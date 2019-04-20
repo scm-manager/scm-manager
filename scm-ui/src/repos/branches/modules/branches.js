@@ -304,17 +304,22 @@ const reduceByBranchesSuccess = (state, payload) => {
   const byName = repoState.byName || {};
   repoState.byName = byName;
 
-  const branches = response._embedded.branches;
-  const names = branches.map(b => b.name);
-  response._embedded.branches = names;
-  for (let branch of branches) {
-    byName[branch.name] = branch;
+  if(response._embedded) {
+    const branches = response._embedded.branches;
+    const names = branches.map(b => b.name);
+    response._embedded.branches = names;
+    for (let branch of branches) {
+      byName[branch.name] = branch;
+    }
+    return {
+      [key]: {
+        list: response,
+        byName
+      }
+    };
   }
   return {
-    [key]: {
-      list: response,
-      byName
-    }
+    [key]: []
   };
 };
 
