@@ -83,7 +83,7 @@ class Overview extends React.Component<Props> {
         {this.renderOverview()}
         <OverviewPageActions
           showCreateButton={showCreateButton}
-          link="repos"
+          link="repos/create"
           label={t("overview.createButton")}
         />
       </Page>

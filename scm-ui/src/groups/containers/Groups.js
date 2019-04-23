@@ -85,7 +85,7 @@ class Groups extends React.Component<Props> {
         {this.renderCreateButton()}
         <OverviewPageActions
           showCreateButton={canAddGroups}
-          link="groups"
+          link="groups/add"
           label={t("create-group-button.label")}
         />
       </Page>
