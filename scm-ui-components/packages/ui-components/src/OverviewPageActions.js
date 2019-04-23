@@ -30,12 +30,13 @@ const styles = {
 class OverviewPageActions extends React.Component<Props> {
   render() {
     const { history, location, link } = this.props;
+    let directory = link.substring(0, link.indexOf("/"));
     return (
       <PageActions>
         <FilterInput
           value={urls.getQueryStringFromLocation(location)}
           filter={filter => {
-            history.push(`/${link}/?q=${filter}`);
+            history.push(`/${directory}/?q=${filter}`);
           }}
         />
         {this.renderCreateButton()}
@@ -48,11 +49,7 @@ class OverviewPageActions extends React.Component<Props> {
     if (showCreateButton) {
       return (
         <div className={classNames(classes.button, "input-button control")}>
-          <Button
-            label={label} //t("overview.createButton")
-            link={`/${link}/create`}
-            color="primary"
-          />
+          <Button label={label} link={`/${link}`} color="primary" />
         </div>
       );
     }
