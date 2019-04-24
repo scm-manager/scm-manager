@@ -28,7 +28,7 @@ type Props = {
   history: History
 };
 
-class AddUser extends React.Component<Props> {
+class CreateUser extends React.Component<Props> {
   componentDidMount() {
     this.props.resetForm();
   }
@@ -49,8 +49,8 @@ class AddUser extends React.Component<Props> {
 
     return (
       <Page
-        title={t("addUser.title")}
-        subtitle={t("addUser.subtitle")}
+        title={t("createUser.title")}
+        subtitle={t("createUser.subtitle")}
         error={error}
         showContentOnError={true}
       >
@@ -88,4 +88,4 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("users")(AddUser));
+)(translate("users")(CreateUser));

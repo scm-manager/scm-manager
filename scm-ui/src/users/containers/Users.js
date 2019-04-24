@@ -87,7 +87,7 @@ class Users extends React.Component<Props> {
         <PageActions>
           <OverviewPageActions
             showCreateButton={canAddUsers}
-            link="users/add"
+            link="users"
             label={t("users.createButton")}
           />
         </PageActions>
@@ -115,7 +115,9 @@ class Users extends React.Component<Props> {
   renderCreateButton() {
     const { canAddUsers, t } = this.props;
     if (canAddUsers) {
-      return <CreateButton label={t("users.createButton")} link="/users/add" />;
+      return (
+        <CreateButton label={t("users.createButton")} link="/users/create" />
+      );
     }
     return null;
   }

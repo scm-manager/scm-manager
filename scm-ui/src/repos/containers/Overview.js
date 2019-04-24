@@ -85,7 +85,7 @@ class Overview extends React.Component<Props> {
         <PageActions>
           <OverviewPageActions
             showCreateButton={showCreateButton}
-            link="repos/create"
+            link="repos"
             label={t("overview.createButton")}
           />
         </PageActions>

@@ -4,7 +4,6 @@ import type { History } from "history";
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import injectSheet from "react-jss";
-import { PageActions } from "./layout";
 import { FilterInput } from "./forms";
 import { Button, urls } from "./index";
 
@@ -30,13 +29,12 @@ const styles = {
 class OverviewPageActions extends React.Component<Props> {
   render() {
     const { history, location, link } = this.props;
-    let directory = link.substring(0, link.indexOf("/"));
     return (
       <>
         <FilterInput
           value={urls.getQueryStringFromLocation(location)}
           filter={filter => {
-            history.push(`/${directory}/?q=${filter}`);
+            history.push(`/${link}/?q=${filter}`);
           }}
         />
         {this.renderCreateButton()}
@@ -49,7 +47,7 @@ class OverviewPageActions extends React.Component<Props> {
     if (showCreateButton) {
       return (
         <div className={classNames(classes.button, "input-button control")}>
-          <Button label={label} link={`/${link}`} color="primary" />
+          <Button label={label} link={`/${link}/create`} color="primary" />
         </div>
       );
     }

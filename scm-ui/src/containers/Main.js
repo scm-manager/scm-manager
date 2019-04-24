@@ -12,14 +12,14 @@ import Logout from "../containers/Logout";
 import { ProtectedRoute } from "@scm-manager/ui-components";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
-import AddUser from "../users/containers/AddUser";
+import CreateUser from "../users/containers/CreateUser";
 import SingleUser from "../users/containers/SingleUser";
 import RepositoryRoot from "../repos/containers/RepositoryRoot";
 import Create from "../repos/containers/Create";
 
 import Groups from "../groups/containers/Groups";
 import SingleGroup from "../groups/containers/SingleGroup";
-import AddGroup from "../groups/containers/AddGroup";
+import CreateGroup from "../groups/containers/CreateGroup";
 
 import Config from "../config/containers/Config";
 import Profile from "./Profile";
@@ -74,8 +74,8 @@ class Main extends React.Component<Props> {
           />
           <ProtectedRoute
             authenticated={authenticated}
-            path="/users/add"
-            component={AddUser}
+            path="/users/create"
+            component={CreateUser}
           />
           <ProtectedRoute
             exact
@@ -102,8 +102,8 @@ class Main extends React.Component<Props> {
           />
           <ProtectedRoute
             authenticated={authenticated}
-            path="/groups/add"
-            component={AddGroup}
+            path="/groups/create"
+            component={CreateGroup}
           />
           <ProtectedRoute
             exact

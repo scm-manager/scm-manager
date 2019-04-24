@@ -39,7 +39,7 @@
       "setPermissionsNavLink": "Berechtigungen"
     }
   },
-  "addUser": {
+  "createUser": {
     "title": "Benutzer erstellen",
     "subtitle": "Erstellen eines neuen Benutzers"
   },
