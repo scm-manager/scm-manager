@@ -80,19 +80,17 @@ class ChangesetsRoot extends React.Component<Props> {
       return <Loading />;
     }
 
-    if (!repository || !branches) {
+    if (!repository) {
       return null;
     }
 
     const url = this.stripEndingSlash(match.url);
-    const branch = this.findSelectedBranch();
+    const branch = branches ? this.findSelectedBranch() : null;
     const changesets = <Changesets repository={repository} branch={branch} />;
 
     return (
       <div className="panel">
-        <div className="panel-heading">
         {this.renderBranchSelector()}
-        </div>
         <Route path={`${url}/:page?`} component={() => changesets} />
       </div>
     );
@@ -102,14 +100,16 @@ class ChangesetsRoot extends React.Component<Props> {
     const { repository, branches, selected, t } = this.props;
     if (repository._links.branches) {
       return (
-        <BranchSelector
-          label={t("changesets.branchSelectorLabel")}
-          branches={branches}
-          selectedBranch={selected}
-          selected={(b: Branch) => {
-            this.branchSelected(b);
-          }}
-        />
+        <div className="panel-heading">
+          <BranchSelector
+            label={t("changesets.branchSelectorLabel")}
+            branches={branches}
+            selectedBranch={selected}
+            selected={(b: Branch) => {
+              this.branchSelected(b);
+            }}
+          />
+        </div>
       );
     }
     return null;

@@ -94,7 +94,7 @@ class Sources extends React.Component<Props> {
     if (currentFileIsDirectory) {
       return (
         <div className="panel">
-          <div className="panel-heading">{this.renderBranchSelector()}</div>
+          {this.renderBranchSelector()}
           <FileTree
             repository={repository}
             revision={revision}
@@ -115,14 +115,16 @@ class Sources extends React.Component<Props> {
 
     if (branches) {
       return (
-        <BranchSelector
-          branches={branches}
-          selectedBranch={revision}
-          label={t("changesets.branchSelectorLabel")}
-          selected={(b: Branch) => {
-            this.branchSelected(b);
-          }}
-        />
+        <div className="panel-heading">
+          <BranchSelector
+            branches={branches}
+            selectedBranch={revision}
+            label={t("changesets.branchSelectorLabel")}
+            selected={(b: Branch) => {
+              this.branchSelected(b);
+            }}
+          />
+        </div>
       );
     }
     return null;
