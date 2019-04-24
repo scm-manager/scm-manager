@@ -62,6 +62,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  *
@@ -280,7 +281,7 @@ public class DefaultUserManager extends AbstractUserManager
   @Override
   public Collection<User> getAll()
   {
-    return getAll(null);
+    return getAll(user -> true, null);
   }
 
   /**
@@ -292,13 +293,13 @@ public class DefaultUserManager extends AbstractUserManager
    * @return
    */
   @Override
-  public Collection<User> getAll(Comparator<User> comparator)
+  public Collection<User> getAll(Predicate<User> filter, Comparator<User> comparator)
   {
     List<User> users = new ArrayList<>();
 
     PermissionActionCheck<User> check = UserPermissions.read();
     for (User user : userDAO.getAll()) {
-      if (check.isPermitted(user)) {
+      if (filter.test(user) && check.isPermitted(user)) {
         users.add(user.clone());
       }
     }

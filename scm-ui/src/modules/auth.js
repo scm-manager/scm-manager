@@ -97,14 +97,14 @@ export const logoutPending = () => {
 
 export const logoutSuccess = () => {
   return {
-    type: LOGOUT_SUCCESS,
+    type: LOGOUT_SUCCESS
   };
 };
 
 export const redirectAfterLogout = () => {
   return {
     type: LOGOUT_REDIRECT
-  }
+  };
 };
 
 export const logoutFailure = (error: Error) => {
@@ -277,4 +277,3 @@ export const getLogoutFailure = (state: Object) => {
 export const isRedirecting = (state: Object) => {
   return !!stateAuth(state).redirecting;
 };
-

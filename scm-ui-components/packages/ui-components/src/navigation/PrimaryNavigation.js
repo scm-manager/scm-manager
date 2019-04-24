@@ -7,12 +7,11 @@ import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   t: string => string,
-  links: Links,
+  links: Links
 };
 
 class PrimaryNavigation extends React.Component<Props> {
-
-  createNavigationAppender = (navigationItems) => {
+  createNavigationAppender = navigationItems => {
     const { t, links } = this.props;
 
     return (to: string, match: string, label: string, linkName: string) => {
@@ -24,8 +23,8 @@ class PrimaryNavigation extends React.Component<Props> {
             match={match}
             label={t(label)}
             key={linkName}
-          />)
-        ;
+          />
+        );
         navigationItems.push(navigationItem);
       }
     };
@@ -63,16 +62,26 @@ class PrimaryNavigation extends React.Component<Props> {
         <ExtensionPoint name="primary-navigation.first-menu" props={props} />
       );
     }
-    append("/repos", "/(repo|repos)", "primary-navigation.repositories", "repositories");
-    append("/users", "/(user|users)", "primary-navigation.users", "users");
-    append("/groups", "/(group|groups)", "primary-navigation.groups", "groups");
+    append(
+      "/repos/",
+      "/(repo|repos)",
+      "primary-navigation.repositories",
+      "repositories"
+    );
+    append("/users/", "/(user|users)", "primary-navigation.users", "users");
+    append(
+      "/groups/",
+      "/(group|groups)",
+      "primary-navigation.groups",
+      "groups"
+    );
     append("/config", "/config", "primary-navigation.config", "config");
 
     navigationItems.push(
       <ExtensionPoint
         name="primary-navigation"
         renderAll={true}
-        props={{links: this.props.links}}
+        props={{ links: this.props.links }}
       />
     );
 
@@ -86,9 +95,7 @@ class PrimaryNavigation extends React.Component<Props> {
 
     return (
       <nav className="tabs is-boxed">
-        <ul>
-          {navigationItems}
-        </ul>
+        <ul>{navigationItems}</ul>
       </nav>
     );
   }

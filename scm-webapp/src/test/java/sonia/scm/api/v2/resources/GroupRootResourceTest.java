@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
@@ -30,9 +31,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -67,8 +70,10 @@ public class GroupRootResourceTest {
   @InjectMocks
   private PermissionCollectionToDtoMapper permissionCollectionToDtoMapper;
 
-
-  private ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
+  @Captor
+  private ArgumentCaptor<Group> groupCaptor;
+  @Captor
+  private ArgumentCaptor<Predicate<Group>> filterCaptor;
 
   @Before
   public void prepareEnvironment() {
@@ -77,7 +82,7 @@ public class GroupRootResourceTest {
     doNothing().when(groupManager).modify(groupCaptor.capture());
 
     Group group = createDummyGroup();
-    when(groupManager.getPage(any(), eq(0), eq(10))).thenReturn(new PageResult<>(singletonList(group), 1));
+    when(groupManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(new PageResult<>(singletonList(group), 1));
     when(groupManager.get("admin")).thenReturn(group);
 
     GroupCollectionToDtoMapper groupCollectionToDtoMapper = new GroupCollectionToDtoMapper(groupToDtoMapper, resourceLinks);
@@ -315,6 +320,23 @@ public class GroupRootResourceTest {
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"name\":\"admin\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/groups/admin\"}"));
+  }
+
+  @Test
+  public void shouldCreateFilterForSearch() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.get("/" + GroupRootResource.GROUPS_PATH_V2 + "?q=One");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    Group group = new Group("xml", "someone");
+    assertTrue(filterCaptor.getValue().test(group));
+    group.setName("nothing");
+    group.setDescription("Someone");
+    assertTrue(filterCaptor.getValue().test(group));
+    group.setDescription("Nobody");
+    assertFalse(filterCaptor.getValue().test(group));
   }
 
   @Test

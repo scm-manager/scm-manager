@@ -15,7 +15,7 @@ import type {
 import { isPending } from "../../../modules/pending";
 import { getFailure } from "../../../modules/failure";
 
-import memoizeOne from 'memoize-one';
+import memoizeOne from "memoize-one";
 
 export const FETCH_BRANCHES = "scm/repos/FETCH_BRANCHES";
 export const FETCH_BRANCHES_PENDING = `${FETCH_BRANCHES}_${PENDING_SUFFIX}`;
@@ -111,9 +111,7 @@ export function createBranch(
 // Selectors
 
 function collectBranches(repoState) {
-  return repoState.list._embedded.branches.map(
-    name => repoState.byName[name]
-  );
+  return repoState.list._embedded.branches.map(name => repoState.byName[name]);
 }
 
 const memoizedBranchCollector = memoizeOne(collectBranches);
@@ -127,7 +125,12 @@ export function getBranches(state: Object, repository: Repository) {
 
 export function getBranchCreateLink(state: Object, repository: Repository) {
   const repoState = getRepoState(state, repository);
-  if (repoState && repoState.list && repoState.list._links && repoState.list._links.create) {
+  if (
+    repoState &&
+    repoState.list &&
+    repoState.list._links &&
+    repoState.list._links.create
+  ) {
     return repoState.list._links.create.href;
   }
 }

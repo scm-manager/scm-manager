@@ -31,7 +31,7 @@ type Props = {
 
 type State = {};
 
-class AddGroup extends React.Component<Props, State> {
+class CreateGroup extends React.Component<Props, State> {
   componentDidMount() {
     this.props.resetForm();
   }
@@ -104,4 +104,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("groups")(AddGroup));
+)(translate("groups")(CreateGroup));

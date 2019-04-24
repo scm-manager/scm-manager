@@ -43,9 +43,14 @@ export function fetchUsers(link: string) {
   return fetchUsersByLink(link);
 }
 
-export function fetchUsersByPage(link: string, page: number) {
+export function fetchUsersByPage(link: string, page: number, filter?: string) {
   // backend start counting by 0
-  return fetchUsersByLink(link + "?page=" + (page - 1));
+  if (filter) {
+    return fetchUsersByLink(
+      `${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`
+    );
+  }
+  return fetchUsersByLink(`${link}?page=${page - 1}`);
 }
 
 export function fetchUsersByLink(link: string) {
@@ -153,9 +158,7 @@ export function createUser(link: string, user: User, callback?: () => void) {
           callback();
         }
       })
-      .catch(error =>
-        dispatch(createUserFailure(error))
-      );
+      .catch(error => dispatch(createUserFailure(error)));
   };
 }
 

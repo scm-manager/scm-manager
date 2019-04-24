@@ -1,4 +1,6 @@
 // @flow
+import queryString from "query-string";
+
 export const contextPath = window.ctxPath || "";
 
 export function withContextPath(path: string) {
@@ -26,4 +28,8 @@ export function getPageFromMatch(match: any) {
     page = 1;
   }
   return page;
+}
+
+export function getQueryStringFromLocation(location: any) {
+  return location.search ? queryString.parse(location.search).q : undefined;
 }

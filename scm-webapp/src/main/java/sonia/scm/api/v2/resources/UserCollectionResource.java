@@ -6,6 +6,8 @@ import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.authc.credential.PasswordService;
+import sonia.scm.search.SearchRequest;
+import sonia.scm.search.SearchUtil;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
@@ -20,6 +22,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import java.util.function.Predicate;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 public class UserCollectionResource {
 
@@ -65,8 +70,10 @@ public class UserCollectionResource {
   public Response getAll(@DefaultValue("0") @QueryParam("page") int page,
     @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
     @QueryParam("sortBy") String sortBy,
-    @DefaultValue("false") @QueryParam("desc") boolean desc) {
-    return adapter.getAll(page, pageSize, sortBy, desc,
+    @DefaultValue("false") @QueryParam("desc") boolean desc,
+    @DefaultValue("") @QueryParam("q") String search
+  ) {
+    return adapter.getAll(page, pageSize, createSearchPredicate(search), sortBy, desc,
                           pageResult -> userCollectionToDtoMapper.map(page, pageSize, pageResult));
   }
 
@@ -92,5 +99,13 @@ public class UserCollectionResource {
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created user"))
   public Response create(@Valid UserDto user) {
     return adapter.create(user, () -> dtoToUserMapper.map(user, passwordService.encryptPassword(user.getPassword())), u -> resourceLinks.user().self(u.getName()));
+  }
+
+  private Predicate<User> createSearchPredicate(String search) {
+    if (isNullOrEmpty(search)) {
+      return user -> true;
+    }
+    SearchRequest searchRequest = new SearchRequest(search, true);
+    return user -> SearchUtil.matchesOne(searchRequest, user.getName(), user.getDisplayName(), user.getMail());
   }
 }

@@ -92,16 +92,13 @@ public final class SearchUtil
     {
       result = true;
 
-      if (Util.isNotEmpty(other))
+      for (String o : other)
       {
-        for (String o : other)
+        if ((o == null) ||!o.matches(query))
         {
-          if ((o == null) ||!o.matches(query))
-          {
-            result = false;
+          result = false;
 
-            break;
-          }
+          break;
         }
       }
     }
@@ -127,16 +124,13 @@ public final class SearchUtil
 
     if (!value.matches(query))
     {
-      if (Util.isNotEmpty(other))
+      for (String o : other)
       {
-        for (String o : other)
+        if ((o != null) && o.matches(query))
         {
-          if ((o != null) && o.matches(query))
-          {
-            result = true;
+          result = true;
 
-            break;
-          }
+          break;
         }
       }
     }

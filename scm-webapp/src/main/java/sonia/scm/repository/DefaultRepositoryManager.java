@@ -64,6 +64,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.function.Predicate;
 
 import static sonia.scm.AlreadyExistsException.alreadyExists;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -253,13 +254,14 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public Collection<Repository> getAll(Comparator<Repository> comparator) {
+  public Collection<Repository> getAll(Predicate<Repository> filter, Comparator<Repository> comparator) {
     List<Repository> repositories = Lists.newArrayList();
 
     PermissionActionCheck<Repository> check = RepositoryPermissions.read();
 
     for (Repository repository : repositoryDAO.getAll()) {
       if (handlerMap.containsKey(repository.getType())
+        && filter.test(repository)
         && check.isPermitted(repository)) {
         Repository r = repository.clone();
 
@@ -276,7 +278,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
   @Override
   public Collection<Repository> getAll() {
-    return getAll(null);
+    return getAll(repository -> true, null);
   }
 
 

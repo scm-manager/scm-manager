@@ -2,24 +2,24 @@
 import React from "react";
 
 import { Redirect, Route, Switch, withRouter } from "react-router-dom";
-import type {Links} from "@scm-manager/ui-types";
+import type { Links } from "@scm-manager/ui-types";
 
 import Overview from "../repos/containers/Overview";
 import Users from "../users/containers/Users";
 import Login from "../containers/Login";
 import Logout from "../containers/Logout";
 
-import {ProtectedRoute} from "@scm-manager/ui-components";
-import {binder,  ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ProtectedRoute } from "@scm-manager/ui-components";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
-import AddUser from "../users/containers/AddUser";
+import CreateUser from "../users/containers/CreateUser";
 import SingleUser from "../users/containers/SingleUser";
 import RepositoryRoot from "../repos/containers/RepositoryRoot";
 import Create from "../repos/containers/Create";
 
 import Groups from "../groups/containers/Groups";
 import SingleGroup from "../groups/containers/SingleGroup";
-import AddGroup from "../groups/containers/AddGroup";
+import CreateGroup from "../groups/containers/CreateGroup";
 
 import Config from "../config/containers/Config";
 import Profile from "./Profile";
@@ -33,14 +33,14 @@ class Main extends React.Component<Props> {
   render() {
     const { authenticated, links } = this.props;
     const redirectUrlFactory = binder.getExtension("main.redirect", this.props);
-    let url ="/repos";
-    if (redirectUrlFactory){
+    let url = "/repos";
+    if (redirectUrlFactory) {
       url = redirectUrlFactory(this.props);
     }
     return (
       <div className="main">
         <Switch>
-          <Redirect exact from="/" to={url}/>
+          <Redirect exact from="/" to={url} />
           <Route exact path="/login" component={Login} />
           <Route path="/logout" component={Logout} />
           <ProtectedRoute
@@ -74,8 +74,8 @@ class Main extends React.Component<Props> {
           />
           <ProtectedRoute
             authenticated={authenticated}
-            path="/users/add"
-            component={AddUser}
+            path="/users/create"
+            component={CreateUser}
           />
           <ProtectedRoute
             exact
@@ -102,8 +102,8 @@ class Main extends React.Component<Props> {
           />
           <ProtectedRoute
             authenticated={authenticated}
-            path="/groups/add"
-            component={AddGroup}
+            path="/groups/create"
+            component={CreateGroup}
           />
           <ProtectedRoute
             exact
@@ -125,7 +125,7 @@ class Main extends React.Component<Props> {
           <ExtensionPoint
             name="main.route"
             renderAll={true}
-            props={{authenticated, links}}
+            props={{ authenticated, links }}
           />
         </Switch>
       </div>

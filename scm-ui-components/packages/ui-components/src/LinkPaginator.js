@@ -1,18 +1,26 @@
 //@flow
 import React from "react";
-import {translate} from "react-i18next";
-import type {PagedCollection} from "@scm-manager/ui-types";
-import {Button} from "./buttons";
+import { translate } from "react-i18next";
+import type { PagedCollection } from "@scm-manager/ui-types";
+import { Button } from "./buttons";
 
 type Props = {
   collection: PagedCollection,
   page: number,
+  filter?: string,
 
   // context props
   t: string => string
 };
 
 class LinkPaginator extends React.Component<Props> {
+  addFilterToLink(link: string) {
+    const { filter } = this.props;
+    if (filter) {
+      return `${link}?q=${filter}`;
+    }
+    return link;
+  }
 
   renderFirstButton() {
     return (
@@ -20,7 +28,7 @@ class LinkPaginator extends React.Component<Props> {
         className={"pagination-link"}
         label={"1"}
         disabled={false}
-        link={"1"}
+        link={this.addFilterToLink("1")}
       />
     );
   }
@@ -34,7 +42,7 @@ class LinkPaginator extends React.Component<Props> {
         className={className}
         label={label ? label : previousPage.toString()}
         disabled={!this.hasLink("prev")}
-        link={`${previousPage}`}
+        link={this.addFilterToLink(`${previousPage}`)}
       />
     );
   }
@@ -52,7 +60,7 @@ class LinkPaginator extends React.Component<Props> {
         className={className}
         label={label ? label : nextPage.toString()}
         disabled={!this.hasLink("next")}
-        link={`${nextPage}`}
+        link={this.addFilterToLink(`${nextPage}`)}
       />
     );
   }
@@ -64,7 +72,7 @@ class LinkPaginator extends React.Component<Props> {
         className={"pagination-link"}
         label={`${collection.pageTotal}`}
         disabled={false}
-        link={`${collection.pageTotal}`}
+        link={this.addFilterToLink(`${collection.pageTotal}`)}
       />
     );
   }
@@ -115,18 +123,25 @@ class LinkPaginator extends React.Component<Props> {
   }
 
   render() {
-    const { t } = this.props;
-    return (
-      <nav className="pagination is-centered" aria-label="pagination">
-        {this.renderPreviousButton("pagination-previous", t("paginator.previous"))}
-        <ul className="pagination-list">
-          {this.pageLinks().map((link, index) => {
-            return <li key={index}>{link}</li>;
-          })}
-        </ul>
-        {this.renderNextButton("pagination-next", t("paginator.next"))}
-      </nav>
-    );
+    const { collection, t } = this.props;
+
+    if(collection) {
+      return (
+        <nav className="pagination is-centered" aria-label="pagination">
+          {this.renderPreviousButton(
+            "pagination-previous",
+            t("paginator.previous")
+          )}
+          <ul className="pagination-list">
+            {this.pageLinks().map((link, index) => {
+              return <li key={index}>{link}</li>;
+            })}
+          </ul>
+          {this.renderNextButton("pagination-next", t("paginator.next"))}
+        </nav>
+      );
+    }
+    return null;
   }
 }
 

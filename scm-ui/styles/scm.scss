@@ -49,13 +49,22 @@ hr.header-with-actions {
     display: none;
   }
 }
-.is-mobile-create-button-spacing {
+.is-mobile-action-spacing {
   @media screen and (max-width: 768px) {
-    border: 2px solid #e9f7fd;
-    padding: 1em 1em;
-    margin-top: 0 !important;
-    width: 100%;
-    text-align: center !important;
+    display: flow-root !important;
+
+    .input-field {
+      padding: 0;
+      margin: 0 0 1.25rem 0 !important;
+      width: 100%;
+    }
+    .input-button {
+      border: 2px solid #e9f7fd;
+      padding: 1em 1em;
+      margin-top: 0 !important;
+      width: 100%;
+      text-align: center !important;
+    }
   }
 }
 

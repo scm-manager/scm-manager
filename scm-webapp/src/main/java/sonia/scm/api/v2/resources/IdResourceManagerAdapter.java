@@ -45,8 +45,8 @@ class IdResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     );
   }
 
-  public Response getAll(int page, int pageSize, String sortBy, boolean desc, Function<PageResult<MODEL_OBJECT>, CollectionDto> mapToDto) {
-    return collectionAdapter.getAll(page, pageSize, sortBy, desc, mapToDto);
+  public Response getAll(int page, int pageSize, Predicate<MODEL_OBJECT> filter, String sortBy, boolean desc, Function<PageResult<MODEL_OBJECT>, CollectionDto> mapToDto) {
+    return collectionAdapter.getAll(page, pageSize, filter, sortBy, desc, mapToDto);
   }
 
   public Response create(DTO dto, Supplier<MODEL_OBJECT> modelObjectSupplier, Function<MODEL_OBJECT, String> uriCreator) {

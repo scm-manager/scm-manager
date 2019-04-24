@@ -5,6 +5,7 @@ export { default as AutocompleteAddEntryToTableField } from "./AutocompleteAddEn
 export { default as MemberNameTable } from "./MemberNameTable.js";
 export { default as Checkbox } from "./Checkbox.js";
 export { default as Radio } from "./Radio.js";
+export { default as FilterInput } from "./FilterInput.js";
 export { default as InputField } from "./InputField.js";
 export { default as Select } from "./Select.js";
 export { default as Textarea } from "./Textarea.js";

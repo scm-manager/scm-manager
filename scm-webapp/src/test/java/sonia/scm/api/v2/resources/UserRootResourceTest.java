@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.ContextEntry;
@@ -30,6 +31,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -72,7 +74,11 @@ public class UserRootResourceTest {
   @InjectMocks
   private PermissionCollectionToDtoMapper permissionCollectionToDtoMapper;
 
-  private ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+  @Captor
+  private ArgumentCaptor<User> userCaptor;
+  @Captor
+  private ArgumentCaptor<Predicate<User>> filterCaptor;
+
   private User originalUser;
 
   @Before
@@ -333,7 +339,7 @@ public class UserRootResourceTest {
   @Test
   public void shouldCreatePageForOnePageOnly() throws URISyntaxException, UnsupportedEncodingException {
     PageResult<User> singletonPageResult = createSingletonPageResult(1);
-    when(userManager.getPage(any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+    when(userManager.getPage(any(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
 
@@ -349,7 +355,7 @@ public class UserRootResourceTest {
   @Test
   public void shouldCreatePageForMultiplePages() throws URISyntaxException, UnsupportedEncodingException {
     PageResult<User> singletonPageResult = createSingletonPageResult(3);
-    when(userManager.getPage(any(), eq(1), eq(1))).thenReturn(singletonPageResult);
+    when(userManager.getPage(any(), any(), eq(1), eq(1))).thenReturn(singletonPageResult);
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "?page=1&pageSize=1");
     MockHttpResponse response = new MockHttpResponse();
 
@@ -362,6 +368,28 @@ public class UserRootResourceTest {
     assertTrue(response.getContentAsString().contains("\"prev\":{\"href\":\"/v2/users/?page=0"));
     assertTrue(response.getContentAsString().contains("\"next\":{\"href\":\"/v2/users/?page=2"));
     assertTrue(response.getContentAsString().contains("\"last\":{\"href\":\"/v2/users/?page=2"));
+  }
+
+  @Test
+  public void shouldCreateFilterForSearch() throws URISyntaxException {
+    PageResult<User> singletonPageResult = createSingletonPageResult(1);
+    when(userManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+    MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "?q=One");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    User user = new User("Someone I know");
+    assertTrue(filterCaptor.getValue().test(user));
+    user.setName("nobody");
+    user.setDisplayName("Someone I know");
+    assertTrue(filterCaptor.getValue().test(user));
+    user.setDisplayName("nobody");
+    user.setMail("me@someone.com");
+    assertTrue(filterCaptor.getValue().test(user));
+    user.setMail("me@nowhere.com");
+    assertFalse(filterCaptor.getValue().test(user));
   }
 
   @Test

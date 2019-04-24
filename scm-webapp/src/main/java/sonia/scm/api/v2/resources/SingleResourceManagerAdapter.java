@@ -5,11 +5,8 @@ import sonia.scm.ConcurrentModificationException;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.NotFoundException;
-import sonia.scm.api.rest.resources.AbstractManagerResource;
 
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -29,10 +26,11 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
  */
 @SuppressWarnings("squid:S00119") // "MODEL_OBJECT" is much more meaningful than "M", right?
 class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
-                             DTO extends HalRepresentation> extends AbstractManagerResource<MODEL_OBJECT> {
+                             DTO extends HalRepresentation> {
 
   private final Function<Throwable, Optional<Response>> errorHandler;
-  private final Class<MODEL_OBJECT> type;
+  protected final Manager<MODEL_OBJECT> manager;
+  protected final Class<MODEL_OBJECT> type;
 
   SingleResourceManagerAdapter(Manager<MODEL_OBJECT> manager, Class<MODEL_OBJECT> type) {
     this(manager, type, e -> Optional.empty());
@@ -42,7 +40,7 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     Manager<MODEL_OBJECT> manager,
     Class<MODEL_OBJECT> type,
     Function<Throwable, Optional<Response>> errorHandler) {
-    super(manager, type);
+    this.manager = manager;
     this.errorHandler = errorHandler;
     this.type = type;
   }
@@ -72,7 +70,16 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     else if (modelObjectWasModifiedConcurrently(existingModelObject, changedModelObject)) {
       throw new ConcurrentModificationException(type, keyExtractor.apply(existingModelObject));
     }
-    return update(getId(existingModelObject), changedModelObject);
+    return update(changedModelObject);
+  }
+
+  private Response update(MODEL_OBJECT item) {
+    try {
+      manager.modify(item);
+      return Response.noContent().build();
+    } catch (RuntimeException ex) {
+      return createErrorResponse(ex);
+    }
   }
 
   private boolean modelObjectWasModifiedConcurrently(MODEL_OBJECT existing, MODEL_OBJECT updated) {
@@ -89,23 +96,27 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     }
   }
 
-  @Override
-  protected Response createErrorResponse(Throwable throwable) {
-    return errorHandler.apply(throwable).orElse(super.createErrorResponse(throwable));
+  public Response delete(String name) {
+    MODEL_OBJECT item = manager.get(name);
+
+    if (item != null) {
+      try {
+        manager.delete(item);
+        return Response.noContent().build();
+      } catch (RuntimeException ex) {
+        return createErrorResponse(ex);
+      }
+    } else {
+      return Response.noContent().build();
+    }
   }
 
-  @Override
-  protected GenericEntity<Collection<MODEL_OBJECT>> createGenericEntity(Collection<MODEL_OBJECT> modelObjects) {
-    throw new UnsupportedOperationException();
+  private Response createErrorResponse(RuntimeException throwable) {
+    return errorHandler.apply(throwable)
+      .orElseThrow(() -> throwable);
   }
 
-  @Override
   protected String getId(MODEL_OBJECT item) {
     return item.getId();
-  }
-
-  @Override
-  protected String getPathPart() {
-    throw new UnsupportedOperationException();
   }
 }
