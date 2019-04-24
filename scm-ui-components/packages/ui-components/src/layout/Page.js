@@ -51,7 +51,7 @@ class Page extends React.Component<Props> {
     let pageActionsExists = false;
     React.Children.forEach(children, child => {
       if (child && !error) {
-        if (child.type.name === PageActions.name)
+        if (child.type.name === PageActions.name) {
           pageActions = (
             <div
               className={classNames(
@@ -62,7 +62,8 @@ class Page extends React.Component<Props> {
               {child}
             </div>
           );
-        pageActionsExists = true;
+          pageActionsExists = true;
+        }
       }
     });
     let underline = pageActionsExists ? (
