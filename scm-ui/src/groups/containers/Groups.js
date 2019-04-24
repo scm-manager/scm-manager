@@ -14,13 +14,14 @@ import {
 } from "../modules/groups";
 import {
   Page,
+  PageActions,
   OverviewPageActions,
   Notification,
   LinkPaginator,
-  urls
+  urls,
+  CreateButton
 } from "@scm-manager/ui-components";
 import { GroupTable } from "./../components/table";
-import CreateGroupButton from "../components/buttons/CreateGroupButton";
 import { getGroupsLink } from "../../modules/indexResource";
 
 type Props = {
@@ -83,11 +84,13 @@ class Groups extends React.Component<Props> {
       >
         {this.renderGroupTable()}
         {this.renderCreateButton()}
-        <OverviewPageActions
-          showCreateButton={canAddGroups}
-          link="groups/add"
-          label={t("create-group-button.label")}
-        />
+        <PageActions>
+          <OverviewPageActions
+            showCreateButton={canAddGroups}
+            link="groups/add"
+            label={t("create-group-button.label")}
+          />
+        </PageActions>
       </Page>
     );
   }
@@ -110,8 +113,14 @@ class Groups extends React.Component<Props> {
   }
 
   renderCreateButton() {
-    if (this.props.canAddGroups) {
-      return <CreateGroupButton />;
+    const { canAddGroups, t } = this.props;
+    if (canAddGroups) {
+      return (
+        <CreateButton
+          label={t("create-group-button.label")}
+          link="/groups/add"
+        />
+      );
     }
     return null;
   }

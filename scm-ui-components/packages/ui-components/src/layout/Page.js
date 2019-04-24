@@ -7,7 +7,6 @@ import ErrorNotification from "./../ErrorNotification";
 import Title from "./Title";
 import Subtitle from "./Subtitle";
 import PageActions from "./PageActions";
-import OverviewPageActions from "../OverviewPageActions";
 import ErrorBoundary from "../ErrorBoundary";
 
 type Props = {
@@ -52,10 +51,7 @@ class Page extends React.Component<Props> {
     let pageActionsExists = false;
     React.Children.forEach(children, child => {
       if (child && !error) {
-        if (
-          child.type.name === PageActions.name ||
-          child.type.name === OverviewPageActions.name
-        )
+        if (child.type.name === PageActions.name)
           pageActions = (
             <div
               className={classNames(
@@ -100,10 +96,7 @@ class Page extends React.Component<Props> {
     let content = [];
     React.Children.forEach(children, child => {
       if (child) {
-        if (
-          child.type.name !== PageActions.name &&
-          child.type.name !== OverviewPageActions.name
-        ) {
+        if (child.type.name !== PageActions.name) {
           content.push(child);
         }
       }

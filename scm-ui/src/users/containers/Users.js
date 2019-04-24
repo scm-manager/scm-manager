@@ -14,13 +14,14 @@ import {
 } from "../modules/users";
 import {
   Page,
+  PageActions,
   OverviewPageActions,
   Notification,
   LinkPaginator,
-  urls
+  urls,
+  CreateButton
 } from "@scm-manager/ui-components";
 import { UserTable } from "./../components/table";
-import CreateUserButton from "../components/buttons/CreateUserButton";
 import { getUsersLink } from "../../modules/indexResource";
 
 type Props = {
@@ -83,11 +84,13 @@ class Users extends React.Component<Props> {
       >
         {this.renderUserTable()}
         {this.renderCreateButton()}
-        <OverviewPageActions
-          showCreateButton={canAddUsers}
-          link="users/add"
-          label={t("users.createButton")}
-        />
+        <PageActions>
+          <OverviewPageActions
+            showCreateButton={canAddUsers}
+            link="users/add"
+            label={t("users.createButton")}
+          />
+        </PageActions>
       </Page>
     );
   }
@@ -110,8 +113,9 @@ class Users extends React.Component<Props> {
   }
 
   renderCreateButton() {
-    if (this.props.canAddUsers) {
-      return <CreateUserButton />;
+    const { canAddUsers, t } = this.props;
+    if (canAddUsers) {
+      return <CreateButton label={t("users.createButton")} link="/users/add" />;
     }
     return null;
   }

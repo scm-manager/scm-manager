@@ -32,7 +32,7 @@ class OverviewPageActions extends React.Component<Props> {
     const { history, location, link } = this.props;
     let directory = link.substring(0, link.indexOf("/"));
     return (
-      <PageActions>
+      <>
         <FilterInput
           value={urls.getQueryStringFromLocation(location)}
           filter={filter => {
@@ -40,7 +40,7 @@ class OverviewPageActions extends React.Component<Props> {
           }}
         />
         {this.renderCreateButton()}
-      </PageActions>
+      </>
     );
   }
 

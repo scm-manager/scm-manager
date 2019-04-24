@@ -14,6 +14,7 @@ import {
 } from "../modules/repos";
 import {
   Page,
+  PageActions,
   OverviewPageActions,
   CreateButton,
   Notification,
@@ -81,11 +82,13 @@ class Overview extends React.Component<Props> {
         error={error}
       >
         {this.renderOverview()}
-        <OverviewPageActions
-          showCreateButton={showCreateButton}
-          link="repos/create"
-          label={t("overview.createButton")}
-        />
+        <PageActions>
+          <OverviewPageActions
+            showCreateButton={showCreateButton}
+            link="repos/create"
+            label={t("overview.createButton")}
+          />
+        </PageActions>
       </Page>
     );
   }
