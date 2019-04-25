@@ -101,6 +101,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
           noOptionsMessage={t("permission.autocomplete.no-group-options")}
           loadingMessage={t("permission.autocomplete.loading")}
           placeholder={t("permission.autocomplete.group-placeholder")}
+          creatable={true}
         />
       );
     }
@@ -113,6 +114,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
         noOptionsMessage={t("permission.autocomplete.no-user-options")}
         loadingMessage={t("permission.autocomplete.loading")}
         placeholder={t("permission.autocomplete.user-placeholder")}
+        creatable={true}
       />
     );
   };

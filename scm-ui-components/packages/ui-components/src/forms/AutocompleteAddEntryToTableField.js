@@ -50,6 +50,7 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
           placeholder={placeholder}
           loadingMessage={loadingMessage}
           noOptionsMessage={noOptionsMessage}
+          creatable={true}
         />
 
         <AddButton
