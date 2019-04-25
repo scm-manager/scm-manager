@@ -57,10 +57,14 @@ class BranchSelector extends React.Component<Props, State> {
     if (branches) {
       return (
         <div
-          className={classNames("field is-horizontal", classes.noBottomMargin)}
+          className={classNames(
+            "field",
+            "is-horizontal",
+            classes.noBottomMargin
+          )}
         >
           <div
-            className={classNames("field-label is-normal", classes.zeroflex)}
+            className={classNames("field-label", "is-normal", classes.zeroflex)}
           >
             <label className={classNames("label", classes.labelSizing)}>
               {label}
@@ -68,7 +72,11 @@ class BranchSelector extends React.Component<Props, State> {
           </div>
           <div className="field-body">
             <div
-              className={classNames("field is-narrow", classes.noBottomMargin)}
+              className={classNames(
+                "field",
+                "is-narrow",
+                classes.noBottomMargin
+              )}
             >
               <div className={classNames("control", classes.minWidthOfControl)}>
                 <DropDown
