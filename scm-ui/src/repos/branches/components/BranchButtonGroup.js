@@ -25,21 +25,17 @@ class BranchButtonGroup extends React.Component<Props> {
 
     return (
       <ButtonGroup>
-        <Button link={changesetLink}>
+        <Button link={changesetLink} className="reduced-mobile">
           <span className="icon">
             <i className="fas fa-exchange-alt" />
           </span>
-          <span className="is-hidden-mobile is-hidden-tablet-only">
-            {t("branch.commits")}
-          </span>
+          <span>{t("branch.commits")}</span>
         </Button>
-        <Button link={sourcesLink}>
+        <Button link={sourcesLink} className="reduced-mobile">
           <span className="icon">
             <i className="fas fa-code" />
           </span>
-          <span className="is-hidden-mobile is-hidden-tablet-only">
-            {t("branch.sources")}
-          </span>
+          <span>{t("branch.sources")}</span>
         </Button>
       </ButtonGroup>
     );
