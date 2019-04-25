@@ -8,10 +8,11 @@ import DropDown from "./forms/DropDown";
 
 const styles = {
   zeroflex: {
+    flexBasis: "inherit",
     flexGrow: 0
   },
-  minWidthOfLabel: {
-    minWidth: "4.5rem"
+  minWidthOfControl: {
+    minWidth: "10rem"
   },
   labelSizing: {
     fontSize: "1rem !important"
@@ -58,17 +59,11 @@ class BranchSelector extends React.Component<Props, State> {
         <div
           className={classNames(
             "field",
-            "is-horizontal",
-            classes.noBottomMargin
+            "is-horizontal"
           )}
         >
           <div
-            className={classNames(
-              "field-label",
-              "is-normal",
-              classes.zeroflex,
-              classes.minWidthOfLabel
-            )}
+            className={classNames("field-label", "is-normal", classes.zeroflex)}
           >
             <label className={classNames("label", classes.labelSizing)}>
               {label}
@@ -76,9 +71,13 @@ class BranchSelector extends React.Component<Props, State> {
           </div>
           <div className="field-body">
             <div
-              className={classNames("field is-narrow", classes.noBottomMargin)}
+              className={classNames(
+                "field",
+                "is-narrow",
+                classes.noBottomMargin
+              )}
             >
-              <div className="control">
+              <div className={classNames("control", classes.minWidthOfControl)}>
                 <DropDown
                   className="is-fullwidth"
                   options={branches.map(b => b.name)}
