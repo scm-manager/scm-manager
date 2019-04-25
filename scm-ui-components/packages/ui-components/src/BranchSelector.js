@@ -59,8 +59,7 @@ class BranchSelector extends React.Component<Props, State> {
         <div
           className={classNames(
             "field",
-            "is-horizontal",
-            classes.noBottomMargin
+            "is-horizontal"
           )}
         >
           <div
