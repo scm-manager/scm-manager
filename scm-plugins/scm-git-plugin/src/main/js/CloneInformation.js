@@ -26,6 +26,8 @@ class CloneInformation extends React.Component<Props> {
           <code>
             git init {repository.name}
             <br />
+            cd {repository.name}
+            <br />
             echo "# {repository.name}" > README.md
             <br />
             git add README.md

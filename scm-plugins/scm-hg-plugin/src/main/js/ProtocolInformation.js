@@ -28,6 +28,8 @@ class ProtocolInformation extends React.Component<Props> {
           <code>
             hg init {repository.name}
             <br />
+            cd {repository.name}
+            <br />
             echo "[paths]" > .hg/hgrc
             <br />
             echo "default = {href}" > .hg/hgrc
