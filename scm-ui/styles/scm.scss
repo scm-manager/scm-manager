@@ -102,6 +102,24 @@ $fa-font-path: "webfonts";
 .has-border-white {
   border-color: #fff !important;
 }
+ul.is-separated {
+  > li {
+    display: inline-block;
+    font-weight: bold;
+  }
+  > li + li:before {
+    content: ", ";
+  }
+  > li + li.is-info {
+    font-weight: normal;
+    margin-left: 1em;
+
+    &:before {
+      content: "";
+    }
+  }
+}
+
 // buttons
 .button {
   padding-left: 1.5em;
