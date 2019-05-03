@@ -154,6 +154,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
     //J-
     return MoreObjects.toStringHelper(this)
             .add("name", name)
+            .add("role", role)
             .add("verbs", verbs)
             .add("groupPermission", groupPermission)
             .toString();
