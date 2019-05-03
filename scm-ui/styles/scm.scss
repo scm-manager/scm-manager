@@ -102,6 +102,20 @@ $fa-font-path: "webfonts";
 .has-border-white {
   border-color: #fff !important;
 }
+ul.is-separated {
+  > li:after {
+    content: ",\2800";
+  }
+  > li:last-child:after {
+    content: "";
+  }
+}
+
+.user {
+  display: inline-block;
+  font-weight: bold;
+}
+
 // buttons
 .button {
   padding-left: 1.5em;
@@ -195,7 +209,8 @@ $fa-font-path: "webfonts";
 // tables
 .table {
   width: 100%;
-  td, th {
+  td,
+  th {
     border-color: #eee;
     padding: 1rem;
   }
@@ -245,12 +260,12 @@ $fa-font-path: "webfonts";
 // panels
 .panel {
   border: 1px solid #dbdbdb;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
 
   .panel-heading {
     border: none;
     border-bottom: 1px solid #dbdbdb;
-    border-radius: .25rem .25rem 0 0;
+    border-radius: 0.25rem 0.25rem 0 0;
 
     > .field {
       margin-bottom: 0; // replace selector margin
@@ -271,7 +286,7 @@ $fa-font-path: "webfonts";
     padding: 0.5em 0.75em;
     border: none;
     border-top: 1px solid #dbdbdb;
-    border-radius: 0 0 .25rem .25rem;
+    border-radius: 0 0 0.25rem 0.25rem;
   }
 }
 
