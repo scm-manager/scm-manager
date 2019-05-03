@@ -103,22 +103,17 @@ $fa-font-path: "webfonts";
   border-color: #fff !important;
 }
 ul.is-separated {
-  > li {
-    display: inline-block;
-    font-weight: bold;
-  }
   > li:after {
     content: "\002C\2800";
-    font-weight: normal;
   }
-  > li.is-info {
-    margin-left: 1em;
-    font-weight: normal;
-  }
-  > li:last-child:after,
-  > li.is-info:after {
+  > li:last-child:after {
     content: "";
   }
+}
+
+.user {
+  display: inline-block;
+  font-weight: bold;
 }
 
 // buttons
