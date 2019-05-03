@@ -75,10 +75,12 @@ import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryManagerProvider;
 import sonia.scm.repository.RepositoryProvider;
+import sonia.scm.repository.RepositoryRoleDAO;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
+import sonia.scm.repository.xml.XmlRepositoryRoleDAO;
 import sonia.scm.schedule.QuartzScheduler;
 import sonia.scm.schedule.Scheduler;
 import sonia.scm.security.AccessTokenCookieIssuer;
@@ -267,6 +269,7 @@ public class ScmServletModule extends ServletModule
     bind(GroupDAO.class, XmlGroupDAO.class);
     bind(UserDAO.class, XmlUserDAO.class);
     bind(RepositoryDAO.class, XmlRepositoryDAO.class);
+    bind(RepositoryRoleDAO.class, XmlRepositoryRoleDAO.class);
 
     bindDecorated(RepositoryManager.class, DefaultRepositoryManager.class,
       RepositoryManagerProvider.class);
