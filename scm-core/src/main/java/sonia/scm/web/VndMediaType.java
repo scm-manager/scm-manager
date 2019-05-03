@@ -53,6 +53,9 @@ public class VndMediaType {
   public static final String SOURCE = PREFIX + "source" + SUFFIX;
   public static final String ERROR_TYPE = PREFIX + "error" + SUFFIX;
 
+  public static final String REPOSITORY_ROLE = PREFIX + "repositoryRole" + SUFFIX;
+  public static final String REPOSITORY_ROLE_COLLECTION = PREFIX + "repositoryRoleCollection" + SUFFIX;
+
   private VndMediaType() {
   }
 

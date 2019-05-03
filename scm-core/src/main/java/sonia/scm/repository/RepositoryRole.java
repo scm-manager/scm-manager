@@ -33,11 +33,12 @@
 
 package sonia.scm.repository;
 
+import com.github.sdorra.ssp.PermissionObject;
+import com.github.sdorra.ssp.StaticPermissions;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import sonia.scm.ModelObject;
-import sonia.scm.user.User;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -56,9 +57,10 @@ import static java.util.Collections.unmodifiableSet;
  * Custom role with specific permissions related to {@link Repository}.
  * This object should be immutable, but could not be due to mapstruct.
  */
+@StaticPermissions(value = "repositoryRole", permissions = {}, globalPermissions = {"read", "modify"})
 @XmlRootElement(name = "roles")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class RepositoryRole implements ModelObject {
+public class RepositoryRole implements ModelObject, PermissionObject {
 
   private static final long serialVersionUID = -723588336073192740L;
 
