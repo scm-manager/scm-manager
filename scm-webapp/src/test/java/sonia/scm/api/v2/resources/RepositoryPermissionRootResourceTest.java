@@ -2,8 +2,6 @@ package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.sdorra.shiro.ShiroRule;
-import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.util.Providers;
 import de.otto.edison.hal.HalRepresentation;
@@ -21,7 +19,6 @@ import org.jboss.resteasy.mock.MockHttpResponse;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,6 +32,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.web.VndMediaType;
 
+import javax.ws.rs.HttpMethod;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -64,11 +62,6 @@ import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 import static sonia.scm.api.v2.resources.RepositoryPermissionDto.GROUP_PREFIX;
 
 @Slf4j
-@SubjectAware(
-  username = "trillian",
-  password = "secret",
-  configuration = "classpath:sonia/scm/repository/shiro.ini"
-)
 public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
   private static final String REPOSITORY_NAMESPACE = "repo_namespace";
   private static final String REPOSITORY_NAME = "repo";
@@ -113,9 +106,6 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     .path(PATH_OF_ONE_PERMISSION);
 
   private Dispatcher dispatcher;
-
-  @Rule
-  public ShiroRule shiro = new ShiroRule();
 
   @Mock
   private RepositoryManager repositoryManager;
@@ -361,6 +351,69 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
         .isBlank())
     );
     assertGettingExpectedPermissions(expectedPermissions, PERMISSION_READ);
+  }
+
+  @Test
+  public void shouldCreateValidationErrorForMissingRoleAndEmptyVerbs() throws Exception {
+    createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_OWNER);
+    MockHttpResponse response = new MockHttpResponse();
+    HttpRequest request = MockHttpRequest
+      .create(HttpMethod.POST, "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS)
+      .content("{ 'name' : 'permission_name', 'verbs' : []  }".replaceAll("'", "\"").getBytes())
+      .contentType(VndMediaType.REPOSITORY_PERMISSION);
+    dispatcher.invoke(request, response);
+    assertThat(response.getStatus()).isEqualTo(400);
+    assertThat(response.getContentAsString()).contains("permission must either have a role or a not empty set of verbs");
+  }
+
+  @Test
+  public void shouldCreateValidationErrorForEmptyRoleAndEmptyVerbs() throws Exception {
+    createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_OWNER);
+    MockHttpResponse response = new MockHttpResponse();
+    HttpRequest request = MockHttpRequest
+      .create(HttpMethod.POST, "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS)
+      .content("{ 'name' : 'permission_name', 'role': '', 'verbs' : []  }".replaceAll("'", "\"").getBytes())
+      .contentType(VndMediaType.REPOSITORY_PERMISSION);
+    dispatcher.invoke(request, response);
+    assertThat(response.getStatus()).isEqualTo(400);
+    assertThat(response.getContentAsString()).contains("permission must either have a role or a not empty set of verbs");
+  }
+
+  @Test
+  public void shouldCreateValidationErrorForRoleAndVerbs() throws Exception {
+    createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_OWNER);
+    MockHttpResponse response = new MockHttpResponse();
+    HttpRequest request = MockHttpRequest
+      .create(HttpMethod.POST, "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS)
+      .content("{ 'name' : 'permission_name', 'role': 'some role', 'verbs' : ['read']  }".replaceAll("'", "\"").getBytes())
+      .contentType(VndMediaType.REPOSITORY_PERMISSION);
+    dispatcher.invoke(request, response);
+    assertThat(response.getStatus()).isEqualTo(400);
+    assertThat(response.getContentAsString()).contains("permission must either have a role or a not empty set of verbs");
+  }
+
+  @Test
+  public void shouldPassWithoutValidationErrorForRoleAndEmptyVerbs() throws Exception {
+    createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_OWNER);
+    MockHttpResponse response = new MockHttpResponse();
+    HttpRequest request = MockHttpRequest
+      .create(HttpMethod.POST, "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS)
+      .content("{ 'name' : 'permission_name', 'role': 'some role', 'verbs': [] }".replaceAll("'", "\"").getBytes())
+      .contentType(VndMediaType.REPOSITORY_PERMISSION);
+    dispatcher.invoke(request, response);
+    assertThat(response.getStatus()).isEqualTo(201);
+  }
+
+  @Test
+  public void shouldPassWithoutValidationErrorForRoleAndNoVerbs() throws Exception {
+    createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_OWNER);
+    MockHttpResponse response = new MockHttpResponse();
+    HttpRequest request = MockHttpRequest
+      .create(HttpMethod.POST, "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS)
+      .content("{ 'name' : 'permission_name', 'role': 'some role' }".replaceAll("'", "\"").getBytes())
+      .contentType(VndMediaType.REPOSITORY_PERMISSION);
+    dispatcher.invoke(request, response);
+    assertThat(response.getStatus()).isEqualTo(201);
   }
 
   private void assertGettingExpectedPermissions(ImmutableList<RepositoryPermission> expectedPermissions, String userPermission) throws URISyntaxException {
