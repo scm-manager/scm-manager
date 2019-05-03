@@ -104,7 +104,7 @@ $fa-font-path: "webfonts";
 }
 ul.is-separated {
   > li:after {
-    content: "\002C\2800";
+    content: ",\2800";
   }
   > li:last-child:after {
     content: "";
