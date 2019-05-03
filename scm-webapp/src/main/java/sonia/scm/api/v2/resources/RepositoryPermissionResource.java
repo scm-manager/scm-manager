@@ -3,7 +3,7 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import de.otto.edison.hal.Links;
-import sonia.scm.security.SystemRepositoryPermissionProvider;
+import sonia.scm.security.RepositoryPermissionProvider;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -19,11 +19,11 @@ public class RepositoryPermissionResource {
 
   static final String PATH = "v2/repositoryPermissions/";
 
-  private final SystemRepositoryPermissionProvider repositoryPermissionProvider;
+  private final RepositoryPermissionProvider repositoryPermissionProvider;
   private final ResourceLinks resourceLinks;
 
   @Inject
-  public RepositoryPermissionResource(SystemRepositoryPermissionProvider repositoryPermissionProvider, ResourceLinks resourceLinks) {
+  public RepositoryPermissionResource(RepositoryPermissionProvider repositoryPermissionProvider, ResourceLinks resourceLinks) {
     this.repositoryPermissionProvider = repositoryPermissionProvider;
     this.resourceLinks = resourceLinks;
   }

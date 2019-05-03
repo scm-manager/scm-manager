@@ -6,6 +6,8 @@ import sonia.scm.repository.RepositoryRoleDAO;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.xml.AbstractXmlDAO;
 
+import java.util.List;
+
 public class XmlRepositoryRoleDAO extends AbstractXmlDAO<RepositoryRole, XmlRepositoryRoleDatabase>
   implements RepositoryRoleDAO {
 
@@ -29,5 +31,10 @@ public class XmlRepositoryRoleDAO extends AbstractXmlDAO<RepositoryRole, XmlRepo
   protected XmlRepositoryRoleDatabase createNewDatabase()
   {
     return new XmlRepositoryRoleDatabase();
+  }
+
+  @Override
+  public List<RepositoryRole> getAll() {
+    return (List<RepositoryRole>) super.getAll();
   }
 }

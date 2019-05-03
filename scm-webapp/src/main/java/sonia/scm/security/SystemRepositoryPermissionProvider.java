@@ -26,25 +26,25 @@ import java.util.stream.Collectors;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.Collections.unmodifiableList;
 
-public class SystemRepositoryPermissionProvider {
+class SystemRepositoryPermissionProvider {
 
   private static final Logger logger = LoggerFactory.getLogger(SystemRepositoryPermissionProvider.class);
   private static final String REPOSITORY_PERMISSION_DESCRIPTOR = "META-INF/scm/repository-permissions.xml";
-  private final Collection<String> availableVerbs;
-  private final Collection<RepositoryRole> availableRoles;
+  private final List<String> availableVerbs;
+  private final List<RepositoryRole> availableRoles;
 
   @Inject
   public SystemRepositoryPermissionProvider(PluginLoader pluginLoader) {
     AvailableRepositoryPermissions availablePermissions = readAvailablePermissions(pluginLoader);
-    this.availableVerbs = unmodifiableCollection(new LinkedHashSet<>(availablePermissions.availableVerbs));
-    this.availableRoles = unmodifiableList(new LinkedHashSet<>(availablePermissions.availableRoles.stream().map(r -> new RepositoryRole(r.name, r.verbs.verbs, "system")).collect(Collectors.toList())));
+    this.availableVerbs = unmodifiableList(new ArrayList<>(availablePermissions.availableVerbs));
+    this.availableRoles = unmodifiableList(new ArrayList<>(availablePermissions.availableRoles.stream().map(r -> new RepositoryRole(r.name, r.verbs.verbs, "system")).collect(Collectors.toList())));
   }
 
-  public Collection<String> availableVerbs() {
+  public List<String> availableVerbs() {
     return availableVerbs;
   }
 
-  public Collection<RepositoryRole> availableRoles() {
+  public List<RepositoryRole> availableRoles() {
     return availableRoles;
   }
 
