@@ -2,7 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
-import sonia.scm.security.RepositoryRole;
+import sonia.scm.repository.RepositoryRole;
 
 import java.util.Collection;
 

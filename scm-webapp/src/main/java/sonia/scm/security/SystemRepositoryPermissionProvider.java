@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.PluginLoader;
+import sonia.scm.repository.RepositoryRole;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -23,19 +24,20 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.unmodifiableCollection;
+import static java.util.Collections.unmodifiableList;
 
-public class RepositoryPermissionProvider {
+public class SystemRepositoryPermissionProvider {
 
-  private static final Logger logger = LoggerFactory.getLogger(RepositoryPermissionProvider.class);
+  private static final Logger logger = LoggerFactory.getLogger(SystemRepositoryPermissionProvider.class);
   private static final String REPOSITORY_PERMISSION_DESCRIPTOR = "META-INF/scm/repository-permissions.xml";
   private final Collection<String> availableVerbs;
   private final Collection<RepositoryRole> availableRoles;
 
   @Inject
-  public RepositoryPermissionProvider(PluginLoader pluginLoader) {
+  public SystemRepositoryPermissionProvider(PluginLoader pluginLoader) {
     AvailableRepositoryPermissions availablePermissions = readAvailablePermissions(pluginLoader);
     this.availableVerbs = unmodifiableCollection(new LinkedHashSet<>(availablePermissions.availableVerbs));
-    this.availableRoles = unmodifiableCollection(new LinkedHashSet<>(availablePermissions.availableRoles.stream().map(r -> new RepositoryRole(r.name, r.verbs.verbs)).collect(Collectors.toList())));
+    this.availableRoles = unmodifiableList(new LinkedHashSet<>(availablePermissions.availableRoles.stream().map(r -> new RepositoryRole(r.name, r.verbs.verbs, "system")).collect(Collectors.toList())));
   }
 
   public Collection<String> availableVerbs() {
