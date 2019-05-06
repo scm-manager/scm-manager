@@ -58,7 +58,10 @@ import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
+import java.util.Collections;
+
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.nullValue;
@@ -203,9 +206,9 @@ public class DefaultAuthorizationCollectorTest {
   public void testCollectWithRepositoryRolePermissions() {
     when(repositoryPermissionProvider.availableRoles()).thenReturn(
       asList(
-        new RepositoryRole("user role", asList("user"), "xml"),
-        new RepositoryRole("group role", asList("group"), "xml"),
-        new RepositoryRole("system role", asList("system"), "system")
+        new RepositoryRole("user role", singletonList("user"), "xml"),
+        new RepositoryRole("group role", singletonList("group"), "xml"),
+        new RepositoryRole("system role", singletonList("system"), "system")
       ));
 
     String group = "heart-of-gold-crew";
@@ -234,6 +237,32 @@ public class DefaultAuthorizationCollectorTest {
       "repository:system:one",
       "repository:group:two",
       "user:read:trillian"));
+  }
+
+  /**
+   * Tests {@link AuthorizationCollector#collect(PrincipalCollection)} with repository roles.
+   */
+  @Test(expected = IllegalStateException.class)
+  @SubjectAware(
+    configuration = "classpath:sonia/scm/shiro-001.ini"
+  )
+  public void testCollectWithUnknownRepositoryRole() {
+    when(repositoryPermissionProvider.availableRoles()).thenReturn(
+      singletonList(
+        new RepositoryRole("something", singletonList("something"), "xml")
+      ));
+
+    String group = "heart-of-gold-crew";
+    authenticate(UserTestData.createTrillian(), group);
+    Repository heartOfGold = RepositoryTestData.createHeartOfGold();
+    heartOfGold.setId("one");
+    heartOfGold.setPermissions(singletonList(
+      new RepositoryPermission("trillian", "unknown", false)
+    ));
+    when(repositoryDAO.getAll()).thenReturn(Lists.newArrayList(heartOfGold));
+
+    // execute and assert
+    AuthorizationInfo authInfo = collector.collect();
   }
 
   /**

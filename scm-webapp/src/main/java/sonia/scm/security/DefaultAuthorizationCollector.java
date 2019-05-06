@@ -201,7 +201,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       {
         hasPermission = isUserPermitted(user, groups, permission);
         if (hasPermission) {
-          addRepositoryPermission(builder, repository, user, hasPermission, permission);
+          addRepositoryPermission(builder, repository, user, permission);
         }
       }
 
@@ -217,7 +217,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     }
   }
 
-  private void addRepositoryPermission(Builder<String> builder, Repository repository, User user, boolean hasPermission, RepositoryPermission permission) {
+  private void addRepositoryPermission(Builder<String> builder, Repository repository, User user, RepositoryPermission permission) {
     Collection<String> verbs = getVerbs(permission);
     if (!verbs.isEmpty())
     {
@@ -237,7 +237,12 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   }
 
   private Collection<String> getVerbsForRole(String roleName) {
-    return repositoryPermissionProvider.availableRoles().stream().filter(role -> roleName.equals(role.getName())).findFirst().orElseThrow(() -> new RuntimeException()).getVerbs();
+    return repositoryPermissionProvider.availableRoles()
+      .stream()
+      .filter(role -> roleName.equals(role.getName()))
+      .findFirst()
+      .orElseThrow(() -> new IllegalStateException("unknown role: " + roleName))
+      .getVerbs();
   }
 
   private AuthorizationInfo createAuthorizationInfo(User user, GroupNames groups) {
