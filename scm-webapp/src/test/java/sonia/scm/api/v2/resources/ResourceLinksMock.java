@@ -43,7 +43,8 @@ public class ResourceLinksMock {
     when(resourceLinks.merge()).thenReturn(new ResourceLinks.MergeLinks(uriInfo));
     when(resourceLinks.permissions()).thenReturn(new ResourceLinks.PermissionsLinks(uriInfo));
     when(resourceLinks.availableRepositoryPermissions()).thenReturn(new ResourceLinks.AvailableRepositoryPermissionLinks(uriInfo));
-    when(resourceLinks.repositoryTypeCollection()).thenReturn(new ResourceLinks.RepositoryTypeCollectionLinks(uriInfo));
+    when(resourceLinks.repositoryRole()).thenReturn(new ResourceLinks.RepositoryRoleLinks(uriInfo));
+    when(resourceLinks.repositoryRoleCollection()).thenReturn(new ResourceLinks.RepositoryRoleCollectionLinks(uriInfo));
     when(resourceLinks.namespaceStrategies()).thenReturn(new ResourceLinks.NamespaceStrategiesLinks(uriInfo));
 
     return resourceLinks;
