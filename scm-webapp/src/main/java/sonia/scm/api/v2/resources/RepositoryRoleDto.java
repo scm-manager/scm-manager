@@ -6,6 +6,7 @@ import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.Collection;
 
@@ -13,7 +14,9 @@ import java.util.Collection;
 @Setter
 @NoArgsConstructor
 public class RepositoryRoleDto extends HalRepresentation {
+  @NotEmpty
   private String name;
+  @NoBlankStrings @NotEmpty
   private Collection<String> verbs;
 
   RepositoryRoleDto(Links links, Embedded embedded) {

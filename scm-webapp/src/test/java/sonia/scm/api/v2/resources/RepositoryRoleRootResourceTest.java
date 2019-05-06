@@ -226,6 +226,48 @@ public class RepositoryRoleRootResourceTest {
   }
 
   @Test
+  public void shouldFailForEmptyName() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2)
+      .contentType(VndMediaType.REPOSITORY_ROLE)
+      .content(content("{'name': '', 'verbs': ['write', 'push']}"));
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
+    verify(repositoryRoleManager, never()).create(any());
+  }
+
+  @Test
+  public void shouldFailForMissingVerbs() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2)
+      .contentType(VndMediaType.REPOSITORY_ROLE)
+      .content(content("{'name': 'ok', 'verbs': []}"));
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
+    verify(repositoryRoleManager, never()).create(any());
+  }
+
+  @Test
+  public void shouldFailForEmptyVerb() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2)
+      .contentType(VndMediaType.REPOSITORY_ROLE)
+      .content(content("{'name': 'ok', 'verbs': ['', 'push']}"));
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
+    verify(repositoryRoleManager, never()).create(any());
+  }
+
+  @Test
   @SubjectAware(username = "dent")
   public void shouldNotGetCreateLinkWithoutPermission() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2);
