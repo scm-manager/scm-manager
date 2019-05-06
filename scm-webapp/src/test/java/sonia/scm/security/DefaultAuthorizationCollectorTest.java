@@ -33,10 +33,10 @@ package sonia.scm.security;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.hamcrest.Matchers;
@@ -49,11 +49,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
-import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupNames;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryPermission;
+import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
@@ -90,6 +90,9 @@ public class DefaultAuthorizationCollectorTest {
   @Mock
   private SecuritySystem securitySystem;
 
+  @Mock
+  private RepositoryPermissionProvider repositoryPermissionProvider;
+
   private DefaultAuthorizationCollector collector;
 
   @Rule
@@ -101,11 +104,11 @@ public class DefaultAuthorizationCollectorTest {
   @Before
   public void setUp(){
     when(cacheManager.getCache(Mockito.any(String.class))).thenReturn(cache);
-    collector = new DefaultAuthorizationCollector(cacheManager, repositoryDAO, securitySystem);
+    collector = new DefaultAuthorizationCollector(cacheManager, repositoryDAO, securitySystem, repositoryPermissionProvider);
   }
 
   /**
-   * Tests {@link AuthorizationCollector#collect()} without user role.
+   * Tests {@link AuthorizationCollector#collect(PrincipalCollection)} ()} without user role.
    */
   @Test
   @SubjectAware
@@ -118,7 +121,7 @@ public class DefaultAuthorizationCollectorTest {
   }
 
   /**
-   * Tests {@link AuthorizationCollector#collect()} from cache.
+   * Tests {@link AuthorizationCollector#collect(PrincipalCollection)} from cache.
    */
   @Test
   @SubjectAware(
@@ -134,7 +137,7 @@ public class DefaultAuthorizationCollectorTest {
   }
 
   /**
-   * Tests {@link AuthorizationCollector#collect()} with cache.
+   * Tests {@link AuthorizationCollector#collect(PrincipalCollection)} ()} with cache.
    */
   @Test
   @SubjectAware(
@@ -148,7 +151,7 @@ public class DefaultAuthorizationCollectorTest {
   }
 
   /**
-   * Tests {@link AuthorizationCollector#collect()} without permissions.
+   * Tests {@link AuthorizationCollector#collect(PrincipalCollection)} ()} without permissions.
    */
   @Test
   @SubjectAware(
@@ -165,7 +168,7 @@ public class DefaultAuthorizationCollectorTest {
   }
 
   /**
-   * Tests {@link AuthorizationCollector#collect()} with repository permissions.
+   * Tests {@link AuthorizationCollector#collect(PrincipalCollection)} ()} with repository permissions.
    */
   @Test
   @SubjectAware(
@@ -191,7 +194,50 @@ public class DefaultAuthorizationCollectorTest {
   }
 
   /**
-   * Tests {@link AuthorizationCollector#collect()} with global permissions.
+   * Tests {@link AuthorizationCollector#collect(PrincipalCollection)} with repository roles.
+   */
+  @Test
+  @SubjectAware(
+    configuration = "classpath:sonia/scm/shiro-001.ini"
+  )
+  public void testCollectWithRepositoryRolePermissions() {
+    when(repositoryPermissionProvider.availableRoles()).thenReturn(
+      asList(
+        new RepositoryRole("user role", asList("user"), "xml"),
+        new RepositoryRole("group role", asList("group"), "xml"),
+        new RepositoryRole("system role", asList("system"), "system")
+      ));
+
+    String group = "heart-of-gold-crew";
+    authenticate(UserTestData.createTrillian(), group);
+    Repository heartOfGold = RepositoryTestData.createHeartOfGold();
+    heartOfGold.setId("one");
+    heartOfGold.setPermissions(Lists.newArrayList(
+      new RepositoryPermission("trillian", "user role", false),
+      new RepositoryPermission("trillian", "system role", false)
+    ));
+    Repository puzzle42 = RepositoryTestData.create42Puzzle();
+    puzzle42.setId("two");
+    RepositoryPermission permission = new RepositoryPermission(group, "group role", true);
+    puzzle42.setPermissions(Lists.newArrayList(permission));
+    when(repositoryDAO.getAll()).thenReturn(Lists.newArrayList(heartOfGold, puzzle42));
+
+    // execute and assert
+    AuthorizationInfo authInfo = collector.collect();
+    assertThat(authInfo.getRoles(), Matchers.containsInAnyOrder(Role.USER));
+    assertThat(authInfo.getObjectPermissions(), nullValue());
+    assertThat(authInfo.getStringPermissions(), containsInAnyOrder(
+      "user:autocomplete",
+      "group:autocomplete",
+      "user:changePassword:trillian",
+      "repository:user:one",
+      "repository:system:one",
+      "repository:group:two",
+      "user:read:trillian"));
+  }
+
+  /**
+   * Tests {@link AuthorizationCollector#collect(PrincipalCollection)} ()} with global permissions.
    */
   @Test
   @SubjectAware(
