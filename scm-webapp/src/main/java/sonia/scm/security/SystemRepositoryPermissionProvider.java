@@ -21,10 +21,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.unmodifiableCollection;
-import static java.util.Collections.unmodifiableList;
+import static java.util.stream.Collectors.toList;
 
 class SystemRepositoryPermissionProvider {
 
@@ -36,8 +35,8 @@ class SystemRepositoryPermissionProvider {
   @Inject
   public SystemRepositoryPermissionProvider(PluginLoader pluginLoader) {
     AvailableRepositoryPermissions availablePermissions = readAvailablePermissions(pluginLoader);
-    this.availableVerbs = unmodifiableList(new ArrayList<>(availablePermissions.availableVerbs));
-    this.availableRoles = unmodifiableList(new ArrayList<>(availablePermissions.availableRoles.stream().map(r -> new RepositoryRole(r.name, r.verbs.verbs, "system")).collect(Collectors.toList())));
+    this.availableVerbs = removeDuplicates(availablePermissions.availableVerbs);
+    this.availableRoles = removeDuplicates(availablePermissions.availableRoles.stream().map(r -> new RepositoryRole(r.name, r.verbs.verbs, "system")).collect(toList()));
   }
 
   public List<String> availableVerbs() {
@@ -107,6 +106,10 @@ class SystemRepositoryPermissionProvider {
       logger.error("could not parse permission descriptor", ex);
       return new RepositoryPermissionsRoot();
     }
+  }
+
+  private static <T> List<T> removeDuplicates(Collection<T> items) {
+    return items.stream().distinct().collect(toList());
   }
 
   private static class AvailableRepositoryPermissions {
