@@ -1,5 +1,7 @@
 // @flow
 import * as React from "react";
+import { withRouter } from "react-router-dom";
+import { withContextPath } from "./urls";
 
 /**
  * Adds anchor links to markdown headings.
@@ -9,7 +11,8 @@ import * as React from "react";
 
 type Props = {
   children: React.Node,
-  level: number
+  level: number,
+  location: any
 };
 
 function flatten(text: string, child: any) {
@@ -27,9 +30,18 @@ export function headingToAnchorId(heading: string) {
   return heading.toLowerCase().replace(/\W/g, "-");
 }
 
-export default function MarkdownHeadingRenderer(props: Props) {
+function MarkdownHeadingRenderer(props: Props) {
   const children = React.Children.toArray(props.children);
   const heading = children.reduce(flatten, "");
   const anchorId = headingToAnchorId(heading);
-  return React.createElement("h" + props.level, {id: anchorId}, props.children);
+  const headingElement = React.createElement("h" + props.level, {}, props.children);
+  const href = withContextPath(props.location.pathname + "#" + anchorId);
+
+  return (
+    <a id={`${anchorId}`} className="anchor" href={href}>
+      {headingElement}
+    </a>
+  );
 }
+
+export default withRouter(MarkdownHeadingRenderer);
