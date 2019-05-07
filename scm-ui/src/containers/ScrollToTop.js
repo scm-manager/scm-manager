@@ -11,7 +11,15 @@ type Props = {
 class ScrollToTop extends React.Component<Props> {
   componentDidUpdate(prevProps) {
     if (this.props.location.pathname !== prevProps.location.pathname) {
-      window.scrollTo(0, 0);
+      const hash = this.props.location.hash;
+      if (hash) {
+        const element = document.getElementById(hash.substring(1));
+        if (element && element.scrollIntoView) {
+          element.scrollIntoView();
+        }
+      } else {
+        window.scrollTo(0, 0);
+      }
     }
   }
 
