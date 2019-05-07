@@ -28,7 +28,7 @@ export const MODIFY_GROUP_SUCCESS = `${MODIFY_GROUP}_${types.SUCCESS_SUFFIX}`;
 export const MODIFY_GROUP_FAILURE = `${MODIFY_GROUP}_${types.FAILURE_SUFFIX}`;
 export const MODIFY_GROUP_RESET = `${MODIFY_GROUP}_${types.RESET_SUFFIX}`;
 
-export const DELETE_GROUP = "scm/groups/DELETE";
+export const DELETE_GROUP = "scm/groups/DELETE_GROUP";
 export const DELETE_GROUP_PENDING = `${DELETE_GROUP}_${types.PENDING_SUFFIX}`;
 export const DELETE_GROUP_SUCCESS = `${DELETE_GROUP}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_GROUP_FAILURE = `${DELETE_GROUP}_${types.FAILURE_SUFFIX}`;

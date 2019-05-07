@@ -28,7 +28,7 @@ export const MODIFY_USER_SUCCESS = `${MODIFY_USER}_${types.SUCCESS_SUFFIX}`;
 export const MODIFY_USER_FAILURE = `${MODIFY_USER}_${types.FAILURE_SUFFIX}`;
 export const MODIFY_USER_RESET = `${MODIFY_USER}_${types.RESET_SUFFIX}`;
 
-export const DELETE_USER = "scm/users/DELETE";
+export const DELETE_USER = "scm/users/DELETE_USER";
 export const DELETE_USER_PENDING = `${DELETE_USER}_${types.PENDING_SUFFIX}`;
 export const DELETE_USER_SUCCESS = `${DELETE_USER}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_USER_FAILURE = `${DELETE_USER}_${types.FAILURE_SUFFIX}`;
