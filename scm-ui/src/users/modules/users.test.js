@@ -4,49 +4,49 @@ import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 
 import reducer, {
-  CREATE_USER_FAILURE,
-  CREATE_USER_PENDING,
-  CREATE_USER_SUCCESS,
-  createUser,
-  DELETE_USER_FAILURE,
-  DELETE_USER_PENDING,
-  DELETE_USER_SUCCESS,
-  deleteUser,
-  deleteUserSuccess,
-  FETCH_USER_FAILURE,
-  FETCH_USER_PENDING,
-  isFetchUserPending,
-  FETCH_USER_SUCCESS,
-  FETCH_USERS_FAILURE,
+  FETCH_USERS,
   FETCH_USERS_PENDING,
   FETCH_USERS_SUCCESS,
+  FETCH_USERS_FAILURE,
+  FETCH_USER,
+  FETCH_USER_PENDING,
+  FETCH_USER_SUCCESS,
+  FETCH_USER_FAILURE,
+  CREATE_USER,
+  CREATE_USER_PENDING,
+  CREATE_USER_SUCCESS,
+  CREATE_USER_FAILURE,
+  MODIFY_USER,
+  MODIFY_USER_PENDING,
+  MODIFY_USER_SUCCESS,
+  MODIFY_USER_FAILURE,
+  DELETE_USER,
+  DELETE_USER_PENDING,
+  DELETE_USER_SUCCESS,
+  DELETE_USER_FAILURE,
+  fetchUsers,
+  getFetchUsersFailure,
+  getUsersFromState,
+  isFetchUsersPending,
+  fetchUsersSuccess,
   fetchUserByLink,
   fetchUserByName,
   fetchUserSuccess,
+  isFetchUserPending,
   getFetchUserFailure,
-  fetchUsers,
-  fetchUsersSuccess,
-  isFetchUsersPending,
-  selectListAsCollection,
-  isPermittedToCreateUsers,
-  MODIFY_USER,
-  MODIFY_USER_FAILURE,
-  MODIFY_USER_PENDING,
-  MODIFY_USER_SUCCESS,
-  modifyUser,
-  getUsersFromState,
-  FETCH_USERS,
-  getFetchUsersFailure,
-  FETCH_USER,
-  CREATE_USER,
+  createUser,
   isCreateUserPending,
   getCreateUserFailure,
   getUserByName,
+  modifyUser,
   isModifyUserPending,
   getModifyUserFailure,
-  DELETE_USER,
+  deleteUser,
   isDeleteUserPending,
-  getDeleteUserFailure
+  deleteUserSuccess,
+  getDeleteUserFailure,
+  selectListAsCollection,
+  isPermittedToCreateUsers
 } from "./users";
 
 const userZaphod = {
@@ -302,7 +302,7 @@ describe("users fetch()", () => {
   });
 
   it("should fail updating user on HTTP 500", () => {
-    fetchMock.putOnce("http://localhost:8081/api/v2/users/zaphod", {
+    fetchMock.putOnce(USER_ZAPHOD_URL, {
       status: 500
     });
 
@@ -316,7 +316,7 @@ describe("users fetch()", () => {
   });
 
   it("should delete successfully user zaphod", () => {
-    fetchMock.deleteOnce("http://localhost:8081/api/v2/users/zaphod", {
+    fetchMock.deleteOnce(USER_ZAPHOD_URL, {
       status: 204
     });
 
@@ -331,7 +331,7 @@ describe("users fetch()", () => {
   });
 
   it("should call the callback, after successful delete", () => {
-    fetchMock.deleteOnce("http://localhost:8081/api/v2/users/zaphod", {
+    fetchMock.deleteOnce(USER_ZAPHOD_URL, {
       status: 204
     });
 
@@ -347,7 +347,7 @@ describe("users fetch()", () => {
   });
 
   it("should fail to delete user zaphod", () => {
-    fetchMock.deleteOnce("http://localhost:8081/api/v2/users/zaphod", {
+    fetchMock.deleteOnce(USER_ZAPHOD_URL, {
       status: 500
     });
 
