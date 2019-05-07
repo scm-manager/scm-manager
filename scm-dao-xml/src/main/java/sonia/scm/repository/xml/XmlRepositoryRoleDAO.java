@@ -6,8 +6,10 @@ import sonia.scm.repository.RepositoryRoleDAO;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.xml.AbstractXmlDAO;
 
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class XmlRepositoryRoleDAO extends AbstractXmlDAO<RepositoryRole, XmlRepositoryRoleDatabase>
   implements RepositoryRoleDAO {
 

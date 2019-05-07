@@ -21,7 +21,7 @@ public class XmlRepositoryRoleDatabase implements XmlDatabase<RepositoryRole> {
 
   @XmlJavaTypeAdapter(XmlRepositoryRoleMapAdapter.class)
   @XmlElement(name = "roles")
-  private Map<String, RepositoryRole> roleMap = new LinkedHashMap<String, RepositoryRole>();
+  private Map<String, RepositoryRole> roleMap = new LinkedHashMap<>();
 
   public XmlRepositoryRoleDatabase() {
     long c = System.currentTimeMillis();
