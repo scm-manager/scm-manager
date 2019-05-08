@@ -4,7 +4,7 @@ import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import * as types from "../../modules/types";
 import { combineReducers, Dispatch } from "redux";
-import type {Action, PagedCollection, Role} from "@scm-manager/ui-types";
+import type { Action, PagedCollection, Role } from "@scm-manager/ui-types";
 
 export const FETCH_ROLES = "scm/roles/FETCH_ROLES";
 export const FETCH_ROLES_PENDING = `${FETCH_ROLES}_${types.PENDING_SUFFIX}`;
@@ -318,24 +318,22 @@ function deleteRoleInEntries(roles: [], roleName: string) {
 }
 
 const reducerByName = (state: any, rolename: string, newRoleState: any) => {
-  const newRolesByNames = {
+  return {
     ...state,
     [rolename]: newRoleState
   };
-
-  return newRolesByNames;
 };
 
 function listReducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case FETCH_ROLES_SUCCESS:
-      const roles = action.payload._embedded.roles;
+      const roles = action.payload._embedded.repositoryRoles;
       const roleNames = roles.map(role => role.name);
       return {
         ...state,
         entries: roleNames,
         entry: {
-          roleCreatePermission: action.payload._links.create ? true : false,
+          roleCreatePermission: !!action.payload._links.create,
           page: action.payload.page,
           pageTotal: action.payload.pageTotal,
           _links: action.payload._links
@@ -361,7 +359,7 @@ function byNamesReducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     // Fetch all roles actions
     case FETCH_ROLES_SUCCESS:
-      const roles = action.payload._embedded.roles;
+      const roles = action.payload._embedded.repositoryRoles;
       const roleNames = roles.map(role => role.name);
       const byNames = extractRolesByNames(roles, roleNames, state.byNames);
       return {
@@ -373,10 +371,7 @@ function byNamesReducer(state: any = {}, action: any = {}) {
       return reducerByName(state, action.payload.name, action.payload);
 
     case DELETE_ROLE_SUCCESS:
-      return deleteRoleInRolesByNames(
-        state,
-        action.payload.name
-      );
+      return deleteRoleInRolesByNames(state, action.payload.name);
 
     default:
       return state;
@@ -390,8 +385,8 @@ export default combineReducers({
 
 // selectors
 const selectList = (state: Object) => {
-  if (state.roles && state.roles.list) {
-    return state.roles.list;
+  if (state.repositoryRoles && state.repositoryRoles.list) {
+    return state.repositoryRoles.list;
   }
   return {};
 };
@@ -409,11 +404,7 @@ export const selectListAsCollection = (state: Object): PagedCollection => {
 };
 
 export const isPermittedToCreateRoles = (state: Object): boolean => {
-  const permission = selectListEntry(state).roleCreatePermission;
-  if (permission) {
-    return true;
-  }
-  return false;
+  return selectListEntry(state).roleCreatePermission;
 };
 
 export function getRolesFromState(state: Object) {
@@ -424,7 +415,7 @@ export function getRolesFromState(state: Object) {
   const roleEntries: Role[] = [];
 
   for (let roleName of roleNames) {
-    roleEntries.push(state.roles.byNames[roleName]);
+    roleEntries.push(state.repositoryRoles.byNames[roleName]);
   }
 
   return roleEntries;
@@ -447,8 +438,8 @@ export function getCreateRoleFailure(state: Object) {
 }
 
 export function getRoleByName(state: Object, name: string) {
-  if (state.roles && state.roles.byNames) {
-    return state.roles.byNames[name];
+  if (state.repositoryRoles && state.repositoryRoles.byNames) {
+    return state.repositoryRoles.byNames[name];
   }
 }
 

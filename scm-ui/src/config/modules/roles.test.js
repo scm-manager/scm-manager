@@ -49,11 +49,6 @@ import reducer, {
   isPermittedToCreateRoles
 } from "./roles";
 
-const URL = "roles";
-const ROLES_URL = "api/v2/repositoryPermissions";
-
-const error = new Error("FEHLER!");
-
 const verbs = [
   "createPullRequest",
   "readPullRequest",
@@ -72,55 +67,76 @@ const verbs = [
   "*"
 ];
 
-const repositoryRoles = {
-  availableVerbs: verbs,
-  availableRoles: [
-    {
-      name: "READ",
-      creationDate: null,
-      lastModified: null,
-      type: "system",
-      verb: ["read", "pull", "readPullRequest"]
-    },
-    {
-      name: "WRITE",
-      creationDate: null,
-      lastModified: null,
-      type: "system",
-      verb: [
-        "read",
-        "pull",
-        "push",
-        "createPullRequest",
-        "readPullRequest",
-        "commentPullRequest",
-        "mergePullRequest"
-      ]
-    },
-    {
-      name: "OWNER",
-      creationDate: null,
-      lastModified: null,
-      type: "system",
-      verb: ["*"]
-    }
-  ],
+const role1 = {
+  name: "SPECIALROLE",
+  verbs: ["read", "pull", "push", "readPullRequest"],
+  system: false,
   _links: {
     self: {
-      href: "http://localhost:8081/scm/api/v2/repositoryPermissions/"
+      href: "http://localhost:8081/scm/api/v2/repositoryRoles/SPECIALROLE"
+    },
+    delete: {
+      href: "http://localhost:8081/scm/api/v2/repositoryRoles/SPECIALROLE"
+    },
+    update: {
+      href: "http://localhost:8081/scm/api/v2/repositoryRoles/SPECIALROLE"
+    }
+  }
+};
+const role2 = {
+  name: "WRITE",
+  verbs: [
+    "read",
+    "pull",
+    "push",
+    "createPullRequest",
+    "readPullRequest",
+    "commentPullRequest",
+    "mergePullRequest"
+  ],
+  system: true,
+  _links: {
+    self: {
+      href: "http://localhost:8081/scm/api/v2/repositoryRoles/WRITE"
     }
   }
 };
 
 const responseBody = {
-  entries: repositoryRoles,
-  rolesUpdatePermission: false
+  page: 0,
+  pageTotal: 1,
+  _links: {
+    self: {
+      href:
+        "http://localhost:8081/scm/api/v2/repositoryRoles/?page=0&pageSize=10"
+    },
+    first: {
+      href:
+        "http://localhost:8081/scm/api/v2/repositoryRoles/?page=0&pageSize=10"
+    },
+    last: {
+      href:
+        "http://localhost:8081/scm/api/v2/repositoryRoles/?page=0&pageSize=10"
+    },
+    create: {
+      href: "http://localhost:8081/scm/api/v2/repositoryRoles/"
+    }
+  },
+  _embedded: {
+    repositoryRoles: [role1, role2]
+  }
 };
 
 const response = {
   headers: { "content-type": "application/json" },
   responseBody
 };
+
+const URL = "repositoryRoles";
+const ROLES_URL = "/api/v2/repositoryRoles";
+const ROLE1_URL = "http://localhost:8081/api/v2/repositoryRoles/SPECIALROLE";
+
+const error = new Error("FEHLER!");
 
 describe("repository roles fetch()", () => {
   const mockStore = configureMockStore([thunk]);
@@ -246,10 +262,6 @@ describe("repository roles fetch()", () => {
     });
   });
 
-
-
-
-
   it("should fail updating role on HTTP 500", () => {
     fetchMock.putOnce(ROLE1_URL, {
       status: 500
@@ -311,40 +323,95 @@ describe("repository roles fetch()", () => {
   });
 });
 
-describe("repository roles reducer", () => {
+describe("roles reducer", () => {
   it("should update state correctly according to FETCH_ROLES_SUCCESS action", () => {
+    const newState = reducer({}, fetchRolesSuccess(responseBody));
 
+    expect(newState.list).toEqual({
+      entries: ["SPECIALROLE", "WRITE"],
+      entry: {
+        roleCreatePermission: true,
+        page: 0,
+        pageTotal: 1,
+        _links: responseBody._links
+      }
+    });
+
+    expect(newState.byNames).toEqual({
+      SPECIALROLE: role1,
+      WRITE: role2
+    });
+
+    expect(newState.list.entry.roleCreatePermission).toBeTruthy();
   });
 
   it("should set roleCreatePermission to true if update link is present", () => {
+    const newState = reducer({}, fetchRolesSuccess(responseBody));
 
+    expect(newState.list.entry.roleCreatePermission).toBeTruthy();
   });
 
   it("should not replace whole byNames map when fetching roles", () => {
+    const oldState = {
+      byNames: {
+        WRITE: role2
+      }
+    };
 
+    const newState = reducer(oldState, fetchRolesSuccess(responseBody));
+    expect(newState.byNames["SPECIALROLE"]).toBeDefined();
+    expect(newState.byNames["WRITE"]).toBeDefined();
   });
 
   it("should remove role from state when delete succeeds", () => {
+    const state = {
+      list: {
+        entries: ["WRITE", "SPECIALROLE"]
+      },
+      byNames: {
+        SPECIALROLE: role1,
+        WRITE: role2
+      }
+    };
 
+    const newState = reducer(state, deleteRoleSuccess(role2));
+    expect(newState.byNames["SPECIALROLE"]).toBeDefined();
+    expect(newState.byNames["WRITE"]).toBeFalsy();
+    expect(newState.list.entries).toEqual(["SPECIALROLE"]);
   });
 
   it("should set roleCreatePermission to true if create link is present", () => {
+    const newState = reducer({}, fetchRolesSuccess(responseBody));
 
+    expect(newState.list.entry.roleCreatePermission).toBeTruthy();
+    expect(newState.list.entries).toEqual(["SPECIALROLE", "WRITE"]);
+    expect(newState.byNames["WRITE"]).toBeTruthy();
+    expect(newState.byNames["SPECIALROLE"]).toBeTruthy();
   });
 
   it("should update state according to FETCH_ROLE_SUCCESS action", () => {
-
+    const newState = reducer({}, fetchRoleSuccess(role2));
+    expect(newState.byNames["WRITE"]).toBe(role2);
   });
 
   it("should affect roles state nor the state of other roles", () => {
-
+    const newState = reducer(
+      {
+        list: {
+          entries: ["SPECIALROLE"]
+        }
+      },
+      fetchRoleSuccess(role2)
+    );
+    expect(newState.byNames["WRITE"]).toBe(role2);
+    expect(newState.list.entries).toEqual(["SPECIALROLE"]);
   });
 });
 
 describe("selector tests", () => {
   it("should return an empty object", () => {
     expect(selectListAsCollection({})).toEqual({});
-    expect(selectListAsCollection({ roles: { a: "a" } })).toEqual({});
+    expect(selectListAsCollection({ repositoryRoles: { a: "a" } })).toEqual({});
   });
 
   it("should return a state slice collection", () => {
@@ -354,7 +421,7 @@ describe("selector tests", () => {
     };
 
     const state = {
-      roles: {
+      repositoryRoles: {
         list: {
           entry: collection
         }
@@ -365,19 +432,19 @@ describe("selector tests", () => {
 
   it("should return false", () => {
     expect(isPermittedToCreateRoles({})).toBe(false);
-    expect(isPermittedToCreateRoles({ roles: { list: { entry: {} } } })).toBe(
+    expect(isPermittedToCreateRoles({ repositoryRoles: { list: { entry: {} } } })).toBe(
       false
     );
     expect(
       isPermittedToCreateRoles({
-        roles: { list: { entry: { roleCreatePermission: false } } }
+        repositoryRoles: { list: { entry: { roleCreatePermission: false } } }
       })
     ).toBe(false);
   });
 
   it("should return true", () => {
     const state = {
-      roles: {
+      repositoryRoles: {
         list: {
           entry: {
             roleCreatePermission: true
@@ -388,9 +455,9 @@ describe("selector tests", () => {
     expect(isPermittedToCreateRoles(state)).toBe(true);
   });
 
-  it("should get roles from state", () => {
+  it("should get repositoryRoles from state", () => {
     const state = {
-      roles: {
+      repositoryRoles: {
         list: {
           entries: ["a", "b"]
         },
@@ -403,7 +470,7 @@ describe("selector tests", () => {
     expect(getRolesFromState(state)).toEqual([{ name: "a" }, { name: "b" }]);
   });
 
-  it("should return true, when fetch roles is pending", () => {
+  it("should return true, when fetch repositoryRoles is pending", () => {
     const state = {
       pending: {
         [FETCH_ROLES]: true
@@ -412,11 +479,11 @@ describe("selector tests", () => {
     expect(isFetchRolesPending(state)).toEqual(true);
   });
 
-  it("should return false, when fetch roles is not pending", () => {
+  it("should return false, when fetch repositoryRoles is not pending", () => {
     expect(isFetchRolesPending({})).toEqual(false);
   });
 
-  it("should return error when fetch roles did fail", () => {
+  it("should return error when fetch repositoryRoles did fail", () => {
     const state = {
       failure: {
         [FETCH_ROLES]: error
@@ -425,7 +492,7 @@ describe("selector tests", () => {
     expect(getFetchRolesFailure(state)).toEqual(error);
   });
 
-  it("should return undefined when fetch roles did not fail", () => {
+  it("should return undefined when fetch repositoryRoles did not fail", () => {
     expect(getFetchRolesFailure({})).toBe(undefined);
   });
 
@@ -462,7 +529,7 @@ describe("selector tests", () => {
 
   it("should return role1", () => {
     const state = {
-      roles: {
+      repositoryRoles: {
         byNames: {
           role1: role1
         }
@@ -549,4 +616,3 @@ describe("selector tests", () => {
     expect(getDeleteRoleFailure({}, "role2")).toBe(undefined);
   });
 });
-

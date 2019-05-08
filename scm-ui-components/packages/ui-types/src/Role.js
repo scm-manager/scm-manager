@@ -1,9 +1,12 @@
 //@flow
 
+import type { Links } from "./hal";
+
 export type Role = {
   name: string,
-  creationDate: number | null,
-  lastModified: number | null,
-  type: string,
-  verb: string[]
+  verbs: string[],
+  creationDate?: number,
+  lastModified?: number,
+  system: boolean,
+  _links: Links
 };
