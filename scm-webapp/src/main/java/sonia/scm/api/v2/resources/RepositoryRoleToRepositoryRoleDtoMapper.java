@@ -3,9 +3,9 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.RepositoryRole;
-import sonia.scm.repository.RepositoryRoleManager;
 import sonia.scm.repository.RepositoryRolePermissions;
 
 import javax.inject.Inject;
@@ -20,15 +20,16 @@ import static de.otto.edison.hal.Links.linkingTo;
 public abstract class RepositoryRoleToRepositoryRoleDtoMapper extends BaseMapper<RepositoryRole, RepositoryRoleDto> {
 
   @Inject
-  private RepositoryRoleManager repositoryRoleManager;
-
-  @Inject
   private ResourceLinks resourceLinks;
+
+  @Override
+  @Mapping(source = "type", target = "system")
+  public abstract RepositoryRoleDto map(RepositoryRole modelObject);
 
   @ObjectFactory
   RepositoryRoleDto createDto(RepositoryRole repositoryRole) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.repositoryRole().self(repositoryRole.getName()));
-    if (RepositoryRolePermissions.modify().isPermitted()) {
+    if (!isSystemRole(repositoryRole.getType()) && RepositoryRolePermissions.modify().isPermitted()) {
       linksBuilder.single(link("delete", resourceLinks.repositoryRole().delete(repositoryRole.getName())));
       linksBuilder.single(link("update", resourceLinks.repositoryRole().update(repositoryRole.getName())));
     }
@@ -39,4 +40,7 @@ public abstract class RepositoryRoleToRepositoryRoleDtoMapper extends BaseMapper
     return new RepositoryRoleDto(linksBuilder.build(), embeddedBuilder.build());
   }
 
+  boolean isSystemRole(String type) {
+    return "system".equals(type);
+  }
 }

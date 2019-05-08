@@ -18,6 +18,7 @@ public class RepositoryRoleDto extends HalRepresentation {
   private String name;
   @NoBlankStrings @NotEmpty
   private Collection<String> verbs;
+  private boolean system;
 
   RepositoryRoleDto(Links links, Embedded embedded) {
     super(links, embedded);

@@ -28,7 +28,7 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 
 import static java.net.URI.create;
-import static java.util.Collections.singletonList;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -46,8 +46,10 @@ import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class RepositoryRoleRootResourceTest {
 
-  public static final String EXISTING_ROLE = "existingRole";
-  public static final RepositoryRole REPOSITORY_ROLE = new RepositoryRole("existingRole", Collections.singleton("verb"), "xml");
+  public static final String CUSTOM_ROLE = "customRole";
+  public static final String SYSTEM_ROLE = "systemRole";
+  public static final RepositoryRole CUSTOM_REPOSITORY_ROLE = new RepositoryRole(CUSTOM_ROLE, Collections.singleton("verb"), "xml");
+  public static final RepositoryRole SYSTEM_REPOSITORY_ROLE = new RepositoryRole(SYSTEM_ROLE, Collections.singleton("admin"), "system");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(create("/"));
 
   @Rule
@@ -88,8 +90,9 @@ public class RepositoryRoleRootResourceTest {
     dispatcher = createDispatcher(rootResource);
     dispatcher.getProviderFactory().registerProviderInstance(new JSONContextResolver(new ObjectMapperProvider().get()));
 
-    when(repositoryRoleManager.get(EXISTING_ROLE)).thenReturn(REPOSITORY_ROLE);
-    when(repositoryRoleManager.getPage(any(), any(), anyInt(), anyInt())).thenReturn(new PageResult<>(singletonList(REPOSITORY_ROLE), 1));
+    when(repositoryRoleManager.get(CUSTOM_ROLE)).thenReturn(CUSTOM_REPOSITORY_ROLE);
+    when(repositoryRoleManager.get(SYSTEM_ROLE)).thenReturn(SYSTEM_REPOSITORY_ROLE);
+    when(repositoryRoleManager.getPage(any(), any(), anyInt(), anyInt())).thenReturn(new PageResult<>(asList(CUSTOM_REPOSITORY_ROLE, SYSTEM_REPOSITORY_ROLE), 2));
   }
 
   @Test
@@ -103,8 +106,8 @@ public class RepositoryRoleRootResourceTest {
   }
 
   @Test
-  public void shouldGetExistingRole() throws URISyntaxException, UnsupportedEncodingException {
-    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2 + "existingRole");
+  public void shouldGetCustomRole() throws URISyntaxException, UnsupportedEncodingException {
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2 + CUSTOM_ROLE);
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -112,17 +115,38 @@ public class RepositoryRoleRootResourceTest {
     assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
     assertThat(response.getContentAsString())
       .contains(
-        "\"name\":\"existingRole\"",
+        "\"name\":\"" + CUSTOM_ROLE + "\"",
         "\"verbs\":[\"verb\"]",
-        "\"self\":{\"href\":\"/v2/repository-roles/existingRole\"}",
-        "\"delete\":{\"href\":\"/v2/repository-roles/existingRole\"}"
+        "\"self\":{\"href\":\"/v2/repository-roles/" + CUSTOM_ROLE + "\"}",
+        "\"update\":{\"href\":\"/v2/repository-roles/" + CUSTOM_ROLE + "\"}",
+        "\"delete\":{\"href\":\"/v2/repository-roles/" + CUSTOM_ROLE + "\"}"
+      );
+  }
+
+  @Test
+  public void shouldGetSystemRole() throws URISyntaxException, UnsupportedEncodingException {
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2 + SYSTEM_ROLE);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+    assertThat(response.getContentAsString())
+      .contains(
+        "\"name\":\"" + SYSTEM_ROLE + "\"",
+        "\"verbs\":[\"admin\"]",
+        "\"self\":{\"href\":\"/v2/repository-roles/" + SYSTEM_ROLE + "\"}"
+      )
+      .doesNotContain(
+        "\"delete\":{\"href\":\"/v2/repository-roles/" + CUSTOM_ROLE + "\"}",
+        "\"update\":{\"href\":\"/v2/repository-roles/" + CUSTOM_ROLE + "\"}"
       );
   }
 
   @Test
   @SubjectAware(username = "dent")
   public void shouldNotGetDeleteLinkWithoutPermission() throws URISyntaxException, UnsupportedEncodingException {
-    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2 + "existingRole");
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2 + CUSTOM_ROLE);
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
@@ -135,23 +159,23 @@ public class RepositoryRoleRootResourceTest {
   @Test
   public void shouldUpdateRole() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest
-      .put("/" + RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2 + "existingRole")
+      .put("/" + RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2 + CUSTOM_ROLE)
       .contentType(VndMediaType.REPOSITORY_ROLE)
-      .content(content("{'name': 'existingRole', 'verbs': ['write', 'push']}"));
+      .content(content("{'name': '" + CUSTOM_ROLE + "', 'verbs': ['write', 'push']}"));
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
     assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NO_CONTENT);
     verify(repositoryRoleManager).modify(any());
-    assertThat(modifyCaptor.getValue().getName()).isEqualTo("existingRole");
+    assertThat(modifyCaptor.getValue().getName()).isEqualTo(CUSTOM_ROLE);
     assertThat(modifyCaptor.getValue().getVerbs()).containsExactly("write", "push");
   }
 
   @Test
   public void shouldNotChangeRoleName() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest
-      .put("/" + RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2 + "existingRole")
+      .put("/" + RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2 + CUSTOM_ROLE)
       .contentType(VndMediaType.REPOSITORY_ROLE)
       .content(content("{'name': 'changedName', 'verbs': ['write', 'push']}"));
     MockHttpResponse response = new MockHttpResponse();
@@ -197,14 +221,14 @@ public class RepositoryRoleRootResourceTest {
   @Test
   public void shouldDeleteRole() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest
-      .delete("/" + RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2 + EXISTING_ROLE);
+      .delete("/" + RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2 + CUSTOM_ROLE);
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
     assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NO_CONTENT);
     verify(repositoryRoleManager).delete(any());
-    assertThat(deleteCaptor.getValue().getName()).isEqualTo(EXISTING_ROLE);
+    assertThat(deleteCaptor.getValue().getName()).isEqualTo(CUSTOM_ROLE);
   }
 
   @Test
@@ -217,12 +241,17 @@ public class RepositoryRoleRootResourceTest {
     assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
     assertThat(response.getContentAsString())
       .contains(
-        "\"name\":\"existingRole\"",
+        "\"name\":\"" + CUSTOM_ROLE + "\"",
+        "\"name\":\"" + SYSTEM_ROLE + "\"",
         "\"verbs\":[\"verb\"]",
+        "\"verbs\":[\"admin\"]",
         "\"self\":{\"href\":\"/v2/repository-roles",
-        "\"delete\":{\"href\":\"/v2/repository-roles/existingRole\"}",
+        "\"delete\":{\"href\":\"/v2/repository-roles/" + CUSTOM_ROLE + "\"}",
         "\"create\":{\"href\":\"/v2/repository-roles/\"}"
-      );
+      )
+    .doesNotContain(
+      "\"delete\":{\"href\":\"/v2/repository-roles/" + SYSTEM_ROLE + "\"}"
+    );
   }
 
   @Test

@@ -33,8 +33,6 @@
 
 package sonia.scm.repository;
 
-import com.github.sdorra.ssp.PermissionActionCheck;
-import com.github.sdorra.ssp.PermissionCheck;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
@@ -44,6 +42,7 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
 import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.security.RepositoryPermissionProvider;
 import sonia.scm.util.Util;
 
 import java.util.ArrayList;
@@ -51,6 +50,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 @Singleton @EagerSingleton
@@ -62,10 +62,11 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
     LoggerFactory.getLogger(DefaultRepositoryRoleManager.class);
 
   @Inject
-  public DefaultRepositoryRoleManager(RepositoryRoleDAO repositoryRoleDAO)
+  public DefaultRepositoryRoleManager(RepositoryRoleDAO repositoryRoleDAO, RepositoryPermissionProvider repositoryPermissionProvider)
   {
     this.repositoryRoleDAO = repositoryRoleDAO;
     this.managerDaoAdapter = new ManagerDaoAdapter<>(repositoryRoleDAO);
+    this.repositoryPermissionProvider = repositoryPermissionProvider;
   }
 
   @Override
@@ -131,6 +132,10 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
   public RepositoryRole get(String id) {
     RepositoryRolePermissions.read();
 
+    return findSystemRole(id).orElse(findCustomRole(id));
+  }
+
+  private RepositoryRole findCustomRole(String id) {
     RepositoryRole repositoryRole = repositoryRoleDAO.get(id);
 
     if (repositoryRole != null) {
@@ -138,6 +143,10 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
     } else {
       return null;
     }
+  }
+
+  private Optional<RepositoryRole> findSystemRole(String id) {
+    return repositoryPermissionProvider.availableRoles().stream().filter(role -> role.getName().equals(id)).findFirst();
   }
 
   @Override
@@ -152,7 +161,7 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
     if (!RepositoryRolePermissions.read().isPermitted()) {
       return Collections.emptySet();
     }
-    for (RepositoryRole repositoryRole : repositoryRoleDAO.getAll()) {
+    for (RepositoryRole repositoryRole : repositoryPermissionProvider.availableRoles()) {
       repositoryRoles.add(repositoryRole.clone());
     }
 
@@ -188,4 +197,5 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
 
   private final RepositoryRoleDAO repositoryRoleDAO;
   private final ManagerDaoAdapter<RepositoryRole> managerDaoAdapter;
+  private final RepositoryPermissionProvider repositoryPermissionProvider;
 }
