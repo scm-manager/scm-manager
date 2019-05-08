@@ -8,17 +8,15 @@ type Props = {
   roles: Role[]
 };
 
-class RoleTable extends React.Component<Props> {
+class PermissionRoleTable extends React.Component<Props> {
   render() {
     const { roles, t } = this.props;
     return (
       <table className="card-table table is-hoverable is-fullwidth">
         <thead>
         <tr>
-          <th className="is-hidden-mobile">{t("user.name")}</th>
-          <th>{t("user.displayName")}</th>
-          <th>{t("user.mail")}</th>
-          <th className="is-hidden-mobile">{t("user.active")}</th>
+          <th>{t("role.form.name")}</th>
+          <th>{t("role.form.permissions")}</th>
         </tr>
         </thead>
         <tbody>
@@ -31,4 +29,4 @@ class RoleTable extends React.Component<Props> {
   }
 }
 
-export default translate("config")(RoleTable);
+export default translate("config")(PermissionRoleTable);

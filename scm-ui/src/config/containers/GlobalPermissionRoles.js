@@ -20,7 +20,7 @@ import {
   urls,
   CreateButton
 } from "@scm-manager/ui-components";
-import RoleTable from "../components/table/RoleTable";
+import PermissionRoleTable from "../components/table/PermissionRoleTable";
 import { getRolesLink } from "../../modules/indexResource";
 
 type Props = {
@@ -60,7 +60,7 @@ class GlobalPermissionRoles extends React.Component<Props> {
 
     return (
       <div>
-        <Title title={t("config.roles.title")} />
+        <Title title={t("roles.title")} />
         {this.renderPermissionsTable()}
         {this.renderCreateButton()}
       </div>
@@ -72,7 +72,7 @@ class GlobalPermissionRoles extends React.Component<Props> {
     if (roles && roles.length > 0) {
       return (
         <>
-          <RoleTable roles={roles} />
+          <PermissionRoleTable roles={roles} />
           <LinkPaginator
             collection={list}
             page={page}
@@ -81,14 +81,14 @@ class GlobalPermissionRoles extends React.Component<Props> {
         </>
       );
     }
-    return <Notification type="info">{t("config.roles.noPermissionRoles")}</Notification>;
+    return <Notification type="info">{t("roles.noPermissionRoles")}</Notification>;
   }
 
   renderCreateButton() {
     const { canAddRoles, t } = this.props;
     if (canAddRoles) {
       return (
-        <CreateButton label={t("config.permissions.createButton")} link="/create" />
+        <CreateButton label={t("roles.createButton")} link="/create" />
       );
     }
     return null;

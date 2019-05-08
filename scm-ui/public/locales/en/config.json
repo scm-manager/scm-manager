@@ -6,6 +6,19 @@
     "errorTitle": "Error",
     "errorSubtitle": "Unknown Config Error"
   },
+  "roles": {
+    "navLink": "Permission Roles",
+    "title": "Permission Roles",
+    "noPermissionRoles": "No permission roles found.",
+    "createButton": "Create Permission Role",
+    "form": {
+      "name": "Name",
+      "system": "System",
+      "permissions": "Permissions",
+      "subtitle": "Edit Permission Roles",
+      "submit": "Save"
+    }
+  },
   "config-form": {
     "submit": "Submit",
     "submit-success-notification": "Configuration changed successfully!",

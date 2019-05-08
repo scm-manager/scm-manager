@@ -68,7 +68,7 @@ class Config extends React.Component<Props> {
                 />
                 <NavLink
                   to={`${url}/roles`}
-                  label={t("config.roles.navLink")}
+                  label={t("roles.navLink")}
                 />
                 <ExtensionPoint
                   name="config.navigation"
