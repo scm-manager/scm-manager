@@ -53,6 +53,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Singleton @EagerSingleton
 public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
@@ -156,38 +157,43 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
   }
 
   private Optional<RepositoryRole> findSystemRole(String id) {
-    return repositoryPermissionProvider.availableRoles().stream().filter(role -> role.getName().equals(id)).findFirst();
+    return repositoryPermissionProvider
+      .availableRoles()
+      .stream()
+      .filter(role -> !repositoryRoleDAO.getType().equals(role.getType()))
+      .filter(role -> role.getName().equals(id)).findFirst();
   }
 
   @Override
-  public Collection<RepositoryRole> getAll() {
-    return getAll(repositoryRole -> true, null);
-  }
-
-  @Override
-  public Collection<RepositoryRole> getAll(Predicate<RepositoryRole> filter, Comparator<RepositoryRole> comparator) {
+  public List<RepositoryRole> getAll() {
     List<RepositoryRole> repositoryRoles = new ArrayList<>();
 
     if (!RepositoryRolePermissions.read().isPermitted()) {
-      return Collections.emptySet();
+      return Collections.emptyList();
     }
     for (RepositoryRole repositoryRole : repositoryPermissionProvider.availableRoles()) {
       repositoryRoles.add(repositoryRole.clone());
-    }
-
-    if (comparator != null) {
-      Collections.sort(repositoryRoles, comparator);
     }
 
     return repositoryRoles;
   }
 
   @Override
-  public Collection<RepositoryRole> getAll(Comparator<RepositoryRole> comaparator, int start, int limit) {
-    if (!RepositoryRolePermissions.read().isPermitted()) {
-      return Collections.emptySet();
+  public Collection<RepositoryRole> getAll(Predicate<RepositoryRole> filter, Comparator<RepositoryRole> comparator) {
+    List<RepositoryRole> repositoryRoles = getAll();
+
+    List<RepositoryRole> filteredRoles = repositoryRoles.stream().filter(filter::test).collect(Collectors.toList());
+
+    if (comparator != null) {
+      filteredRoles.sort(comparator);
     }
-    return Util.createSubCollection(repositoryRoleDAO.getAll(), comaparator,
+
+    return filteredRoles;
+  }
+
+  @Override
+  public Collection<RepositoryRole> getAll(Comparator<RepositoryRole> comaparator, int start, int limit) {
+    return Util.createSubCollection(getAll(), comaparator,
       (collection, item) -> {
         collection.add(item.clone());
       }, start, limit);

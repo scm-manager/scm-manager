@@ -10,7 +10,7 @@ import javax.ws.rs.Path;
 @Path(RepositoryRoleRootResource.REPOSITORY_ROLES_PATH_V2)
 public class RepositoryRoleRootResource {
 
-  static final String REPOSITORY_ROLES_PATH_V2 = "v2/repository-roles/";
+  static final String REPOSITORY_ROLES_PATH_V2 = "v2/repositoryRoles/";
 
   private final Provider<RepositoryRoleCollectionResource> repositoryRoleCollectionResource;
   private final Provider<RepositoryRoleResource> repositoryRoleResource;
