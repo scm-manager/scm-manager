@@ -151,6 +151,11 @@ export function getSvnConfigLink(state: Object) {
   return getLink(state, "svnConfig");
 }
 
+export function getRolesLink(state: Object) {
+  //return getLink(state, "availableRepositoryPermissions");
+  return "http://localhost:8081/scm/api/v2/repository-roles"; // TODO
+}
+
 export function getUserAutoCompleteLink(state: Object): string {
   const link = getLinkCollection(state, "autocomplete").find(
     i => i.name === "users"
