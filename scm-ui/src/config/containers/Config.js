@@ -7,6 +7,7 @@ import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import type { Links } from "@scm-manager/ui-types";
 import { Page, Navigation, NavLink, Section } from "@scm-manager/ui-components";
 import GlobalConfig from "./GlobalConfig";
+import GlobalPermissionRoles from "./GlobalPermissionRoles";
 import type { History } from "history";
 import { connect } from "react-redux";
 import { compose } from "redux";
@@ -47,6 +48,11 @@ class Config extends React.Component<Props> {
         <div className="columns">
           <div className="column is-three-quarters">
             <Route path={url} exact component={GlobalConfig} />
+            <Route
+              path={`${url}/roles`}
+              exact
+              component={GlobalPermissionRoles}
+            />
             <ExtensionPoint
               name="config.route"
               props={extensionProps}
@@ -59,6 +65,10 @@ class Config extends React.Component<Props> {
                 <NavLink
                   to={`${url}`}
                   label={t("config.globalConfigurationNavLink")}
+                />
+                <NavLink
+                  to={`${url}/roles`}
+                  label={t("config.roles.navLink")}
                 />
                 <ExtensionPoint
                   name="config.navigation"
