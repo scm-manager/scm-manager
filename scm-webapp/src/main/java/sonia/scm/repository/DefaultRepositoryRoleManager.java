@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.EagerSingleton;
@@ -76,6 +77,7 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
 
   @Override
   public RepositoryRole create(RepositoryRole repositoryRole) {
+    assertNoSystemRole(repositoryRole);
     String type = repositoryRole.getType();
     if (Util.isEmpty(type)) {
       repositoryRole.setType(repositoryRoleDAO.getType());
@@ -93,6 +95,7 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
 
   @Override
   public void delete(RepositoryRole repositoryRole) {
+    assertNoSystemRole(repositoryRole);
     logger.info("delete repositoryRole {} of type {}", repositoryRole.getName(), repositoryRole.getType());
     managerDaoAdapter.delete(
       repositoryRole,
@@ -108,6 +111,7 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
 
   @Override
   public void modify(RepositoryRole repositoryRole) {
+    assertNoSystemRole(repositoryRole);
     logger.info("modify repositoryRole {} of type {}", repositoryRole.getName(), repositoryRole.getType());
     managerDaoAdapter.modify(
       repositoryRole,
@@ -130,9 +134,15 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
 
   @Override
   public RepositoryRole get(String id) {
-    RepositoryRolePermissions.read();
+    RepositoryRolePermissions.read().check();
 
     return findSystemRole(id).orElse(findCustomRole(id));
+  }
+
+  private void assertNoSystemRole(RepositoryRole repositoryRole) {
+    if (findSystemRole(repositoryRole.getId()).isPresent()) {
+      throw new UnauthorizedException("system roles cannot be modified");
+    }
   }
 
   private RepositoryRole findCustomRole(String id) {
