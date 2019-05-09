@@ -15,6 +15,7 @@ import pending from "./modules/pending";
 import failure from "./modules/failure";
 import permissions from "./repos/permissions/modules/permissions";
 import config from "./config/modules/config";
+import roles from "./config/modules/roles";
 import namespaceStrategies from "./config/modules/namespaceStrategies";
 import indexResources from "./modules/indexResource";
 
@@ -39,6 +40,7 @@ function createReduxStore(history: BrowserHistory) {
     groups,
     auth,
     config,
+    roles,
     sources,
     namespaceStrategies
   });
