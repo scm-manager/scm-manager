@@ -320,7 +320,7 @@ describe("repository roles reducer", () => {
 describe("repository roles selector", () => {
   it("should return an empty object", () => {
     expect(selectListAsCollection({})).toEqual({});
-    expect(selectListAsCollection({ repositoryRoles: { a: "a" } })).toEqual({});
+    expect(selectListAsCollection({ roles: { a: "a" } })).toEqual({});
   });
 
   it("should return a state slice collection", () => {
@@ -330,7 +330,7 @@ describe("repository roles selector", () => {
     };
 
     const state = {
-      repositoryRoles: {
+      roles: {
         list: {
           entry: collection
         }
@@ -342,18 +342,18 @@ describe("repository roles selector", () => {
   it("should return false", () => {
     expect(isPermittedToCreateRoles({})).toBe(false);
     expect(
-      isPermittedToCreateRoles({ repositoryRoles: { list: { entry: {} } } })
+      isPermittedToCreateRoles({ roles: { list: { entry: {} } } })
     ).toBe(false);
     expect(
       isPermittedToCreateRoles({
-        repositoryRoles: { list: { entry: { roleCreatePermission: false } } }
+        roles: { list: { entry: { roleCreatePermission: false } } }
       })
     ).toBe(false);
   });
 
   it("should return true", () => {
     const state = {
-      repositoryRoles: {
+      roles: {
         list: {
           entry: {
             roleCreatePermission: true
@@ -366,7 +366,7 @@ describe("repository roles selector", () => {
 
   it("should get repositoryRoles from state", () => {
     const state = {
-      repositoryRoles: {
+      roles: {
         list: {
           entries: ["a", "b"]
         },
@@ -438,7 +438,7 @@ describe("repository roles selector", () => {
 
   it("should return role1", () => {
     const state = {
-      repositoryRoles: {
+      roles: {
         byNames: {
           role1: role1
         }
