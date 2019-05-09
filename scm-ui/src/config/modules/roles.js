@@ -242,8 +242,8 @@ export default combineReducers({
 
 // selectors
 const selectList = (state: Object) => {
-  if (state.repositoryRoles && state.repositoryRoles.list) {
-    return state.repositoryRoles.list;
+  if (state.roles && state.roles.list) {
+    return state.roles.list;
   }
   return {};
 };
@@ -272,7 +272,7 @@ export function getRolesFromState(state: Object) {
   const roleEntries: Role[] = [];
 
   for (let roleName of roleNames) {
-    roleEntries.push(state.repositoryRoles.byNames[roleName]);
+    roleEntries.push(state.roles.byNames[roleName]);
   }
 
   return roleEntries;
@@ -295,8 +295,8 @@ export function getCreateRoleFailure(state: Object) {
 }
 
 export function getRoleByName(state: Object, name: string) {
-  if (state.repositoryRoles && state.repositoryRoles.byNames) {
-    return state.repositoryRoles.byNames[name];
+  if (state.roles && state.roles.byNames) {
+    return state.roles.byNames[name];
   }
 }
 
