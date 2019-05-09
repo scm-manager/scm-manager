@@ -49,37 +49,19 @@ import reducer, {
   isPermittedToCreateRoles
 } from "./roles";
 
-const verbs = [
-  "createPullRequest",
-  "readPullRequest",
-  "commentPullRequest",
-  "modifyPullRequest",
-  "mergePullRequest",
-  "git",
-  "hg",
-  "read",
-  "modify",
-  "delete",
-  "pull",
-  "push",
-  "permissionRead",
-  "permissionWrite",
-  "*"
-];
-
 const role1 = {
-  name: "SPECIALROLE",
+  name: "specialrole",
   verbs: ["read", "pull", "push", "readPullRequest"],
   system: false,
   _links: {
     self: {
-      href: "http://localhost:8081/scm/api/v2/repositoryRoles/SPECIALROLE"
+      href: "http://localhost:8081/scm/api/v2/repositoryRoles/specialrole"
     },
     delete: {
-      href: "http://localhost:8081/scm/api/v2/repositoryRoles/SPECIALROLE"
+      href: "http://localhost:8081/scm/api/v2/repositoryRoles/specialrole"
     },
     update: {
-      href: "http://localhost:8081/scm/api/v2/repositoryRoles/SPECIALROLE"
+      href: "http://localhost:8081/scm/api/v2/repositoryRoles/specialrole"
     }
   }
 };
@@ -134,7 +116,7 @@ const response = {
 
 const URL = "repositoryRoles";
 const ROLES_URL = "/api/v2/repositoryRoles";
-const ROLE1_URL = "http://localhost:8081/api/v2/repositoryRoles/SPECIALROLE";
+const ROLE1_URL = "http://localhost:8081/api/v2/repositoryRoles/specialrole";
 
 const error = new Error("FEHLER!");
 
@@ -174,6 +156,58 @@ describe("repository roles fetch()", () => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(FETCH_ROLES_PENDING);
       expect(actions[1].type).toEqual(FETCH_ROLES_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  it("should sucessfully fetch single role by name", () => {
+    fetchMock.getOnce(ROLES_URL + "/specialrole", role1);
+
+    const store = mockStore({});
+    return store.dispatch(fetchRoleByName(URL, "specialrole")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_ROLE_PENDING);
+      expect(actions[1].type).toEqual(FETCH_ROLE_SUCCESS);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  it("should fail fetching single role by name on HTTP 500", () => {
+    fetchMock.getOnce(ROLES_URL + "/specialrole", {
+      status: 500
+    });
+
+    const store = mockStore({});
+    return store.dispatch(fetchRoleByName(URL, "specialrole")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_ROLE_PENDING);
+      expect(actions[1].type).toEqual(FETCH_ROLE_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  it("should sucessfully fetch single role", () => {
+    fetchMock.getOnce(ROLE1_URL, role1);
+
+    const store = mockStore({});
+    return store.dispatch(fetchRoleByLink(role1)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_ROLE_PENDING);
+      expect(actions[1].type).toEqual(FETCH_ROLE_SUCCESS);
+      expect(actions[1].payload).toBeDefined();
+    });
+  });
+
+  it("should fail fetching single role on HTTP 500", () => {
+    fetchMock.getOnce(ROLE1_URL, {
+      status: 500
+    });
+
+    const store = mockStore({});
+    return store.dispatch(fetchRoleByLink(role1)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_ROLE_PENDING);
+      expect(actions[1].type).toEqual(FETCH_ROLE_FAILURE);
       expect(actions[1].payload).toBeDefined();
     });
   });
@@ -291,7 +325,7 @@ describe("repository roles fetch()", () => {
     });
   });
 
-  it("should call the callback, after successful delete", () => {
+  it("should call the callback after successful delete", () => {
     fetchMock.deleteOnce(ROLE1_URL, {
       status: 204
     });
@@ -359,34 +393,34 @@ describe("roles reducer", () => {
     };
 
     const newState = reducer(oldState, fetchRolesSuccess(responseBody));
-    expect(newState.byNames["SPECIALROLE"]).toBeDefined();
+    expect(newState.byNames["specialrole"]).toBeDefined();
     expect(newState.byNames["WRITE"]).toBeDefined();
   });
 
   it("should remove role from state when delete succeeds", () => {
     const state = {
       list: {
-        entries: ["WRITE", "SPECIALROLE"]
+        entries: ["WRITE", "specialrole"]
       },
       byNames: {
-        SPECIALROLE: role1,
+        specialrole: role1,
         WRITE: role2
       }
     };
 
     const newState = reducer(state, deleteRoleSuccess(role2));
-    expect(newState.byNames["SPECIALROLE"]).toBeDefined();
+    expect(newState.byNames["specialrole"]).toBeDefined();
     expect(newState.byNames["WRITE"]).toBeFalsy();
-    expect(newState.list.entries).toEqual(["SPECIALROLE"]);
+    expect(newState.list.entries).toEqual(["specialrole"]);
   });
 
   it("should set roleCreatePermission to true if create link is present", () => {
     const newState = reducer({}, fetchRolesSuccess(responseBody));
 
     expect(newState.list.entry.roleCreatePermission).toBeTruthy();
-    expect(newState.list.entries).toEqual(["SPECIALROLE", "WRITE"]);
+    expect(newState.list.entries).toEqual(["specialrole", "WRITE"]);
     expect(newState.byNames["WRITE"]).toBeTruthy();
-    expect(newState.byNames["SPECIALROLE"]).toBeTruthy();
+    expect(newState.byNames["specialrole"]).toBeTruthy();
   });
 
   it("should update state according to FETCH_ROLE_SUCCESS action", () => {
@@ -398,13 +432,13 @@ describe("roles reducer", () => {
     const newState = reducer(
       {
         list: {
-          entries: ["SPECIALROLE"]
+          entries: ["specialrole"]
         }
       },
       fetchRoleSuccess(role2)
     );
     expect(newState.byNames["WRITE"]).toBe(role2);
-    expect(newState.list.entries).toEqual(["SPECIALROLE"]);
+    expect(newState.list.entries).toEqual(["specialrole"]);
   });
 });
 
@@ -432,9 +466,9 @@ describe("selector tests", () => {
 
   it("should return false", () => {
     expect(isPermittedToCreateRoles({})).toBe(false);
-    expect(isPermittedToCreateRoles({ repositoryRoles: { list: { entry: {} } } })).toBe(
-      false
-    );
+    expect(
+      isPermittedToCreateRoles({ repositoryRoles: { list: { entry: {} } } })
+    ).toBe(false);
     expect(
       isPermittedToCreateRoles({
         repositoryRoles: { list: { entry: { roleCreatePermission: false } } }
