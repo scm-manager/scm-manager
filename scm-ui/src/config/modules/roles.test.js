@@ -101,7 +101,7 @@ const response = {
 
 const URL = "repositoryRoles";
 const ROLES_URL = "/api/v2/repositoryRoles";
-const ROLE1_URL = "http://localhost:8081/api/v2/repositoryRoles/specialrole";
+const ROLE1_URL = "http://localhost:8081/scm/api/v2/repositoryRoles/specialrole";
 
 const error = new Error("FEHLER!");
 
