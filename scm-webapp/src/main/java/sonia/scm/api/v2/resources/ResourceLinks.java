@@ -523,6 +523,22 @@ class ResourceLinks {
     }
   }
 
+  RepositoryVerbLinks repositoryVerbs() {
+    return new RepositoryVerbLinks(scmPathInfoStore.get());
+  }
+
+  static class RepositoryVerbLinks {
+    private final LinkBuilder repositoryVerbLinkBuilder;
+
+    RepositoryVerbLinks(ScmPathInfo pathInfo) {
+      repositoryVerbLinkBuilder = new LinkBuilder(pathInfo, RepositoryVerbResource.class);
+    }
+
+    String self() {
+      return repositoryVerbLinkBuilder.method("getAll").parameters().href();
+    }
+  }
+
   RepositoryRoleLinks repositoryRole() {
     return new RepositoryRoleLinks(scmPathInfoStore.get());
   }
@@ -708,22 +724,6 @@ class ResourceLinks {
 
     String self() {
       return permissionsLinkBuilder.method("getAll").parameters().href();
-    }
-  }
-
-  public AvailableRepositoryPermissionLinks availableRepositoryPermissions() {
-    return new AvailableRepositoryPermissionLinks(scmPathInfoStore.get());
-  }
-
-  static class AvailableRepositoryPermissionLinks {
-    private final LinkBuilder linkBuilder;
-
-    AvailableRepositoryPermissionLinks(ScmPathInfo scmPathInfo) {
-      this.linkBuilder = new LinkBuilder(scmPathInfo, RepositoryPermissionResource.class);
-    }
-
-    String self() {
-      return linkBuilder.method("get").parameters().href();
     }
   }
 }
