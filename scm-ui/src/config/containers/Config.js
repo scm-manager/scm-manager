@@ -3,15 +3,15 @@ import React from "react";
 import { translate } from "react-i18next";
 import { Route } from "react-router";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-
-import type { Links } from "@scm-manager/ui-types";
-import { Page, Navigation, NavLink, Section } from "@scm-manager/ui-components";
-import GlobalConfig from "./GlobalConfig";
-import GlobalPermissionRoles from "./GlobalPermissionRoles";
 import type { History } from "history";
 import { connect } from "react-redux";
 import { compose } from "redux";
+import type { Links } from "@scm-manager/ui-types";
+import { Page, Navigation, NavLink, Section } from "@scm-manager/ui-components";
 import { getLinks } from "../../modules/indexResource";
+import GlobalConfig from "./GlobalConfig";
+import GlobalPermissionRoles from "./GlobalPermissionRoles";
+import GlobalPermissionRoleForm from "./GlobalPermissionRoleForm";
 
 type Props = {
   links: Links,
@@ -34,6 +34,12 @@ class Config extends React.Component<Props> {
     return this.stripEndingSlash(this.props.match.url);
   };
 
+  matchesRoles = (route: any) => {
+    const url = this.matchedUrl();
+    const regex = new RegExp(`${url}/role/.+/edit`);
+    return route.location.pathname.match(regex);
+  };
+
   render() {
     const { links, t } = this.props;
 
@@ -53,10 +59,11 @@ class Config extends React.Component<Props> {
               exact
               render={() => (
                 <GlobalPermissionRoles
-                  baseUrl={`${url}/roles`}
+                  baseUrl={`${url}/role`}
                 />
               )}
             />
+            <Route path={`${url}/role`} component={GlobalPermissionRoleForm} />
             <ExtensionPoint
               name="config.route"
               props={extensionProps}
@@ -73,6 +80,7 @@ class Config extends React.Component<Props> {
                 <NavLink
                   to={`${url}/roles`}
                   label={t("roles.navLink")}
+                  activeWhenMatch={this.matchesRoles}
                 />
                 <ExtensionPoint
                   name="config.navigation"
