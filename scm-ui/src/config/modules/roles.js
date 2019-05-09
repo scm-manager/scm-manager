@@ -33,7 +33,7 @@ export const DELETE_ROLE_PENDING = `${DELETE_ROLE}_${types.PENDING_SUFFIX}`;
 export const DELETE_ROLE_SUCCESS = `${DELETE_ROLE}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_ROLE_FAILURE = `${DELETE_ROLE}_${types.FAILURE_SUFFIX}`;
 
-const CONTENT_TYPE_ROLE = "application/vnd.scmm-role+json;v=2";
+const CONTENT_TYPE_ROLE = "application/vnd.scmm-repositoryRole+json;v=2";
 
 // fetch roles
 export function fetchRolesPending(): Action {
@@ -184,7 +184,7 @@ export function createRole(link: string, role: Role, callback?: () => void) {
   };
 }
 
-// modify group
+// modify role
 export function modifyRolePending(role: Role): Action {
   return {
     type: MODIFY_ROLE_PENDING,
@@ -371,7 +371,10 @@ function byNamesReducer(state: any = {}, action: any = {}) {
       return reducerByName(state, action.payload.name, action.payload);
 
     case DELETE_ROLE_SUCCESS:
-      return deleteRoleInRolesByNames(state, action.payload.name);
+      return deleteRoleInRolesByNames(
+        state,
+        action.payload.name
+      );
 
     default:
       return state;
@@ -404,7 +407,7 @@ export const selectListAsCollection = (state: Object): PagedCollection => {
 };
 
 export const isPermittedToCreateRoles = (state: Object): boolean => {
-  return selectListEntry(state).roleCreatePermission;
+  return !!selectListEntry(state).roleCreatePermission;
 };
 
 export function getRolesFromState(state: Object) {
