@@ -16,14 +16,6 @@ import reducer, {
   CREATE_ROLE_PENDING,
   CREATE_ROLE_SUCCESS,
   CREATE_ROLE_FAILURE,
-  MODIFY_ROLE,
-  MODIFY_ROLE_PENDING,
-  MODIFY_ROLE_SUCCESS,
-  MODIFY_ROLE_FAILURE,
-  DELETE_ROLE,
-  DELETE_ROLE_PENDING,
-  DELETE_ROLE_SUCCESS,
-  DELETE_ROLE_FAILURE,
   fetchRoles,
   getFetchRolesFailure,
   getRolesFromState,
@@ -38,13 +30,6 @@ import reducer, {
   isCreateRolePending,
   getCreateRoleFailure,
   getRoleByName,
-  modifyRole,
-  isModifyRolePending,
-  getModifyRoleFailure,
-  deleteRole,
-  isDeleteRolePending,
-  deleteRoleSuccess,
-  getDeleteRoleFailure,
   selectListAsCollection,
   isPermittedToCreateRoles
 } from "./roles";
@@ -120,7 +105,7 @@ const ROLE1_URL = "http://localhost:8081/api/v2/repositoryRoles/specialrole";
 
 const error = new Error("FEHLER!");
 
-describe("repository roles fetch()", () => {
+describe("repository roles fetch", () => {
   const mockStore = configureMockStore([thunk]);
   afterEach(() => {
     fetchMock.reset();
@@ -262,107 +247,14 @@ describe("repository roles fetch()", () => {
       expect(callMe).toBe("yeah");
     });
   });
-
-  it("successfully update role", () => {
-    fetchMock.putOnce(ROLE1_URL, {
-      status: 204
-    });
-    fetchMock.getOnce(ROLE1_URL, role1);
-
-    const store = mockStore({});
-    return store.dispatch(modifyRole(role1)).then(() => {
-      const actions = store.getActions();
-      expect(actions.length).toBe(3);
-      expect(actions[0].type).toEqual(MODIFY_ROLE_PENDING);
-      expect(actions[1].type).toEqual(MODIFY_ROLE_SUCCESS);
-      expect(actions[2].type).toEqual(FETCH_ROLE_PENDING);
-    });
-  });
-
-  it("should call callback, after successful modified role", () => {
-    fetchMock.putOnce(ROLE1_URL, {
-      status: 204
-    });
-    fetchMock.getOnce(ROLE1_URL, role1);
-
-    let called = false;
-    const callMe = () => {
-      called = true;
-    };
-
-    const store = mockStore({});
-    return store.dispatch(modifyRole(role1, callMe)).then(() => {
-      expect(called).toBeTruthy();
-    });
-  });
-
-  it("should fail updating role on HTTP 500", () => {
-    fetchMock.putOnce(ROLE1_URL, {
-      status: 500
-    });
-
-    const store = mockStore({});
-    return store.dispatch(modifyRole(role1)).then(() => {
-      const actions = store.getActions();
-      expect(actions[0].type).toEqual(MODIFY_ROLE_PENDING);
-      expect(actions[1].type).toEqual(MODIFY_ROLE_FAILURE);
-      expect(actions[1].payload).toBeDefined();
-    });
-  });
-
-  it("should delete successfully role1", () => {
-    fetchMock.deleteOnce(ROLE1_URL, {
-      status: 204
-    });
-
-    const store = mockStore({});
-    return store.dispatch(deleteRole(role1)).then(() => {
-      const actions = store.getActions();
-      expect(actions.length).toBe(2);
-      expect(actions[0].type).toEqual(DELETE_ROLE_PENDING);
-      expect(actions[0].payload).toBe(role1);
-      expect(actions[1].type).toEqual(DELETE_ROLE_SUCCESS);
-    });
-  });
-
-  it("should call the callback after successful delete", () => {
-    fetchMock.deleteOnce(ROLE1_URL, {
-      status: 204
-    });
-
-    let called = false;
-    const callMe = () => {
-      called = true;
-    };
-
-    const store = mockStore({});
-    return store.dispatch(deleteRole(role1, callMe)).then(() => {
-      expect(called).toBeTruthy();
-    });
-  });
-
-  it("should fail to delete role1", () => {
-    fetchMock.deleteOnce(ROLE1_URL, {
-      status: 500
-    });
-
-    const store = mockStore({});
-    return store.dispatch(deleteRole(role1)).then(() => {
-      const actions = store.getActions();
-      expect(actions[0].type).toEqual(DELETE_ROLE_PENDING);
-      expect(actions[0].payload).toBe(role1);
-      expect(actions[1].type).toEqual(DELETE_ROLE_FAILURE);
-      expect(actions[1].payload).toBeDefined();
-    });
-  });
 });
 
-describe("roles reducer", () => {
+describe("repository roles reducer", () => {
   it("should update state correctly according to FETCH_ROLES_SUCCESS action", () => {
     const newState = reducer({}, fetchRolesSuccess(responseBody));
 
     expect(newState.list).toEqual({
-      entries: ["SPECIALROLE", "WRITE"],
+      entries: ["specialrole", "WRITE"],
       entry: {
         roleCreatePermission: true,
         page: 0,
@@ -372,7 +264,7 @@ describe("roles reducer", () => {
     });
 
     expect(newState.byNames).toEqual({
-      SPECIALROLE: role1,
+      specialrole: role1,
       WRITE: role2
     });
 
@@ -395,23 +287,6 @@ describe("roles reducer", () => {
     const newState = reducer(oldState, fetchRolesSuccess(responseBody));
     expect(newState.byNames["specialrole"]).toBeDefined();
     expect(newState.byNames["WRITE"]).toBeDefined();
-  });
-
-  it("should remove role from state when delete succeeds", () => {
-    const state = {
-      list: {
-        entries: ["WRITE", "specialrole"]
-      },
-      byNames: {
-        specialrole: role1,
-        WRITE: role2
-      }
-    };
-
-    const newState = reducer(state, deleteRoleSuccess(role2));
-    expect(newState.byNames["specialrole"]).toBeDefined();
-    expect(newState.byNames["WRITE"]).toBeFalsy();
-    expect(newState.list.entries).toEqual(["specialrole"]);
   });
 
   it("should set roleCreatePermission to true if create link is present", () => {
@@ -442,7 +317,7 @@ describe("roles reducer", () => {
   });
 });
 
-describe("selector tests", () => {
+describe("repository roles selector", () => {
   it("should return an empty object", () => {
     expect(selectListAsCollection({})).toEqual({});
     expect(selectListAsCollection({ repositoryRoles: { a: "a" } })).toEqual({});
@@ -596,57 +471,5 @@ describe("selector tests", () => {
 
   it("should return undefined when fetch role2 did not fail", () => {
     expect(getFetchRoleFailure({}, "role2")).toBe(undefined);
-  });
-
-  it("should return true, when modify role1 is pending", () => {
-    const state = {
-      pending: {
-        [MODIFY_ROLE + "/role1"]: true
-      }
-    };
-    expect(isModifyRolePending(state, "role1")).toEqual(true);
-  });
-
-  it("should return false, when modify role1 is not pending", () => {
-    expect(isModifyRolePending({}, "role1")).toEqual(false);
-  });
-
-  it("should return error when modify role1 did fail", () => {
-    const state = {
-      failure: {
-        [MODIFY_ROLE + "/role1"]: error
-      }
-    };
-    expect(getModifyRoleFailure(state, "role1")).toEqual(error);
-  });
-
-  it("should return undefined when modify role1 did not fail", () => {
-    expect(getModifyRoleFailure({}, "role1")).toBe(undefined);
-  });
-
-  it("should return true, when delete role2 is pending", () => {
-    const state = {
-      pending: {
-        [DELETE_ROLE + "/role2"]: true
-      }
-    };
-    expect(isDeleteRolePending(state, "role2")).toEqual(true);
-  });
-
-  it("should return false, when delete role2 is not pending", () => {
-    expect(isDeleteRolePending({}, "role2")).toEqual(false);
-  });
-
-  it("should return error when delete role2 did fail", () => {
-    const state = {
-      failure: {
-        [DELETE_ROLE + "/role2"]: error
-      }
-    };
-    expect(getDeleteRoleFailure(state, "role2")).toEqual(error);
-  });
-
-  it("should return undefined when delete role2 did not fail", () => {
-    expect(getDeleteRoleFailure({}, "role2")).toBe(undefined);
   });
 });
