@@ -79,9 +79,9 @@ class GlobalPermissionRoles extends React.Component<Props> {
   }
 
   renderCreateButton() {
-    const { canAddRoles, t } = this.props;
+    const { canAddRoles, baseUrl, t } = this.props;
     if (canAddRoles) {
-      return <CreateButton label={t("roles.createButton")} link="/create" />;
+      return <CreateButton label={t("roles.createButton")} link={`${baseUrl}/create`} />;
     }
     return null;
   }
