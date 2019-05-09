@@ -51,7 +51,11 @@ class Config extends React.Component<Props> {
             <Route
               path={`${url}/roles`}
               exact
-              component={GlobalPermissionRoles}
+              render={() => (
+                <GlobalPermissionRoles
+                  baseUrl={`${url}/roles`}
+                />
+              )}
             />
             <ExtensionPoint
               name="config.route"

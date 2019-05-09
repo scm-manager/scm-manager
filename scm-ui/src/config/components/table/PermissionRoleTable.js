@@ -5,6 +5,7 @@ import type { Role } from "@scm-manager/ui-types";
 import PermissionRoleRow from "./PermissionRoleRow";
 
 type Props = {
+  baseUrl: string,
   roles: Role[],
 
   t: string => string
@@ -12,18 +13,20 @@ type Props = {
 
 class PermissionRoleTable extends React.Component<Props> {
   render() {
-    const { roles, t } = this.props;
+    const { baseUrl, roles, t } = this.props;
     return (
       <table className="card-table table is-hoverable is-fullwidth">
         <thead>
-        <tr>
-          <th>{t("role.form.name")}</th>
-        </tr>
+          <tr>
+            <th>{t("role.form.name")}</th>
+          </tr>
         </thead>
         <tbody>
-        {roles.map((role, index) => {
-          return <PermissionRoleRow key={index} role={role} />;
-        })}
+          {roles.map((role, index) => {
+            return (
+              <PermissionRoleRow key={index} baseUrl={baseUrl} role={role} />
+            );
+          })}
         </tbody>
       </table>
     );

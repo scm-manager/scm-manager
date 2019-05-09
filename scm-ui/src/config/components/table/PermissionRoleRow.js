@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import type { Role } from "@scm-manager/ui-types";
 
 type Props = {
+  baseUrl: string,
   role: Role
 };
 
@@ -13,8 +14,8 @@ class PermissionRoleRow extends React.Component<Props> {
   }
 
   render() {
-    const { role } = this.props;
-    const to = `./${encodeURIComponent(role.name)}/info`;
+    const { baseUrl, role } = this.props;
+    const to = `${baseUrl}/${encodeURIComponent(role.name)}/info`;
     return (
       <tr>
         <td>{this.renderLink(to, role.name)}</td>

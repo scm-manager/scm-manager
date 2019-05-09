@@ -1,6 +1,7 @@
 // @flow
 import React from "react";
 import { connect } from "react-redux";
+import {withRouter} from "react-router-dom";
 import { translate } from "react-i18next";
 import type { History } from "history";
 import type { Role, PagedCollection } from "@scm-manager/ui-types";
@@ -22,8 +23,8 @@ import {
 } from "@scm-manager/ui-components";
 import PermissionRoleTable from "../components/table/PermissionRoleTable";
 import { getRolesLink } from "../../modules/indexResource";
-
 type Props = {
+  baseUrl: string,
   roles: Role[],
   loading: boolean,
   error: Error,
@@ -63,11 +64,11 @@ class GlobalPermissionRoles extends React.Component<Props> {
   }
 
   renderPermissionsTable() {
-    const { roles, list, page, t } = this.props;
+    const { baseUrl, roles, list, page, t } = this.props;
     if (roles && roles.length > 0) {
       return (
         <>
-          <PermissionRoleTable roles={roles} />
+          <PermissionRoleTable baseUrl={baseUrl} roles={roles} />
           <LinkPaginator collection={list} page={page} />
         </>
       );
@@ -115,7 +116,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("config")(GlobalPermissionRoles));
+)(translate("config")(GlobalPermissionRoles)));
