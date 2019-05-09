@@ -117,9 +117,9 @@ public class RepositoryRoleRootResourceTest {
       .contains(
         "\"name\":\"" + CUSTOM_ROLE + "\"",
         "\"verbs\":[\"verb\"]",
-        "\"self\":{\"href\":\"/v2/repository-roles/" + CUSTOM_ROLE + "\"}",
-        "\"update\":{\"href\":\"/v2/repository-roles/" + CUSTOM_ROLE + "\"}",
-        "\"delete\":{\"href\":\"/v2/repository-roles/" + CUSTOM_ROLE + "\"}"
+        "\"self\":{\"href\":\"/v2/repositoryRoles/" + CUSTOM_ROLE + "\"}",
+        "\"update\":{\"href\":\"/v2/repositoryRoles/" + CUSTOM_ROLE + "\"}",
+        "\"delete\":{\"href\":\"/v2/repositoryRoles/" + CUSTOM_ROLE + "\"}"
       );
   }
 
@@ -135,11 +135,11 @@ public class RepositoryRoleRootResourceTest {
       .contains(
         "\"name\":\"" + SYSTEM_ROLE + "\"",
         "\"verbs\":[\"admin\"]",
-        "\"self\":{\"href\":\"/v2/repository-roles/" + SYSTEM_ROLE + "\"}"
+        "\"self\":{\"href\":\"/v2/repositoryRoles/" + SYSTEM_ROLE + "\"}"
       )
       .doesNotContain(
-        "\"delete\":{\"href\":\"/v2/repository-roles/" + CUSTOM_ROLE + "\"}",
-        "\"update\":{\"href\":\"/v2/repository-roles/" + CUSTOM_ROLE + "\"}"
+        "\"delete\":{\"href\":\"/v2/repositoryRoles/" + CUSTOM_ROLE + "\"}",
+        "\"update\":{\"href\":\"/v2/repositoryRoles/" + CUSTOM_ROLE + "\"}"
       );
   }
 
@@ -215,7 +215,7 @@ public class RepositoryRoleRootResourceTest {
     assertThat(createCaptor.getValue().getName()).isEqualTo("newRole");
     assertThat(createCaptor.getValue().getVerbs()).containsExactly("write", "push");
     Object location = response.getOutputHeaders().getFirst("Location");
-    assertThat(location).isEqualTo(create("/v2/repository-roles/newRole"));
+    assertThat(location).isEqualTo(create("/v2/repositoryRoles/newRole"));
   }
 
   @Test
@@ -245,12 +245,12 @@ public class RepositoryRoleRootResourceTest {
         "\"name\":\"" + SYSTEM_ROLE + "\"",
         "\"verbs\":[\"verb\"]",
         "\"verbs\":[\"admin\"]",
-        "\"self\":{\"href\":\"/v2/repository-roles",
-        "\"delete\":{\"href\":\"/v2/repository-roles/" + CUSTOM_ROLE + "\"}",
-        "\"create\":{\"href\":\"/v2/repository-roles/\"}"
+        "\"self\":{\"href\":\"/v2/repositoryRoles",
+        "\"delete\":{\"href\":\"/v2/repositoryRoles/" + CUSTOM_ROLE + "\"}",
+        "\"create\":{\"href\":\"/v2/repositoryRoles/\"}"
       )
     .doesNotContain(
-      "\"delete\":{\"href\":\"/v2/repository-roles/" + SYSTEM_ROLE + "\"}"
+      "\"delete\":{\"href\":\"/v2/repositoryRoles/" + SYSTEM_ROLE + "\"}"
     );
   }
 
