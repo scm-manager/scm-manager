@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -78,7 +79,10 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
 
     locationResolver = mock(RepositoryLocationResolver.class);
 
-    when(locationResolver.getPath(anyString())).then(ic -> {
+    RepositoryLocationResolver.RepositoryLocationResolverInstance instanceMock = mock(RepositoryLocationResolver.RepositoryLocationResolverInstance.class);
+    when(locationResolver.forClass(any())).thenReturn(instanceMock);
+
+    when(instanceMock.getLocation(anyString())).then(ic -> {
       String id = ic.getArgument(0);
       return baseDirectory.toPath().resolve(id);
     });

@@ -74,7 +74,7 @@ public abstract class ManagerTestBase<T extends ModelObject>
     contextProvider = MockUtil.getSCMContextProvider(temp);
     InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver();
     RepositoryDAO repoDao = mock(RepositoryDAO.class);
-    locationResolver = new RepositoryLocationResolver(contextProvider, repoDao ,initialRepositoryLocationResolver);
+    locationResolver = new TempDirRepositoryLocationResolver(temp);
     manager = createManager();
     manager.init(contextProvider);
   }

@@ -37,6 +37,7 @@ package sonia.scm.repository;
 
 import org.junit.Assume;
 import sonia.scm.SCMContext;
+import sonia.scm.TempDirRepositoryLocationResolver;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -103,7 +104,7 @@ public final class HgTestUtil
 
     PathBasedRepositoryDAO repoDao = mock(PathBasedRepositoryDAO.class);
 
-    RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(context, repoDao, new InitialRepositoryLocationResolver());
+    RepositoryLocationResolver repositoryLocationResolver = new TempDirRepositoryLocationResolver(directory);
     HgRepositoryHandler handler =
       new HgRepositoryHandler(new InMemoryConfigurationStoreFactory(), new HgContextProvider(), repositoryLocationResolver, null, null);
     Path repoDir = directory.toPath();

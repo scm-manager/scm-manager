@@ -65,7 +65,7 @@ public class FileBlobStoreFactory extends FileBasedStoreFactory implements BlobS
    * @param keyGenerator key generator
    */
   @Inject
-  public FileBlobStoreFactory(SCMContextProvider contextProvider ,RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator) {
+  public FileBlobStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator) {
     super(contextProvider, repositoryLocationResolver, Store.BLOB);
     this.keyGenerator = keyGenerator;
   }

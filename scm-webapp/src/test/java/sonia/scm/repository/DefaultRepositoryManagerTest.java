@@ -59,6 +59,7 @@ import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.spi.HookContextProvider;
+import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.KeyGenerator;
@@ -412,7 +413,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     Set<RepositoryHandler> handlerSet = new HashSet<>();
     InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver();
     XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(contextProvider, initialRepositoryLocationResolver, fileSystem);
-    RepositoryLocationResolver repositoryLocationResolver = new RepositoryLocationResolver(contextProvider, repositoryDAO, initialRepositoryLocationResolver);
+    PathBasedRepositoryLocationResolver repositoryLocationResolver = new PathBasedRepositoryLocationResolver(contextProvider, repositoryDAO, initialRepositoryLocationResolver);
     ConfigurationStoreFactory factory = new JAXBConfigurationStoreFactory(contextProvider, repositoryLocationResolver);
     handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver));
     handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver) {

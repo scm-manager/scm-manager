@@ -26,7 +26,7 @@ public class GitRepositoryContextResolver implements RepositoryContextResolver {
   public RepositoryContext resolve(String[] args) {
     NamespaceAndName namespaceAndName = extractNamespaceAndName(args);
     Repository repository = repositoryManager.get(namespaceAndName);
-    Path path = locationResolver.getPath(repository.getId()).resolve("data");
+    Path path = locationResolver.forClass(Path.class).getLocation(repository.getId()).resolve("data");
     return new RepositoryContext(repository, path);
   }
 
