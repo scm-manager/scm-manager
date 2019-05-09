@@ -28,22 +28,25 @@
  */
 
 
-
 package sonia.scm.boot;
-
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
-
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import sonia.scm.BootstrapModule;
+import sonia.scm.ClassOverrides;
 import sonia.scm.SCMContext;
 import sonia.scm.ScmContextListener;
 import sonia.scm.Stage;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginException;
 import sonia.scm.plugin.PluginLoadException;
@@ -53,29 +56,23 @@ import sonia.scm.plugin.SmpArchive;
 import sonia.scm.util.ClassLoaders;
 import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-
 import javax.xml.bind.DataBindingException;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -161,7 +158,38 @@ public class BootstrapContextListener implements ServletContextListener
       Set<PluginWrapper> plugins = PluginsInternal.collectPlugins(cl,
                                      pluginDirectory.toPath());
 
-      contextListener = new ScmContextListener(cl, plugins);
+
+      Module scmContextListenerModule = new AbstractModule() {
+        @Override
+        protected void configure() {
+
+          install(new FactoryModuleBuilder().build(ScmContextListener.Factory.class));
+        }
+      };
+
+
+
+      DefaultPluginLoader pluginLoader = new DefaultPluginLoader(context, cl, plugins);
+
+      Injector bootstrapInjector = Guice.createInjector(new BootstrapModule(
+          ClassOverrides.findOverrides(pluginLoader.getUberClassLoader()),
+          pluginLoader
+        ),
+        scmContextListenerModule
+      );
+
+
+
+
+      contextListener = bootstrapInjector.getInstance(ScmContextListener.Factory.class).create(cl, plugins);
+
+
+//      Set<MigrationStep> steps = bootstrapInjector.getInstance(....);
+      // migrate
+
+
+
+//      contextListener = new ScmContextListener(cl, plugins);
     }
     catch (IOException ex)
     {
@@ -169,7 +197,7 @@ public class BootstrapContextListener implements ServletContextListener
     }
 
     contextListener.contextInitialized(sce);
-    
+
         // register for restart events
     if (!registered
       && (SCMContext.getContext().getStage() == Stage.DEVELOPMENT))

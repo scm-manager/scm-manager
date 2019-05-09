@@ -132,7 +132,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
   {
     // Normally we do not have a log of repository permissions having the same size of verbs, but different content.
     // Therefore we do not use the verbs themselves for the hash code but only the number of verbs.
-    return Objects.hashCode(name, verbs.size(), groupPermission);
+    return Objects.hashCode(name, verbs == null? -1: verbs.size(), groupPermission);
   }
 
 
