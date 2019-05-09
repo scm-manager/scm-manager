@@ -15,7 +15,7 @@ class PermissionRoleRow extends React.Component<Props> {
 
   render() {
     const { baseUrl, role } = this.props;
-    const to = `${baseUrl}/${encodeURIComponent(role.name)}/info`;
+    const to = `${baseUrl}/${encodeURIComponent(role.name)}/edit`;
     return (
       <tr>
         <td>{this.renderLink(to, role.name)}</td>
