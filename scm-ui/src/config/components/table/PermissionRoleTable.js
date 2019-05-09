@@ -2,10 +2,12 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { Role } from "@scm-manager/ui-types";
+import PermissionRoleRow from "./PermissionRoleRow";
 
 type Props = {
-  t: string => string,
-  roles: Role[]
+  roles: Role[],
+
+  t: string => string
 };
 
 class PermissionRoleTable extends React.Component<Props> {
@@ -16,12 +18,11 @@ class PermissionRoleTable extends React.Component<Props> {
         <thead>
         <tr>
           <th>{t("role.form.name")}</th>
-          <th>{t("role.form.permissions")}</th>
         </tr>
         </thead>
         <tbody>
         {roles.map((role, index) => {
-          return <p key={index}>role</p>;
+          return <PermissionRoleRow key={index} role={role} />;
         })}
         </tbody>
       </table>
