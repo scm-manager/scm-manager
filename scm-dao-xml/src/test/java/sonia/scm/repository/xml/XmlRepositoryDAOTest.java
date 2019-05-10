@@ -14,26 +14,14 @@ import org.mockito.quality.Strictness;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
-import sonia.scm.repository.InitialRepositoryLocationResolver;
-import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryLocationResolver;
-import sonia.scm.repository.RepositoryPermission;
-import sonia.scm.repository.RepositoryTestData;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.Clock;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.concurrent.atomic.AtomicLong;
 
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class, TempDirectory.class})
@@ -52,31 +40,25 @@ class XmlRepositoryDAOTest {
 
   private XmlRepositoryDAO dao;
 
-  private Path baseDirectory;
-
-  private AtomicLong atomicClock;
+  private Path basePath;
 
   @BeforeEach
-  void createDAO(@TempDirectory.TempDir Path baseDirectory) {
-    this.baseDirectory = baseDirectory;
-    this.atomicClock = new AtomicLong();
+  void createDAO(@TempDirectory.TempDir Path basePath) {
+    this.basePath = basePath;
 
-    when(locationResolver.create("42")).thenReturn(Paths.get("repos", "42"));
-    when(locationResolver.create("23")).thenReturn(Paths.get("repos", "puzzle"));
-
-    when(context.getBaseDirectory()).thenReturn(baseDirectory.toFile());
-    when(context.resolve(any(Path.class))).then(ic -> {
-      Path path = ic.getArgument(0);
-      return baseDirectory.resolve(path);
+    when(locationResolver.create(anyString())).thenAnswer(invocation -> {
+      Path resolvedPath = basePath.resolve(invocation.getArgument(0).toString());
+      Files.createDirectories(resolvedPath);
+      return resolvedPath;
     });
+    when(locationResolver.remove(anyString())).thenAnswer(invocation -> basePath.resolve(invocation.getArgument(0).toString()));
+
+    when(context.getBaseDirectory()).thenReturn(basePath.toFile());
 
     dao = createDAO();
   }
 
   private XmlRepositoryDAO createDAO() {
-    Clock clock = mock(Clock.class);
-    when(clock.millis()).then(ic -> atomicClock.incrementAndGet());
-
     return new XmlRepositoryDAO(context, locationResolver, fileSystem);
   }
 
@@ -87,14 +69,14 @@ class XmlRepositoryDAOTest {
 
   @Test
   void shouldReturnCreationTimeOfLocationResolver() {
-    long now = atomicClock.get();
+    long now = 42L;
     when(locationResolver.getCreationTime()).thenReturn(now);
     assertThat(dao.getCreationTime()).isEqualTo(now);
   }
 
   @Test
   void shouldReturnLasModifiedOfLocationResolver() {
-    long now = atomicClock.get();
+    long now = 42L;
     when(locationResolver.getLastModified()).thenReturn(now);
     assertThat(dao.getLastModified()).isEqualTo(now);
   }
@@ -106,6 +88,36 @@ class XmlRepositoryDAOTest {
     assertThat(dao.contains(REPOSITORY)).isTrue();
     assertThat(dao.contains(REPOSITORY.getId())).isTrue();
     assertThat(dao.contains(REPOSITORY.getNamespaceAndName())).isTrue();
+  }
+
+  @Test
+  void shouldPersistRepository() {
+    dao.add(REPOSITORY);
+
+    String content = getXmlFileContent(REPOSITORY.getId());
+
+    assertThat(content).contains("<id>42</id>");
+  }
+
+  @Test
+  void shouldDeleteDataFile() {
+    dao.add(REPOSITORY);
+    dao.delete(REPOSITORY);
+
+    assertThat(metadataFile(REPOSITORY.getId())).doesNotExist();
+  }
+
+  @Test
+  void shouldModifyRepository() {
+    dao.add(REPOSITORY);
+    Repository changedRepository = REPOSITORY.clone();
+    changedRepository.setContact("change");
+
+    dao.modify(changedRepository);
+
+    String content = getXmlFileContent(REPOSITORY.getId());
+
+    assertThat(content).contains("change");
   }
 
 //  @Test
@@ -374,6 +386,25 @@ class XmlRepositoryDAOTest {
 //    assertThat(dao.getCreationTime()).isEqualTo(creationTime);
 //    assertThat(dao.getLastModified()).isEqualTo(lastModified);
 //  }
+
+  private String getXmlFileContent(String id) {
+    Path storePath = metadataFile(id);
+
+    assertThat(storePath).isRegularFile();
+    return content(storePath);
+  }
+
+  private Path metadataFile(String id) {
+    return locationResolver.create(id).resolve("metadata.xml");
+  }
+
+  private String content(Path storePath) {
+    try {
+      return new String(Files.readAllBytes(storePath), Charsets.UTF_8);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   private static Repository createRepository(String id) {
     return new Repository(id, "xml", "space", "id");

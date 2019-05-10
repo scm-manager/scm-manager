@@ -104,23 +104,21 @@ public class XmlRepositoryDAO implements RepositoryDAO {
   public void add(Repository repository) {
     Repository clone = repository.clone();
 
-    try {
-      synchronized (this) {
-        Path repositoryPath = repositoryLocationResolver.create(repository.getId());
-        Path resolvedPath = repositoryPath;
-        fileSystem.create(resolvedPath.toFile());
+    synchronized (this) {
+      Path repositoryPath = repositoryLocationResolver.create(repository.getId());
 
-        Path metadataPath = resolveDataPath(resolvedPath);
+      try {
+        Path metadataPath = resolveDataPath(repositoryPath);
         metadataStore.write(metadataPath, repository);
-
-        byId.put(repository.getId(), clone);
-        byNamespaceAndName.put(repository.getNamespaceAndName(), clone);
+      } catch (Exception e) {
+        repositoryLocationResolver.remove(repository.getId());
+        throw new InternalRepositoryException(repository, "failed to create filesystem", e);
       }
 
-    } catch (Exception e) {
-      repositoryLocationResolver.remove(repository.getId());
-      throw new InternalRepositoryException(repository, "failed to create filesystem", e);
+      byId.put(repository.getId(), clone);
+      byNamespaceAndName.put(repository.getNamespaceAndName(), clone);
     }
+
   }
 
 
