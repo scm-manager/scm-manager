@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import java.time.Instant;
 import java.util.Collection;
 
 @Getter
@@ -18,7 +19,9 @@ public class RepositoryRoleDto extends HalRepresentation {
   private String name;
   @NoBlankStrings @NotEmpty
   private Collection<String> verbs;
-  private boolean system;
+  private String type;
+  private Instant creationDate;
+  private Instant lastModified;
 
   RepositoryRoleDto(Links links, Embedded embedded) {
     super(links, embedded);
