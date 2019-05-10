@@ -12,6 +12,8 @@ import java.nio.file.Path;
 import java.time.Clock;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * A Location Resolver for File based Repository Storage.
@@ -22,7 +24,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * Please use the {@link sonia.scm.store.BlobStoreFactory } and the {@link sonia.scm.store.BlobStore} classes to store binary files<br>
  * Please use the {@link sonia.scm.store.ConfigurationStoreFactory} and the {@link sonia.scm.store.ConfigurationStore} classes  to store configurations
  *
- * @author Mohamed Karray
  * @since 2.0.0
  */
 public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocationResolver<Path> {
@@ -31,8 +32,6 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
 
   private final SCMContextProvider contextProvider;
   private final InitialRepositoryLocationResolver initialRepositoryLocationResolver;
-
-  private final SCMContextProvider context;
 
   private final PathDatabase pathDatabase;
   private final Map<String, Path> pathById;
@@ -43,15 +42,14 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
   private Long lastModified;
 
   @Inject
-  public PathBasedRepositoryLocationResolver(SCMContextProvider contextProvider, InitialRepositoryLocationResolver initialRepositoryLocationResolver, SCMContextProvider context) {
-    this(contextProvider, initialRepositoryLocationResolver, context, Clock.systemUTC());
+  public PathBasedRepositoryLocationResolver(SCMContextProvider contextProvider, InitialRepositoryLocationResolver initialRepositoryLocationResolver) {
+    this(contextProvider, initialRepositoryLocationResolver, Clock.systemUTC());
   }
 
-  public PathBasedRepositoryLocationResolver(SCMContextProvider contextProvider, InitialRepositoryLocationResolver initialRepositoryLocationResolver, SCMContextProvider context, Clock clock) {
+  public PathBasedRepositoryLocationResolver(SCMContextProvider contextProvider, InitialRepositoryLocationResolver initialRepositoryLocationResolver, Clock clock) {
     super(Path.class);
     this.contextProvider = contextProvider;
     this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
-    this.context = context;
     this.pathById = new ConcurrentHashMap<>();
 
     this.clock = clock;
@@ -65,13 +63,11 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
   @Override
   protected <T> RepositoryLocationResolverInstance<T> create(Class<T> type) {
     return repositoryId -> {
-      Path path;
       if (pathById.containsKey(repositoryId)) {
-        path = pathById.get(repositoryId);
+        return (T) contextProvider.resolve(pathById.get(repositoryId));
       } else {
-        path = create(repositoryId);
+        return (T) create(repositoryId);
       }
-      return (T) contextProvider.resolve(path);
     };
   }
 
@@ -79,13 +75,17 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
     Path path = initialRepositoryLocationResolver.getPath(repositoryId);
     pathById.put(repositoryId, path);
     writePathDatabase();
-    return path;
+    return contextProvider.resolve(path);
   }
 
   Path remove(String repositoryId) {
     Path removedPath = pathById.remove(repositoryId);
     writePathDatabase();
-    return removedPath;
+    return contextProvider.resolve(removedPath);
+  }
+
+  void forAllPaths(BiConsumer<String, Path> consumer) {
+    pathById.forEach((id, path) -> consumer.accept(id, contextProvider.resolve(path)));
   }
 
   private void writePathDatabase() {
@@ -117,23 +117,11 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
 
 
   private void onLoadRepository(String id, Path repositoryPath) {
-//    Path metadataPath = resolveMetadataPath(context.resolve(repositoryPath));
-//
-//    Repository repository = metadataStore.read(metadataPath);
-//
-//    byId.put(id, repository);
-//    byNamespaceAndName.put(repository.getNamespaceAndName(), repository);
     pathById.put(id, repositoryPath);
   }
 
-  @VisibleForTesting
-  Path resolveMetadataPath(Path repositoryPath) {
-    return repositoryPath.resolve(StoreConstants.REPOSITORY_METADATA.concat(StoreConstants.FILE_EXTENSION));
-  }
-
-  @VisibleForTesting
-  Path resolveStorePath() {
-    return context.getBaseDirectory()
+  private Path resolveStorePath() {
+    return contextProvider.getBaseDirectory()
       .toPath()
       .resolve(StoreConstants.CONFIG_DIRECTORY_NAME)
       .resolve(STORE_NAME.concat(StoreConstants.FILE_EXTENSION));

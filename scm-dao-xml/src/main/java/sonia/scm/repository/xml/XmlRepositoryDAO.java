@@ -69,23 +69,26 @@ public class XmlRepositoryDAO implements RepositoryDAO {
   private final Map<String, Repository> byId;
   private final Map<NamespaceAndName, Repository> byNamespaceAndName;
 
-  private Long creationTime;
-  private Long lastModified;
-
   @Inject
-  public XmlRepositoryDAO(SCMContextProvider context, PathBasedRepositoryLocationResolver repositoryLocationResolver, InitialRepositoryLocationResolver initialLocationResolver, FileSystem fileSystem) {
-    this(context, repositoryLocationResolver, initialLocationResolver, fileSystem, Clock.systemUTC());
-  }
-
-  XmlRepositoryDAO(SCMContextProvider context, PathBasedRepositoryLocationResolver repositoryLocationResolver, InitialRepositoryLocationResolver initialLocationResolver, FileSystem fileSystem, Clock clock) {
+  public XmlRepositoryDAO(SCMContextProvider context, PathBasedRepositoryLocationResolver repositoryLocationResolver, FileSystem fileSystem) {
     this.context = context;
     this.repositoryLocationResolver = repositoryLocationResolver;
     this.fileSystem = fileSystem;
 
     this.byId = new ConcurrentHashMap<>();
     this.byNamespaceAndName = new ConcurrentHashMap<>();
+
+    init();
   }
 
+  private void init() {
+    repositoryLocationResolver.forAllPaths((repositoryId, repositoryPath) -> {
+      Path metadataPath = resolveDataPath(repositoryPath);
+      Repository repository = metadataStore.read(metadataPath);
+      byNamespaceAndName.put(repository.getNamespaceAndName(), repository);
+      byId.put(repositoryId, repository);
+    });
+  }
 
   @VisibleForTesting
   Path resolveDataPath(Path repositoryPath) {
@@ -101,11 +104,10 @@ public class XmlRepositoryDAO implements RepositoryDAO {
   public void add(Repository repository) {
     Repository clone = repository.clone();
 
-
     try {
       synchronized (this) {
         Path repositoryPath = repositoryLocationResolver.create(repository.getId());
-        Path resolvedPath = context.resolve(repositoryPath);
+        Path resolvedPath = repositoryPath;
         fileSystem.create(resolvedPath.toFile());
 
         Path metadataPath = resolveDataPath(resolvedPath);
@@ -165,7 +167,7 @@ public class XmlRepositoryDAO implements RepositoryDAO {
       byNamespaceAndName.put(clone.getNamespaceAndName(), clone);
     }
 
-    Path repositoryPath = context.resolve(repositoryLocationResolver.create(Path.class).getLocation(repository.getId()));
+    Path repositoryPath = repositoryLocationResolver.create(Path.class).getLocation(repository.getId());
     Path metadataPath = resolveDataPath(repositoryPath);
     metadataStore.write(metadataPath, clone);
   }
@@ -181,8 +183,6 @@ public class XmlRepositoryDAO implements RepositoryDAO {
       path = repositoryLocationResolver.remove(repository.getId());
     }
 
-    path = context.resolve(path);
-
     try {
       fileSystem.destroy(path.toFile());
     } catch (IOException e) {
@@ -192,11 +192,11 @@ public class XmlRepositoryDAO implements RepositoryDAO {
 
   @Override
   public Long getCreationTime() {
-    return creationTime;
+    return repositoryLocationResolver.getCreationTime();
   }
 
   @Override
   public Long getLastModified() {
-    return lastModified;
+    return repositoryLocationResolver.getLastModified();
   }
 }

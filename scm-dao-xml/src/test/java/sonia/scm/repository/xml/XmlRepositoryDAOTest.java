@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junitpioneer.jupiter.TempDirectory;
+import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -39,13 +40,13 @@ import static org.mockito.Mockito.when;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class XmlRepositoryDAOTest {
 
+  private static final Repository REPOSITORY = createRepository("42");
+
   @Mock
   private SCMContextProvider context;
 
-  @Mock
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private PathBasedRepositoryLocationResolver locationResolver;
-  @Mock
-  private InitialRepositoryLocationResolver initialLocationResolver;
 
   private FileSystem fileSystem = new DefaultFileSystem();
 
@@ -60,8 +61,8 @@ class XmlRepositoryDAOTest {
     this.baseDirectory = baseDirectory;
     this.atomicClock = new AtomicLong();
 
-    when(initialLocationResolver.getPath("42")).thenReturn(Paths.get("repos", "42"));
-    when(initialLocationResolver.getPath("42+1")).thenReturn(Paths.get("repos", "puzzle"));
+    when(locationResolver.create("42")).thenReturn(Paths.get("repos", "42"));
+    when(locationResolver.create("23")).thenReturn(Paths.get("repos", "puzzle"));
 
     when(context.getBaseDirectory()).thenReturn(baseDirectory.toFile());
     when(context.resolve(any(Path.class))).then(ic -> {
@@ -76,41 +77,37 @@ class XmlRepositoryDAOTest {
     Clock clock = mock(Clock.class);
     when(clock.millis()).then(ic -> atomicClock.incrementAndGet());
 
-    return new XmlRepositoryDAO(context, locationResolver, initialLocationResolver, fileSystem, clock);
+    return new XmlRepositoryDAO(context, locationResolver, fileSystem);
   }
 
-//  @Test
-//  void shouldReturnXmlType() {
-//    assertThat(dao.getType()).isEqualTo("xml");
-//  }
-//
-//  @Test
-//  void shouldReturnCreationTimeAfterCreation() {
-//    long now = atomicClock.get();
-//    assertThat(dao.getCreationTime()).isEqualTo(now);
-//  }
-//
-//  @Test
-//  void shouldNotReturnLastModifiedAfterCreation() {
-//    assertThat(dao.getLastModified()).isNull();
-//  }
-//
-//  @Test
-//  void shouldReturnTrueForEachContainsMethod() {
-//    Repository heartOfGold = createHeartOfGold();
-//    dao.add(heartOfGold);
-//
-//    assertThat(dao.contains(heartOfGold)).isTrue();
-//    assertThat(dao.contains(heartOfGold.getId())).isTrue();
-//    assertThat(dao.contains(heartOfGold.getNamespaceAndName())).isTrue();
-//  }
-//
-//  private Repository createHeartOfGold() {
-//    Repository heartOfGold = RepositoryTestData.createHeartOfGold();
-//    heartOfGold.setId("42");
-//    return heartOfGold;
-//  }
-//
+  @Test
+  void shouldReturnXmlType() {
+    assertThat(dao.getType()).isEqualTo("xml");
+  }
+
+  @Test
+  void shouldReturnCreationTimeOfLocationResolver() {
+    long now = atomicClock.get();
+    when(locationResolver.getCreationTime()).thenReturn(now);
+    assertThat(dao.getCreationTime()).isEqualTo(now);
+  }
+
+  @Test
+  void shouldReturnLasModifiedOfLocationResolver() {
+    long now = atomicClock.get();
+    when(locationResolver.getLastModified()).thenReturn(now);
+    assertThat(dao.getLastModified()).isEqualTo(now);
+  }
+
+  @Test
+  void shouldReturnTrueForEachContainsMethod() {
+    dao.add(REPOSITORY);
+
+    assertThat(dao.contains(REPOSITORY)).isTrue();
+    assertThat(dao.contains(REPOSITORY.getId())).isTrue();
+    assertThat(dao.contains(REPOSITORY.getNamespaceAndName())).isTrue();
+  }
+
 //  @Test
 //  void shouldReturnFalseForEachContainsMethod() {
 //    Repository heartOfGold = createHeartOfGold();
@@ -377,4 +374,8 @@ class XmlRepositoryDAOTest {
 //    assertThat(dao.getCreationTime()).isEqualTo(creationTime);
 //    assertThat(dao.getLastModified()).isEqualTo(lastModified);
 //  }
+
+  private static Repository createRepository(String id) {
+    return new Repository(id, "xml", "space", "id");
+  }
 }

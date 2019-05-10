@@ -80,7 +80,8 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     locationResolver = mock(RepositoryLocationResolver.class);
 
     RepositoryLocationResolver.RepositoryLocationResolverInstance instanceMock = mock(RepositoryLocationResolver.RepositoryLocationResolverInstance.class);
-    when(locationResolver.forClass(any())).thenReturn(instanceMock);
+    when(locationResolver.create(any())).thenReturn(instanceMock);
+    when(locationResolver.supportsLocationType(any())).thenReturn(true);
 
     when(instanceMock.getLocation(anyString())).then(ic -> {
       String id = ic.getArgument(0);
