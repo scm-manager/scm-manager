@@ -9,6 +9,8 @@ import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.RepositoryLocationResolver;
+import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.security.DefaultKeyGenerator;
@@ -48,6 +50,8 @@ public class BootstrapModule extends AbstractModule {
     bind(SCMContextProvider.class).toInstance(context);
 
     bind(KeyGenerator.class).to(DefaultKeyGenerator.class);
+
+    bind(RepositoryLocationResolver.class).to(PathBasedRepositoryLocationResolver.class);
 
     bind(RepositoryDAO.class, XmlRepositoryDAO.class);
 

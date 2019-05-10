@@ -6,7 +6,8 @@ public abstract class RepositoryLocationResolver {
 
   protected abstract <T> RepositoryLocationResolverInstance<T> create(Class<T> type);
 
-  public final <T> RepositoryLocationResolverInstance<T> forClass(Class<T> type) {
+  // TODO make final, but fix mockito mocking
+  public <T> RepositoryLocationResolverInstance<T> forClass(Class<T> type) {
     if (!supportsLocationType(type)) {
       throw new IllegalStateException("no support for location of class " + type);
     }

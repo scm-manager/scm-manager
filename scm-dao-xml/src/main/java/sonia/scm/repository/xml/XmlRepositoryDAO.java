@@ -41,8 +41,8 @@ import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.PathBasedRepositoryDAO;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.store.StoreConstants;
 
 import javax.inject.Inject;
@@ -57,82 +57,38 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class XmlRepositoryDAO implements PathBasedRepositoryDAO {
+public class XmlRepositoryDAO implements RepositoryDAO {
 
-  private static final String STORE_NAME = "repositories";
 
-  private final PathDatabase pathDatabase;
   private final MetadataStore metadataStore = new MetadataStore();
 
   private final SCMContextProvider context;
-  private final InitialRepositoryLocationResolver locationResolver;
+  private final PathBasedRepositoryLocationResolver repositoryLocationResolver;
   private final FileSystem fileSystem;
 
-  private final Map<String, Path> pathById;
   private final Map<String, Repository> byId;
   private final Map<NamespaceAndName, Repository> byNamespaceAndName;
-
-  private final Clock clock;
 
   private Long creationTime;
   private Long lastModified;
 
   @Inject
-  public XmlRepositoryDAO(SCMContextProvider context, InitialRepositoryLocationResolver locationResolver, FileSystem fileSystem) {
-    this(context, locationResolver, fileSystem, Clock.systemUTC());
+  public XmlRepositoryDAO(SCMContextProvider context, PathBasedRepositoryLocationResolver repositoryLocationResolver, InitialRepositoryLocationResolver initialLocationResolver, FileSystem fileSystem) {
+    this(context, repositoryLocationResolver, initialLocationResolver, fileSystem, Clock.systemUTC());
   }
 
-  XmlRepositoryDAO(SCMContextProvider context, InitialRepositoryLocationResolver locationResolver, FileSystem fileSystem, Clock clock) {
+  XmlRepositoryDAO(SCMContextProvider context, PathBasedRepositoryLocationResolver repositoryLocationResolver, InitialRepositoryLocationResolver initialLocationResolver, FileSystem fileSystem, Clock clock) {
     this.context = context;
-    this.locationResolver = locationResolver;
+    this.repositoryLocationResolver = repositoryLocationResolver;
     this.fileSystem = fileSystem;
 
-    this.clock = clock;
-    this.creationTime = clock.millis();
-
-    this.pathById = new ConcurrentHashMap<>();
     this.byId = new ConcurrentHashMap<>();
     this.byNamespaceAndName = new ConcurrentHashMap<>();
-
-    pathDatabase = new PathDatabase(resolveStorePath());
-    read();
-  }
-
-  private void read() {
-    Path storePath = resolveStorePath();
-
-    // Files.exists is slow on java 8
-    if (storePath.toFile().exists()) {
-      pathDatabase.read(this::onLoadDates, this::onLoadRepository);
-    }
-  }
-
-  private void onLoadDates(Long creationTime, Long lastModified) {
-    this.creationTime = creationTime;
-    this.lastModified = lastModified;
-  }
-
-  private void onLoadRepository(String id, Path repositoryPath) {
-    Path metadataPath = resolveMetadataPath(context.resolve(repositoryPath));
-
-    Repository repository = metadataStore.read(metadataPath);
-
-    byId.put(id, repository);
-    byNamespaceAndName.put(repository.getNamespaceAndName(), repository);
-    pathById.put(id, repositoryPath);
-  }
-
-  @VisibleForTesting
-  Path resolveStorePath() {
-    return context.getBaseDirectory()
-      .toPath()
-      .resolve(StoreConstants.CONFIG_DIRECTORY_NAME)
-      .resolve(STORE_NAME.concat(StoreConstants.FILE_EXTENSION));
   }
 
 
   @VisibleForTesting
-  Path resolveMetadataPath(Path repositoryPath) {
+  Path resolveDataPath(Path repositoryPath) {
     return repositoryPath.resolve(StoreConstants.REPOSITORY_METADATA.concat(StoreConstants.FILE_EXTENSION));
   }
 
@@ -142,46 +98,29 @@ public class XmlRepositoryDAO implements PathBasedRepositoryDAO {
   }
 
   @Override
-  public Long getCreationTime() {
-    return creationTime;
-  }
-
-  @Override
-  public Long getLastModified() {
-    return lastModified;
-  }
-
-  @Override
   public void add(Repository repository) {
     Repository clone = repository.clone();
 
-    Path repositoryPath = locationResolver.getPath(repository.getId());
-    Path resolvedPath = context.resolve(repositoryPath);
 
     try {
-      fileSystem.create(resolvedPath.toFile());
-
-      Path metadataPath = resolveMetadataPath(resolvedPath);
-      metadataStore.write(metadataPath, repository);
-
       synchronized (this) {
-        pathById.put(repository.getId(), repositoryPath);
+        Path repositoryPath = repositoryLocationResolver.create(repository.getId());
+        Path resolvedPath = context.resolve(repositoryPath);
+        fileSystem.create(resolvedPath.toFile());
+
+        Path metadataPath = resolveDataPath(resolvedPath);
+        metadataStore.write(metadataPath, repository);
 
         byId.put(repository.getId(), clone);
         byNamespaceAndName.put(repository.getNamespaceAndName(), clone);
-
-        writePathDatabase();
       }
 
-    } catch (IOException e) {
+    } catch (Exception e) {
+      repositoryLocationResolver.remove(repository.getId());
       throw new InternalRepositoryException(repository, "failed to create filesystem", e);
     }
   }
 
-  private void writePathDatabase() {
-    lastModified = clock.millis();
-    pathDatabase.write(creationTime, lastModified, pathById);
-  }
 
   @Override
   public boolean contains(Repository repository) {
@@ -224,12 +163,10 @@ public class XmlRepositoryDAO implements PathBasedRepositoryDAO {
         byNamespaceAndName.remove(prev.getNamespaceAndName());
       }
       byNamespaceAndName.put(clone.getNamespaceAndName(), clone);
-
-      writePathDatabase();
     }
 
-    Path repositoryPath = context.resolve(getPath(repository.getId()));
-    Path metadataPath = resolveMetadataPath(repositoryPath);
+    Path repositoryPath = context.resolve(repositoryLocationResolver.create(Path.class).getLocation(repository.getId()));
+    Path metadataPath = resolveDataPath(repositoryPath);
     metadataStore.write(metadataPath, clone);
   }
 
@@ -241,10 +178,7 @@ public class XmlRepositoryDAO implements PathBasedRepositoryDAO {
       if (prev != null) {
         byNamespaceAndName.remove(prev.getNamespaceAndName());
       }
-
-      path = pathById.remove(repository.getId());
-
-      writePathDatabase();
+      path = repositoryLocationResolver.remove(repository.getId());
     }
 
     path = context.resolve(path);
@@ -257,7 +191,12 @@ public class XmlRepositoryDAO implements PathBasedRepositoryDAO {
   }
 
   @Override
-  public Path getPath(String repositoryId) {
-    return pathById.get(repositoryId);
+  public Long getCreationTime() {
+    return creationTime;
+  }
+
+  @Override
+  public Long getLastModified() {
+    return lastModified;
   }
 }

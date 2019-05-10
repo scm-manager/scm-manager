@@ -66,6 +66,8 @@ import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -412,8 +414,9 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     DefaultFileSystem fileSystem = new DefaultFileSystem();
     Set<RepositoryHandler> handlerSet = new HashSet<>();
     InitialRepositoryLocationResolver initialRepositoryLocationResolver = new InitialRepositoryLocationResolver();
-    XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(contextProvider, initialRepositoryLocationResolver, fileSystem);
-    PathBasedRepositoryLocationResolver repositoryLocationResolver = new PathBasedRepositoryLocationResolver(contextProvider, repositoryDAO, initialRepositoryLocationResolver);
+    PathBasedRepositoryLocationResolver repositoryLocationResolver = mock(PathBasedRepositoryLocationResolver.class, RETURNS_DEEP_STUBS);
+    when(repositoryLocationResolver.forClass(Path.class).getLocation(anyString())).thenReturn(Paths.get("."));
+    XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(contextProvider, repositoryLocationResolver, initialRepositoryLocationResolver, fileSystem);
     ConfigurationStoreFactory factory = new JAXBConfigurationStoreFactory(contextProvider, repositoryLocationResolver);
     handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver));
     handlerSet.add(new DummyRepositoryHandler(factory, repositoryLocationResolver) {
@@ -439,10 +442,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
 
     return new DefaultRepositoryManager(configuration, contextProvider,
       keyGenerator, repositoryDAO, handlerSet, Providers.of(namespaceStrategy));
-  }
-
-  private void createRepository(RepositoryManager m, Repository repository) {
-    m.create(repository);
   }
 
   private HookContext createHookContext(Repository repository) {
