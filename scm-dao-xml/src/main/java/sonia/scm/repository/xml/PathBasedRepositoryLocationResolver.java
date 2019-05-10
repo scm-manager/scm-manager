@@ -1,19 +1,21 @@
 package sonia.scm.repository.xml;
 
-import com.google.common.annotations.VisibleForTesting;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.BasicRepositoryLocationResolver;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
-import sonia.scm.repository.Repository;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.store.StoreConstants;
 
 import javax.inject.Inject;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 /**
  * A Location Resolver for File based Repository Storage.
@@ -75,7 +77,13 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
     Path path = initialRepositoryLocationResolver.getPath(repositoryId);
     pathById.put(repositoryId, path);
     writePathDatabase();
-    return contextProvider.resolve(path);
+    Path resolvedPath = contextProvider.resolve(path);
+    try {
+      Files.createDirectories(resolvedPath);
+    } catch (IOException e) {
+      throw new InternalRepositoryException(entity("Repository", repositoryId), "could not create directory for new repository", e);
+    }
+    return resolvedPath;
   }
 
   Path remove(String repositoryId) {
