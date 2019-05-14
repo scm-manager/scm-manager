@@ -39,7 +39,6 @@ import com.google.inject.Module;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.UpdateEngine;
 import sonia.scm.SCMContext;
 import sonia.scm.ScmContextListener;
 import sonia.scm.Stage;
@@ -51,6 +50,7 @@ import sonia.scm.plugin.PluginLoadException;
 import sonia.scm.plugin.PluginWrapper;
 import sonia.scm.plugin.PluginsInternal;
 import sonia.scm.plugin.SmpArchive;
+import sonia.scm.update.UpdateEngine;
 import sonia.scm.util.ClassLoaders;
 import sonia.scm.util.IOUtil;
 
