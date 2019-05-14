@@ -13,6 +13,7 @@ public abstract class RepositoryLocationResolver {
     return create(type);
   }
 
+  @FunctionalInterface
   public interface RepositoryLocationResolverInstance<T> {
     T getLocation(String repositoryId);
   }

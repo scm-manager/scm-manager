@@ -62,7 +62,6 @@ public class XmlRepositoryDAO implements RepositoryDAO {
 
   private final MetadataStore metadataStore = new MetadataStore();
 
-  private final SCMContextProvider context;
   private final PathBasedRepositoryLocationResolver repositoryLocationResolver;
   private final FileSystem fileSystem;
 
@@ -70,8 +69,7 @@ public class XmlRepositoryDAO implements RepositoryDAO {
   private final Map<NamespaceAndName, Repository> byNamespaceAndName;
 
   @Inject
-  public XmlRepositoryDAO(SCMContextProvider context, PathBasedRepositoryLocationResolver repositoryLocationResolver, FileSystem fileSystem) {
-    this.context = context;
+  public XmlRepositoryDAO(PathBasedRepositoryLocationResolver repositoryLocationResolver, FileSystem fileSystem) {
     this.repositoryLocationResolver = repositoryLocationResolver;
     this.fileSystem = fileSystem;
 
@@ -165,7 +163,9 @@ public class XmlRepositoryDAO implements RepositoryDAO {
       byNamespaceAndName.put(clone.getNamespaceAndName(), clone);
     }
 
-    Path repositoryPath = repositoryLocationResolver.create(Path.class).getLocation(repository.getId());
+    Path repositoryPath = repositoryLocationResolver
+      .create(Path.class)
+      .getLocation(repository.getId());
     Path metadataPath = resolveDataPath(repositoryPath);
     metadataStore.write(metadataPath, clone);
   }
