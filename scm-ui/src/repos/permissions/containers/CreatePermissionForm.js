@@ -10,7 +10,7 @@ import {
 } from "@scm-manager/ui-components";
 import RoleSelector from "../components/RoleSelector";
 import type {
-  AvailableRepositoryPermissions,
+  RepositoryRole,
   PermissionCollection,
   PermissionCreateEntry,
   SelectValue
@@ -21,7 +21,8 @@ import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
 
 type Props = {
   t: string => string,
-  availablePermissions: AvailableRepositoryPermissions,
+  availableRoles: RepositoryRole[],
+  availableVerbs: string[],
   createPermission: (permission: PermissionCreateEntry) => void,
   loading: boolean,
   currentPermissions: PermissionCollection,
@@ -44,7 +45,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
 
     this.state = {
       name: "",
-      verbs: props.availablePermissions.availableRoles[0].verbs,
+      verbs: props.availableRoles[0].verbs,
       groupPermission: false,
       valid: true,
       value: undefined,
@@ -132,18 +133,18 @@ class CreatePermissionForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { t, availablePermissions, loading } = this.props;
+    const { t, availableRoles, availableVerbs, loading } = this.props;
 
     const { verbs, showAdvancedDialog } = this.state;
 
-    const availableRoleNames = availablePermissions.availableRoles.map(
+    const availableRoleNames = availableRoles.map(
       r => r.name
     );
-    const matchingRole = findMatchingRoleName(availablePermissions, verbs);
+    const matchingRole = findMatchingRoleName(availableRoles, verbs);
 
     const advancedDialog = showAdvancedDialog ? (
       <AdvancedPermissionsDialog
-        availableVerbs={availablePermissions.availableVerbs}
+        availableVerbs={availableVerbs}
         selectedVerbs={verbs}
         onClose={this.closeAdvancedPermissionsDialog}
         onSubmit={this.submitAdvancedPermissionsDialog}
@@ -246,7 +247,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
   removeState = () => {
     this.setState({
       name: "",
-      verbs: this.props.availablePermissions.availableRoles[0].verbs,
+      verbs: this.props.availableRoles[0].verbs,
       valid: true,
       value: undefined
     });
@@ -263,7 +264,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
   };
 
   findAvailableRole = (roleName: string) => {
-    return this.props.availablePermissions.availableRoles.find(
+    return this.props.availableRoles.find(
       role => role.name === roleName
     );
   };

@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import sonia.scm.NotFoundException;
+import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.security.RepositoryPermissionProvider;
 
 import java.util.Collection;
@@ -119,9 +120,15 @@ class DefaultRepositoryRoleManagerTest {
 
     @Test
     void shouldModifyRole() {
-      RepositoryRole role = new RepositoryRole(CUSTOM_ROLE_NAME, singletonList("changed"), null);
+      RepositoryRole role = new RepositoryRole(CUSTOM_ROLE_NAME, singletonList("changed"), "xml");
       manager.modify(role);
       verify(dao).modify(role);
+    }
+
+    @Test
+    void shouldNotModifyRole_whenTypeChanged() {
+      assertThrows(ScmConstraintViolationException.class, () -> manager.modify(new RepositoryRole(CUSTOM_ROLE_NAME, singletonList("changed"), null)));
+      verify(dao, never()).modify(any());
     }
 
     @Test

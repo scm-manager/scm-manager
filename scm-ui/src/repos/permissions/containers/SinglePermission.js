@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import type {
-  AvailableRepositoryPermissions,
+  RepositoryRole,
   Permission
 } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
@@ -22,7 +22,8 @@ import classNames from "classnames";
 import injectSheet from "react-jss";
 
 type Props = {
-  availablePermissions: AvailableRepositoryPermissions,
+  availableRepositoryRoles: RepositoryRole[],
+  availableRepositoryVerbs: string[],
   submitForm: Permission => void,
   modifyPermission: (
     permission: Permission,
@@ -68,8 +69,8 @@ class SinglePermission extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const defaultPermission = props.availablePermissions.availableRoles
-      ? props.availablePermissions.availableRoles[0]
+    const defaultPermission = props.availableRoles
+      ? props.availableRoles[0]
       : {};
 
     this.state = {
@@ -85,10 +86,10 @@ class SinglePermission extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const { availablePermissions, permission } = this.props;
+    const { availableRepositoryRoles, permission } = this.props;
 
     const matchingRole = findMatchingRoleName(
-      availablePermissions,
+      availableRepositoryRoles,
       permission.verbs
     );
 
@@ -117,13 +118,14 @@ class SinglePermission extends React.Component<Props, State> {
     const { role, permission, showAdvancedDialog } = this.state;
     const {
       t,
-      availablePermissions,
+      availableRepositoryRoles,
+      availableRepositoryVerbs,
       loading,
       namespace,
       repoName,
       classes
     } = this.props;
-    const availableRoleNames = availablePermissions.availableRoles.map(
+    const availableRoleNames = !!availableRepositoryRoles && availableRepositoryRoles.map(
       r => r.name
     );
     const readOnly = !this.mayChangePermissions();
@@ -143,7 +145,7 @@ class SinglePermission extends React.Component<Props, State> {
     const advancedDialg = showAdvancedDialog ? (
       <AdvancedPermissionsDialog
         readOnly={readOnly}
-        availableVerbs={availablePermissions.availableVerbs}
+        availableVerbs={availableRepositoryVerbs}
         selectedVerbs={permission.verbs}
         onClose={this.closeAdvancedPermissionsDialog}
         onSubmit={this.submitAdvancedPermissionsDialog}
@@ -198,7 +200,7 @@ class SinglePermission extends React.Component<Props, State> {
   submitAdvancedPermissionsDialog = (newVerbs: string[]) => {
     const { permission } = this.state;
     const newRole = findMatchingRoleName(
-      this.props.availablePermissions,
+      this.props.availableRoles,
       newVerbs
     );
     this.setState(
@@ -226,7 +228,8 @@ class SinglePermission extends React.Component<Props, State> {
   };
 
   findAvailableRole = (roleName: string) => {
-    return this.props.availablePermissions.availableRoles.find(
+    const { availableRepositoryRoles } = this.props;
+    return availableRepositoryRoles.find(
       role => role.name === roleName
     );
   };
