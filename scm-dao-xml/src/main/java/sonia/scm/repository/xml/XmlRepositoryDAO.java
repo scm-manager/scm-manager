@@ -33,12 +33,9 @@ package sonia.scm.repository.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Singleton;
-import sonia.scm.SCMContextProvider;
 import sonia.scm.io.FileSystem;
-import sonia.scm.repository.InitialRepositoryLocationResolver;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -48,7 +45,6 @@ import sonia.scm.store.StoreConstants;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.time.Clock;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -88,8 +84,7 @@ public class XmlRepositoryDAO implements RepositoryDAO {
     });
   }
 
-  @VisibleForTesting
-  Path resolveDataPath(Path repositoryPath) {
+  private Path resolveDataPath(Path repositoryPath) {
     return repositoryPath.resolve(StoreConstants.REPOSITORY_METADATA.concat(StoreConstants.FILE_EXTENSION));
   }
 
@@ -167,6 +162,7 @@ public class XmlRepositoryDAO implements RepositoryDAO {
       .create(Path.class)
       .getLocation(repository.getId());
     Path metadataPath = resolveDataPath(repositoryPath);
+    repositoryLocationResolver.updateModificationDate();
     metadataStore.write(metadataPath, clone);
   }
 

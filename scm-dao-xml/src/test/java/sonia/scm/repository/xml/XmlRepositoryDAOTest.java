@@ -15,23 +15,17 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import sonia.scm.SCMContextProvider;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermission;
-import sonia.scm.util.IOUtil;
-import sun.misc.IOUtils;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.function.BiConsumer;
 
 import static java.util.Arrays.asList;
@@ -40,8 +34,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static sonia.scm.repository.RepositoryTestData.createHeartOfGold;
 
 @ExtendWith({MockitoExtension.class, TempDirectory.class})
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -259,9 +254,19 @@ class XmlRepositoryDAOTest {
       dao.add(REPOSITORY);
 
       String content = getXmlFileContent(REPOSITORY.getId());
-      System.out.println(content);
       assertThat(content).containsSubsequence("trillian", "<verb>read</verb>", "<verb>write</verb>");
       assertThat(content).containsSubsequence("vogons", "<verb>delete</verb>");
+    }
+
+    @Test
+    void shouldUpdateRepositoryPathDatabse() {
+      dao.add(REPOSITORY);
+
+      verify(locationResolver, never()).updateModificationDate();
+
+      dao.modify(REPOSITORY);
+
+      verify(locationResolver).updateModificationDate();
     }
   }
 

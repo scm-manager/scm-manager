@@ -96,6 +96,10 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
     pathById.forEach((id, path) -> consumer.accept(id, contextProvider.resolve(path)));
   }
 
+  void updateModificationDate() {
+    this.writePathDatabase();
+  }
+
   private void writePathDatabase() {
     lastModified = clock.millis();
     pathDatabase.write(creationTime, lastModified, pathById);
