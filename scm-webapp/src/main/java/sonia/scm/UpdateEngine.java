@@ -5,16 +5,16 @@ import sonia.scm.migration.UpdateStep;
 import javax.inject.Inject;
 import java.util.Set;
 
-public class MigrationEngine {
+public class UpdateEngine {
 
   private final Set<UpdateStep> steps;
 
   @Inject
-  public MigrationEngine(Set<UpdateStep> steps) {
+  public UpdateEngine(Set<UpdateStep> steps) {
     this.steps = steps;
   }
 
-  public void migrate() {
+  public void update() {
     steps.forEach(UpdateStep::doUpdate);
   }
 }

@@ -39,7 +39,7 @@ import com.google.inject.Module;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.MigrationEngine;
+import sonia.scm.UpdateEngine;
 import sonia.scm.SCMContext;
 import sonia.scm.ScmContextListener;
 import sonia.scm.Stage;
@@ -152,14 +152,7 @@ public class BootstrapContextListener implements ServletContextListener {
 
       Injector bootstrapInjector = Guice.createInjector(bootstrapModule, scmContextListenerModule);
 
-
-      Injector migrationInjector = bootstrapInjector.createChildInjector(new UpdateStepModule(pluginLoader));
-
-      MigrationEngine stepEngine = migrationInjector.getInstance(MigrationEngine.class);
-      stepEngine.migrate();
-
-
-
+      processUpdates(pluginLoader, bootstrapInjector);
 
       contextListener = bootstrapInjector.getInstance(ScmContextListener.Factory.class).create(cl, plugins);
     } catch (IOException ex) {
@@ -175,6 +168,13 @@ public class BootstrapContextListener implements ServletContextListener {
       ScmEventBus.getInstance().register(this);
       registered = true;
     }
+  }
+
+  private void processUpdates(DefaultPluginLoader pluginLoader, Injector bootstrapInjector) {
+    Injector updateInjector = bootstrapInjector.createChildInjector(new UpdateStepModule(pluginLoader));
+
+    UpdateEngine updateEngine = updateInjector.getInstance(UpdateEngine.class);
+    updateEngine.update();
   }
 
   private boolean isCorePluginExtractionDisabled() {
