@@ -8,11 +8,8 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.DefaultPluginLoader;
-import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver;
-import sonia.scm.repository.xml.XmlRepositoryDAO;
-import sonia.scm.security.CipherUtil;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.BlobStoreFactory;
@@ -32,8 +29,8 @@ public class BootstrapModule extends AbstractModule {
   private final ClassOverrides overrides;
   private final DefaultPluginLoader pluginLoader;
 
-  public BootstrapModule(ClassOverrides overrides, DefaultPluginLoader pluginLoader) {
-    this.overrides = overrides;
+  public BootstrapModule(DefaultPluginLoader pluginLoader) {
+    this.overrides = ClassOverrides.findOverrides(pluginLoader.getUberClassLoader());
     this.pluginLoader = pluginLoader;
   }
 

@@ -41,7 +41,6 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.BootstrapModule;
-import sonia.scm.ClassOverrides;
 import sonia.scm.SCMContext;
 import sonia.scm.ScmContextListener;
 import sonia.scm.Stage;
@@ -152,44 +151,23 @@ public class BootstrapContextListener implements ServletContextListener
         logger.info("core plugin extraction is disabled");
       }
 
-      ClassLoader cl =
-        ClassLoaders.getContextClassLoader(BootstrapContextListener.class);
+      ClassLoader cl = ClassLoaders.getContextClassLoader(BootstrapContextListener.class);
 
-      Set<PluginWrapper> plugins = PluginsInternal.collectPlugins(cl,
-                                     pluginDirectory.toPath());
-
-
-      Module scmContextListenerModule = new AbstractModule() {
-        @Override
-        protected void configure() {
-
-          install(new FactoryModuleBuilder().build(ScmContextListener.Factory.class));
-        }
-      };
-
-
+      Set<PluginWrapper> plugins = PluginsInternal.collectPlugins(cl, pluginDirectory.toPath());
 
       DefaultPluginLoader pluginLoader = new DefaultPluginLoader(context, cl, plugins);
 
-      Injector bootstrapInjector = Guice.createInjector(new BootstrapModule(
-          ClassOverrides.findOverrides(pluginLoader.getUberClassLoader()),
-          pluginLoader
-        ),
-        scmContextListenerModule
-      );
+      Module scmContextListenerModule = new ScmContextListenerModule();
+      BootstrapModule bootstrapModule = new BootstrapModule(pluginLoader);
 
-
-
+      Injector bootstrapInjector = Guice.createInjector(bootstrapModule, scmContextListenerModule);
 
       contextListener = bootstrapInjector.getInstance(ScmContextListener.Factory.class).create(cl, plugins);
 
-
-//      Set<MigrationStep> steps = bootstrapInjector.getInstance(....);
+      //      Set<MigrationStep> steps = bootstrapInjector.getInstance(....);
       // migrate
 
-
-
-//      contextListener = new ScmContextListener(cl, plugins);
+      //      contextListener = new ScmContextListener(cl, plugins);
     }
     catch (IOException ex)
     {
@@ -443,4 +421,12 @@ public class BootstrapContextListener implements ServletContextListener
 
   /** Field description */
   private boolean registered = false;
+
+  private static class ScmContextListenerModule extends AbstractModule {
+    @Override
+    protected void configure() {
+
+      install(new FactoryModuleBuilder().build(ScmContextListener.Factory.class));
+    }
+  }
 }
