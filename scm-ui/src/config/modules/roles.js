@@ -16,6 +16,11 @@ export const FETCH_ROLE_PENDING = `${FETCH_ROLE}_${types.PENDING_SUFFIX}`;
 export const FETCH_ROLE_SUCCESS = `${FETCH_ROLE}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_ROLE_FAILURE = `${FETCH_ROLE}_${types.FAILURE_SUFFIX}`;
 
+export const FETCH_VERBS = "scm/roles/FETCH_VERBS";
+export const FETCH_VERBS_PENDING = `${FETCH_VERBS}_${types.PENDING_SUFFIX}`;
+export const FETCH_VERBS_SUCCESS = `${FETCH_VERBS}_${types.SUCCESS_SUFFIX}`;
+export const FETCH_VERBS_FAILURE = `${FETCH_VERBS}_${types.FAILURE_SUFFIX}`;
+
 export const CREATE_ROLE = "scm/roles/CREATE_ROLE";
 export const CREATE_ROLE_PENDING = `${CREATE_ROLE}_${types.PENDING_SUFFIX}`;
 export const CREATE_ROLE_SUCCESS = `${CREATE_ROLE}_${types.SUCCESS_SUFFIX}`;
@@ -173,6 +178,59 @@ export function createRole(link: string, role: Role, callback?: () => void) {
   };
 }
 
+//fetch verbs
+export function fetchVerbsPending(): Action {
+  return {
+    type: FETCH_VERBS_PENDING
+  };
+}
+
+export function fetchVerbsSuccess(verbs: any): Action {
+  return {
+    type: FETCH_VERBS_SUCCESS,
+    payload: verbs
+  };
+}
+
+export function fetchVerbsFailure(error: Error): Action {
+  return {
+    type: FETCH_VERBS_FAILURE,
+    payload: error
+  };
+}
+
+export function fetchAvailableVerbs(link: string) {
+  return function(dispatch: any) {
+    dispatch(fetchVerbsPending());
+    return apiClient
+      .get(link)
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        dispatch(fetchVerbsSuccess(data));
+      })
+      .catch(error => {
+        dispatch(fetchVerbsFailure(error));
+      });
+  };
+}
+
+function verbReducer(state: any = {}, action: any = {}) {
+  switch (action.type) {
+    case FETCH_VERBS_SUCCESS:
+      const verbs = action.payload.verbs;
+      const verbMap = {};
+      verbs.forEach(p => (verbMap[p] = false));
+      return {
+        ...state,
+        verbMap
+        };
+    default:
+      return state;
+  }
+}
+
 function listReducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case FETCH_ROLES_SUCCESS:
@@ -237,7 +295,8 @@ function byNamesReducer(state: any = {}, action: any = {}) {
 
 export default combineReducers({
   list: listReducer,
-  byNames: byNamesReducer
+  byNames: byNamesReducer,
+  verbs: verbReducer
 });
 
 // selectors
@@ -278,6 +337,10 @@ export function getRolesFromState(state: Object) {
   return roleEntries;
 }
 
+export function getVerbsFromState(state: Object) {
+  return state.roles.verbs.verbs
+}
+
 export function isFetchRolesPending(state: Object) {
   return isPending(state, FETCH_ROLES);
 }
@@ -292,6 +355,14 @@ export function isCreateRolePending(state: Object) {
 
 export function getCreateRoleFailure(state: Object) {
   return getFailure(state, CREATE_ROLE);
+}
+
+export function isFetchVerbsPending(state: Object) {
+  return isPending(state, FETCH_VERBS);
+}
+
+export function getFetchVerbsFailure(state: Object) {
+  return getFailure(state, FETCH_VERBS);
 }
 
 export function getRoleByName(state: Object, name: string) {
