@@ -1,9 +1,12 @@
-package sonia.scm;
+package sonia.scm.boot;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ClassOverrides;
+import sonia.scm.SCMContext;
+import sonia.scm.SCMContextProvider;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.DefaultPluginLoader;
@@ -28,7 +31,7 @@ public class BootstrapModule extends AbstractModule {
 
   private final ClassOverrides overrides;
 
-  public BootstrapModule(DefaultPluginLoader pluginLoader) {
+  BootstrapModule(DefaultPluginLoader pluginLoader) {
     this.overrides = ClassOverrides.findOverrides(pluginLoader.getUberClassLoader());
   }
 

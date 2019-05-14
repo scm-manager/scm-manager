@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer. 2. Redistributions in
  * binary form must reproduce the above copyright notice, this list of
@@ -11,7 +11,7 @@
  * materials provided with the distribution. 3. Neither the name of SCM-Manager;
  * nor the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -22,9 +22,8 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
 
 
@@ -40,7 +39,7 @@ import com.google.inject.Module;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.BootstrapModule;
+import sonia.scm.MigrationEngine;
 import sonia.scm.SCMContext;
 import sonia.scm.ScmContextListener;
 import sonia.scm.Stage;
@@ -77,8 +76,7 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
-public class BootstrapContextListener implements ServletContextListener
-{
+public class BootstrapContextListener implements ServletContextListener {
 
   /** Field description */
   private static final String DIRECTORY_PLUGINS = "plugins";
@@ -105,22 +103,16 @@ public class BootstrapContextListener implements ServletContextListener
    * @param sce
    */
   @Override
-  public void contextDestroyed(ServletContextEvent sce)
-  {
+  public void contextDestroyed(ServletContextEvent sce) {
     contextListener.contextDestroyed(sce);
 
-    for (PluginWrapper plugin : contextListener.getPlugins())
-    {
+    for (PluginWrapper plugin : contextListener.getPlugins()) {
       ClassLoader pcl = plugin.getClassLoader();
 
-      if (pcl instanceof Closeable)
-      {
-        try
-        {
+      if (pcl instanceof Closeable) {
+        try {
           ((Closeable) pcl).close();
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
           logger.warn("could not close plugin classloader", ex);
         }
       }
@@ -137,14 +129,12 @@ public class BootstrapContextListener implements ServletContextListener
    * @param sce
    */
   @Override
-  public void contextInitialized(ServletContextEvent sce)
-  {
+  public void contextInitialized(ServletContextEvent sce) {
     context = sce.getServletContext();
 
     File pluginDirectory = getPluginDirectory();
 
-    try
-    {
+    try {
       if (!isCorePluginExtractionDisabled()) {
         extractCorePlugins(context, pluginDirectory);
       } else {
@@ -162,24 +152,25 @@ public class BootstrapContextListener implements ServletContextListener
 
       Injector bootstrapInjector = Guice.createInjector(bootstrapModule, scmContextListenerModule);
 
+
+      Injector migrationInjector = bootstrapInjector.createChildInjector(new UpdateStepModule(pluginLoader));
+
+      MigrationEngine stepEngine = migrationInjector.getInstance(MigrationEngine.class);
+      stepEngine.migrate();
+
+
+
+
       contextListener = bootstrapInjector.getInstance(ScmContextListener.Factory.class).create(cl, plugins);
-
-      //      Set<MigrationStep> steps = bootstrapInjector.getInstance(....);
-      // migrate
-
-      //      contextListener = new ScmContextListener(cl, plugins);
-    }
-    catch (IOException ex)
-    {
+    } catch (IOException ex) {
       throw new PluginLoadException("could not load plugins", ex);
     }
 
     contextListener.contextInitialized(sce);
 
-        // register for restart events
+    // register for restart events
     if (!registered
-      && (SCMContext.getContext().getStage() == Stage.DEVELOPMENT))
-    {
+      && (SCMContext.getContext().getStage() == Stage.DEVELOPMENT)) {
       logger.info("register for restart events");
       ScmEventBus.getInstance().register(this);
       registered = true;
@@ -201,41 +192,32 @@ public class BootstrapContextListener implements ServletContextListener
    * @throws IOException
    */
   private void extractCorePlugin(ServletContext context, File pluginDirectory,
-    PluginIndexEntry entry)
-    throws IOException
-  {
+                                 PluginIndexEntry entry)
+    throws IOException {
     URL url = context.getResource(PLUGIN_DIRECTORY.concat(entry.getName()));
     SmpArchive archive = SmpArchive.create(url);
     Plugin plugin = archive.getPlugin();
 
     File directory = PluginsInternal.createPluginDirectory(pluginDirectory,
-                       plugin);
+      plugin);
     File checksumFile = PluginsInternal.getChecksumFile(directory);
 
-    if (!directory.exists())
-    {
+    if (!directory.exists()) {
       logger.warn("install plugin {}", plugin.getInformation().getId());
       PluginsInternal.extract(archive, entry.getChecksum(), directory,
         checksumFile, true);
-    }
-    else if (!checksumFile.exists())
-    {
+    } else if (!checksumFile.exists()) {
       logger.warn("plugin directory {} exists without checksum file.",
         directory);
       PluginsInternal.extract(archive, entry.getChecksum(), directory,
         checksumFile, true);
-    }
-    else
-    {
+    } else {
       String checksum = Files.toString(checksumFile, Charsets.UTF_8).trim();
 
-      if (checksum.equals(entry.getChecksum()))
-      {
+      if (checksum.equals(entry.getChecksum())) {
         logger.debug("plugin {} is up to date",
           plugin.getInformation().getId());
-      }
-      else
-      {
+      } else {
         logger.warn("checksum mismatch of pluing {}, start update",
           plugin.getInformation().getId());
         PluginsInternal.extract(archive, entry.getChecksum(), directory,
@@ -253,14 +235,12 @@ public class BootstrapContextListener implements ServletContextListener
    *
    * @throws IOException
    */
-  private void extractCorePlugins(ServletContext context, File pluginDirectory) throws IOException
-  {
+  private void extractCorePlugins(ServletContext context, File pluginDirectory) throws IOException {
     IOUtil.mkdirs(pluginDirectory);
 
     PluginIndex index = readCorePluginIndex(context);
 
-    for (PluginIndexEntry entry : index)
-    {
+    for (PluginIndexEntry entry : index) {
       extractCorePlugin(context, pluginDirectory, entry);
     }
   }
@@ -273,27 +253,20 @@ public class BootstrapContextListener implements ServletContextListener
    *
    * @return
    */
-  private PluginIndex readCorePluginIndex(ServletContext context)
-  {
+  private PluginIndex readCorePluginIndex(ServletContext context) {
     PluginIndex index = null;
 
-    try
-    {
+    try {
       URL indexUrl = context.getResource(PLUGIN_COREINDEX);
 
-      if (indexUrl == null)
-      {
+      if (indexUrl == null) {
         throw new PluginException("no core plugin index found");
       }
 
       index = JAXB.unmarshal(indexUrl, PluginIndex.class);
-    }
-    catch (MalformedURLException ex)
-    {
+    } catch (MalformedURLException ex) {
       throw new PluginException("could not load core plugin index", ex);
-    }
-    catch (DataBindingException ex)
-    {
+    } catch (DataBindingException ex) {
       throw new PluginException("could not unmarshall core plugin index", ex);
     }
 
@@ -308,8 +281,7 @@ public class BootstrapContextListener implements ServletContextListener
    *
    * @return
    */
-  private File getPluginDirectory()
-  {
+  private File getPluginDirectory() {
     File baseDirectory = SCMContext.getContext().getBaseDirectory();
 
     return new File(baseDirectory, DIRECTORY_PLUGINS);
@@ -321,13 +293,12 @@ public class BootstrapContextListener implements ServletContextListener
    * Class description
    *
    *
-   * @version        Enter version here..., 14/07/09
-   * @author         Enter your name here...
+   * @version Enter version here..., 14/07/09
+   * @author Enter your name here...
    */
   @XmlAccessorType(XmlAccessType.FIELD)
   @XmlRootElement(name = "plugin-index")
-  private static class PluginIndex implements Iterable<PluginIndexEntry>
-  {
+  private static class PluginIndex implements Iterable<PluginIndexEntry> {
 
     /**
      * Method description
@@ -336,8 +307,7 @@ public class BootstrapContextListener implements ServletContextListener
      * @return
      */
     @Override
-    public Iterator<PluginIndexEntry> iterator()
-    {
+    public Iterator<PluginIndexEntry> iterator() {
       return getPlugins().iterator();
     }
 
@@ -349,10 +319,8 @@ public class BootstrapContextListener implements ServletContextListener
      *
      * @return
      */
-    public List<PluginIndexEntry> getPlugins()
-    {
-      if (plugins == null)
-      {
+    public List<PluginIndexEntry> getPlugins() {
+      if (plugins == null) {
         plugins = ImmutableList.of();
       }
 
@@ -371,13 +339,12 @@ public class BootstrapContextListener implements ServletContextListener
    * Class description
    *
    *
-   * @version        Enter version here..., 14/07/09
-   * @author         Enter your name here...
+   * @version Enter version here..., 14/07/09
+   * @author Enter your name here...
    */
   @XmlRootElement(name = "plugins")
   @XmlAccessorType(XmlAccessType.FIELD)
-  private static class PluginIndexEntry
-  {
+  private static class PluginIndexEntry {
 
     /**
      * Method description
@@ -385,8 +352,7 @@ public class BootstrapContextListener implements ServletContextListener
      *
      * @return
      */
-    public String getChecksum()
-    {
+    public String getChecksum() {
       return checksum;
     }
 
@@ -396,8 +362,7 @@ public class BootstrapContextListener implements ServletContextListener
      *
      * @return
      */
-    public String getName()
-    {
+    public String getName() {
       return name;
     }
 
