@@ -4,12 +4,13 @@ import com.google.inject.AbstractModule;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.config.ScmConfiguration;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver;
+import sonia.scm.security.CipherHandler;
+import sonia.scm.security.CipherUtil;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.BlobStoreFactory;
@@ -20,27 +21,20 @@ import sonia.scm.store.FileBlobStoreFactory;
 import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 import sonia.scm.store.JAXBDataStoreFactory;
-import sonia.scm.util.ScmConfigurationUtil;
 
 public class BootstrapModule extends AbstractModule {
 
   private static final Logger LOG = LoggerFactory.getLogger(BootstrapModule.class);
 
   private final ClassOverrides overrides;
-  private final DefaultPluginLoader pluginLoader;
 
   public BootstrapModule(DefaultPluginLoader pluginLoader) {
     this.overrides = ClassOverrides.findOverrides(pluginLoader.getUberClassLoader());
-    this.pluginLoader = pluginLoader;
   }
 
   @Override
   protected void configure() {
     install(ThrowingProviderBinder.forModule(this));
-
-//    ScmConfiguration config = getScmConfiguration();
-//
-//    CipherUtil cu = CipherUtil.getInstance();
 
     SCMContextProvider context = SCMContext.getContext();
 
@@ -52,21 +46,14 @@ public class BootstrapModule extends AbstractModule {
 
     bind(FileSystem.class, DefaultFileSystem.class);
 
+    // note CipherUtil uses an other generator
+    bind(CipherHandler.class).toInstance(CipherUtil.getInstance().getCipherHandler());
 
     // bind core
     bind(ConfigurationStoreFactory.class, JAXBConfigurationStoreFactory.class);
     bind(ConfigurationEntryStoreFactory.class, JAXBConfigurationEntryStoreFactory.class);
     bind(DataStoreFactory.class, JAXBDataStoreFactory.class);
     bind(BlobStoreFactory.class, FileBlobStoreFactory.class);
-
-    //    bind(ScmConfiguration.class).toInstance(config);
-//    bind(PluginLoader.class).toInstance(pluginLoader);
-//    bind(PluginManager.class, DefaultPluginManager.class);
-
-    // note CipherUtil uses an other generator
-//    bind(KeyGenerator.class).to(DefaultKeyGenerator.class);
-//    bind(CipherHandler.class).toInstance(cu.getCipherHandler());
-//    bind(FileSystem.class, DefaultFileSystem.class);
   }
 
   private <T> void bind(Class<T> clazz, Class<? extends T> defaultImplementation) {
@@ -89,13 +76,5 @@ public class BootstrapModule extends AbstractModule {
     }
 
     return implementation;
-  }
-
-  private ScmConfiguration getScmConfiguration() {
-    ScmConfiguration configuration = new ScmConfiguration();
-
-    ScmConfigurationUtil.getInstance().load(configuration);
-
-    return configuration;
   }
 }
