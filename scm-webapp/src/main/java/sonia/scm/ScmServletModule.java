@@ -266,7 +266,7 @@ public class ScmServletModule extends ServletModule
     // bind dao
     bind(GroupDAO.class, XmlGroupDAO.class);
     bind(UserDAO.class, XmlUserDAO.class);
-//    bind(RepositoryDAO.class, XmlRepositoryDAO.class);
+    bind(RepositoryDAO.class, XmlRepositoryDAO.class);
 
     bindDecorated(RepositoryManager.class, DefaultRepositoryManager.class,
       RepositoryManagerProvider.class);

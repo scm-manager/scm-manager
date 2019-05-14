@@ -41,9 +41,9 @@ public class BootstrapModule extends AbstractModule {
   protected void configure() {
     install(ThrowingProviderBinder.forModule(this));
 
-    ScmConfiguration config = getScmConfiguration();
-
-    CipherUtil cu = CipherUtil.getInstance();
+//    ScmConfiguration config = getScmConfiguration();
+//
+//    CipherUtil cu = CipherUtil.getInstance();
 
     SCMContextProvider context = SCMContext.getContext();
 
@@ -52,8 +52,6 @@ public class BootstrapModule extends AbstractModule {
     bind(KeyGenerator.class).to(DefaultKeyGenerator.class);
 
     bind(RepositoryLocationResolver.class).to(PathBasedRepositoryLocationResolver.class);
-
-    bind(RepositoryDAO.class, XmlRepositoryDAO.class);
 
     bind(FileSystem.class, DefaultFileSystem.class);
 
