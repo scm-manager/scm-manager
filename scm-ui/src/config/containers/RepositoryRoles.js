@@ -41,7 +41,7 @@ type Props = {
   fetchRolesByPage: (link: string, page: number) => void
 };
 
-class GlobalPermissionRoles extends React.Component<Props> {
+class RepositoryRoles extends React.Component<Props> {
   componentDidMount() {
     const { fetchRolesByPage, rolesLink, page } = this.props;
     fetchRolesByPage(rolesLink, page);
@@ -119,4 +119,4 @@ const mapDispatchToProps = dispatch => {
 export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("config")(GlobalPermissionRoles)));
+)(translate("config")(RepositoryRoles)));

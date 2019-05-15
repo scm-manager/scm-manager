@@ -10,8 +10,9 @@ import type { Links } from "@scm-manager/ui-types";
 import { Page, Navigation, NavLink, Section } from "@scm-manager/ui-components";
 import { getLinks } from "../../modules/indexResource";
 import GlobalConfig from "./GlobalConfig";
-import GlobalPermissionRoles from "./GlobalPermissionRoles";
-import GlobalPermissionRoleForm from "./GlobalPermissionRoleForm";
+import RepositoryRoles from "./RepositoryRoles";
+import RepositoryRoleForm from "./RepositoryRoleForm"
+import SingleRepositoryRole from "./SingleRepositoryRole";
 
 type Props = {
   links: Links,
@@ -57,13 +58,9 @@ class Config extends React.Component<Props> {
             <Route
               path={`${url}/roles`}
               exact
-              render={() => (
-                <GlobalPermissionRoles
-                  baseUrl={`${url}/role`}
-                />
-              )}
+              render={() => <RepositoryRoles baseUrl={`${url}/roles`} />}
             />
-            <Route path={`${url}/role`} component={GlobalPermissionRoleForm} />
+            <Route path={`${url}/role`} component={SingleRepositoryRole} />
             <ExtensionPoint
               name="config.route"
               props={extensionProps}
