@@ -24,7 +24,7 @@ class SystemRoleTag extends React.Component<Props> {
     if (system) {
       return (
         <span className={classNames("tag is-dark", classes.tag)}>
-          {t("roles.system")}
+          {t("role.system")}
         </span>
       );
     }

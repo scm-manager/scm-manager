@@ -10,8 +10,9 @@ import type { Links } from "@scm-manager/ui-types";
 import { Page, Navigation, NavLink, Section } from "@scm-manager/ui-components";
 import { getLinks } from "../../modules/indexResource";
 import GlobalConfig from "./GlobalConfig";
-import GlobalPermissionRoles from "./GlobalPermissionRoles";
-import GlobalPermissionRoleForm from "./GlobalPermissionRoleForm";
+import PermissionRolesOverview from "../roles/containers/PermissionRolesOverview";
+import PermissionRoleRoot from "../roles/containers/PermissionRoleRoot";
+import CreatePermissionRole from "../roles/containers/CreatePermissionRole";
 
 type Props = {
   links: Links,
@@ -36,7 +37,7 @@ class Config extends React.Component<Props> {
 
   matchesRoles = (route: any) => {
     const url = this.matchedUrl();
-    const regex = new RegExp(`${url}/role/.+/edit`);
+    const regex = new RegExp(`${url}/role/.+/info`);
     return route.location.pathname.match(regex);
   };
 
@@ -55,15 +56,18 @@ class Config extends React.Component<Props> {
           <div className="column is-three-quarters">
             <Route path={url} exact component={GlobalConfig} />
             <Route
+              path={`${url}/role/:role`}
+              component={() => <PermissionRoleRoot baseUrl={`${url}/roles`} />}
+            />
+            <Route
               path={`${url}/roles`}
               exact
-              render={() => (
-                <GlobalPermissionRoles
-                  baseUrl={`${url}/role`}
-                />
-              )}
+              render={() => <PermissionRolesOverview baseUrl={`${url}/role`} />}
             />
-            <Route path={`${url}/role`} component={GlobalPermissionRoleForm} />
+            <Route
+              path={`${url}/roles/create`}
+              render={() => <CreatePermissionRole />}
+            />
             <ExtensionPoint
               name="config.route"
               props={extensionProps}
@@ -78,9 +82,10 @@ class Config extends React.Component<Props> {
                   label={t("config.globalConfigurationNavLink")}
                 />
                 <NavLink
-                  to={`${url}/roles`}
+                  to={`${url}/roles/`}
                   label={t("roles.navLink")}
                   activeWhenMatch={this.matchesRoles}
+                  activeOnlyWhenExact={false}
                 />
                 <ExtensionPoint
                   name="config.navigation"

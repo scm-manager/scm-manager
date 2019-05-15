@@ -21,8 +21,9 @@ import {
   isFetchRolesPending,
   getFetchRolesFailure
 } from "../modules/roles";
-import PermissionRoleTable from "../components/table/PermissionRoleTable";
-import { getRolesLink } from "../../modules/indexResource";
+import PermissionRoleTable from "../components/PermissionRoleTable";
+import { getRolesLink } from "../../../modules/indexResource";
+
 type Props = {
   baseUrl: string,
   roles: Role[],
@@ -41,7 +42,7 @@ type Props = {
   fetchRolesByPage: (link: string, page: number) => void
 };
 
-class GlobalPermissionRoles extends React.Component<Props> {
+class PermissionRolesOverview extends React.Component<Props> {
   componentDidMount() {
     const { fetchRolesByPage, rolesLink, page } = this.props;
     fetchRolesByPage(rolesLink, page);
@@ -119,4 +120,4 @@ const mapDispatchToProps = dispatch => {
 export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("config")(GlobalPermissionRoles)));
+)(translate("config")(PermissionRolesOverview)));
