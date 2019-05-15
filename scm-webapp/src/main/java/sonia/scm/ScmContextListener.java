@@ -37,6 +37,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.google.inject.assistedinject.Assisted;
 import org.apache.shiro.guice.web.ShiroWebModule;
 import org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener;
 import org.slf4j.Logger;
@@ -55,6 +56,7 @@ import sonia.scm.upgrade.UpgradeManager;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.IOUtil;
 
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import java.util.Collections;
@@ -77,9 +79,12 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
   private final Set<PluginWrapper> plugins;
   private Injector injector;
   
-  //~--- constructors ---------------------------------------------------------
-  
-  public ScmContextListener(ClassLoader parent, Set<PluginWrapper> plugins)
+  public interface Factory {
+    ScmContextListener create(ClassLoader parent, Set<PluginWrapper> plugins);
+  }
+
+  @Inject
+  public ScmContextListener(@Assisted ClassLoader parent, @Assisted Set<PluginWrapper> plugins)
   {
     this.parent = parent;
     this.plugins = plugins;

@@ -1,51 +1,20 @@
 package sonia.scm.repository;
 
-import sonia.scm.SCMContextProvider;
+public abstract class RepositoryLocationResolver {
 
-import javax.inject.Inject;
-import java.nio.file.Path;
+  public abstract boolean supportsLocationType(Class<?> type);
 
-/**
- * A Location Resolver for File based Repository Storage.
- * <p>
- * <b>WARNING:</b> The Locations provided with this class may not be used from the plugins to store any plugin specific files.
- * <p>
- * Please use the {@link sonia.scm.store.DataStoreFactory } and the {@link sonia.scm.store.DataStore} classes to store data<br>
- * Please use the {@link sonia.scm.store.BlobStoreFactory } and the {@link sonia.scm.store.BlobStore} classes to store binary files<br>
- * Please use the {@link sonia.scm.store.ConfigurationStoreFactory} and the {@link sonia.scm.store.ConfigurationStore} classes  to store configurations
- *
- * @author Mohamed Karray
- * @since 2.0.0
- */
-public class RepositoryLocationResolver {
+  protected abstract <T> RepositoryLocationResolverInstance<T> create(Class<T> type);
 
-  private final SCMContextProvider contextProvider;
-  private final RepositoryDAO repositoryDAO;
-  private final InitialRepositoryLocationResolver initialRepositoryLocationResolver;
-
-  @Inject
-  public RepositoryLocationResolver(SCMContextProvider contextProvider, RepositoryDAO repositoryDAO, InitialRepositoryLocationResolver initialRepositoryLocationResolver) {
-    this.contextProvider = contextProvider;
-    this.repositoryDAO = repositoryDAO;
-    this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
+  public final <T> RepositoryLocationResolverInstance<T> forClass(Class<T> type) {
+    if (!supportsLocationType(type)) {
+      throw new IllegalStateException("no support for location of class " + type);
+    }
+    return create(type);
   }
 
-  /**
-   * Returns the path to the repository.
-   *
-   * @param repositoryId repository id
-   *
-   * @return path of repository
-   */
-  public Path getPath(String repositoryId) {
-    Path path;
-
-    if (repositoryDAO instanceof PathBasedRepositoryDAO) {
-      path = ((PathBasedRepositoryDAO) repositoryDAO).getPath(repositoryId);
-    } else {
-      path = initialRepositoryLocationResolver.getPath(repositoryId);
-    }
-
-    return contextProvider.resolve(path);
+  @FunctionalInterface
+  public interface RepositoryLocationResolverInstance<T> {
+    T getLocation(String repositoryId);
   }
 }

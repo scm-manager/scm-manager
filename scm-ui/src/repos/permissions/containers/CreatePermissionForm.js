@@ -2,6 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import {
+  Subtitle,
   Autocomplete,
   SubmitButton,
   Button,
@@ -154,9 +155,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
     return (
       <div>
         <hr />
-        <h2 className="subtitle">
-          {t("permission.add-permission.add-permission-heading")}
-        </h2>
+        <Subtitle subtitle={t("permission.add-permission.add-permission-heading")} />
         {advancedDialog}
         <form onSubmit={this.submit}>
           <div className="field is-grouped">

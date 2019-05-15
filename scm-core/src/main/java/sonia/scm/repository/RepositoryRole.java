@@ -122,7 +122,8 @@ public class RepositoryRole implements ModelObject, PermissionObject {
    */
   @Override
   public int hashCode() {
-    return Objects.hashCode(name, verbs);
+
+    return Objects.hashCode(name, verbs == null? -1: verbs.size(), groupPermission);
   }
 
   @Override

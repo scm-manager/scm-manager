@@ -40,6 +40,7 @@ import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.util.IOUtil;
 
 import java.io.File;
+import java.nio.file.Path;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -58,7 +59,7 @@ public abstract class FileBasedStoreFactory {
   private RepositoryLocationResolver repositoryLocationResolver;
   private Store store;
 
-  protected FileBasedStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, Store store) {
+  protected FileBasedStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver, Store store) {
     this.contextProvider = contextProvider;
     this.repositoryLocationResolver = repositoryLocationResolver;
     this.store = store;
@@ -92,7 +93,7 @@ public abstract class FileBasedStoreFactory {
    * @return the store directory of a specific repository
    */
   private File getStoreDirectory(Store store, Repository repository) {
-    return new File(repositoryLocationResolver.getPath(repository.getId()).toFile(), store.getRepositoryStoreDirectory());
+    return new File(repositoryLocationResolver.forClass(Path.class).getLocation(repository.getId()).toFile(), store.getRepositoryStoreDirectory());
   }
 
   /**
