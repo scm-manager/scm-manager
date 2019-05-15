@@ -77,10 +77,18 @@ const CONTENT_TYPE = "application/vnd.scmm-repositoryPermission+json";
 
 // fetch available permissions
 
-export function fetchAvailablePermissionsIfNeeded(repositoryRolesLink: string, repositoryVerbsLink: string) {
+export function fetchAvailablePermissionsIfNeeded(
+  repositoryRolesLink: string,
+  repositoryVerbsLink: string
+) {
   return function(dispatch: any, getState: () => Object) {
     if (shouldFetchAvailablePermissions(getState())) {
-      return fetchAvailablePermissions(dispatch, getState, repositoryRolesLink, repositoryVerbsLink);
+      return fetchAvailablePermissions(
+        dispatch,
+        getState,
+        repositoryRolesLink,
+        repositoryVerbsLink
+      );
     }
   };
 }
@@ -97,7 +105,8 @@ export function fetchAvailablePermissions(
     .then(repositoryRoles => repositoryRoles.json())
     .then(repositoryRoles => repositoryRoles._embedded.repositoryRoles)
     .then(repositoryRoles => {
-      return apiClient.get(repositoryVerbsLink)
+      return apiClient
+        .get(repositoryVerbsLink)
         .then(repositoryVerbs => repositoryVerbs.json())
         .then(repositoryVerbs => repositoryVerbs.verbs)
         .then(repositoryVerbs => {
@@ -577,8 +586,7 @@ export function getPermissionsOfRepo(
   repoName: string
 ) {
   if (state.permissions && state.permissions[namespace + "/" + repoName]) {
-    const permissions = state.permissions[namespace + "/" + repoName].entries;
-    return permissions;
+    return state.permissions[namespace + "/" + repoName].entries;
   }
 }
 
@@ -739,9 +747,11 @@ export function findMatchingRoleName(
   if (!verbs) {
     return "";
   }
-  const matchingRole = !! availableRoles && availableRoles.find(role => {
-    return equalVerbs(role.verbs, verbs);
-  });
+  const matchingRole =
+    !!availableRoles &&
+    availableRoles.find(role => {
+      return equalVerbs(role.verbs, verbs);
+    });
 
   if (matchingRole) {
     return matchingRole.name;

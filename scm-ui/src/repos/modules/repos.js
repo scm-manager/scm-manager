@@ -353,15 +353,13 @@ function normalizeByNamespaceAndName(
 
 const reducerByNames = (state: Object, repository: Repository) => {
   const identifier = createIdentifier(repository);
-  const newState = {
+  return {
     ...state,
     byNames: {
       ...state.byNames,
       [identifier]: repository
     }
   };
-
-  return newState;
 };
 
 export default function reducer(

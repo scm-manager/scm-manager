@@ -49,10 +49,7 @@ export function shouldFetchRepositoryTypes(state: Object) {
   ) {
     return false;
   }
-  if (state.repositoryTypes && state.repositoryTypes.length > 0) {
-    return false;
-  }
-  return true;
+  return !(state.repositoryTypes && state.repositoryTypes.length > 0);
 }
 
 export function fetchRepositoryTypesPending(): Action {
