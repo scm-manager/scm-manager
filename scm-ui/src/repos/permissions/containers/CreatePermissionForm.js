@@ -32,6 +32,7 @@ type Props = {
 
 type State = {
   name: string,
+  role?: string,
   verbs: string[],
   groupPermission: boolean,
   valid: boolean,
@@ -45,6 +46,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
 
     this.state = {
       name: "",
+      role: props.availableRoles[0].name,
       verbs: props.availableRoles[0].verbs,
       groupPermission: false,
       valid: true,
@@ -137,9 +139,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
 
     const { verbs, showAdvancedDialog } = this.state;
 
-    const availableRoleNames = availableRoles.map(
-      r => r.name
-    );
+    const availableRoleNames = availableRoles.map(r => r.name);
     const matchingRole = findMatchingRoleName(availableRoles, verbs);
 
     const advancedDialog = showAdvancedDialog ? (
@@ -230,6 +230,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
   submitAdvancedPermissionsDialog = (newVerbs: string[]) => {
     this.setState({
       showAdvancedDialog: false,
+      role: undefined,
       verbs: newVerbs
     });
   };
@@ -237,6 +238,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
   submit = e => {
     this.props.createPermission({
       name: this.state.name,
+      role: this.state.role,
       verbs: this.state.verbs,
       groupPermission: this.state.groupPermission
     });
@@ -247,6 +249,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
   removeState = () => {
     this.setState({
       name: "",
+      role: undefined,
       verbs: this.props.availableRoles[0].verbs,
       valid: true,
       value: undefined
@@ -259,14 +262,13 @@ class CreatePermissionForm extends React.Component<Props, State> {
       return;
     }
     this.setState({
+      role: selectedRole.name,
       verbs: selectedRole.verbs
     });
   };
 
   findAvailableRole = (roleName: string) => {
-    return this.props.availableRoles.find(
-      role => role.name === roleName
-    );
+    return this.props.availableRoles.find(role => role.name === roleName);
   };
 }
 
