@@ -12,12 +12,15 @@
     "noPermissionRoles": "No permission roles found.",
     "createButton": "Create Permission Role",
     "form": {
+      "subtitle": "Edit Permission Role",
       "name": "Name",
-      "system": "System",
       "permissions": "Permissions",
-      "subtitle": "Edit Permission Roles",
       "submit": "Save"
     }
+  },
+  "role": {
+    "name": "Name",
+    "system": "System"
   },
   "config-form": {
     "submit": "Submit",

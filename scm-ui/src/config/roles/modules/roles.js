@@ -1,10 +1,10 @@
 // @flow
 import { apiClient } from "@scm-manager/ui-components";
-import { isPending } from "../../modules/pending";
-import { getFailure } from "../../modules/failure";
-import * as types from "../../modules/types";
+import { isPending } from "../../../modules/pending";
+import { getFailure } from "../../../modules/failure";
+import * as types from "../../../modules/types";
 import { combineReducers, Dispatch } from "redux";
-import type { Action, PagedCollection, Role } from "@scm-manager/ui-types";
+import type {Action, PagedCollection, Repository, Role} from "@scm-manager/ui-types";
 
 export const FETCH_ROLES = "scm/roles/FETCH_ROLES";
 export const FETCH_ROLES_PENDING = `${FETCH_ROLES}_${types.PENDING_SUFFIX}`;
@@ -467,6 +467,17 @@ export function getRolesFromState(state: Object) {
   }
 
   return roleEntries;
+}
+
+export function getRoleCreateLink(state: Object) {
+  if (
+    state &&
+    state.list &&
+    state.list._links &&
+    state.list._links.create
+  ) {
+    return state.list._links.create.href;
+  }
 }
 
 export function getVerbsFromState(state: Object) {

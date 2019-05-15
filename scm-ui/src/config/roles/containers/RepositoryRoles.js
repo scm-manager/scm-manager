@@ -21,8 +21,8 @@ import {
   isFetchRolesPending,
   getFetchRolesFailure
 } from "../modules/roles";
-import PermissionRoleTable from "../components/table/PermissionRoleTable";
-import { getRolesLink } from "../../modules/indexResource";
+import PermissionRoleTable from "../components/PermissionRoleTable";
+import { getRolesLink } from "../../../modules/indexResource";
 type Props = {
   baseUrl: string,
   roles: Role[],

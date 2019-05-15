@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import type { Role } from "@scm-manager/ui-types";
 import { InputField, SubmitButton } from "@scm-manager/ui-components";
-import PermissionCheckbox from "../../repos/permissions/components/PermissionCheckbox";
+import PermissionCheckbox from "../../../repos/permissions/components/PermissionCheckbox";
 import {
   createRole,
   fetchAvailableVerbs,
@@ -12,7 +12,7 @@ import {
   getVerbsFromState,
   isFetchVerbsPending
 } from "../modules/roles";
-import {getRepositoryRolesLink, getRepositoryVerbsLink} from "../../modules/indexResource";
+import {getRepositoryRolesLink, getRepositoryVerbsLink} from "../../../modules/indexResource";
 
 type Props = {
   role?: Role,

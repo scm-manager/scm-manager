@@ -10,9 +10,8 @@ import type { Links } from "@scm-manager/ui-types";
 import { Page, Navigation, NavLink, Section } from "@scm-manager/ui-components";
 import { getLinks } from "../../modules/indexResource";
 import GlobalConfig from "./GlobalConfig";
-import RepositoryRoles from "./RepositoryRoles";
-import RepositoryRoleForm from "./RepositoryRoleForm"
-import SingleRepositoryRole from "./SingleRepositoryRole";
+import RepositoryRoles from "../roles/containers/RepositoryRoles";
+import SingleRepositoryRole from "../roles/containers/SingleRepositoryRole";
 
 type Props = {
   links: Links,
@@ -37,7 +36,7 @@ class Config extends React.Component<Props> {
 
   matchesRoles = (route: any) => {
     const url = this.matchedUrl();
-    const regex = new RegExp(`${url}/role/.+/edit`);
+    const regex = new RegExp(`${url}/role/`);
     return route.location.pathname.match(regex);
   };
 
@@ -56,11 +55,18 @@ class Config extends React.Component<Props> {
           <div className="column is-three-quarters">
             <Route path={url} exact component={GlobalConfig} />
             <Route
+              path={`${url}/role/:role`}
+              render={() => <SingleRepositoryRole baseUrl={`${url}/roles`} />}
+            />
+            <Route
               path={`${url}/roles`}
               exact
               render={() => <RepositoryRoles baseUrl={`${url}/roles`} />}
             />
-            <Route path={`${url}/role`} component={SingleRepositoryRole} />
+            <Route
+              path={`${url}/roles/create`}
+              render={() => <CreatePermissionRole />}
+            />
             <ExtensionPoint
               name="config.route"
               props={extensionProps}

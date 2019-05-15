@@ -8,10 +8,10 @@ import {
 } from "@scm-manager/ui-components";
 import { Route } from "react-router";
 import type { History } from "history";
-import { EditRepositoryRoleNavLink, RepositoryRoleDetailNavLink } from "./../components/navLinks";
+import { EditRepositoryRoleNavLink, RepositoryRoleDetailNavLink } from "../../components/navLinks";
 import { translate } from "react-i18next";
 import type { Role } from "@scm-manager/ui-types";
-import {getRepositoryRolesLink} from "../../modules/indexResource";
+import {getRepositoryRolesLink} from "../../../modules/indexResource";
 import {ExtensionPoint} from "@scm-manager/ui-extensions";
 import {fetchRoleByName, getFetchRoleFailure, getRoleByName, isFetchRolePending} from "../modules/roles";
 
