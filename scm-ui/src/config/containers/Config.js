@@ -66,7 +66,7 @@ class Config extends React.Component<Props> {
             />
             <Route
               path={`${url}/roles/create`}
-              render={() => <CreateRepositoryRole disabled={false} />}
+              render={() => <CreateRepositoryRole disabled={false} history={this.props.history} />}
             />
             <ExtensionPoint
               name="config.route"

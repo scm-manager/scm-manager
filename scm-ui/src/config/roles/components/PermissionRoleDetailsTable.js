@@ -61,5 +61,5 @@ class PermissionRoleDetailsTable extends React.Component<Props> {
 
 export default compose(
   injectSheet(styles),
-  translate("roles")
+  translate("config")
 )(PermissionRoleDetailsTable);
