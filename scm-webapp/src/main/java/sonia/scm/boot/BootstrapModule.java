@@ -10,6 +10,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.DefaultPluginLoader;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver;
 import sonia.scm.security.CipherHandler;
@@ -30,9 +31,11 @@ public class BootstrapModule extends AbstractModule {
   private static final Logger LOG = LoggerFactory.getLogger(BootstrapModule.class);
 
   private final ClassOverrides overrides;
+  private final PluginLoader pluginLoader;
 
   BootstrapModule(DefaultPluginLoader pluginLoader) {
     this.overrides = ClassOverrides.findOverrides(pluginLoader.getUberClassLoader());
+    this.pluginLoader = pluginLoader;
   }
 
   @Override
@@ -57,6 +60,7 @@ public class BootstrapModule extends AbstractModule {
     bind(ConfigurationEntryStoreFactory.class, JAXBConfigurationEntryStoreFactory.class);
     bind(DataStoreFactory.class, JAXBDataStoreFactory.class);
     bind(BlobStoreFactory.class, FileBlobStoreFactory.class);
+    bind(PluginLoader.class).toInstance(pluginLoader);
   }
 
   private <T> void bind(Class<T> clazz, Class<? extends T> defaultImplementation) {
