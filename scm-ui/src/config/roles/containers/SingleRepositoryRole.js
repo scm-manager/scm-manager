@@ -21,6 +21,7 @@ type Props = {
   loading: boolean,
   error: Error,
   repositoryRolesLink: string,
+  disabled: boolean,
 
   // dispatcher function
   fetchRoleByName: (string, string) => void,

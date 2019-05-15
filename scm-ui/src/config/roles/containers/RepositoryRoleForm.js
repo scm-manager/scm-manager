@@ -20,13 +20,14 @@ type Props = {
   disabled: boolean,
   availableVerbs: string[],
   verbsLink: string,
+  submitForm: Role => void,
 
   // context objects
   t: string => string,
 
   // dispatch functions
-  fetchAvailableVerbs: (link: string) => void,
-  addRole: (link: string, role: Role) => void
+  fetchAvailableVerbs: (link: string) => void
+  // addRole: (link: string, role: Role) => void
 };
 
 type State = {
@@ -93,7 +94,7 @@ class RepositoryRoleForm extends React.Component<Props, State> {
   submit = (event: Event) => {
     event.preventDefault();
     if (this.isValid()) {
-      this.props.addRole(this.props.repositoryRolesLink, this.state.role)
+      this.props.submitForm(this.state.role)
     }
   };
 
@@ -122,7 +123,7 @@ class RepositoryRoleForm extends React.Component<Props, State> {
               label={t("roles.create.name")}
               onChange={this.handleNameChange}
               value={role.name ? role.name : ""}
-              disabled={!!role.name || disabled}
+              disabled={disabled}
             />
           </div>
         </div>
@@ -163,9 +164,9 @@ const mapDispatchToProps = dispatch => {
     fetchAvailableVerbs: (link: string) => {
       dispatch(fetchAvailableVerbs(link));
     },
-    addRole: (link: string, role: Role) => {
-      createRole(link, role)
-    }
+    // addRole: (link: string, role: Role) => {
+    //   createRole(link, role)
+    // }
   };
 };
 

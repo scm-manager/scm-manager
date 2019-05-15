@@ -12,6 +12,7 @@ import { getLinks } from "../../modules/indexResource";
 import GlobalConfig from "./GlobalConfig";
 import RepositoryRoles from "../roles/containers/RepositoryRoles";
 import SingleRepositoryRole from "../roles/containers/SingleRepositoryRole";
+import CreateRepositoryRole from "../roles/containers/CreateRepositoryRole";
 
 type Props = {
   links: Links,
@@ -65,7 +66,7 @@ class Config extends React.Component<Props> {
             />
             <Route
               path={`${url}/roles/create`}
-              render={() => <CreatePermissionRole />}
+              render={() => <CreateRepositoryRole disabled={false} />}
             />
             <ExtensionPoint
               name="config.route"
