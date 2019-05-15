@@ -14,9 +14,12 @@ import type { Role } from "@scm-manager/ui-types";
 import {getRepositoryRolesLink} from "../../../modules/indexResource";
 import {ExtensionPoint} from "@scm-manager/ui-extensions";
 import {fetchRoleByName, getFetchRoleFailure, getRoleByName, isFetchRolePending} from "../modules/roles";
+import RepositoryRoleForm from "./RepositoryRoleForm";
+import {withRouter} from "react-router-dom";
+import PermissionRoleDetail from "../components/PermissionRoleDetail";
 
 type Props = {
-  name: string,
+  roleName: string,
   role: Role,
   loading: boolean,
   error: Error,
@@ -34,7 +37,8 @@ type Props = {
 
 class SingleRepositoryRole extends React.Component<Props> {
   componentDidMount() {
-    this.props.fetchRoleByName(this.props.repositoryRolesLink, this.props.name);
+    this.props.fetchRoleByName(this.props.repositoryRolesLink, this.props.roleName);
+    console.log(this.props.match)
   }
 
   stripEndingSlash = (url: string) => {
@@ -76,7 +80,7 @@ class SingleRepositoryRole extends React.Component<Props> {
       <Page title={role.displayName}>
         <div className="columns">
           <div className="column is-three-quarters">
-            <Route path={url} exact component={() => <RepositoryRoleDetailNavLink role={role} />} />
+            <Route path={url} component={() => <PermissionRoleDetail role={role} />} />
             <Route
               path={`${url}/settings/general`}
               component={() => <EditRepositoryRoleNavLink role={role} />}
@@ -94,14 +98,14 @@ class SingleRepositoryRole extends React.Component<Props> {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const name = ownProps.match.params.name;
-  const role = getRoleByName(state, name);
-  const loading = isFetchRolePending(state, name);
-  const error = getFetchRoleFailure(state, name);
+  const roleName = ownProps.match.params.role;
+  const role = getRoleByName(state, roleName);
+  const loading = isFetchRolePending(state, roleName);
+  const error = getFetchRoleFailure(state, roleName);
   const repositoryRolesLink = getRepositoryRolesLink(state);
   return {
     repositoryRolesLink,
-    name,
+    roleName,
     role,
     loading,
     error
@@ -116,7 +120,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("users")(SingleRepositoryRole));
+)(translate("users")(SingleRepositoryRole)));
