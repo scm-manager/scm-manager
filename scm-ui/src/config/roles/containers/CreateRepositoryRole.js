@@ -19,14 +19,14 @@ type Props = {
   repositoryRolesLink: string,
 
   //dispatch function
-  addRole: (link: string, role: Role) => void
+  addRole: (link: string, role: Role, callback?: () => void) => void
 };
 
 class CreateRepositoryRole extends React.Component<Props> {
-  //Callback after dispatch
+
   repositoryRoleCreated = (role: Role) => {
     const { history } = this.props;
-    history.push("/role/" + role.name);
+    history.push("/config/role/" + role.name);
   };
 
   createRepositoryRole = (role: Role) => {
@@ -63,8 +63,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addRole: (link: string, role: Role) => {
-      dispatch(createRole(link, role));
+    addRole: (link: string, role: Role, callback?: () => void) => {
+      dispatch(createRole(link, role, callback));
     }
   };
 };
@@ -72,4 +72,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("roles")(CreateRepositoryRole));
+)(translate("config")(CreateRepositoryRole));

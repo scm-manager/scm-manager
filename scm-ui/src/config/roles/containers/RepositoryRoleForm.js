@@ -6,7 +6,6 @@ import type { Role } from "@scm-manager/ui-types";
 import { InputField, SubmitButton } from "@scm-manager/ui-components";
 import PermissionCheckbox from "../../../repos/permissions/components/PermissionCheckbox";
 import {
-  createRole,
   fetchAvailableVerbs,
   getFetchVerbsFailure,
   getVerbsFromState,
@@ -27,7 +26,6 @@ type Props = {
 
   // dispatch functions
   fetchAvailableVerbs: (link: string) => void
-  // addRole: (link: string, role: Role) => void
 };
 
 type State = {
@@ -51,6 +49,9 @@ class RepositoryRoleForm extends React.Component<Props, State> {
   componentDidMount() {
     const { fetchAvailableVerbs, verbsLink} = this.props;
     fetchAvailableVerbs(verbsLink);
+    if (this.props.role) {
+      this.setState({role: this.props.role})
+    }
   }
 
   isFalsy(value) {
@@ -107,7 +108,6 @@ class RepositoryRoleForm extends React.Component<Props, State> {
       : availableVerbs.map(verb => (
           <PermissionCheckbox
             key={verb}
-            // disabled={readOnly}
             name={verb}
             checked={role.verbs.includes(verb)}
             onChange={this.handleVerbChange}
@@ -164,13 +164,10 @@ const mapDispatchToProps = dispatch => {
     fetchAvailableVerbs: (link: string) => {
       dispatch(fetchAvailableVerbs(link));
     },
-    // addRole: (link: string, role: Role) => {
-    //   createRole(link, role)
-    // }
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("roles")(RepositoryRoleForm));
+)(translate("config")(RepositoryRoleForm));
