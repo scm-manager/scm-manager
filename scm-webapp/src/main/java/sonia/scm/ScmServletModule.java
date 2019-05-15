@@ -230,7 +230,6 @@ public class ScmServletModule extends ServletModule
 
     // bind core
     bind(ScmConfiguration.class).toInstance(config);
-    bind(PluginLoader.class).toInstance(pluginLoader);
     bind(PluginManager.class, DefaultPluginManager.class);
 
     // bind scheduler
