@@ -739,35 +739,3 @@ export function getModifyPermissionsFailure(
   }
   return null;
 }
-
-export function findMatchingRoleName(
-  availableRoles: RepositoryRole[],
-  verbs: string[]
-) {
-  if (!verbs) {
-    return "";
-  }
-  const matchingRole =
-    !!availableRoles &&
-    availableRoles.find(role => {
-      return equalVerbs(role.verbs, verbs);
-    });
-
-  if (matchingRole) {
-    return matchingRole.name;
-  } else {
-    return "";
-  }
-}
-
-function equalVerbs(verbs1: string[], verbs2: string[]) {
-  if (!verbs1 || !verbs2) {
-    return false;
-  }
-
-  if (verbs1.length !== verbs2.length) {
-    return false;
-  }
-
-  return verbs1.every(verb => verbs2.includes(verb));
-}

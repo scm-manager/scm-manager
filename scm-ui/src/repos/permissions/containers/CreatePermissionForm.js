@@ -1,6 +1,12 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
+import type {
+  RepositoryRole,
+  PermissionCollection,
+  PermissionCreateEntry,
+  SelectValue
+} from "@scm-manager/ui-types";
 import {
   Autocomplete,
   SubmitButton,
@@ -8,32 +14,27 @@ import {
   LabelWithHelpIcon,
   Radio
 } from "@scm-manager/ui-components";
-import RoleSelector from "../components/RoleSelector";
-import type {
-  RepositoryRole,
-  PermissionCollection,
-  PermissionCreateEntry,
-  SelectValue
-} from "@scm-manager/ui-types";
 import * as validator from "../components/permissionValidation";
-import { findMatchingRoleName } from "../modules/permissions";
+import RoleSelector from "../components/RoleSelector";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
 
 type Props = {
-  t: string => string,
   availableRoles: RepositoryRole[],
   availableVerbs: string[],
   createPermission: (permission: PermissionCreateEntry) => void,
   loading: boolean,
   currentPermissions: PermissionCollection,
   groupAutoCompleteLink: string,
-  userAutoCompleteLink: string
+  userAutoCompleteLink: string,
+
+  // Context props
+  t: string => string
 };
 
 type State = {
   name: string,
   role?: string,
-  verbs: string[],
+  verbs?: string[],
   groupPermission: boolean,
   valid: boolean,
   value?: SelectValue,
@@ -47,7 +48,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
     this.state = {
       name: "",
       role: props.availableRoles[0].name,
-      verbs: props.availableRoles[0].verbs,
+      verbs: undefined,
       groupPermission: false,
       valid: true,
       value: undefined,
@@ -92,6 +93,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
         });
       });
   }
+
   renderAutocompletionField = () => {
     const { t } = this.props;
     if (this.state.groupPermission) {
@@ -136,11 +138,9 @@ class CreatePermissionForm extends React.Component<Props, State> {
 
   render() {
     const { t, availableRoles, availableVerbs, loading } = this.props;
-
-    const { verbs, showAdvancedDialog } = this.state;
+    const { role, verbs, showAdvancedDialog } = this.state;
 
     const availableRoleNames = availableRoles.map(r => r.name);
-    const matchingRole = findMatchingRoleName(availableRoles, verbs);
 
     const advancedDialog = showAdvancedDialog ? (
       <AdvancedPermissionsDialog
@@ -189,7 +189,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
                     label={t("permission.role")}
                     helpText={t("permission.help.roleHelpText")}
                     handleRoleChange={this.handleRoleChange}
-                    role={matchingRole}
+                    role={role}
                   />
                 </div>
                 <div className="column">
@@ -249,8 +249,8 @@ class CreatePermissionForm extends React.Component<Props, State> {
   removeState = () => {
     this.setState({
       name: "",
-      role: undefined,
-      verbs: this.props.availableRoles[0].verbs,
+      role: this.props.availableRoles[0].name,
+      verbs: undefined,
       valid: true,
       value: undefined
     });
@@ -262,8 +262,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
       return;
     }
     this.setState({
-      role: selectedRole.name,
-      verbs: selectedRole.verbs
+      role: selectedRole.name
     });
   };
 

@@ -4,7 +4,7 @@ import type {Links} from "./hal";
 export type PermissionCreateEntry = {
   name: string,
   role?: string,
-  verbs: string[],
+  verbs?: string[],
   groupPermission: boolean
 }
 
