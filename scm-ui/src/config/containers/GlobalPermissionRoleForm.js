@@ -14,11 +14,10 @@ import {
 import { getRepositoryVerbsLink } from "../../modules/indexResource";
 
 type Props = {
-  submitForm: CustomRoleRequest => void,
   role?: Role,
   loading?: boolean,
+  disabled: boolean,
   availableVerbs: string[],
-  selectedVerbs: string[],
   verbsLink: string,
 
   // context objects
@@ -29,8 +28,7 @@ type Props = {
 };
 
 type State = {
-  role: Role,
-  verbs: string[]
+  role: Role
 };
 
 class GlobalPermissionRoleForm extends React.Component<Props, State> {
@@ -43,8 +41,7 @@ class GlobalPermissionRoleForm extends React.Component<Props, State> {
         verbs: [],
         system: false,
         _links: {}
-      },
-      verbs: props.availableVerbs
+      }
     };
   }
 
@@ -53,7 +50,12 @@ class GlobalPermissionRoleForm extends React.Component<Props, State> {
     fetchAvailableVerbs(verbsLink);
 
     if (role) {
-      this.setState({ role: { ...role } });
+      this.setState({
+        role: {
+          ...role,
+          role: { verbs: role.verbs }
+        }
+      });
     }
   }
 
@@ -80,26 +82,44 @@ class GlobalPermissionRoleForm extends React.Component<Props, State> {
   };
 
   handleVerbChange = (value: boolean, name: string) => {
-    const { selectedVerbs } = this.props;
-    const newVerbs = { ...selectedVerbs, [name]: value };
-    this.setState({ verbs: newVerbs });
+    const { role } = this.state;
+
+    const newVerbs = value
+      ? [...role.verbs, name]
+      : role.verbs.filter(v => v !== name);
+
+    this.setState({
+      ...this.state,
+      role: {
+        ...role,
+        verbs: newVerbs
+      }
+    });
+  };
+
+  submit = (event: Event) => {
+    event.preventDefault();
+    if (this.isValid()) {
+      // this.props.submitForm(this.state.role);
+      //TODO ADD createRole here
+    }
   };
 
   render() {
-    const { loading, availableVerbs, t } = this.props;
-    const { role, verbs } = this.state;
+    const { loading, availableVerbs, disabled, t } = this.props;
+    const { role } = this.state;
 
-    const verbSelectBoxes =
-      !!availableVerbs &&
-      Object.entries(availableVerbs).map(e => (
-        <PermissionCheckbox
-          key={e[0]}
-          // disabled={readOnly}
-          name={e[0]}
-          checked={e[1]}
-          onChange={this.handleVerbChange}
-        />
-      ));
+    const verbSelectBoxes = !availableVerbs
+      ? null
+      : availableVerbs.map(verb => (
+          <PermissionCheckbox
+            key={verb}
+            // disabled={readOnly}
+            name={verb}
+            checked={role.verbs.includes(verb)}
+            onChange={this.handleVerbChange}
+          />
+        ));
 
     return (
       <form onSubmit={this.submit}>
@@ -110,17 +130,18 @@ class GlobalPermissionRoleForm extends React.Component<Props, State> {
               label={t("roles.create.name")}
               onChange={this.handleNameChange}
               value={role.name ? role.name : ""}
-              disabled={!!role.name} // || disabled
+              disabled={!!role.name || disabled}
             />
           </div>
         </div>
         <>{verbSelectBoxes}</>
+        <hr />
         <div className="columns">
           <div className="column">
             <SubmitButton
               loading={loading}
               label={t("roles.create.submit")}
-              //disabled={disabled || !this.isValid()}
+              disabled={disabled || !this.isValid()}
             />
           </div>
         </div>

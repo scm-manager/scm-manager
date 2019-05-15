@@ -220,12 +220,7 @@ function verbReducer(state: any = {}, action: any = {}) {
   switch (action.type) {
     case FETCH_VERBS_SUCCESS:
       const verbs = action.payload.verbs;
-      const verbMap = {};
-      verbs.forEach(p => (verbMap[p] = false));
-      return {
-        ...state,
-        verbMap
-      };
+      return { ...state, verbs };
     default:
       return state;
   }
