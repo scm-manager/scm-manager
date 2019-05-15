@@ -1,12 +1,10 @@
 //@flow
 import React from "react";
 import { connect } from "react-redux";
-import {Loading, ErrorPage, Title} from "@scm-manager/ui-components";
+import { Loading, ErrorPage, Title } from "@scm-manager/ui-components";
 import { Route } from "react-router";
 import type { History } from "history";
-import {
-  EditRepositoryRoleNavLink,
-} from "../../components/navLinks";
+import { EditRepositoryRoleNavLink } from "../../components/navLinks";
 import { translate } from "react-i18next";
 import type { Role } from "@scm-manager/ui-types";
 import { getRepositoryRolesLink } from "../../../modules/indexResource";
@@ -19,6 +17,8 @@ import {
 } from "../modules/roles";
 import { withRouter } from "react-router-dom";
 import PermissionRoleDetail from "../components/PermissionRoleDetails";
+import EditRepositoryRole from "./EditRepositoryRole";
+import Switch from "react-router-dom/es/Switch";
 
 type Props = {
   roleName: string,
@@ -83,22 +83,23 @@ class SingleRepositoryRole extends React.Component<Props> {
 
     return (
       <>
-        <Title title={t("repositoryRoles.title")}/>
+        <Title title={t("repositoryRoles.title")} />
         <div className="columns">
           <div className="column is-three-quarters">
-            <Route
-              path={url}
-              component={() => <PermissionRoleDetail role={role} />}
-            />
-            <Route
-              path={`${url}/settings/general`}
-              component={() => <EditRepositoryRoleNavLink role={role} />}
-            />
-            <ExtensionPoint
-              name="roles.route"
-              props={extensionProps}
-              renderAll={true}
-            />
+              <Route
+                path={url}
+                component={() => <PermissionRoleDetail role={role} url={url} />}
+              />
+              <Route
+                path={`${url}`}
+                exact
+                component={() => <EditRepositoryRole role={role} />}
+              />
+              <ExtensionPoint
+                name="roles.route"
+                props={extensionProps}
+                renderAll={true}
+              />
           </div>
         </div>
       </>

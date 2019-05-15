@@ -49,6 +49,9 @@ class RepositoryRoleForm extends React.Component<Props, State> {
   componentDidMount() {
     const { fetchAvailableVerbs, verbsLink} = this.props;
     fetchAvailableVerbs(verbsLink);
+    if (this.props.role) {
+      this.setState({role: this.props.role})
+    }
   }
 
   isFalsy(value) {
