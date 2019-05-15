@@ -1,5 +1,8 @@
 package sonia.scm.update;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.migration.UpdateException;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
@@ -13,6 +16,8 @@ import static java.util.stream.Collectors.toList;
 
 public class UpdateEngine {
 
+  public static final Logger LOG = LoggerFactory.getLogger(UpdateEngine.class);
+
   private static final String STORE_NAME = "executedUpdates";
 
   private final List<UpdateStep> steps;
@@ -25,9 +30,12 @@ public class UpdateEngine {
   }
 
   private List<UpdateStep> sortSteps(Set<UpdateStep> steps) {
-    return steps.stream()
+    LOG.trace("sorting available update steps:");
+    List<UpdateStep> sortedSteps = steps.stream()
       .sorted(Comparator.comparing(UpdateStep::getTargetVersion).reversed())
       .collect(toList());
+    sortedSteps.forEach(step -> LOG.trace("{} for version {}", step.getAffectedDataType(), step.getTargetVersion()));
+    return sortedSteps;
   }
 
   public void update() {
@@ -38,16 +46,41 @@ public class UpdateEngine {
   }
 
   private void execute(UpdateStep updateStep) {
-    updateStep.doUpdate();
+    try {
+      LOG.info("running update step for type {} and version {}",
+        updateStep.getAffectedDataType(),
+        updateStep.getTargetVersion()
+      );
+      updateStep.doUpdate();
+    } catch (Exception e) {
+      throw new UpdateException(
+        String.format(
+          "could not execute update for type %s to version %s in class %s",
+          updateStep.getAffectedDataType(),
+          updateStep.getTargetVersion(),
+          updateStep.getClass()),
+        e);
+    }
     UpdateVersionInfo newVersionInfo = new UpdateVersionInfo(updateStep.getTargetVersion().getParsedVersion());
-    store.put(updateStep.affectedDataType(), newVersionInfo);
+    store.put(updateStep.getAffectedDataType(), newVersionInfo);
   }
 
   private boolean notRunYet(UpdateStep updateStep) {
-    UpdateVersionInfo updateVersionInfo = store.get(updateStep.affectedDataType());
+    LOG.trace("checking whether to run update step for type {} and version {}",
+      updateStep.getAffectedDataType(),
+      updateStep.getTargetVersion()
+    );
+    UpdateVersionInfo updateVersionInfo = store.get(updateStep.getAffectedDataType());
     if (updateVersionInfo == null) {
+      LOG.trace("no updates for type {} run yet; step will be executed", updateStep.getAffectedDataType());
       return true;
     }
-    return updateStep.getTargetVersion().isNewer(updateVersionInfo.getLatestVersion());
+    boolean result = updateStep.getTargetVersion().isNewer(updateVersionInfo.getLatestVersion());
+    LOG.trace("latest version for type {}: {}; step will be executed: {}",
+      updateStep.getAffectedDataType(),
+      updateVersionInfo.getLatestVersion(),
+      result
+    );
+    return result;
   }
 }

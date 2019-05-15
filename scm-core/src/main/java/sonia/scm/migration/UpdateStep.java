@@ -5,9 +5,9 @@ import sonia.scm.version.Version;
 
 @ExtensionPoint
 public interface UpdateStep {
-  void doUpdate();
+  void doUpdate() throws Exception;
 
   Version getTargetVersion();
 
-  String affectedDataType();
+  String getAffectedDataType();
 }

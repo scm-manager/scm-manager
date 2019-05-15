@@ -85,7 +85,7 @@ class UpdateEngineTest {
     }
 
     @Override
-    public String affectedDataType() {
+    public String getAffectedDataType() {
       return type;
     }
 
