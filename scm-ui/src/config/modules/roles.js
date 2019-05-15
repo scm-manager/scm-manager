@@ -225,7 +225,7 @@ function verbReducer(state: any = {}, action: any = {}) {
       return {
         ...state,
         verbMap
-        };
+      };
     default:
       return state;
   }
@@ -338,7 +338,7 @@ export function getRolesFromState(state: Object) {
 }
 
 export function getVerbsFromState(state: Object) {
-  return state.roles.verbs.verbs
+  return state.roles.verbs.verbs;
 }
 
 export function isFetchRolesPending(state: Object) {

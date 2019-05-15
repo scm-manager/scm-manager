@@ -6,14 +6,6 @@ import { translate } from "react-i18next";
 import type { History } from "history";
 import type { Role, PagedCollection } from "@scm-manager/ui-types";
 import {
-  fetchRolesByPage,
-  getRolesFromState,
-  selectListAsCollection,
-  isPermittedToCreateRoles,
-  isFetchRolesPending,
-  getFetchRolesFailure
-} from "../modules/roles";
-import {
   Title,
   Loading,
   Notification,
@@ -21,6 +13,14 @@ import {
   urls,
   CreateButton
 } from "@scm-manager/ui-components";
+import {
+  fetchRolesByPage,
+  getRolesFromState,
+  selectListAsCollection,
+  isPermittedToCreateRoles,
+  isFetchRolesPending,
+  getFetchRolesFailure
+} from "../modules/roles";
 import PermissionRoleTable from "../components/table/PermissionRoleTable";
 import { getRolesLink } from "../../modules/indexResource";
 type Props = {

@@ -1,7 +1,9 @@
 // @flow
 import React from "react";
-import { InputField, SubmitButton } from "@scm-manager/ui-components";
+import { connect } from "react-redux";
 import { translate } from "react-i18next";
+import type { Role } from "@scm-manager/ui-types";
+import { InputField, SubmitButton } from "@scm-manager/ui-components";
 import PermissionCheckbox from "../../repos/permissions/components/PermissionCheckbox";
 import {
   fetchAvailableVerbs,
@@ -10,15 +12,16 @@ import {
   isFetchVerbsPending
 } from "../modules/roles";
 import { getRepositoryVerbsLink } from "../../modules/indexResource";
-import { connect } from "react-redux";
 
 type Props = {
   submitForm: CustomRoleRequest => void,
-  transmittedName?: string,
+  role?: Role,
   loading?: boolean,
   availableVerbs: string[],
   selectedVerbs: string[],
   verbsLink: string,
+
+  // context objects
   t: string => string,
 
   // dispatch functions
@@ -26,7 +29,7 @@ type Props = {
 };
 
 type State = {
-  name?: string,
+  role: Role,
   verbs: string[]
 };
 
@@ -35,56 +38,56 @@ class GlobalPermissionRoleForm extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      name: props.transmittedName ? props.transmittedName : "",
+      role: {
+        name: "",
+        verbs: [],
+        system: false,
+        _links: {}
+      },
       verbs: props.availableVerbs
     };
   }
 
-  componentWillMount() {
-    const { fetchAvailableVerbs, verbsLink } = this.props;
-    fetchAvailableVerbs(verbsLink);
-  }
-
   componentDidMount() {
-    const {
-      fetchAvailableVerbs,
-      verbsLink,
-    } = this.props;
+    const { fetchAvailableVerbs, verbsLink, role } = this.props;
     fetchAvailableVerbs(verbsLink);
 
+    if (role) {
+      this.setState({ role: { ...role } });
+    }
   }
-
-  isValid = () => {
-    const { name, verbs } = this.state;
-    return !(this.isFalsy(name) || this.isFalsy(verbs) || verbs.isEmpty());
-  };
 
   isFalsy(value) {
     return !value;
   }
 
+  isValid = () => {
+    const { role } = this.state;
+    return !(
+      this.isFalsy(role) ||
+      this.isFalsy(role.name) ||
+      this.isFalsy(role.verbs)
+    );
+  };
+
   handleNameChange = (name: string) => {
     this.setState({
-      ...this.state,
-      name
+      role: {
+        ...this.state.role,
+        name
+      }
     });
   };
 
   handleVerbChange = (value: boolean, name: string) => {
-    const { selectedVerbs } = this.state;
+    const { selectedVerbs } = this.props;
     const newVerbs = { ...selectedVerbs, [name]: value };
-    this.setState({ selectedVerbs: newVerbs });
+    this.setState({ verbs: newVerbs });
   };
 
   render() {
-    const {
-      t,
-      transmittedName,
-      loading,
-      disabled,
-      availableVerbs
-    } = this.props;
-    const { verbs } = this.state;
+    const { loading, availableVerbs, t } = this.props;
+    const { role, verbs } = this.state;
 
     const verbSelectBoxes =
       !!availableVerbs &&
@@ -99,31 +102,29 @@ class GlobalPermissionRoleForm extends React.Component<Props, State> {
       ));
 
     return (
-      <div>
-        <form onSubmit={this.submit}>
-          <div className="columns">
-            <div className="column">
-              <InputField
-                name="name"
-                label={t("roles.create.name")}
-                onChange={this.handleNameChange}
-                value={name ? name : ""}
-                disabled={!!transmittedName || disabled}
-              />
-            </div>
+      <form onSubmit={this.submit}>
+        <div className="columns">
+          <div className="column">
+            <InputField
+              name="name"
+              label={t("roles.create.name")}
+              onChange={this.handleNameChange}
+              value={role.name ? role.name : ""}
+              disabled={!!role.name} // || disabled
+            />
           </div>
-          <>{verbSelectBoxes}</>
-          <div className="columns">
-            <div className="column">
-              <SubmitButton
-                disabled={disabled || !this.isValid()}
-                loading={loading}
-                label={t("roles.create.submit")}
-              />
-            </div>
+        </div>
+        <>{verbSelectBoxes}</>
+        <div className="columns">
+          <div className="column">
+            <SubmitButton
+              loading={loading}
+              label={t("roles.create.submit")}
+              //disabled={disabled || !this.isValid()}
+            />
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     );
   }
 }
