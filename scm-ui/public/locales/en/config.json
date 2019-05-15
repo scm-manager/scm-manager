@@ -10,12 +10,12 @@
     "navLink": "Permission Roles",
     "title": "Permission Roles",
     "noPermissionRoles": "No permission roles found.",
+    "system": "System",
     "createButton": "Create Permission Role",
     "form": {
+      "subtitle": "Edit Permission Role",
       "name": "Name",
-      "system": "System",
       "permissions": "Permissions",
-      "subtitle": "Edit Permission Roles",
       "submit": "Save"
     }
   },

@@ -127,20 +127,21 @@ class GlobalPermissionRoleForm extends React.Component<Props, State> {
           <div className="column">
             <InputField
               name="name"
-              label={t("roles.create.name")}
+              label={t("roles.form.name")}
               onChange={this.handleNameChange}
               value={role.name ? role.name : ""}
               disabled={!!role.name || disabled}
             />
           </div>
         </div>
-        <>{verbSelectBoxes}</>
+
+        {verbSelectBoxes}
         <hr />
         <div className="columns">
           <div className="column">
             <SubmitButton
               loading={loading}
-              label={t("roles.create.submit")}
+              label={t("roles.form.submit")}
               disabled={disabled || !this.isValid()}
             />
           </div>
@@ -175,4 +176,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("roles")(GlobalPermissionRoleForm));
+)(translate("config")(GlobalPermissionRoleForm));

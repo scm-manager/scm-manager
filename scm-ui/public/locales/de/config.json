@@ -10,12 +10,12 @@
     "navLink": "Berechtigungsrollen",
     "title": "Berechtigungsrollen",
     "noPermissionRoles": "Keine Berechtigungsrollen gefunden.",
+    "system": "System",
     "createButton": "Berechtigungsrolle erstellen",
     "form": {
-      "name": "Name",
-      "system": "System",
-      "permissions": "Berechtigungen",
       "subtitle": "Berechtigungsrolle bearbeiten",
+      "name": "Name",
+      "permissions": "Berechtigungen",
       "submit": "Speichern"
     }
   },
