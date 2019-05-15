@@ -122,6 +122,7 @@
     "error-subtitle": "Unknown permissions error",
     "name": "User or group",
     "role": "Role",
+    "custom": "CUSTOM",
     "permissions": "Permissions",
     "group-permission": "Group Permission",
     "user-permission": "User Permission",
