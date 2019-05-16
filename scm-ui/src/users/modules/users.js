@@ -28,7 +28,7 @@ export const MODIFY_USER_SUCCESS = `${MODIFY_USER}_${types.SUCCESS_SUFFIX}`;
 export const MODIFY_USER_FAILURE = `${MODIFY_USER}_${types.FAILURE_SUFFIX}`;
 export const MODIFY_USER_RESET = `${MODIFY_USER}_${types.RESET_SUFFIX}`;
 
-export const DELETE_USER = "scm/users/DELETE";
+export const DELETE_USER = "scm/users/DELETE_USER";
 export const DELETE_USER_PENDING = `${DELETE_USER}_${types.PENDING_SUFFIX}`;
 export const DELETE_USER_SUCCESS = `${DELETE_USER}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_USER_FAILURE = `${DELETE_USER}_${types.FAILURE_SUFFIX}`;
@@ -324,12 +324,10 @@ function deleteUserInEntries(users: [], userName: string) {
 }
 
 const reducerByName = (state: any, username: string, newUserState: any) => {
-  const newUsersByNames = {
+  return {
     ...state,
     [username]: newUserState
   };
-
-  return newUsersByNames;
 };
 
 function listReducer(state: any = {}, action: any = {}) {
@@ -341,7 +339,7 @@ function listReducer(state: any = {}, action: any = {}) {
         ...state,
         entries: userNames,
         entry: {
-          userCreatePermission: action.payload._links.create ? true : false,
+          userCreatePermission: !!action.payload._links.create,
           page: action.payload.page,
           pageTotal: action.payload.pageTotal,
           _links: action.payload._links
@@ -379,11 +377,10 @@ function byNamesReducer(state: any = {}, action: any = {}) {
       return reducerByName(state, action.payload.name, action.payload);
 
     case DELETE_USER_SUCCESS:
-      const newUserByNames = deleteUserInUsersByNames(
+      return deleteUserInUsersByNames(
         state,
         action.payload.name
       );
-      return newUserByNames;
 
     default:
       return state;
@@ -417,11 +414,7 @@ export const selectListAsCollection = (state: Object): PagedCollection => {
 };
 
 export const isPermittedToCreateUsers = (state: Object): boolean => {
-  const permission = selectListEntry(state).userCreatePermission;
-  if (permission) {
-    return true;
-  }
-  return false;
+  return !!selectListEntry(state).userCreatePermission;
 };
 
 export function getUsersFromState(state: Object) {

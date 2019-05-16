@@ -14,6 +14,7 @@ import javax.validation.constraints.Pattern;
 import java.util.Collection;
 
 @Getter @Setter @ToString @NoArgsConstructor
+@EitherRoleOrVerbs
 public class RepositoryPermissionDto extends HalRepresentation {
 
   public static final String GROUP_PREFIX = "@";
@@ -21,8 +22,10 @@ public class RepositoryPermissionDto extends HalRepresentation {
   @Pattern(regexp = ValidationUtil.REGEX_NAME)
   private String name;
 
-  @NotEmpty
+  @NoBlankStrings
   private Collection<String> verbs;
+
+  private String role;
 
   private boolean groupPermission = false;
 

@@ -34,7 +34,7 @@ public class VndMediaType {
   public static final String REPOSITORY_COLLECTION = PREFIX + "repositoryCollection" + SUFFIX;
   public static final String BRANCH_COLLECTION = PREFIX + "branchCollection" + SUFFIX;
   public static final String CONFIG = PREFIX + "config" + SUFFIX;
-  public static final String REPOSITORY_PERMISSION_COLLECTION = PREFIX + "repositoryPermissionCollection" + SUFFIX;
+  public static final String REPOSITORY_VERB_COLLECTION = PREFIX + "repositoryVerbCollection" + SUFFIX;
   public static final String REPOSITORY_TYPE_COLLECTION = PREFIX + "repositoryTypeCollection" + SUFFIX;
   public static final String REPOSITORY_TYPE = PREFIX + "repositoryType" + SUFFIX;
   public static final String UI_PLUGIN = PREFIX + "uiPlugin" + SUFFIX;
@@ -52,6 +52,9 @@ public class VndMediaType {
   public static final String ME = PREFIX + "me" + SUFFIX;
   public static final String SOURCE = PREFIX + "source" + SUFFIX;
   public static final String ERROR_TYPE = PREFIX + "error" + SUFFIX;
+
+  public static final String REPOSITORY_ROLE = PREFIX + "repositoryRole" + SUFFIX;
+  public static final String REPOSITORY_ROLE_COLLECTION = PREFIX + "repositoryRoleCollection" + SUFFIX;
 
   private VndMediaType() {
   }

@@ -201,7 +201,12 @@ public class ScmRequests {
       return super.assertPropertyPathDoesNotExists(LINK_USERS);
     }
 
-
+    public String getUrl(String linkName) {
+      return response
+        .then()
+        .extract()
+        .path("_links."  + linkName + ".href");
+    }
   }
 
   public class RepositoryResponse<PREV extends ModelResponse> extends ModelResponse<RepositoryResponse<PREV>, PREV> {

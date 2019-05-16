@@ -12,6 +12,8 @@ export type ButtonProps = {
   fullWidth?: boolean,
   className?: string,
   children?: React.Node,
+  
+  // context props
   classes: any
 };
 

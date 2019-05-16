@@ -106,14 +106,31 @@ public class TestData {
     ;
   }
 
-  public static void createUserPermission(String name, Collection<String> permissionType, String repositoryType) {
+  public static void createUserPermission(String username, Collection<String> verbs, String repositoryType) {
     String defaultPermissionUrl = TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType);
-    LOG.info("create permission with name {} and type: {} using the endpoint: {}", name, permissionType, defaultPermissionUrl);
+    LOG.info("create permission with name {} and verbs {} using the endpoint: {}", username, verbs, defaultPermissionUrl);
     given(VndMediaType.REPOSITORY_PERMISSION)
       .when()
       .content("{\n" +
-        "\t\"verbs\": " + permissionType.stream().collect(Collectors.joining("\",\"", "[\"", "\"]")) + ",\n" +
-        "\t\"name\": \"" + name + "\",\n" +
+        "\t\"verbs\": " + verbs.stream().collect(Collectors.joining("\",\"", "[\"", "\"]")) + ",\n" +
+        "\t\"name\": \"" + username + "\",\n" +
+        "\t\"groupPermission\": false\n" +
+        "\t\n" +
+        "}")
+      .post(defaultPermissionUrl)
+      .then()
+      .statusCode(HttpStatus.SC_CREATED)
+    ;
+  }
+
+  public static void createUserPermission(String username, String roleName, String repositoryType) {
+    String defaultPermissionUrl = TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType);
+    LOG.info("create permission with name {} and role {} using the endpoint: {}", username, roleName, defaultPermissionUrl);
+    given(VndMediaType.REPOSITORY_PERMISSION)
+      .when()
+      .content("{\n" +
+        "\t\"role\": " + roleName + ",\n" +
+        "\t\"name\": \"" + username + "\",\n" +
         "\t\"groupPermission\": false\n" +
         "\t\n" +
         "}")

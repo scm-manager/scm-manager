@@ -119,6 +119,7 @@
     "error-subtitle": "Unbekannter Fehler bei Berechtigung",
     "name": "Benutzer oder Gruppe",
     "role": "Rolle",
+    "custom": "CUSTOM",
     "permissions": "Berechtigung",
     "group-permission": "Gruppenberechtigung",
     "user-permission": "Benutzerberechtigung",

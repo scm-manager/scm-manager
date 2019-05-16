@@ -52,7 +52,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
-import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupNames;
 import sonia.scm.group.GroupPermissions;
 import sonia.scm.plugin.Extension;
@@ -64,7 +63,6 @@ import sonia.scm.user.UserPermissions;
 import sonia.scm.util.Util;
 
 import java.util.Collection;
-import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -90,18 +88,19 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
   /**
    * Constructs ...
-   *
-   * @param cacheManager
+   *  @param cacheManager
    * @param repositoryDAO
    * @param securitySystem
+   * @param repositoryPermissionProvider
    */
   @Inject
   public DefaultAuthorizationCollector(CacheManager cacheManager,
-                                       RepositoryDAO repositoryDAO, SecuritySystem securitySystem)
+                                       RepositoryDAO repositoryDAO, SecuritySystem securitySystem, RepositoryPermissionProvider repositoryPermissionProvider)
   {
     this.cache = cacheManager.getCache(CACHE_NAME);
     this.repositoryDAO = repositoryDAO;
     this.securitySystem = securitySystem;
+    this.repositoryPermissionProvider = repositoryPermissionProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -201,16 +200,8 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       for (RepositoryPermission permission : repositoryPermissions)
       {
         hasPermission = isUserPermitted(user, groups, permission);
-        if (hasPermission && !permission.getVerbs().isEmpty())
-        {
-          String perm = "repository:" + String.join(",", permission.getVerbs()) + ":" + repository.getId();
-          if (logger.isTraceEnabled())
-          {
-            logger.trace("add repository permission {} for user {} at repository {}",
-              perm, user.getName(), repository.getName());
-          }
-
-          builder.add(perm);
+        if (hasPermission) {
+          addRepositoryPermission(builder, repository, user, permission);
         }
       }
 
@@ -224,6 +215,34 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       logger.trace("repository {} has no permission entries",
         repository.getName());
     }
+  }
+
+  private void addRepositoryPermission(Builder<String> builder, Repository repository, User user, RepositoryPermission permission) {
+    Collection<String> verbs = getVerbs(permission);
+    if (!verbs.isEmpty())
+    {
+      String perm = "repository:" + String.join(",", verbs) + ":" + repository.getId();
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("add repository permission {} for user {} at repository {}",
+          perm, user.getName(), repository.getName());
+      }
+
+      builder.add(perm);
+    }
+  }
+
+  private Collection<String> getVerbs(RepositoryPermission permission) {
+    return permission.getRole() == null? permission.getVerbs(): getVerbsForRole(permission.getRole());
+  }
+
+  private Collection<String> getVerbsForRole(String roleName) {
+    return repositoryPermissionProvider.availableRoles()
+      .stream()
+      .filter(role -> roleName.equals(role.getName()))
+      .findFirst()
+      .orElseThrow(() -> new IllegalStateException("unknown role: " + roleName))
+      .getVerbs();
   }
 
   private AuthorizationInfo createAuthorizationInfo(User user, GroupNames groups) {
@@ -353,4 +372,6 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
   /** security system */
   private final SecuritySystem securitySystem;
+
+  private final RepositoryPermissionProvider repositoryPermissionProvider;
 }

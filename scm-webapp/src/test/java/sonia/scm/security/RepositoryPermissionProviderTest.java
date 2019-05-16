@@ -1,72 +1,51 @@
 package sonia.scm.security;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import sonia.scm.plugin.PluginLoader;
-import sonia.scm.repository.RepositoryPermissions;
-import sonia.scm.util.ClassLoaders;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.repository.RepositoryRole;
+import sonia.scm.repository.RepositoryRoleDAO;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class RepositoryPermissionProviderTest {
 
-  private RepositoryPermissionProvider repositoryPermissionProvider;
-  private String[] allVerbsFromRepositoryClass;
+  @Mock
+  SystemRepositoryPermissionProvider systemRepositoryPermissionProvider;
+  @Mock
+  RepositoryRoleDAO repositoryRoleDAO;
 
+  @InjectMocks
+  RepositoryPermissionProvider repositoryPermissionProvider;
 
-  @BeforeEach
-  void init() {
-    PluginLoader pluginLoader = mock(PluginLoader.class);
-    when(pluginLoader.getUberClassLoader()).thenReturn(ClassLoaders.getContextClassLoader(DefaultSecuritySystem.class));
-    repositoryPermissionProvider = new RepositoryPermissionProvider(pluginLoader);
-    allVerbsFromRepositoryClass = Arrays.stream(RepositoryPermissions.class.getDeclaredFields())
-      .filter(field -> field.getName().startsWith("ACTION_"))
-      .filter(field -> !field.getName().equals("ACTION_HEALTHCHECK"))
-      .map(this::getString)
-      .filter(verb -> !"create".equals(verb))
-      .toArray(String[]::new);
+  @Test
+  void shouldReturnVerbsFromSystem() {
+    List<String> expectedVerbs = asList("verb1", "verb2");
+    when(systemRepositoryPermissionProvider.availableVerbs()).thenReturn(expectedVerbs);
+
+    Collection<String> actualVerbs = repositoryPermissionProvider.availableVerbs();
+
+    assertThat(actualVerbs).isEqualTo(expectedVerbs);
   }
 
   @Test
-  void shouldReadAvailableRoles() {
-    assertThat(repositoryPermissionProvider.availableRoles()).isNotEmpty();
-    assertThat(repositoryPermissionProvider.availableRoles()).allSatisfy(this::containsOnlyAvailableVerbs);
-  }
+  void shouldReturnJoinedRolesFromSystemAndDao() {
+    RepositoryRole systemRole = new RepositoryRole("roleSystem", singletonList("verb1"), "system");
+    RepositoryRole daoRole = new RepositoryRole("roleDao", singletonList("verb1"), "xml");
+    when(systemRepositoryPermissionProvider.availableRoles()).thenReturn(singletonList(systemRole));
+    when(repositoryRoleDAO.getAll()).thenReturn(singletonList(daoRole));
 
-  private void containsOnlyAvailableVerbs(RepositoryRole role) {
-    assertThat(role.getVerbs()).isSubsetOf(repositoryPermissionProvider.availableVerbs());
-  }
+    Collection<RepositoryRole> actualRoles = repositoryPermissionProvider.availableRoles();
 
-  @Test
-  void shouldReadAvailableVerbsFromRepository() {
-    assertThat(repositoryPermissionProvider.availableVerbs()).contains(allVerbsFromRepositoryClass);
-  }
-
-  @Test
-  void shouldMergeRepositoryRoles() {
-    Collection<String> verbsInMergedRole = repositoryPermissionProvider
-      .availableRoles()
-      .stream()
-      .filter(r -> "READ".equals(r.getName()))
-      .findFirst()
-      .get()
-      .getVerbs();
-    assertThat(verbsInMergedRole).contains("read", "pull", "test");
-  }
-
-  private String getString(Field field) {
-    try {
-      return (String) field.get(null);
-    } catch (IllegalAccessException e) {
-      fail(e);
-      return null;
-    }
+    assertThat(actualRoles).containsExactly(systemRole, daoRole);
   }
 }

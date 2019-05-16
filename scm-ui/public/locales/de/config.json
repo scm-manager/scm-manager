@@ -6,6 +6,33 @@
     "errorTitle": "Fehler",
     "errorSubtitle": "Unbekannter Einstellungen Fehler"
   },
+  "repositoryRole": {
+    "navLink": "Berechtigungsrollen",
+    "title": "Berechtigungsrollen",
+    "noPermissionRoles": "Keine Berechtigungsrollen gefunden.",
+    "system": "System",
+    "createButton": "Berechtigungsrolle erstellen",
+    "name": "Name",
+    "type": "Typ",
+    "verbs": "Verben",
+    "button": {
+      "edit": "Bearbeiten"
+    },
+    "create": {
+      "name": "Name"
+    },
+    "edit": "Berechtigungsrolle bearbeiten",
+    "form": {
+      "subtitle": "Berechtigungsrolle bearbeiten",
+      "name": "Name",
+      "permissions": "Berechtigungen",
+      "submit": "Speichern"
+    }
+  },
+  "role": {
+    "name": "Name",
+    "system": "System"
+  },
   "config-form": {
     "submit": "Speichern",
     "submit-success-notification": "Einstellungen wurden erfolgreich geändert!",
