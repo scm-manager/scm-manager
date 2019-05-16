@@ -1,10 +1,10 @@
 // @flow
 import React from "react";
 import { connect } from "react-redux";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { translate } from "react-i18next";
 import type { History } from "history";
-import type { Role, PagedCollection } from "@scm-manager/ui-types";
+import type { RepositoryRole, PagedCollection } from "@scm-manager/ui-types";
 import {
   Title,
   Loading,
@@ -25,7 +25,7 @@ import PermissionRoleTable from "../components/PermissionRoleTable";
 import { getRolesLink } from "../../../modules/indexResource";
 type Props = {
   baseUrl: string,
-  roles: Role[],
+  roles: RepositoryRole[],
   loading: boolean,
   error: Error,
   canAddRoles: boolean,
@@ -90,19 +90,26 @@ class RepositoryRoles extends React.Component<Props> {
       return (
         <>
           <PermissionRoleTable baseUrl={baseUrl} roles={roles} />
-          <LinkPaginator collection={list} page={page}  />
+          <LinkPaginator collection={list} page={page} />
         </>
       );
     }
     return (
-      <Notification type="info">{t("repositoryRole.noPermissionRoles")}</Notification>
+      <Notification type="info">
+        {t("repositoryRole.noPermissionRoles")}
+      </Notification>
     );
   }
 
   renderCreateButton() {
     const { canAddRoles, baseUrl, t } = this.props;
     if (canAddRoles) {
-      return <CreateButton label={t("repositoryRole.createButton")} link={`${baseUrl}/create`} />;
+      return (
+        <CreateButton
+          label={t("repositoryRole.createButton")}
+          link={`${baseUrl}/create`}
+        />
+      );
     }
     return null;
   }
@@ -137,7 +144,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(translate("config")(RepositoryRoles)));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(translate("config")(RepositoryRoles))
+);

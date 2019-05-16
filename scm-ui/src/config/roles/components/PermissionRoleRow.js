@@ -1,12 +1,12 @@
 // @flow
 import React from "react";
 import { Link } from "react-router-dom";
-import type { Role } from "@scm-manager/ui-types";
+import type { RepositoryRole } from "@scm-manager/ui-types";
 import SystemRoleTag from "./SystemRoleTag";
 
 type Props = {
   baseUrl: string,
-  role: Role
+  role: RepositoryRole
 };
 
 class PermissionRoleRow extends React.Component<Props> {

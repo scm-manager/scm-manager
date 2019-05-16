@@ -5,7 +5,7 @@ import { Loading, ErrorPage, Title } from "@scm-manager/ui-components";
 import { Route } from "react-router";
 import type { History } from "history";
 import { translate } from "react-i18next";
-import type { Role } from "@scm-manager/ui-types";
+import type { RepositoryRole } from "@scm-manager/ui-types";
 import { getRepositoryRolesLink } from "../../../modules/indexResource";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import {
@@ -20,7 +20,7 @@ import EditRepositoryRole from "./EditRepositoryRole";
 
 type Props = {
   roleName: string,
-  role: Role,
+  role: RepositoryRole,
   loading: boolean,
   error: Error,
   repositoryRolesLink: string,
@@ -83,22 +83,22 @@ class SingleRepositoryRole extends React.Component<Props> {
         <Title title={t("repositoryRole.title")} />
         <div className="columns">
           <div className="column is-three-quarters">
-                <Route
-                  path={`${url}/info`}
-                  component={() => (
-                    <PermissionRoleDetail role={role} url={url} />
-                  )}
-                />
-                <Route
-                  path={`${url}/edit`}
-                  exact
-                  component={() => <EditRepositoryRole role={role} history={this.props.history} />}
-                />
-                <ExtensionPoint
-                  name="roles.route"
-                  props={extensionProps}
-                  renderAll={true}
-                />
+            <Route
+              path={`${url}/info`}
+              component={() => <PermissionRoleDetail role={role} url={url} />}
+            />
+            <Route
+              path={`${url}/edit`}
+              exact
+              component={() => (
+                <EditRepositoryRole role={role} history={this.props.history} />
+              )}
+            />
+            <ExtensionPoint
+              name="roles.route"
+              props={extensionProps}
+              renderAll={true}
+            />
           </div>
         </div>
       </>

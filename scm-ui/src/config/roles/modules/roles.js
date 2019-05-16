@@ -4,7 +4,11 @@ import { isPending } from "../../../modules/pending";
 import { getFailure } from "../../../modules/failure";
 import * as types from "../../../modules/types";
 import { combineReducers, Dispatch } from "redux";
-import type {Action, PagedCollection, Repository, Role} from "@scm-manager/ui-types";
+import type {
+  Action,
+  PagedCollection,
+  RepositoryRole
+} from "@scm-manager/ui-types";
 
 export const FETCH_ROLES = "scm/roles/FETCH_ROLES";
 export const FETCH_ROLES_PENDING = `${FETCH_ROLES}_${types.PENDING_SUFFIX}`;
@@ -138,12 +142,12 @@ export function fetchRoleByName(link: string, name: string) {
   return fetchRole(roleUrl, name);
 }
 
-export function fetchRoleByLink(role: Role) {
+export function fetchRoleByLink(role: RepositoryRole) {
   return fetchRole(role._links.self.href, role.name);
 }
 
 // create role
-export function createRolePending(role: Role): Action {
+export function createRolePending(role: RepositoryRole): Action {
   return {
     type: CREATE_ROLE_PENDING,
     role
@@ -169,7 +173,11 @@ export function createRoleReset() {
   };
 }
 
-export function createRole(link: string, role: Role, callback?: () => void) {
+export function createRole(
+  link: string,
+  role: RepositoryRole,
+  callback?: () => void
+) {
   return function(dispatch: Dispatch) {
     dispatch(createRolePending(role));
     return apiClient
@@ -233,7 +241,7 @@ function verbReducer(state: any = {}, action: any = {}) {
 }
 
 // modify role
-export function modifyRolePending(role: Role): Action {
+export function modifyRolePending(role: RepositoryRole): Action {
   return {
     type: MODIFY_ROLE_PENDING,
     payload: role,
@@ -241,7 +249,7 @@ export function modifyRolePending(role: Role): Action {
   };
 }
 
-export function modifyRoleSuccess(role: Role): Action {
+export function modifyRoleSuccess(role: RepositoryRole): Action {
   return {
     type: MODIFY_ROLE_SUCCESS,
     payload: role,
@@ -249,7 +257,7 @@ export function modifyRoleSuccess(role: Role): Action {
   };
 }
 
-export function modifyRoleFailure(role: Role, error: Error): Action {
+export function modifyRoleFailure(role: RepositoryRole, error: Error): Action {
   return {
     type: MODIFY_ROLE_FAILURE,
     payload: {
@@ -260,14 +268,14 @@ export function modifyRoleFailure(role: Role, error: Error): Action {
   };
 }
 
-export function modifyRoleReset(role: Role): Action {
+export function modifyRoleReset(role: RepositoryRole): Action {
   return {
     type: MODIFY_ROLE_RESET,
     itemId: role.name
   };
 }
 
-export function modifyRole(role: Role, callback?: () => void) {
+export function modifyRole(role: RepositoryRole, callback?: () => void) {
   return function(dispatch: Dispatch) {
     dispatch(modifyRolePending(role));
     return apiClient
@@ -288,7 +296,7 @@ export function modifyRole(role: Role, callback?: () => void) {
 }
 
 // delete role
-export function deleteRolePending(role: Role): Action {
+export function deleteRolePending(role: RepositoryRole): Action {
   return {
     type: DELETE_ROLE_PENDING,
     payload: role,
@@ -296,7 +304,7 @@ export function deleteRolePending(role: Role): Action {
   };
 }
 
-export function deleteRoleSuccess(role: Role): Action {
+export function deleteRoleSuccess(role: RepositoryRole): Action {
   return {
     type: DELETE_ROLE_SUCCESS,
     payload: role,
@@ -304,7 +312,7 @@ export function deleteRoleSuccess(role: Role): Action {
   };
 }
 
-export function deleteRoleFailure(role: Role, error: Error): Action {
+export function deleteRoleFailure(role: RepositoryRole, error: Error): Action {
   return {
     type: DELETE_ROLE_FAILURE,
     payload: {
@@ -315,7 +323,7 @@ export function deleteRoleFailure(role: Role, error: Error): Action {
   };
 }
 
-export function deleteRole(role: Role, callback?: () => void) {
+export function deleteRole(role: RepositoryRole, callback?: () => void) {
   return function(dispatch: any) {
     dispatch(deleteRolePending(role));
     return apiClient
@@ -333,7 +341,7 @@ export function deleteRole(role: Role, callback?: () => void) {
 }
 
 function extractRolesByNames(
-  roles: Role[],
+  roles: RepositoryRole[],
   roleNames: string[],
   oldRolesByNames: Object
 ) {
@@ -460,7 +468,7 @@ export function getRolesFromState(state: Object) {
   if (!roleNames) {
     return null;
   }
-  const roleEntries: Role[] = [];
+  const roleEntries: RepositoryRole[] = [];
 
   for (let roleName of roleNames) {
     roleEntries.push(state.roles.byNames[roleName]);
@@ -470,12 +478,7 @@ export function getRolesFromState(state: Object) {
 }
 
 export function getRoleCreateLink(state: Object) {
-  if (
-    state &&
-    state.list &&
-    state.list._links &&
-    state.list._links.create
-  ) {
+  if (state && state.list && state.list._links && state.list._links.create) {
     return state.list._links.create.href;
   }
 }

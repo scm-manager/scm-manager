@@ -1,11 +1,11 @@
 //@flow
 import React from "react";
-import type { Role } from "@scm-manager/ui-types";
+import type { RepositoryRole } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
 import AvailableVerbs from "./AvailableVerbs";
 
 type Props = {
-  role: Role,
+  role: RepositoryRole,
   // context props
   t: string => string
 };

@@ -1,13 +1,13 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import type { Role } from "@scm-manager/ui-types";
+import type { RepositoryRole } from "@scm-manager/ui-types";
 import ExtensionPoint from "@scm-manager/ui-extensions/lib/ExtensionPoint";
 import PermissionRoleDetailsTable from "./PermissionRoleDetailsTable";
 import { Button, Subtitle } from "@scm-manager/ui-components";
 
 type Props = {
-  role: Role,
+  role: RepositoryRole,
   url: string,
 
   // context props

@@ -10,7 +10,7 @@ import {
   getFetchVerbsFailure,
   isFetchVerbsPending
 } from "../modules/roles";
-import type { Role } from "@scm-manager/ui-types";
+import type { RepositoryRole } from "@scm-manager/ui-types";
 import {
   getRepositoryRolesLink,
   getRepositoryVerbsLink
@@ -22,19 +22,19 @@ type Props = {
   error?: Error,
 
   //dispatch function
-  addRole: (link: string, role: Role, callback?: () => void) => void,
+  addRole: (link: string, role: RepositoryRole, callback?: () => void) => void,
 
   // context objects
   t: string => string
 };
 
 class CreateRepositoryRole extends React.Component<Props> {
-  repositoryRoleCreated = (role: Role) => {
+  repositoryRoleCreated = (role: RepositoryRole) => {
     const { history } = this.props;
     history.push("/config/role/" + role.name + "/info");
   };
 
-  createRepositoryRole = (role: Role) => {
+  createRepositoryRole = (role: RepositoryRole) => {
     this.props.addRole(this.props.repositoryRolesLink, role, () =>
       this.repositoryRoleCreated(role)
     );
@@ -75,7 +75,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addRole: (link: string, role: Role, callback?: () => void) => {
+    addRole: (link: string, role: RepositoryRole, callback?: () => void) => {
       dispatch(createRole(link, role, callback));
     }
   };

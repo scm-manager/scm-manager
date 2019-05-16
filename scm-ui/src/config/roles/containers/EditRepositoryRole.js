@@ -9,25 +9,29 @@ import {
   modifyRole
 } from "../modules/roles";
 import { ErrorNotification } from "@scm-manager/ui-components";
-import type { Role } from "@scm-manager/ui-types";
+import type { RepositoryRole } from "@scm-manager/ui-types";
 
 type Props = {
   disabled: boolean,
-  role: Role,
+  role: RepositoryRole,
   repositoryRolesLink: string,
   error?: Error,
 
   //dispatch function
-  updateRole: (link: string, role: Role, callback?: () => void) => void
+  updateRole: (
+    link: string,
+    role: RepositoryRole,
+    callback?: () => void
+  ) => void
 };
 
 class EditRepositoryRole extends React.Component<Props> {
-  repositoryRoleUpdated = (role: Role) => {
+  repositoryRoleUpdated = (role: RepositoryRole) => {
     const { history } = this.props;
     history.push("/config/roles/");
   };
 
-  updateRepositoryRole = (role: Role) => {
+  updateRepositoryRole = (role: RepositoryRole) => {
     this.props.updateRole(role, () => this.repositoryRoleUpdated(role));
   };
 
@@ -62,7 +66,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateRole: (role: Role, callback?: () => void) => {
+    updateRole: (role: RepositoryRole, callback?: () => void) => {
       dispatch(modifyRole(role, callback));
     }
   };
