@@ -3,9 +3,10 @@ import React from "react";
 import RepositoryRoleForm from "./RepositoryRoleForm";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
-import { Title } from "@scm-manager/ui-components";
+import { ErrorNotification, Title } from "@scm-manager/ui-components";
 import {
   createRole,
+  getCreateRoleFailure,
   getFetchVerbsFailure,
   isFetchVerbsPending
 } from "../modules/roles";
@@ -18,6 +19,7 @@ import {
 type Props = {
   disabled: boolean,
   repositoryRolesLink: string,
+  error?: Error,
 
   //dispatch function
   addRole: (link: string, role: Role, callback?: () => void) => void,
@@ -27,7 +29,6 @@ type Props = {
 };
 
 class CreateRepositoryRole extends React.Component<Props> {
-
   repositoryRoleCreated = (role: Role) => {
     const { history } = this.props;
     history.push("/config/role/" + role.name + "/info");
@@ -40,7 +41,12 @@ class CreateRepositoryRole extends React.Component<Props> {
   };
 
   render() {
-    const { t } = this.props;
+    const { t, error } = this.props;
+
+    if (error) {
+      return <ErrorNotification error={error} />;
+    }
+
     return (
       <>
         <Title title={t("repositoryRole.title")} />
@@ -55,7 +61,7 @@ class CreateRepositoryRole extends React.Component<Props> {
 
 const mapStateToProps = (state, ownProps) => {
   const loading = isFetchVerbsPending(state);
-  const error = getFetchVerbsFailure(state);
+  const error = getFetchVerbsFailure(state) || getCreateRoleFailure(state);
   const verbsLink = getRepositoryVerbsLink(state);
   const repositoryRolesLink = getRepositoryRolesLink(state);
 
