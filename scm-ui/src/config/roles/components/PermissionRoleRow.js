@@ -1,12 +1,12 @@
 // @flow
 import React from "react";
 import { Link } from "react-router-dom";
-import type { Role } from "@scm-manager/ui-types";
+import type { RepositoryRole } from "@scm-manager/ui-types";
 import SystemRoleTag from "./SystemRoleTag";
 
 type Props = {
   baseUrl: string,
-  role: Role
+  role: RepositoryRole
 };
 
 class PermissionRoleRow extends React.Component<Props> {
@@ -20,7 +20,8 @@ class PermissionRoleRow extends React.Component<Props> {
 
   render() {
     const { baseUrl, role } = this.props;
-    const to = `${baseUrl}/${encodeURIComponent(role.name)}/info`;
+    const singleRepoRoleUrl = baseUrl.substring(0, baseUrl.length - 1);
+    const to = `${singleRepoRoleUrl}/${encodeURIComponent(role.name)}/info`;
     return (
       <tr>
         <td>{this.renderLink(to, role.name, !role._links.update)}</td>

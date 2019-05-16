@@ -26,9 +26,11 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
 
     const verbs = {};
     props.availableVerbs.forEach(
-      verb => (verbs[verb] = props.selectedVerbs.includes(verb))
+      verb =>
+        (verbs[verb] = props.selectedVerbs
+          ? props.selectedVerbs.includes(verb)
+          : false)
     );
-
     this.state = { verbs };
   }
 

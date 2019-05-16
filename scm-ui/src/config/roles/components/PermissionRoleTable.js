@@ -1,12 +1,12 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import type { Role } from "@scm-manager/ui-types";
+import type { RepositoryRole } from "@scm-manager/ui-types";
 import PermissionRoleRow from "./PermissionRoleRow";
 
 type Props = {
   baseUrl: string,
-  roles: Role[],
+  roles: RepositoryRole[],
 
   t: string => string
 };
@@ -18,7 +18,7 @@ class PermissionRoleTable extends React.Component<Props> {
       <table className="card-table table is-hoverable is-fullwidth">
         <thead>
           <tr>
-            <th>{t("roles.form.name")}</th>
+            <th>{t("repositoryRole.form.name")}</th>
           </tr>
         </thead>
         <tbody>

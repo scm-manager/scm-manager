@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Route } from "react-router";
+import { Route, Switch } from "react-router-dom";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import type { History } from "history";
 import { connect } from "react-redux";
@@ -10,9 +10,9 @@ import type { Links } from "@scm-manager/ui-types";
 import { Page, Navigation, NavLink, Section } from "@scm-manager/ui-components";
 import { getLinks } from "../../modules/indexResource";
 import GlobalConfig from "./GlobalConfig";
-import PermissionRolesOverview from "../roles/containers/PermissionRolesOverview";
-import PermissionRoleRoot from "../roles/containers/PermissionRoleRoot";
-import CreatePermissionRole from "../roles/containers/CreatePermissionRole";
+import RepositoryRoles from "../roles/containers/RepositoryRoles";
+import SingleRepositoryRole from "../roles/containers/SingleRepositoryRole";
+import CreateRepositoryRole from "../roles/containers/CreateRepositoryRole";
 
 type Props = {
   links: Links,
@@ -37,7 +37,7 @@ class Config extends React.Component<Props> {
 
   matchesRoles = (route: any) => {
     const url = this.matchedUrl();
-    const regex = new RegExp(`${url}/role/.+/info`);
+    const regex = new RegExp(`${url}/role/`);
     return route.location.pathname.match(regex);
   };
 
@@ -54,25 +54,44 @@ class Config extends React.Component<Props> {
       <Page>
         <div className="columns">
           <div className="column is-three-quarters">
-            <Route path={url} exact component={GlobalConfig} />
-            <Route
-              path={`${url}/role/:role`}
-              component={() => <PermissionRoleRoot baseUrl={`${url}/roles`} />}
-            />
-            <Route
-              path={`${url}/roles`}
-              exact
-              render={() => <PermissionRolesOverview baseUrl={`${url}/role`} />}
-            />
-            <Route
-              path={`${url}/roles/create`}
-              render={() => <CreatePermissionRole />}
-            />
-            <ExtensionPoint
-              name="config.route"
-              props={extensionProps}
-              renderAll={true}
-            />
+            <Switch>
+              <Route path={url} exact component={GlobalConfig} />
+              <Route
+                path={`${url}/role/:role`}
+                render={() => (
+                  <SingleRepositoryRole
+                    baseUrl={`${url}/roles`}
+                    history={this.props.history}
+                  />
+                )}
+              />
+              <Route
+                path={`${url}/roles`}
+                exact
+                render={() => <RepositoryRoles baseUrl={`${url}/roles`} />}
+              />
+              <Route
+                path={`${url}/roles/create`}
+                render={() => (
+                  <CreateRepositoryRole
+                    disabled={false}
+                    history={this.props.history}
+                  />
+                )}
+              />
+              <Route
+                path={`${url}/roles/:page`}
+                exact
+                render={() => (
+                  <RepositoryRoles baseUrl={`${url}/roles`} />
+                )}
+              />
+              <ExtensionPoint
+                name="config.route"
+                props={extensionProps}
+                renderAll={true}
+              />
+            </Switch>
           </div>
           <div className="column is-one-quarter">
             <Navigation>
@@ -83,9 +102,8 @@ class Config extends React.Component<Props> {
                 />
                 <NavLink
                   to={`${url}/roles/`}
-                  label={t("roles.navLink")}
+                  label={t("repositoryRole.navLink")}
                   activeWhenMatch={this.matchesRoles}
-                  activeOnlyWhenExact={false}
                 />
                 <ExtensionPoint
                   name="config.navigation"

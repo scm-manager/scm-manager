@@ -2,7 +2,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
-import type { Role } from "@scm-manager/ui-types";
+import type { RepositoryRole } from "@scm-manager/ui-types";
 import { InputField, SubmitButton } from "@scm-manager/ui-components";
 import PermissionCheckbox from "../../../repos/permissions/components/PermissionCheckbox";
 import {
@@ -11,14 +11,18 @@ import {
   getVerbsFromState,
   isFetchVerbsPending
 } from "../modules/roles";
-import { getRepositoryVerbsLink } from "../../../modules/indexResource";
+import {
+  getRepositoryRolesLink,
+  getRepositoryVerbsLink
+} from "../../../modules/indexResource";
 
 type Props = {
-  role?: Role,
+  role?: RepositoryRole,
   loading?: boolean,
-  disabled: boolean,
+  nameDisabled: boolean,
   availableVerbs: string[],
   verbsLink: string,
+  submitForm: RepositoryRole => void,
 
   // context objects
   t: string => string,
@@ -28,10 +32,10 @@ type Props = {
 };
 
 type State = {
-  role: Role
+  role: RepositoryRole
 };
 
-class GlobalPermissionRoleForm extends React.Component<Props, State> {
+class RepositoryRoleForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -46,16 +50,10 @@ class GlobalPermissionRoleForm extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const { fetchAvailableVerbs, verbsLink, role } = this.props;
+    const { fetchAvailableVerbs, verbsLink } = this.props;
     fetchAvailableVerbs(verbsLink);
-
-    if (role) {
-      this.setState({
-        role: {
-          ...role,
-          role: { verbs: role.verbs }
-        }
-      });
+    if (this.props.role) {
+      this.setState({ role: this.props.role });
     }
   }
 
@@ -68,7 +66,7 @@ class GlobalPermissionRoleForm extends React.Component<Props, State> {
     return !(
       this.isFalsy(role) ||
       this.isFalsy(role.name) ||
-      this.isFalsy(role.verbs)
+      this.isFalsy(role.verbs.length > 0)
     );
   };
 
@@ -100,13 +98,12 @@ class GlobalPermissionRoleForm extends React.Component<Props, State> {
   submit = (event: Event) => {
     event.preventDefault();
     if (this.isValid()) {
-      // this.props.submitForm(this.state.role);
-      //TODO ADD createRole here
+      this.props.submitForm(this.state.role);
     }
   };
 
   render() {
-    const { loading, availableVerbs, disabled, t } = this.props;
+    const { loading, availableVerbs, nameDisabled, t } = this.props;
     const { role } = this.state;
 
     const verbSelectBoxes = !availableVerbs
@@ -114,7 +111,6 @@ class GlobalPermissionRoleForm extends React.Component<Props, State> {
       : availableVerbs.map(verb => (
           <PermissionCheckbox
             key={verb}
-            // disabled={readOnly}
             name={verb}
             checked={role.verbs.includes(verb)}
             onChange={this.handleVerbChange}
@@ -127,22 +123,21 @@ class GlobalPermissionRoleForm extends React.Component<Props, State> {
           <div className="column">
             <InputField
               name="name"
-              label={t("roles.form.name")}
+              label={t("repositoryRole.create.name")}
               onChange={this.handleNameChange}
               value={role.name ? role.name : ""}
-              disabled={!!role.name || disabled}
+              disabled={nameDisabled}
             />
           </div>
         </div>
-
-        {verbSelectBoxes}
+        <>{verbSelectBoxes}</>
         <hr />
         <div className="columns">
           <div className="column">
             <SubmitButton
               loading={loading}
-              label={t("roles.form.submit")}
-              disabled={disabled || !this.isValid()}
+              label={t("repositoryRole.form.submit")}
+              disabled={!this.isValid()}
             />
           </div>
         </div>
@@ -156,12 +151,14 @@ const mapStateToProps = (state, ownProps) => {
   const error = getFetchVerbsFailure(state);
   const verbsLink = getRepositoryVerbsLink(state);
   const availableVerbs = getVerbsFromState(state);
+  const repositoryRolesLink = getRepositoryRolesLink(state);
 
   return {
     loading,
     error,
     verbsLink,
-    availableVerbs
+    availableVerbs,
+    repositoryRolesLink
   };
 };
 
@@ -176,4 +173,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("config")(GlobalPermissionRoleForm));
+)(translate("config")(RepositoryRoleForm));

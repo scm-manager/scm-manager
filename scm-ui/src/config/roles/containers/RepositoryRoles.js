@@ -1,10 +1,10 @@
 // @flow
 import React from "react";
 import { connect } from "react-redux";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { translate } from "react-i18next";
 import type { History } from "history";
-import type { Role, PagedCollection } from "@scm-manager/ui-types";
+import type { RepositoryRole, PagedCollection } from "@scm-manager/ui-types";
 import {
   Title,
   Loading,
@@ -23,10 +23,9 @@ import {
 } from "../modules/roles";
 import PermissionRoleTable from "../components/PermissionRoleTable";
 import { getRolesLink } from "../../../modules/indexResource";
-
 type Props = {
   baseUrl: string,
-  roles: Role[],
+  roles: RepositoryRole[],
   loading: boolean,
   error: Error,
   canAddRoles: boolean,
@@ -42,11 +41,32 @@ type Props = {
   fetchRolesByPage: (link: string, page: number) => void
 };
 
-class PermissionRolesOverview extends React.Component<Props> {
+class RepositoryRoles extends React.Component<Props> {
   componentDidMount() {
     const { fetchRolesByPage, rolesLink, page } = this.props;
     fetchRolesByPage(rolesLink, page);
   }
+
+  componentDidUpdate = (prevProps: Props) => {
+    const {
+      loading,
+      list,
+      page,
+      rolesLink,
+      location,
+      fetchRolesByPage
+    } = this.props;
+    if (list && page && !loading) {
+      const statePage: number = list.page + 1;
+      if (page !== statePage || prevProps.location.search !== location.search) {
+        fetchRolesByPage(
+          rolesLink,
+          page,
+          urls.getQueryStringFromLocation(location)
+        );
+      }
+    }
+  };
 
   render() {
     const { t, loading } = this.props;
@@ -57,7 +77,7 @@ class PermissionRolesOverview extends React.Component<Props> {
 
     return (
       <div>
-        <Title title={t("roles.title")} />
+        <Title title={t("repositoryRole.title")} />
         {this.renderPermissionsTable()}
         {this.renderCreateButton()}
       </div>
@@ -75,14 +95,21 @@ class PermissionRolesOverview extends React.Component<Props> {
       );
     }
     return (
-      <Notification type="info">{t("roles.noPermissionRoles")}</Notification>
+      <Notification type="info">
+        {t("repositoryRole.noPermissionRoles")}
+      </Notification>
     );
   }
 
   renderCreateButton() {
     const { canAddRoles, baseUrl, t } = this.props;
     if (canAddRoles) {
-      return <CreateButton label={t("roles.createButton")} link={`${baseUrl}/create`} />;
+      return (
+        <CreateButton
+          label={t("repositoryRole.createButton")}
+          link={`${baseUrl}/create`}
+        />
+      );
     }
     return null;
   }
@@ -117,7 +144,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(translate("config")(PermissionRolesOverview)));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(translate("config")(RepositoryRoles))
+);
