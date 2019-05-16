@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Route } from "react-router";
+import { Route, Switch } from "react-router-dom";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import type { History } from "history";
 import { connect } from "react-redux";
@@ -54,6 +54,7 @@ class Config extends React.Component<Props> {
       <Page>
         <div className="columns">
           <div className="column is-three-quarters">
+            <Switch>
             <Route path={url} exact component={GlobalConfig} />
             <Route
               path={`${url}/role/:role`}
@@ -68,11 +69,17 @@ class Config extends React.Component<Props> {
               path={`${url}/roles/create`}
               render={() => <CreateRepositoryRole disabled={false} history={this.props.history} />}
             />
+            <Route
+              path={`${url}/roles/:page`}
+              exact
+              render={() => <RepositoryRoles baseUrl={`${url}/roles/:page`} />}
+            />
             <ExtensionPoint
               name="config.route"
               props={extensionProps}
               renderAll={true}
             />
+            </Switch>
           </div>
           <div className="column is-one-quarter">
             <Navigation>
@@ -82,7 +89,7 @@ class Config extends React.Component<Props> {
                   label={t("config.globalConfigurationNavLink")}
                 />
                 <NavLink
-                  to={`${url}/roles`}
+                  to={`${url}/roles/`}
                   label={t("repositoryRole.navLink")}
                   activeWhenMatch={this.matchesRoles}
                 />

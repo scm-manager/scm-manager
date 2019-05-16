@@ -25,7 +25,7 @@ class EditRepositoryRole extends React.Component<Props> {
 
   repositoryRoleUpdated = (role: Role) => {
     const { history } = this.props;
-    history.push("/config/roles");
+    history.push("/config/roles/");
   };
 
   updateRepositoryRole = (role: Role) => {

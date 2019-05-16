@@ -64,7 +64,7 @@ class SingleRepositoryRole extends React.Component<Props> {
           subtitle={t("repositoryRole.errorSubtitle")}
           error={error}
         />
-      );0
+      );
     }
 
     if (!role || loading) {
