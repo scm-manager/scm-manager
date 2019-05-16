@@ -6,11 +6,22 @@
     "errorTitle": "Error",
     "errorSubtitle": "Unknown Config Error"
   },
-  "roles": {
+  "repositoryRole": {
     "navLink": "Permission Roles",
     "title": "Permission Roles",
     "noPermissionRoles": "No permission roles found.",
+    "system": "System",
     "createButton": "Create Permission Role",
+    "name": "Name",
+    "type": "Type",
+    "verbs": "Verbs",
+    "edit": "Edit Permission Role",
+    "button": {
+      "edit": "Edit"
+    },
+    "create": {
+      "name": "Name"
+    },
     "form": {
       "subtitle": "Edit Permission Role",
       "name": "Name",

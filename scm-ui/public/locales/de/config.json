@@ -6,12 +6,22 @@
     "errorTitle": "Fehler",
     "errorSubtitle": "Unbekannter Einstellungen Fehler"
   },
-  "roles": {
+  "repositoryRole": {
     "navLink": "Berechtigungsrollen",
     "title": "Berechtigungsrollen",
     "noPermissionRoles": "Keine Berechtigungsrollen gefunden.",
     "system": "System",
     "createButton": "Berechtigungsrolle erstellen",
+    "name": "Name",
+    "type": "Typ",
+    "verbs": "Verben",
+    "button": {
+      "edit": "Bearbeiten"
+    },
+    "create": {
+      "name": "Name"
+    },
+    "edit": "Berechtigungsrolle bearbeiten",
     "form": {
       "subtitle": "Berechtigungsrolle bearbeiten",
       "name": "Name",
