@@ -19,7 +19,9 @@ import {
   getDeletePermissionsFailure,
   getModifyPermissionsFailure,
   modifyPermissionReset,
-  deletePermissionReset, getAvailableRepositoryRoles, getAvailableRepositoryVerbs
+  deletePermissionReset,
+  getAvailableRepositoryRoles,
+  getAvailableRepositoryVerbs
 } from "../modules/permissions";
 import {
   Loading,
@@ -38,11 +40,14 @@ import CreatePermissionForm from "./CreatePermissionForm";
 import type { History } from "history";
 import { getPermissionsLink } from "../../modules/repos";
 import {
-  getGroupAutoCompleteLink, getRepositoryRolesLink, getRepositoryVerbsLink,
+  getGroupAutoCompleteLink,
+  getRepositoryRolesLink,
+  getRepositoryVerbsLink,
   getUserAutoCompleteLink
 } from "../../../modules/indexResource";
 
 type Props = {
+  availablePermissions: boolean,
   availableRepositoryRoles: RepositoryRole[],
   availableVerbs: string[],
   namespace: string,
@@ -59,7 +64,10 @@ type Props = {
   userAutoCompleteLink: string,
 
   //dispatch functions
-  fetchAvailablePermissionsIfNeeded: () => void,
+  fetchAvailablePermissionsIfNeeded: (
+    repositoryRolesLink: string,
+    repositoryVerbsLink: string
+  ) => void,
   fetchPermissions: (link: string, namespace: string, repoName: string) => void,
   createPermission: (
     link: string,
@@ -76,7 +84,6 @@ type Props = {
   match: any,
   history: History
 };
-
 
 class Permissions extends React.Component<Props> {
   componentDidMount() {
@@ -251,8 +258,16 @@ const mapDispatchToProps = dispatch => {
     fetchPermissions: (link: string, namespace: string, repoName: string) => {
       dispatch(fetchPermissions(link, namespace, repoName));
     },
-    fetchAvailablePermissionsIfNeeded: (repositoryRolesLink: string, repositoryVerbsLink: string) => {
-      dispatch(fetchAvailablePermissionsIfNeeded(repositoryRolesLink, repositoryVerbsLink));
+    fetchAvailablePermissionsIfNeeded: (
+      repositoryRolesLink: string,
+      repositoryVerbsLink: string
+    ) => {
+      dispatch(
+        fetchAvailablePermissionsIfNeeded(
+          repositoryRolesLink,
+          repositoryVerbsLink
+        )
+      );
     },
     createPermission: (
       link: string,

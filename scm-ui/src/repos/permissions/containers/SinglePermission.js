@@ -1,16 +1,12 @@
 // @flow
 import React from "react";
-import type {
-  RepositoryRole,
-  Permission
-} from "@scm-manager/ui-types";
+import type { RepositoryRole, Permission } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
 import {
   modifyPermission,
   isModifyPermissionPending,
   deletePermission,
-  isDeletePermissionPending,
-  findMatchingRoleName
+  isDeletePermissionPending
 } from "../modules/permissions";
 import { connect } from "react-redux";
 import type { History } from "history";
@@ -47,7 +43,6 @@ type Props = {
 };
 
 type State = {
-  role: string,
   permission: Permission,
   showAdvancedDialog: boolean
 };
@@ -69,39 +64,34 @@ class SinglePermission extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const defaultPermission = props.availableRoles
-      ? props.availableRoles[0]
+    const defaultPermission = props.availableRepositoryRoles
+      ? props.availableRepositoryRoles[0]
       : {};
 
     this.state = {
       permission: {
         name: "",
+        role: undefined,
         verbs: defaultPermission.verbs,
         groupPermission: false,
         _links: {}
       },
-      role: defaultPermission.name,
       showAdvancedDialog: false
     };
   }
 
   componentDidMount() {
-    const { availableRepositoryRoles, permission } = this.props;
-
-    const matchingRole = findMatchingRoleName(
-      availableRepositoryRoles,
-      permission.verbs
-    );
+    const { permission } = this.props;
 
     if (permission) {
       this.setState({
         permission: {
           name: permission.name,
+          role: permission.role,
           verbs: permission.verbs,
           groupPermission: permission.groupPermission,
           _links: permission._links
-        },
-        role: matchingRole
+        }
       });
     }
   }
@@ -115,7 +105,7 @@ class SinglePermission extends React.Component<Props, State> {
   };
 
   render() {
-    const { role, permission, showAdvancedDialog } = this.state;
+    const { permission, showAdvancedDialog } = this.state;
     const {
       t,
       availableRepositoryRoles,
@@ -125,18 +115,17 @@ class SinglePermission extends React.Component<Props, State> {
       repoName,
       classes
     } = this.props;
-    const availableRoleNames = !!availableRepositoryRoles && availableRepositoryRoles.map(
-      r => r.name
-    );
+    const availableRoleNames =
+      !!availableRepositoryRoles && availableRepositoryRoles.map(r => r.name);
     const readOnly = !this.mayChangePermissions();
     const roleSelector = readOnly ? (
-      <td>{role}</td>
+      <td>{permission.role ? permission.role : t("permission.custom")}</td>
     ) : (
       <td>
         <RoleSelector
           handleRoleChange={this.handleRoleChange}
           availableRoles={availableRoleNames}
-          role={role}
+          role={permission.role}
           loading={loading}
         />
       </td>
@@ -154,9 +143,15 @@ class SinglePermission extends React.Component<Props, State> {
 
     const iconType =
       permission && permission.groupPermission ? (
-        <i title={t("permission.group")} className={classNames("fas fa-user-friends", classes.iconColor)} />
+        <i
+          title={t("permission.group")}
+          className={classNames("fas fa-user-friends", classes.iconColor)}
+        />
       ) : (
-        <i title={t("permission.user")} className={classNames("fas fa-user", classes.iconColor)} />
+        <i
+          title={t("permission.user")}
+          className={classNames("fas fa-user", classes.iconColor)}
+        />
       );
 
     return (
@@ -199,42 +194,41 @@ class SinglePermission extends React.Component<Props, State> {
 
   submitAdvancedPermissionsDialog = (newVerbs: string[]) => {
     const { permission } = this.state;
-    const newRole = findMatchingRoleName(
-      this.props.availableRoles,
-      newVerbs
-    );
     this.setState(
       {
         showAdvancedDialog: false,
-        permission: { ...permission, verbs: newVerbs },
-        role: newRole
+        permission: { ...permission, role: undefined, verbs: newVerbs }
       },
-      () => this.modifyPermission(newVerbs)
+      () => this.modifyPermissionVerbs(newVerbs)
     );
   };
 
   handleRoleChange = (role: string) => {
-    const selectedRole = this.findAvailableRole(role);
+    const { permission } = this.state;
     this.setState(
       {
-        permission: {
-          ...this.state.permission,
-          verbs: selectedRole.verbs
-        },
-        role: role
+        permission: { ...permission, role: role, verbs: undefined }
       },
-      () => this.modifyPermission(selectedRole.verbs)
+      () => this.modifyPermissionRole(role)
     );
   };
 
   findAvailableRole = (roleName: string) => {
     const { availableRepositoryRoles } = this.props;
-    return availableRepositoryRoles.find(
-      role => role.name === roleName
+    return availableRepositoryRoles.find(role => role.name === roleName);
+  };
+
+  modifyPermissionRole = (role: string) => {
+    let permission = this.state.permission;
+    permission.role = role;
+    this.props.modifyPermission(
+      permission,
+      this.props.namespace,
+      this.props.repoName
     );
   };
 
-  modifyPermission = (verbs: string[]) => {
+  modifyPermissionVerbs = (verbs: string[]) => {
     let permission = this.state.permission;
     permission.verbs = verbs;
     this.props.modifyPermission(

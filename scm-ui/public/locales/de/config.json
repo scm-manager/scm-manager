@@ -29,6 +29,10 @@
       "submit": "Speichern"
     }
   },
+  "role": {
+    "name": "Name",
+    "system": "System"
+  },
   "config-form": {
     "submit": "Speichern",
     "submit-success-notification": "Einstellungen wurden erfolgreich geändert!",
