@@ -265,7 +265,8 @@ class CreatePermissionForm extends React.Component<Props, State> {
       return;
     }
     this.setState({
-      role: selectedRole.name
+      role: selectedRole.name,
+      verbs: []
     });
   };
 
