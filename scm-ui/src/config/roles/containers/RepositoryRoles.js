@@ -56,7 +56,7 @@ class RepositoryRoles extends React.Component<Props> {
 
     return (
       <div>
-        <Title title={t("roles.title")} />
+        <Title title={t("repositoryRole.title")} />
         {this.renderPermissionsTable()}
         {this.renderCreateButton()}
       </div>
@@ -69,19 +69,19 @@ class RepositoryRoles extends React.Component<Props> {
       return (
         <>
           <PermissionRoleTable baseUrl={baseUrl} roles={roles} />
-          <LinkPaginator collection={list} page={page} />
+          <LinkPaginator collection={list} page={page}  />
         </>
       );
     }
     return (
-      <Notification type="info">{t("roles.noPermissionRoles")}</Notification>
+      <Notification type="info">{t("repositoryRole.noPermissionRoles")}</Notification>
     );
   }
 
   renderCreateButton() {
     const { canAddRoles, baseUrl, t } = this.props;
     if (canAddRoles) {
-      return <CreateButton label={t("roles.createButton")} link={`${baseUrl}/create`} />;
+      return <CreateButton label={t("repositoryRole.createButton")} link={`${baseUrl}/create`} />;
     }
     return null;
   }

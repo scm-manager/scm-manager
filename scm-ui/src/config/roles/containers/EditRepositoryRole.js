@@ -25,7 +25,7 @@ class EditRepositoryRole extends React.Component<Props> {
 
   repositoryRoleUpdated = (role: Role) => {
     const { history } = this.props;
-    history.push("/config/role/" + role.name);
+    history.push("/config/roles");
   };
 
   updateRepositoryRole = (role: Role) => {
@@ -38,13 +38,13 @@ class EditRepositoryRole extends React.Component<Props> {
     return (
       <>
         <RepositoryRoleForm
-          disabled={false}
+          nameDisabled={true}
           role={this.props.role}
           submitForm={role => this.updateRepositoryRole(role)}
         />
       </>
     );
-  }
+  }w
 }
 
 const mapStateToProps = (state, ownProps) => {

@@ -57,7 +57,7 @@ class Config extends React.Component<Props> {
             <Route path={url} exact component={GlobalConfig} />
             <Route
               path={`${url}/role/:role`}
-              render={() => <SingleRepositoryRole baseUrl={`${url}/roles`} />}
+              render={() => <SingleRepositoryRole baseUrl={`${url}/roles`} history={this.props.history} />}
             />
             <Route
               path={`${url}/roles`}
@@ -83,7 +83,7 @@ class Config extends React.Component<Props> {
                 />
                 <NavLink
                   to={`${url}/roles`}
-                  label={t("roles.navLink")}
+                  label={t("repositoryRole.navLink")}
                   activeWhenMatch={this.matchesRoles}
                 />
                 <ExtensionPoint

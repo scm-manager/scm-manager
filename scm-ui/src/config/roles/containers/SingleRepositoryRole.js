@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { Loading, ErrorPage, Title } from "@scm-manager/ui-components";
 import { Route } from "react-router";
 import type { History } from "history";
-import { EditRepositoryRoleNavLink } from "../../components/navLinks";
 import { translate } from "react-i18next";
 import type { Role } from "@scm-manager/ui-types";
 import { getRepositoryRolesLink } from "../../../modules/indexResource";
@@ -18,7 +17,6 @@ import {
 import { withRouter } from "react-router-dom";
 import PermissionRoleDetail from "../components/PermissionRoleDetails";
 import EditRepositoryRole from "./EditRepositoryRole";
-import Switch from "react-router-dom/es/Switch";
 
 type Props = {
   roleName: string,
@@ -43,7 +41,6 @@ class SingleRepositoryRole extends React.Component<Props> {
       this.props.repositoryRolesLink,
       this.props.roleName
     );
-    console.log(this.props.match);
   }
 
   stripEndingSlash = (url: string) => {
@@ -67,7 +64,7 @@ class SingleRepositoryRole extends React.Component<Props> {
           subtitle={t("singleUser.errorSubtitle")}
           error={error}
         />
-      );
+      );0
     }
 
     if (!role || loading) {
@@ -83,23 +80,25 @@ class SingleRepositoryRole extends React.Component<Props> {
 
     return (
       <>
-        <Title title={t("repositoryRoles.title")} />
+        <Title title={t("repositoryRole.title")} />
         <div className="columns">
           <div className="column is-three-quarters">
-              <Route
-                path={url}
-                component={() => <PermissionRoleDetail role={role} url={url} />}
-              />
-              <Route
-                path={`${url}`}
-                exact
-                component={() => <EditRepositoryRole role={role} />}
-              />
-              <ExtensionPoint
-                name="roles.route"
-                props={extensionProps}
-                renderAll={true}
-              />
+                <Route
+                  path={`${url}/info`}
+                  component={() => (
+                    <PermissionRoleDetail role={role} url={url} />
+                  )}
+                />
+                <Route
+                  path={`${url}/edit`}
+                  exact
+                  component={() => <EditRepositoryRole role={role} history={this.props.history} />}
+                />
+                <ExtensionPoint
+                  name="roles.route"
+                  props={extensionProps}
+                  renderAll={true}
+                />
           </div>
         </div>
       </>

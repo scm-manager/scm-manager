@@ -4,36 +4,47 @@ import { translate } from "react-i18next";
 import type { Role } from "@scm-manager/ui-types";
 import ExtensionPoint from "@scm-manager/ui-extensions/lib/ExtensionPoint";
 import PermissionRoleDetailsTable from "./PermissionRoleDetailsTable";
-import {Button, Subtitle} from "@scm-manager/ui-components";
+import { Button, Subtitle } from "@scm-manager/ui-components";
 
 type Props = {
   role: Role,
   url: string,
 
   // context props
-  t: string => string,
+  t: string => string
 };
 
 class PermissionRoleDetails extends React.Component<Props> {
+  renderEditButton() {
+    const { t, url } = this.props;
+    if (!!this.props.role._links.update) {
+      return (
+        <Button
+          label={t("repositoryRole.button.edit")}
+          link={`${url}/edit`}
+          color="primary"
+        />
+      );
+    }
+    return null;
+  }
+
   render() {
-    const { role, url } = this.props;
+    const { role } = this.props;
 
     return (
-
       <div>
-        <PermissionRoleDetailsTable role={role}/>
-        <hr/>
-        <Subtitle subtitle={"repositoryRoles.edit"}/>
-        <Button label={"test"} link={`${url}/edit`} color="primary" />
+        <PermissionRoleDetailsTable role={role} />
+        <hr />
+        {this.renderEditButton()}
         <div className="content">
           <ExtensionPoint
-            name="roles.repositoryRole-details.information"
+            name="repositoryRole.role-details.information"
             renderAll={true}
             props={{ role }}
           />
         </div>
       </div>
-
     );
   }
 }

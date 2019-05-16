@@ -16,7 +16,7 @@ import {getRepositoryRolesLink, getRepositoryVerbsLink} from "../../../modules/i
 type Props = {
   role?: Role,
   loading?: boolean,
-  disabled: boolean,
+  nameDisabled: boolean,
   availableVerbs: string[],
   verbsLink: string,
   submitForm: Role => void,
@@ -63,7 +63,7 @@ class RepositoryRoleForm extends React.Component<Props, State> {
     return !(
       this.isFalsy(role) ||
       this.isFalsy(role.name) ||
-      this.isFalsy(role.verbs)
+      this.isFalsy(role.verbs.length > 0)
     );
   };
 
@@ -100,7 +100,7 @@ class RepositoryRoleForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { loading, availableVerbs, disabled, t } = this.props;
+    const { loading, availableVerbs, nameDisabled, t } = this.props;
     const { role } = this.state;
 
     const verbSelectBoxes = !availableVerbs
@@ -120,10 +120,10 @@ class RepositoryRoleForm extends React.Component<Props, State> {
           <div className="column">
             <InputField
               name="name"
-              label={t("roles.create.name")}
+              label={t("repositoryRole.create.name")}
               onChange={this.handleNameChange}
               value={role.name ? role.name : ""}
-              disabled={disabled}
+              disabled={nameDisabled}
             />
           </div>
         </div>
@@ -133,8 +133,8 @@ class RepositoryRoleForm extends React.Component<Props, State> {
           <div className="column">
             <SubmitButton
               loading={loading}
-              label={t("roles.create.submit")}
-              disabled={disabled || !this.isValid()}
+              label={t("repositoryRole.form.submit")}
+              disabled={!this.isValid()}
             />
           </div>
         </div>

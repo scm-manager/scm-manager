@@ -26,7 +26,7 @@ class CreateRepositoryRole extends React.Component<Props> {
 
   repositoryRoleCreated = (role: Role) => {
     const { history } = this.props;
-    history.push("/config/role/" + role.name);
+    history.push("/config/role/" + role.name + "/info");
   };
 
   createRepositoryRole = (role: Role) => {
