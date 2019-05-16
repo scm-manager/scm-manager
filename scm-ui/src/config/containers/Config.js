@@ -55,30 +55,42 @@ class Config extends React.Component<Props> {
         <div className="columns">
           <div className="column is-three-quarters">
             <Switch>
-            <Route path={url} exact component={GlobalConfig} />
-            <Route
-              path={`${url}/role/:role`}
-              render={() => <SingleRepositoryRole baseUrl={`${url}/roles`} history={this.props.history} />}
-            />
-            <Route
-              path={`${url}/roles`}
-              exact
-              render={() => <RepositoryRoles baseUrl={`${url}/roles`} />}
-            />
-            <Route
-              path={`${url}/roles/create`}
-              render={() => <CreateRepositoryRole disabled={false} history={this.props.history} />}
-            />
-            <Route
-              path={`${url}/roles/:page`}
-              exact
-              render={() => <RepositoryRoles baseUrl={`${url}/roles/:page`} />}
-            />
-            <ExtensionPoint
-              name="config.route"
-              props={extensionProps}
-              renderAll={true}
-            />
+              <Route path={url} exact component={GlobalConfig} />
+              <Route
+                path={`${url}/role/:role`}
+                render={() => (
+                  <SingleRepositoryRole
+                    baseUrl={`${url}/roles`}
+                    history={this.props.history}
+                  />
+                )}
+              />
+              <Route
+                path={`${url}/roles`}
+                exact
+                render={() => <RepositoryRoles baseUrl={`${url}/roles`} />}
+              />
+              <Route
+                path={`${url}/roles/create`}
+                render={() => (
+                  <CreateRepositoryRole
+                    disabled={false}
+                    history={this.props.history}
+                  />
+                )}
+              />
+              <Route
+                path={`${url}/roles/:page`}
+                exact
+                render={() => (
+                  <RepositoryRoles baseUrl={`${url}/roles`} />
+                )}
+              />
+              <ExtensionPoint
+                name="config.route"
+                props={extensionProps}
+                renderAll={true}
+              />
             </Switch>
           </div>
           <div className="column is-one-quarter">
