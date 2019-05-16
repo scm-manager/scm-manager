@@ -60,8 +60,8 @@ class SingleRepositoryRole extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t("singleUser.errorTitle")}
-          subtitle={t("singleUser.errorSubtitle")}
+          title={t("repositoryRole.errorTitle")}
+          subtitle={t("repositoryRole.errorSubtitle")}
           error={error}
         />
       );0
