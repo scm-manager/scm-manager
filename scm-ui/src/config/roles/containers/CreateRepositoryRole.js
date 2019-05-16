@@ -3,6 +3,7 @@ import React from "react";
 import RepositoryRoleForm from "./RepositoryRoleForm";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
+import { Title } from "@scm-manager/ui-components";
 import {
   createRole,
   getFetchVerbsFailure,
@@ -19,7 +20,10 @@ type Props = {
   repositoryRolesLink: string,
 
   //dispatch function
-  addRole: (link: string, role: Role, callback?: () => void) => void
+  addRole: (link: string, role: Role, callback?: () => void) => void,
+
+  // context objects
+  t: string => string
 };
 
 class CreateRepositoryRole extends React.Component<Props> {
@@ -36,8 +40,10 @@ class CreateRepositoryRole extends React.Component<Props> {
   };
 
   render() {
+    const { t } = this.props;
     return (
       <>
+        <Title title={t("repositoryRole.title")} />
         <RepositoryRoleForm
           disabled={this.props.disabled}
           submitForm={role => this.createRepositoryRole(role)}
