@@ -17,6 +17,7 @@ import {
 import * as validator from "../components/permissionValidation";
 import RoleSelector from "../components/RoleSelector";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
+import { findVerbsForRole } from "../modules/permissions";
 
 type Props = {
   availableRoles: RepositoryRole[],
@@ -142,10 +143,12 @@ class CreatePermissionForm extends React.Component<Props, State> {
 
     const availableRoleNames = availableRoles.map(r => r.name);
 
+    const selectedVerbs = role ? findVerbsForRole(availableRoles, role) : verbs;
+
     const advancedDialog = showAdvancedDialog ? (
       <AdvancedPermissionsDialog
         availableVerbs={availableVerbs}
-        selectedVerbs={verbs}
+        selectedVerbs={selectedVerbs}
         onClose={this.closeAdvancedPermissionsDialog}
         onSubmit={this.submitAdvancedPermissionsDialog}
       />

@@ -6,7 +6,8 @@ import {
   modifyPermission,
   isModifyPermissionPending,
   deletePermission,
-  isDeletePermissionPending
+  isDeletePermissionPending,
+  findVerbsForRole
 } from "../modules/permissions";
 import { connect } from "react-redux";
 import type { History } from "history";
@@ -131,11 +132,15 @@ class SinglePermission extends React.Component<Props, State> {
       </td>
     );
 
-    const advancedDialg = showAdvancedDialog ? (
+    const selectedVerbs = permission.role
+      ? findVerbsForRole(availableRepositoryRoles, permission.role)
+      : permission.verbs;
+
+    const advancedDialog = showAdvancedDialog ? (
       <AdvancedPermissionsDialog
         readOnly={readOnly}
         availableVerbs={availableRepositoryVerbs}
-        selectedVerbs={permission.verbs}
+        selectedVerbs={selectedVerbs}
         onClose={this.closeAdvancedPermissionsDialog}
         onSubmit={this.submitAdvancedPermissionsDialog}
       />
@@ -174,7 +179,7 @@ class SinglePermission extends React.Component<Props, State> {
             deletePermission={this.deletePermission}
             loading={this.props.deleteLoading}
           />
-          {advancedDialg}
+          {advancedDialog}
         </td>
       </tr>
     );

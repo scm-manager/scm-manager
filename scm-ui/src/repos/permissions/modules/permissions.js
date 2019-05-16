@@ -739,3 +739,17 @@ export function getModifyPermissionsFailure(
   }
   return null;
 }
+
+export function findVerbsForRole(
+  availableRepositoryRoles: RepositoryRole[],
+  roleName: string
+) {
+  const matchingRole = availableRepositoryRoles.find(
+    role => roleName === role.name
+  );
+  if (matchingRole) {
+    return matchingRole.verbs;
+  } else {
+    return [];
+  }
+}
