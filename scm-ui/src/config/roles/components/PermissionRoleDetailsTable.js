@@ -2,19 +2,12 @@
 import React from "react";
 import type { Role } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
-import { compose } from "redux";
-import injectSheet from "react-jss";
+import AvailableVerbs from "./AvailableVerbs";
 
 type Props = {
   role: Role,
   // context props
   t: string => string
-};
-
-const styles = {
-  spacing: {
-    padding: "0 !important"
-  }
 };
 
 class PermissionRoleDetailsTable extends React.Component<Props> {
@@ -31,35 +24,14 @@ class PermissionRoleDetailsTable extends React.Component<Props> {
             <th>{t("repositoryRole.type")}</th>
             <td>{role.type}</td>
           </tr>
-          {this.renderVerbs()}
+          <tr>
+            <th>{t("repositoryRole.verbs")}</th>
+            <AvailableVerbs role={role} />
+          </tr>
         </tbody>
       </table>
     );
   }
-
-  renderVerbs() {
-    const { role, t, classes } = this.props;
-
-    let verbs = null;
-    if (role.verbs.length > 0) {
-      verbs = (
-        <tr>
-          <th>{t("repositoryRole.verbs")}</th>
-          <td className={classes.spacing}>
-            <ul>
-              {role.verbs.map(verb => {
-                return <li>{verb}</li>;
-              })}
-            </ul>
-          </td>
-        </tr>
-      );
-    }
-    return verbs;
-  }
 }
 
-export default compose(
-  injectSheet(styles),
-  translate("config")
-)(PermissionRoleDetailsTable);
+export default translate("config")(PermissionRoleDetailsTable);
