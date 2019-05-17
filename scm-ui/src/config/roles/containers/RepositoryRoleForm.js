@@ -19,7 +19,6 @@ import {
 type Props = {
   role?: RepositoryRole,
   loading?: boolean,
-  nameDisabled: boolean,
   availableVerbs: string[],
   verbsLink: string,
   submitForm: RepositoryRole => void,
@@ -103,7 +102,7 @@ class RepositoryRoleForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { loading, availableVerbs, nameDisabled, t } = this.props;
+    const { loading, availableVerbs, t } = this.props;
     const { role } = this.state;
 
     const verbSelectBoxes = !availableVerbs
@@ -126,7 +125,7 @@ class RepositoryRoleForm extends React.Component<Props, State> {
               label={t("repositoryRole.create.name")}
               onChange={this.handleNameChange}
               value={role.name ? role.name : ""}
-              disabled={nameDisabled}
+              disabled={!!this.props.role}
             />
           </div>
         </div>

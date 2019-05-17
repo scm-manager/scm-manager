@@ -51,7 +51,6 @@ class EditRepositoryRole extends React.Component<Props> {
       <>
         <Subtitle subtitle={t("repositoryRole.editSubtitle")} />
         <RepositoryRoleForm
-          nameDisabled={true}
           role={this.props.role}
           submitForm={role => this.updateRepositoryRole(role)}
         />
