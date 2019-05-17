@@ -33,18 +33,16 @@ class PermissionRoleDetails extends React.Component<Props> {
     const { role } = this.props;
 
     return (
-      <div>
+      <>
         <PermissionRoleDetailsTable role={role} />
         <hr />
         {this.renderEditButton()}
-        <div className="content">
-          <ExtensionPoint
-            name="repositoryRole.role-details.information"
-            renderAll={true}
-            props={{ role }}
-          />
-        </div>
-      </div>
+        <ExtensionPoint
+          name="repositoryRole.role-details.information"
+          renderAll={true}
+          props={{ role }}
+        />
+      </>
     );
   }
 }
