@@ -36,6 +36,7 @@ type Props = {
   // context objects
   t: string => string,
   history: History,
+  location: any,
 
   // dispatch functions
   fetchRolesByPage: (link: string, page: number) => void

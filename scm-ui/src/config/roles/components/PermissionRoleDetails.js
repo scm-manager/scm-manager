@@ -4,7 +4,7 @@ import { translate } from "react-i18next";
 import type { RepositoryRole } from "@scm-manager/ui-types";
 import ExtensionPoint from "@scm-manager/ui-extensions/lib/ExtensionPoint";
 import PermissionRoleDetailsTable from "./PermissionRoleDetailsTable";
-import { Button, Subtitle } from "@scm-manager/ui-components";
+import { Button } from "@scm-manager/ui-components";
 
 type Props = {
   role: RepositoryRole,

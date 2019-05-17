@@ -6,6 +6,8 @@ import { translate } from "react-i18next";
 
 type Props = {
   system?: boolean,
+
+  // context props
   classes: any,
   t: string => string
 };

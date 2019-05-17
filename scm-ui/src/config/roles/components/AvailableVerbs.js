@@ -7,7 +7,9 @@ import injectSheet from "react-jss";
 
 type Props = {
   role: RepositoryRole,
+
   // context props
+  classes: any,
   t: string => string
 };
 

@@ -15,11 +15,13 @@ import {
   getRepositoryRolesLink,
   getRepositoryVerbsLink
 } from "../../../modules/indexResource";
+import type {History} from "history";
 
 type Props = {
   disabled: boolean,
   repositoryRolesLink: string,
   error?: Error,
+  history: History,
 
   //dispatch function
   addRole: (link: string, role: RepositoryRole, callback?: () => void) => void,
