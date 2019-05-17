@@ -23,6 +23,7 @@ import {
 } from "../modules/roles";
 import PermissionRoleTable from "../components/PermissionRoleTable";
 import { getRolesLink } from "../../../modules/indexResource";
+
 type Props = {
   baseUrl: string,
   roles: RepositoryRole[],
@@ -47,27 +48,6 @@ class RepositoryRoles extends React.Component<Props> {
     const { fetchRolesByPage, rolesLink, page } = this.props;
     fetchRolesByPage(rolesLink, page);
   }
-
-  componentDidUpdate = (prevProps: Props) => {
-    const {
-      loading,
-      list,
-      page,
-      rolesLink,
-      location,
-      fetchRolesByPage
-    } = this.props;
-    if (list && page && !loading) {
-      const statePage: number = list.page + 1;
-      if (page !== statePage || prevProps.location.search !== location.search) {
-        fetchRolesByPage(
-          rolesLink,
-          page,
-          urls.getQueryStringFromLocation(location)
-        );
-      }
-    }
-  };
 
   render() {
     const { t, loading } = this.props;
