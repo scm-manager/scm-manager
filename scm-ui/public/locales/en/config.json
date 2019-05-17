@@ -14,7 +14,7 @@
     "createButton": "Create Permission Role",
     "name": "Name",
     "type": "Type",
-    "verbs": "Verbs",
+    "verbs": "Permissions",
     "edit": "Edit Permission Role",
     "button": {
       "edit": "Edit"
@@ -32,6 +32,16 @@
   "role": {
     "name": "Name",
     "system": "System"
+  },
+  "deleteRole" : {
+    "button": "Delete",
+    "subtitle": "Delete Permission Role",
+    "confirmAlert": {
+      "title": "Delete Permission Role",
+      "message": "Do you really want to delete this permission role? All users who own this role will lose their permissions.",
+      "submit": "Yes",
+      "cancel": "No"
+    }
   },
   "config-form": {
     "submit": "Submit",
