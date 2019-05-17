@@ -9,29 +9,25 @@
   "repositoryRole": {
     "navLink": "Berechtigungsrollen",
     "title": "Berechtigungsrollen",
-    "noPermissionRoles": "Keine Berechtigungsrollen gefunden.",
-    "system": "System",
-    "createButton": "Berechtigungsrolle erstellen",
+    "errorTitle": "Fehler",
+    "errorSubtitle": "Unbekannter Berechtigungsrollen Fehler",
+    "createSubtitle": "Berechtigungsrolle erstellen",
+    "editSubtitle": "Berechtigungsrolle bearbeiten",
+    "overview": {
+      "title": "Übersicht aller verfügbaren Berechtigungsrollen",
+      "noPermissionRoles": "Keine Berechtigungsrollen gefunden.",
+      "createButton": "Berechtigungsrolle erstellen"
+    },
+    "editButton": "Bearbeiten",
     "name": "Name",
     "type": "Typ",
     "verbs": "Berechtigungen",
-    "button": {
-      "edit": "Bearbeiten"
-    },
-    "create": {
-      "name": "Name"
-    },
-    "edit": "Berechtigungsrolle bearbeiten",
+    "system": "System",
     "form": {
-      "subtitle": "Berechtigungsrolle bearbeiten",
       "name": "Name",
       "permissions": "Berechtigungen",
       "submit": "Speichern"
     }
-  },
-  "role": {
-    "name": "Name",
-    "system": "System"
   },
   "deleteRole" : {
     "button": "Löschen",

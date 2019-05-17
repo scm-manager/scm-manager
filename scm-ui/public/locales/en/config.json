@@ -18,9 +18,7 @@
       "noPermissionRoles": "No permission roles found.",
       "createButton": "Create Permission Role"
     },
-    "details": {
-      "editButton": "Edit"
-    },
+    "editButton": "Edit",
     "name": "Name",
     "type": "Type",
     "verbs": "Permissions",
@@ -31,7 +29,7 @@
       "submit": "Save"
     }
   },
-  "deleteRole" : {
+  "deleteRole": {
     "button": "Delete",
     "subtitle": "Delete Permission Role",
     "confirmAlert": {
