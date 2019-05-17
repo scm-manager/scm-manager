@@ -23,21 +23,16 @@ type Props = {
   history: History,
 
   //dispatch function
-  updateRole: (
-    link: string,
-    role: RepositoryRole,
-    callback?: () => void
-  ) => void
+  updateRole: (role: RepositoryRole, callback?: () => void) => void
 };
 
 class EditRepositoryRole extends React.Component<Props> {
-  repositoryRoleUpdated = (role: RepositoryRole) => {
-    const { history } = this.props;
-    history.push("/config/roles/");
+  repositoryRoleUpdated = () => {
+    this.props.history.push("/config/roles/");
   };
 
   updateRepositoryRole = (role: RepositoryRole) => {
-    this.props.updateRole(role, () => this.repositoryRoleUpdated(role));
+    this.props.updateRole(role, this.repositoryRoleUpdated);
   };
 
   render() {
@@ -60,7 +55,7 @@ class EditRepositoryRole extends React.Component<Props> {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const loading = isModifyRolePending(state);
+  const loading = isModifyRolePending(state, ownProps.role.name);
   const error = getModifyRoleFailure(state, ownProps.role.name);
 
   return {
