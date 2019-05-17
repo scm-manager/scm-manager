@@ -2,7 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { RepositoryRole } from "@scm-manager/ui-types";
-import ExtensionPoint from "@scm-manager/ui-extensions/lib/ExtensionPoint";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import PermissionRoleDetailsTable from "./PermissionRoleDetailsTable";
 import { Button } from "@scm-manager/ui-components";
 
