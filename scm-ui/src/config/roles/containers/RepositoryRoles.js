@@ -50,6 +50,26 @@ class RepositoryRoles extends React.Component<Props> {
     fetchRolesByPage(rolesLink, page);
   }
 
+  componentDidUpdate = (prevProps: Props) => {
+    const {
+      loading,
+      list,
+      page,
+      rolesLink,
+      location,
+      fetchRolesByPage
+    } = this.props;
+    if (list && page && !loading) {
+      const statePage: number = list.page + 1;
+      if (page !== statePage || prevProps.location.search !== location.search) {
+        fetchRolesByPage(
+          rolesLink,
+          page
+        );
+      }
+    }
+  };
+
   render() {
     const { t, loading } = this.props;
 
