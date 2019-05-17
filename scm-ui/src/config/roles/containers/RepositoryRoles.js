@@ -22,7 +22,7 @@ import {
   getFetchRolesFailure
 } from "../modules/roles";
 import PermissionRoleTable from "../components/PermissionRoleTable";
-import { getRolesLink } from "../../../modules/indexResource";
+import { getRepositoryRolesLink } from "../../../modules/indexResource";
 
 type Props = {
   baseUrl: string,
@@ -104,7 +104,7 @@ const mapStateToProps = (state, ownProps) => {
   const page = urls.getPageFromMatch(match);
   const canAddRoles = isPermittedToCreateRoles(state);
   const list = selectListAsCollection(state);
-  const rolesLink = getRolesLink(state);
+  const rolesLink = getRepositoryRolesLink(state);
 
   return {
     roles,

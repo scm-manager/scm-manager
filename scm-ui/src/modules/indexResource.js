@@ -159,10 +159,6 @@ export function getSvnConfigLink(state: Object) {
   return getLink(state, "svnConfig");
 }
 
-export function getRolesLink(state: Object) {
-  return getLink(state, "repositoryRoles");
-}
-
 export function getUserAutoCompleteLink(state: Object): string {
   const link = getLinkCollection(state, "autocomplete").find(
     i => i.name === "users"
