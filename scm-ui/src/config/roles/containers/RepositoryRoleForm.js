@@ -118,28 +118,20 @@ class RepositoryRoleForm extends React.Component<Props, State> {
 
     return (
       <form onSubmit={this.submit}>
-        <div className="columns">
-          <div className="column">
-            <InputField
-              name="name"
-              label={t("repositoryRole.create.name")}
-              onChange={this.handleNameChange}
-              value={role.name ? role.name : ""}
-              disabled={!!this.props.role}
-            />
-          </div>
-        </div>
-        <>{verbSelectBoxes}</>
+        <InputField
+          name="name"
+          label={t("repositoryRole.create.name")}
+          onChange={this.handleNameChange}
+          value={role.name ? role.name : ""}
+          disabled={!!this.props.role}
+        />
+        {verbSelectBoxes}
         <hr />
-        <div className="columns">
-          <div className="column">
-            <SubmitButton
-              loading={loading}
-              label={t("repositoryRole.form.submit")}
-              disabled={!this.isValid()}
-            />
-          </div>
-        </div>
+        <SubmitButton
+          loading={loading}
+          label={t("repositoryRole.form.submit")}
+          disabled={!this.isValid()}
+        />
       </form>
     );
   }
