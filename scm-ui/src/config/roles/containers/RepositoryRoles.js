@@ -7,6 +7,7 @@ import type { History } from "history";
 import type { RepositoryRole, PagedCollection } from "@scm-manager/ui-types";
 import {
   Title,
+  Subtitle,
   Loading,
   Notification,
   LinkPaginator,
@@ -57,11 +58,12 @@ class RepositoryRoles extends React.Component<Props> {
     }
 
     return (
-      <div>
+      <>
         <Title title={t("repositoryRole.title")} />
+        <Subtitle subtitle={t("repositoryRole.overview.title")} />
         {this.renderPermissionsTable()}
         {this.renderCreateButton()}
-      </div>
+      </>
     );
   }
 
@@ -77,7 +79,7 @@ class RepositoryRoles extends React.Component<Props> {
     }
     return (
       <Notification type="info">
-        {t("repositoryRole.noPermissionRoles")}
+        {t("repositoryRole.overview.noPermissionRoles")}
       </Notification>
     );
   }
@@ -87,7 +89,7 @@ class RepositoryRoles extends React.Component<Props> {
     if (canAddRoles) {
       return (
         <CreateButton
-          label={t("repositoryRole.createButton")}
+          label={t("repositoryRole.overview.createButton")}
           link={`${baseUrl}/create`}
         />
       );

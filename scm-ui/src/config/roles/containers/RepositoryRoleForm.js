@@ -120,12 +120,17 @@ class RepositoryRoleForm extends React.Component<Props, State> {
       <form onSubmit={this.submit}>
         <InputField
           name="name"
-          label={t("repositoryRole.create.name")}
+          label={t("repositoryRole.form.name")}
           onChange={this.handleNameChange}
           value={role.name ? role.name : ""}
           disabled={!!this.props.role}
         />
-        {verbSelectBoxes}
+        <div className="field">
+          <label className="label">
+            {t("repositoryRole.form.permissions")}
+          </label>
+          {verbSelectBoxes}
+        </div>
         <hr />
         <SubmitButton
           loading={loading}

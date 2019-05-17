@@ -20,7 +20,7 @@ class PermissionRoleDetails extends React.Component<Props> {
     if (!!this.props.role._links.update) {
       return (
         <Button
-          label={t("repositoryRole.button.edit")}
+          label={t("repositoryRole.details.editButton")}
           link={`${url}/edit`}
           color="primary"
         />

@@ -9,29 +9,27 @@
   "repositoryRole": {
     "navLink": "Permission Roles",
     "title": "Permission Roles",
-    "noPermissionRoles": "No permission roles found.",
-    "system": "System",
-    "createButton": "Create Permission Role",
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown Permission Role Error",
+    "createSubtitle": "Create Permission Role",
+    "editSubtitle": "Edit Permission Role",
+    "overview": {
+      "title": "Overview of all permission roles",
+      "noPermissionRoles": "No permission roles found.",
+      "createButton": "Create Permission Role"
+    },
+    "details": {
+      "editButton": "Edit"
+    },
     "name": "Name",
     "type": "Type",
     "verbs": "Verbs",
-    "edit": "Edit Permission Role",
-    "button": {
-      "edit": "Edit"
-    },
-    "create": {
-      "name": "Name"
-    },
+    "system": "System",
     "form": {
-      "subtitle": "Edit Permission Role",
       "name": "Name",
       "permissions": "Permissions",
       "submit": "Save"
     }
-  },
-  "role": {
-    "name": "Name",
-    "system": "System"
   },
   "config-form": {
     "submit": "Submit",
