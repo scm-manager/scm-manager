@@ -74,7 +74,6 @@ class Config extends React.Component<Props> {
                 path={`${url}/roles/create`}
                 render={() => (
                   <CreateRepositoryRole
-                    disabled={false}
                     history={this.props.history}
                   />
                 )}

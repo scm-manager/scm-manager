@@ -18,7 +18,6 @@ import {
 import type {History} from "history";
 
 type Props = {
-  disabled: boolean,
   repositoryRolesLink: string,
   error?: Error,
   history: History,
@@ -54,7 +53,6 @@ class CreateRepositoryRole extends React.Component<Props> {
         <Title title={t("repositoryRole.title")} />
         <Subtitle subtitle={t("repositoryRole.createSubtitle")} />
         <RepositoryRoleForm
-          disabled={this.props.disabled}
           submitForm={role => this.createRepositoryRole(role)}
         />
       </>
