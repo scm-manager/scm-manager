@@ -33,6 +33,16 @@
     "name": "Name",
     "system": "System"
   },
+  "deleteRole" : {
+    "button": "Löschen",
+    "subtitle": "Berechtigungsrolle löschen",
+    "confirmAlert": {
+      "title": "Berechtigungsrolle löschen",
+      "message": "Soll die Berechtigungsrolle wirklich gelöscht werden? Alle Nutzer dieser Rolle verlieren Ihre Berechtigungen.",
+      "submit": "Ja",
+      "cancel": "Nein"
+    }
+  },
   "config-form": {
     "submit": "Speichern",
     "submit-success-notification": "Einstellungen wurden erfolgreich geändert!",
