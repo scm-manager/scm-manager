@@ -10,6 +10,7 @@ import {
 } from "../modules/roles";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import type { RepositoryRole } from "@scm-manager/ui-types";
+import DeleteRepositoryRole from "./DeleteRepositoryRole";
 
 type Props = {
   disabled: boolean,
@@ -49,6 +50,8 @@ class EditRepositoryRole extends React.Component<Props> {
           role={this.props.role}
           submitForm={role => this.updateRepositoryRole(role)}
         />
+        <hr/>
+        <DeleteRepositoryRole role={this.props.role}/>
       </>
     );
   }
