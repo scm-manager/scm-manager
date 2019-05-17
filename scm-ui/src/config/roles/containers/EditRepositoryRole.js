@@ -8,14 +8,19 @@ import {
   isModifyRolePending,
   modifyRole
 } from "../modules/roles";
-import { ErrorNotification } from "@scm-manager/ui-components";
+import { ErrorNotification, Subtitle } from "@scm-manager/ui-components";
 import type { RepositoryRole } from "@scm-manager/ui-types";
+import type { History } from "history";
 
 type Props = {
   disabled: boolean,
   role: RepositoryRole,
   repositoryRolesLink: string,
   error?: Error,
+
+  // context objects
+  t: string => string,
+  history: History,
 
   //dispatch function
   updateRole: (
@@ -36,7 +41,7 @@ class EditRepositoryRole extends React.Component<Props> {
   };
 
   render() {
-    const { error } = this.props;
+    const { error, t } = this.props;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -44,6 +49,7 @@ class EditRepositoryRole extends React.Component<Props> {
 
     return (
       <>
+        <Subtitle subtitle={t("repositoryRole.editSubtitle")} />
         <RepositoryRoleForm
           nameDisabled={true}
           role={this.props.role}
