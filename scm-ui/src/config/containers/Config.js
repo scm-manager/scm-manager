@@ -103,6 +103,7 @@ class Config extends React.Component<Props> {
                   to={`${url}/roles/`}
                   label={t("repositoryRole.navLink")}
                   activeWhenMatch={this.matchesRoles}
+                  activeOnlyWhenExact={false}
                 />
                 <ExtensionPoint
                   name="config.navigation"
