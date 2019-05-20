@@ -4,7 +4,7 @@ import type { Action } from "@scm-manager/ui-components";
 import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../../modules/types";
 import type {
-  AvailableRepositoryPermissions,
+  RepositoryRole,
   Permission,
   PermissionCollection,
   PermissionCreateEntry
@@ -12,7 +12,6 @@ import type {
 import { isPending } from "../../../modules/pending";
 import { getFailure } from "../../../modules/failure";
 import { Dispatch } from "redux";
-import { getLinks } from "../../../modules/indexResource";
 
 export const FETCH_AVAILABLE = "scm/permissions/FETCH_AVAILABLE";
 export const FETCH_AVAILABLE_PENDING = `${FETCH_AVAILABLE}_${
@@ -78,22 +77,45 @@ const CONTENT_TYPE = "application/vnd.scmm-repositoryPermission+json";
 
 // fetch available permissions
 
-export function fetchAvailablePermissionsIfNeeded() {
+export function fetchAvailablePermissionsIfNeeded(
+  repositoryRolesLink: string,
+  repositoryVerbsLink: string
+) {
   return function(dispatch: any, getState: () => Object) {
     if (shouldFetchAvailablePermissions(getState())) {
-      return fetchAvailablePermissions(dispatch, getState);
+      return fetchAvailablePermissions(
+        dispatch,
+        getState,
+        repositoryRolesLink,
+        repositoryVerbsLink
+      );
     }
   };
 }
 
 export function fetchAvailablePermissions(
   dispatch: any,
-  getState: () => Object
+  getState: () => Object,
+  repositoryRolesLink: string,
+  repositoryVerbsLink: string
 ) {
   dispatch(fetchAvailablePending());
   return apiClient
-    .get(getLinks(getState()).availableRepositoryPermissions.href)
-    .then(response => response.json())
+    .get(repositoryRolesLink)
+    .then(repositoryRoles => repositoryRoles.json())
+    .then(repositoryRoles => repositoryRoles._embedded.repositoryRoles)
+    .then(repositoryRoles => {
+      return apiClient
+        .get(repositoryVerbsLink)
+        .then(repositoryVerbs => repositoryVerbs.json())
+        .then(repositoryVerbs => repositoryVerbs.verbs)
+        .then(repositoryVerbs => {
+          return {
+            repositoryVerbs,
+            repositoryRoles
+          };
+        });
+    })
     .then(available => {
       dispatch(fetchAvailableSuccess(available));
     })
@@ -121,7 +143,7 @@ export function fetchAvailablePending(): Action {
 }
 
 export function fetchAvailableSuccess(
-  available: AvailableRepositoryPermissions
+  available: [RepositoryRole[], string[]]
 ): Action {
   return {
     type: FETCH_AVAILABLE_SUCCESS,
@@ -543,14 +565,28 @@ export function getAvailablePermissions(state: Object) {
   }
 }
 
+export function getAvailableRepositoryRoles(state: Object) {
+  return available(state).repositoryRoles;
+}
+
+export function getAvailableRepositoryVerbs(state: Object) {
+  return available(state).repositoryVerbs;
+}
+
+function available(state: Object) {
+  if (state.permissions && state.permissions.available) {
+    return state.permissions.available;
+  }
+  return {};
+}
+
 export function getPermissionsOfRepo(
   state: Object,
   namespace: string,
   repoName: string
 ) {
   if (state.permissions && state.permissions[namespace + "/" + repoName]) {
-    const permissions = state.permissions[namespace + "/" + repoName].entries;
-    return permissions;
+    return state.permissions[namespace + "/" + repoName].entries;
   }
 }
 
@@ -704,32 +740,16 @@ export function getModifyPermissionsFailure(
   return null;
 }
 
-export function findMatchingRoleName(
-  availablePermissions: AvailableRepositoryPermissions,
-  verbs: string[]
+export function findVerbsForRole(
+  availableRepositoryRoles: RepositoryRole[],
+  roleName: string
 ) {
-  if (!verbs) {
-    return "";
-  }
-  const matchingRole = availablePermissions.availableRoles.find(role => {
-    return equalVerbs(role.verbs, verbs);
-  });
-
+  const matchingRole = availableRepositoryRoles.find(
+    role => roleName === role.name
+  );
   if (matchingRole) {
-    return matchingRole.name;
+    return matchingRole.verbs;
   } else {
-    return "";
+    return [];
   }
-}
-
-function equalVerbs(verbs1: string[], verbs2: string[]) {
-  if (!verbs1 || !verbs2) {
-    return false;
-  }
-
-  if (verbs1.length !== verbs2.length) {
-    return false;
-  }
-
-  return verbs1.every(verb => verbs2.includes(verb));
 }

@@ -50,6 +50,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -73,6 +74,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
   private String name;
   @XmlElement(name = "verb")
   private Set<String> verbs;
+  private String role;
 
   /**
    * This constructor exists for mapstruct and JAXB, only -- <b>do not use this in "normal" code</b>.
@@ -87,6 +89,15 @@ public class RepositoryPermission implements PermissionObject, Serializable
   {
     this.name = name;
     this.verbs = new LinkedHashSet<>(verbs);
+    this.role = null;
+    this.groupPermission = groupPermission;
+  }
+
+  public RepositoryPermission(String name, String role, boolean groupPermission)
+  {
+    this.name = name;
+    this.verbs = emptySet();
+    this.role = role;
     this.groupPermission = groupPermission;
   }
 
@@ -116,8 +127,9 @@ public class RepositoryPermission implements PermissionObject, Serializable
     final RepositoryPermission other = (RepositoryPermission) obj;
 
     return Objects.equal(name, other.name)
-      && verbs.containsAll(other.verbs)
       && verbs.size() == other.verbs.size()
+      && verbs.containsAll(other.verbs)
+      && Objects.equal(role, other.role)
       && Objects.equal(groupPermission, other.groupPermission);
   }
 
@@ -132,7 +144,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
   {
     // Normally we do not have a log of repository permissions having the same size of verbs, but different content.
     // Therefore we do not use the verbs themselves for the hash code but only the number of verbs.
-    return Objects.hashCode(name, verbs == null? -1: verbs.size(), groupPermission);
+    return Objects.hashCode(name, verbs == null? -1: verbs.size(), role, groupPermission);
   }
 
 
@@ -142,6 +154,7 @@ public class RepositoryPermission implements PermissionObject, Serializable
     //J-
     return MoreObjects.toStringHelper(this)
             .add("name", name)
+            .add("role", role)
             .add("verbs", verbs)
             .add("groupPermission", groupPermission)
             .toString();
@@ -174,6 +187,16 @@ public class RepositoryPermission implements PermissionObject, Serializable
   }
 
   /**
+   * Returns the role of the permission.
+   *
+   *
+   * @return role of the permission
+   */
+  public String getRole() {
+    return role;
+  }
+
+  /**
    * Returns true if the permission is a permission which affects a group.
    *
    *
@@ -192,7 +215,8 @@ public class RepositoryPermission implements PermissionObject, Serializable
    * @throws IllegalStateException when modified after the value has been set once.
    *
    * @deprecated Do not use this for "normal" code.
-   * Use {@link RepositoryPermission#RepositoryPermission(String, Collection, boolean)} instead.
+   * Use {@link RepositoryPermission#RepositoryPermission(String, Collection, boolean)}
+   * or {@link RepositoryPermission#RepositoryPermission(String, String, boolean)} instead.
    */
   @Deprecated
   public void setGroupPermission(boolean groupPermission)
@@ -208,7 +232,8 @@ public class RepositoryPermission implements PermissionObject, Serializable
    * @throws IllegalStateException when modified after the value has been set once.
    *
    * @deprecated Do not use this for "normal" code.
-   * Use {@link RepositoryPermission#RepositoryPermission(String, Collection, boolean)} instead.
+   * Use {@link RepositoryPermission#RepositoryPermission(String, Collection, boolean)}
+   * or {@link RepositoryPermission#RepositoryPermission(String, String, boolean)} instead.
    */
   @Deprecated
   public void setName(String name)
@@ -224,6 +249,22 @@ public class RepositoryPermission implements PermissionObject, Serializable
    * @throws IllegalStateException when modified after the value has been set once.
    *
    * @deprecated Do not use this for "normal" code.
+   * Use {@link RepositoryPermission#RepositoryPermission(String, String, boolean)} instead.
+   */
+  @Deprecated
+  public void setRole(String role)
+  {
+    if (this.role != null) {
+      throw new IllegalStateException(REPOSITORY_MODIFIED_EXCEPTION_TEXT);
+    }
+    this.role = role;
+  }
+
+  /**
+   * Use this for creation only. This will throw an {@link IllegalStateException} when modified.
+   * @throws IllegalStateException when modified after the value has been set once.
+   *
+   * @deprecated Do not use this for "normal" code.
    * Use {@link RepositoryPermission#RepositoryPermission(String, Collection, boolean)} instead.
    */
   @Deprecated
@@ -232,6 +273,6 @@ public class RepositoryPermission implements PermissionObject, Serializable
     if (this.verbs != null) {
       throw new IllegalStateException(REPOSITORY_MODIFIED_EXCEPTION_TEXT);
     }
-    this.verbs = unmodifiableSet(new LinkedHashSet<>(verbs));
+    this.verbs = verbs == null? emptySet(): unmodifiableSet(new LinkedHashSet<>(verbs));
   }
 }

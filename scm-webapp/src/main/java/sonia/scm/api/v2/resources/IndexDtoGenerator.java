@@ -8,6 +8,7 @@ import org.apache.shiro.SecurityUtils;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.group.GroupPermissions;
+import sonia.scm.repository.RepositoryRolePermissions;
 import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.UserPermissions;
 
@@ -58,10 +59,13 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       if (PermissionPermissions.list().isPermitted()) {
         builder.single(link("permissions", resourceLinks.permissions().self()));
       }
-      builder.single(link("availableRepositoryPermissions", resourceLinks.availableRepositoryPermissions().self()));
+      builder.single(link("repositoryVerbs", resourceLinks.repositoryVerbs().self()));
 
       builder.single(link("repositoryTypes", resourceLinks.repositoryTypeCollection().self()));
       builder.single(link("namespaceStrategies", resourceLinks.namespaceStrategies().self()));
+      if (RepositoryRolePermissions.read().isPermitted()) {
+        builder.single(link("repositoryRoles", resourceLinks.repositoryRoleCollection().self()));
+      }
     } else {
       builder.single(link("login", resourceLinks.authentication().jsonLogin()));
     }

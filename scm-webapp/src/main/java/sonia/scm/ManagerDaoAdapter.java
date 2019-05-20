@@ -7,6 +7,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
+
 public class ManagerDaoAdapter<T extends ModelObject> {
 
   private final GenericDAO<T> dao;
@@ -19,6 +21,9 @@ public class ManagerDaoAdapter<T extends ModelObject> {
     T notModified = dao.get(object.getId());
     if (notModified != null) {
       permissionCheck.apply(notModified).check();
+
+      doThrow().violation("type must not be changed").when(!notModified.getType().equals(object.getType()));
+
       AssertUtil.assertIsValid(object);
 
       beforeUpdate.handle(notModified);

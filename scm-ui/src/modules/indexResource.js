@@ -127,6 +127,14 @@ export function getUsersLink(state: Object) {
   return getLink(state, "users");
 }
 
+export function getRepositoryRolesLink(state: Object) {
+  return getLink(state, "repositoryRoles");
+}
+
+export function getRepositoryVerbsLink(state: Object) {
+  return getLink(state, "repositoryVerbs");
+}
+
 export function getGroupsLink(state: Object) {
   return getLink(state, "groups");
 }
@@ -149,6 +157,10 @@ export function getGitConfigLink(state: Object) {
 
 export function getSvnConfigLink(state: Object) {
   return getLink(state, "svnConfig");
+}
+
+export function getRolesLink(state: Object) {
+  return getLink(state, "repositoryRoles");
 }
 
 export function getUserAutoCompleteLink(state: Object): string {

@@ -106,7 +106,7 @@ public class RepositoryCollectionResource {
 
   private Repository createModelObjectFromDto(@Valid RepositoryDto repositoryDto) {
     Repository repository = dtoToRepositoryMapper.map(repositoryDto, null);
-    repository.setPermissions(singletonList(new RepositoryPermission(currentUser(), singletonList("*"), false)));
+    repository.setPermissions(singletonList(new RepositoryPermission(currentUser(), "OWNER", false)));
     return repository;
   }
 

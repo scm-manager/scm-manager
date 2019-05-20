@@ -332,7 +332,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
       .hasSize(1)
       .allSatisfy(p -> {
         assertThat(p.getName()).isEqualTo("trillian");
-        assertThat(p.getVerbs()).containsExactly("*");
+        assertThat(p.getRole()).isEqualTo("OWNER");
       });
   }
 
