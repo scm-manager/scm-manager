@@ -152,7 +152,7 @@ class PathBasedRepositoryLocationResolverTest {
   }
 
   private String getXmlFileContent() {
-    Path storePath = basePath.resolve("config").resolve("repositories.xml");
+    Path storePath = basePath.resolve("config").resolve("repository-paths.xml");
 
     assertThat(storePath).isRegularFile();
     return content(storePath);
