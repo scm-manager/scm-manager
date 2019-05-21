@@ -39,9 +39,11 @@ import com.google.inject.Module;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.EagerSingletonModule;
 import sonia.scm.SCMContext;
 import sonia.scm.ScmContextListener;
 import sonia.scm.ScmEventBusModule;
+import sonia.scm.ScmInitializerModule;
 import sonia.scm.Stage;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.plugin.DefaultPluginLoader;
@@ -150,9 +152,18 @@ public class BootstrapContextListener implements ServletContextListener {
 
       Module scmContextListenerModule = new ScmContextListenerModule();
       BootstrapModule bootstrapModule = new BootstrapModule(pluginLoader);
+      ScmInitializerModule scmInitializerModule = new ScmInitializerModule();
+      EagerSingletonModule eagerSingletonModule = new EagerSingletonModule();
       ScmEventBusModule scmEventBusModule = new ScmEventBusModule();
 
-      Injector bootstrapInjector = Guice.createInjector(bootstrapModule, scmContextListenerModule, scmEventBusModule);
+      Injector bootstrapInjector =
+        Guice.createInjector(
+          bootstrapModule,
+          scmContextListenerModule,
+          scmEventBusModule,
+          scmInitializerModule,
+          eagerSingletonModule
+        );
 
       processUpdates(pluginLoader, bootstrapInjector);
 
