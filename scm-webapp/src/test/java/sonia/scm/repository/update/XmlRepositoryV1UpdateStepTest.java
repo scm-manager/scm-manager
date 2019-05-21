@@ -1,7 +1,7 @@
 package sonia.scm.repository.update;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junitpioneer.jupiter.TempDirectory;
@@ -44,89 +44,98 @@ class XmlRepositoryV1UpdateStepTest {
   XmlRepositoryV1UpdateStep updateStep;
 
   @BeforeEach
-  void createV1Home(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void mockScmHome(@TempDirectory.TempDir Path tempDir) {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
-    ZippedRepositoryTestBase.extract(tempDir.toFile(), "sonia/scm/repository/update/scm-home.v1.zip");
   }
 
-  @BeforeEach
-  void captureStoredRepositories() {
-    doNothing().when(dao).add(storeCaptor.capture());
+  @Nested
+  class WithExistingDatabase {
+
+    @BeforeEach
+    void createV1Home(@TempDirectory.TempDir Path tempDir) throws IOException {
+      ZippedRepositoryTestBase.extract(tempDir.toFile(), "sonia/scm/repository/update/scm-home.v1.zip");
+    }
+
+    @BeforeEach
+    void captureStoredRepositories() {
+      doNothing().when(dao).add(storeCaptor.capture());
+    }
+
+    @Test
+    void shouldCreateNewRepositories() throws JAXBException {
+      updateStep.doUpdate();
+      verify(dao, times(3)).add(any());
+    }
+
+    @Test
+    void shouldMapAttributes() throws JAXBException {
+      updateStep.doUpdate();
+
+      Optional<Repository> repository = findByNamespace("git");
+
+      assertThat(repository)
+        .get()
+        .hasFieldOrPropertyWithValue("type", "git")
+        .hasFieldOrPropertyWithValue("contact", "arthur@dent.uk")
+        .hasFieldOrPropertyWithValue("description", "A simple repository without directories.");
+    }
+
+    @Test
+    void shouldUseRepositoryTypeAsNamespaceForNamesWithSingleElement() throws JAXBException {
+      updateStep.doUpdate();
+
+      Optional<Repository> repository = findByNamespace("git");
+
+      assertThat(repository)
+        .get()
+        .hasFieldOrPropertyWithValue("namespace", "git")
+        .hasFieldOrPropertyWithValue("name", "simple");
+    }
+
+    @Test
+    void shouldUseDirectoriesForNamespaceAndNameForNamesWithTwoElements() throws JAXBException {
+      updateStep.doUpdate();
+
+      Optional<Repository> repository = findByNamespace("one");
+
+      assertThat(repository)
+        .get()
+        .hasFieldOrPropertyWithValue("namespace", "one")
+        .hasFieldOrPropertyWithValue("name", "directory");
+    }
+
+    @Test
+    void shouldUseDirectoriesForNamespaceAndConcatenatedNameForNamesWithMoreThanTwoElements() throws JAXBException {
+      updateStep.doUpdate();
+
+      Optional<Repository> repository = findByNamespace("some");
+
+      assertThat(repository)
+        .get()
+        .hasFieldOrPropertyWithValue("namespace", "some")
+        .hasFieldOrPropertyWithValue("name", "more_directories_than_one");
+    }
+
+    @Test
+    void shouldMapPermissions() throws JAXBException {
+      updateStep.doUpdate();
+
+      Optional<Repository> repository = findByNamespace("git");
+
+      assertThat(repository.get().getPermissions())
+        .hasSize(3)
+        .contains(
+          new RepositoryPermission("mice", "WRITE", true),
+          new RepositoryPermission("dent", "OWNER", false),
+          new RepositoryPermission("trillian", "READ", false)
+        );
+    }
   }
 
   @Test
-  void shouldCreateNewRepositories() throws JAXBException {
-    updateStep.doUpdate();
-    verify(dao, times(3)).add(any());
-  }
-
-  @Test
-  void shouldMapAttributes() throws JAXBException {
+  void shouldNotFailIfNoOldDatabaseExists() throws JAXBException {
     updateStep.doUpdate();
 
-    Optional<Repository> repository = findByNamespace("git");
-
-    assertThat(repository)
-      .get()
-      .hasFieldOrPropertyWithValue("type", "git")
-      .hasFieldOrPropertyWithValue("contact", "arthur@dent.uk")
-      .hasFieldOrPropertyWithValue("description", "A simple repository without directories.")
-    ;
-  }
-
-  @Test
-  void shouldUseRepositoryTypeAsNamespaceForNamesWithSingleElement() throws JAXBException {
-    updateStep.doUpdate();
-
-    Optional<Repository> repository = findByNamespace("git");
-
-    assertThat(repository)
-      .get()
-      .hasFieldOrPropertyWithValue("namespace", "git")
-      .hasFieldOrPropertyWithValue("name", "simple")
-    ;
-  }
-
-  @Test
-  void shouldUseDirectoriesForNamespaceAndNameForNamesWithTwoElements() throws JAXBException {
-    updateStep.doUpdate();
-
-    Optional<Repository> repository = findByNamespace("one");
-
-    assertThat(repository)
-      .get()
-      .hasFieldOrPropertyWithValue("namespace", "one")
-      .hasFieldOrPropertyWithValue("name", "directory")
-    ;
-  }
-
-  @Test
-  void shouldUseDirectoriesForNamespaceAndConcatenatedNameForNamesWithMoreThanTwoElements() throws JAXBException {
-    updateStep.doUpdate();
-
-    Optional<Repository> repository = findByNamespace("some");
-
-    assertThat(repository)
-      .get()
-      .hasFieldOrPropertyWithValue("namespace", "some")
-      .hasFieldOrPropertyWithValue("name", "more_directories_than_one")
-    ;
-  }
-
-  @Test
-  void shouldMapPermissions() throws JAXBException {
-    updateStep.doUpdate();
-
-    Optional<Repository> repository = findByNamespace("git");
-
-    assertThat(repository.get().getPermissions())
-      .hasSize(3)
-    .contains(
-      new RepositoryPermission("mice", "WRITE", true),
-      new RepositoryPermission("dent", "OWNER", false),
-      new RepositoryPermission("trillian", "READ", false)
-    )
-    ;
   }
 
   private Optional<Repository> findByNamespace(String namespace) {

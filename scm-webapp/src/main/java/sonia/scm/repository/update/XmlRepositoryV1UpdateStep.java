@@ -1,7 +1,6 @@
 package sonia.scm.repository.update;
 
 import sonia.scm.SCMContextProvider;
-import sonia.scm.io.FileSystem;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
@@ -49,6 +48,9 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
 
   @Override
   public void doUpdate() throws JAXBException {
+    if (!determineV1File().exists()) {
+      return;
+    }
     JAXBContext jaxbContext = JAXBContext.newInstance(V1RepositoryDatabase.class);
     V1RepositoryDatabase v1Database = readV1Database(jaxbContext);
     v1Database.repositoryList.repositories.forEach(this::update);
@@ -109,7 +111,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
 
   @XmlAccessorType(XmlAccessType.FIELD)
   @XmlRootElement(name = "permissions")
-  public static class V1Permission {
+  private static class V1Permission {
     private boolean groupPermission;
     private String name;
     private String type;
@@ -117,7 +119,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
 
   @XmlAccessorType(XmlAccessType.FIELD)
   @XmlRootElement(name = "repositories")
-  public static class V1Repository {
+  private static class V1Repository {
     private Map<String, String> properties;
     private String contact;
     private long creationDate;
@@ -147,14 +149,14 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
     }
   }
 
-  public static class RepositoryList {
+  private static class RepositoryList {
     @XmlElement(name = "repository")
     private List<V1Repository> repositories;
   }
 
   @XmlRootElement(name = "repository-db")
   @XmlAccessorType(XmlAccessType.FIELD)
-  public static class V1RepositoryDatabase {
+  private static class V1RepositoryDatabase {
     private long creationTime;
     private Long lastModified;
     @XmlElement(name = "repositories")
