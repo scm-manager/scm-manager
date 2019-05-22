@@ -76,7 +76,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
       v1Repository.contact,
       v1Repository.description,
       createPermissions(v1Repository));
-    repositoryDao.add(repository);
+    repositoryDao.add(repository, destination);
   }
 
   private Path handleDataDirectory(V1Repository v1Repository) {
