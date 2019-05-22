@@ -7,6 +7,7 @@ import type { History } from "history";
 import type { RepositoryRole, PagedCollection } from "@scm-manager/ui-types";
 import {
   Title,
+  Subtitle,
   Loading,
   Notification,
   LinkPaginator,
@@ -22,7 +23,8 @@ import {
   getFetchRolesFailure
 } from "../modules/roles";
 import PermissionRoleTable from "../components/PermissionRoleTable";
-import { getRolesLink } from "../../../modules/indexResource";
+import { getRepositoryRolesLink } from "../../../modules/indexResource";
+
 type Props = {
   baseUrl: string,
   roles: RepositoryRole[],
@@ -36,6 +38,7 @@ type Props = {
   // context objects
   t: string => string,
   history: History,
+  location: any,
 
   // dispatch functions
   fetchRolesByPage: (link: string, page: number) => void
@@ -61,8 +64,7 @@ class RepositoryRoles extends React.Component<Props> {
       if (page !== statePage || prevProps.location.search !== location.search) {
         fetchRolesByPage(
           rolesLink,
-          page,
-          urls.getQueryStringFromLocation(location)
+          page
         );
       }
     }
@@ -76,11 +78,12 @@ class RepositoryRoles extends React.Component<Props> {
     }
 
     return (
-      <div>
+      <>
         <Title title={t("repositoryRole.title")} />
+        <Subtitle subtitle={t("repositoryRole.overview.title")} />
         {this.renderPermissionsTable()}
         {this.renderCreateButton()}
-      </div>
+      </>
     );
   }
 
@@ -96,7 +99,7 @@ class RepositoryRoles extends React.Component<Props> {
     }
     return (
       <Notification type="info">
-        {t("repositoryRole.noPermissionRoles")}
+        {t("repositoryRole.overview.noPermissionRoles")}
       </Notification>
     );
   }
@@ -106,7 +109,7 @@ class RepositoryRoles extends React.Component<Props> {
     if (canAddRoles) {
       return (
         <CreateButton
-          label={t("repositoryRole.createButton")}
+          label={t("repositoryRole.overview.createButton")}
           link={`${baseUrl}/create`}
         />
       );
@@ -123,7 +126,7 @@ const mapStateToProps = (state, ownProps) => {
   const page = urls.getPageFromMatch(match);
   const canAddRoles = isPermittedToCreateRoles(state);
   const list = selectListAsCollection(state);
-  const rolesLink = getRolesLink(state);
+  const rolesLink = getRepositoryRolesLink(state);
 
   return {
     roles,

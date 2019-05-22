@@ -6,6 +6,8 @@ import { translate } from "react-i18next";
 
 type Props = {
   system?: boolean,
+
+  // context props
   classes: any,
   t: string => string
 };
@@ -24,7 +26,7 @@ class SystemRoleTag extends React.Component<Props> {
     if (system) {
       return (
         <span className={classNames("tag is-dark", classes.tag)}>
-          {t("role.system")}
+          {t("repositoryRole.system")}
         </span>
       );
     }
