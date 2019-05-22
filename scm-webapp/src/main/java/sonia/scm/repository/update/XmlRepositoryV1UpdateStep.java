@@ -1,5 +1,8 @@
 package sonia.scm.repository.update;
 
+import com.google.inject.Injector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
@@ -17,6 +20,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -27,13 +31,19 @@ import static sonia.scm.version.Version.parse;
 @Extension
 public class XmlRepositoryV1UpdateStep implements UpdateStep {
 
+  private static Logger LOG = LoggerFactory.getLogger(XmlRepositoryV1UpdateStep.class);
+
   private final SCMContextProvider contextProvider;
-  private final XmlRepositoryDAO dao;
+  private final XmlRepositoryDAO repositoryDao;
+  private final MigrationStrategyDao migrationStrategyDao;
+  private final Injector injector;
 
   @Inject
-  public XmlRepositoryV1UpdateStep(SCMContextProvider contextProvider, XmlRepositoryDAO dao) {
+  public XmlRepositoryV1UpdateStep(SCMContextProvider contextProvider, XmlRepositoryDAO repositoryDao, MigrationStrategyDao migrationStrategyDao, Injector injector) {
     this.contextProvider = contextProvider;
-    this.dao = dao;
+    this.repositoryDao = repositoryDao;
+    this.migrationStrategyDao = migrationStrategyDao;
+    this.injector = injector;
   }
 
   @Override
@@ -57,6 +67,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
   }
 
   private void update(V1Repository v1Repository) {
+    Path destination = handleDataDirectory(v1Repository);
     Repository repository = new Repository(
       v1Repository.id,
       v1Repository.type,
@@ -65,7 +76,14 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
       v1Repository.contact,
       v1Repository.description,
       createPermissions(v1Repository));
-    dao.add(repository);
+    repositoryDao.add(repository);
+  }
+
+  private Path handleDataDirectory(V1Repository v1Repository) {
+    MigrationStrategy dataMigrationStrategy =
+      migrationStrategyDao.get(v1Repository.id)
+      .orElseThrow(() -> new IllegalStateException("no strategy found for repository with id " + v1Repository.id + " and name " + v1Repository.name));
+    return dataMigrationStrategy.from(injector).migrate(v1Repository.id, v1Repository.name, v1Repository.type);
   }
 
   private RepositoryPermission[] createPermissions(V1Repository v1Repository) {

@@ -1,5 +1,6 @@
 package sonia.scm.repository.update;
 
+import com.google.inject.Injector;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,21 +22,30 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static sonia.scm.repository.update.MigrationStrategy.COPY;
+import static sonia.scm.repository.update.MigrationStrategy.INLINE;
+import static sonia.scm.repository.update.MigrationStrategy.MOVE;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(TempDirectory.class)
 class XmlRepositoryV1UpdateStepTest {
 
+  Injector injectorMock = MigrationStrategyMock.init();
+
   @Mock
   SCMContextProvider contextProvider;
   @Mock
-  XmlRepositoryDAO dao;
+  XmlRepositoryDAO repositoryDAO;
+  @Mock()
+  MigrationStrategyDao migrationStrategyDao;
 
   @Captor
   ArgumentCaptor<Repository> storeCaptor;
@@ -58,13 +68,20 @@ class XmlRepositoryV1UpdateStepTest {
 
     @BeforeEach
     void captureStoredRepositories() {
-      doNothing().when(dao).add(storeCaptor.capture());
+      doNothing().when(repositoryDAO).add(storeCaptor.capture());
+    }
+
+    @BeforeEach
+    void createMigrationPlan(@TempDirectory.TempDir Path tempDir) {
+      lenient().when(migrationStrategyDao.get("3b91caa5-59c3-448f-920b-769aaa56b761")).thenReturn(of(MOVE));
+      lenient().when(migrationStrategyDao.get("c1597b4f-a9f0-49f7-ad1f-37d3aae1c55f")).thenReturn(of(COPY));
+      lenient().when(migrationStrategyDao.get("454972da-faf9-4437-b682-dc4a4e0aa8eb")).thenReturn(of(INLINE));
     }
 
     @Test
     void shouldCreateNewRepositories() throws JAXBException {
       updateStep.doUpdate();
-      verify(dao, times(3)).add(any());
+      verify(repositoryDAO, times(3)).add(any());
     }
 
     @Test
