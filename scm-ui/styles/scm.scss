@@ -275,6 +275,10 @@ ul.is-separated {
   .panel-block {
     display: block;
     border: none;
+
+    & div .comment-wrapper div:first-child {
+      border-top: none;
+    }
   }
 
   .panel-footer {
