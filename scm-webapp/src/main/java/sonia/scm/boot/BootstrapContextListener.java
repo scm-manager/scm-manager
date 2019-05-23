@@ -50,6 +50,7 @@ import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginException;
 import sonia.scm.plugin.PluginLoadException;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginWrapper;
 import sonia.scm.plugin.PluginsInternal;
 import sonia.scm.plugin.SmpArchive;
@@ -137,6 +138,19 @@ public class BootstrapContextListener implements ServletContextListener {
 
     File pluginDirectory = getPluginDirectory();
 
+    createContextListener(pluginDirectory);
+
+    contextListener.contextInitialized(sce);
+
+    // register for restart events
+    if (!registered && (SCMContext.getContext().getStage() == Stage.DEVELOPMENT)) {
+      logger.info("register for restart events");
+      ScmEventBus.getInstance().register(this);
+      registered = true;
+    }
+  }
+
+  private void createContextListener(File pluginDirectory) {
     try {
       if (!isCorePluginExtractionDisabled()) {
         extractCorePlugins(context, pluginDirectory);
@@ -148,22 +162,9 @@ public class BootstrapContextListener implements ServletContextListener {
 
       Set<PluginWrapper> plugins = PluginsInternal.collectPlugins(cl, pluginDirectory.toPath());
 
-      DefaultPluginLoader pluginLoader = new DefaultPluginLoader(context, cl, plugins);
+      PluginLoader pluginLoader = new DefaultPluginLoader(context, cl, plugins);
 
-      Module scmContextListenerModule = new ScmContextListenerModule();
-      BootstrapModule bootstrapModule = new BootstrapModule(pluginLoader);
-      ScmInitializerModule scmInitializerModule = new ScmInitializerModule();
-      EagerSingletonModule eagerSingletonModule = new EagerSingletonModule();
-      ScmEventBusModule scmEventBusModule = new ScmEventBusModule();
-
-      Injector bootstrapInjector =
-        Guice.createInjector(
-          bootstrapModule,
-          scmContextListenerModule,
-          scmEventBusModule,
-          scmInitializerModule,
-          eagerSingletonModule
-        );
+      Injector bootstrapInjector = createBootstrapInjector(pluginLoader);
 
       processUpdates(pluginLoader, bootstrapInjector);
 
@@ -171,19 +172,25 @@ public class BootstrapContextListener implements ServletContextListener {
     } catch (IOException ex) {
       throw new PluginLoadException("could not load plugins", ex);
     }
-
-    contextListener.contextInitialized(sce);
-
-    // register for restart events
-    if (!registered
-      && (SCMContext.getContext().getStage() == Stage.DEVELOPMENT)) {
-      logger.info("register for restart events");
-      ScmEventBus.getInstance().register(this);
-      registered = true;
-    }
   }
 
-  private void processUpdates(DefaultPluginLoader pluginLoader, Injector bootstrapInjector) {
+  private Injector createBootstrapInjector(PluginLoader pluginLoader) {
+    Module scmContextListenerModule = new ScmContextListenerModule();
+    BootstrapModule bootstrapModule = new BootstrapModule(pluginLoader);
+    ScmInitializerModule scmInitializerModule = new ScmInitializerModule();
+    EagerSingletonModule eagerSingletonModule = new EagerSingletonModule();
+    ScmEventBusModule scmEventBusModule = new ScmEventBusModule();
+
+    return Guice.createInjector(
+      bootstrapModule,
+      scmContextListenerModule,
+      scmEventBusModule,
+      scmInitializerModule,
+      eagerSingletonModule
+    );
+  }
+
+  private void processUpdates(PluginLoader pluginLoader, Injector bootstrapInjector) {
     Injector updateInjector = bootstrapInjector.createChildInjector(new UpdateStepModule(pluginLoader));
 
     UpdateEngine updateEngine = updateInjector.getInstance(UpdateEngine.class);
@@ -403,7 +410,6 @@ public class BootstrapContextListener implements ServletContextListener {
   private static class ScmContextListenerModule extends AbstractModule {
     @Override
     protected void configure() {
-
       install(new FactoryModuleBuilder().build(ScmContextListener.Factory.class));
     }
   }

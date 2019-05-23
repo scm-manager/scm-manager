@@ -9,7 +9,6 @@ import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
-import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver;
@@ -33,7 +32,7 @@ public class BootstrapModule extends AbstractModule {
   private final ClassOverrides overrides;
   private final PluginLoader pluginLoader;
 
-  BootstrapModule(DefaultPluginLoader pluginLoader) {
+  BootstrapModule(PluginLoader pluginLoader) {
     this.overrides = ClassOverrides.findOverrides(pluginLoader.getUberClassLoader());
     this.pluginLoader = pluginLoader;
   }
