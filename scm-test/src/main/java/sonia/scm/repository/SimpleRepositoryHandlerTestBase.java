@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -56,7 +57,7 @@ import static org.mockito.Mockito.when;
 public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
 
 
-  protected PathBasedRepositoryDAO repoDao = mock(PathBasedRepositoryDAO.class);
+  protected RepositoryDAO repoDao = mock(RepositoryDAO.class);
   protected Path repoPath;
   protected Repository repository;
 
@@ -78,7 +79,11 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
 
     locationResolver = mock(RepositoryLocationResolver.class);
 
-    when(locationResolver.getPath(anyString())).then(ic -> {
+    RepositoryLocationResolver.RepositoryLocationResolverInstance instanceMock = mock(RepositoryLocationResolver.RepositoryLocationResolverInstance.class);
+    when(locationResolver.create(any())).thenReturn(instanceMock);
+    when(locationResolver.supportsLocationType(any())).thenReturn(true);
+
+    when(instanceMock.getLocation(anyString())).then(ic -> {
       String id = ic.getArgument(0);
       return baseDirectory.toPath().resolve(id);
     });
@@ -107,7 +112,7 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     repository = RepositoryTestData.createHeartOfGold();
     File repoDirectory = new File(baseDirectory, repository.getId());
     repoPath = repoDirectory.toPath();
-    when(repoDao.getPath(repository.getId())).thenReturn(repoPath);
+//    when(repoDao.getPath(repository.getId())).thenReturn(repoPath);
     return new File(repoDirectory, AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY);
   }
 

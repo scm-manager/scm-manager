@@ -46,6 +46,7 @@ import sonia.scm.store.ConfigurationStoreFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -172,6 +173,6 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
   }
 
   private File resolveNativeDirectory(String repositoryId) {
-    return repositoryLocationResolver.getPath(repositoryId).resolve(REPOSITORIES_NATIVE_DIRECTORY).toFile();
+    return repositoryLocationResolver.create(Path.class).getLocation(repositoryId).resolve(REPOSITORIES_NATIVE_DIRECTORY).toFile();
   }
 }

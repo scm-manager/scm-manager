@@ -91,7 +91,7 @@ public class AbstractTestBase
     contextProvider = MockUtil.getSCMContextProvider(tempDirectory);
     fileSystem = new DefaultFileSystem();
     InitialRepositoryLocationResolver initialRepoLocationResolver = new InitialRepositoryLocationResolver();
-    repositoryLocationResolver = new RepositoryLocationResolver(contextProvider, repositoryDAO, initialRepoLocationResolver);
+    repositoryLocationResolver = new TempDirRepositoryLocationResolver(tempDirectory);
     postSetUp();
   }
 
@@ -254,4 +254,5 @@ public class AbstractTestBase
     subjectThreadState = createThreadState(subject);
     subjectThreadState.bind();
   }
+
 }

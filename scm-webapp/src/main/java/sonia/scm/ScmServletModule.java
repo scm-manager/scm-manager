@@ -212,12 +212,7 @@ public class ScmServletModule extends ServletModule
   {
     install(ThrowingProviderBinder.forModule(this));
 
-    SCMContextProvider context = SCMContext.getContext();
-
-    bind(SCMContextProvider.class).toInstance(context);
-
     ScmConfiguration config = getScmConfiguration();
-    CipherUtil cu = CipherUtil.getInstance();
 
     bind(NamespaceStrategy.class).toProvider(NamespaceStrategyProvider.class);
 
@@ -234,21 +229,11 @@ public class ScmServletModule extends ServletModule
     bind(ScmEventBus.class).toInstance(ScmEventBus.getInstance());
 
     // bind core
-    bind(ConfigurationStoreFactory.class, JAXBConfigurationStoreFactory.class);
-    bind(ConfigurationEntryStoreFactory.class, JAXBConfigurationEntryStoreFactory.class);
-    bind(DataStoreFactory.class, JAXBDataStoreFactory.class);
-    bind(BlobStoreFactory.class, FileBlobStoreFactory.class);
     bind(ScmConfiguration.class).toInstance(config);
-    bind(PluginLoader.class).toInstance(pluginLoader);
     bind(PluginManager.class, DefaultPluginManager.class);
 
     // bind scheduler
     bind(Scheduler.class).to(QuartzScheduler.class);
-    
-    // note CipherUtil uses an other generator
-    bind(KeyGenerator.class).to(DefaultKeyGenerator.class);
-    bind(CipherHandler.class).toInstance(cu.getCipherHandler());
-    bind(FileSystem.class, DefaultFileSystem.class);
 
     // bind health check stuff
     bind(HealthCheckContextListener.class);
@@ -327,7 +312,6 @@ public class ScmServletModule extends ServletModule
     bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class);
 
     // bind events
-    // bind(LastModifiedUpdateListener.class);
 
     bind(AccessTokenCookieIssuer.class).to(DefaultAccessTokenCookieIssuer.class);
     bind(PushStateDispatcher.class).toProvider(PushStateDispatcherProvider.class);

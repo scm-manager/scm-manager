@@ -121,8 +121,11 @@ public class RepositoryRole implements ModelObject, PermissionObject {
    * @return the hash code value for the {@link RepositoryRole}
    */
   @Override
-  public int hashCode() {
-    return Objects.hashCode(name, verbs);
+  public int hashCode()
+  {
+    // Normally we do not have a log of repository permissions having the same size of verbs, but different content.
+    // Therefore we do not use the verbs themselves for the hash code but only the number of verbs.
+    return Objects.hashCode(name, verbs == null? -1: verbs.size());
   }
 
   @Override
