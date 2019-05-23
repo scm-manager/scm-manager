@@ -1,5 +1,6 @@
 package sonia.scm.repository.update;
 
+import com.google.common.io.Resources;
 import com.google.inject.Injector;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -14,11 +15,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermission;
-import sonia.scm.repository.spi.ZippedRepositoryTestBase;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
@@ -165,7 +167,15 @@ class XmlRepositoryV1UpdateStepTest {
   @Test
   void shouldNotFailIfNoOldDatabaseExists() throws JAXBException {
     updateStep.doUpdate();
+  }
 
+  @Test
+  void shouldNotFailIfFormerV1DatabaseExists(@TempDirectory.TempDir Path tempDir) throws JAXBException, IOException {
+    URL url = Resources.getResource("sonia/scm/repository/update/formerV2RepositoryFile.xml");
+    Path configDir = tempDir.resolve("config");
+    Files.createDirectories(configDir);
+    Files.copy(url.openStream(), configDir.resolve("repositories.xml"));
+    updateStep.doUpdate();
   }
 
   private Optional<Repository> findByNamespace(String namespace) {

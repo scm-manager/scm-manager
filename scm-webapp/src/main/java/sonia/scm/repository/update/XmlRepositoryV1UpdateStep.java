@@ -24,10 +24,30 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static sonia.scm.version.Version.parse;
 
+/**
+ * Migrates SCM-Manager v1 repository data structure to SCM-Manager v2 data structure.
+ * That is:
+ * <ul>
+ * <li>The old <code>repositories.xml</code> file is read</li>
+ * <li>For each repository in this database,
+ * <ul>
+ * <li>a new entry in the new <code>repository-paths.xml</code> database is written,</li>
+ * <li>the data directory is moved or copied to a SCM v2 consistent directory. How this is done
+ * can be specified by a strategy (@see {@link MigrationStrategy}), that has to be set in
+ * a database file named <code>migration-plan.xml</code></li> (to create this file, use {@link MigrationStrategyDao}),
+ * and
+ * <li>the new <code>metadata.xml</code> file is created.</li>
+ * </ul>
+ * </li>
+ * </ul>
+ */
 @Extension
 public class XmlRepositoryV1UpdateStep implements UpdateStep {
 
@@ -62,8 +82,9 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
       return;
     }
     JAXBContext jaxbContext = JAXBContext.newInstance(V1RepositoryDatabase.class);
-    V1RepositoryDatabase v1Database = readV1Database(jaxbContext);
-    v1Database.repositoryList.repositories.forEach(this::update);
+    readV1Database(jaxbContext).ifPresent(
+      v1Database -> v1Database.repositoryList.repositories.forEach(this::update)
+    );
   }
 
   private void update(V1Repository v1Repository) {
@@ -82,7 +103,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
   private Path handleDataDirectory(V1Repository v1Repository) {
     MigrationStrategy dataMigrationStrategy =
       migrationStrategyDao.get(v1Repository.id)
-      .orElseThrow(() -> new IllegalStateException("no strategy found for repository with id " + v1Repository.id + " and name " + v1Repository.name));
+        .orElseThrow(() -> new IllegalStateException("no strategy found for repository with id " + v1Repository.id + " and name " + v1Repository.name));
     return dataMigrationStrategy.from(injector).migrate(v1Repository.id, v1Repository.name, v1Repository.type);
   }
 
@@ -102,12 +123,12 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
 
   private String getNamespace(V1Repository v1Repository) {
     String[] nameParts = getNameParts(v1Repository.name);
-    return nameParts.length > 1? nameParts[0]: v1Repository.type;
+    return nameParts.length > 1 ? nameParts[0] : v1Repository.type;
   }
 
   private String getName(V1Repository v1Repository) {
     String[] nameParts = getNameParts(v1Repository.name);
-    return nameParts.length == 1? nameParts[0]: concatPathElements(nameParts);
+    return nameParts.length == 1 ? nameParts[0] : concatPathElements(nameParts);
   }
 
   private String concatPathElements(String[] nameParts) {
@@ -118,8 +139,13 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
     return v1Name.split("/");
   }
 
-  private V1RepositoryDatabase readV1Database(JAXBContext jaxbContext) throws JAXBException {
-    return (V1RepositoryDatabase) jaxbContext.createUnmarshaller().unmarshal(determineV1File());
+  private Optional<V1RepositoryDatabase> readV1Database(JAXBContext jaxbContext) throws JAXBException {
+    Object unmarshal = jaxbContext.createUnmarshaller().unmarshal(determineV1File());
+    if (unmarshal instanceof V1RepositoryDatabase) {
+      return of((V1RepositoryDatabase) unmarshal);
+    } else {
+      return empty();
+    }
   }
 
   private File determineV1File() {
