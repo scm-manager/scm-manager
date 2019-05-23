@@ -1,21 +1,42 @@
 package sonia.scm.repository.update;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.repository.AbstractSimpleRepositoryHandler;
 
 import javax.inject.Inject;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
-class InlineMigrationStrategy implements MigrationStrategy.Instance {
-
-  private final SCMContextProvider contextProvider;
+class InlineMigrationStrategy extends BaseMigrationStrategy {
 
   @Inject
   public InlineMigrationStrategy(SCMContextProvider contextProvider) {
-    this.contextProvider = contextProvider;
+    super(contextProvider);
   }
 
   @Override
   public Path migrate(String id, String name, String type) {
-    return null;
+    Path repositoryBasePath = getSourceDataPath(name, type);
+    Path targetDataPath = repositoryBasePath
+      .resolve(AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY);
+    moveData(repositoryBasePath, targetDataPath);
+    return repositoryBasePath;
+  }
+
+  private void moveData(Path sourceDirectory, Path targetDirectory) {
+    createDataDirectory(targetDirectory);
+    listSourceDirectory(sourceDirectory)
+      .filter(sourceFile -> !targetDirectory.equals(sourceFile))
+      .forEach(
+        sourceFile -> {
+          Path targetFile = targetDirectory.resolve(sourceFile.getFileName());
+          if (Files.isDirectory(sourceFile)) {
+            moveData(sourceFile, targetFile);
+          } else {
+            moveFile(sourceFile, targetFile);
+          }
+        }
+      );
   }
 }
