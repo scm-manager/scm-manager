@@ -83,7 +83,10 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
     }
     JAXBContext jaxbContext = JAXBContext.newInstance(V1RepositoryDatabase.class);
     readV1Database(jaxbContext).ifPresent(
-      v1Database -> v1Database.repositoryList.repositories.forEach(this::update)
+      v1Database -> {
+        v1Database.repositoryList.repositories.forEach(this::readMigrationStrategy);
+        v1Database.repositoryList.repositories.forEach(this::update);
+      }
     );
   }
 
@@ -101,10 +104,13 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
   }
 
   private Path handleDataDirectory(V1Repository v1Repository) {
-    MigrationStrategy dataMigrationStrategy =
-      migrationStrategyDao.get(v1Repository.id)
-        .orElseThrow(() -> new IllegalStateException("no strategy found for repository with id " + v1Repository.id + " and name " + v1Repository.name));
+    MigrationStrategy dataMigrationStrategy = readMigrationStrategy(v1Repository);
     return dataMigrationStrategy.from(injector).migrate(v1Repository.id, v1Repository.name, v1Repository.type);
+  }
+
+  private MigrationStrategy readMigrationStrategy(V1Repository v1Repository) {
+    return migrationStrategyDao.get(v1Repository.id)
+      .orElseThrow(() -> new IllegalStateException("no strategy found for repository with id " + v1Repository.id + " and name " + v1Repository.name));
   }
 
   private RepositoryPermission[] createPermissions(V1Repository v1Repository) {

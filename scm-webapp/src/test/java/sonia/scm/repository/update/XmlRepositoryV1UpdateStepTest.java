@@ -24,8 +24,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.lenient;
@@ -72,7 +74,7 @@ class XmlRepositoryV1UpdateStepTest {
 
     @BeforeEach
     void captureStoredRepositories() {
-      doNothing().when(repositoryDAO).add(storeCaptor.capture(), locationCaptor.capture());
+      lenient().doNothing().when(repositoryDAO).add(storeCaptor.capture(), locationCaptor.capture());
     }
 
     @BeforeEach
@@ -161,6 +163,12 @@ class XmlRepositoryV1UpdateStepTest {
       updateStep.doUpdate();
 
       assertThat(locationCaptor.getAllValues()).contains(targetDir);
+    }
+
+    @Test
+    void shouldFailForMissingMigrationStrategy() throws JAXBException {
+      lenient().when(migrationStrategyDao.get("c1597b4f-a9f0-49f7-ad1f-37d3aae1c55f")).thenReturn(empty());
+      assertThrows(IllegalStateException.class, () -> updateStep.doUpdate());
     }
   }
 
