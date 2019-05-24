@@ -68,7 +68,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
 
   @Override
   public Version getTargetVersion() {
-    return parse("0.0.1");
+    return parse("2.0.0");
   }
 
   @Override
@@ -79,6 +79,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
   @Override
   public void doUpdate() throws JAXBException {
     if (!determineV1File().exists()) {
+      LOG.info("no v1 repositories database file found");
       return;
     }
     JAXBContext jaxbContext = JAXBContext.newInstance(V1RepositoryDatabase.class);
@@ -100,6 +101,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
       v1Repository.contact,
       v1Repository.description,
       createPermissions(v1Repository));
+    LOG.info("creating new repository {} with id {} from old repository {} in directory {}", repository.getNamespaceAndName(), repository.getId(), v1Repository.name, destination);
     repositoryDao.add(repository, destination);
   }
 
@@ -124,6 +126,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
   }
 
   private RepositoryPermission createPermission(V1Permission v1Permission) {
+    LOG.info("creating permission {} for {}", v1Permission.type, v1Permission.name);
     return new RepositoryPermission(v1Permission.name, v1Permission.type, v1Permission.groupPermission);
   }
 
