@@ -30,7 +30,7 @@ import static sonia.scm.ContextEntry.ContextBuilder.entity;
  */
 public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocationResolver<Path> {
 
-  private static final String STORE_NAME = "repository-paths";
+  public static final String STORE_NAME = "repository-paths";
 
   private final SCMContextProvider contextProvider;
   private final InitialRepositoryLocationResolver initialRepositoryLocationResolver;
