@@ -16,6 +16,10 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
+import sonia.scm.store.ConfigurationEntryStore;
+import sonia.scm.store.ConfigurationEntryStoreFactory;
+import sonia.scm.store.InMemoryConfigurationEntryStore;
+import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -29,7 +33,6 @@ import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -48,20 +51,32 @@ class XmlRepositoryV1UpdateStepTest {
   SCMContextProvider contextProvider;
   @Mock
   XmlRepositoryDAO repositoryDAO;
-  @Mock()
+  @Mock
   MigrationStrategyDao migrationStrategyDao;
+
+  ConfigurationEntryStoreFactory configurationEntryStoreFactory = new InMemoryConfigurationEntryStoreFactory(new InMemoryConfigurationEntryStore());
 
   @Captor
   ArgumentCaptor<Repository> storeCaptor;
   @Captor
   ArgumentCaptor<Path> locationCaptor;
 
-  @InjectMocks
   XmlRepositoryV1UpdateStep updateStep;
 
   @BeforeEach
   void mockScmHome(@TempDirectory.TempDir Path tempDir) {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
+  }
+
+  @BeforeEach
+  void createUpdateStepFromMocks() {
+    updateStep = new XmlRepositoryV1UpdateStep(
+      contextProvider,
+      repositoryDAO,
+      migrationStrategyDao,
+      injectorMock,
+      configurationEntryStoreFactory
+    );
   }
 
   @Nested
@@ -152,6 +167,15 @@ class XmlRepositoryV1UpdateStepTest {
           new RepositoryPermission("dent", "OWNER", false),
           new RepositoryPermission("trillian", "READ", false)
         );
+    }
+
+    @Test
+    void shouldExtractPropertiesFromRepositories() throws JAXBException {
+      updateStep.doUpdate();
+
+      ConfigurationEntryStore<Object> store = configurationEntryStoreFactory.withType(null).withName("").build();
+      assertThat(store.getAll())
+        .hasSize(3);
     }
 
     @Test

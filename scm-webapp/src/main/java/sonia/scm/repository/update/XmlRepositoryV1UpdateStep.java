@@ -9,6 +9,8 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
+import sonia.scm.store.ConfigurationEntryStore;
+import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.store.StoreConstants;
 import sonia.scm.version.Version;
 
@@ -57,13 +59,24 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
   private final XmlRepositoryDAO repositoryDao;
   private final MigrationStrategyDao migrationStrategyDao;
   private final Injector injector;
+  private final ConfigurationEntryStore<V1Properties> propertyStore;
 
   @Inject
-  public XmlRepositoryV1UpdateStep(SCMContextProvider contextProvider, XmlRepositoryDAO repositoryDao, MigrationStrategyDao migrationStrategyDao, Injector injector) {
+  public XmlRepositoryV1UpdateStep(
+    SCMContextProvider contextProvider,
+    XmlRepositoryDAO repositoryDao,
+    MigrationStrategyDao migrationStrategyDao,
+    Injector injector,
+    ConfigurationEntryStoreFactory configurationEntryStoreFactory
+  ) {
     this.contextProvider = contextProvider;
     this.repositoryDao = repositoryDao;
     this.migrationStrategyDao = migrationStrategyDao;
     this.injector = injector;
+    this.propertyStore = configurationEntryStoreFactory
+      .withType(V1Properties.class)
+      .withName("repository-properties-v1")
+      .build();
   }
 
   @Override
@@ -103,6 +116,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
       createPermissions(v1Repository));
     LOG.info("creating new repository {} with id {} from old repository {} in directory {}", repository.getNamespaceAndName(), repository.getId(), v1Repository.name, destination);
     repositoryDao.add(repository, destination);
+    propertyStore.put(v1Repository.id, v1Repository.properties);
   }
 
   private Path handleDataDirectory(V1Repository v1Repository) {
@@ -171,9 +185,21 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
+  private static class V1Property {
+    private String key;
+    private String value;
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
+  @XmlRootElement(name = "properties")
+  private static class V1Properties {
+    @XmlElement(name = "item")
+    private List<V1Property> properties;
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
   @XmlRootElement(name = "repositories")
   private static class V1Repository {
-    private Map<String, String> properties;
     private String contact;
     private long creationDate;
     private Long lastModified;
@@ -184,11 +210,11 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
     private boolean archived;
     private String type;
     private List<V1Permission> permissions;
+    private V1Properties properties;
 
     @Override
     public String toString() {
       return "V1Repository{" +
-        "properties=" + properties +
         ", contact='" + contact + '\'' +
         ", creationDate=" + creationDate +
         ", lastModified=" + lastModified +
