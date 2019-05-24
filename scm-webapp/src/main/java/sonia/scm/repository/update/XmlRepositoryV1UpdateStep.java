@@ -4,6 +4,7 @@ import com.google.inject.Injector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.migration.UpdateException;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
@@ -22,10 +23,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -100,8 +102,21 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
       v1Database -> {
         v1Database.repositoryList.repositories.forEach(this::readMigrationStrategy);
         v1Database.repositoryList.repositories.forEach(this::update);
+        backupOldRepositoriesFile();
       }
     );
+  }
+
+  private void backupOldRepositoriesFile() {
+    Path configDir = contextProvider.getBaseDirectory().toPath().resolve(StoreConstants.CONFIG_DIRECTORY_NAME);
+    Path oldRepositoriesFile = configDir.resolve("repositories.xml");
+    Path backupFile = configDir.resolve("repositories.xml.v1.backup");
+    LOG.info("moving old repositories database files to backup file {}", backupFile);
+    try {
+      Files.move(oldRepositoriesFile, backupFile);
+    } catch (IOException e) {
+      throw new UpdateException("could not backup old repository database file", e);
+    }
   }
 
   private void update(V1Repository v1Repository) {

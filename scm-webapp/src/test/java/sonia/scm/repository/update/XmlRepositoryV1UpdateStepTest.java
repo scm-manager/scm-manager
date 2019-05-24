@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junitpioneer.jupiter.TempDirectory;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
@@ -190,9 +189,17 @@ class XmlRepositoryV1UpdateStepTest {
     }
 
     @Test
-    void shouldFailForMissingMigrationStrategy() throws JAXBException {
+    void shouldFailForMissingMigrationStrategy() {
       lenient().when(migrationStrategyDao.get("c1597b4f-a9f0-49f7-ad1f-37d3aae1c55f")).thenReturn(empty());
       assertThrows(IllegalStateException.class, () -> updateStep.doUpdate());
+    }
+
+    @Test
+    void shouldBackupOldRepositoryDatabaseFile(@TempDirectory.TempDir Path tempDir) throws JAXBException {
+      updateStep.doUpdate();
+
+      assertThat(tempDir.resolve("config").resolve("repositories.xml")).doesNotExist();
+      assertThat(tempDir.resolve("config").resolve("repositories.xml.v1.backup")).exists();
     }
   }
 
@@ -202,12 +209,27 @@ class XmlRepositoryV1UpdateStepTest {
   }
 
   @Test
-  void shouldNotFailIfFormerV1DatabaseExists(@TempDirectory.TempDir Path tempDir) throws JAXBException, IOException {
+  void shouldNotFailIfFormerV2DatabaseExists(@TempDirectory.TempDir Path tempDir) throws JAXBException, IOException {
+    createFormerV2RepositoriesFile(tempDir);
+
+    updateStep.doUpdate();
+  }
+
+  @Test
+  void shouldNotBackupFormerV2DatabaseFile(@TempDirectory.TempDir Path tempDir) throws JAXBException, IOException {
+    createFormerV2RepositoriesFile(tempDir);
+
+    updateStep.doUpdate();
+
+    assertThat(tempDir.resolve("config").resolve("repositories.xml")).exists();
+    assertThat(tempDir.resolve("config").resolve("repositories.xml.v1.backup")).doesNotExist();
+  }
+
+  private void createFormerV2RepositoriesFile(@TempDirectory.TempDir Path tempDir) throws IOException {
     URL url = Resources.getResource("sonia/scm/repository/update/formerV2RepositoryFile.xml");
     Path configDir = tempDir.resolve("config");
     Files.createDirectories(configDir);
     Files.copy(url.openStream(), configDir.resolve("repositories.xml"));
-    updateStep.doUpdate();
   }
 
   private Optional<Repository> findByNamespace(String namespace) {
