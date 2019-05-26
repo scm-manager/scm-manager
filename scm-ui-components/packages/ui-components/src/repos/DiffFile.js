@@ -18,8 +18,7 @@ const styles = {
     fontSize: "1rem"
   },
   /* breaks into a second row
-   * when buttons and title become too long
-   */
+     when buttons and title become too long */
   level: {
     flexWrap: "wrap"
   },
@@ -32,8 +31,7 @@ const styles = {
     marginLeft: ".25rem",
     fontSize: "1rem"
   },
-  /* align child to right
-   */
+  /* align child to right */
   buttonHeader: {
     display: "flex",
     marginLeft: "auto"
