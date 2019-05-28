@@ -74,7 +74,6 @@ class Config extends React.Component<Props> {
                 path={`${url}/roles/create`}
                 render={() => (
                   <CreateRepositoryRole
-                    disabled={false}
                     history={this.props.history}
                   />
                 )}
@@ -104,6 +103,7 @@ class Config extends React.Component<Props> {
                   to={`${url}/roles/`}
                   label={t("repositoryRole.navLink")}
                   activeWhenMatch={this.matchesRoles}
+                  activeOnlyWhenExact={false}
                 />
                 <ExtensionPoint
                   name="config.navigation"

@@ -2,9 +2,9 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { RepositoryRole } from "@scm-manager/ui-types";
-import ExtensionPoint from "@scm-manager/ui-extensions/lib/ExtensionPoint";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import PermissionRoleDetailsTable from "./PermissionRoleDetailsTable";
-import { Button, Subtitle } from "@scm-manager/ui-components";
+import { Button } from "@scm-manager/ui-components";
 
 type Props = {
   role: RepositoryRole,
@@ -20,7 +20,7 @@ class PermissionRoleDetails extends React.Component<Props> {
     if (!!this.props.role._links.update) {
       return (
         <Button
-          label={t("repositoryRole.button.edit")}
+          label={t("repositoryRole.editButton")}
           link={`${url}/edit`}
           color="primary"
         />
@@ -33,18 +33,16 @@ class PermissionRoleDetails extends React.Component<Props> {
     const { role } = this.props;
 
     return (
-      <div>
+      <>
         <PermissionRoleDetailsTable role={role} />
         <hr />
         {this.renderEditButton()}
-        <div className="content">
-          <ExtensionPoint
-            name="repositoryRole.role-details.information"
-            renderAll={true}
-            props={{ role }}
-          />
-        </div>
-      </div>
+        <ExtensionPoint
+          name="repositoryRole.role-details.information"
+          renderAll={true}
+          props={{ role }}
+        />
+      </>
     );
   }
 }

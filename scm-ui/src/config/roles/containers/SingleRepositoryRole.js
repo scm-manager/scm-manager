@@ -81,26 +81,22 @@ class SingleRepositoryRole extends React.Component<Props> {
     return (
       <>
         <Title title={t("repositoryRole.title")} />
-        <div className="columns">
-          <div className="column is-three-quarters">
-            <Route
-              path={`${url}/info`}
-              component={() => <PermissionRoleDetail role={role} url={url} />}
-            />
-            <Route
-              path={`${url}/edit`}
-              exact
-              component={() => (
-                <EditRepositoryRole role={role} history={this.props.history} />
-              )}
-            />
-            <ExtensionPoint
-              name="roles.route"
-              props={extensionProps}
-              renderAll={true}
-            />
-          </div>
-        </div>
+        <Route
+          path={`${url}/info`}
+          component={() => <PermissionRoleDetail role={role} url={url} />}
+        />
+        <Route
+          path={`${url}/edit`}
+          exact
+          component={() => (
+            <EditRepositoryRole role={role} history={this.props.history} />
+          )}
+        />
+        <ExtensionPoint
+          name="roles.route"
+          props={extensionProps}
+          renderAll={true}
+        />
       </>
     );
   }
