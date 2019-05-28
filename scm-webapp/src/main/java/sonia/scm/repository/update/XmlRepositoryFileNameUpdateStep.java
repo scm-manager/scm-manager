@@ -16,6 +16,11 @@ import java.nio.file.Path;
 
 import static sonia.scm.version.Version.parse;
 
+/**
+ * Moves an existing <code>repositories.xml</code> file to <code>repository-paths.xml</code>.
+ * Note that this has to run <em>after</em> an old v1 repository database has been migrated to v2
+ * (see {@link XmlRepositoryV1UpdateStep}).
+ */
 @Extension
 public class XmlRepositoryFileNameUpdateStep implements UpdateStep {
 
