@@ -172,7 +172,6 @@ class ResourceLinks {
     }
   }
 
-
   UserCollectionLinks userCollection() {
     return new UserCollectionLinks(scmPathInfoStore.get());
   }
@@ -522,8 +521,66 @@ class ResourceLinks {
     public String content(String namespace, String name, String revision, String path) {
       return addPath(sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("content").parameters().method("get").parameters(revision, "").href(), path);
     }
+  }
 
+  RepositoryVerbLinks repositoryVerbs() {
+    return new RepositoryVerbLinks(scmPathInfoStore.get());
+  }
 
+  static class RepositoryVerbLinks {
+    private final LinkBuilder repositoryVerbLinkBuilder;
+
+    RepositoryVerbLinks(ScmPathInfo pathInfo) {
+      repositoryVerbLinkBuilder = new LinkBuilder(pathInfo, RepositoryVerbResource.class);
+    }
+
+    String self() {
+      return repositoryVerbLinkBuilder.method("getAll").parameters().href();
+    }
+  }
+
+  RepositoryRoleLinks repositoryRole() {
+    return new RepositoryRoleLinks(scmPathInfoStore.get());
+  }
+
+  static class RepositoryRoleLinks {
+    private final LinkBuilder repositoryRoleLinkBuilder;
+
+    RepositoryRoleLinks(ScmPathInfo pathInfo) {
+      repositoryRoleLinkBuilder = new LinkBuilder(pathInfo, RepositoryRoleRootResource.class, RepositoryRoleResource.class);
+    }
+
+    String self(String name) {
+      return repositoryRoleLinkBuilder.method("getRepositoryRoleResource").parameters(name).method("get").parameters().href();
+    }
+
+    String delete(String name) {
+      return repositoryRoleLinkBuilder.method("getRepositoryRoleResource").parameters(name).method("delete").parameters().href();
+    }
+
+    String update(String name) {
+      return repositoryRoleLinkBuilder.method("getRepositoryRoleResource").parameters(name).method("update").parameters().href();
+    }
+  }
+
+  RepositoryRoleCollectionLinks repositoryRoleCollection() {
+    return new RepositoryRoleCollectionLinks(scmPathInfoStore.get());
+  }
+
+  static class RepositoryRoleCollectionLinks {
+    private final LinkBuilder collectionLinkBuilder;
+
+    RepositoryRoleCollectionLinks(ScmPathInfo pathInfo) {
+      collectionLinkBuilder = new LinkBuilder(pathInfo, RepositoryRoleRootResource.class, RepositoryRoleCollectionResource.class);
+    }
+
+    String self() {
+      return collectionLinkBuilder.method("getRepositoryRoleCollectionResource").parameters().method("getAll").parameters().href();
+    }
+
+    String create() {
+      return collectionLinkBuilder.method("getRepositoryRoleCollectionResource").parameters().method("create").parameters().href();
+    }
   }
 
   public RepositoryPermissionLinks repositoryPermission() {
@@ -667,22 +724,6 @@ class ResourceLinks {
 
     String self() {
       return permissionsLinkBuilder.method("getAll").parameters().href();
-    }
-  }
-
-  public AvailableRepositoryPermissionLinks availableRepositoryPermissions() {
-    return new AvailableRepositoryPermissionLinks(scmPathInfoStore.get());
-  }
-
-  static class AvailableRepositoryPermissionLinks {
-    private final LinkBuilder linkBuilder;
-
-    AvailableRepositoryPermissionLinks(ScmPathInfo scmPathInfo) {
-      this.linkBuilder = new LinkBuilder(scmPathInfo, RepositoryPermissionResource.class);
-    }
-
-    String self() {
-      return linkBuilder.method("get").parameters().href();
     }
   }
 }

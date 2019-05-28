@@ -60,6 +60,12 @@
         }
       }
     },
+    "repositoryRole": {
+      "read,write": {
+        "displayName": "Administer custom repository role permissions",
+        "description": "May create, modify and delete custom repository roles and their permissions"
+      }
+    },
     "unknown": "Unknown permission"
   },
   "verbs": {

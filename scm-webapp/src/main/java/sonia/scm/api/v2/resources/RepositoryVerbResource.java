@@ -12,18 +12,18 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 /**
- * RESTful Web Service Resource to get available repository types.
+ * RESTful Web Service Resource to get available repository verbs.
  */
-@Path(RepositoryPermissionResource.PATH)
-public class RepositoryPermissionResource {
+@Path(RepositoryVerbResource.PATH)
+public class RepositoryVerbResource {
 
-  static final String PATH = "v2/repositoryPermissions/";
+  static final String PATH = "v2/repositoryVerbs/";
 
   private final RepositoryPermissionProvider repositoryPermissionProvider;
   private final ResourceLinks resourceLinks;
 
   @Inject
-  public RepositoryPermissionResource(RepositoryPermissionProvider repositoryPermissionProvider, ResourceLinks resourceLinks) {
+  public RepositoryVerbResource(RepositoryPermissionProvider repositoryPermissionProvider, ResourceLinks resourceLinks) {
     this.repositoryPermissionProvider = repositoryPermissionProvider;
     this.resourceLinks = resourceLinks;
   }
@@ -34,10 +34,11 @@ public class RepositoryPermissionResource {
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces(VndMediaType.REPOSITORY_PERMISSION_COLLECTION)
-  public AvailableRepositoryPermissionsDto get() {
-    AvailableRepositoryPermissionsDto dto = new AvailableRepositoryPermissionsDto(repositoryPermissionProvider.availableVerbs(), repositoryPermissionProvider.availableRoles());
-    dto.add(Links.linkingTo().self(resourceLinks.availableRepositoryPermissions().self()).build());
-    return dto;
+  @Produces(VndMediaType.REPOSITORY_VERB_COLLECTION)
+  public RepositoryVerbsDto getAll() {
+    return new RepositoryVerbsDto(
+      Links.linkingTo().self(resourceLinks.repositoryVerbs().self()).build(),
+      repositoryPermissionProvider.availableVerbs()
+    );
   }
 }

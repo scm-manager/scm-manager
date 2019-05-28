@@ -60,6 +60,12 @@
         }
       }
     },
+    "repositoryRole": {
+      "read,write": {
+        "displayName": "Benutzerdefinierte Repository-Rollen-Berechtigungen verwalten",
+        "description": "Kann benutzerdefinierte Rollen und deren Berechtigungen erstellen, ändern und löschen"
+      }
+    },
     "unknown": "Unbekannte Berechtigung"
   },
   "verbs": {

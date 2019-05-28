@@ -6,6 +6,39 @@
     "errorTitle": "Error",
     "errorSubtitle": "Unknown Config Error"
   },
+  "repositoryRole": {
+    "navLink": "Permission Roles",
+    "title": "Permission Roles",
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown Permission Role Error",
+    "createSubtitle": "Create Permission Role",
+    "editSubtitle": "Edit Permission Role",
+    "overview": {
+      "title": "Overview of all permission roles",
+      "noPermissionRoles": "No permission roles found.",
+      "createButton": "Create Permission Role"
+    },
+    "editButton": "Edit",
+    "name": "Name",
+    "type": "Type",
+    "verbs": "Permissions",
+    "system": "System",
+    "form": {
+      "name": "Name",
+      "permissions": "Permissions",
+      "submit": "Save"
+    }
+  },
+  "deleteRole": {
+    "button": "Delete",
+    "subtitle": "Delete Permission Role",
+    "confirmAlert": {
+      "title": "Delete Permission Role",
+      "message": "Do you really want to delete this permission role? All users who own this role will lose their permissions.",
+      "submit": "Yes",
+      "cancel": "No"
+    }
+  },
   "config-form": {
     "submit": "Submit",
     "submit-success-notification": "Configuration changed successfully!",
