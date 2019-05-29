@@ -279,6 +279,10 @@ ul.is-separated {
     & .comment-wrapper:first-child div:first-child {
       border-top: none;
     }
+
+    & .diff-widget-content div {
+      border-bottom: none;
+    }
   }
 
   .panel-footer {
