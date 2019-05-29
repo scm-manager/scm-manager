@@ -276,7 +276,7 @@ ul.is-separated {
     display: block;
     border: none;
 
-    & div .comment-wrapper div:first-child {
+    & .comment-wrapper div:first-child {
       border-top: none;
     }
   }
