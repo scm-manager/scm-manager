@@ -275,6 +275,14 @@ ul.is-separated {
   .panel-block {
     display: block;
     border: none;
+
+    & .comment-wrapper:first-child div:first-child {
+      border-top: none;
+    }
+
+    & .diff-widget-content div {
+      border-bottom: none;
+    }
   }
 
   .panel-footer {
