@@ -88,7 +88,7 @@ public class XmlUserV1UpdateStep implements UpdateStep {
 
   @Override
   public Version getTargetVersion() {
-    return parse("0.0.1");
+    return parse("2.0.0");
   }
 
   @Override
