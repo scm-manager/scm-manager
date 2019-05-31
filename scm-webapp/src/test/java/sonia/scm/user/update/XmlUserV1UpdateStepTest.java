@@ -97,7 +97,14 @@ class XmlUserV1UpdateStepTest {
         .hasFieldOrPropertyWithValue("displayName", "SCM Administrator")
         .hasFieldOrPropertyWithValue("active", false)
         .hasFieldOrPropertyWithValue("password", "ff8f5c593a01f9fcd3ed48b09a4b013e8d8f3be7")
-        .hasFieldOrPropertyWithValue("type", "xml");
+        .hasFieldOrPropertyWithValue("type", "xml")
+        .hasFieldOrPropertyWithValue("lastModified", 1558597367492L)
+        .hasFieldOrPropertyWithValue("creationDate", 1558597074732L);
     }
+  }
+
+  @Test
+  void shouldNotFailForMissingConfigDir() throws JAXBException {
+    updateStep.doUpdate();
   }
 }

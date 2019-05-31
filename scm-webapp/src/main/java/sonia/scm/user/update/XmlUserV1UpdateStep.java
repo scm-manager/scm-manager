@@ -3,6 +3,7 @@ package sonia.scm.user.update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.migration.UpdateException;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.AssignedPermission;
@@ -22,9 +23,15 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static sonia.scm.version.Version.parse;
 
 @Extension
@@ -45,11 +52,12 @@ public class XmlUserV1UpdateStep implements UpdateStep {
 
   @Override
   public void doUpdate() throws JAXBException {
-    if (!determineV1File().exists()) {
+    Optional<Path> v1UsersFile = determineV1File();
+    if (!v1UsersFile.isPresent()) {
+      LOG.info("no v1 file for users found");
       return;
     }
-    JAXBContext jaxbContext = JAXBContext.newInstance(XmlUserV1UpdateStep.V1UserDatabase.class);
-    XmlUserV1UpdateStep.V1UserDatabase v1Database = readV1Database(jaxbContext);
+    XmlUserV1UpdateStep.V1UserDatabase v1Database = readV1Database(v1UsersFile.get());
     ConfigurationEntryStore<AssignedPermission> securityStore = createSecurityStore();
     v1Database.userList.users.forEach(user -> update(user, securityStore));
   }
@@ -65,6 +73,7 @@ public class XmlUserV1UpdateStep implements UpdateStep {
   }
 
   private void update(XmlUserV1UpdateStep.V1User v1User, ConfigurationEntryStore<AssignedPermission> securityStore) {
+    LOG.debug("updating user {}", v1User.name);
     User user = new User(
       v1User.name,
       v1User.displayName,
@@ -72,29 +81,39 @@ public class XmlUserV1UpdateStep implements UpdateStep {
       v1User.password,
       v1User.type,
       v1User.active);
+    user.setCreationDate(v1User.creationDate);
+    user.setLastModified(v1User.lastModified);
     userDAO.add(user);
 
     if (v1User.admin) {
+      LOG.debug("setting admin permissions for user {}", v1User.name);
       securityStore.put(new AssignedPermission(v1User.name, "*"));
     }
   }
 
-  private XmlUserV1UpdateStep.V1UserDatabase readV1Database(JAXBContext jaxbContext) throws JAXBException {
-    return (XmlUserV1UpdateStep.V1UserDatabase) jaxbContext.createUnmarshaller().unmarshal(determineV1File());
+  private XmlUserV1UpdateStep.V1UserDatabase readV1Database(Path v1UsersFile) throws JAXBException {
+    JAXBContext jaxbContext = JAXBContext.newInstance(XmlUserV1UpdateStep.V1UserDatabase.class);
+    return (XmlUserV1UpdateStep.V1UserDatabase) jaxbContext.createUnmarshaller().unmarshal(v1UsersFile.toFile());
   }
 
   private ConfigurationEntryStore<AssignedPermission> createSecurityStore() {
     return configurationEntryStoreFactory.withType(AssignedPermission.class).withName("security").build();
   }
 
-  private File determineV1File() {
-    File configDirectory = new File(contextProvider.getBaseDirectory(), StoreConstants.CONFIG_DIRECTORY_NAME);
-    for (File file : configDirectory.listFiles()) {
-      if (file.getName().equals("users" + StoreConstants.FILE_EXTENSION)) {
-        file.renameTo(new File(configDirectory + "/usersV1" + StoreConstants.FILE_EXTENSION));
+  private Optional<Path> determineV1File() {
+    Path configDirectory = new File(contextProvider.getBaseDirectory(), StoreConstants.CONFIG_DIRECTORY_NAME).toPath();
+    Path existingUsersFile = configDirectory.resolve("users" + StoreConstants.FILE_EXTENSION);
+    Path usersV1File = configDirectory.resolve("usersV1" + StoreConstants.FILE_EXTENSION);
+    if (existingUsersFile.toFile().exists()) {
+      try {
+        Files.move(existingUsersFile, usersV1File);
+      } catch (IOException e) {
+        throw new UpdateException("could not move old users file to " + usersV1File.toAbsolutePath());
       }
+      LOG.info("moved old users file to {}", usersV1File.toAbsolutePath());
+      return of(usersV1File);
     }
-    return new File(configDirectory, "usersV1" + StoreConstants.FILE_EXTENSION);
+    return empty();
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
