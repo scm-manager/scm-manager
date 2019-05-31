@@ -67,7 +67,7 @@
     <value>configuration:read,write:*</value>
   </permission>
   <permission>
-    <value>repositoryRole:read,write</value>
+    <value>repositoryRole:write</value>
   </permission>
 
 </permissions>

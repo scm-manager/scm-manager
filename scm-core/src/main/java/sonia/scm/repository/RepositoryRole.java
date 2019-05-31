@@ -57,7 +57,7 @@ import static java.util.Collections.unmodifiableSet;
  * Custom role with specific permissions related to {@link Repository}.
  * This object should be immutable, but could not be due to mapstruct.
  */
-@StaticPermissions(value = "repositoryRole", permissions = {}, globalPermissions = {"read", "modify"})
+@StaticPermissions(value = "repositoryRole", permissions = {}, globalPermissions = {"write"})
 @XmlRootElement(name = "roles")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RepositoryRole implements ModelObject, PermissionObject {

@@ -27,7 +27,7 @@ public abstract class RepositoryRoleToRepositoryRoleDtoMapper extends BaseMapper
   @ObjectFactory
   RepositoryRoleDto createDto(RepositoryRole repositoryRole) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.repositoryRole().self(repositoryRole.getName()));
-    if (!"system".equals(repositoryRole.getType()) && RepositoryRolePermissions.modify().isPermitted()) {
+    if (!"system".equals(repositoryRole.getType()) && RepositoryRolePermissions.write().isPermitted()) {
       linksBuilder.single(link("delete", resourceLinks.repositoryRole().delete(repositoryRole.getName())));
       linksBuilder.single(link("update", resourceLinks.repositoryRole().update(repositoryRole.getName())));
     }
