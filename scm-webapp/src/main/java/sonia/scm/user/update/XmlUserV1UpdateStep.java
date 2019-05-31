@@ -40,7 +40,7 @@ import static sonia.scm.version.Version.parse;
 @Extension
 public class XmlUserV1UpdateStep implements UpdateStep {
 
-  private static Logger LOG = LoggerFactory.getLogger(XmlUserV1UpdateStep.class);
+  private static final Logger LOG = LoggerFactory.getLogger(XmlUserV1UpdateStep.class);
 
   private final SCMContextProvider contextProvider;
   private final XmlUserDAO userDAO;
