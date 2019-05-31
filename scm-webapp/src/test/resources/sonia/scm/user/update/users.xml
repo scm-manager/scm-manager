@@ -25,12 +25,34 @@
         </user>
         <user>
             <properties/>
-            <admin>true</admin>
+            <admin>false</admin>
             <creationDate>1558597107621</creationDate>
-            <displayName>edii</displayName>
+            <displayName>Arthur Dent</displayName>
             <lastModified>1558597185919</lastModified>
             <mail>edi@edi.de</mail>
-            <name>edi</name>
+            <name>dent</name>
+            <password>30f0d7632401710a20719ec21d21bc4ec232aa31</password>
+            <type>xml</type>
+        </user>
+        <user>
+            <properties/>
+            <admin>false</admin>
+            <creationDate>1558597107621</creationDate>
+            <displayName>Jeltz</displayName>
+            <lastModified>1558597185919</lastModified>
+            <mail>edi@edi.de</mail>
+            <name>jeltz</name>
+            <password>30f0d7632401710a20719ec21d21bc4ec232aa31</password>
+            <type>xml</type>
+        </user>
+        <user>
+            <properties/>
+            <admin>false</admin>
+            <creationDate>1558597107621</creationDate>
+            <displayName>Marvin</displayName>
+            <lastModified>1558597185919</lastModified>
+            <mail>edi@edi.de</mail>
+            <name>marvin</name>
             <password>30f0d7632401710a20719ec21d21bc4ec232aa31</password>
             <type>xml</type>
         </user>

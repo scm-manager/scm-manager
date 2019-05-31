@@ -26,12 +26,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
-import static org.mockito.Mockito.doNothing;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(TempDirectory.class)
@@ -53,7 +53,7 @@ class XmlUserV1UpdateStepTest {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
     assignedPermissionStore = new InMemoryConfigurationEntryStore<>();
     ConfigurationEntryStoreFactory inMemoryConfigurationEntryStoreFactory = new InMemoryConfigurationEntryStoreFactory(assignedPermissionStore);
-    updateStep = new XmlUserV1UpdateStep(contextProvider,userDAO, inMemoryConfigurationEntryStoreFactory);
+    updateStep = new XmlUserV1UpdateStep(contextProvider, userDAO, inMemoryConfigurationEntryStoreFactory);
   }
 
   @Nested
@@ -66,10 +66,10 @@ class XmlUserV1UpdateStepTest {
 
     @BeforeEach
     void createUserV1XML(@TempDirectory.TempDir Path tempDir) throws IOException {
-      URL url = Resources.getResource("sonia/scm/user/update/users.xml");
       Path configDir = tempDir.resolve("config");
       Files.createDirectories(configDir);
-      Files.copy(url.openStream(), configDir.resolve("users.xml"));
+      copyTestDatabaseFile(configDir, "users.xml");
+      copyTestDatabaseFile(configDir, "config.xml");
     }
 
     @Test
@@ -83,7 +83,7 @@ class XmlUserV1UpdateStepTest {
     @Test
     void shouldCreateNewUserFromUsersV1Xml() throws JAXBException {
       updateStep.doUpdate();
-      verify(userDAO, times(3)).add(any());
+      verify(userDAO, times(5)).add(any());
     }
 
     @Test
@@ -92,7 +92,7 @@ class XmlUserV1UpdateStepTest {
       Optional<User> user = userCaptor.getAllValues().stream().filter(u -> u.getName().equals("scmadmin")).findFirst();
       assertThat(user)
         .get()
-        .hasFieldOrPropertyWithValue("name","scmadmin")
+        .hasFieldOrPropertyWithValue("name", "scmadmin")
         .hasFieldOrPropertyWithValue("mail", "scm-admin@scm-manager.com")
         .hasFieldOrPropertyWithValue("displayName", "SCM Administrator")
         .hasFieldOrPropertyWithValue("active", false)
@@ -101,6 +101,19 @@ class XmlUserV1UpdateStepTest {
         .hasFieldOrPropertyWithValue("lastModified", 1558597367492L)
         .hasFieldOrPropertyWithValue("creationDate", 1558597074732L);
     }
+
+    @Test
+    void shouldCreatePermissionForUsersConfiguredAsAdminInConfig() throws JAXBException {
+      updateStep.doUpdate();
+      Optional<AssignedPermission> assignedPermission = assignedPermissionStore.getAll().values().stream().filter(a -> a.getName().equals("dent")).findFirst();
+      assertThat(assignedPermission.get().getPermission().getValue()).contains("*");
+      assertThat(assignedPermission.get().isGroupPermission()).isFalse();
+    }
+  }
+
+  private void copyTestDatabaseFile(Path configDir, String usersFileName) throws IOException {
+    URL url = Resources.getResource("sonia/scm/user/update/" + usersFileName);
+    Files.copy(url.openStream(), configDir.resolve(usersFileName));
   }
 
   @Test
