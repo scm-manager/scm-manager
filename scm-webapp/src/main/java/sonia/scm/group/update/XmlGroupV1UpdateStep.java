@@ -3,15 +3,12 @@ package sonia.scm.group.update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.group.Group;
 import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.migration.UpdateException;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
-import sonia.scm.security.AssignedPermission;
-import sonia.scm.store.ConfigurationEntryStore;
-import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.store.StoreConstants;
-import sonia.scm.group.Group;
 import sonia.scm.version.Version;
 
 import javax.inject.Inject;
@@ -25,16 +22,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static java.util.Optional.ofNullable;
 import static sonia.scm.version.Version.parse;
 
 @Extension
@@ -44,13 +37,11 @@ public class XmlGroupV1UpdateStep implements UpdateStep {
 
   private final SCMContextProvider contextProvider;
   private final XmlGroupDAO groupDAO;
-  private final ConfigurationEntryStoreFactory configurationEntryStoreFactory;
 
   @Inject
-  public XmlGroupV1UpdateStep(SCMContextProvider contextProvider, XmlGroupDAO groupDAO, ConfigurationEntryStoreFactory configurationEntryStoreFactory) {
+  public XmlGroupV1UpdateStep(SCMContextProvider contextProvider, XmlGroupDAO groupDAO) {
     this.contextProvider = contextProvider;
     this.groupDAO = groupDAO;
-    this.configurationEntryStoreFactory = configurationEntryStoreFactory;
   }
 
   @Override
@@ -60,30 +51,8 @@ public class XmlGroupV1UpdateStep implements UpdateStep {
       LOG.info("no v1 file for groups found");
       return;
     }
-    Collection<String> adminGroups = determineAdminGroups();
-    LOG.debug("found the following admin groups from global config: {}", adminGroups);
     XmlGroupV1UpdateStep.V1GroupDatabase v1Database = readV1Database(v1GroupsFile.get());
-    ConfigurationEntryStore<AssignedPermission> securityStore = createSecurityStore();
-    v1Database.groupList.groups.forEach(group -> update(group, adminGroups, securityStore));
-  }
-
-  private Collection<String> determineAdminGroups() throws JAXBException {
-    Path configDirectory = determineConfigDirectory();
-    Path existingConfigFile = configDirectory.resolve("config" + StoreConstants.FILE_EXTENSION);
-    if (existingConfigFile.toFile().exists()) {
-      return extractAdminGroupsFromConfigFile(existingConfigFile);
-    } else {
-      return emptyList();
-    }
-  }
-
-  private Collection<String> extractAdminGroupsFromConfigFile(Path existingConfigFile) throws JAXBException {
-    JAXBContext jaxbContext = JAXBContext.newInstance(XmlGroupV1UpdateStep.V1Configuration.class);
-    V1Configuration v1Configuration = (V1Configuration) jaxbContext.createUnmarshaller().unmarshal(existingConfigFile.toFile());
-    return ofNullable(v1Configuration.adminGroups)
-      .map(groupList -> groupList.split(","))
-      .map(Arrays::asList)
-      .orElse(emptyList());
+    v1Database.groupList.groups.forEach(group -> update(group));
   }
 
   @Override
@@ -96,7 +65,7 @@ public class XmlGroupV1UpdateStep implements UpdateStep {
     return "sonia.scm.group.xml";
   }
 
-  private void update(V1Group v1Group, Collection<String> adminGroups, ConfigurationEntryStore<AssignedPermission> securityStore) {
+  private void update(V1Group v1Group) {
     LOG.debug("updating group {}", v1Group.name);
     Group group = new Group(
       v1Group.type,
@@ -106,20 +75,11 @@ public class XmlGroupV1UpdateStep implements UpdateStep {
     group.setCreationDate(v1Group.creationDate);
     group.setLastModified(v1Group.lastModified);
     groupDAO.add(group);
-
-    if (adminGroups.contains(v1Group.name)) {
-      LOG.debug("setting admin permissions for group {}", v1Group.name);
-      securityStore.put(new AssignedPermission(v1Group.name, true, "*"));
-    }
   }
 
   private XmlGroupV1UpdateStep.V1GroupDatabase readV1Database(Path v1GroupsFile) throws JAXBException {
     JAXBContext jaxbContext = JAXBContext.newInstance(XmlGroupV1UpdateStep.V1GroupDatabase.class);
     return (XmlGroupV1UpdateStep.V1GroupDatabase) jaxbContext.createUnmarshaller().unmarshal(v1GroupsFile.toFile());
-  }
-
-  private ConfigurationEntryStore<AssignedPermission> createSecurityStore() {
-    return configurationEntryStoreFactory.withType(AssignedPermission.class).withName("security").build();
   }
 
   private Optional<Path> determineV1File() {
@@ -165,13 +125,6 @@ public class XmlGroupV1UpdateStep implements UpdateStep {
         ", type='" + type + '\'' +
         '}';
     }
-  }
-
-  @XmlAccessorType(XmlAccessType.FIELD)
-  @XmlRootElement(name = "scm-config")
-  private static class V1Configuration {
-    @XmlElement(name = "admin-groups")
-    private String adminGroups;
   }
 
   private static class GroupList {

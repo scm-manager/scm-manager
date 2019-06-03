@@ -25,16 +25,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static java.util.Optional.ofNullable;
 import static sonia.scm.version.Version.parse;
 
 @Extension
@@ -60,30 +56,9 @@ public class XmlUserV1UpdateStep implements UpdateStep {
       LOG.info("no v1 file for users found");
       return;
     }
-    Collection<String> adminUsers = determineAdminUsers();
-    LOG.debug("found the following admin users from global config: {}", adminUsers);
     XmlUserV1UpdateStep.V1UserDatabase v1Database = readV1Database(v1UsersFile.get());
     ConfigurationEntryStore<AssignedPermission> securityStore = createSecurityStore();
-    v1Database.userList.users.forEach(user -> update(user, adminUsers, securityStore));
-  }
-
-  private Collection<String> determineAdminUsers() throws JAXBException {
-    Path configDirectory = determineConfigDirectory();
-    Path existingConfigFile = configDirectory.resolve("config" + StoreConstants.FILE_EXTENSION);
-    if (existingConfigFile.toFile().exists()) {
-      return extractAdminUsersFromConfigFile(existingConfigFile);
-    } else {
-      return emptyList();
-    }
-  }
-
-  private Collection<String> extractAdminUsersFromConfigFile(Path existingConfigFile) throws JAXBException {
-    JAXBContext jaxbContext = JAXBContext.newInstance(XmlUserV1UpdateStep.V1Configuration.class);
-    V1Configuration v1Configuration = (V1Configuration) jaxbContext.createUnmarshaller().unmarshal(existingConfigFile.toFile());
-    return ofNullable(v1Configuration.adminUsers)
-      .map(userList -> userList.split(","))
-      .map(Arrays::asList)
-      .orElse(emptyList());
+    v1Database.userList.users.forEach(user -> update(user, securityStore));
   }
 
   @Override
@@ -96,7 +71,7 @@ public class XmlUserV1UpdateStep implements UpdateStep {
     return "sonia.scm.user.xml";
   }
 
-  private void update(V1User v1User, Collection<String> adminUsers, ConfigurationEntryStore<AssignedPermission> securityStore) {
+  private void update(V1User v1User, ConfigurationEntryStore<AssignedPermission> securityStore) {
     LOG.debug("updating user {}", v1User.name);
     User user = new User(
       v1User.name,
@@ -109,7 +84,7 @@ public class XmlUserV1UpdateStep implements UpdateStep {
     user.setLastModified(v1User.lastModified);
     userDAO.add(user);
 
-    if (v1User.admin || adminUsers.contains(v1User.name)) {
+    if (v1User.admin) {
       LOG.debug("setting admin permissions for user {}", v1User.name);
       securityStore.put(new AssignedPermission(v1User.name, "*"));
     }
@@ -172,13 +147,6 @@ public class XmlUserV1UpdateStep implements UpdateStep {
         ", active='" + active + '\'' +
         '}';
     }
-  }
-
-  @XmlAccessorType(XmlAccessType.FIELD)
-  @XmlRootElement(name = "scm-config")
-  private static class V1Configuration {
-    @XmlElement(name = "admin-users")
-    private String adminUsers;
   }
 
   private static class UserList {

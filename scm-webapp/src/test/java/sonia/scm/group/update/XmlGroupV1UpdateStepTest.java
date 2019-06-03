@@ -11,13 +11,11 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.security.AssignedPermission;
-import sonia.scm.store.ConfigurationEntryStore;
-import sonia.scm.store.ConfigurationEntryStoreFactory;
-import sonia.scm.store.InMemoryConfigurationEntryStore;
-import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
 import sonia.scm.group.Group;
 import sonia.scm.group.xml.XmlGroupDAO;
+import sonia.scm.security.AssignedPermission;
+import sonia.scm.store.ConfigurationEntryStore;
+import sonia.scm.store.InMemoryConfigurationEntryStore;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -53,8 +51,7 @@ class XmlGroupV1UpdateStepTest {
   void mockScmHome(@TempDirectory.TempDir Path tempDir) {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
     assignedPermissionStore = new InMemoryConfigurationEntryStore<>();
-    ConfigurationEntryStoreFactory inMemoryConfigurationEntryStoreFactory = new InMemoryConfigurationEntryStoreFactory(assignedPermissionStore);
-    updateStep = new XmlGroupV1UpdateStep(contextProvider, groupDAO, inMemoryConfigurationEntryStoreFactory);
+    updateStep = new XmlGroupV1UpdateStep(contextProvider, groupDAO);
   }
 
   @Nested
@@ -70,7 +67,6 @@ class XmlGroupV1UpdateStepTest {
       Path configDir = tempDir.resolve("config");
       Files.createDirectories(configDir);
       copyTestDatabaseFile(configDir, "groups.xml");
-      copyTestDatabaseFile(configDir, "config.xml");
     }
 
     @Test
@@ -91,14 +87,6 @@ class XmlGroupV1UpdateStepTest {
         .hasFieldOrPropertyWithValue("members", asList("trillian", "dent"))
         .hasFieldOrPropertyWithValue("lastModified", 1559550955883L)
         .hasFieldOrPropertyWithValue("creationDate", 1559548942457L);
-    }
-
-    @Test
-    void shouldCreatePermissionForGroupsConfiguredAsAdminInConfig() throws JAXBException {
-      updateStep.doUpdate();
-      Optional<AssignedPermission> assignedPermission = assignedPermissionStore.getAll().values().stream().filter(a -> a.getName().equals("vogons")).findFirst();
-      assertThat(assignedPermission.get().getPermission().getValue()).contains("*");
-      assertThat(assignedPermission.get().isGroupPermission()).isTrue();
     }
   }
 

@@ -69,7 +69,6 @@ class XmlUserV1UpdateStepTest {
       Path configDir = tempDir.resolve("config");
       Files.createDirectories(configDir);
       copyTestDatabaseFile(configDir, "users.xml");
-      copyTestDatabaseFile(configDir, "config.xml");
     }
 
     @Test
@@ -100,14 +99,6 @@ class XmlUserV1UpdateStepTest {
         .hasFieldOrPropertyWithValue("type", "xml")
         .hasFieldOrPropertyWithValue("lastModified", 1558597367492L)
         .hasFieldOrPropertyWithValue("creationDate", 1558597074732L);
-    }
-
-    @Test
-    void shouldCreatePermissionForUsersConfiguredAsAdminInConfig() throws JAXBException {
-      updateStep.doUpdate();
-      Optional<AssignedPermission> assignedPermission = assignedPermissionStore.getAll().values().stream().filter(a -> a.getName().equals("dent")).findFirst();
-      assertThat(assignedPermission.get().getPermission().getValue()).contains("*");
-      assertThat(assignedPermission.get().isGroupPermission()).isFalse();
     }
   }
 
