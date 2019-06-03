@@ -1,7 +1,7 @@
 package sonia.scm.repository.update;
 
 import sonia.scm.SCMContextProvider;
-import sonia.scm.repository.AbstractSimpleRepositoryHandler;
+import sonia.scm.repository.RepositoryDirectoryHandler;
 import sonia.scm.repository.RepositoryLocationResolver;
 
 import javax.inject.Inject;
@@ -22,7 +22,7 @@ class CopyMigrationStrategy extends BaseMigrationStrategy {
   public Path migrate(String id, String name, String type) {
     Path repositoryBasePath = locationResolver.forClass(Path.class).getLocation(id);
     Path targetDataPath = repositoryBasePath
-      .resolve(AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY);
+      .resolve(RepositoryDirectoryHandler.REPOSITORIES_NATIVE_DIRECTORY);
     Path sourceDataPath = getSourceDataPath(name, type);
     copyData(sourceDataPath, targetDataPath);
     return repositoryBasePath;

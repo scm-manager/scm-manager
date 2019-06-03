@@ -1,10 +1,9 @@
 package sonia.scm.repository.update;
 
 import sonia.scm.SCMContextProvider;
-import sonia.scm.repository.AbstractSimpleRepositoryHandler;
+import sonia.scm.repository.RepositoryDirectoryHandler;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -19,7 +18,7 @@ class InlineMigrationStrategy extends BaseMigrationStrategy {
   public Path migrate(String id, String name, String type) {
     Path repositoryBasePath = getSourceDataPath(name, type);
     Path targetDataPath = repositoryBasePath
-      .resolve(AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY);
+      .resolve(RepositoryDirectoryHandler.REPOSITORIES_NATIVE_DIRECTORY);
     moveData(repositoryBasePath, targetDataPath);
     return repositoryBasePath;
   }

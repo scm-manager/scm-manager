@@ -3,7 +3,7 @@ package sonia.scm.repository.update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.repository.AbstractSimpleRepositoryHandler;
+import sonia.scm.repository.RepositoryDirectoryHandler;
 import sonia.scm.repository.RepositoryLocationResolver;
 
 import javax.inject.Inject;
@@ -30,7 +30,7 @@ class MoveMigrationStrategy extends BaseMigrationStrategy {
   public Path migrate(String id, String name, String type) {
     Path repositoryBasePath = locationResolver.forClass(Path.class).getLocation(id);
     Path targetDataPath = repositoryBasePath
-      .resolve(AbstractSimpleRepositoryHandler.REPOSITORIES_NATIVE_DIRECTORY);
+      .resolve(RepositoryDirectoryHandler.REPOSITORIES_NATIVE_DIRECTORY);
     Path sourceDataPath = getSourceDataPath(name, type);
     moveData(sourceDataPath, targetDataPath);
     deleteOldDataDir(getTypeDependentPath(type), name);

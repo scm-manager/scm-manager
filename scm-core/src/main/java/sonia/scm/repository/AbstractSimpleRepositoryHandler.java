@@ -59,9 +59,6 @@ public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig
 
   public static final String DEFAULT_VERSION_INFORMATION = "unknown";
 
-  public static final String DOT = ".";
-  public static final String REPOSITORIES_NATIVE_DIRECTORY = "data";
-
   /**
    * the logger for AbstractSimpleRepositoryHandler
    */

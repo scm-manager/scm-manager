@@ -42,6 +42,8 @@ import java.io.File;
  */
 public interface RepositoryDirectoryHandler extends RepositoryHandler {
 
+  String REPOSITORIES_NATIVE_DIRECTORY = "data";
+
   /**
    * Get the current directory of the repository for the given id.
    * @return the current directory of the given repository
