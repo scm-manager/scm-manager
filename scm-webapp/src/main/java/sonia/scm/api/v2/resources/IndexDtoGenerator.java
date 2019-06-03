@@ -63,9 +63,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
 
       builder.single(link("repositoryTypes", resourceLinks.repositoryTypeCollection().self()));
       builder.single(link("namespaceStrategies", resourceLinks.namespaceStrategies().self()));
-      if (RepositoryRolePermissions.read().isPermitted()) {
-        builder.single(link("repositoryRoles", resourceLinks.repositoryRoleCollection().self()));
-      }
+      builder.single(link("repositoryRoles", resourceLinks.repositoryRoleCollection().self()));
     } else {
       builder.single(link("login", resourceLinks.authentication().jsonLogin()));
     }
