@@ -11,7 +11,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
@@ -19,6 +18,7 @@ import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.store.InMemoryConfigurationEntryStore;
 import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
+import sonia.scm.update.UpdateStepTestUtil;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -47,8 +47,6 @@ class XmlRepositoryV1UpdateStepTest {
   Injector injectorMock = MigrationStrategyMock.init();
 
   @Mock
-  SCMContextProvider contextProvider;
-  @Mock
   XmlRepositoryDAO repositoryDAO;
   @Mock
   MigrationStrategyDao migrationStrategyDao;
@@ -60,17 +58,15 @@ class XmlRepositoryV1UpdateStepTest {
   @Captor
   ArgumentCaptor<Path> locationCaptor;
 
+  UpdateStepTestUtil testUtil;
+
   XmlRepositoryV1UpdateStep updateStep;
 
   @BeforeEach
-  void mockScmHome(@TempDirectory.TempDir Path tempDir) {
-    when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
-  }
-
-  @BeforeEach
-  void createUpdateStepFromMocks() {
+  void createUpdateStepFromMocks(@TempDirectory.TempDir Path tempDir) {
+    testUtil = new UpdateStepTestUtil(tempDir);
     updateStep = new XmlRepositoryV1UpdateStep(
-      contextProvider,
+      testUtil.getContextProvider(),
       repositoryDAO,
       migrationStrategyDao,
       injectorMock,

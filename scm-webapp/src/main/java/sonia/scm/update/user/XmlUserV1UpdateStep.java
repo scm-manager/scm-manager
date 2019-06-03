@@ -22,10 +22,10 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -107,9 +107,8 @@ public class XmlUserV1UpdateStep implements UpdateStep {
   }
 
   private Optional<Path> determineV1File() {
-    Path configDirectory = determineConfigDirectory();
-    Path existingUsersFile = configDirectory.resolve("users" + StoreConstants.FILE_EXTENSION);
-    Path usersV1File = configDirectory.resolve("usersV1" + StoreConstants.FILE_EXTENSION);
+    Path existingUsersFile = resolveConfigFile("users");
+    Path usersV1File = resolveConfigFile("usersV1");
     if (existingUsersFile.toFile().exists()) {
       try {
         Files.move(existingUsersFile, usersV1File);
@@ -122,8 +121,11 @@ public class XmlUserV1UpdateStep implements UpdateStep {
     return empty();
   }
 
-  private Path determineConfigDirectory() {
-    return new File(contextProvider.getBaseDirectory(), StoreConstants.CONFIG_DIRECTORY_NAME).toPath();
+  private Path resolveConfigFile(String name) {
+    return contextProvider
+      .resolve(
+        Paths.get(StoreConstants.CONFIG_DIRECTORY_NAME).resolve(name + StoreConstants.FILE_EXTENSION)
+      );
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)

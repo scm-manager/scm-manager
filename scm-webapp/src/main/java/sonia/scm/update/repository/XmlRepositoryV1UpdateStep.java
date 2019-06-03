@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -94,7 +95,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
 
   @Override
   public void doUpdate() throws JAXBException {
-    if (!determineV1File().exists()) {
+    if (!resolveV1File().exists()) {
       LOG.info("no v1 repositories database file found");
       return;
     }
@@ -179,7 +180,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
   }
 
   private Optional<V1RepositoryDatabase> readV1Database(JAXBContext jaxbContext) throws JAXBException {
-    Object unmarshal = jaxbContext.createUnmarshaller().unmarshal(determineV1File());
+    Object unmarshal = jaxbContext.createUnmarshaller().unmarshal(resolveV1File());
     if (unmarshal instanceof V1RepositoryDatabase) {
       return of((V1RepositoryDatabase) unmarshal);
     } else {
@@ -187,9 +188,11 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
     }
   }
 
-  private File determineV1File() {
-    File configDirectory = new File(contextProvider.getBaseDirectory(), StoreConstants.CONFIG_DIRECTORY_NAME);
-    return new File(configDirectory, "repositories" + StoreConstants.FILE_EXTENSION);
+  private File resolveV1File() {
+    return contextProvider
+      .resolve(
+        Paths.get(StoreConstants.CONFIG_DIRECTORY_NAME).resolve("repositories" + StoreConstants.FILE_EXTENSION)
+      ).toFile();
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)

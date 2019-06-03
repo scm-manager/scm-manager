@@ -15,7 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 
 public class UpdateStepTestUtil {
 
@@ -28,7 +29,8 @@ private final SCMContextProvider contextProvider;
     this.tempDir = tempDir;
     contextProvider = Mockito.mock(SCMContextProvider.class);
     storeFactory = new JAXBConfigurationEntryStoreFactory(contextProvider, null, new DefaultKeyGenerator());
-    when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
+    lenient().when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
+    lenient().when(contextProvider.resolve(any())).thenAnswer(invocation -> tempDir.resolve(invocation.getArgument(0).toString()));
   }
 
   public SCMContextProvider getContextProvider() {
