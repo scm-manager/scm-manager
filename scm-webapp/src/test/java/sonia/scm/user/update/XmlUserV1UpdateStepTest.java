@@ -12,10 +12,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.security.AssignedPermission;
-import sonia.scm.store.ConfigurationEntryStore;
+import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
-import sonia.scm.store.InMemoryConfigurationEntryStore;
-import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
+import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.user.User;
 import sonia.scm.user.xml.XmlUserDAO;
 
@@ -27,6 +26,7 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.linesOf;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -46,14 +46,14 @@ class XmlUserV1UpdateStepTest {
   ArgumentCaptor<User> userCaptor;
 
   XmlUserV1UpdateStep updateStep;
-  ConfigurationEntryStore<AssignedPermission> assignedPermissionStore;
+
+  ConfigurationEntryStoreFactory storeFactory;
 
   @BeforeEach
   void mockScmHome(@TempDirectory.TempDir Path tempDir) {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
-    assignedPermissionStore = new InMemoryConfigurationEntryStore<>();
-    ConfigurationEntryStoreFactory inMemoryConfigurationEntryStoreFactory = new InMemoryConfigurationEntryStoreFactory(assignedPermissionStore);
-    updateStep = new XmlUserV1UpdateStep(contextProvider, userDAO, inMemoryConfigurationEntryStoreFactory);
+    storeFactory = new JAXBConfigurationEntryStoreFactory(contextProvider, null, new DefaultKeyGenerator());
+    updateStep = new XmlUserV1UpdateStep(contextProvider, userDAO, storeFactory);
   }
 
   @Nested
@@ -74,7 +74,16 @@ class XmlUserV1UpdateStepTest {
     @Test
     void shouldCreateNewPermissionsForV1AdminUser() throws JAXBException {
       updateStep.doUpdate();
-      Optional<AssignedPermission> assignedPermission = assignedPermissionStore.getAll().values().stream().filter(a -> a.getName().equals("scmadmin")).findFirst();
+      Optional<AssignedPermission> assignedPermission =
+        storeFactory
+          .withType(AssignedPermission.class)
+          .withName("security")
+          .build()
+          .getAll()
+          .values()
+          .stream()
+          .filter(a -> a.getName().equals("scmadmin"))
+          .findFirst();
       assertThat(assignedPermission.get().getPermission().getValue()).contains("*");
       assertThat(assignedPermission.get().isGroupPermission()).isFalse();
     }
@@ -99,6 +108,28 @@ class XmlUserV1UpdateStepTest {
         .hasFieldOrPropertyWithValue("type", "xml")
         .hasFieldOrPropertyWithValue("lastModified", 1558597367492L)
         .hasFieldOrPropertyWithValue("creationDate", 1558597074732L);
+    }
+
+    @Test
+    void shouldExtractProperties(@TempDirectory.TempDir Path tempDir) throws JAXBException {
+      updateStep.doUpdate();
+      Path propertiesFile = tempDir.resolve("config").resolve("user-properties-v1.xml");
+      assertThat(propertiesFile)
+        .exists();
+      assertThat(linesOf(propertiesFile.toFile()))
+        .extracting(String::trim)
+        .containsSequence(
+          "<key>dent</key>",
+          "<value>",
+          "<item>",
+          "<key>born.on</key>",
+          "<value>earth</value>",
+          "</item>",
+          "<item>",
+          "<key>last.seen</key>",
+          "<value>end of the universe</value>",
+          "</item>",
+          "</value>");
     }
   }
 

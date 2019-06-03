@@ -13,9 +13,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.group.Group;
 import sonia.scm.group.xml.XmlGroupDAO;
-import sonia.scm.security.AssignedPermission;
-import sonia.scm.store.ConfigurationEntryStore;
-import sonia.scm.store.InMemoryConfigurationEntryStore;
+import sonia.scm.security.DefaultKeyGenerator;
+import sonia.scm.store.ConfigurationEntryStoreFactory;
+import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.linesOf;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -45,13 +46,14 @@ class XmlGroupV1UpdateStepTest {
   ArgumentCaptor<Group> groupCaptor;
 
   XmlGroupV1UpdateStep updateStep;
-  ConfigurationEntryStore<AssignedPermission> assignedPermissionStore;
+
+  ConfigurationEntryStoreFactory storeFactory;
 
   @BeforeEach
   void mockScmHome(@TempDirectory.TempDir Path tempDir) {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
-    assignedPermissionStore = new InMemoryConfigurationEntryStore<>();
-    updateStep = new XmlGroupV1UpdateStep(contextProvider, groupDAO);
+    storeFactory = new JAXBConfigurationEntryStoreFactory(contextProvider, null, new DefaultKeyGenerator());
+    updateStep = new XmlGroupV1UpdateStep(contextProvider, groupDAO, storeFactory);
   }
 
   @Nested
@@ -87,6 +89,24 @@ class XmlGroupV1UpdateStepTest {
         .hasFieldOrPropertyWithValue("members", asList("trillian", "dent"))
         .hasFieldOrPropertyWithValue("lastModified", 1559550955883L)
         .hasFieldOrPropertyWithValue("creationDate", 1559548942457L);
+    }
+
+    @Test
+    void shouldExtractProperties(@TempDirectory.TempDir Path tempDir) throws JAXBException {
+      updateStep.doUpdate();
+      Path propertiesFile = tempDir.resolve("config").resolve("group-properties-v1.xml");
+      assertThat(propertiesFile)
+        .exists();
+      assertThat(linesOf(propertiesFile.toFile()))
+        .extracting(String::trim)
+        .containsSequence(
+          "<key>normals</key>",
+          "<value>",
+          "<item>",
+          "<key>mostly</key>",
+          "<value>humans</value>",
+          "</item>",
+          "</value>");
     }
   }
 

@@ -11,7 +11,12 @@
             <type>xml</type>
         </group>
         <group>
-            <properties/>
+            <properties>
+              <item>
+                <key>mostly</key>
+                <value>humans</value>
+              </item>
+            </properties>
             <creationDate>1559548942457</creationDate>
             <description>Normal people</description>
             <name>normals</name>

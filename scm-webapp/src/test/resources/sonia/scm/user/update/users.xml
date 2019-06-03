@@ -24,7 +24,16 @@
             <type>xml</type>
         </user>
         <user>
-            <properties/>
+            <properties>
+                <item>
+                    <key>born.on</key>
+                    <value>earth</value>
+                </item>
+                <item>
+                    <key>last.seen</key>
+                    <value>end of the universe</value>
+                </item>
+            </properties>
             <admin>false</admin>
             <creationDate>1558597107621</creationDate>
             <displayName>Arthur Dent</displayName>

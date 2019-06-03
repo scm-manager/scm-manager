@@ -8,6 +8,8 @@ import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.migration.UpdateException;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
+import sonia.scm.store.ConfigurationEntryStore;
+import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.store.StoreConstants;
 import sonia.scm.version.Version;
 
@@ -37,11 +39,20 @@ public class XmlGroupV1UpdateStep implements UpdateStep {
 
   private final SCMContextProvider contextProvider;
   private final XmlGroupDAO groupDAO;
+  private final ConfigurationEntryStore<V1Properties> propertyStore;
 
   @Inject
-  public XmlGroupV1UpdateStep(SCMContextProvider contextProvider, XmlGroupDAO groupDAO) {
+  public XmlGroupV1UpdateStep(
+    SCMContextProvider contextProvider,
+    XmlGroupDAO groupDAO,
+    ConfigurationEntryStoreFactory configurationEntryStoreFactory
+  ) {
     this.contextProvider = contextProvider;
     this.groupDAO = groupDAO;
+    this.propertyStore = configurationEntryStoreFactory
+      .withType(V1Properties.class)
+      .withName("group-properties-v1")
+      .build();
   }
 
   @Override
@@ -52,7 +63,7 @@ public class XmlGroupV1UpdateStep implements UpdateStep {
       return;
     }
     XmlGroupV1UpdateStep.V1GroupDatabase v1Database = readV1Database(v1GroupsFile.get());
-    v1Database.groupList.groups.forEach(group -> update(group));
+    v1Database.groupList.groups.forEach(this::update);
   }
 
   @Override
@@ -75,6 +86,8 @@ public class XmlGroupV1UpdateStep implements UpdateStep {
     group.setCreationDate(v1Group.creationDate);
     group.setLastModified(v1Group.lastModified);
     groupDAO.add(group);
+
+    propertyStore.put(v1Group.name, v1Group.properties);
   }
 
   private XmlGroupV1UpdateStep.V1GroupDatabase readV1Database(Path v1GroupsFile) throws JAXBException {
@@ -105,7 +118,7 @@ public class XmlGroupV1UpdateStep implements UpdateStep {
   @XmlAccessorType(XmlAccessType.FIELD)
   @XmlRootElement(name = "group")
   private static class V1Group {
-    private Map<String, String> properties;
+    private V1Properties properties;
     private long creationDate;
     private String description;
     private Long lastModified;
@@ -125,6 +138,19 @@ public class XmlGroupV1UpdateStep implements UpdateStep {
         ", type='" + type + '\'' +
         '}';
     }
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
+  private static class V1Property {
+    private String key;
+    private String value;
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
+  @XmlRootElement(name = "properties")
+  private static class V1Properties {
+    @XmlElement(name = "item")
+    private List<V1Property> properties;
   }
 
   private static class GroupList {

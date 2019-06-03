@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
@@ -41,12 +40,17 @@ public class XmlUserV1UpdateStep implements UpdateStep {
   private final SCMContextProvider contextProvider;
   private final XmlUserDAO userDAO;
   private final ConfigurationEntryStoreFactory configurationEntryStoreFactory;
+  private final ConfigurationEntryStore<V1Properties> propertyStore;
 
   @Inject
   public XmlUserV1UpdateStep(SCMContextProvider contextProvider, XmlUserDAO userDAO, ConfigurationEntryStoreFactory configurationEntryStoreFactory) {
     this.contextProvider = contextProvider;
     this.userDAO = userDAO;
     this.configurationEntryStoreFactory = configurationEntryStoreFactory;
+    this.propertyStore = configurationEntryStoreFactory
+      .withType(V1Properties.class)
+      .withName("user-properties-v1")
+      .build();
   }
 
   @Override
@@ -88,6 +92,8 @@ public class XmlUserV1UpdateStep implements UpdateStep {
       LOG.debug("setting admin permissions for user {}", v1User.name);
       securityStore.put(new AssignedPermission(v1User.name, "*"));
     }
+
+    propertyStore.put(v1User.name, v1User.properties);
   }
 
   private XmlUserV1UpdateStep.V1UserDatabase readV1Database(Path v1UsersFile) throws JAXBException {
@@ -120,9 +126,22 @@ public class XmlUserV1UpdateStep implements UpdateStep {
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
+  private static class V1Property {
+    private String key;
+    private String value;
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
+  @XmlRootElement(name = "properties")
+  private static class V1Properties {
+    @XmlElement(name = "item")
+    private List<V1Property> properties;
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
   @XmlRootElement(name = "user")
   private static class V1User {
-    private Map<String, String> properties;
+    private V1Properties properties;
     private boolean admin;
     private long creationDate;
     private String displayName;
