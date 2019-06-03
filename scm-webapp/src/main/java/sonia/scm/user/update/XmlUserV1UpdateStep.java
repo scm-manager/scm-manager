@@ -168,7 +168,6 @@ public class XmlUserV1UpdateStep implements UpdateStep {
         ", lastModified=" + lastModified + '\'' +
         ", mail='" + mail + '\'' +
         ", name='" + name + '\'' +
-        ", password=" + password + '\'' +
         ", type='" + type + '\'' +
         ", active='" + active + '\'' +
         '}';
