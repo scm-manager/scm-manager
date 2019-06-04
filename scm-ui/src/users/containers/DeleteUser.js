@@ -35,7 +35,7 @@ class DeleteUser extends React.Component<Props> {
   };
 
   userDeleted = () => {
-    this.props.history.push("/users");
+    this.props.history.push("/users/");
   };
 
   deleteUser = () => {

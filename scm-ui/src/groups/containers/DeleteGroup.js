@@ -39,7 +39,7 @@ export class DeleteGroup extends React.Component<Props> {
   };
 
   groupDeleted = () => {
-    this.props.history.push("/groups");
+    this.props.history.push("/groups/");
   };
 
   confirmDelete = () => {
