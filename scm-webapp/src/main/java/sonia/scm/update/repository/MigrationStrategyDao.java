@@ -4,8 +4,10 @@ import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
+@Singleton
 public class MigrationStrategyDao {
 
   private final RepositoryMigrationPlan plan;

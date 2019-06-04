@@ -4,7 +4,7 @@ import com.google.inject.Injector;
 
 import java.nio.file.Path;
 
-enum MigrationStrategy {
+public enum MigrationStrategy {
 
   COPY(CopyMigrationStrategy.class),
   MOVE(MoveMigrationStrategy.class),

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SCM-Manager Migration</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<h1>SCM-Manager Migration</h1>
+You have migrated from SCM-Manager v1 to SCM-Manager v2.
+<form action="{{submitUrl}}" method="post">
+  <table>
+    <tr>
+      <th>original name</th>
+      <th>new namespace/name</th>
+      <th>Strategy</th>
+    </tr>
+  {{#repositories}}
+    <tr>
+      <td>
+        {{name}}
+      </td>
+      <td>
+        {{newNamespace}}/{{newName}}
+      </td>
+      <td>
+        <select name="{{id}}">
+          {{#strategies}}
+          <option>{{.}}</option>
+          {{/strategies}}
+        </select>
+      </td>
+    </tr>
+  {{/repositories}}
+  </table>
+  <button type="submit">Submit</button>
+</form>
+</body>
+</html>

@@ -161,10 +161,17 @@ public class DefaultCipherHandler implements CipherHandler {
    * @return decrypted value
    */
   public String decode(char[] plainKey, String value) {
-    String result = null;
-
+    Base64.Decoder decoder = Base64.getUrlDecoder();
     try {
-      byte[] encodedInput = Base64.getUrlDecoder().decode(value);
+      return decode(plainKey, value, decoder);
+    } catch (IllegalArgumentException e) {
+      return decode(plainKey, value, Base64.getDecoder());
+    }
+  }
+
+  private String decode(char[] plainKey, String value, Base64.Decoder decoder) {
+    try {
+      byte[] encodedInput = decoder.decode(value);
       byte[] salt = new byte[SALT_LENGTH];
       byte[] encoded = new byte[encodedInput.length - SALT_LENGTH];
 
@@ -180,12 +187,10 @@ public class DefaultCipherHandler implements CipherHandler {
 
       byte[] decoded = cipher.doFinal(encoded);
 
-      result = new String(decoded, ENCODING);
+      return new String(decoded, ENCODING);
     } catch (IOException | GeneralSecurityException ex) {
       throw new CipherException("could not decode string", ex);
     }
-
-    return result;
   }
 
   @Override

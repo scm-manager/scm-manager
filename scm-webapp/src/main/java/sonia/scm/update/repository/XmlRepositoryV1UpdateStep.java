@@ -32,7 +32,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static sonia.scm.version.Version.parse;
@@ -109,6 +111,23 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
     );
   }
 
+  public List<V1Repository> missingMigrationStrategies() {
+    if (!resolveV1File().exists()) {
+      LOG.info("no v1 repositories database file found");
+      return emptyList();
+    }
+    try {
+      JAXBContext jaxbContext = JAXBContext.newInstance(XmlRepositoryV1UpdateStep.V1RepositoryDatabase.class);
+      return readV1Database(jaxbContext)
+        .map(v1Database -> v1Database.repositoryList.repositories.stream())
+        .orElse(Stream.empty())
+        .filter(v1Repository -> !this.findMigrationStrategy(v1Repository).isPresent())
+        .collect(Collectors.toList());
+    } catch (JAXBException e) {
+      throw new UpdateException("could not read v1 repository database", e);
+    }
+  }
+
   private void backupOldRepositoriesFile() {
     Path configDir = contextProvider.getBaseDirectory().toPath().resolve(StoreConstants.CONFIG_DIRECTORY_NAME);
     Path oldRepositoriesFile = configDir.resolve("repositories.xml");
@@ -126,8 +145,8 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
     Repository repository = new Repository(
       v1Repository.id,
       v1Repository.type,
-      getNamespace(v1Repository),
-      getName(v1Repository),
+      v1Repository.getNewNamespace(),
+      v1Repository.getNewName(),
       v1Repository.contact,
       v1Repository.description,
       createPermissions(v1Repository));
@@ -142,8 +161,12 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
   }
 
   private MigrationStrategy readMigrationStrategy(V1Repository v1Repository) {
-    return migrationStrategyDao.get(v1Repository.id)
+    return findMigrationStrategy(v1Repository)
       .orElseThrow(() -> new IllegalStateException("no strategy found for repository with id " + v1Repository.id + " and name " + v1Repository.name));
+  }
+
+  private Optional<MigrationStrategy> findMigrationStrategy(V1Repository v1Repository) {
+    return migrationStrategyDao.get(v1Repository.id);
   }
 
   private RepositoryPermission[] createPermissions(V1Repository v1Repository) {
@@ -159,24 +182,6 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
   private RepositoryPermission createPermission(V1Permission v1Permission) {
     LOG.info("creating permission {} for {}", v1Permission.type, v1Permission.name);
     return new RepositoryPermission(v1Permission.name, v1Permission.type, v1Permission.groupPermission);
-  }
-
-  private String getNamespace(V1Repository v1Repository) {
-    String[] nameParts = getNameParts(v1Repository.name);
-    return nameParts.length > 1 ? nameParts[0] : v1Repository.type;
-  }
-
-  private String getName(V1Repository v1Repository) {
-    String[] nameParts = getNameParts(v1Repository.name);
-    return nameParts.length == 1 ? nameParts[0] : concatPathElements(nameParts);
-  }
-
-  private String concatPathElements(String[] nameParts) {
-    return Arrays.stream(nameParts).skip(1).collect(Collectors.joining("_"));
-  }
-
-  private String[] getNameParts(String v1Name) {
-    return v1Name.split("/");
   }
 
   private Optional<V1RepositoryDatabase> readV1Database(JAXBContext jaxbContext) throws JAXBException {
@@ -205,7 +210,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
 
   @XmlAccessorType(XmlAccessType.FIELD)
   @XmlRootElement(name = "repositories")
-  private static class V1Repository {
+  public static class V1Repository {
     private String contact;
     private long creationDate;
     private Long lastModified;
@@ -217,6 +222,32 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
     private String type;
     private List<V1Permission> permissions;
     private V1Properties properties;
+
+    public String getId() {
+      return id;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public String getNewNamespace() {
+      String[] nameParts = getNameParts(name);
+      return nameParts.length > 1 ? nameParts[0] : type;
+    }
+
+    public String getNewName() {
+      String[] nameParts = getNameParts(name);
+      return nameParts.length == 1 ? nameParts[0] : concatPathElements(nameParts);
+    }
+
+    private String[] getNameParts(String v1Name) {
+      return v1Name.split("/");
+    }
+
+    private String concatPathElements(String[] nameParts) {
+      return Arrays.stream(nameParts).skip(1).collect(Collectors.joining("_"));
+    }
 
     @Override
     public String toString() {
