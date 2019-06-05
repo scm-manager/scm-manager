@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,6 +46,7 @@ class MigrationWizardServlet extends HttpServlet {
 
     HashMap<String, Object> model = new HashMap<>();
 
+    model.put("contextPath", req.getContextPath());
     model.put("submitUrl", req.getRequestURI());
     model.put("repositories", missingMigrationStrategies);
     model.put("strategies", getMigrationStrategies());
@@ -68,7 +70,7 @@ class MigrationWizardServlet extends HttpServlet {
 
     MustacheFactory mf = new DefaultMustacheFactory();
     Mustache mustache = mf.compile("templates/repository-migration-restart.mustache");
-    mustache.execute(resp.getWriter(), new Object()).flush();
+    mustache.execute(resp.getWriter(), Collections.singletonMap("contextPath", req.getContextPath())).flush();
 
     ScmEventBus.getInstance().post(new RestartEvent(MigrationWizardServlet.class, "wrote migration data"));
   }

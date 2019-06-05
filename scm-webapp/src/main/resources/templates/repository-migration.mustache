@@ -2,41 +2,66 @@
 <html>
 <head>
   <title>SCM-Manager Migration</title>
+  <link rel="stylesheet" type="text/css" href="{{ contextPath }}/styles/scm.css">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
-<h1>SCM-Manager Migration</h1>
-You have migrated from SCM-Manager v1 to SCM-Manager v2.
-<form action="{{submitUrl}}" method="post">
-  <table>
-    <tr>
-      <th>original name</th>
-      <th>type</th>
-      <th>new namespace/name</th>
-      <th>Strategy</th>
-    </tr>
-  {{#repositories}}
-    <tr>
-      <td>
-        {{name}}
-      </td>
-      <td>
-        {{type}}
-      </td>
-      <td>
-        {{newNamespace}}/{{newName}}
-      </td>
-      <td>
-        <select name="{{id}}">
-          {{#strategies}}
-          <option>{{.}}</option>
-          {{/strategies}}
-        </select>
-      </td>
-    </tr>
-  {{/repositories}}
-  </table>
-  <button type="submit">Submit</button>
-</form>
+<div id="root">
+  <div>
+    <div class="App">
+      <section class="hero is-dark is-small">
+        <div class="hero-body">
+          <div class="container">
+            <div class="columns is-vcentered">
+              <div class="column"><img src="{{ contextPath }}/images/logo.png" alt="SCM-Manager"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="main">
+        <section class="section">
+          <div class="container">
+            <h1 class="title">SCM-Manager Migration</h1>
+            <h2 class="subtitle">You have migrated from SCM-Manager v1 to SCM-Manager v2.</h2>
+            <form action="{{submitUrl}}" method="post">
+              <table class="card-table table is-hoverable is-fullwidth">
+                <tr>
+                  <th>Original name</th>
+                  <th>Type</th>
+                  <th>New namespace and name</th>
+                  <th>Strategy</th>
+                </tr>
+                {{#repositories}}
+                  <tr>
+                    <td>
+                      {{name}}
+                    </td>
+                    <td>
+                      {{type}}
+                    </td>
+                    <td>
+                      {{newNamespace}}/{{newName}}
+                    </td>
+                    <td>
+                      <div class="field">
+                        <div class="control select">
+                          <select name="{{id}}">
+                            {{#strategies}}
+                              <option>{{.}}</option>
+                            {{/strategies}}
+                          </select>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                {{/repositories}}
+              </table>
+              <button class="button is-primary" type="submit">Submit</button>
+            </form>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
