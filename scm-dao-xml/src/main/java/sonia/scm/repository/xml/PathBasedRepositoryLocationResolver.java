@@ -78,7 +78,7 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
 
       @Override
       public void setLocation(String repositoryId, T location) {
-        PathBasedRepositoryLocationResolver.this.setLocation(repositoryId, (Path) location);
+        PathBasedRepositoryLocationResolver.this.setLocation(repositoryId, ((Path) location).toAbsolutePath());
       }
     };
   }
@@ -148,7 +148,7 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
       .resolve(STORE_NAME.concat(StoreConstants.FILE_EXTENSION));
   }
 
-  public void setLocation(String repositoryId, Path repositoryBasePath) {
+  private void setLocation(String repositoryId, Path repositoryBasePath) {
     pathById.put(repositoryId, repositoryBasePath);
     writePathDatabase();
   }
