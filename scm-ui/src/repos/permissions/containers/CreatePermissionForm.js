@@ -9,7 +9,6 @@ import type {
 } from "@scm-manager/ui-types";
 import {
   Subtitle,
-  Autocomplete,
   SubmitButton,
   Button,
   LabelWithHelpIcon,
@@ -17,6 +16,8 @@ import {
 } from "@scm-manager/ui-components";
 import * as validator from "../components/permissionValidation";
 import RoleSelector from "../components/RoleSelector";
+import GroupAutocomplete from "../components/GroupAutocomplete";
+import UserAutocomplete from "../components/UserAutocomplete";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
 import { findVerbsForRole } from "../modules/permissions";
 
@@ -26,8 +27,8 @@ type Props = {
   createPermission: (permission: PermissionCreateEntry) => void,
   loading: boolean,
   currentPermissions: PermissionCollection,
-  groupAutoCompleteLink: string,
-  userAutoCompleteLink: string,
+  groupAutocompleteLink: string,
+  userAutocompleteLink: string,
 
   // Context props
   t: string => string
@@ -68,65 +69,27 @@ class CreatePermissionForm extends React.Component<Props, State> {
     });
   };
 
-  loadUserAutocompletion = (inputValue: string) => {
-    return this.loadAutocompletion(this.props.userAutoCompleteLink, inputValue);
-  };
-
-  loadGroupAutocompletion = (inputValue: string) => {
-    return this.loadAutocompletion(
-      this.props.groupAutoCompleteLink,
-      inputValue
-    );
-  };
-
-  loadAutocompletion(url: string, inputValue: string) {
-    const link = url + "?q=";
-    return fetch(link + inputValue)
-      .then(response => response.json())
-      .then(json => {
-        return json.map(element => {
-          const label = element.displayName
-            ? `${element.displayName} (${element.id})`
-            : element.id;
-          return {
-            value: element,
-            label
-          };
-        });
-      });
-  }
-
   renderAutocompletionField = () => {
-    const { t } = this.props;
-    if (this.state.groupPermission) {
+    const group = this.state.groupPermission;
+    if (group) {
       return (
-        <Autocomplete
-          loadSuggestions={this.loadGroupAutocompletion}
-          valueSelected={this.groupOrUserSelected}
+        <GroupAutocomplete
+          groupAutocompleteLink={this.props.groupAutocompleteLink}
+          valueSelected={this.selectName}
           value={this.state.value ? this.state.value : ""}
-          label={t("permission.group")}
-          noOptionsMessage={t("permission.autocomplete.no-group-options")}
-          loadingMessage={t("permission.autocomplete.loading")}
-          placeholder={t("permission.autocomplete.group-placeholder")}
-          creatable={true}
         />
       );
     }
     return (
-      <Autocomplete
-        loadSuggestions={this.loadUserAutocompletion}
-        valueSelected={this.groupOrUserSelected}
+      <UserAutocomplete
+        userAutocompleteLink={this.props.userAutocompleteLink}
+        valueSelected={this.selectName}
         value={this.state.value ? this.state.value : ""}
-        label={t("permission.user")}
-        noOptionsMessage={t("permission.autocomplete.no-user-options")}
-        loadingMessage={t("permission.autocomplete.loading")}
-        placeholder={t("permission.autocomplete.user-placeholder")}
-        creatable={true}
       />
     );
   };
 
-  groupOrUserSelected = (value: SelectValue) => {
+selectName = (value: SelectValue) => {
     this.setState({
       value,
       name: value.value.id,
