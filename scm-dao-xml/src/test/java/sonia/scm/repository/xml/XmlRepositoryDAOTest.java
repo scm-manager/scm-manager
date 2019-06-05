@@ -19,6 +19,7 @@ import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryPermission;
 
 import java.io.IOException;
@@ -56,7 +57,18 @@ class XmlRepositoryDAOTest {
 
   @BeforeEach
   void createDAO(@TempDirectory.TempDir Path basePath) {
-    when(locationResolver.create(Path.class)).thenReturn(locationResolver::create);
+    when(locationResolver.create(Path.class)).thenReturn(
+      new RepositoryLocationResolver.RepositoryLocationResolverInstance<Path>() {
+        @Override
+        public Path getLocation(String repositoryId) {
+          return locationResolver.create(repositoryId);
+        }
+
+        @Override
+        public void setLocation(String repositoryId, Path location) {
+        }
+      }
+    );
     when(locationResolver.create(anyString())).thenAnswer(invocation -> createMockedRepoPath(basePath, invocation));
     when(locationResolver.remove(anyString())).thenAnswer(invocation -> basePath.resolve(invocation.getArgument(0).toString()));
   }

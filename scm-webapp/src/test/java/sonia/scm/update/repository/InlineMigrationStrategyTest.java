@@ -7,11 +7,14 @@ import org.junitpioneer.jupiter.TempDirectory;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.repository.RepositoryLocationResolver;
+import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(TempDirectory.class)
@@ -20,9 +23,14 @@ class InlineMigrationStrategyTest {
 
   @Mock
   SCMContextProvider contextProvider;
+  @Mock
+  PathBasedRepositoryLocationResolver locationResolver;
+  @Mock
+  RepositoryLocationResolver.RepositoryLocationResolverInstance locationResolverInstance;
 
   @BeforeEach
   void mockContextProvider(@TempDirectory.TempDir Path tempDir) {
+    when(locationResolver.forClass(Path.class)).thenReturn(locationResolverInstance);
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
   }
 
@@ -33,13 +41,14 @@ class InlineMigrationStrategyTest {
 
   @Test
   void shouldUseExistingDirectory(@TempDirectory.TempDir Path tempDir) {
-    Path target = new InlineMigrationStrategy(contextProvider).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git");
+    Path target = new InlineMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git");
     assertThat(target).isEqualTo(resolveOldDirectory(tempDir));
+    verify(locationResolverInstance).setLocation("b4f-a9f0-49f7-ad1f-37d3aae1c55f", target);
   }
 
   @Test
   void shouldMoveDataDirectory(@TempDirectory.TempDir Path tempDir) {
-    new InlineMigrationStrategy(contextProvider).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git");
+    new InlineMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git");
     assertThat(resolveOldDirectory(tempDir).resolve("data")).exists();
   }
 

@@ -7,6 +7,7 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.store.StoreConstants;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,6 +29,7 @@ import static sonia.scm.ContextEntry.ContextBuilder.entity;
  *
  * @since 2.0.0
  */
+@Singleton
 public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocationResolver<Path> {
 
   public static final String STORE_NAME = "repository-paths";
@@ -64,19 +66,26 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
 
   @Override
   protected <T> RepositoryLocationResolverInstance<T> create(Class<T> type) {
-    return repositoryId -> {
-      if (pathById.containsKey(repositoryId)) {
-        return (T) contextProvider.resolve(pathById.get(repositoryId));
-      } else {
-        return (T) create(repositoryId);
+    return new RepositoryLocationResolverInstance<T>() {
+      @Override
+      public T getLocation(String repositoryId) {
+        if (pathById.containsKey(repositoryId)) {
+          return (T) contextProvider.resolve(pathById.get(repositoryId));
+        } else {
+          return (T) create(repositoryId);
+        }
+      }
+
+      @Override
+      public void setLocation(String repositoryId, T location) {
+        PathBasedRepositoryLocationResolver.this.setLocation(repositoryId, (Path) location);
       }
     };
   }
 
   Path create(String repositoryId) {
     Path path = initialRepositoryLocationResolver.getPath(repositoryId);
-    pathById.put(repositoryId, path);
-    writePathDatabase();
+    setLocation(repositoryId, path);
     Path resolvedPath = contextProvider.resolve(path);
     try {
       Files.createDirectories(resolvedPath);
@@ -137,5 +146,10 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
       .toPath()
       .resolve(StoreConstants.CONFIG_DIRECTORY_NAME)
       .resolve(STORE_NAME.concat(StoreConstants.FILE_EXTENSION));
+  }
+
+  public void setLocation(String repositoryId, Path repositoryBasePath) {
+    pathById.put(repositoryId, repositoryBasePath);
+    writePathDatabase();
   }
 }

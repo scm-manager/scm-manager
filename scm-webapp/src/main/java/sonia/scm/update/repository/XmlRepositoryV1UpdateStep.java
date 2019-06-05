@@ -157,6 +157,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
 
   private Path handleDataDirectory(V1Repository v1Repository) {
     MigrationStrategy dataMigrationStrategy = readMigrationStrategy(v1Repository);
+    LOG.info("using strategy {} to migrate repository {} with id {}", dataMigrationStrategy.getClass(), v1Repository.name, v1Repository.id);
     return dataMigrationStrategy.from(injector).migrate(v1Repository.id, v1Repository.name, v1Repository.type);
   }
 
@@ -229,6 +230,10 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
 
     public String getName() {
       return name;
+    }
+
+    public String getType() {
+      return type;
     }
 
     public String getNewNamespace() {

@@ -32,6 +32,7 @@ class MoveMigrationStrategy extends BaseMigrationStrategy {
     Path targetDataPath = repositoryBasePath
       .resolve(RepositoryDirectoryHandler.REPOSITORIES_NATIVE_DIRECTORY);
     Path sourceDataPath = getSourceDataPath(name, type);
+    LOG.info("moving repository data from {} to {}", sourceDataPath, targetDataPath);
     moveData(sourceDataPath, targetDataPath);
     deleteOldDataDir(getTypeDependentPath(type), name);
     return repositoryBasePath;
