@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.Stage;
+import sonia.scm.event.RecreateEventBusEvent;
 import sonia.scm.event.ScmEventBus;
 
 import javax.servlet.FilterConfig;
@@ -72,7 +73,7 @@ public class BootstrapContextFilter extends GuiceFilter
    *
    * @throws ServletException
    */
-  @Subscribe(async = false)
+  @Subscribe
   public void handleRestartEvent(RestartEvent event) throws ServletException
   {
     logger.warn("received restart event from {} with reason: {}",
@@ -86,6 +87,10 @@ public class BootstrapContextFilter extends GuiceFilter
     {
       logger.warn("destroy filter pipeline, because of a received restart event");
       destroy();
+
+      logger.warn("send recreate eventbus event");
+      ScmEventBus.getInstance().post(new RecreateEventBusEvent());
+      ScmEventBus.getInstance().register(this);
 
       logger.warn("reinitialize filter pipeline, because of a received restart event");
       initGuice();

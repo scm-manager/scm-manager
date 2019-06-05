@@ -36,7 +36,7 @@ package sonia.scm.event;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.EventBus;
-
+import com.github.legman.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,9 +62,13 @@ public class LegmanScmEventBus extends ScmEventBus
    * Constructs ...
    *
    */
-  public LegmanScmEventBus()
-  {
-    eventBus = new EventBus(NAME);
+  public LegmanScmEventBus() {
+    eventBus = create();
+  }
+
+  private EventBus create() {
+    logger.info("create new event bus {}", NAME);
+    return new EventBus(NAME);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -118,8 +122,15 @@ public class LegmanScmEventBus extends ScmEventBus
     }
   }
 
+  @Subscribe(async = false)
+  public void recreateEventBus(RecreateEventBusEvent recreateEventBusEvent) {
+    logger.info("shutdown event bus executor");
+    eventBus.shutdown();
+    eventBus = create();
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** event bus */
-  private final EventBus eventBus;
+  private EventBus eventBus;
 }
