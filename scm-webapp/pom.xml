@@ -245,15 +245,9 @@
     </dependency>
     
     <dependency>
-      <groupId>org.quartz-scheduler</groupId>
-      <artifactId>quartz</artifactId>
-      <version>${quartz.version}</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>c3p0</artifactId>
-          <groupId>c3p0</groupId>
-        </exclusion>
-      </exclusions>
+      <groupId>com.cronutils</groupId>
+      <artifactId>cron-utils</artifactId>
+      <version>8.1.1</version>
     </dependency>
 
     <!-- template engine -->

@@ -80,7 +80,7 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.repository.xml.XmlRepositoryRoleDAO;
-import sonia.scm.schedule.QuartzScheduler;
+import sonia.scm.schedule.CronScheduler;
 import sonia.scm.schedule.Scheduler;
 import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.AuthorizationChangedEventProducer;
@@ -218,7 +218,7 @@ public class ScmServletModule extends ServletModule
     bind(PluginManager.class, DefaultPluginManager.class);
 
     // bind scheduler
-    bind(Scheduler.class).to(QuartzScheduler.class);
+    bind(Scheduler.class).to(CronScheduler.class);
 
     // bind health check stuff
     bind(HealthCheckContextListener.class);
