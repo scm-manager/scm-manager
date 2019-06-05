@@ -44,8 +44,6 @@ import sonia.scm.SCMContext;
 import sonia.scm.ScmContextListener;
 import sonia.scm.ScmEventBusModule;
 import sonia.scm.ScmInitializerModule;
-import sonia.scm.Stage;
-import sonia.scm.event.ScmEventBus;
 import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginException;
@@ -141,13 +139,6 @@ public class BootstrapContextListener implements ServletContextListener {
     createContextListener(pluginDirectory);
 
     contextListener.contextInitialized(sce);
-
-    // register for restart events
-    if (!registered && (SCMContext.getContext().getStage() == Stage.DEVELOPMENT)) {
-      logger.info("register for restart events");
-      ScmEventBus.getInstance().register(this);
-      registered = true;
-    }
   }
 
   private void createContextListener(File pluginDirectory) {
@@ -403,9 +394,6 @@ public class BootstrapContextListener implements ServletContextListener {
 
   /** Field description */
   private ScmContextListener contextListener;
-
-  /** Field description */
-  private boolean registered = false;
 
   private static class ScmContextListenerModule extends AbstractModule {
     @Override
