@@ -7,6 +7,7 @@ import sonia.scm.repository.RepositoryDirectoryHandler;
 import sonia.scm.repository.RepositoryLocationResolver;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -34,6 +35,10 @@ class InlineMigrationStrategy extends BaseMigrationStrategy {
   }
 
   private void moveData(Path sourceDirectory, Path targetDirectory) {
+    moveData(sourceDirectory, targetDirectory, false);
+  }
+
+  private void moveData(Path sourceDirectory, Path targetDirectory, boolean deleteDirectory) {
     createDataDirectory(targetDirectory);
     listSourceDirectory(sourceDirectory)
       .filter(sourceFile -> !targetDirectory.equals(sourceFile))
@@ -41,11 +46,18 @@ class InlineMigrationStrategy extends BaseMigrationStrategy {
         sourceFile -> {
           Path targetFile = targetDirectory.resolve(sourceFile.getFileName());
           if (Files.isDirectory(sourceFile)) {
-            moveData(sourceFile, targetFile);
+            moveData(sourceFile, targetFile, true);
           } else {
             moveFile(sourceFile, targetFile);
           }
         }
       );
+    if (deleteDirectory) {
+      try {
+        Files.delete(sourceDirectory);
+      } catch (IOException e) {
+        LOG.warn("could not delete source repository directory {}", sourceDirectory);
+      }
+    }
   }
 }
