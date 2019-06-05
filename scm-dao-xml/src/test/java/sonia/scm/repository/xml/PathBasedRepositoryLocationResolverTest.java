@@ -57,7 +57,7 @@ class PathBasedRepositoryLocationResolverTest {
 
   @Test
   void shouldCreateInitialDirectory() {
-    Path path = resolver.forClass(Path.class).getLocation("newId");
+    Path path = resolver.forClass(Path.class).createLocation("newId");
 
     assertThat(path).isEqualTo(basePath.resolve("newId"));
     assertThat(path).isDirectory();
@@ -65,7 +65,7 @@ class PathBasedRepositoryLocationResolverTest {
 
   @Test
   void shouldPersistInitialDirectory() {
-    resolver.forClass(Path.class).getLocation("newId");
+    resolver.forClass(Path.class).createLocation("newId");
 
     String content = getXmlFileContent();
 
@@ -78,7 +78,7 @@ class PathBasedRepositoryLocationResolverTest {
     long now = CREATION_TIME + 100;
     when(clock.millis()).thenReturn(now);
 
-    resolver.forClass(Path.class).getLocation("newId");
+    resolver.forClass(Path.class).createLocation("newId");
 
     assertThat(resolver.getCreationTime()).isEqualTo(CREATION_TIME);
 
@@ -91,7 +91,7 @@ class PathBasedRepositoryLocationResolverTest {
     long now = CREATION_TIME + 100;
     when(clock.millis()).thenReturn(now);
 
-    resolver.forClass(Path.class).getLocation("newId");
+    resolver.forClass(Path.class).createLocation("newId");
 
     assertThat(resolver.getCreationTime()).isEqualTo(CREATION_TIME);
     assertThat(resolver.getLastModified()).isEqualTo(now);
@@ -108,8 +108,8 @@ class PathBasedRepositoryLocationResolverTest {
 
     @BeforeEach
     void createExistingDatabase() {
-      resolver.forClass(Path.class).getLocation("existingId_1");
-      resolver.forClass(Path.class).getLocation("existingId_2");
+      resolver.forClass(Path.class).createLocation("existingId_1");
+      resolver.forClass(Path.class).createLocation("existingId_2");
       resolverWithExistingData = createResolver();
     }
 

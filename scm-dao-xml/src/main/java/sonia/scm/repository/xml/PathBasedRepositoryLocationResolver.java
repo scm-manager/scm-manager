@@ -72,13 +72,26 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
         if (pathById.containsKey(repositoryId)) {
           return (T) contextProvider.resolve(pathById.get(repositoryId));
         } else {
+          throw new IllegalStateException("location for repository " + repositoryId + " does not exist");
+        }
+      }
+
+      @Override
+      public T createLocation(String repositoryId) {
+        if (pathById.containsKey(repositoryId)) {
+          throw new IllegalStateException("location for repository " + repositoryId + " already exists");
+        } else {
           return (T) create(repositoryId);
         }
       }
 
       @Override
       public void setLocation(String repositoryId, T location) {
-        PathBasedRepositoryLocationResolver.this.setLocation(repositoryId, ((Path) location).toAbsolutePath());
+        if (pathById.containsKey(repositoryId)) {
+          throw new IllegalStateException("location for repository " + repositoryId + " already exists");
+        } else {
+          PathBasedRepositoryLocationResolver.this.setLocation(repositoryId, ((Path) location).toAbsolutePath());
+        }
       }
     };
   }

@@ -22,6 +22,11 @@ public class TempDirRepositoryLocationResolver extends BasicRepositoryLocationRe
       }
 
       @Override
+      public T createLocation(String repositoryId) {
+        return (T) tempDirectory.toPath();
+      }
+
+      @Override
       public void setLocation(String repositoryId, T location) {
         throw new UnsupportedOperationException("not implemented for tests");
       }

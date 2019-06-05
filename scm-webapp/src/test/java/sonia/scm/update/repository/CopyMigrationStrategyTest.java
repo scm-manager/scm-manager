@@ -43,7 +43,7 @@ class CopyMigrationStrategyTest {
   void mockLocationResolver(@TempDirectory.TempDir Path tempDir) {
     RepositoryLocationResolver.RepositoryLocationResolverInstance instanceMock = mock(RepositoryLocationResolver.RepositoryLocationResolverInstance.class);
     when(locationResolver.forClass(Path.class)).thenReturn(instanceMock);
-    when(instanceMock.getLocation(anyString())).thenAnswer(invocation -> tempDir.resolve((String) invocation.getArgument(0)));
+    when(instanceMock.createLocation(anyString())).thenAnswer(invocation -> tempDir.resolve((String) invocation.getArgument(0)));
   }
 
   @Test

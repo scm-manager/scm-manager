@@ -65,6 +65,11 @@ class XmlRepositoryDAOTest {
         }
 
         @Override
+        public Path createLocation(String repositoryId) {
+          return locationResolver.create(repositoryId);
+        }
+
+        @Override
         public void setLocation(String repositoryId, Path location) {
         }
       }

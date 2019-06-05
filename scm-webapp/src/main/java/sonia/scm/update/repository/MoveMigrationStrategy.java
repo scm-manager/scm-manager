@@ -28,7 +28,7 @@ class MoveMigrationStrategy extends BaseMigrationStrategy {
 
   @Override
   public Path migrate(String id, String name, String type) {
-    Path repositoryBasePath = locationResolver.forClass(Path.class).getLocation(id);
+    Path repositoryBasePath = locationResolver.forClass(Path.class).createLocation(id);
     Path targetDataPath = repositoryBasePath
       .resolve(RepositoryDirectoryHandler.REPOSITORIES_NATIVE_DIRECTORY);
     Path sourceDataPath = getSourceDataPath(name, type);
