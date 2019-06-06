@@ -11,6 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.io.DefaultFileSystem;
+import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
 
 import java.io.IOException;
@@ -40,6 +42,8 @@ class PathBasedRepositoryLocationResolverTest {
 
   @Mock
   private Clock clock;
+
+  private final FileSystem fileSystem = new DefaultFileSystem();
 
   private Path basePath;
 
@@ -159,7 +163,7 @@ class PathBasedRepositoryLocationResolverTest {
   }
 
   private PathBasedRepositoryLocationResolver createResolver() {
-    return new PathBasedRepositoryLocationResolver(contextProvider, initialRepositoryLocationResolver, clock);
+    return new PathBasedRepositoryLocationResolver(contextProvider, initialRepositoryLocationResolver, fileSystem, clock);
   }
 
   private String content(Path storePath) {
