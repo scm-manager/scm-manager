@@ -14,7 +14,7 @@
     "check": "flow check"
   },
   "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.28"
+    "@scm-manager/ui-bundler": "^0.0.29"
   },
   "browserify": {
     "transform": [
