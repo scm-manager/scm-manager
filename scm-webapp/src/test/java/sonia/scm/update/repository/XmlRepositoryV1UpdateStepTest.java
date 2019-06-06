@@ -221,6 +221,25 @@ class XmlRepositoryV1UpdateStepTest {
     assertThat(tempDir.resolve("config").resolve("repositories.xml.v1.backup")).doesNotExist();
   }
 
+  @Test
+  void shouldGetNoMissingStrategiesWithFormerV2DatabaseFile(@TempDirectory.TempDir Path tempDir) throws IOException {
+    createFormerV2RepositoriesFile(tempDir);
+
+    assertThat(updateStep.getRepositoriesWithoutMigrationStrategies()).isEmpty();
+  }
+
+  @Test
+  void shouldFindMissingStrategies(@TempDirectory.TempDir Path tempDir) throws IOException {
+    V1RepositoryFileSystem.createV1Home(tempDir);
+
+    assertThat(updateStep.getRepositoriesWithoutMigrationStrategies())
+      .extracting("id")
+      .contains(
+        "3b91caa5-59c3-448f-920b-769aaa56b761",
+        "c1597b4f-a9f0-49f7-ad1f-37d3aae1c55f",
+        "454972da-faf9-4437-b682-dc4a4e0aa8eb");
+  }
+
   private void createFormerV2RepositoriesFile(@TempDirectory.TempDir Path tempDir) throws IOException {
     URL url = Resources.getResource("sonia/scm/update/repository/formerV2RepositoryFile.xml");
     Path configDir = tempDir.resolve("config");
