@@ -7,6 +7,7 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.store.StoreConstants;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,6 +29,7 @@ import static sonia.scm.ContextEntry.ContextBuilder.entity;
  *
  * @since 2.0.0
  */
+@Singleton
 public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocationResolver<Path> {
 
   public static final String STORE_NAME = "repository-paths";
@@ -48,7 +50,7 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
     this(contextProvider, initialRepositoryLocationResolver, Clock.systemUTC());
   }
 
-  public PathBasedRepositoryLocationResolver(SCMContextProvider contextProvider, InitialRepositoryLocationResolver initialRepositoryLocationResolver, Clock clock) {
+  PathBasedRepositoryLocationResolver(SCMContextProvider contextProvider, InitialRepositoryLocationResolver initialRepositoryLocationResolver, Clock clock) {
     super(Path.class);
     this.contextProvider = contextProvider;
     this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
@@ -137,5 +139,9 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
       .toPath()
       .resolve(StoreConstants.CONFIG_DIRECTORY_NAME)
       .resolve(STORE_NAME.concat(StoreConstants.FILE_EXTENSION));
+  }
+
+  public void refresh() {
+    this.read();
   }
 }
