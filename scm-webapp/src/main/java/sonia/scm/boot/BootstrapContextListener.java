@@ -112,20 +112,6 @@ public class BootstrapContextListener implements ServletContextListener {
   public void contextDestroyed(ServletContextEvent sce) {
     contextListener.contextDestroyed(sce);
 
-    if (contextListener instanceof ScmContextListener) {
-      for (PluginWrapper plugin : ((ScmContextListener) contextListener).getPlugins()) {
-        ClassLoader pcl = plugin.getClassLoader();
-
-        if (pcl instanceof Closeable) {
-          try {
-            ((Closeable) pcl).close();
-          } catch (IOException ex) {
-            logger.warn("could not close plugin classloader", ex);
-          }
-        }
-      }
-    }
-
     context = null;
     contextListener = null;
   }
