@@ -35,7 +35,7 @@ class DeleteRepo extends React.Component<Props> {
   };
 
   deleted = () => {
-    this.props.history.push("/repos");
+    this.props.history.push("/repos/");
   };
 
   deleteRepo = () => {
