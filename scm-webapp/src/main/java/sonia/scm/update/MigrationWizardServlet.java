@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toList;
 
 @Singleton
 class MigrationWizardServlet extends HttpServlet {
@@ -41,27 +40,24 @@ class MigrationWizardServlet extends HttpServlet {
   }
 
   public boolean wizardNecessary() {
-    return !repositoryV1UpdateStep.missingMigrationStrategies().isEmpty();
+    return !repositoryV1UpdateStep.getRepositoriesWithoutMigrationStrategies().isEmpty();
   }
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    List<XmlRepositoryV1UpdateStep.V1Repository> missingMigrationStrategies = repositoryV1UpdateStep.missingMigrationStrategies();
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+    List<XmlRepositoryV1UpdateStep.V1Repository> repositoriesWithoutMigrationStrategies =
+      repositoryV1UpdateStep.getRepositoriesWithoutMigrationStrategies();
 
     HashMap<String, Object> model = new HashMap<>();
 
     model.put("contextPath", req.getContextPath());
     model.put("submitUrl", req.getRequestURI());
-    model.put("repositories", missingMigrationStrategies);
+    model.put("repositories", repositoriesWithoutMigrationStrategies);
     model.put("strategies", getMigrationStrategies());
 
     MustacheFactory mf = new DefaultMustacheFactory();
     Mustache template = mf.compile("templates/repository-migration.mustache");
     respondWithTemplate(resp, model, template);
-  }
-
-  private List<String> getMigrationStrategies() {
-    return stream(MigrationStrategy.values()).map(Enum::name).collect(toList());
   }
 
   @Override
@@ -79,6 +75,10 @@ class MigrationWizardServlet extends HttpServlet {
     respondWithTemplate(resp, model, template);
 
     ScmEventBus.getInstance().post(new RestartEvent(MigrationWizardServlet.class, "wrote migration data"));
+  }
+
+  private MigrationStrategy[] getMigrationStrategies() {
+    return MigrationStrategy.values();
   }
 
   private void respondWithTemplate(HttpServletResponse resp, Map<String, Object> model, Mustache template) {

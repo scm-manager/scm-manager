@@ -111,7 +111,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
     );
   }
 
-  public List<V1Repository> missingMigrationStrategies() {
+  public List<V1Repository> getRepositoriesWithoutMigrationStrategies() {
     if (!resolveV1File().exists()) {
       LOG.info("no v1 repositories database file found");
       return emptyList();

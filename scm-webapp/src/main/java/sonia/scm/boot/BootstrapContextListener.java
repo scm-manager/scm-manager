@@ -141,34 +141,42 @@ public class BootstrapContextListener implements ServletContextListener {
   }
 
   private void createContextListener(File pluginDirectory) {
+    ClassLoader cl;
+    Set<PluginWrapper> plugins;
+    PluginLoader pluginLoader;
 
     try {
       renameOldPluginsFolder(pluginDirectory);
+
       if (!isCorePluginExtractionDisabled()) {
         extractCorePlugins(context, pluginDirectory);
       } else {
         logger.info("core plugin extraction is disabled");
       }
 
-      ClassLoader cl = ClassLoaders.getContextClassLoader(BootstrapContextListener.class);
+      cl = ClassLoaders.getContextClassLoader(BootstrapContextListener.class);
 
-      Set<PluginWrapper> plugins = PluginsInternal.collectPlugins(cl, pluginDirectory.toPath());
+      plugins = PluginsInternal.collectPlugins(cl, pluginDirectory.toPath());
 
-      PluginLoader pluginLoader = new DefaultPluginLoader(context, cl, plugins);
+      pluginLoader = new DefaultPluginLoader(context, cl, plugins);
 
-      Injector bootstrapInjector = createBootstrapInjector(pluginLoader);
-
-      MigrationWizardContextListener wizardContextListener = prepareWizardIfNeeded(bootstrapInjector);
-
-      if (wizardContextListener.wizardNecessary()) {
-        contextListener = wizardContextListener;
-      } else {
-        processUpdates(pluginLoader, bootstrapInjector);
-
-        contextListener = bootstrapInjector.getInstance(ScmContextListener.Factory.class).create(cl, plugins);
-      }
     } catch (IOException ex) {
       throw new PluginLoadException("could not load plugins", ex);
+    }
+
+    Injector bootstrapInjector = createBootstrapInjector(pluginLoader);
+
+    startEitherMigrationOrNormalServlet(cl, plugins, pluginLoader, bootstrapInjector);
+  }
+
+  private void startEitherMigrationOrNormalServlet(ClassLoader cl, Set<PluginWrapper> plugins, PluginLoader pluginLoader, Injector bootstrapInjector) {
+    MigrationWizardContextListener wizardContextListener = prepareWizardIfNeeded(bootstrapInjector);
+
+    if (wizardContextListener.wizardNecessary()) {
+      contextListener = wizardContextListener;
+    } else {
+      processUpdates(pluginLoader, bootstrapInjector);
+      contextListener = bootstrapInjector.getInstance(ScmContextListener.Factory.class).create(cl, plugins);
     }
   }
 
