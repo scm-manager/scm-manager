@@ -47,6 +47,12 @@ private final SCMContextProvider contextProvider;
     copyTestDatabaseFile(configDir, fileName);
   }
 
+  public void copyConfigFile(String fileName, String targetFileName) throws IOException {
+    Path configDir = tempDir.resolve("config");
+    Files.createDirectories(configDir);
+    copyTestDatabaseFile(configDir, fileName, targetFileName);
+  }
+
   public ConfigurationEntryStore<AssignedPermission> getStoreForConfigFile(String name) {
     return storeFactory
       .withType(AssignedPermission.class)
@@ -59,7 +65,12 @@ private final SCMContextProvider contextProvider;
   }
 
   private void copyTestDatabaseFile(Path configDir, String fileName) throws IOException {
+    Path targetFileName = Paths.get(fileName).getFileName();
+    copyTestDatabaseFile(configDir, fileName, targetFileName.toString());
+  }
+
+  private void copyTestDatabaseFile(Path configDir, String fileName, String targetFileName) throws IOException {
     URL url = Resources.getResource(fileName);
-    Files.copy(url.openStream(), configDir.resolve(Paths.get(fileName).getFileName()));
+    Files.copy(url.openStream(), configDir.resolve(targetFileName));
   }
 }

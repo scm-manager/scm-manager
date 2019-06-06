@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/scm-hg-plugin",
   "main": "src/main/js/index.js",
-  "license" : "BSD-3-Clause",
+  "license": "BSD-3-Clause",
   "scripts": {
     "build": "ui-bundler plugin"
   },
@@ -9,6 +9,6 @@
     "@scm-manager/ui-extensions": "^0.1.2"
   },
   "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.28"
+    "@scm-manager/ui-bundler": "^0.0.29"
   }
 }
