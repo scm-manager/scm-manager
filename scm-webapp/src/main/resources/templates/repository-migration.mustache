@@ -47,7 +47,7 @@
                         <div class="control select">
                           <select name="{{id}}">
                             {{#strategies}}
-                              <option>{{.}}</option>
+                              <option>{{name}}</option>
                             {{/strategies}}
                           </select>
                         </div>
@@ -58,6 +58,18 @@
               </table>
               <button class="button is-primary" type="submit">Submit</button>
             </form>
+            <hr>
+            <div class="content">
+              <h2 class="subtitle">These are the different strategies:</h2>
+              <table class="table">
+                {{#strategies}}
+                  <tr>
+                    <th>{{name}}</th>
+                    <td>{{description}}</td>
+                  </tr>
+                {{/strategies}}
+              </table>
+            </div>
           </div>
         </section>
       </div>
