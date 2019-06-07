@@ -198,4 +198,11 @@ public class XmlRepositoryDAO implements RepositoryDAO {
   public Long getLastModified() {
     return repositoryLocationResolver.getLastModified();
   }
+
+  public void refresh() {
+    repositoryLocationResolver.refresh();
+    byNamespaceAndName.clear();
+    byId.clear();
+    init();
+  }
 }
