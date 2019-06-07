@@ -18,7 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +48,8 @@ class MigrationWizardServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
     List<XmlRepositoryV1UpdateStep.V1Repository> repositoriesWithoutMigrationStrategies =
-      repositoryV1UpdateStep.getRepositoriesWithoutMigrationStrategies();
+      new ArrayList<>(repositoryV1UpdateStep.getRepositoriesWithoutMigrationStrategies());
+    repositoriesWithoutMigrationStrategies.sort(Comparator.comparing(XmlRepositoryV1UpdateStep.V1Repository::getPath));
 
     HashMap<String, Object> model = new HashMap<>();
 

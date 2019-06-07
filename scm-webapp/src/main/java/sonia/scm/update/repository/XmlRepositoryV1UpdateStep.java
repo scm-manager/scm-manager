@@ -240,6 +240,10 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
       return type;
     }
 
+    public String getPath() {
+      return type + "/" + name;
+    }
+
     public String getNewNamespace() {
       String[] nameParts = getNameParts(name);
       return nameParts.length > 1 ? nameParts[0] : type;
