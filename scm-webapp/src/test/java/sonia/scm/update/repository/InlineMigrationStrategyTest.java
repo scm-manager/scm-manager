@@ -41,7 +41,7 @@ class InlineMigrationStrategyTest {
 
   @Test
   void shouldUseExistingDirectory(@TempDirectory.TempDir Path tempDir) {
-    Path target = new InlineMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git");
+    Path target = new InlineMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git").get();
     assertThat(target).isEqualTo(resolveOldDirectory(tempDir));
     verify(locationResolverInstance).setLocation("b4f-a9f0-49f7-ad1f-37d3aae1c55f", target);
   }

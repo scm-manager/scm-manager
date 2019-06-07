@@ -45,13 +45,13 @@ class MoveMigrationStrategyTest {
 
   @Test
   void shouldUseStandardDirectory(@TempDirectory.TempDir Path tempDir) {
-    Path target = new MoveMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git");
+    Path target = new MoveMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git").get();
     assertThat(target).isEqualTo(tempDir.resolve("b4f-a9f0-49f7-ad1f-37d3aae1c55f"));
   }
 
   @Test
   void shouldMoveDataDirectory(@TempDirectory.TempDir Path tempDir) {
-    Path target = new MoveMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git");
+    Path target = new MoveMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git").get();
     assertThat(target.resolve("data")).exists();
     Path originalDataDir = tempDir
       .resolve("repositories")

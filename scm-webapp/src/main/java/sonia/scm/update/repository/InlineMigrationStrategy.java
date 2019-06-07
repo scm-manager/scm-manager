@@ -10,6 +10,9 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
+
+import static java.util.Optional.of;
 
 class InlineMigrationStrategy extends BaseMigrationStrategy {
 
@@ -24,14 +27,14 @@ class InlineMigrationStrategy extends BaseMigrationStrategy {
   }
 
   @Override
-  public Path migrate(String id, String name, String type) {
+  public Optional<Path> migrate(String id, String name, String type) {
     Path repositoryBasePath = getSourceDataPath(name, type);
     locationResolver.forClass(Path.class).setLocation(id, repositoryBasePath);
     Path targetDataPath = repositoryBasePath
       .resolve(RepositoryDirectoryHandler.REPOSITORIES_NATIVE_DIRECTORY);
     LOG.info("moving repository data from {} to {}", repositoryBasePath, targetDataPath);
     moveData(repositoryBasePath, targetDataPath);
-    return repositoryBasePath;
+    return of(repositoryBasePath);
   }
 
   private void moveData(Path sourceDirectory, Path targetDirectory) {

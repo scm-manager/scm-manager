@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
@@ -33,10 +34,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static sonia.scm.update.repository.MigrationStrategy.COPY;
+import static sonia.scm.update.repository.MigrationStrategy.DELETE;
 import static sonia.scm.update.repository.MigrationStrategy.INLINE;
 import static sonia.scm.update.repository.MigrationStrategy.MOVE;
 
@@ -177,11 +180,24 @@ class XmlRepositoryV1UpdateStepTest {
     void shouldUseDirectoryFromStrategy(@TempDirectory.TempDir Path tempDir) throws JAXBException {
       Path targetDir = tempDir.resolve("someDir");
       MigrationStrategy.Instance strategyMock = injectorMock.getInstance(InlineMigrationStrategy.class);
-      when(strategyMock.migrate("454972da-faf9-4437-b682-dc4a4e0aa8eb", "simple", "git")).thenReturn(targetDir);
+      when(strategyMock.migrate("454972da-faf9-4437-b682-dc4a4e0aa8eb", "simple", "git")).thenReturn(of(targetDir));
 
       updateStep.doUpdate();
 
       assertThat(locationCaptor.getAllValues()).contains(targetDir);
+    }
+
+    @Test
+    void shouldSkipWhenStrategyGivesNoNewPath() throws JAXBException {
+      for (MigrationStrategy strategy : MigrationStrategy.values()) {
+        MigrationStrategy.Instance strategyMock = mock(strategy.getImplementationClass());
+        lenient().when(strategyMock.migrate(any(), any(), any())).thenReturn(empty());
+        lenient().when(injectorMock.getInstance((Class<MigrationStrategy.Instance>) strategy.getImplementationClass())).thenReturn(strategyMock);
+      }
+
+      updateStep.doUpdate();
+
+      assertThat(locationCaptor.getAllValues()).isEmpty();
     }
 
     @Test

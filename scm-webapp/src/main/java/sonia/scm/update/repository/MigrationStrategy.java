@@ -3,6 +3,7 @@ package sonia.scm.update.repository;
 import com.google.inject.Injector;
 
 import java.nio.file.Path;
+import java.util.Optional;
 
 public enum MigrationStrategy {
 
@@ -15,7 +16,13 @@ public enum MigrationStrategy {
   INLINE(InlineMigrationStrategy.class,
     "Use the current directory where the repository data files are stored, but modify the directory " +
       "structure so that it can be used for SCM-Manager v2. The repository data files will be moved to a new " +
-      "subdirectory 'data' inside the current directory.");
+      "subdirectory 'data' inside the current directory."),
+  IGNORE(IgnoreMigrationStrategy.class,
+    "The repository will not be migrated and will not be visible inside SCM-Manager. " +
+      "The data files will be kept at the current location."),
+  DELETE(DeleteMigrationStrategy.class,
+    "The repository will not be migrated and will not be visible inside SCM-Manager. " +
+      "The data files will be deleted!");
 
   private final Class<? extends Instance> implementationClass;
   private final String description;
@@ -23,6 +30,10 @@ public enum MigrationStrategy {
   MigrationStrategy(Class<? extends Instance> implementationClass, String description) {
     this.implementationClass = implementationClass;
     this.description = description;
+  }
+
+  public Class<? extends Instance> getImplementationClass() {
+    return implementationClass;
   }
 
   public String getDescription() {
@@ -34,6 +45,6 @@ public enum MigrationStrategy {
   }
 
   interface Instance {
-    Path migrate(String id, String name, String type);
+    Optional<Path> migrate(String id, String name, String type);
   }
 }
