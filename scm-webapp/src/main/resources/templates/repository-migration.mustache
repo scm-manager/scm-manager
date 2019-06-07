@@ -21,8 +21,26 @@
       <div class="main">
         <section class="section">
           <div class="container">
-            <h1 class="title">SCM-Manager Migration</h1>
-            <h2 class="subtitle">You have migrated from SCM-Manager v1 to SCM-Manager v2.</h2>
+            <p class="content">
+              <h1 class="title">SCM-Manager Migration</h1>
+              <h2 class="subtitle">You have migrated from SCM-Manager v1 to SCM-Manager v2.</h2>
+              <p>
+                To migrate the existing repositories you have to specify a namespace and a name for each on them
+                as well as a migration strategy.
+              </p>
+              <p>
+                The strategies are the following:
+                <table class="table">
+                  {{#strategies}}
+                    <tr>
+                      <th>{{name}}</th>
+                      <td>{{description}}</td>
+                    </tr>
+                  {{/strategies}}
+                </table>
+              </p>
+            </div>
+            <hr>
             <form action="{{submitUrl}}" method="post">
               <table class="card-table table is-hoverable is-fullwidth">
                 <tr>
@@ -34,7 +52,7 @@
                 {{#repositories}}
                   <tr>
                     <td>
-                      {{name}}
+                      {{type}}/{{name}}
                     </td>
                     <td>
                       {{type}}
@@ -58,18 +76,6 @@
               </table>
               <button class="button is-primary" type="submit">Submit</button>
             </form>
-            <hr>
-            <div class="content">
-              <h2 class="subtitle">These are the different strategies:</h2>
-              <table class="table">
-                {{#strategies}}
-                  <tr>
-                    <th>{{name}}</th>
-                    <td>{{description}}</td>
-                  </tr>
-                {{/strategies}}
-              </table>
-            </div>
           </div>
         </section>
       </div>
