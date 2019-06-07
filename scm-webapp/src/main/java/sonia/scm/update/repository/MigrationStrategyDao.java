@@ -23,8 +23,8 @@ public class MigrationStrategyDao {
     return plan.get(id);
   }
 
-  public void set(String repositoryId, MigrationStrategy strategy) {
-    plan.set(repositoryId, strategy);
+  public void set(String repositoryId, MigrationStrategy strategy, String newNamespace, String newName) {
+    plan.set(repositoryId, strategy, newNamespace, newName);
     store.set(plan);
   }
 }

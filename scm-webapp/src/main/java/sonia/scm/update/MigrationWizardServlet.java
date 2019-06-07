@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -65,8 +66,13 @@ class MigrationWizardServlet extends HttpServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
     resp.setStatus(200);
 
-    req.getParameterMap().forEach(
-      (name, strategy) -> migrationStrategyDao.set(name, MigrationStrategy.valueOf(strategy[0]))
+    Arrays.stream(req.getParameterValues("ids")).forEach(
+      id -> {
+        String strategy = req.getParameter("strategy-" + id);
+        String namespace = req.getParameter("namespace-" + id);
+        String name = req.getParameter("name-" + id);
+        migrationStrategyDao.set(id, MigrationStrategy.valueOf(strategy), namespace, name);
+      }
     );
 
     MustacheFactory mf = new DefaultMustacheFactory();

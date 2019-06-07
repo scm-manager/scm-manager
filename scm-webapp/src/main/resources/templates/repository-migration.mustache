@@ -46,7 +46,8 @@
                 <tr>
                   <th>Original name</th>
                   <th>Type</th>
-                  <th>New namespace and name</th>
+                  <th>New namespace</th>
+                  <th>New name</th>
                   <th>Strategy</th>
                 </tr>
                 {{#repositories}}
@@ -58,12 +59,15 @@
                       {{type}}
                     </td>
                     <td>
-                      {{newNamespace}}/{{newName}}
+                      <input class="input" type="text" name="namespace-{{id}}" value="{{newNamespace}}">
+                    </td>
+                    <td>
+                      <input class="input" type="text" name="name-{{id}}" value="{{newName}}">
                     </td>
                     <td>
                       <div class="field">
                         <div class="control select">
-                          <select name="{{id}}">
+                          <select name="strategy-{{id}}">
                             {{#strategies}}
                               <option>{{name}}</option>
                             {{/strategies}}
@@ -74,6 +78,9 @@
                   </tr>
                 {{/repositories}}
               </table>
+              {{#repositories}}
+                <input type="hidden" name="ids" value="{{id}}">
+              {{/repositories}}
               <button class="button is-primary" type="submit">Submit</button>
             </form>
           </div>
