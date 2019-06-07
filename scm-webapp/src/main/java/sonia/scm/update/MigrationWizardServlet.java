@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Arrays.stream;
-
 @Singleton
 class MigrationWizardServlet extends HttpServlet {
 
