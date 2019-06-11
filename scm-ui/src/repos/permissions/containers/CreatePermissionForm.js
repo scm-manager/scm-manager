@@ -89,7 +89,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
     );
   };
 
-selectName = (value: SelectValue) => {
+  selectName = (value: SelectValue) => {
     this.setState({
       value,
       name: value.value.id,
@@ -113,15 +113,17 @@ selectName = (value: SelectValue) => {
       <AdvancedPermissionsDialog
         availableVerbs={availableVerbs}
         selectedVerbs={selectedVerbs}
-        onClose={this.closeAdvancedPermissionsDialog}
+        onClose={this.toggleAdvancedPermissionsDialog}
         onSubmit={this.submitAdvancedPermissionsDialog}
       />
     ) : null;
 
     return (
-      <div>
+      <>
         <hr />
-        <Subtitle subtitle={t("permission.add-permission.add-permission-heading")} />
+        <Subtitle
+          subtitle={t("permission.add-permission.add-permission-heading")}
+        />
         {advancedDialog}
         <form onSubmit={this.submit}>
           <div className="field is-grouped">
@@ -164,7 +166,7 @@ selectName = (value: SelectValue) => {
                   />
                   <Button
                     label={t("permission.advanced-button.label")}
-                    action={this.handleDetailedPermissionsPressed}
+                    action={this.toggleAdvancedPermissionsDialog}
                   />
                 </div>
               </div>
@@ -180,16 +182,14 @@ selectName = (value: SelectValue) => {
             </div>
           </div>
         </form>
-      </div>
+      </>
     );
   }
 
-  handleDetailedPermissionsPressed = () => {
-    this.setState({ showAdvancedDialog: true });
-  };
-
-  closeAdvancedPermissionsDialog = () => {
-    this.setState({ showAdvancedDialog: false });
+  toggleAdvancedPermissionsDialog = () => {
+    this.setState(prevState => ({
+      showAdvancedDialog: !prevState.showAdvancedDialog
+    }));
   };
 
   submitAdvancedPermissionsDialog = (newVerbs: string[]) => {
