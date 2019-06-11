@@ -117,7 +117,7 @@ public class MigrateVerbsToPermissionRoles extends RepositoryUpdates.RepositoryU
 
   @Override
   public Version getTargetVersion() {
-    return Version.parse("1");
+    return Version.parse("2.0.0");
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
