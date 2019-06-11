@@ -181,6 +181,9 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
   }
 
   private RepositoryPermission[] createPermissions(V1Repository v1Repository) {
+    if (v1Repository.getPermissions() == null) {
+      return new RepositoryPermission[0];
+    }
     return v1Repository.getPermissions()
       .stream()
       .map(this::createPermission)
