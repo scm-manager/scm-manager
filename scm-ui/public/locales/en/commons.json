@@ -19,11 +19,11 @@
       "subtitle": "Unknown error occurred"
     }
   },
-  "error-notification": {
+  "errorNotification": {
     "prefix": "Error",
     "loginLink": "You can login here again.",
     "timeout": "The session has expired",
-    "wrong-login-credentials": "Invalid credentials",
+    "wrongLoginCredentials": "Invalid credentials",
     "forbidden": "You don't have permission to view this entity"
   },
   "loading": {
@@ -40,6 +40,15 @@
     "config": "Configuration"
   },
   "filterEntries": "filter entries",
+  "autocomplete": {
+    "group": "Group",
+    "user": "User",
+    "noGroupOptions": "No group suggestion available",
+    "groupPlaceholder": "Enter group",
+    "noUserOptions": "No user suggestion available",
+    "userPlaceholder": "Enter user",
+    "loading": "Loading..."
+  },
   "paginator": {
     "next": "Next",
     "previous": "Previous"

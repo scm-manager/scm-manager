@@ -1,21 +1,18 @@
 // @flow
 import React from "react";
-import { translate } from "react-i18next";
-import { Autocomplete } from "@scm-manager/ui-components";
 import type { SelectValue } from "@scm-manager/ui-types";
+import Autocomplete from "./Autocomplete";
 
 type Props = {
-  groupAutocompleteLink: string,
+  autocompleteLink: string,
   valueSelected: SelectValue => void,
   value: string,
-
-  // Context props
-  t: string => string
+  label: string
 };
 
-class GroupAutocomplete extends React.Component<Props> {
-  loadGroupSuggestions = (inputValue: string) => {
-    const url = this.props.groupAutocompleteLink;
+class UserGroupAutocomplete extends React.Component<Props> {
+  loadSuggestions = (inputValue: string) => {
+    const url = this.props.autocompleteLink;
     const link = url + "?q=";
     return fetch(link + inputValue)
       .then(response => response.json())
@@ -37,20 +34,18 @@ class GroupAutocomplete extends React.Component<Props> {
   };
 
   render() {
-    const { t, value } = this.props;
+    const { value, label } = this.props;
     return (
       <Autocomplete
-        loadSuggestions={this.loadGroupSuggestions}
-        label={t("permission.group")}
-        noOptionsMessage={t("permission.autocomplete.no-group-options")}
-        loadingMessage={t("permission.autocomplete.loading")}
-        placeholder={t("permission.autocomplete.group-placeholder")}
+        loadSuggestions={this.loadSuggestions}
         valueSelected={this.selectName}
         value={value}
         creatable={true}
+        label={label}
+        {...this.props}
       />
     );
   }
 }
 
-export default translate("repos")(GroupAutocomplete);
+export default UserGroupAutocomplete;

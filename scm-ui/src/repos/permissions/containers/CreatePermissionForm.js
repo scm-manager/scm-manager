@@ -12,12 +12,12 @@ import {
   SubmitButton,
   Button,
   LabelWithHelpIcon,
-  Radio
+  Radio,
+  GroupAutocomplete,
+  UserAutocomplete
 } from "@scm-manager/ui-components";
 import * as validator from "../components/permissionValidation";
 import RoleSelector from "../components/RoleSelector";
-import GroupAutocomplete from "../components/GroupAutocomplete";
-import UserAutocomplete from "../components/UserAutocomplete";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
 import { findVerbsForRole } from "../modules/permissions";
 

@@ -63,7 +63,9 @@ public class XmlGroupV1UpdateStep implements UpdateStep {
       return;
     }
     XmlGroupV1UpdateStep.V1GroupDatabase v1Database = readV1Database(v1GroupsFile.get());
-    v1Database.groupList.groups.forEach(this::update);
+    if (v1Database.groupList != null && v1Database.groupList.groups != null) {
+      v1Database.groupList.groups.forEach(this::update);
+    }
   }
 
   @Override

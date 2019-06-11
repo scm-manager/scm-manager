@@ -99,6 +99,36 @@ class XmlGroupV1UpdateStepTest {
     }
   }
 
+  @Nested
+  class WithExistingDatabaseWithEmptyList {
+
+    @BeforeEach
+    void createGroupV1XML() throws IOException {
+      testUtil.copyConfigFile("sonia/scm/update/group/groups_empty_groups.xml", "groups.xml");
+    }
+
+    @Test
+    void shouldCreateNewGroupFromGroupsV1Xml() throws JAXBException {
+      updateStep.doUpdate();
+      verify(groupDAO, times(0)).add(any());
+    }
+  }
+
+  @Nested
+  class WithExistingDatabaseWithoutList {
+
+    @BeforeEach
+    void createGroupV1XML() throws IOException {
+      testUtil.copyConfigFile("sonia/scm/update/group/groups_no_groups.xml", "groups.xml");
+    }
+
+    @Test
+    void shouldCreateNewGroupFromGroupsV1Xml() throws JAXBException {
+      updateStep.doUpdate();
+      verify(groupDAO, times(0)).add(any());
+    }
+  }
+
   @Test
   void shouldNotFailForMissingConfigDir() throws JAXBException {
     updateStep.doUpdate();

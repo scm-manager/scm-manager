@@ -4,7 +4,6 @@ import { AsyncCreatable, Async } from "react-select";
 import type { AutocompleteObject, SelectValue } from "@scm-manager/ui-types";
 import LabelWithHelpIcon from "./forms/LabelWithHelpIcon";
 
-
 type Props = {
   loadSuggestions: string => Promise<AutocompleteObject>,
   valueSelected: SelectValue => void,
