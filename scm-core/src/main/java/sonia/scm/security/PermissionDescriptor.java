@@ -100,7 +100,7 @@ public class PermissionDescriptor implements Serializable
   @Override
   public int hashCode()
   {
-    return value.hashCode();
+    return value == null? -1: value.hashCode();
   }
 
   /**
