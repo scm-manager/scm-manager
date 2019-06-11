@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<group-db>
+    <creationTime>1559548854204</creationTime>
+    <groups>
+        <group>
+            <properties/>
+            <creationDate>1559548913984</creationDate>
+            <description>They love poetry</description>
+            <name>vogons</name>
+            <members>jeltz</members>
+            <type>xml</type>
+        </group>
+        <group>
+            <properties>
+              <item>
+                <key>mostly</key>
+                <value>humans</value>
+              </item>
+            </properties>
+            <creationDate>1559548942457</creationDate>
+            <description>Normal people</description>
+            <name>normals</name>
+            <members>trillian</members>
+            <members>dent</members>
+            <lastModified>1559550955883</lastModified>
+            <type>xml</type>
+        </group>
+    </groups>
+    <lastModified>1559548942458</lastModified>
+</group-db>

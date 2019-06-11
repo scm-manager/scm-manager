@@ -17,12 +17,24 @@ const styles = {
   panel: {
     fontSize: "1rem"
   },
+  /* breaks into a second row
+     when buttons and title become too long */
+  level: {
+    flexWrap: "wrap"
+  },
   titleHeader: {
+    display: "flex",
+    maxWidth: "100%",
     cursor: "pointer"
   },
   title: {
     marginLeft: ".25rem",
     fontSize: "1rem"
+  },
+  /* align child to right */
+  buttonHeader: {
+    display: "flex",
+    marginLeft: "auto"
   },
   hunkDivider: {
     margin: ".5rem 0"
@@ -143,14 +155,41 @@ class DiffFile extends React.Component<Props, State> {
     return file.newPath;
   };
 
+  hoverFileTitle = (file: any) => {
+    if (
+      file.oldPath !== file.newPath &&
+      (file.type === "copy" || file.type === "rename")
+    ) {
+      return (
+        <>
+          {file.oldPath} > {file.newPath}
+        </>
+      );
+    } else if (file.type === "delete") {
+      return file.oldPath;
+    }
+    return file.newPath;
+  };
+
   renderChangeTag = (file: any) => {
-    const { t } = this.props;
+    const { t, classes } = this.props;
     const key = "diff.changes." + file.type;
     let value = t(key);
     if (key === value) {
       value = file.type;
     }
-    return <span className="tag is-info has-text-weight-normal">{value}</span>;
+    return (
+      <span
+        className={classNames(
+          "tag",
+          "is-info",
+          "has-text-weight-normal",
+          classes.changeType
+        )}
+      >
+        {value}
+      </span>
+    );
   };
 
   render() {
@@ -187,20 +226,21 @@ class DiffFile extends React.Component<Props, State> {
     return (
       <div className={classNames("panel", classes.panel)}>
         <div className="panel-heading">
-          <div className="level">
+          <div className={classNames("level", classes.level)}>
             <div
               className={classNames("level-left", classes.titleHeader)}
               onClick={this.toggleCollapse}
+              title={this.hoverFileTitle(file)}
             >
               <i className={icon} />
-              <span className={classes.title}>
+              <span
+                className={classNames("is-ellipsis-overflow", classes.title)}
+              >
                 {this.renderFileTitle(file)}
               </span>
-              <span className={classes.changeType}>
-                {this.renderChangeTag(file)}
-              </span>
+              {this.renderChangeTag(file)}
             </div>
-            <div className="level-right">
+            <div className={classNames("level-right", classes.buttonHeader)}>
               <Button action={this.toggleSideBySide} className="reduced-mobile">
                 <span className="icon is-small">
                   <i

@@ -1,4 +1,4 @@
-package sonia.scm.repository.update;
+package sonia.scm.update.repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

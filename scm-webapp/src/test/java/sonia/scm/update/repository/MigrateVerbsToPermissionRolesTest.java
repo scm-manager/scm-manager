@@ -1,4 +1,4 @@
-package sonia.scm.repository.update;
+package sonia.scm.update.repository;
 
 import com.google.common.io.Resources;
 import org.assertj.core.api.Assertions;
@@ -42,7 +42,7 @@ class MigrateVerbsToPermissionRolesTest {
 
   @BeforeEach
   void init(@TempDirectory.TempDir Path tempDir) throws IOException {
-    URL metadataUrl = Resources.getResource("sonia/scm/repository/update/metadataWithoutRoles.xml");
+    URL metadataUrl = Resources.getResource("sonia/scm/update/repository/metadataWithoutRoles.xml");
     Files.copy(metadataUrl.openStream(), tempDir.resolve("metadata.xml"));
     doAnswer(invocation -> {
       ((BiConsumer<String, Path>) invocation.getArgument(0)).accept(EXISTING_REPOSITORY_ID, tempDir);

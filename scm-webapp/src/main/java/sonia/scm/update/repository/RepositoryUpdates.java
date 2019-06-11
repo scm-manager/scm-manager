@@ -1,4 +1,4 @@
-package sonia.scm.repository.update;
+package sonia.scm.update.repository;
 
 public class RepositoryUpdates {
 

@@ -8,6 +8,7 @@ import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -69,7 +70,7 @@ public class UserPermissionResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  public Response overwritePermissions(@PathParam("id") String id, PermissionListDto newPermissions) {
+  public Response overwritePermissions(@PathParam("id") String id, @Valid PermissionListDto newPermissions) {
     Collection<PermissionDescriptor> permissionDescriptors = Arrays.stream(newPermissions.getPermissions())
       .map(PermissionDescriptor::new)
       .collect(Collectors.toList());

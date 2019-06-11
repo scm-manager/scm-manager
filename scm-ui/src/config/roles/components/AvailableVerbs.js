@@ -1,13 +1,15 @@
 //@flow
 import React from "react";
-import type { RepositoryRole } from "@scm-manager/ui-types";
-import { translate } from "react-i18next";
 import { compose } from "redux";
 import injectSheet from "react-jss";
+import { translate } from "react-i18next";
+import type { RepositoryRole } from "@scm-manager/ui-types";
 
 type Props = {
   role: RepositoryRole,
+
   // context props
+  classes: any,
   t: string => string
 };
 

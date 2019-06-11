@@ -8,6 +8,7 @@ type Props = {
   baseUrl: string,
   roles: RepositoryRole[],
 
+  // context props
   t: string => string
 };
 
@@ -17,16 +18,16 @@ class PermissionRoleTable extends React.Component<Props> {
     return (
       <table className="card-table table is-hoverable is-fullwidth">
         <thead>
-          <tr>
-            <th>{t("repositoryRole.form.name")}</th>
-          </tr>
+        <tr>
+          <th>{t("repositoryRole.name")}</th>
+        </tr>
         </thead>
         <tbody>
-          {roles.map((role, index) => {
-            return (
-              <PermissionRoleRow key={index} baseUrl={baseUrl} role={role} />
-            );
-          })}
+        {roles.map((role, index) => {
+          return (
+            <PermissionRoleRow key={index} baseUrl={baseUrl} role={role} />
+          );
+        })}
         </tbody>
       </table>
     );

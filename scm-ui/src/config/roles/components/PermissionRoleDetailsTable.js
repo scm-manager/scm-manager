@@ -6,6 +6,7 @@ import AvailableVerbs from "./AvailableVerbs";
 
 type Props = {
   role: RepositoryRole,
+
   // context props
   t: string => string
 };
@@ -16,18 +17,18 @@ class PermissionRoleDetailsTable extends React.Component<Props> {
     return (
       <table className="table content">
         <tbody>
-          <tr>
-            <th>{t("repositoryRole.name")}</th>
-            <td>{role.name}</td>
-          </tr>
-          <tr>
-            <th>{t("repositoryRole.type")}</th>
-            <td>{role.type}</td>
-          </tr>
-          <tr>
-            <th>{t("repositoryRole.verbs")}</th>
-            <AvailableVerbs role={role} />
-          </tr>
+        <tr>
+          <th>{t("repositoryRole.name")}</th>
+          <td>{role.name}</td>
+        </tr>
+        <tr>
+          <th>{t("repositoryRole.type")}</th>
+          <td>{role.type}</td>
+        </tr>
+        <tr>
+          <th>{t("repositoryRole.verbs")}</th>
+          <AvailableVerbs role={role} />
+        </tr>
         </tbody>
       </table>
     );

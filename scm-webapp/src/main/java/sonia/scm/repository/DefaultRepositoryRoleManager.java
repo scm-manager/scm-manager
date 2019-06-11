@@ -88,7 +88,7 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
 
     return managerDaoAdapter.create(
       repositoryRole,
-      RepositoryRolePermissions::modify,
+      RepositoryRolePermissions::write,
       newRepositoryRole -> fireEvent(HandlerEventType.BEFORE_CREATE, newRepositoryRole),
       newRepositoryRole -> fireEvent(HandlerEventType.CREATE, newRepositoryRole)
     );
@@ -100,7 +100,7 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
     logger.info("delete repositoryRole {} of type {}", repositoryRole.getName(), repositoryRole.getType());
     managerDaoAdapter.delete(
       repositoryRole,
-      RepositoryRolePermissions::modify,
+      RepositoryRolePermissions::write,
       toDelete -> fireEvent(HandlerEventType.BEFORE_DELETE, toDelete),
       toDelete -> fireEvent(HandlerEventType.DELETE, toDelete)
     );
@@ -116,7 +116,7 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
     logger.info("modify repositoryRole {} of type {}", repositoryRole.getName(), repositoryRole.getType());
     managerDaoAdapter.modify(
       repositoryRole,
-      x -> RepositoryRolePermissions.modify(),
+      x -> RepositoryRolePermissions.write(),
       notModified -> fireEvent(HandlerEventType.BEFORE_MODIFY, repositoryRole, notModified),
       notModified -> fireEvent(HandlerEventType.MODIFY, repositoryRole, notModified));
   }
@@ -125,7 +125,6 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
   public void refresh(RepositoryRole repositoryRole) {
     logger.info("refresh repositoryRole {} of type {}", repositoryRole.getName(), repositoryRole.getType());
 
-    RepositoryRolePermissions.read().check();
     RepositoryRole fresh = repositoryRoleDAO.get(repositoryRole.getName());
 
     if (fresh == null) {
@@ -135,8 +134,6 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
 
   @Override
   public RepositoryRole get(String id) {
-    RepositoryRolePermissions.read().check();
-
     return findSystemRole(id).orElse(findCustomRole(id));
   }
 
@@ -168,9 +165,6 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
   public List<RepositoryRole> getAll() {
     List<RepositoryRole> repositoryRoles = new ArrayList<>();
 
-    if (!RepositoryRolePermissions.read().isPermitted()) {
-      return Collections.emptyList();
-    }
     for (RepositoryRole repositoryRole : repositoryPermissionProvider.availableRoles()) {
       repositoryRoles.add(repositoryRole.clone());
     }

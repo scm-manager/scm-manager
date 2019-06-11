@@ -105,6 +105,24 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
     this.mail = mail;
   }
 
+  /**
+   * Constructs ...
+   *
+   *
+   * @param name
+   * @param displayName
+   * @param mail
+   */
+  public User(String name, String displayName, String mail, String password, String type, boolean active)
+  {
+    this.name = name;
+    this.displayName = displayName;
+    this.mail = mail;
+    this.password = password;
+    this.type = type;
+    this.active = active;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**

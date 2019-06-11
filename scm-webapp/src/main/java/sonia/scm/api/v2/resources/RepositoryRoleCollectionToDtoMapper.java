@@ -25,7 +25,7 @@ public class RepositoryRoleCollectionToDtoMapper extends BasicCollectionToDtoMap
   }
 
   Optional<String> createCreateLink() {
-    return RepositoryRolePermissions.modify().isPermitted() ? of(resourceLinks.repositoryRoleCollection().create()): empty();
+    return RepositoryRolePermissions.write().isPermitted() ? of(resourceLinks.repositoryRoleCollection().create()): empty();
   }
 
   String createSelfLink() {

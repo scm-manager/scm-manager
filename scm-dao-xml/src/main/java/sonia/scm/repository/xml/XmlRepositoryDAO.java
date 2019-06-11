@@ -95,10 +95,17 @@ public class XmlRepositoryDAO implements RepositoryDAO {
 
   @Override
   public void add(Repository repository) {
+    add(repository, repositoryLocationResolver.create(repository.getId()));
+  }
+
+  public void add(Repository repository, Object location) {
+    if (!(location instanceof Path)) {
+      throw new IllegalArgumentException("can only handle locations of type " + Path.class.getName() + ", not of type " + location.getClass().getName());
+    }
     Repository clone = repository.clone();
 
     synchronized (this) {
-      Path repositoryPath = repositoryLocationResolver.create(repository.getId());
+      Path repositoryPath = (Path) location;
 
       try {
         Path metadataPath = resolveDataPath(repositoryPath);
@@ -111,9 +118,7 @@ public class XmlRepositoryDAO implements RepositoryDAO {
       byId.put(repository.getId(), clone);
       byNamespaceAndName.put(repository.getNamespaceAndName(), clone);
     }
-
   }
-
 
   @Override
   public boolean contains(Repository repository) {
@@ -192,5 +197,12 @@ public class XmlRepositoryDAO implements RepositoryDAO {
   @Override
   public Long getLastModified() {
     return repositoryLocationResolver.getLastModified();
+  }
+
+  public void refresh() {
+    repositoryLocationResolver.refresh();
+    byNamespaceAndName.clear();
+    byId.clear();
+    init();
   }
 }

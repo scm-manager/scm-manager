@@ -52,7 +52,6 @@ import sonia.scm.plugin.ExtensionProcessor;
 import sonia.scm.plugin.PluginWrapper;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.schedule.Scheduler;
-import sonia.scm.upgrade.UpgradeManager;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.IOUtil;
 
@@ -102,17 +101,8 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
   }
   
   private void beforeInjectorCreation() {
-    upgradeIfNecessary();
   }
-  
-  private void upgradeIfNecessary() {
-    if (!hasStartupErrors()) {
-      UpgradeManager upgradeHandler = new UpgradeManager();
 
-      upgradeHandler.doUpgrade();
-    }
-  }
-  
   private boolean hasStartupErrors() {
     return SCMContext.getContext().getStartupError() != null;
   }
@@ -132,9 +122,6 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
     List<Module> moduleList = Lists.newArrayList();
 
     moduleList.add(new ResteasyModule());
-    moduleList.add(new ScmInitializerModule());
-    moduleList.add(new ScmEventBusModule());
-    moduleList.add(new EagerSingletonModule());
     moduleList.add(ShiroWebModule.guiceFilterModule());
     moduleList.add(new WebElementModule(pluginLoader));
     moduleList.add(new ScmServletModule(context, pluginLoader, overrides));

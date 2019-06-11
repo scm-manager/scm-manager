@@ -89,8 +89,7 @@ class DefaultRepositoryRoleManagerTest {
 
     @BeforeEach
     void authorizeUser() {
-      when(subject.isPermitted("repositoryRole:read")).thenReturn(true);
-      when(subject.isPermitted("repositoryRole:modify")).thenReturn(true);
+      when(subject.isPermitted("repositoryRole:write")).thenReturn(true);
     }
 
     @Test
@@ -184,8 +183,15 @@ class DefaultRepositoryRoleManagerTest {
     }
 
     @Test
-    void shouldThrowException_forGet() {
-      assertThrows(UnauthorizedException.class, () -> manager.get("any"));
+    void shouldReturnNull_forNotExistingRole() {
+      RepositoryRole role = manager.get("noSuchRole");
+      assertThat(role).isNull();
+    }
+
+    @Test
+    void shouldReturnRole_forExistingRole() {
+      RepositoryRole role = manager.get(CUSTOM_ROLE_NAME);
+      assertThat(role).isNotNull();
     }
 
     @Test
@@ -201,18 +207,25 @@ class DefaultRepositoryRoleManagerTest {
     }
 
     @Test
-    void shouldReturnEmptyList() {
-      assertThat(manager.getAll()).isEmpty();
+    void shouldReturnAllRoles() {
+      List<RepositoryRole> allRoles = manager.getAll();
+      assertThat(allRoles).containsExactly(CUSTOM_ROLE, SYSTEM_ROLE);
     }
 
     @Test
-    void shouldReturnEmptyFilteredList() {
-      assertThat(manager.getAll(x -> true, null)).isEmpty();
+    void shouldReturnFilteredList() {
+      Collection<RepositoryRole> allRoles = manager.getAll(role -> CUSTOM_ROLE_NAME.equals(role.getName()), null);
+      assertThat(allRoles).containsExactly(CUSTOM_ROLE);
     }
 
     @Test
-    void shouldReturnEmptyPaginatedList() {
-      assertThat(manager.getAll(1, 1)).isEmpty();
+    void shouldReturnPaginatedRoles() {
+      Collection<RepositoryRole> allRoles =
+        manager.getAll(
+          Comparator.comparing(RepositoryRole::getType),
+          1, 1
+        );
+      assertThat(allRoles).containsExactly(CUSTOM_ROLE);
     }
   }
 }

@@ -3,7 +3,7 @@ import React from "react";
 import RepositoryRoleForm from "./RepositoryRoleForm";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
-import { ErrorNotification, Title } from "@scm-manager/ui-components";
+import {ErrorNotification, Subtitle, Title} from "@scm-manager/ui-components";
 import {
   createRole,
   getCreateRoleFailure,
@@ -15,11 +15,12 @@ import {
   getRepositoryRolesLink,
   getRepositoryVerbsLink
 } from "../../../modules/indexResource";
+import type {History} from "history";
 
 type Props = {
-  disabled: boolean,
   repositoryRolesLink: string,
   error?: Error,
+  history: History,
 
   //dispatch function
   addRole: (link: string, role: RepositoryRole, callback?: () => void) => void,
@@ -50,8 +51,8 @@ class CreateRepositoryRole extends React.Component<Props> {
     return (
       <>
         <Title title={t("repositoryRole.title")} />
+        <Subtitle subtitle={t("repositoryRole.createSubtitle")} />
         <RepositoryRoleForm
-          disabled={this.props.disabled}
           submitForm={role => this.createRepositoryRole(role)}
         />
       </>

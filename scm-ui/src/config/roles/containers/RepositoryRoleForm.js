@@ -19,7 +19,6 @@ import {
 type Props = {
   role?: RepositoryRole,
   loading?: boolean,
-  nameDisabled: boolean,
   availableVerbs: string[],
   verbsLink: string,
   submitForm: RepositoryRole => void,
@@ -103,7 +102,7 @@ class RepositoryRoleForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { loading, availableVerbs, nameDisabled, t } = this.props;
+    const { loading, availableVerbs, t } = this.props;
     const { role } = this.state;
 
     const verbSelectBoxes = !availableVerbs
@@ -119,28 +118,25 @@ class RepositoryRoleForm extends React.Component<Props, State> {
 
     return (
       <form onSubmit={this.submit}>
-        <div className="columns">
-          <div className="column">
-            <InputField
-              name="name"
-              label={t("repositoryRole.create.name")}
-              onChange={this.handleNameChange}
-              value={role.name ? role.name : ""}
-              disabled={nameDisabled}
-            />
-          </div>
+        <InputField
+          name="name"
+          label={t("repositoryRole.form.name")}
+          onChange={this.handleNameChange}
+          value={role.name ? role.name : ""}
+          disabled={!!this.props.role}
+        />
+        <div className="field">
+          <label className="label">
+            {t("repositoryRole.form.permissions")}
+          </label>
+          {verbSelectBoxes}
         </div>
-        <>{verbSelectBoxes}</>
         <hr />
-        <div className="columns">
-          <div className="column">
-            <SubmitButton
-              loading={loading}
-              label={t("repositoryRole.form.submit")}
-              disabled={!this.isValid()}
-            />
-          </div>
-        </div>
+        <SubmitButton
+          loading={loading}
+          label={t("repositoryRole.form.submit")}
+          disabled={!this.isValid()}
+        />
       </form>
     );
   }

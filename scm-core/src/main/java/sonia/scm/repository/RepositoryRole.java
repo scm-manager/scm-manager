@@ -57,7 +57,7 @@ import static java.util.Collections.unmodifiableSet;
  * Custom role with specific permissions related to {@link Repository}.
  * This object should be immutable, but could not be due to mapstruct.
  */
-@StaticPermissions(value = "repositoryRole", permissions = {}, globalPermissions = {"read", "modify"})
+@StaticPermissions(value = "repositoryRole", permissions = {}, globalPermissions = {"write"})
 @XmlRootElement(name = "roles")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RepositoryRole implements ModelObject, PermissionObject {
@@ -121,7 +121,10 @@ public class RepositoryRole implements ModelObject, PermissionObject {
    * @return the hash code value for the {@link RepositoryRole}
    */
   @Override
-  public int hashCode() {
+  public int hashCode()
+  {
+    // Normally we do not have a log of repository permissions having the same size of verbs, but different content.
+    // Therefore we do not use the verbs themselves for the hash code but only the number of verbs.
     return Objects.hashCode(name, verbs == null? -1: verbs.size());
   }
 
