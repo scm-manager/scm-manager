@@ -11,8 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
-import sonia.scm.update.repository.MigrationStrategy;
-import sonia.scm.update.repository.MigrationStrategyDao;
 
 import javax.xml.bind.JAXBException;
 import java.nio.file.Path;
@@ -37,23 +35,31 @@ class MigrationStrategyDaoTest {
   }
 
   @Test
-  void shouldReturnEmptyOptionalWhenStoreIsEmpty() throws JAXBException {
+  void shouldReturnEmptyOptionalWhenStoreIsEmpty() {
     MigrationStrategyDao dao = new MigrationStrategyDao(storeFactory);
 
-    Optional<MigrationStrategy> strategy = dao.get("any");
+    Optional<RepositoryMigrationPlan.RepositoryMigrationEntry> entry = dao.get("any");
 
-    Assertions.assertThat(strategy).isEmpty();
+    Assertions.assertThat(entry).isEmpty();
   }
 
   @Test
-  void shouldReturnNewValue() throws JAXBException {
+  void shouldReturnNewValue() {
     MigrationStrategyDao dao = new MigrationStrategyDao(storeFactory);
 
-    dao.set("id", INLINE);
+    dao.set("id", INLINE, "space", "name");
 
-    Optional<MigrationStrategy> strategy = dao.get("id");
+    Optional<RepositoryMigrationPlan.RepositoryMigrationEntry> entry = dao.get("id");
 
-    Assertions.assertThat(strategy).contains(INLINE);
+    Assertions.assertThat(entry)
+      .map(RepositoryMigrationPlan.RepositoryMigrationEntry::getDataMigrationStrategy)
+      .contains(INLINE);
+    Assertions.assertThat(entry)
+      .map(RepositoryMigrationPlan.RepositoryMigrationEntry::getNewNamespace)
+      .contains("space");
+    Assertions.assertThat(entry)
+      .map(RepositoryMigrationPlan.RepositoryMigrationEntry::getNewName)
+      .contains("name");
   }
 
   @Nested
@@ -62,16 +68,24 @@ class MigrationStrategyDaoTest {
     void initExistingDatabase() throws JAXBException {
       MigrationStrategyDao dao = new MigrationStrategyDao(storeFactory);
 
-      dao.set("id", INLINE);
+      dao.set("id", INLINE, "space", "name");
     }
 
     @Test
     void shouldFindExistingValue() throws JAXBException {
       MigrationStrategyDao dao = new MigrationStrategyDao(storeFactory);
 
-      Optional<MigrationStrategy> strategy = dao.get("id");
+      Optional<RepositoryMigrationPlan.RepositoryMigrationEntry> entry = dao.get("id");
 
-      Assertions.assertThat(strategy).contains(INLINE);
+      Assertions.assertThat(entry)
+        .map(RepositoryMigrationPlan.RepositoryMigrationEntry::getDataMigrationStrategy)
+        .contains(INLINE);
+      Assertions.assertThat(entry)
+        .map(RepositoryMigrationPlan.RepositoryMigrationEntry::getNewNamespace)
+        .contains("space");
+      Assertions.assertThat(entry)
+        .map(RepositoryMigrationPlan.RepositoryMigrationEntry::getNewName)
+        .contains("name");
     }
   }
 }

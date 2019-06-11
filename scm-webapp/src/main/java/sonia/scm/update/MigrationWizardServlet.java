@@ -3,12 +3,14 @@ package sonia.scm.update;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.boot.RestartEvent;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.update.repository.MigrationStrategy;
 import sonia.scm.update.repository.MigrationStrategyDao;
+import sonia.scm.update.repository.V1Repository;
 import sonia.scm.update.repository.XmlRepositoryV1UpdateStep;
 import sonia.scm.util.ValidationUtil;
 
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -62,9 +65,7 @@ class MigrationWizardServlet extends HttpServlet {
       .stream()
       .anyMatch(entry -> entry.isNamespaceInvalid() || entry.isNameInvalid()));
 
-    MustacheFactory mf = new DefaultMustacheFactory();
-    Mustache template = mf.compile("templates/repository-migration.mustache");
-    respondWithTemplate(resp, model, template);
+    respondWithTemplate(resp, model, "templates/repository-migration.mustache");
   }
 
   @Override
@@ -76,6 +77,7 @@ class MigrationWizardServlet extends HttpServlet {
       String id = repositoryLineEntry.getId();
       String namespace = req.getParameter("namespace-" + id);
       String name = req.getParameter("name-" + id);
+      String strategy = req.getParameter("strategy-" + id);
       repositoryLineEntry.setNamespace(namespace);
       repositoryLineEntry.setName(name);
 
@@ -105,19 +107,15 @@ class MigrationWizardServlet extends HttpServlet {
         }
       );
 
-    MustacheFactory mf = new DefaultMustacheFactory();
-    Mustache template = mf.compile("templates/repository-migration-restart.mustache");
     Map<String, Object> model = Collections.singletonMap("contextPath", req.getContextPath());
 
-    respondWithTemplate(resp, model, template);
-
-    resp.setStatus(200);
+    respondWithTemplate(resp, model, "templates/repository-migration-restart.mustache");
 
     ScmEventBus.getInstance().post(new RestartEvent(MigrationWizardServlet.class, "wrote migration data"));
   }
 
   private List<RepositoryLineEntry> getRepositoryLineEntries() {
-    List<XmlRepositoryV1UpdateStep.V1Repository> repositoriesWithoutMigrationStrategies =
+    List<V1Repository> repositoriesWithoutMigrationStrategies =
       repositoryV1UpdateStep.getRepositoriesWithoutMigrationStrategies();
     return repositoriesWithoutMigrationStrategies.stream()
       .map(RepositoryLineEntry::new)
@@ -129,7 +127,11 @@ class MigrationWizardServlet extends HttpServlet {
     return MigrationStrategy.values();
   }
 
-  private void respondWithTemplate(HttpServletResponse resp, Map<String, Object> model, Mustache template) {
+  @VisibleForTesting
+  void respondWithTemplate(HttpServletResponse resp, Map<String, Object> model, String templateName) {
+    MustacheFactory mf = new DefaultMustacheFactory();
+    Mustache template = mf.compile(templateName);
+
     PrintWriter writer;
     try {
       writer = resp.getWriter();
@@ -152,12 +154,30 @@ class MigrationWizardServlet extends HttpServlet {
     private boolean namespaceValid = true;
     private boolean nameValid = true;
 
-    public RepositoryLineEntry(XmlRepositoryV1UpdateStep.V1Repository repository) {
+    public RepositoryLineEntry(V1Repository repository) {
       this.id = repository.getId();
       this.type = repository.getType();
-      this.path = repository.getPath();
-      this.namespace = repository.getNewNamespace();
-      this.name = repository.getNewName();
+      this.path = repository.getType() + "/" + repository.getName();
+      this.namespace = computeNewNamespace(repository);
+      this.name = computeNewName(repository);
+    }
+
+    private static String computeNewNamespace(V1Repository v1Repository) {
+      String[] nameParts = getNameParts(v1Repository.getName());
+      return nameParts.length > 1 ? nameParts[0] : v1Repository.getType();
+    }
+
+    private static String computeNewName(V1Repository v1Repository) {
+      String[] nameParts = getNameParts(v1Repository.getName());
+      return nameParts.length == 1 ? nameParts[0] : concatPathElements(nameParts);
+    }
+
+    private static String[] getNameParts(String v1Name) {
+      return v1Name.split("/");
+    }
+
+    private static String concatPathElements(String[] nameParts) {
+      return Arrays.stream(nameParts).skip(1).collect(Collectors.joining("_"));
     }
 
     public String getId() {

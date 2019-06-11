@@ -11,6 +11,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
@@ -25,7 +26,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
@@ -38,9 +38,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static sonia.scm.update.repository.MigrationStrategy.COPY;
-import static sonia.scm.update.repository.MigrationStrategy.DELETE;
-import static sonia.scm.update.repository.MigrationStrategy.INLINE;
 import static sonia.scm.update.repository.MigrationStrategy.MOVE;
 
 @ExtendWith(MockitoExtension.class)
@@ -92,9 +89,14 @@ class XmlRepositoryV1UpdateStepTest {
 
     @BeforeEach
     void createMigrationPlan() {
-      lenient().when(migrationStrategyDao.get("3b91caa5-59c3-448f-920b-769aaa56b761")).thenReturn(of(MOVE));
-      lenient().when(migrationStrategyDao.get("c1597b4f-a9f0-49f7-ad1f-37d3aae1c55f")).thenReturn(of(COPY));
-      lenient().when(migrationStrategyDao.get("454972da-faf9-4437-b682-dc4a4e0aa8eb")).thenReturn(of(INLINE));
+      Answer<Object> planAnswer = invocation -> {
+        String id = invocation.getArgument(0).toString();
+        return of(new RepositoryMigrationPlan.RepositoryMigrationEntry(id, MOVE, "namespace-" + id, "name-" + id));
+      };
+
+      lenient().when(migrationStrategyDao.get("3b91caa5-59c3-448f-920b-769aaa56b761")).thenAnswer(planAnswer);
+      lenient().when(migrationStrategyDao.get("c1597b4f-a9f0-49f7-ad1f-37d3aae1c55f")).thenAnswer(planAnswer);
+      lenient().when(migrationStrategyDao.get("454972da-faf9-4437-b682-dc4a4e0aa8eb")).thenAnswer(planAnswer);
     }
 
     @Test
@@ -107,56 +109,20 @@ class XmlRepositoryV1UpdateStepTest {
     void shouldMapAttributes() throws JAXBException {
       updateStep.doUpdate();
 
-      Optional<Repository> repository = findByNamespace("git");
+      Optional<Repository> repository = findByNamespace("namespace-3b91caa5-59c3-448f-920b-769aaa56b761");
 
       assertThat(repository)
         .get()
         .hasFieldOrPropertyWithValue("type", "git")
         .hasFieldOrPropertyWithValue("contact", "arthur@dent.uk")
-        .hasFieldOrPropertyWithValue("description", "A simple repository without directories.");
-    }
-
-    @Test
-    void shouldUseRepositoryTypeAsNamespaceForNamesWithSingleElement() throws JAXBException {
-      updateStep.doUpdate();
-
-      Optional<Repository> repository = findByNamespace("git");
-
-      assertThat(repository)
-        .get()
-        .hasFieldOrPropertyWithValue("namespace", "git")
-        .hasFieldOrPropertyWithValue("name", "simple");
-    }
-
-    @Test
-    void shouldUseDirectoriesForNamespaceAndNameForNamesWithTwoElements() throws JAXBException {
-      updateStep.doUpdate();
-
-      Optional<Repository> repository = findByNamespace("one");
-
-      assertThat(repository)
-        .get()
-        .hasFieldOrPropertyWithValue("namespace", "one")
-        .hasFieldOrPropertyWithValue("name", "directory");
-    }
-
-    @Test
-    void shouldUseDirectoriesForNamespaceAndConcatenatedNameForNamesWithMoreThanTwoElements() throws JAXBException {
-      updateStep.doUpdate();
-
-      Optional<Repository> repository = findByNamespace("some");
-
-      assertThat(repository)
-        .get()
-        .hasFieldOrPropertyWithValue("namespace", "some")
-        .hasFieldOrPropertyWithValue("name", "more_directories_than_one");
+        .hasFieldOrPropertyWithValue("description", "A repository with two folders.");
     }
 
     @Test
     void shouldMapPermissions() throws JAXBException {
       updateStep.doUpdate();
 
-      Optional<Repository> repository = findByNamespace("git");
+      Optional<Repository> repository = findByNamespace("namespace-454972da-faf9-4437-b682-dc4a4e0aa8eb");
 
       assertThat(repository.get().getPermissions())
         .hasSize(3)
@@ -179,7 +145,7 @@ class XmlRepositoryV1UpdateStepTest {
     @Test
     void shouldUseDirectoryFromStrategy(@TempDirectory.TempDir Path tempDir) throws JAXBException {
       Path targetDir = tempDir.resolve("someDir");
-      MigrationStrategy.Instance strategyMock = injectorMock.getInstance(InlineMigrationStrategy.class);
+      MigrationStrategy.Instance strategyMock = injectorMock.getInstance(MoveMigrationStrategy.class);
       when(strategyMock.migrate("454972da-faf9-4437-b682-dc4a4e0aa8eb", "simple", "git")).thenReturn(of(targetDir));
 
       updateStep.doUpdate();

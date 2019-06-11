@@ -19,7 +19,7 @@ public class MigrationStrategyDao {
     this.plan = store.getOptional().orElse(new RepositoryMigrationPlan());
   }
 
-  public Optional<MigrationStrategy> get(String id) {
+  public Optional<RepositoryMigrationPlan.RepositoryMigrationEntry> get(String id) {
     return plan.get(id);
   }
 

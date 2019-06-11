@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -104,7 +103,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
     JAXBContext jaxbContext = JAXBContext.newInstance(V1RepositoryDatabase.class);
     readV1Database(jaxbContext).ifPresent(
       v1Database -> {
-        v1Database.repositoryList.repositories.forEach(this::readMigrationStrategy);
+        v1Database.repositoryList.repositories.forEach(this::readMigrationEntry);
         v1Database.repositoryList.repositories.forEach(this::update);
         backupOldRepositoriesFile();
       }
@@ -141,52 +140,56 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
   }
 
   private void update(V1Repository v1Repository) {
-    Optional<Path> destination = handleDataDirectory(v1Repository);
+    RepositoryMigrationPlan.RepositoryMigrationEntry repositoryMigrationEntry = readMigrationEntry(v1Repository);
+    Optional<Path> destination = handleDataDirectory(v1Repository, repositoryMigrationEntry.getDataMigrationStrategy());
+    LOG.info("using strategy {} to migrate repository {} with id {} using new namespace {} and name {}",
+      repositoryMigrationEntry.getDataMigrationStrategy().getClass(),
+      v1Repository.getName(),
+      v1Repository.getId(),
+      repositoryMigrationEntry.getNewNamespace(),
+      repositoryMigrationEntry.getNewName());
     destination.ifPresent(
       newPath -> {
         Repository repository = new Repository(
-          v1Repository.id,
-          v1Repository.type,
-          v1Repository.getNewNamespace(),
-          v1Repository.getNewName(),
-          v1Repository.contact,
-          v1Repository.description,
+          v1Repository.getId(),
+          v1Repository.getType(),
+          repositoryMigrationEntry.getNewNamespace(),
+          repositoryMigrationEntry.getNewName(),
+          v1Repository.getContact(),
+          v1Repository.getDescription(),
           createPermissions(v1Repository));
-        LOG.info("creating new repository {} with id {} from old repository {} in directory {}", repository.getNamespaceAndName(), repository.getId(), v1Repository.name, newPath);
+        LOG.info("creating new repository {} with id {} from old repository {} in directory {}", repository.getNamespaceAndName(), repository.getId(), v1Repository.getName(), newPath);
         repositoryDao.add(repository, newPath);
-        propertyStore.put(v1Repository.id, v1Repository.properties);
+        propertyStore.put(v1Repository.getId(), v1Repository.getProperties());
       }
     );
   }
 
-  private Optional<Path> handleDataDirectory(V1Repository v1Repository) {
-    MigrationStrategy dataMigrationStrategy = readMigrationStrategy(v1Repository);
-    LOG.info("using strategy {} to migrate repository {} with id {}", dataMigrationStrategy.getClass(), v1Repository.name, v1Repository.id);
-    return dataMigrationStrategy.from(injector).migrate(v1Repository.id, v1Repository.name, v1Repository.type);
+  private Optional<Path> handleDataDirectory(V1Repository v1Repository, MigrationStrategy dataMigrationStrategy) {
+    return dataMigrationStrategy
+      .from(injector)
+      .migrate(v1Repository.getId(), v1Repository.getName(), v1Repository.getType());
   }
 
-  private MigrationStrategy readMigrationStrategy(V1Repository v1Repository) {
+  private RepositoryMigrationPlan.RepositoryMigrationEntry readMigrationEntry(V1Repository v1Repository) {
     return findMigrationStrategy(v1Repository)
-      .orElseThrow(() -> new IllegalStateException("no strategy found for repository with id " + v1Repository.id + " and name " + v1Repository.name));
+      .orElseThrow(() -> new IllegalStateException("no strategy found for repository with id " + v1Repository.getId() + " and name " + v1Repository.getName()));
   }
 
-  private Optional<MigrationStrategy> findMigrationStrategy(V1Repository v1Repository) {
-    return migrationStrategyDao.get(v1Repository.id);
+  private Optional<RepositoryMigrationPlan.RepositoryMigrationEntry> findMigrationStrategy(V1Repository v1Repository) {
+    return migrationStrategyDao.get(v1Repository.getId());
   }
 
   private RepositoryPermission[] createPermissions(V1Repository v1Repository) {
-    if (v1Repository.permissions == null) {
-      return new RepositoryPermission[0];
-    }
-    return v1Repository.permissions
+    return v1Repository.getPermissions()
       .stream()
       .map(this::createPermission)
       .toArray(RepositoryPermission[]::new);
   }
 
   private RepositoryPermission createPermission(V1Permission v1Permission) {
-    LOG.info("creating permission {} for {}", v1Permission.type, v1Permission.name);
-    return new RepositoryPermission(v1Permission.name, v1Permission.type, v1Permission.groupPermission);
+    LOG.info("creating permission {} for {}", v1Permission.getType(), v1Permission.getName());
+    return new RepositoryPermission(v1Permission.getName(), v1Permission.getType(), v1Permission.isGroupPermission());
   }
 
   private Optional<V1RepositoryDatabase> readV1Database(JAXBContext jaxbContext) throws JAXBException {
@@ -203,79 +206,6 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
       .resolve(
         Paths.get(StoreConstants.CONFIG_DIRECTORY_NAME).resolve("repositories" + StoreConstants.FILE_EXTENSION)
       ).toFile();
-  }
-
-  @XmlAccessorType(XmlAccessType.FIELD)
-  @XmlRootElement(name = "permissions")
-  private static class V1Permission {
-    private boolean groupPermission;
-    private String name;
-    private String type;
-  }
-
-  @XmlAccessorType(XmlAccessType.FIELD)
-  @XmlRootElement(name = "repositories")
-  public static class V1Repository {
-    private String contact;
-    private long creationDate;
-    private Long lastModified;
-    private String description;
-    private String id;
-    private String name;
-    private boolean isPublic;
-    private boolean archived;
-    private String type;
-    private List<V1Permission> permissions;
-    private V1Properties properties;
-
-    public String getId() {
-      return id;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public String getType() {
-      return type;
-    }
-
-    public String getPath() {
-      return type + "/" + name;
-    }
-
-    public String getNewNamespace() {
-      String[] nameParts = getNameParts(name);
-      return nameParts.length > 1 ? nameParts[0] : type;
-    }
-
-    public String getNewName() {
-      String[] nameParts = getNameParts(name);
-      return nameParts.length == 1 ? nameParts[0] : concatPathElements(nameParts);
-    }
-
-    private String[] getNameParts(String v1Name) {
-      return v1Name.split("/");
-    }
-
-    private String concatPathElements(String[] nameParts) {
-      return Arrays.stream(nameParts).skip(1).collect(Collectors.joining("_"));
-    }
-
-    @Override
-    public String toString() {
-      return "V1Repository{" +
-        ", contact='" + contact + '\'' +
-        ", creationDate=" + creationDate +
-        ", lastModified=" + lastModified +
-        ", description='" + description + '\'' +
-        ", id='" + id + '\'' +
-        ", name='" + name + '\'' +
-        ", isPublic=" + isPublic +
-        ", archived=" + archived +
-        ", type='" + type + '\'' +
-        '}';
-    }
   }
 
   private static class RepositoryList {
