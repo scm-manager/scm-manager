@@ -44,17 +44,13 @@ class MigrationWizardServlet extends HttpServlet {
     this.migrationStrategyDao = migrationStrategyDao;
   }
 
-  public boolean wizardNecessary() {
-    return !repositoryV1UpdateStep.getRepositoriesWithoutMigrationStrategies().isEmpty();
-  }
-
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
     List<RepositoryLineEntry> repositoryLineEntries = getRepositoryLineEntries();
     doGet(req, resp, repositoryLineEntries);
   }
 
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp, List<RepositoryLineEntry> repositoryLineEntries) {
+  private void doGet(HttpServletRequest req, HttpServletResponse resp, List<RepositoryLineEntry> repositoryLineEntries) {
     HashMap<String, Object> model = new HashMap<>();
 
     model.put("contextPath", req.getContextPath());
@@ -77,7 +73,6 @@ class MigrationWizardServlet extends HttpServlet {
       String id = repositoryLineEntry.getId();
       String namespace = req.getParameter("namespace-" + id);
       String name = req.getParameter("name-" + id);
-      String strategy = req.getParameter("strategy-" + id);
       repositoryLineEntry.setNamespace(namespace);
       repositoryLineEntry.setName(name);
 

@@ -157,7 +157,6 @@ class MigrationWizardServletTest {
     );
     doReturn("invalid namespace").when(request).getParameter("namespace-id");
     doReturn("invalid name").when(request).getParameter("name-id");
-    doReturn("COPY").when(request).getParameter("strategy-id");
 
     servlet.doPost(request, response);
 
