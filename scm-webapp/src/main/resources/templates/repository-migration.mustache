@@ -58,6 +58,16 @@
                   </th>
                   <th>Strategy
                     <span class="tooltip is-tooltip-right is-tooltip-multiline t-tooltip-0-1-38" data-tooltip="The strategy used to migrate the data directory of the repository. See above for the means of the different strategies."><i class="fa fa-question-circle has-text-info t-textinfo-0-1-10"></i></span>
+                    <br>Change all:
+                    <div class="field">
+                      <div class="control select">
+                        <select id="changeAll">
+                          {{#strategies}}
+                            <option>{{name}}</option>
+                          {{/strategies}}
+                        </select>
+                      </div>
+                    </div>
                   </th>
                 </tr>
                 {{#repositories}}
@@ -77,7 +87,7 @@
                     <td>
                       <div class="field">
                         <div class="control select">
-                          <select name="strategy-{{id}}">
+                          <select class="strategy-select" name="strategy-{{id}}">
                             {{#strategies}}
                               <option>{{name}}</option>
                             {{/strategies}}
@@ -96,4 +106,15 @@
     </div>
   </div>
 </body>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const changeAllSelector = document.getElementById('changeAll');
+    changeAllSelector.onchange = function () {
+      const strategySelects = document.getElementsByClassName('strategy-select');
+      console.log("selects:", strategySelects);
+      console.log("setting to:", changeAllSelector.value);
+      Array.prototype.forEach.call(strategySelects, s => s.value = changeAllSelector.value);
+    };
+  });
+</script>
 </html>
