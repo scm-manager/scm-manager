@@ -166,4 +166,8 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
     pathById.put(repositoryId, repositoryBasePath);
     writePathDatabase();
   }
+
+  public void refresh() {
+    this.read();
+  }
 }
