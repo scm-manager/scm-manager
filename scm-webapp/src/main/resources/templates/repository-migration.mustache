@@ -74,7 +74,7 @@
               <div class="control select">
                 <select class="strategy-select" name="strategy-{{id}}">
                   {{#strategies}}
-                    <option>{{name}}</option>
+                    <option{{#selected}} selected{{/selected}}>{{name}}</option>
                   {{/strategies}}
                 </select>
               </div>

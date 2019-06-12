@@ -4,6 +4,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.boot.RestartEvent;
@@ -71,9 +72,16 @@ class MigrationWizardServlet extends HttpServlet {
     boolean validationErrorFound = false;
     for (RepositoryLineEntry repositoryLineEntry : repositoryLineEntries) {
       String id = repositoryLineEntry.getId();
+
+      String strategy = req.getParameter("strategy-" + id);
+      if (!Strings.isNullOrEmpty(strategy)) {
+        repositoryLineEntry.setSelectedStrategy(MigrationStrategy.valueOf(strategy));
+      }
+
       String namespace = req.getParameter("namespace-" + id);
-      String name = req.getParameter("name-" + id);
       repositoryLineEntry.setNamespace(namespace);
+
+      String name = req.getParameter("name-" + id);
       repositoryLineEntry.setName(name);
 
       if (!ValidationUtil.isRepositoryNameValid(namespace)) {
@@ -144,6 +152,7 @@ class MigrationWizardServlet extends HttpServlet {
     private final String id;
     private final String type;
     private final String path;
+    private MigrationStrategy selectedStrategy;
     private String namespace;
     private String name;
     private boolean namespaceValid = true;
@@ -153,6 +162,7 @@ class MigrationWizardServlet extends HttpServlet {
       this.id = repository.getId();
       this.type = repository.getType();
       this.path = repository.getType() + "/" + repository.getName();
+      this.selectedStrategy = MigrationStrategy.COPY;
       this.namespace = computeNewNamespace(repository);
       this.name = computeNewName(repository);
     }
@@ -195,6 +205,17 @@ class MigrationWizardServlet extends HttpServlet {
       return name;
     }
 
+    public MigrationStrategy getSelectedStrategy() {
+      return selectedStrategy;
+    }
+
+    public List<RepositoryLineMigrationStrategy> getStrategies() {
+      return Arrays.asList(MigrationStrategy.values())
+        .stream()
+        .map(s -> new RepositoryLineMigrationStrategy(s.name(), selectedStrategy == s))
+        .collect(Collectors.toList());
+    }
+
     public void setNamespace(String namespace) {
       this.namespace = namespace;
     }
@@ -211,12 +232,35 @@ class MigrationWizardServlet extends HttpServlet {
       this.nameValid = nameValid;
     }
 
+    public void setSelectedStrategy(MigrationStrategy selectedStrategy) {
+      this.selectedStrategy = selectedStrategy;
+    }
+
     public boolean isNamespaceInvalid() {
       return !namespaceValid;
     }
 
     public boolean isNameInvalid() {
       return !nameValid;
+    }
+  }
+
+  private static class RepositoryLineMigrationStrategy {
+
+    private final String name;
+    private final boolean selected;
+
+    private RepositoryLineMigrationStrategy(String name, boolean selected) {
+      this.name = name;
+      this.selected = selected;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public boolean isSelected() {
+      return selected;
     }
   }
 }

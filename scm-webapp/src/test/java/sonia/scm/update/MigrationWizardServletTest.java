@@ -157,6 +157,7 @@ class MigrationWizardServletTest {
     );
     doReturn("invalid namespace").when(request).getParameter("namespace-id");
     doReturn("invalid name").when(request).getParameter("name-id");
+    doReturn("COPY").when(request).getParameter("strategy-id");
 
     servlet.doPost(request, response);
 
@@ -169,6 +170,42 @@ class MigrationWizardServletTest {
       .asList()
       .extracting("nameInvalid")
       .contains(true);
+  }
+
+  @Test
+  void shouldKeepSelectedMigrationStrategy() {
+    when(updateStep.getRepositoriesWithoutMigrationStrategies()).thenReturn(
+      Collections.singletonList(new V1Repository("id", "git", "name"))
+    );
+
+    doReturn("we need an").when(request).getParameter("namespace-id");
+    doReturn("error for this test").when(request).getParameter("name-id");
+    doReturn("INLINE").when(request).getParameter("strategy-id");
+
+    servlet.doPost(request, response);
+
+    assertThat(renderedModel.get("repositories"))
+      .asList()
+      .extracting("selectedStrategy")
+      .contains(MigrationStrategy.INLINE);
+  }
+
+  @Test
+  void shouldUseCopyWithoutMigrationStrategy() {
+    when(updateStep.getRepositoriesWithoutMigrationStrategies()).thenReturn(
+      Collections.singletonList(new V1Repository("id", "git", "name"))
+    );
+
+    doReturn("we need an").when(request).getParameter("namespace-id");
+    doReturn("error for this test").when(request).getParameter("name-id");
+    doReturn("").when(request).getParameter("strategy-id");
+
+    servlet.doPost(request, response);
+
+    assertThat(renderedModel.get("repositories"))
+      .asList()
+      .extracting("selectedStrategy")
+      .contains(MigrationStrategy.COPY);
   }
 
   @Test
