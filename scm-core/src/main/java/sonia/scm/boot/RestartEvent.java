@@ -33,14 +33,16 @@ package sonia.scm.boot;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Stage;
 import sonia.scm.event.Event;
 
 /**
  * This event can be used to force a restart of the webapp context. The restart
  * event is useful during plugin development, because we don't have to restart
- * the whole server, to see our changes. The restart event can only be used in
- * stage {@link Stage#DEVELOPMENT}.
+ * the whole server, to see our changes. The restart event could also be used
+ * to install or upgrade plugins.
+ *
+ * But the restart event should be used carefully, because the whole context
+ * will be restarted and that process could take some time.
  *
  * @author Sebastian Sdorra
  * @since 2.0.0
