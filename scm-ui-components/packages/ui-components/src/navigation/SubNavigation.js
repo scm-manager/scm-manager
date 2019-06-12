@@ -1,6 +1,7 @@
 //@flow
 import * as React from "react";
 import { Link, Route } from "react-router-dom";
+import classNames from "classnames";
 
 type Props = {
   to: string,
@@ -37,7 +38,7 @@ class SubNavigation extends React.Component<Props> {
     return (
       <li>
         <Link className={this.isActive(route) ? "is-active" : ""} to={to}>
-          <i className={defaultIcon} /> {label}
+          <i className={classNames(defaultIcon, "fa-fw")} /> {label}
         </Link>
         {children}
       </li>
