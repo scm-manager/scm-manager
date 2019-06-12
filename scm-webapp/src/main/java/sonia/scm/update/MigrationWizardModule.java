@@ -20,7 +20,7 @@ class MigrationWizardModule extends ServletModule {
     LOG.info("=                                                        =");
     LOG.info("==========================================================");
     bind(PushStateDispatcher.class).toInstance((request, response, uri) -> {});
-    serve("/images/*", "/styles/*").with(WebResourceServlet.class);
+    serve("/images/*", "/styles/*", "/favicon.ico").with(WebResourceServlet.class);
     serve("/*").with(MigrationWizardServlet.class);
   }
 }
