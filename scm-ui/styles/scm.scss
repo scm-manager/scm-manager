@@ -219,16 +219,23 @@ ul.is-separated {
 // card tables
 .card-table {
   border-collapse: separate;
-  border-spacing: 0px 5px;
+  border-spacing: 0 5px;
 
   tr {
     a {
       color: #363636;
     }
+    &.border-is-green td:first-child {
+      border-left-color: $green;
+    }
+    &.border-is-yellow td:first-child {
+      border-left-color: $yellow;
+    }
     &:hover {
       td {
         background-color: whitesmoke;
-        &:nth-child(4) {
+
+        &.is-darker {
           background-color: #e1e1e1;
         }
       }
@@ -238,13 +245,14 @@ ul.is-separated {
     }
   }
   td {
-    border-bottom: 1px solid whitesmoke;
-    background-color: #fafafa;
     padding: 1em 1.25em;
+    background-color: #fafafa;
+    border-bottom: 1px solid whitesmoke;
+
     &:first-child {
-      border-left: 3px solid $mint;
+      border-left: 3px solid $grey;
     }
-    &:nth-child(4) {
+    &.is-darker {
       background-color: whitesmoke;
     }
   }
@@ -316,6 +324,10 @@ form .field:not(.is-grouped) {
       border-color: #7a7a7a;
     }
   }
+}
+
+.is-icon {
+  color: $grey-light;
 }
 
 // label with help-icon compensation
