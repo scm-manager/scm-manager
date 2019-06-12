@@ -93,8 +93,8 @@
     var changeAllSelector = document.getElementById('changeAll');
     changeAllSelector.onchange = function () {
       var strategySelects = document.getElementsByClassName('strategy-select');
-      for (var strategySelect of strategySelects) {
-        strategySelect.value = changeAllSelector.value;
+      for (var index in strategySelects) {
+        strategySelects[index].value = changeAllSelector.value;
       }
     };
   });
