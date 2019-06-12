@@ -210,8 +210,7 @@ class MigrationWizardServlet extends HttpServlet {
     }
 
     public List<RepositoryLineMigrationStrategy> getStrategies() {
-      return Arrays.asList(MigrationStrategy.values())
-        .stream()
+      return Arrays.stream(MigrationStrategy.values())
         .map(s -> new RepositoryLineMigrationStrategy(s.name(), selectedStrategy == s))
         .collect(Collectors.toList());
     }
