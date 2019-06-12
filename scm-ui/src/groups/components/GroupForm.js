@@ -115,7 +115,7 @@ class GroupForm extends React.Component<Props, State> {
       return null;
     }
 
-    const iconType = group && group.external ? (
+    const label = group && group.external ? (
       <>{t("group.external")} <Icon title={t("group.external")} name="sign-out-alt fa-rotate-270" /></>
     ) : (
       <>{t("group.internal")} <Icon title={t("group.internal")} name="sign-in-alt fa-rotate-90" /></>
@@ -123,7 +123,7 @@ class GroupForm extends React.Component<Props, State> {
 
     return (
       <Checkbox
-        label={iconType}
+        label={label}
         checked={group.external}
         helpText={t("groupForm.help.externalHelpText")}
         onChange={this.handleExternalChange}

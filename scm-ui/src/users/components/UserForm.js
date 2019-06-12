@@ -140,7 +140,7 @@ class UserForm extends React.Component<Props, State> {
       subtitle = <Subtitle subtitle={t("userForm.subtitle")} />;
     }
 
-    const iconType =
+    const label =
       user && user.active ? (
         <>
           {t("user.active")} <Icon title={t("user.active")} name="user" />
@@ -183,7 +183,7 @@ class UserForm extends React.Component<Props, State> {
             <div className="column">
               {passwordChangeField}
               <Checkbox
-                label={iconType}
+                label={label}
                 onChange={this.handleActiveChange}
                 checked={user ? user.active : false}
                 helpText={t("help.activeHelpText")}
