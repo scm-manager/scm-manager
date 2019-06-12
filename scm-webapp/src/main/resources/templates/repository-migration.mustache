@@ -90,12 +90,12 @@
 {{$script}}
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    const changeAllSelector = document.getElementById('changeAll');
+    var changeAllSelector = document.getElementById('changeAll');
     changeAllSelector.onchange = function () {
-      const strategySelects = document.getElementsByClassName('strategy-select');
-      console.log("selects:", strategySelects);
-      console.log("setting to:", changeAllSelector.value);
-      Array.prototype.forEach.call(strategySelects, s => s.value = changeAllSelector.value);
+      var strategySelects = document.getElementsByClassName('strategy-select');
+      for (var strategySelect of strategySelects) {
+        strategySelect.value = changeAllSelector.value;
+      }
     };
   });
 </script>

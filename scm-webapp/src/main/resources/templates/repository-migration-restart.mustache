@@ -48,12 +48,12 @@
 {{$script}}
   <script>
     setInterval(function () {
-        const request = new XMLHttpRequest();
+        var request = new XMLHttpRequest();
 
         request.open('GET', '{{ contextPath }}/api/v2/', true);
 
         request.onload = function () {
-          if (this.readyState == 4 && this.status == 200 && this.response.toString().indexOf("_links") > 0) {
+          if (this.readyState === 4 && this.status === 200 && this.response.toString().indexOf("_links") > 0) {
             location.href = '{{ contextPath }}';
           }
         };
