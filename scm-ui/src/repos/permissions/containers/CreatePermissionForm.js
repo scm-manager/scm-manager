@@ -9,11 +9,12 @@ import type {
 } from "@scm-manager/ui-types";
 import {
   Subtitle,
-  Autocomplete,
   SubmitButton,
   Button,
   LabelWithHelpIcon,
-  Radio
+  Radio,
+  GroupAutocomplete,
+  UserAutocomplete
 } from "@scm-manager/ui-components";
 import * as validator from "../components/permissionValidation";
 import RoleSelector from "../components/RoleSelector";
@@ -26,8 +27,8 @@ type Props = {
   createPermission: (permission: PermissionCreateEntry) => void,
   loading: boolean,
   currentPermissions: PermissionCollection,
-  groupAutoCompleteLink: string,
-  userAutoCompleteLink: string,
+  groupAutocompleteLink: string,
+  userAutocompleteLink: string,
 
   // Context props
   t: string => string
@@ -68,65 +69,27 @@ class CreatePermissionForm extends React.Component<Props, State> {
     });
   };
 
-  loadUserAutocompletion = (inputValue: string) => {
-    return this.loadAutocompletion(this.props.userAutoCompleteLink, inputValue);
-  };
-
-  loadGroupAutocompletion = (inputValue: string) => {
-    return this.loadAutocompletion(
-      this.props.groupAutoCompleteLink,
-      inputValue
-    );
-  };
-
-  loadAutocompletion(url: string, inputValue: string) {
-    const link = url + "?q=";
-    return fetch(link + inputValue)
-      .then(response => response.json())
-      .then(json => {
-        return json.map(element => {
-          const label = element.displayName
-            ? `${element.displayName} (${element.id})`
-            : element.id;
-          return {
-            value: element,
-            label
-          };
-        });
-      });
-  }
-
   renderAutocompletionField = () => {
-    const { t } = this.props;
-    if (this.state.groupPermission) {
+    const group = this.state.groupPermission;
+    if (group) {
       return (
-        <Autocomplete
-          loadSuggestions={this.loadGroupAutocompletion}
-          valueSelected={this.groupOrUserSelected}
+        <GroupAutocomplete
+          groupAutocompleteLink={this.props.groupAutocompleteLink}
+          valueSelected={this.selectName}
           value={this.state.value ? this.state.value : ""}
-          label={t("permission.group")}
-          noOptionsMessage={t("permission.autocomplete.no-group-options")}
-          loadingMessage={t("permission.autocomplete.loading")}
-          placeholder={t("permission.autocomplete.group-placeholder")}
-          creatable={true}
         />
       );
     }
     return (
-      <Autocomplete
-        loadSuggestions={this.loadUserAutocompletion}
-        valueSelected={this.groupOrUserSelected}
+      <UserAutocomplete
+        userAutocompleteLink={this.props.userAutocompleteLink}
+        valueSelected={this.selectName}
         value={this.state.value ? this.state.value : ""}
-        label={t("permission.user")}
-        noOptionsMessage={t("permission.autocomplete.no-user-options")}
-        loadingMessage={t("permission.autocomplete.loading")}
-        placeholder={t("permission.autocomplete.user-placeholder")}
-        creatable={true}
       />
     );
   };
 
-  groupOrUserSelected = (value: SelectValue) => {
+  selectName = (value: SelectValue) => {
     this.setState({
       value,
       name: value.value.id,
@@ -150,15 +113,17 @@ class CreatePermissionForm extends React.Component<Props, State> {
       <AdvancedPermissionsDialog
         availableVerbs={availableVerbs}
         selectedVerbs={selectedVerbs}
-        onClose={this.closeAdvancedPermissionsDialog}
+        onClose={this.toggleAdvancedPermissionsDialog}
         onSubmit={this.submitAdvancedPermissionsDialog}
       />
     ) : null;
 
     return (
-      <div>
+      <>
         <hr />
-        <Subtitle subtitle={t("permission.add-permission.add-permission-heading")} />
+        <Subtitle
+          subtitle={t("permission.add-permission.add-permission-heading")}
+        />
         {advancedDialog}
         <form onSubmit={this.submit}>
           <div className="field is-grouped">
@@ -201,7 +166,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
                   />
                   <Button
                     label={t("permission.advanced-button.label")}
-                    action={this.handleDetailedPermissionsPressed}
+                    action={this.toggleAdvancedPermissionsDialog}
                   />
                 </div>
               </div>
@@ -217,16 +182,14 @@ class CreatePermissionForm extends React.Component<Props, State> {
             </div>
           </div>
         </form>
-      </div>
+      </>
     );
   }
 
-  handleDetailedPermissionsPressed = () => {
-    this.setState({ showAdvancedDialog: true });
-  };
-
-  closeAdvancedPermissionsDialog = () => {
-    this.setState({ showAdvancedDialog: false });
+  toggleAdvancedPermissionsDialog = () => {
+    this.setState(prevState => ({
+      showAdvancedDialog: !prevState.showAdvancedDialog
+    }));
   };
 
   submitAdvancedPermissionsDialog = (newVerbs: string[]) => {

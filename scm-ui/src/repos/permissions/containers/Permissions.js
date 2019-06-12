@@ -60,8 +60,8 @@ type Props = {
   repositoryRolesLink: string,
   repositoryVerbsLink: string,
   permissionsLink: string,
-  groupAutoCompleteLink: string,
-  userAutoCompleteLink: string,
+  groupAutocompleteLink: string,
+  userAutocompleteLink: string,
 
   //dispatch functions
   fetchAvailablePermissionsIfNeeded: (
@@ -129,8 +129,8 @@ class Permissions extends React.Component<Props> {
       repoName,
       loadingCreatePermission,
       hasPermissionToCreate,
-      userAutoCompleteLink,
-      groupAutoCompleteLink
+      userAutocompleteLink,
+      groupAutocompleteLink
     } = this.props;
     if (error) {
       return (
@@ -153,8 +153,8 @@ class Permissions extends React.Component<Props> {
         createPermission={permission => this.createPermission(permission)}
         loading={loadingCreatePermission}
         currentPermissions={permissions}
-        userAutoCompleteLink={userAutoCompleteLink}
-        groupAutoCompleteLink={groupAutoCompleteLink}
+        userAutocompleteLink={userAutocompleteLink}
+        groupAutocompleteLink={groupAutocompleteLink}
       />
     ) : null;
 
@@ -163,41 +163,41 @@ class Permissions extends React.Component<Props> {
         <Subtitle subtitle={t("permission.title")} />
         <table className="card-table table is-hoverable is-fullwidth">
           <thead>
-            <tr>
-              <th>
-                <LabelWithHelpIcon
-                  label={t("permission.name")}
-                  helpText={t("permission.help.nameHelpText")}
-                />
-              </th>
-              <th>
-                <LabelWithHelpIcon
-                  label={t("permission.role")}
-                  helpText={t("permission.help.roleHelpText")}
-                />
-              </th>
-              <th>
-                <LabelWithHelpIcon
-                  label={t("permission.permissions")}
-                  helpText={t("permission.help.permissionsHelpText")}
-                />
-              </th>
-              <th />
-            </tr>
+          <tr>
+            <th>
+              <LabelWithHelpIcon
+                label={t("permission.name")}
+                helpText={t("permission.help.nameHelpText")}
+              />
+            </th>
+            <th>
+              <LabelWithHelpIcon
+                label={t("permission.role")}
+                helpText={t("permission.help.roleHelpText")}
+              />
+            </th>
+            <th>
+              <LabelWithHelpIcon
+                label={t("permission.permissions")}
+                helpText={t("permission.help.permissionsHelpText")}
+              />
+            </th>
+            <th />
+          </tr>
           </thead>
           <tbody>
-            {permissions.map(permission => {
-              return (
-                <SinglePermission
-                  availableRepositoryRoles={availableRepositoryRoles}
-                  availableRepositoryVerbs={availableVerbs}
-                  key={permission.name + permission.groupPermission.toString()}
-                  namespace={namespace}
-                  repoName={repoName}
-                  permission={permission}
-                />
-              );
-            })}
+          {permissions.map(permission => {
+            return (
+              <SinglePermission
+                availableRepositoryRoles={availableRepositoryRoles}
+                availableRepositoryVerbs={availableVerbs}
+                key={permission.name + permission.groupPermission.toString()}
+                namespace={namespace}
+                repoName={repoName}
+                permission={permission}
+              />
+            );
+          })}
           </tbody>
         </table>
         {createPermissionForm}
@@ -228,8 +228,8 @@ const mapStateToProps = (state, ownProps) => {
   const repositoryRolesLink = getRepositoryRolesLink(state);
   const repositoryVerbsLink = getRepositoryVerbsLink(state);
   const permissionsLink = getPermissionsLink(state, namespace, repoName);
-  const groupAutoCompleteLink = getGroupAutoCompleteLink(state);
-  const userAutoCompleteLink = getUserAutoCompleteLink(state);
+  const groupAutocompleteLink = getGroupAutoCompleteLink(state);
+  const userAutocompleteLink = getUserAutoCompleteLink(state);
   const availablePermissions = getAvailablePermissions(state);
   const availableRepositoryRoles = getAvailableRepositoryRoles(state);
   const availableVerbs = getAvailableRepositoryVerbs(state);
@@ -248,8 +248,8 @@ const mapStateToProps = (state, ownProps) => {
     hasPermissionToCreate,
     loadingCreatePermission,
     permissionsLink,
-    groupAutoCompleteLink,
-    userAutoCompleteLink
+    groupAutocompleteLink,
+    userAutocompleteLink
   };
 };
 

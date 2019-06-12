@@ -40,6 +40,15 @@
     "config": "Configuration"
   },
   "filterEntries": "filter entries",
+  "autocomplete": {
+    "group": "Group",
+    "user": "User",
+    "noGroupOptions": "No group suggestion available",
+    "groupPlaceholder": "Enter group",
+    "noUserOptions": "No user suggestion available",
+    "userPlaceholder": "Enter user",
+    "loading": "Loading..."
+  },
   "paginator": {
     "next": "Next",
     "previous": "Previous"

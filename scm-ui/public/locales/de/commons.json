@@ -40,6 +40,15 @@
     "config": "Einstellungen"
   },
   "filterEntries": "Einträge filtern",
+  "autocomplete": {
+    "group": "Gruppe",
+    "user": "Benutzer",
+    "noGroupOptions": "Kein Gruppenname als Vorschlag verfügbar",
+    "groupPlaceholder": "Gruppe eingeben",
+    "noUserOptions": "Kein Benutzername als Vorschlag verfügbar",
+    "userPlaceholder": "Benutzer eingeben",
+    "loading": "suche..."
+  },
   "paginator": {
     "next": "Weiter",
     "previous": "Zurück"

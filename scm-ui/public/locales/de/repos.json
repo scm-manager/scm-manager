@@ -150,13 +150,6 @@
       "roleHelpText": "READ = read; WRITE = read und write; OWNER = read, write und auch die Möglichkeit Einstellungen und Berechtigungen zu verwalten. Wenn hier nichts angezeigt wird, den Erweitert-Button benutzen, um Details zu sehen.",
       "permissionsHelpText": "Hier können individuelle Berechtigungen unabhängig von vordefinierten Rollen vergeben werden."
     },
-    "autocomplete": {
-      "no-group-options": "Kein Gruppenname als Vorschlag verfügbar",
-      "group-placeholder": "Gruppe eingeben",
-      "no-user-options": "Kein Benutzername als Vorschlag verfügbar",
-      "user-placeholder": "Benutzer eingeben",
-      "loading": "suche..."
-    },
     "advanced": {
       "dialog": {
         "title": "Erweiterte Berechtigungen",
