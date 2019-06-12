@@ -34,6 +34,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
+import org.mockito.stubbing.Answer;
 import sonia.scm.AbstractTestBase;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
@@ -82,11 +83,12 @@ public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
     RepositoryLocationResolver.RepositoryLocationResolverInstance instanceMock = mock(RepositoryLocationResolver.RepositoryLocationResolverInstance.class);
     when(locationResolver.create(any())).thenReturn(instanceMock);
     when(locationResolver.supportsLocationType(any())).thenReturn(true);
-
-    when(instanceMock.getLocation(anyString())).then(ic -> {
+    Answer<Object> pathAnswer = ic -> {
       String id = ic.getArgument(0);
       return baseDirectory.toPath().resolve(id);
-    });
+    };
+    when(instanceMock.getLocation(anyString())).then(pathAnswer);
+    when(instanceMock.createLocation(anyString())).then(pathAnswer);
 
     handler = createRepositoryHandler(storeFactory, locationResolver, baseDirectory);
   }

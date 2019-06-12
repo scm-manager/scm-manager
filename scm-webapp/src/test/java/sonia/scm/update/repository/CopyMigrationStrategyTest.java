@@ -43,18 +43,18 @@ class CopyMigrationStrategyTest {
   void mockLocationResolver(@TempDirectory.TempDir Path tempDir) {
     RepositoryLocationResolver.RepositoryLocationResolverInstance instanceMock = mock(RepositoryLocationResolver.RepositoryLocationResolverInstance.class);
     when(locationResolver.forClass(Path.class)).thenReturn(instanceMock);
-    when(instanceMock.getLocation(anyString())).thenAnswer(invocation -> tempDir.resolve((String) invocation.getArgument(0)));
+    when(instanceMock.createLocation(anyString())).thenAnswer(invocation -> tempDir.resolve((String) invocation.getArgument(0)));
   }
 
   @Test
   void shouldUseStandardDirectory(@TempDirectory.TempDir Path tempDir) {
-    Path target = new CopyMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git");
+    Path target = new CopyMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git").get();
     assertThat(target).isEqualTo(tempDir.resolve("b4f-a9f0-49f7-ad1f-37d3aae1c55f"));
   }
 
   @Test
   void shouldCopyDataDirectory(@TempDirectory.TempDir Path tempDir) {
-    Path target = new CopyMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git");
+    Path target = new CopyMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git").get();
     assertThat(target.resolve("data")).exists();
     Path originalDataDir = tempDir
       .resolve("repositories")
