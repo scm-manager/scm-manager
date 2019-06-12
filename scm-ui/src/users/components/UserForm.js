@@ -17,6 +17,8 @@ type Props = {
   submitForm: User => void,
   user?: User,
   loading?: boolean,
+
+  // context props
   t: string => string
 };
 
@@ -138,11 +140,17 @@ class UserForm extends React.Component<Props, State> {
       subtitle = <Subtitle subtitle={t("userForm.subtitle")} />;
     }
 
-    const iconType = user && user.active ? (
-      <Icon title={t("user.active")} name="user" />
-    ) : (
-      <Icon title={t("user.inactive")} name="user-slash" />
-    );
+    const iconType =
+      user && user.active ? (
+        <>
+          {t("user.active")} <Icon title={t("user.active")} name="user" />
+        </>
+      ) : (
+        <>
+          {t("user.inactive")}{" "}
+          <Icon title={t("user.inactive")} name="user-slash" />
+        </>
+      );
 
     return (
       <>
@@ -175,7 +183,7 @@ class UserForm extends React.Component<Props, State> {
             <div className="column">
               {passwordChangeField}
               <Checkbox
-                label={<>{iconType} {t("user.active")}</>}
+                label={iconType}
                 onChange={this.handleActiveChange}
                 checked={user ? user.active : false}
                 helpText={t("help.activeHelpText")}
