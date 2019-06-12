@@ -11,7 +11,10 @@
   "validation": {
     "namespace-invalid": "Der Namespace des Repository ist ungültig",
     "name-invalid": "Der Name des Repository ist ungültig",
-    "contact-invalid": "Der Kontakt muss eine gültige E-Mail Adresse sein"
+    "contact-invalid": "Der Kontakt muss eine gültige E-Mail Adresse sein",
+    "branch": {
+      "nameInvalid": "Der Name des Branches ist ungültig"
+    }
   },
   "help": {
     "namespaceHelpText": "Der Namespace des Repository. Dieser wird Teil der URL des Repository sein.",
