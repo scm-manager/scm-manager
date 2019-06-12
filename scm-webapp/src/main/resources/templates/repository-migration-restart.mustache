@@ -1,36 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>SCM-Manager Restart</title>
-  <link rel="stylesheet" type="text/css" href="{{ contextPath }}/styles/scm.css">
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-</head>
-<body>
-<div id="root">
-  <div>
-    <div class="App">
-      <section class="hero is-dark is-small">
-        <div class="hero-body">
-          <div class="container">
-            <div class="columns is-vcentered">
-              <div class="column"><img src="{{ contextPath }}/images/logo.png" alt="SCM-Manager"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <div class="main">
-        <section class="section">
-          <div class="container">
-            <h1 class="title">SCM-Manager will restart to migrate the data.</h1>
-          </div>
-        </section>
-        <section class="section">
-          <p class="has-text-centered">
-            <!--          <img src="{{ contextPath }}/images/loading.png" alt="Loading...">-->
-            <svg width="200px" version="1.1" id="L7" xmlns="http://www.w3.org/2000/svg"
-                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                 x="0px" y="0px"
-                 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+{{<layout}}
+
+{{$title}}SCM-Manager will restart to migrate the data{{/title}}
+
+{{$content}}
+  <p class="has-text-centered">
+    <svg width="200px" version="1.1" id="L7" xmlns="http://www.w3.org/2000/svg"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         x="0px" y="0px"
+         viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
        <path fill="#33B2E8" d="M31.6,3.5C5.9,13.6-6.6,42.7,3.5,68.4c10.1,25.7,39.2,38.3,64.9,28.1l-3.1-7.9c-21.3,8.4-45.4-2-53.8-23.3
         c-8.4-21.3,2-45.4,23.3-53.8L31.6,3.5z">
             <animateTransform
@@ -42,7 +19,7 @@
               to="360 50 50"
               repeatCount="indefinite"/>
         </path>
-              <path fill="#33B2E8" d="M42.3,39.6c5.7-4.3,13.9-3.1,18.1,2.7c4.3,5.7,3.1,13.9-2.7,18.1l4.1,5.5c8.8-6.5,10.6-19,4.1-27.7
+      <path fill="#33B2E8" d="M42.3,39.6c5.7-4.3,13.9-3.1,18.1,2.7c4.3,5.7,3.1,13.9-2.7,18.1l4.1,5.5c8.8-6.5,10.6-19,4.1-27.7
         c-6.5-8.8-19-10.6-27.7-4.1L42.3,39.6z">
             <animateTransform
               attributeName="transform"
@@ -53,7 +30,7 @@
               to="-360 50 50"
               repeatCount="indefinite"/>
         </path>
-              <path fill="#33B2E8" d="M82,35.7C74.1,18,53.4,10.1,35.7,18S10.1,46.6,18,64.3l7.6-3.4c-6-13.5,0-29.3,13.5-35.3s29.3,0,35.3,13.5
+      <path fill="#33B2E8" d="M82,35.7C74.1,18,53.4,10.1,35.7,18S10.1,46.6,18,64.3l7.6-3.4c-6-13.5,0-29.3,13.5-35.3s29.3,0,35.3,13.5
         L82,35.7z">
             <animateTransform
               attributeName="transform"
@@ -65,28 +42,27 @@
               repeatCount="indefinite"/>
         </path>
       </svg>
-          </p>
-        </section>
-      </div>
-    </div>
-  </div>
-</div>
-<script>
-  setInterval(function () {
-      const request = new XMLHttpRequest();
+  </p>
+{{/content}}
 
-      request.open('GET', '{{ contextPath }}/api/v2/', true);
+{{$script}}
+  <script>
+    setInterval(function () {
+        const request = new XMLHttpRequest();
 
-      request.onload = function () {
-        if (this.readyState == 4 && this.status == 200 && this.response.toString().indexOf("_links") > 0) {
-          location.href = '{{ contextPath }}';
-        }
-      };
+        request.open('GET', '{{ contextPath }}/api/v2/', true);
 
-      request.send();
-    },
-    3000
-  );
-</script>
-</body>
-</html>
+        request.onload = function () {
+          if (this.readyState == 4 && this.status == 200 && this.response.toString().indexOf("_links") > 0) {
+            location.href = '{{ contextPath }}';
+          }
+        };
+
+        request.send();
+      },
+      3000
+    );
+  </script>
+{{/script}}
+
+{{/layout}}
