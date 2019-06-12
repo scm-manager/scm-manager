@@ -5,6 +5,7 @@ import type { User } from "@scm-manager/ui-types";
 import {
   Subtitle,
   Checkbox,
+  Icon,
   InputField,
   PasswordConfirmation,
   SubmitButton,
@@ -136,6 +137,13 @@ class UserForm extends React.Component<Props, State> {
       // edit existing user
       subtitle = <Subtitle subtitle={t("userForm.subtitle")} />;
     }
+
+    const iconType = user && user.active ? (
+      <Icon title={t("user.active")} name="user" />
+    ) : (
+      <Icon title={t("user.inactive")} name="user-slash" />
+    );
+
     return (
       <>
         {subtitle}
@@ -167,7 +175,7 @@ class UserForm extends React.Component<Props, State> {
             <div className="column">
               {passwordChangeField}
               <Checkbox
-                label={t("user.active")}
+                label={<>{iconType} {t("user.active")}</>}
                 onChange={this.handleActiveChange}
                 checked={user ? user.active : false}
                 helpText={t("help.activeHelpText")}

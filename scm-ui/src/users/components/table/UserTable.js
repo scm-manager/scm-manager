@@ -19,7 +19,6 @@ class UserTable extends React.Component<Props> {
             <th className="is-hidden-mobile">{t("user.name")}</th>
             <th>{t("user.displayName")}</th>
             <th>{t("user.mail")}</th>
-            <th className="is-hidden-mobile">{t("user.active")}</th>
           </tr>
         </thead>
         <tbody>

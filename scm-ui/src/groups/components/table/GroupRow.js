@@ -1,29 +1,38 @@
 // @flow
 import React from "react";
+import { translate } from "react-i18next";
 import { Link } from "react-router-dom";
 import type { Group } from "@scm-manager/ui-types";
-import { Checkbox } from "@scm-manager/ui-components";
+import { Icon } from "@scm-manager/ui-components";
 
 type Props = {
-  group: Group
+  group: Group,
+
+  // context props
+  t: string => string
 };
 
-export default class GroupRow extends React.Component<Props> {
+class GroupRow extends React.Component<Props> {
   renderLink(to: string, label: string) {
     return <Link to={to}>{label}</Link>;
   }
 
   render() {
-    const { group } = this.props;
+    const { group, t } = this.props;
     const to = `/group/${group.name}`;
+    const iconType = group.external ? (
+      <Icon title={t("group.external")} name="sign-out-alt fa-rotate-270" />
+    ) : (
+      <Icon title={t("group.internal")} name="sign-in-alt fa-rotate-90" />
+    );
+
     return (
       <tr>
-        <td>{this.renderLink(to, group.name)}</td>
+        <td>{iconType} {this.renderLink(to, group.name)}</td>
         <td className="is-hidden-mobile">{group.description}</td>
-        <td>
-          <Checkbox checked={group.external} />
-        </td>
       </tr>
     );
   }
 }
+
+export default translate("groups")(GroupRow);

@@ -5,6 +5,7 @@
     "mail": "E-Mail",
     "password": "Password",
     "active": "Active",
+    "inactive": "Inactive",
     "type": "Type",
     "creationDate": "Creation Date",
     "lastModified": "Last Modified"
