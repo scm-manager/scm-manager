@@ -5,9 +5,12 @@ import Autocomplete from "./Autocomplete";
 
 type Props = {
   autocompleteLink: string,
+  label: string,
+  noOptionsMessage: string,
+  loadingMessage: string,
+  placeholder: string,
   valueSelected: SelectValue => void,
-  value: string,
-  label: string
+  value?: SelectValue
 };
 
 class UserGroupAutocomplete extends React.Component<Props> {
@@ -34,17 +37,20 @@ class UserGroupAutocomplete extends React.Component<Props> {
   };
 
   render() {
-    const { value, label } = this.props;
+    const { autocompleteLink, label, noOptionsMessage, loadingMessage, placeholder, value } = this.props;
     return (
       <Autocomplete
+        autocompleteLink={autocompleteLink}
+        label={label}
+        noOptionsMessage={noOptionsMessage}
+        loadingMessage={loadingMessage}
+        placeholder={placeholder}
         loadSuggestions={this.loadSuggestions}
         valueSelected={this.selectName}
         value={value}
         creatable={true}
-        label={label}
-        {...this.props}
       />
-    );
+    ); // {...this.props}
   }
 }
 

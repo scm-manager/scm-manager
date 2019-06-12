@@ -7,7 +7,7 @@ import UserGroupAutocomplete from "./UserGroupAutocomplete";
 type Props = {
   groupAutocompleteLink: string,
   valueSelected: SelectValue => void,
-  value: string,
+  value?: SelectValue,
 
   // Context props
   t: string => string

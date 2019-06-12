@@ -43,10 +43,10 @@
   "autocomplete": {
     "group": "Gruppe",
     "user": "Benutzer",
-    "no-group-options": "Kein Gruppenname als Vorschlag verfügbar",
-    "group-placeholder": "Gruppe eingeben",
-    "no-user-options": "Kein Benutzername als Vorschlag verfügbar",
-    "user-placeholder": "Benutzer eingeben",
+    "noGroupOptions": "Kein Gruppenname als Vorschlag verfügbar",
+    "groupPlaceholder": "Gruppe eingeben",
+    "noUserOptions": "Kein Benutzername als Vorschlag verfügbar",
+    "userPlaceholder": "Benutzer eingeben",
     "loading": "suche..."
   },
   "paginator": {

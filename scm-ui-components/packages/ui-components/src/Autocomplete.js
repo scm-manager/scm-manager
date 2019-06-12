@@ -16,12 +16,9 @@ type Props = {
   creatable?: boolean
 };
 
-
 type State = {};
 
 class Autocomplete extends React.Component<Props, State> {
-
-
   static defaultProps = {
     placeholder: "Type here",
     loadingMessage: "Loading...",
@@ -33,7 +30,11 @@ class Autocomplete extends React.Component<Props, State> {
   };
 
   // We overwrite this to avoid running into a bug (https://github.com/JedWatson/react-select/issues/2944)
-  isValidNewOption = (inputValue: string, selectValue: SelectValue, selectOptions: SelectValue[]) => {
+  isValidNewOption = (
+    inputValue: string,
+    selectValue: SelectValue,
+    selectOptions: SelectValue[]
+  ) => {
     const isNotDuplicated = !selectOptions
       .map(option => option.label)
       .includes(inputValue);
@@ -42,12 +43,21 @@ class Autocomplete extends React.Component<Props, State> {
   };
 
   render() {
-    const { label, helpText, value, placeholder, loadingMessage, noOptionsMessage, loadSuggestions, creatable } = this.props;
+    const {
+      label,
+      helpText,
+      value,
+      placeholder,
+      loadingMessage,
+      noOptionsMessage,
+      loadSuggestions,
+      creatable
+    } = this.props;
     return (
       <div className="field">
         <LabelWithHelpIcon label={label} helpText={helpText} />
         <div className="control">
-          {creatable?
+          {creatable ? (
             <AsyncCreatable
               cacheOptions
               loadOptions={loadSuggestions}
@@ -64,7 +74,7 @@ class Autocomplete extends React.Component<Props, State> {
                 });
               }}
             />
-          :
+          ) : (
             <Async
               cacheOptions
               loadOptions={loadSuggestions}
@@ -74,13 +84,11 @@ class Autocomplete extends React.Component<Props, State> {
               loadingMessage={() => loadingMessage}
               noOptionsMessage={() => noOptionsMessage}
             />
-
-          }
+          )}
         </div>
       </div>
     );
   }
 }
-
 
 export default Autocomplete;
