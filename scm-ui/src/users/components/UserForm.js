@@ -80,7 +80,6 @@ class UserForm extends React.Component<Props, State> {
       return (
         this.props.user.displayName === user.displayName &&
         this.props.user.mail === user.mail &&
-        this.props.user.admin === user.admin &&
         this.props.user.active === user.active
       );
     } else {
