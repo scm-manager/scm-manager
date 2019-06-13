@@ -4,8 +4,10 @@ import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
+@Singleton
 public class MigrationStrategyDao {
 
   private final RepositoryMigrationPlan plan;
@@ -17,12 +19,12 @@ public class MigrationStrategyDao {
     this.plan = store.getOptional().orElse(new RepositoryMigrationPlan());
   }
 
-  public Optional<MigrationStrategy> get(String id) {
+  public Optional<RepositoryMigrationPlan.RepositoryMigrationEntry> get(String id) {
     return plan.get(id);
   }
 
-  public void set(String repositoryId, MigrationStrategy strategy) {
-    plan.set(repositoryId, strategy);
+  public void set(String repositoryId, MigrationStrategy strategy, String newNamespace, String newName) {
+    plan.set(repositoryId, strategy, newNamespace, newName);
     store.set(plan);
   }
 }

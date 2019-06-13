@@ -11,8 +11,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Optional.of;
 
 class MoveMigrationStrategy extends BaseMigrationStrategy {
 
@@ -27,14 +29,15 @@ class MoveMigrationStrategy extends BaseMigrationStrategy {
   }
 
   @Override
-  public Path migrate(String id, String name, String type) {
-    Path repositoryBasePath = locationResolver.forClass(Path.class).getLocation(id);
+  public Optional<Path> migrate(String id, String name, String type) {
+    Path repositoryBasePath = locationResolver.forClass(Path.class).createLocation(id);
     Path targetDataPath = repositoryBasePath
       .resolve(RepositoryDirectoryHandler.REPOSITORIES_NATIVE_DIRECTORY);
     Path sourceDataPath = getSourceDataPath(name, type);
+    LOG.info("moving repository data from {} to {}", sourceDataPath, targetDataPath);
     moveData(sourceDataPath, targetDataPath);
     deleteOldDataDir(getTypeDependentPath(type), name);
-    return repositoryBasePath;
+    return of(repositoryBasePath);
   }
 
   private void deleteOldDataDir(Path rootPath, String name) {
