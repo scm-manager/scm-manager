@@ -37,27 +37,22 @@ package sonia.scm.template;
 
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
-
 import com.google.common.base.Throwables;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.google.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.Default;
 import sonia.scm.plugin.PluginLoader;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.Reader;
-
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-import javax.servlet.ServletContext;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -66,6 +61,14 @@ import javax.servlet.ServletContext;
 @Default
 public class MustacheTemplateEngine implements TemplateEngine
 {
+
+  /**
+   * Used to implement optional injection for the PluginLoader.
+   * @see <a href="https://github.com/google/guice/wiki/FrequentlyAskedQuestions#how-can-i-inject-optional-parameters-into-a-constructor">Optional Injection</a>
+   */
+  static class PluginLoaderHolder {
+    @Inject(optional = true) PluginLoader pluginLoader;
+  }
 
   /** Field description */
   public static final TemplateType TYPE = new TemplateType("mustache",
@@ -87,18 +90,24 @@ public class MustacheTemplateEngine implements TemplateEngine
    *
    *
    * @param context
-   * @param pluginLoader
+   * @param pluginLoaderHolder
    */
   @Inject
-  public MustacheTemplateEngine(@Default ServletContext context,
-    PluginLoader pluginLoader)
+  public MustacheTemplateEngine(@Default ServletContext context, PluginLoaderHolder pluginLoaderHolder)
   {
-    factory = new ServletMustacheFactory(context, pluginLoader);
+    factory = new ServletMustacheFactory(context, createClassLoader(pluginLoaderHolder.pluginLoader));
 
     ThreadFactory threadFactory =
       new ThreadFactoryBuilder().setNameFormat(THREAD_NAME).build();
 
     factory.setExecutorService(Executors.newCachedThreadPool(threadFactory));
+  }
+
+  private ClassLoader createClassLoader(PluginLoader pluginLoader) {
+    if (pluginLoader == null) {
+      return Thread.currentThread().getContextClassLoader();
+    }
+    return pluginLoader.getUberClassLoader();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -112,12 +121,9 @@ public class MustacheTemplateEngine implements TemplateEngine
    *
    * @return
    *
-   * @throws IOException
    */
   @Override
-  public Template getTemplate(String templateIdentifier, Reader reader)
-    throws IOException
-  {
+  public Template getTemplate(String templateIdentifier, Reader reader) {
     if (logger.isTraceEnabled())
     {
       logger.trace("try to create mustache template from reader with id {}",

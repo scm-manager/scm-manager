@@ -63,13 +63,13 @@ import sonia.scm.util.IOUtil;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.DataBindingException;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -126,9 +126,7 @@ public class BootstrapContextListener implements ServletContextListener {
   public void contextInitialized(ServletContextEvent sce) {
     context = sce.getServletContext();
 
-    File pluginDirectory = getPluginDirectory();
-
-    createContextListener(pluginDirectory);
+    createContextListener();
 
     contextListener.contextInitialized(sce);
 
@@ -140,12 +138,26 @@ public class BootstrapContextListener implements ServletContextListener {
     }
   }
 
-  private void createContextListener(File pluginDirectory) {
+  private void createContextListener() {
+    Throwable startupError = SCMContext.getContext().getStartupError();
+    if (startupError != null) {
+      contextListener = SingleView.error(startupError);
+    } else if (Versions.isTooOld()) {
+      contextListener = SingleView.view("/templates/too-old.mustache", HttpServletResponse.SC_CONFLICT);
+    } else {
+      createMigrationOrNormalContextListener();
+      Versions.writeNew();
+    }
+  }
+
+  private void createMigrationOrNormalContextListener() {
     ClassLoader cl;
     Set<PluginWrapper> plugins;
     PluginLoader pluginLoader;
 
     try {
+      File pluginDirectory = getPluginDirectory();
+
       renameOldPluginsFolder(pluginDirectory);
 
       if (!isCorePluginExtractionDisabled()) {

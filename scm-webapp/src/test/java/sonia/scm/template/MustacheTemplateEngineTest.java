@@ -35,15 +35,20 @@ package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.ImmutableMap;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
 import sonia.scm.plugin.PluginLoader;
 
-import static org.mockito.Mockito.*;
+import javax.servlet.ServletContext;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.InputStream;
-
-import javax.servlet.ServletContext;
 
 /**
  *
@@ -68,7 +73,10 @@ public class MustacheTemplateEngineTest extends TemplateEngineTestBase
     when(loader.getUberClassLoader()).thenReturn(
       Thread.currentThread().getContextClassLoader());
 
-    return new MustacheTemplateEngine(context, loader);
+    MustacheTemplateEngine.PluginLoaderHolder holder = new MustacheTemplateEngine.PluginLoaderHolder();
+    holder.pluginLoader = loader;
+
+    return new MustacheTemplateEngine(context, holder);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -115,5 +123,19 @@ public class MustacheTemplateEngineTest extends TemplateEngineTestBase
   {
     return MustacheTemplateEngineTest.class.getResourceAsStream(
       "/sonia/scm/template/".concat(resource).concat(".mustache"));
+  }
+
+  @Test
+  public void testCreateEngineWithoutPluginLoader() throws IOException {
+    ServletContext context = mock(ServletContext.class);
+    MustacheTemplateEngine.PluginLoaderHolder holder = new MustacheTemplateEngine.PluginLoaderHolder();
+    MustacheTemplateEngine engine = new MustacheTemplateEngine(context, holder);
+
+    Template template = engine.getTemplate(getTemplateResource());
+
+    StringWriter writer = new StringWriter();
+    template.execute(writer, ImmutableMap.of("name", "World"));
+
+    Assertions.assertThat(writer.toString()).isEqualTo("Hello World!");
   }
 }
