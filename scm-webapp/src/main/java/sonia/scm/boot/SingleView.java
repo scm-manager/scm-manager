@@ -37,6 +37,16 @@ final class SingleView {
     return new SingleViewContextListener(controller);
   }
 
+  static ServletContextListener view(String template, int sc) {
+    ViewController controller = new SimpleViewController(template, request -> {
+      Object model = ImmutableMap.of(
+        "contextPath", request.getContextPath()
+      );
+      return new View(sc, model);
+    });
+    return new SingleViewContextListener(controller);
+  }
+
   private static class SingleViewContextListener extends GuiceServletContextListener {
 
     private final ViewController controller;

@@ -63,6 +63,7 @@ import sonia.scm.util.IOUtil;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.DataBindingException;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -141,8 +142,11 @@ public class BootstrapContextListener implements ServletContextListener {
     Throwable startupError = SCMContext.getContext().getStartupError();
     if (startupError != null) {
       contextListener = SingleView.error(startupError);
+    } else if (Versions.isToOld()) {
+      contextListener = SingleView.view("/templates/to-old.mustache", HttpServletResponse.SC_CONFLICT);
     } else {
       createMigrationOrNormalContextListener();
+      Versions.writeNew();
     }
   }
 

@@ -51,6 +51,18 @@ class SingleViewTest {
   }
 
   @Test
+  void shouldCreateViewControllerForView() {
+    ServletContextListener listener = SingleView.view("/my-template", 409);
+    when(request.getContextPath()).thenReturn("/scm");
+
+    ViewController instance = findViewController(listener);
+    assertThat(instance.getTemplate()).isEqualTo("/my-template");
+
+    View view = instance.createView(request);
+    assertThat(view.getStatusCode()).isEqualTo(409);
+  }
+
+  @Test
   void shouldCreateViewControllerForError() {
     ServletContextListener listener = SingleView.error(new IOException("awesome io"));
     when(request.getContextPath()).thenReturn("/scm");
