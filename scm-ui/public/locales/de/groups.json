@@ -6,6 +6,7 @@
     "lastModified": "Zuletzt bearbeitet",
     "type": "Typ",
     "external": "Extern",
+    "internal": "Intern",
     "members": "Mitglieder"
   },
   "groups": {

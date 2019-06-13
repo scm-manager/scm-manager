@@ -123,7 +123,7 @@ class GroupForm extends React.Component<Props, State> {
     );
   };
 
-  isExistingGroup = () => !! this.props.group;
+  isExistingGroup = () => !!this.props.group;
 
   render() {
     const { loading, t } = this.props;

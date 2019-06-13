@@ -11,7 +11,7 @@ import {
 } from "../modules/permissions";
 import { connect } from "react-redux";
 import type { History } from "history";
-import { Button } from "@scm-manager/ui-components";
+import { Button, Icon } from "@scm-manager/ui-components";
 import DeletePermissionButton from "../components/buttons/DeletePermissionButton";
 import RoleSelector from "../components/RoleSelector";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
@@ -49,9 +49,6 @@ type State = {
 };
 
 const styles = {
-  iconColor: {
-    color: "#9a9a9a"
-  },
   centerMiddle: {
     display: "table-cell",
     verticalAlign: "middle !important"
@@ -148,15 +145,9 @@ class SinglePermission extends React.Component<Props, State> {
 
     const iconType =
       permission && permission.groupPermission ? (
-        <i
-          title={t("permission.group")}
-          className={classNames("fas fa-user-friends", classes.iconColor)}
-        />
+        <Icon title={t("permission.group")} name="user-friends" />
       ) : (
-        <i
-          title={t("permission.user")}
-          className={classNames("fas fa-user", classes.iconColor)}
-        />
+        <Icon title={t("permission.user")} name="user" />
       );
 
     return (
@@ -171,7 +162,7 @@ class SinglePermission extends React.Component<Props, State> {
             action={this.handleDetailedPermissionsPressed}
           />
         </td>
-        <td className={classes.centerMiddle}>
+        <td className={classNames("is-darker", classes.centerMiddle)}>
           <DeletePermissionButton
             permission={permission}
             namespace={namespace}

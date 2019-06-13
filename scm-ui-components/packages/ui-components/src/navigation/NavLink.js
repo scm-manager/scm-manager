@@ -1,5 +1,6 @@
 //@flow
 import * as React from "react";
+import classNames from "classnames";
 import {Link, Route} from "react-router-dom";
 
 // TODO mostly copy of PrimaryNavigationLink
@@ -28,7 +29,7 @@ class NavLink extends React.Component<Props> {
 
     let showIcon = null;
     if (icon) {
-      showIcon = (<><i className={icon} />{" "}</>);
+      showIcon = (<><i className={classNames(icon, "fa-fw")} />{" "}</>);
     }
 
     return (
