@@ -46,6 +46,7 @@ import sonia.scm.ScmEventBusModule;
 import sonia.scm.ScmInitializerModule;
 import sonia.scm.Stage;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.migration.UpdateException;
 import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginException;
@@ -54,6 +55,7 @@ import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginWrapper;
 import sonia.scm.plugin.PluginsInternal;
 import sonia.scm.plugin.SmpArchive;
+import sonia.scm.update.MigrationWizardContextListener;
 import sonia.scm.update.UpdateEngine;
 import sonia.scm.util.ClassLoaders;
 import sonia.scm.util.IOUtil;
@@ -110,18 +112,6 @@ public class BootstrapContextListener implements ServletContextListener {
   public void contextDestroyed(ServletContextEvent sce) {
     contextListener.contextDestroyed(sce);
 
-    for (PluginWrapper plugin : contextListener.getPlugins()) {
-      ClassLoader pcl = plugin.getClassLoader();
-
-      if (pcl instanceof Closeable) {
-        try {
-          ((Closeable) pcl).close();
-        } catch (IOException ex) {
-          logger.warn("could not close plugin classloader", ex);
-        }
-      }
-    }
-
     context = null;
     contextListener = null;
   }
@@ -151,27 +141,59 @@ public class BootstrapContextListener implements ServletContextListener {
   }
 
   private void createContextListener(File pluginDirectory) {
+    ClassLoader cl;
+    Set<PluginWrapper> plugins;
+    PluginLoader pluginLoader;
+
     try {
+      renameOldPluginsFolder(pluginDirectory);
+
       if (!isCorePluginExtractionDisabled()) {
         extractCorePlugins(context, pluginDirectory);
       } else {
         logger.info("core plugin extraction is disabled");
       }
 
-      ClassLoader cl = ClassLoaders.getContextClassLoader(BootstrapContextListener.class);
+      cl = ClassLoaders.getContextClassLoader(BootstrapContextListener.class);
 
-      Set<PluginWrapper> plugins = PluginsInternal.collectPlugins(cl, pluginDirectory.toPath());
+      plugins = PluginsInternal.collectPlugins(cl, pluginDirectory.toPath());
 
-      PluginLoader pluginLoader = new DefaultPluginLoader(context, cl, plugins);
+      pluginLoader = new DefaultPluginLoader(context, cl, plugins);
 
-      Injector bootstrapInjector = createBootstrapInjector(pluginLoader);
-
-      processUpdates(pluginLoader, bootstrapInjector);
-
-      contextListener = bootstrapInjector.getInstance(ScmContextListener.Factory.class).create(cl, plugins);
     } catch (IOException ex) {
       throw new PluginLoadException("could not load plugins", ex);
     }
+
+    Injector bootstrapInjector = createBootstrapInjector(pluginLoader);
+
+    startEitherMigrationOrNormalServlet(cl, plugins, pluginLoader, bootstrapInjector);
+  }
+
+  private void startEitherMigrationOrNormalServlet(ClassLoader cl, Set<PluginWrapper> plugins, PluginLoader pluginLoader, Injector bootstrapInjector) {
+    MigrationWizardContextListener wizardContextListener = prepareWizardIfNeeded(bootstrapInjector);
+
+    if (wizardContextListener.wizardNecessary()) {
+      contextListener = wizardContextListener;
+    } else {
+      processUpdates(pluginLoader, bootstrapInjector);
+      contextListener = bootstrapInjector.getInstance(ScmContextListener.Factory.class).create(cl, plugins);
+    }
+  }
+
+  private void renameOldPluginsFolder(File pluginDirectory) {
+    if (new File(pluginDirectory, "classpath.xml").exists()) {
+      File backupDirectory = new File(pluginDirectory.getParentFile(), "plugins.v1");
+      boolean renamed = pluginDirectory.renameTo(backupDirectory);
+      if (renamed) {
+        logger.warn("moved old plugins directory to {}", backupDirectory);
+      } else {
+        throw new UpdateException("could not rename existing v1 plugin directory");
+      }
+    }
+  }
+
+  private MigrationWizardContextListener prepareWizardIfNeeded(Injector bootstrapInjector) {
+    return new MigrationWizardContextListener(bootstrapInjector);
   }
 
   private Injector createBootstrapInjector(PluginLoader pluginLoader) {
@@ -402,7 +424,7 @@ public class BootstrapContextListener implements ServletContextListener {
   private ServletContext context;
 
   /** Field description */
-  private ScmContextListener contextListener;
+  private ServletContextListener contextListener;
 
   /** Field description */
   private boolean registered = false;

@@ -58,6 +58,8 @@ import sonia.scm.util.IOUtil;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -77,7 +79,7 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
   private final ClassLoader parent;
   private final Set<PluginWrapper> plugins;
   private Injector injector;
-  
+
   public interface Factory {
     ScmContextListener create(ClassLoader parent, Set<PluginWrapper> plugins);
   }
@@ -183,6 +185,18 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
     }
 
     super.contextDestroyed(servletContextEvent);
+
+    for (PluginWrapper plugin : getPlugins()) {
+      ClassLoader pcl = plugin.getClassLoader();
+
+      if (pcl instanceof Closeable) {
+        try {
+          ((Closeable) pcl).close();
+        } catch (IOException ex) {
+          LOG.warn("could not close plugin classloader", ex);
+        }
+      }
+    }
   }
   
   private void closeCloseables() {
@@ -205,6 +219,4 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
   private void destroyServletContextListeners(ServletContextEvent event) {
     injector.getInstance(ServletContextListenerHolder.class).contextDestroyed(event);
   }
-
-
 }
