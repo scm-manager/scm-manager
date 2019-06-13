@@ -147,6 +147,10 @@ public class ValidationUtilTest
   public void testIsRepositoryNameValid() {
     String[] validPaths = {
       "scm",
+      "scm-",
+      "scm_",
+      "s_cm",
+      "s-cm",
       "s",
       "sc",
       ".hiddenrepo",
@@ -206,7 +210,8 @@ public class ValidationUtilTest
       "a/..b",
       "scm/main",
       "scm/plugins/git-plugin",
-      "scm/plugins/git-plugin"
+      "_scm",
+      "-scm"
     };
 
     for (String path : validPaths) {

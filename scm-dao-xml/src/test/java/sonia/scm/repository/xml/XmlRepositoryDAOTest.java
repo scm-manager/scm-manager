@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junitpioneer.jupiter.TempDirectory;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,6 +17,7 @@ import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryPermission;
 
 import java.io.IOException;
@@ -32,7 +31,9 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -47,16 +48,29 @@ class XmlRepositoryDAOTest {
   @Mock
   private PathBasedRepositoryLocationResolver locationResolver;
 
-  @Captor
-  private ArgumentCaptor<BiConsumer<String, Path>> forAllCaptor;
-
   private FileSystem fileSystem = new DefaultFileSystem();
 
   private XmlRepositoryDAO dao;
 
   @BeforeEach
   void createDAO(@TempDirectory.TempDir Path basePath) {
-    when(locationResolver.create(Path.class)).thenReturn(locationResolver::create);
+    when(locationResolver.create(Path.class)).thenReturn(
+      new RepositoryLocationResolver.RepositoryLocationResolverInstance<Path>() {
+        @Override
+        public Path getLocation(String repositoryId) {
+          return locationResolver.create(repositoryId);
+        }
+
+        @Override
+        public Path createLocation(String repositoryId) {
+          return locationResolver.create(repositoryId);
+        }
+
+        @Override
+        public void setLocation(String repositoryId, Path location) {
+        }
+      }
+    );
     when(locationResolver.create(anyString())).thenAnswer(invocation -> createMockedRepoPath(basePath, invocation));
     when(locationResolver.remove(anyString())).thenAnswer(invocation -> basePath.resolve(invocation.getArgument(0).toString()));
   }
@@ -268,43 +282,80 @@ class XmlRepositoryDAOTest {
 
       verify(locationResolver).updateModificationDate();
     }
-  }
 
-  @Test
-  void shouldReadExistingRepositoriesFromPathDatabase(@TempDirectory.TempDir Path basePath) throws IOException {
-    doNothing().when(locationResolver).forAllPaths(forAllCaptor.capture());
-    XmlRepositoryDAO dao = new XmlRepositoryDAO(locationResolver, fileSystem);
+    private String getXmlFileContent(String id) {
+      Path storePath = metadataFile(id);
 
-    Path repositoryPath = basePath.resolve("existing");
-    Files.createDirectories(repositoryPath);
-    URL metadataUrl = Resources.getResource("sonia/scm/store/repositoryDaoMetadata.xml");
-    Files.copy(metadataUrl.openStream(), repositoryPath.resolve("metadata.xml"));
+      assertThat(storePath).isRegularFile();
+      return content(storePath);
+    }
 
-    forAllCaptor.getValue().accept("existing", repositoryPath);
+    private Path metadataFile(String id) {
+      return locationResolver.create(id).resolve("metadata.xml");
+    }
 
-    assertThat(dao.contains(new NamespaceAndName("space", "existing"))).isTrue();
-  }
-
-  private String getXmlFileContent(String id) {
-    Path storePath = metadataFile(id);
-
-    assertThat(storePath).isRegularFile();
-    return content(storePath);
-  }
-
-  private Path metadataFile(String id) {
-    return locationResolver.create(id).resolve("metadata.xml");
-  }
-
-  private String content(Path storePath) {
-    try {
-      return new String(Files.readAllBytes(storePath), Charsets.UTF_8);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+    private String content(Path storePath) {
+      try {
+        return new String(Files.readAllBytes(storePath), Charsets.UTF_8);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 
-  private static Repository createRepository(String id) {
+  @Nested
+  class WithExistingRepositories {
+
+    private Path repositoryPath;
+
+    @BeforeEach
+    void createMetadataFileForRepository(@TempDirectory.TempDir Path basePath) throws IOException {
+      repositoryPath = basePath.resolve("existing");
+
+      Files.createDirectories(repositoryPath);
+      URL metadataUrl = Resources.getResource("sonia/scm/store/repositoryDaoMetadata.xml");
+      Files.copy(metadataUrl.openStream(), repositoryPath.resolve("metadata.xml"));
+    }
+
+    @Test
+    void shouldReadExistingRepositoriesFromPathDatabase() {
+      // given
+      mockExistingPath();
+
+      // when
+      XmlRepositoryDAO dao = new XmlRepositoryDAO(locationResolver, fileSystem);
+
+      // then
+      assertThat(dao.contains(new NamespaceAndName("space", "existing"))).isTrue();
+    }
+
+    @Test
+    void shouldRefreshWithExistingRepositoriesFromPathDatabase() {
+      // given
+      doNothing().when(locationResolver).forAllPaths(any());
+      XmlRepositoryDAO dao = new XmlRepositoryDAO(locationResolver, fileSystem);
+
+      mockExistingPath();
+
+      // when
+      dao.refresh();
+
+      // then
+      verify(locationResolver).refresh();
+      assertThat(dao.contains(new NamespaceAndName("space", "existing"))).isTrue();
+    }
+
+    private void mockExistingPath() {
+      doAnswer(
+        invocation -> {
+          ((BiConsumer<String, Path>) invocation.getArgument(0)).accept("existing", repositoryPath);
+          return null;
+        }
+      ).when(locationResolver).forAllPaths(any());
+    }
+  }
+
+  private Repository createRepository(String id) {
     return new Repository(id, "xml", "space", id);
   }
 }

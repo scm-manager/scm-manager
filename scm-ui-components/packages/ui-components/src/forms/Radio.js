@@ -22,19 +22,18 @@ class Radio extends React.Component<Props> {
 
   render() {
     return (
-
-          <label className="radio" disabled={this.props.disabled}>
-            <input
-              type="radio"
-              name={this.props.name}
-              value={this.props.value}
-              checked={this.props.checked}
-              onChange={this.props.onChange}
-              disabled={this.props.disabled}
-            />{" "}
-            {this.props.label}
-            {this.renderHelp()}
-          </label>
+      <label className="radio" disabled={this.props.disabled}>
+        <input
+          type="radio"
+          name={this.props.name}
+          value={this.props.value}
+          checked={this.props.checked}
+          onChange={this.props.onChange}
+          disabled={this.props.disabled}
+        />{" "}
+        {this.props.label}
+        {this.renderHelp()}
+      </label>
     );
   }
 }

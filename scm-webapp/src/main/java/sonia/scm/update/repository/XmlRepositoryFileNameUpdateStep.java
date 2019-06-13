@@ -6,6 +6,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver;
+import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.store.StoreConstants;
 import sonia.scm.version.Version;
 
@@ -27,10 +28,12 @@ public class XmlRepositoryFileNameUpdateStep implements UpdateStep {
   private static final Logger LOG = LoggerFactory.getLogger(XmlRepositoryFileNameUpdateStep.class);
 
   private final SCMContextProvider contextProvider;
+  private final XmlRepositoryDAO repositoryDAO;
 
   @Inject
-  public XmlRepositoryFileNameUpdateStep(SCMContextProvider contextProvider) {
+  public XmlRepositoryFileNameUpdateStep(SCMContextProvider contextProvider, XmlRepositoryDAO repositoryDAO) {
     this.contextProvider = contextProvider;
+    this.repositoryDAO = repositoryDAO;
   }
 
   @Override
@@ -41,6 +44,7 @@ public class XmlRepositoryFileNameUpdateStep implements UpdateStep {
     if (Files.exists(oldRepositoriesFile)) {
       LOG.info("moving old repositories database files to repository-paths file");
       Files.move(oldRepositoriesFile, newRepositoryPathsFile);
+      repositoryDAO.refresh();
     }
   }
 

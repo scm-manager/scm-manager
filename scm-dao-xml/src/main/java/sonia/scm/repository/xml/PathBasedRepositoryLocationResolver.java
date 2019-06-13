@@ -1,14 +1,14 @@
 package sonia.scm.repository.xml;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.io.FileSystem;
 import sonia.scm.repository.BasicRepositoryLocationResolver;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.store.StoreConstants;
 
 import javax.inject.Inject;
-import java.io.IOException;
-import java.nio.file.Files;
+import javax.inject.Singleton;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.util.Map;
@@ -28,12 +28,14 @@ import static sonia.scm.ContextEntry.ContextBuilder.entity;
  *
  * @since 2.0.0
  */
+@Singleton
 public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocationResolver<Path> {
 
   public static final String STORE_NAME = "repository-paths";
 
   private final SCMContextProvider contextProvider;
   private final InitialRepositoryLocationResolver initialRepositoryLocationResolver;
+  private final FileSystem fileSystem;
 
   private final PathDatabase pathDatabase;
   private final Map<String, Path> pathById;
@@ -44,14 +46,15 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
   private Long lastModified;
 
   @Inject
-  public PathBasedRepositoryLocationResolver(SCMContextProvider contextProvider, InitialRepositoryLocationResolver initialRepositoryLocationResolver) {
-    this(contextProvider, initialRepositoryLocationResolver, Clock.systemUTC());
+  public PathBasedRepositoryLocationResolver(SCMContextProvider contextProvider, InitialRepositoryLocationResolver initialRepositoryLocationResolver, FileSystem fileSystem) {
+    this(contextProvider, initialRepositoryLocationResolver, fileSystem, Clock.systemUTC());
   }
 
-  public PathBasedRepositoryLocationResolver(SCMContextProvider contextProvider, InitialRepositoryLocationResolver initialRepositoryLocationResolver, Clock clock) {
+  PathBasedRepositoryLocationResolver(SCMContextProvider contextProvider, InitialRepositoryLocationResolver initialRepositoryLocationResolver, FileSystem fileSystem, Clock clock) {
     super(Path.class);
     this.contextProvider = contextProvider;
     this.initialRepositoryLocationResolver = initialRepositoryLocationResolver;
+    this.fileSystem = fileSystem;
     this.pathById = new ConcurrentHashMap<>();
 
     this.clock = clock;
@@ -64,23 +67,43 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
 
   @Override
   protected <T> RepositoryLocationResolverInstance<T> create(Class<T> type) {
-    return repositoryId -> {
-      if (pathById.containsKey(repositoryId)) {
-        return (T) contextProvider.resolve(pathById.get(repositoryId));
-      } else {
-        return (T) create(repositoryId);
+    return new RepositoryLocationResolverInstance<T>() {
+      @Override
+      public T getLocation(String repositoryId) {
+        if (pathById.containsKey(repositoryId)) {
+          return (T) contextProvider.resolve(pathById.get(repositoryId));
+        } else {
+          throw new IllegalStateException("location for repository " + repositoryId + " does not exist");
+        }
+      }
+
+      @Override
+      public T createLocation(String repositoryId) {
+        if (pathById.containsKey(repositoryId)) {
+          throw new IllegalStateException("location for repository " + repositoryId + " already exists");
+        } else {
+          return (T) create(repositoryId);
+        }
+      }
+
+      @Override
+      public void setLocation(String repositoryId, T location) {
+        if (pathById.containsKey(repositoryId)) {
+          throw new IllegalStateException("location for repository " + repositoryId + " already exists");
+        } else {
+          PathBasedRepositoryLocationResolver.this.setLocation(repositoryId, ((Path) location).toAbsolutePath());
+        }
       }
     };
   }
 
   Path create(String repositoryId) {
     Path path = initialRepositoryLocationResolver.getPath(repositoryId);
-    pathById.put(repositoryId, path);
-    writePathDatabase();
+    setLocation(repositoryId, path);
     Path resolvedPath = contextProvider.resolve(path);
     try {
-      Files.createDirectories(resolvedPath);
-    } catch (IOException e) {
+      fileSystem.create(resolvedPath.toFile());
+    } catch (Exception e) {
       throw new InternalRepositoryException(entity("Repository", repositoryId), "could not create directory for new repository", e);
     }
     return resolvedPath;
@@ -137,5 +160,14 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
       .toPath()
       .resolve(StoreConstants.CONFIG_DIRECTORY_NAME)
       .resolve(STORE_NAME.concat(StoreConstants.FILE_EXTENSION));
+  }
+
+  private void setLocation(String repositoryId, Path repositoryBasePath) {
+    pathById.put(repositoryId, repositoryBasePath);
+    writePathDatabase();
+  }
+
+  public void refresh() {
+    this.read();
   }
 }

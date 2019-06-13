@@ -58,6 +58,8 @@ import sonia.scm.util.IOUtil;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -73,11 +75,11 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
    * the logger for ScmContextListener
    */
   private static final Logger LOG = LoggerFactory.getLogger(ScmContextListener.class);
-  
+
   private final ClassLoader parent;
   private final Set<PluginWrapper> plugins;
   private Injector injector;
-  
+
   public interface Factory {
     ScmContextListener create(ClassLoader parent, Set<PluginWrapper> plugins);
   }
@@ -99,23 +101,16 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
     super.contextInitialized(servletContextEvent);
     afterInjectorCreation(servletContextEvent);
   }
-  
+
   private void beforeInjectorCreation() {
   }
 
   private boolean hasStartupErrors() {
     return SCMContext.getContext().getStartupError() != null;
   }
-  
+
   @Override
   protected List<? extends Module> getModules(ServletContext context) {
-    if (hasStartupErrors()) {
-      return getErrorModules();
-    }
-    return getDefaultModules(context);
-  }
-  
-  private List<? extends Module> getDefaultModules(ServletContext context) {
     DefaultPluginLoader pluginLoader = new DefaultPluginLoader(context, parent, plugins);
 
     ClassOverrides overrides = ClassOverrides.findOverrides(pluginLoader.getUberClassLoader());
@@ -130,15 +125,15 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
     );
     appendModules(pluginLoader.getExtensionProcessor(), moduleList);
     moduleList.addAll(overrides.getModules());
-    
+
     if (SCMContext.getContext().getStage() == Stage.DEVELOPMENT){
       moduleList.add(new DebugModule());
     }
     moduleList.add(new MapperModule());
 
-    return moduleList;    
+    return moduleList;
   }
-  
+
   private void appendModules(ExtensionProcessor ep, List<Module> moduleList) {
     for (Class<? extends Module> module : ep.byExtensionPoint(Module.class)) {
       try {
@@ -149,31 +144,27 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
       }
     }
   }
-  
-  private List<? extends Module> getErrorModules() {
-    return Collections.singletonList(new ScmErrorModule());
-  }
 
   @Override
   protected void withInjector(Injector injector) {
     this.injector = injector;
   }
-  
+
   private void afterInjectorCreation(ServletContextEvent event) {
     if (injector != null && !hasStartupErrors()) {
       bindEagerSingletons();
       initializeServletContextListeners(event);
-    } 
+    }
   }
-  
+
   private void bindEagerSingletons() {
     injector.getInstance(EagerSingletonModule.class).initialize(injector);
   }
-  
+
   private void initializeServletContextListeners(ServletContextEvent event) {
     injector.getInstance(ServletContextListenerHolder.class).contextInitialized(event);
   }
-  
+
   @Override
   public void contextDestroyed(ServletContextEvent servletContextEvent)
   {
@@ -183,8 +174,20 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
     }
 
     super.contextDestroyed(servletContextEvent);
+
+    for (PluginWrapper plugin : getPlugins()) {
+      ClassLoader pcl = plugin.getClassLoader();
+
+      if (pcl instanceof Closeable) {
+        try {
+          ((Closeable) pcl).close();
+        } catch (IOException ex) {
+          LOG.warn("could not close plugin classloader", ex);
+        }
+      }
+    }
   }
-  
+
   private void closeCloseables() {
     // close Scheduler
     IOUtil.close(injector.getInstance(Scheduler.class));
@@ -205,6 +208,4 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
   private void destroyServletContextListeners(ServletContextEvent event) {
     injector.getInstance(ServletContextListenerHolder.class).contextDestroyed(event);
   }
-
-
 }
