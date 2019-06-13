@@ -37,8 +37,6 @@ import com.github.legman.Subscribe;
 import com.google.inject.servlet.GuiceFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.SCMContext;
-import sonia.scm.Stage;
 import sonia.scm.event.ScmEventBus;
 
 import javax.servlet.FilterConfig;
@@ -99,11 +97,8 @@ public class BootstrapContextFilter extends GuiceFilter
 
     initGuice();
 
-    if (SCMContext.getContext().getStage() == Stage.DEVELOPMENT)
-    {
-      logger.info("register for restart events");
-      ScmEventBus.getInstance().register(this);
-    }
+    logger.info("register for restart events");
+    ScmEventBus.getInstance().register(this);
   }
 
   public void initGuice() throws ServletException {
