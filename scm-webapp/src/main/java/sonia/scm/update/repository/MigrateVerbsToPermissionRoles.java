@@ -36,13 +36,15 @@ public class MigrateVerbsToPermissionRoles implements UpdateStep {
 
   private final SingleRepositoryUpdateProcessor updateProcessor;
   private final SystemRepositoryPermissionProvider systemRepositoryPermissionProvider;
-  private final JAXBContext jaxbContext;
+  private final JAXBContext jaxbContextNewRepository;
+  private final JAXBContext jaxbContextOldRepository;
 
   @Inject
   public MigrateVerbsToPermissionRoles(SingleRepositoryUpdateProcessor updateProcessor, SystemRepositoryPermissionProvider systemRepositoryPermissionProvider) {
     this.updateProcessor = updateProcessor;
     this.systemRepositoryPermissionProvider = systemRepositoryPermissionProvider;
-    jaxbContext = createJAXBContext();
+    jaxbContextNewRepository = createJAXBContext(Repository.class);
+    jaxbContextOldRepository = createJAXBContext(OldRepository.class);
   }
 
   @Override
@@ -59,7 +61,7 @@ public class MigrateVerbsToPermissionRoles implements UpdateStep {
 
   private void writeNewRepository(Path path, Repository newRepository) {
     try {
-      Marshaller marshaller = jaxbContext.createMarshaller();
+      Marshaller marshaller = jaxbContextNewRepository.createMarshaller();
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
       marshaller.marshal(newRepository, path.resolve("metadata.xml").toFile());
     } catch (JAXBException e) {
@@ -69,7 +71,7 @@ public class MigrateVerbsToPermissionRoles implements UpdateStep {
 
   private OldRepository readOldRepository(Path path) {
     try {
-      return (OldRepository) jaxbContext.createUnmarshaller().unmarshal(path.resolve("metadata.xml").toFile());
+      return (OldRepository) jaxbContextOldRepository.createUnmarshaller().unmarshal(path.resolve("metadata.xml").toFile());
     } catch (JAXBException e) {
       throw new UpdateException("could not read old repository structure", e);
     }
@@ -115,9 +117,9 @@ public class MigrateVerbsToPermissionRoles implements UpdateStep {
     return verbs.size() == r.getVerbs().size() && r.getVerbs().containsAll(verbs);
   }
 
-  private JAXBContext createJAXBContext() {
+  private JAXBContext createJAXBContext(Class<?> clazz) {
     try {
-      return JAXBContext.newInstance(Repository.class);
+      return JAXBContext.newInstance(clazz);
     } catch (JAXBException e) {
       throw new UpdateException("could not create XML marshaller", e);
     }
