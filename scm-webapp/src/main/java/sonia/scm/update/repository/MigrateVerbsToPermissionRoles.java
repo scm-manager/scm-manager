@@ -30,17 +30,19 @@ import java.util.Optional;
 import java.util.Set;
 
 @Extension
-public class MigrateVerbsToPermissionRoles extends RepositoryUpdates.RepositoryUpdateType implements UpdateStep {
+public class MigrateVerbsToPermissionRoles implements UpdateStep {
 
   public static final Logger LOG = LoggerFactory.getLogger(MigrateVerbsToPermissionRoles.class);
 
   private final SingleRepositoryUpdateProcessor updateProcessor;
   private final SystemRepositoryPermissionProvider systemRepositoryPermissionProvider;
+  private final JAXBContext jaxbContext;
 
   @Inject
   public MigrateVerbsToPermissionRoles(SingleRepositoryUpdateProcessor updateProcessor, SystemRepositoryPermissionProvider systemRepositoryPermissionProvider) {
     this.updateProcessor = updateProcessor;
     this.systemRepositoryPermissionProvider = systemRepositoryPermissionProvider;
+    jaxbContext = createJAXBContext();
   }
 
   @Override
@@ -57,7 +59,6 @@ public class MigrateVerbsToPermissionRoles extends RepositoryUpdates.RepositoryU
 
   private void writeNewRepository(Path path, Repository newRepository) {
     try {
-      JAXBContext jaxbContext = JAXBContext.newInstance(Repository.class);
       Marshaller marshaller = jaxbContext.createMarshaller();
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
       marshaller.marshal(newRepository, path.resolve("metadata.xml").toFile());
@@ -68,7 +69,6 @@ public class MigrateVerbsToPermissionRoles extends RepositoryUpdates.RepositoryU
 
   private OldRepository readOldRepository(Path path) {
     try {
-      JAXBContext jaxbContext = JAXBContext.newInstance(OldRepository.class);
       return (OldRepository) jaxbContext.createUnmarshaller().unmarshal(path.resolve("metadata.xml").toFile());
     } catch (JAXBException e) {
       throw new UpdateException("could not read old repository structure", e);
@@ -115,9 +115,22 @@ public class MigrateVerbsToPermissionRoles extends RepositoryUpdates.RepositoryU
     return verbs.size() == r.getVerbs().size() && r.getVerbs().containsAll(verbs);
   }
 
+  private JAXBContext createJAXBContext() {
+    try {
+      return JAXBContext.newInstance(Repository.class);
+    } catch (JAXBException e) {
+      throw new UpdateException("could not create XML marshaller", e);
+    }
+  }
+
   @Override
   public Version getTargetVersion() {
-    return Version.parse("2.0.0");
+    return Version.parse("2.0.2");
+  }
+
+  @Override
+  public String getAffectedDataType() {
+    return "sonia.scm.repository.xml";
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)

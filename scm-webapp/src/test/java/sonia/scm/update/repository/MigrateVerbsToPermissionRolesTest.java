@@ -52,7 +52,7 @@ class MigrateVerbsToPermissionRolesTest {
   }
 
   @Test
-  void x(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldUpdateToRolesIfPossible(@TempDirectory.TempDir Path tempDir) throws IOException {
     migration.doUpdate();
 
     List<String> newMetadata = Files.readAllLines(tempDir.resolve("metadata.xml"));
