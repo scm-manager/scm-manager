@@ -9,7 +9,6 @@ import {
   InputField,
   SubmitButton,
   Textarea,
-  Icon,
   Checkbox
 } from "@scm-manager/ui-components";
 import type { Group, SelectValue } from "@scm-manager/ui-types";
@@ -114,16 +113,9 @@ class GroupForm extends React.Component<Props, State> {
     if (this.isExistingGroup()) {
       return null;
     }
-
-    const label = group && group.external ? (
-      <>{t("group.external")} <Icon title={t("group.external")} name="sign-out-alt fa-rotate-270" /></>
-    ) : (
-      <>{t("group.internal")} <Icon title={t("group.internal")} name="sign-in-alt fa-rotate-90" /></>
-    );
-
     return (
       <Checkbox
-        label={label}
+        label={t("group.external")}
         checked={group.external}
         helpText={t("groupForm.help.externalHelpText")}
         onChange={this.handleExternalChange}
@@ -131,7 +123,7 @@ class GroupForm extends React.Component<Props, State> {
     );
   };
 
-  isExistingGroup = () => !! this.props.group;
+  isExistingGroup = () => !!this.props.group;
 
   render() {
     const { loading, t } = this.props;
