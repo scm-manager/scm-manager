@@ -25,7 +25,7 @@ import java.util.Set;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.stream.Collectors.toList;
 
-class SystemRepositoryPermissionProvider {
+public class SystemRepositoryPermissionProvider {
 
   private static final Logger logger = LoggerFactory.getLogger(SystemRepositoryPermissionProvider.class);
   private static final String REPOSITORY_PERMISSION_DESCRIPTOR = "META-INF/scm/repository-permissions.xml";
