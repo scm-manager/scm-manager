@@ -29,37 +29,37 @@ class VersionsTest {
   @Test
   void shouldReturnTrueForVersionsPreviousTo160(@TempDirectory.TempDir Path directory) throws IOException {
     setVersion(directory, "1.59");
-    assertThat(versions.isPreviousVersionToOld()).isTrue();
+    assertThat(versions.isPreviousVersionTooOld()).isTrue();
 
     setVersion(directory, "1.12");
-    assertThat(versions.isPreviousVersionToOld()).isTrue();
+    assertThat(versions.isPreviousVersionTooOld()).isTrue();
   }
 
   @Test
   void shouldReturnFalseForVersion160(@TempDirectory.TempDir Path directory) throws IOException {
     setVersion(directory, "1.60");
-    assertThat(versions.isPreviousVersionToOld()).isFalse();
+    assertThat(versions.isPreviousVersionTooOld()).isFalse();
   }
 
   @Test
   void shouldNotFailIfVersionContainsLineBreak(@TempDirectory.TempDir Path directory) throws IOException {
     setVersion(directory, "1.59\n");
-    assertThat(versions.isPreviousVersionToOld()).isTrue();
+    assertThat(versions.isPreviousVersionTooOld()).isTrue();
   }
 
   @Test
   void shouldReturnFalseForVersionsNewerAs160(@TempDirectory.TempDir Path directory) throws IOException {
     setVersion(directory, "1.61");
-    assertThat(versions.isPreviousVersionToOld()).isFalse();
+    assertThat(versions.isPreviousVersionTooOld()).isFalse();
 
     setVersion(directory, "1.82");
-    assertThat(versions.isPreviousVersionToOld()).isFalse();
+    assertThat(versions.isPreviousVersionTooOld()).isFalse();
   }
 
   @Test
   void shouldReturnFalseForNonExistingVersionFile(@TempDirectory.TempDir Path directory) {
     setVersionFile(directory.resolve("version.txt"));
-    assertThat(versions.isPreviousVersionToOld()).isFalse();
+    assertThat(versions.isPreviousVersionTooOld()).isFalse();
   }
 
   @Test

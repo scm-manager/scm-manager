@@ -142,8 +142,8 @@ public class BootstrapContextListener implements ServletContextListener {
     Throwable startupError = SCMContext.getContext().getStartupError();
     if (startupError != null) {
       contextListener = SingleView.error(startupError);
-    } else if (Versions.isToOld()) {
-      contextListener = SingleView.view("/templates/to-old.mustache", HttpServletResponse.SC_CONFLICT);
+    } else if (Versions.isTooOld()) {
+      contextListener = SingleView.view("/templates/too-old.mustache", HttpServletResponse.SC_CONFLICT);
     } else {
       createMigrationOrNormalContextListener();
       Versions.writeNew();

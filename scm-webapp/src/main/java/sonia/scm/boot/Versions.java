@@ -29,7 +29,7 @@ class Versions {
   }
 
   @VisibleForTesting
-  boolean isPreviousVersionToOld() {
+  boolean isPreviousVersionTooOld() {
     return readVersion().map(v -> v.isOlder(MIN_VERSION)).orElse(false);
   }
 
@@ -66,8 +66,8 @@ class Versions {
     }
   }
 
-  static boolean isToOld() {
-    return new Versions(SCMContext.getContext()).isPreviousVersionToOld();
+  static boolean isTooOld() {
+    return new Versions(SCMContext.getContext()).isPreviousVersionTooOld();
   }
 
   static void writeNew() {
