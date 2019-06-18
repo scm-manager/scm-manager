@@ -74,7 +74,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
     if (group) {
       return (
         <GroupAutocomplete
-          groupAutocompleteLink={this.props.groupAutocompleteLink}
+          autocompleteLink={this.props.groupAutocompleteLink}
           valueSelected={this.selectName}
           value={this.state.value ? this.state.value : ""}
         />
@@ -82,7 +82,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
     }
     return (
       <UserAutocomplete
-        userAutocompleteLink={this.props.userAutocompleteLink}
+        autocompleteLink={this.props.userAutocompleteLink}
         valueSelected={this.selectName}
         value={this.state.value ? this.state.value : ""}
       />
