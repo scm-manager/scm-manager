@@ -1,0 +1,43 @@
+{
+  "admin": {
+    "menu": {
+      "navigationLabel": "Administrations Navigation",
+      "informationNavLink": "Informationen",
+      "settingsNavLink": "Einstellungen",
+      "generalNavLink": "Generell"
+    }
+  },
+  "repositoryRole": {
+    "navLink": "Berechtigungsrollen",
+    "title": "Berechtigungsrollen",
+    "errorTitle": "Fehler",
+    "errorSubtitle": "Unbekannter Berechtigungsrollen Fehler",
+    "createSubtitle": "Berechtigungsrolle erstellen",
+    "editSubtitle": "Berechtigungsrolle bearbeiten",
+    "overview": {
+      "title": "Übersicht aller verfügbaren Berechtigungsrollen",
+      "noPermissionRoles": "Keine Berechtigungsrollen gefunden.",
+      "createButton": "Berechtigungsrolle erstellen"
+    },
+    "editButton": "Bearbeiten",
+    "name": "Name",
+    "type": "Typ",
+    "verbs": "Berechtigungen",
+    "system": "System",
+    "form": {
+      "name": "Name",
+      "permissions": "Berechtigungen",
+      "submit": "Speichern"
+    },
+    "delete": {
+      "button": "Delete",
+      "subtitle": "Delete Permission Role",
+      "confirmAlert": {
+        "title": "Delete Permission Role",
+        "message": "Do you really want to delete this permission role? All users who own this role will lose their permissions.",
+        "submit": "Yes",
+        "cancel": "No"
+      }
+    }
+  }
+}

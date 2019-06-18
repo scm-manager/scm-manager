@@ -37,7 +37,7 @@
     "users": "Benutzer",
     "logout": "Abmelden",
     "groups": "Gruppen",
-    "config": "Einstellungen"
+    "admin": "Administration"
   },
   "filterEntries": "Einträge filtern",
   "paginator": {
