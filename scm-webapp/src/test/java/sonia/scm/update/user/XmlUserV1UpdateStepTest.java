@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.security.AssignedPermission;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.store.ConfigurationEntryStore;
+import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.update.UpdateStepTestUtil;
 import sonia.scm.user.User;
@@ -46,7 +47,7 @@ class XmlUserV1UpdateStepTest {
   @BeforeEach
   void mockScmHome(@TempDirectory.TempDir Path tempDir) {
     testUtil = new UpdateStepTestUtil(tempDir);
-    JAXBConfigurationEntryStoreFactory storeFactory = new JAXBConfigurationEntryStoreFactory(testUtil.getContextProvider(), null, new DefaultKeyGenerator());
+    ConfigurationEntryStoreFactory storeFactory = new JAXBConfigurationEntryStoreFactory(testUtil.getContextProvider(), null, new DefaultKeyGenerator());
     updateStep = new XmlUserV1UpdateStep(testUtil.getContextProvider(), userDAO, storeFactory);
   }
 

@@ -16,7 +16,7 @@ import static sonia.scm.version.Version.parse;
 
 class UpdateEngineTest {
 
-  ConfigurationEntryStoreFactory storeFactory = new InMemoryConfigurationEntryStoreFactory(new InMemoryConfigurationEntryStore());
+  ConfigurationEntryStoreFactory storeFactory = new InMemoryConfigurationEntryStoreFactory();
 
   List<String> processedUpdates = new ArrayList<>();
 

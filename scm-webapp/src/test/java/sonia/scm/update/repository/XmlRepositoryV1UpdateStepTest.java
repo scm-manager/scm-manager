@@ -51,7 +51,7 @@ class XmlRepositoryV1UpdateStepTest {
   @Mock
   MigrationStrategyDao migrationStrategyDao;
 
-  ConfigurationEntryStoreFactory configurationEntryStoreFactory = new InMemoryConfigurationEntryStoreFactory(new InMemoryConfigurationEntryStore());
+  InMemoryConfigurationEntryStoreFactory configurationEntryStoreFactory = new InMemoryConfigurationEntryStoreFactory();
 
   @Captor
   ArgumentCaptor<Repository> storeCaptor;
@@ -137,7 +137,7 @@ class XmlRepositoryV1UpdateStepTest {
     void shouldExtractPropertiesFromRepositories() throws JAXBException {
       updateStep.doUpdate();
 
-      ConfigurationEntryStore<Object> store = configurationEntryStoreFactory.withType(null).withName("").build();
+      ConfigurationEntryStore store = configurationEntryStoreFactory.get("repository-properties-v1");
       assertThat(store.getAll())
         .hasSize(3);
     }
