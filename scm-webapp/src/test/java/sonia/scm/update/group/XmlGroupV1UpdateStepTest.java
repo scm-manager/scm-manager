@@ -11,9 +11,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.group.Group;
 import sonia.scm.group.xml.XmlGroupDAO;
-import sonia.scm.security.DefaultKeyGenerator;
-import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
+import sonia.scm.store.ConfigurationEntryStore;
+import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
 import sonia.scm.update.UpdateStepTestUtil;
+import sonia.scm.update.properties.V1Properties;
+import sonia.scm.update.properties.V1Property;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -22,11 +24,11 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.linesOf;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static sonia.scm.store.InMemoryConfigurationEntryStoreFactory.create;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(TempDirectory.class)
@@ -38,6 +40,8 @@ class XmlGroupV1UpdateStepTest {
   @Captor
   ArgumentCaptor<Group> groupCaptor;
 
+  InMemoryConfigurationEntryStoreFactory storeFactory = create();
+
   XmlGroupV1UpdateStep updateStep;
 
   private UpdateStepTestUtil testUtil;
@@ -46,7 +50,6 @@ class XmlGroupV1UpdateStepTest {
   @BeforeEach
   void mockScmHome(@TempDirectory.TempDir Path tempDir) {
     testUtil = new UpdateStepTestUtil(tempDir);
-    JAXBConfigurationEntryStoreFactory storeFactory = new JAXBConfigurationEntryStoreFactory(testUtil.getContextProvider(), null, new DefaultKeyGenerator());
     updateStep = new XmlGroupV1UpdateStep(testUtil.getContextProvider(), groupDAO, storeFactory);
   }
 
@@ -86,19 +89,13 @@ class XmlGroupV1UpdateStepTest {
     @Test
     void shouldExtractProperties() throws JAXBException {
       updateStep.doUpdate();
-      Path propertiesFile = testUtil.getFile("group-properties-v1.xml");
-      assertThat(propertiesFile)
-        .exists();
-      assertThat(linesOf(propertiesFile.toFile()))
-        .extracting(String::trim)
-        .containsSequence(
-          "<key>normals</key>",
-          "<value>",
-          "<item>",
-          "<key>mostly</key>",
-          "<value>humans</value>",
-          "</item>",
-          "</value>");
+      ConfigurationEntryStore<V1Properties> propertiesStore = storeFactory.<V1Properties>get("group-properties-v1");
+      assertThat(propertiesStore.get("normals"))
+        .isNotNull()
+        .extracting(V1Properties::getProperties)
+        .first()
+        .asList()
+        .contains(new V1Property("mostly", "humans"));
     }
   }
 

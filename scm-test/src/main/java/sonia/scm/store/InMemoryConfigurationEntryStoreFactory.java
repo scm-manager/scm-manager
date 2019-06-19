@@ -17,7 +17,7 @@ public class InMemoryConfigurationEntryStoreFactory implements ConfigurationEntr
     return get(name);
   }
 
-  public InMemoryConfigurationEntryStore get(String name) {
+  public <T> InMemoryConfigurationEntryStore<T> get(String name) {
     return stores.computeIfAbsent(name, x -> new InMemoryConfigurationEntryStore());
   }
 }

@@ -42,10 +42,6 @@ public class UpdateStepTestUtil {
     copyTestDatabaseFile(configDir, fileName, targetFileName);
   }
 
-  public Path getFile(String name) {
-    return tempDir.resolve("config").resolve(name);
-  }
-
   private void copyTestDatabaseFile(Path configDir, String fileName) throws IOException {
     Path targetFileName = Paths.get(fileName).getFileName();
     copyTestDatabaseFile(configDir, fileName, targetFileName.toString());
