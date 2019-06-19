@@ -40,6 +40,8 @@ import com.github.legman.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -47,8 +49,11 @@ import org.slf4j.LoggerFactory;
 public class LegmanScmEventBus extends ScmEventBus
 {
 
+  private static final AtomicLong INSTANCE_COUNTER = new AtomicLong();
+
+
   /** Field description */
-  private static final String NAME = "ScmEventBus";
+  private static final String NAME = "ScmEventBus-%s";
 
   /**
    * the logger for LegmanScmEventBus
@@ -67,8 +72,9 @@ public class LegmanScmEventBus extends ScmEventBus
   }
 
   private EventBus create() {
-    logger.info("create new event bus {}", NAME);
-    return new EventBus(NAME);
+    String name = String.format(NAME, INSTANCE_COUNTER.incrementAndGet());
+    logger.info("create new event bus {}", name);
+    return new EventBus(name);
   }
 
   //~--- methods --------------------------------------------------------------
