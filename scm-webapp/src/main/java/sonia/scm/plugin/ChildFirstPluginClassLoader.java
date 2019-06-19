@@ -48,16 +48,7 @@ public class ChildFirstPluginClassLoader extends ChildFirstURLClassLoader
   implements PluginClassLoader
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param urls
-   */
-  public ChildFirstPluginClassLoader(URL[] urls)
-  {
-    super(urls);
-  }
+  private final String plugin;
 
   /**
    * Constructs ...
@@ -66,8 +57,14 @@ public class ChildFirstPluginClassLoader extends ChildFirstURLClassLoader
    * @param urls
    * @param parent
    */
-  public ChildFirstPluginClassLoader(URL[] urls, ClassLoader parent)
+  public ChildFirstPluginClassLoader(URL[] urls, ClassLoader parent, String plugin)
   {
     super(urls, parent);
+    this.plugin = plugin;
+  }
+
+  @Override
+  public String toString() {
+    return ChildFirstPluginClassLoader.class.getName() + " for plugin " + plugin;
   }
 }
