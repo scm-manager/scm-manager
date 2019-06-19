@@ -1,17 +1,15 @@
 {
   "config": {
     "navigationLabel": "Administration Navigation",
-    "globalConfigurationNavLink": "Global Configuration",
-    "title": "Administration",
+    "title": "Global Configuration",
     "errorTitle": "Error",
-    "errorSubtitle": "Unknown Config Error"
-  },
-
-  "config-form": {
-    "submit": "Submit",
-    "submit-success-notification": "Configuration changed successfully!",
-    "no-read-permission-notification": "Please note: You do not have the permission to see the config!",
-    "no-write-permission-notification": "Please note: You do not have the permission to edit the config!"
+    "errorSubtitle": "Unknown Config Error",
+    "form": {
+      "submit": "Submit",
+      "submit-success-notification": "Configuration changed successfully!",
+      "no-read-permission-notification": "Please note: You do not have the permission to see the config!",
+      "no-write-permission-notification": "Please note: You do not have the permission to edit the config!"
+    }
   },
   "proxy-settings": {
     "name": "Proxy Settings",

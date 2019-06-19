@@ -1,17 +1,15 @@
 {
   "config": {
     "navigationLabel": "Administrations Navigation",
-    "globalConfigurationNavLink": "Globale Einstellungen",
-    "title": "Administration",
+    "title": "Globale Einstellungen",
     "errorTitle": "Fehler",
-    "errorSubtitle": "Unbekannter Einstellungen Fehler"
-  },
-
-  "config-form": {
-    "submit": "Speichern",
-    "submit-success-notification": "Einstellungen wurden erfolgreich geändert!",
-    "no-read-permission-notification": "Hinweis: Es fehlen Berechtigungen zum Lesen der Einstellungen!",
-    "no-write-permission-notification": "Hinweis: Es fehlen Berechtigungen zum Bearbeiten der Einstellungen!"
+    "errorSubtitle": "Unbekannter Einstellungen Fehler",
+    "form": {
+      "submit": "Speichern",
+      "submit-success-notification": "Einstellungen wurden erfolgreich geändert!",
+      "no-read-permission-notification": "Hinweis: Es fehlen Berechtigungen zum Lesen der Einstellungen!",
+      "no-write-permission-notification": "Hinweis: Es fehlen Berechtigungen zum Bearbeiten der Einstellungen!"
+    }
   },
   "proxy-settings": {
     "name": "Proxy Einstellungen",

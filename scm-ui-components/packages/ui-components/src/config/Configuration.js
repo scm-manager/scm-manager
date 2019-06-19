@@ -136,7 +136,7 @@ class Configuration extends React.Component<Props, State> {
             className="delete"
             onClick={() => this.setState({ configChanged: false })}
           />
-          {this.props.t("config-form.submit-success-notification")}
+          {this.props.t("config.form.submit-success-notification")}
         </div>
       );
     }
@@ -167,7 +167,7 @@ class Configuration extends React.Component<Props, State> {
             {this.props.render(renderProps)}
             <hr />
             <SubmitButton
-              label={t("config-form.submit")}
+              label={t("config.form.submit")}
               disabled={!valid || readOnly}
               loading={modifying}
             />
