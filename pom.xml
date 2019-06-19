@@ -826,7 +826,7 @@
     <jaxb.version>2.3.0</jaxb.version>
 
     <!-- event bus -->
-    <legman.version>1.5.0</legman.version>
+    <legman.version>1.5.1</legman.version>
 
     <!-- webserver -->
     <jetty.version>9.4.14.v20181114</jetty.version>
