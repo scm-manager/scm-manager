@@ -37,7 +37,6 @@ import com.github.legman.Subscribe;
 import com.google.inject.servlet.GuiceFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.event.RecreateEventBusEvent;
 import sonia.scm.event.ScmEventBus;
 
 import javax.servlet.FilterConfig;
@@ -50,63 +49,29 @@ import javax.servlet.ServletException;
  *
  * @author Sebastian Sdorra
  */
-public class BootstrapContextFilter extends GuiceFilter
-{
+public class BootstrapContextFilter extends GuiceFilter {
 
   /**
    * the logger for BootstrapContextFilter
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(BootstrapContextFilter.class);
-
-  //~--- methods --------------------------------------------------------------
+  private static final Logger LOG = LoggerFactory.getLogger(BootstrapContextFilter.class);
 
   private final BootstrapContextListener listener = new BootstrapContextListener();
 
-  /**
-   * Restart the whole webapp context.
-   *
-   *
-   * @param event restart event
-   *
-   * @throws ServletException
-   */
-  @Subscribe
-  public void handleRestartEvent(RestartEvent event) throws ServletException
-  {
-    logger.warn("received restart event from {} with reason: {}",
-      event.getCause(), event.getReason());
-
-    if (filterConfig == null)
-    {
-      logger.error("filter config is null, scm-manager is not initialized");
-    }
-    else
-    {
-      logger.warn("destroy filter pipeline, because of a received restart event");
-      destroy();
-
-      logger.warn("send recreate eventbus event");
-      ScmEventBus.getInstance().post(new RecreateEventBusEvent());
-      ScmEventBus.getInstance().register(this);
-
-      logger.warn("reinitialize filter pipeline, because of a received restart event");
-      initGuice();
-    }
-  }
+  /** Field description */
+  private FilterConfig filterConfig;
 
   @Override
-  public void init(FilterConfig filterConfig) throws ServletException
-  {
+  public void init(FilterConfig filterConfig) throws ServletException {
     this.filterConfig = filterConfig;
 
     initGuice();
 
-    logger.info("register for restart events");
+    LOG.info("register for restart events");
     ScmEventBus.getInstance().register(this);
   }
 
-  public void initGuice() throws ServletException {
+  private void initGuice() throws ServletException {
     super.init(filterConfig);
 
     listener.contextInitialized(new ServletContextEvent(filterConfig.getServletContext()));
@@ -119,8 +84,39 @@ public class BootstrapContextFilter extends GuiceFilter
     ServletContextCleaner.cleanup(filterConfig.getServletContext());
   }
 
-  //~--- fields ---------------------------------------------------------------
+  /**
+   * Restart SCM-Manager.
+   *
+   * @param event restart event
+   */
+  @Subscribe
+  public void handleRestartEvent(RestartEvent event) {
+    LOG.warn("received restart event from {} with reason: {}",
+      event.getCause(), event.getReason());
 
-  /** Field description */
-  private FilterConfig filterConfig;
+    if (filterConfig == null) {
+      LOG.error("filter config is null, scm-manager is not initialized");
+    } else {
+      RestartStrategy restartStrategy = RestartStrategy.get();
+      restartStrategy.restart(new GuiceInjectionContext());
+    }
+  }
+
+  private class GuiceInjectionContext implements RestartStrategy.InjectionContext {
+
+    @Override
+    public void initialize() {
+      try {
+        BootstrapContextFilter.this.initGuice();
+      } catch (ServletException e) {
+        throw new IllegalStateException("failed to initialize guice", e);
+      }
+    }
+
+    @Override
+    public void destroy() {
+      BootstrapContextFilter.this.destroy();
+    }
+  }
+
 }
