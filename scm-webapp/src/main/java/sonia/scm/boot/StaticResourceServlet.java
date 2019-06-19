@@ -2,7 +2,8 @@ package sonia.scm.boot;
 
 import com.github.sdorra.webresources.CacheControl;
 import com.github.sdorra.webresources.WebResourceSender;
-import com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.util.HttpUtil;
 
 import javax.inject.Singleton;
@@ -16,6 +17,8 @@ import java.net.URL;
 @Singleton
 public class StaticResourceServlet extends HttpServlet {
 
+  private static final Logger LOG = LoggerFactory.getLogger(StaticResourceServlet.class);
+
   private final WebResourceSender sender = WebResourceSender.create()
     .withGZIP()
     .withGZIPMinLength(512)
@@ -23,12 +26,17 @@ public class StaticResourceServlet extends HttpServlet {
     .withCacheControl(CacheControl.create().noCache());
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    URL resource = createResourceUrlFromRequest(request);
-    if (resource != null) {
-      sender.resource(resource).get(request, response);
-    } else {
-      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+    try {
+      URL resource = createResourceUrlFromRequest(request);
+      if (resource != null) {
+        sender.resource(resource).get(request, response);
+      } else {
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+      }
+    } catch (IOException ex) {
+      LOG.warn("failed to servce resource", ex);
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }
 

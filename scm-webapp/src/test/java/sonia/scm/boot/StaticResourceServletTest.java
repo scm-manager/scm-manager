@@ -47,7 +47,7 @@ class StaticResourceServletTest {
   }
 
   @Test
-  void shouldReturnNotFound() throws IOException {
+  void shouldReturnNotFound() {
     doReturn("/scm").when(request).getContextPath();
     doReturn("/scm/resource.txt").when(request).getRequestURI();
     doReturn(context).when(request).getServletContext();
