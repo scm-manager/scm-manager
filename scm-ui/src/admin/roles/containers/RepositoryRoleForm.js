@@ -169,4 +169,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("config")(RepositoryRoleForm));
+)(translate("admin")(RepositoryRoleForm));

@@ -1,5 +1,4 @@
 // @flow
-
 import * as types from "../../modules/types";
 import type { Action, NamespaceStrategies } from "@scm-manager/ui-types";
 import { apiClient } from "@scm-manager/ui-components";

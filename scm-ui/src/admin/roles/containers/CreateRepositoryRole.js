@@ -85,4 +85,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("config")(CreateRepositoryRole));
+)(translate("admin")(CreateRepositoryRole));

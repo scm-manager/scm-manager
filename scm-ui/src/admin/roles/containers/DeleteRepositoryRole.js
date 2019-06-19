@@ -45,15 +45,15 @@ class DeleteRepositoryRole extends React.Component<Props> {
   confirmDelete = () => {
     const { t } = this.props;
     confirmAlert({
-      title: t("deleteRole.confirmAlert.title"),
-      message: t("deleteRole.confirmAlert.message"),
+      title: t("repositoryRole.delete.confirmAlert.title"),
+      message: t("repositoryRole.delete.confirmAlert.message"),
       buttons: [
         {
-          label: t("deleteRole.confirmAlert.submit"),
+          label: t("repositoryRole.delete.confirmAlert.submit"),
           onClick: () => this.deleteRole()
         },
         {
-          label: t("deleteRole.confirmAlert.cancel"),
+          label: t("repositoryRole.delete.confirmAlert.cancel"),
           onClick: () => null
         }
       ]
@@ -74,12 +74,12 @@ class DeleteRepositoryRole extends React.Component<Props> {
 
     return (
       <>
-        <Subtitle subtitle={t("deleteRole.subtitle")} />
+        <Subtitle subtitle={t("repositoryRole.delete.subtitle")} />
         <div className="columns">
           <div className="column">
             <ErrorNotification error={error} />
             <DeleteButton
-              label={t("deleteRole.button")}
+              label={t("repositoryRole.delete.button")}
               action={action}
               loading={loading}
             />
@@ -110,4 +110,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(translate("config")(DeleteRepositoryRole)));
+)(withRouter(translate("admin")(DeleteRepositoryRole)));

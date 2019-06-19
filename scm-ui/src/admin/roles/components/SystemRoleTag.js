@@ -34,4 +34,4 @@ class SystemRoleTag extends React.Component<Props> {
   }
 }
 
-export default injectSheet(styles)(translate("config")(SystemRoleTag));
+export default injectSheet(styles)(translate("admin")(SystemRoleTag));
