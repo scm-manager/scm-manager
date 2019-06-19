@@ -10,6 +10,9 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.security.AssignedPermission;
+import sonia.scm.security.DefaultKeyGenerator;
+import sonia.scm.store.ConfigurationEntryStore;
+import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.update.UpdateStepTestUtil;
 import sonia.scm.user.User;
 import sonia.scm.user.xml.XmlUserDAO;
@@ -43,7 +46,8 @@ class XmlUserV1UpdateStepTest {
   @BeforeEach
   void mockScmHome(@TempDirectory.TempDir Path tempDir) {
     testUtil = new UpdateStepTestUtil(tempDir);
-    updateStep = new XmlUserV1UpdateStep(testUtil.getContextProvider(), userDAO, testUtil.getStoreFactory());
+    JAXBConfigurationEntryStoreFactory storeFactory = new JAXBConfigurationEntryStoreFactory(testUtil.getContextProvider(), null, new DefaultKeyGenerator());
+    updateStep = new XmlUserV1UpdateStep(testUtil.getContextProvider(), userDAO, storeFactory);
   }
 
   @Nested
@@ -63,7 +67,7 @@ class XmlUserV1UpdateStepTest {
     void shouldCreateNewPermissionsForV1AdminUser() throws JAXBException {
       updateStep.doUpdate();
       Optional<AssignedPermission> assignedPermission =
-        testUtil.getStoreForConfigFile("security")
+        getStoreForConfigFile("security")
           .getAll()
           .values()
           .stream()
@@ -115,6 +119,13 @@ class XmlUserV1UpdateStepTest {
           "<value>end of the universe</value>",
           "</item>",
           "</value>");
+    }
+
+    private ConfigurationEntryStore<AssignedPermission> getStoreForConfigFile(String name) {
+      return new JAXBConfigurationEntryStoreFactory(testUtil.getContextProvider(), null, new DefaultKeyGenerator())
+        .withType(AssignedPermission.class)
+        .withName(name)
+        .build();
     }
   }
 

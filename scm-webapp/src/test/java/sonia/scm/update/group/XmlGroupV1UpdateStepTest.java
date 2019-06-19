@@ -11,6 +11,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.group.Group;
 import sonia.scm.group.xml.XmlGroupDAO;
+import sonia.scm.security.DefaultKeyGenerator;
+import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.update.UpdateStepTestUtil;
 
 import javax.xml.bind.JAXBException;
@@ -44,7 +46,8 @@ class XmlGroupV1UpdateStepTest {
   @BeforeEach
   void mockScmHome(@TempDirectory.TempDir Path tempDir) {
     testUtil = new UpdateStepTestUtil(tempDir);
-    updateStep = new XmlGroupV1UpdateStep(testUtil.getContextProvider(), groupDAO, testUtil.getStoreFactory());
+    JAXBConfigurationEntryStoreFactory storeFactory = new JAXBConfigurationEntryStoreFactory(testUtil.getContextProvider(), null, new DefaultKeyGenerator());
+    updateStep = new XmlGroupV1UpdateStep(testUtil.getContextProvider(), groupDAO, storeFactory);
   }
 
   @Nested
