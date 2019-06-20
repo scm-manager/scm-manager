@@ -11,7 +11,7 @@ import {
 import injectSheets from "react-jss";
 import classNames from "classnames";
 import { translate } from "react-i18next";
-import { Button } from "../buttons";
+import { ButtonGroup, Button } from "../buttons";
 
 const styles = {
   panel: {
@@ -241,20 +241,25 @@ class DiffFile extends React.Component<Props, State> {
               {this.renderChangeTag(file)}
             </div>
             <div className={classNames("level-right", classes.buttonHeader)}>
-              <Button action={this.toggleSideBySide} className="reduced-mobile">
-                <span className="icon is-small">
-                  <i
-                    className={classNames(
-                      "fas",
-                      sideBySide ? "fa-align-left" : "fa-columns"
-                    )}
-                  />
-                </span>
-                <span>
-                  {t(sideBySide ? "diff.combined" : "diff.sideBySide")}
-                </span>
-              </Button>
-              {fileControls}
+              <ButtonGroup connected={false}>
+                <Button
+                  action={this.toggleSideBySide}
+                  className="reduced-mobile"
+                >
+                  <span className="icon is-small">
+                    <i
+                      className={classNames(
+                        "fas",
+                        sideBySide ? "fa-align-left" : "fa-columns"
+                      )}
+                    />
+                  </span>
+                  <span>
+                    {t(sideBySide ? "diff.combined" : "diff.sideBySide")}
+                  </span>
+                </Button>
+                {fileControls}
+              </ButtonGroup>
             </div>
           </div>
         </div>
