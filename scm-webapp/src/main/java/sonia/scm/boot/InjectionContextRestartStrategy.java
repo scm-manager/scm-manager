@@ -39,7 +39,7 @@ public class InjectionContextRestartStrategy implements RestartStrategy {
         LOG.warn("reinitialize injection context");
         context.initialize();
 
-        LOG.debug("re register injection context for events");
+        LOG.debug("register injection context on new eventbus");
         ScmEventBus.getInstance().register(context);
       } catch ( Exception ex) {
         LOG.error("failed to restart", ex);

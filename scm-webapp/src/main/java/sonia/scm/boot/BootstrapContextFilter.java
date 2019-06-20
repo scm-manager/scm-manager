@@ -65,14 +65,14 @@ public class BootstrapContextFilter extends GuiceFilter {
   public void init(FilterConfig filterConfig) throws ServletException {
     this.filterConfig = filterConfig;
 
-    initGuice();
+    initializeContext();
+  }
+
+  private void initializeContext() throws ServletException {
+    super.init(filterConfig);
 
     LOG.info("register for restart events");
     ScmEventBus.getInstance().register(this);
-  }
-
-  private void initGuice() throws ServletException {
-    super.init(filterConfig);
 
     listener.contextInitialized(new ServletContextEvent(filterConfig.getServletContext()));
   }
@@ -80,6 +80,7 @@ public class BootstrapContextFilter extends GuiceFilter {
   @Override
   public void destroy() {
     super.destroy();
+
     listener.contextDestroyed(new ServletContextEvent(filterConfig.getServletContext()));
     ServletContextCleaner.cleanup(filterConfig.getServletContext());
   }
@@ -107,7 +108,7 @@ public class BootstrapContextFilter extends GuiceFilter {
     @Override
     public void initialize() {
       try {
-        BootstrapContextFilter.this.initGuice();
+        BootstrapContextFilter.this.initializeContext();
       } catch (ServletException e) {
         throw new IllegalStateException("failed to initialize guice", e);
       }

@@ -1,7 +1,6 @@
 package sonia.scm.boot;
 
 import com.github.legman.Subscribe;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
