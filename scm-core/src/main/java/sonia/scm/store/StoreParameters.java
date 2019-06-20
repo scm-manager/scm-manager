@@ -12,5 +12,5 @@ public interface StoreParameters {
 
   String getName();
 
-  Repository getRepository();
+  String getRepositoryId();
 }

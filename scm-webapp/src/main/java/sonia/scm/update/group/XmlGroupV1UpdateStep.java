@@ -11,7 +11,7 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.store.StoreConstants;
-import sonia.scm.update.properties.V1Properties;
+import sonia.scm.update.V1Properties;
 import sonia.scm.version.Version;
 
 import javax.inject.Inject;

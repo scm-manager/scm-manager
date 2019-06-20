@@ -13,7 +13,9 @@ import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.store.StoreConstants;
-import sonia.scm.update.properties.V1Properties;
+import sonia.scm.update.CoreUpdateStep;
+import sonia.scm.update.V1Properties;
+import sonia.scm.update.RepositoryV1PropertyReader;
 import sonia.scm.version.Version;
 
 import javax.inject.Inject;
@@ -56,7 +58,7 @@ import static sonia.scm.version.Version.parse;
  * </ul>
  */
 @Extension
-public class XmlRepositoryV1UpdateStep implements UpdateStep {
+public class XmlRepositoryV1UpdateStep implements CoreUpdateStep {
 
   private static Logger LOG = LoggerFactory.getLogger(XmlRepositoryV1UpdateStep.class);
 
@@ -80,7 +82,7 @@ public class XmlRepositoryV1UpdateStep implements UpdateStep {
     this.injector = injector;
     this.propertyStore = configurationEntryStoreFactory
       .withType(V1Properties.class)
-      .withName("repository-properties-v1")
+      .withName(new RepositoryV1PropertyReader().getStoreName())
       .build();
   }
 

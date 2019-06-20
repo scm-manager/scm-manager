@@ -35,7 +35,6 @@ package sonia.scm.store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.util.IOUtil;
 
@@ -66,18 +65,18 @@ public abstract class FileBasedStoreFactory {
   }
 
   protected File getStoreLocation(StoreParameters storeParameters) {
-    return getStoreLocation(storeParameters.getName(), null, storeParameters.getRepository());
+    return getStoreLocation(storeParameters.getName(), null, storeParameters.getRepositoryId());
   }
 
   protected File getStoreLocation(TypedStoreParameters storeParameters) {
-    return getStoreLocation(storeParameters.getName(), storeParameters.getType(), storeParameters.getRepository());
+    return getStoreLocation(storeParameters.getName(), storeParameters.getType(), storeParameters.getRepositoryId());
   }
 
-  protected File getStoreLocation(String name, Class type, Repository repository) {
+  protected File getStoreLocation(String name, Class type, String repositoryId) {
     File storeDirectory;
-    if (repository != null) {
-      LOG.debug("create store with type: {}, name: {} and repository: {}", type, name, repository.getNamespaceAndName());
-      storeDirectory = this.getStoreDirectory(store, repository);
+    if (repositoryId != null) {
+      LOG.debug("create store with type: {}, name: {} and repository id: {}", type, name, repositoryId);
+      storeDirectory = this.getStoreDirectory(store, repositoryId);
     } else {
       LOG.debug("create store with type: {} and name: {} ", type, name);
       storeDirectory = this.getStoreDirectory(store);
@@ -89,11 +88,11 @@ public abstract class FileBasedStoreFactory {
   /**
    * Get the store directory of a specific repository
    * @param store the type of the store
-   * @param repository the repo
+   * @param repositoryId the id of the repossitory
    * @return the store directory of a specific repository
    */
-  private File getStoreDirectory(Store store, Repository repository) {
-    return new File(repositoryLocationResolver.forClass(Path.class).getLocation(repository.getId()).toFile(), store.getRepositoryStoreDirectory());
+  private File getStoreDirectory(Store store, String repositoryId) {
+    return new File(repositoryLocationResolver.forClass(Path.class).getLocation(repositoryId).toFile(), store.getRepositoryStoreDirectory());
   }
 
   /**

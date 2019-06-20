@@ -1,6 +1,6 @@
 package sonia.scm.update.repository;
 
-import sonia.scm.update.properties.V1Properties;
+import sonia.scm.update.V1Properties;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

@@ -13,8 +13,8 @@ import sonia.scm.security.AssignedPermission;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
 import sonia.scm.update.UpdateStepTestUtil;
-import sonia.scm.update.properties.V1Properties;
-import sonia.scm.update.properties.V1Property;
+import sonia.scm.update.V1Properties;
+import sonia.scm.update.V1Property;
 import sonia.scm.user.User;
 import sonia.scm.user.xml.XmlUserDAO;
 
@@ -105,14 +105,10 @@ class XmlUserV1UpdateStepTest {
     void shouldExtractProperties() throws JAXBException {
       updateStep.doUpdate();
       ConfigurationEntryStore<V1Properties> propertiesStore = storeFactory.<V1Properties>get("user-properties-v1");
-      assertThat(propertiesStore.get("dent"))
-        .isNotNull()
-        .extracting(V1Properties::getProperties)
-        .first()
-        .asList()
-        .contains(
-          new V1Property("born.on", "earth"),
-          new V1Property("last.seen", "end of the universe"));
+      V1Properties properties = propertiesStore.get("dent");
+      assertThat(properties).isNotNull();
+      assertThat(properties.get("born.on")).isEqualTo("earth");
+      assertThat(properties.get("last.seen")).isEqualTo("end of the universe");
     }
   }
 

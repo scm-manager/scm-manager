@@ -117,7 +117,18 @@ final class TypedFloatingDataStoreParameters<T> {
      * @return Floating API to finish the call.
      */
     public OptionalRepositoryBuilder forRepository(Repository repository) {
-      parameters.setRepository(repository);
+      parameters.setRepositoryId(repository.getId());
+      return this;
+    }
+
+    /**
+     * Use this to create or get a {@link DataStore} for a specific repository. This step is optional. If you
+     * want to have a global {@link DataStore}, omit this.
+     * @param repositoryId The id of the optional repository for the {@link DataStore}.
+     * @return Floating API to finish the call.
+     */
+    public OptionalRepositoryBuilder forRepository(String repositoryId) {
+      parameters.setRepositoryId(repositoryId);
       return this;
     }
 

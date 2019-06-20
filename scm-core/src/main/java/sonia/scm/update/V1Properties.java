@@ -1,4 +1,4 @@
-package sonia.scm.update.properties;
+package sonia.scm.update;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -14,7 +14,7 @@ public class V1Properties {
   @XmlElement(name = "item")
   private List<V1Property> properties;
 
-  public List<V1Property> getProperties() {
-    return unmodifiableList(properties);
+  public String get(String key) {
+    return properties.stream().filter(p -> key.equals(p.getKey())).map(V1Property::getValue).findFirst().orElse(null);
   }
 }

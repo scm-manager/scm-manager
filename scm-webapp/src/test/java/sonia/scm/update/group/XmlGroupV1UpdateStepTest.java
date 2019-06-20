@@ -14,8 +14,8 @@ import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
 import sonia.scm.update.UpdateStepTestUtil;
-import sonia.scm.update.properties.V1Properties;
-import sonia.scm.update.properties.V1Property;
+import sonia.scm.update.V1Properties;
+import sonia.scm.update.V1Property;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -89,13 +89,10 @@ class XmlGroupV1UpdateStepTest {
     @Test
     void shouldExtractProperties() throws JAXBException {
       updateStep.doUpdate();
-      ConfigurationEntryStore<V1Properties> propertiesStore = storeFactory.<V1Properties>get("group-properties-v1");
-      assertThat(propertiesStore.get("normals"))
-        .isNotNull()
-        .extracting(V1Properties::getProperties)
-        .first()
-        .asList()
-        .contains(new V1Property("mostly", "humans"));
+      ConfigurationEntryStore<V1Properties> propertiesStore = storeFactory.get("group-properties-v1");
+      V1Properties properties = propertiesStore.get("normals");
+      assertThat(properties).isNotNull();
+      assertThat(properties.get("mostly")).isEqualTo("humans");
     }
   }
 
