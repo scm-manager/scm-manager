@@ -241,7 +241,7 @@ class DiffFile extends React.Component<Props, State> {
               {this.renderChangeTag(file)}
             </div>
             <div className={classNames("level-right", classes.buttonHeader)}>
-              <ButtonGroup connected={false}>
+              <ButtonGroup>
                 <Button
                   action={this.toggleSideBySide}
                   className="reduced-mobile"

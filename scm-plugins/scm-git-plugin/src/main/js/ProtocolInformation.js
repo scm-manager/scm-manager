@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import { ButtonGroup, Button } from "@scm-manager/ui-components";
+import { ButtonAddons, Button } from "@scm-manager/ui-components";
 import type { Repository } from "@scm-manager/ui-types";
 import CloneInformation from "./CloneInformation";
 import type { Link } from "@scm-manager/ui-types";
@@ -95,9 +95,9 @@ class ProtocolInformation extends React.Component<Props, State> {
 
     return (
      <div className={classes.protocols}>
-       <ButtonGroup connected={true} className={classes.switcher}>
+       <ButtonAddons className={classes.switcher}>
          {protocols.map(this.renderProtocolButton)}
-       </ButtonGroup>
+       </ButtonAddons>
        { cloneInformation }
      </div>
     );

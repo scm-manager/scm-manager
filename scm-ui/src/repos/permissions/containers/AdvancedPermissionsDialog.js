@@ -60,7 +60,7 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
 
     const footer = (
       <form onSubmit={this.onSubmit}>
-        <ButtonGroup connected={false}>
+        <ButtonGroup>
           {submitButton}
           <Button
             label={t("permission.advanced.dialog.abort")}
