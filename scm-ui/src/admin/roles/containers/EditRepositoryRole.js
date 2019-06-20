@@ -29,7 +29,7 @@ type Props = {
 
 class EditRepositoryRole extends React.Component<Props> {
   repositoryRoleUpdated = () => {
-    this.props.history.push("/config/roles/");
+    this.props.history.push("/admin/roles/");
   };
 
   updateRepositoryRole = (role: RepositoryRole) => {

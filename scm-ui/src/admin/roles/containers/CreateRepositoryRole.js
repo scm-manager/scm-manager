@@ -32,7 +32,7 @@ type Props = {
 class CreateRepositoryRole extends React.Component<Props> {
   repositoryRoleCreated = (role: RepositoryRole) => {
     const { history } = this.props;
-    history.push("/config/role/" + role.name + "/info");
+    history.push("/admin/role/" + role.name + "/info");
   };
 
   createRepositoryRole = (role: RepositoryRole) => {

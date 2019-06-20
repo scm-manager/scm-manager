@@ -35,7 +35,7 @@ class DeleteRepositoryRole extends React.Component<Props> {
   };
 
   roleDeleted = () => {
-    this.props.history.push("/config/roles/");
+    this.props.history.push("/admin/roles/");
   };
 
   deleteRole = () => {
