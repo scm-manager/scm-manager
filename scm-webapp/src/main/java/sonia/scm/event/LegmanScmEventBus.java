@@ -63,6 +63,8 @@ public class LegmanScmEventBus extends ScmEventBus
 
   //~--- constructors ---------------------------------------------------------
 
+  private String name;
+
   /**
    * Constructs ...
    *
@@ -72,7 +74,7 @@ public class LegmanScmEventBus extends ScmEventBus
   }
 
   private EventBus create() {
-    String name = String.format(NAME, INSTANCE_COUNTER.incrementAndGet());
+    name = String.format(NAME, INSTANCE_COUNTER.incrementAndGet());
     logger.info("create new event bus {}", name);
     return new EventBus(name);
   }
@@ -88,7 +90,7 @@ public class LegmanScmEventBus extends ScmEventBus
   @Override
   public void post(Object event)
   {
-    logger.debug("post {} to event bus", event);
+    logger.debug("post {} to event bus {}", event, name);
     eventBus.post(event);
   }
 
@@ -102,7 +104,7 @@ public class LegmanScmEventBus extends ScmEventBus
   @Override
   public void register(Object object)
   {
-    logger.trace("register {} to event bus", object);
+    logger.trace("register {} to event bus {}", object, name);
     eventBus.register(object);
 
   }
@@ -116,7 +118,7 @@ public class LegmanScmEventBus extends ScmEventBus
   @Override
   public void unregister(Object object)
   {
-    logger.trace("unregister {} from event bus", object);
+    logger.trace("unregister {} from event bus {}", object, name);
     
     try
     {
@@ -130,7 +132,7 @@ public class LegmanScmEventBus extends ScmEventBus
 
   @Subscribe(async = false)
   public void recreateEventBus(RecreateEventBusEvent recreateEventBusEvent) {
-    logger.info("shutdown event bus executor");
+    logger.info("shutdown event bus executor for {}", name);
     eventBus.shutdown();
     eventBus = create();
   }
