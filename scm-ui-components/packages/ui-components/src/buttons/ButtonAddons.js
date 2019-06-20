@@ -19,7 +19,7 @@ class ButtonAddons extends React.Component<Props> {
     });
 
     return (
-      <div className={classNames("field", "is-addons", className)}>
+      <div className={classNames("field", "has-addons", className)}>
         {childWrapper}
       </div>
     );
