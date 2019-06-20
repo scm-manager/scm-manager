@@ -9,6 +9,7 @@ import se.jiderhamn.classloader.leak.prevention.ClassLoaderLeakPreventor;
  */
 public class LoggingAdapter implements se.jiderhamn.classloader.leak.prevention.Logger {
 
+  @SuppressWarnings("squid:S3416") // suppress "loggers should be named for their enclosing classes" rule
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderLeakPreventor.class);
 
   @Override

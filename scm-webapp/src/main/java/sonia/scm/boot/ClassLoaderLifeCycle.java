@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.jiderhamn.classloader.leak.prevention.ClassLoaderLeakPreventor;
 import se.jiderhamn.classloader.leak.prevention.ClassLoaderLeakPreventorFactory;
+import se.jiderhamn.classloader.leak.prevention.cleanup.MBeanCleanUp;
 import sonia.scm.plugin.ChildFirstPluginClassLoader;
 import sonia.scm.plugin.DefaultPluginClassLoader;
 
@@ -36,6 +37,7 @@ public final class ClassLoaderLifeCycle {
   public static ClassLoaderLifeCycle create() {
     ClassLoaderLeakPreventorFactory classLoaderLeakPreventorFactory = new ClassLoaderLeakPreventorFactory();
     classLoaderLeakPreventorFactory.setLogger(new LoggingAdapter());
+    classLoaderLeakPreventorFactory.removeCleanUp(MBeanCleanUp.class);
     return new ClassLoaderLifeCycle(Thread.currentThread().getContextClassLoader(), classLoaderLeakPreventorFactory);
   }
 
