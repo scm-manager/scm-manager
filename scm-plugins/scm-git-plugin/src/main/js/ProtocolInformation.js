@@ -95,7 +95,7 @@ class ProtocolInformation extends React.Component<Props, State> {
 
     return (
      <div className={classes.protocols}>
-       <ButtonGroup className={classes.switcher}>
+       <ButtonGroup connected={true} className={classes.switcher}>
          {protocols.map(this.renderProtocolButton)}
        </ButtonGroup>
        { cloneInformation }

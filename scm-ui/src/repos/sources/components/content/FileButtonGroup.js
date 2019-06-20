@@ -26,7 +26,7 @@ class FileButtonGroup extends React.Component<Props> {
     const { t, historyIsSelected } = this.props;
 
     return (
-      <ButtonGroup>
+      <ButtonGroup connected={true}>
         <Button
           action={this.showSources}
           className="reduced-mobile"

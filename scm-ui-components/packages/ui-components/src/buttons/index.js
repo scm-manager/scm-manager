@@ -8,7 +8,6 @@ export { default as EditButton } from "./EditButton.js";
 export { default as SubmitButton } from "./SubmitButton.js";
 export { default as DownloadButton } from "./DownloadButton.js";
 export { default as ButtonGroup } from "./ButtonGroup.js";
-export { default as ButtonGrouped } from "./ButtonGrouped.js";
 export {
   default as RemoveEntryOfTableButton
 } from "./RemoveEntryOfTableButton.js";

@@ -1,7 +1,9 @@
 // @flow
 import * as React from "react";
+import classNames from "classnames";
 
 type Props = {
+  connected?: boolean,
   addons?: boolean,
   className?: string,
   children: React.Node
@@ -14,17 +16,26 @@ class ButtonGroup extends React.Component<Props> {
   };
 
   render() {
-    const { addons, className, children } = this.props;
-    let styleClasses = "buttons";
-    if (addons) {
-      styleClasses += " has-addons";
+    const {connected, addons, className, children} = this.props;
+
+    if (!connected) {
+      var childWrapper = [];
+      React.Children.forEach(children, child => {
+        if (child) {
+          childWrapper.push(<p className="control">{child}</p>);
+        }
+      });
+
+      return (
+        <div className={classNames("field", "is-grouped", className)}>
+          {childWrapper}
+        </div>
+      );
     }
-    if (className) {
-      styleClasses += " " + className;
-    }
+
     return (
-      <div className={styleClasses}>
-        { children }
+      <div className={classNames("buttons", addons ? "has-addons" : "", className)}>
+        {children}
       </div>
     );
   }

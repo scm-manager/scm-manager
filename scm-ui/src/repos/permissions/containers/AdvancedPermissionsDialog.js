@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import {
-  ButtonGrouped,
+  ButtonGroup,
   Button,
   SubmitButton,
   Modal
@@ -60,13 +60,13 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
 
     const footer = (
       <form onSubmit={this.onSubmit}>
-        <ButtonGrouped>
+        <ButtonGroup connected={false}>
           {submitButton}
           <Button
             label={t("permission.advanced.dialog.abort")}
             action={onClose}
           />
-        </ButtonGrouped>
+        </ButtonGroup>
       </form>
     );
 

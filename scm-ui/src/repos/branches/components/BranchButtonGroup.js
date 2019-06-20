@@ -24,7 +24,7 @@ class BranchButtonGroup extends React.Component<Props> {
     }/sources/${encodeURIComponent(branch.name)}/`;
 
     return (
-      <ButtonGroup>
+      <ButtonGroup connected={true}>
         <Button link={changesetLink} className="reduced-mobile">
           <span className="icon">
             <i className="fas fa-exchange-alt" />
