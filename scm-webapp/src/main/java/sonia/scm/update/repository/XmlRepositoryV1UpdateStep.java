@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.migration.UpdateException;
-import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermission;
@@ -15,7 +14,6 @@ import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.store.StoreConstants;
 import sonia.scm.update.CoreUpdateStep;
 import sonia.scm.update.V1Properties;
-import sonia.scm.update.RepositoryV1PropertyReader;
 import sonia.scm.version.Version;
 
 import javax.inject.Inject;
@@ -38,6 +36,7 @@ import java.util.stream.Stream;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static sonia.scm.update.V1PropertyReader.REPOSITORY_PROPERTY_READER;
 import static sonia.scm.version.Version.parse;
 
 /**
@@ -82,7 +81,7 @@ public class XmlRepositoryV1UpdateStep implements CoreUpdateStep {
     this.injector = injector;
     this.propertyStore = configurationEntryStoreFactory
       .withType(V1Properties.class)
-      .withName(new RepositoryV1PropertyReader().getStoreName())
+      .withName(REPOSITORY_PROPERTY_READER.getStoreName())
       .build();
   }
 

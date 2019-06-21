@@ -30,6 +30,7 @@ import java.util.Optional;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static sonia.scm.update.V1PropertyReader.GROUP_PROPERTY_READER;
 import static sonia.scm.version.Version.parse;
 
 @Extension
@@ -51,7 +52,7 @@ public class XmlGroupV1UpdateStep implements UpdateStep {
     this.groupDAO = groupDAO;
     this.propertyStore = configurationEntryStoreFactory
       .withType(V1Properties.class)
-      .withName("group-properties-v1")
+      .withName(GROUP_PROPERTY_READER.getStoreName())
       .build();
   }
 
