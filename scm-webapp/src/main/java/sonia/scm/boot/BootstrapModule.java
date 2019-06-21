@@ -24,6 +24,8 @@ import sonia.scm.store.FileBlobStoreFactory;
 import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 import sonia.scm.store.JAXBDataStoreFactory;
+import sonia.scm.store.JAXBPropertyFileAccess;
+import sonia.scm.update.PropertyFileAccess;
 import sonia.scm.update.V1PropertyDAO;
 import sonia.scm.update.xml.XmlV1PropertyDAO;
 
@@ -63,6 +65,7 @@ public class BootstrapModule extends AbstractModule {
     bind(BlobStoreFactory.class, FileBlobStoreFactory.class);
     bind(PluginLoader.class).toInstance(pluginLoader);
     bind(V1PropertyDAO.class, XmlV1PropertyDAO.class);
+    bind(PropertyFileAccess.class, JAXBPropertyFileAccess.class);
   }
 
   private <T> void bind(Class<T> clazz, Class<? extends T> defaultImplementation) {
