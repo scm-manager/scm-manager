@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Stream;
 
 public class JAXBPropertyFileAccess implements PropertyFileAccess {
 
@@ -43,14 +44,16 @@ public class JAXBPropertyFileAccess implements PropertyFileAccess {
       public void forStoreFiles(FileConsumer storeFileConsumer) throws IOException {
         Path v1storeDir = computeV1StoreDir();
         if (Files.exists(v1storeDir) && Files.isDirectory(v1storeDir)) {
-          Files.list(v1storeDir).filter(p -> p.toString().endsWith(XML_FILENAME_SUFFIX)).forEach(p -> {
-            try {
-              String storeName = extractStoreName(p);
-              storeFileConsumer.accept(p, storeName);
-            } catch (IOException e) {
-              throw new RuntimeException("could not call consumer for store file " + p + " with name " + storeName, e);
-            }
-          });
+          try (Stream<Path> fileStream = Files.list(v1storeDir)) {
+            fileStream.filter(p -> p.toString().endsWith(XML_FILENAME_SUFFIX)).forEach(p -> {
+              try {
+                String storeName = extractStoreName(p);
+                storeFileConsumer.accept(p, storeName);
+              } catch (IOException e) {
+                throw new RuntimeException("could not call consumer for store file " + p + " with name " + storeName, e);
+              }
+            });
+          }
         }
       }
 
