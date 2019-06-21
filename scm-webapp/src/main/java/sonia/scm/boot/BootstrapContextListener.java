@@ -34,6 +34,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import sonia.scm.CloseableModule;
 import sonia.scm.EagerSingletonModule;
 import sonia.scm.SCMContext;
 import sonia.scm.ScmContextListener;
@@ -123,6 +124,7 @@ public class BootstrapContextListener implements ServletContextListener {
     BootstrapModule bootstrapModule = new BootstrapModule(pluginLoader);
     ScmInitializerModule scmInitializerModule = new ScmInitializerModule();
     EagerSingletonModule eagerSingletonModule = new EagerSingletonModule();
+    CloseableModule closeableModule = new CloseableModule();
     ScmEventBusModule scmEventBusModule = new ScmEventBusModule();
 
     return Guice.createInjector(
@@ -130,7 +132,8 @@ public class BootstrapContextListener implements ServletContextListener {
       scmContextListenerModule,
       scmEventBusModule,
       scmInitializerModule,
-      eagerSingletonModule
+      eagerSingletonModule,
+      closeableModule
     );
   }
 

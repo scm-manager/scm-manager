@@ -174,20 +174,7 @@ public class ScmContextListener extends GuiceResteasyBootstrapServletContextList
   }
 
   private void closeCloseables() {
-    // close Scheduler
-    IOUtil.close(injector.getInstance(Scheduler.class));
-
-    // close RepositoryManager
-    IOUtil.close(injector.getInstance(RepositoryManager.class));
-
-    // close GroupManager
-    IOUtil.close(injector.getInstance(GroupManager.class));
-
-    // close UserManager
-    IOUtil.close(injector.getInstance(UserManager.class));
-
-    // close CacheManager
-    IOUtil.close(injector.getInstance(CacheManager.class));
+    injector.getInstance(CloseableModule.class).closeAll();
   }
 
   private void destroyServletContextListeners(ServletContextEvent event) {
