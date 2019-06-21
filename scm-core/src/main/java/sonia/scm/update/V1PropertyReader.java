@@ -11,5 +11,9 @@ public interface V1PropertyReader {
 
   interface Instance {
     void forEachEntry(BiConsumer<String, V1Properties> propertiesForNameConsumer);
+
+    Instance havingAnyOf(String... keys);
+
+    Instance havingAllOf(String... keys);
   }
 }
