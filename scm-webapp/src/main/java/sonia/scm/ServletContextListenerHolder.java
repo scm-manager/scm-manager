@@ -39,6 +39,7 @@ import com.google.inject.Singleton;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collections;
 import java.util.Set;
 
 import javax.servlet.ServletContextEvent;
@@ -49,55 +50,36 @@ import javax.servlet.ServletContextListener;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class ServletContextListenerHolder implements ServletContextListener
-{
+public class ServletContextListenerHolder implements ServletContextListener {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param listenerSet
-   */
+  static class ListenerHolder {
+    @Inject(optional = true)
+    private Set<ServletContextListener> listenerSet;
+
+    private Set<ServletContextListener> getListenerSet() {
+      if (listenerSet == null) {
+        return Collections.emptySet();
+      }
+      return listenerSet;
+    }
+  }
+
+  private final Set<ServletContextListener> listenerSet;
+
   @Inject
-  public ServletContextListenerHolder(Set<ServletContextListener> listenerSet)
+  public ServletContextListenerHolder(ListenerHolder listeners)
   {
-    this.listenerSet = listenerSet;
+    this.listenerSet = listeners.getListenerSet();
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param sce
-   */
   @Override
-  public void contextDestroyed(ServletContextEvent sce)
-  {
-    for (ServletContextListener listener : listenerSet)
-    {
-      listener.contextDestroyed(sce);
-    }
+  public void contextInitialized(ServletContextEvent sce) {
+    listenerSet.forEach(listener -> listener.contextInitialized(sce));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param sce
-   */
   @Override
-  public void contextInitialized(ServletContextEvent sce)
-  {
-    for (ServletContextListener listener : listenerSet)
-    {
-      listener.contextInitialized(sce);
-    }
+  public void contextDestroyed(ServletContextEvent sce) {
+    listenerSet.forEach(listener -> listener.contextDestroyed(sce));
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Set<ServletContextListener> listenerSet;
 }
