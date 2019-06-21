@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,9 +24,8 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
 
 
@@ -38,96 +37,51 @@ import com.google.common.collect.Sets;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
-import com.google.inject.matcher.AbstractMatcher;
-import com.google.inject.matcher.Matcher;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.lang.annotation.Annotation;
-
 import java.util.Set;
 
+//~--- JDK imports ------------------------------------------------------------
+
 /**
+ * Guice module which captures all classes which are annotated with {@link EagerSingleton}. These classes can be later
+ * initialized.
  *
  * @author Sebastian Sdorra
  */
-public class EagerSingletonModule extends AbstractModule
-{
+public class EagerSingletonModule extends AbstractModule {
+
+  private static final Logger LOG = LoggerFactory.getLogger(EagerSingletonModule.class);
+
+  private final Set<Class<?>> eagerSingletons = Sets.newHashSet();
 
   /**
-   * the logger for EagerSingletonModule
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(EagerSingletonModule.class);
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
+   * Initialize all captured classes.
    *
-   *
-   * @param injector
+   * @param injector injector for initialization
    */
-  void initialize(Injector injector)
-  {
-    for (Class<?> clazz : eagerSingletons)
-    {
-      logger.info("initialize eager singleton {}", clazz.getName());
+  public void initialize(Injector injector) {
+    for (Class<?> clazz : eagerSingletons) {
+      LOG.info("initialize eager singleton {}", clazz.getName());
       injector.getInstance(clazz);
     }
   }
 
-  /**
-   * Method description
-   *
-   */
   @Override
-  protected void configure()
-  {
-    bindListener(isAnnotatedWith(EagerSingleton.class), new TypeListener()
-    {
-
+  protected void configure() {
+    bindListener(MoreMatchers.isAnnotatedWith(EagerSingleton.class), new TypeListener() {
       @Override
-      public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter)
-      {
-        eagerSingletons.add(type.getRawType());
+      public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {
+        Class<? super I> rawType = type.getRawType();
+        LOG.trace("register eager singleton {}", rawType);
+        eagerSingletons.add(rawType);
       }
     });
 
     bind(EagerSingletonModule.class).toInstance(this);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param annotation
-   *
-   * @return
-   */
-  private Matcher<TypeLiteral<?>> isAnnotatedWith(
-    final Class<? extends Annotation> annotation)
-  {
-    return new AbstractMatcher<TypeLiteral<?>>()
-    {
-      @Override
-      public boolean matches(TypeLiteral<?> type)
-      {
-        return type.getRawType().isAnnotationPresent(annotation);
-      }
-    };
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final Set<Class<?>> eagerSingletons = Sets.newHashSet();
 }

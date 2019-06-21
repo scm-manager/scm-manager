@@ -14,6 +14,12 @@ import java.lang.ref.WeakReference;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+/**
+ * Guice module which captures all classes which are implementing the {@link Closeable}. These classes can be later
+ * closed, by injecting the {@link CloseableModule} and calling {@link #closeAll()}.
+ *
+ * @author Sebastian Sdorra
+ */
 public final class CloseableModule extends AbstractModule {
 
   private static final Logger LOG = LoggerFactory.getLogger(CloseableModule.class);
@@ -36,6 +42,9 @@ public final class CloseableModule extends AbstractModule {
     bind(CloseableModule.class).toInstance(this);
   }
 
+  /**
+   * Closes all captured instances.
+   */
   public void closeAll() {
     LOG.debug("close all registered closeables");
     WeakReference<Closeable> reference = closeables.poll();
