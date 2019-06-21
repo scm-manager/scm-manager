@@ -6,9 +6,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
+import static java.util.stream.Stream.empty;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "properties")
@@ -32,7 +34,7 @@ public class V1Properties {
   }
 
   public Optional<String> getOptional(String key) {
-    return properties.stream().filter(p -> key.equals(p.getKey())).map(V1Property::getValue).findFirst();
+    return streamProps().filter(p -> key.equals(p.getKey())).map(V1Property::getValue).findFirst();
   }
 
   public Optional<Boolean> getBoolean(String key) {
@@ -44,10 +46,14 @@ public class V1Properties {
   }
 
   public boolean hasAny(String[] keys) {
-    return properties.stream().anyMatch(p -> stream(keys).anyMatch(k -> k.equals(p.getKey())));
+    return streamProps().anyMatch(p -> stream(keys).anyMatch(k -> k.equals(p.getKey())));
   }
 
   public boolean hasAll(String[] keys) {
-    return stream(keys).allMatch(k -> properties.stream().anyMatch(p -> k.equals(p.getKey())));
+    return stream(keys).allMatch(k -> streamProps().anyMatch(p -> k.equals(p.getKey())));
+  }
+
+  private Stream<V1Property> streamProps() {
+    return properties == null? empty(): properties.stream();
   }
 }
