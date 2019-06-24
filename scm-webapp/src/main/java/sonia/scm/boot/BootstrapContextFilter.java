@@ -82,7 +82,6 @@ public class BootstrapContextFilter extends GuiceFilter {
     super.destroy();
 
     listener.contextDestroyed(new ServletContextEvent(filterConfig.getServletContext()));
-    ServletContextCleaner.cleanup(filterConfig.getServletContext());
   }
 
   /**

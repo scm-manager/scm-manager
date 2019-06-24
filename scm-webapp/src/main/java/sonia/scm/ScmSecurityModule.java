@@ -81,8 +81,7 @@ public class ScmSecurityModule extends ShiroWebModule
    * @param servletContext
    * @param extensionProcessor
    */
-  ScmSecurityModule(ServletContext servletContext,
-    ExtensionProcessor extensionProcessor)
+  public ScmSecurityModule(ServletContext servletContext, ExtensionProcessor extensionProcessor)
   {
     super(servletContext);
     this.extensionProcessor = extensionProcessor;

@@ -1,14 +1,18 @@
 package sonia.scm.update;
 
 import com.google.inject.Injector;
-import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.Module;
+import sonia.scm.boot.ModuleProvider;
 import sonia.scm.update.repository.XmlRepositoryV1UpdateStep;
 
-public class MigrationWizardContextListener extends GuiceServletContextListener {
+import java.util.Collection;
+import java.util.Collections;
+
+public class MigrationWizardModuleProvider implements ModuleProvider {
 
   private final Injector bootstrapInjector;
 
-  public MigrationWizardContextListener(Injector bootstrapInjector) {
+  public MigrationWizardModuleProvider(Injector bootstrapInjector) {
     this.bootstrapInjector = bootstrapInjector;
   }
 
@@ -17,7 +21,7 @@ public class MigrationWizardContextListener extends GuiceServletContextListener 
   }
 
   @Override
-  protected Injector getInjector() {
-    return bootstrapInjector.createChildInjector(new MigrationWizardModule());
+  public Collection<Module> createModules() {
+    return Collections.singleton(new MigrationWizardModule());
   }
 }

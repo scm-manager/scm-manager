@@ -29,111 +29,134 @@
 
 package sonia.scm.boot;
 
-import com.google.inject.AbstractModule;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.servlet.GuiceServletContextListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.CloseableModule;
 import sonia.scm.EagerSingletonModule;
 import sonia.scm.SCMContext;
-import sonia.scm.ScmContextListener;
 import sonia.scm.ScmEventBusModule;
 import sonia.scm.ScmInitializerModule;
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.plugin.PluginWrapper;
-import sonia.scm.update.MigrationWizardContextListener;
+import sonia.scm.update.MigrationWizardModuleProvider;
 import sonia.scm.update.UpdateEngine;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class BootstrapContextListener implements ServletContextListener {
+public class BootstrapContextListener extends GuiceServletContextListener {
+
+  private static final Logger LOG = LoggerFactory.getLogger(BootstrapContextListener.class);
 
   private final ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
 
-
   private ServletContext context;
-  private ServletContextListener contextListener;
+  private InjectionLifeCycle injectionLifeCycle;
 
   @Override
   public void contextInitialized(ServletContextEvent sce) {
-    classLoaderLifeCycle.init();
+    LOG.info("start scm-manager initialization");
 
     context = sce.getServletContext();
+    classLoaderLifeCycle.init();
+    super.contextInitialized(sce);
 
-    createContextListener();
+    Injector injector = (Injector) context.getAttribute(Injector.class.getName());
+    injectionLifeCycle = new InjectionLifeCycle(injector);
+    injectionLifeCycle.initialize();
+  }
 
-    contextListener.contextInitialized(sce);
+  @Override
+  protected Injector getInjector() {
+    Throwable startupError = SCMContext.getContext().getStartupError();
+    if (startupError != null) {
+      return createStageOneInjector(SingleView.error(startupError));
+    } else if (Versions.isTooOld()) {
+      return createStageOneInjector(SingleView.view("/templates/too-old.mustache", HttpServletResponse.SC_CONFLICT));
+    } else {
+      try {
+        return createStageTwoInjector();
+      } catch (Exception ex) {
+        return createStageOneInjector(SingleView.error(ex));
+      }
+    }
   }
 
   @Override
   public void contextDestroyed(ServletContextEvent sce) {
-    contextListener.contextDestroyed(sce);
+    LOG.info("shutdown scm-manager context");
+
+    ServletContextCleaner.cleanup(context);
+
+    injectionLifeCycle.shutdown();
+    injectionLifeCycle = null;
     classLoaderLifeCycle.shutdown();
-
-    context = null;
-    contextListener = null;
   }
 
-  private void createContextListener() {
-    Throwable startupError = SCMContext.getContext().getStartupError();
-    if (startupError != null) {
-      contextListener = SingleView.error(startupError);
-    } else if (Versions.isTooOld()) {
-      contextListener = SingleView.view("/templates/too-old.mustache", HttpServletResponse.SC_CONFLICT);
-    } else {
-      createMigrationOrNormalContextListener();
-      Versions.writeNew();
-    }
-  }
-
-  private void createMigrationOrNormalContextListener() {
+  private Injector createStageTwoInjector() {
     PluginBootstrap pluginBootstrap = new PluginBootstrap(context, classLoaderLifeCycle);
 
-    Injector bootstrapInjector = createBootstrapInjector(pluginBootstrap.getPluginLoader());
-
-    startEitherMigrationOrNormalServlet(classLoaderLifeCycle.getBootstrapClassLoader(), pluginBootstrap.getPlugins(), pluginBootstrap.getPluginLoader(), bootstrapInjector);
+    ModuleProvider provider = createMigrationOrNormalModuleProvider(pluginBootstrap);
+    return createStageTwoInjector(provider, pluginBootstrap.getPluginLoader());
   }
 
-  private void startEitherMigrationOrNormalServlet(ClassLoader cl, Set<PluginWrapper> plugins, PluginLoader pluginLoader, Injector bootstrapInjector) {
-    MigrationWizardContextListener wizardContextListener = prepareWizardIfNeeded(bootstrapInjector);
+  private ModuleProvider createMigrationOrNormalModuleProvider(PluginBootstrap pluginBootstrap) {
+    Injector bootstrapInjector = createBootstrapInjector(pluginBootstrap.getPluginLoader());
 
-    if (wizardContextListener.wizardNecessary()) {
-      contextListener = wizardContextListener;
+    return startEitherMigrationOrApplication(pluginBootstrap.getPluginLoader(), bootstrapInjector);
+  }
+
+  private ModuleProvider startEitherMigrationOrApplication(PluginLoader pluginLoader, Injector bootstrapInjector) {
+    MigrationWizardModuleProvider wizardModuleProvider = new MigrationWizardModuleProvider(bootstrapInjector);
+
+    if (wizardModuleProvider.wizardNecessary()) {
+      return wizardModuleProvider;
     } else {
       processUpdates(pluginLoader, bootstrapInjector);
-      contextListener = bootstrapInjector.getInstance(ScmContextListener.Factory.class).create(cl, plugins);
+
+      Versions.writeNew();
+
+      return new ApplicationModuleProvider(context, pluginLoader);
     }
   }
 
+  private Injector createStageOneInjector(ModuleProvider provider) {
+    return Guice.createInjector(provider.createModules());
+  }
 
-  private MigrationWizardContextListener prepareWizardIfNeeded(Injector bootstrapInjector) {
-    return new MigrationWizardContextListener(bootstrapInjector);
+  private Injector createStageTwoInjector(ModuleProvider provider, PluginLoader pluginLoader) {
+    List<Module> modules = new ArrayList<>(createBootstrapModules(pluginLoader));
+    modules.addAll(provider.createModules());
+    return Guice.createInjector(modules);
   }
 
   private Injector createBootstrapInjector(PluginLoader pluginLoader) {
-    Module scmContextListenerModule = new ScmContextListenerModule();
-    BootstrapModule bootstrapModule = new BootstrapModule(pluginLoader);
-    ScmInitializerModule scmInitializerModule = new ScmInitializerModule();
-    EagerSingletonModule eagerSingletonModule = new EagerSingletonModule();
-    CloseableModule closeableModule = new CloseableModule();
-    ScmEventBusModule scmEventBusModule = new ScmEventBusModule();
+    return Guice.createInjector(createBootstrapModules(pluginLoader));
+  }
 
-    return Guice.createInjector(
-      bootstrapModule,
-      scmContextListenerModule,
-      scmEventBusModule,
-      scmInitializerModule,
-      eagerSingletonModule,
-      closeableModule
+  private List<Module> createBootstrapModules(PluginLoader pluginLoader) {
+    List<Module> modules = new ArrayList<>(createBaseModules());
+    modules.add(new BootstrapModule(pluginLoader));
+    return modules;
+  }
+
+  private List<Module> createBaseModules() {
+    return ImmutableList.of(
+      new EagerSingletonModule(),
+      new ScmInitializerModule(),
+      new ScmEventBusModule(),
+      new ServletContextModule(),
+      new CloseableModule()
     );
   }
 
@@ -144,10 +167,4 @@ public class BootstrapContextListener implements ServletContextListener {
     updateEngine.update();
   }
 
-  private static class ScmContextListenerModule extends AbstractModule {
-    @Override
-    protected void configure() {
-      install(new FactoryModuleBuilder().build(ScmContextListener.Factory.class));
-    }
-  }
 }

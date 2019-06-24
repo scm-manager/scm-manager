@@ -1,11 +1,10 @@
 package sonia.scm.boot;
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.google.inject.multibindings.Multibinder;
-import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import sonia.scm.Default;
 import sonia.scm.SCMContext;
@@ -14,17 +13,16 @@ import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
 
 final class SingleView {
 
   private SingleView() {
   }
 
-  static ServletContextListener error(Throwable throwable) {
+  static SingleViewModuleProvider error(Throwable throwable) {
     String error = Throwables.getStackTraceAsString(throwable);
 
     ViewController controller = new SimpleViewController("/templates/error.mustache", request -> {
@@ -34,30 +32,30 @@ final class SingleView {
       );
       return new View(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, model);
     });
-    return new SingleViewContextListener(controller);
+    return new SingleViewModuleProvider(controller);
   }
 
-  static ServletContextListener view(String template, int sc) {
+  static SingleViewModuleProvider view(String template, int sc) {
     ViewController controller = new SimpleViewController(template, request -> {
       Object model = ImmutableMap.of(
         "contextPath", request.getContextPath()
       );
       return new View(sc, model);
     });
-    return new SingleViewContextListener(controller);
+    return new SingleViewModuleProvider(controller);
   }
 
-  private static class SingleViewContextListener extends GuiceServletContextListener {
+  private static class SingleViewModuleProvider implements ModuleProvider {
 
     private final ViewController controller;
 
-    private SingleViewContextListener(ViewController controller) {
+    private SingleViewModuleProvider(ViewController controller) {
       this.controller = controller;
     }
 
     @Override
-    protected Injector getInjector() {
-      return Guice.createInjector(new SingleViewModule(controller));
+    public Collection<Module> createModules() {
+      return ImmutableList.of(new ServletContextModule(), new SingleViewModule(controller));
     }
   }
 
@@ -83,8 +81,6 @@ final class SingleView {
       bind(TemplateEngine.class).annotatedWith(Default.class).to(
         MustacheTemplateEngine.class);
       bind(TemplateEngineFactory.class);
-
-      bind(ServletContext.class).annotatedWith(Default.class).toInstance(getServletContext());
 
       serve("/images/*", "/styles/*", "/favicon.ico").with(StaticResourceServlet.class);
       serve("/*").with(SingleViewServlet.class);

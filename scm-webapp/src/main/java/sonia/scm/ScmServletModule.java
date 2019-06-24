@@ -59,8 +59,8 @@ import sonia.scm.net.ahc.ContentTransformer;
 import sonia.scm.net.ahc.DefaultAdvancedHttpClient;
 import sonia.scm.net.ahc.JsonContentTransformer;
 import sonia.scm.net.ahc.XmlContentTransformer;
-import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.DefaultPluginManager;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.repository.DefaultRepositoryManager;
 import sonia.scm.repository.DefaultRepositoryProvider;
@@ -110,7 +110,6 @@ import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.DefaultAdministrationContext;
 
 import javax.net.ssl.SSLContext;
-import javax.servlet.ServletContext;
 
 import static sonia.scm.api.v2.resources.ScmPathInfo.REST_API_PATH;
 
@@ -179,9 +178,8 @@ public class ScmServletModule extends ServletModule
 
   //~--- constructors ---------------------------------------------------------
 
-  ScmServletModule(ServletContext servletContext, DefaultPluginLoader pluginLoader, ClassOverrides overrides)
+  public ScmServletModule(PluginLoader pluginLoader, ClassOverrides overrides)
   {
-    this.servletContext = servletContext;
     this.pluginLoader = pluginLoader;
     this.overrides = overrides;
   }
@@ -205,10 +203,6 @@ public class ScmServletModule extends ServletModule
     ThrowingProviderBinder.create(binder()).bind(
       RepositoryProvider.class, Repository.class).to(
       DefaultRepositoryProvider.class).in(RequestScoped.class);
-
-    // bind servlet context
-    bind(ServletContext.class).annotatedWith(Default.class).toInstance(
-      servletContext);
 
     // bind event api
     bind(ScmEventBus.class).toInstance(ScmEventBus.getInstance());
@@ -408,8 +402,5 @@ public class ScmServletModule extends ServletModule
   private final ClassOverrides overrides;
 
   /** Field description */
-  private final DefaultPluginLoader pluginLoader;
-
-  /** Field description */
-  private final ServletContext servletContext;
+  private final PluginLoader pluginLoader;
 }
