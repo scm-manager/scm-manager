@@ -27,7 +27,10 @@ type Props = {
 class Admin extends React.Component<Props> {
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {
-      return url.substring(0, url.length - 2);
+      if(url.includes("role")) {
+        return url.substring(0, url.length - 2);
+      }
+      return url.substring(0, url.length - 1);
     }
     return url;
   };
