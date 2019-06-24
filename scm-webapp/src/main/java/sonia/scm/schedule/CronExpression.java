@@ -30,7 +30,7 @@ final class CronExpression {
 
   boolean shouldRun(ZonedDateTime time) {
     ZonedDateTime now = ZonedDateTime.now(clock);
-    return time.isBefore(now);
+    return time.isBefore(now) || time.isEqual(now);
   }
 
   Optional<ZonedDateTime> calculateNextRun() {
