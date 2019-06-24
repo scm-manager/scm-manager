@@ -6,8 +6,8 @@ import java.util.function.BiConsumer;
 public interface V1PropertyReader {
 
   V1PropertyReader REPOSITORY_PROPERTY_READER = new RepositoryV1PropertyReader();
-  V1PropertyReader USER_PROPERTY_READER = new RepositoryV1PropertyReader();
-  V1PropertyReader GROUP_PROPERTY_READER = new RepositoryV1PropertyReader();
+  V1PropertyReader USER_PROPERTY_READER = new UserV1PropertyReader();
+  V1PropertyReader GROUP_PROPERTY_READER = new GroupV1PropertyReader();
 
   String getStoreName();
 
