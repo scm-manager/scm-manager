@@ -1,19 +1,22 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Title, Loading, ErrorNotification } from "@scm-manager/ui-components";
+import {Loading, Subtitle} from "@scm-manager/ui-components";
+import {getAppVersion} from "../../modules/indexResource";
+import {connect} from "react-redux";
+import Title from "@scm-manager/ui-components/src/layout/Title";
 
 type Props = {
   loading: boolean,
   error: Error,
 
+  version: string,
+
   // context objects
   t: string => string
 };
 
-
 class AdminDetails extends React.Component<Props> {
-
   render() {
     const { t, loading } = this.props;
 
@@ -21,10 +24,18 @@ class AdminDetails extends React.Component<Props> {
       return <Loading />;
     }
 
-    return (
-      <>Nothing special.</>
-    );
+    return <>
+      <Title title={t("admin.information.currentAppVersion")}/>
+      <Subtitle subtitle={this.props.version}/>
+    </>;
   }
 }
 
-export default translate("admin")(AdminDetails);
+const mapStateToProps = (state: any) => {
+  const version = getAppVersion(state);
+  return {
+    version
+  };
+};
+
+export default connect(mapStateToProps)(translate("admin")(AdminDetails));

@@ -5,6 +5,9 @@
       "informationNavLink": "Information",
       "settingsNavLink": "Settings",
       "generalNavLink": "General"
+    },
+    "information":  {
+      "currentAppVersion": "Current Application Version"
     }
   },
   "repositoryRole": {

@@ -73,6 +73,7 @@ export default function reducer(
     case FETCH_INDEXRESOURCES_SUCCESS:
       return {
         ...state,
+        version: action.payload.version,
         links: action.payload._links
       };
     default:
@@ -105,6 +106,10 @@ export function getLinkCollection(state: Object, name: string): Link[] {
     return state.indexResources.links[name];
   }
   return [];
+}
+
+export function getAppVersion(state: Object) {
+  return state.indexResources.version;
 }
 
 export function getUiPluginsLink(state: Object) {

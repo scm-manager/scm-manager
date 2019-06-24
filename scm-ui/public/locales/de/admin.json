@@ -5,6 +5,9 @@
       "informationNavLink": "Informationen",
       "settingsNavLink": "Einstellungen",
       "generalNavLink": "Generell"
+    },
+    "information":  {
+      "currentAppVersion": "Aktuelle Software-Versionsnummer"
     }
   },
   "repositoryRole": {
