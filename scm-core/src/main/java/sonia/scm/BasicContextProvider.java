@@ -126,19 +126,6 @@ public class BasicContextProvider implements SCMContextProvider
     return baseDirectory.toPath().resolve(path);
   }
 
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void close() throws IOException {}
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void init() {}
-
   //~--- get methods ----------------------------------------------------------
 
   /**
