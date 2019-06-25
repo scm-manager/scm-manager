@@ -14,9 +14,9 @@ import auth from "./modules/auth";
 import pending from "./modules/pending";
 import failure from "./modules/failure";
 import permissions from "./repos/permissions/modules/permissions";
-import config from "./config/modules/config";
-import roles from "./config/roles/modules/roles";
-import namespaceStrategies from "./config/modules/namespaceStrategies";
+import config from "./admin/modules/config";
+import roles from "./admin/roles/modules/roles";
+import namespaceStrategies from "./admin/modules/namespaceStrategies";
 import indexResources from "./modules/indexResource";
 
 import type { BrowserHistory } from "history/createBrowserHistory";

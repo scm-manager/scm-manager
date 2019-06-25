@@ -32,7 +32,7 @@ class CronTask implements Task, Runnable {
 
   @Override
   public synchronized void run() {
-    if (expression.shouldRun(nextRun)) {
+    if (hasNextRun() && expression.shouldRun(nextRun)) {
       LOG.debug("execute task {}, because of matching expression {}", name, expression);
       runnable.run();
       Optional<ZonedDateTime> next = expression.calculateNextRun();
@@ -40,6 +40,7 @@ class CronTask implements Task, Runnable {
         nextRun = next.get();
       } else {
         LOG.debug("cancel task {}, because expression {} has no next execution", name, expression);
+        nextRun = null;
         cancel();
       }
     } else {

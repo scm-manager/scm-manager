@@ -75,7 +75,7 @@ class PrimaryNavigation extends React.Component<Props> {
       "primary-navigation.groups",
       "groups"
     );
-    append("/config", "/config", "primary-navigation.config", "config");
+    append("/admin", "/admin", "primary-navigation.admin", "config");
 
     navigationItems.push(
       <ExtensionPoint

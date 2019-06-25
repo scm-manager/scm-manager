@@ -129,5 +129,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(translate("config")(SingleRepositoryRole))
+  )(translate("admin")(SingleRepositoryRole))
 );

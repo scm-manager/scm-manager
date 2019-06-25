@@ -1,49 +1,15 @@
 {
   "config": {
-    "navigationLabel": "Einstellungs Navigation",
-    "globalConfigurationNavLink": "Globale Einstellungen",
-    "title": "Einstellungen",
+    "navigationLabel": "Administrations Navigation",
+    "title": "Globale Einstellungen",
     "errorTitle": "Fehler",
-    "errorSubtitle": "Unbekannter Einstellungen Fehler"
-  },
-  "repositoryRole": {
-    "navLink": "Berechtigungsrollen",
-    "title": "Berechtigungsrollen",
-    "errorTitle": "Fehler",
-    "errorSubtitle": "Unbekannter Berechtigungsrollen Fehler",
-    "createSubtitle": "Berechtigungsrolle erstellen",
-    "editSubtitle": "Berechtigungsrolle bearbeiten",
-    "overview": {
-      "title": "Übersicht aller verfügbaren Berechtigungsrollen",
-      "noPermissionRoles": "Keine Berechtigungsrollen gefunden.",
-      "createButton": "Berechtigungsrolle erstellen"
-    },
-    "editButton": "Bearbeiten",
-    "name": "Name",
-    "type": "Typ",
-    "verbs": "Berechtigungen",
-    "system": "System",
+    "errorSubtitle": "Unbekannter Einstellungen Fehler",
     "form": {
-      "name": "Name",
-      "permissions": "Berechtigungen",
-      "submit": "Speichern"
+      "submit": "Speichern",
+      "submit-success-notification": "Einstellungen wurden erfolgreich geändert!",
+      "no-read-permission-notification": "Hinweis: Es fehlen Berechtigungen zum Lesen der Einstellungen!",
+      "no-write-permission-notification": "Hinweis: Es fehlen Berechtigungen zum Bearbeiten der Einstellungen!"
     }
-  },
-  "deleteRole" : {
-    "button": "Löschen",
-    "subtitle": "Berechtigungsrolle löschen",
-    "confirmAlert": {
-      "title": "Berechtigungsrolle löschen",
-      "message": "Soll die Berechtigungsrolle wirklich gelöscht werden? Alle Nutzer dieser Rolle verlieren Ihre Berechtigungen.",
-      "submit": "Ja",
-      "cancel": "Nein"
-    }
-  },
-  "config-form": {
-    "submit": "Speichern",
-    "submit-success-notification": "Einstellungen wurden erfolgreich geändert!",
-    "no-read-permission-notification": "Hinweis: Es fehlen Berechtigungen zum Lesen der Einstellungen!",
-    "no-write-permission-notification": "Hinweis: Es fehlen Berechtigungen zum Bearbeiten der Einstellungen!"
   },
   "proxy-settings": {
     "name": "Proxy Einstellungen",

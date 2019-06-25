@@ -1,14 +1,15 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { Route, Switch } from "react-router-dom";
+import {Redirect, Route, Switch} from "react-router-dom";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import type { History } from "history";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import type { Links } from "@scm-manager/ui-types";
-import { Page, Navigation, NavLink, Section } from "@scm-manager/ui-components";
+import { Page, Navigation, NavLink, Section, SubNavigation } from "@scm-manager/ui-components";
 import { getLinks } from "../../modules/indexResource";
+import AdminDetails from "./AdminDetails";
 import GlobalConfig from "./GlobalConfig";
 import RepositoryRoles from "../roles/containers/RepositoryRoles";
 import SingleRepositoryRole from "../roles/containers/SingleRepositoryRole";
@@ -23,10 +24,13 @@ type Props = {
   history: History
 };
 
-class Config extends React.Component<Props> {
+class Admin extends React.Component<Props> {
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {
-      return url.substring(0, url.length - 2);
+      if(url.includes("role")) {
+        return url.substring(0, url.length - 2);
+      }
+      return url.substring(0, url.length - 1);
     }
     return url;
   };
@@ -55,7 +59,9 @@ class Config extends React.Component<Props> {
         <div className="columns">
           <div className="column is-three-quarters">
             <Switch>
-              <Route path={url} exact component={GlobalConfig} />
+              <Redirect exact from={url} to={`${url}/info`} />
+              <Route path={`${url}/info`} exact component={AdminDetails} />
+              <Route path={`${url}/settings/general`} exact component={GlobalConfig} />
               <Route
                 path={`${url}/role/:role`}
                 render={() => (
@@ -86,7 +92,7 @@ class Config extends React.Component<Props> {
                 )}
               />
               <ExtensionPoint
-                name="config.route"
+                name="admin.route"
                 props={extensionProps}
                 renderAll={true}
               />
@@ -94,22 +100,38 @@ class Config extends React.Component<Props> {
           </div>
           <div className="column is-one-quarter">
             <Navigation>
-              <Section label={t("config.navigationLabel")}>
+              <Section label={t("admin.menu.navigationLabel")}>
                 <NavLink
-                  to={`${url}`}
-                  label={t("config.globalConfigurationNavLink")}
+                  to={`${url}/info`}
+                  icon="fas fa-info-circle"
+                  label={t("admin.menu.informationNavLink")}
                 />
                 <NavLink
                   to={`${url}/roles/`}
+                  icon="fas fa-user-shield"
                   label={t("repositoryRole.navLink")}
                   activeWhenMatch={this.matchesRoles}
                   activeOnlyWhenExact={false}
                 />
                 <ExtensionPoint
-                  name="config.navigation"
+                  name="admin.navigation"
                   props={extensionProps}
                   renderAll={true}
                 />
+                <SubNavigation
+                  to={`${url}/settings/general`}
+                  label={t("admin.menu.settingsNavLink")}
+                >
+                  <NavLink
+                    to={`${url}/settings/general`}
+                    label={t("admin.menu.generalNavLink")}
+                  />
+                  <ExtensionPoint
+                    name="admin.setting"
+                    props={extensionProps}
+                    renderAll={true}
+                  />
+                </SubNavigation>
               </Section>
             </Navigation>
           </div>
@@ -128,5 +150,5 @@ const mapStateToProps = (state: any) => {
 
 export default compose(
   connect(mapStateToProps),
-  translate("config")
-)(Config);
+  translate("admin")
+)(Admin);

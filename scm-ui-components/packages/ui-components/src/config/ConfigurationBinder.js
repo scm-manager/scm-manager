@@ -29,20 +29,20 @@ class ConfigurationBinder {
 
     // create NavigationLink with translated label
     const ConfigNavLink = translate(this.i18nNamespace)(({t}) => {
-      return this.navLink("/config" + to, labelI18nKey, t);
+      return this.navLink("/admin/settings" + to, labelI18nKey, t);
     });
 
     // bind navigation link to extension point
-    binder.bind("config.navigation", ConfigNavLink, configPredicate);
+    binder.bind("admin.setting", ConfigNavLink, configPredicate);
 
     // route for global configuration, passes the link from the index resource to component
     const ConfigRoute = ({ url, links, ...additionalProps }) => {
       const link = links[linkName].href;
-      return this.route(url + to, <ConfigurationComponent link={link} {...additionalProps} />);
+      return this.route(url + "/settings" + to, <ConfigurationComponent link={link} {...additionalProps} />);
     };
 
     // bind config route to extension point
-    binder.bind("config.route", ConfigRoute, configPredicate);
+    binder.bind("admin.route", ConfigRoute, configPredicate);
   }
 
   bindRepository(to: string, labelI18nKey: string, linkName: string, RepositoryComponent: any) {

@@ -53,7 +53,7 @@ class CronTaskTest {
   @Test
   void shouldCancelWithoutNextRun() {
     ZonedDateTime time = ZonedDateTime.now();
-    when(expression.calculateNextRun()).thenAnswer(new FirstTimeAnswer(Optional.of(time), Optional.empty()));
+    when(expression.calculateNextRun()).thenReturn(Optional.of(time), Optional.empty());
     when(expression.shouldRun(time)).thenReturn(true);
 
     CronTask task = task();
@@ -65,31 +65,25 @@ class CronTaskTest {
   }
 
   @Test
+  void shouldNotRunAfterCancelHasBeenCalledIfRunIsCalledAgain() {
+    ZonedDateTime time = ZonedDateTime.now();
+    when(expression.calculateNextRun()).thenReturn(Optional.of(time), Optional.empty());
+    when(expression.shouldRun(time)).thenReturn(true);
+
+    CronTask task = task();
+    task.setFuture(future);
+
+    task.run();
+    task.run();
+
+    verify(future).cancel(false);
+    verify(runnable).run();
+  }
+
+  @Test
   void shouldNotRun() {
     task().run();
 
     verify(runnable, never()).run();
   }
-
-  private static class FirstTimeAnswer implements Answer<Object> {
-
-    private boolean first = true;
-    private final Object answer;
-    private final Object secondAnswer;
-
-    FirstTimeAnswer(Object answer, Object secondAnswer) {
-      this.answer = answer;
-      this.secondAnswer = secondAnswer;
-    }
-
-    @Override
-    public Object answer(InvocationOnMock invocation) {
-      if (first) {
-        first = false;
-        return answer;
-      }
-      return secondAnswer;
-    }
-  }
-
 }

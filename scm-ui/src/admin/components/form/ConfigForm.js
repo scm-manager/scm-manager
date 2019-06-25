@@ -99,7 +99,7 @@ class ConfigForm extends React.Component<Props, State> {
       return (
         <Notification
           type={"danger"}
-          children={t("config-form.no-read-permission-notification")}
+          children={t("config.form.no-read-permission-notification")}
         />
       );
     }
@@ -108,7 +108,7 @@ class ConfigForm extends React.Component<Props, State> {
       noPermissionNotification = (
         <Notification
           type={"info"}
-          children={t("config-form.no-write-permission-notification")}
+          children={t("config.form.no-write-permission-notification")}
           onClose={() => this.onClose()}
         />
       );
@@ -167,7 +167,7 @@ class ConfigForm extends React.Component<Props, State> {
         <hr />
         <SubmitButton
           loading={loading}
-          label={t("config-form.submit")}
+          label={t("config.form.submit")}
           disabled={
             !configUpdatePermission || this.hasError() || !this.state.changed
           }

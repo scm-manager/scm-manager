@@ -21,7 +21,8 @@ import Groups from "../groups/containers/Groups";
 import SingleGroup from "../groups/containers/SingleGroup";
 import CreateGroup from "../groups/containers/CreateGroup";
 
-import Config from "../config/containers/Config";
+import Admin from "../admin/containers/Admin";
+
 import Profile from "./Profile";
 
 type Props = {
@@ -112,8 +113,8 @@ class Main extends React.Component<Props> {
             authenticated={authenticated}
           />
           <ProtectedRoute
-            path="/config"
-            component={Config}
+            path="/admin"
+            component={Admin}
             authenticated={authenticated}
           />
           <ProtectedRoute
