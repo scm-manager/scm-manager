@@ -1,7 +1,5 @@
 package sonia.scm.store;
 
-import org.assertj.core.api.Assertions;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,7 +15,6 @@ import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver;
 import sonia.scm.update.PropertyFileAccess;
 import sonia.scm.util.IOUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,9 +30,6 @@ class JAXBPropertyFileAccessTest {
 
   public static final String REPOSITORY_ID = "repoId";
   public static final String STORE_NAME = "test";
-  public static final String OLD_FILE_NAME = "old";
-  public static final String NEW_FILE_NAME = "new";
-  public static final String CONFIG_DIR = "config";
 
   @Mock
   SCMContextProvider contextProvider;
