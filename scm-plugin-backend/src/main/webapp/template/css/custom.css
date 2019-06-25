@@ -28,6 +28,156 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+
+body{
+	font-size:16px;
+	line-height: 1.75;
+	font-weight:300;
+}
+h1, h2, h3, h4, h5, h6, #nav-below {
+	font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+	border-bottom: unset;
+	box-shadow: none;
+}
+h1 {
+	font-weight:600;
+}
+h1 a:link, h1 a:visited, h2 a:link, h2 a:visited, h3 a:link, h3 a:visited, h4 a:link, h4 a:visited, h5 a:link, h5 a:visited, h6 a:link, h6 a:visited {
+    color: #33b2e8;
+}
+h2{
+	color: #333;
+	font-weight: 400;
+}
+h1 + .entry-meta{
+border-bottom: 1px solid #ddd;
+padding-bottom: 20px;
+}
+
+/* Links */
+
+a:link, a:visited {
+color: #33b2e8;
+}
+
+/* Header */ 
+
+#branding {
+	background: url(https://www.scm-manager.org/wp-content/uploads/2019/06/scmManagerHero.jpg);
+}
+#navigation {
+    padding: 40px 0 0;
+}
+
+/* Main Content */ 
+
+#main {
+    background: #fff;
+}
+
+#content ul {
+	padding-left: 0;
+}
+#content ul li {
+    list-style-type: disc;
+	list-style-position: inside;
+	margin-bottom: 15px;
+}
+
+/* Blog */ 
+
+#content .entry-title, #portfolio .entry-title {
+border: 0;
+}
+.entry-meta{
+font-size: 14px;
+color: #999;
+}
+#nav-below{
+overflow:visible;
+}
+#nav-below a{
+font-weight: 600;
+color: #fff;
+background: #999;
+text-shadow: none;
+padding: 10px 15px;
+border-radius: 5px;
+}
+.reply a:link, #commentform #submit {
+    font-size: 12px;
+    color: #fff;
+    background: #33b2e8;
+    box-shadow: none;
+    border-color: #33b2e8;
+    padding: 5px 10px;
+    text-shadow: none;
+}
+
+/* Sidebar */
+
+.widget-container h3{
+	border-bottom:0;
+	margin-bottom: 0;
+	font-size: 15px;
+	font-weight: 700;
+	letter-spacing: 1px;
+}
+.widget-container ul li a {
+	font-size: 15px;
+	color: #33b2e8;
+	line-height: 1.8;
+	padding: 0;
+}
+#sidebar #text-2, #sidebar #text-7 {
+	border-top:1px solid #ddd;
+	padding-top:30px;
+}
+#sidebar #text-2 .textwidget, #sidebar #text-3 .textwidget{ 
+	width: 235px;
+	margin: auto;
+	padding: 20px 0;
+	background: #eee;
+	text-align: center;
+	border-radius: 5px;
+}
+#sidebar #text-6 p, #sidebar #text-7 p {
+	color: #33b2e8;
+}
+#sidebar #text-7 .button{
+font-size: 12px;
+    color: #fff;
+    background: #33b2e8;
+    box-shadow: none;
+    border-color: #33b2e8;
+	margin-top: 10px;
+    padding: 5px 10px;
+    text-shadow: none;
+	border-radius: 5px;
+	display: inline-block;
+}
+#sidebar #text-7 img {
+	max-width: 130px;
+}
+#social4i{
+	position: relative; 
+	display: block;
+	width: 55%;
+	margin: auto;
+}
+
+/* Footer */
+
+footer#colophon {
+border-top: 1px solid #333;
+background: #111;
+}
+
+footer span {
+color: #999;
+}
+
+
 h3.ui-accordion-header {
   padding-bottom: 0 !important;
 }
