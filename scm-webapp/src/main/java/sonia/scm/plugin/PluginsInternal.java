@@ -41,6 +41,7 @@ import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.boot.ClassLoaderLifeCycle;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -86,13 +87,13 @@ public final class PluginsInternal
    *
    * @throws IOException
    */
-  public static Set<PluginWrapper> collectPlugins(ClassLoader classLoader,
-    Path directory)
+  public static Set<PluginWrapper> collectPlugins(ClassLoaderLifeCycle classLoaderLifeCycle,
+                                                  Path directory)
     throws IOException
   {
-    PluginProcessor processor = new PluginProcessor(directory);
+    PluginProcessor processor = new PluginProcessor(classLoaderLifeCycle, directory);
 
-    return processor.collectPlugins(classLoader);
+    return processor.collectPlugins(classLoaderLifeCycle.getBootstrapClassLoader());
   }
 
   /**

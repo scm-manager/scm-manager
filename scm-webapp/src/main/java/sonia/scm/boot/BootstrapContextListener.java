@@ -44,8 +44,6 @@ import sonia.scm.SCMContext;
 import sonia.scm.ScmContextListener;
 import sonia.scm.ScmEventBusModule;
 import sonia.scm.ScmInitializerModule;
-import sonia.scm.Stage;
-import sonia.scm.event.ScmEventBus;
 import sonia.scm.migration.UpdateException;
 import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.Plugin;
@@ -57,7 +55,6 @@ import sonia.scm.plugin.PluginsInternal;
 import sonia.scm.plugin.SmpArchive;
 import sonia.scm.update.MigrationWizardContextListener;
 import sonia.scm.update.UpdateEngine;
-import sonia.scm.util.ClassLoaders;
 import sonia.scm.util.IOUtil;
 
 import javax.servlet.ServletContext;
@@ -102,6 +99,8 @@ public class BootstrapContextListener implements ServletContextListener {
 
   //~--- methods --------------------------------------------------------------
 
+  private final ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
+
   /**
    * Method description
    *
@@ -111,6 +110,7 @@ public class BootstrapContextListener implements ServletContextListener {
   @Override
   public void contextDestroyed(ServletContextEvent sce) {
     contextListener.contextDestroyed(sce);
+    classLoaderLifeCycle.shutdown();
 
     context = null;
     contextListener = null;
@@ -124,18 +124,13 @@ public class BootstrapContextListener implements ServletContextListener {
    */
   @Override
   public void contextInitialized(ServletContextEvent sce) {
+    classLoaderLifeCycle.init();
+
     context = sce.getServletContext();
 
     createContextListener();
 
     contextListener.contextInitialized(sce);
-
-    // register for restart events
-    if (!registered && (SCMContext.getContext().getStage() == Stage.DEVELOPMENT)) {
-      logger.info("register for restart events");
-      ScmEventBus.getInstance().register(this);
-      registered = true;
-    }
   }
 
   private void createContextListener() {
@@ -151,7 +146,6 @@ public class BootstrapContextListener implements ServletContextListener {
   }
 
   private void createMigrationOrNormalContextListener() {
-    ClassLoader cl;
     Set<PluginWrapper> plugins;
     PluginLoader pluginLoader;
 
@@ -166,11 +160,10 @@ public class BootstrapContextListener implements ServletContextListener {
         logger.info("core plugin extraction is disabled");
       }
 
-      cl = ClassLoaders.getContextClassLoader(BootstrapContextListener.class);
 
-      plugins = PluginsInternal.collectPlugins(cl, pluginDirectory.toPath());
+      plugins = PluginsInternal.collectPlugins(classLoaderLifeCycle, pluginDirectory.toPath());
 
-      pluginLoader = new DefaultPluginLoader(context, cl, plugins);
+      pluginLoader = new DefaultPluginLoader(context, classLoaderLifeCycle.getBootstrapClassLoader(), plugins);
 
     } catch (IOException ex) {
       throw new PluginLoadException("could not load plugins", ex);
@@ -178,7 +171,7 @@ public class BootstrapContextListener implements ServletContextListener {
 
     Injector bootstrapInjector = createBootstrapInjector(pluginLoader);
 
-    startEitherMigrationOrNormalServlet(cl, plugins, pluginLoader, bootstrapInjector);
+    startEitherMigrationOrNormalServlet(classLoaderLifeCycle.getBootstrapClassLoader(), plugins, pluginLoader, bootstrapInjector);
   }
 
   private void startEitherMigrationOrNormalServlet(ClassLoader cl, Set<PluginWrapper> plugins, PluginLoader pluginLoader, Injector bootstrapInjector) {
@@ -437,9 +430,6 @@ public class BootstrapContextListener implements ServletContextListener {
 
   /** Field description */
   private ServletContextListener contextListener;
-
-  /** Field description */
-  private boolean registered = false;
 
   private static class ScmContextListenerModule extends AbstractModule {
     @Override

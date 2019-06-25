@@ -42,6 +42,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import sonia.scm.boot.ClassLoaderLifeCycle;
 
 import static org.hamcrest.Matchers.*;
 
@@ -288,7 +289,7 @@ public class PluginProcessorTest
   public void setUp() throws IOException
   {
     pluginDirectory = temp.newFolder();
-    processor = new PluginProcessor(pluginDirectory.toPath());
+    processor = new PluginProcessor(ClassLoaderLifeCycle.create(), pluginDirectory.toPath());
   }
 
   //~--- methods --------------------------------------------------------------

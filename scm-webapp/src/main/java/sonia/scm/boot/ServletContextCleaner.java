@@ -1,10 +1,12 @@
 package sonia.scm.boot;
 
 import com.google.common.collect.ImmutableSet;
+import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
+import javax.ws.rs.ext.RuntimeDelegate;
 import java.util.Enumeration;
 import java.util.Set;
 
@@ -46,6 +48,10 @@ final class ServletContextCleaner {
         LOG.info("keep attribute {} in servlet context", name);
       }
     }
+
+    ResteasyProviderFactory.clearInstanceIfEqual(ResteasyProviderFactory.getInstance());
+    ResteasyProviderFactory.clearContextData();
+    RuntimeDelegate.setInstance(null);
   }
 
   private static boolean shouldRemove(String name) {

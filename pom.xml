@@ -826,7 +826,7 @@
     <jaxb.version>2.3.0</jaxb.version>
 
     <!-- event bus -->
-    <legman.version>1.4.2</legman.version>
+    <legman.version>1.5.1</legman.version>
 
     <!-- webserver -->
     <jetty.version>9.4.14.v20181114</jetty.version>
@@ -837,12 +837,11 @@
     <shiro.version>1.4.0</shiro.version>
 
     <!-- repository libraries -->
-    <jgit.version>v4.5.3.201708160445-r-scm1</jgit.version>
+    <jgit.version>v5.4.0.201906121030-r-scm1</jgit.version>
     <svnkit.version>1.9.0-scm3</svnkit.version>
 
     <!-- util libraries -->
     <guava.version>26.0-jre</guava.version>
-    <quartz.version>2.2.3</quartz.version>
 
     <!-- frontend -->
     <nodejs.version>10.16.0</nodejs.version>

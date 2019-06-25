@@ -46,16 +46,7 @@ public class DefaultPluginClassLoader extends URLClassLoader
   implements PluginClassLoader
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param urls
-   */
-  public DefaultPluginClassLoader(URL[] urls)
-  {
-    super(urls);
-  }
+  private final String plugin;
 
   /**
    * Constructs ...
@@ -64,8 +55,14 @@ public class DefaultPluginClassLoader extends URLClassLoader
    * @param urls
    * @param parent
    */
-  public DefaultPluginClassLoader(URL[] urls, ClassLoader parent)
+  public DefaultPluginClassLoader(URL[] urls, ClassLoader parent, String plugin)
   {
     super(urls, parent);
+    this.plugin = plugin;
+  }
+
+  @Override
+  public String toString() {
+    return DefaultPluginClassLoader.class.getName() + " for plugin " + plugin;
   }
 }

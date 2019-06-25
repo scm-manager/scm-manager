@@ -41,6 +41,7 @@ import com.google.common.collect.Sets;
 import com.google.common.hash.Hashing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.boot.ClassLoaderLifeCycle;
 import sonia.scm.plugin.ExplodedSmp.PathTransformer;
 
 import javax.xml.bind.JAXBContext;
@@ -105,14 +106,18 @@ public final class PluginProcessor
 
   //~--- constructors ---------------------------------------------------------
 
+  private ClassLoaderLifeCycle classLoaderLifeCycle;
+
   /**
    * Constructs ...
    *
    *
+   * @param classLoaderLifeCycle
    * @param pluginDirectory
    */
-  public PluginProcessor(Path pluginDirectory)
+  public PluginProcessor(ClassLoaderLifeCycle classLoaderLifeCycle, Path pluginDirectory)
   {
+    this.classLoaderLifeCycle = classLoaderLifeCycle;
     this.pluginDirectory = pluginDirectory;
     this.installedDirectory = findInstalledDirectory();
 
@@ -372,18 +377,17 @@ public final class PluginProcessor
     URL[] urlArray = urls.toArray(new URL[urls.size()]);
     Plugin plugin = smp.getPlugin();
 
+    String id = plugin.getInformation().getId(false);
+
     if (smp.getPlugin().isChildFirstClassLoader())
     {
-      logger.debug("create child fist classloader for plugin {}",
-        plugin.getInformation().getId());
-      classLoader = new ChildFirstPluginClassLoader(urlArray,
-        parentClassLoader);
+      logger.debug("create child fist classloader for plugin {}", id);
+      classLoader = classLoaderLifeCycle.createChildFirstPluginClassLoader(urlArray, parentClassLoader, id);
     }
     else
     {
-      logger.debug("create parent fist classloader for plugin {}",
-        plugin.getInformation().getId());
-      classLoader = new DefaultPluginClassLoader(urlArray, parentClassLoader);
+      logger.debug("create parent fist classloader for plugin {}", id);
+      classLoader = classLoaderLifeCycle.createPluginClassLoader(urlArray, parentClassLoader, id);
     }
 
     return classLoader;

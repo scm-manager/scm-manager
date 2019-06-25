@@ -20,7 +20,7 @@ public class ScmLfsProtocolServlet extends LfsProtocolServlet {
 
 
   @Override
-  protected LargeFileRepository getLargeFileRepository(LfsRequest request, String path) throws LfsException {
+  protected LargeFileRepository getLargeFileRepository(LfsRequest request, String path, String auth)  throws LfsException {
     return repository;
   }
 }
