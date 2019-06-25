@@ -1,4 +1,4 @@
-package sonia.scm.lifecycle;
+package sonia.scm;
 
 import com.github.sdorra.webresources.CacheControl;
 import com.github.sdorra.webresources.WebResourceSender;
@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * Serves static resources from servlet context.
+ */
 @Singleton
 public class StaticResourceServlet extends HttpServlet {
 
@@ -35,7 +38,7 @@ public class StaticResourceServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
       }
     } catch (IOException ex) {
-      LOG.warn("failed to servce resource", ex);
+      LOG.warn("failed to serve resource", ex);
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
   }

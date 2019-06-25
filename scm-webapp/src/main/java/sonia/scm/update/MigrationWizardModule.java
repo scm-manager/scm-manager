@@ -3,8 +3,7 @@ package sonia.scm.update;
 import com.google.inject.servlet.ServletModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.PushStateDispatcher;
-import sonia.scm.WebResourceServlet;
+import sonia.scm.StaticResourceServlet;
 
 class MigrationWizardModule extends ServletModule {
 
@@ -19,8 +18,7 @@ class MigrationWizardModule extends ServletModule {
     LOG.info("=   Open SCM-Manager in a browser to start the wizard.   =");
     LOG.info("=                                                        =");
     LOG.info("==========================================================");
-    bind(PushStateDispatcher.class).toInstance((request, response, uri) -> {});
-    serve("/images/*", "/styles/*", "/favicon.ico").with(WebResourceServlet.class);
+    serve("/images/*", "/styles/*", "/favicon.ico").with(StaticResourceServlet.class);
     serve("/*").with(MigrationWizardServlet.class);
   }
 }

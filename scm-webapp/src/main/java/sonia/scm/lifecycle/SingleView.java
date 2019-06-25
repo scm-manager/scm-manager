@@ -9,6 +9,7 @@ import com.google.inject.servlet.ServletModule;
 import sonia.scm.Default;
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.StaticResourceServlet;
 import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;

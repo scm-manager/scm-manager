@@ -1,4 +1,4 @@
-package sonia.scm.lifecycle;
+package sonia.scm;
 
 import com.google.common.io.Resources;
 import org.junit.jupiter.api.Test;
