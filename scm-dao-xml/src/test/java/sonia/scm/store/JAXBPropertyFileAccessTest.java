@@ -1,6 +1,7 @@
 package sonia.scm.store;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,11 +17,13 @@ import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver;
 import sonia.scm.update.PropertyFileAccess;
 import sonia.scm.util.IOUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 
@@ -30,6 +33,9 @@ class JAXBPropertyFileAccessTest {
 
   public static final String REPOSITORY_ID = "repoId";
   public static final String STORE_NAME = "test";
+  public static final String OLD_FILE_NAME = "old";
+  public static final String NEW_FILE_NAME = "new";
+  public static final String CONFIG_DIR = "config";
 
   @Mock
   SCMContextProvider contextProvider;
@@ -43,9 +49,26 @@ class JAXBPropertyFileAccessTest {
     lenient().when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
     lenient().when(contextProvider.resolve(any())).thenAnswer(invocation -> tempDir.resolve(invocation.getArgument(0).toString()));
 
-    locationResolver = new PathBasedRepositoryLocationResolver(contextProvider, new InitialRepositoryLocationResolver(), new DefaultFileSystem());//new TempDirRepositoryLocationResolver(tempDir.toFile());
+    locationResolver = new PathBasedRepositoryLocationResolver(contextProvider, new InitialRepositoryLocationResolver(), new DefaultFileSystem());
 
     fileAccess = new JAXBPropertyFileAccess(contextProvider, locationResolver);
+  }
+
+  @Test
+  void shouldRenameGlobalConfigFile() throws IOException {
+    Path baseDirectory = contextProvider.getBaseDirectory().toPath();
+    Path configDirectory = baseDirectory.resolve(StoreConstants.CONFIG_DIRECTORY_NAME);
+
+    Files.createDirectories(configDirectory);
+
+    Path oldPath = configDirectory.resolve("old" + StoreConstants.FILE_EXTENSION);
+    Files.createFile(oldPath);
+
+    fileAccess.renameGlobalConfigurationFrom("old").to("new");
+
+    Path newPath = configDirectory.resolve("new" + StoreConstants.FILE_EXTENSION);
+    assertThat(oldPath).doesNotExist();
+    assertThat(newPath).exists();
   }
 
   @Nested
@@ -63,7 +86,7 @@ class JAXBPropertyFileAccessTest {
 
       fileAccess.forStoreName(STORE_NAME).moveAsRepositoryStore(Paths.get("myStore.xml"), REPOSITORY_ID);
 
-      Assertions.assertThat(tempDir.resolve("repositories").resolve(REPOSITORY_ID).resolve("store").resolve("data").resolve(STORE_NAME).resolve("myStore.xml")).exists();
+      assertThat(tempDir.resolve("repositories").resolve(REPOSITORY_ID).resolve("store").resolve("data").resolve(STORE_NAME).resolve("myStore.xml")).exists();
     }
 
     @Test
@@ -76,8 +99,8 @@ class JAXBPropertyFileAccessTest {
       PropertyFileAccess.StoreFileTools statisticStoreAccess = fileAccess.forStoreName(STORE_NAME);
       statisticStoreAccess.forStoreFiles(statisticStoreAccess::moveAsRepositoryStore);
 
-      Assertions.assertThat(tempDir.resolve("repositories").resolve(REPOSITORY_ID).resolve("store").resolve("data").resolve(STORE_NAME).resolve("repoId.xml")).exists();
-      Assertions.assertThat(tempDir.resolve("repositories").resolve("repoId2").resolve("store").resolve("data").resolve(STORE_NAME).resolve("repoId2.xml")).exists();
+      assertThat(tempDir.resolve("repositories").resolve(REPOSITORY_ID).resolve("store").resolve("data").resolve(STORE_NAME).resolve("repoId.xml")).exists();
+      assertThat(tempDir.resolve("repositories").resolve("repoId2").resolve("store").resolve("data").resolve(STORE_NAME).resolve("repoId2.xml")).exists();
     }
   }
 
@@ -96,7 +119,7 @@ class JAXBPropertyFileAccessTest {
 
       fileAccess.forStoreName(STORE_NAME).moveAsRepositoryStore(Paths.get("myStore.xml"), REPOSITORY_ID);
 
-      Assertions.assertThat(tempDir.resolve("repositories").resolve(REPOSITORY_ID).resolve("store").resolve("data").resolve(STORE_NAME).resolve("myStore.xml")).doesNotExist();
+      assertThat(tempDir.resolve("repositories").resolve(REPOSITORY_ID).resolve("store").resolve("data").resolve(STORE_NAME).resolve("myStore.xml")).doesNotExist();
     }
   }
 }

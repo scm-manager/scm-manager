@@ -32,7 +32,7 @@ public class JAXBPropertyFileAccess implements PropertyFileAccess {
     return newName -> {
       Path configDir = contextProvider.getBaseDirectory().toPath().resolve(StoreConstants.CONFIG_DIRECTORY_NAME);
       Path oldConfigFile = configDir.resolve(oldName + XML_FILENAME_SUFFIX);
-      Path newConfigFile = configDir.resolve(oldName + XML_FILENAME_SUFFIX);
+      Path newConfigFile = configDir.resolve(newName + XML_FILENAME_SUFFIX);
       Files.move(oldConfigFile, newConfigFile);
     };
   }
