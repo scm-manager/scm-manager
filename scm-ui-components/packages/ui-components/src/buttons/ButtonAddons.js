@@ -7,7 +7,7 @@ type Props = {
   children: React.Node
 };
 
-class ButtonGroup extends React.Component<Props> {
+class ButtonAddons extends React.Component<Props> {
   render() {
     const { className, children } = this.props;
 
@@ -19,11 +19,11 @@ class ButtonGroup extends React.Component<Props> {
     });
 
     return (
-      <div className={classNames("field", "is-grouped", className)}>
+      <div className={classNames("field", "has-addons", className)}>
         {childWrapper}
       </div>
     );
   }
 }
 
-export default ButtonGroup;
+export default ButtonAddons;
