@@ -16,7 +16,7 @@ import static sonia.scm.version.Version.parse;
 
 class UpdateEngineTest {
 
-  ConfigurationEntryStoreFactory storeFactory = new InMemoryConfigurationEntryStoreFactory(new InMemoryConfigurationEntryStore());
+  ConfigurationEntryStoreFactory storeFactory = new InMemoryConfigurationEntryStoreFactory();
 
   List<String> processedUpdates = new ArrayList<>();
 
@@ -32,7 +32,21 @@ class UpdateEngineTest {
     updateEngine.update();
 
     assertThat(processedUpdates)
-      .containsExactly("1.1.0", "1.1.1", "1.2.0");
+      .containsExactly("test:1.1.0", "test:1.1.1", "test:1.2.0");
+  }
+
+  @Test
+  void shouldProcessCoreStepsBeforeOther() {
+    LinkedHashSet<UpdateStep> updateSteps = new LinkedHashSet<>();
+
+    updateSteps.add(new FixedVersionUpdateStep("test", "1.2.0"));
+    updateSteps.add(new CoreFixedVersionUpdateStep("core", "1.2.0"));
+
+    UpdateEngine updateEngine = new UpdateEngine(updateSteps, storeFactory);
+    updateEngine.update();
+
+    assertThat(processedUpdates)
+      .containsExactly("core:1.2.0", "test:1.2.0");
   }
 
   @Test
@@ -67,7 +81,7 @@ class UpdateEngineTest {
     updateEngine = new UpdateEngine(updateSteps, storeFactory);
     updateEngine.update();
 
-    assertThat(processedUpdates).containsExactly("1.1.1");
+    assertThat(processedUpdates).containsExactly("other:1.1.1");
   }
 
   class FixedVersionUpdateStep implements UpdateStep {
@@ -91,7 +105,13 @@ class UpdateEngineTest {
 
     @Override
     public void doUpdate() {
-      processedUpdates.add(version);
+      processedUpdates.add(type + ":" + version);
+    }
+  }
+
+  class CoreFixedVersionUpdateStep extends FixedVersionUpdateStep implements CoreUpdateStep {
+    CoreFixedVersionUpdateStep(String type, String version) {
+      super(type, version);
     }
   }
 }

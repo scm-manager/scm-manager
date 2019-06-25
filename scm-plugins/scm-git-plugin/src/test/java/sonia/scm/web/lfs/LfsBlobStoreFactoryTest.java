@@ -71,7 +71,7 @@ public class LfsBlobStoreFactoryTest {
     // the return value (and should not be part of this test)
     verify(blobStoreFactory).getStore(argThat(blobStoreParameters -> {
       assertThat(blobStoreParameters.getName()).isEqualTo("the-id-git-lfs");
-      assertThat(blobStoreParameters.getRepository()).isEqualTo(repository);
+      assertThat(blobStoreParameters.getRepositoryId()).isEqualTo("the-id");
       return true;
     }));
 

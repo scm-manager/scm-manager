@@ -32,10 +32,18 @@ public class UpdateEngine {
   private List<UpdateStep> sortSteps(Set<UpdateStep> steps) {
     LOG.trace("sorting available update steps:");
     List<UpdateStep> sortedSteps = steps.stream()
-      .sorted(Comparator.comparing(UpdateStep::getTargetVersion).reversed())
+      .sorted(
+        Comparator
+          .comparing(UpdateStep::getTargetVersion)
+          .thenComparing(this::isCoreUpdateStep)
+          .reversed())
       .collect(toList());
     sortedSteps.forEach(step -> LOG.trace("{} for version {}", step.getAffectedDataType(), step.getTargetVersion()));
     return sortedSteps;
+  }
+
+  private boolean isCoreUpdateStep(UpdateStep updateStep) {
+    return updateStep instanceof CoreUpdateStep;
   }
 
   public void update() {

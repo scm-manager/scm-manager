@@ -59,7 +59,9 @@ public class JAXBConfigurationEntryStoreFactory extends FileBasedStoreFactory
 
   @Override
   public <T> ConfigurationEntryStore<T> getStore(TypedStoreParameters<T> storeParameters) {
-    return new JAXBConfigurationEntryStore<>(getStoreLocation(storeParameters.getName().concat(StoreConstants.FILE_EXTENSION), storeParameters.getType(), storeParameters.getRepository()), keyGenerator, storeParameters.getType());
+    return new JAXBConfigurationEntryStore<>(
+      getStoreLocation(storeParameters.getName().concat(StoreConstants.FILE_EXTENSION), storeParameters.getType(), storeParameters.getRepositoryId()),
+      keyGenerator,
+      storeParameters.getType());
   }
-
 }

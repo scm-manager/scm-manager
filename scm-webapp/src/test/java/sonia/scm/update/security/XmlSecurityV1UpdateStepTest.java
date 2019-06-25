@@ -26,6 +26,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static sonia.scm.store.InMemoryConfigurationEntryStoreFactory.create;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(TempDirectory.class)
@@ -40,8 +41,8 @@ class XmlSecurityV1UpdateStepTest {
   @BeforeEach
   void mockScmHome(@TempDirectory.TempDir Path tempDir) {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
-    assignedPermissionStore = new InMemoryConfigurationEntryStore<>();
-    ConfigurationEntryStoreFactory inMemoryConfigurationEntryStoreFactory = new InMemoryConfigurationEntryStoreFactory(assignedPermissionStore);
+    InMemoryConfigurationEntryStoreFactory inMemoryConfigurationEntryStoreFactory = create();
+    assignedPermissionStore = inMemoryConfigurationEntryStoreFactory.get("security");
     updateStep = new XmlSecurityV1UpdateStep(contextProvider, inMemoryConfigurationEntryStoreFactory);
   }
 

@@ -10,7 +10,7 @@ import sonia.scm.security.AssignedPermission;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.store.StoreConstants;
-import sonia.scm.update.properties.V1Properties;
+import sonia.scm.update.V1Properties;
 import sonia.scm.user.User;
 import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.version.Version;
@@ -31,6 +31,7 @@ import java.util.Optional;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static sonia.scm.update.V1PropertyReader.USER_PROPERTY_READER;
 import static sonia.scm.version.Version.parse;
 
 @Extension
@@ -50,7 +51,7 @@ public class XmlUserV1UpdateStep implements UpdateStep {
     this.configurationEntryStoreFactory = configurationEntryStoreFactory;
     this.propertyStore = configurationEntryStoreFactory
       .withType(V1Properties.class)
-      .withName("user-properties-v1")
+      .withName(USER_PROPERTY_READER.getStoreName())
       .build();
   }
 

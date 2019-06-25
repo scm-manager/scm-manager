@@ -11,7 +11,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.group.Group;
 import sonia.scm.group.xml.XmlGroupDAO;
+import sonia.scm.store.ConfigurationEntryStore;
+import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
 import sonia.scm.update.UpdateStepTestUtil;
+import sonia.scm.update.V1Properties;
+import sonia.scm.update.V1Property;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -20,11 +24,11 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.linesOf;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static sonia.scm.store.InMemoryConfigurationEntryStoreFactory.create;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(TempDirectory.class)
@@ -36,6 +40,8 @@ class XmlGroupV1UpdateStepTest {
   @Captor
   ArgumentCaptor<Group> groupCaptor;
 
+  InMemoryConfigurationEntryStoreFactory storeFactory = create();
+
   XmlGroupV1UpdateStep updateStep;
 
   private UpdateStepTestUtil testUtil;
@@ -44,7 +50,7 @@ class XmlGroupV1UpdateStepTest {
   @BeforeEach
   void mockScmHome(@TempDirectory.TempDir Path tempDir) {
     testUtil = new UpdateStepTestUtil(tempDir);
-    updateStep = new XmlGroupV1UpdateStep(testUtil.getContextProvider(), groupDAO, testUtil.getStoreFactory());
+    updateStep = new XmlGroupV1UpdateStep(testUtil.getContextProvider(), groupDAO, storeFactory);
   }
 
   @Nested
@@ -83,19 +89,10 @@ class XmlGroupV1UpdateStepTest {
     @Test
     void shouldExtractProperties() throws JAXBException {
       updateStep.doUpdate();
-      Path propertiesFile = testUtil.getFile("group-properties-v1.xml");
-      assertThat(propertiesFile)
-        .exists();
-      assertThat(linesOf(propertiesFile.toFile()))
-        .extracting(String::trim)
-        .containsSequence(
-          "<key>normals</key>",
-          "<value>",
-          "<item>",
-          "<key>mostly</key>",
-          "<value>humans</value>",
-          "</item>",
-          "</value>");
+      ConfigurationEntryStore<V1Properties> propertiesStore = storeFactory.get("group-properties-v1");
+      V1Properties properties = propertiesStore.get("normals");
+      assertThat(properties).isNotNull();
+      assertThat(properties.get("mostly")).isEqualTo("humans");
     }
   }
 

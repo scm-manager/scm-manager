@@ -35,6 +35,9 @@ package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * In memory configuration store factory for testing purposes.
  *
@@ -44,24 +47,19 @@ package sonia.scm.store;
  */
 public class InMemoryConfigurationStoreFactory implements ConfigurationStoreFactory {
 
-  private ConfigurationStore store;
+  private final Map<String, InMemoryConfigurationStore> stores = new HashMap<>();
 
-  public static ConfigurationStoreFactory create() {
-    return new InMemoryConfigurationStoreFactory(new InMemoryConfigurationStore());
-  }
-
-  public InMemoryConfigurationStoreFactory() {
-  }
-
-  public InMemoryConfigurationStoreFactory(ConfigurationStore store) {
-    this.store = store;
+  public static InMemoryConfigurationStoreFactory create() {
+    return new InMemoryConfigurationStoreFactory();
   }
 
   @Override
   public ConfigurationStore getStore(TypedStoreParameters storeParameters) {
-    if (store != null) {
-      return store;
-    }
-    return new InMemoryConfigurationStore<>();
+    String name = storeParameters.getName();
+    return get(name);
+  }
+
+  public ConfigurationStore get(String name) {
+    return stores.computeIfAbsent(name, x -> new InMemoryConfigurationStore());
   }
 }
