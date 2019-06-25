@@ -115,88 +115,29 @@ import sonia.scm.web.security.DefaultAdministrationContext;
 
 import javax.net.ssl.SSLContext;
 
-import static sonia.scm.api.v2.resources.ScmPathInfo.REST_API_PATH;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ScmServletModule extends ServletModule
-{
+class ScmServletModule extends ServletModule {
 
-  /** Field description */
-  public static final String[] PATTERN_ADMIN = new String[] {
-                                                 REST_API_PATH + "/groups*",
-    REST_API_PATH + "/users*", REST_API_PATH + "/plguins*" };
+  private static final String PATTERN_ALL = "/*";
+  private static final String PATTERN_DEBUG = "/debug.html";
+  private static final String PATTERN_INDEX = "/index.html";
+  private static final String SYSTEM_PROPERTY_DEBUG_HTTP = "scm.debug.http";
 
-  /** Field description */
-  public static final String PATTERN_ALL = "/*";
+  private static final Logger logger = LoggerFactory.getLogger(ScmServletModule.class);
 
-  /** Field description */
-  public static final String PATTERN_CONFIG = REST_API_PATH + "/config*";
+  private final ClassOverrides overrides;
+  private final PluginLoader pluginLoader;
 
-  /** Field description */
-  public static final String PATTERN_DEBUG = "/debug.html";
-
-  /** Field description */
-  public static final String PATTERN_INDEX = "/index.html";
-
-  /** Field description */
-  public static final String PATTERN_PAGE = "*.html";
-
-  /** Field description */
-  public static final String PATTERN_PLUGIN_SCRIPT = "/plugins/resources/js/*";
-
-  /** Field description */
-  public static final String PATTERN_RESTAPI = "/api/*";
-
-  /** Field description */
-  public static final String PATTERN_SCRIPT = "*.js";
-
-  /** Field description */
-  public static final String PATTERN_STYLESHEET = "*.css";
-
-  /** Field description */
-  public static final String RESOURCE_REGEX =
-    "^/(?:resources|api|plugins|index)[\\./].*(?:html|\\.css|\\.js|\\.xml|\\.json|\\.txt)";
-
-  /** Field description */
-  public static final String REST_PACKAGE = "sonia.scm.api.rest";
-
-  /** Field description */
-  public static final String SYSTEM_PROPERTY_DEBUG_HTTP = "scm.debug.http";
-
-  /** Field description */
-  public static final String[] PATTERN_STATIC_RESOURCES = new String[] {
-                                                            PATTERN_SCRIPT,
-    PATTERN_STYLESHEET, "*.jpg", "*.gif", "*.png" };
-
-  /** Field description */
-  public static final String[] PATTERN_COMPRESSABLE = new String[] {
-                                                        PATTERN_SCRIPT,
-    PATTERN_STYLESHEET, "*.json", "*.xml", "*.txt" };
-
-  /** Field description */
-  private static final Logger logger =
-    LoggerFactory.getLogger(ScmServletModule.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  public ScmServletModule(PluginLoader pluginLoader, ClassOverrides overrides)
-  {
+  ScmServletModule(PluginLoader pluginLoader, ClassOverrides overrides) {
     this.pluginLoader = pluginLoader;
     this.overrides = overrides;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
   @Override
-  protected void configureServlets()
-  {
+  protected void configureServlets() {
     install(ThrowingProviderBinder.forModule(this));
 
     ScmConfiguration config = getScmConfiguration();
@@ -275,8 +216,7 @@ public class ScmServletModule extends ServletModule
     bind(UserAgentParser.class);
 
     // bind debug logging filter
-    if ("true".equalsIgnoreCase(System.getProperty(SYSTEM_PROPERTY_DEBUG_HTTP)))
-    {
+    if ("true".equalsIgnoreCase(System.getProperty(SYSTEM_PROPERTY_DEBUG_HTTP))) {
       filter(PATTERN_ALL).through(LoggingFilter.class);
     }
     
@@ -301,111 +241,41 @@ public class ScmServletModule extends ServletModule
     bind(PushStateDispatcher.class).toProvider(PushStateDispatcherProvider.class);
   }
 
-
-  /**
-   * Method description
-   *
-   *
-   * @param clazz
-   * @param defaultImplementation
-   * @param <T>
-   */
-  private <T> void bind(Class<T> clazz,
-    Class<? extends T> defaultImplementation)
-  {
+  private <T> void bind(Class<T> clazz, Class<? extends T> defaultImplementation) {
     Class<? extends T> implementation = find(clazz, defaultImplementation);
-
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("bind {} to {}", clazz, implementation);
-    }
-
+    logger.debug("bind {} to {}", clazz, implementation);
     bind(clazz).to(implementation);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param clazz
-   * @param defaultImplementation
-   * @param providerClass
-   * @param <T>
-   */
-  private <T> void bindDecorated(Class<T> clazz,
-    Class<? extends T> defaultImplementation,
-    Class<? extends Provider<T>> providerClass)
-  {
+  private <T> void bindDecorated(
+    Class<T> clazz, Class<? extends T> defaultImplementation, Class<? extends Provider<T>> providerClass
+  ) {
     Class<? extends T> implementation = find(clazz, defaultImplementation);
 
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("bind undecorated {} to {}", clazz, implementation);
-    }
-
+    logger.debug("bind undecorated {} to {}", clazz, implementation);
     bind(clazz).annotatedWith(Undecorated.class).to(implementation);
 
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("bind {} to provider {}", clazz, providerClass);
-    }
-
+    logger.debug("bind {} to provider {}", clazz, providerClass);
     bind(clazz).toProvider(providerClass);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param clazz
-   * @param defaultImplementation
-   * @param <T>
-   *
-   * @return
-   */
-  private <T> Class<? extends T> find(Class<T> clazz,
-    Class<? extends T> defaultImplementation)
-  {
+  private <T> Class<? extends T> find(Class<T> clazz, Class<? extends T> defaultImplementation) {
     Class<? extends T> implementation = overrides.getOverride(clazz);
 
-    if (implementation != null)
-    {
+    if (implementation != null) {
       logger.info("found override {} for {}", implementation, clazz);
-    }
-    else
-    {
+    } else {
       implementation = defaultImplementation;
-
-      if (logger.isTraceEnabled())
-      {
-        logger.trace(
-          "no override available for {}, using default implementation {}",
-          clazz, implementation);
-      }
+      logger.trace("no override available for {}, using default implementation {}", clazz, implementation);
     }
 
     return implementation;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Load ScmConfiguration with JAXB
-   */
-  private ScmConfiguration getScmConfiguration()
-  {
+  private ScmConfiguration getScmConfiguration() {
     ScmConfiguration configuration = new ScmConfiguration();
-
     ScmConfigurationUtil.getInstance().load(configuration);
-
     return configuration;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final ClassOverrides overrides;
-
-  /** Field description */
-  private final PluginLoader pluginLoader;
 }
