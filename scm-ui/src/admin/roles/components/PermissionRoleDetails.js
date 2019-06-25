@@ -47,4 +47,4 @@ class PermissionRoleDetails extends React.Component<Props> {
   }
 }
 
-export default translate("config")(PermissionRoleDetails);
+export default translate("admin")(PermissionRoleDetails);

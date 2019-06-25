@@ -22,7 +22,7 @@ import { getRepositoriesLink } from "../../modules/indexResource";
 import {
   fetchNamespaceStrategiesIfNeeded,
   getFetchNamespaceStrategiesFailure, getNamespaceStrategies, isFetchNamespaceStrategiesPending
-} from "../../config/modules/namespaceStrategies";
+} from "../../admin/modules/namespaceStrategies";
 
 type Props = {
   repositoryTypes: RepositoryType[],

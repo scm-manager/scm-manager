@@ -80,7 +80,7 @@ class GlobalConfig extends React.Component<Props, State> {
             className="delete"
             onClick={() => this.setState({ configChanged: false })}
           />
-          {this.props.t("config-form.submit-success-notification")}
+          {this.props.t("config.form.submit-success-notification")}
         </div>
       );
     }

@@ -1,0 +1,46 @@
+{
+  "admin": {
+    "menu": {
+      "navigationLabel": "Administration Navigation",
+      "informationNavLink": "Information",
+      "settingsNavLink": "Settings",
+      "generalNavLink": "General"
+    },
+    "information":  {
+      "currentAppVersion": "Current Application Version"
+    }
+  },
+  "repositoryRole": {
+    "navLink": "Permission Roles",
+    "title": "Permission Roles",
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown Permission Role Error",
+    "createSubtitle": "Create Permission Role",
+    "editSubtitle": "Edit Permission Role",
+    "overview": {
+      "title": "Overview of all permission roles",
+      "noPermissionRoles": "No permission roles found.",
+      "createButton": "Create Permission Role"
+    },
+    "editButton": "Edit",
+    "name": "Name",
+    "type": "Type",
+    "verbs": "Permissions",
+    "system": "System",
+    "form": {
+      "name": "Name",
+      "permissions": "Permissions",
+      "submit": "Save"
+    },
+    "delete" : {
+      "button": "Löschen",
+      "subtitle": "Berechtigungsrolle löschen",
+      "confirmAlert": {
+        "title": "Berechtigungsrolle löschen",
+        "message": "Soll die Berechtigungsrolle wirklich gelöscht werden? Alle Nutzer dieser Rolle verlieren Ihre Berechtigungen.",
+        "submit": "Ja",
+        "cancel": "Nein"
+      }
+    }
+  }
+}
