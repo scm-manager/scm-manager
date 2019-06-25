@@ -41,7 +41,7 @@ import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.boot.ClassLoaderLifeCycle;
+import sonia.scm.lifecycle.ClassLoaderLifeCycle;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------

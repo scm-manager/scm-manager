@@ -43,7 +43,7 @@
 
   <filter>
     <filter-name>BootstrapFilter</filter-name>
-    <filter-class>sonia.scm.boot.BootstrapContextFilter</filter-class>
+    <filter-class>sonia.scm.lifecycle.BootstrapContextFilter</filter-class>
   </filter>
 
   <filter-mapping>

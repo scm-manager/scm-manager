@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import sonia.scm.NotFoundException;
 import sonia.scm.SCMContext;
 import sonia.scm.Stage;
-import sonia.scm.boot.RestartEvent;
+import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.filter.WebElement;
