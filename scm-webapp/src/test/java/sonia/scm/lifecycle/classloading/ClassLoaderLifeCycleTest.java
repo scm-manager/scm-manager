@@ -35,7 +35,7 @@ class ClassLoaderLifeCycleTest {
   @Test
   void shouldThrowIllegalStateExceptionAfterShutdown() {
     ClassLoaderLifeCycle lifeCycle = createMockedLifeCycle();
-    lifeCycle.init();
+    lifeCycle.initialize();
 
     lifeCycle.shutdown();
     assertThrows(IllegalStateException.class, lifeCycle::getBootstrapClassLoader);
@@ -44,7 +44,7 @@ class ClassLoaderLifeCycleTest {
   @Test
   void shouldCreateBootstrapClassLoaderOnInit() {
     ClassLoaderLifeCycle lifeCycle = ClassLoaderLifeCycle.create();
-    lifeCycle.init();
+    lifeCycle.initialize();
 
     assertThat(lifeCycle.getBootstrapClassLoader()).isNotNull();
   }
@@ -53,7 +53,7 @@ class ClassLoaderLifeCycleTest {
   void shouldCallTheLeakPreventor() {
     ClassLoaderLifeCycle lifeCycle = createMockedLifeCycle();
 
-    lifeCycle.init();
+    lifeCycle.initialize();
     verify(classLoaderLeakPreventor, times(2)).runPreClassLoaderInitiators();
 
     lifeCycle.createChildFirstPluginClassLoader(new URL[0], null, "a");
@@ -71,7 +71,7 @@ class ClassLoaderLifeCycleTest {
 
     ClassLoaderLifeCycle lifeCycle = createMockedLifeCycle(webappClassLoader);
     lifeCycle.setClassLoaderAppendListener(c -> spy(c));
-    lifeCycle.init();
+    lifeCycle.initialize();
 
     ClassLoader pluginA = lifeCycle.createChildFirstPluginClassLoader(new URL[0], null, "a");
     ClassLoader pluginB = lifeCycle.createPluginClassLoader(new URL[0], null, "b");
