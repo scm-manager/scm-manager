@@ -15,6 +15,7 @@ import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.ws.rs.ext.RuntimeDelegate;
 
 /**
  * Resteasy initialization and dispatching. This servlet combines the initialization of
@@ -66,5 +67,10 @@ public class ResteasyAllInOneServletDispatcher extends HttpServletDispatcher {
     LOG.info("destroy resteasy");
     super.destroy();
     deployment.stop();
+
+    // ensure everything gets cleared, to avoid classloader leaks
+    ResteasyProviderFactory.clearInstanceIfEqual(ResteasyProviderFactory.getInstance());
+    ResteasyProviderFactory.clearContextData();
+    RuntimeDelegate.setInstance(null);
   }
 }

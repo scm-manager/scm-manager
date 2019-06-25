@@ -49,9 +49,7 @@ final class ServletContextCleaner {
       }
     }
 
-    ResteasyProviderFactory.clearInstanceIfEqual(ResteasyProviderFactory.getInstance());
-    ResteasyProviderFactory.clearContextData();
-    RuntimeDelegate.setInstance(null);
+
   }
 
   private static boolean shouldRemove(String name) {
