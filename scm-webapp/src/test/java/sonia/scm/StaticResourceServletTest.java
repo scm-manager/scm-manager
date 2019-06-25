@@ -36,7 +36,7 @@ class StaticResourceServletTest {
     doReturn("/scm").when(request).getContextPath();
     doReturn("/scm/resource.txt").when(request).getRequestURI();
     doReturn(context).when(request).getServletContext();
-    URL resource = Resources.getResource("sonia/scm/boot/resource.txt");
+    URL resource = Resources.getResource("sonia/scm/lifecycle/resource.txt");
     doReturn(resource).when(context).getResource("/resource.txt");
     doReturn(stream).when(response).getOutputStream();
 

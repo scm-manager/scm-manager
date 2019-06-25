@@ -36,11 +36,19 @@ import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.CloseableModule;
-import sonia.scm.EagerSingletonModule;
+import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
+import sonia.scm.lifecycle.modules.ApplicationModuleProvider;
+import sonia.scm.lifecycle.modules.BootstrapModule;
+import sonia.scm.lifecycle.modules.CloseableModule;
+import sonia.scm.lifecycle.modules.EagerSingletonModule;
 import sonia.scm.SCMContext;
-import sonia.scm.ScmEventBusModule;
-import sonia.scm.ScmInitializerModule;
+import sonia.scm.lifecycle.modules.InjectionLifeCycle;
+import sonia.scm.lifecycle.modules.ModuleProvider;
+import sonia.scm.lifecycle.modules.ScmEventBusModule;
+import sonia.scm.lifecycle.modules.ScmInitializerModule;
+import sonia.scm.lifecycle.modules.ServletContextModule;
+import sonia.scm.lifecycle.modules.UpdateStepModule;
+import sonia.scm.lifecycle.view.SingleView;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.update.MigrationWizardModuleProvider;
 import sonia.scm.update.UpdateEngine;
@@ -68,7 +76,7 @@ public class BootstrapContextListener extends GuiceServletContextListener {
     LOG.info("start scm-manager initialization");
 
     context = sce.getServletContext();
-    classLoaderLifeCycle.init();
+    classLoaderLifeCycle.initialize();
     super.contextInitialized(sce);
 
     Injector injector = (Injector) context.getAttribute(Injector.class.getName());

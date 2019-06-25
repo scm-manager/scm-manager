@@ -2,7 +2,7 @@ package sonia.scm.update;
 
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import sonia.scm.lifecycle.ModuleProvider;
+import sonia.scm.lifecycle.modules.ModuleProvider;
 import sonia.scm.update.repository.XmlRepositoryV1UpdateStep;
 
 import java.util.Collection;

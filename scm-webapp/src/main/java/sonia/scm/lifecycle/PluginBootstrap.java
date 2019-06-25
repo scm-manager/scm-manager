@@ -6,6 +6,7 @@ import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
+import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
 import sonia.scm.migration.UpdateException;
 import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.Plugin;

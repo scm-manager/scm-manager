@@ -30,36 +30,51 @@
  */
 
 
-package sonia.scm.repository;
+package sonia.scm.lifecycle.modules;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.SCMContextProvider;
-import sonia.scm.Stage;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
+import sonia.scm.Validateable;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class TempSCMContextProvider implements SCMContextProvider
+@XmlAccessorType(XmlAccessType.FIELD)
+public class ClassOverride implements Validateable
 {
 
   /**
    * Method description
    *
    *
+   * @param obj
+   *
    * @return
    */
   @Override
-  public File getBaseDirectory()
+  public boolean equals(Object obj)
   {
-    return baseDirectory;
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final ClassOverride other = (ClassOverride) obj;
+
+    return Objects.equal(bind, other.bind) && Objects.equal(to, other.to);
   }
 
   /**
@@ -69,9 +84,9 @@ public class TempSCMContextProvider implements SCMContextProvider
    * @return
    */
   @Override
-  public Stage getStage()
+  public int hashCode()
   {
-    return Stage.DEVELOPMENT;
+    return Objects.hashCode(bind, to);
   }
 
   /**
@@ -81,9 +96,38 @@ public class TempSCMContextProvider implements SCMContextProvider
    * @return
    */
   @Override
-  public Throwable getStartupError()
+  public String toString()
   {
-    return null;
+    //J-
+    return MoreObjects.toStringHelper(this)
+            .add("bind", bind)
+            .add("to", to)
+            .toString();
+    //J+
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Class<?> getBind()
+  {
+    return bind;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Class<?> getTo()
+  {
+    return to;
   }
 
   /**
@@ -93,9 +137,9 @@ public class TempSCMContextProvider implements SCMContextProvider
    * @return
    */
   @Override
-  public String getVersion()
+  public boolean isValid()
   {
-    return "900.0.1-SNAPSHOT";
+    return (bind != null) && (to != null);
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -104,20 +148,29 @@ public class TempSCMContextProvider implements SCMContextProvider
    * Method description
    *
    *
-   * @param baseDirectory
+   * @param bind
    */
-  public void setBaseDirectory(File baseDirectory)
+  public void setBind(Class<?> bind)
   {
-    this.baseDirectory = baseDirectory;
+    this.bind = bind;
   }
 
-  @Override
-  public Path resolve(Path path) {
-    return baseDirectory.toPath().resolve(path);
+  /**
+   * Method description
+   *
+   *
+   * @param to
+   */
+  public void setTo(Class<?> to)
+  {
+    this.to = to;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private File baseDirectory;
+  private Class<?> bind;
+
+  /** Field description */
+  private Class<?> to;
 }
