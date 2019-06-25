@@ -39,7 +39,7 @@
     
   <display-name>SCM-Manager ${project.version}</display-name>
 
-  <!-- bootstraping -->
+  <!-- bootstrapping -->
 
   <filter>
     <filter-name>BootstrapFilter</filter-name>
@@ -50,15 +50,6 @@
     <filter-name>BootstrapFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-  
-  <!-- capture sessions -->
-  <!-- 
-  TODO remove, we need no longer a session
-  -->
-  
-  <listener>
-    <listener-class>sonia.scm.HttpSessionListenerHolder</listener-class>
-  </listener>
 
   <!-- basic configuration -->
 
