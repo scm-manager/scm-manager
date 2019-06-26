@@ -30,94 +30,56 @@
  */
 
 
-package sonia.scm.repository;
+package sonia.scm.lifecycle.modules;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.SCMContextProvider;
-import sonia.scm.Stage;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
+import java.util.Collections;
+import java.util.Set;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class TempSCMContextProvider implements SCMContextProvider
-{
+@Singleton
+public class ServletContextListenerHolder implements ServletContextListener {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public File getBaseDirectory()
-  {
-    return baseDirectory;
+  static class ListenerHolder {
+    @Inject(optional = true)
+    private Set<ServletContextListener> listenerSet;
+
+    private Set<ServletContextListener> getListenerSet() {
+      if (listenerSet == null) {
+        return Collections.emptySet();
+      }
+      return listenerSet;
+    }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Stage getStage()
+  private final Set<ServletContextListener> listenerSet;
+
+  @Inject
+  public ServletContextListenerHolder(ListenerHolder listeners)
   {
-    return Stage.DEVELOPMENT;
+    this.listenerSet = listeners.getListenerSet();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+
   @Override
-  public Throwable getStartupError()
-  {
-    return null;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String getVersion()
-  {
-    return "900.0.1-SNAPSHOT";
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param baseDirectory
-   */
-  public void setBaseDirectory(File baseDirectory)
-  {
-    this.baseDirectory = baseDirectory;
+  public void contextInitialized(ServletContextEvent sce) {
+    listenerSet.forEach(listener -> listener.contextInitialized(sce));
   }
 
   @Override
-  public Path resolve(Path path) {
-    return baseDirectory.toPath().resolve(path);
+  public void contextDestroyed(ServletContextEvent sce) {
+    listenerSet.forEach(listener -> listener.contextDestroyed(sce));
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private File baseDirectory;
 }

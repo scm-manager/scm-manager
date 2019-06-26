@@ -41,7 +41,7 @@ import com.google.common.collect.Sets;
 import com.google.common.hash.Hashing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.boot.ClassLoaderLifeCycle;
+import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
 import sonia.scm.plugin.ExplodedSmp.PathTransformer;
 
 import javax.xml.bind.JAXBContext;

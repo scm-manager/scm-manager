@@ -16,7 +16,7 @@ import org.mockito.MockSettings;
 import org.mockito.internal.creation.MockSettingsImpl;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.boot.RestartEvent;
+import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.event.ScmEventBus;
