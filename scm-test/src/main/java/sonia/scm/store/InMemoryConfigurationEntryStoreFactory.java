@@ -1,28 +1,23 @@
 package sonia.scm.store;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class InMemoryConfigurationEntryStoreFactory implements ConfigurationEntryStoreFactory {
 
+  private final Map<String, InMemoryConfigurationEntryStore> stores = new HashMap<>();
 
-
-
-  private ConfigurationEntryStore store;
-
-  public static ConfigurationEntryStoreFactory create() {
-    return new InMemoryConfigurationEntryStoreFactory(new InMemoryConfigurationEntryStore());
-  }
-
-  public InMemoryConfigurationEntryStoreFactory() {
-  }
-
-  public InMemoryConfigurationEntryStoreFactory(ConfigurationEntryStore store) {
-    this.store = store;
+  public static InMemoryConfigurationEntryStoreFactory create() {
+    return new InMemoryConfigurationEntryStoreFactory();
   }
 
   @Override
   public <T> ConfigurationEntryStore<T> getStore(TypedStoreParameters<T> storeParameters) {
-    if (store != null) {
-      return store;
-    }
-    return new InMemoryConfigurationEntryStore<>();
+    String name = storeParameters.getName();
+    return get(name);
+  }
+
+  public <T> InMemoryConfigurationEntryStore<T> get(String name) {
+    return stores.computeIfAbsent(name, x -> new InMemoryConfigurationEntryStore());
   }
 }

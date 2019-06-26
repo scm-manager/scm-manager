@@ -15,5 +15,5 @@ public interface TypedStoreParameters<T> {
 
   String getName();
 
-  Repository getRepository();
+  String getRepositoryId();
 }

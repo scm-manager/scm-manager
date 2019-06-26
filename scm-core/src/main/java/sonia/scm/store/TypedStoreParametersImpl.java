@@ -1,11 +1,9 @@
 package sonia.scm.store;
 
-import sonia.scm.repository.Repository;
-
 class TypedStoreParametersImpl<T> implements TypedStoreParameters<T> {
   private Class<T> type;
   private String name;
-  private Repository repository;
+  private String repositoryId;
 
   @Override
   public Class<T> getType() {
@@ -26,11 +24,11 @@ class TypedStoreParametersImpl<T> implements TypedStoreParameters<T> {
   }
 
   @Override
-  public Repository getRepository() {
-    return repository;
+  public String getRepositoryId() {
+    return repositoryId;
   }
 
-  void setRepository(Repository repository) {
-    this.repository = repository;
+  void setRepositoryId(String repositoryId) {
+    this.repositoryId = repositoryId;
   }
 }

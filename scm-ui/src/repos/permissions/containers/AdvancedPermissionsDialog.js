@@ -1,7 +1,11 @@
 // @flow
-
 import React from "react";
-import { Button, SubmitButton, Modal } from "@scm-manager/ui-components";
+import {
+  ButtonGroup,
+  Button,
+  SubmitButton,
+  Modal
+} from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import PermissionCheckbox from "../components/PermissionCheckbox";
 
@@ -56,15 +60,13 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
 
     const footer = (
       <form onSubmit={this.onSubmit}>
-        <div className="field is-grouped">
-          <p className="control">{submitButton}</p>
-          <p className="control">
-            <Button
-              label={t("permission.advanced.dialog.abort")}
-              action={onClose}
-            />
-          </p>
-        </div>
+        <ButtonGroup>
+          {submitButton}
+          <Button
+            label={t("permission.advanced.dialog.abort")}
+            action={onClose}
+          />
+        </ButtonGroup>
       </form>
     );
 

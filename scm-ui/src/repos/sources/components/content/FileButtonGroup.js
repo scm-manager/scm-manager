@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import { ButtonGroup, Button } from "@scm-manager/ui-components";
+import { ButtonAddons, Button } from "@scm-manager/ui-components";
 
 type Props = {
   t: string => string,
@@ -26,7 +26,7 @@ class FileButtonGroup extends React.Component<Props> {
     const { t, historyIsSelected } = this.props;
 
     return (
-      <ButtonGroup>
+      <ButtonAddons>
         <Button
           action={this.showSources}
           className="reduced-mobile"
@@ -47,7 +47,7 @@ class FileButtonGroup extends React.Component<Props> {
           </span>
           <span>{t("sources.content.historyButton")}</span>
         </Button>
-      </ButtonGroup>
+      </ButtonAddons>
     );
   }
 }

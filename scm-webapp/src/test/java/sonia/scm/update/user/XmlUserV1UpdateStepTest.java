@@ -10,7 +10,11 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.security.AssignedPermission;
+import sonia.scm.store.ConfigurationEntryStore;
+import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
 import sonia.scm.update.UpdateStepTestUtil;
+import sonia.scm.update.V1Properties;
+import sonia.scm.update.V1Property;
 import sonia.scm.user.User;
 import sonia.scm.user.xml.XmlUserDAO;
 
@@ -20,11 +24,11 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.linesOf;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static sonia.scm.store.InMemoryConfigurationEntryStoreFactory.create;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(TempDirectory.class)
@@ -36,6 +40,8 @@ class XmlUserV1UpdateStepTest {
   @Captor
   ArgumentCaptor<User> userCaptor;
 
+  InMemoryConfigurationEntryStoreFactory storeFactory = create();
+
   XmlUserV1UpdateStep updateStep;
 
   private UpdateStepTestUtil testUtil;
@@ -43,7 +49,7 @@ class XmlUserV1UpdateStepTest {
   @BeforeEach
   void mockScmHome(@TempDirectory.TempDir Path tempDir) {
     testUtil = new UpdateStepTestUtil(tempDir);
-    updateStep = new XmlUserV1UpdateStep(testUtil.getContextProvider(), userDAO, testUtil.getStoreFactory());
+    updateStep = new XmlUserV1UpdateStep(testUtil.getContextProvider(), userDAO, storeFactory);
   }
 
   @Nested
@@ -63,7 +69,7 @@ class XmlUserV1UpdateStepTest {
     void shouldCreateNewPermissionsForV1AdminUser() throws JAXBException {
       updateStep.doUpdate();
       Optional<AssignedPermission> assignedPermission =
-        testUtil.getStoreForConfigFile("security")
+        storeFactory.<AssignedPermission>get("security")
           .getAll()
           .values()
           .stream()
@@ -98,23 +104,11 @@ class XmlUserV1UpdateStepTest {
     @Test
     void shouldExtractProperties() throws JAXBException {
       updateStep.doUpdate();
-      Path propertiesFile = testUtil.getFile("user-properties-v1.xml");
-      assertThat(propertiesFile)
-        .exists();
-      assertThat(linesOf(propertiesFile.toFile()))
-        .extracting(String::trim)
-        .containsSequence(
-          "<key>dent</key>",
-          "<value>",
-          "<item>",
-          "<key>born.on</key>",
-          "<value>earth</value>",
-          "</item>",
-          "<item>",
-          "<key>last.seen</key>",
-          "<value>end of the universe</value>",
-          "</item>",
-          "</value>");
+      ConfigurationEntryStore<V1Properties> propertiesStore = storeFactory.<V1Properties>get("user-properties-v1");
+      V1Properties properties = propertiesStore.get("dent");
+      assertThat(properties).isNotNull();
+      assertThat(properties.get("born.on")).isEqualTo("earth");
+      assertThat(properties.get("last.seen")).isEqualTo("end of the universe");
     }
   }
 

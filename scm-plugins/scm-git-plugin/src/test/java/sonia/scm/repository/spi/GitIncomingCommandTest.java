@@ -40,6 +40,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.Repository;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.IOException;
@@ -189,7 +190,7 @@ public class GitIncomingCommandTest
    */
   private GitIncomingCommand createCommand()
   {
-    return new GitIncomingCommand(handler, new GitContext(incomingDirectory, null, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())),
-      incomingRepository);
+    return new GitIncomingCommand(handler, new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())),
+      this.incomingRepository);
   }
 }

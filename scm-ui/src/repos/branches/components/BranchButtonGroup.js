@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import type { Repository, Branch } from "@scm-manager/ui-types";
-import { ButtonGroup, Button } from "@scm-manager/ui-components";
+import { ButtonAddons, Button } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 
 type Props = {
@@ -24,7 +24,7 @@ class BranchButtonGroup extends React.Component<Props> {
     }/sources/${encodeURIComponent(branch.name)}/`;
 
     return (
-      <ButtonGroup>
+      <ButtonAddons>
         <Button link={changesetLink} className="reduced-mobile">
           <span className="icon">
             <i className="fas fa-exchange-alt" />
@@ -37,7 +37,7 @@ class BranchButtonGroup extends React.Component<Props> {
           </span>
           <span>{t("branch.sources")}</span>
         </Button>
-      </ButtonGroup>
+      </ButtonAddons>
     );
   }
 }

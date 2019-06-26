@@ -1,8 +1,7 @@
 //@flow
 import React from "react";
 import type { Changeset, Repository } from "@scm-manager/ui-types";
-import ButtonGroup from "../../buttons/ButtonGroup";
-import Button from "../../buttons/Button";
+import { ButtonAddons, Button } from "../../buttons";
 import { createChangesetLink, createSourcesLink } from "./changesets";
 import { translate } from "react-i18next";
 
@@ -22,7 +21,7 @@ class ChangesetButtonGroup extends React.Component<Props> {
     const sourcesLink = createSourcesLink(repository, changeset);
 
     return (
-      <ButtonGroup className="is-pulled-right">
+      <ButtonAddons className="is-pulled-right">
         <Button link={changesetLink} className="reduced-mobile">
           <span className="icon">
             <i className="fas fa-exchange-alt" />
@@ -35,7 +34,7 @@ class ChangesetButtonGroup extends React.Component<Props> {
           </span>
           <span>{t("changeset.buttons.sources")}</span>
         </Button>
-      </ButtonGroup>
+      </ButtonAddons>
     );
   }
 }

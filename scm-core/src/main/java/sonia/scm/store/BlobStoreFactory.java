@@ -82,7 +82,7 @@ public interface BlobStoreFactory {
 final class FloatingStoreParameters implements StoreParameters {
 
   private String name;
-  private Repository repository;
+  private String repositoryId;
 
   private final BlobStoreFactory factory;
 
@@ -96,8 +96,8 @@ final class FloatingStoreParameters implements StoreParameters {
   }
 
   @Override
-  public Repository getRepository() {
-    return repository;
+  public String getRepositoryId() {
+    return repositoryId;
   }
 
   public class Builder {
@@ -113,7 +113,18 @@ final class FloatingStoreParameters implements StoreParameters {
      * @return Floating API to finish the call.
      */
     public FloatingStoreParameters.Builder forRepository(Repository repository) {
-      FloatingStoreParameters.this.repository = repository;
+      FloatingStoreParameters.this.repositoryId = repository.getId();
+      return this;
+    }
+
+    /**
+     * Use this to create or get a {@link BlobStore} for a specific repository. This step is optional. If you want to
+     * have a global {@link BlobStore}, omit this.
+     * @param repositoryId The id of the optional repository for the {@link BlobStore}.
+     * @return Floating API to finish the call.
+     */
+    public FloatingStoreParameters.Builder forRepository(String repositoryId) {
+      FloatingStoreParameters.this.repositoryId = repositoryId;
       return this;
     }
 
