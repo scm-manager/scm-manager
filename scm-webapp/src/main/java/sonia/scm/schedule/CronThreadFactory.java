@@ -30,8 +30,11 @@ class CronThreadFactory implements ThreadFactory, AutoCloseable {
         ThreadContext.remove();
         return new Thread(r, createName());
       }).get();
-    } catch (InterruptedException | ExecutionException e) {
-      throw new RuntimeException("failed to schedule runnable");
+    } catch (InterruptedException ex) {
+      Thread.currentThread().interrupt();
+      throw new IllegalStateException("failed to schedule runnable");
+    } catch (ExecutionException ex) {
+      throw new IllegalStateException("failed to schedule runnable");
     }
   }
 
