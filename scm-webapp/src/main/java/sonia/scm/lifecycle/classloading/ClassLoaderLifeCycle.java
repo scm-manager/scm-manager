@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import se.jiderhamn.classloader.leak.prevention.ClassLoaderLeakPreventor;
 import se.jiderhamn.classloader.leak.prevention.ClassLoaderLeakPreventorFactory;
 import se.jiderhamn.classloader.leak.prevention.cleanup.MBeanCleanUp;
+import se.jiderhamn.classloader.leak.prevention.preinit.SunAwtAppContextInitiator;
 import sonia.scm.lifecycle.LifeCycle;
 import sonia.scm.plugin.ChildFirstPluginClassLoader;
 import sonia.scm.plugin.DefaultPluginClassLoader;
@@ -38,6 +39,9 @@ public final class ClassLoaderLifeCycle implements LifeCycle {
   public static ClassLoaderLifeCycle create() {
     ClassLoaderLeakPreventorFactory classLoaderLeakPreventorFactory = new ClassLoaderLeakPreventorFactory();
     classLoaderLeakPreventorFactory.setLogger(new LoggingAdapter());
+    // the SunAwtAppContextInitiator causes a lot of exceptions and we use no awt
+    classLoaderLeakPreventorFactory.removePreInitiator(SunAwtAppContextInitiator.class);
+    // the MBeanCleanUp causes a Exception and we use no mbeans
     classLoaderLeakPreventorFactory.removeCleanUp(MBeanCleanUp.class);
     return new ClassLoaderLifeCycle(Thread.currentThread().getContextClassLoader(), classLoaderLeakPreventorFactory);
   }
