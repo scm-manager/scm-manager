@@ -28,7 +28,6 @@ public class ResteasyAllInOneServletDispatcher extends HttpServletDispatcher {
   private static final Logger LOG = LoggerFactory.getLogger(ResteasyAllInOneServletDispatcher.class);
 
   private final Injector injector;
-  private ResteasyDeployment deployment;
 
   @Inject
   public ResteasyAllInOneServletDispatcher(Injector injector) {
@@ -40,23 +39,24 @@ public class ResteasyAllInOneServletDispatcher extends HttpServletDispatcher {
     LOG.info("init resteasy");
 
     ServletContext servletContext = servletConfig.getServletContext();
-    createDeployment(servletContext);
+    ResteasyDeployment deployment = createDeployment(servletContext);
 
-    ModuleProcessor processor = createModuleProcessor();
+    ModuleProcessor processor = createModuleProcessor(deployment);
     processor.processInjector(injector);
 
     super.init(servletConfig);
   }
 
-  private void createDeployment(ServletContext servletContext) {
+  private ResteasyDeployment createDeployment(ServletContext servletContext) {
     ListenerBootstrap config = new ListenerBootstrap(servletContext);
-    deployment = config.createDeployment();
+    ResteasyDeployment deployment = config.createDeployment();
     deployment.start();
 
     servletContext.setAttribute(ResteasyDeployment.class.getName(), deployment);
+    return deployment;
   }
 
-  private ModuleProcessor createModuleProcessor() {
+  private ModuleProcessor createModuleProcessor(ResteasyDeployment deployment) {
     Registry registry = deployment.getRegistry();
     ResteasyProviderFactory providerFactory = deployment.getProviderFactory();
     return new ModuleProcessor(registry, providerFactory);
@@ -65,6 +65,8 @@ public class ResteasyAllInOneServletDispatcher extends HttpServletDispatcher {
   @Override
   public void destroy() {
     LOG.info("destroy resteasy");
+    ResteasyDeployment deployment = getDeploymentFromServletContext();
+
     super.destroy();
     deployment.stop();
 
@@ -72,5 +74,9 @@ public class ResteasyAllInOneServletDispatcher extends HttpServletDispatcher {
     ResteasyProviderFactory.clearInstanceIfEqual(ResteasyProviderFactory.getInstance());
     ResteasyProviderFactory.clearContextData();
     RuntimeDelegate.setInstance(null);
+  }
+
+  private ResteasyDeployment getDeploymentFromServletContext() {
+    return (ResteasyDeployment) getServletContext().getAttribute(ResteasyDeployment.class.getName());
   }
 }
