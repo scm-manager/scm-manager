@@ -4,7 +4,12 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import type { Branch, Repository } from "@scm-manager/ui-types";
 import FileTree from "../components/FileTree";
-import { ErrorNotification, Loading, BranchSelector, Breadcrumb } from "@scm-manager/ui-components";
+import {
+  ErrorNotification,
+  Loading,
+  BranchSelector,
+  Breadcrumb
+} from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import {
   fetchBranches,
@@ -94,7 +99,7 @@ class Sources extends React.Component<Props> {
       return (
         <div className="panel">
           {this.renderBranchSelector()}
-          <Breadcrumb path={path} baseUrl={baseUrl} />
+          <Breadcrumb revision={revision} path={path} baseUrl={baseUrl} />
           <FileTree
             repository={repository}
             revision={revision}
