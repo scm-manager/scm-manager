@@ -2,7 +2,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import injectSheet from "react-jss";
-import classNames from "classnames";
 
 type Props = {
   revision: string,
@@ -12,51 +11,50 @@ type Props = {
 };
 
 const styles = {
-  margin: {
-    margin: "1rem 1.25rem 0rem"
+  noMargin: {
+    margin: "0"
   }
 };
 
 class Breadcrumb extends React.Component<Props> {
-  render() {
-    const { revision, path, baseUrl, classes } = this.props;
+  renderPath() {
+    const { revision, path, baseUrl } = this.props;
 
     if (path) {
       const paths = path.split("/");
-
-      return (
-        <>
-          <nav
-            className={classNames("breadcrumb", classes.margin)}
-            aria-label="breadcrumbs"
-          >
-            <ul>
-              {paths.map((path, index) => {
-                const currPath = paths.slice(0, index + 1).join("/");
-                if (paths.length - 1 === index) {
-                  return (
-                    <li className="is-active" key={index}>
-                      <Link to={"#"} aria-current="page">
-                        {path}
-                      </Link>
-                    </li>
-                  );
-                }
-                return (
-                  <li key={index}>
-                    <Link to={baseUrl + "/" + revision + "/" + currPath}>
-                      {path}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-          <hr />
-        </>
-      );
+      const map = paths.map((path, index) => {
+        const currPath = paths.slice(0, index + 1).join("/");
+        if (paths.length - 1 === index) {
+          return (
+            <li className="is-active" key={index}>
+              <Link to={"#"} aria-current="page">
+                {path}
+              </Link>
+            </li>
+          );
+        }
+        return (
+          <li key={index}>
+            <Link to={baseUrl + "/" + revision + "/" + currPath}>{path}</Link>
+          </li>
+        );
+      });
+      return map;
     }
-    return null;
+    return <li />;
+  }
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <>
+        <nav className="breadcrumb sources-breadcrumb" aria-label="breadcrumbs">
+          <ul>{this.renderPath()}</ul>
+        </nav>
+        <hr className={classes.noMargin} />
+      </>
+    );
   }
 }
 
