@@ -181,3 +181,46 @@ color: #999;
 h3.ui-accordion-header {
   padding-bottom: 0 !important;
 }
+
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+	color: #33b2e8;
+}
+
+.ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+    color: #00c79b;
+}
+.ui-accordion #content h1, .ui-accordion #content h2, .ui-accordion #content h3, .ui-state-default, .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+    border-radius: 0;
+    background: transparent;
+    font-weight: 600;
+}
+.ui-widget-content {
+    border: none;
+    background: transparent;
+    font-weight: 400;
+    font-size: 16px;
+}
+.ui-accordion .ui-accordion-content{
+    border-bottom: 1px solid #ddd;
+    /padding-bottom: 40px !important;/
+    border-radius: 0;
+}
+.ui-accordion-content a{
+    color: #fff !important;
+    background: #33b2e8;
+    padding: 5px 10px;
+    margin-top: 10px;
+    display: inline-block;
+    border-radius: 5px;
+
+}
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus{
+   color:#7fe3cd;
+}
+.ui-accordion .ui-accordion-header .ui-icon, .ui-state-active .ui-icon {
+    background-image: url(https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/images/ui-icons_222222_256x240.png);
+}
