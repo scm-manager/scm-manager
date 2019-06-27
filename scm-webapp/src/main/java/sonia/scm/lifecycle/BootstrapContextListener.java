@@ -90,6 +90,7 @@ public class BootstrapContextListener extends GuiceServletContextListener {
     if (startupError != null) {
       return createStageOneInjector(SingleView.error(startupError));
     } else if (Versions.isTooOld()) {
+      LOG.error("Existing version is too old and cannot be migrated to new version. Please update to version {} first", Versions.MIN_VERSION);
       return createStageOneInjector(SingleView.view("/templates/too-old.mustache", HttpServletResponse.SC_CONFLICT));
     } else {
       try {
