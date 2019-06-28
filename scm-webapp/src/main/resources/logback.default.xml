@@ -56,6 +56,7 @@
   <logger name="sonia.scm.security.AuthorizationCollector" level="DEBUG" />
   <logger name="sonia.scm.web.filter.AutoLoginFilter" level="DEBUG" />
   <logger name="sonia.scm.security.XsrfProtectionFilter" level="DEBUG" />
+  <logger name="sonia.scm.schedule.CronTask" level="DEBUG" />
   
   <!-- suppress massive gzip logging -->
   <logger name="sonia.scm.filter.GZipFilter" level="WARN" />

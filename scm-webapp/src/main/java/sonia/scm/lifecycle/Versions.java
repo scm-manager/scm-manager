@@ -19,7 +19,7 @@ class Versions {
 
   private static final Logger LOG = LoggerFactory.getLogger(Versions.class);
 
-  private static final Version MIN_VERSION = Version.parse("1.60");
+  static final Version MIN_VERSION = Version.parse("1.60");
 
   private final SCMContextProvider contextProvider;
 
