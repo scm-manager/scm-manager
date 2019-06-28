@@ -56,10 +56,15 @@ public class InMemoryConfigurationStoreFactory implements ConfigurationStoreFact
   @Override
   public ConfigurationStore getStore(TypedStoreParameters storeParameters) {
     String name = storeParameters.getName();
-    return get(name);
+    String id = storeParameters.getRepositoryId();
+    return get(name, id);
   }
 
-  public ConfigurationStore get(String name) {
-    return stores.computeIfAbsent(name, x -> new InMemoryConfigurationStore());
+  public ConfigurationStore get(String name, String id) {
+    return stores.computeIfAbsent(buildKey(name, id), x -> new InMemoryConfigurationStore());
+  }
+
+  private String buildKey(String name, String id) {
+    return id == null? name: name + "-" + id;
   }
 }
