@@ -47,7 +47,7 @@ class MigrationStrategyDaoTest {
   void shouldReturnNewValue() {
     MigrationStrategyDao dao = new MigrationStrategyDao(storeFactory);
 
-    dao.set("id", INLINE, "space", "name");
+    dao.set("id", "originalName", INLINE, "space", "name");
 
     Optional<RepositoryMigrationPlan.RepositoryMigrationEntry> entry = dao.get("id");
 
@@ -65,14 +65,14 @@ class MigrationStrategyDaoTest {
   @Nested
   class WithExistingDatabase {
     @BeforeEach
-    void initExistingDatabase() throws JAXBException {
+    void initExistingDatabase() {
       MigrationStrategyDao dao = new MigrationStrategyDao(storeFactory);
 
-      dao.set("id", INLINE, "space", "name");
+      dao.set("id", "originalName", INLINE, "space", "name");
     }
 
     @Test
-    void shouldFindExistingValue() throws JAXBException {
+    void shouldFindExistingValue() {
       MigrationStrategyDao dao = new MigrationStrategyDao(storeFactory);
 
       Optional<RepositoryMigrationPlan.RepositoryMigrationEntry> entry = dao.get("id");
@@ -86,6 +86,9 @@ class MigrationStrategyDaoTest {
       Assertions.assertThat(entry)
         .map(RepositoryMigrationPlan.RepositoryMigrationEntry::getNewName)
         .contains("name");
+      Assertions.assertThat(entry)
+        .map(RepositoryMigrationPlan.RepositoryMigrationEntry::getOriginalName)
+        .contains("originalName");
     }
   }
 }

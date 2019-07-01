@@ -91,7 +91,7 @@ class XmlRepositoryV1UpdateStepTest {
     void createMigrationPlan() {
       Answer<Object> planAnswer = invocation -> {
         String id = invocation.getArgument(0).toString();
-        return of(new RepositoryMigrationPlan.RepositoryMigrationEntry(id, MOVE, "namespace-" + id, "name-" + id));
+        return of(new RepositoryMigrationPlan.RepositoryMigrationEntry(id, "originalName", MOVE, "namespace-" + id, "name-" + id));
       };
 
       lenient().when(migrationStrategyDao.get("3b91caa5-59c3-448f-920b-769aaa56b761")).thenAnswer(planAnswer);

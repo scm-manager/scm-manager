@@ -29,14 +29,14 @@ class RepositoryMigrationPlan {
       .findFirst();
   }
 
-  public void set(String repositoryId, MigrationStrategy strategy, String newNamespace, String newName) {
+  public void set(String repositoryId, String originalName, MigrationStrategy strategy, String newNamespace, String newName) {
     Optional<RepositoryMigrationEntry> entry = get(repositoryId);
     if (entry.isPresent()) {
       entry.get().setStrategy(strategy);
       entry.get().setNewNamespace(newNamespace);
       entry.get().setNewName(newName);
     } else {
-      entries.add(new RepositoryMigrationEntry(repositoryId, strategy, newNamespace, newName));
+      entries.add(new RepositoryMigrationEntry(repositoryId, originalName, strategy, newNamespace, newName));
     }
   }
 
@@ -45,6 +45,7 @@ class RepositoryMigrationPlan {
   static class RepositoryMigrationEntry {
 
     private String repositoryId;
+    private String originalName;
     private MigrationStrategy dataMigrationStrategy;
     private String newNamespace;
     private String newName;
@@ -52,11 +53,16 @@ class RepositoryMigrationPlan {
     RepositoryMigrationEntry() {
     }
 
-    RepositoryMigrationEntry(String repositoryId, MigrationStrategy dataMigrationStrategy, String newNamespace, String newName) {
+    RepositoryMigrationEntry(String repositoryId, String originalName, MigrationStrategy dataMigrationStrategy, String newNamespace, String newName) {
       this.repositoryId = repositoryId;
+      this.originalName = originalName;
       this.dataMigrationStrategy = dataMigrationStrategy;
       this.newNamespace = newNamespace;
       this.newName = newName;
+    }
+
+    public String getOriginalName() {
+      return originalName;
     }
 
     public MigrationStrategy getDataMigrationStrategy() {

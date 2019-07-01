@@ -132,6 +132,20 @@ class MigrationWizardServletTest {
   }
 
   @Test
+  void shouldKeepOriginalName() {
+    when(updateStep.getRepositoriesWithoutMigrationStrategies()).thenReturn(
+      Collections.singletonList(new V1Repository("id", "git", "name"))
+    );
+
+    servlet.doGet(request, response);
+
+    assertThat(renderedModel.get("repositories"))
+      .asList()
+      .extracting("originalName")
+      .contains("name");
+  }
+
+  @Test
   void shouldNotBeInvalidAtFirstRequest() {
     when(updateStep.getRepositoriesWithoutMigrationStrategies()).thenReturn(
       Collections.singletonList(new V1Repository("id", "git", "name"))
@@ -219,6 +233,6 @@ class MigrationWizardServletTest {
 
     servlet.doPost(request, response);
 
-    verify(migrationStrategyDao).set("id", MigrationStrategy.COPY, "namespace", "name");
+    verify(migrationStrategyDao).set("id", "name", MigrationStrategy.COPY, "namespace", "name");
   }
 }

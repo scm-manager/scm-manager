@@ -100,13 +100,14 @@ class MigrationWizardServlet extends HttpServlet {
     }
 
     repositoryLineEntries.stream()
-      .map(RepositoryLineEntry::getId)
       .forEach(
-        id -> {
+        entry-> {
+          String id = entry.getId();
+          String originalName = entry.getOriginalName();
           String strategy = req.getParameter("strategy-" + id);
           String namespace = req.getParameter("namespace-" + id);
           String name = req.getParameter("name-" + id);
-          migrationStrategyDao.set(id, MigrationStrategy.valueOf(strategy), namespace, name);
+          migrationStrategyDao.set(id, originalName, MigrationStrategy.valueOf(strategy), namespace, name);
         }
       );
 
@@ -150,6 +151,7 @@ class MigrationWizardServlet extends HttpServlet {
 
   private static class RepositoryLineEntry {
     private final String id;
+    private final String originalName;
     private final String type;
     private final String path;
     private MigrationStrategy selectedStrategy;
@@ -160,6 +162,7 @@ class MigrationWizardServlet extends HttpServlet {
 
     public RepositoryLineEntry(V1Repository repository) {
       this.id = repository.getId();
+      this.originalName = repository.getName();
       this.type = repository.getType();
       this.path = repository.getType() + "/" + repository.getName();
       this.selectedStrategy = MigrationStrategy.COPY;
@@ -187,6 +190,10 @@ class MigrationWizardServlet extends HttpServlet {
 
     public String getId() {
       return id;
+    }
+
+    public String getOriginalName() {
+      return originalName;
     }
 
     public String getType() {
