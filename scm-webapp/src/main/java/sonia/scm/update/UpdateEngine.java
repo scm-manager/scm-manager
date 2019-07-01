@@ -63,7 +63,7 @@ public class UpdateEngine {
     } catch (Exception e) {
       throw new UpdateException(
         String.format(
-          "could not execute update for type %s to version %s in class %s",
+          "could not execute update for type %s to version %s in %s",
           updateStep.getAffectedDataType(),
           updateStep.getTargetVersion(),
           updateStep.getClass()),
