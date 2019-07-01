@@ -17,7 +17,6 @@ public class JAXBPropertyFileAccess implements PropertyFileAccess {
 
   private static final Logger LOG = LoggerFactory.getLogger(JAXBPropertyFileAccess.class);
 
-  public static final String XML_FILENAME_SUFFIX = ".xml";
   private final SCMContextProvider contextProvider;
   private final RepositoryLocationResolver locationResolver;
 
@@ -31,8 +30,8 @@ public class JAXBPropertyFileAccess implements PropertyFileAccess {
   public Target renameGlobalConfigurationFrom(String oldName) {
     return newName -> {
       Path configDir = contextProvider.getBaseDirectory().toPath().resolve(StoreConstants.CONFIG_DIRECTORY_NAME);
-      Path oldConfigFile = configDir.resolve(oldName + XML_FILENAME_SUFFIX);
-      Path newConfigFile = configDir.resolve(newName + XML_FILENAME_SUFFIX);
+      Path oldConfigFile = configDir.resolve(oldName + StoreConstants.FILE_EXTENSION);
+      Path newConfigFile = configDir.resolve(newName + StoreConstants.FILE_EXTENSION);
       Files.move(oldConfigFile, newConfigFile);
     };
   }
@@ -45,7 +44,7 @@ public class JAXBPropertyFileAccess implements PropertyFileAccess {
         Path v1storeDir = computeV1StoreDir();
         if (Files.exists(v1storeDir) && Files.isDirectory(v1storeDir)) {
           try (Stream<Path> fileStream = Files.list(v1storeDir)) {
-            fileStream.filter(p -> p.toString().endsWith(XML_FILENAME_SUFFIX)).forEach(p -> {
+            fileStream.filter(p -> p.toString().endsWith(StoreConstants.FILE_EXTENSION)).forEach(p -> {
               try {
                 String storeName = extractStoreName(p);
                 storeFileConsumer.accept(p, storeName);
@@ -84,7 +83,7 @@ public class JAXBPropertyFileAccess implements PropertyFileAccess {
 
       private String extractStoreName(Path p) {
         String fileName = p.getFileName().toString();
-        return fileName.substring(0, fileName.length() - XML_FILENAME_SUFFIX.length());
+        return fileName.substring(0, fileName.length() - StoreConstants.FILE_EXTENSION.length());
       }
     };
   }
