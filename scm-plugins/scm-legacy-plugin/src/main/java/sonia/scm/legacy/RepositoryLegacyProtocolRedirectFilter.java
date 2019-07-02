@@ -2,6 +2,7 @@ package sonia.scm.legacy;
 
 import sonia.scm.migration.MigrationDAO;
 import sonia.scm.migration.MigrationInfo;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.filter.HttpFilter;
 
 import javax.inject.Inject;
@@ -21,16 +22,17 @@ import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.apache.commons.lang.StringUtils.isEmpty;
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 @Singleton
 public class RepositoryLegacyProtocolRedirectFilter extends HttpFilter {
 
   private final ProtocolBasedLegacyRepositoryInfo info;
+  private final RepositoryManager repositoryManager;
 
   @Inject
-  public RepositoryLegacyProtocolRedirectFilter(MigrationDAO migrationDAO) {
+  public RepositoryLegacyProtocolRedirectFilter(MigrationDAO migrationDAO, RepositoryManager repositoryManager) {
     this.info = load(migrationDAO);
+    this.repositoryManager = repositoryManager;
   }
 
   private static ProtocolBasedLegacyRepositoryInfo load(MigrationDAO migrationDAO) {
@@ -53,7 +55,7 @@ public class RepositoryLegacyProtocolRedirectFilter extends HttpFilter {
       this.chain = chain;
     }
 
-    public void doFilter() throws IOException, ServletException {
+    void doFilter() throws IOException, ServletException {
       String servletPath = getServletPathWithoutLeadingSlash();
       String[] pathElements = servletPath.split("/");
       if (pathElements.length > 0) {
@@ -72,13 +74,17 @@ public class RepositoryLegacyProtocolRedirectFilter extends HttpFilter {
       }
     }
 
-    private void doRedirect(String servletPath, MigrationInfo migrationInfo) throws IOException {
-      String furtherPath = servletPath.substring(migrationInfo.getProtocol().length() + 1 + migrationInfo.getOriginalRepositoryName().length());
-      String queryString = request.getQueryString();
-      if (isEmpty(queryString)) {
-        redirectWithoutQueryParameters(migrationInfo, furtherPath);
+    private void doRedirect(String servletPath, MigrationInfo migrationInfo) throws IOException, ServletException {
+      if (repositoryManager.get(migrationInfo.getId()) == null) {
+        noRedirect();
       } else {
-        redirectWithQueryParameters(migrationInfo, furtherPath, queryString);
+        String furtherPath = servletPath.substring(migrationInfo.getProtocol().length() + 1 + migrationInfo.getOriginalRepositoryName().length());
+        String queryString = request.getQueryString();
+        if (isEmpty(queryString)) {
+          redirectWithoutQueryParameters(migrationInfo, furtherPath);
+        } else {
+          redirectWithQueryParameters(migrationInfo, furtherPath, queryString);
+        }
       }
     }
 
@@ -108,7 +114,7 @@ public class RepositoryLegacyProtocolRedirectFilter extends HttpFilter {
 
     private final Map<String, LegacyRepositoryInfoCollection> infosForProtocol = new HashMap<>();
 
-    public ProtocolBasedLegacyRepositoryInfo(Collection<MigrationInfo> all) {
+    ProtocolBasedLegacyRepositoryInfo(Collection<MigrationInfo> all) {
       all.forEach(this::add);
     }
 
@@ -126,7 +132,7 @@ public class RepositoryLegacyProtocolRedirectFilter extends HttpFilter {
       return infosForProtocol.get(protocol).findRepository(removeFirstElement(pathElements));
     }
 
-    public boolean isProtocol(String protocol) {
+    boolean isProtocol(String protocol) {
       return infosForProtocol.containsKey(protocol);
     }
   }
@@ -136,7 +142,7 @@ public class RepositoryLegacyProtocolRedirectFilter extends HttpFilter {
     private final Map<String, MigrationInfo> repositories = new HashMap<>();
     private final Map<String, LegacyRepositoryInfoCollection> next = new HashMap<>();
 
-    public Optional<MigrationInfo> findRepository(List<String> pathElements) {
+    Optional<MigrationInfo> findRepository(List<String> pathElements) {
       String firstPathElement = pathElements.get(0);
       if (repositories.containsKey(firstPathElement)) {
         return of(repositories.get(firstPathElement));
