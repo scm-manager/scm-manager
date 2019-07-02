@@ -20,6 +20,8 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 @Singleton
 public class RepositoryLegacyProtocolRedirectFilter extends HttpFilter {
@@ -37,26 +39,68 @@ public class RepositoryLegacyProtocolRedirectFilter extends HttpFilter {
 
   @Override
   protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-    String servletPath = request.getServletPath();
-    if (servletPath.startsWith("/")) {
-      servletPath = servletPath.substring(1);
+    new Worker(request, response, chain).doFilter();
+  }
+
+  private class Worker {
+    private final HttpServletRequest request;
+    private final HttpServletResponse response;
+    private final FilterChain chain;
+
+    private Worker(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
+      this.request = request;
+      this.response = response;
+      this.chain = chain;
     }
-    String[] pathElements = servletPath.split("/");
-    if (pathElements.length > 0) {
-      Optional<MigrationInfo> repository = info.findRepository(asList(pathElements));
-      if (repository.isPresent()) {
-        String furtherPath = servletPath.substring(repository.get().getProtocol().length() + 1 + repository.get().getOriginalRepositoryName().length());
-        String queryString = request.getQueryString();
-        if (queryString != null && queryString.length() > 0) {
-          response.sendRedirect(String.format("%s/repo/%s/%s%s?%s", request.getContextPath(), repository.get().getNamespace(), repository.get().getName(), furtherPath, queryString));
-        } else {
-          response.sendRedirect(String.format("%s/repo/%s/%s%s", request.getContextPath(), repository.get().getNamespace(), repository.get().getName(), furtherPath));
-        }
+
+    public void doFilter() throws IOException, ServletException {
+      String servletPath = getServletPathWithoutLeadingSlash();
+      String[] pathElements = servletPath.split("/");
+      if (pathElements.length > 0) {
+        checkPathElements(servletPath, pathElements);
       } else {
-        chain.doFilter(request, response);
+        noRedirect();
       }
-    } else {
+    }
+
+    private void checkPathElements(String servletPath, String[] pathElements) throws IOException, ServletException {
+      Optional<MigrationInfo> migrationInfo = info.findRepository(asList(pathElements));
+      if (migrationInfo.isPresent()) {
+        doRedirect(servletPath, migrationInfo.get());
+      } else {
+        noRedirect();
+      }
+    }
+
+    private void doRedirect(String servletPath, MigrationInfo migrationInfo) throws IOException {
+      String furtherPath = servletPath.substring(migrationInfo.getProtocol().length() + 1 + migrationInfo.getOriginalRepositoryName().length());
+      String queryString = request.getQueryString();
+      if (isEmpty(queryString)) {
+        redirectWithoutQueryParameters(migrationInfo, furtherPath);
+      } else {
+        redirectWithQueryParameters(migrationInfo, furtherPath, queryString);
+      }
+    }
+
+    private void redirectWithoutQueryParameters(MigrationInfo migrationInfo, String furtherPath) throws IOException {
+      response.sendRedirect(String.format("%s/repo/%s/%s%s", request.getContextPath(), migrationInfo.getNamespace(), migrationInfo.getName(), furtherPath));
+    }
+
+    private void redirectWithQueryParameters(MigrationInfo migrationInfo, String furtherPath, String queryString) throws IOException {
+      response.sendRedirect(String.format("%s/repo/%s/%s%s?%s", request.getContextPath(), migrationInfo.getNamespace(), migrationInfo.getName(), furtherPath, queryString));
+    }
+
+    private void noRedirect() throws IOException, ServletException {
       chain.doFilter(request, response);
+    }
+
+    private String getServletPathWithoutLeadingSlash() {
+      String servletPath = request.getServletPath();
+      if (servletPath.startsWith("/")) {
+        return servletPath.substring(1);
+      } else {
+        return servletPath;
+      }
     }
   }
 
@@ -93,10 +137,11 @@ public class RepositoryLegacyProtocolRedirectFilter extends HttpFilter {
     private final Map<String, LegacyRepositoryInfoCollection> next = new HashMap<>();
 
     public Optional<MigrationInfo> findRepository(List<String> pathElements) {
-      if (repositories.containsKey(pathElements.get(0))) {
-        return of(repositories.get(pathElements.get(0)));
-      } else if (next.containsKey(pathElements.get(0))) {
-        return next.get(pathElements.get(0)).findRepository(removeFirstElement(pathElements));
+      String firstPathElement = pathElements.get(0);
+      if (repositories.containsKey(firstPathElement)) {
+        return of(repositories.get(firstPathElement));
+      } else if (next.containsKey(firstPathElement)) {
+        return next.get(firstPathElement).findRepository(removeFirstElement(pathElements));
       } else {
         return empty();
       }
