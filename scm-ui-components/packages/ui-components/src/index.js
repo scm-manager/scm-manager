@@ -25,6 +25,8 @@ export { default as Tooltip } from "./Tooltip";
 // TODO do we need this? getPageFromMatch is already exported by urls
 export { getPageFromMatch } from "./urls";
 export { default as Autocomplete} from "./Autocomplete";
+export { default as GroupAutocomplete} from "./GroupAutocomplete";
+export { default as UserAutocomplete} from "./UserAutocomplete";
 export { default as BranchSelector } from "./BranchSelector";
 export { default as MarkdownView } from "./MarkdownView";
 export { default as SyntaxHighlighter } from "./SyntaxHighlighter";
