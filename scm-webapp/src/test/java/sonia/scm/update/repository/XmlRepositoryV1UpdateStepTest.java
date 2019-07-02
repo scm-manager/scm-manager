@@ -16,8 +16,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.store.ConfigurationEntryStore;
-import sonia.scm.store.ConfigurationEntryStoreFactory;
-import sonia.scm.store.InMemoryConfigurationEntryStore;
 import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
 import sonia.scm.update.UpdateStepTestUtil;
 
@@ -49,7 +47,7 @@ class XmlRepositoryV1UpdateStepTest {
   @Mock
   XmlRepositoryDAO repositoryDAO;
   @Mock
-  MigrationStrategyDao migrationStrategyDao;
+  DefaultMigrationStrategyDAO migrationStrategyDao;
 
   InMemoryConfigurationEntryStoreFactory configurationEntryStoreFactory = new InMemoryConfigurationEntryStoreFactory();
 
@@ -91,7 +89,7 @@ class XmlRepositoryV1UpdateStepTest {
     void createMigrationPlan() {
       Answer<Object> planAnswer = invocation -> {
         String id = invocation.getArgument(0).toString();
-        return of(new RepositoryMigrationPlan.RepositoryMigrationEntry(id, "originalName", MOVE, "namespace-" + id, "name-" + id));
+        return of(new RepositoryMigrationPlan.RepositoryMigrationEntry(id, "git", "originalName", MOVE, "namespace-" + id, "name-" + id));
       };
 
       lenient().when(migrationStrategyDao.get("3b91caa5-59c3-448f-920b-769aaa56b761")).thenAnswer(planAnswer);
