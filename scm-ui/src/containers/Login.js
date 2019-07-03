@@ -95,7 +95,7 @@ class Login extends React.Component<Props, State> {
   areCredentialsInvalid() {
     const { t, error } = this.props;
     if (error instanceof UnauthorizedError) {
-      return new Error(t("error-notification.wrong-login-credentials"));
+      return new Error(t("errorNotification.wrongLoginCredentials"));
     } else {
       return error;
     }

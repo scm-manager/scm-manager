@@ -1,34 +1,24 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import type { SelectValue } from "@scm-manager/ui-types";
+import type AutocompleteProps from "./UserGroupAutocomplete";
 import UserGroupAutocomplete from "./UserGroupAutocomplete";
 
-type Props = {
-  groupAutocompleteLink: string,
-  valueSelected: SelectValue => void,
-  value?: SelectValue,
-
+type Props = AutocompleteProps & {
   // Context props
   t: string => string
 };
 
 class GroupAutocomplete extends React.Component<Props> {
-  selectName = (selection: SelectValue) => {
-    this.props.valueSelected(selection);
-  };
-
   render() {
-    const { groupAutocompleteLink, t, value } = this.props;
+    const { t } = this.props;
     return (
       <UserGroupAutocomplete
-        autocompleteLink={groupAutocompleteLink}
         label={t("autocomplete.group")}
         noOptionsMessage={t("autocomplete.noGroupOptions")}
         loadingMessage={t("autocomplete.loading")}
         placeholder={t("autocomplete.groupPlaceholder")}
-        valueSelected={this.selectName}
-        value={value}
+        {...this.props}
       />
     );
   }

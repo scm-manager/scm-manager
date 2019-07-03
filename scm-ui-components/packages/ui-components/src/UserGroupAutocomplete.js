@@ -3,12 +3,20 @@ import React from "react";
 import type { SelectValue } from "@scm-manager/ui-types";
 import Autocomplete from "./Autocomplete";
 
-type Props = {
+export type AutocompleteProps = {
   autocompleteLink: string,
-  valueSelected: SelectValue => void
+  valueSelected: SelectValue => void,
+  value?: SelectValue
 };
 
-class UserGroupAutocomplete extends React.Component<Props> {
+type Props = AutocompleteProps & {
+  label: string,
+  noOptionsMessage: string,
+  loadingMessage: string,
+  placeholder: string
+};
+
+export default class UserGroupAutocomplete extends React.Component<Props> {
   loadSuggestions = (inputValue: string) => {
     const url = this.props.autocompleteLink;
     const link = url + "?q=";
@@ -42,5 +50,3 @@ class UserGroupAutocomplete extends React.Component<Props> {
     );
   }
 }
-
-export default UserGroupAutocomplete;
