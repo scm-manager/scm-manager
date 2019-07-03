@@ -31,7 +31,7 @@ public class SvnV1UpdateStep implements UpdateStep {
         Repository repository = repositoryMetadataAccess.read(path);
         if (isSvnDirectory(repository)) {
           try {
-            new SvnConfigHelper().writeRepositoryId(repository, path.toFile());
+            new SvnConfigHelper().writeRepositoryId(repository, path.resolve(RepositoryDirectoryHandler.REPOSITORIES_NATIVE_DIRECTORY).toFile());
           } catch (IOException e) {
             throw new UpdateException("could not update repository with id " + repositoryId + " in path " + path, e);
           }
