@@ -19,13 +19,13 @@ import java.nio.file.Path;
 import static sonia.scm.version.Version.parse;
 
 @Extension
-public class GitV1UpdateStep implements UpdateStep {
+public class GitV2UpdateStep implements UpdateStep {
 
   private final RepositoryLocationResolver locationResolver;
   private final UpdateStepRepositoryMetadataAccess<Path> repositoryMetadataAccess;
 
   @Inject
-  public GitV1UpdateStep(RepositoryLocationResolver locationResolver, UpdateStepRepositoryMetadataAccess<Path> repositoryMetadataAccess) {
+  public GitV2UpdateStep(RepositoryLocationResolver locationResolver, UpdateStepRepositoryMetadataAccess<Path> repositoryMetadataAccess) {
     this.locationResolver = locationResolver;
     this.repositoryMetadataAccess = repositoryMetadataAccess;
   }

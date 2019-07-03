@@ -13,13 +13,13 @@ import java.nio.file.Path;
 import static sonia.scm.version.Version.parse;
 
 @Extension
-public class SvnV1UpdateStep implements UpdateStep {
+public class SvnV2UpdateStep implements UpdateStep {
 
   private final RepositoryLocationResolver locationResolver;
   private final UpdateStepRepositoryMetadataAccess<Path> repositoryMetadataAccess;
 
   @Inject
-  public SvnV1UpdateStep(RepositoryLocationResolver locationResolver, UpdateStepRepositoryMetadataAccess<Path> repositoryMetadataAccess) {
+  public SvnV2UpdateStep(RepositoryLocationResolver locationResolver, UpdateStepRepositoryMetadataAccess<Path> repositoryMetadataAccess) {
     this.locationResolver = locationResolver;
     this.repositoryMetadataAccess = repositoryMetadataAccess;
   }
