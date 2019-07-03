@@ -9,6 +9,8 @@ import sonia.scm.repository.RepositoryManager;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 @Path("v2/legacy/repository")
 public class LegacyRepositoryService {
@@ -22,6 +24,7 @@ public class LegacyRepositoryService {
 
   @GET
   @Path("{id}")
+  @Produces(MediaType.APPLICATION_JSON)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),

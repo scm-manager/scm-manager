@@ -9,7 +9,7 @@ import Users from "../users/containers/Users";
 import Login from "../containers/Login";
 import Logout from "../containers/Logout";
 
-import { ProtectedRoute } from "@scm-manager/ui-components";
+import { ProtectedRoute, apiClient } from "@scm-manager/ui-components";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
 import CreateUser from "../users/containers/CreateUser";
@@ -27,7 +27,10 @@ import Profile from "./Profile";
 
 type Props = {
   authenticated?: boolean,
-  links: Links
+  links: Links,
+
+  //context objects
+  history: History
 };
 
 class Main extends React.Component<Props> {
@@ -35,6 +38,15 @@ class Main extends React.Component<Props> {
     const { authenticated, links } = this.props;
     const redirectUrlFactory = binder.getExtension("main.redirect", this.props);
     let url = "/repos";
+    if (location.href && location.href.includes("#diffPanel;")) {
+      let repoId = location.href.substring(location.href.search("#diffPanel;") + 11, location.href.search("#diffPanel;") + 21);
+      console.log("RepoId:");
+      console.log(repoId);
+      apiClient.get("/legacy/repository/" + repoId).then(response =>
+        console.log(JSON.parse(response))
+        // this.props.history.push("/repo/" + response.responseBody.namespace + "/" + response.responseBody.name)
+      );
+    }
     if (redirectUrlFactory) {
       url = redirectUrlFactory(this.props);
     }
