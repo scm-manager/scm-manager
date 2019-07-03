@@ -10,6 +10,16 @@
       "currentAppVersion": "Aktuelle Software-Versionsnummer"
     }
   },
+  "plugins": {
+    "title": "Plugins",
+    "installedSubtitle": "Installierte Plugins",
+    "availableSubtitle": "Verfügbare Plugins",
+    "menu": {
+      "pluginsNavLink": "Plugins",
+      "installedNavLink": "Installiert",
+      "availableNavLink": "Verfügbar"
+    }
+  },
   "repositoryRole": {
     "navLink": "Berechtigungsrollen",
     "title": "Berechtigungsrollen",

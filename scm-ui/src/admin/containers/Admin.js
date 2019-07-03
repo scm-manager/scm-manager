@@ -10,6 +10,7 @@ import type { Links } from "@scm-manager/ui-types";
 import { Page, Navigation, NavLink, Section, SubNavigation } from "@scm-manager/ui-components";
 import { getLinks } from "../../modules/indexResource";
 import AdminDetails from "./AdminDetails";
+import PluginsOverview from "../plugins/containers/PluginsOverview";
 import GlobalConfig from "./GlobalConfig";
 import RepositoryRoles from "../roles/containers/RepositoryRoles";
 import SingleRepositoryRole from "../roles/containers/SingleRepositoryRole";
@@ -62,6 +63,35 @@ class Admin extends React.Component<Props> {
               <Redirect exact from={url} to={`${url}/info`} />
               <Route path={`${url}/info`} exact component={AdminDetails} />
               <Route path={`${url}/settings/general`} exact component={GlobalConfig} />
+              <Redirect exact from={`${url}/plugins`} to={`${url}/plugins/installed/`} />
+              <Route
+                path={`${url}/plugins/installed`}
+                exact
+                render={() => (
+                  <PluginsOverview baseUrl={`${url}/plugins/installed`} installed={true} />
+                )}
+              />
+              <Route
+                path={`${url}/plugins/installed/:page`}
+                exact
+                render={() => (
+                  <PluginsOverview baseUrl={`${url}/plugins/installed`} installed={true} />
+                )}
+              />
+              <Route
+                path={`${url}/plugins/available`}
+                exact
+                render={() => (
+                  <PluginsOverview baseUrl={`${url}/plugins/available`} installed={false} />
+                )}
+              />
+              <Route
+                path={`${url}/plugins/available/:page`}
+                exact
+                render={() => (
+                  <PluginsOverview baseUrl={`${url}/plugins/available`} installed={false} />
+                )}
+              />
               <Route
                 path={`${url}/role/:role`}
                 render={() => (
@@ -106,6 +136,20 @@ class Admin extends React.Component<Props> {
                   icon="fas fa-info-circle"
                   label={t("admin.menu.informationNavLink")}
                 />
+                <SubNavigation
+                  to={`${url}/plugins/`}
+                  icon="fas fa-puzzle-piece"
+                  label={t("plugins.menu.pluginsNavLink")}
+                >
+                  <NavLink
+                    to={`${url}/plugins/installed/`}
+                    label={t("plugins.menu.installedNavLink")}
+                  />
+                  <NavLink
+                    to={`${url}/plugins/available/`}
+                    label={t("plugins.menu.availableNavLink")}
+                  />
+                </SubNavigation>
                 <NavLink
                   to={`${url}/roles/`}
                   icon="fas fa-user-shield"
