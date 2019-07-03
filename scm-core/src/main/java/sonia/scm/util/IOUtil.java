@@ -471,8 +471,14 @@ public final class IOUtil
   {
     if (!directory.exists() &&!directory.mkdirs())
     {
-      throw new IllegalStateException(
-        "could not create directory ".concat(directory.getPath()));
+      // Sometimes, the previous check simply has the wrong result (either the 'exists()' returnes false though the
+      // directory exists or 'mkdirs()' returns false though the directory was created successfully.
+      // We therefore have to double check here. Funny though, in these cases a second check with 'directory.exists()'
+      // still returns false. As it seems, 'directory.getAbsoluteFile().exists()' creates a new object that fixes this
+      // problem.
+      if (!directory.getAbsoluteFile().exists()) {
+        throw new IllegalStateException("could not create directory ".concat(directory.getPath()));
+      }
     }
   }
 
