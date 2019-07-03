@@ -18,7 +18,8 @@
       "pluginsNavLink": "Plugins",
       "installedNavLink": "Installed",
       "availableNavLink": "Available"
-    }
+    },
+    "noPlugins": "No plugins found."
   },
   "repositoryRole": {
     "navLink": "Permission Roles",

@@ -1,8 +1,7 @@
 //@flow
-import type { PagedCollection, Links } from "./hal";
+import type { Collection, Links } from "./hal";
 
 export type Plugin = {
-  namespace: string,
   name: string,
   type: string,
   description?: string,
@@ -11,7 +10,7 @@ export type Plugin = {
   _links: Links
 };
 
-export type PluginCollection = PagedCollection & {
+export type PluginCollection = Collection & {
   _embedded: {
     plugins: Plugin[] | string[]
   }

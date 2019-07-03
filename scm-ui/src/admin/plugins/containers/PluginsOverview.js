@@ -1,20 +1,40 @@
 // @flow
 import React from "react";
+import {connect} from "react-redux";
 import { translate } from "react-i18next";
+import type { PluginCollection } from "@scm-manager/ui-types";
 import { Loading, Title, Subtitle, LinkPaginator, Notification } from "@scm-manager/ui-components";
+import {
+  fetchPluginsByLink,
+  getFetchPluginsFailure,
+  getPluginCollection,
+  isFetchPluginsPending
+} from "../modules/plugins";
 import PluginsList from "../components/PluginsList";
+import { getUiPluginsLink } from "../../../modules/indexResource";
 
 type Props = {
   loading: boolean,
   error: Error,
+  collection: PluginCollection,
+  page: number,
   baseUrl: string,
   installed: boolean,
+  pluginsLink: string,
 
   // context objects
-  t: string => string
+  t: string => string,
+
+  // dispatched functions
+  fetchPluginsByLink: (link: string) => void
 };
 
 class PluginsOverview extends React.Component<Props> {
+  componentDidMount() {
+    const { fetchPluginsByLink, pluginsLink } = this.props;
+    fetchPluginsByLink(pluginsLink);
+  }
+
   render() {
     const { loading, installed, t } = this.props;
 
@@ -54,4 +74,25 @@ class PluginsOverview extends React.Component<Props> {
   }
 }
 
-export default translate("admin")(PluginsOverview);
+const mapStateToProps = (state) => {
+  const collection = getPluginCollection(state);
+  const loading = isFetchPluginsPending(state);
+  const error = getFetchPluginsFailure(state);
+  const pluginsLink = getUiPluginsLink(state);
+  return {
+    collection,
+    loading,
+    error,
+    pluginsLink
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchPluginsByLink: (link: string) => {
+      dispatch(fetchPluginsByLink(link));
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(translate("admin")(PluginsOverview));
