@@ -1,8 +1,10 @@
 package sonia.scm.legacy;
 
+import sonia.scm.Priority;
+import sonia.scm.filter.Filters;
 import sonia.scm.migration.MigrationDAO;
 import sonia.scm.migration.MigrationInfo;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.web.filter.HttpFilter;
 
 import javax.inject.Inject;
@@ -23,16 +25,17 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
+@Priority(Filters.PRIORITY_BASEURL)
 @Singleton
 public class RepositoryLegacyProtocolRedirectFilter extends HttpFilter {
 
   private final ProtocolBasedLegacyRepositoryInfo info;
-  private final RepositoryManager repositoryManager;
+  private final RepositoryDAO repositoryDao;
 
   @Inject
-  public RepositoryLegacyProtocolRedirectFilter(MigrationDAO migrationDAO, RepositoryManager repositoryManager) {
+  public RepositoryLegacyProtocolRedirectFilter(MigrationDAO migrationDAO, RepositoryDAO repositoryDao) {
     this.info = load(migrationDAO);
-    this.repositoryManager = repositoryManager;
+    this.repositoryDao = repositoryDao;
   }
 
   private static ProtocolBasedLegacyRepositoryInfo load(MigrationDAO migrationDAO) {
@@ -75,7 +78,7 @@ public class RepositoryLegacyProtocolRedirectFilter extends HttpFilter {
     }
 
     private void doRedirect(String servletPath, MigrationInfo migrationInfo) throws IOException, ServletException {
-      if (repositoryManager.get(migrationInfo.getId()) == null) {
+      if (repositoryDao.get(migrationInfo.getId()) == null) {
         noRedirect();
       } else {
         String furtherPath = servletPath.substring(migrationInfo.getProtocol().length() + 1 + migrationInfo.getOriginalRepositoryName().length());
