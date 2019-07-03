@@ -26,10 +26,13 @@ public class UIPluginDtoMapper {
   }
 
   public UIPluginDto map(PluginWrapper plugin) {
-    UIPluginDto dto = new UIPluginDto(
-      plugin.getPlugin().getInformation().getName(),
-      getScriptResources(plugin)
-    );
+    UIPluginDto dto = new UIPluginDto();
+    dto.setName(plugin.getPlugin().getInformation().getName());
+    dto.setBundles(getScriptResources(plugin));
+    dto.setType("42");
+    dto.setVersion(plugin.getPlugin().getInformation().getVersion());
+    dto.setAuthor(plugin.getPlugin().getInformation().getAuthor());
+    dto.setDescription(plugin.getPlugin().getInformation().getDescription());
 
     Links.Builder linksBuilder = linkingTo()
         .self(resourceLinks.uiPlugin()

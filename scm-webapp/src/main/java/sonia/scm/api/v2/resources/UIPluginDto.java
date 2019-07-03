@@ -6,16 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter
 public class UIPluginDto extends HalRepresentation {
 
   private String name;
   private Iterable<String> bundles;
-
-  public UIPluginDto(String name, Iterable<String> bundles) {
-    this.name = name;
-    this.bundles = bundles;
-  }
+  private String type;
+  private String version;
+  private String author;
+  private String description;
 
   @Override
   protected HalRepresentation add(Links links) {
