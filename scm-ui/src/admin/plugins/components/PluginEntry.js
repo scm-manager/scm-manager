@@ -2,11 +2,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import injectSheet from "react-jss";
-import type { Repository } from "@scm-manager/ui-types";
-import { DateFromNow } from "@scm-manager/ui-components";
-import RepositoryEntryLink from "./RepositoryEntryLink";
 import classNames from "classnames";
-import RepositoryAvatar from "./RepositoryAvatar";
+import type { Plugin } from "@scm-manager/ui-types";
+import PluginAvatar from "./PluginAvatar";
 
 const styles = {
   inner: {
@@ -14,82 +12,31 @@ const styles = {
     pointerEvents: "none",
     zIndex: 1
   },
-  innerLink: {
-    pointerEvents: "all"
-  },
   centerImage: {
     marginTop: "0.8em",
     marginLeft: "1em !important"
+  },
+  marginBottom: {
+    marginBottom: "0.75rem !important"
   }
 };
 
 type Props = {
-  repository: Repository,
+  plugin: Plugin,
   fullColumnWidth?: boolean,
+
   // context props
   classes: any
 };
 
 class PluginEntry extends React.Component<Props> {
-  createLink = (repository: Repository) => {
-    return `/repo/${repository.namespace}/${repository.name}`;
-  };
-
-  renderBranchesLink = (repository: Repository, repositoryLink: string) => {
-    if (repository._links["branches"]) {
-      return (
-        <RepositoryEntryLink
-          iconClass="fas fa-code-branch fa-lg"
-          to={repositoryLink + "/branches"}
-        />
-      );
-    }
-    return null;
-  };
-
-  renderChangesetsLink = (repository: Repository, repositoryLink: string) => {
-    if (repository._links["changesets"]) {
-      return (
-        <RepositoryEntryLink
-          iconClass="fas fa-exchange-alt fa-lg"
-          to={repositoryLink + "/changesets"}
-        />
-      );
-    }
-    return null;
-  };
-
-  renderSourcesLink = (repository: Repository, repositoryLink: string) => {
-    if (repository._links["sources"]) {
-      return (
-        <RepositoryEntryLink
-          iconClass="fa-code fa-lg"
-          to={repositoryLink + "/sources"}
-        />
-      );
-    }
-    return null;
-  };
-
-  renderModifyLink = (repository: Repository, repositoryLink: string) => {
-    if (repository._links["update"]) {
-      return (
-        <RepositoryEntryLink
-          iconClass="fa-cog fa-lg"
-          to={repositoryLink + "/settings/general"}
-        />
-      );
-    }
-    return null;
-  };
-
   render() {
-    const { repository, classes, fullColumnWidth } = this.props;
-    const repositoryLink = this.createLink(repository);
+    const { plugin, classes, fullColumnWidth } = this.props;
     const halfColumn = fullColumnWidth ? "is-full" : "is-half";
     const overlayLinkClass = fullColumnWidth
       ? "overlay-full-column"
       : "overlay-half-column";
+    // TODO: Add link to plugin page below
     return (
       <div
         className={classNames(
@@ -100,31 +47,35 @@ class PluginEntry extends React.Component<Props> {
           halfColumn
         )}
       >
-        <Link className={classNames(overlayLinkClass)} to={repositoryLink} />
+        <Link
+          className={classNames(overlayLinkClass, "is-plugin-page")}
+          to="#"
+        />
         <article className={classNames("media", classes.inner)}>
           <figure className={classNames(classes.centerImage, "media-left")}>
-            <RepositoryAvatar repository={repository} />
+            <PluginAvatar plugin={plugin} />
           </figure>
           <div className={classNames("media-content", "text-box")}>
             <div className="content">
-              <p className="is-marginless">
-                <strong>{repository.name}</strong>
+              <nav
+                className={classNames(
+                  "level",
+                  "is-mobile",
+                  classes.marginBottom
+                )}
+              >
+                <div className="level-left">
+                  <strong>{plugin.name}</strong>
+                </div>
+                <div className="level-right is-hidden-mobile">
+                  {plugin.version}
+                </div>
+              </nav>
+              <p className="shorten-text is-marginless">{plugin.description}</p>
+              <p>
+                <small>{plugin.author}</small>
               </p>
-              <p className={"shorten-text"}>{repository.description}</p>
             </div>
-            <nav className="level is-mobile">
-              <div className="level-left">
-                {this.renderBranchesLink(repository, repositoryLink)}
-                {this.renderChangesetsLink(repository, repositoryLink)}
-                {this.renderSourcesLink(repository, repositoryLink)}
-                {this.renderModifyLink(repository, repositoryLink)}
-              </div>
-              <div className="level-right is-hidden-mobile">
-                <small className="level-item">
-                  <DateFromNow date={repository.creationDate} />
-                </small>
-              </div>
-            </nav>
           </div>
         </article>
       </div>

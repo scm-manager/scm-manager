@@ -172,12 +172,18 @@ ul.is-separated {
       height: calc(120px - 1.5rem);
       width: calc(50% - 3rem);
     }
+    .overlay-half-column.is-plugin-page {
+      width: calc(37.5% - 1.5rem);
+    }
   }
   .column.is-full {
     .overlay-full-column {
       position: absolute;
       height: calc(120px - 0.5rem);
       width: calc(100% - 1.5rem);
+    }
+    .overlay-full-column.is-plugin-page {
+      width: calc(75% - 1.5rem);
     }
   }
   @media screen and (max-width: 768px) {
@@ -188,11 +194,13 @@ ul.is-separated {
         margin-right: 0;
       }
 
-      .overlay-half-column {
-        position: absolute;
-        height: calc(120px - 0.5rem);
+      .overlay-half-column,
+      .overlay-half-column.is-plugin-page {
         width: calc(100% - 1.5rem);
       }
+    }
+    .column.is-full .overlay-full-column.is-plugin-page {
+      width: calc(100% - 1.5rem);
     }
   }
 }

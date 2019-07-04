@@ -1,24 +1,26 @@
 //@flow
 import React from "react";
-import type { Plugins } from "@scm-manager/ui-types";
+import type { Plugin } from "@scm-manager/ui-types";
+import PluginGroupEntry from "../components/PluginGroupEntry";
+import groupByCategory from "./groupByCategory";
 
 type Props = {
-  plugins: Plugins[]
+  plugins: Plugin[]
 };
 
-class RepositoryList extends React.Component<Props> {
+class PluginList extends React.Component<Props> {
   render() {
     const { plugins } = this.props;
 
-    const groups = groupByNamespace(plugins);
+    const groups = groupByCategory(plugins);
     return (
       <div className="content">
         {groups.map(group => {
-          return <PluginEntry group={group} key={group.name} />;
+          return <PluginGroupEntry group={group} key={group.name} />;
         })}
       </div>
     );
   }
 }
 
-export default RepositoryList;
+export default PluginList;
