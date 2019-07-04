@@ -1,9 +1,16 @@
 // @flow
 import React from "react";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import { translate } from "react-i18next";
+import { compose } from "redux";
 import type { PluginCollection } from "@scm-manager/ui-types";
-import { Loading, Title, Subtitle, LinkPaginator, Notification } from "@scm-manager/ui-components";
+import {
+  Loading,
+  Title,
+  Subtitle,
+  Notification,
+  ErrorNotification
+} from "@scm-manager/ui-components";
 import {
   fetchPluginsByLink,
   getFetchPluginsFailure,
@@ -17,7 +24,6 @@ type Props = {
   loading: boolean,
   error: Error,
   collection: PluginCollection,
-  page: number,
   baseUrl: string,
   installed: boolean,
   pluginsLink: string,
@@ -36,9 +42,13 @@ class PluginsOverview extends React.Component<Props> {
   }
 
   render() {
-    const { loading, installed, t } = this.props;
+    const { loading, error, collection, installed, t } = this.props;
 
-    if (loading) {
+    if (error) {
+      return <ErrorNotification error={error} />;
+    }
+
+    if (!collection || loading) {
       return <Loading />;
     }
 
@@ -58,27 +68,21 @@ class PluginsOverview extends React.Component<Props> {
   }
 
   renderPluginsList() {
-    const { collection, page, t } = this.props;
+    const { collection, t } = this.props;
 
     if (collection._embedded && collection._embedded.plugins.length > 0) {
-      return (
-        <>
-          <PluginsList plugins={collection._embedded.plugins} />
-          <LinkPaginator collection={collection} page={page} />
-        </>
-      );
+      return <PluginsList plugins={collection._embedded.plugins} />;
     }
-    return (
-      <Notification type="info">{t("plugins.noPlugins")}</Notification>
-    );
+    return <Notification type="info">{t("plugins.noPlugins")}</Notification>;
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const collection = getPluginCollection(state);
   const loading = isFetchPluginsPending(state);
   const error = getFetchPluginsFailure(state);
   const pluginsLink = getUiPluginsLink(state);
+
   return {
     collection,
     loading,
@@ -95,4 +99,10 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(translate("admin")(PluginsOverview));
+export default compose(
+  translate("admin"),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(PluginsOverview);
