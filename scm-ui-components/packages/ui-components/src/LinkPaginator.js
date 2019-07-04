@@ -25,7 +25,7 @@ class LinkPaginator extends React.Component<Props> {
   renderFirstButton() {
     return (
       <Button
-        className={"pagination-link"}
+        className="pagination-link"
         label={"1"}
         disabled={false}
         link={this.addFilterToLink("1")}
@@ -69,7 +69,7 @@ class LinkPaginator extends React.Component<Props> {
     const { collection } = this.props;
     return (
       <Button
-        className={"pagination-link"}
+        className="pagination-link"
         label={`${collection.pageTotal}`}
         disabled={false}
         link={this.addFilterToLink(`${collection.pageTotal}`)}

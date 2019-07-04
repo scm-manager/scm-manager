@@ -110,7 +110,7 @@ class RepositoryEntry extends React.Component<Props> {
               <p className="is-marginless">
                 <strong>{repository.name}</strong>
               </p>
-              <p className={"shorten-text"}>{repository.description}</p>
+              <p className="shorten-text">{repository.description}</p>
             </div>
             <nav className="level is-mobile">
               <div className="level-left">
