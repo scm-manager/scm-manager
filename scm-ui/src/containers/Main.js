@@ -38,15 +38,6 @@ class Main extends React.Component<Props> {
     const { authenticated, links } = this.props;
     const redirectUrlFactory = binder.getExtension("main.redirect", this.props);
     let url = "/repos";
-    if (location.href && location.href.includes("#diffPanel;")) {
-      let repoId = location.href.substring(location.href.search("#diffPanel;") + 11, location.href.search("#diffPanel;") + 21);
-      console.log("RepoId:");
-      console.log(repoId);
-      apiClient.get("/legacy/repository/" + repoId).then(response =>
-        console.log(JSON.parse(response))
-        // this.props.history.push("/repo/" + response.responseBody.namespace + "/" + response.responseBody.name)
-      );
-    }
     if (redirectUrlFactory) {
       url = redirectUrlFactory(this.props);
     }
@@ -134,7 +125,11 @@ class Main extends React.Component<Props> {
             component={Profile}
             authenticated={authenticated}
           />
-
+          <ExtensionPoint
+            name="legacyRepository.redirect"
+            renderAll={true}
+            props={{ authenticated }}
+          />
           <ExtensionPoint
             name="main.route"
             renderAll={true}
