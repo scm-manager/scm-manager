@@ -4,9 +4,9 @@ import type { Collection, Links } from "./hal";
 export type Plugin = {
   name: string,
   type: string,
+  version: string,
+  author: string,
   description?: string,
-  creationDate?: string,
-  lastModified?: string,
   _links: Links
 };
 
