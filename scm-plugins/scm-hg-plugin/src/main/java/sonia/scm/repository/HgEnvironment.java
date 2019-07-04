@@ -118,7 +118,7 @@ public final class HgEnvironment
       String credentials = hookManager.getCredentials();
       environment.put(SCM_BEARER_TOKEN, credentials);
     } catch (ProvisionException e) {
-      LOG.debug("could not create bearer token; looks like currently we are not in a request", e);
+      LOG.debug("could not create bearer token; looks like currently we are not in a request; probably you can ignore the following exception:", e);
     }
     environment.put(ENV_PYTHON_PATH, HgUtil.getPythonPath(handler.getConfig()));
     environment.put(ENV_URL, hookUrl);
