@@ -55,9 +55,10 @@ public class UpdateEngine {
 
   private void execute(UpdateStep updateStep) {
     try {
-      LOG.info("running update step for type {} and version {}",
+      LOG.info("running update step for type {} and version {} (class {})",
         updateStep.getAffectedDataType(),
-        updateStep.getTargetVersion()
+        updateStep.getTargetVersion(),
+        updateStep.getClass().getName()
       );
       updateStep.doUpdate();
     } catch (Exception e) {
