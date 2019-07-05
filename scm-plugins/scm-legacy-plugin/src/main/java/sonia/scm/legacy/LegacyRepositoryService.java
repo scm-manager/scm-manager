@@ -39,6 +39,5 @@ public class LegacyRepositoryService {
     }
     return new NamespaceAndNameDto(repo.getName(), repo.getNamespace());
   }
-
 }
 

@@ -27,10 +27,7 @@ import Profile from "./Profile";
 
 type Props = {
   authenticated?: boolean,
-  links: Links,
-
-  //context objects
-  history: History
+  links: Links
 };
 
 class Main extends React.Component<Props> {
