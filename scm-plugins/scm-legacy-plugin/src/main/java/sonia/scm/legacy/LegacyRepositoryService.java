@@ -3,6 +3,7 @@ package sonia.scm.legacy;
 import com.google.inject.Inject;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 
@@ -33,8 +34,10 @@ public class LegacyRepositoryService {
   })
   public NamespaceAndNameDto getNameAndNamespaceForRepositoryId(@PathParam("id") String repositoryId) {
     Repository repo = repositoryManager.get(repositoryId);
+    if (repo == null) {
+      throw new NotFoundException(Repository.class, repositoryId);
+    }
     return new NamespaceAndNameDto(repo.getName(), repo.getNamespace());
-
   }
 
 }

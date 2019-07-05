@@ -3,7 +3,12 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { binder } from "@scm-manager/ui-extensions";
-import { ProtectedRoute, apiClient } from "@scm-manager/ui-components";
+import {
+  ProtectedRoute,
+  apiClient,
+  ErrorNotification,
+  ErrorBoundary
+} from "@scm-manager/ui-components";
 import DummyComponent from "./DummyComponent";
 
 type Props = {
@@ -13,10 +18,21 @@ type Props = {
   history: History
 };
 
-class LegacyRepositoryRedirect extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
+type State = {
+  error?: Error
+};
+
+class LegacyRepositoryRedirect extends React.Component<Props, State> {
+  constructor(props: Props, state: State) {
+    super(props, state);
+    this.state = { error: null };
   }
+
+  handleError = (error: Error) => {
+    this.setState({
+      error
+    });
+  };
 
   redirectLegacyRepository() {
     const { history } = this.props;
@@ -25,31 +41,53 @@ class LegacyRepositoryRedirect extends React.Component<Props> {
       let repoId = splittedUrl[1];
       let changeSetId = splittedUrl[2];
 
-      apiClient.get("/legacy/repository/" + repoId)
+      apiClient
+        .get("/legacy/repository/" + repoId)
         .then(response => response.json())
-        .then(payload => history.push("/repo/" + payload.namespace + "/" + payload.name + "/changesets/" + changeSetId)
-        );
+        .then(payload =>
+          history.push(
+            "/repo/" +
+              payload.namespace +
+              "/" +
+              payload.name +
+              "/changesets/" +
+              changeSetId
+          )
+        )
+        .catch(this.handleError);
     }
   }
 
   render() {
     const { authenticated } = this.props;
+    const { error } = this.state;
+
+    if (error) {
+      return (
+        <section className="section">
+          <div className="container">
+            <ErrorBoundary>
+              <ErrorNotification error={error} />
+            </ErrorBoundary>
+          </div>
+        </section>
+      );
+    }
 
     return (
       <>
-      {
-        authenticated?
-        this.redirectLegacyRepository():
-        <ProtectedRoute
-          path="/index.html"
-          component={DummyComponent}
-          authenticated={authenticated}
-        />
-      }
+        {authenticated ? (
+          this.redirectLegacyRepository()
+        ) : (
+          <ProtectedRoute
+            path="/index.html"
+            component={DummyComponent}
+            authenticated={authenticated}
+          />
+        )}
       </>
     );
   }
 }
 
-binder.bind("legacyRepository.redirect", withRouter(LegacyRepositoryRedirect));
-
+binder.bind("legacy.redirectRepository", withRouter(LegacyRepositoryRedirect));

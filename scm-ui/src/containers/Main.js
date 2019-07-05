@@ -9,7 +9,7 @@ import Users from "../users/containers/Users";
 import Login from "../containers/Login";
 import Logout from "../containers/Logout";
 
-import { ProtectedRoute, apiClient } from "@scm-manager/ui-components";
+import { ProtectedRoute } from "@scm-manager/ui-components";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
 import CreateUser from "../users/containers/CreateUser";
@@ -126,7 +126,7 @@ class Main extends React.Component<Props> {
             authenticated={authenticated}
           />
           <ExtensionPoint
-            name="legacyRepository.redirect"
+            name="legacy.redirectRepository"
             renderAll={true}
             props={{ authenticated }}
           />
