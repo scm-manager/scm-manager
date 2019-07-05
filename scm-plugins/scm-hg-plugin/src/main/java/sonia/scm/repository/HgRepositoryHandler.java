@@ -41,13 +41,11 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ConfigurationException;
-import sonia.scm.ContextEntry;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.installer.HgInstaller;
 import sonia.scm.installer.HgInstallerFactory;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.INIConfiguration;
-import sonia.scm.io.INIConfigurationReader;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.plugin.Extension;
@@ -345,14 +343,6 @@ public class HgRepositoryHandler
     INIConfigurationWriter writer = new INIConfigurationWriter();
 
     writer.write(hgrc, hgrcFile);
-  }
-
-  public String getRepositoryId(File directory) {
-    try {
-      return new INIConfigurationReader().read(new File(directory, PATH_HGRC)).getSection(CONFIG_SECTION_SCMM).getParameter(CONFIG_KEY_REPOSITORY_ID);
-    } catch (IOException e) {
-      throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("Directory", directory.toString()), "could not read scm configuration file", e);
-    }
   }
 
   //~--- get methods ----------------------------------------------------------

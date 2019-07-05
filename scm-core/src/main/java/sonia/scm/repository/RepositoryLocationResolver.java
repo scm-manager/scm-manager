@@ -1,5 +1,7 @@
 package sonia.scm.repository;
 
+import java.util.function.BiConsumer;
+
 public abstract class RepositoryLocationResolver {
 
   public abstract boolean supportsLocationType(Class<?> type);
@@ -35,5 +37,12 @@ public abstract class RepositoryLocationResolver {
      * @throws IllegalStateException when there already is a location for the given repository registered.
      */
     void setLocation(String repositoryId, T location);
+
+    /**
+     * Iterates all repository locations known to this resolver instance and calls the consumer giving the repository id
+     * and its location for each repository.
+     * @param consumer This callback will be called for each repository with the repository id and its location.
+     */
+    void forAllLocations(BiConsumer<String, T> consumer);
   }
 }

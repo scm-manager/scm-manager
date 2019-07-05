@@ -94,6 +94,11 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
           PathBasedRepositoryLocationResolver.this.setLocation(repositoryId, ((Path) location).toAbsolutePath());
         }
       }
+
+      @Override
+      public void forAllLocations(BiConsumer<String, T> consumer) {
+        pathById.forEach((id, path) -> consumer.accept(id, (T) contextProvider.resolve(path)));
+      }
     };
   }
 
@@ -113,10 +118,6 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
     Path removedPath = pathById.remove(repositoryId);
     writePathDatabase();
     return contextProvider.resolve(removedPath);
-  }
-
-  void forAllPaths(BiConsumer<String, Path> consumer) {
-    pathById.forEach((id, path) -> consumer.accept(id, contextProvider.resolve(path)));
   }
 
   void updateModificationDate() {

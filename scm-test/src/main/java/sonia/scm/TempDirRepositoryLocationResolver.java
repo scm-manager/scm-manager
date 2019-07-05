@@ -4,6 +4,7 @@ import sonia.scm.repository.BasicRepositoryLocationResolver;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.function.BiConsumer;
 
 public class TempDirRepositoryLocationResolver extends BasicRepositoryLocationResolver {
   private final File tempDirectory;
@@ -29,6 +30,11 @@ public class TempDirRepositoryLocationResolver extends BasicRepositoryLocationRe
       @Override
       public void setLocation(String repositoryId, T location) {
         throw new UnsupportedOperationException("not implemented for tests");
+      }
+
+      @Override
+      public void forAllLocations(BiConsumer<String, T> consumer) {
+        consumer.accept("id", (T) tempDirectory.toPath());
       }
     };
   }
