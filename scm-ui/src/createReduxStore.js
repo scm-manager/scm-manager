@@ -18,6 +18,7 @@ import config from "./admin/modules/config";
 import roles from "./admin/roles/modules/roles";
 import namespaceStrategies from "./admin/modules/namespaceStrategies";
 import indexResources from "./modules/indexResource";
+import plugins from "./admin/plugins/modules/plugins";
 
 import type { BrowserHistory } from "history/createBrowserHistory";
 import branches from "./repos/branches/modules/branches";
@@ -42,7 +43,8 @@ function createReduxStore(history: BrowserHistory) {
     config,
     roles,
     sources,
-    namespaceStrategies
+    namespaceStrategies,
+    plugins
   });
 
   return createStore(
