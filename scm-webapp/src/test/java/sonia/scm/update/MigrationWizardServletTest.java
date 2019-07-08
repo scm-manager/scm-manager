@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.update.repository.MigrationStrategy;
-import sonia.scm.update.repository.MigrationStrategyDao;
+import sonia.scm.update.repository.DefaultMigrationStrategyDAO;
 import sonia.scm.update.repository.V1Repository;
 import sonia.scm.update.repository.XmlRepositoryV1UpdateStep;
 
@@ -26,7 +26,7 @@ class MigrationWizardServletTest {
   @Mock
   XmlRepositoryV1UpdateStep updateStep;
   @Mock
-  MigrationStrategyDao migrationStrategyDao;
+  DefaultMigrationStrategyDAO migrationStrategyDao;
 
   @Mock
   HttpServletRequest request;
@@ -233,6 +233,6 @@ class MigrationWizardServletTest {
 
     servlet.doPost(request, response);
 
-    verify(migrationStrategyDao).set("id", "name", MigrationStrategy.COPY, "namespace", "name");
+    verify(migrationStrategyDao).set("id", "git", "name", MigrationStrategy.COPY, "namespace", "name");
   }
 }

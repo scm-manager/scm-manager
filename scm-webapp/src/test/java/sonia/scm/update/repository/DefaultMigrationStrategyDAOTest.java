@@ -12,7 +12,6 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 
-import javax.xml.bind.JAXBException;
 import java.nio.file.Path;
 import java.util.Optional;
 
@@ -21,7 +20,7 @@ import static sonia.scm.update.repository.MigrationStrategy.INLINE;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(TempDirectory.class)
-class MigrationStrategyDaoTest {
+class DefaultMigrationStrategyDAOTest {
 
   @Mock
   SCMContextProvider contextProvider;
@@ -36,7 +35,7 @@ class MigrationStrategyDaoTest {
 
   @Test
   void shouldReturnEmptyOptionalWhenStoreIsEmpty() {
-    MigrationStrategyDao dao = new MigrationStrategyDao(storeFactory);
+    DefaultMigrationStrategyDAO dao = new DefaultMigrationStrategyDAO(storeFactory);
 
     Optional<RepositoryMigrationPlan.RepositoryMigrationEntry> entry = dao.get("any");
 
@@ -45,9 +44,9 @@ class MigrationStrategyDaoTest {
 
   @Test
   void shouldReturnNewValue() {
-    MigrationStrategyDao dao = new MigrationStrategyDao(storeFactory);
+    DefaultMigrationStrategyDAO dao = new DefaultMigrationStrategyDAO(storeFactory);
 
-    dao.set("id", "originalName", INLINE, "space", "name");
+    dao.set("id", "git", "originalName", INLINE, "space", "name");
 
     Optional<RepositoryMigrationPlan.RepositoryMigrationEntry> entry = dao.get("id");
 
@@ -66,14 +65,14 @@ class MigrationStrategyDaoTest {
   class WithExistingDatabase {
     @BeforeEach
     void initExistingDatabase() {
-      MigrationStrategyDao dao = new MigrationStrategyDao(storeFactory);
+      DefaultMigrationStrategyDAO dao = new DefaultMigrationStrategyDAO(storeFactory);
 
-      dao.set("id", "originalName", INLINE, "space", "name");
+      dao.set("id", "git", "originalName", INLINE, "space", "name");
     }
 
     @Test
     void shouldFindExistingValue() {
-      MigrationStrategyDao dao = new MigrationStrategyDao(storeFactory);
+      DefaultMigrationStrategyDAO dao = new DefaultMigrationStrategyDAO(storeFactory);
 
       Optional<RepositoryMigrationPlan.RepositoryMigrationEntry> entry = dao.get("id");
 

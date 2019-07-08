@@ -57,6 +57,7 @@ import sonia.scm.group.GroupDisplayManager;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupManagerProvider;
 import sonia.scm.group.xml.XmlGroupDAO;
+import sonia.scm.migration.MigrationDAO;
 import sonia.scm.net.SSLContextProvider;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.net.ahc.ContentTransformer;
@@ -97,6 +98,7 @@ import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
 import sonia.scm.template.TemplateServlet;
+import sonia.scm.update.repository.DefaultMigrationStrategyDAO;
 import sonia.scm.user.DefaultUserDisplayManager;
 import sonia.scm.user.DefaultUserManager;
 import sonia.scm.user.UserDAO;
@@ -183,6 +185,7 @@ class ScmServletModule extends ServletModule {
     bind(RepositoryDAO.class, XmlRepositoryDAO.class);
     bind(RepositoryRoleDAO.class, XmlRepositoryRoleDAO.class);
     bind(RepositoryRoleManager.class).to(DefaultRepositoryRoleManager.class);
+    bind(MigrationDAO.class).to(DefaultMigrationStrategyDAO.class);
 
     bindDecorated(RepositoryManager.class, DefaultRepositoryManager.class,
       RepositoryManagerProvider.class);

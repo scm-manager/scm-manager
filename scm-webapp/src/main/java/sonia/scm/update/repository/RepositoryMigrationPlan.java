@@ -4,6 +4,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,14 +31,18 @@ class RepositoryMigrationPlan {
       .findFirst();
   }
 
-  public void set(String repositoryId, String originalName, MigrationStrategy strategy, String newNamespace, String newName) {
+  public Collection<RepositoryMigrationEntry> getEntries() {
+    return Collections.unmodifiableList(entries);
+  }
+
+  public void set(String repositoryId, String protocol, String originalName, MigrationStrategy strategy, String newNamespace, String newName) {
     Optional<RepositoryMigrationEntry> entry = get(repositoryId);
     if (entry.isPresent()) {
       entry.get().setStrategy(strategy);
       entry.get().setNewNamespace(newNamespace);
       entry.get().setNewName(newName);
     } else {
-      entries.add(new RepositoryMigrationEntry(repositoryId, originalName, strategy, newNamespace, newName));
+      entries.add(new RepositoryMigrationEntry(repositoryId, protocol, originalName, strategy, newNamespace, newName));
     }
   }
 
@@ -45,6 +51,7 @@ class RepositoryMigrationPlan {
   static class RepositoryMigrationEntry {
 
     private String repositoryId;
+    private String protocol;
     private String originalName;
     private MigrationStrategy dataMigrationStrategy;
     private String newNamespace;
@@ -53,12 +60,21 @@ class RepositoryMigrationPlan {
     RepositoryMigrationEntry() {
     }
 
-    RepositoryMigrationEntry(String repositoryId, String originalName, MigrationStrategy dataMigrationStrategy, String newNamespace, String newName) {
+    RepositoryMigrationEntry(String repositoryId, String protocol, String originalName, MigrationStrategy dataMigrationStrategy, String newNamespace, String newName) {
       this.repositoryId = repositoryId;
+      this.protocol = protocol;
       this.originalName = originalName;
       this.dataMigrationStrategy = dataMigrationStrategy;
       this.newNamespace = newNamespace;
       this.newName = newName;
+    }
+
+    public String getRepositoryId() {
+      return repositoryId;
+    }
+
+    public String getProtocol() {
+      return protocol;
     }
 
     public String getOriginalName() {
