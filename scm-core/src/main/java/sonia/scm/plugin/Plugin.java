@@ -35,7 +35,6 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.github.sdorra.ssp.StaticPermissions;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
@@ -53,7 +52,6 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
-@StaticPermissions( value = "plugin", globalPermissions = {"install", "remove"}, permissions = {} )
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class Plugin extends ScmModule

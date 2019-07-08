@@ -21,13 +21,11 @@ import reducer, {
   fetchPluginSuccess,
   getPlugin,
   isFetchPluginPending,
-  getFetchPluginFailure,
-  getPermissionsLink
+  getFetchPluginFailure
 } from "./plugins";
 import type {
   Plugin,
-  PluginCollection,
-  PluginGroup
+  PluginCollection
 } from "@scm-manager/ui-types";
 
 const groupManagerPlugin: Plugin = {
@@ -72,6 +70,17 @@ const branchwpPlugin: Plugin = {
       href:
         "http://localhost:8081/api/v2/ui/plugins/scm-branchwp-plugin"
     }
+  }
+};
+
+const pluginCollectionWithNames: PluginCollection = {
+  _links: {
+    self: {
+      href: "http://localhost:8081/api/v2/ui/plugins"
+    }
+  },
+  _embedded: {
+    plugins: [groupManagerPlugin.name, scriptPlugin.name, branchwpPlugin.name]
   }
 };
 
@@ -267,7 +276,7 @@ describe("plugins selectors", () => {
   it("should return the plugins collection", () => {
     const state = {
       plugins: {
-        list: pluginCollection,
+        list: pluginCollectionWithNames,
         byNames: {
           "scm-groupmanager-plugin": groupManagerPlugin,
           "scm-script-plugin": scriptPlugin,
@@ -317,21 +326,6 @@ describe("plugins selectors", () => {
 
     const plugin = getPlugin(state, "scm-groupmanager-plugin");
     expect(plugin).toEqual(groupManagerPlugin);
-  });
-
-  it("should return permissions link", () => {
-    const state = {
-      plugins: {
-        byNames: {
-          "scm-groupmanager-plugin": groupManagerPlugin
-        }
-      }
-    };
-
-    const link = getPermissionsLink(state, "scm-groupmanager-plugin");
-    expect(link).toEqual(
-      "http://localhost:8081/api/v2/ui/plugins/scm-groupmanager-plugin/permissions/"
-    );
   });
 
   it("should return true, when fetch plugin is pending", () => {
