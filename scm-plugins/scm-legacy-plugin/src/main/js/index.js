@@ -10,9 +10,11 @@ import {
   ErrorBoundary
 } from "@scm-manager/ui-components";
 import DummyComponent from "./DummyComponent";
+import type {Links} from "@scm-manager/ui-types";
 
 type Props = {
   authenticated?: boolean,
+  links: Links,
 
   //context objects
   history: History
@@ -35,14 +37,14 @@ class LegacyRepositoryRedirect extends React.Component<Props, State> {
   };
 
   redirectLegacyRepository() {
-    const { history } = this.props;
+    const { history, links } = this.props;
     if (location.href && location.href.includes("#diffPanel;")) {
       let splittedUrl = location.href.split(";");
       let repoId = splittedUrl[1];
       let changeSetId = splittedUrl[2];
 
       apiClient
-        .get("/legacy/repository/" + repoId)
+        .get(links.nameAndNamespace.href.replace("{id}", repoId))
         .then(response => response.json())
         .then(payload =>
           history.push(
@@ -50,7 +52,7 @@ class LegacyRepositoryRedirect extends React.Component<Props, State> {
               payload.namespace +
               "/" +
               payload.name +
-              "/changesets/" +
+              "/changeset/" +
               changeSetId
           )
         )
@@ -90,4 +92,4 @@ class LegacyRepositoryRedirect extends React.Component<Props, State> {
   }
 }
 
-binder.bind("legacy.redirectRepository", withRouter(LegacyRepositoryRedirect));
+binder.bind("main.route", withRouter(LegacyRepositoryRedirect));

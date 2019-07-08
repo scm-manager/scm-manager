@@ -123,11 +123,6 @@ class Main extends React.Component<Props> {
             authenticated={authenticated}
           />
           <ExtensionPoint
-            name="legacy.redirectRepository"
-            renderAll={true}
-            props={{ authenticated }}
-          />
-          <ExtensionPoint
             name="main.route"
             renderAll={true}
             props={{ authenticated, links }}
