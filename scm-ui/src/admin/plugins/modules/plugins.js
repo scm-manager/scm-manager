@@ -158,7 +158,7 @@ export function getPluginCollection(state: Object) {
   if (state.plugins && state.plugins.list && state.plugins.byNames) {
     const plugins = [];
     for (let pluginName of state.plugins.list._embedded.plugins) {
-      plugins.push(state.plugins.byNames[pluginName.name]);
+      plugins.push(state.plugins.byNames[pluginName]);
     }
     return {
       ...state.plugins.list,
