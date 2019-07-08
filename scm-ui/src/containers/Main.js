@@ -122,7 +122,6 @@ class Main extends React.Component<Props> {
             component={Profile}
             authenticated={authenticated}
           />
-
           <ExtensionPoint
             name="main.route"
             renderAll={true}
