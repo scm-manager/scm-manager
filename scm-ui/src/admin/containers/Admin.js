@@ -145,10 +145,11 @@ class Admin extends React.Component<Props> {
                     to={`${url}/plugins/installed/`}
                     label={t("plugins.menu.installedNavLink")}
                   />
-                  <NavLink
-                    to={`${url}/plugins/available/`}
-                    label={t("plugins.menu.availableNavLink")}
-                  />
+                  {/* Activate this again after available plugins page is created */}
+                  {/*<NavLink*/}
+                  {/*  to={`${url}/plugins/available/`}*/}
+                  {/*  label={t("plugins.menu.availableNavLink")}*/}
+                  {/*/>*/}
                 </SubNavigation>
                 <NavLink
                   to={`${url}/roles/`}
