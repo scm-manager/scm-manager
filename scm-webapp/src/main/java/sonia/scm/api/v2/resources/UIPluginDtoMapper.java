@@ -29,7 +29,7 @@ public class UIPluginDtoMapper {
     UIPluginDto dto = new UIPluginDto();
     dto.setName(plugin.getPlugin().getInformation().getName());
     dto.setBundles(getScriptResources(plugin));
-    dto.setType("42"); //TODO: add plugin category
+    dto.setType(plugin.getPlugin().getInformation().getCategory() != null ? plugin.getPlugin().getInformation().getCategory() : "No Category defined");
     dto.setVersion(plugin.getPlugin().getInformation().getVersion());
     dto.setAuthor(plugin.getPlugin().getInformation().getAuthor());
     dto.setDescription(plugin.getPlugin().getInformation().getDescription());
