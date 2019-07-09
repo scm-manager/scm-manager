@@ -14,7 +14,7 @@ class PluginList extends React.Component<Props> {
 
     const groups = groupByCategory(plugins);
     return (
-      <div className="content">
+      <div className="content is-plugin-page">
         {groups.map(group => {
           return <PluginGroupEntry group={group} key={group.name} />;
         })}
