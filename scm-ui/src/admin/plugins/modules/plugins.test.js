@@ -23,10 +23,7 @@ import reducer, {
   isFetchPluginPending,
   getFetchPluginFailure
 } from "./plugins";
-import type {
-  Plugin,
-  PluginCollection
-} from "@scm-manager/ui-types";
+import type { Plugin, PluginCollection } from "@scm-manager/ui-types";
 
 const groupManagerPlugin: Plugin = {
   name: "scm-groupmanager-plugin",
@@ -37,8 +34,7 @@ const groupManagerPlugin: Plugin = {
   description: "Notify a remote webserver whenever a plugin is pushed to.",
   _links: {
     self: {
-      href:
-        "http://localhost:8081/api/v2/ui/plugins/scm-groupmanager-plugin"
+      href: "http://localhost:8081/api/v2/ui/plugins/scm-groupmanager-plugin"
     }
   }
 };
@@ -52,8 +48,7 @@ const scriptPlugin: Plugin = {
   description: "Script support for scm-manager.",
   _links: {
     self: {
-      href:
-        "http://localhost:8081/api/v2/ui/plugins/scm-script-plugin"
+      href: "http://localhost:8081/api/v2/ui/plugins/scm-script-plugin"
     }
   }
 };
@@ -67,8 +62,7 @@ const branchwpPlugin: Plugin = {
   description: "This plugin adds branch write protection for plugins.",
   _links: {
     self: {
-      href:
-        "http://localhost:8081/api/v2/ui/plugins/scm-branchwp-plugin"
+      href: "http://localhost:8081/api/v2/ui/plugins/scm-branchwp-plugin"
     }
   }
 };
@@ -166,12 +160,9 @@ describe("plugins fetch", () => {
   });
 
   it("should dispatch FETCH_PLUGIN_FAILURE, if the request for scm-groupmanager-plugin by name fails", () => {
-    fetchMock.getOnce(
-      PLUGINS_URL + "/scm-groupmanager-plugin",
-      {
-        status: 500
-      }
-    );
+    fetchMock.getOnce(PLUGINS_URL + "/scm-groupmanager-plugin", {
+      status: 500
+    });
 
     const store = mockStore({});
     return store
@@ -331,8 +322,7 @@ describe("plugins selectors", () => {
   it("should return true, when fetch plugin is pending", () => {
     const state = {
       pending: {
-        [FETCH_PLUGIN +
-        "/scm-groupmanager-plugin"]: true
+        [FETCH_PLUGIN + "/scm-groupmanager-plugin"]: true
       }
     };
     expect(isFetchPluginPending(state, "scm-groupmanager-plugin")).toEqual(
@@ -347,8 +337,7 @@ describe("plugins selectors", () => {
   it("should return error when fetch plugin did fail", () => {
     const state = {
       failure: {
-        [FETCH_PLUGIN +
-        "/scm-groupmanager-plugin"]: error
+        [FETCH_PLUGIN + "/scm-groupmanager-plugin"]: error
       }
     };
     expect(getFetchPluginFailure(state, "scm-groupmanager-plugin")).toEqual(
