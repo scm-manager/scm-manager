@@ -99,7 +99,7 @@ class Sources extends React.Component<Props> {
       return (
         <div className="panel">
           {this.renderBranchSelector()}
-          <Breadcrumb revision={revision} path={path} baseUrl={baseUrl} />
+          <Breadcrumb revision={encodeURIComponent(revision)} path={path} baseUrl={baseUrl} />
           <FileTree
             repository={repository}
             revision={revision}
