@@ -37,6 +37,8 @@ public class VndMediaType {
   public static final String REPOSITORY_VERB_COLLECTION = PREFIX + "repositoryVerbCollection" + SUFFIX;
   public static final String REPOSITORY_TYPE_COLLECTION = PREFIX + "repositoryTypeCollection" + SUFFIX;
   public static final String REPOSITORY_TYPE = PREFIX + "repositoryType" + SUFFIX;
+  public static final String PLUGIN = PREFIX + "plugin" + SUFFIX;
+  public static final String PLUGIN_COLLECTION = PREFIX + "pluginCollection" + SUFFIX;
   public static final String UI_PLUGIN = PREFIX + "uiPlugin" + SUFFIX;
   public static final String UI_PLUGIN_COLLECTION = PREFIX + "uiPluginCollection" + SUFFIX;
   @SuppressWarnings("squid:S2068")

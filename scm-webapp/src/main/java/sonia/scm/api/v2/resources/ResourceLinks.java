@@ -651,6 +651,38 @@ class ResourceLinks {
     }
   }
 
+  public PluginLinks plugin() {
+    return new PluginLinks(scmPathInfoStore.get());
+  }
+
+  static class PluginLinks {
+    private final LinkBuilder pluginLinkBuilder;
+
+    PluginLinks(ScmPathInfo pathInfo) {
+      pluginLinkBuilder = new LinkBuilder(pathInfo, PluginRootResource.class, PluginResource.class);
+    }
+
+    String self(String id) {
+      return pluginLinkBuilder.method("plugins").parameters().method("getInstalledPlugin").parameters(id).href();
+    }
+  }
+
+  public PluginCollectionLinks pluginCollection() {
+    return new PluginCollectionLinks(scmPathInfoStore.get());
+  }
+
+  static class PluginCollectionLinks {
+    private final LinkBuilder pluginCollectionLinkBuilder;
+
+    PluginCollectionLinks(ScmPathInfo pathInfo) {
+      pluginCollectionLinkBuilder = new LinkBuilder(pathInfo, UIRootResource.class, UIPluginResource.class);
+    }
+
+    String self() {
+      return pluginCollectionLinkBuilder.method("plugins").parameters().method("getInstalledPlugins").parameters().href();
+    }
+  }
+
   public AuthenticationLinks authentication() {
     return new AuthenticationLinks(scmPathInfoStore.get());
   }
