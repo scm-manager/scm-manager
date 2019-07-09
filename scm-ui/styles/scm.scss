@@ -159,30 +159,33 @@ ul.is-separated {
 
 // multiline Columns
 .columns.is-multiline {
+
   .column.is-half {
+    height: 120px;
     width: calc(50% - 0.75rem);
-    max-height: 120px;
 
     &:nth-child(odd) {
       margin-right: 1.5rem;
     }
 
-    .overlay-half-column {
+    .overlay-column {
       position: absolute;
-      height: calc(120px - 1.5rem);
+      height: 120px;
       width: calc(50% - 3rem);
     }
-    .overlay-half-column.is-plugin-page {
+    .overlay-column.is-plugin-page {
       width: calc(37.5% - 1.5rem);
     }
   }
   .column.is-full {
-    .overlay-full-column {
+    height: 120px;
+
+    .overlay-column {
       position: absolute;
-      height: calc(120px - 0.5rem);
+      height: 120px;
       width: calc(100% - 1.5rem);
     }
-    .overlay-full-column.is-plugin-page {
+    .overlay-column.is-plugin-page {
       width: calc(75% - 1.5rem);
     }
   }
@@ -194,12 +197,12 @@ ul.is-separated {
         margin-right: 0;
       }
 
-      .overlay-half-column,
-      .overlay-half-column.is-plugin-page {
+      .overlay-column,
+      .overlay-column.is-plugin-page {
         width: calc(100% - 1.5rem);
       }
     }
-    .column.is-full .overlay-full-column.is-plugin-page {
+    .column.is-full .overlay-column.is-plugin-page {
       width: calc(100% - 1.5rem);
     }
   }
