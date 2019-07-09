@@ -144,8 +144,7 @@ export default function reducer(
 
   switch (action.type) {
     case FETCH_PLUGINS_SUCCESS:
-      const t = normalizeByName(action.payload);
-      return t;
+      return normalizeByName(action.payload);
     case FETCH_PLUGIN_SUCCESS:
       return reducerByNames(state, action.payload);
     default:
@@ -189,9 +188,4 @@ export function isFetchPluginPending(state: Object, name: string) {
 
 export function getFetchPluginFailure(state: Object, name: string) {
   return getFailure(state, FETCH_PLUGIN, name);
-}
-
-export function getPermissionsLink(state: Object, name: string) {
-  const plugin = getPlugin(state, name);
-  return plugin && plugin._links ? plugin._links.permissions.href : undefined;
 }
