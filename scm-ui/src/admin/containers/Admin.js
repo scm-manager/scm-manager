@@ -136,6 +136,8 @@ class Admin extends React.Component<Props> {
                   icon="fas fa-info-circle"
                   label={t("admin.menu.informationNavLink")}
                 />
+                {
+                 links.plugins &&
                 <SubNavigation
                   to={`${url}/plugins/`}
                   icon="fas fa-puzzle-piece"
@@ -151,6 +153,7 @@ class Admin extends React.Component<Props> {
                   {/*  label={t("plugins.menu.availableNavLink")}*/}
                   {/*/>*/}
                 </SubNavigation>
+                }
                 <NavLink
                   to={`${url}/roles/`}
                   icon="fas fa-user-shield"
