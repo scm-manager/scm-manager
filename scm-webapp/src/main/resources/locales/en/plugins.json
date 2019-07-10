@@ -68,12 +68,16 @@
     },
     "plugin": {
       "read": {
-        "displayName": "Read all plugins",
-        "description": "May see all installed and available plugins"
+        "*": {
+          "displayName": "Read all plugins",
+          "description": "May see all installed and available plugins"
+        }
       },
       "read,write": {
-        "displayName": "Read and manage all plugins",
-        "description": "May read and manage all installed and available plugins"
+        "*": {
+          "displayName": "Read and manage all plugins",
+          "description": "May see and manage all installed and available plugins"
+        }
       }
     },
     "unknown": "Unknown permission"
