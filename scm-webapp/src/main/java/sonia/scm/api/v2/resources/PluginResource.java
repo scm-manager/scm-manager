@@ -4,6 +4,7 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.plugin.PluginLoader;
+import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.plugin.PluginWrapper;
 import sonia.scm.web.VndMediaType;
 
@@ -47,7 +48,7 @@ public class PluginResource {
     List<PluginWrapper> plugins = pluginLoader.getInstalledPlugins()
       .stream()
       .collect(Collectors.toList());
-
+    PluginPermissions.read().check();
     return Response.ok(collectionMapper.map(plugins)).build();
   }
 
@@ -73,7 +74,7 @@ public class PluginResource {
       .filter(plugin -> id.equals(plugin.getId()))
       .map(mapper::map)
       .findFirst();
-
+    PluginPermissions.read().check();
     if (pluginDto.isPresent()) {
       return Response.ok(pluginDto.get()).build();
     } else {
