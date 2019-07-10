@@ -8,6 +8,7 @@ import org.apache.shiro.SecurityUtils;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.group.GroupPermissions;
+import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.repository.RepositoryRolePermissions;
 import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.UserPermissions;
@@ -34,11 +35,15 @@ public class IndexDtoGenerator extends HalAppenderMapper {
     List<Link> autoCompleteLinks = Lists.newArrayList();
     builder.self(resourceLinks.index().self());
     builder.single(link("uiPlugins", resourceLinks.uiPluginCollection().self()));
+
     if (SecurityUtils.getSubject().isAuthenticated()) {
       builder.single(
         link("me", resourceLinks.me().self()),
         link("logout", resourceLinks.authentication().logout())
       );
+      if (PluginPermissions.custom(PluginPermissions.ACTION_READ).isPermitted()) {
+        builder.single(link("plugins", resourceLinks.pluginCollection().self()));
+      }
       if (UserPermissions.list().isPermitted()) {
         builder.single(link("users", resourceLinks.userCollection().self()));
       }

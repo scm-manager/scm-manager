@@ -675,7 +675,7 @@ class ResourceLinks {
     private final LinkBuilder pluginCollectionLinkBuilder;
 
     PluginCollectionLinks(ScmPathInfo pathInfo) {
-      pluginCollectionLinkBuilder = new LinkBuilder(pathInfo, UIRootResource.class, UIPluginResource.class);
+      pluginCollectionLinkBuilder = new LinkBuilder(pathInfo, PluginRootResource.class, PluginResource.class);
     }
 
     String self() {
