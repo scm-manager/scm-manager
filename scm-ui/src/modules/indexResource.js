@@ -116,6 +116,10 @@ export function getUiPluginsLink(state: Object) {
   return getLink(state, "uiPlugins");
 }
 
+export function getPluginsLink(state: Object) {
+  return getLink(state, "plugins");
+}
+
 export function getMeLink(state: Object) {
   return getLink(state, "me");
 }

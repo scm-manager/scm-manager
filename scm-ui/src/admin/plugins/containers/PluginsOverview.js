@@ -18,7 +18,7 @@ import {
   isFetchPluginsPending
 } from "../modules/plugins";
 import PluginsList from "../components/PluginsList";
-import { getUiPluginsLink } from "../../../modules/indexResource";
+import { getPluginsLink } from "../../../modules/indexResource";
 
 type Props = {
   loading: boolean,
@@ -81,7 +81,7 @@ const mapStateToProps = state => {
   const collection = getPluginCollection(state);
   const loading = isFetchPluginsPending(state);
   const error = getFetchPluginsFailure(state);
-  const pluginsLink = getUiPluginsLink(state);
+  const pluginsLink = getPluginsLink(state);
 
   return {
     collection,
