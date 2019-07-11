@@ -74,7 +74,7 @@ public class PluginResource {
     PluginPermissions.read().check();
     Optional<PluginDto> pluginDto = pluginLoader.getInstalledPlugins()
       .stream()
-      .filter(plugin -> id.equals(plugin.getId()))
+      .filter(plugin -> id.equals(plugin.getPlugin().getInformation().getId(false)))
       .map(mapper::map)
       .findFirst();
     if (pluginDto.isPresent()) {

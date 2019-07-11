@@ -18,7 +18,7 @@ public class PluginDtoMapper {
   public PluginDto map(PluginWrapper plugin) {
     Links.Builder linksBuilder = linkingTo()
       .self(resourceLinks.plugin()
-        .self(plugin.getId()));
+        .self(plugin.getPlugin().getInformation().getId(false)));
 
     PluginDto pluginDto = new PluginDto(linksBuilder.build());
     pluginDto.setName(plugin.getPlugin().getInformation().getName());
