@@ -70,9 +70,10 @@
     <value>repositoryRole:read,write</value>
   </permission>
   <permission>
-    <value>plugin:read:*</value>
+    <value>plugin:read</value>
   </permission>
   <permission>
-    <value>plugin:read,write:*</value>
+    <value>plugin:read,write</value>
   </permission>
 </permissions>
+

@@ -3,6 +3,7 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.plugin.PluginWrapper;
@@ -14,9 +15,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 public class PluginResource {
 
@@ -45,10 +49,8 @@ public class PluginResource {
   @TypeHint(CollectionDto.class)
   @Produces(VndMediaType.PLUGIN_COLLECTION)
   public Response getInstalledPlugins() {
-    List<PluginWrapper> plugins = pluginLoader.getInstalledPlugins()
-      .stream()
-      .collect(Collectors.toList());
     PluginPermissions.read().check();
+    List<PluginWrapper> plugins = new ArrayList<>(pluginLoader.getInstalledPlugins());
     return Response.ok(collectionMapper.map(plugins)).build();
   }
 
@@ -69,16 +71,16 @@ public class PluginResource {
   @TypeHint(PluginDto.class)
   @Produces(VndMediaType.PLUGIN)
   public Response getInstalledPlugin(@PathParam("id") String id) {
+    PluginPermissions.read().check();
     Optional<PluginDto> pluginDto = pluginLoader.getInstalledPlugins()
       .stream()
       .filter(plugin -> id.equals(plugin.getId()))
       .map(mapper::map)
       .findFirst();
-    PluginPermissions.read().check();
     if (pluginDto.isPresent()) {
       return Response.ok(pluginDto.get()).build();
     } else {
-      return Response.status(Response.Status.NOT_FOUND).build();
+      throw notFound(entity(Plugin.class, id));
     }
   }
 

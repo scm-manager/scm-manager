@@ -18,9 +18,7 @@ public class PluginDto extends HalRepresentation {
   private String author;
   private String description;
 
-  @Override
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
+  public PluginDto(Links links) {
+    add(links);
   }
-
 }
