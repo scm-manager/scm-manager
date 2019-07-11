@@ -10,6 +10,17 @@
       "currentAppVersion": "Current Application Version"
     }
   },
+  "plugins": {
+    "title": "Plugins",
+    "installedSubtitle": "Installed Plugins",
+    "availableSubtitle": "Available Plugins",
+    "menu": {
+      "pluginsNavLink": "Plugins",
+      "installedNavLink": "Installed",
+      "availableNavLink": "Available"
+    },
+    "noPlugins": "No plugins found."
+  },
   "repositoryRole": {
     "navLink": "Permission Roles",
     "title": "Permission Roles",

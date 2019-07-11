@@ -66,6 +66,16 @@
         "description": "Kann benutzerdefinierte Rollen und deren Berechtigungen erstellen, ändern und löschen"
       }
     },
+    "plugin": {
+      "read": {
+        "displayName": "Alle Plugins lesen",
+        "description": "Darf alle installierten und verfügbaren Plugins lesen"
+      },
+      "read,write": {
+        "displayName": "Alle Plugins lesen und verwalten",
+        "description": "Darf alle installierten und verfügbaren Plugins lesen und verwalten"
+      }
+    },
     "unknown": "Unbekannte Berechtigung"
   },
   "verbs": {

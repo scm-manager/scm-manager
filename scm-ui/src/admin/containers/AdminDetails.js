@@ -1,10 +1,9 @@
 // @flow
 import React from "react";
+import { connect } from "react-redux";
 import { translate } from "react-i18next";
-import {Loading, Subtitle} from "@scm-manager/ui-components";
-import {getAppVersion} from "../../modules/indexResource";
-import {connect} from "react-redux";
-import Title from "@scm-manager/ui-components/src/layout/Title";
+import { Loading, Title, Subtitle } from "@scm-manager/ui-components";
+import { getAppVersion } from "../../modules/indexResource";
 
 type Props = {
   loading: boolean,
@@ -24,10 +23,12 @@ class AdminDetails extends React.Component<Props> {
       return <Loading />;
     }
 
-    return <>
-      <Title title={t("admin.information.currentAppVersion")}/>
-      <Subtitle subtitle={this.props.version}/>
-    </>;
+    return (
+      <>
+        <Title title={t("admin.information.currentAppVersion")} />
+        <Subtitle subtitle={this.props.version} />
+      </>
+    );
   }
 }
 

@@ -159,27 +159,31 @@ ul.is-separated {
 
 // multiline Columns
 .columns.is-multiline {
+  .column {
+    height: 120px;
+
+    .overlay-column {
+      position: absolute;
+      height: calc(120px - 1.5rem);
+    }
+  }
+
   .column.is-half {
     width: calc(50% - 0.75rem);
-    max-height: 120px;
 
     &:nth-child(odd) {
       margin-right: 1.5rem;
     }
 
-    .overlay-half-column {
-      position: absolute;
-      height: calc(120px - 1.5rem);
+    .overlay-column {
       width: calc(50% - 3rem);
     }
   }
-  .column.is-full {
-    .overlay-full-column {
-      position: absolute;
-      height: calc(120px - 0.5rem);
-      width: calc(100% - 1.5rem);
-    }
+
+  .column.is-full .overlay-column {
+    width: calc(100% - 1.5rem);
   }
+
   @media screen and (max-width: 768px) {
     .column.is-half {
       width: 100%;
@@ -188,9 +192,25 @@ ul.is-separated {
         margin-right: 0;
       }
 
-      .overlay-half-column {
-        position: absolute;
-        height: calc(120px - 0.5rem);
+      .overlay-column {
+        width: calc(100% - 1.5rem);
+      }
+    }
+  }
+}
+.content.is-plugin-page {
+  .columns.is-multiline {
+    .column.is-half .overlay-column {
+      width: calc(37.5% - 1.5rem);
+    }
+
+    .column.is-full .overlay-column {
+      width: calc(75% - 1.5rem);
+    }
+
+    @media screen and (max-width: 768px) {
+      .column.is-half .overlay-column,
+      .column.is-full .overlay-column {
         width: calc(100% - 1.5rem);
       }
     }

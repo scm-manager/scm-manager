@@ -34,6 +34,8 @@ export { default as MarkdownView } from "./MarkdownView";
 export { default as SyntaxHighlighter } from "./SyntaxHighlighter";
 export { default as ErrorBoundary } from "./ErrorBoundary";
 export { default as OverviewPageActions } from "./OverviewPageActions.js";
+export { default as CardColumnGroup } from "./CardColumnGroup";
+export { default as CardColumn } from "./CardColumn";
 
 export { apiClient } from "./apiclient.js";
 export * from "./errors";

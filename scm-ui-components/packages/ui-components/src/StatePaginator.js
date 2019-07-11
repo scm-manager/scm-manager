@@ -17,7 +17,7 @@ class StatePaginator extends React.Component<Props> {
   renderFirstButton() {
     return (
       <Button
-        className={"pagination-link"}
+        className="pagination-link"
         label={"1"}
         disabled={false}
         action={() => this.updateCurrentPage(1)}
@@ -35,7 +35,7 @@ class StatePaginator extends React.Component<Props> {
 
     return (
       <Button
-        className={"pagination-previous"}
+        className="pagination-previous"
         label={label ? label : previousPage.toString()}
         disabled={!this.hasLink("prev")}
         action={() => this.updateCurrentPage(previousPage)}
@@ -53,7 +53,7 @@ class StatePaginator extends React.Component<Props> {
     const nextPage = page + 1;
     return (
       <Button
-        className={"pagination-next"}
+        className="pagination-next"
         label={label ? label : nextPage.toString()}
         disabled={!this.hasLink("next")}
         action={() => this.updateCurrentPage(nextPage)}
@@ -65,7 +65,7 @@ class StatePaginator extends React.Component<Props> {
     const { collection } = this.props;
     return (
       <Button
-        className={"pagination-link"}
+        className="pagination-link"
         label={`${collection.pageTotal}`}
         disabled={false}
         action={() => this.updateCurrentPage(collection.pageTotal)}

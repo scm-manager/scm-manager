@@ -34,16 +34,16 @@
     </dependency>
 
     <!-- fix javadoc -->
-    
-    <dependency>    
+
+    <dependency>
       <groupId>javax.transaction</groupId>
       <artifactId>jta</artifactId>
       <version>1.1</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- scm -->
-    
+
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
@@ -63,7 +63,7 @@
       <artifactId>shiro-web</artifactId>
       <version>${shiro.version}</version>
     </dependency>
-            
+
     <dependency>
       <groupId>org.apache.shiro</groupId>
       <artifactId>shiro-guice</artifactId>
@@ -204,13 +204,13 @@
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
       <version>${slf4j.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>log4j-over-slf4j</artifactId>
@@ -237,13 +237,13 @@
       <artifactId>commons-codec</artifactId>
       <version>1.9</version>
     </dependency>
-   
+
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>${guava.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>com.cronutils</groupId>
       <artifactId>cron-utils</artifactId>
@@ -312,7 +312,7 @@
       <version>${selenium.version}</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>htmlunit-driver</artifactId>
@@ -386,16 +386,16 @@
       <version>2.0.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
-    
+
     <!-- global excludes -->
-    
+
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>1.1.3</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
@@ -419,7 +419,7 @@
 
   <build>
     <plugins>
-    
+
       <plugin>
         <groupId>com.mycila.maven-license-plugin</groupId>
         <artifactId>maven-license-plugin</artifactId>
@@ -459,7 +459,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>sonia.scm.maven</groupId>
         <artifactId>smp-maven-plugin</artifactId>
@@ -947,6 +947,6 @@
     </profile>
 
   </profiles>
-  
+
 </project>
 
