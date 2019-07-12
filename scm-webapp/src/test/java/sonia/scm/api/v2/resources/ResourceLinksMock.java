@@ -46,6 +46,7 @@ public class ResourceLinksMock {
     when(resourceLinks.repositoryRole()).thenReturn(new ResourceLinks.RepositoryRoleLinks(uriInfo));
     when(resourceLinks.repositoryRoleCollection()).thenReturn(new ResourceLinks.RepositoryRoleCollectionLinks(uriInfo));
     when(resourceLinks.namespaceStrategies()).thenReturn(new ResourceLinks.NamespaceStrategiesLinks(uriInfo));
+    when(resourceLinks.pluginCollection()).thenReturn(new ResourceLinks.PluginCollectionLinks(uriInfo));
 
     return resourceLinks;
   }
