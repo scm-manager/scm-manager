@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.MergeCommandBuilder;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
@@ -49,6 +50,7 @@ public class MergeResource {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     log.info("Merge in Repository {}/{} from {} to {}", namespace, name, mergeCommand.getSourceRevision(), mergeCommand.getTargetRevision());
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
+      RepositoryPermissions.push(repositoryService.getRepository()).check();
       MergeCommandResult mergeCommandResult = createMergeCommand(mergeCommand, repositoryService).executeMerge();
       if (mergeCommandResult.isSuccess()) {
         return Response.noContent().build();
@@ -67,14 +69,19 @@ public class MergeResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response dryRun(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid MergeCommandDto mergeCommand) {
+
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     log.info("Merge in Repository {}/{} from {} to {}", namespace, name, mergeCommand.getSourceRevision(), mergeCommand.getTargetRevision());
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
-      MergeDryRunCommandResult mergeCommandResult = createMergeCommand(mergeCommand, repositoryService).dryRun();
-      if (mergeCommandResult.isMergeable()) {
-        return Response.noContent().build();
+      if (RepositoryPermissions.push(repositoryService.getRepository()).isPermitted()) {
+        MergeDryRunCommandResult mergeCommandResult = createMergeCommand(mergeCommand, repositoryService).dryRun();
+        if (mergeCommandResult.isMergeable()) {
+          return Response.noContent().build();
+        } else {
+          throw new ConcurrentModificationException("revision", mergeCommand.getTargetRevision());
+        }
       } else {
-        throw new ConcurrentModificationException("revision", mergeCommand.getTargetRevision());
+        return Response.noContent().build();
       }
     }
   }
