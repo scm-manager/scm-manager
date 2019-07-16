@@ -162,7 +162,7 @@ public class AssignedPermission implements PermissionObject, Serializable
     //J-
     return MoreObjects.toStringHelper(this)
                   .add("name", name)
-                  .add("groupPermisison", groupPermission)
+                  .add("groupPermission", groupPermission)
                   .add("permission", permission)
                   .toString();
     //J+
