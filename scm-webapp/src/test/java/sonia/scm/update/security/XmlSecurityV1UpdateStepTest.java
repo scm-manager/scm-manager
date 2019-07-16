@@ -56,6 +56,13 @@ class XmlSecurityV1UpdateStepTest {
       copyTestDatabaseFile(configDir, "config.xml");
     }
 
+    @BeforeEach
+    void createSecurityV1XML(@TempDirectory.TempDir Path tempDir) throws IOException {
+      Path configDir = tempDir.resolve("config");
+      Files.createDirectories(configDir);
+      copyTestDatabaseFile(configDir, "securityV1.xml");
+    }
+
     @Test
     void shouldCreatePermissionForUsersConfiguredAsAdmin() throws JAXBException {
       updateStep.doUpdate();
@@ -80,6 +87,19 @@ class XmlSecurityV1UpdateStepTest {
           .map(AssignedPermission::getName)
           .collect(toList());
       assertThat(assignedPermission).contains("admins", "vogons");
+    }
+
+    @Test
+    void shouldMapV1PermissionsFromSecurityV1XML() throws JAXBException {
+      updateStep.doUpdate();
+      List<String> assignedPermission =
+        assignedPermissionStore.getAll().values()
+          .stream()
+          .filter(a -> a.getPermission().getValue().contains("repository:"))
+          .map(AssignedPermission::getName)
+          .collect(toList());
+      assertThat(assignedPermission).contains("scmadmin");
+      assertThat(assignedPermission).contains("test");
     }
   }
 
