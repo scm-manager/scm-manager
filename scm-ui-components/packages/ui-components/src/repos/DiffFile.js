@@ -178,12 +178,20 @@ class DiffFile extends React.Component<Props, State> {
     if (key === value) {
       value = file.type;
     }
+    const color =
+      value === "added"
+        ? "is-success"
+        : value === "deleted"
+          ? "is-danger"
+          : "is-info";
+
     return (
       <span
         className={classNames(
           "tag",
-          "is-info",
+          "is-rounded",
           "has-text-weight-normal",
+          color,
           classes.changeType
         )}
       >
