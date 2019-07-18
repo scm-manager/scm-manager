@@ -23,12 +23,16 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.util.Optional.ofNullable;
 import static sonia.scm.version.Version.parse;
 
 @Extension
 public class XmlSecurityV1UpdateStep implements UpdateStep {
+
+  private static final Pattern v1PermissionPattern = Pattern.compile("^repository:\\*:(READ|WRITE|OWNER)$");
 
   private static final Logger LOG = LoggerFactory.getLogger(XmlSecurityV1UpdateStep.class);
 
@@ -63,28 +67,34 @@ public class XmlSecurityV1UpdateStep implements UpdateStep {
     V1Security v1Security = (V1Security) jaxbContext.createUnmarshaller().unmarshal(v1SecurityFile.toFile());
 
     v1Security.entries.forEach(assignedPermission -> {
-
-      String newPermission = "";
-      if (assignedPermission.value.permission != null && !assignedPermission.value.permission.isEmpty()) {
-        String[] splitPermission = assignedPermission.value.permission.split(":");
-        switch(splitPermission[2]) {
-          case "OWNER":
-            newPermission = "repository:*";
-            break;
-          case "WRITE":
-            newPermission = "repository:read,pull,push:*";
-            break;
-          case "READ":
-            newPermission = "repository:read,pull:*";
-        }
+      Matcher matcher = v1PermissionPattern.matcher(assignedPermission.value.permission);
+      if (matcher.matches()) {
+        String newPermission = convertRole(matcher.group(1));
+        securityStore.put(new AssignedPermission(
+          assignedPermission.value.name,
+          Boolean.parseBoolean(assignedPermission.value.groupPermission),
+          newPermission
+        ));
       }
-
-      securityStore.put(new AssignedPermission(
-        assignedPermission.value.name,
-        Boolean.parseBoolean(assignedPermission.value.groupPermission),
-        newPermission
-      ));
     });
+  }
+
+  private String convertRole(String role) {
+    String newPermission;
+    switch (role) {
+      case "OWNER":
+        newPermission = "repository:*";
+        break;
+      case "WRITE":
+        newPermission = "repository:read,pull,push:*";
+        break;
+      case "READ":
+        newPermission = "repository:read,pull:*";
+        break;
+      default:
+        newPermission = "";
+    }
+    return newPermission;
   }
 
   private void forAllAdmins(Consumer<String> userConsumer, Consumer<String> groupConsumer) throws JAXBException {

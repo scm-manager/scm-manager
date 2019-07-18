@@ -56,13 +56,6 @@ class XmlSecurityV1UpdateStepTest {
       copyTestDatabaseFile(configDir, "config.xml");
     }
 
-    @BeforeEach
-    void createSecurityV1XML(@TempDirectory.TempDir Path tempDir) throws IOException {
-      Path configDir = tempDir.resolve("config");
-      Files.createDirectories(configDir);
-      copyTestDatabaseFile(configDir, "securityV1.xml");
-    }
-
     @Test
     void shouldCreatePermissionForUsersConfiguredAsAdmin() throws JAXBException {
       updateStep.doUpdate();
@@ -89,6 +82,18 @@ class XmlSecurityV1UpdateStepTest {
       assertThat(assignedPermission).contains("admins", "vogons");
     }
 
+  }
+
+  @Nested
+  class WithExistingSecurityXml {
+
+    @BeforeEach
+    void createSecurityV1XML(@TempDirectory.TempDir Path tempDir) throws IOException {
+      Path configDir = tempDir.resolve("config");
+      Files.createDirectories(configDir);
+      copyTestDatabaseFile(configDir, "securityV1.xml");
+    }
+
     @Test
     void shouldMapV1PermissionsFromSecurityV1XML() throws JAXBException {
       updateStep.doUpdate();
@@ -101,6 +106,7 @@ class XmlSecurityV1UpdateStepTest {
       assertThat(assignedPermission).contains("scmadmin");
       assertThat(assignedPermission).contains("test");
     }
+
   }
 
   private void copyTestDatabaseFile(Path configDir, String fileName) throws IOException {
