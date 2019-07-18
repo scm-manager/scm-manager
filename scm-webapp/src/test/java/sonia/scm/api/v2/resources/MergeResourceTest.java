@@ -1,10 +1,14 @@
 package sonia.scm.api.v2.resources;
 
+import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
 import com.google.inject.util.Providers;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.MergeCommandBuilder;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
@@ -26,12 +31,20 @@ import java.net.URL;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
+import static sonia.scm.repository.RepositoryTestData.createHeartOfGold;
 
 @ExtendWith(MockitoExtension.class)
+@SubjectAware(
+  configuration = "classpath:sonia/scm/shiro-001.ini",
+  username = "trillian",
+  password = "secret"
+)
 public class MergeResourceTest extends RepositoryTestBase {
 
   public static final String MERGE_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/merge/";
+  private Repository repository = createHeartOfGold();
 
   private Dispatcher dispatcher;
   @Mock
@@ -72,10 +85,21 @@ public class MergeResourceTest extends RepositoryTestBase {
   @Nested
   class ExecutingMergeCommand {
 
+    @Mock
+    private Subject subject;
+
     @BeforeEach
     void initRepository() {
       when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
-      when(repositoryService.getMergeCommand()).thenReturn(mergeCommandBuilder);
+      lenient().when(repositoryService.getMergeCommand()).thenReturn(mergeCommandBuilder);
+      when(repositoryService.getRepository()).thenReturn(repository);
+
+      ThreadContext.bind(subject);
+    }
+
+    @AfterEach
+    void tearDownShiro() {
+      ThreadContext.unbindSubject();
     }
 
     @Test
@@ -115,6 +139,7 @@ public class MergeResourceTest extends RepositoryTestBase {
 
     @Test
     void shouldHandleSuccessfulDryRun() throws Exception {
+      when(subject.isPermitted("repository:push:" + repositoryService.getRepository().getId())).thenReturn(true);
       when(mergeCommand.dryRun(any())).thenReturn(new MergeDryRunCommandResult(true));
 
       URL url = Resources.getResource("sonia/scm/api/v2/mergeCommand.json");
@@ -132,6 +157,7 @@ public class MergeResourceTest extends RepositoryTestBase {
 
     @Test
     void shouldHandleFailedDryRun() throws Exception {
+      when(subject.isPermitted("repository:push:" + repositoryService.getRepository().getId())).thenReturn(true);
       when(mergeCommand.dryRun(any())).thenReturn(new MergeDryRunCommandResult(false));
 
       URL url = Resources.getResource("sonia/scm/api/v2/mergeCommand.json");
@@ -145,6 +171,23 @@ public class MergeResourceTest extends RepositoryTestBase {
       dispatcher.invoke(request, response);
 
       assertThat(response.getStatus()).isEqualTo(409);
+    }
+
+    @Test
+    void shouldSkipDryRunIfSubjectHasNoPushPermission() throws Exception {
+      when(subject.isPermitted("repository:push:" + repositoryService.getRepository().getId())).thenReturn(false);
+
+      URL url = Resources.getResource("sonia/scm/api/v2/mergeCommand.json");
+      byte[] mergeCommandJson = Resources.toByteArray(url);
+
+      MockHttpRequest request = MockHttpRequest
+        .post(MERGE_URL + "dry-run/")
+        .content(mergeCommandJson)
+        .contentType(VndMediaType.MERGE_COMMAND);
+      MockHttpResponse response = new MockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(204);
     }
   }
 }

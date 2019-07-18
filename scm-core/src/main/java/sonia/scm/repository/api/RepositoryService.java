@@ -379,7 +379,6 @@ public final class RepositoryService implements Closeable {
    * @since 2.0.0
    */
   public MergeCommandBuilder getMergeCommand() {
-    RepositoryPermissions.push(getRepository()).check();
     LOG.debug("create merge command for repository {}",
       repository.getNamespaceAndName());
 
