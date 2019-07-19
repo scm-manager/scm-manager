@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<configuration>
+  <entry>
+    <key>4lRWOA7DH1</key>
+    <value>
+      <group-permission>false</group-permission>
+      <name>scmadmin</name>
+      <permission>repository:*:READ</permission>
+    </value>
+  </entry>
+  <entry>
+    <key>CfRWOAANM2</key>
+    <value>
+      <group-permission>true</group-permission>
+      <name>test</name>
+      <permission>repository:*:OWNER</permission>
+    </value>
+  </entry>
+  <entry>
+    <key>CfRWOAANM2</key>
+    <value>
+      <group-permission>true</group-permission>
+      <name>test</name>
+      <permission>invalid:permission</permission>
+    </value>
+  </entry>
+  <entry>
+    <key>CfRWOAANM2</key>
+    <value>
+      <group-permission>true</group-permission>
+      <name>test</name>
+      <permission>repository:*:STRANGE</permission>
+    </value>
+  </entry>
+</configuration>
