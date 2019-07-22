@@ -15,7 +15,6 @@ import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
 
-import javax.inject.Provider;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,24 +22,17 @@ import java.io.IOException;
 
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class HttpProtocolServletTest {
 
-
   @Mock
   private RepositoryServiceFactory serviceFactory;
-  @Mock
-  private HttpServletRequest httpServletRequest;
   @Mock
   private PushStateDispatcher dispatcher;
   @Mock
   private UserAgentParser userAgentParser;
-  @Mock
-  private Provider<HttpServletRequest> requestProvider;
 
   @InjectMocks
   private HttpProtocolServlet servlet;
@@ -65,7 +57,6 @@ public class HttpProtocolServletTest {
     NamespaceAndName existingRepo = new NamespaceAndName("space", "repo");
     when(serviceFactory.create(not(eq(existingRepo)))).thenThrow(new NotFoundException("Test", "a"));
     when(serviceFactory.create(existingRepo)).thenReturn(repositoryService);
-    when(requestProvider.get()).thenReturn(httpServletRequest);
   }
 
   @Test
@@ -107,7 +98,7 @@ public class HttpProtocolServletTest {
 
     servlet.service(request, response);
 
-    verify(httpServletRequest).setAttribute(DefaultRepositoryProvider.ATTRIBUTE_NAME, repository);
+    verify(request).setAttribute(DefaultRepositoryProvider.ATTRIBUTE_NAME, repository);
     verify(protocol).serve(request, response, null);
     verify(repositoryService).close();
   }
