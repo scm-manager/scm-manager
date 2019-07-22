@@ -1,9 +1,11 @@
 package sonia.scm.web.protocol;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
 import sonia.scm.PushStateDispatcher;
 import sonia.scm.repository.DefaultRepositoryProvider;
@@ -23,9 +25,9 @@ import java.io.IOException;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-public class HttpProtocolServletTest {
+@ExtendWith(MockitoExtension.class)
+class HttpProtocolServletTest {
 
   @Mock
   private RepositoryServiceFactory serviceFactory;
@@ -49,9 +51,8 @@ public class HttpProtocolServletTest {
   @Mock
   private HttpScmProtocol protocol;
 
-  @Before
-  public void init() {
-    initMocks(this);
+  @BeforeEach
+  void init() {
     when(userAgentParser.parse(request)).thenReturn(userAgent);
     when(userAgent.isBrowser()).thenReturn(false);
     NamespaceAndName existingRepo = new NamespaceAndName("space", "repo");
@@ -60,7 +61,7 @@ public class HttpProtocolServletTest {
   }
 
   @Test
-  public void shouldDispatchBrowserRequests() throws ServletException, IOException {
+  void shouldDispatchBrowserRequests() throws ServletException, IOException {
     when(userAgent.isBrowser()).thenReturn(true);
     when(request.getRequestURI()).thenReturn("uri");
 
@@ -70,7 +71,7 @@ public class HttpProtocolServletTest {
   }
 
   @Test
-  public void shouldHandleBadPaths() throws IOException, ServletException {
+  void shouldHandleBadPaths() throws IOException, ServletException {
     when(request.getPathInfo()).thenReturn("/illegal");
 
     servlet.service(request, response);
@@ -79,7 +80,7 @@ public class HttpProtocolServletTest {
   }
 
   @Test
-  public void shouldHandleNotExistingRepository() throws IOException, ServletException {
+  void shouldHandleNotExistingRepository() throws IOException, ServletException {
     when(request.getPathInfo()).thenReturn("/not/exists");
 
     servlet.service(request, response);
@@ -88,7 +89,7 @@ public class HttpProtocolServletTest {
   }
 
   @Test
-  public void shouldDelegateToProvider() throws IOException, ServletException {
+  void shouldDelegateToProvider() throws IOException, ServletException {
     when(request.getPathInfo()).thenReturn("/space/name");
     NamespaceAndName namespaceAndName = new NamespaceAndName("space", "name");
     doReturn(repositoryService).when(serviceFactory).create(namespaceAndName);
