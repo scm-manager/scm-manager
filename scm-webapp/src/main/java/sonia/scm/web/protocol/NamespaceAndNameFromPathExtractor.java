@@ -1,18 +1,31 @@
 package sonia.scm.web.protocol;
 
+import sonia.scm.Type;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.util.HttpUtil;
 
+import javax.inject.Inject;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
 final class NamespaceAndNameFromPathExtractor {
 
-  private NamespaceAndNameFromPathExtractor() {}
+  private final Set<String> types;
 
-  static Optional<NamespaceAndName> fromUri(String uri) {
+  @Inject
+  public NamespaceAndNameFromPathExtractor(RepositoryManager repositoryManager) {
+    this.types = repositoryManager.getConfiguredTypes()
+      .stream()
+      .map(Type::getName)
+      .collect(Collectors.toSet());
+  }
+
+  Optional<NamespaceAndName> fromUri(String uri) {
     if (uri.startsWith(HttpUtil.SEPARATOR_PATH)) {
       uri = uri.substring(1);
     }
@@ -30,12 +43,13 @@ final class NamespaceAndNameFromPathExtractor {
     }
 
     String name = uri.substring(endOfNamespace + 1, nameIndex);
-
-    int nameDotIndex = name.indexOf('.');
+    int nameDotIndex = name.lastIndexOf('.');
     if (nameDotIndex >= 0) {
-      return of(new NamespaceAndName(namespace, name.substring(0, nameDotIndex)));
-    } else {
-      return of(new NamespaceAndName(namespace, name));
+      String suffix = name.substring(nameDotIndex + 1);
+      if (types.contains(suffix)) {
+        name = name.substring(0, nameDotIndex);
+      }
     }
+    return of(new NamespaceAndName(namespace, name));
   }
 }

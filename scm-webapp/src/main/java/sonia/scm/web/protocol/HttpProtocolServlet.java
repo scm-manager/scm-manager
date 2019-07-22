@@ -32,13 +32,15 @@ public class HttpProtocolServlet extends HttpServlet {
   public static final String PATTERN = PATH + "/*";
 
   private final RepositoryServiceFactory serviceFactory;
+  private final NamespaceAndNameFromPathExtractor pathExtractor;
   private final PushStateDispatcher dispatcher;
   private final UserAgentParser userAgentParser;
 
 
   @Inject
-  public HttpProtocolServlet(RepositoryServiceFactory serviceFactory, PushStateDispatcher dispatcher, UserAgentParser userAgentParser) {
+  public HttpProtocolServlet(RepositoryServiceFactory serviceFactory, NamespaceAndNameFromPathExtractor pathExtractor, PushStateDispatcher dispatcher, UserAgentParser userAgentParser) {
     this.serviceFactory = serviceFactory;
+    this.pathExtractor = pathExtractor;
     this.dispatcher = dispatcher;
     this.userAgentParser = userAgentParser;
   }
@@ -51,7 +53,7 @@ public class HttpProtocolServlet extends HttpServlet {
       dispatcher.dispatch(request, response, request.getRequestURI());
     } else {
       String pathInfo = request.getPathInfo();
-      Optional<NamespaceAndName> namespaceAndName = NamespaceAndNameFromPathExtractor.fromUri(pathInfo);
+      Optional<NamespaceAndName> namespaceAndName = pathExtractor.fromUri(pathInfo);
       if (namespaceAndName.isPresent()) {
         service(request, response, namespaceAndName.get());
       } else {
