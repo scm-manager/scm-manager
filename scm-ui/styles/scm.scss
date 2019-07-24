@@ -497,6 +497,10 @@ form .field:not(.is-grouped) {
   }
 }
 
+.modal-card-body div div:last-child {
+  border-bottom: none;
+}
+
 .sub-menu li {
   line-height: 1;
 
@@ -521,3 +525,6 @@ form .field:not(.is-grouped) {
     display: none;
   }
 }
+
+
+@import "bulma-popover/css/bulma-popover";

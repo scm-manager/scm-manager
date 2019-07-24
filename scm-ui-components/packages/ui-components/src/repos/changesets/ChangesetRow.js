@@ -10,7 +10,7 @@ import { DateFromNow } from "../..";
 import ChangesetAuthor from "./ChangesetAuthor";
 import { parseDescription } from "./changesets";
 import { AvatarWrapper, AvatarImage } from "../../avatar";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint} from "@scm-manager/ui-extensions";
 import ChangesetTags from "./ChangesetTags";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
 
@@ -110,7 +110,16 @@ class ChangesetRow extends React.Component<Props> {
           </div>
           <div className={classNames("column", classes.isVcentered)}>
             <ChangesetTags changeset={changeset} />
-            <ChangesetButtonGroup repository={repository} changeset={changeset} />
+            <div className="is-pulled-right level">
+              <ChangesetButtonGroup repository={repository} changeset={changeset} />
+              <div className={classes.isVcentered}>
+                <ExtensionPoint
+                  name="changeset.right"
+                  props={{ repository, changeset }}
+                  renderAll={true}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

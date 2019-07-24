@@ -125,7 +125,7 @@ class RepositoryRoot extends React.Component<Props> {
     return (
       <Page title={repository.namespace + "/" + repository.name}>
         <div className="columns">
-          <div className="column is-three-quarters is-clipped">
+          <div className="column is-three-quarters">
             <Switch>
               <Redirect exact from={this.props.match.url} to={redirectedUrl} />
               <Route
