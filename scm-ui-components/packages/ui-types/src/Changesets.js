@@ -1,9 +1,9 @@
 //@flow
-import type {Links} from "./hal";
+import type {Collection, Links} from "./hal";
 import type {Tag} from "./Tags";
 import type {Branch} from "./Branches";
 
-export type Changeset = {
+export type Changeset = Collection & {
   id: string,
   date: Date,
   author: {
