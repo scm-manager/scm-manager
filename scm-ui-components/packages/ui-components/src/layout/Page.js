@@ -51,7 +51,7 @@ class Page extends React.Component<Props> {
     let pageActionsExists = false;
     React.Children.forEach(children, child => {
       if (child && !error) {
-        if (child.type.name === PageActions.name) {
+        if (child.displayName === PageActions.displayName) {
           pageActions = (
             <div
               className={classNames(
@@ -97,7 +97,7 @@ class Page extends React.Component<Props> {
     let content = [];
     React.Children.forEach(children, child => {
       if (child) {
-        if (child.type.name !== PageActions.name) {
+        if (child.displayName !== PageActions.displayName) {
           content.push(child);
         }
       }
