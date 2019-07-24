@@ -1,114 +1,136 @@
 package sonia.scm.web.protocol;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
 import sonia.scm.PushStateDispatcher;
 import sonia.scm.repository.DefaultRepositoryProvider;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
 
-import javax.inject.Provider;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
-import static org.mockito.AdditionalMatchers.not;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-public class HttpProtocolServletTest {
-
+@ExtendWith(MockitoExtension.class)
+class HttpProtocolServletTest {
 
   @Mock
   private RepositoryServiceFactory serviceFactory;
+
   @Mock
-  private HttpServletRequest httpServletRequest;
+  private NamespaceAndNameFromPathExtractor extractor;
+
   @Mock
   private PushStateDispatcher dispatcher;
+
   @Mock
   private UserAgentParser userAgentParser;
-  @Mock
-  private Provider<HttpServletRequest> requestProvider;
 
   @InjectMocks
   private HttpProtocolServlet servlet;
 
   @Mock
   private RepositoryService repositoryService;
+
   @Mock
   private UserAgent userAgent;
 
   @Mock
   private HttpServletRequest request;
+
   @Mock
   private HttpServletResponse response;
+
   @Mock
   private HttpScmProtocol protocol;
 
-  @Before
-  public void init() {
-    initMocks(this);
-    when(userAgentParser.parse(request)).thenReturn(userAgent);
-    when(userAgent.isBrowser()).thenReturn(false);
-    NamespaceAndName existingRepo = new NamespaceAndName("space", "repo");
-    when(serviceFactory.create(not(eq(existingRepo)))).thenThrow(new NotFoundException("Test", "a"));
-    when(serviceFactory.create(existingRepo)).thenReturn(repositoryService);
-    when(requestProvider.get()).thenReturn(httpServletRequest);
+  @Nested
+  class Browser {
+
+    @BeforeEach
+    void prepareMocks() {
+      when(userAgentParser.parse(request)).thenReturn(userAgent);
+      when(userAgent.isBrowser()).thenReturn(true);
+      when(request.getRequestURI()).thenReturn("uri");
+    }
+
+    @Test
+    void shouldDispatchBrowserRequests() throws ServletException, IOException {
+      when(userAgent.isBrowser()).thenReturn(true);
+      when(request.getRequestURI()).thenReturn("uri");
+
+      servlet.service(request, response);
+
+      verify(dispatcher).dispatch(request, response, "uri");
+    }
+
   }
 
-  @Test
-  public void shouldDispatchBrowserRequests() throws ServletException, IOException {
-    when(userAgent.isBrowser()).thenReturn(true);
-    when(request.getRequestURI()).thenReturn("uri");
+  @Nested
+  class ScmClient {
 
-    servlet.service(request, response);
+    @BeforeEach
+    void prepareMocks() {
+      when(userAgentParser.parse(request)).thenReturn(userAgent);
+      when(userAgent.isBrowser()).thenReturn(false);
+    }
 
-    verify(dispatcher).dispatch(request, response, "uri");
-  }
+    @Test
+    void shouldHandleBadPaths() throws IOException, ServletException {
+      when(request.getPathInfo()).thenReturn("/illegal");
 
-  @Test
-  public void shouldHandleBadPaths() throws IOException, ServletException {
-    when(request.getPathInfo()).thenReturn("/illegal");
+      servlet.service(request, response);
 
-    servlet.service(request, response);
+      verify(response).setStatus(400);
+    }
 
-    verify(response).setStatus(400);
-  }
+    @Test
+    void shouldHandleNotExistingRepository() throws IOException, ServletException {
+      when(request.getPathInfo()).thenReturn("/not/exists");
 
-  @Test
-  public void shouldHandleNotExistingRepository() throws IOException, ServletException {
-    when(request.getPathInfo()).thenReturn("/not/exists");
+      NamespaceAndName repo = new NamespaceAndName("not", "exists");
+      when(extractor.fromUri("/not/exists")).thenReturn(Optional.of(repo));
+      when(serviceFactory.create(repo)).thenThrow(new NotFoundException("Test", "a"));
 
-    servlet.service(request, response);
+      servlet.service(request, response);
 
-    verify(response).setStatus(404);
-  }
+      verify(response).setStatus(404);
+    }
 
-  @Test
-  public void shouldDelegateToProvider() throws IOException, ServletException {
-    when(request.getPathInfo()).thenReturn("/space/name");
-    NamespaceAndName namespaceAndName = new NamespaceAndName("space", "name");
-    doReturn(repositoryService).when(serviceFactory).create(namespaceAndName);
-    Repository repository = new Repository();
-    when(repositoryService.getRepository()).thenReturn(repository);
-    when(repositoryService.getProtocol(HttpScmProtocol.class)).thenReturn(protocol);
+    @Test
+    void shouldDelegateToProvider() throws IOException, ServletException {
+      NamespaceAndName repo = new NamespaceAndName("space", "name");
+      when(extractor.fromUri("/space/name")).thenReturn(Optional.of(repo));
+      when(serviceFactory.create(repo)).thenReturn(repositoryService);
 
-    servlet.service(request, response);
+      when(request.getPathInfo()).thenReturn("/space/name");
+      Repository repository = RepositoryTestData.createHeartOfGold();
+      when(repositoryService.getRepository()).thenReturn(repository);
+      when(repositoryService.getProtocol(HttpScmProtocol.class)).thenReturn(protocol);
 
-    verify(httpServletRequest).setAttribute(DefaultRepositoryProvider.ATTRIBUTE_NAME, repository);
-    verify(protocol).serve(request, response, null);
-    verify(repositoryService).close();
+      servlet.service(request, response);
+
+      verify(request).setAttribute(DefaultRepositoryProvider.ATTRIBUTE_NAME, repository);
+      verify(protocol).serve(request, response, null);
+      verify(repositoryService).close();
+    }
+
   }
 }

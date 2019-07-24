@@ -2,6 +2,8 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
 
+import java.util.List;
+
 /**
  * The {@link HalAppender} can be used within an {@link HalEnricher} to append hateoas links to a json response.
  *
@@ -33,6 +35,14 @@ public interface HalAppender {
    * @param embeddedItem embedded object
    */
   void appendEmbedded(String rel, HalRepresentation embeddedItem);
+
+  /**
+   * Appends a list of embedded objects to the json response.
+   *
+   * @param rel name of relation
+   * @param embeddedItems embedded objects
+   */
+  void appendEmbedded(String rel, List<HalRepresentation> embeddedItems);
 
   /**
    * Builder for link arrays.
