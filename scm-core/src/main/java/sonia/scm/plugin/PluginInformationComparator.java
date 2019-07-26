@@ -75,29 +75,24 @@ public class PluginInformationComparator
   {
     int result = 0;
 
-    result = Util.compare(plugin.getGroupId(), other.getGroupId());
+    result = Util.compare(plugin.getName(), other.getName());
 
     if (result == 0)
     {
-      result = Util.compare(plugin.getArtifactId(), other.getArtifactId());
+      PluginState state = plugin.getState();
+      PluginState otherState = other.getState();
 
-      if (result == 0)
+      if ((state != null) && (otherState != null))
       {
-        PluginState state = plugin.getState();
-        PluginState otherState = other.getState();
-
-        if ((state != null) && (otherState != null))
-        {
-          result = state.getCompareValue() - otherState.getCompareValue();
-        }
-        else if ((state == null) && (otherState != null))
-        {
-          result = 1;
-        }
-        else if ((state != null) && (otherState == null))
-        {
-          result = -1;
-        }
+        result = state.getCompareValue() - otherState.getCompareValue();
+      }
+      else if ((state == null) && (otherState != null))
+      {
+        result = 1;
+      }
+      else if ((state != null) && (otherState == null))
+      {
+        result = -1;
       }
     }
 

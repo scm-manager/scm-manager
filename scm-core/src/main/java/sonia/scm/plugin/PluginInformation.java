@@ -88,7 +88,6 @@ public class PluginInformation
   {
     PluginInformation clone = new PluginInformation();
 
-    clone.setArtifactId(artifactId);
     clone.setAuthor(author);
     clone.setCategory(category);
     clone.setTags(tags);
@@ -99,7 +98,6 @@ public class PluginInformation
     }
 
     clone.setDescription(description);
-    clone.setGroupId(groupId);
     clone.setName(name);
 
     if (Util.isNotEmpty(screenshots))
@@ -139,13 +137,12 @@ public class PluginInformation
     final PluginInformation other = (PluginInformation) obj;
 
     //J-
-    return Objects.equal(artifactId, other.artifactId)
-      && Objects.equal(author, other.author)
+    return
+      Objects.equal(author, other.author)
       && Objects.equal(category, other.category)
       && Objects.equal(tags, other.tags)
       && Objects.equal(condition, other.condition)
       && Objects.equal(description, other.description)
-      && Objects.equal(groupId, other.groupId)
       && Objects.equal(name, other.name)
       && Objects.equal(screenshots, other.screenshots)
       && Objects.equal(state, other.state) 
@@ -164,8 +161,8 @@ public class PluginInformation
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(artifactId, author, category, tags, condition,
-      description, groupId, name, screenshots, state, url, version, wiki);
+    return Objects.hashCode(author, category, tags, condition,
+      description, name, screenshots, state, url, version, wiki);
   }
 
   /**
@@ -179,13 +176,11 @@ public class PluginInformation
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                  .add("artifactId", artifactId)
                   .add("author", author)
                   .add("category", category)
                   .add("tags", tags)
                   .add("condition", condition)
                   .add("description", description)
-                  .add("groupId", groupId)
                   .add("name", name)
                   .add("screenshots", screenshots)
                   .add("state", state)
@@ -197,17 +192,6 @@ public class PluginInformation
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getArtifactId()
-  {
-    return artifactId;
-  }
 
   /**
    * Method description
@@ -253,16 +237,6 @@ public class PluginInformation
     return description;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getGroupId()
-  {
-    return groupId;
-  }
 
   /**
    * Method description
@@ -273,7 +247,7 @@ public class PluginInformation
   @Override
   public String getId()
   {
-    return getId(true);
+    return getName(true);
   }
 
   /**
@@ -285,11 +259,9 @@ public class PluginInformation
    * @return
    * @since 1.21
    */
-  public String getId(boolean withVersion)
+  public String getName(boolean withVersion)
   {
-    StringBuilder id = new StringBuilder(groupId);
-
-    id.append(":").append(artifactId);
+    StringBuilder id = new StringBuilder(name);
 
     if (withVersion)
     {
@@ -385,22 +357,11 @@ public class PluginInformation
   @Override
   public boolean isValid()
   {
-    return Util.isNotEmpty(groupId) && Util.isNotEmpty(artifactId)
-      && Util.isNotEmpty(name) && Util.isNotEmpty(version);
+    return Util.isNotEmpty(name) && Util.isNotEmpty(version);
   }
 
   //~--- set methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param artifactId
-   */
-  public void setArtifactId(String artifactId)
-  {
-    this.artifactId = artifactId;
-  }
 
   /**
    * Method description
@@ -446,16 +407,6 @@ public class PluginInformation
     this.description = description;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param groupId
-   */
-  public void setGroupId(String groupId)
-  {
-    this.groupId = groupId;
-  }
 
   /**
    * Method description
@@ -537,9 +488,6 @@ public class PluginInformation
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String artifactId;
-
-  /** Field description */
   private String author;
 
   /** Field description */
@@ -550,9 +498,6 @@ public class PluginInformation
 
   /** Field description */
   private String description;
-
-  /** Field description */
-  private String groupId;
 
   /** Field description */
   private String name;

@@ -4,7 +4,10 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.plugin.Plugin;
+import sonia.scm.plugin.PluginCenter;
+import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginLoader;
+import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.plugin.PluginWrapper;
 import sonia.scm.web.VndMediaType;
@@ -16,6 +19,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,12 +31,14 @@ public class PluginResource {
   private final PluginLoader pluginLoader;
   private final PluginDtoCollectionMapper collectionMapper;
   private final PluginDtoMapper mapper;
+  private final PluginManager pluginManager;
 
   @Inject
-  public PluginResource(PluginLoader pluginLoader, PluginDtoCollectionMapper collectionMapper, PluginDtoMapper mapper) {
+  public PluginResource(PluginLoader pluginLoader, PluginDtoCollectionMapper collectionMapper, PluginDtoMapper mapper, PluginCenter pluginCenter1, PluginManager pluginManager) {
     this.pluginLoader = pluginLoader;
     this.collectionMapper = collectionMapper;
     this.mapper = mapper;
+    this.pluginManager = pluginManager;
   }
 
   /**
@@ -74,7 +80,7 @@ public class PluginResource {
     PluginPermissions.read().check();
     Optional<PluginDto> pluginDto = pluginLoader.getInstalledPlugins()
       .stream()
-      .filter(plugin -> id.equals(plugin.getPlugin().getInformation().getId(false)))
+      .filter(plugin -> id.equals(plugin.getPlugin().getInformation().getName(false)))
       .map(mapper::map)
       .findFirst();
     if (pluginDto.isPresent()) {
@@ -82,6 +88,25 @@ public class PluginResource {
     } else {
       throw notFound(entity(Plugin.class, id));
     }
+  }
+
+  /**
+   * Returns a collection of available plugins.
+   *
+   * @return collection of available plugins.
+   */
+  @GET
+  @Path("/available")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(CollectionDto.class)
+  @Produces(VndMediaType.PLUGIN_COLLECTION)
+  public Response getAvailablePlugins() {
+    PluginPermissions.read().check();
+    Collection<PluginInformation> plugins = pluginManager.getAvailable();
+    return Response.ok(collectionMapper.map(plugins)).build();
   }
 
 }

@@ -377,7 +377,7 @@ public final class PluginProcessor
     URL[] urlArray = urls.toArray(new URL[urls.size()]);
     Plugin plugin = smp.getPlugin();
 
-    String id = plugin.getInformation().getId(false);
+    String id = plugin.getInformation().getName(false);
 
     if (smp.getPlugin().isChildFirstClassLoader())
     {

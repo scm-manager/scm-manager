@@ -115,8 +115,8 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
     }
     else
     {
-      String id = plugin.getInformation().getId(false);
-      String oid = o.plugin.getInformation().getId(false);
+      String id = plugin.getInformation().getName(false);
+      String oid = o.plugin.getInformation().getName(false);
 
       if (depends.contains(oid) && odepends.contains(id))
       {

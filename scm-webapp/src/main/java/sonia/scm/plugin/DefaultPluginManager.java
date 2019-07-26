@@ -67,10 +67,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -99,7 +101,7 @@ public class DefaultPluginManager implements PluginManager
     LoggerFactory.getLogger(DefaultPluginManager.class);
 
   /** enable or disable remote plugins */
-  private static final boolean REMOTE_PLUGINS_ENABLED = false;
+  private static final boolean REMOTE_PLUGINS_ENABLED = true;
 
   /** Field description */
   public static final Predicate<PluginInformation> FILTER_UPDATES =
@@ -309,14 +311,12 @@ public class DefaultPluginManager implements PluginManager
     PluginPermissions.manage().check();
 
     String[] idParts = id.split(":");
-    String groupId = idParts[0];
-    String artefactId = idParts[1];
+    String name = idParts[0];
     PluginInformation installed = null;
 
     for (PluginInformation info : getInstalled())
     {
-      if (groupId.equals(info.getGroupId())
-        && artefactId.equals(info.getArtifactId()))
+      if (name.equals(info.getName()))
       {
         installed = info;
 
@@ -326,9 +326,9 @@ public class DefaultPluginManager implements PluginManager
 
     if (installed == null)
     {
-      StringBuilder msg = new StringBuilder(groupId);
+      StringBuilder msg = new StringBuilder(name);
 
-      msg.append(":").append(groupId).append(" is not install");
+      msg.append(" is not install");
 
       throw new PluginNotInstalledException(msg.toString());
     }
@@ -423,7 +423,7 @@ public class DefaultPluginManager implements PluginManager
 
     for (PluginInformation info : centerPlugins)
     {
-      if (!installedPlugins.containsKey(info.getId()))
+      if (!installedPlugins.containsKey(info.getName()))
       {
         availablePlugins.add(info);
       }
@@ -590,7 +590,7 @@ public class DefaultPluginManager implements PluginManager
    */
   private PluginCenter getPluginCenter()
   {
-    PluginCenter center = cache.get(PluginCenter.class.getName());
+    PluginCenter center = null; // cache.get(PluginCenter.class.getName());
 
     if (center == null)
     {
@@ -605,15 +605,13 @@ public class DefaultPluginManager implements PluginManager
           logger.info("fetch plugin informations from {}", pluginUrl);
         }
 
-        /**
-         * remote plugins are disabled for early 2.0.0-SNAPSHOTS
-         * TODO enable remote plugins later
-         */
         if (REMOTE_PLUGINS_ENABLED && Util.isNotEmpty(pluginUrl))
         {
           try
           {
-            center = httpClient.get(pluginUrl).request().contentFromXml(PluginCenter.class);
+            center = new PluginCenter();
+            PluginCenterDto pluginCenterDto = httpClient.get(pluginUrl).request().contentFromJson(PluginCenterDto.class);
+            center.setPlugins(mapPluginsFromPluginCenter(pluginCenterDto.getEmbedded().getPlugins()));
             preparePlugins(center);
             cache.put(PluginCenter.class.getName(), center);
 
@@ -633,15 +631,33 @@ public class DefaultPluginManager implements PluginManager
             logger.error("could not load plugins from plugin center", ex);
           }
         }
-
-        if (center == null)
-        {
-          center = new PluginCenter();
-        }
       }
     }
 
     return center;
+  }
+
+  private Set<PluginInformation> mapPluginsFromPluginCenter(List<PluginCenterDto.Plugin> plugins) {
+    HashSet<PluginInformation> pluginInformationSet = new HashSet<>();
+
+    for (PluginCenterDto.Plugin plugin : plugins) {
+
+      PluginInformation pluginInformation = new PluginInformation();
+      pluginInformation.setName(plugin.getName());
+      pluginInformation.setAuthor(plugin.getAuthor());
+      pluginInformation.setCategory(plugin.getCategory());
+      pluginInformation.setVersion(plugin.getVersion());
+      pluginInformation.setDescription(plugin.getDescription());
+      pluginInformation.setUrl(plugin.getLinks().getDownload());
+
+      if (plugin.getConditions() != null) {
+        PluginCenterDto.Condition condition = plugin.getConditions();
+        pluginInformation.setCondition(new PluginCondition(condition.getMinVersion(), Collections.singletonList(condition.getOs()), condition.getArch()));
+      }
+
+       pluginInformationSet.add(pluginInformation);
+    }
+    return pluginInformationSet;
   }
 
   /**
@@ -719,8 +735,7 @@ public class DefaultPluginManager implements PluginManager
    */
   private boolean isSamePlugin(PluginInformation p1, PluginInformation p2)
   {
-    return p1.getGroupId().equals(p2.getGroupId())
-      && p1.getArtifactId().equals(p2.getArtifactId());
+    return p1.getName().equals(p2.getName());
   }
 
   //~--- fields ---------------------------------------------------------------

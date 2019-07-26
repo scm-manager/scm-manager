@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
+import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginWrapper;
 import javax.inject.Inject;
 
@@ -16,16 +17,20 @@ public class PluginDtoMapper {
   }
 
   public PluginDto map(PluginWrapper plugin) {
+    return map(plugin.getPlugin().getInformation());
+  }
+
+  public PluginDto map(PluginInformation pluginInformation) {
     Links.Builder linksBuilder = linkingTo()
       .self(resourceLinks.plugin()
-        .self(plugin.getPlugin().getInformation().getId(false)));
+        .self(pluginInformation.getName()));
 
     PluginDto pluginDto = new PluginDto(linksBuilder.build());
-    pluginDto.setName(plugin.getPlugin().getInformation().getName());
-    pluginDto.setType(plugin.getPlugin().getInformation().getCategory() != null ? plugin.getPlugin().getInformation().getCategory() : "Miscellaneous");
-    pluginDto.setVersion(plugin.getPlugin().getInformation().getVersion());
-    pluginDto.setAuthor(plugin.getPlugin().getInformation().getAuthor());
-    pluginDto.setDescription(plugin.getPlugin().getInformation().getDescription());
+    pluginDto.setName(pluginInformation.getName());
+    pluginDto.setCategory(pluginInformation.getCategory() != null ? pluginInformation.getCategory() : "Miscellaneous");
+    pluginDto.setVersion(pluginInformation.getVersion());
+    pluginDto.setAuthor(pluginInformation.getAuthor());
+    pluginDto.setDescription(pluginInformation.getDescription());
 
     return pluginDto;
   }
