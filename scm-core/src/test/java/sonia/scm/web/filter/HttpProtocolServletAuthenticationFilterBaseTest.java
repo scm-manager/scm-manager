@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class HttpProtocolServletAuthenticationFilterTest {
+class HttpProtocolServletAuthenticationFilterBaseTest {
 
   private ScmConfiguration configuration = new ScmConfiguration();
 
@@ -32,7 +32,7 @@ class HttpProtocolServletAuthenticationFilterTest {
   @Mock
   private UserAgentParser userAgentParser;
 
-  private HttpProtocolServletAuthenticationFilter authenticationFilter;
+  private HttpProtocolServletAuthenticationFilterBase authenticationFilter;
 
   @Mock
   private HttpServletRequest request;
@@ -48,7 +48,7 @@ class HttpProtocolServletAuthenticationFilterTest {
 
   @BeforeEach
   void setUpObjectUnderTest() {
-    authenticationFilter = new HttpProtocolServletAuthenticationFilter(configuration, tokenGenerators, userAgentParser);
+    authenticationFilter = new HttpProtocolServletAuthenticationFilterBase(configuration, tokenGenerators, userAgentParser);
   }
 
   @Test
