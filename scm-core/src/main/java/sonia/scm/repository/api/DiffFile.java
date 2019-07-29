@@ -6,7 +6,7 @@ public interface DiffFile extends Iterable<Hunk> {
 
   String getNewRevision();
 
-  String getOldName();
+  String getOldPath();
 
-  String getNewName();
+  String getNewPath();
 }
