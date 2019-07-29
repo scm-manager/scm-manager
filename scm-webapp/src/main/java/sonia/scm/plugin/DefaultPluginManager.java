@@ -648,7 +648,6 @@ public class DefaultPluginManager implements PluginManager
       pluginInformation.setCategory(plugin.getCategory());
       pluginInformation.setVersion(plugin.getVersion());
       pluginInformation.setDescription(plugin.getDescription());
-      pluginInformation.setUrl(plugin.getLinks().getDownload());
 
       if (plugin.getConditions() != null) {
         PluginCenterDto.Condition condition = plugin.getConditions();

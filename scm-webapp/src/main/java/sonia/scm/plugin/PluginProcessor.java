@@ -318,10 +318,7 @@ public final class PluginProcessor
     {
       for (Path parent : parentStream)
       {
-        try (DirectoryStream<Path> direcotries = stream(parent, filter))
-        {
-          paths.addAll(direcotries);
-        }
+        paths.add(parent);
       }
     }
 
@@ -333,7 +330,6 @@ public final class PluginProcessor
    *
    *
    * @param parentClassLoader
-   * @param directory
    * @param smp
    *
    * @return
@@ -472,7 +468,6 @@ public final class PluginProcessor
    *
    *
    * @param classLoader
-   * @param directory
    * @param smp
    *
    * @return
@@ -511,7 +506,6 @@ public final class PluginProcessor
    *
    *
    * @param classLoader
-   * @param smps
    * @param rootNodes
    *
    * @return

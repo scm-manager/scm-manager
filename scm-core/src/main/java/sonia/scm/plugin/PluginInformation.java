@@ -44,11 +44,8 @@ import sonia.scm.util.Util;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -87,28 +84,17 @@ public class PluginInformation
   public PluginInformation clone()
   {
     PluginInformation clone = new PluginInformation();
-
+    clone.setName(name);
     clone.setAuthor(author);
     clone.setCategory(category);
-    clone.setTags(tags);
+    clone.setDescription(description);
+    clone.setState(state);
+    clone.setVersion(version);
 
     if (condition != null)
     {
       clone.setCondition(condition.clone());
     }
-
-    clone.setDescription(description);
-    clone.setName(name);
-
-    if (Util.isNotEmpty(screenshots))
-    {
-      clone.setScreenshots(new ArrayList<String>(screenshots));
-    }
-
-    clone.setState(state);
-    clone.setUrl(url);
-    clone.setVersion(version);
-    clone.setWiki(wiki);
 
     return clone;
   }
@@ -140,15 +126,11 @@ public class PluginInformation
     return
       Objects.equal(author, other.author)
       && Objects.equal(category, other.category)
-      && Objects.equal(tags, other.tags)
       && Objects.equal(condition, other.condition)
       && Objects.equal(description, other.description)
       && Objects.equal(name, other.name)
-      && Objects.equal(screenshots, other.screenshots)
-      && Objects.equal(state, other.state) 
-      && Objects.equal(url, other.url)
-      && Objects.equal(version, other.version)
-      && Objects.equal(wiki, other.wiki);
+      && Objects.equal(state, other.state)
+      && Objects.equal(version, other.version);
     //J+
   }
 
@@ -161,8 +143,8 @@ public class PluginInformation
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(author, category, tags, condition,
-      description, name, screenshots, state, url, version, wiki);
+    return Objects.hashCode(author, category, condition,
+      description, name, state, version);
   }
 
   /**
@@ -178,15 +160,11 @@ public class PluginInformation
     return MoreObjects.toStringHelper(this)
                   .add("author", author)
                   .add("category", category)
-                  .add("tags", tags)
                   .add("condition", condition)
                   .add("description", description)
                   .add("name", name)
-                  .add("screenshots", screenshots)
                   .add("state", state)
-                  .add("url", url)
                   .add("version", version)
-                  .add("wiki", wiki)
                   .toString();
     //J+
   }
@@ -288,42 +266,9 @@ public class PluginInformation
    *
    * @return
    */
-  public List<String> getScreenshots()
-  {
-    return screenshots;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public PluginState getState()
   {
     return state;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<String> getTags()
-  {
-    return tags;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getUrl()
-  {
-    return url;
   }
 
   /**
@@ -343,9 +288,8 @@ public class PluginInformation
    *
    * @return
    */
-  public String getWiki()
-  {
-    return wiki;
+  public List<String> getLinks() {
+    return links;
   }
 
   /**
@@ -361,7 +305,6 @@ public class PluginInformation
   }
 
   //~--- set methods ----------------------------------------------------------
-
 
   /**
    * Method description
@@ -423,44 +366,11 @@ public class PluginInformation
    * Method description
    *
    *
-   * @param screenshots
-   */
-  public void setScreenshots(List<String> screenshots)
-  {
-    this.screenshots = screenshots;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param state
    */
   public void setState(PluginState state)
   {
     this.state = state;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param tags
-   */
-  public void setTags(List<String> tags)
-  {
-    this.tags = tags;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param url
-   */
-  public void setUrl(String url)
-  {
-    this.url = url;
   }
 
   /**
@@ -474,15 +384,15 @@ public class PluginInformation
     this.version = version;
   }
 
+
   /**
    * Method description
    *
    *
-   * @param wiki
+   * @param links
    */
-  public void setWiki(String wiki)
-  {
-    this.wiki = wiki;
+  public void setLinks(List<String> links) {
+    this.links = links;
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -503,24 +413,12 @@ public class PluginInformation
   private String name;
 
   /** Field description */
-  @XmlElement(name = "screenshot")
-  @XmlElementWrapper(name = "screenshots")
-  private List<String> screenshots;
-
-  /** Field description */
   private PluginState state;
-
-  /** Field description */
-  @XmlElement(name = "tag")
-  @XmlElementWrapper(name = "tags")
-  private List<String> tags;
-
-  /** Field description */
-  private String url;
 
   /** Field description */
   private String version;
 
   /** Field description */
-  private String wiki;
+  private List<String> links;
+
 }

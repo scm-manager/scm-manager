@@ -71,37 +71,37 @@ public class PluginProcessorTest
   /** Field description */
   private static final PluginResource PLUGIN_A =
     new PluginResource("sonia/scm/plugin/scm-a-plugin.smp", "scm-a-plugin.smp",
-      "sonia.scm.plugins:scm-a-plugin:1.0.0-SNAPSHOT");
+      "scm-a-plugin:1.0.0-SNAPSHOT");
 
   /** Field description */
   private static final PluginResource PLUGIN_B =
     new PluginResource("sonia/scm/plugin/scm-b-plugin.smp", "scm-b-plugin.smp",
-      "sonia.scm.plugins:scm-b-plugin:1.0.0-SNAPSHOT");
+      "scm-b-plugin:1.0.0-SNAPSHOT");
 
   /** Field description */
   private static final PluginResource PLUGIN_C =
     new PluginResource("sonia/scm/plugin/scm-c-plugin.smp", "scm-c-plugin.smp",
-      "sonia.scm.plugins:scm-c-plugin:1.0.0-SNAPSHOT");
+      "scm-c-plugin:1.0.0-SNAPSHOT");
 
   /** Field description */
   private static final PluginResource PLUGIN_D =
     new PluginResource("sonia/scm/plugin/scm-d-plugin.smp", "scm-d-plugin.smp",
-      "sonia.scm.plugins:scm-d-plugin:1.0.0-SNAPSHOT");
+      "scm-d-plugin:1.0.0-SNAPSHOT");
 
   /** Field description */
   private static final PluginResource PLUGIN_E =
     new PluginResource("sonia/scm/plugin/scm-e-plugin.smp", "scm-e-plugin.smp",
-      "sonia.scm.plugins:scm-e-plugin:1.0.0-SNAPSHOT");
+      "scm-e-plugin:1.0.0-SNAPSHOT");
 
   /** Field description */
   private static final PluginResource PLUGIN_F_1_0_0 =
     new PluginResource("sonia/scm/plugin/scm-f-plugin-1.0.0.smp",
-      "scm-f-plugin.smp", "sonia.scm.plugins:scm-f-plugin:1.0.0");
+      "scm-f-plugin.smp", "scm-f-plugin:1.0.0");
 
   /** Field description */
   private static final PluginResource PLUGIN_F_1_0_1 =
     new PluginResource("sonia/scm/plugin/scm-f-plugin-1.0.1.smp",
-      "scm-f-plugin.smp", "sonia.scm.plugins:scm-f-plugin:1.0.1");
+      "scm-f-plugin.smp", "scm-f-plugin:1.0.1");
 
   //~--- methods --------------------------------------------------------------
 
