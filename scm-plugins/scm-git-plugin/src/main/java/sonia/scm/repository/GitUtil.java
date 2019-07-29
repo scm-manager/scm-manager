@@ -43,6 +43,7 @@ import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.lib.AnyObjectId;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
@@ -441,7 +442,7 @@ public final class GitUtil
    *
    * @return
    */
-  public static String getId(ObjectId objectId)
+  public static String getId(AnyObjectId objectId)
   {
     String id = Util.EMPTY_STRING;
 

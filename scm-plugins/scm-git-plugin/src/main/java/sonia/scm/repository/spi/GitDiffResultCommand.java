@@ -1,12 +1,15 @@
 package sonia.scm.repository.spi;
 
+import com.google.common.base.Throwables;
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffFile;
 import sonia.scm.repository.api.DiffResult;
 import sonia.scm.repository.api.Hunk;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.stream.Collectors;
@@ -18,8 +21,9 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
   }
 
   public DiffResult getDiffResult(DiffCommandRequest diffCommandRequest) throws IOException {
-    try (Differ differ = Differ.create(open(), diffCommandRequest)) {
-      GitDiffResult result = new GitDiffResult();
+    org.eclipse.jgit.lib.Repository repository = open();
+    try (Differ differ = Differ.create(repository, diffCommandRequest)) {
+      GitDiffResult result = new GitDiffResult(repository);
       differ.process(result::process);
       return result;
     }
@@ -27,7 +31,12 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
 
   private class GitDiffResult implements DiffResult {
 
+    private final org.eclipse.jgit.lib.Repository repository;
     private Differ.Diff diff;
+
+    private GitDiffResult(org.eclipse.jgit.lib.Repository repository) {
+      this.repository = repository;
+    }
 
     void process(Differ.Diff diff) {
       this.diff = diff;
@@ -45,26 +54,28 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
 
     @Override
     public Iterator<DiffFile> iterator() {
-      return diff.getEntries().stream().map(GitDiffFile::new).collect(Collectors.<DiffFile>toList()).iterator();
+      return diff.getEntries().stream().map(diffEntry -> new GitDiffFile(repository, diffEntry)).collect(Collectors.<DiffFile>toList()).iterator();
     }
   }
 
-  private static class GitDiffFile implements DiffFile {
+  private class GitDiffFile implements DiffFile {
 
+    private final org.eclipse.jgit.lib.Repository repository;
     private final DiffEntry diffEntry;
 
-    private GitDiffFile(DiffEntry diffEntry) {
+    private GitDiffFile(org.eclipse.jgit.lib.Repository repository, DiffEntry diffEntry) {
+      this.repository = repository;
       this.diffEntry = diffEntry;
     }
 
     @Override
     public String getOldRevision() {
-      return null;
+      return GitUtil.getId(diffEntry.getOldId().toObjectId());
     }
 
     @Override
     public String getNewRevision() {
-      return null;
+      return GitUtil.getId(diffEntry.getNewId().toObjectId());
     }
 
     @Override
@@ -79,7 +90,22 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
 
     @Override
     public Iterator<Hunk> iterator() {
-      return null;
+      String content = format(repository, diffEntry);
+      GitHunkParser parser = new GitHunkParser();
+      return parser.parse(content).iterator();
     }
+
+    private String format(org.eclipse.jgit.lib.Repository repository, DiffEntry entry) {
+      try(ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+        DiffFormatter formatter = new DiffFormatter(baos);
+        formatter.setRepository(repository);
+        formatter.format(entry);
+        return baos.toString();
+      } catch (IOException ex) {
+        throw Throwables.propagate(ex);
+      }
+    }
+
   }
+
 }
