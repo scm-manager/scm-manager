@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -56,8 +57,7 @@ public final class PluginCenterDto implements Serializable {
     private Dependency dependencies;
 
     @XmlElement(name = "_links")
-    private Links links;
-
+    private Map<String, Object> links;
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
@@ -81,7 +81,14 @@ public final class PluginCenterDto implements Serializable {
   @XmlRootElement(name = "_links")
   @Getter
   static class Links {
-    private String download;
+    private Link link;
+    private boolean templated;
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
+  @Getter
+  static class Link {
+    private String url;
   }
 
 }

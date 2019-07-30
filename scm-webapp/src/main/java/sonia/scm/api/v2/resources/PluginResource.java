@@ -9,6 +9,7 @@ import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
+import sonia.scm.plugin.PluginState;
 import sonia.scm.plugin.PluginWrapper;
 import sonia.scm.web.VndMediaType;
 
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -34,7 +36,7 @@ public class PluginResource {
   private final PluginManager pluginManager;
 
   @Inject
-  public PluginResource(PluginLoader pluginLoader, PluginDtoCollectionMapper collectionMapper, PluginDtoMapper mapper, PluginCenter pluginCenter1, PluginManager pluginManager) {
+  public PluginResource(PluginLoader pluginLoader, PluginDtoCollectionMapper collectionMapper, PluginDtoMapper mapper, PluginManager pluginManager) {
     this.pluginLoader = pluginLoader;
     this.collectionMapper = collectionMapper;
     this.mapper = mapper;
@@ -105,7 +107,10 @@ public class PluginResource {
   @Produces(VndMediaType.PLUGIN_COLLECTION)
   public Response getAvailablePlugins() {
     PluginPermissions.read().check();
-    Collection<PluginInformation> plugins = pluginManager.getAvailable();
+    Collection<PluginInformation> plugins = pluginManager.getAvailable()
+      .stream()
+      .filter(plugin -> plugin.getState().equals(PluginState.AVAILABLE))
+      .collect(Collectors.toList());
     return Response.ok(collectionMapper.map(plugins)).build();
   }
 

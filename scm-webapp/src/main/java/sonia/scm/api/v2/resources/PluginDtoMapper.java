@@ -5,6 +5,8 @@ import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginWrapper;
 import javax.inject.Inject;
 
+import java.util.Map;
+
 import static de.otto.edison.hal.Links.linkingTo;
 
 public class PluginDtoMapper {
@@ -24,6 +26,11 @@ public class PluginDtoMapper {
     Links.Builder linksBuilder = linkingTo()
       .self(resourceLinks.plugin()
         .self(pluginInformation.getName()));
+
+    for (Object link : pluginInformation.getLinks().values()) {
+      System.out.println("Link is = " + link.toString());
+      linksBuilder.item(((Map<String, Object>) link).values().iterator().next().toString());
+    }
 
     PluginDto pluginDto = new PluginDto(linksBuilder.build());
     pluginDto.setName(pluginInformation.getName());

@@ -46,7 +46,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Map;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -288,7 +288,7 @@ public class PluginInformation
    *
    * @return
    */
-  public List<String> getLinks() {
+  public Map<String, Object> getLinks() {
     return links;
   }
 
@@ -391,7 +391,7 @@ public class PluginInformation
    *
    * @param links
    */
-  public void setLinks(List<String> links) {
+  public void setLinks(Map<String, Object> links) {
     this.links = links;
   }
 
@@ -419,6 +419,6 @@ public class PluginInformation
   private String version;
 
   /** Field description */
-  private List<String> links;
+  private Map<String, Object> links;
 
 }

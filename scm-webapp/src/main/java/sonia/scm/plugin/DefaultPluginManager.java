@@ -75,10 +75,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXB;
 
 import sonia.scm.net.ahc.AdvancedHttpClient;
+
+import static sonia.scm.plugin.PluginCenterDtoMapper.*;
 
 /**
  * TODO replace aether stuff.
@@ -592,8 +595,8 @@ public class DefaultPluginManager implements PluginManager
   {
     PluginCenter center = null; // cache.get(PluginCenter.class.getName());
 
-    if (center == null)
-    {
+//    if (center == null)
+//    {
       synchronized (DefaultPluginManager.class)
       {
         String pluginUrl = configuration.getPluginUrl();
@@ -611,7 +614,8 @@ public class DefaultPluginManager implements PluginManager
           {
             center = new PluginCenter();
             PluginCenterDto pluginCenterDto = httpClient.get(pluginUrl).request().contentFromJson(PluginCenterDto.class);
-            center.setPlugins(mapPluginsFromPluginCenter(pluginCenterDto.getEmbedded().getPlugins()));
+            Set<PluginInformation> pluginInformationSet = map(pluginCenterDto.getEmbedded().getPlugins());
+            center.setPlugins(pluginInformationSet);
             preparePlugins(center);
             cache.put(PluginCenter.class.getName(), center);
 
@@ -632,31 +636,9 @@ public class DefaultPluginManager implements PluginManager
           }
         }
       }
-    }
+//    }
 
     return center;
-  }
-
-  private Set<PluginInformation> mapPluginsFromPluginCenter(List<PluginCenterDto.Plugin> plugins) {
-    HashSet<PluginInformation> pluginInformationSet = new HashSet<>();
-
-    for (PluginCenterDto.Plugin plugin : plugins) {
-
-      PluginInformation pluginInformation = new PluginInformation();
-      pluginInformation.setName(plugin.getName());
-      pluginInformation.setAuthor(plugin.getAuthor());
-      pluginInformation.setCategory(plugin.getCategory());
-      pluginInformation.setVersion(plugin.getVersion());
-      pluginInformation.setDescription(plugin.getDescription());
-
-      if (plugin.getConditions() != null) {
-        PluginCenterDto.Condition condition = plugin.getConditions();
-        pluginInformation.setCondition(new PluginCondition(condition.getMinVersion(), Collections.singletonList(condition.getOs()), condition.getArch()));
-      }
-
-       pluginInformationSet.add(pluginInformation);
-    }
-    return pluginInformationSet;
   }
 
   /**
