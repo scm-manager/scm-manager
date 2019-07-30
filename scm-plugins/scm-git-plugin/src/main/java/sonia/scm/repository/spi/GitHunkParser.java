@@ -51,6 +51,7 @@ final class GitHunkParser {
 
     FileRange oldFileRange = createFileRange(split[0]);
     // TODO merge contains two two block which starts with "-" e.g. -1,3 -2,4 +3,6
+    // check if it is relevant for our use case
     FileRange newFileRange = createFileRange(split[1]);
 
     currentGitHunk = new GitHunk(oldFileRange, newFileRange);
@@ -137,7 +138,7 @@ final class GitHunkParser {
     private final int oldLineNumber;
     private final String content;
 
-    public UnchangedGitDiffLine(int newLineNumber, int oldLineNumber, String content) {
+    private UnchangedGitDiffLine(int newLineNumber, int oldLineNumber, String content) {
       this.newLineNumber = newLineNumber;
       this.oldLineNumber = oldLineNumber;
       this.content = content;

@@ -15,7 +15,6 @@ import sonia.scm.util.Util;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Consumer;
 
 final class Differ implements AutoCloseable {
 
@@ -29,7 +28,13 @@ final class Differ implements AutoCloseable {
     this.treeWalk = treeWalk;
   }
 
-  public static Differ create(Repository repository, DiffCommandRequest request) throws IOException {
+  static Diff diff(Repository repository, DiffCommandRequest request) throws IOException {
+    try (Differ differ = create(repository, request)) {
+      return differ.diff();
+    }
+  }
+
+  private static Differ create(Repository repository, DiffCommandRequest request) throws IOException {
       RevWalk walk = new RevWalk(repository);
 
       ObjectId revision = repository.resolve(request.getRevision());
@@ -81,9 +86,9 @@ final class Differ implements AutoCloseable {
     return GitUtil.computeCommonAncestor(repository, revision1, revision2);
   }
 
-  public void process(Consumer<Diff> diffConsumer) throws IOException {
+  private Diff diff() throws IOException {
     List<DiffEntry> entries = DiffEntry.scan(treeWalk);
-    diffConsumer.accept(new Diff(commit, entries));
+    return new Diff(commit, entries);
   }
 
   @Override

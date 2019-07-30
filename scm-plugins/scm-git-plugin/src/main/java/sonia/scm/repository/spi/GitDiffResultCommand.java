@@ -22,23 +22,16 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
 
   public DiffResult getDiffResult(DiffCommandRequest diffCommandRequest) throws IOException {
     org.eclipse.jgit.lib.Repository repository = open();
-    try (Differ differ = Differ.create(repository, diffCommandRequest)) {
-      GitDiffResult result = new GitDiffResult(repository);
-      differ.process(result::process);
-      return result;
-    }
+    return new GitDiffResult(repository, Differ.diff(repository, diffCommandRequest));
   }
 
   private class GitDiffResult implements DiffResult {
 
     private final org.eclipse.jgit.lib.Repository repository;
-    private Differ.Diff diff;
+    private final Differ.Diff diff;
 
-    private GitDiffResult(org.eclipse.jgit.lib.Repository repository) {
+    private GitDiffResult(org.eclipse.jgit.lib.Repository repository, Differ.Diff diff) {
       this.repository = repository;
-    }
-
-    void process(Differ.Diff diff) {
       this.diff = diff;
     }
 
@@ -96,7 +89,7 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
     }
 
     private String format(org.eclipse.jgit.lib.Repository repository, DiffEntry entry) {
-      try(ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+      try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
         DiffFormatter formatter = new DiffFormatter(baos);
         formatter.setRepository(repository);
         formatter.format(entry);
