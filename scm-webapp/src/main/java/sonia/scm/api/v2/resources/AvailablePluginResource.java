@@ -5,11 +5,9 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginInformation;
-import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.plugin.PluginState;
-import sonia.scm.plugin.PluginWrapper;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -19,9 +17,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -74,7 +70,7 @@ public class AvailablePluginResource {
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @TypeHint(CollectionDto.class)
+  @TypeHint(PluginDto.class)
   @Produces(VndMediaType.PLUGIN)
   public Response getAvailablePlugin(@PathParam("name") String name, @PathParam("version") String version) {
     PluginPermissions.read().check();
@@ -82,12 +78,17 @@ public class AvailablePluginResource {
       .stream()
       .filter(p -> p.getId().equals(name + ":" + version))
       .findFirst();
-    return Response.ok(dtoMapper.map(plugin.get())).build();
+    if (plugin.isPresent()) {
+      return Response.ok(plugin.get()).build();
+    } else {
+      throw notFound(entity(Plugin.class, name));
+    }
   }
 
   /**
-   * Returns 200 when plugin installation is successful triggered.
-   *
+   * Triggers plugin installation.
+   * @param name plugin artefact name
+   * @param version plugin version
    * @return HTTP Status.
    */
   @POST
@@ -96,8 +97,6 @@ public class AvailablePluginResource {
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @TypeHint(CollectionDto.class)
-  @Produces(VndMediaType.PLUGIN)
   public Response installPlugin(@PathParam("name") String name, @PathParam("version") String version) {
     PluginPermissions.manage().check();
     pluginManager.install(name + ":" + version);
