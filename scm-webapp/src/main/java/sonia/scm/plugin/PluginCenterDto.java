@@ -57,7 +57,7 @@ public final class PluginCenterDto implements Serializable {
     private Dependency dependencies;
 
     @XmlElement(name = "_links")
-    private Map<String, Object> links;
+    private Map<String, Link> links;
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
@@ -78,17 +78,9 @@ public final class PluginCenterDto implements Serializable {
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
-  @XmlRootElement(name = "_links")
-  @Getter
-  static class Links {
-    private Link link;
-    private boolean templated;
-  }
-
-  @XmlAccessorType(XmlAccessType.FIELD)
   @Getter
   static class Link {
-    private String url;
+    private String href;
+    private boolean templated;
   }
-
 }

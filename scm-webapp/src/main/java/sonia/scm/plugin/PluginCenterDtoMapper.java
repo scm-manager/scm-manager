@@ -24,10 +24,6 @@ public class PluginCenterDtoMapper  {
         pluginInformation.setCondition(new PluginCondition(condition.getMinVersion(), Collections.singletonList(condition.getOs()), condition.getArch()));
       }
 
-      if (plugin.getLinks() != null) {
-        pluginInformation.setLinks(plugin.getLinks());
-      }
-
       pluginInformationSet.add(pluginInformation);
     }
     return pluginInformationSet;

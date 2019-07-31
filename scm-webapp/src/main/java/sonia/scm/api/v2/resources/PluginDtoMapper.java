@@ -2,11 +2,11 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
 import sonia.scm.plugin.PluginInformation;
+import sonia.scm.plugin.PluginState;
 import sonia.scm.plugin.PluginWrapper;
 import javax.inject.Inject;
 
-import java.util.Map;
-
+import static de.otto.edison.hal.Link.*;
 import static de.otto.edison.hal.Links.linkingTo;
 
 public class PluginDtoMapper {
@@ -23,13 +23,18 @@ public class PluginDtoMapper {
   }
 
   public PluginDto map(PluginInformation pluginInformation) {
-    Links.Builder linksBuilder = linkingTo()
-      .self(resourceLinks.plugin()
-        .self(pluginInformation.getName()));
+    Links.Builder linksBuilder;
+    if (pluginInformation.getState() != null && pluginInformation.getState().equals(PluginState.AVAILABLE)) {
+      linksBuilder = linkingTo()
+        .self(resourceLinks.availablePlugin()
+          .self(pluginInformation.getName(), pluginInformation.getVersion()));
 
-    for (Object link : pluginInformation.getLinks().values()) {
-      System.out.println("Link is = " + link.toString());
-      linksBuilder.item(((Map<String, Object>) link).values().iterator().next().toString());
+      linksBuilder.single(link("install", resourceLinks.availablePlugin().install(pluginInformation.getName(), pluginInformation.getVersion())));
+    }
+    else {
+      linksBuilder = linkingTo()
+        .self(resourceLinks.installedPlugin()
+          .self(pluginInformation.getName()));
     }
 
     PluginDto pluginDto = new PluginDto(linksBuilder.build());

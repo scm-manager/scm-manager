@@ -27,16 +27,24 @@ public class PluginDtoCollectionMapper {
 
   public HalRepresentation map(List<PluginWrapper> plugins) {
     List<PluginDto> dtos = plugins.stream().map(mapper::map).collect(toList());
-    return new HalRepresentation(createLinks(), embedDtos(dtos));
+    return new HalRepresentation(createInstalledPluginsLinks(), embedDtos(dtos));
   }
 
   public HalRepresentation map(Collection<PluginInformation> plugins) {
     List<PluginDto> dtos = plugins.stream().map(mapper::map).collect(toList());
-    return new HalRepresentation(createLinks(), embedDtos(dtos));
+    return new HalRepresentation(createAvailablePluginsLinks(), embedDtos(dtos));
   }
 
-  private Links createLinks() {
-    String baseUrl = resourceLinks.pluginCollection().self();
+  private Links createInstalledPluginsLinks() {
+    String baseUrl = resourceLinks.installedPluginCollection().self();
+
+    Links.Builder linksBuilder = linkingTo()
+      .with(Links.linkingTo().self(baseUrl).build());
+    return linksBuilder.build();
+  }
+
+  private Links createAvailablePluginsLinks() {
+    String baseUrl = resourceLinks.availablePluginCollection().self();
 
     Links.Builder linksBuilder = linkingTo()
       .with(Links.linkingTo().self(baseUrl).build());

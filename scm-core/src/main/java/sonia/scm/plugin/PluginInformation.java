@@ -288,16 +288,6 @@ public class PluginInformation
    *
    * @return
    */
-  public Map<String, Object> getLinks() {
-    return links;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public boolean isValid()
   {
@@ -384,17 +374,6 @@ public class PluginInformation
     this.version = version;
   }
 
-
-  /**
-   * Method description
-   *
-   *
-   * @param links
-   */
-  public void setLinks(Map<String, Object> links) {
-    this.links = links;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -417,8 +396,5 @@ public class PluginInformation
 
   /** Field description */
   private String version;
-
-  /** Field description */
-  private Map<String, Object> links;
 
 }

@@ -4,7 +4,6 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.plugin.Plugin;
-import sonia.scm.plugin.PluginCenter;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
@@ -15,6 +14,7 @@ import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -28,68 +28,17 @@ import java.util.stream.Collectors;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
-public class PluginResource {
+public class AvailablePluginResource {
 
-  private final PluginLoader pluginLoader;
   private final PluginDtoCollectionMapper collectionMapper;
-  private final PluginDtoMapper mapper;
+  private PluginDtoMapper dtoMapper;
   private final PluginManager pluginManager;
 
   @Inject
-  public PluginResource(PluginLoader pluginLoader, PluginDtoCollectionMapper collectionMapper, PluginDtoMapper mapper, PluginManager pluginManager) {
-    this.pluginLoader = pluginLoader;
+  public AvailablePluginResource(PluginDtoCollectionMapper collectionMapper, PluginDtoMapper dtoMapper, PluginManager pluginManager) {
     this.collectionMapper = collectionMapper;
-    this.mapper = mapper;
+    this.dtoMapper = dtoMapper;
     this.pluginManager = pluginManager;
-  }
-
-  /**
-   * Returns a collection of installed plugins.
-   *
-   * @return collection of installed plugins.
-   */
-  @GET
-  @Path("")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(CollectionDto.class)
-  @Produces(VndMediaType.PLUGIN_COLLECTION)
-  public Response getInstalledPlugins() {
-    PluginPermissions.read().check();
-    List<PluginWrapper> plugins = new ArrayList<>(pluginLoader.getInstalledPlugins());
-    return Response.ok(collectionMapper.map(plugins)).build();
-  }
-
-  /**
-   * Returns the installed plugin with the given id.
-   *
-   * @param id id of plugin
-   *
-   * @return installed plugin with specified id
-   */
-  @GET
-  @Path("{id}")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 404, condition = "not found"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(PluginDto.class)
-  @Produces(VndMediaType.PLUGIN)
-  public Response getInstalledPlugin(@PathParam("id") String id) {
-    PluginPermissions.read().check();
-    Optional<PluginDto> pluginDto = pluginLoader.getInstalledPlugins()
-      .stream()
-      .filter(plugin -> id.equals(plugin.getPlugin().getInformation().getName(false)))
-      .map(mapper::map)
-      .findFirst();
-    if (pluginDto.isPresent()) {
-      return Response.ok(pluginDto.get()).build();
-    } else {
-      throw notFound(entity(Plugin.class, id));
-    }
   }
 
   /**
@@ -98,7 +47,7 @@ public class PluginResource {
    * @return collection of available plugins.
    */
   @GET
-  @Path("/available")
+  @Path("")
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
@@ -114,4 +63,44 @@ public class PluginResource {
     return Response.ok(collectionMapper.map(plugins)).build();
   }
 
+  /**
+   * Returns available plugin.
+   *
+   * @return available plugin.
+   */
+  @GET
+  @Path("/{name}/{version}")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(CollectionDto.class)
+  @Produces(VndMediaType.PLUGIN)
+  public Response getAvailablePlugin(@PathParam("name") String name, @PathParam("version") String version) {
+    PluginPermissions.read().check();
+    Optional<PluginInformation> plugin = pluginManager.getAvailable()
+      .stream()
+      .filter(p -> p.getId().equals(name + ":" + version))
+      .findFirst();
+    return Response.ok(dtoMapper.map(plugin.get())).build();
+  }
+
+  /**
+   * Returns 200 when plugin installation is successful triggered.
+   *
+   * @return HTTP Status.
+   */
+  @POST
+  @Path("/{name}/{version}/install")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(CollectionDto.class)
+  @Produces(VndMediaType.PLUGIN)
+  public Response installPlugin(@PathParam("name") String name, @PathParam("version") String version) {
+    PluginPermissions.manage().check();
+    pluginManager.install(name + ":" + version);
+    return Response.ok().build();
+  }
 }

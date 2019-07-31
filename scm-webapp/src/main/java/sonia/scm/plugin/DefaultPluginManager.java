@@ -186,8 +186,6 @@ public class DefaultPluginManager implements PluginManager
     
     PluginCenter center = getPluginCenter();
 
-    // pluginHandler.install(id);
-
     for (PluginInformation plugin : center.getPlugins())
     {
       String pluginId = plugin.getId();
@@ -593,10 +591,10 @@ public class DefaultPluginManager implements PluginManager
    */
   private PluginCenter getPluginCenter()
   {
-    PluginCenter center = null; // cache.get(PluginCenter.class.getName());
+    PluginCenter center = cache.get(PluginCenter.class.getName());
 
-//    if (center == null)
-//    {
+    if (center == null)
+    {
       synchronized (DefaultPluginManager.class)
       {
         String pluginUrl = configuration.getPluginUrl();
@@ -636,7 +634,7 @@ public class DefaultPluginManager implements PluginManager
           }
         }
       }
-//    }
+    }
 
     return center;
   }
