@@ -31,8 +31,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -103,8 +102,7 @@ class InstalledPluginResourceTest {
       PluginDto pluginDto = new PluginDto();
       pluginDto.setName("plugin-name");
       pluginDto.setVersion("2.0.0");
-      //TODO How to mock this?
-      when(collectionMapper.map(Collections.singletonList(pluginWrapper))).thenReturn(new HalRepresentation());
+      when(collectionMapper.map(Collections.singletonList(pluginWrapper))).thenReturn(new MockedResultDto());
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/installed");
       request.accept(VndMediaType.PLUGIN_COLLECTION);
@@ -112,13 +110,18 @@ class InstalledPluginResourceTest {
 
       dispatcher.invoke(request, response);
 
-      assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-      assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/plugins/installed\"}"));
+      assertThat(HttpServletResponse.SC_OK).isEqualTo(response.getStatus());
+      assertThat(response.getContentAsString()).contains("\"marker\":\"x\"");
     }
 
     @Test
     void getInstalledPlugin() {
     }
 
+    public class MockedResultDto extends HalRepresentation {
+      public String getMarker() {
+        return "x";
+      }
+    }
   }
 }
