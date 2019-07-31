@@ -1,4 +1,7 @@
-package sonia.scm.plugin;
+package sonia.scm.api.v2.resources;
+
+import sonia.scm.plugin.PluginCondition;
+import sonia.scm.plugin.PluginInformation;
 
 import java.util.Collections;
 import java.util.HashSet;

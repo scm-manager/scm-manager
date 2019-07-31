@@ -1,7 +1,9 @@
-package sonia.scm.plugin;
+package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.ImmutableList;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -24,7 +26,7 @@ public final class PluginCenterDto implements Serializable {
 
   @XmlRootElement(name = "_embedded")
   @XmlAccessorType(XmlAccessType.FIELD)
-  static class Embedded {
+  public static class Embedded {
 
     @XmlElement(name = "plugins")
     private List<Plugin> plugins;
@@ -40,7 +42,8 @@ public final class PluginCenterDto implements Serializable {
   @XmlAccessorType(XmlAccessType.FIELD)
   @XmlRootElement(name = "plugins")
   @Getter
-  static class Plugin {
+  @AllArgsConstructor
+  public static class Plugin {
 
     private String name;
     private String displayName;
@@ -63,7 +66,8 @@ public final class PluginCenterDto implements Serializable {
   @XmlAccessorType(XmlAccessType.FIELD)
   @XmlRootElement(name = "conditions")
   @Getter
-  static class Condition {
+  @AllArgsConstructor
+  public static class Condition {
 
     private String os;
     private String arch;
@@ -73,6 +77,7 @@ public final class PluginCenterDto implements Serializable {
   @XmlAccessorType(XmlAccessType.FIELD)
   @XmlRootElement(name = "dependencies")
   @Getter
+  @AllArgsConstructor
   static class Dependency {
     private String name;
   }

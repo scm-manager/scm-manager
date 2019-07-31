@@ -27,13 +27,11 @@ import static sonia.scm.NotFoundException.notFound;
 public class AvailablePluginResource {
 
   private final PluginDtoCollectionMapper collectionMapper;
-  private PluginDtoMapper dtoMapper;
   private final PluginManager pluginManager;
 
   @Inject
-  public AvailablePluginResource(PluginDtoCollectionMapper collectionMapper, PluginDtoMapper dtoMapper, PluginManager pluginManager) {
+  public AvailablePluginResource(PluginDtoCollectionMapper collectionMapper, PluginManager pluginManager) {
     this.collectionMapper = collectionMapper;
-    this.dtoMapper = dtoMapper;
     this.pluginManager = pluginManager;
   }
 

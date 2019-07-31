@@ -46,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.api.v2.resources.PluginCenterDto;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
@@ -67,21 +68,18 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXB;
 
 import sonia.scm.net.ahc.AdvancedHttpClient;
 
-import static sonia.scm.plugin.PluginCenterDtoMapper.*;
+import static sonia.scm.api.v2.resources.PluginCenterDtoMapper.*;
 
 /**
  * TODO replace aether stuff.

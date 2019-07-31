@@ -1,0 +1,201 @@
+{
+  "_links": {
+    "self": { "href": "http://localhost:8081/scm/api/v2/plugins/installed" }
+  },
+  "_embedded": {
+    "plugins": [
+      {
+        "name": "scm-issuetracker-plugin",
+        "category": "Library Plugin",
+        "version": "2.0.0-SNAPSHOT",
+        "author": "Sebastian Sdorra",
+        "description": "Helper classes for issuetracker plugins.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-issuetracker-plugin"
+          }
+        }
+      },
+      {
+        "name": "scm-webhook-plugin",
+        "category": "Miscellaneous",
+        "version": "2.0.0-SNAPSHOT",
+        "author": "Sebastian Sdorra",
+        "description": "Notify a remote webserver whenever a repository is pushed to.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-webhook-plugin"
+          }
+        }
+      },
+      {
+        "name": "scm-jenkins-plugin",
+        "category": "Continuous Integration",
+        "version": "2.0-SNAPSHOT",
+        "author": "Sebastian Sdorra",
+        "description": "This plugin will ping your Jenkins CI server when a new commit is pushed to SCM-Manager.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-jenkins-plugin"
+          }
+        }
+      },
+      {
+        "name": "scm-legacy-plugin",
+        "category": "Miscellaneous",
+        "version": "2.0.0-SNAPSHOT",
+        "author": "Sebastian Sdorra",
+        "description": "The easiest way to share your Git, Mercurial\n    and Subversion repositories over http.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-legacy-plugin"
+          }
+        }
+      },
+      {
+        "name": "scm-jira-plugin",
+        "category": "Issue-Tracking",
+        "version": "2.0.0-SNAPSHOT",
+        "author": "Sebastian Sdorra",
+        "description": "This plugin integrates Atlassian JIRA to SCM-Manager.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-jira-plugin"
+          }
+        }
+      },
+      {
+        "name": "scm-ci-plugin",
+        "category": "Miscellaneous",
+        "version": "2.0.0-SNAPSHOT",
+        "author": "Cloudogu GmbH",
+        "description": "SCM-Manager CI Plugin",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-ci-plugin"
+          }
+        }
+      },
+      {
+        "name": "scm-svn-plugin",
+        "category": "Subversion",
+        "version": "2.0.0-SNAPSHOT",
+        "author": "Sebastian Sdorra",
+        "description": "Plugin for the version control system Subversion",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-svn-plugin"
+          }
+        }
+      },
+      {
+        "name": "scm-hg-plugin",
+        "category": "Mercurial",
+        "version": "2.0.0-SNAPSHOT",
+        "author": "Sebastian Sdorra",
+        "description": "Plugin for the version control system Mercurial",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-hg-plugin"
+          }
+        }
+      },
+      {
+        "name": "scm-review-plugin",
+        "category": "Miscellaneous",
+        "version": "2.0.0-SNAPSHOT",
+        "author": "Cloudogu GmbH",
+        "description": "SCM-Manager Review Plugin",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-review-plugin"
+          }
+        }
+      },
+      {
+        "name": "scm-git-plugin",
+        "category": "Git",
+        "version": "2.0.0-SNAPSHOT",
+        "author": "Sebastian Sdorra",
+        "description": "Plugin for the version control system Git",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-git-plugin"
+          }
+        }
+      },
+      {
+        "name": "scm-script-plugin",
+        "category": "Development",
+        "version": "2.0.0-SNAPSHOT",
+        "author": "Sebastian Sdorra",
+        "description": "Script support for scm-manager.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-script-plugin"
+          }
+        }
+      },
+      {
+        "name": "scm-mail-plugin",
+        "category": "Library Plugin",
+        "version": "2.0.0-SNAPSHOT",
+        "author": "Sebastian Sdorra",
+        "description": "The mail plugin provides an api for sending e-mails.\n    This api can be used by other plugins.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-mail-plugin"
+          }
+        }
+      },
+      {
+        "name": "scm-authormapping-plugin",
+        "category": "Miscellaneous",
+        "version": "2.0.0-SNAPSHOT",
+        "author": "Sebastian Sdorra",
+        "description": "Lookup and transform usernames to the real names stored in the scm-manager user database or in a mapping table.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-authormapping-plugin"
+          }
+        }
+      },
+      {
+        "name": "scm-pushlog-plugin",
+        "category": "Miscellaneous",
+        "version": "2.0-SNAPSHOT",
+        "author": "Sebastian Sdorra",
+        "description": "Tracks who pushed what to a repository.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-pushlog-plugin"
+          }
+        }
+      },
+      {
+        "name": "scm-branchwp-plugin",
+        "category": "Miscellaneous",
+        "version": "2.0.0-SNAPSHOT",
+        "author": "Sebastian Sdorra",
+        "description": "This plugin adds branch write protection for repositories.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-branchwp-plugin"
+          }
+        }
+      },
+      {
+        "name": "scm-notify-plugin",
+        "category": "Miscellaneous",
+        "version": "2.0.0-SNAPSHOT",
+        "author": "Sebastian Sdorra",
+        "description": "This plugin sends email notifications to a list of subscribed addresses whenever a repo has changes.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/plugins/installed/scm-notify-plugin"
+          }
+        }
+      }
+    ]
+  }
+}
