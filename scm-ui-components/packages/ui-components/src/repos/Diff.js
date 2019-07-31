@@ -1,10 +1,10 @@
 //@flow
 import React from "react";
 import DiffFile from "./DiffFile";
-import type { DiffObjectProps } from "./DiffTypes";
+import type { DiffObjectProps, File } from "./DiffTypes";
 
 type Props = DiffObjectProps & {
-  diff: any
+  diff: File[]
 };
 
 class Diff extends React.Component<Props> {

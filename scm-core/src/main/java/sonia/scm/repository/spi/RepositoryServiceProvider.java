@@ -158,6 +158,11 @@ public abstract class RepositoryServiceProvider implements Closeable
     throw new CommandNotSupportedException(Command.DIFF);
   }
 
+  public DiffResultCommand getDiffResultCommand()
+  {
+    throw new CommandNotSupportedException(Command.DIFF_RESULT);
+  }
+
   /**
    * Method description
    *

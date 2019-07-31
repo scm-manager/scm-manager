@@ -12,6 +12,7 @@ export type {
   FileChangeType,
   Hunk,
   Change,
+  ChangeType,
   BaseContext,
   AnnotationFactory,
   AnnotationFactoryContext,

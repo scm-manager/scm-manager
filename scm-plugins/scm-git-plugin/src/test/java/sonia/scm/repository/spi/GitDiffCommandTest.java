@@ -3,6 +3,7 @@ package sonia.scm.repository.spi;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -38,7 +39,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
     "+f\n";
 
   @Test
-  public void diffForOneRevisionShouldCreateDiff() {
+  public void diffForOneRevisionShouldCreateDiff() throws IOException {
     GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
@@ -48,7 +49,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void diffForOneBranchShouldCreateDiff() {
+  public void diffForOneBranchShouldCreateDiff() throws IOException {
     GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("test-branch");
@@ -58,7 +59,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void diffForPathShouldCreateLimitedDiff() {
+  public void diffForPathShouldCreateLimitedDiff() throws IOException {
     GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("test-branch");
@@ -69,7 +70,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void diffBetweenTwoBranchesShouldCreateDiff() {
+  public void diffBetweenTwoBranchesShouldCreateDiff() throws IOException {
     GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("master");
@@ -80,7 +81,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void diffBetweenTwoBranchesForPathShouldCreateLimitedDiff() {
+  public void diffBetweenTwoBranchesForPathShouldCreateLimitedDiff() throws IOException {
     GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("master");

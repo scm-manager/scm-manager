@@ -38,10 +38,8 @@ package sonia.scm.repository.api;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.FeatureNotSupportedException;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.spi.DiffCommand;
-import sonia.scm.repository.spi.DiffCommandRequest;
 import sonia.scm.util.IOUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -72,7 +70,7 @@ import java.util.Set;
  * @author Sebastian Sdorra
  * @since 1.17
  */
-public final class DiffCommandBuilder
+public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCommandBuilder>
 {
 
   /**
@@ -80,6 +78,9 @@ public final class DiffCommandBuilder
    */
   private static final Logger logger =
     LoggerFactory.getLogger(DiffCommandBuilder.class);
+
+  /** implementation of the diff command */
+  private final DiffCommand diffCommand;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -92,8 +93,8 @@ public final class DiffCommandBuilder
    */
   DiffCommandBuilder(DiffCommand diffCommand, Set<Feature> supportedFeatures)
   {
+    super(supportedFeatures);
     this.diffCommand = diffCommand;
-    this.supportedFeatures = supportedFeatures;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -162,54 +163,6 @@ public final class DiffCommandBuilder
 
     return this;
   }
-
-  /**
-   * Show the difference only for the given path.
-   *
-   *
-   * @param path path for difference
-   *
-   * @return {@code this}
-   */
-  public DiffCommandBuilder setPath(String path)
-  {
-    request.setPath(path);
-
-    return this;
-  }
-
-  /**
-   * Show the difference only for the given revision or (using {@link #setAncestorChangeset(String)}) between this
-   * and another revision.
-   *
-   *
-   * @param revision revision for difference
-   *
-   * @return {@code this}
-   */
-  public DiffCommandBuilder setRevision(String revision)
-  {
-    request.setRevision(revision);
-
-    return this;
-  }
-  /**
-   * Compute the incoming changes of the branch set with {@link #setRevision(String)} in respect to the changeset given
-   * here. In other words: What changes would be new to the ancestor changeset given here when the branch would
-   * be merged into it. Requires feature {@link sonia.scm.repository.Feature#INCOMING_REVISION}!
-   *
-   * @return {@code this}
-   */
-  public DiffCommandBuilder setAncestorChangeset(String revision)
-  {
-    if (!supportedFeatures.contains(Feature.INCOMING_REVISION)) {
-      throw new FeatureNotSupportedException(Feature.INCOMING_REVISION.name());
-    }
-    request.setAncestorChangeset(revision);
-
-    return this;
-  }
-
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -233,12 +186,8 @@ public final class DiffCommandBuilder
     diffCommand.getDiffResult(request, outputStream);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** implementation of the diff command */
-  private final DiffCommand diffCommand;
-  private Set<Feature> supportedFeatures;
-
-  /** request for the diff command implementation */
-  private final DiffCommandRequest request = new DiffCommandRequest();
+  @Override
+  DiffCommandBuilder self() {
+    return this;
+  }
 }
