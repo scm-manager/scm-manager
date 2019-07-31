@@ -4,6 +4,7 @@ import com.google.common.base.Throwables;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffFile;
 import sonia.scm.repository.api.DiffResult;
@@ -47,7 +48,11 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
 
     @Override
     public Iterator<DiffFile> iterator() {
-      return diff.getEntries().stream().map(diffEntry -> new GitDiffFile(repository, diffEntry)).collect(Collectors.<DiffFile>toList()).iterator();
+      return diff.getEntries()
+        .stream()
+        .map(diffEntry -> new GitDiffFile(repository, diffEntry))
+        .collect(Collectors.<DiffFile>toList())
+        .iterator();
     }
   }
 
@@ -89,13 +94,12 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
     }
 
     private String format(org.eclipse.jgit.lib.Repository repository, DiffEntry entry) {
-      try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-        DiffFormatter formatter = new DiffFormatter(baos);
+      try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); DiffFormatter formatter = new DiffFormatter(baos)) {
         formatter.setRepository(repository);
         formatter.format(entry);
         return baos.toString();
       } catch (IOException ex) {
-        throw Throwables.propagate(ex);
+        throw new InternalRepositoryException(GitDiffResultCommand.this.repository, "failed to format diff entry", ex);
       }
     }
 
