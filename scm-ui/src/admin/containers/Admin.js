@@ -1,14 +1,24 @@
 // @flow
 import React from "react";
 import { translate } from "react-i18next";
-import {Redirect, Route, Switch} from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import type { History } from "history";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import type { Links } from "@scm-manager/ui-types";
-import { Page, Navigation, NavLink, Section, SubNavigation } from "@scm-manager/ui-components";
-import { getLinks } from "../../modules/indexResource";
+import {
+  Page,
+  Navigation,
+  NavLink,
+  Section,
+  SubNavigation
+} from "@scm-manager/ui-components";
+import {
+  getLinks,
+  getAvailablePluginsLink,
+  getInstalledPluginsLink
+} from "../../modules/indexResource";
 import AdminDetails from "./AdminDetails";
 import PluginsOverview from "../plugins/containers/PluginsOverview";
 import GlobalConfig from "./GlobalConfig";
@@ -18,6 +28,8 @@ import CreateRepositoryRole from "../roles/containers/CreateRepositoryRole";
 
 type Props = {
   links: Links,
+  availablePluginsLink: string,
+  installedPluginsLink: string,
 
   // context objects
   t: string => string,
@@ -28,7 +40,7 @@ type Props = {
 class Admin extends React.Component<Props> {
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {
-      if(url.includes("role")) {
+      if (url.includes("role")) {
         return url.substring(0, url.length - 2);
       }
       return url.substring(0, url.length - 1);
@@ -47,7 +59,7 @@ class Admin extends React.Component<Props> {
   };
 
   render() {
-    const { links, t } = this.props;
+    const { links, availablePluginsLink, installedPluginsLink, t } = this.props;
 
     const url = this.matchedUrl();
     const extensionProps = {
@@ -62,34 +74,54 @@ class Admin extends React.Component<Props> {
             <Switch>
               <Redirect exact from={url} to={`${url}/info`} />
               <Route path={`${url}/info`} exact component={AdminDetails} />
-              <Route path={`${url}/settings/general`} exact component={GlobalConfig} />
-              <Redirect exact from={`${url}/plugins`} to={`${url}/plugins/installed/`} />
+              <Route
+                path={`${url}/settings/general`}
+                exact
+                component={GlobalConfig}
+              />
+              <Redirect
+                exact
+                from={`${url}/plugins`}
+                to={`${url}/plugins/installed/`}
+              />
               <Route
                 path={`${url}/plugins/installed`}
                 exact
                 render={() => (
-                  <PluginsOverview baseUrl={`${url}/plugins/installed`} installed={true} />
+                  <PluginsOverview
+                    baseUrl={`${url}/plugins/installed`}
+                    installed={true}
+                  />
                 )}
               />
               <Route
                 path={`${url}/plugins/installed/:page`}
                 exact
                 render={() => (
-                  <PluginsOverview baseUrl={`${url}/plugins/installed`} installed={true} />
+                  <PluginsOverview
+                    baseUrl={`${url}/plugins/installed`}
+                    installed={true}
+                  />
                 )}
               />
               <Route
                 path={`${url}/plugins/available`}
                 exact
                 render={() => (
-                  <PluginsOverview baseUrl={`${url}/plugins/available`} installed={false} />
+                  <PluginsOverview
+                    baseUrl={`${url}/plugins/available`}
+                    installed={false}
+                  />
                 )}
               />
               <Route
                 path={`${url}/plugins/available/:page`}
                 exact
                 render={() => (
-                  <PluginsOverview baseUrl={`${url}/plugins/available`} installed={false} />
+                  <PluginsOverview
+                    baseUrl={`${url}/plugins/available`}
+                    installed={false}
+                  />
                 )}
               />
               <Route
@@ -109,17 +141,13 @@ class Admin extends React.Component<Props> {
               <Route
                 path={`${url}/roles/create`}
                 render={() => (
-                  <CreateRepositoryRole
-                    history={this.props.history}
-                  />
+                  <CreateRepositoryRole history={this.props.history} />
                 )}
               />
               <Route
                 path={`${url}/roles/:page`}
                 exact
-                render={() => (
-                  <RepositoryRoles baseUrl={`${url}/roles`} />
-                )}
+                render={() => <RepositoryRoles baseUrl={`${url}/roles`} />}
               />
               <ExtensionPoint
                 name="admin.route"
@@ -136,24 +164,26 @@ class Admin extends React.Component<Props> {
                   icon="fas fa-info-circle"
                   label={t("admin.menu.informationNavLink")}
                 />
-                {
-                 links.plugins &&
-                <SubNavigation
-                  to={`${url}/plugins/`}
-                  icon="fas fa-puzzle-piece"
-                  label={t("plugins.menu.pluginsNavLink")}
-                >
-                  <NavLink
-                    to={`${url}/plugins/installed/`}
-                    label={t("plugins.menu.installedNavLink")}
-                  />
-                  {/* Activate this again after available plugins page is created */}
-                  {/*<NavLink*/}
-                  {/*  to={`${url}/plugins/available/`}*/}
-                  {/*  label={t("plugins.menu.availableNavLink")}*/}
-                  {/*/>*/}
-                </SubNavigation>
-                }
+                {(availablePluginsLink || installedPluginsLink) && (
+                  <SubNavigation
+                    to={`${url}/plugins/`}
+                    icon="fas fa-puzzle-piece"
+                    label={t("plugins.menu.pluginsNavLink")}
+                  >
+                    {installedPluginsLink && (
+                      <NavLink
+                        to={`${url}/plugins/installed/`}
+                        label={t("plugins.menu.installedNavLink")}
+                      />
+                    )}
+                    {availablePluginsLink && (
+                      <NavLink
+                        to={`${url}/plugins/available/`}
+                        label={t("plugins.menu.availableNavLink")}
+                      />
+                    )}
+                  </SubNavigation>
+                )}
                 <NavLink
                   to={`${url}/roles/`}
                   icon="fas fa-user-shield"
@@ -191,8 +221,12 @@ class Admin extends React.Component<Props> {
 
 const mapStateToProps = (state: any) => {
   const links = getLinks(state);
+  const availablePluginsLink = getAvailablePluginsLink(state);
+  const installedPluginsLink = getInstalledPluginsLink(state);
   return {
-    links
+    links,
+    availablePluginsLink,
+    installedPluginsLink
   };
 };
 
