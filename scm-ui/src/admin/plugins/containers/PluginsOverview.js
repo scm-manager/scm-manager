@@ -18,7 +18,10 @@ import {
   isFetchPluginsPending
 } from "../modules/plugins";
 import PluginsList from "../components/PluginsList";
-import { getPluginsLink } from "../../../modules/indexResource";
+import {
+  getAvailablePluginsLink,
+  getInstalledPluginsLink
+} from "../../../modules/indexResource";
 
 type Props = {
   loading: boolean,
@@ -26,7 +29,8 @@ type Props = {
   collection: PluginCollection,
   baseUrl: string,
   installed: boolean,
-  pluginsLink: string,
+  availablePluginsLink: string,
+  installedPluginsLink: string,
 
   // context objects
   t: string => string,
@@ -37,8 +41,27 @@ type Props = {
 
 class PluginsOverview extends React.Component<Props> {
   componentDidMount() {
-    const { fetchPluginsByLink, pluginsLink } = this.props;
-    fetchPluginsByLink(pluginsLink);
+    const {
+      installed,
+      fetchPluginsByLink,
+      availablePluginsLink,
+      installedPluginsLink
+    } = this.props;
+    fetchPluginsByLink(installed ? installedPluginsLink : availablePluginsLink);
+  }
+
+  componentDidUpdate(prevProps) {
+    const {
+      installed,
+      fetchPluginsByLink,
+      availablePluginsLink,
+      installedPluginsLink
+    } = this.props;
+    if (prevProps.installed !== installed) {
+      fetchPluginsByLink(
+        installed ? installedPluginsLink : availablePluginsLink
+      );
+    }
   }
 
   render() {
@@ -81,13 +104,15 @@ const mapStateToProps = state => {
   const collection = getPluginCollection(state);
   const loading = isFetchPluginsPending(state);
   const error = getFetchPluginsFailure(state);
-  const pluginsLink = getPluginsLink(state);
+  const availablePluginsLink = getAvailablePluginsLink(state);
+  const installedPluginsLink = getInstalledPluginsLink(state);
 
   return {
     collection,
     loading,
     error,
-    pluginsLink
+    availablePluginsLink,
+    installedPluginsLink
   };
 };
 

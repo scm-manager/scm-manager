@@ -116,8 +116,12 @@ export function getUiPluginsLink(state: Object) {
   return getLink(state, "uiPlugins");
 }
 
-export function getPluginsLink(state: Object) {
-  return getLink(state, "plugins");
+export function getAvailablePluginsLink(state: Object) {
+  return getLink(state, "availablePlugins");
+}
+
+export function getInstalledPluginsLink(state: Object) {
+  return getLink(state, "installedPlugins");
 }
 
 export function getMeLink(state: Object) {

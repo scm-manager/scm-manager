@@ -1,16 +1,37 @@
 //@flow
 import React from "react";
+import injectSheet from "react-jss";
 import type { Plugin } from "@scm-manager/ui-types";
 import { CardColumn } from "@scm-manager/ui-components";
 import PluginAvatar from "./PluginAvatar";
 
 type Props = {
-  plugin: Plugin
+  plugin: Plugin,
+
+  // context props
+  classes: any
+};
+
+const styles = {
+  link: {
+    pointerEvents: "all"
+  }
 };
 
 class PluginEntry extends React.Component<Props> {
   createAvatar = (plugin: Plugin) => {
     return <PluginAvatar plugin={plugin} />;
+  };
+
+  createContentRight = (plugin: Plugin) => {
+    const { classes } = this.props;
+    if (plugin._links && plugin._links.install && plugin._links.install.href) {
+      return (
+        <a className={classes.link} href={plugin._links.install.href}>
+          <i className="fas fa-cloud-download-alt fa-2x" />
+        </a>
+      );
+    }
   };
 
   createFooterLeft = (plugin: Plugin) => {
@@ -24,6 +45,7 @@ class PluginEntry extends React.Component<Props> {
   render() {
     const { plugin } = this.props;
     const avatar = this.createAvatar(plugin);
+    const contentRight = this.createContentRight(plugin);
     const footerLeft = this.createFooterLeft(plugin);
     const footerRight = this.createFooterRight(plugin);
 
@@ -34,6 +56,7 @@ class PluginEntry extends React.Component<Props> {
         avatar={avatar}
         title={plugin.name}
         description={plugin.description}
+        contentRight={contentRight}
         footerLeft={footerLeft}
         footerRight={footerRight}
       />
@@ -41,4 +64,4 @@ class PluginEntry extends React.Component<Props> {
   }
 }
 
-export default PluginEntry;
+export default injectSheet(styles)(PluginEntry);
