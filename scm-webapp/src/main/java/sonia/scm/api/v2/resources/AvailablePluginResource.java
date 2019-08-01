@@ -11,6 +11,7 @@ import sonia.scm.plugin.PluginState;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -66,6 +67,7 @@ public class AvailablePluginResource {
   @Path("/{name}/{version}")
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 404, condition = "not found"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(PluginDto.class)
@@ -91,6 +93,7 @@ public class AvailablePluginResource {
    */
   @POST
   @Path("/{name}/{version}/install")
+  @Consumes(VndMediaType.PLUGIN)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")

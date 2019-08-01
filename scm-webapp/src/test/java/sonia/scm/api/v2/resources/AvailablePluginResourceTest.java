@@ -16,15 +16,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginInformation;
-import sonia.scm.plugin.PluginLoader;
+import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginState;
-import sonia.scm.plugin.PluginWrapper;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.Collections;
@@ -33,10 +32,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class InstalledPluginResourceTest {
+class AvailablePluginResourceTest {
 
   private Dispatcher dispatcher;
 
@@ -47,26 +47,24 @@ class InstalledPluginResourceTest {
   Provider<AvailablePluginResource> availablePluginResourceProvider;
 
   @Mock
-  private PluginLoader pluginLoader;
-
-  @Mock
   private PluginDtoCollectionMapper collectionMapper;
 
   @Mock
-  private PluginDtoMapper mapper;
+  private PluginManager pluginManager;
 
   @InjectMocks
-  InstalledPluginResource installedPluginResource;
+  AvailablePluginResource availablePluginResource;
 
   PluginRootResource pluginRootResource;
 
   private final Subject subject = mock(Subject.class);
 
+
   @BeforeEach
   void prepareEnvironment() {
     dispatcher = MockDispatcherFactory.createDispatcher();
     pluginRootResource = new PluginRootResource(installedPluginResourceProvider, availablePluginResourceProvider);
-    when(installedPluginResourceProvider.get()).thenReturn(installedPluginResource);
+    when(availablePluginResourceProvider.get()).thenReturn(availablePluginResource);
     dispatcher.getRegistry().addSingletonResource(pluginRootResource);
   }
 
@@ -85,12 +83,13 @@ class InstalledPluginResourceTest {
     }
 
     @Test
-    void getInstalledPlugins() throws URISyntaxException, UnsupportedEncodingException {
-      PluginWrapper pluginWrapper = new PluginWrapper(null, null, null, null);
-      when(pluginLoader.getInstalledPlugins()).thenReturn(Collections.singletonList(pluginWrapper));
-      when(collectionMapper.map(Collections.singletonList(pluginWrapper))).thenReturn(new MockedResultDto());
+    void getAvailablePlugins() throws URISyntaxException, UnsupportedEncodingException {
+      PluginInformation pluginInformation = new PluginInformation();
+      pluginInformation.setState(PluginState.AVAILABLE);
+      when(pluginManager.getAvailable()).thenReturn(Collections.singletonList(pluginInformation));
+      when(collectionMapper.map(Collections.singletonList(pluginInformation))).thenReturn(new MockedResultDto());
 
-      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/installed");
+      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available");
       request.accept(VndMediaType.PLUGIN_COLLECTION);
       MockHttpResponse response = new MockHttpResponse();
 
@@ -101,20 +100,14 @@ class InstalledPluginResourceTest {
     }
 
     @Test
-    void getInstalledPlugin() throws UnsupportedEncodingException, URISyntaxException {
+    void getAvailablePlugin() throws UnsupportedEncodingException, URISyntaxException {
       PluginInformation pluginInformation = new PluginInformation();
-      pluginInformation.setVersion("2.0.0");
+      pluginInformation.setState(PluginState.AVAILABLE);
       pluginInformation.setName("pluginName");
-      pluginInformation.setState(PluginState.INSTALLED);
-      Plugin plugin = new Plugin(2, pluginInformation, null, null, false, null);
-      PluginWrapper pluginWrapper = new PluginWrapper(plugin, null, null, null);
-      when(pluginLoader.getInstalledPlugins()).thenReturn(Collections.singletonList(pluginWrapper));
+      pluginInformation.setVersion("2.0.0");
+      when(pluginManager.getAvailable()).thenReturn(Collections.singletonList(pluginInformation));
 
-      PluginDto pluginDto = new PluginDto();
-      pluginDto.setName("pluginName");
-      when(mapper.map(pluginWrapper)).thenReturn(pluginDto);
-
-      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/installed/pluginName");
+      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available/pluginName/2.0.0");
       request.accept(VndMediaType.PLUGIN);
       MockHttpResponse response = new MockHttpResponse();
 
@@ -123,14 +116,26 @@ class InstalledPluginResourceTest {
       assertThat(HttpServletResponse.SC_OK).isEqualTo(response.getStatus());
       assertThat(response.getContentAsString()).contains("\"name\":\"pluginName\"");
     }
+
+    @Test
+    void installPlugin() throws URISyntaxException {
+      MockHttpRequest request = MockHttpRequest.post("/v2/plugins/available/pluginName/2.0.0/install");
+      request.accept(VndMediaType.PLUGIN);
+      MockHttpResponse response = new MockHttpResponse();
+
+      dispatcher.invoke(request, response);
+
+      verify(pluginManager).install("pluginName:2.0.0");
+      assertThat(HttpServletResponse.SC_OK).isEqualTo(response.getStatus());
+    }
   }
 
   @Nested
   class WithoutAuthorization {
 
     @Test
-    void shouldNotGetInstalledPluginsIfMissingPermission() throws URISyntaxException {
-      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/installed");
+    void shouldNotGetAvailablePluginsIfMissingPermission() throws URISyntaxException {
+      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available");
       request.accept(VndMediaType.PLUGIN_COLLECTION);
       MockHttpResponse response = new MockHttpResponse();
 
@@ -138,9 +143,18 @@ class InstalledPluginResourceTest {
     }
 
     @Test
-    void shouldNotGetInstalledPluginIfMissingPermission() throws URISyntaxException {
-      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/installed/pluginName");
-//      request.accept(VndMediaType.PLUGIN);
+    void shouldNotGetAvailablePluginIfMissingPermission() throws URISyntaxException {
+      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available/pluginName/2.0.0");
+      request.accept(VndMediaType.PLUGIN);
+      MockHttpResponse response = new MockHttpResponse();
+
+      assertThrows(UnhandledException.class, () -> dispatcher.invoke(request, response));
+    }
+
+    @Test
+    void shouldNotInstallPluginIfMissingPermission() throws URISyntaxException {
+      MockHttpRequest request = MockHttpRequest.post("/v2/plugins/available/pluginName/2.0.0/install");
+      request.accept(VndMediaType.PLUGIN);
       MockHttpResponse response = new MockHttpResponse();
 
       assertThrows(UnhandledException.class, () -> dispatcher.invoke(request, response));
