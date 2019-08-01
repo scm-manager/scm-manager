@@ -614,23 +614,15 @@ public class DefaultPluginManager implements PluginManager
             center.setPlugins(pluginInformationSet);
             preparePlugins(center);
             cache.put(PluginCenter.class.getName(), center);
-
-            /*
-             * if (pluginHandler == null)
-             * {
-             * pluginHandler = new AetherPluginHandler(this,
-             *   SCMContext.getContext(), configuration,
-             *   advancedPluginConfiguration);
-             * }
-             *
-             * pluginHandler.setPluginRepositories(center.getRepositories());
-             */
           }
           catch (IOException ex)
           {
             logger.error("could not load plugins from plugin center", ex);
           }
         }
+      }
+      if(center == null) {
+        center = new PluginCenter();
       }
     }
 
