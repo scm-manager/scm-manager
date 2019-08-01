@@ -128,6 +128,11 @@ class InstalledPluginResourceTest {
   @Nested
   class WithoutAuthorization {
 
+    @BeforeEach
+    void unbindSubject() {
+      ThreadContext.unbindSubject();
+    }
+
     @Test
     void shouldNotGetInstalledPluginsIfMissingPermission() throws URISyntaxException {
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/installed");
