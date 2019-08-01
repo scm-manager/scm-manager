@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.NotFoundException;
+import sonia.scm.cache.CacheManager;
 import sonia.scm.group.ExternalGroupNames;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupDAO;
@@ -65,7 +66,7 @@ public final class SyncingRealmHelper {
   private final AdministrationContext ctx;
   private final UserManager userManager;
   private final GroupManager groupManager;
-  private final GroupCollector groupCollector;
+  private final CacheManager cacheManager;
 
   /**
    * Constructs a new SyncingRealmHelper.
@@ -76,11 +77,11 @@ public final class SyncingRealmHelper {
    * @param groupDAO group dao
    */
   @Inject
-  public SyncingRealmHelper(AdministrationContext ctx, UserManager userManager, GroupManager groupManager, GroupDAO groupDAO) {
+  public SyncingRealmHelper(AdministrationContext ctx, UserManager userManager, GroupManager groupManager, GroupDAO groupDAO, CacheManager cacheManager) {
     this.ctx = ctx;
     this.userManager = userManager;
     this.groupManager = groupManager;
-    this.groupCollector = new GroupCollector(groupDAO);
+    this.cacheManager = cacheManager;
   }
 
   /**
@@ -199,7 +200,6 @@ public final class SyncingRealmHelper {
 
     collection.add(user.getId(), realm);
     collection.add(user, realm);
-    collection.add(groupCollector.collect(user.getId(), groups), realm);
     collection.add(new ExternalGroupNames(externalGroups), realm);
 
     return new SimpleAuthenticationInfo(collection, user.getPassword());

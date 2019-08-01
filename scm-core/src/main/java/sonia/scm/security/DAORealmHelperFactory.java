@@ -30,6 +30,7 @@
  */
 package sonia.scm.security;
 
+import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupDAO;
 import sonia.scm.user.UserDAO;
 
@@ -45,20 +46,23 @@ public final class DAORealmHelperFactory {
   
   private final LoginAttemptHandler loginAttemptHandler;
   private final UserDAO userDAO; 
-  private final GroupCollector groupCollector;
+  private final CacheManager cacheManager;
+  private final GroupResolver groupResolver;
 
   /**
    * Constructs a new instance.
-   * 
    * @param loginAttemptHandler login attempt handler
    * @param userDAO user dao
    * @param groupDAO group dao
+   * @param cacheManager
+   * @param groupResolver
    */
   @Inject
-  public DAORealmHelperFactory(LoginAttemptHandler loginAttemptHandler, UserDAO userDAO, GroupDAO groupDAO) {
+  public DAORealmHelperFactory(LoginAttemptHandler loginAttemptHandler, UserDAO userDAO, GroupDAO groupDAO, CacheManager cacheManager, GroupResolver groupResolver) {
     this.loginAttemptHandler = loginAttemptHandler;
     this.userDAO = userDAO;
-    this.groupCollector = new GroupCollector(groupDAO);
+    this.groupResolver = groupResolver;
+    this.cacheManager = cacheManager;
   }
   
   /**
@@ -69,7 +73,7 @@ public final class DAORealmHelperFactory {
    * @return new {@link DAORealmHelper} instance.
    */
   public DAORealmHelper create(String realm) {
-    return new DAORealmHelper(loginAttemptHandler, userDAO, groupCollector, realm);
+    return new DAORealmHelper(loginAttemptHandler, userDAO, realm);
   }
   
 }

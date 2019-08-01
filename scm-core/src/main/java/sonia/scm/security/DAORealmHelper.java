@@ -45,7 +45,6 @@ import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.group.GroupDAO;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 
@@ -71,8 +70,6 @@ public final class DAORealmHelper {
   
   private final UserDAO userDAO;
   
-  private final GroupCollector groupCollector;
-
   private final String realm;
   
   //~--- constructors ---------------------------------------------------------
@@ -83,14 +80,12 @@ public final class DAORealmHelper {
    *
    * @param loginAttemptHandler login attempt handler for wrapping credentials matcher
    * @param userDAO user dao
-   * @param groupCollector collect groups for a principal
    * @param realm name of realm
    */
-  public DAORealmHelper(LoginAttemptHandler loginAttemptHandler, UserDAO userDAO, GroupCollector groupCollector, String realm) {
+  public DAORealmHelper(LoginAttemptHandler loginAttemptHandler, UserDAO userDAO, String realm) {
     this.loginAttemptHandler = loginAttemptHandler;
     this.realm = realm;
     this.userDAO = userDAO;
-    this.groupCollector = groupCollector;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -120,7 +115,7 @@ public final class DAORealmHelper {
     UsernamePasswordToken upt = (UsernamePasswordToken) token;
     String principal = upt.getUsername();
 
-    return getAuthenticationInfo(principal, null, null, Collections.emptySet());
+    return getAuthenticationInfo(principal, null, null);
   }
 
   /**
@@ -135,7 +130,7 @@ public final class DAORealmHelper {
   }
 
 
-  private AuthenticationInfo getAuthenticationInfo(String principal, String credentials, Scope scope, Iterable<String> groups) {
+  private AuthenticationInfo getAuthenticationInfo(String principal, String credentials, Scope scope) {
     checkArgument(!Strings.isNullOrEmpty(principal), "username is required");
 
     LOG.debug("try to authenticate {}", principal);
@@ -153,7 +148,6 @@ public final class DAORealmHelper {
 
     collection.add(principal, realm);
     collection.add(user, realm);
-    collection.add(groupCollector.collect(principal, groups), realm);
     collection.add(MoreObjects.firstNonNull(scope, Scope.empty()), realm);
 
     String creds = credentials;
@@ -207,17 +201,17 @@ public final class DAORealmHelper {
       return this;
     }
 
-    /**
-     * With groups adds extra groups, besides those which come from the {@link GroupDAO}, to the authentication info.
-     *
-     * @param groups extra groups
-     *
-     * @return {@code this}
-     */
-    public AuthenticationInfoBuilder withGroups(Iterable<String> groups) {
-      this.groups = groups;
-      return this;
-    }
+//    /**
+//     * With groups adds extra groups, besides those which come from the {@link GroupDAO}, to the authentication info.
+//     *
+//     * @param groups extra groups
+//     *
+//     * @return {@code this}
+//     */
+//    public AuthenticationInfoBuilder withGroups(Iterable<String> groups) {
+//      this.groups = groups;
+//      return this;
+//    }
 
     /**
      * Build creates the authentication info from the given information.
@@ -225,7 +219,7 @@ public final class DAORealmHelper {
      * @return authentication info
      */
     public AuthenticationInfo build() {
-      return getAuthenticationInfo(principal, credentials, scope, groups);
+      return getAuthenticationInfo(principal, credentials, scope);
     }
 
   }
