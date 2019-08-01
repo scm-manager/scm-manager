@@ -133,6 +133,11 @@ class AvailablePluginResourceTest {
   @Nested
   class WithoutAuthorization {
 
+    @BeforeEach
+    void unbindSubject() {
+      ThreadContext.unbindSubject();
+    }
+
     @Test
     void shouldNotGetAvailablePluginsIfMissingPermission() throws URISyntaxException {
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available");
@@ -153,6 +158,7 @@ class AvailablePluginResourceTest {
 
     @Test
     void shouldNotInstallPluginIfMissingPermission() throws URISyntaxException {
+      ThreadContext.unbindSubject();
       MockHttpRequest request = MockHttpRequest.post("/v2/plugins/available/pluginName/2.0.0/install");
       request.accept(VndMediaType.PLUGIN);
       MockHttpResponse response = new MockHttpResponse();

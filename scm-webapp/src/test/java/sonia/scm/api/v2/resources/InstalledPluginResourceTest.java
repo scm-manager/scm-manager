@@ -140,7 +140,7 @@ class InstalledPluginResourceTest {
     @Test
     void shouldNotGetInstalledPluginIfMissingPermission() throws URISyntaxException {
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/installed/pluginName");
-//      request.accept(VndMediaType.PLUGIN);
+      request.accept(VndMediaType.PLUGIN);
       MockHttpResponse response = new MockHttpResponse();
 
       assertThrows(UnhandledException.class, () -> dispatcher.invoke(request, response));
