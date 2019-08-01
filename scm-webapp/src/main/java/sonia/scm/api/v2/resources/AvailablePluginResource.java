@@ -29,11 +29,13 @@ public class AvailablePluginResource {
 
   private final PluginDtoCollectionMapper collectionMapper;
   private final PluginManager pluginManager;
+  private final PluginDtoMapper mapper;
 
   @Inject
-  public AvailablePluginResource(PluginDtoCollectionMapper collectionMapper, PluginManager pluginManager) {
+  public AvailablePluginResource(PluginDtoCollectionMapper collectionMapper, PluginManager pluginManager, PluginDtoMapper mapper) {
     this.collectionMapper = collectionMapper;
     this.pluginManager = pluginManager;
+    this.mapper = mapper;
   }
 
   /**
@@ -79,7 +81,7 @@ public class AvailablePluginResource {
       .filter(p -> p.getId().equals(name + ":" + version))
       .findFirst();
     if (plugin.isPresent()) {
-      return Response.ok(plugin.get()).build();
+      return Response.ok(mapper.map(plugin.get())).build();
     } else {
       throw notFound(entity(Plugin.class, name));
     }

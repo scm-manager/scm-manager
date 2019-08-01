@@ -52,6 +52,9 @@ class AvailablePluginResourceTest {
   @Mock
   private PluginManager pluginManager;
 
+  @Mock
+  private PluginDtoMapper mapper;
+
   @InjectMocks
   AvailablePluginResource availablePluginResource;
 
@@ -106,6 +109,10 @@ class AvailablePluginResourceTest {
       pluginInformation.setName("pluginName");
       pluginInformation.setVersion("2.0.0");
       when(pluginManager.getAvailable()).thenReturn(Collections.singletonList(pluginInformation));
+
+      PluginDto pluginDto = new PluginDto();
+      pluginDto.setName("pluginName");
+      when(mapper.map(pluginInformation)).thenReturn(pluginDto);
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available/pluginName/2.0.0");
       request.accept(VndMediaType.PLUGIN);

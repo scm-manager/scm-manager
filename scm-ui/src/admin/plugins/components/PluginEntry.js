@@ -27,9 +27,9 @@ class PluginEntry extends React.Component<Props> {
     const { classes } = this.props;
     if (plugin._links && plugin._links.install && plugin._links.install.href) {
       return (
-        <a className={classes.link} href={plugin._links.install.href}>
-          <i className="fas fa-cloud-download-alt fa-2x" />
-        </a>
+        <div className={classes.link} onClick={() => console.log(plugin._links.install.href) /*TODO trigger plugin installation*/}>
+          <i className="fas fa-cloud-download-alt fa-2x has-text-info" />
+        </div>
       );
     }
   };
