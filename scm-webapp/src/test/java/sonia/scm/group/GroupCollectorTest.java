@@ -1,6 +1,5 @@
-package sonia.scm.security;
+package sonia.scm.group;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -9,11 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.group.Group;
-import sonia.scm.group.GroupDAO;
-import sonia.scm.group.GroupNames;
+import sonia.scm.security.GroupCollector;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +26,7 @@ class GroupCollectorTest {
 
   @Test
   void shouldAlwaysReturnAuthenticatedGroup() {
-    GroupNames groupNames = collector.collect("trillian", Collections.emptySet());
+    Iterable<String> groupNames = collector.collect("trillian");
     assertThat(groupNames).containsOnly("_authenticated");
   }
 
@@ -49,13 +45,13 @@ class GroupCollectorTest {
 
     @Test
     void shouldReturnGroupsFromDao() {
-      GroupNames groupNames = collector.collect("trillian", Collections.emptySet());
+      Iterable<String> groupNames = collector.collect("trillian");
       assertThat(groupNames).contains("_authenticated", "heartOfGold", "fjordsOfAfrican");
     }
 
     @Test
     void shouldCombineGivenWithDao() {
-      GroupNames groupNames = collector.collect("trillian", ImmutableList.of("awesome", "incredible"));
+      Iterable<String> groupNames = collector.collect("trillian");
       assertThat(groupNames).contains("_authenticated", "heartOfGold", "fjordsOfAfrican", "awesome", "incredible");
     }
 
