@@ -32,24 +32,14 @@ import com.google.inject.Inject;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.subject.SimplePrincipalCollection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.NotFoundException;
-import sonia.scm.cache.CacheManager;
-import sonia.scm.group.ExternalGroupNames;
 import sonia.scm.group.Group;
-import sonia.scm.group.GroupDAO;
 import sonia.scm.group.GroupManager;
 import sonia.scm.plugin.Extension;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.security.AdministrationContext;
-
-import java.util.Collection;
-import java.util.Collections;
-
-import static java.util.Arrays.asList;
 
 /**
  * Helper class for syncing realms. The class should simplify the creation of realms, which are syncing authenticated
@@ -61,12 +51,9 @@ import static java.util.Arrays.asList;
 @Extension
 public final class SyncingRealmHelper {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SyncingRealmHelper.class);
-
   private final AdministrationContext ctx;
   private final UserManager userManager;
   private final GroupManager groupManager;
-  private final CacheManager cacheManager;
 
   /**
    * Constructs a new SyncingRealmHelper.
@@ -74,115 +61,13 @@ public final class SyncingRealmHelper {
    * @param ctx administration context
    * @param userManager user manager
    * @param groupManager group manager
-   * @param groupDAO group dao
    */
   @Inject
-  public SyncingRealmHelper(AdministrationContext ctx, UserManager userManager, GroupManager groupManager, GroupDAO groupDAO, CacheManager cacheManager) {
+  public SyncingRealmHelper(AdministrationContext ctx, UserManager userManager, GroupManager groupManager) {
     this.ctx = ctx;
     this.userManager = userManager;
     this.groupManager = groupManager;
-    this.cacheManager = cacheManager;
   }
-
-  /**
-   * Create {@link AuthenticationInfo} from user and groups.
-   */
-  public AuthenticationInfoBuilder.ForRealm authenticationInfo() {
-    return new AuthenticationInfoBuilder().new ForRealm();
-  }
-
-  public class AuthenticationInfoBuilder {
-    private String realm;
-    private User user;
-    private Collection<String> groups = Collections.emptySet();
-    private Collection<String> externalGroups = Collections.emptySet();
-
-    private AuthenticationInfo build() {
-      return SyncingRealmHelper.this.createAuthenticationInfo(realm, user, groups, externalGroups);
-    }
-
-    public class ForRealm {
-      private ForRealm() {
-      }
-
-      /**
-       * Sets the realm.
-       * @param realm name of the realm
-       */
-      public ForUser forRealm(String realm) {
-        AuthenticationInfoBuilder.this.realm = realm;
-        return AuthenticationInfoBuilder.this.new ForUser();
-      }
-    }
-
-    public class ForUser {
-      private ForUser() {
-      }
-
-      /**
-       * Sets the user.
-       * @param user authenticated user
-       */
-      public AuthenticationInfoBuilder.WithGroups andUser(User user) {
-        AuthenticationInfoBuilder.this.user = user;
-        return AuthenticationInfoBuilder.this.new WithGroups();
-      }
-    }
-
-    public class WithGroups {
-      private WithGroups() {
-      }
-
-      /**
-       * Set the internal groups for the user.
-       * @param groups groups of the authenticated user
-       * @return builder step for groups
-       */
-      public WithGroups withGroups(String... groups) {
-        return withGroups(asList(groups));
-      }
-
-      /**
-       * Set the internal groups for the user.
-       * @param groups groups of the authenticated user
-       * @return builder step for groups
-       */
-      public WithGroups withGroups(Collection<String> groups) {
-        AuthenticationInfoBuilder.this.groups = groups;
-        return this;
-      }
-
-      /**
-       * Set the external groups for the user.
-       * @param externalGroups external groups of the authenticated user
-       * @return builder step for groups
-       */
-      public WithGroups withExternalGroups(String... externalGroups) {
-        return withExternalGroups(asList(externalGroups));
-      }
-
-      /**
-       * Set the external groups for the user.
-       * @param externalGroups external groups of the authenticated user
-       * @return builder step for groups
-       */
-      public WithGroups withExternalGroups(Collection<String> externalGroups) {
-        AuthenticationInfoBuilder.this.externalGroups = externalGroups;
-        return this;
-      }
-
-      /**
-       * Builds the {@link AuthenticationInfo} from the given options.
-       *
-       * @return complete autentication info
-       */
-      public AuthenticationInfo build() {
-        return AuthenticationInfoBuilder.this.build();
-      }
-    }
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Create {@link AuthenticationInfo} from user and groups.
@@ -190,17 +75,14 @@ public final class SyncingRealmHelper {
    *
    * @param realm name of the realm
    * @param user authenticated user
-   * @param groups groups of the authenticated user
    *
    * @return authentication info
    */
-  private AuthenticationInfo createAuthenticationInfo(String realm, User user,
-    Collection<String> groups, Collection<String> externalGroups) {
+  public AuthenticationInfo createAuthenticationInfo(String realm, User user) {
     SimplePrincipalCollection collection = new SimplePrincipalCollection();
 
     collection.add(user.getId(), realm);
     collection.add(user, realm);
-    collection.add(new ExternalGroupNames(externalGroups), realm);
 
     return new SimpleAuthenticationInfo(collection, user.getPassword());
   }

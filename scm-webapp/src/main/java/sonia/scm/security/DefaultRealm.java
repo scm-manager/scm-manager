@@ -34,7 +34,6 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
-
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -45,20 +44,15 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-
-import org.apache.shiro.subject.SimplePrincipalCollection;
-import sonia.scm.group.GroupNames;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.Extension;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Default authorizing realm.
@@ -149,7 +143,7 @@ public class DefaultRealm extends AuthorizingRealm
       LOG.trace("principal does not contain scope information, returning all permissions");
       log(principals, info, null);
     }
-    
+
     return info;
   }
 
@@ -180,8 +174,6 @@ public class DefaultRealm extends AuthorizingRealm
     StringBuilder buffer = new StringBuilder("authorization summary: ");
     
     buffer.append(SEPARATOR).append("username   : ").append(collection.getPrimaryPrincipal());
-    buffer.append(SEPARATOR).append("groups     : ");
-    append(buffer, collection.oneByType(GroupNames.class));
     buffer.append(SEPARATOR).append("roles      : ");
     append(buffer, original.getRoles()); 
     buffer.append(SEPARATOR).append("scope      : ");

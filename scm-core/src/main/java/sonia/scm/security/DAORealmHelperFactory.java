@@ -31,7 +31,6 @@
 package sonia.scm.security;
 
 import sonia.scm.cache.CacheManager;
-import sonia.scm.group.GroupDAO;
 import sonia.scm.user.UserDAO;
 
 import javax.inject.Inject;
@@ -47,21 +46,17 @@ public final class DAORealmHelperFactory {
   private final LoginAttemptHandler loginAttemptHandler;
   private final UserDAO userDAO; 
   private final CacheManager cacheManager;
-  private final GroupResolver groupResolver;
 
   /**
    * Constructs a new instance.
    * @param loginAttemptHandler login attempt handler
    * @param userDAO user dao
-   * @param groupDAO group dao
    * @param cacheManager
-   * @param groupResolver
    */
   @Inject
-  public DAORealmHelperFactory(LoginAttemptHandler loginAttemptHandler, UserDAO userDAO, GroupDAO groupDAO, CacheManager cacheManager, GroupResolver groupResolver) {
+  public DAORealmHelperFactory(LoginAttemptHandler loginAttemptHandler, UserDAO userDAO, CacheManager cacheManager) {
     this.loginAttemptHandler = loginAttemptHandler;
     this.userDAO = userDAO;
-    this.groupResolver = groupResolver;
     this.cacheManager = cacheManager;
   }
   

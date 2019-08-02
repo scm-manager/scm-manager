@@ -37,17 +37,13 @@ package sonia.scm.security;
 
 import com.google.common.base.Throwables;
 import org.apache.shiro.authc.AuthenticationInfo;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.AlreadyExistsException;
-import sonia.scm.cache.CacheManager;
-import sonia.scm.group.ExternalGroupNames;
 import sonia.scm.group.Group;
-import sonia.scm.group.GroupDAO;
 import sonia.scm.group.GroupManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -81,12 +77,6 @@ public class SyncingRealmHelperTest {
   @Mock
   private UserManager userManager;
 
-  @Mock
-  private GroupDAO groupDAO;
-
-  @Mock
-  CacheManager cacheManager;
-
   private SyncingRealmHelper helper;
 
   /**
@@ -112,7 +102,7 @@ public class SyncingRealmHelperTest {
       }
     };
 
-    helper = new SyncingRealmHelper(ctx, userManager, groupManager, groupDAO, cacheManager);
+    helper = new SyncingRealmHelper(ctx, userManager, groupManager);
   }
 
   /**
@@ -189,27 +179,11 @@ public class SyncingRealmHelperTest {
     verify(userManager, times(1)).modify(user);
   }
 
-  @Test
-  public void builderShouldSetExternalGroups() {
-    AuthenticationInfo authenticationInfo = helper
-      .authenticationInfo()
-      .forRealm("unit-test")
-      .andUser(new User("ziltoid"))
-      .withExternalGroups("external")
-      .build();
-
-    ExternalGroupNames groupNames = authenticationInfo.getPrincipals().oneByType(ExternalGroupNames.class);
-    Assertions.assertThat(groupNames.getCollection()).containsOnly("external");
-  }
 
   @Test
   public void builderShouldSetValues() {
     User user = new User("ziltoid");
-    AuthenticationInfo authInfo = helper
-      .authenticationInfo()
-      .forRealm("unit-test")
-      .andUser(user)
-      .build();
+    AuthenticationInfo authInfo = helper.createAuthenticationInfo("unit-test", user);
 
     assertNotNull(authInfo);
     assertEquals("ziltoid", authInfo.getPrincipals().getPrimaryPrincipal());
