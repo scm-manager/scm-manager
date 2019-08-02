@@ -48,6 +48,8 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserEvent;
 import sonia.scm.user.UserModificationEvent;
 
+import javax.inject.Singleton;
+
 /**
  * Receives all kinds of events, which affects authorization relevant data and fires an
  * {@link AuthorizationChangedEvent} if authorization data has changed.
@@ -55,6 +57,7 @@ import sonia.scm.user.UserModificationEvent;
  * @author Sebastian Sdorra
  * @since 1.52
  */
+@Singleton
 @EagerSingleton
 public class AuthorizationChangedEventProducer {
 
