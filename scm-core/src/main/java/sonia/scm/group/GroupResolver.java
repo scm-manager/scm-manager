@@ -1,9 +1,10 @@
-package sonia.scm.security;
+package sonia.scm.group;
 
 import sonia.scm.plugin.ExtensionPoint;
 
+import java.util.Set;
+
 @ExtensionPoint
 public interface GroupResolver {
-
-  Iterable<String> resolveGroups(String principal);
+  Set<String> resolve(String principal);
 }
