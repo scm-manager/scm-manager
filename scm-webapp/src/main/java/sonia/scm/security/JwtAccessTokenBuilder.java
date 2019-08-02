@@ -40,11 +40,9 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.group.ExternalGroupNames;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -139,12 +137,6 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
     return this;
   }
 
-  @Override
-  public JwtAccessTokenBuilder groups(String... groups) {
-    Collections.addAll(this.groups, groups);
-    return this;
-  }
-
   JwtAccessTokenBuilder refreshExpiration(Instant refreshExpiration) {
     this.refreshExpiration = refreshExpiration;
     this.refreshableFor = 0;
@@ -204,16 +196,6 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
     if ( issuer != null ) {
       claims.setIssuer(issuer);
-    }
-
-    if (!groups.isEmpty()) {
-      claims.put(JwtAccessToken.GROUPS_CLAIM_KEY, groups);
-    } else {
-      Subject currentSubject = SecurityUtils.getSubject();
-      ExternalGroupNames externalGroupNames = currentSubject.getPrincipals().oneByType(ExternalGroupNames.class);
-      if (externalGroupNames != null) {
-        claims.put(JwtAccessToken.GROUPS_CLAIM_KEY, externalGroupNames.getCollection().toArray(new String[]{}));
-      }
     }
 
     // sign token and create compact version

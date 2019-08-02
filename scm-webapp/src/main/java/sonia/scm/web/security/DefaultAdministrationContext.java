@@ -38,7 +38,6 @@ package sonia.scm.web.security;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
@@ -46,21 +45,17 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.SCMContext;
-import sonia.scm.group.GroupNames;
 import sonia.scm.security.Role;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.xml.bind.JAXB;
 import java.net.URL;
 
-import javax.xml.bind.JAXB;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -161,7 +156,6 @@ public class DefaultAdministrationContext implements AdministrationContext
 
     collection.add(adminUser.getId(), REALM);
     collection.add(adminUser, REALM);
-    collection.add(new GroupNames(), REALM);
     collection.add(AdministrationContextMarker.MARKER, REALM);
 
     return collection;

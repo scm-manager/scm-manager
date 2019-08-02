@@ -1,18 +1,16 @@
 package sonia.scm.api.v2.resources;
 
-import com.google.common.collect.ImmutableList;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
-import sonia.scm.group.GroupNames;
+import sonia.scm.group.GroupCollector;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.UserPermissions;
 
 import javax.inject.Inject;
-import java.util.Collections;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
@@ -22,11 +20,13 @@ public class MeDtoFactory extends HalAppenderMapper {
 
   private final ResourceLinks resourceLinks;
   private final UserManager userManager;
+  private final GroupCollector groupCollector;
 
   @Inject
-  public MeDtoFactory(ResourceLinks resourceLinks, UserManager userManager) {
+  public MeDtoFactory(ResourceLinks resourceLinks, UserManager userManager, GroupCollector groupCollector) {
     this.resourceLinks = resourceLinks;
     this.userManager = userManager;
+    this.groupCollector = groupCollector;
   }
 
   public MeDto create() {
@@ -35,16 +35,12 @@ public class MeDtoFactory extends HalAppenderMapper {
 
     MeDto dto = createDto(user);
     mapUserProperties(user, dto);
-    mapGroups(principals, dto);
+    mapGroups(user, dto);
     return dto;
   }
 
-  private void mapGroups(PrincipalCollection principals, MeDto dto) {
-    Iterable<String> groups = principals.oneByType(GroupNames.class);
-    if (groups == null) {
-      groups = Collections.emptySet();
-    }
-    dto.setGroups(ImmutableList.copyOf(groups));
+  private void mapGroups(User user, MeDto dto) {
+    dto.setGroups(groupCollector.collect(user.getName()));
   }
 
   private void mapUserProperties(User user, MeDto dto) {

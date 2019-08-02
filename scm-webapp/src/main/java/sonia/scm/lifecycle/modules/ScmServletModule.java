@@ -50,8 +50,10 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.group.DefaultGroupCollector;
 import sonia.scm.group.DefaultGroupDisplayManager;
 import sonia.scm.group.DefaultGroupManager;
+import sonia.scm.group.GroupCollector;
 import sonia.scm.group.GroupDAO;
 import sonia.scm.group.GroupDisplayManager;
 import sonia.scm.group.GroupManager;
@@ -195,7 +197,7 @@ class ScmServletModule extends ServletModule {
     bindDecorated(GroupManager.class, DefaultGroupManager.class,
       GroupManagerProvider.class);
     bind(GroupDisplayManager.class, DefaultGroupDisplayManager.class);
-
+    bind(GroupCollector.class, DefaultGroupCollector.class);
     bind(CGIExecutorFactory.class, DefaultCGIExecutorFactory.class);
 
     // bind sslcontext provider

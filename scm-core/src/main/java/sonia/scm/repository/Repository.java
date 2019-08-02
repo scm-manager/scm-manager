@@ -82,7 +82,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   private String namespace;
   private String name;
   @XmlElement(name = "permission")
-  private final Set<RepositoryPermission> permissions = new HashSet<>();
+  private Set<RepositoryPermission> permissions = new HashSet<>();
   @XmlElement(name = "public")
   private boolean publicReadable = false;
   private boolean archived = false;
@@ -331,6 +331,8 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
 
     try {
       repository = (Repository) super.clone();
+      // fix permission reference on clone
+      repository.permissions = new HashSet<>(permissions);
     } catch (CloneNotSupportedException ex) {
       throw new RuntimeException(ex);
     }

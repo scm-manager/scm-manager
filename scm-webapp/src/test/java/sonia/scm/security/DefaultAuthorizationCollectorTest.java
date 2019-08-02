@@ -33,6 +33,7 @@ package sonia.scm.security;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -49,7 +50,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
-import sonia.scm.group.GroupNames;
+import sonia.scm.group.GroupCollector;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryPermission;
@@ -57,8 +58,6 @@ import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
-
-import java.util.Collections;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -96,6 +95,9 @@ public class DefaultAuthorizationCollectorTest {
   @Mock
   private RepositoryPermissionProvider repositoryPermissionProvider;
 
+  @Mock
+  private GroupCollector groupCollector;
+
   private DefaultAuthorizationCollector collector;
 
   @Rule
@@ -107,7 +109,7 @@ public class DefaultAuthorizationCollectorTest {
   @Before
   public void setUp(){
     when(cacheManager.getCache(Mockito.any(String.class))).thenReturn(cache);
-    collector = new DefaultAuthorizationCollector(cacheManager, repositoryDAO, securitySystem, repositoryPermissionProvider);
+    collector = new DefaultAuthorizationCollector(cacheManager, repositoryDAO, securitySystem, repositoryPermissionProvider, groupCollector);
   }
 
   /**
@@ -290,9 +292,13 @@ public class DefaultAuthorizationCollectorTest {
     SimplePrincipalCollection spc = new SimplePrincipalCollection();
     spc.add(user.getName(), "unit");
     spc.add(user, "unit");
-    spc.add(new GroupNames(group, groups), "unit");
     Subject subject = new Subject.Builder().authenticated(true).principals(spc).buildSubject();
     shiro.setSubject(subject);
+
+    ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+    builder.add(group);
+    builder.add(groups);
+    when(groupCollector.collect(user.getName())).thenReturn(builder.build());
   }
 
   /**

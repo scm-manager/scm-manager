@@ -1,9 +1,9 @@
 package sonia.scm.api.v2.resources;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import sonia.scm.group.GroupNames;
+import sonia.scm.group.GroupCollector;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.UserTestData;
@@ -20,7 +20,6 @@ import sonia.scm.user.UserTestData;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -34,6 +33,9 @@ class MeDtoFactoryTest {
   private UserManager userManager;
 
   @Mock
+  private GroupCollector groupCollector;
+
+  @Mock
   private Subject subject;
 
   private MeDtoFactory meDtoFactory;
@@ -42,7 +44,7 @@ class MeDtoFactoryTest {
   void setUpContext() {
     ThreadContext.bind(subject);
     ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
-    meDtoFactory = new MeDtoFactory(resourceLinks, userManager);
+    meDtoFactory = new MeDtoFactory(resourceLinks, userManager, groupCollector);
   }
 
   @AfterEach
@@ -69,24 +71,16 @@ class MeDtoFactoryTest {
 
   @Test
   void shouldCreateMeDtoWithGroups() {
-    prepareSubject(UserTestData.createTrillian(), "HeartOfGold", "Puzzle42");
+    when(groupCollector.collect("trillian")).thenReturn(ImmutableSet.of("HeartOfGold", "Puzzle42"));
+    prepareSubject(UserTestData.createTrillian());
     MeDto dto = meDtoFactory.create();
     assertThat(dto.getGroups()).containsOnly("HeartOfGold", "Puzzle42");
   }
 
-  private void prepareSubject(User user, String... groups) {
+  private void prepareSubject(User user) {
     PrincipalCollection collection = mock(PrincipalCollection.class);
     when(subject.getPrincipals()).thenReturn(collection);
-    when(collection.oneByType(any(Class.class))).then(ic -> {
-      Class<?> type = ic.getArgument(0);
-      if (type.isAssignableFrom(User.class)) {
-        return user;
-      } else if (type.isAssignableFrom(GroupNames.class)) {
-        return new GroupNames(Lists.newArrayList(groups));
-      } else {
-        return null;
-      }
-    });
+    when(collection.oneByType(User.class)).thenReturn(user);
   }
 
   @Test
