@@ -97,6 +97,9 @@ public class DefaultRealm extends AuthorizingRealm
     matcher.setPasswordService(service);
     setCredentialsMatcher(helper.wrapCredentialsMatcher(matcher));
     setAuthenticationTokenClass(UsernamePasswordToken.class);
+
+    // we cache in the AuthorizationCollector
+    setCachingEnabled(false);
   }
 
   //~--- methods --------------------------------------------------------------
