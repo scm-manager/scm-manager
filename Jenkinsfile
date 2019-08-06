@@ -70,8 +70,8 @@ node('docker') {
             image.push(dockerImageTag)
             image.push('latest')
             if (params.dockerTag) {
-              image.push(dockerTag)
-              image.push("2.0.0-${commitHash.substring(0,7)}-dev-${dockerTag}")
+              image.push(params.dockerTag)
+              image.push("2.0.0-${commitHash.substring(0,7)}-dev-${params.dockerTag}")
             }
           }
         }
