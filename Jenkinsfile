@@ -13,6 +13,9 @@ node('docker') {
     // Keep only the last 10 build to preserve space
     buildDiscarder(logRotator(numToKeepStr: '10')),
     disableConcurrentBuilds()
+    parameters([
+        string(name: 'dockerTag', trim: true, description: 'Extra Docker Tag for cloudogu/scm-manager image')
+    ])
   ])
 
   timeout(activity: true, time: 30, unit: 'MINUTES') {
@@ -66,6 +69,9 @@ node('docker') {
           docker.withRegistry('', 'hub.docker.com-cesmarvin') {
             image.push(dockerImageTag)
             image.push('latest')
+            if (params.dockerTag) {
+              image.push(dockerTag)
+            }
           }
         }
 
