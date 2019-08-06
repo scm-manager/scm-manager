@@ -71,7 +71,10 @@ node('docker') {
             image.push('latest')
             if (params.dockerTag) {
               image.push(params.dockerTag)
-              image.push("2.0.0-${commitHash.substring(0,7)}-dev-${params.dockerTag}")
+
+              def newDockerTag = "2.0.0-${commitHash.substring(0,7)}-dev-${params.dockerTag}"
+              currentBuild.description = newDockerTag
+              image.push(newDockerTag)
             }
           }
         }
