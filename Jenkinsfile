@@ -14,7 +14,7 @@ node('docker') {
     buildDiscarder(logRotator(numToKeepStr: '10')),
     disableConcurrentBuilds(),
     parameters([
-        string(name: 'dockerTag', trim: true, description: 'Extra Docker Tag for cloudogu/scm-manager image')
+        string(name: 'dockerTag', trim: true, defaultValue: "", description: 'Extra Docker Tag for cloudogu/scm-manager image')
     ])
   ])
 
