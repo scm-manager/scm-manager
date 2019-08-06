@@ -12,7 +12,7 @@ node('docker') {
   properties([
     // Keep only the last 10 build to preserve space
     buildDiscarder(logRotator(numToKeepStr: '10')),
-    disableConcurrentBuilds()
+    disableConcurrentBuilds(),
     parameters([
         string(name: 'dockerTag', trim: true, description: 'Extra Docker Tag for cloudogu/scm-manager image')
     ])
