@@ -6,8 +6,17 @@
       "settingsNavLink": "Settings",
       "generalNavLink": "General"
     },
-    "information":  {
-      "currentAppVersion": "Current Application Version"
+    "info":  {
+      "currentAppVersion": "Current Application Version",
+      "communityTitle": "Community Support",
+      "communityIconAlt": "Community Support Icon",
+      "communityInfo": "The Cloudogu support team is available for general questions about SCM-Manager, bug reporting and feature requests through our official channels.",
+      "communityButton": "Contact our team",
+      "enterpriseTitle": "Enterprise Support",
+      "enterpriseIconAlt": "Enterprise Support Icon",
+      "enterpriseInfo": "You need technical support for your company or you need a SCM-Manager plugin developed for you? We are happy to help you with your individual requirements for SCM-Manager use.<br /><strong>Contact the SCM-Manager Support Team at our development partner Cloudogu for a non-binding offer.</strong>",
+      "enterpriseLink": "https://cloudogu.com/en/scm-manager-enterprise/",
+      "enterpriseButton": "Request Enterprise Support"
     }
   },
   "plugins": {
