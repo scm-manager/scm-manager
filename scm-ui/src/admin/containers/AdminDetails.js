@@ -76,7 +76,7 @@ class AdminDetails extends React.Component<Props> {
             <div className="media-content">
               <div className="content">
                 <h3 className={classes.boxTitle}>{t("admin.info.enterpriseTitle")}</h3>
-                <p>{t("admin.info.enterpriseInfo")}</p>
+                <p>{t("admin.info.enterpriseInfo")}<br /><strong>{t("admin.info.enterprisePartner")}</strong></p>
                 <a className="button is-info is-pulled-right" href={t("admin.info.enterpriseLink")}>{t("admin.info.enterpriseButton")}</a>
               </div>
             </div>

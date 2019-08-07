@@ -14,7 +14,8 @@
       "communityButton": "Unser Team kontaktieren",
       "enterpriseTitle": "Enterprise Support",
       "enterpriseIconAlt": "Enterprise Support Icon",
-      "enterpriseInfo": "Sie benötigen technische Unterstützung für Ihr Unternehmen oder haben Bedarf an einem für Sie entwickelten SCM-Manager Plugin? Gerne helfen wir Ihnen bei Ihren individuellen Anforderungen für die SCM-Manager Nutzung weiter.<br /><strong>Kontaktieren Sie das SCM-Manager Support Team bei unserem Entwicklungs-Partner Cloudogu für ein unverbindliches Angebot.</strong>",
+      "enterpriseInfo": "Sie benötigen technische Unterstützung für Ihr Unternehmen oder haben Bedarf an einem für Sie entwickelten SCM-Manager Plugin? Gerne helfen wir Ihnen bei Ihren individuellen Anforderungen für die SCM-Manager Nutzung weiter.",
+      "enterprisePartner": "Kontaktieren Sie das SCM-Manager Support Team bei unserem Entwicklungs-Partner Cloudogu für ein unverbindliches Angebot.",
       "enterpriseLink": "https://cloudogu.com/de/scm-manager-enterprise/",
       "enterpriseButton": "Enterprise Support anfragen"
     }
