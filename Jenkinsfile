@@ -14,7 +14,7 @@ node('docker') {
     buildDiscarder(logRotator(numToKeepStr: '10')),
     disableConcurrentBuilds(),
     parameters([
-      string(name: 'dockerTag', trim: true, defaultValue: 'latest', description: 'Extra Docker Tag for cloudogu/scm-manager image')
+      string(name: 'dockerTag', trim: true, description: 'Extra Docker Tag for cloudogu/scm-manager image')
     ])
   ])
 
@@ -69,7 +69,7 @@ node('docker') {
           docker.withRegistry('', 'hub.docker.com-cesmarvin') {
             image.push(dockerImageTag)
             image.push('latest')
-            if (!'latest'.equals(params.dockerTag)) {
+            if (params.dockerTag) {
               image.push(params.dockerTag)
 
               def newDockerTag = "2.0.0-${commitHash.substring(0,7)}-dev-${params.dockerTag}"
