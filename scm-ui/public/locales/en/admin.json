@@ -10,12 +10,12 @@
       "currentAppVersion": "Current Application Version",
       "communityTitle": "Community Support",
       "communityIconAlt": "Community Support Icon",
-      "communityInfo": "The Cloudogu support team is available for general questions about SCM-Manager, bug reporting and feature requests through our official channels.",
+      "communityInfo": "Contact the SCM-Manager support team for questions about SCM-Manager, to report bugs or to request features through the official channels.",
       "communityButton": "Contact our team",
       "enterpriseTitle": "Enterprise Support",
       "enterpriseIconAlt": "Enterprise Support Icon",
-      "enterpriseInfo": "You need technical support for your company or you need a SCM-Manager plugin developed for you? We are happy to help you with your individual requirements for SCM-Manager use.",
-      "enterprisePartner": "Contact the SCM-Manager Support Team at our development partner Cloudogu for a non-binding offer.",
+      "enterpriseInfo": "You require support with the integration of SCM-Manager into your processes, with the customization of the tool or simply a service level agreement (SLA)?",
+      "enterprisePartner": "Contact our development partner Cloudogu! Their team is looking forward to discussing your individual requirements with you and will be more than happy to give you a quote.",
       "enterpriseLink": "https://cloudogu.com/en/scm-manager-enterprise/",
       "enterpriseButton": "Request Enterprise Support"
     }
