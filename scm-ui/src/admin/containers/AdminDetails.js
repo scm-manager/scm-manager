@@ -1,16 +1,11 @@
 // @flow
 import React from "react";
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import injectSheet from "react-jss";
-import { translate } from "react-i18next";
+import {translate} from "react-i18next";
 import classNames from "classnames";
-import {
-  Loading,
-  Title,
-  Subtitle,
-  Image
-} from "@scm-manager/ui-components";
-import { getAppVersion } from "../../modules/indexResource";
+import {Image, Loading, Subtitle, Title} from "@scm-manager/ui-components";
+import {getAppVersion} from "../../modules/indexResource";
 
 type Props = {
   loading: boolean,
@@ -25,7 +20,7 @@ type Props = {
 
 const styles = {
   boxShadow: {
-    boxShadow: "0 2px 3px rgba(40, 177, 232, 0.1), 0 0 0 1px rgb(40, 177, 232)"
+    boxShadow: "0 2px 3px rgba(40, 177, 232, 0.1), 0 0 0 2px rgb(40, 177, 232, 0.2)"
   },
   boxTitle: {
     fontWeight: "500 !important"
@@ -47,7 +42,7 @@ class AdminDetails extends React.Component<Props> {
         <div className={classNames("box", classes.boxShadow)}>
           <article className="media">
             <div className="media-left">
-              <figure className="image is-64x64">
+              <figure className="image is-96x96">
                 <Image
                   src="/images/iconCommunitySupport.png"
                   alt={t("admin.info.communityIconAlt")}
@@ -58,7 +53,7 @@ class AdminDetails extends React.Component<Props> {
               <div className="content">
                 <h3 className={classes.boxTitle}>{t("admin.info.communityTitle")}</h3>
                 <p>{t("admin.info.communityInfo")}</p>
-                <a className="button is-info is-pulled-right" href="https://scm-manager.org/support/">{t("admin.info.communityButton")}</a>
+                <a className="button is-info is-pulled-right" target="_blank" href="https://scm-manager.org/support/">{t("admin.info.communityButton")}</a>
               </div>
             </div>
           </article>
@@ -66,7 +61,7 @@ class AdminDetails extends React.Component<Props> {
         <div className={classNames("box", classes.boxShadow)}>
           <article className="media">
             <div className="media-left">
-              <figure className="image is-64x64">
+              <figure className="image is-96x96">
                 <Image
                   src="/images/iconEnterpriseSupport.png"
                   alt={t("admin.info.enterpriseIconAlt")}
@@ -77,7 +72,7 @@ class AdminDetails extends React.Component<Props> {
               <div className="content">
                 <h3 className={classes.boxTitle}>{t("admin.info.enterpriseTitle")}</h3>
                 <p>{t("admin.info.enterpriseInfo")}<br /><strong>{t("admin.info.enterprisePartner")}</strong></p>
-                <a className="button is-info is-pulled-right" href={t("admin.info.enterpriseLink")}>{t("admin.info.enterpriseButton")}</a>
+                <a className="button is-info is-pulled-right is-normal" target="_blank" href={t("admin.info.enterpriseLink")}>{t("admin.info.enterpriseButton")}</a>
               </div>
             </div>
           </article>
