@@ -24,55 +24,56 @@ const styles = {
   },
   boxTitle: {
     fontWeight: "500 !important"
+  },
+  imagePadding: {
+    padding: "0.5rem 0.5rem"
   }
 };
 
 class AdminDetails extends React.Component<Props> {
   render() {
-    const { loading, classes, t } = this.props;
+    const {loading, classes, t} = this.props;
 
     if (loading) {
-      return <Loading />;
+      return <Loading/>;
     }
 
     return (
       <>
-        <Title title={t("admin.info.currentAppVersion")} />
-        <Subtitle subtitle={this.props.version} />
+        <Title title={t("admin.info.currentAppVersion")}/>
+        <Subtitle subtitle={this.props.version}/>
         <div className={classNames("box", classes.boxShadow)}>
           <article className="media">
-            <div className="media-left">
-              <figure className="image is-96x96">
-                <Image
-                  src="/images/iconCommunitySupport.png"
-                  alt={t("admin.info.communityIconAlt")}
-                />
-              </figure>
+            <div className={classNames("media-left", classes.imagePadding)}>
+              <Image
+                src="/images/iconCommunitySupport.png"
+                alt={t("admin.info.communityIconAlt")}
+              />
             </div>
             <div className="media-content">
               <div className="content">
                 <h3 className={classes.boxTitle}>{t("admin.info.communityTitle")}</h3>
                 <p>{t("admin.info.communityInfo")}</p>
-                <a className="button is-info is-pulled-right" target="_blank" href="https://scm-manager.org/support/">{t("admin.info.communityButton")}</a>
+                <a className="button is-info is-pulled-right" target="_blank"
+                   href="https://scm-manager.org/support/">{t("admin.info.communityButton")}</a>
               </div>
             </div>
           </article>
         </div>
         <div className={classNames("box", classes.boxShadow)}>
           <article className="media">
-            <div className="media-left">
-              <figure className="image is-96x96">
-                <Image
-                  src="/images/iconEnterpriseSupport.png"
-                  alt={t("admin.info.enterpriseIconAlt")}
-                />
-              </figure>
+            <div className={classNames("media-left", classes.imagePadding)}>
+              <Image
+                src="/images/iconEnterpriseSupport.png"
+                alt={t("admin.info.enterpriseIconAlt")}
+              />
             </div>
             <div className="media-content">
               <div className="content">
                 <h3 className={classes.boxTitle}>{t("admin.info.enterpriseTitle")}</h3>
-                <p>{t("admin.info.enterpriseInfo")}<br /><strong>{t("admin.info.enterprisePartner")}</strong></p>
-                <a className="button is-info is-pulled-right is-normal" target="_blank" href={t("admin.info.enterpriseLink")}>{t("admin.info.enterpriseButton")}</a>
+                <p>{t("admin.info.enterpriseInfo")}<br/><strong>{t("admin.info.enterprisePartner")}</strong></p>
+                <a className="button is-info is-pulled-right is-normal" target="_blank"
+                   href={t("admin.info.enterpriseLink")}>{t("admin.info.enterpriseButton")}</a>
               </div>
             </div>
           </article>
