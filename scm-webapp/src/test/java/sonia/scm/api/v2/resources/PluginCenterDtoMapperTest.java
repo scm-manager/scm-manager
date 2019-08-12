@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static sonia.scm.api.v2.resources.PluginCenterDto.*;
+import static sonia.scm.api.v2.resources.PluginCenterDto.Condition;
+import static sonia.scm.api.v2.resources.PluginCenterDto.Dependency;
+import static sonia.scm.api.v2.resources.PluginCenterDto.Plugin;
 
 class PluginCenterDtoMapperTest {
 
@@ -32,8 +34,9 @@ class PluginCenterDtoMapperTest {
       "Travel",
       "2.0.0",
       "trillian",
+      "http://avatar.url",
       "555000444",
-      new Condition("linux", "amd64","2.0.0"),
+      new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
       new Dependency("scm-review-plugin"),
       new HashMap<>());
 
@@ -44,7 +47,7 @@ class PluginCenterDtoMapperTest {
     assertThat(result.getVersion()).isEqualTo(plugin.getVersion());
     assertThat(result.getCondition().getArch()).isEqualTo(plugin.getConditions().getArch());
     assertThat(result.getCondition().getMinVersion()).isEqualTo(plugin.getConditions().getMinVersion());
-    assertThat(result.getCondition().getOs().iterator().next()).isEqualTo(plugin.getConditions().getOs());
+    assertThat(result.getCondition().getOs().iterator().next()).isEqualTo(plugin.getConditions().getOs().iterator().next());
     assertThat(result.getDescription()).isEqualTo(plugin.getDescription());
     assertThat(result.getName()).isEqualTo(plugin.getName());
   }
@@ -52,26 +55,28 @@ class PluginCenterDtoMapperTest {
   @Test
   void shouldMapMultiplePlugins() {
     Plugin plugin1 = new Plugin(
-      "scm-hitchhiker-plugin",
-      "SCM Hitchhiker Plugin",
-      "plugin for hitchhikers",
-      "Travel",
-      "2.0.0",
-      "dent",
-      "555000444",
-      new Condition("linux", "amd64","2.0.0"),
-      new Dependency("scm-review-plugin"),
-      new HashMap<>());
-
-    Plugin plugin2 = new Plugin(
       "scm-review-plugin",
       "SCM Hitchhiker Plugin",
       "plugin for hitchhikers",
       "Travel",
       "2.1.0",
       "trillian",
+      "https://avatar.url",
       "12345678aa",
-      new Condition("linux", "amd64","2.0.0"),
+      new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
+      new Dependency("scm-review-plugin"),
+      new HashMap<>());
+
+    Plugin plugin2 = new Plugin(
+      "scm-hitchhiker-plugin",
+      "SCM Hitchhiker Plugin",
+      "plugin for hitchhikers",
+      "Travel",
+      "2.0.0",
+      "dent",
+      "http://avatar.url",
+      "555000444",
+      new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
       new Dependency("scm-review-plugin"),
       new HashMap<>());
 

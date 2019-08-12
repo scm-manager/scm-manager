@@ -4,9 +4,10 @@ import de.otto.edison.hal.Links;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginState;
 import sonia.scm.plugin.PluginWrapper;
+
 import javax.inject.Inject;
 
-import static de.otto.edison.hal.Link.*;
+import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 public class PluginDtoMapper {
@@ -43,6 +44,7 @@ public class PluginDtoMapper {
     pluginDto.setVersion(pluginInformation.getVersion());
     pluginDto.setAuthor(pluginInformation.getAuthor());
     pluginDto.setDescription(pluginInformation.getDescription());
+    pluginDto.setAvatarUrl(pluginInformation.getAvatarUrl());
 
     return pluginDto;
   }

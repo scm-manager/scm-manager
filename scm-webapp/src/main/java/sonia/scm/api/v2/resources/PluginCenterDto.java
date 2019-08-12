@@ -3,7 +3,6 @@ package sonia.scm.api.v2.resources;
 import com.google.common.collect.ImmutableList;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -51,6 +50,7 @@ public final class PluginCenterDto implements Serializable {
     private String category;
     private String version;
     private String author;
+    private String avatarUrl;
     private String sha256;
 
     @XmlElement(name = "conditions")
@@ -69,7 +69,7 @@ public final class PluginCenterDto implements Serializable {
   @AllArgsConstructor
   public static class Condition {
 
-    private String os;
+    private List<String> os;
     private String arch;
     private String minVersion;
   }
