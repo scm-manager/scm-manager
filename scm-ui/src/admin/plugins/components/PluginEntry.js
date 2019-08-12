@@ -1,8 +1,8 @@
 //@flow
 import React from "react";
 import injectSheet from "react-jss";
-import type { Plugin } from "@scm-manager/ui-types";
-import { CardColumn } from "@scm-manager/ui-components";
+import type {Plugin} from "@scm-manager/ui-types";
+import {CardColumn} from "@scm-manager/ui-components";
 import PluginAvatar from "./PluginAvatar";
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
 
 const styles = {
   link: {
-    pointerEvents: "all"
+    pointerEvents: "cursor"
   }
 };
 
