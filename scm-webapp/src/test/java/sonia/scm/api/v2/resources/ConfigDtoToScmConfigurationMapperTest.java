@@ -50,6 +50,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
     assertEquals(40 , config.getLoginAttemptLimitTimeout());
     assertTrue(config.isEnabledXsrfProtection());
     assertEquals("username", config.getNamespaceStrategy());
+    assertEquals("https://scm-manager.org/login-info", config.getLoginInfoUrl());
   }
 
   private ConfigDto createDefaultDto() {
@@ -73,6 +74,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
     configDto.setLoginAttemptLimitTimeout(40);
     configDto.setEnabledXsrfProtection(true);
     configDto.setNamespaceStrategy("username");
+    configDto.setLoginInfoUrl("https://scm-manager.org/login-info");
 
     return configDto;
   }

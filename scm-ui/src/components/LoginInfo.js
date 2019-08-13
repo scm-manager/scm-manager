@@ -4,6 +4,7 @@ import InfoBox from "./InfoBox";
 import type { InfoItem } from "./InfoItem";
 
 type Props = {
+  loginInfoLink: string
 };
 
 type State = {
@@ -21,7 +22,8 @@ class LoginInfo extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    fetch("https://login-info.scm-manager.org/api/v1/login-info")
+    const { loginInfoLink } = this.props;
+    fetch(loginInfoLink)
       .then(response => response.json())
       .then(info => {
         this.setState({

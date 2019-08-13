@@ -21,5 +21,6 @@ export type Config = {
   loginAttemptLimitTimeout: number,
   enabledXsrfProtection: boolean,
   namespaceStrategy: string,
+  loginInfoUrl: string,
   _links: Links
 };

@@ -3,9 +3,11 @@ package sonia.scm.api.v2.resources;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.config.ScmConfiguration;
 
 import java.net.URI;
 import java.util.Optional;
@@ -19,15 +21,44 @@ public class IndexResourceTest {
   @Rule
   public final ShiroRule shiroRule = new ShiroRule();
 
-  private final SCMContextProvider scmContextProvider = mock(SCMContextProvider.class);
-  private final IndexDtoGenerator indexDtoGenerator = new IndexDtoGenerator(ResourceLinksMock.createMock(URI.create("/")), scmContextProvider);
-  private final IndexResource indexResource = new IndexResource(indexDtoGenerator);
+  private ScmConfiguration configuration;
+  private SCMContextProvider scmContextProvider;
+  private IndexResource indexResource;
+
+
+  @Before
+  public void setUpObjectUnderTest() {
+    this.configuration = new ScmConfiguration();
+    this.scmContextProvider = mock(SCMContextProvider.class);
+    IndexDtoGenerator generator = new IndexDtoGenerator(
+      ResourceLinksMock.createMock(URI.create("/")),
+      scmContextProvider,
+      configuration
+    );
+    this.indexResource = new IndexResource(generator);
+  }
 
   @Test
   public void shouldRenderLoginUrlsForUnauthenticatedRequest() {
     IndexDto index = indexResource.getIndex();
 
     Assertions.assertThat(index.getLinks().getLinkBy("login")).matches(Optional::isPresent);
+  }
+
+  @Test
+  public void shouldRenderLoginInfoUrl() {
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinkBy("loginInfo")).isPresent();
+  }
+
+  @Test
+  public void shouldNotRenderLoginInfoUrlWhenNoUrlIsConfigured() {
+    configuration.setLoginInfoUrl("");
+
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinkBy("loginInfo")).isNotPresent();
   }
 
   @Test

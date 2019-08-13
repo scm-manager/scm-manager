@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Link;
@@ -7,6 +8,7 @@ import de.otto.edison.hal.Links;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ConfigurationPermissions;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupPermissions;
 import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.repository.RepositoryRolePermissions;
@@ -23,11 +25,13 @@ public class IndexDtoGenerator extends HalAppenderMapper {
 
   private final ResourceLinks resourceLinks;
   private final SCMContextProvider scmContextProvider;
+  private final ScmConfiguration configuration;
 
   @Inject
-  public IndexDtoGenerator(ResourceLinks resourceLinks, SCMContextProvider scmContextProvider) {
+  public IndexDtoGenerator(ResourceLinks resourceLinks, SCMContextProvider scmContextProvider, ScmConfiguration configuration) {
     this.resourceLinks = resourceLinks;
     this.scmContextProvider = scmContextProvider;
+    this.configuration = configuration;
   }
 
   public IndexDto generate() {
@@ -35,6 +39,11 @@ public class IndexDtoGenerator extends HalAppenderMapper {
     List<Link> autoCompleteLinks = Lists.newArrayList();
     builder.self(resourceLinks.index().self());
     builder.single(link("uiPlugins", resourceLinks.uiPluginCollection().self()));
+
+    String loginInfoUrl = configuration.getLoginInfoUrl();
+    if (!Strings.isNullOrEmpty(loginInfoUrl)) {
+      builder.single(link("loginInfo", loginInfoUrl));
+    }
 
     if (SecurityUtils.getSubject().isAuthenticated()) {
       builder.single(

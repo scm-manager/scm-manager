@@ -8,7 +8,7 @@ import {
   getLoginFailure
 } from "../modules/auth";
 import { connect } from "react-redux";
-import { getLoginLink } from "../modules/indexResource";
+import { getLoginLink, getLoginInfoLink } from "../modules/indexResource";
 import LoginForm from "../components/LoginForm";
 import LoginInfo from "../components/LoginInfo";
 import classNames from "classnames";
@@ -25,6 +25,7 @@ type Props = {
   loading: boolean,
   error?: Error,
   link: string,
+  loginInfoLink?: string,
 
   // dispatcher props
   login: (link: string, username: string, password: string) => void,
@@ -49,19 +50,24 @@ class Login extends React.Component<Props> {
   };
 
   render() {
-    const { authenticated, loading, error, classes } = this.props;
+    const { authenticated, loginInfoLink, loading, error, classes } = this.props;
 
     if (authenticated) {
       return this.renderRedirect();
+    }
+
+    let loginInfo;
+    if (loginInfoLink) {
+      loginInfo = <LoginInfo loginInfoLink={loginInfoLink}/>
     }
 
     return (
       <section className={classNames("hero", classes.section )}>
         <div className="hero-body">
           <div className="container">
-            <div className="columns">
+            <div className="columns is-centered">
               <LoginForm loading={loading} error={error} login={this.login}/>
-              <LoginInfo/>
+              {loginInfo}
             </div>
           </div>
         </div>
@@ -75,11 +81,13 @@ const mapStateToProps = state => {
   const loading = isLoginPending(state);
   const error = getLoginFailure(state);
   const link = getLoginLink(state);
+  const loginInfoLink = getLoginInfoLink(state);
   return {
     authenticated,
     loading,
     error,
-    link
+    link,
+    loginInfoLink
   };
 };
 
