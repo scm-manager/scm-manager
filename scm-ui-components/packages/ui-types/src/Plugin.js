@@ -6,6 +6,7 @@ export type Plugin = {
   type: string,
   version: string,
   author: string,
+  displayName: string,
   avatarUrl: string,
   description?: string,
   _links: Links

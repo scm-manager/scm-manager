@@ -35,10 +35,10 @@ package sonia.scm.plugin;
 
 import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
 
@@ -63,6 +63,8 @@ import java.io.Serializable;
 @XmlRootElement(name = "plugin-information")
 @Getter
 @Setter
+@EqualsAndHashCode
+@ToString
 public class PluginInformation implements PermissionObject, Validateable, Cloneable, Serializable {
 
   private static final long serialVersionUID = 461382048865977206L;
@@ -74,6 +76,7 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
   private String name;
   private PluginState state;
   private String version;
+  private String displayName;
   private String avatarUrl;
 
   @Override
@@ -85,6 +88,7 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
     clone.setDescription(description);
     clone.setState(state);
     clone.setVersion(version);
+    clone.setDisplayName(displayName);
     clone.setAvatarUrl(avatarUrl);
 
     if (condition != null) {
@@ -92,53 +96,6 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
     }
 
     return clone;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-
-    final PluginInformation other = (PluginInformation) obj;
-
-    //J-
-    return
-      Objects.equal(author, other.author)
-        && Objects.equal(category, other.category)
-        && Objects.equal(condition, other.condition)
-        && Objects.equal(description, other.description)
-        && Objects.equal(name, other.name)
-        && Objects.equal(state, other.state)
-        && Objects.equal(version, other.version)
-        && Objects.equal(avatarUrl, other.avatarUrl);
-    //J+
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(author, category, condition,
-      description, name, state, version, avatarUrl);
-  }
-
-  @Override
-  public String toString() {
-    //J-
-    return MoreObjects.toStringHelper(this)
-      .add("author", author)
-      .add("category", category)
-      .add("condition", condition)
-      .add("description", description)
-      .add("name", name)
-      .add("state", state)
-      .add("version", version)
-      .add("avatarUrl", avatarUrl)
-      .toString();
-    //J+
   }
 
   @Override
