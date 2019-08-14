@@ -74,6 +74,8 @@ public class ScmConfiguration implements Configuration {
    */
   public static final String DEFAULT_PLUGINURL =
     "http://download.scm-manager.org/api/v2/plugins.json";
+  // Keep the parameters
+  // "http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false";
 
   /**
    * Default plugin url from version 1.0
