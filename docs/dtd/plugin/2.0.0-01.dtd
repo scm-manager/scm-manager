@@ -29,7 +29,7 @@
 <!ELEMENT scm-version (#PCDATA)>
 
 <!--- contains informations of the plugin for the plugin backend -->
-<!ELEMENT information (author|category|description|name|version)*>
+<!ELEMENT information (author|category|description|name|version|displayName|avatarUrl)*>
 
 <!--- plugin author -->
 <!ELEMENT author (#PCDATA)>
@@ -45,6 +45,12 @@
 
 <!--- the current version of the plugin -->
 <!ELEMENT version (#PCDATA)>
+
+  <!--- plugin displayName -->
+  <!ELEMENT displayName (#PCDATA)>
+
+  <!--- url of the plugin avatar -->
+  <!ELEMENT avatarUrl (#PCDATA)>
 
 <!--- true if the plugin should load child classes first, the default is false -->
 <!ELEMENT child-first-classloader (#PCDATA)>
