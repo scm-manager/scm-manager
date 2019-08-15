@@ -76,6 +76,11 @@ public class ScmConfiguration implements Configuration {
     "http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false";
 
   /**
+   * Default url for login information (plugin and feature tips on the login page).
+   */
+  public static final String DEFAULT_LOGIN_INFO_URL = "https://login-info.scm-manager.org/api/v1/login-info";
+
+  /**
    * Default plugin url from version 1.0
    */
   public static final String OLD_PLUGINURL =
@@ -177,6 +182,9 @@ public class ScmConfiguration implements Configuration {
   @XmlElement(name = "namespace-strategy")
   private String namespaceStrategy = "UsernameNamespaceStrategy";
 
+  @XmlElement(name = "login-info-url")
+  private String loginInfoUrl = DEFAULT_LOGIN_INFO_URL;
+
 
   /**
    * Calls the {@link sonia.scm.ConfigChangedListener#configChanged(Object)}
@@ -216,6 +224,7 @@ public class ScmConfiguration implements Configuration {
     this.loginAttemptLimitTimeout = other.loginAttemptLimitTimeout;
     this.enabledXsrfProtection = other.enabledXsrfProtection;
     this.namespaceStrategy = other.namespaceStrategy;
+    this.loginInfoUrl = other.loginInfoUrl;
   }
 
   /**
@@ -350,6 +359,9 @@ public class ScmConfiguration implements Configuration {
     return namespaceStrategy;
   }
 
+  public String getLoginInfoUrl() {
+    return loginInfoUrl;
+  }
 
   /**
    * Returns true if failed authenticators are skipped.
@@ -475,6 +487,10 @@ public class ScmConfiguration implements Configuration {
 
   public void setNamespaceStrategy(String namespaceStrategy) {
     this.namespaceStrategy = namespaceStrategy;
+  }
+
+  public void setLoginInfoUrl(String loginInfoUrl) {
+    this.loginInfoUrl = loginInfoUrl;
   }
 
   @Override

@@ -1,8 +1,6 @@
 //@flow
 import React from "react";
 import { Redirect, withRouter } from "react-router-dom";
-import injectSheet from "react-jss";
-import { translate } from "react-i18next";
 import {
   login,
   isAuthenticated,
@@ -10,148 +8,64 @@ import {
   getLoginFailure
 } from "../modules/auth";
 import { connect } from "react-redux";
-
-import {
-  InputField,
-  SubmitButton,
-  ErrorNotification,
-  Image, UnauthorizedError
-} from "@scm-manager/ui-components";
+import { getLoginLink, getLoginInfoLink } from "../modules/indexResource";
+import LoginInfo from "../components/LoginInfo";
 import classNames from "classnames";
-import { getLoginLink } from "../modules/indexResource";
+import injectSheet from "react-jss";
 
 const styles = {
-  avatar: {
-    marginTop: "-70px",
-    paddingBottom: "20px"
-  },
-  avatarImage: {
-    border: "1px solid lightgray",
-    padding: "5px",
-    background: "#fff",
-    borderRadius: "50%",
-    width: "128px",
-    height: "128px"
-  },
-  avatarSpacing: {
-    marginTop: "5rem"
+  section: {
+    paddingTop: "2em"
   }
 };
 
 type Props = {
   authenticated: boolean,
   loading: boolean,
-  error: Error,
+  error?: Error,
   link: string,
+  loginInfoLink?: string,
 
   // dispatcher props
   login: (link: string, username: string, password: string) => void,
 
   // context props
-  t: string => string,
   classes: any,
+  t: string => string,
   from: any,
   location: any
 };
 
-type State = {
-  username: string,
-  password: string
-};
+class Login extends React.Component<Props> {
 
-class Login extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { username: "", password: "" };
-  }
-
-  handleUsernameChange = (value: string) => {
-    this.setState({ username: value });
+  handleLogin = (username: string, password: string): void => {
+    const { link, login } = this.props;
+    login(link, username, password);
   };
-
-  handlePasswordChange = (value: string) => {
-    this.setState({ password: value });
-  };
-
-  handleSubmit = (event: Event) => {
-    event.preventDefault();
-    if (this.isValid()) {
-      this.props.login(
-        this.props.link,
-        this.state.username,
-        this.state.password
-      );
-    }
-  };
-
-  isValid() {
-    return this.state.username && this.state.password;
-  }
-
-  isInValid() {
-    return !this.isValid();
-  }
-
-  areCredentialsInvalid() {
-    const { t, error } = this.props;
-    if (error instanceof UnauthorizedError) {
-      return new Error(t("errorNotification.wrongLoginCredentials"));
-    } else {
-      return error;
-    }
-  }
 
   renderRedirect = () => {
     const { from } = this.props.location.state || { from: { pathname: "/" } };
-    return <Redirect to={from} />;
+    return <Redirect to={from}/>;
   };
 
   render() {
-    const { authenticated, loading, t, classes } = this.props;
+    const { authenticated, classes, ...restProps } = this.props;
 
     if (authenticated) {
       return this.renderRedirect();
     }
 
     return (
-      <section className="hero">
+      <section className={classNames("hero", classes.section )}>
         <div className="hero-body">
-          <div className="container has-text-centered">
-            <div className="column is-4 is-offset-4">
-              <h3 className="title">{t("login.title")}</h3>
-              <p className="subtitle">{t("login.subtitle")}</p>
-              <div className={classNames("box", classes.avatarSpacing)}>
-                <figure className={classes.avatar}>
-                  <Image
-                    className={classes.avatarImage}
-                    src="/images/blib.jpg"
-                    alt={t("login.logo-alt")}
-                  />
-                </figure>
-                <ErrorNotification error={this.areCredentialsInvalid()} />
-                <form onSubmit={this.handleSubmit}>
-                  <InputField
-                    placeholder={t("login.username-placeholder")}
-                    autofocus={true}
-                    onChange={this.handleUsernameChange}
-                  />
-                  <InputField
-                    placeholder={t("login.password-placeholder")}
-                    type="password"
-                    onChange={this.handlePasswordChange}
-                  />
-                  <SubmitButton
-                    label={t("login.submit")}
-                    fullWidth={true}
-                    loading={loading}
-                  />
-                </form>
-              </div>
+          <div className="container">
+            <div className="columns is-centered">
+              <LoginInfo loginHandler={this.handleLogin} {...restProps} />
             </div>
           </div>
         </div>
       </section>
-    );
+      );
   }
 }
 
@@ -160,11 +74,13 @@ const mapStateToProps = state => {
   const loading = isLoginPending(state);
   const error = getLoginFailure(state);
   const link = getLoginLink(state);
+  const loginInfoLink = getLoginInfoLink(state);
   return {
     authenticated,
     loading,
     error,
-    link
+    link,
+    loginInfoLink
   };
 };
 
@@ -179,6 +95,6 @@ const StyledLogin = injectSheet(styles)(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(translate("commons")(Login))
+  )(Login)
 );
 export default withRouter(StyledLogin);

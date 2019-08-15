@@ -168,6 +168,10 @@ export function getSvnConfigLink(state: Object) {
   return getLink(state, "svnConfig");
 }
 
+export function getLoginInfoLink(state: Object) {
+  return getLink(state, "loginInfo");
+}
+
 export function getUserAutoCompleteLink(state: Object): string {
   const link = getLinkCollection(state, "autocomplete").find(
     i => i.name === "users"
