@@ -33,15 +33,14 @@ const styles = {
   },
   "@media (max-width: 768px)": {
     link: {
-      width: "100%",
+      width: "100%"
     }
   }
 };
 
 type Props = {
   type: "plugin" | "feature",
-  item?: InfoItem,
-  error?: Error,
+  item: InfoItem,
 
   // context props
   classes: any,
@@ -51,27 +50,16 @@ type Props = {
 class InfoBox extends React.Component<Props> {
 
   renderBody = () => {
-    const { item, error, t } = this.props;
+    const { item, t } = this.props;
 
     const bodyClasses = classNames("media-content", "content", this.props.classes.content);
-
-    if (error) {
-      return (
-        <div className={bodyClasses}>
-          <h4>{t("login.error")}</h4>
-          <ErrorNotification error={error}/>
-        </div>
-      );
-    }
-
     const title = item ? item.title : t("login.loading");
     const summary = item ? item.summary : t("login.loading");
-
 
     return (
       <div className={bodyClasses}>
         <h4>
-          <a href={this.createHref()}>{title}</a>
+          <a href={item._links.self.href}>{title}</a>
         </h4>
         <p>{summary}</p>
       </div>
@@ -79,15 +67,11 @@ class InfoBox extends React.Component<Props> {
 
   };
 
-  createHref = () => {
-    const { item } = this.props;
-    return item ? item._links.self.href : "#";
-  };
 
   createLink = () => {
-    const { classes } = this.props;
+    const { item, classes } = this.props;
     // eslint-disable-next-line jsx-a11y/anchor-has-content
-    return <a href={this.createHref()} className={classes.link} />;
+    return <a href={item._links.self.href} className={classes.link}/>;
   };
 
   render() {

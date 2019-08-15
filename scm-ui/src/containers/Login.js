@@ -9,7 +9,6 @@ import {
 } from "../modules/auth";
 import { connect } from "react-redux";
 import { getLoginLink, getLoginInfoLink } from "../modules/indexResource";
-import LoginForm from "../components/LoginForm";
 import LoginInfo from "../components/LoginInfo";
 import classNames from "classnames";
 import injectSheet from "react-jss";
@@ -39,7 +38,7 @@ type Props = {
 
 class Login extends React.Component<Props> {
 
-  login = (username: string, password: string) => {
+  handleLogin = (username: string, password: string): void => {
     const { link, login } = this.props;
     login(link, username, password);
   };
@@ -50,15 +49,10 @@ class Login extends React.Component<Props> {
   };
 
   render() {
-    const { authenticated, loginInfoLink, loading, error, classes } = this.props;
+    const { authenticated, classes, ...restProps } = this.props;
 
     if (authenticated) {
       return this.renderRedirect();
-    }
-
-    let loginInfo;
-    if (loginInfoLink) {
-      loginInfo = <LoginInfo loginInfoLink={loginInfoLink}/>
     }
 
     return (
@@ -66,8 +60,7 @@ class Login extends React.Component<Props> {
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
-              <LoginForm loading={loading} error={error} login={this.login}/>
-              {loginInfo}
+              <LoginInfo loginHandler={this.handleLogin} {...restProps} />
             </div>
           </div>
         </div>

@@ -26,7 +26,7 @@ const styles = {
 type Props = {
   error?: Error,
   loading: boolean,
-  login: (username: string, password: string) => void,
+  loginHandler: (username: string, password: string) => void,
 
   // context props
   t: string => string,
@@ -48,7 +48,7 @@ class LoginForm extends React.Component<Props, State> {
   handleSubmit = (event: Event) => {
     event.preventDefault();
     if (this.isValid()) {
-      this.props.login(
+      this.props.loginHandler(
         this.state.username,
         this.state.password
       );
