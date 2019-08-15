@@ -31,19 +31,32 @@ class LoginInfo extends React.Component<Props, State> {
     };
   }
 
-  componentDidMount() {
-    const { loginInfoLink } = this.props;
-    if (!loginInfoLink) {
-      return;
-    }
-    fetch(loginInfoLink)
+  fetchLoginInfo = (url: string) => {
+    return fetch(url)
       .then(response => response.json())
       .then(info => {
         this.setState({
           info,
           loading: false
         });
-      })
+      });
+  };
+
+  timeout = (ms: number, promise: Promise<any>) => {
+    return new Promise<LoginInfoResponse>((resolve, reject) => {
+      setTimeout(() => {
+        reject(new Error("timeout during fetch of login info"));
+      }, ms);
+      promise.then(resolve, reject);
+    });
+  };
+
+  componentDidMount() {
+    const { loginInfoLink } = this.props;
+    if (!loginInfoLink) {
+      return;
+    }
+    this.timeout(1000, this.fetchLoginInfo(loginInfoLink))
       .catch(() => {
         this.setState({
           loading: false
