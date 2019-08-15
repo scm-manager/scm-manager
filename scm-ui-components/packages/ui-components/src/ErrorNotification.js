@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
-import { translate } from "react-i18next";
-import { BackendError, ForbiddenError, UnauthorizedError } from "./errors";
+import {translate} from "react-i18next";
+import {BackendError, ForbiddenError, UnauthorizedError} from "./errors";
 import Notification from "./Notification";
 import BackendErrorNotification from "./BackendErrorNotification";
 
@@ -10,35 +10,33 @@ type Props = {
   error?: Error
 };
 
-
 class ErrorNotification extends React.Component<Props> {
   render() {
     const { t, error } = this.props;
     if (error) {
       if (error instanceof BackendError) {
-        return <BackendErrorNotification error={error} />
+        return <BackendErrorNotification error={error} />;
       } else if (error instanceof UnauthorizedError) {
         return (
           <Notification type="danger">
-            <strong>{t("error-notification.prefix")}:</strong>{" "}
-            {t("error-notification.timeout")}{" "}
+            <strong>{t("errorNotification.prefix")}:</strong>{" "}
+            {t("errorNotification.timeout")}{" "}
             <a href="javascript:window.location.reload(true)">
-              {t("error-notification.loginLink")}
+              {t("errorNotification.loginLink")}
             </a>
           </Notification>
         );
       } else if (error instanceof ForbiddenError) {
         return (
           <Notification type="danger">
-            <strong>{t("error-notification.prefix")}:</strong>{" "}
-            {t("error-notification.forbidden")}
+            <strong>{t("errorNotification.prefix")}:</strong>{" "}
+            {t("errorNotification.forbidden")}
           </Notification>
-        )
-      } else
-       {
+        );
+      } else {
         return (
           <Notification type="danger">
-            <strong>{t("error-notification.prefix")}:</strong> {error.message}
+            <strong>{t("errorNotification.prefix")}:</strong> {error.message}
           </Notification>
         );
       }
@@ -47,4 +45,4 @@ class ErrorNotification extends React.Component<Props> {
   }
 }
 
-export default  translate("commons")(ErrorNotification);
+export default translate("commons")(ErrorNotification);

@@ -36,27 +36,25 @@ import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.Sets;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.group.ExternalGroupNames;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.when;
 import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
 
 /**
@@ -137,7 +135,6 @@ public class JwtAccessTokenBuilderTest {
       .issuer("https://www.scm-manager.org")
       .expiresIn(5, TimeUnit.SECONDS)
       .custom("a", "b")
-      .groups("one", "two", "three")
       .scope(Scope.valueOf("repo:*"))
       .build();
     
@@ -154,36 +151,6 @@ public class JwtAccessTokenBuilderTest {
     assertClaims(new JwtAccessToken(claims, compact));
   }
 
-  @Test
-  public void testWithExternalGroups() {
-    applyExternalGroupsToSubject(true, "external");
-    JwtAccessToken token = factory.create().subject("dent").build();
-    assertArrayEquals(new String[]{"external"}, token.getCustom(JwtAccessToken.GROUPS_CLAIM_KEY).map(x -> (String[]) x).get());
-  }
-
-  @Test
-  public void testWithInternalGroups() {
-    applyExternalGroupsToSubject(false, "external");
-    JwtAccessToken token = factory.create().subject("dent").build();
-    assertFalse(token.getCustom(JwtAccessToken.GROUPS_CLAIM_KEY).isPresent());
-  }
-
-  private void applyExternalGroupsToSubject(boolean external, String... groups) {
-    Subject subject = spy(SecurityUtils.getSubject());
-    when(subject.getPrincipals()).thenAnswer(invocation -> enrichWithGroups(invocation, groups, external));
-    shiro.setSubject(subject);
-  }
-
-  private Object enrichWithGroups(InvocationOnMock invocation, String[] groups, boolean external) throws Throwable {
-    PrincipalCollection principals = (PrincipalCollection) spy(invocation.callRealMethod());
-
-    List<String> groupCollection = Arrays.asList(groups);
-    if (external) {
-      when(principals.oneByType(ExternalGroupNames.class)).thenReturn(new ExternalGroupNames(groupCollection));
-    }
-    return principals;
-  }
-
   private void assertClaims(JwtAccessToken token){
     assertThat(token.getId(), not(isEmptyOrNullString()));
     assertNotNull( token.getIssuedAt() );
@@ -194,6 +161,5 @@ public class JwtAccessTokenBuilderTest {
     assertEquals(token.getIssuer().get(), "https://www.scm-manager.org");
     assertEquals("b", token.getCustom("a").get());
     assertEquals("[\"repo:*\"]", token.getScope().toString());
-    assertThat(token.getGroups(), containsInAnyOrder("one", "two", "three"));
   }
 }

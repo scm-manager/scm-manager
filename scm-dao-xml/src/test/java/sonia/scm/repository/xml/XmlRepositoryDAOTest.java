@@ -26,15 +26,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -47,6 +45,7 @@ class XmlRepositoryDAOTest {
 
   @Mock
   private PathBasedRepositoryLocationResolver locationResolver;
+  private Consumer<BiConsumer<String, Path>> triggeredOnForAllLocations = none -> {};
 
   private FileSystem fileSystem = new DefaultFileSystem();
 
@@ -68,6 +67,11 @@ class XmlRepositoryDAOTest {
 
         @Override
         public void setLocation(String repositoryId, Path location) {
+        }
+
+        @Override
+        public void forAllLocations(BiConsumer<String, Path> consumer) {
+          triggeredOnForAllLocations.accept(consumer);
         }
       }
     );
@@ -332,10 +336,9 @@ class XmlRepositoryDAOTest {
     @Test
     void shouldRefreshWithExistingRepositoriesFromPathDatabase() {
       // given
-      doNothing().when(locationResolver).forAllPaths(any());
-      XmlRepositoryDAO dao = new XmlRepositoryDAO(locationResolver, fileSystem);
-
       mockExistingPath();
+
+      XmlRepositoryDAO dao = new XmlRepositoryDAO(locationResolver, fileSystem);
 
       // when
       dao.refresh();
@@ -346,12 +349,7 @@ class XmlRepositoryDAOTest {
     }
 
     private void mockExistingPath() {
-      doAnswer(
-        invocation -> {
-          ((BiConsumer<String, Path>) invocation.getArgument(0)).accept("existing", repositoryPath);
-          return null;
-        }
-      ).when(locationResolver).forAllPaths(any());
+      triggeredOnForAllLocations = consumer -> consumer.accept("existing", repositoryPath);
     }
   }
 

@@ -104,7 +104,6 @@ public class BearerRealm extends AuthenticatingRealm
     return helper.authenticationInfoBuilder(accessToken.getSubject())
       .withCredentials(bt.getCredentials())
       .withScope(Scopes.fromClaims(accessToken.getClaims()))
-      .withGroups(accessToken.getGroups())
       .build();
   }
 

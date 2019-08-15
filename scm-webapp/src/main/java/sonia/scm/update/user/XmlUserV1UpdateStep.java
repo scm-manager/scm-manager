@@ -57,7 +57,8 @@ public class XmlUserV1UpdateStep implements UpdateStep {
 
   @Override
   public void doUpdate() throws JAXBException {
-    Optional<Path> v1UsersFile = determineV1File();
+    Optional<Path> v1UsersFile = determineV1File("users");
+    determineV1File("security");
     if (!v1UsersFile.isPresent()) {
       LOG.info("no v1 file for users found");
       return;
@@ -107,17 +108,17 @@ public class XmlUserV1UpdateStep implements UpdateStep {
     return configurationEntryStoreFactory.withType(AssignedPermission.class).withName("security").build();
   }
 
-  private Optional<Path> determineV1File() {
-    Path existingUsersFile = resolveConfigFile("users");
-    Path usersV1File = resolveConfigFile("usersV1");
-    if (existingUsersFile.toFile().exists()) {
+  private Optional<Path> determineV1File(String filename) {
+    Path existingFile = resolveConfigFile(filename);
+    Path v1File = resolveConfigFile(filename + "V1");
+    if (existingFile.toFile().exists()) {
       try {
-        Files.move(existingUsersFile, usersV1File);
+        Files.move(existingFile, v1File);
       } catch (IOException e) {
-        throw new UpdateException("could not move old users file to " + usersV1File.toAbsolutePath());
+        throw new UpdateException("could not move old " + filename + " file to " + v1File.toAbsolutePath());
       }
-      LOG.info("moved old users file to {}", usersV1File.toAbsolutePath());
-      return of(usersV1File);
+      LOG.info("moved old " + filename + " file to {}", v1File.toAbsolutePath());
+      return of(v1File);
     }
     return empty();
   }

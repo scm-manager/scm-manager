@@ -11,7 +11,10 @@
   "validation": {
     "namespace-invalid": "Der Namespace des Repository ist ungültig",
     "name-invalid": "Der Name des Repository ist ungültig",
-    "contact-invalid": "Der Kontakt muss eine gültige E-Mail Adresse sein"
+    "contact-invalid": "Der Kontakt muss eine gültige E-Mail Adresse sein",
+    "branch": {
+      "nameInvalid": "Der Name des Branches ist ungültig"
+    }
   },
   "help": {
     "namespaceHelpText": "Der Namespace des Repository. Dieser wird Teil der URL des Repository sein.",
@@ -149,13 +152,6 @@
       "nameHelpText": "Verwaltung von Berechtigungen für Benutzer und Gruppen",
       "roleHelpText": "READ = read; WRITE = read und write; OWNER = read, write und auch die Möglichkeit Einstellungen und Berechtigungen zu verwalten. Wenn hier nichts angezeigt wird, den Erweitert-Button benutzen, um Details zu sehen.",
       "permissionsHelpText": "Hier können individuelle Berechtigungen unabhängig von vordefinierten Rollen vergeben werden."
-    },
-    "autocomplete": {
-      "no-group-options": "Kein Gruppenname als Vorschlag verfügbar",
-      "group-placeholder": "Gruppe eingeben",
-      "no-user-options": "Kein Benutzername als Vorschlag verfügbar",
-      "user-placeholder": "Benutzer eingeben",
-      "loading": "suche..."
     },
     "advanced": {
       "dialog": {

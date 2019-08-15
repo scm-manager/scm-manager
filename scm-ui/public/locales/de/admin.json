@@ -6,8 +6,18 @@
       "settingsNavLink": "Einstellungen",
       "generalNavLink": "Generell"
     },
-    "information":  {
-      "currentAppVersion": "Aktuelle Software-Versionsnummer"
+    "info":  {
+      "currentAppVersion": "Aktuelle Software-Versionsnummer",
+      "communityTitle": "Community Support",
+      "communityIconAlt": "Community Support Icon",
+      "communityInfo": "Das SCM-Manager Support-Team steht für allgemeine Fragen, die Meldung von Fehlern sowie Anfragen für Features gerne für Sie über die offiziellen Kanäle bereit.",
+      "communityButton": "Unser Team kontaktieren",
+      "enterpriseTitle": "Enterprise Support",
+      "enterpriseIconAlt": "Enterprise Support Icon",
+      "enterpriseInfo": "Sie benötigen Unterstützung bei der Integration von SCM-Manager in Ihre Prozesse, bei der Anpassung des Tools auf Ihre Anforderungen oder einfach ein Service Level Agreement (SLA)?",
+      "enterprisePartner": "Treten Sie mit unserem Entwicklungs-Partner Cloudogu in Kontakt! Das Team freut sich auf den Austausch über Ihre individuellen Anforderungen und erstellt Ihnen gerne ein maßgeschneidertes Angebot.",
+      "enterpriseLink": "https://cloudogu.com/de/scm-manager-enterprise/",
+      "enterpriseButton": "Enterprise Support anfragen"
     }
   },
   "plugins": {
@@ -44,13 +54,13 @@
       "submit": "Speichern"
     },
     "delete": {
-      "button": "Delete",
-      "subtitle": "Delete Permission Role",
+      "button": "Löschen",
+      "subtitle": "Berechtigungsrolle löschen",
       "confirmAlert": {
-        "title": "Delete Permission Role",
-        "message": "Do you really want to delete this permission role? All users who own this role will lose their permissions.",
-        "submit": "Yes",
-        "cancel": "No"
+        "title": "Berechtigungsrolle löschen?",
+        "message": "Wollen Sie diese Rolle wirklich löschen? Alle Benutzer mit dieser Rolle verlieren die entsprechenden Berechtigungen.",
+        "submit": "Ja",
+        "cancel": "Nein"
       }
     }
   }

@@ -54,11 +54,6 @@ public enum Command
   BRANCHES,
 
   /**
-   * @since 2.0
-   */
-  BRANCH,
-
-  /**
    * @since 1.31
    */
   INCOMING, OUTGOING, PUSH, PULL,
@@ -71,10 +66,5 @@ public enum Command
   /**
    * @since 2.0
    */
-  MODIFICATIONS,
-
-  /**
-   * @since 2.0
-   */
-  MERGE
+  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH;
 }

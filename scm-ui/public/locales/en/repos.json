@@ -153,13 +153,6 @@
       "roleHelpText": "READ = read; WRITE = read and write; OWNER = read, write and also the ability to manage the properties and permissions. If nothing is selected here, use the 'Advanced' Button to see detailed permissions.",
       "permissionsHelpText": "Use this to specify your own set of permissions regardless of predefined roles."
     },
-    "autocomplete": {
-      "no-group-options": "No group suggestion available",
-      "group-placeholder": "Enter group",
-      "no-user-options": "No user suggestion available",
-      "user-placeholder": "Enter user",
-      "loading": "Loading..."
-    },
     "advanced": {
       "dialog": {
         "title": "Advanced Permissions",

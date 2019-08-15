@@ -11,10 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.security.AssignedPermission;
 import sonia.scm.store.ConfigurationEntryStore;
-import sonia.scm.store.ConfigurationEntryStoreFactory;
-import sonia.scm.store.InMemoryConfigurationEntryStore;
 import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
-import sonia.scm.update.security.XmlSecurityV1UpdateStep;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -81,6 +78,32 @@ class XmlSecurityV1UpdateStepTest {
           .collect(toList());
       assertThat(assignedPermission).contains("admins", "vogons");
     }
+
+  }
+
+  @Nested
+  class WithExistingSecurityXml {
+
+    @BeforeEach
+    void createSecurityV1XML(@TempDirectory.TempDir Path tempDir) throws IOException {
+      Path configDir = tempDir.resolve("config");
+      Files.createDirectories(configDir);
+      copyTestDatabaseFile(configDir, "securityV1.xml");
+    }
+
+    @Test
+    void shouldMapV1PermissionsFromSecurityV1XML() throws JAXBException {
+      updateStep.doUpdate();
+      List<String> assignedPermission =
+        assignedPermissionStore.getAll().values()
+          .stream()
+          .filter(a -> a.getPermission().getValue().contains("repository:"))
+          .map(AssignedPermission::getName)
+          .collect(toList());
+      assertThat(assignedPermission).contains("scmadmin");
+      assertThat(assignedPermission).contains("test");
+    }
+
   }
 
   private void copyTestDatabaseFile(Path configDir, String fileName) throws IOException {

@@ -1,24 +1,14 @@
 //@flow
 import React from "react";
-import { Redirect, withRouter } from "react-router-dom";
+import {Redirect, withRouter} from "react-router-dom";
 import injectSheet from "react-jss";
-import { translate } from "react-i18next";
-import {
-  login,
-  isAuthenticated,
-  isLoginPending,
-  getLoginFailure
-} from "../modules/auth";
-import { connect } from "react-redux";
+import {translate} from "react-i18next";
+import {getLoginFailure, isAuthenticated, isLoginPending, login} from "../modules/auth";
+import {connect} from "react-redux";
 
-import {
-  InputField,
-  SubmitButton,
-  ErrorNotification,
-  Image, UnauthorizedError
-} from "@scm-manager/ui-components";
+import {ErrorNotification, Image, InputField, SubmitButton, UnauthorizedError} from "@scm-manager/ui-components";
 import classNames from "classnames";
-import { getLoginLink } from "../modules/indexResource";
+import {getLoginLink} from "../modules/indexResource";
 
 const styles = {
   avatar: {
@@ -95,7 +85,7 @@ class Login extends React.Component<Props, State> {
   areCredentialsInvalid() {
     const { t, error } = this.props;
     if (error instanceof UnauthorizedError) {
-      return new Error(t("error-notification.wrong-login-credentials"));
+      return new Error(t("errorNotification.wrongLoginCredentials"));
     } else {
       return error;
     }

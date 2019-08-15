@@ -19,11 +19,11 @@
       "subtitle": "Ein unbekannter Fehler ist aufgetreten."
     }
   },
-  "error-notification": {
+  "errorNotification": {
     "prefix": "Fehler",
     "loginLink": "Erneute Anmeldung",
     "timeout": "Die Session ist abgelaufen.",
-    "wrong-login-credentials": "Ungültige Anmeldedaten",
+    "wrongLoginCredentials": "Ungültige Anmeldedaten",
     "forbidden": "Sie haben nicht die Berechtigung, diesen Datensatz zu sehen"
   },
   "loading": {
@@ -40,6 +40,15 @@
     "admin": "Administration"
   },
   "filterEntries": "Einträge filtern",
+  "autocomplete": {
+    "group": "Gruppe",
+    "user": "Benutzer",
+    "noGroupOptions": "Kein Gruppenname als Vorschlag verfügbar",
+    "groupPlaceholder": "Gruppe eingeben",
+    "noUserOptions": "Kein Benutzername als Vorschlag verfügbar",
+    "userPlaceholder": "Benutzer eingeben",
+    "loading": "suche..."
+  },
   "paginator": {
     "next": "Weiter",
     "previous": "Zurück"

@@ -37,13 +37,10 @@ package sonia.scm.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.io.Command;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.SimpleCommand;
 import sonia.scm.io.ZipUnArchiver;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -55,11 +52,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -471,8 +469,14 @@ public final class IOUtil
   {
     if (!directory.exists() &&!directory.mkdirs())
     {
-      throw new IllegalStateException(
-        "could not create directory ".concat(directory.getPath()));
+      // Sometimes, the previous check simply has the wrong result (either the 'exists()' returnes false though the
+      // directory exists or 'mkdirs()' returns false though the directory was created successfully.
+      // We therefore have to double check here. Funny though, in these cases a second check with 'directory.exists()'
+      // still returns false. As it seems, 'directory.getAbsoluteFile().exists()' creates a new object that fixes this
+      // problem.
+      if (!directory.getAbsoluteFile().exists()) {
+        throw new IllegalStateException("could not create directory ".concat(directory.getPath()));
+      }
     }
   }
 

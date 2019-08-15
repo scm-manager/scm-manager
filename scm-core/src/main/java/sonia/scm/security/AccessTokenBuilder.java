@@ -100,15 +100,6 @@ public interface AccessTokenBuilder {
   AccessTokenBuilder scope(Scope scope);
 
   /**
-   * Define the logged in user as member of the given groups.
-   *
-   * @param groups group names
-   *
-   * @return {@code this}
-   */
-  AccessTokenBuilder groups(String... groups);
-
-  /**
    * Creates a new {@link AccessToken} with the provided settings.
    * 
    * @return new {@link AccessToken}

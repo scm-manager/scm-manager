@@ -16,7 +16,6 @@ import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
 
-import javax.inject.Provider;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,17 +32,15 @@ public class HttpProtocolServlet extends HttpServlet {
   public static final String PATTERN = PATH + "/*";
 
   private final RepositoryServiceFactory serviceFactory;
-
-  private final Provider<HttpServletRequest> requestProvider;
-
+  private final NamespaceAndNameFromPathExtractor pathExtractor;
   private final PushStateDispatcher dispatcher;
   private final UserAgentParser userAgentParser;
 
 
   @Inject
-  public HttpProtocolServlet(RepositoryServiceFactory serviceFactory, Provider<HttpServletRequest> requestProvider, PushStateDispatcher dispatcher, UserAgentParser userAgentParser) {
+  public HttpProtocolServlet(RepositoryServiceFactory serviceFactory, NamespaceAndNameFromPathExtractor pathExtractor, PushStateDispatcher dispatcher, UserAgentParser userAgentParser) {
     this.serviceFactory = serviceFactory;
-    this.requestProvider = requestProvider;
+    this.pathExtractor = pathExtractor;
     this.dispatcher = dispatcher;
     this.userAgentParser = userAgentParser;
   }
@@ -55,9 +52,8 @@ public class HttpProtocolServlet extends HttpServlet {
       log.trace("dispatch browser request for user agent {}", userAgent);
       dispatcher.dispatch(request, response, request.getRequestURI());
     } else {
-
       String pathInfo = request.getPathInfo();
-      Optional<NamespaceAndName> namespaceAndName = NamespaceAndNameFromPathExtractor.fromUri(pathInfo);
+      Optional<NamespaceAndName> namespaceAndName = pathExtractor.fromUri(pathInfo);
       if (namespaceAndName.isPresent()) {
         service(request, response, namespaceAndName.get());
       } else {
@@ -69,7 +65,7 @@ public class HttpProtocolServlet extends HttpServlet {
 
   private void service(HttpServletRequest req, HttpServletResponse resp, NamespaceAndName namespaceAndName) throws IOException, ServletException {
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
-      requestProvider.get().setAttribute(DefaultRepositoryProvider.ATTRIBUTE_NAME, repositoryService.getRepository());
+      req.setAttribute(DefaultRepositoryProvider.ATTRIBUTE_NAME, repositoryService.getRepository());
       HttpScmProtocol protocol = repositoryService.getProtocol(HttpScmProtocol.class);
       protocol.serve(req, resp, getServletConfig());
     } catch (NotFoundException e) {

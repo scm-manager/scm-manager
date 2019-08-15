@@ -7,10 +7,10 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.lifecycle.RestartEvent;
+import sonia.scm.update.repository.DefaultMigrationStrategyDAO;
 import sonia.scm.update.repository.MigrationStrategy;
-import sonia.scm.update.repository.MigrationStrategyDao;
 import sonia.scm.update.repository.V1Repository;
 import sonia.scm.update.repository.XmlRepositoryV1UpdateStep;
 import sonia.scm.util.ValidationUtil;
@@ -37,10 +37,10 @@ class MigrationWizardServlet extends HttpServlet {
   private static final Logger LOG = LoggerFactory.getLogger(MigrationWizardServlet.class);
 
   private final XmlRepositoryV1UpdateStep repositoryV1UpdateStep;
-  private final MigrationStrategyDao migrationStrategyDao;
+  private final DefaultMigrationStrategyDAO migrationStrategyDao;
 
   @Inject
-  MigrationWizardServlet(XmlRepositoryV1UpdateStep repositoryV1UpdateStep, MigrationStrategyDao migrationStrategyDao) {
+  MigrationWizardServlet(XmlRepositoryV1UpdateStep repositoryV1UpdateStep, DefaultMigrationStrategyDAO migrationStrategyDao) {
     this.repositoryV1UpdateStep = repositoryV1UpdateStep;
     this.migrationStrategyDao = migrationStrategyDao;
   }
@@ -103,11 +103,12 @@ class MigrationWizardServlet extends HttpServlet {
       .forEach(
         entry-> {
           String id = entry.getId();
+          String protocol = entry.getType();
           String originalName = entry.getOriginalName();
           String strategy = req.getParameter("strategy-" + id);
           String namespace = req.getParameter("namespace-" + id);
           String name = req.getParameter("name-" + id);
-          migrationStrategyDao.set(id, originalName, MigrationStrategy.valueOf(strategy), namespace, name);
+          migrationStrategyDao.set(id, protocol, originalName, MigrationStrategy.valueOf(strategy), namespace, name);
         }
       );
 

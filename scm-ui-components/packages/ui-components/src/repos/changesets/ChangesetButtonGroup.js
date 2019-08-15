@@ -1,9 +1,9 @@
 //@flow
 import React from "react";
-import type { Changeset, Repository } from "@scm-manager/ui-types";
-import { ButtonAddons, Button } from "../../buttons";
-import { createChangesetLink, createSourcesLink } from "./changesets";
-import { translate } from "react-i18next";
+import type {Changeset, Repository} from "@scm-manager/ui-types";
+import {Button, ButtonAddons} from "../../buttons";
+import {createChangesetLink, createSourcesLink} from "./changesets";
+import {translate} from "react-i18next";
 
 type Props = {
   repository: Repository,
@@ -21,7 +21,7 @@ class ChangesetButtonGroup extends React.Component<Props> {
     const sourcesLink = createSourcesLink(repository, changeset);
 
     return (
-      <ButtonAddons className="is-pulled-right">
+      <ButtonAddons className="level-item">
         <Button link={changesetLink} className="reduced-mobile">
           <span className="icon">
             <i className="fas fa-exchange-alt" />

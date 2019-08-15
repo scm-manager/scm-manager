@@ -1,16 +1,16 @@
 //@flow
 import React from "react";
-import type { Changeset, Repository, Tag } from "@scm-manager/ui-types";
+import type {Changeset, Repository} from "@scm-manager/ui-types";
 
 import classNames from "classnames";
-import { Interpolate, translate } from "react-i18next";
+import {Interpolate, translate} from "react-i18next";
 import ChangesetId from "./ChangesetId";
 import injectSheet from "react-jss";
-import { DateFromNow } from "../..";
+import {DateFromNow} from "../..";
 import ChangesetAuthor from "./ChangesetAuthor";
-import { parseDescription } from "./changesets";
-import { AvatarWrapper, AvatarImage } from "../../avatar";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import {parseDescription} from "./changesets";
+import {AvatarImage, AvatarWrapper} from "../../avatar";
+import {ExtensionPoint} from "@scm-manager/ui-extensions";
 import ChangesetTags from "./ChangesetTags";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
 
@@ -110,7 +110,16 @@ class ChangesetRow extends React.Component<Props> {
           </div>
           <div className={classNames("column", classes.isVcentered)}>
             <ChangesetTags changeset={changeset} />
-            <ChangesetButtonGroup repository={repository} changeset={changeset} />
+            <div className="is-pulled-right level">
+              <ChangesetButtonGroup repository={repository} changeset={changeset} />
+              <div className={classes.isVcentered}>
+                <ExtensionPoint
+                  name="changeset.right"
+                  props={{ repository, changeset }}
+                  renderAll={true}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

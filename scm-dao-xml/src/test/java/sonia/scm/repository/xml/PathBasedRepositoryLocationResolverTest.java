@@ -120,7 +120,7 @@ class PathBasedRepositoryLocationResolverTest {
     @Test
     void shouldInitWithExistingData() {
       Map<String, Path> foundRepositories = new HashMap<>();
-      resolverWithExistingData.forAllPaths(
+      resolverWithExistingData.forClass(Path.class).forAllLocations(
         foundRepositories::put
       );
       assertThat(foundRepositories)

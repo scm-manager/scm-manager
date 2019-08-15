@@ -1,44 +1,34 @@
 //@flow
 import React from "react";
-import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import {connect} from "react-redux";
+import {translate} from "react-i18next";
 import {
+  createPermission,
+  createPermissionReset,
+  deletePermissionReset,
   fetchAvailablePermissionsIfNeeded,
   fetchPermissions,
-  getFetchAvailablePermissionsFailure,
   getAvailablePermissions,
+  getAvailableRepositoryRoles,
+  getAvailableRepositoryVerbs,
+  getCreatePermissionFailure,
+  getDeletePermissionsFailure,
+  getFetchAvailablePermissionsFailure,
   getFetchPermissionsFailure,
-  isFetchAvailablePermissionsPending,
-  isFetchPermissionsPending,
+  getModifyPermissionsFailure,
   getPermissionsOfRepo,
   hasCreatePermission,
-  createPermission,
   isCreatePermissionPending,
-  getCreatePermissionFailure,
-  createPermissionReset,
-  getDeletePermissionsFailure,
-  getModifyPermissionsFailure,
-  modifyPermissionReset,
-  deletePermissionReset,
-  getAvailableRepositoryRoles,
-  getAvailableRepositoryVerbs
+  isFetchAvailablePermissionsPending,
+  isFetchPermissionsPending,
+  modifyPermissionReset
 } from "../modules/permissions";
-import {
-  Loading,
-  ErrorPage,
-  Subtitle,
-  LabelWithHelpIcon
-} from "@scm-manager/ui-components";
-import type {
-  Permission,
-  PermissionCollection,
-  PermissionCreateEntry,
-  RepositoryRole
-} from "@scm-manager/ui-types";
+import {ErrorPage, LabelWithHelpIcon, Loading, Subtitle} from "@scm-manager/ui-components";
+import type {Permission, PermissionCollection, PermissionCreateEntry, RepositoryRole} from "@scm-manager/ui-types";
 import SinglePermission from "./SinglePermission";
 import CreatePermissionForm from "./CreatePermissionForm";
-import type { History } from "history";
-import { getPermissionsLink } from "../../modules/repos";
+import type {History} from "history";
+import {getPermissionsLink} from "../../modules/repos";
 import {
   getGroupAutoCompleteLink,
   getRepositoryRolesLink,
@@ -60,8 +50,8 @@ type Props = {
   repositoryRolesLink: string,
   repositoryVerbsLink: string,
   permissionsLink: string,
-  groupAutoCompleteLink: string,
-  userAutoCompleteLink: string,
+  groupAutocompleteLink: string,
+  userAutocompleteLink: string,
 
   //dispatch functions
   fetchAvailablePermissionsIfNeeded: (
@@ -129,8 +119,8 @@ class Permissions extends React.Component<Props> {
       repoName,
       loadingCreatePermission,
       hasPermissionToCreate,
-      userAutoCompleteLink,
-      groupAutoCompleteLink
+      userAutocompleteLink,
+      groupAutocompleteLink
     } = this.props;
     if (error) {
       return (
@@ -153,8 +143,8 @@ class Permissions extends React.Component<Props> {
         createPermission={permission => this.createPermission(permission)}
         loading={loadingCreatePermission}
         currentPermissions={permissions}
-        userAutoCompleteLink={userAutoCompleteLink}
-        groupAutoCompleteLink={groupAutoCompleteLink}
+        userAutocompleteLink={userAutocompleteLink}
+        groupAutocompleteLink={groupAutocompleteLink}
       />
     ) : null;
 
@@ -228,8 +218,8 @@ const mapStateToProps = (state, ownProps) => {
   const repositoryRolesLink = getRepositoryRolesLink(state);
   const repositoryVerbsLink = getRepositoryVerbsLink(state);
   const permissionsLink = getPermissionsLink(state, namespace, repoName);
-  const groupAutoCompleteLink = getGroupAutoCompleteLink(state);
-  const userAutoCompleteLink = getUserAutoCompleteLink(state);
+  const groupAutocompleteLink = getGroupAutoCompleteLink(state);
+  const userAutocompleteLink = getUserAutoCompleteLink(state);
   const availablePermissions = getAvailablePermissions(state);
   const availableRepositoryRoles = getAvailableRepositoryRoles(state);
   const availableVerbs = getAvailableRepositoryVerbs(state);
@@ -248,8 +238,8 @@ const mapStateToProps = (state, ownProps) => {
     hasPermissionToCreate,
     loadingCreatePermission,
     permissionsLink,
-    groupAutoCompleteLink,
-    userAutoCompleteLink
+    groupAutocompleteLink,
+    userAutocompleteLink
   };
 };
 

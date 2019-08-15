@@ -1,25 +1,20 @@
 // @flow
 import React from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import type { Branch, Repository } from "@scm-manager/ui-types";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
+import type {Branch, Repository} from "@scm-manager/ui-types";
 import FileTree from "../components/FileTree";
-import {
-  ErrorNotification,
-  Loading,
-  BranchSelector,
-  Breadcrumb
-} from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
+import {BranchSelector, Breadcrumb, ErrorNotification, Loading} from "@scm-manager/ui-components";
+import {translate} from "react-i18next";
 import {
   fetchBranches,
   getBranches,
   getFetchBranchesFailure,
   isFetchBranchesPending
 } from "../../branches/modules/branches";
-import { compose } from "redux";
+import {compose} from "redux";
 import Content from "./Content";
-import { fetchSources, isDirectory } from "../modules/sources";
+import {fetchSources, isDirectory} from "../modules/sources";
 
 type Props = {
   repository: Repository,
@@ -99,7 +94,7 @@ class Sources extends React.Component<Props> {
       return (
         <div className="panel">
           {this.renderBranchSelector()}
-          <Breadcrumb revision={revision} path={path} baseUrl={baseUrl} />
+          <Breadcrumb revision={encodeURIComponent(revision)} path={path} baseUrl={baseUrl} />
           <FileTree
             repository={repository}
             revision={revision}

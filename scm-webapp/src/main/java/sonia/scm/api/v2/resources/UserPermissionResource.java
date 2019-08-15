@@ -5,6 +5,7 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
+import sonia.scm.security.PermissionPermissions;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -48,6 +49,7 @@ public class UserPermissionResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response getPermissions(@PathParam("id") String id) {
+    PermissionPermissions.read().check();
     Collection<PermissionDescriptor> permissions = permissionAssigner.readPermissionsForUser(id);
     return Response.ok(permissionCollectionToDtoMapper.mapForUser(permissions, id)).build();
   }

@@ -89,8 +89,6 @@ public class GitRepositoryHandler
                                     GitRepositoryServiceProvider.COMMANDS);
 
   private static final Object LOCK = new Object();
-  private static final String CONFIG_SECTION_SCMM = "scmm";
-  private static final String CONFIG_KEY_REPOSITORY_ID = "repositoryid";
 
   private final Scheduler scheduler;
 
@@ -185,7 +183,7 @@ public class GitRepositoryHandler
   }
 
   public String getRepositoryId(StoredConfig gitConfig) {
-    return gitConfig.getString(GitRepositoryHandler.CONFIG_SECTION_SCMM, null, GitRepositoryHandler.CONFIG_KEY_REPOSITORY_ID);
+    return new GitConfigHelper().getRepositoryId(gitConfig);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -194,9 +192,7 @@ public class GitRepositoryHandler
   protected void create(Repository repository, File directory) throws IOException {
     try (org.eclipse.jgit.lib.Repository gitRepository = build(directory)) {
       gitRepository.create(true);
-      StoredConfig config = gitRepository.getConfig();
-      config.setString(CONFIG_SECTION_SCMM, null, CONFIG_KEY_REPOSITORY_ID, repository.getId());
-      config.save();
+      new GitConfigHelper().createScmmConfig(repository, gitRepository);
     }
   }
 

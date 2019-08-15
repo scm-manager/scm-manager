@@ -40,7 +40,7 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
-import sonia.scm.store.StoreConstants;
+import sonia.scm.repository.RepositoryLocationResolver;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -76,16 +76,12 @@ public class XmlRepositoryDAO implements RepositoryDAO {
   }
 
   private void init() {
-    repositoryLocationResolver.forAllPaths((repositoryId, repositoryPath) -> {
-      Path metadataPath = resolveDataPath(repositoryPath);
-      Repository repository = metadataStore.read(metadataPath);
+    RepositoryLocationResolver.RepositoryLocationResolverInstance<Path> pathRepositoryLocationResolverInstance = repositoryLocationResolver.create(Path.class);
+    pathRepositoryLocationResolverInstance.forAllLocations((repositoryId, repositoryPath) -> {
+      Repository repository = metadataStore.read(repositoryPath);
       byNamespaceAndName.put(repository.getNamespaceAndName(), repository);
       byId.put(repositoryId, repository);
     });
-  }
-
-  private Path resolveDataPath(Path repositoryPath) {
-    return repositoryPath.resolve(StoreConstants.REPOSITORY_METADATA.concat(StoreConstants.FILE_EXTENSION));
   }
 
   @Override
@@ -108,8 +104,7 @@ public class XmlRepositoryDAO implements RepositoryDAO {
       Path repositoryPath = (Path) location;
 
       try {
-        Path metadataPath = resolveDataPath(repositoryPath);
-        metadataStore.write(metadataPath, repository);
+        metadataStore.write(repositoryPath, repository);
       } catch (Exception e) {
         repositoryLocationResolver.remove(repository.getId());
         throw new InternalRepositoryException(repository, "failed to create filesystem", e);
@@ -166,9 +161,8 @@ public class XmlRepositoryDAO implements RepositoryDAO {
     Path repositoryPath = repositoryLocationResolver
       .create(Path.class)
       .getLocation(repository.getId());
-    Path metadataPath = resolveDataPath(repositoryPath);
     repositoryLocationResolver.updateModificationDate();
-    metadataStore.write(metadataPath, clone);
+    metadataStore.write(repositoryPath, clone);
   }
 
   @Override

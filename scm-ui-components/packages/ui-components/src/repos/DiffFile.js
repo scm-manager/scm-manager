@@ -1,17 +1,10 @@
 //@flow
 import React from "react";
-import {
-  Hunk,
-  Diff as DiffComponent,
-  getChangeKey,
-  Change,
-  DiffObjectProps,
-  File
-} from "react-diff-view";
+import {Change, Diff as DiffComponent, DiffObjectProps, File, getChangeKey, Hunk} from "react-diff-view";
 import injectSheets from "react-jss";
 import classNames from "classnames";
-import { translate } from "react-i18next";
-import { ButtonGroup, Button } from "../buttons";
+import {translate} from "react-i18next";
+import {Button, ButtonGroup} from "../buttons";
 
 const styles = {
   panel: {
@@ -178,12 +171,20 @@ class DiffFile extends React.Component<Props, State> {
     if (key === value) {
       value = file.type;
     }
+    const color =
+      value === "added"
+        ? "is-success"
+        : value === "deleted"
+          ? "is-danger"
+          : "is-info";
+
     return (
       <span
         className={classNames(
           "tag",
-          "is-info",
+          "is-rounded",
           "has-text-weight-normal",
+          color,
           classes.changeType
         )}
       >
