@@ -1,6 +1,5 @@
 //@flow
 import * as React from "react";
-import { ErrorNotification } from "@scm-manager/ui-components";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 import { translate } from "react-i18next";
