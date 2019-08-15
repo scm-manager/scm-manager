@@ -25,16 +25,8 @@ const styles = {
     marginLeft: "1.5em"
   },
   link: {
-    width: "60%",
-    height: "200px",
-    position: "absolute",
-    cursor: "pointer",
-    zIndex: 20
-  },
-  "@media (max-width: 768px)": {
-    link: {
-      width: "100%"
-    }
+    display: "block",
+    marginBottom: "1.5rem"
   }
 };
 
@@ -58,28 +50,18 @@ class InfoBox extends React.Component<Props> {
 
     return (
       <div className={bodyClasses}>
-        <h4>
-          <a href={item._links.self.href}>{title}</a>
-        </h4>
+        <h4 className="has-text-link">{title}</h4>
         <p>{summary}</p>
       </div>
     );
 
   };
 
-
-  createLink = () => {
-    const { item, classes } = this.props;
-    // eslint-disable-next-line jsx-a11y/anchor-has-content
-    return <a href={item._links.self.href} className={classes.link}/>;
-  };
-
   render() {
-    const { type, classes, t } = this.props;
+    const { item, type, classes, t } = this.props;
     const icon = type === "plugin" ? "puzzle-piece" : "star";
     return (
-      <>
-        {this.createLink()}
+      <a href={item._links.self.href} className={classes.link}>
         <div className="box media">
           <figure className="media-left">
             <div
@@ -91,7 +73,7 @@ class InfoBox extends React.Component<Props> {
           </figure>
           {this.renderBody()}
         </div>
-      </>
+      </a>
     );
   }
 
