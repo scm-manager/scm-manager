@@ -1,4 +1,4 @@
-package sonia.scm.api.v2.resources;
+package sonia.scm.plugin;
 
 import com.google.common.collect.ImmutableList;
 import lombok.AllArgsConstructor;
@@ -45,10 +45,10 @@ public final class PluginCenterDto implements Serializable {
   public static class Plugin {
 
     private String name;
+    private String version;
     private String displayName;
     private String description;
     private String category;
-    private String version;
     private String author;
     private String avatarUrl;
     private String sha256;
@@ -86,6 +86,5 @@ public final class PluginCenterDto implements Serializable {
   @Getter
   static class Link {
     private String href;
-    private boolean templated;
   }
 }

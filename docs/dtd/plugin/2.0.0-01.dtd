@@ -46,11 +46,11 @@
 <!--- the current version of the plugin -->
 <!ELEMENT version (#PCDATA)>
 
-  <!--- plugin displayName -->
-  <!ELEMENT displayName (#PCDATA)>
+<!--- plugin displayName -->
+<!ELEMENT displayName (#PCDATA)>
 
-  <!--- url of the plugin avatar -->
-  <!ELEMENT avatarUrl (#PCDATA)>
+<!--- url of the plugin avatar -->
+<!ELEMENT avatarUrl (#PCDATA)>
 
 <!--- true if the plugin should load child classes first, the default is false -->
 <!ELEMENT child-first-classloader (#PCDATA)>

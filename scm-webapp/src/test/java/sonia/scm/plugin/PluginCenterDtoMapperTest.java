@@ -1,8 +1,6 @@
-package sonia.scm.api.v2.resources;
+package sonia.scm.plugin;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import sonia.scm.plugin.PluginInformation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,18 +10,10 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static sonia.scm.api.v2.resources.PluginCenterDto.Condition;
-import static sonia.scm.api.v2.resources.PluginCenterDto.Dependency;
-import static sonia.scm.api.v2.resources.PluginCenterDto.Plugin;
+import static sonia.scm.plugin.PluginCenterDto.Plugin;
+import static sonia.scm.plugin.PluginCenterDto.*;
 
 class PluginCenterDtoMapperTest {
-
-  private PluginCenterDtoMapper pluginCenterDtoMapper;
-
-  @BeforeEach
-  void initMapper() {
-    pluginCenterDtoMapper = new PluginCenterDtoMapper();
-  }
 
   @Test
   void shouldMapSinglePlugin() {
@@ -82,10 +72,10 @@ class PluginCenterDtoMapperTest {
 
     Set<PluginInformation> resultSet = PluginCenterDtoMapper.map(Arrays.asList(plugin1, plugin2));
 
-    List pluginsList = new ArrayList(resultSet);
+    List<PluginInformation> pluginsList = new ArrayList<>(resultSet);
 
-    PluginInformation pluginInformation1 = (PluginInformation) pluginsList.get(1);
-    PluginInformation pluginInformation2 = (PluginInformation) pluginsList.get(0);
+    PluginInformation pluginInformation1 = pluginsList.get(1);
+    PluginInformation pluginInformation2 = pluginsList.get(0);
 
     assertThat(pluginInformation1.getAuthor()).isEqualTo(plugin1.getAuthor());
     assertThat(pluginInformation1.getVersion()).isEqualTo(plugin1.getVersion());

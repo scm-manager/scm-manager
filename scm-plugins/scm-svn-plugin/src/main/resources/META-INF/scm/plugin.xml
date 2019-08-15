@@ -47,13 +47,7 @@
 
   <information>
     <author>Sebastian Sdorra</author>
-    <category>Subversion</category>
-    <tags>
-      <tag>subversion</tag>
-      <tag>scm</tag>
-      <tag>vcs</tag>
-      <tag>svn</tag>
-    </tags>
+    <category>Source Code Management</category>
   </information>
 
   <conditions>

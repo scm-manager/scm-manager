@@ -35,10 +35,7 @@ package sonia.scm.plugin;
 
 import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
 
@@ -52,6 +49,7 @@ import java.io.Serializable;
 /**
  * @author Sebastian Sdorra
  */
+@Data
 @StaticPermissions(
   value = "plugin",
   generatedClass = "PluginPermissions",
@@ -61,40 +59,34 @@ import java.io.Serializable;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "plugin-information")
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
 public class PluginInformation implements PermissionObject, Validateable, Cloneable, Serializable {
 
   private static final long serialVersionUID = 461382048865977206L;
 
-  private String author;
-  private String category;
-  private PluginCondition condition;
-  private String description;
   private String name;
-  private PluginState state;
   private String version;
   private String displayName;
+  private String description;
+  private String author;
+  private String category;
   private String avatarUrl;
+  private PluginCondition condition;
+  private PluginState state;
 
   @Override
   public PluginInformation clone() {
     PluginInformation clone = new PluginInformation();
     clone.setName(name);
-    clone.setAuthor(author);
-    clone.setCategory(category);
-    clone.setDescription(description);
-    clone.setState(state);
     clone.setVersion(version);
     clone.setDisplayName(displayName);
+    clone.setDescription(description);
+    clone.setAuthor(author);
+    clone.setCategory(category);
     clone.setAvatarUrl(avatarUrl);
-
+    clone.setState(state);
     if (condition != null) {
       clone.setCondition(condition.clone());
     }
-
     return clone;
   }
 

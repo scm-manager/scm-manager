@@ -46,7 +46,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
-import sonia.scm.api.v2.resources.PluginCenterDto;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
@@ -79,7 +78,7 @@ import javax.xml.bind.JAXB;
 
 import sonia.scm.net.ahc.AdvancedHttpClient;
 
-import static sonia.scm.api.v2.resources.PluginCenterDtoMapper.*;
+import static sonia.scm.plugin.PluginCenterDtoMapper.*;
 
 /**
  * TODO replace aether stuff.
@@ -595,14 +594,8 @@ public class DefaultPluginManager implements PluginManager
     {
       synchronized (DefaultPluginManager.class)
       {
-        String pluginUrl = configuration.getPluginUrl();
-
-        pluginUrl = buildPluginUrl(pluginUrl);
-
-        if (logger.isInfoEnabled())
-        {
-          logger.info("fetch plugin informations from {}", pluginUrl);
-        }
+        String pluginUrl = buildPluginUrl(configuration.getPluginUrl());
+        logger.info("fetch plugin information from {}", pluginUrl);
 
         if (REMOTE_PLUGINS_ENABLED && Util.isNotEmpty(pluginUrl))
         {

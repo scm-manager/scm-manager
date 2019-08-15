@@ -12,11 +12,12 @@ import lombok.Setter;
 public class PluginDto extends HalRepresentation {
 
   private String name;
-  private String category;
   private String version;
-  private String author;
-  private String avatarUrl;
+  private String displayName;
   private String description;
+  private String author;
+  private String category;
+  private String avatarUrl;
 
   public PluginDto(Links links) {
     add(links);

@@ -47,14 +47,7 @@ jo
 
   <information>
     <author>Sebastian Sdorra</author>
-    <category>Mercurial</category>
-    <tags>
-      <tag>mercurial</tag>
-      <tag>hg</tag>
-      <tag>scm</tag>
-      <tag>vcs</tag>
-      <tag>dvcs</tag>
-    </tags>
+    <category>Source Code Management</category>
   </information>
 
   <conditions>
