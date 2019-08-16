@@ -464,32 +464,28 @@
         <groupId>sonia.scm.maven</groupId>
         <artifactId>smp-maven-plugin</artifactId>
         <configuration>
-          <artifactItems>
-            <artifactItem>
+          <smpArtifacts>
+            <artifact>
               <groupId>sonia.scm.plugins</groupId>
               <artifactId>scm-hg-plugin</artifactId>
               <version>${project.version}</version>
-              <type>smp</type>
-            </artifactItem>
-            <artifactItem>
+            </artifact>
+            <artifact>
               <groupId>sonia.scm.plugins</groupId>
               <artifactId>scm-svn-plugin</artifactId>
               <version>${project.version}</version>
-              <type>smp</type>
-            </artifactItem>
-            <artifactItem>
+            </artifact>
+            <artifact>
               <groupId>sonia.scm.plugins</groupId>
               <artifactId>scm-git-plugin</artifactId>
               <version>${project.version}</version>
-              <type>smp</type>
-            </artifactItem>
-            <artifactItem>
+            </artifact>
+            <artifact>
               <groupId>sonia.scm.plugins</groupId>
               <artifactId>scm-legacy-plugin</artifactId>
               <version>${project.version}</version>
-              <type>smp</type>
-            </artifactItem>
-          </artifactItems>
+            </artifact>
+          </smpArtifacts>
         </configuration>
         <executions>
           <execution>
