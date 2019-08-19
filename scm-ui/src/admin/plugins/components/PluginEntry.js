@@ -54,7 +54,7 @@ class PluginEntry extends React.Component<Props> {
       <CardColumn
         link="#"
         avatar={avatar}
-        title={plugin.name}
+        title={plugin.displayName ? plugin.displayName : plugin.name}
         description={plugin.description}
         contentRight={contentRight}
         footerLeft={footerLeft}
