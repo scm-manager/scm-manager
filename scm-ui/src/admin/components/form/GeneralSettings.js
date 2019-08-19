@@ -29,6 +29,7 @@ class GeneralSettings extends React.Component<Props> {
       t,
       realmDescription,
       loginInfoUrl,
+      pluginUrl,
       enabledXsrfProtection,
       namespaceStrategy,
       hasUpdatePermission,
@@ -78,6 +79,17 @@ class GeneralSettings extends React.Component<Props> {
             />
           </div>
         </div>
+        <div className="columns">
+          <div className="column is-half">
+            <InputField
+              label={t("general-settings.plugin-url")}
+              onChange={this.handlePluginCenterUrlChange}
+              value={pluginUrl}
+              disabled={!hasUpdatePermission}
+              helpText={t("help.pluginUrlHelpText")}
+            />
+          </div>
+        </div>
       </div>
     );
   }
@@ -85,7 +97,6 @@ class GeneralSettings extends React.Component<Props> {
   handleLoginInfoUrlChange = (value: string) => {
     this.props.onChange(true, value, "loginInfoUrl");
   };
-
   handleRealmDescriptionChange = (value: string) => {
     this.props.onChange(true, value, "realmDescription");
   };
@@ -94,6 +105,9 @@ class GeneralSettings extends React.Component<Props> {
   };
   handleNamespaceStrategyChange = (value: string) => {
     this.props.onChange(true, value, "namespaceStrategy");
+  };
+  handlePluginCenterUrlChange = (value: string) => {
+    this.props.onChange(true, value, "pluginUrl");
   };
 }
 
