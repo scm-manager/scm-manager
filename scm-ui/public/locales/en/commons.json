@@ -5,7 +5,12 @@
     "logo-alt": "SCM-Manager",
     "username-placeholder": "Your Username",
     "password-placeholder": "Your Password",
-    "submit": "Login"
+    "submit": "Login",
+    "plugin": "Plugin",
+    "feature": "Feature",
+    "tip": "Tip",
+    "loading": "Loading ...",
+    "error": "Error"
   },
   "logout": {
     "error": {

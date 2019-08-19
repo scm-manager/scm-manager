@@ -526,5 +526,9 @@ form .field:not(.is-grouped) {
   }
 }
 
+// cursor
+.has-cursor-pointer {
+  cursor: pointer;
+}
 
 @import "bulma-popover/css/bulma-popover";

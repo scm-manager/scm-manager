@@ -54,6 +54,7 @@ class ConfigForm extends React.Component<Props, State> {
         loginAttemptLimitTimeout: 0,
         enabledXsrfProtection: true,
         namespaceStrategy: "",
+        loginInfoUrl: "",
         _links: {}
       },
       showNotification: false,
@@ -119,6 +120,7 @@ class ConfigForm extends React.Component<Props, State> {
         {noPermissionNotification}
         <GeneralSettings
           namespaceStrategies={namespaceStrategies}
+          loginInfoUrl={config.loginInfoUrl}
           realmDescription={config.realmDescription}
           enableRepositoryArchive={config.enableRepositoryArchive}
           disableGroupingGrid={config.disableGroupingGrid}
