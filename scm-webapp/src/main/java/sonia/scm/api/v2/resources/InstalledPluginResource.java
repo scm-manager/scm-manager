@@ -5,6 +5,7 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginLoader;
+import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.plugin.PluginWrapper;
 import sonia.scm.web.VndMediaType;
@@ -22,17 +23,19 @@ import java.util.Optional;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
-public class PluginResource {
+public class InstalledPluginResource {
 
   private final PluginLoader pluginLoader;
   private final PluginDtoCollectionMapper collectionMapper;
   private final PluginDtoMapper mapper;
+  private final PluginManager pluginManager;
 
   @Inject
-  public PluginResource(PluginLoader pluginLoader, PluginDtoCollectionMapper collectionMapper, PluginDtoMapper mapper) {
+  public InstalledPluginResource(PluginLoader pluginLoader, PluginDtoCollectionMapper collectionMapper, PluginDtoMapper mapper, PluginManager pluginManager) {
     this.pluginLoader = pluginLoader;
     this.collectionMapper = collectionMapper;
     this.mapper = mapper;
+    this.pluginManager = pluginManager;
   }
 
   /**
@@ -57,12 +60,12 @@ public class PluginResource {
   /**
    * Returns the installed plugin with the given id.
    *
-   * @param id id of plugin
+   * @param name name of plugin
    *
    * @return installed plugin with specified id
    */
   @GET
-  @Path("{id}")
+  @Path("/{name}")
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 404, condition = "not found"),
@@ -70,18 +73,17 @@ public class PluginResource {
   })
   @TypeHint(PluginDto.class)
   @Produces(VndMediaType.PLUGIN)
-  public Response getInstalledPlugin(@PathParam("id") String id) {
+  public Response getInstalledPlugin(@PathParam("name") String name) {
     PluginPermissions.read().check();
     Optional<PluginDto> pluginDto = pluginLoader.getInstalledPlugins()
       .stream()
-      .filter(plugin -> id.equals(plugin.getPlugin().getInformation().getId(false)))
+      .filter(plugin -> name.equals(plugin.getPlugin().getInformation().getName()))
       .map(mapper::map)
       .findFirst();
     if (pluginDto.isPresent()) {
       return Response.ok(pluginDto.get()).build();
     } else {
-      throw notFound(entity(Plugin.class, id));
+      throw notFound(entity(Plugin.class, name));
     }
   }
-
 }

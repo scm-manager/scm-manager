@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import { apiClient } from "../apiclient";
+import {apiClient} from "../apiclient";
 import ErrorNotification from "../ErrorNotification";
 import parser from "gitdiff-parser";
 

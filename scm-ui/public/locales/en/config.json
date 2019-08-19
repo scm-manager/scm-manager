@@ -41,7 +41,7 @@
     "date-format": "Date Format",
     "anonymous-access-enabled": "Anonymous Access Enabled",
     "skip-failed-authenticators": "Skip Failed Authenticators",
-    "plugin-url": "Plugin URL",
+    "plugin-url": "Plugin Center URL",
     "enabled-xsrf-protection": "Enabled XSRF Protection",
     "namespace-strategy": "Namespace Strategy",
     "login-info-url": "Login Info URL"
@@ -55,7 +55,7 @@
   "help": {
     "realmDescriptionHelpText": "Enter authentication realm description.",
     "dateFormatHelpText": "Moments date format. Please have a look at the MomentJS documentation.",
-    "pluginRepositoryHelpText": "The url of the plugin repository. Explanation of the placeholders: version = SCM-Manager Version; os = Operation System; arch = Architecture",
+    "pluginUrlHelpText": "The url of the Plugin Center API. Explanation of the placeholders: version = SCM-Manager Version; os = Operation System; arch = Architecture",
     "enableForwardingHelpText": "Enable mod_proxy port forwarding.",
     "enableRepositoryArchiveHelpText": "Enable repository archives. A complete page reload is required after a change of this value.",
     "disableGroupingGridHelpText": "Disable repository Groups. A complete page reload is required after a change of this value.",

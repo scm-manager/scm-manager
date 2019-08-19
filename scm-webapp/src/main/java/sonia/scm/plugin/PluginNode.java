@@ -126,7 +126,7 @@ public final class PluginNode
    */
   public String getId()
   {
-    return plugin.getPlugin().getInformation().getId(false);
+    return plugin.getPlugin().getInformation().getName(false);
   }
 
   /**

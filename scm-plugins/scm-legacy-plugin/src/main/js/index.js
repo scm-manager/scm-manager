@@ -1,14 +1,9 @@
 // @flow
 
 import React from "react";
-import { withRouter } from "react-router-dom";
-import { binder } from "@scm-manager/ui-extensions";
-import {
-  ProtectedRoute,
-  apiClient,
-  ErrorNotification,
-  ErrorBoundary
-} from "@scm-manager/ui-components";
+import {withRouter} from "react-router-dom";
+import {binder} from "@scm-manager/ui-extensions";
+import {apiClient, ErrorBoundary, ErrorNotification, ProtectedRoute} from "@scm-manager/ui-components";
 import DummyComponent from "./DummyComponent";
 import type {Links} from "@scm-manager/ui-types";
 

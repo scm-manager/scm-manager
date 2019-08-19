@@ -78,6 +78,8 @@ import javax.xml.bind.JAXB;
 
 import sonia.scm.net.ahc.AdvancedHttpClient;
 
+import static sonia.scm.plugin.PluginCenterDtoMapper.*;
+
 /**
  * TODO replace aether stuff.
  * TODO check AdvancedPluginConfiguration from 1.x
@@ -99,7 +101,7 @@ public class DefaultPluginManager implements PluginManager
     LoggerFactory.getLogger(DefaultPluginManager.class);
 
   /** enable or disable remote plugins */
-  private static final boolean REMOTE_PLUGINS_ENABLED = false;
+  private static final boolean REMOTE_PLUGINS_ENABLED = true;
 
   /** Field description */
   public static final Predicate<PluginInformation> FILTER_UPDATES =
@@ -180,8 +182,6 @@ public class DefaultPluginManager implements PluginManager
     PluginPermissions.manage().check();
     
     PluginCenter center = getPluginCenter();
-
-    // pluginHandler.install(id);
 
     for (PluginInformation plugin : center.getPlugins())
     {
@@ -309,14 +309,12 @@ public class DefaultPluginManager implements PluginManager
     PluginPermissions.manage().check();
 
     String[] idParts = id.split(":");
-    String groupId = idParts[0];
-    String artefactId = idParts[1];
+    String name = idParts[0];
     PluginInformation installed = null;
 
     for (PluginInformation info : getInstalled())
     {
-      if (groupId.equals(info.getGroupId())
-        && artefactId.equals(info.getArtifactId()))
+      if (name.equals(info.getName()))
       {
         installed = info;
 
@@ -326,9 +324,9 @@ public class DefaultPluginManager implements PluginManager
 
     if (installed == null)
     {
-      StringBuilder msg = new StringBuilder(groupId);
+      StringBuilder msg = new StringBuilder(name);
 
-      msg.append(":").append(groupId).append(" is not install");
+      msg.append(" is not install");
 
       throw new PluginNotInstalledException(msg.toString());
     }
@@ -423,7 +421,7 @@ public class DefaultPluginManager implements PluginManager
 
     for (PluginInformation info : centerPlugins)
     {
-      if (!installedPlugins.containsKey(info.getId()))
+      if (!installedPlugins.containsKey(info.getName()))
       {
         availablePlugins.add(info);
       }
@@ -596,48 +594,28 @@ public class DefaultPluginManager implements PluginManager
     {
       synchronized (DefaultPluginManager.class)
       {
-        String pluginUrl = configuration.getPluginUrl();
+        String pluginUrl = buildPluginUrl(configuration.getPluginUrl());
+        logger.info("fetch plugin information from {}", pluginUrl);
 
-        pluginUrl = buildPluginUrl(pluginUrl);
-
-        if (logger.isInfoEnabled())
-        {
-          logger.info("fetch plugin informations from {}", pluginUrl);
-        }
-
-        /**
-         * remote plugins are disabled for early 2.0.0-SNAPSHOTS
-         * TODO enable remote plugins later
-         */
         if (REMOTE_PLUGINS_ENABLED && Util.isNotEmpty(pluginUrl))
         {
           try
           {
-            center = httpClient.get(pluginUrl).request().contentFromXml(PluginCenter.class);
+            center = new PluginCenter();
+            PluginCenterDto pluginCenterDto = httpClient.get(pluginUrl).request().contentFromJson(PluginCenterDto.class);
+            Set<PluginInformation> pluginInformationSet = map(pluginCenterDto.getEmbedded().getPlugins());
+            center.setPlugins(pluginInformationSet);
             preparePlugins(center);
             cache.put(PluginCenter.class.getName(), center);
-
-            /*
-             * if (pluginHandler == null)
-             * {
-             * pluginHandler = new AetherPluginHandler(this,
-             *   SCMContext.getContext(), configuration,
-             *   advancedPluginConfiguration);
-             * }
-             *
-             * pluginHandler.setPluginRepositories(center.getRepositories());
-             */
           }
           catch (IOException ex)
           {
             logger.error("could not load plugins from plugin center", ex);
           }
         }
-
-        if (center == null)
-        {
-          center = new PluginCenter();
-        }
+      }
+      if(center == null) {
+        center = new PluginCenter();
       }
     }
 
@@ -719,8 +697,7 @@ public class DefaultPluginManager implements PluginManager
    */
   private boolean isSamePlugin(PluginInformation p1, PluginInformation p2)
   {
-    return p1.getGroupId().equals(p2.getGroupId())
-      && p1.getArtifactId().equals(p2.getArtifactId());
+    return p1.getName().equals(p2.getName());
   }
 
   //~--- fields ---------------------------------------------------------------

@@ -109,7 +109,7 @@ public final class PluginsInternal
   {
     PluginInformation info = plugin.getInformation();
 
-    return new File(new File(parent, info.getGroupId()), info.getArtifactId());
+    return new File(parent, info.getName());
   }
 
   /**
@@ -131,14 +131,14 @@ public final class PluginsInternal
     if (directory.exists())
     {
       logger.debug("delete directory {} for plugin extraction",
-        archive.getPlugin().getInformation().getId(false));
+        archive.getPlugin().getInformation().getName(false));
       IOUtil.delete(directory);
     }
 
     IOUtil.mkdirs(directory);
 
     logger.debug("extract plugin {}",
-      archive.getPlugin().getInformation().getId(false));
+      archive.getPlugin().getInformation().getName(false));
     archive.extract(directory);
     Files.write(checksum, checksumFile, Charsets.UTF_8);
 

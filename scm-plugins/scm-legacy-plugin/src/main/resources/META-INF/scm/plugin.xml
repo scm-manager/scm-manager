@@ -46,7 +46,9 @@
   <scm-version>2</scm-version>
 
   <information>
-    <author>Sebastian Sdorra</author>
+    <displayName>Legacy</displayName>
+    <author>Cloudogu GmbH</author>
+    <category>Legacy Support</category>
   </information>
 
   <conditions>

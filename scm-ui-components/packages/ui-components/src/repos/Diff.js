@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
 import DiffFile from "./DiffFile";
-import type { DiffObjectProps, File } from "./DiffTypes";
+import type {DiffObjectProps, File} from "./DiffTypes";
 
 type Props = DiffObjectProps & {
   diff: File[]

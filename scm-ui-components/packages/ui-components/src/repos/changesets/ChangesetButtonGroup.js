@@ -1,9 +1,9 @@
 //@flow
 import React from "react";
-import type { Changeset, Repository } from "@scm-manager/ui-types";
-import { ButtonAddons, Button } from "../../buttons";
-import { createChangesetLink, createSourcesLink } from "./changesets";
-import { translate } from "react-i18next";
+import type {Changeset, Repository} from "@scm-manager/ui-types";
+import {Button, ButtonAddons} from "../../buttons";
+import {createChangesetLink, createSourcesLink} from "./changesets";
+import {translate} from "react-i18next";
 
 type Props = {
   repository: Repository,

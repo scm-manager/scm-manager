@@ -1,6 +1,5 @@
 package sonia.scm.repository.spi;
 
-import com.google.common.base.Throwables;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import sonia.scm.repository.GitUtil;

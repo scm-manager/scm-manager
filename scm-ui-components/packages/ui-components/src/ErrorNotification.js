@@ -1,7 +1,7 @@
 //@flow
 import React from "react";
-import { translate } from "react-i18next";
-import { BackendError, ForbiddenError, UnauthorizedError } from "./errors";
+import {translate} from "react-i18next";
+import {BackendError, ForbiddenError, UnauthorizedError} from "./errors";
 import Notification from "./Notification";
 import BackendErrorNotification from "./BackendErrorNotification";
 

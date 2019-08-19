@@ -1,44 +1,34 @@
 //@flow
 import React from "react";
-import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import {connect} from "react-redux";
+import {translate} from "react-i18next";
 import {
+  createPermission,
+  createPermissionReset,
+  deletePermissionReset,
   fetchAvailablePermissionsIfNeeded,
   fetchPermissions,
-  getFetchAvailablePermissionsFailure,
   getAvailablePermissions,
+  getAvailableRepositoryRoles,
+  getAvailableRepositoryVerbs,
+  getCreatePermissionFailure,
+  getDeletePermissionsFailure,
+  getFetchAvailablePermissionsFailure,
   getFetchPermissionsFailure,
-  isFetchAvailablePermissionsPending,
-  isFetchPermissionsPending,
+  getModifyPermissionsFailure,
   getPermissionsOfRepo,
   hasCreatePermission,
-  createPermission,
   isCreatePermissionPending,
-  getCreatePermissionFailure,
-  createPermissionReset,
-  getDeletePermissionsFailure,
-  getModifyPermissionsFailure,
-  modifyPermissionReset,
-  deletePermissionReset,
-  getAvailableRepositoryRoles,
-  getAvailableRepositoryVerbs
+  isFetchAvailablePermissionsPending,
+  isFetchPermissionsPending,
+  modifyPermissionReset
 } from "../modules/permissions";
-import {
-  Loading,
-  ErrorPage,
-  Subtitle,
-  LabelWithHelpIcon
-} from "@scm-manager/ui-components";
-import type {
-  Permission,
-  PermissionCollection,
-  PermissionCreateEntry,
-  RepositoryRole
-} from "@scm-manager/ui-types";
+import {ErrorPage, LabelWithHelpIcon, Loading, Subtitle} from "@scm-manager/ui-components";
+import type {Permission, PermissionCollection, PermissionCreateEntry, RepositoryRole} from "@scm-manager/ui-types";
 import SinglePermission from "./SinglePermission";
 import CreatePermissionForm from "./CreatePermissionForm";
-import type { History } from "history";
-import { getPermissionsLink } from "../../modules/repos";
+import type {History} from "history";
+import {getPermissionsLink} from "../../modules/repos";
 import {
   getGroupAutoCompleteLink,
   getRepositoryRolesLink,

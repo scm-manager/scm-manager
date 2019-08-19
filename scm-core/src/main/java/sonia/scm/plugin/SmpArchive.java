@@ -219,16 +219,10 @@ public final class SmpArchive
         throw new PluginException("could not find information section");
       }
 
-      if (Strings.isNullOrEmpty(info.getGroupId()))
+      if (Strings.isNullOrEmpty(info.getName()))
       {
         throw new PluginException(
-          "could not find groupId in plugin descriptor");
-      }
-
-      if (Strings.isNullOrEmpty(info.getArtifactId()))
-      {
-        throw new PluginException(
-          "could not find artifactId in plugin descriptor");
+          "could not find name in plugin descriptor");
       }
 
       if (Strings.isNullOrEmpty(info.getVersion()))
