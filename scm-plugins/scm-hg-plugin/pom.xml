@@ -10,7 +10,6 @@
   </parent>
 
   <artifactId>scm-hg-plugin</artifactId>
-  <name>Mercurial</name>
   <packaging>smp</packaging>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
   <description>Plugin for the version control system Mercurial</description>

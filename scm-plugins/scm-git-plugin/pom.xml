@@ -10,7 +10,6 @@
   </parent>
 
   <artifactId>scm-git-plugin</artifactId>
-  <name>Git</name>
   <packaging>smp</packaging>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
   <description>Plugin for the version control system Git</description>

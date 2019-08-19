@@ -46,8 +46,10 @@
   <scm-version>2</scm-version>
 
   <information>
-    <author>Sebastian Sdorra</author>
+    <displayName>Subversion</displayName>
+    <author>Cloudogu GmbH</author>
     <category>Source Code Management</category>
+    <avatarUrl>/images/svn-logo.gif</avatarUrl>
   </information>
 
   <conditions>
