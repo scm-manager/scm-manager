@@ -86,7 +86,7 @@ public class UIPluginResource {
   }
 
   private boolean filter(InstalledPlugin plugin) {
-    return plugin.getPlugin().getResources() != null;
+    return plugin.getDescriptor().getResources() != null;
   }
 
 }

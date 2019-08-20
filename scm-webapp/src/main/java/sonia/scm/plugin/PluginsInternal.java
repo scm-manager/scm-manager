@@ -202,7 +202,7 @@ public final class PluginsInternal
     @Override
     public InstalledPluginDescriptor apply(InstalledPlugin wrapper)
     {
-      return wrapper.getPlugin();
+      return wrapper.getDescriptor();
     }
   }
 }

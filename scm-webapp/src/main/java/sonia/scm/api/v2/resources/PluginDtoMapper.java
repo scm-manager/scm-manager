@@ -21,7 +21,7 @@ public abstract class PluginDtoMapper {
   private ResourceLinks resourceLinks;
 
   public PluginDto map(InstalledPlugin plugin) {
-    return map(plugin.getPlugin().getInformation());
+    return map(plugin.getDescriptor().getInformation());
   }
 
   public abstract PluginDto map(PluginInformation plugin);

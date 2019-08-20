@@ -131,7 +131,7 @@ public class DefaultPluginManager implements PluginManager
 
     for (InstalledPlugin wrapper : pluginLoader.getInstalledPlugins())
     {
-      InstalledPluginDescriptor plugin = wrapper.getPlugin();
+      InstalledPluginDescriptor plugin = wrapper.getDescriptor();
       PluginInformation info = plugin.getInformation();
 
       if ((info != null) && info.isValid())

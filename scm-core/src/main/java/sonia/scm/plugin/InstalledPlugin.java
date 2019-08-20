@@ -42,21 +42,21 @@ import java.nio.file.Path;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public final class InstalledPlugin
+public final class InstalledPlugin implements Plugin
 {
 
   /**
    * Constructs a new plugin wrapper.
    *
-   * @param plugin wrapped plugin
+   * @param descriptor wrapped plugin
    * @param classLoader plugin class loader
    * @param webResourceLoader web resource loader
    * @param directory plugin directory
    */
-  public InstalledPlugin(InstalledPluginDescriptor plugin, ClassLoader classLoader,
+  public InstalledPlugin(InstalledPluginDescriptor descriptor, ClassLoader classLoader,
                          WebResourceLoader webResourceLoader, Path directory)
   {
-    this.plugin = plugin;
+    this.descriptor = descriptor;
     this.classLoader = classLoader;
     this.webResourceLoader = webResourceLoader;
     this.directory = directory;
@@ -94,18 +94,19 @@ public final class InstalledPlugin
    */
   public String getId()
   {
-    return plugin.getInformation().getId();
+    return descriptor.getInformation().getId();
   }
 
   /**
-   * Returns the plugin.
+   * Returns the plugin descriptor.
    *
    *
-   * @return plugin
+   * @return plugin descriptor
    */
-  public InstalledPluginDescriptor getPlugin()
+  @Override
+  public InstalledPluginDescriptor getDescriptor()
   {
-    return plugin;
+    return descriptor;
   }
 
   /**
@@ -119,6 +120,11 @@ public final class InstalledPlugin
     return webResourceLoader;
   }
 
+  @Override
+  public PluginState getState() {
+    return PluginState.INSTALLED;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** plugin class loader */
@@ -128,7 +134,7 @@ public final class InstalledPlugin
   private final Path directory;
 
   /** plugin */
-  private final InstalledPluginDescriptor plugin;
+  private final InstalledPluginDescriptor descriptor;
 
   /** plugin web resource loader */
   private final WebResourceLoader webResourceLoader;

@@ -27,7 +27,7 @@ public class UIPluginDtoMapper {
 
   public UIPluginDto map(InstalledPlugin plugin) {
     UIPluginDto dto = new UIPluginDto(
-      plugin.getPlugin().getInformation().getName(),
+      plugin.getDescriptor().getInformation().getName(),
       getScriptResources(plugin)
     );
 
@@ -41,7 +41,7 @@ public class UIPluginDtoMapper {
   }
 
   private Set<String> getScriptResources(InstalledPlugin wrapper) {
-    Set<String> scriptResources = wrapper.getPlugin().getResources().getScriptResources();
+    Set<String> scriptResources = wrapper.getDescriptor().getResources().getScriptResources();
     if (scriptResources != null) {
       return scriptResources.stream()
         .map(this::addContextPath)
