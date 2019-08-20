@@ -4,13 +4,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.plugin.Plugin;
+import sonia.scm.plugin.PluginDescriptor;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginState;
 
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PluginDtoMapperTest {
@@ -25,7 +31,8 @@ class PluginDtoMapperTest {
   void shouldMapInformation() {
     PluginInformation information = createPluginInformation();
 
-    PluginDto dto = mapper.map(information);
+    PluginDto dto = new PluginDto();
+    mapper.map(information, dto);
 
     assertThat(dto.getName()).isEqualTo("scm-cas-plugin");
     assertThat(dto.getVersion()).isEqualTo("1.0.0");
@@ -48,41 +55,51 @@ class PluginDtoMapperTest {
 
   @Test
   void shouldAppendInstalledSelfLink() {
-    PluginInformation information = createPluginInformation();
-    information.setState(PluginState.INSTALLED);
+    Plugin plugin = createPlugin(PluginState.INSTALLED);
 
-    PluginDto dto = mapper.map(information);
+    PluginDto dto = mapper.map(plugin);
     assertThat(dto.getLinks().getLinkBy("self").get().getHref())
       .isEqualTo("https://hitchhiker.com/v2/plugins/installed/scm-cas-plugin");
   }
 
   @Test
   void shouldAppendAvailableSelfLink() {
-    PluginInformation information = createPluginInformation();
-    information.setState(PluginState.AVAILABLE);
+    Plugin plugin = createPlugin(PluginState.AVAILABLE);
 
-    PluginDto dto = mapper.map(information);
+    PluginDto dto = mapper.map(plugin);
     assertThat(dto.getLinks().getLinkBy("self").get().getHref())
-      .isEqualTo("https://hitchhiker.com/v2/plugins/available/scm-cas-plugin/1.0.0");
+      .isEqualTo("https://hitchhiker.com/v2/plugins/available/scm-cas-plugin");
   }
 
   @Test
   void shouldAppendInstallLink() {
-    PluginInformation information = createPluginInformation();
-    information.setState(PluginState.AVAILABLE);
+    Plugin plugin = createPlugin(PluginState.AVAILABLE);
 
-    PluginDto dto = mapper.map(information);
+    PluginDto dto = mapper.map(plugin);
     assertThat(dto.getLinks().getLinkBy("install").get().getHref())
-      .isEqualTo("https://hitchhiker.com/v2/plugins/available/scm-cas-plugin/1.0.0/install");
+      .isEqualTo("https://hitchhiker.com/v2/plugins/available/scm-cas-plugin/install");
   }
 
   @Test
   void shouldReturnMiscellaneousIfCategoryIsNull() {
     PluginInformation information = createPluginInformation();
     information.setCategory(null);
-
-    PluginDto dto = mapper.map(information);
+    Plugin plugin = createPlugin(information, PluginState.AVAILABLE);
+    PluginDto dto = mapper.map(plugin);
     assertThat(dto.getCategory()).isEqualTo("Miscellaneous");
+  }
+
+  private Plugin createPlugin(PluginState state) {
+    return createPlugin(createPluginInformation(), state);
+  }
+
+  private Plugin createPlugin(PluginInformation information, PluginState state) {
+    Plugin plugin = Mockito.mock(Plugin.class);
+    when(plugin.getState()).thenReturn(state);
+    PluginDescriptor descriptor = mock(PluginDescriptor.class);
+    when(descriptor.getInformation()).thenReturn(information);
+    when(plugin.getDescriptor()).thenReturn(descriptor);
+    return plugin;
   }
 
 }

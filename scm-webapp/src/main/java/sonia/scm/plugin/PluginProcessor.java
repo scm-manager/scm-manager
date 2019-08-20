@@ -237,7 +237,7 @@ public final class PluginProcessor
     }
 
     InstalledPlugin plugin =
-      createPluginWrapper(createParentPluginClassLoader(classLoader, parents),
+      createPlugin(createParentPluginClassLoader(classLoader, parents),
         smp);
 
     if (plugin != null)
@@ -431,73 +431,36 @@ public final class PluginProcessor
     return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param classLoader
-   * @param descriptor
-   *
-   * @return
-   */
-  private InstalledPluginDescriptor createPlugin(ClassLoader classLoader, Path descriptor)
-  {
+  private InstalledPluginDescriptor createDescriptor(ClassLoader classLoader, Path descriptor) {
     ClassLoader ctxcl = Thread.currentThread().getContextClassLoader();
-
     Thread.currentThread().setContextClassLoader(classLoader);
-
-    try
-    {
-      return (InstalledPluginDescriptor) context.createUnmarshaller().unmarshal(
-        descriptor.toFile());
-    }
-    catch (JAXBException ex)
-    {
-      throw new PluginLoadException(
-        "could not load plugin desriptor ".concat(descriptor.toString()), ex);
-    }
-    finally
-    {
+    try {
+      return (InstalledPluginDescriptor) context.createUnmarshaller().unmarshal(descriptor.toFile());
+    } catch (JAXBException ex) {
+      throw new PluginLoadException("could not load plugin desriptor ".concat(descriptor.toString()), ex);
+    } finally {
       Thread.currentThread().setContextClassLoader(ctxcl);
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param classLoader
-   * @param smp
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private InstalledPlugin createPluginWrapper(ClassLoader classLoader,
-                                              ExplodedSmp smp)
-    throws IOException
-  {
-    InstalledPlugin wrapper = null;
+  private InstalledPlugin createPlugin(ClassLoader classLoader, ExplodedSmp smp) throws IOException {
+    InstalledPlugin plugin = null;
     Path directory = smp.getPath();
-    Path descriptor = directory.resolve(PluginConstants.FILE_DESCRIPTOR);
+    Path descriptorPath = directory.resolve(PluginConstants.FILE_DESCRIPTOR);
 
-    if (Files.exists(descriptor))
-    {
+    if (Files.exists(descriptorPath)) {
       ClassLoader cl = createClassLoader(classLoader, smp);
 
-      InstalledPluginDescriptor plugin = createPlugin(cl, descriptor);
+      InstalledPluginDescriptor descriptor = createDescriptor(cl, descriptorPath);
 
       WebResourceLoader resourceLoader = createWebResourceLoader(directory);
 
-      wrapper = new InstalledPlugin(plugin, cl, resourceLoader, directory);
-    }
-    else
-    {
+      plugin = new InstalledPlugin(descriptor, cl, resourceLoader, directory);
+    } else {
       logger.warn("found plugin directory without plugin descriptor");
     }
 
-    return wrapper;
+    return plugin;
   }
 
   /**

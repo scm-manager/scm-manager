@@ -52,7 +52,7 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement
+@XmlRootElement(name = "plugin")
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class InstalledPluginDescriptor extends ScmModule implements PluginDescriptor
 {
@@ -247,6 +247,7 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
   private Set<String> dependencies;
 
   /** Field description */
+  @XmlElement(name = "information")
   private PluginInformation information;
 
   /** Field description */

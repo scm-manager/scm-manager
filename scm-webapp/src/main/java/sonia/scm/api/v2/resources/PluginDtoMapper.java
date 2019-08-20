@@ -1,13 +1,11 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.ObjectFactory;
+import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginState;
-import sonia.scm.plugin.InstalledPlugin;
 
 import javax.inject.Inject;
 
@@ -20,23 +18,23 @@ public abstract class PluginDtoMapper {
   @Inject
   private ResourceLinks resourceLinks;
 
-  public PluginDto map(InstalledPlugin plugin) {
-    return map(plugin.getDescriptor().getInformation());
-  }
+  public abstract void map(PluginInformation plugin, @MappingTarget PluginDto dto);
 
-  public abstract PluginDto map(PluginInformation plugin);
-
-  @AfterMapping
-  protected void appendCategory(@MappingTarget PluginDto dto) {
+  public PluginDto map(Plugin plugin) {
+    PluginDto dto = createDto(plugin);
+    map(plugin.getDescriptor().getInformation(), dto);
     if (dto.getCategory() == null) {
       dto.setCategory("Miscellaneous");
     }
+    return dto;
   }
 
-  @ObjectFactory
-  public PluginDto createDto(PluginInformation pluginInformation) {
+  private PluginDto createDto(Plugin plugin) {
     Links.Builder linksBuilder;
-    if (pluginInformation.getState() != null && pluginInformation.getState().equals(PluginState.AVAILABLE)) {
+
+    PluginInformation pluginInformation = plugin.getDescriptor().getInformation();
+
+    if (plugin.getState() != null && plugin.getState().equals(PluginState.AVAILABLE)) {
       linksBuilder = linkingTo()
         .self(resourceLinks.availablePlugin()
           .self(pluginInformation.getName(), pluginInformation.getVersion()));

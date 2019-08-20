@@ -33,113 +33,50 @@
 
 package sonia.scm.plugin;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import com.google.common.base.Predicate;
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 /**
+ * The plugin manager is responsible for plugin related tasks, such as install, uninstall or updating.
  *
  * @author Sebastian Sdorra
  */
-public interface PluginManager
-{
+public interface PluginManager {
 
   /**
-   * Method description
-   *
+   * Returns the available plugin with the given name.
+   * @param name of plugin
+   * @return optional available plugin.
    */
-  public void clearCache();
+  Optional<AvailablePlugin> getAvailable(String name);
 
   /**
-   * Method description
-   *
-   *
-   * @param id
+   * Returns the installed plugin with the given name.
+   * @param name of plugin
+   * @return optional installed plugin.
    */
-  public void install(String id);
+  Optional<InstalledPlugin> getInstalled(String name);
+
 
   /**
-   * Installs a plugin package from a inputstream.
+   * Returns all installed plugins.
    *
-   *
-   * @param packageStream package input stream
-   *
-   * @throws IOException
-   * @since 1.21
+   * @return a list of installed plugins.
    */
-  public void installPackage(InputStream packageStream) throws IOException;
+  List<InstalledPlugin> getInstalled();
 
   /**
-   * Method description
+   * Returns all available plugins. The list contains the plugins which are loaded from the plugin center, but without
+   * the installed plugins.
    *
-   *
-   * @param id
+   * @return a list of available plugins.
    */
-  public void uninstall(String id);
+  List<AvailablePlugin> getAvailable();
 
   /**
-   * Method description
+   * Installs the plugin with the given name from the list of available plugins.
    *
-   *
-   * @param id
+   * @param name plugin name
    */
-  public void update(String id);
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
-  public PluginInformation get(String id);
-
-  /**
-   * Method description
-   *
-   *
-   * @param filter
-   *
-   * @return
-   */
-  public Collection<PluginInformation> get(Predicate<PluginInformation> filter);
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getAll();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getAvailable();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getAvailableUpdates();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getInstalled();
+  void install(String name);
 }
