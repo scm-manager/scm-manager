@@ -206,7 +206,7 @@ public final class SmpArchive
    *
    * @throws IOException
    */
-  public Plugin getPlugin() throws IOException
+  public InstalledPluginDescriptor getPlugin() throws IOException
   {
     if (plugin == null)
     {
@@ -245,9 +245,9 @@ public final class SmpArchive
    *
    * @throws IOException
    */
-  private Plugin createPlugin() throws IOException
+  private InstalledPluginDescriptor createPlugin() throws IOException
   {
-    Plugin p = null;
+    InstalledPluginDescriptor p = null;
     NonClosingZipInputStream zis = null;
 
     try
@@ -412,5 +412,5 @@ public final class SmpArchive
   private final ByteSource archive;
 
   /** Field description */
-  private Plugin plugin;
+  private InstalledPluginDescriptor plugin;
 }

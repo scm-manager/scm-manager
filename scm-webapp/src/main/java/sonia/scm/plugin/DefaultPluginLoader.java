@@ -95,7 +95,7 @@ public class DefaultPluginLoader implements PluginLoader
     try
     {
       JAXBContext context = JAXBContext.newInstance(ScmModule.class,
-                              Plugin.class);
+                              InstalledPluginDescriptor.class);
 
       modules = getInstalled(parent, context, PATH_MODULECONFIG);
 
@@ -178,7 +178,7 @@ public class DefaultPluginLoader implements PluginLoader
    *
    * @return
    */
-  private Iterable<Plugin> unwrap()
+  private Iterable<InstalledPluginDescriptor> unwrap()
   {
     return PluginsInternal.unwrap(installedPlugins);
   }

@@ -54,14 +54,14 @@ import java.util.Set;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class Plugin extends ScmModule
+public final class InstalledPluginDescriptor extends ScmModule implements PluginDescriptor
 {
 
   /**
    * Constructs ...
    *
    */
-  Plugin() {}
+  InstalledPluginDescriptor() {}
 
   /**
    * Constructs ...
@@ -74,9 +74,9 @@ public final class Plugin extends ScmModule
    * @param childFirstClassLoader
    * @param dependencies
    */
-  public Plugin(int scmVersion, PluginInformation information,
-    PluginResources resources, PluginCondition condition,
-    boolean childFirstClassLoader, Set<String> dependencies)
+  public InstalledPluginDescriptor(int scmVersion, PluginInformation information,
+                                   PluginResources resources, PluginCondition condition,
+                                   boolean childFirstClassLoader, Set<String> dependencies)
   {
     this.scmVersion = scmVersion;
     this.information = information;
@@ -109,7 +109,7 @@ public final class Plugin extends ScmModule
       return false;
     }
 
-    final Plugin other = (Plugin) obj;
+    final InstalledPluginDescriptor other = (InstalledPluginDescriptor) obj;
 
     return Objects.equal(scmVersion, other.scmVersion)
       && Objects.equal(condition, other.condition)
@@ -161,6 +161,7 @@ public final class Plugin extends ScmModule
    *
    * @return
    */
+  @Override
   public PluginCondition getCondition()
   {
     return condition;
@@ -174,6 +175,7 @@ public final class Plugin extends ScmModule
    *
    * @since 2.0.0
    */
+  @Override
   public Set<String> getDependencies()
   {
     if (dependencies == null)
@@ -190,6 +192,7 @@ public final class Plugin extends ScmModule
    *
    * @return
    */
+  @Override
   public PluginInformation getInformation()
   {
     return information;

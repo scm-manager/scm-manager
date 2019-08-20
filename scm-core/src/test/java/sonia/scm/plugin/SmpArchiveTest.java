@@ -113,7 +113,7 @@ public class SmpArchiveTest
   public void testGetPlugin() throws IOException
   {
     File archive = createArchive("sonia.sample", "1.0");
-    Plugin plugin = SmpArchive.create(archive).getPlugin();
+    InstalledPluginDescriptor plugin = SmpArchive.create(archive).getPlugin();
 
     assertNotNull(plugin);
 

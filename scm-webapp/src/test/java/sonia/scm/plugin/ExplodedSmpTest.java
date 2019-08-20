@@ -133,7 +133,7 @@ public class ExplodedSmpTest
     info.setName(name);
     info.setVersion(version);
 
-    Plugin plugin = new Plugin(2, info, null, null, false,
+    InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(2, info, null, null, false,
                       Sets.newSet(dependencies));
 
     return new ExplodedSmp(null, plugin);

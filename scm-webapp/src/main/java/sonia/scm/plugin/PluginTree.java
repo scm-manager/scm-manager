@@ -86,7 +86,7 @@ public final class PluginTree
 
     for (ExplodedSmp smp : smpOrdered)
     {
-      Plugin plugin = smp.getPlugin();
+      InstalledPluginDescriptor plugin = smp.getPlugin();
 
       if (plugin.getScmVersion() != SCM_VERSION)
       {

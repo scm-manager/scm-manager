@@ -131,7 +131,7 @@ public class DefaultPluginManager implements PluginManager
 
     for (InstalledPlugin wrapper : pluginLoader.getInstalledPlugins())
     {
-      Plugin plugin = wrapper.getPlugin();
+      InstalledPluginDescriptor plugin = wrapper.getPlugin();
       PluginInformation info = plugin.getInformation();
 
       if ((info != null) && info.isValid())
@@ -192,7 +192,7 @@ public class DefaultPluginManager implements PluginManager
         plugin.setState(PluginState.INSTALLED);
 
         // ugly workaround
-        Plugin newPlugin = new Plugin();
+        InstalledPluginDescriptor newPlugin = new InstalledPluginDescriptor();
 
         // TODO check
         // newPlugin.setInformation(plugin);
@@ -220,8 +220,8 @@ public class DefaultPluginManager implements PluginManager
     {
       new ZipUnArchiver().extractArchive(packageStream, tempDirectory);
 
-      Plugin plugin = JAXB.unmarshal(new File(tempDirectory, "plugin.xml"),
-                        Plugin.class);
+      InstalledPluginDescriptor plugin = JAXB.unmarshal(new File(tempDirectory, "plugin.xml"),
+                        InstalledPluginDescriptor.class);
 
       PluginCondition condition = plugin.getCondition();
 
@@ -262,7 +262,7 @@ public class DefaultPluginManager implements PluginManager
   {
     PluginPermissions.manage().check();
 
-    Plugin plugin = installedPlugins.get(id);
+    InstalledPluginDescriptor plugin = installedPlugins.get(id);
 
     if (plugin == null)
     {
@@ -457,7 +457,7 @@ public class DefaultPluginManager implements PluginManager
 
     Set<PluginInformation> infoSet = new LinkedHashSet<>();
 
-    for (Plugin plugin : installedPlugins.values())
+    for (InstalledPluginDescriptor plugin : installedPlugins.values())
     {
       infoSet.add(plugin.getInformation());
     }
@@ -647,7 +647,7 @@ public class DefaultPluginManager implements PluginManager
   {
     boolean core = false;
 
-    for (Plugin installedPlugin : installedPlugins.values())
+    for (InstalledPluginDescriptor installedPlugin : installedPlugins.values())
     {
       PluginInformation installed = installedPlugin.getInformation();
 
@@ -715,5 +715,5 @@ public class DefaultPluginManager implements PluginManager
   private final SCMContextProvider context;
 
   /** Field description */
-  private final Map<String, Plugin> installedPlugins;
+  private final Map<String, InstalledPluginDescriptor> installedPlugins;
 }

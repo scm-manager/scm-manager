@@ -9,7 +9,7 @@ import sonia.scm.SCMContext;
 import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
 import sonia.scm.migration.UpdateException;
 import sonia.scm.plugin.DefaultPluginLoader;
-import sonia.scm.plugin.Plugin;
+import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginException;
 import sonia.scm.plugin.PluginLoadException;
 import sonia.scm.plugin.PluginLoader;
@@ -105,7 +105,7 @@ public final class PluginBootstrap {
                                  PluginIndexEntry entry) throws IOException {
     URL url = context.getResource(PLUGIN_DIRECTORY.concat(entry.getName()));
     SmpArchive archive = SmpArchive.create(url);
-    Plugin plugin = archive.getPlugin();
+    InstalledPluginDescriptor plugin = archive.getPlugin();
 
     File directory = PluginsInternal.createPluginDirectory(pluginDirectory, plugin);
     File checksumFile = PluginsInternal.getChecksumFile(directory);

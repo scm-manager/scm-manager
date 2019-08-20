@@ -105,7 +105,7 @@ public final class PluginsInternal
    *
    * @return
    */
-  public static File createPluginDirectory(File parent, Plugin plugin)
+  public static File createPluginDirectory(File parent, InstalledPluginDescriptor plugin)
   {
     PluginInformation info = plugin.getInformation();
 
@@ -159,7 +159,7 @@ public final class PluginsInternal
    *
    * @return
    */
-  public static Iterable<Plugin> unwrap(Iterable<InstalledPlugin> wrapped)
+  public static Iterable<InstalledPluginDescriptor> unwrap(Iterable<InstalledPlugin> wrapped)
   {
     return Iterables.transform(wrapped, new Unwrap());
   }
@@ -188,7 +188,7 @@ public final class PluginsInternal
    * @version        Enter version here..., 14/06/05
    * @author         Enter your name here...
    */
-  private static class Unwrap implements Function<InstalledPlugin, Plugin>
+  private static class Unwrap implements Function<InstalledPlugin, InstalledPluginDescriptor>
   {
 
     /**
@@ -200,7 +200,7 @@ public final class PluginsInternal
      * @return
      */
     @Override
-    public Plugin apply(InstalledPlugin wrapper)
+    public InstalledPluginDescriptor apply(InstalledPlugin wrapper)
     {
       return wrapper.getPlugin();
     }

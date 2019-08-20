@@ -123,7 +123,7 @@ public final class PluginProcessor
 
     try
     {
-      this.context = JAXBContext.newInstance(Plugin.class);
+      this.context = JAXBContext.newInstance(InstalledPluginDescriptor.class);
     }
     catch (JAXBException ex)
     {
@@ -371,7 +371,7 @@ public final class PluginProcessor
 
     ClassLoader classLoader;
     URL[] urlArray = urls.toArray(new URL[urls.size()]);
-    Plugin plugin = smp.getPlugin();
+    InstalledPluginDescriptor plugin = smp.getPlugin();
 
     String id = plugin.getInformation().getName(false);
 
@@ -441,7 +441,7 @@ public final class PluginProcessor
    *
    * @return
    */
-  private Plugin createPlugin(ClassLoader classLoader, Path descriptor)
+  private InstalledPluginDescriptor createPlugin(ClassLoader classLoader, Path descriptor)
   {
     ClassLoader ctxcl = Thread.currentThread().getContextClassLoader();
 
@@ -449,7 +449,7 @@ public final class PluginProcessor
 
     try
     {
-      return (Plugin) context.createUnmarshaller().unmarshal(
+      return (InstalledPluginDescriptor) context.createUnmarshaller().unmarshal(
         descriptor.toFile());
     }
     catch (JAXBException ex)
@@ -486,7 +486,7 @@ public final class PluginProcessor
     {
       ClassLoader cl = createClassLoader(classLoader, smp);
 
-      Plugin plugin = createPlugin(cl, descriptor);
+      InstalledPluginDescriptor plugin = createPlugin(cl, descriptor);
 
       WebResourceLoader resourceLoader = createWebResourceLoader(directory);
 

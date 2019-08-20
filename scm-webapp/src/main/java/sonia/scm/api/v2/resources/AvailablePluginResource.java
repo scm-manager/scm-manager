@@ -3,7 +3,7 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import sonia.scm.plugin.Plugin;
+import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
@@ -83,7 +83,7 @@ public class AvailablePluginResource {
     if (plugin.isPresent()) {
       return Response.ok(mapper.map(plugin.get())).build();
     } else {
-      throw notFound(entity(Plugin.class, name));
+      throw notFound(entity(InstalledPluginDescriptor.class, name));
     }
   }
 

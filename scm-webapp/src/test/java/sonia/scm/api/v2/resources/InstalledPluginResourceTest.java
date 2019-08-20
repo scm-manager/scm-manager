@@ -16,7 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.plugin.Plugin;
+import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginState;
@@ -106,7 +106,7 @@ class InstalledPluginResourceTest {
       pluginInformation.setVersion("2.0.0");
       pluginInformation.setName("pluginName");
       pluginInformation.setState(PluginState.INSTALLED);
-      Plugin plugin = new Plugin(2, pluginInformation, null, null, false, null);
+      InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(2, pluginInformation, null, null, false, null);
       InstalledPlugin installedPlugin = new InstalledPlugin(plugin, null, null, null);
       when(pluginLoader.getInstalledPlugins()).thenReturn(Collections.singletonList(installedPlugin));
 

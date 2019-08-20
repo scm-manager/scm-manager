@@ -188,7 +188,7 @@ public class UIRootResourceTest {
     InstalledPlugin wrapper = mock(InstalledPlugin.class);
     when(wrapper.getId()).thenReturn(id);
 
-    Plugin plugin = mock(Plugin.class);
+    InstalledPluginDescriptor plugin = mock(InstalledPluginDescriptor.class);
     when(wrapper.getPlugin()).thenReturn(plugin);
     when(plugin.getResources()).thenReturn(pluginResources);
 
