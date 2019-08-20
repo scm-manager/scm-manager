@@ -51,6 +51,17 @@ class PluginInstallerTest {
     assertThat(directory.resolve("plugins").resolve("scm-git-plugin.smp")).hasContent("42");
   }
 
+  @Test
+  void shouldReturnPendingPluginInstallation() throws IOException {
+    mockContent("42");
+    AvailablePlugin gitPlugin = createGitPlugin();
+
+    PendingPluginInstallation pending = installer.install(gitPlugin);
+
+    assertThat(pending).isNotNull();
+    assertThat(pending.getPlugin()).isSameAs(gitPlugin);
+  }
+
   private void mockContent(String content) throws IOException {
     when(client.get("https://download.hitchhiker.com").request().contentAsStream())
       .thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));

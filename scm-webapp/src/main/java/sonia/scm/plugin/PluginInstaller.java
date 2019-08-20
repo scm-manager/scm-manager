@@ -1,7 +1,5 @@
 package sonia.scm.plugin;
 
-import com.google.common.base.Throwables;
-import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
@@ -28,12 +26,16 @@ class PluginInstaller {
     this.client = client;
   }
 
-  public void install(AvailablePlugin plugin) {
+  public PendingPluginInstallation install(AvailablePlugin plugin) {
     File file = createFile(plugin);
     try (InputStream input = download(plugin); OutputStream output = new FileOutputStream(file)) {
       ByteStreams.copy(input, output);
 
       verifyChecksum(plugin, file);
+
+      // TODO clean up in case of error
+
+      return new PendingPluginInstallation(plugin, file);
     } catch (IOException ex) {
       throw new PluginDownloadException("failed to install plugin", ex);
     }
