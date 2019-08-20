@@ -60,6 +60,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.stream.Collectors.toList;
+
 //~--- JDK imports ------------------------------------------------------------
 
 /**
@@ -171,7 +173,11 @@ public final class PluginProcessor
 
     extract(archives);
 
-    List<Path> dirs = collectPluginDirectories(pluginDirectory);
+    List<Path> dirs =
+      collectPluginDirectories(pluginDirectory)
+      .stream()
+      .filter(dir -> !dir.endsWith("sonia.scm.plugins"))
+      .collect(toList());
 
     logger.debug("process {} directories: {}", dirs.size(), dirs);
 
