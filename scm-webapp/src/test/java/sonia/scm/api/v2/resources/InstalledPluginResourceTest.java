@@ -20,7 +20,7 @@ import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginState;
-import sonia.scm.plugin.PluginWrapper;
+import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Provider;
@@ -86,9 +86,9 @@ class InstalledPluginResourceTest {
 
     @Test
     void getInstalledPlugins() throws URISyntaxException, UnsupportedEncodingException {
-      PluginWrapper pluginWrapper = new PluginWrapper(null, null, null, null);
-      when(pluginLoader.getInstalledPlugins()).thenReturn(Collections.singletonList(pluginWrapper));
-      when(collectionMapper.map(Collections.singletonList(pluginWrapper))).thenReturn(new MockedResultDto());
+      InstalledPlugin installedPlugin = new InstalledPlugin(null, null, null, null);
+      when(pluginLoader.getInstalledPlugins()).thenReturn(Collections.singletonList(installedPlugin));
+      when(collectionMapper.map(Collections.singletonList(installedPlugin))).thenReturn(new MockedResultDto());
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/installed");
       request.accept(VndMediaType.PLUGIN_COLLECTION);
@@ -107,12 +107,12 @@ class InstalledPluginResourceTest {
       pluginInformation.setName("pluginName");
       pluginInformation.setState(PluginState.INSTALLED);
       Plugin plugin = new Plugin(2, pluginInformation, null, null, false, null);
-      PluginWrapper pluginWrapper = new PluginWrapper(plugin, null, null, null);
-      when(pluginLoader.getInstalledPlugins()).thenReturn(Collections.singletonList(pluginWrapper));
+      InstalledPlugin installedPlugin = new InstalledPlugin(plugin, null, null, null);
+      when(pluginLoader.getInstalledPlugins()).thenReturn(Collections.singletonList(installedPlugin));
 
       PluginDto pluginDto = new PluginDto();
       pluginDto.setName("pluginName");
-      when(mapper.map(pluginWrapper)).thenReturn(pluginDto);
+      when(mapper.map(installedPlugin)).thenReturn(pluginDto);
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/installed/pluginName");
       request.accept(VndMediaType.PLUGIN);

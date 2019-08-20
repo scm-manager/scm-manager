@@ -7,7 +7,7 @@ import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
-import sonia.scm.plugin.PluginWrapper;
+import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -53,7 +53,7 @@ public class InstalledPluginResource {
   @Produces(VndMediaType.PLUGIN_COLLECTION)
   public Response getInstalledPlugins() {
     PluginPermissions.read().check();
-    List<PluginWrapper> plugins = new ArrayList<>(pluginLoader.getInstalledPlugins());
+    List<InstalledPlugin> plugins = new ArrayList<>(pluginLoader.getInstalledPlugins());
     return Response.ok(collectionMapper.map(plugins)).build();
   }
 

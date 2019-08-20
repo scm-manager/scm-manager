@@ -7,7 +7,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginState;
-import sonia.scm.plugin.PluginWrapper;
+import sonia.scm.plugin.InstalledPlugin;
 
 import javax.inject.Inject;
 
@@ -20,7 +20,7 @@ public abstract class PluginDtoMapper {
   @Inject
   private ResourceLinks resourceLinks;
 
-  public PluginDto map(PluginWrapper plugin) {
+  public PluginDto map(InstalledPlugin plugin) {
     return map(plugin.getPlugin().getInformation());
   }
 

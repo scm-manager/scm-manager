@@ -42,7 +42,7 @@ import java.nio.file.Path;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public final class PluginWrapper
+public final class InstalledPlugin
 {
 
   /**
@@ -53,8 +53,8 @@ public final class PluginWrapper
    * @param webResourceLoader web resource loader
    * @param directory plugin directory
    */
-  public PluginWrapper(Plugin plugin, ClassLoader classLoader,
-    WebResourceLoader webResourceLoader, Path directory)
+  public InstalledPlugin(Plugin plugin, ClassLoader classLoader,
+                         WebResourceLoader webResourceLoader, Path directory)
   {
     this.plugin = plugin;
     this.classLoader = classLoader;

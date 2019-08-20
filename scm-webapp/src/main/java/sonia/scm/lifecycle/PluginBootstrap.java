@@ -13,7 +13,7 @@ import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginException;
 import sonia.scm.plugin.PluginLoadException;
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.plugin.PluginWrapper;
+import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginsInternal;
 import sonia.scm.plugin.SmpArchive;
 import sonia.scm.util.IOUtil;
@@ -43,7 +43,7 @@ public final class PluginBootstrap {
 
   private final ClassLoaderLifeCycle classLoaderLifeCycle;
   private final ServletContext servletContext;
-  private final Set<PluginWrapper> plugins;
+  private final Set<InstalledPlugin> plugins;
   private final PluginLoader pluginLoader;
 
   PluginBootstrap(ServletContext servletContext, ClassLoaderLifeCycle classLoaderLifeCycle) {
@@ -58,7 +58,7 @@ public final class PluginBootstrap {
     return pluginLoader;
   }
 
-  public Set<PluginWrapper> getPlugins() {
+  public Set<InstalledPlugin> getPlugins() {
     return plugins;
   }
 
@@ -66,7 +66,7 @@ public final class PluginBootstrap {
     return new DefaultPluginLoader(servletContext, classLoaderLifeCycle.getBootstrapClassLoader(), plugins);
   }
 
-  private Set<PluginWrapper> collectPlugins() {
+  private Set<InstalledPlugin> collectPlugins() {
     try {
       File pluginDirectory = getPluginDirectory();
 

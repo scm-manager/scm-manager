@@ -129,7 +129,7 @@ public class DefaultPluginManager implements PluginManager
     this.httpClient = httpClient;
     installedPlugins = new HashMap<>();
 
-    for (PluginWrapper wrapper : pluginLoader.getInstalledPlugins())
+    for (InstalledPlugin wrapper : pluginLoader.getInstalledPlugins())
     {
       Plugin plugin = wrapper.getPlugin();
       PluginInformation info = plugin.getInformation();

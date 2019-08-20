@@ -157,7 +157,7 @@ public final class PluginNode
    *
    * @return
    */
-  public PluginWrapper getWrapper()
+  public InstalledPlugin getWrapper()
   {
     return wrapper;
   }
@@ -170,7 +170,7 @@ public final class PluginNode
    *
    * @param wrapper
    */
-  public void setWrapper(PluginWrapper wrapper)
+  public void setWrapper(InstalledPlugin wrapper)
   {
     this.wrapper = wrapper;
   }
@@ -192,5 +192,5 @@ public final class PluginNode
   private final ExplodedSmp plugin;
 
   /** Field description */
-  private PluginWrapper wrapper;
+  private InstalledPlugin wrapper;
 }

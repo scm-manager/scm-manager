@@ -160,7 +160,7 @@ public final class PluginProcessor
    *
    * @throws IOException
    */
-  public Set<PluginWrapper> collectPlugins(ClassLoader classLoader)
+  public Set<InstalledPlugin> collectPlugins(ClassLoader classLoader)
     throws IOException
   {
     logger.info("collect plugins");
@@ -187,7 +187,7 @@ public final class PluginProcessor
 
     logger.trace("create plugin wrappers and build classloaders");
 
-    Set<PluginWrapper> wrappers = createPluginWrappers(classLoader, rootNodes);
+    Set<InstalledPlugin> wrappers = createPluginWrappers(classLoader, rootNodes);
 
     logger.debug("collected {} plugins", wrappers.size());
 
@@ -204,7 +204,7 @@ public final class PluginProcessor
    *
    * @throws IOException
    */
-  private void appendPluginWrapper(Set<PluginWrapper> plugins,
+  private void appendPluginWrapper(Set<InstalledPlugin> plugins,
     ClassLoader classLoader, PluginNode node)
     throws IOException
   {
@@ -217,7 +217,7 @@ public final class PluginProcessor
 
     for (PluginNode parent : node.getParents())
     {
-      PluginWrapper wrapper = parent.getWrapper();
+      InstalledPlugin wrapper = parent.getWrapper();
 
       if (wrapper != null)
       {
@@ -236,7 +236,7 @@ public final class PluginProcessor
 
     }
 
-    PluginWrapper plugin =
+    InstalledPlugin plugin =
       createPluginWrapper(createParentPluginClassLoader(classLoader, parents),
         smp);
 
@@ -257,7 +257,7 @@ public final class PluginProcessor
    *
    * @throws IOException
    */
-  private void appendPluginWrappers(Set<PluginWrapper> plugins,
+  private void appendPluginWrappers(Set<InstalledPlugin> plugins,
     ClassLoader classLoader, List<PluginNode> nodes)
     throws IOException
   {
@@ -474,11 +474,11 @@ public final class PluginProcessor
    *
    * @throws IOException
    */
-  private PluginWrapper createPluginWrapper(ClassLoader classLoader,
-    ExplodedSmp smp)
+  private InstalledPlugin createPluginWrapper(ClassLoader classLoader,
+                                              ExplodedSmp smp)
     throws IOException
   {
-    PluginWrapper wrapper = null;
+    InstalledPlugin wrapper = null;
     Path directory = smp.getPath();
     Path descriptor = directory.resolve(PluginConstants.FILE_DESCRIPTOR);
 
@@ -490,7 +490,7 @@ public final class PluginProcessor
 
       WebResourceLoader resourceLoader = createWebResourceLoader(directory);
 
-      wrapper = new PluginWrapper(plugin, cl, resourceLoader, directory);
+      wrapper = new InstalledPlugin(plugin, cl, resourceLoader, directory);
     }
     else
     {
@@ -512,11 +512,11 @@ public final class PluginProcessor
    *
    * @throws IOException
    */
-  private Set<PluginWrapper> createPluginWrappers(ClassLoader classLoader,
-    List<PluginNode> rootNodes)
+  private Set<InstalledPlugin> createPluginWrappers(ClassLoader classLoader,
+                                                    List<PluginNode> rootNodes)
     throws IOException
   {
-    Set<PluginWrapper> plugins = Sets.newHashSet();
+    Set<InstalledPlugin> plugins = Sets.newHashSet();
 
     appendPluginWrappers(plugins, classLoader, rootNodes);
 
