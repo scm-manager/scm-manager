@@ -1,5 +1,6 @@
 package sonia.scm.plugin;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -10,11 +11,23 @@ public class AvailablePluginDescriptor implements PluginDescriptor {
   private final PluginInformation information;
   private final PluginCondition condition;
   private final Set<String> dependencies;
+  private final String url;
+  private final String checksum;
 
-  public AvailablePluginDescriptor(PluginInformation information, PluginCondition condition, Set<String> dependencies) {
+  public AvailablePluginDescriptor(PluginInformation information, PluginCondition condition, Set<String> dependencies, String url, String checksum) {
     this.information = information;
     this.condition = condition;
     this.dependencies = dependencies;
+    this.url = url;
+    this.checksum = checksum;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public Optional<String> getChecksum() {
+    return Optional.ofNullable(checksum);
   }
 
   @Override

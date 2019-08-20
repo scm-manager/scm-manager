@@ -1,5 +1,6 @@
 package sonia.scm.plugin;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,12 +43,16 @@ class PluginCenterDtoMapperTest {
       "555000444",
       new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
       ImmutableSet.of("scm-review-plugin"),
-      new HashMap<>());
+      ImmutableMap.of("download", new Link("http://download.hitchhiker.com"))
+    );
 
     when(dto.getEmbedded().getPlugins()).thenReturn(Collections.singletonList(plugin));
     AvailablePluginDescriptor descriptor = mapper.map(dto).iterator().next().getDescriptor();
     PluginInformation information = descriptor.getInformation();
     PluginCondition condition = descriptor.getCondition();
+
+    assertThat(descriptor.getUrl()).isEqualTo("http://download.hitchhiker.com");
+    assertThat(descriptor.getChecksum()).contains("555000444");
 
     assertThat(information.getAuthor()).isEqualTo(plugin.getAuthor());
     assertThat(information.getCategory()).isEqualTo(plugin.getCategory());
@@ -72,7 +77,8 @@ class PluginCenterDtoMapperTest {
       "12345678aa",
       new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
       ImmutableSet.of("scm-review-plugin"),
-      new HashMap<>());
+      ImmutableMap.of("download", new Link("http://download.hitchhiker.com/review"))
+    );
 
     Plugin plugin2 = new Plugin(
       "scm-hitchhiker-plugin",
@@ -85,7 +91,8 @@ class PluginCenterDtoMapperTest {
       "555000444",
       new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
       ImmutableSet.of("scm-review-plugin"),
-      new HashMap<>());
+      ImmutableMap.of("download", new Link("http://download.hitchhiker.com/hitchhiker"))
+    );
 
     when(dto.getEmbedded().getPlugins()).thenReturn(Arrays.asList(plugin1, plugin2));
 
