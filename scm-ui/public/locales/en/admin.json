@@ -6,7 +6,7 @@
       "settingsNavLink": "Settings",
       "generalNavLink": "General"
     },
-    "info":  {
+    "info": {
       "currentAppVersion": "Current Application Version",
       "communityTitle": "Community Support",
       "communityIconAlt": "Community Support Icon",
@@ -31,12 +31,14 @@
     },
     "noPlugins": "No plugins found.",
     "modal": {
-      "title": "Install Plugin",
-      "dependency": "Dependency:",
-      "dependency_plural": "Dependencies:",
+      "title": "Install {{name}} Plugin",
       "restart": "Restart to activate",
       "install": "Install",
-      "abort": "Abort"
+      "abort": "Abort",
+      "author": "Author",
+      "version": "Version",
+      "dependencyNotification": "With this plugin, the following dependencies are installed if they are not available yet.",
+      "dependencies": "Dependencies"
     }
   },
   "repositoryRole": {
@@ -61,7 +63,7 @@
       "permissions": "Permissions",
       "submit": "Save"
     },
-    "delete" : {
+    "delete": {
       "button": "Löschen",
       "subtitle": "Berechtigungsrolle löschen",
       "confirmAlert": {

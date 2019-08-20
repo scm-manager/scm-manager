@@ -19,6 +19,7 @@ type State = {
 
 const styles = {
   link: {
+    cursor: "pointer",
     pointerEvents: "all"
   }
 };

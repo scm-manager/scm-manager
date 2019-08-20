@@ -31,12 +31,14 @@
     },
     "noPlugins": "Keine Plugins gefunden.",
     "modal": {
-      "title": "Plugin installieren",
-      "dependency": "Abhängigkeit:",
-      "dependency_plural": "Abhängigkeiten:",
+      "title": "{{name}} Plugin installieren",
       "restart": "Neustarten um Plugin zu aktivieren",
       "install": "Installieren",
-      "abort": "Abbrechen"
+      "abort": "Abbrechen",
+      "author": "Autor",
+      "version": "Version",
+      "dependencyNotification": "Mit diesem Plugin werden folgende Abhängigkeiten mit installieren wenn sie noch nicht vorhanden sind.",
+      "dependencies": "Abhängigkeiten"
     }
   },
   "repositoryRole": {
