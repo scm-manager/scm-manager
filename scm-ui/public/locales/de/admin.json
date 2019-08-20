@@ -29,7 +29,15 @@
       "installedNavLink": "Installiert",
       "availableNavLink": "Verfügbar"
     },
-    "noPlugins": "Keine Plugins gefunden."
+    "noPlugins": "Keine Plugins gefunden.",
+    "modal": {
+      "title": "Plugin installieren",
+      "dependency": "Abhängigkeit:",
+      "dependency_plural": "Abhängigkeiten:",
+      "restart": "Neustarten um Plugin zu aktivieren",
+      "install": "Installieren",
+      "abort": "Abbrechen"
+    }
   },
   "repositoryRole": {
     "navLink": "Berechtigungsrollen",
