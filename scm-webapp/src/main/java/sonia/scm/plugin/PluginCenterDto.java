@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -56,8 +57,8 @@ public final class PluginCenterDto implements Serializable {
     @XmlElement(name = "conditions")
     private Condition conditions;
 
-    @XmlElement(name = "dependecies")
-    private Dependency dependencies;
+    @XmlElement(name = "dependencies")
+    private Set<String> dependencies;
 
     @XmlElement(name = "_links")
     private Map<String, Link> links;
@@ -72,14 +73,6 @@ public final class PluginCenterDto implements Serializable {
     private List<String> os;
     private String arch;
     private String minVersion;
-  }
-
-  @XmlAccessorType(XmlAccessType.FIELD)
-  @XmlRootElement(name = "dependencies")
-  @Getter
-  @AllArgsConstructor
-  static class Dependency {
-    private String name;
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)

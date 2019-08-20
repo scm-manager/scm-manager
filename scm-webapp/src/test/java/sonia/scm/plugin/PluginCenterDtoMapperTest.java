@@ -1,5 +1,6 @@
 package sonia.scm.plugin;
 
+import com.google.common.collect.ImmutableSet;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ class PluginCenterDtoMapperTest {
       "http://avatar.url",
       "555000444",
       new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
-      new Dependency("scm-review-plugin"),
+      ImmutableSet.of("scm-review-plugin"),
       new HashMap<>());
 
     PluginInformation result = PluginCenterDtoMapper.map(Collections.singletonList(plugin)).iterator().next();
@@ -54,7 +55,7 @@ class PluginCenterDtoMapperTest {
       "https://avatar.url",
       "12345678aa",
       new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
-      new Dependency("scm-review-plugin"),
+      ImmutableSet.of("scm-review-plugin"),
       new HashMap<>());
 
     Plugin plugin2 = new Plugin(
@@ -67,7 +68,7 @@ class PluginCenterDtoMapperTest {
       "http://avatar.url",
       "555000444",
       new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
-      new Dependency("scm-review-plugin"),
+      ImmutableSet.of("scm-review-plugin"),
       new HashMap<>());
 
     Set<PluginInformation> resultSet = PluginCenterDtoMapper.map(Arrays.asList(plugin1, plugin2));
