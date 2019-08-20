@@ -3,6 +3,7 @@ package sonia.scm.plugin;
 import com.google.common.collect.ImmutableList;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -77,6 +78,8 @@ public final class PluginCenterDto implements Serializable {
 
   @XmlAccessorType(XmlAccessType.FIELD)
   @Getter
+  @NoArgsConstructor
+  @AllArgsConstructor
   static class Link {
     private String href;
   }

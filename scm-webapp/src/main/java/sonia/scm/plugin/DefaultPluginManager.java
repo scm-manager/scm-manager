@@ -37,13 +37,19 @@ package sonia.scm.plugin;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.NotFoundException;
 
 //~--- JDK imports ------------------------------------------------------------
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 /**
  *
@@ -52,13 +58,17 @@ import java.util.stream.Collectors;
 @Singleton
 public class DefaultPluginManager implements PluginManager {
 
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultPluginManager.class);
+
   private final PluginLoader loader;
   private final PluginCenter center;
+  private final PluginInstaller installer;
 
   @Inject
-  public DefaultPluginManager(PluginLoader loader, PluginCenter center) {
+  public DefaultPluginManager(PluginLoader loader, PluginCenter center, PluginInstaller installer) {
     this.loader = loader;
     this.center = center;
+    this.installer = installer;
   }
 
   @Override
@@ -98,6 +108,18 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public void install(String name) {
+    if (getInstalled(name).isPresent()){
+      LOG.info("plugin {} is already installed, skipping installation", name);
+      return;
+    }
+    AvailablePlugin plugin = getAvailable(name).orElseThrow(() -> NotFoundException.notFound(entity(AvailablePlugin.class, name)));
+    Set<String> dependencies = plugin.getDescriptor().getDependencies();
+    if (dependencies != null) {
+      for (String dependency: dependencies){
+        install(dependency);
+      }
+    }
 
+    installer.install(plugin);
   }
 }

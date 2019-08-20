@@ -21,7 +21,6 @@ import sonia.scm.plugin.AvailablePluginDescriptor;
 import sonia.scm.plugin.PluginCondition;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.plugin.PluginState;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Provider;
@@ -148,7 +147,9 @@ class AvailablePluginResourceTest {
   }
 
   private AvailablePlugin createPlugin(PluginInformation pluginInformation) {
-    AvailablePluginDescriptor descriptor = new AvailablePluginDescriptor(pluginInformation, new PluginCondition(), Collections.emptySet());
+    AvailablePluginDescriptor descriptor = new AvailablePluginDescriptor(
+      pluginInformation, new PluginCondition(), Collections.emptySet(), "https://download.hitchhiker.com", null
+    );
     return new AvailablePlugin(descriptor);
   }
 

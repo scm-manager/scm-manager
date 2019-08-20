@@ -2,7 +2,6 @@ package sonia.scm.plugin;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
@@ -10,16 +9,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultPluginManagerTest {
@@ -29,6 +23,9 @@ class DefaultPluginManagerTest {
 
   @Mock
   private PluginCenter center;
+
+  @Mock
+  private PluginInstaller installer;
 
   @InjectMocks
   private DefaultPluginManager manager;
@@ -116,6 +113,44 @@ class DefaultPluginManagerTest {
 
     Optional<AvailablePlugin> available = manager.getAvailable("scm-git-plugin");
     assertThat(available).isEmpty();
+  }
+
+  @Test
+  void shouldInstallThePlugin() {
+    AvailablePlugin git = createAvailable("scm-git-plugin");
+    when(center.getAvailable()).thenReturn(ImmutableSet.of(git));
+
+    manager.install("scm-git-plugin");
+
+    verify(installer).install(git);
+  }
+
+  @Test
+  void shouldInstallDependingPlugins() {
+    AvailablePlugin review = createAvailable("scm-review-plugin");
+    when(review.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin"));
+    AvailablePlugin mail = createAvailable("scm-mail-plugin");
+    when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail));
+
+    manager.install("scm-review-plugin");
+
+    verify(installer).install(mail);
+    verify(installer).install(review);
+  }
+
+  @Test
+  void shouldNotInstallAlreadyInstalledDependencies() {
+    AvailablePlugin review = createAvailable("scm-review-plugin");
+    when(review.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin"));
+    AvailablePlugin mail = createAvailable("scm-mail-plugin");
+    when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail));
+
+    InstalledPlugin installedMail = createInstalled("scm-mail-plugin");
+    when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(installedMail));
+
+    manager.install("scm-review-plugin");
+
+    verify(installer).install(review);
   }
 
   private AvailablePlugin createAvailable(String name) {
