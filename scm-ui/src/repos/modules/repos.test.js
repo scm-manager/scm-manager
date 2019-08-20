@@ -96,7 +96,6 @@ const hitchhikerRestatend: Repository = {
   description: "restaurant at the end of the universe",
   namespace: "hitchhiker",
   name: "restatend",
-  archived: false,
   type: "git",
   _links: {
     self: {

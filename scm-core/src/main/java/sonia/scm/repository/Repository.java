@@ -85,7 +85,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   private Set<RepositoryPermission> permissions = new HashSet<>();
   @XmlElement(name = "public")
   private boolean publicReadable = false;
-  private boolean archived = false;
   private String type;
 
 
@@ -217,16 +216,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   }
 
   /**
-   * Returns true if the repository is archived.
-   *
-   * @return true if the repository is archived
-   * @since 1.14
-   */
-  public boolean isArchived() {
-    return archived;
-  }
-
-  /**
    * Returns {@code true} if the repository is healthy.
    *
    * @return {@code true} if the repository is healthy
@@ -262,16 +251,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
       && ValidationUtil.isRepositoryNameValid(name)
       && Util.isNotEmpty(type)
       && ((Util.isEmpty(contact)) || ValidationUtil.isMailAddressValid(contact));
-  }
-
-  /**
-   * Archive or un archive this repository.
-   *
-   * @param archived true to enable archive
-   * @since 1.14
-   */
-  public void setArchived(boolean archived) {
-    this.archived = archived;
   }
 
   public void setContact(String contact) {
@@ -354,7 +333,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     repository.setDescription(description);
     repository.setPermissions(permissions);
     repository.setPublicReadable(publicReadable);
-    repository.setArchived(archived);
 
     // do not copy health check results
   }
@@ -383,7 +361,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
       && Objects.equal(contact, other.contact)
       && Objects.equal(description, other.description)
       && Objects.equal(publicReadable, other.publicReadable)
-      && Objects.equal(archived, other.archived)
       && Objects.equal(permissions, other.permissions)
       && Objects.equal(type, other.type)
       && Objects.equal(creationDate, other.creationDate)
@@ -395,7 +372,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   @Override
   public int hashCode() {
     return Objects.hashCode(id, namespace, name, contact, description, publicReadable,
-      archived, permissions, type, creationDate, lastModified, properties,
+      permissions, type, creationDate, lastModified, properties,
       healthCheckFailures);
   }
 
@@ -408,7 +385,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
       .add("contact", contact)
       .add("description", description)
       .add("publicReadable", publicReadable)
-      .add("archived", archived)
       .add("permissions", permissions)
       .add("type", type)
       .add("lastModified", lastModified)

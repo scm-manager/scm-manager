@@ -37,7 +37,6 @@ public class ConfigDtoToScmConfigurationMapperTest {
     assertEquals("user" , config.getProxyUser());
     assertTrue(config.isEnableProxy());
     assertEquals("realm" , config.getRealmDescription());
-    assertTrue(config.isEnableRepositoryArchive());
     assertTrue(config.isDisableGroupingGrid());
     assertEquals("yyyy" , config.getDateFormat());
     assertTrue(config.isAnonymousAccessEnabled());
@@ -61,7 +60,6 @@ public class ConfigDtoToScmConfigurationMapperTest {
     configDto.setProxyUser("user");
     configDto.setEnableProxy(true);
     configDto.setRealmDescription("realm");
-    configDto.setEnableRepositoryArchive(true);
     configDto.setDisableGroupingGrid(true);
     configDto.setDateFormat("yyyy");
     configDto.setAnonymousAccessEnabled(true);

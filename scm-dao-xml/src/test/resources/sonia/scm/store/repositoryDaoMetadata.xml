@@ -5,6 +5,5 @@
     <namespace>space</namespace>
     <name>existing</name>
     <public>false</public>
-    <archived>false</archived>
     <type>xml</type>
 </repositories>

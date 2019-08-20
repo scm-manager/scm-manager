@@ -67,7 +67,6 @@ public class ScmConfigurationToConfigDtoMapperTest {
     assertEquals("trillian" , dto.getProxyUser());
     assertTrue(dto.isEnableProxy());
     assertEquals("description" , dto.getRealmDescription());
-    assertTrue(dto.isEnableRepositoryArchive());
     assertTrue(dto.isDisableGroupingGrid());
     assertEquals("dd" , dto.getDateFormat());
     assertTrue(dto.isAnonymousAccessEnabled());
@@ -106,7 +105,6 @@ public class ScmConfigurationToConfigDtoMapperTest {
     config.setProxyUser("trillian");
     config.setEnableProxy(true);
     config.setRealmDescription("description");
-    config.setEnableRepositoryArchive(true);
     config.setDisableGroupingGrid(true);
     config.setDateFormat("dd");
     config.setAnonymousAccessEnabled(true);

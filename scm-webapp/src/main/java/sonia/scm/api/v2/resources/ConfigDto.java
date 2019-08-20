@@ -19,7 +19,6 @@ public class ConfigDto extends HalRepresentation {
   private String proxyUser;
   private boolean enableProxy;
   private String realmDescription;
-  private boolean enableRepositoryArchive;
   private boolean disableGroupingGrid;
   private String dateFormat;
   private boolean anonymousAccessEnabled;

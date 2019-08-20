@@ -5,7 +5,6 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
 
@@ -63,7 +62,7 @@ public class RepositoryResource {
     this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
-    this.adapter = new SingleResourceManagerAdapter<>(manager, Repository.class, this::handleNotArchived);
+    this.adapter = new SingleResourceManagerAdapter<>(manager, Repository.class);
     this.tagRootResource = tagRootResource;
     this.branchRootResource = branchRootResource;
     this.changesetRootResource = changesetRootResource;
@@ -211,14 +210,6 @@ public class RepositoryResource {
 
   @Path("merge/")
   public MergeResource merge() {return mergeResource.get(); }
-
-  private Optional<Response> handleNotArchived(Throwable throwable) {
-    if (throwable instanceof RepositoryIsNotArchivedException) {
-      return Optional.of(Response.status(Response.Status.PRECONDITION_FAILED).build());
-    } else {
-      return Optional.empty();
-    }
-  }
 
   private Supplier<Repository> loadBy(String namespace, String name) {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);

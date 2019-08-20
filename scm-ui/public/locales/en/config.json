@@ -36,7 +36,6 @@
   },
   "general-settings": {
     "realm-description": "Realm Description",
-    "enable-repository-archive": "Enable Repository Archive",
     "disable-grouping-grid": "Disable Grouping Grid",
     "date-format": "Date Format",
     "anonymous-access-enabled": "Anonymous Access Enabled",
@@ -57,7 +56,6 @@
     "dateFormatHelpText": "Moments date format. Please have a look at the MomentJS documentation.",
     "pluginUrlHelpText": "The url of the Plugin Center API. Explanation of the placeholders: version = SCM-Manager Version; os = Operation System; arch = Architecture",
     "enableForwardingHelpText": "Enable mod_proxy port forwarding.",
-    "enableRepositoryArchiveHelpText": "Enable repository archives. A complete page reload is required after a change of this value.",
     "disableGroupingGridHelpText": "Disable repository Groups. A complete page reload is required after a change of this value.",
     "allowAnonymousAccessHelpText": "Anonymous users have read access on public repositories.",
     "skipFailedAuthenticatorsHelpText": "Do not stop the authentication chain, if an authenticator finds the user but fails to authenticate the user.",
