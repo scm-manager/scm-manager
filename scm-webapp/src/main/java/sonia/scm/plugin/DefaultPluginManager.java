@@ -35,11 +35,15 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Singleton;
 
 //~--- JDK imports ------------------------------------------------------------
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -48,24 +52,48 @@ import java.util.Optional;
 @Singleton
 public class DefaultPluginManager implements PluginManager {
 
+  private final PluginLoader loader;
+  private final PluginCenter center;
+
+  @Inject
+  public DefaultPluginManager(PluginLoader loader, PluginCenter center) {
+    this.loader = loader;
+    this.center = center;
+  }
+
   @Override
   public Optional<AvailablePlugin> getAvailable(String name) {
-    return Optional.empty();
+    return center.getAvailable()
+      .stream()
+      .filter(filterByName(name))
+      .filter(this::isNotInstalled)
+      .findFirst();
   }
 
   @Override
   public Optional<InstalledPlugin> getInstalled(String name) {
-    return Optional.empty();
+    return loader.getInstalledPlugins()
+      .stream()
+      .filter(filterByName(name))
+      .findFirst();
   }
 
   @Override
   public List<InstalledPlugin> getInstalled() {
-    return null;
+    return ImmutableList.copyOf(loader.getInstalledPlugins());
   }
 
   @Override
   public List<AvailablePlugin> getAvailable() {
-    return null;
+    return center.getAvailable().stream().filter(this::isNotInstalled).collect(Collectors.toList());
+  }
+
+  private <T extends Plugin> Predicate<T> filterByName(String name) {
+    return (plugin) -> name.equals(plugin.getDescriptor().getInformation().getName());
+  }
+
+  private boolean isNotInstalled(AvailablePlugin availablePlugin) {
+    return !getInstalled(availablePlugin.getDescriptor().getInformation().getName()).isPresent();
   }
 
   @Override

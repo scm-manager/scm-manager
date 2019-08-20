@@ -2,6 +2,11 @@ package sonia.scm.plugin;
 
 import com.google.common.collect.ImmutableSet;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,10 +16,18 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 import static sonia.scm.plugin.PluginCenterDto.Plugin;
 import static sonia.scm.plugin.PluginCenterDto.*;
 
+@ExtendWith(MockitoExtension.class)
 class PluginCenterDtoMapperTest {
+
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private PluginCenterDto dto;
+
+  @InjectMocks
+  private PluginCenterDtoMapperImpl mapper;
 
   @Test
   void shouldMapSinglePlugin() {
@@ -31,16 +44,19 @@ class PluginCenterDtoMapperTest {
       ImmutableSet.of("scm-review-plugin"),
       new HashMap<>());
 
-    PluginInformation result = PluginCenterDtoMapper.map(Collections.singletonList(plugin)).iterator().next();
+    when(dto.getEmbedded().getPlugins()).thenReturn(Collections.singletonList(plugin));
+    AvailablePluginDescriptor descriptor = mapper.map(dto).iterator().next().getDescriptor();
+    PluginInformation information = descriptor.getInformation();
+    PluginCondition condition = descriptor.getCondition();
 
-    assertThat(result.getAuthor()).isEqualTo(plugin.getAuthor());
-    assertThat(result.getCategory()).isEqualTo(plugin.getCategory());
-    assertThat(result.getVersion()).isEqualTo(plugin.getVersion());
-    assertThat(result.getCondition().getArch()).isEqualTo(plugin.getConditions().getArch());
-    assertThat(result.getCondition().getMinVersion()).isEqualTo(plugin.getConditions().getMinVersion());
-    assertThat(result.getCondition().getOs().iterator().next()).isEqualTo(plugin.getConditions().getOs().iterator().next());
-    assertThat(result.getDescription()).isEqualTo(plugin.getDescription());
-    assertThat(result.getName()).isEqualTo(plugin.getName());
+    assertThat(information.getAuthor()).isEqualTo(plugin.getAuthor());
+    assertThat(information.getCategory()).isEqualTo(plugin.getCategory());
+    assertThat(information.getVersion()).isEqualTo(plugin.getVersion());
+    assertThat(condition.getArch()).isEqualTo(plugin.getConditions().getArch());
+    assertThat(condition.getMinVersion()).isEqualTo(plugin.getConditions().getMinVersion());
+    assertThat(condition.getOs().iterator().next()).isEqualTo(plugin.getConditions().getOs().iterator().next());
+    assertThat(information.getDescription()).isEqualTo(plugin.getDescription());
+    assertThat(information.getName()).isEqualTo(plugin.getName());
   }
 
   @Test
@@ -71,12 +87,14 @@ class PluginCenterDtoMapperTest {
       ImmutableSet.of("scm-review-plugin"),
       new HashMap<>());
 
-    Set<PluginInformation> resultSet = PluginCenterDtoMapper.map(Arrays.asList(plugin1, plugin2));
+    when(dto.getEmbedded().getPlugins()).thenReturn(Arrays.asList(plugin1, plugin2));
 
-    List<PluginInformation> pluginsList = new ArrayList<>(resultSet);
+    Set<AvailablePlugin> resultSet = mapper.map(dto);
 
-    PluginInformation pluginInformation1 = pluginsList.get(1);
-    PluginInformation pluginInformation2 = pluginsList.get(0);
+    List<AvailablePlugin> pluginsList = new ArrayList<>(resultSet);
+
+    PluginInformation pluginInformation1 = pluginsList.get(1).getDescriptor().getInformation();
+    PluginInformation pluginInformation2 = pluginsList.get(0).getDescriptor().getInformation();
 
     assertThat(pluginInformation1.getAuthor()).isEqualTo(plugin1.getAuthor());
     assertThat(pluginInformation1.getVersion()).isEqualTo(plugin1.getVersion());
