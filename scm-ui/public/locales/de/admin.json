@@ -37,7 +37,7 @@
       "abort": "Abbrechen",
       "author": "Autor",
       "version": "Version",
-      "dependencyNotification": "Mit diesem Plugin werden folgende Abhängigkeiten mit installieren wenn sie noch nicht vorhanden sind.",
+      "dependencyNotification": "Mit diesem Plugin werden folgende Abhängigkeiten mit installieren wenn sie noch nicht vorhanden sind!",
       "dependencies": "Abhängigkeiten"
     }
   },

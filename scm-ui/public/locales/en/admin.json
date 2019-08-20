@@ -37,7 +37,7 @@
       "abort": "Abort",
       "author": "Author",
       "version": "Version",
-      "dependencyNotification": "With this plugin, the following dependencies are installed if they are not available yet.",
+      "dependencyNotification": "With this plugin, the following dependencies are installed if they are not available yet!",
       "dependencies": "Dependencies"
     }
   },

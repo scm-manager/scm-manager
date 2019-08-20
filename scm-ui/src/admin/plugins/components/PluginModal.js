@@ -48,7 +48,7 @@ class PluginModal extends React.Component<Props> {
     if (plugin.dependencies && plugin.dependencies.length > 0) {
       dependencies = (
         <>
-          <strong>{t("plugin.modal.dependencyNotification")}</strong>
+          <strong>{t("plugins.modal.dependencyNotification")}</strong>
           <div className="field is-horizontal">
             <div
               className={classNames(
