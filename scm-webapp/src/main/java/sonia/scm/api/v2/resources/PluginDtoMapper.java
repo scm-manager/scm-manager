@@ -22,6 +22,7 @@ public abstract class PluginDtoMapper {
 
   public PluginDto map(Plugin plugin) {
     PluginDto dto = createDto(plugin);
+    dto.setDependencies(plugin.getDescriptor().getDependencies());
     map(plugin.getDescriptor().getInformation(), dto);
     if (dto.getCategory() == null) {
       dto.setCategory("Miscellaneous");

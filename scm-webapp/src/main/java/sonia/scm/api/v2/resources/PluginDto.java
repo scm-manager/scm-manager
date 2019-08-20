@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,6 +20,7 @@ public class PluginDto extends HalRepresentation {
   private String author;
   private String category;
   private String avatarUrl;
+  private Set<String> dependencies;
 
   public PluginDto(Links links) {
     add(links);

@@ -1,6 +1,6 @@
 package sonia.scm.api.v2.resources;
 
-import org.junit.jupiter.api.BeforeEach;
+import com.google.common.collect.ImmutableSet;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +14,6 @@ import sonia.scm.plugin.PluginState;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -87,6 +86,15 @@ class PluginDtoMapperTest {
     Plugin plugin = createPlugin(information, PluginState.AVAILABLE);
     PluginDto dto = mapper.map(plugin);
     assertThat(dto.getCategory()).isEqualTo("Miscellaneous");
+  }
+
+  @Test
+  void shouldAppendDependencies() {
+    Plugin plugin = createPlugin(PluginState.AVAILABLE);
+    when(plugin.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("one", "two"));
+
+    PluginDto dto = mapper.map(plugin);
+    assertThat(dto.getDependencies()).containsOnly("one", "two");
   }
 
   private Plugin createPlugin(PluginState state) {
