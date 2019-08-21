@@ -9,8 +9,7 @@ import {
   Title,
   Subtitle,
   Notification,
-  ErrorNotification,
-  Button
+  ErrorNotification
 } from "@scm-manager/ui-components";
 import {
   fetchPluginsByLink,
@@ -25,7 +24,7 @@ import {
 } from "../../../modules/indexResource";
 import PluginTopActions from "../components/PluginTopActions";
 import PluginBottomActions from "../components/PluginBottomActions";
-import InstallPendingAction from '../components/InstallPendingAction';
+import InstallPendingAction from "../components/InstallPendingAction";
 
 type Props = {
   loading: boolean,
@@ -57,16 +56,23 @@ class PluginsOverview extends React.Component<Props> {
   componentDidUpdate(prevProps) {
     const {
       installed,
+    } = this.props;
+    if (prevProps.installed !== installed) {
+      this.fetchPlugins();
+    }
+  }
+
+  fetchPlugins = () => {
+    const {
+      installed,
       fetchPluginsByLink,
       availablePluginsLink,
       installedPluginsLink
     } = this.props;
-    if (prevProps.installed !== installed) {
-      fetchPluginsByLink(
-        installed ? installedPluginsLink : availablePluginsLink
-      );
-    }
-  }
+    fetchPluginsByLink(
+      installed ? installedPluginsLink : availablePluginsLink
+    );
+  };
 
   renderHeader = (actions: React.Node) => {
     const { installed, t } = this.props;
@@ -97,9 +103,7 @@ class PluginsOverview extends React.Component<Props> {
   createActions = () => {
     const { collection } = this.props;
     if (collection._links.installPending) {
-      return (
-        <InstallPendingAction collection={collection} />
-      );
+      return <InstallPendingAction collection={collection} />;
     }
     return null;
   };
@@ -130,7 +134,7 @@ class PluginsOverview extends React.Component<Props> {
     const { collection, t } = this.props;
 
     if (collection._embedded && collection._embedded.plugins.length > 0) {
-      return <PluginsList plugins={collection._embedded.plugins} />;
+      return <PluginsList plugins={collection._embedded.plugins} refresh={this.fetchPlugins} />;
     }
     return <Notification type="info">{t("plugins.noPlugins")}</Notification>;
   }

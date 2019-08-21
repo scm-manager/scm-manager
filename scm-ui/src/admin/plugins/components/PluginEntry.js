@@ -9,6 +9,7 @@ import classNames from "classnames";
 
 type Props = {
   plugin: Plugin,
+  refresh: () => void,
 
   // context props
   classes: any
@@ -73,7 +74,7 @@ class PluginEntry extends React.Component<Props, State> {
   };
 
   render() {
-    const { plugin } = this.props;
+    const { plugin, refresh } = this.props;
     const { showModal } = this.state;
     const avatar = this.createAvatar(plugin);
     const footerLeft = this.createFooterLeft(plugin);
@@ -82,7 +83,7 @@ class PluginEntry extends React.Component<Props, State> {
     const modal = showModal ? (
       <PluginModal
         plugin={plugin}
-        onSubmit={this.toggleModal}
+        refresh={refresh}
         onClose={this.toggleModal}
       />
     ) : null;

@@ -17,7 +17,7 @@ import classNames from "classnames";
 
 type Props = {
   plugin: Plugin,
-  onSubmit: () => void,
+  refresh: () => void,
   onClose: () => void,
 
   // context props
@@ -55,7 +55,7 @@ class PluginModal extends React.Component<Props, State> {
 
   onInstallSuccess = () => {
     const { restart } = this.state;
-    const { onClose } = this.props;
+    const { refresh, onClose } = this.props;
 
     const newState = {
       loading: false,
@@ -68,7 +68,10 @@ class PluginModal extends React.Component<Props, State> {
         success: true
       });
     } else {
-      this.setState(newState, onClose);
+      this.setState(newState, () => {
+        refresh();
+        onClose();
+      });
     }
   };
 
