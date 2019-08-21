@@ -74,6 +74,7 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public Optional<AvailablePlugin> getAvailable(String name) {
+    PluginPermissions.read().check();
     return center.getAvailable()
       .stream()
       .filter(filterByName(name))
@@ -83,6 +84,7 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public Optional<InstalledPlugin> getInstalled(String name) {
+    PluginPermissions.read().check();
     return loader.getInstalledPlugins()
       .stream()
       .filter(filterByName(name))
@@ -91,11 +93,13 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public List<InstalledPlugin> getInstalled() {
+    PluginPermissions.read().check();
     return ImmutableList.copyOf(loader.getInstalledPlugins());
   }
 
   @Override
   public List<AvailablePlugin> getAvailable() {
+    PluginPermissions.read().check();
     return center.getAvailable().stream().filter(this::isNotInstalled).collect(Collectors.toList());
   }
 
@@ -109,6 +113,7 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public void install(String name) {
+    PluginPermissions.manage().check();
     List<AvailablePlugin> plugins = collectPluginsToInstall(name);
     List<PendingPluginInstallation> pendingInstallations = new ArrayList<>();
     for (AvailablePlugin plugin : plugins) {
@@ -131,6 +136,7 @@ public class DefaultPluginManager implements PluginManager {
     collectPluginsToInstall(plugins, name);
     return plugins;
   }
+
   private void collectPluginsToInstall(List<AvailablePlugin> plugins, String name) {
     if (!getInstalled(name).isPresent()) {
       AvailablePlugin plugin = getAvailable(name).orElseThrow(() -> NotFoundException.notFound(entity(AvailablePlugin.class, name)));

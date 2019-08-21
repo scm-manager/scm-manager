@@ -81,7 +81,7 @@ public class AvailablePluginResource {
 
   /**
    * Triggers plugin installation.
-   * @param name plugin artefact name
+   * @param name plugin name
    * @return HTTP Status.
    */
   @POST
