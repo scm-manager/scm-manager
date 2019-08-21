@@ -23,6 +23,11 @@ const styles = {
   link: {
     cursor: "pointer",
     pointerEvents: "all"
+  },
+  spinner: {
+    position: "absolute",
+    right: 0,
+    top: 0
   }
 };
 
@@ -49,19 +54,14 @@ class PluginEntry extends React.Component<Props, State> {
     return <small className="level-item">{plugin.author}</small>;
   };
 
-  createFooterLeft = (plugin: Plugin) => {
+  isInstallable = () => {
+    const { plugin } = this.props;
+    return plugin._links && plugin._links.install && plugin._links.install.href;
+  };
+
+  createFooterLeft = () => {
     const { classes } = this.props;
-    if (plugin.pending) {
-      return (
-        <span className="level-item">
-          <i className="fas fa-spinner fa-spin has-text-info" />
-        </span>
-      );
-    } else if (
-      plugin._links &&
-      plugin._links.install &&
-      plugin._links.install.href
-    ) {
+    if (this.isInstallable()) {
       return (
         <span
           className={classNames(classes.link, "level-item")}
@@ -73,11 +73,23 @@ class PluginEntry extends React.Component<Props, State> {
     }
   };
 
+  createPendingSpinner = () => {
+    const { plugin, classes } = this.props;
+    if (plugin.pending) {
+      return (
+        <span className={classes.spinner}>
+          <i className="fas fa-spinner fa-spin has-text-info" />
+        </span>
+      );
+    }
+    return null;
+  };
+
   render() {
     const { plugin, refresh } = this.props;
     const { showModal } = this.state;
     const avatar = this.createAvatar(plugin);
-    const footerLeft = this.createFooterLeft(plugin);
+    const footerLeft = this.createFooterLeft();
     const footerRight = this.createFooterRight(plugin);
 
     const modal = showModal ? (
@@ -88,14 +100,14 @@ class PluginEntry extends React.Component<Props, State> {
       />
     ) : null;
 
-    // TODO: Add link to plugin page below
     return (
       <>
         <CardColumn
-          link="#"
+          action={this.isInstallable() ? this.toggleModal : null}
           avatar={avatar}
           title={plugin.displayName ? plugin.displayName : plugin.name}
           description={plugin.description}
+          contentRight={this.createPendingSpinner()}
           footerLeft={footerLeft}
           footerRight={footerRight}
         />
