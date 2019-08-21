@@ -9,6 +9,7 @@ export type Plugin = {
   author: string,
   category: string,
   avatarUrl: string,
+  pending: boolean,
   dependencies: string[],
   _links: Links
 };

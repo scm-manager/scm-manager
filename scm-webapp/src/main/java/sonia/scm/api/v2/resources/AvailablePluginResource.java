@@ -95,4 +95,16 @@ public class AvailablePluginResource {
     pluginManager.install(name, restartAfterInstallation);
     return Response.ok().build();
   }
+
+  @POST
+  @Path("/install-pending")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  public Response installPending() {
+    PluginPermissions.manage().check();
+    pluginManager.installPendingAndRestart();
+    return Response.ok().build();
+  }
 }

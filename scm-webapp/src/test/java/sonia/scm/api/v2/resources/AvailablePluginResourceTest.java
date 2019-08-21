@@ -139,6 +139,17 @@ class AvailablePluginResourceTest {
       verify(pluginManager).install("pluginName", false);
       assertThat(HttpServletResponse.SC_OK).isEqualTo(response.getStatus());
     }
+
+    @Test
+    void installPendingPlugin() throws URISyntaxException {
+      MockHttpRequest request = MockHttpRequest.post("/v2/plugins/available/install-pending");
+      MockHttpResponse response = new MockHttpResponse();
+
+      dispatcher.invoke(request, response);
+
+      verify(pluginManager).installPendingAndRestart();
+      assertThat(HttpServletResponse.SC_OK).isEqualTo(response.getStatus());
+    }
   }
 
   private AvailablePlugin createPlugin() {

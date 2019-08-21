@@ -29,6 +29,7 @@
       "installedNavLink": "Installed",
       "availableNavLink": "Available"
     },
+    "installPending": "Install pending plugins",
     "noPlugins": "No plugins found.",
     "modal": {
       "title": "Install {{name}} Plugin",
@@ -42,7 +43,8 @@
       "dependencies": "Dependencies",
       "successNotification": "Successful installed plugin. You have to reload the page, to see ui changes:",
       "reload": "reload now",
-      "restartNotification": "Restarting the scm-manager context, should only be done if no one else is currently working with it."
+      "restartNotification": "Restarting the scm-manager context, should only be done if no one else is currently working with it.",
+      "installPending": "The following plugins will be installed and after installation the scm-manager context will be restarted."
     }
   },
   "repositoryRole": {
