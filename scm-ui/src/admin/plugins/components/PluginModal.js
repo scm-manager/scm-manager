@@ -5,9 +5,10 @@ import { translate } from "react-i18next";
 import injectSheet from "react-jss";
 import type { Plugin } from "@scm-manager/ui-types";
 import {
+  apiClient,
   Button,
   ButtonGroup,
-  Checkbox,
+  Checkbox, ErrorNotification,
   Modal,
   SubmitButton
 } from "@scm-manager/ui-components";
@@ -20,7 +21,12 @@ type Props = {
 
   // context props
   classes: any,
-  t: string => string
+  t: (key: string, params?: Object) => string
+};
+
+type State = {
+  loading: boolean,
+  error?: Error
 };
 
 const styles = {
@@ -37,10 +43,55 @@ const styles = {
   },
   listSpacing: {
     marginTop: "0 !important"
+  },
+  error: {
+    marginTop: "1em"
   }
 };
 
-class PluginModal extends React.Component<Props> {
+class PluginModal extends React.Component<Props,State> {
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      loading: false
+    };
+  }
+
+  install = (e: Event) => {
+    const { plugin, onClose } = this.props;
+    this.setState({
+      loading: true
+    });
+    e.preventDefault();
+    apiClient.post(plugin._links.install.href)
+      .then(() => {
+        this.setState({
+          loading: false,
+          error: undefined
+        }, onClose);
+      })
+      .catch(error => {
+        this.setState({
+          loading: false,
+          error: error
+        });
+      });
+  };
+
+  footer = () => {
+    const { onClose, t } = this.props;
+    const { loading, error } = this.state;
+    return (
+      <form>
+        <ButtonGroup>
+          <SubmitButton label={t("plugins.modal.install")} loading={loading} action={this.install} disabled={!!error} />
+          <Button label={t("plugins.modal.abort")} action={onClose} />
+        </ButtonGroup>
+      </form>
+    );
+  };
+
   renderDependencies() {
     const { plugin, classes, t } = this.props;
 
@@ -77,14 +128,28 @@ class PluginModal extends React.Component<Props> {
     return dependencies;
   }
 
+  renderError = () => {
+    const { classes } = this.props;
+    const { error } = this.state;
+    if (error) {
+      return (
+        <div className={classes.error}>
+          <ErrorNotification error={error} />
+        </div>
+      );
+    }
+    return null;
+  };
+
   render() {
-    const { plugin, onSubmit, onClose, classes, t } = this.props;
+
+    const { plugin, onClose, classes, t } = this.props;
 
     const body = (
       <>
         <div className="media">
           <div className="media-content">
-            <p>{plugin.description && plugin.description}</p>
+            <p>{plugin.description}</p>
           </div>
         </div>
         <div className="media">
@@ -139,26 +204,18 @@ class PluginModal extends React.Component<Props> {
             />
           </div>
         </div>
+        {this.renderError()}
       </>
-    );
-
-    const footer = (
-      <form onSubmit={onSubmit}>
-        <ButtonGroup>
-          <SubmitButton label={t("plugins.modal.install")} />
-          <Button label={t("plugins.modal.abort")} action={onClose} />
-        </ButtonGroup>
-      </form>
     );
 
     return (
       <Modal
         title={t("plugins.modal.title", {
-          name: plugin.displayName ? plugin.displayName : ""
+          name: plugin.displayName ? plugin.displayName : plugin.name
         })}
         closeFunction={() => onClose()}
         body={body}
-        footer={footer}
+        footer={this.footer()}
         active={true}
       />
     );

@@ -132,7 +132,6 @@ class AvailablePluginResourceTest {
     @Test
     void installPlugin() throws URISyntaxException {
       MockHttpRequest request = MockHttpRequest.post("/v2/plugins/available/pluginName/install");
-      request.accept(VndMediaType.PLUGIN);
       MockHttpResponse response = new MockHttpResponse();
 
       dispatcher.invoke(request, response);
