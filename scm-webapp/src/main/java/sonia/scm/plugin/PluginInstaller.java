@@ -27,25 +27,35 @@ class PluginInstaller {
   }
 
   public PendingPluginInstallation install(AvailablePlugin plugin) {
+    Path file = null;
     try (HashingInputStream input = new HashingInputStream(Hashing.sha256(), download(plugin))) {
-      Path file = createFile(plugin);
+      file = createFile(plugin);
       Files.copy(input, file);
 
-      verifyChecksum(plugin, input.hash());
-
-      // TODO clean up in case of error
-
+      verifyChecksum(plugin, input.hash(), file);
       return new PendingPluginInstallation(plugin, file);
     } catch (IOException ex) {
+      cleanup(file);
       throw new PluginDownloadException("failed to download plugin", ex);
     }
   }
 
-  private void verifyChecksum(AvailablePlugin plugin, HashCode hash) {
+  private void cleanup(Path file) {
+    try {
+      if (file != null) {
+        Files.deleteIfExists(file);
+      }
+    } catch (IOException e) {
+      throw new PluginInstallException("failed to cleanup, after broken installation");
+    }
+  }
+
+  private void verifyChecksum(AvailablePlugin plugin, HashCode hash, Path file) {
     Optional<String> checksum = plugin.getDescriptor().getChecksum();
     if (checksum.isPresent()) {
       String calculatedChecksum = hash.toString();
       if (!checksum.get().equalsIgnoreCase(calculatedChecksum)) {
+        cleanup(file);
         throw new PluginChecksumMismatchException(
           String.format("downloaded plugin checksum %s does not match expected %s", calculatedChecksum, checksum.get())
         );

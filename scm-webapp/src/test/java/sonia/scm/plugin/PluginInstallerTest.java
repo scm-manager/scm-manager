@@ -13,16 +13,15 @@ import sonia.scm.net.ahc.AdvancedHttpClient;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith({MockitoExtension.class, TempDirectory.class})
 class PluginInstallerTest {
@@ -92,6 +91,17 @@ class PluginInstallerTest {
     mockContent("21");
 
     assertThrows(PluginChecksumMismatchException.class, () -> installer.install(createGitPlugin()));
+    assertThat(directory.resolve("plugins").resolve("scm-git-plugin.smp")).doesNotExist();
+  }
+
+  @Test
+  void shouldThrowPluginDownloadExceptionAndCleanup() throws IOException {
+    InputStream stream = mock(InputStream.class);
+    when(stream.read(any(), anyInt(), anyInt())).thenThrow(new IOException("failed to read"));
+    when(client.get("https://download.hitchhiker.com").request().contentAsStream()).thenReturn(stream);
+
+    assertThrows(PluginDownloadException.class, () -> installer.install(createGitPlugin()));
+    assertThat(directory.resolve("plugins").resolve("scm-git-plugin.smp")).doesNotExist();
   }
 
 
