@@ -26,6 +26,7 @@ class PluginInstaller {
     this.client = client;
   }
 
+  @SuppressWarnings("squid:S4790") // hashing should be safe
   public PendingPluginInstallation install(AvailablePlugin plugin) {
     Path file = null;
     try (HashingInputStream input = new HashingInputStream(Hashing.sha256(), download(plugin))) {

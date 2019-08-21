@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import { Button, ButtonGroup, Modal } from "@scm-manager/ui-components";
+import { Button } from "@scm-manager/ui-components";
 import type { PluginCollection } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
 import InstallPendingModal from "./InstallPendingModal";
