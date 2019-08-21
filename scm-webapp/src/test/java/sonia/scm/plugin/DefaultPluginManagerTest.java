@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -45,6 +47,14 @@ class DefaultPluginManagerTest {
 
   @Mock
   private Subject subject;
+
+  @BeforeEach
+  void mockInstaller() {
+    lenient().when(installer.install(any())).then(ic -> {
+      AvailablePlugin plugin = ic.getArgument(0);
+      return new PendingPluginInstallation(plugin.install(), null);
+    });
+  }
 
   @Nested
   class WithAdminPermissions {
@@ -180,7 +190,10 @@ class DefaultPluginManagerTest {
 
       manager.install("scm-review-plugin", false);
 
-      verify(installer).install(review);
+      ArgumentCaptor<AvailablePlugin> captor = ArgumentCaptor.forClass(AvailablePlugin.class);
+      verify(installer).install(captor.capture());
+
+      assertThat(captor.getValue().getDescriptor().getInformation().getName()).isEqualTo("scm-review-plugin");
     }
 
     @Test
@@ -230,6 +243,66 @@ class DefaultPluginManagerTest {
       verify(eventBus).post(any(RestartEvent.class));
     }
 
+    @Test
+    void shouldNotSendRestartEventIfNoPluginWasInstalled() {
+      InstalledPlugin gitInstalled = createInstalled("scm-git-plugin");
+      when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(gitInstalled));
+
+      manager.install("scm-git-plugin", true);
+      verify(eventBus, never()).post(any());
+    }
+
+    @Test
+    void shouldNotInstallAlreadyPendingPlugins() {
+      AvailablePlugin review = createAvailable("scm-review-plugin");
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
+
+      manager.install("scm-review-plugin", false);
+      manager.install("scm-review-plugin", false);
+      // only one interaction
+      verify(installer).install(any());
+    }
+
+    @Test
+    void shouldSendRestartEvent() {
+      AvailablePlugin review = createAvailable("scm-review-plugin");
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
+
+      manager.install("scm-review-plugin", false);
+      manager.installPendingAndRestart();
+
+      verify(eventBus).post(any(RestartEvent.class));
+    }
+
+    @Test
+    void shouldNotSendRestartEventWithoutPendingPlugins() {
+      manager.installPendingAndRestart();
+
+      verify(eventBus, never()).post(any());
+    }
+
+    @Test
+    void shouldReturnSingleAvailableAsPending() {
+      AvailablePlugin review = createAvailable("scm-review-plugin");
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
+
+      manager.install("scm-review-plugin", false);
+
+      Optional<AvailablePlugin> available = manager.getAvailable("scm-review-plugin");
+      assertThat(available.get().isPending()).isTrue();
+    }
+
+    @Test
+    void shouldReturnAvailableAsPending() {
+      AvailablePlugin review = createAvailable("scm-review-plugin");
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
+
+      manager.install("scm-review-plugin", false);
+
+      List<AvailablePlugin> available = manager.getAvailable();
+      assertThat(available.get(0).isPending()).isTrue();
+    }
+
   }
 
   @Nested
@@ -275,6 +348,11 @@ class DefaultPluginManagerTest {
       assertThrows(AuthorizationException.class, () -> manager.install("test", false));
     }
 
+    @Test
+    void shouldThrowAuthorizationExceptionsForInstallPendingAndRestart() {
+      assertThrows(AuthorizationException.class, () -> manager.installPendingAndRestart());
+    }
+
   }
 
   private AvailablePlugin createAvailable(String name) {
@@ -296,9 +374,9 @@ class DefaultPluginManagerTest {
   }
 
   private AvailablePlugin createAvailable(PluginInformation information) {
-    AvailablePlugin plugin = mock(AvailablePlugin.class, Answers.RETURNS_DEEP_STUBS);
-    returnInformation(plugin, information);
-    return plugin;
+    AvailablePluginDescriptor descriptor = mock(AvailablePluginDescriptor.class);
+    lenient().when(descriptor.getInformation()).thenReturn(information);
+    return new AvailablePlugin(descriptor);
   }
 
   private void returnInformation(Plugin mockedPlugin, PluginInformation information) {

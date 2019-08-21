@@ -67,6 +67,7 @@ public class DefaultPluginManager implements PluginManager {
   private final PluginLoader loader;
   private final PluginCenter center;
   private final PluginInstaller installer;
+  private final List<PendingPluginInstallation> pendingQueue = new ArrayList<>();
 
   @Inject
   public DefaultPluginManager(ScmEventBus eventBus, PluginLoader loader, PluginCenter center, PluginInstaller installer) {
@@ -83,6 +84,15 @@ public class DefaultPluginManager implements PluginManager {
       .stream()
       .filter(filterByName(name))
       .filter(this::isNotInstalled)
+      .map(p -> getPending(name).orElse(p))
+      .findFirst();
+  }
+
+  private Optional<AvailablePlugin> getPending(String name) {
+    return pendingQueue
+      .stream()
+      .map(PendingPluginInstallation::getPlugin)
+      .filter(filterByName(name))
       .findFirst();
   }
 
@@ -104,7 +114,11 @@ public class DefaultPluginManager implements PluginManager {
   @Override
   public List<AvailablePlugin> getAvailable() {
     PluginPermissions.read().check();
-    return center.getAvailable().stream().filter(this::isNotInstalled).collect(Collectors.toList());
+    return center.getAvailable()
+      .stream()
+      .filter(this::isNotInstalled)
+      .map(p -> getPending(p.getDescriptor().getInformation().getName()).orElse(p))
+      .collect(Collectors.toList());
   }
 
   private <T extends Plugin> Predicate<T> filterByName(String name) {
@@ -129,9 +143,26 @@ public class DefaultPluginManager implements PluginManager {
         throw ex;
       }
     }
-    if (restartAfterInstallation) {
-      eventBus.post(new RestartEvent(PluginManager.class, "plugin installation"));
+
+    if (!pendingInstallations.isEmpty()) {
+      if (restartAfterInstallation) {
+        restart("plugin installation");
+      } else {
+        pendingQueue.addAll(pendingInstallations);
+      }
     }
+  }
+
+  @Override
+  public void installPendingAndRestart() {
+    PluginPermissions.manage().check();
+    if (!pendingQueue.isEmpty()) {
+      restart("install pending plugins");
+    }
+  }
+
+  private void restart(String cause) {
+    eventBus.post(new RestartEvent(PluginManager.class, cause));
   }
 
   private void cancelPending(List<PendingPluginInstallation> pendingInstallations) {
@@ -144,8 +175,12 @@ public class DefaultPluginManager implements PluginManager {
     return plugins;
   }
 
+  private boolean isInstalledOrPending(String name) {
+    return getInstalled(name).isPresent() || getPending(name).isPresent();
+  }
+
   private void collectPluginsToInstall(List<AvailablePlugin> plugins, String name) {
-    if (!getInstalled(name).isPresent()) {
+    if (!isInstalledOrPending(name)) {
       AvailablePlugin plugin = getAvailable(name).orElseThrow(() -> NotFoundException.notFound(entity(AvailablePlugin.class, name)));
 
       Set<String> dependencies = plugin.getDescriptor().getDependencies();
@@ -157,7 +192,7 @@ public class DefaultPluginManager implements PluginManager {
 
       plugins.add(plugin);
     } else {
-      LOG.info("plugin {} is already installed, skipping installation", name);
+      LOG.info("plugin {} is already installed or installation is pending, skipping installation", name);
     }
   }
 }

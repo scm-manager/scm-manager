@@ -33,7 +33,7 @@ class PluginInstaller {
       Files.copy(input, file);
 
       verifyChecksum(plugin, input.hash(), file);
-      return new PendingPluginInstallation(plugin, file);
+      return new PendingPluginInstallation(plugin.install(), file);
     } catch (IOException ex) {
       cleanup(file);
       throw new PluginDownloadException("failed to download plugin", ex);

@@ -117,7 +117,7 @@ class AvailablePluginResourceTest {
 
       PluginDto pluginDto = new PluginDto();
       pluginDto.setName("pluginName");
-      when(mapper.map(plugin)).thenReturn(pluginDto);
+      when(mapper.mapAvailable(plugin)).thenReturn(pluginDto);
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available/pluginName");
       request.accept(VndMediaType.PLUGIN);

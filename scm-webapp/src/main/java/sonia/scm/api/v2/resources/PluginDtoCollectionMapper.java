@@ -5,10 +5,8 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import sonia.scm.plugin.AvailablePlugin;
-import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.InstalledPlugin;
 
-import java.util.Collection;
 import java.util.List;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
@@ -27,12 +25,12 @@ public class PluginDtoCollectionMapper {
   }
 
   public HalRepresentation mapInstalled(List<InstalledPlugin> plugins) {
-    List<PluginDto> dtos = plugins.stream().map(mapper::map).collect(toList());
+    List<PluginDto> dtos = plugins.stream().map(mapper::mapInstalled).collect(toList());
     return new HalRepresentation(createInstalledPluginsLinks(), embedDtos(dtos));
   }
 
   public HalRepresentation mapAvailable(List<AvailablePlugin> plugins) {
-    List<PluginDto> dtos = plugins.stream().map(mapper::map).collect(toList());
+    List<PluginDto> dtos = plugins.stream().map(mapper::mapAvailable).collect(toList());
     return new HalRepresentation(createAvailablePluginsLinks(), embedDtos(dtos));
   }
 

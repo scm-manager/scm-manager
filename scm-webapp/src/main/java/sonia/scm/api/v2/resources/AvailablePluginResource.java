@@ -10,7 +10,6 @@ import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -74,7 +73,7 @@ public class AvailablePluginResource {
     PluginPermissions.read().check();
     Optional<AvailablePlugin> plugin = pluginManager.getAvailable(name);
     if (plugin.isPresent()) {
-      return Response.ok(mapper.map(plugin.get())).build();
+      return Response.ok(mapper.mapAvailable(plugin.get())).build();
     } else {
       throw notFound(entity(InstalledPluginDescriptor.class, name));
     }

@@ -3,9 +3,11 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.Links;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import sonia.scm.plugin.AvailablePlugin;
+import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginInformation;
-import sonia.scm.plugin.PluginState;
+import sonia.scm.plugin.PluginPermissions;
 
 import javax.inject.Inject;
 
@@ -20,34 +22,48 @@ public abstract class PluginDtoMapper {
 
   public abstract void map(PluginInformation plugin, @MappingTarget PluginDto dto);
 
-  public PluginDto map(Plugin plugin) {
-    PluginDto dto = createDto(plugin);
+  public PluginDto mapInstalled(InstalledPlugin plugin) {
+    PluginDto dto = createDtoForInstalled(plugin);
+    map(dto, plugin);
+    return dto;
+  }
+
+  public PluginDto mapAvailable(AvailablePlugin plugin) {
+    PluginDto dto = createDtoForAvailable(plugin);
+    map(dto, plugin);
+    dto.setPending(plugin.isPending());
+    return dto;
+  }
+
+  private void map(PluginDto dto, Plugin plugin) {
     dto.setDependencies(plugin.getDescriptor().getDependencies());
     map(plugin.getDescriptor().getInformation(), dto);
     if (dto.getCategory() == null) {
       dto.setCategory("Miscellaneous");
     }
-    return dto;
   }
 
-  private PluginDto createDto(Plugin plugin) {
-    Links.Builder linksBuilder;
+  private PluginDto createDtoForAvailable(AvailablePlugin plugin) {
+    PluginInformation information = plugin.getDescriptor().getInformation();
 
-    PluginInformation pluginInformation = plugin.getDescriptor().getInformation();
+    Links.Builder links = linkingTo()
+      .self(resourceLinks.availablePlugin()
+        .self(information.getName()));
 
-    if (plugin.getState() != null && plugin.getState().equals(PluginState.AVAILABLE)) {
-      linksBuilder = linkingTo()
-        .self(resourceLinks.availablePlugin()
-          .self(pluginInformation.getName(), pluginInformation.getVersion()));
-
-      linksBuilder.single(link("install", resourceLinks.availablePlugin().install(pluginInformation.getName(), pluginInformation.getVersion())));
-    }
-    else {
-      linksBuilder = linkingTo()
-        .self(resourceLinks.installedPlugin()
-          .self(pluginInformation.getName()));
+    if (!plugin.isPending() && PluginPermissions.manage().isPermitted()) {
+      links.single(link("install", resourceLinks.availablePlugin().install(information.getName())));
     }
 
-    return new PluginDto(linksBuilder.build());
+    return new PluginDto(links.build());
+  }
+
+  private PluginDto createDtoForInstalled(InstalledPlugin plugin) {
+    PluginInformation information = plugin.getDescriptor().getInformation();
+
+    Links.Builder links = linkingTo()
+      .self(resourceLinks.installedPlugin()
+        .self(information.getName()));
+
+    return new PluginDto(links.build());
   }
 }

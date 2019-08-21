@@ -110,7 +110,7 @@ class InstalledPluginResourceTest {
 
       PluginDto pluginDto = new PluginDto();
       pluginDto.setName("pluginName");
-      when(mapper.map(installedPlugin)).thenReturn(pluginDto);
+      when(mapper.mapInstalled(installedPlugin)).thenReturn(pluginDto);
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/installed/pluginName");
       request.accept(VndMediaType.PLUGIN);

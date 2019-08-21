@@ -11,6 +11,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@SuppressWarnings("squid:S2160") // we do not need equals for dto
 public class PluginDto extends HalRepresentation {
 
   private String name;
@@ -20,6 +21,7 @@ public class PluginDto extends HalRepresentation {
   private String author;
   private String category;
   private String avatarUrl;
+  private boolean pending;
   private Set<String> dependencies;
 
   public PluginDto(Links links) {

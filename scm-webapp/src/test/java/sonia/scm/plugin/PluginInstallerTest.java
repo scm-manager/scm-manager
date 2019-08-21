@@ -63,7 +63,8 @@ class PluginInstallerTest {
     PendingPluginInstallation pending = installer.install(gitPlugin);
 
     assertThat(pending).isNotNull();
-    assertThat(pending.getPlugin()).isSameAs(gitPlugin);
+    assertThat(pending.getPlugin().getDescriptor()).isEqualTo(gitPlugin.getDescriptor());
+    assertThat(pending.getPlugin().isPending()).isTrue();
   }
 
   private void mockContent(String content) throws IOException {

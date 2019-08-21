@@ -1,15 +1,20 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.ImmutableSet;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
-import org.mockito.Mockito;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.plugin.Plugin;
-import sonia.scm.plugin.PluginDescriptor;
+import sonia.scm.plugin.AvailablePlugin;
+import sonia.scm.plugin.AvailablePluginDescriptor;
+import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginInformation;
-import sonia.scm.plugin.PluginState;
 
 import java.net.URI;
 
@@ -25,6 +30,19 @@ class PluginDtoMapperTest {
 
   @InjectMocks
   private PluginDtoMapperImpl mapper;
+
+  @Mock
+  private Subject subject;
+
+  @BeforeEach
+  void bindSubject() {
+    ThreadContext.bind(subject);
+  }
+
+  @AfterEach
+  void unbindSubject() {
+    ThreadContext.unbindSubject();
+  }
 
   @Test
   void shouldMapInformation() {
@@ -54,27 +72,42 @@ class PluginDtoMapperTest {
 
   @Test
   void shouldAppendInstalledSelfLink() {
-    Plugin plugin = createPlugin(PluginState.INSTALLED);
+    InstalledPlugin plugin = createInstalled();
 
-    PluginDto dto = mapper.map(plugin);
+    PluginDto dto = mapper.mapInstalled(plugin);
     assertThat(dto.getLinks().getLinkBy("self").get().getHref())
       .isEqualTo("https://hitchhiker.com/v2/plugins/installed/scm-cas-plugin");
   }
 
+  private InstalledPlugin createInstalled(PluginInformation information) {
+    InstalledPlugin plugin = mock(InstalledPlugin.class, Answers.RETURNS_DEEP_STUBS);
+    when(plugin.getDescriptor().getInformation()).thenReturn(information);
+    return plugin;
+  }
+
   @Test
   void shouldAppendAvailableSelfLink() {
-    Plugin plugin = createPlugin(PluginState.AVAILABLE);
+    AvailablePlugin plugin = createAvailable();
 
-    PluginDto dto = mapper.map(plugin);
+    PluginDto dto = mapper.mapAvailable(plugin);
     assertThat(dto.getLinks().getLinkBy("self").get().getHref())
       .isEqualTo("https://hitchhiker.com/v2/plugins/available/scm-cas-plugin");
   }
 
   @Test
-  void shouldAppendInstallLink() {
-    Plugin plugin = createPlugin(PluginState.AVAILABLE);
+  void shouldNotAppendInstallLinkWithoutPermissions() {
+    AvailablePlugin plugin = createAvailable();
 
-    PluginDto dto = mapper.map(plugin);
+    PluginDto dto = mapper.mapAvailable(plugin);
+    assertThat(dto.getLinks().getLinkBy("install")).isEmpty();
+  }
+
+  @Test
+  void shouldAppendInstallLink() {
+    when(subject.isPermitted("plugin:manage")).thenReturn(true);
+    AvailablePlugin plugin = createAvailable();
+
+    PluginDto dto = mapper.mapAvailable(plugin);
     assertThat(dto.getLinks().getLinkBy("install").get().getHref())
       .isEqualTo("https://hitchhiker.com/v2/plugins/available/scm-cas-plugin/install");
   }
@@ -83,31 +116,32 @@ class PluginDtoMapperTest {
   void shouldReturnMiscellaneousIfCategoryIsNull() {
     PluginInformation information = createPluginInformation();
     information.setCategory(null);
-    Plugin plugin = createPlugin(information, PluginState.AVAILABLE);
-    PluginDto dto = mapper.map(plugin);
+    AvailablePlugin plugin = createAvailable(information);
+    PluginDto dto = mapper.mapAvailable(plugin);
     assertThat(dto.getCategory()).isEqualTo("Miscellaneous");
   }
 
   @Test
   void shouldAppendDependencies() {
-    Plugin plugin = createPlugin(PluginState.AVAILABLE);
+    AvailablePlugin plugin = createAvailable();
     when(plugin.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("one", "two"));
 
-    PluginDto dto = mapper.map(plugin);
+    PluginDto dto = mapper.mapAvailable(plugin);
     assertThat(dto.getDependencies()).containsOnly("one", "two");
   }
 
-  private Plugin createPlugin(PluginState state) {
-    return createPlugin(createPluginInformation(), state);
+  private InstalledPlugin createInstalled() {
+    return createInstalled(createPluginInformation());
   }
 
-  private Plugin createPlugin(PluginInformation information, PluginState state) {
-    Plugin plugin = Mockito.mock(Plugin.class);
-    when(plugin.getState()).thenReturn(state);
-    PluginDescriptor descriptor = mock(PluginDescriptor.class);
+  private AvailablePlugin createAvailable() {
+    return createAvailable(createPluginInformation());
+  }
+
+  private AvailablePlugin createAvailable(PluginInformation information) {
+    AvailablePluginDescriptor descriptor = mock(AvailablePluginDescriptor.class);
     when(descriptor.getInformation()).thenReturn(information);
-    when(plugin.getDescriptor()).thenReturn(descriptor);
-    return plugin;
+    return new AvailablePlugin(descriptor);
   }
 
 }

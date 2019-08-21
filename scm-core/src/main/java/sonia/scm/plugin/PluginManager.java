@@ -80,4 +80,9 @@ public interface PluginManager {
    * @param restartAfterInstallation restart context after plugin installation
    */
   void install(String name, boolean restartAfterInstallation);
+
+  /**
+   * Install all pending plugins and restart the scm context.
+   */
+  void installPendingAndRestart();
 }
