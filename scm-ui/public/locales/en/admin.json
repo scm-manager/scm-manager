@@ -34,11 +34,15 @@
       "title": "Install {{name}} Plugin",
       "restart": "Restart to activate",
       "install": "Install",
+      "installAndRestart": "Install and Restart",
       "abort": "Abort",
       "author": "Author",
       "version": "Version",
       "dependencyNotification": "With this plugin, the following dependencies are installed if they are not available yet!",
-      "dependencies": "Dependencies"
+      "dependencies": "Dependencies",
+      "successNotification": "Successful installed plugin. You have to reload the page, to see ui changes:",
+      "reload": "reload now",
+      "restartNotification": "Restarting the scm-manager context, should only be done if no one else is currently working with it."
     }
   },
   "repositoryRole": {

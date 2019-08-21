@@ -136,7 +136,7 @@ class AvailablePluginResourceTest {
 
       dispatcher.invoke(request, response);
 
-      verify(pluginManager).install("pluginName");
+      verify(pluginManager).install("pluginName", false);
       assertThat(HttpServletResponse.SC_OK).isEqualTo(response.getStatus());
     }
   }

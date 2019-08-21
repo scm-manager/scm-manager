@@ -77,6 +77,7 @@ public interface PluginManager {
    * Installs the plugin with the given name from the list of available plugins.
    *
    * @param name plugin name
+   * @param restartAfterInstallation restart context after plugin installation
    */
-  void install(String name);
+  void install(String name, boolean restartAfterInstallation);
 }

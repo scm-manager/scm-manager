@@ -15,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.lifecycle.RestartEvent;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +27,9 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultPluginManagerTest {
+
+  @Mock
+  private ScmEventBus eventBus;
 
   @Mock
   private PluginLoader loader;
@@ -144,9 +149,10 @@ class DefaultPluginManagerTest {
       AvailablePlugin git = createAvailable("scm-git-plugin");
       when(center.getAvailable()).thenReturn(ImmutableSet.of(git));
 
-      manager.install("scm-git-plugin");
+      manager.install("scm-git-plugin", false);
 
       verify(installer).install(git);
+      verify(eventBus, never()).post(any());
     }
 
     @Test
@@ -156,7 +162,7 @@ class DefaultPluginManagerTest {
       AvailablePlugin mail = createAvailable("scm-mail-plugin");
       when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail));
 
-      manager.install("scm-review-plugin");
+      manager.install("scm-review-plugin", false);
 
       verify(installer).install(mail);
       verify(installer).install(review);
@@ -172,7 +178,7 @@ class DefaultPluginManagerTest {
       InstalledPlugin installedMail = createInstalled("scm-mail-plugin");
       when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(installedMail));
 
-      manager.install("scm-review-plugin");
+      manager.install("scm-review-plugin", false);
 
       verify(installer).install(review);
     }
@@ -194,7 +200,7 @@ class DefaultPluginManagerTest {
 
       doThrow(new PluginChecksumMismatchException("checksum does not match")).when(installer).install(review);
 
-      assertThrows(PluginInstallException.class, () -> manager.install("scm-review-plugin"));
+      assertThrows(PluginInstallException.class, () -> manager.install("scm-review-plugin", false));
 
       verify(pendingNotification).cancel();
       verify(pendingMail).cancel();
@@ -208,9 +214,20 @@ class DefaultPluginManagerTest {
       when(mail.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-notification-plugin"));
       when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail));
 
-      assertThrows(NotFoundException.class, () -> manager.install("scm-review-plugin"));
+      assertThrows(NotFoundException.class, () -> manager.install("scm-review-plugin", false));
 
       verify(installer, never()).install(any());
+    }
+
+    @Test
+    void shouldSendRestartEventAfterInstallation() {
+      AvailablePlugin git = createAvailable("scm-git-plugin");
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(git));
+
+      manager.install("scm-git-plugin", true);
+
+      verify(installer).install(git);
+      verify(eventBus).post(any(RestartEvent.class));
     }
 
   }
@@ -255,7 +272,7 @@ class DefaultPluginManagerTest {
 
     @Test
     void shouldThrowAuthorizationExceptionsForInstallMethod() {
-      assertThrows(AuthorizationException.class, () -> manager.install("test"));
+      assertThrows(AuthorizationException.class, () -> manager.install("test", false));
     }
 
   }

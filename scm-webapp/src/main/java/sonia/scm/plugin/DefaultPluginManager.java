@@ -40,6 +40,8 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.lifecycle.RestartEvent;
 
 //~--- JDK imports ------------------------------------------------------------
 import javax.inject.Inject;
@@ -61,12 +63,14 @@ public class DefaultPluginManager implements PluginManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(DefaultPluginManager.class);
 
+  private final ScmEventBus eventBus;
   private final PluginLoader loader;
   private final PluginCenter center;
   private final PluginInstaller installer;
 
   @Inject
-  public DefaultPluginManager(PluginLoader loader, PluginCenter center, PluginInstaller installer) {
+  public DefaultPluginManager(ScmEventBus eventBus, PluginLoader loader, PluginCenter center, PluginInstaller installer) {
+    this.eventBus = eventBus;
     this.loader = loader;
     this.center = center;
     this.installer = installer;
@@ -112,7 +116,7 @@ public class DefaultPluginManager implements PluginManager {
   }
 
   @Override
-  public void install(String name) {
+  public void install(String name, boolean restartAfterInstallation) {
     PluginPermissions.manage().check();
     List<AvailablePlugin> plugins = collectPluginsToInstall(name);
     List<PendingPluginInstallation> pendingInstallations = new ArrayList<>();
@@ -124,6 +128,9 @@ public class DefaultPluginManager implements PluginManager {
         cancelPending(pendingInstallations);
         throw ex;
       }
+    }
+    if (restartAfterInstallation) {
+      eventBus.post(new RestartEvent(PluginManager.class, "plugin installation"));
     }
   }
 

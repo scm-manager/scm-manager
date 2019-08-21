@@ -8,9 +8,10 @@ import {
   apiClient,
   Button,
   ButtonGroup,
-  Checkbox, ErrorNotification,
+  Checkbox,
+  ErrorNotification,
   Modal,
-  SubmitButton
+  Notification
 } from "@scm-manager/ui-components";
 import classNames from "classnames";
 
@@ -25,14 +26,13 @@ type Props = {
 };
 
 type State = {
+  success: boolean,
+  restart: boolean,
   loading: boolean,
   error?: Error
 };
 
 const styles = {
-  titleVersion: {
-    marginLeft: "0.75rem"
-  },
   userLabelAlignment: {
     textAlign: "left",
     marginRight: 0,
@@ -40,37 +40,48 @@ const styles = {
   },
   userFieldFlex: {
     flexGrow: 4
-  },
-  listSpacing: {
-    marginTop: "0 !important"
-  },
-  error: {
-    marginTop: "1em"
   }
 };
 
-class PluginModal extends React.Component<Props,State> {
-
+class PluginModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      loading: false
+      loading: false,
+      restart: false,
+      success: false
     };
   }
 
+  onInstallSuccess = () => {
+    const { restart } = this.state;
+    const { onClose } = this.props;
+
+    const newState = {
+      loading: false,
+      error: undefined
+    };
+
+    if (restart) {
+      this.setState({
+        ...newState,
+        success: true
+      });
+    } else {
+      this.setState(newState, onClose);
+    }
+  };
+
   install = (e: Event) => {
-    const { plugin, onClose } = this.props;
+    const { restart } = this.state;
+    const { plugin } = this.props;
     this.setState({
       loading: true
     });
     e.preventDefault();
-    apiClient.post(plugin._links.install.href)
-      .then(() => {
-        this.setState({
-          loading: false,
-          error: undefined
-        }, onClose);
-      })
+    apiClient
+      .post(plugin._links.install.href + "?restart=" + restart.toString())
+      .then(this.onInstallSuccess)
       .catch(error => {
         this.setState({
           loading: false,
@@ -81,14 +92,25 @@ class PluginModal extends React.Component<Props,State> {
 
   footer = () => {
     const { onClose, t } = this.props;
-    const { loading, error } = this.state;
+    const { loading, error, restart, success } = this.state;
+
+    let color = "primary";
+    let label = "plugins.modal.install";
+    if (restart) {
+      color = "warning";
+      label = "plugins.modal.installAndRestart";
+    }
     return (
-      <form>
-        <ButtonGroup>
-          <SubmitButton label={t("plugins.modal.install")} loading={loading} action={this.install} disabled={!!error} />
-          <Button label={t("plugins.modal.abort")} action={onClose} />
-        </ButtonGroup>
-      </form>
+      <ButtonGroup>
+        <Button
+          label={t(label)}
+          color={color}
+          action={this.install}
+          loading={loading}
+          disabled={!!error || success}
+        />
+        <Button label={t("plugins.modal.abort")} action={onClose} />
+      </ButtonGroup>
     );
   };
 
@@ -98,51 +120,61 @@ class PluginModal extends React.Component<Props,State> {
     let dependencies = null;
     if (plugin.dependencies && plugin.dependencies.length > 0) {
       dependencies = (
-        <>
-          <strong>{t("plugins.modal.dependencyNotification")}</strong>
-          <div className="field is-horizontal">
-            <div
-              className={classNames(
-                classes.userLabelAlignment,
-                "field-label is-inline-flex"
-              )}
-            >
-              {t("plugins.modal.dependencies")}:
-            </div>
-            <div
-              className={classNames(
-                classes.userFieldFlex,
-                "field-body is-inline-flex"
-              )}
-            >
-              <ul className={classes.listSpacing}>
-                {plugin.dependencies.map((dependency, index) => {
-                  return <li key={index}>{dependency}</li>;
-                })}
-              </ul>
-            </div>
-          </div>
-        </>
+        <div className="media">
+          <Notification type="warning">
+            <strong>{t("plugins.modal.dependencyNotification")}</strong>
+            <ul className={classes.listSpacing}>
+              {plugin.dependencies.map((dependency, index) => {
+                return <li key={index}>{dependency}</li>;
+              })}
+            </ul>
+          </Notification>
+        </div>
       );
     }
     return dependencies;
   }
 
-  renderError = () => {
-    const { classes } = this.props;
-    const { error } = this.state;
+  renderNotifications = () => {
+    const { t } = this.props;
+    const { restart, error, success } = this.state;
     if (error) {
       return (
-        <div className={classes.error}>
+        <div className="media">
           <ErrorNotification error={error} />
+        </div>
+      );
+    } else if (success) {
+      return (
+        <div className="media">
+          <Notification type="success">
+            {t("plugins.modal.successNotification")}{" "}
+            <a onClick={e => window.location.reload()}>
+              {t("plugins.modal.reload")}
+            </a>
+          </Notification>
+        </div>
+      );
+    } else if (restart) {
+      return (
+        <div className="media">
+          <Notification type="warning">
+            {t("plugins.modal.restartNotification")}
+          </Notification>
         </div>
       );
     }
     return null;
   };
 
-  render() {
+  handleRestartChange = (value: boolean) => {
+    this.setState({
+      restart: value
+    });
+  };
 
+  render() {
+    const { restart } = this.state;
     const { plugin, onClose, classes, t } = this.props;
 
     const body = (
@@ -197,14 +229,14 @@ class PluginModal extends React.Component<Props,State> {
         <div className="media">
           <div className="media-content">
             <Checkbox
-              checked={false}
+              checked={restart}
               label={t("plugins.modal.restart")}
-              onChange={null}
-              disabled={null}
+              onChange={this.handleRestartChange}
+              disabled={false}
             />
           </div>
         </div>
-        {this.renderError()}
+        {this.renderNotifications()}
       </>
     );
 
