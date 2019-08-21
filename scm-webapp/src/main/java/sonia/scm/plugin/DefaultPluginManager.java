@@ -43,6 +43,7 @@ import sonia.scm.NotFoundException;
 
 //~--- JDK imports ------------------------------------------------------------
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -99,7 +100,7 @@ public class DefaultPluginManager implements PluginManager {
   }
 
   private <T extends Plugin> Predicate<T> filterByName(String name) {
-    return (plugin) -> name.equals(plugin.getDescriptor().getInformation().getName());
+    return plugin -> name.equals(plugin.getDescriptor().getInformation().getName());
   }
 
   private boolean isNotInstalled(AvailablePlugin availablePlugin) {
@@ -108,18 +109,42 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public void install(String name) {
-    if (getInstalled(name).isPresent()){
-      LOG.info("plugin {} is already installed, skipping installation", name);
-      return;
-    }
-    AvailablePlugin plugin = getAvailable(name).orElseThrow(() -> NotFoundException.notFound(entity(AvailablePlugin.class, name)));
-    Set<String> dependencies = plugin.getDescriptor().getDependencies();
-    if (dependencies != null) {
-      for (String dependency: dependencies){
-        install(dependency);
+    List<AvailablePlugin> plugins = collectPluginsToInstall(name);
+    List<PendingPluginInstallation> pendingInstallations = new ArrayList<>();
+    for (AvailablePlugin plugin : plugins) {
+      try {
+        PendingPluginInstallation pending = installer.install(plugin);
+        pendingInstallations.add(pending);
+      } catch (PluginInstallException ex) {
+        cancelPending(pendingInstallations);
+        throw ex;
       }
     }
+  }
 
-    installer.install(plugin);
+  private void cancelPending(List<PendingPluginInstallation> pendingInstallations) {
+    pendingInstallations.forEach(PendingPluginInstallation::cancel);
+  }
+
+  private List<AvailablePlugin> collectPluginsToInstall(String name) {
+    List<AvailablePlugin> plugins = new ArrayList<>();
+    collectPluginsToInstall(plugins, name);
+    return plugins;
+  }
+  private void collectPluginsToInstall(List<AvailablePlugin> plugins, String name) {
+    if (!getInstalled(name).isPresent()) {
+      AvailablePlugin plugin = getAvailable(name).orElseThrow(() -> NotFoundException.notFound(entity(AvailablePlugin.class, name)));
+
+      Set<String> dependencies = plugin.getDescriptor().getDependencies();
+      if (dependencies != null) {
+        for (String dependency: dependencies){
+          collectPluginsToInstall(plugins, dependency);
+        }
+      }
+
+      plugins.add(plugin);
+    } else {
+      LOG.info("plugin {} is already installed, skipping installation", name);
+    }
   }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -151,6 +152,29 @@ class DefaultPluginManagerTest {
     manager.install("scm-review-plugin");
 
     verify(installer).install(review);
+  }
+
+  @Test
+  void shouldRollbackOnFailedInstallation() {
+    AvailablePlugin review = createAvailable("scm-review-plugin");
+    when(review.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin"));
+    AvailablePlugin mail = createAvailable("scm-mail-plugin");
+    when(mail.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-notification-plugin"));
+    AvailablePlugin notification = createAvailable("scm-notification-plugin");
+    when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail, notification));
+
+    PendingPluginInstallation pendingNotification = mock(PendingPluginInstallation.class);
+    doReturn(pendingNotification).when(installer).install(notification);
+
+    PendingPluginInstallation pendingMail = mock(PendingPluginInstallation.class);
+    doReturn(pendingMail).when(installer).install(mail);
+
+    doThrow(new PluginChecksumMismatchException("checksum does not match")).when(installer).install(review);
+
+    assertThrows(PluginInstallException.class, () -> manager.install("scm-review-plugin"));
+
+    verify(pendingNotification).cancel();
+    verify(pendingMail).cancel();
   }
 
   private AvailablePlugin createAvailable(String name) {
