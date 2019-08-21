@@ -1,20 +1,20 @@
 package sonia.scm.plugin;
 
+import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.Files;
+import com.google.common.hash.HashingInputStream;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.net.ahc.AdvancedHttpClient;
-import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
+@SuppressWarnings("UnstableApiUsage") // guava hash is marked as unstable
 class PluginInstaller {
 
   private final SCMContextProvider context;
@@ -27,24 +27,24 @@ class PluginInstaller {
   }
 
   public PendingPluginInstallation install(AvailablePlugin plugin) {
-    File file = createFile(plugin);
-    try (InputStream input = download(plugin); OutputStream output = new FileOutputStream(file)) {
-      ByteStreams.copy(input, output);
+    try (HashingInputStream input = new HashingInputStream(Hashing.sha256(), download(plugin))) {
+      Path file = createFile(plugin);
+      Files.copy(input, file);
 
-      verifyChecksum(plugin, file);
+      verifyChecksum(plugin, input.hash());
 
       // TODO clean up in case of error
 
       return new PendingPluginInstallation(plugin, file);
     } catch (IOException ex) {
-      throw new PluginDownloadException("failed to install plugin", ex);
+      throw new PluginDownloadException("failed to download plugin", ex);
     }
   }
 
-  private void verifyChecksum(AvailablePlugin plugin, File file) throws IOException {
+  private void verifyChecksum(AvailablePlugin plugin, HashCode hash) {
     Optional<String> checksum = plugin.getDescriptor().getChecksum();
     if (checksum.isPresent()) {
-      String calculatedChecksum = Files.hash(file, Hashing.sha256()).toString();
+      String calculatedChecksum = hash.toString();
       if (!checksum.get().equalsIgnoreCase(calculatedChecksum)) {
         throw new PluginChecksumMismatchException(
           String.format("downloaded plugin checksum %s does not match expected %s", calculatedChecksum, checksum.get())
@@ -57,9 +57,9 @@ class PluginInstaller {
     return client.get(plugin.getDescriptor().getUrl()).request().contentAsStream();
   }
 
-  private File createFile(AvailablePlugin plugin) {
-    File pluginDirectory = new File(context.getBaseDirectory(), "plugins");
-    IOUtil.mkdirs(pluginDirectory);
-    return new File(pluginDirectory, plugin.getDescriptor().getInformation().getName() + ".smp");
+  private Path createFile(AvailablePlugin plugin) throws IOException {
+    Path directory = context.resolve(Paths.get("plugins"));
+    Files.createDirectories(directory);
+    return directory.resolve(plugin.getDescriptor().getInformation().getName() + ".smp");
   }
 }

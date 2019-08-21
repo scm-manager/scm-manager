@@ -20,6 +20,8 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class, TempDirectory.class})
@@ -39,7 +41,10 @@ class PluginInstallerTest {
   @BeforeEach
   void setUpContext(@TempDirectory.TempDir Path directory) {
     this.directory = directory;
-    when(context.getBaseDirectory()).thenReturn(directory.toFile());
+    lenient().when(context.resolve(any())).then(ic -> {
+      Path arg = ic.getArgument(0);
+      return directory.resolve(arg);
+    });
   }
 
   @Test

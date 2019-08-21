@@ -28,7 +28,7 @@ class PendingPluginInstallationTest {
 
     when(plugin.getDescriptor().getInformation().getName()).thenReturn("scm-awesome-plugin");
 
-    PendingPluginInstallation installation = new PendingPluginInstallation(plugin, file.toFile());
+    PendingPluginInstallation installation = new PendingPluginInstallation(plugin, file);
     installation.cancel();
 
     assertThat(file).doesNotExist();
@@ -39,7 +39,7 @@ class PendingPluginInstallationTest {
     Path file = directory.resolve("file");
     when(plugin.getDescriptor().getInformation().getName()).thenReturn("scm-awesome-plugin");
 
-    PendingPluginInstallation installation = new PendingPluginInstallation(plugin, file.toFile());
+    PendingPluginInstallation installation = new PendingPluginInstallation(plugin, file);
     assertThrows(PluginFailedToCancelInstallationException.class, installation::cancel);
   }
 
