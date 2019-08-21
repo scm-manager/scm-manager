@@ -21,11 +21,6 @@ public class AvailablePlugin implements Plugin {
     return pluginDescriptor;
   }
 
-  @Override
-  public PluginState getState() {
-    return PluginState.AVAILABLE;
-  }
-
   public boolean isPending() {
     return pending;
   }

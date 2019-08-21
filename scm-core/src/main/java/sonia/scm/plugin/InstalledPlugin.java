@@ -120,11 +120,6 @@ public final class InstalledPlugin implements Plugin
     return webResourceLoader;
   }
 
-  @Override
-  public PluginState getState() {
-    return PluginState.INSTALLED;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** plugin class loader */

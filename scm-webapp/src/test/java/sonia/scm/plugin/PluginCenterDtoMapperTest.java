@@ -98,15 +98,23 @@ class PluginCenterDtoMapperTest {
 
     Set<AvailablePlugin> resultSet = mapper.map(dto);
 
-    List<AvailablePlugin> pluginsList = new ArrayList<>(resultSet);
-
-    PluginInformation pluginInformation1 = pluginsList.get(1).getDescriptor().getInformation();
-    PluginInformation pluginInformation2 = pluginsList.get(0).getDescriptor().getInformation();
+    PluginInformation pluginInformation1 = findPlugin(resultSet, plugin1.getName());
+    PluginInformation pluginInformation2 = findPlugin(resultSet, plugin2.getName());
 
     assertThat(pluginInformation1.getAuthor()).isEqualTo(plugin1.getAuthor());
     assertThat(pluginInformation1.getVersion()).isEqualTo(plugin1.getVersion());
     assertThat(pluginInformation2.getAuthor()).isEqualTo(plugin2.getAuthor());
     assertThat(pluginInformation2.getVersion()).isEqualTo(plugin2.getVersion());
     assertThat(resultSet.size()).isEqualTo(2);
+  }
+
+  private PluginInformation findPlugin(Set<AvailablePlugin> resultSet, String name) {
+    return resultSet
+      .stream()
+      .filter(p -> name.equals(p.getDescriptor().getInformation().getName()))
+      .findFirst()
+      .orElseThrow(() -> new IllegalStateException("could not find plugin " + name))
+      .getDescriptor()
+      .getInformation();
   }
 }
