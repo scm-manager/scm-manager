@@ -13,7 +13,6 @@
     <enableSSL>false</enableSSL>
     <enablePortForward>false</enablePortForward>
     <sslPort>8181</sslPort>
-    <enableRepositoryArchive>false</enableRepositoryArchive>
     <disableGroupingGrid>false</disableGroupingGrid>
     <dateFormat>Y-m-d H:i:s</dateFormat>
     <anonymousAccessEnabled>false</anonymousAccessEnabled>

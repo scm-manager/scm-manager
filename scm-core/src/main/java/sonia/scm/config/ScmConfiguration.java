@@ -161,7 +161,6 @@ public class ScmConfiguration implements Configuration {
    * Authentication realm for basic authentication.
    */
   private String realmDescription = HttpUtil.AUTHENTICATION_REALM;
-  private boolean enableRepositoryArchive = false;
   private boolean disableGroupingGrid = false;
   /**
    * JavaScript date format from moment.js
@@ -218,7 +217,6 @@ public class ScmConfiguration implements Configuration {
     this.forceBaseUrl = other.forceBaseUrl;
     this.baseUrl = other.baseUrl;
     this.disableGroupingGrid = other.disableGroupingGrid;
-    this.enableRepositoryArchive = other.enableRepositoryArchive;
     this.skipFailedAuthenticators = other.skipFailedAuthenticators;
     this.loginAttemptLimit = other.loginAttemptLimit;
     this.loginAttemptLimitTimeout = other.loginAttemptLimitTimeout;
@@ -343,10 +341,6 @@ public class ScmConfiguration implements Configuration {
     return enableProxy;
   }
 
-  public boolean isEnableRepositoryArchive() {
-    return enableRepositoryArchive;
-  }
-
   public boolean isForceBaseUrl() {
     return forceBaseUrl;
   }
@@ -391,16 +385,6 @@ public class ScmConfiguration implements Configuration {
 
   public void setEnableProxy(boolean enableProxy) {
     this.enableProxy = enableProxy;
-  }
-
-  /**
-   * Enable or disable the repository archive. Default is disabled.
-   *
-   * @param enableRepositoryArchive true to disable the repository archive
-   * @since 1.14
-   */
-  public void setEnableRepositoryArchive(boolean enableRepositoryArchive) {
-    this.enableRepositoryArchive = enableRepositoryArchive;
   }
 
   public void setForceBaseUrl(boolean forceBaseUrl) {

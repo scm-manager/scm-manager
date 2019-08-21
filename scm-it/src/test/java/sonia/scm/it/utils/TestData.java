@@ -228,7 +228,6 @@ public class TestData {
       .add("contact", "zaphod.beeblebrox@hitchhiker.com")
       .add("description", "Heart of Gold")
       .add("name", getDefaultRepoName(repositoryType))
-      .add("archived", false)
       .add("type", repositoryType)
       .build().toString();
   }

@@ -19,7 +19,6 @@ import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -41,7 +40,6 @@ import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
-import static javax.servlet.http.HttpServletResponse.SC_PRECONDITION_FAILED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -268,20 +266,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     assertEquals(SC_NO_CONTENT, response.getStatus());
     verify(repositoryManager).delete(anyObject());
-  }
-
-  @Test
-  public void shouldHandleDeleteIsNotArchivedException() throws Exception {
-    mockRepository("space", "repo");
-
-    doThrow(RepositoryIsNotArchivedException.class).when(repositoryManager).delete(anyObject());
-
-    MockHttpRequest request = MockHttpRequest.delete("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertEquals(SC_PRECONDITION_FAILED, response.getStatus());
   }
 
   @Test

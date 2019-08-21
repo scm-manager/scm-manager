@@ -172,9 +172,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   private void preDelete(Repository toDelete) {
-    if (configuration.isEnableRepositoryArchive() && !toDelete.isArchived()) {
-      throw new RepositoryIsNotArchivedException();
-    }
     fireEvent(HandlerEventType.BEFORE_DELETE, toDelete);
     getHandler(toDelete).delete(toDelete);
   }

@@ -8,7 +8,6 @@ import NamespaceStrategySelect from "./NamespaceStrategySelect";
 type Props = {
   realmDescription: string,
   loginInfoUrl: string,
-  enableRepositoryArchive: boolean,
   disableGroupingGrid: boolean,
   dateFormat: string,
   anonymousAccessEnabled: boolean,
