@@ -2,7 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import com.google.common.base.Strings;
 import de.otto.edison.hal.Links;
-import sonia.scm.plugin.PluginWrapper;
+import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.util.HttpUtil;
 
 import javax.inject.Inject;
@@ -25,9 +25,9 @@ public class UIPluginDtoMapper {
     this.request = request;
   }
 
-  public UIPluginDto map(PluginWrapper plugin) {
+  public UIPluginDto map(InstalledPlugin plugin) {
     UIPluginDto dto = new UIPluginDto(
-      plugin.getPlugin().getInformation().getName(),
+      plugin.getDescriptor().getInformation().getName(),
       getScriptResources(plugin)
     );
 
@@ -40,8 +40,8 @@ public class UIPluginDtoMapper {
     return dto;
   }
 
-  private Set<String> getScriptResources(PluginWrapper wrapper) {
-    Set<String> scriptResources = wrapper.getPlugin().getResources().getScriptResources();
+  private Set<String> getScriptResources(InstalledPlugin wrapper) {
+    Set<String> scriptResources = wrapper.getDescriptor().getResources().getScriptResources();
     if (scriptResources != null) {
       return scriptResources.stream()
         .map(this::addContextPath)

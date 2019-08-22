@@ -16,9 +16,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.plugin.AvailablePlugin;
+import sonia.scm.plugin.AvailablePluginDescriptor;
+import sonia.scm.plugin.PluginCondition;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.plugin.PluginState;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Provider;
@@ -27,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -87,10 +90,10 @@ class AvailablePluginResourceTest {
 
     @Test
     void getAvailablePlugins() throws URISyntaxException, UnsupportedEncodingException {
-      PluginInformation pluginInformation = new PluginInformation();
-      pluginInformation.setState(PluginState.AVAILABLE);
-      when(pluginManager.getAvailable()).thenReturn(Collections.singletonList(pluginInformation));
-      when(collectionMapper.map(Collections.singletonList(pluginInformation))).thenReturn(new MockedResultDto());
+      AvailablePlugin plugin = createPlugin();
+
+      when(pluginManager.getAvailable()).thenReturn(Collections.singletonList(plugin));
+      when(collectionMapper.mapAvailable(Collections.singletonList(plugin))).thenReturn(new MockedResultDto());
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available");
       request.accept(VndMediaType.PLUGIN_COLLECTION);
@@ -105,16 +108,18 @@ class AvailablePluginResourceTest {
     @Test
     void getAvailablePlugin() throws UnsupportedEncodingException, URISyntaxException {
       PluginInformation pluginInformation = new PluginInformation();
-      pluginInformation.setState(PluginState.AVAILABLE);
       pluginInformation.setName("pluginName");
       pluginInformation.setVersion("2.0.0");
-      when(pluginManager.getAvailable()).thenReturn(Collections.singletonList(pluginInformation));
+
+      AvailablePlugin plugin = createPlugin(pluginInformation);
+
+      when(pluginManager.getAvailable("pluginName")).thenReturn(Optional.of(plugin));
 
       PluginDto pluginDto = new PluginDto();
       pluginDto.setName("pluginName");
-      when(mapper.map(pluginInformation)).thenReturn(pluginDto);
+      when(mapper.mapAvailable(plugin)).thenReturn(pluginDto);
 
-      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available/pluginName/2.0.0");
+      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available/pluginName");
       request.accept(VndMediaType.PLUGIN);
       MockHttpResponse response = new MockHttpResponse();
 
@@ -126,15 +131,36 @@ class AvailablePluginResourceTest {
 
     @Test
     void installPlugin() throws URISyntaxException {
-      MockHttpRequest request = MockHttpRequest.post("/v2/plugins/available/pluginName/2.0.0/install");
-      request.accept(VndMediaType.PLUGIN);
+      MockHttpRequest request = MockHttpRequest.post("/v2/plugins/available/pluginName/install");
       MockHttpResponse response = new MockHttpResponse();
 
       dispatcher.invoke(request, response);
 
-      verify(pluginManager).install("pluginName:2.0.0");
+      verify(pluginManager).install("pluginName", false);
       assertThat(HttpServletResponse.SC_OK).isEqualTo(response.getStatus());
     }
+
+    @Test
+    void installPendingPlugin() throws URISyntaxException {
+      MockHttpRequest request = MockHttpRequest.post("/v2/plugins/available/install-pending");
+      MockHttpResponse response = new MockHttpResponse();
+
+      dispatcher.invoke(request, response);
+
+      verify(pluginManager).installPendingAndRestart();
+      assertThat(HttpServletResponse.SC_OK).isEqualTo(response.getStatus());
+    }
+  }
+
+  private AvailablePlugin createPlugin() {
+    return createPlugin(new PluginInformation());
+  }
+
+  private AvailablePlugin createPlugin(PluginInformation pluginInformation) {
+    AvailablePluginDescriptor descriptor = new AvailablePluginDescriptor(
+      pluginInformation, new PluginCondition(), Collections.emptySet(), "https://download.hitchhiker.com", null
+    );
+    return new AvailablePlugin(descriptor);
   }
 
   @Nested
@@ -156,7 +182,7 @@ class AvailablePluginResourceTest {
 
     @Test
     void shouldNotGetAvailablePluginIfMissingPermission() throws URISyntaxException {
-      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available/pluginName/2.0.0");
+      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available/pluginName");
       request.accept(VndMediaType.PLUGIN);
       MockHttpResponse response = new MockHttpResponse();
 
@@ -166,7 +192,7 @@ class AvailablePluginResourceTest {
     @Test
     void shouldNotInstallPluginIfMissingPermission() throws URISyntaxException {
       ThreadContext.unbindSubject();
-      MockHttpRequest request = MockHttpRequest.post("/v2/plugins/available/pluginName/2.0.0/install");
+      MockHttpRequest request = MockHttpRequest.post("/v2/plugins/available/pluginName/install");
       request.accept(VndMediaType.PLUGIN);
       MockHttpResponse response = new MockHttpResponse();
 

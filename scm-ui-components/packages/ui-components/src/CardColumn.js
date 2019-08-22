@@ -46,7 +46,8 @@ type Props = {
   contentRight?: React.Node,
   footerLeft: React.Node,
   footerRight: React.Node,
-  link: string,
+  link?: string,
+  action?: () => void,
 
   // context props
   classes: any
@@ -54,9 +55,11 @@ type Props = {
 
 class CardColumn extends React.Component<Props> {
   createLink = () => {
-    const { link } = this.props;
+    const { link, action } = this.props;
     if (link) {
       return <Link className="overlay-column" to={link} />;
+    } else if (action) {
+      return <a className="overlay-column" onClick={e => {e.preventDefault(); action();}} href="#" />;
     }
     return null;
   };

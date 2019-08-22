@@ -3,24 +3,22 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import sonia.scm.plugin.Plugin;
-import sonia.scm.plugin.PluginInformation;
+import sonia.scm.plugin.AvailablePlugin;
+import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
-import sonia.scm.plugin.PluginState;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -53,11 +51,8 @@ public class AvailablePluginResource {
   @Produces(VndMediaType.PLUGIN_COLLECTION)
   public Response getAvailablePlugins() {
     PluginPermissions.read().check();
-    Collection<PluginInformation> plugins = pluginManager.getAvailable()
-      .stream()
-      .filter(plugin -> plugin.getState().equals(PluginState.AVAILABLE))
-      .collect(Collectors.toList());
-    return Response.ok(collectionMapper.map(plugins)).build();
+    List<AvailablePlugin> available = pluginManager.getAvailable();
+    return Response.ok(collectionMapper.mapAvailable(available)).build();
   }
 
   /**
@@ -66,7 +61,7 @@ public class AvailablePluginResource {
    * @return available plugin.
    */
   @GET
-  @Path("/{name}/{version}")
+  @Path("/{name}")
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 404, condition = "not found"),
@@ -74,35 +69,42 @@ public class AvailablePluginResource {
   })
   @TypeHint(PluginDto.class)
   @Produces(VndMediaType.PLUGIN)
-  public Response getAvailablePlugin(@PathParam("name") String name, @PathParam("version") String version) {
+  public Response getAvailablePlugin(@PathParam("name") String name) {
     PluginPermissions.read().check();
-    Optional<PluginInformation> plugin = pluginManager.getAvailable()
-      .stream()
-      .filter(p -> p.getId().equals(name + ":" + version))
-      .findFirst();
+    Optional<AvailablePlugin> plugin = pluginManager.getAvailable(name);
     if (plugin.isPresent()) {
-      return Response.ok(mapper.map(plugin.get())).build();
+      return Response.ok(mapper.mapAvailable(plugin.get())).build();
     } else {
-      throw notFound(entity(Plugin.class, name));
+      throw notFound(entity(InstalledPluginDescriptor.class, name));
     }
   }
 
   /**
    * Triggers plugin installation.
-   * @param name plugin artefact name
-   * @param version plugin version
+   * @param name plugin name
    * @return HTTP Status.
    */
   @POST
-  @Path("/{name}/{version}/install")
-  @Consumes(VndMediaType.PLUGIN)
+  @Path("/{name}/install")
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response installPlugin(@PathParam("name") String name, @PathParam("version") String version) {
+  public Response installPlugin(@PathParam("name") String name, @QueryParam("restart") boolean restartAfterInstallation) {
     PluginPermissions.manage().check();
-    pluginManager.install(name + ":" + version);
+    pluginManager.install(name, restartAfterInstallation);
+    return Response.ok().build();
+  }
+
+  @POST
+  @Path("/install-pending")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  public Response installPending() {
+    PluginPermissions.manage().check();
+    pluginManager.installPendingAndRestart();
     return Response.ok().build();
   }
 }

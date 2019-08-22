@@ -170,7 +170,7 @@ public class UIRootResourceTest {
     assertTrue(response.getContentAsString().contains("/scm/my/bundle.js"));
   }
 
-  private void mockPlugins(PluginWrapper... plugins) {
+  private void mockPlugins(InstalledPlugin... plugins) {
     when(pluginLoader.getInstalledPlugins()).thenReturn(Lists.newArrayList(plugins));
   }
 
@@ -180,16 +180,16 @@ public class UIRootResourceTest {
     return new PluginResources(scripts, styles);
   }
 
-  private PluginWrapper mockPlugin(String id) {
+  private InstalledPlugin mockPlugin(String id) {
     return mockPlugin(id, id, null);
   }
 
-  private PluginWrapper mockPlugin(String id, String name, PluginResources pluginResources) {
-    PluginWrapper wrapper = mock(PluginWrapper.class);
+  private InstalledPlugin mockPlugin(String id, String name, PluginResources pluginResources) {
+    InstalledPlugin wrapper = mock(InstalledPlugin.class);
     when(wrapper.getId()).thenReturn(id);
 
-    Plugin plugin = mock(Plugin.class);
-    when(wrapper.getPlugin()).thenReturn(plugin);
+    InstalledPluginDescriptor plugin = mock(InstalledPluginDescriptor.class);
+    when(wrapper.getDescriptor()).thenReturn(plugin);
     when(plugin.getResources()).thenReturn(pluginResources);
 
     PluginInformation information = mock(PluginInformation.class);

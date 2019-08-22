@@ -71,11 +71,11 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
 
   //~--- constructors ---------------------------------------------------------
 
-  public DefaultUberWebResourceLoader(ServletContext servletContext, Iterable<PluginWrapper> plugins) {
+  public DefaultUberWebResourceLoader(ServletContext servletContext, Iterable<InstalledPlugin> plugins) {
     this(servletContext, plugins, SCMContext.getContext().getStage());
   }
 
-  public DefaultUberWebResourceLoader(ServletContext servletContext, Iterable<PluginWrapper> plugins, Stage stage) {
+  public DefaultUberWebResourceLoader(ServletContext servletContext, Iterable<InstalledPlugin> plugins, Stage stage) {
     this.servletContext = servletContext;
     this.plugins = plugins;
     this.cache = createCache(stage);
@@ -153,7 +153,7 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
         resources.add(ctxResource);
       }
 
-      for (PluginWrapper wrapper : plugins)
+      for (InstalledPlugin wrapper : plugins)
       {
         URL resource = nonDirectory(wrapper.getWebResourceLoader().getResource(path));
 
@@ -205,7 +205,7 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
 
       if (resource == null)
       {
-        for (PluginWrapper wrapper : plugins)
+        for (InstalledPlugin wrapper : plugins)
         {
           resource = nonDirectory(wrapper.getWebResourceLoader().getResource(path));
 
@@ -259,7 +259,7 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
   private final Cache<String, URL> cache;
 
   /** Field description */
-  private final Iterable<PluginWrapper> plugins;
+  private final Iterable<InstalledPlugin> plugins;
 
   /** Field description */
   private final ServletContext servletContext;

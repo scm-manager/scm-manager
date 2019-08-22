@@ -3,6 +3,7 @@ package sonia.scm.plugin;
 import com.google.common.collect.ImmutableList;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -11,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -56,8 +58,8 @@ public final class PluginCenterDto implements Serializable {
     @XmlElement(name = "conditions")
     private Condition conditions;
 
-    @XmlElement(name = "dependecies")
-    private Dependency dependencies;
+    @XmlElement(name = "dependencies")
+    private Set<String> dependencies;
 
     @XmlElement(name = "_links")
     private Map<String, Link> links;
@@ -75,15 +77,9 @@ public final class PluginCenterDto implements Serializable {
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
-  @XmlRootElement(name = "dependencies")
   @Getter
+  @NoArgsConstructor
   @AllArgsConstructor
-  static class Dependency {
-    private String name;
-  }
-
-  @XmlAccessorType(XmlAccessType.FIELD)
-  @Getter
   static class Link {
     private String href;
   }

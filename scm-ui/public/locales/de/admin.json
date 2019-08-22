@@ -29,7 +29,23 @@
       "installedNavLink": "Installiert",
       "availableNavLink": "Verfügbar"
     },
-    "noPlugins": "Keine Plugins gefunden."
+    "installPending": "Austehende Plugins installieren",
+    "noPlugins": "Keine Plugins gefunden.",
+    "modal": {
+      "title": "{{name}} Plugin installieren",
+      "restart": "Neustarten um Plugin zu aktivieren",
+      "install": "Installieren",
+      "installAndRestart": "Installieren und Neustarten",
+      "abort": "Abbrechen",
+      "author": "Autor",
+      "version": "Version",
+      "dependencyNotification": "Mit diesem Plugin werden folgende Abhängigkeiten mit installieren wenn sie noch nicht vorhanden sind!",
+      "dependencies": "Abhängigkeiten",
+      "successNotification": "Das Plugin wurde erfolgreich installiert. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden:",
+      "reload": "jetzt new laden",
+      "restartNotification": "Der SCM-Manager Kontext sollte nur neu gestartet werden, wenn aktuell niemand damit arbeitet.",
+      "installPending": "Die folgenden Plugins werden installiert und anschließend wir der SCM-Manager Kontext neu gestartet."
+    }
   },
   "repositoryRole": {
     "navLink": "Berechtigungsrollen",

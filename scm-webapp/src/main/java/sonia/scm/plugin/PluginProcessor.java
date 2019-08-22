@@ -123,7 +123,7 @@ public final class PluginProcessor
 
     try
     {
-      this.context = JAXBContext.newInstance(Plugin.class);
+      this.context = JAXBContext.newInstance(InstalledPluginDescriptor.class);
     }
     catch (JAXBException ex)
     {
@@ -160,7 +160,7 @@ public final class PluginProcessor
    *
    * @throws IOException
    */
-  public Set<PluginWrapper> collectPlugins(ClassLoader classLoader)
+  public Set<InstalledPlugin> collectPlugins(ClassLoader classLoader)
     throws IOException
   {
     logger.info("collect plugins");
@@ -187,7 +187,7 @@ public final class PluginProcessor
 
     logger.trace("create plugin wrappers and build classloaders");
 
-    Set<PluginWrapper> wrappers = createPluginWrappers(classLoader, rootNodes);
+    Set<InstalledPlugin> wrappers = createPluginWrappers(classLoader, rootNodes);
 
     logger.debug("collected {} plugins", wrappers.size());
 
@@ -204,7 +204,7 @@ public final class PluginProcessor
    *
    * @throws IOException
    */
-  private void appendPluginWrapper(Set<PluginWrapper> plugins,
+  private void appendPluginWrapper(Set<InstalledPlugin> plugins,
     ClassLoader classLoader, PluginNode node)
     throws IOException
   {
@@ -217,7 +217,7 @@ public final class PluginProcessor
 
     for (PluginNode parent : node.getParents())
     {
-      PluginWrapper wrapper = parent.getWrapper();
+      InstalledPlugin wrapper = parent.getWrapper();
 
       if (wrapper != null)
       {
@@ -236,8 +236,8 @@ public final class PluginProcessor
 
     }
 
-    PluginWrapper plugin =
-      createPluginWrapper(createParentPluginClassLoader(classLoader, parents),
+    InstalledPlugin plugin =
+      createPlugin(createParentPluginClassLoader(classLoader, parents),
         smp);
 
     if (plugin != null)
@@ -257,7 +257,7 @@ public final class PluginProcessor
    *
    * @throws IOException
    */
-  private void appendPluginWrappers(Set<PluginWrapper> plugins,
+  private void appendPluginWrappers(Set<InstalledPlugin> plugins,
     ClassLoader classLoader, List<PluginNode> nodes)
     throws IOException
   {
@@ -371,7 +371,7 @@ public final class PluginProcessor
 
     ClassLoader classLoader;
     URL[] urlArray = urls.toArray(new URL[urls.size()]);
-    Plugin plugin = smp.getPlugin();
+    InstalledPluginDescriptor plugin = smp.getPlugin();
 
     String id = plugin.getInformation().getName(false);
 
@@ -431,73 +431,36 @@ public final class PluginProcessor
     return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param classLoader
-   * @param descriptor
-   *
-   * @return
-   */
-  private Plugin createPlugin(ClassLoader classLoader, Path descriptor)
-  {
+  private InstalledPluginDescriptor createDescriptor(ClassLoader classLoader, Path descriptor) {
     ClassLoader ctxcl = Thread.currentThread().getContextClassLoader();
-
     Thread.currentThread().setContextClassLoader(classLoader);
-
-    try
-    {
-      return (Plugin) context.createUnmarshaller().unmarshal(
-        descriptor.toFile());
-    }
-    catch (JAXBException ex)
-    {
-      throw new PluginLoadException(
-        "could not load plugin desriptor ".concat(descriptor.toString()), ex);
-    }
-    finally
-    {
+    try {
+      return (InstalledPluginDescriptor) context.createUnmarshaller().unmarshal(descriptor.toFile());
+    } catch (JAXBException ex) {
+      throw new PluginLoadException("could not load plugin desriptor ".concat(descriptor.toString()), ex);
+    } finally {
       Thread.currentThread().setContextClassLoader(ctxcl);
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param classLoader
-   * @param smp
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private PluginWrapper createPluginWrapper(ClassLoader classLoader,
-    ExplodedSmp smp)
-    throws IOException
-  {
-    PluginWrapper wrapper = null;
+  private InstalledPlugin createPlugin(ClassLoader classLoader, ExplodedSmp smp) throws IOException {
+    InstalledPlugin plugin = null;
     Path directory = smp.getPath();
-    Path descriptor = directory.resolve(PluginConstants.FILE_DESCRIPTOR);
+    Path descriptorPath = directory.resolve(PluginConstants.FILE_DESCRIPTOR);
 
-    if (Files.exists(descriptor))
-    {
+    if (Files.exists(descriptorPath)) {
       ClassLoader cl = createClassLoader(classLoader, smp);
 
-      Plugin plugin = createPlugin(cl, descriptor);
+      InstalledPluginDescriptor descriptor = createDescriptor(cl, descriptorPath);
 
       WebResourceLoader resourceLoader = createWebResourceLoader(directory);
 
-      wrapper = new PluginWrapper(plugin, cl, resourceLoader, directory);
-    }
-    else
-    {
+      plugin = new InstalledPlugin(descriptor, cl, resourceLoader, directory);
+    } else {
       logger.warn("found plugin directory without plugin descriptor");
     }
 
-    return wrapper;
+    return plugin;
   }
 
   /**
@@ -512,11 +475,11 @@ public final class PluginProcessor
    *
    * @throws IOException
    */
-  private Set<PluginWrapper> createPluginWrappers(ClassLoader classLoader,
-    List<PluginNode> rootNodes)
+  private Set<InstalledPlugin> createPluginWrappers(ClassLoader classLoader,
+                                                    List<PluginNode> rootNodes)
     throws IOException
   {
-    Set<PluginWrapper> plugins = Sets.newHashSet();
+    Set<InstalledPlugin> plugins = Sets.newHashSet();
 
     appendPluginWrappers(plugins, classLoader, rootNodes);
 

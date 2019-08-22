@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+@SuppressWarnings("squid:S1192") // string literals should not be duplicated
 class ResourceLinks {
 
   private final ScmPathInfoStore scmPathInfoStore;
@@ -694,12 +695,12 @@ class ResourceLinks {
       availablePluginLinkBuilder = new LinkBuilder(pathInfo, PluginRootResource.class, AvailablePluginResource.class);
     }
 
-    String self(String name, String version) {
-      return availablePluginLinkBuilder.method("availablePlugins").parameters().method("getAvailablePlugin").parameters(name, version).href();
+    String self(String name) {
+      return availablePluginLinkBuilder.method("availablePlugins").parameters().method("getAvailablePlugin").parameters(name).href();
     }
 
-    String install(String name, String version) {
-      return availablePluginLinkBuilder.method("availablePlugins").parameters().method("installPlugin").parameters(name, version).href();
+    String install(String name) {
+      return availablePluginLinkBuilder.method("availablePlugins").parameters().method("installPlugin").parameters(name).href();
     }
   }
 
@@ -712,6 +713,10 @@ class ResourceLinks {
 
     AvailablePluginCollectionLinks(ScmPathInfo pathInfo) {
       availablePluginCollectionLinkBuilder = new LinkBuilder(pathInfo, PluginRootResource.class, AvailablePluginResource.class);
+    }
+
+    String installPending() {
+      return availablePluginCollectionLinkBuilder.method("availablePlugins").parameters().method("installPending").parameters().href();
     }
 
     String self() {

@@ -1,7 +1,6 @@
 //@flow
 import type {Collection, Links} from "./hal";
 
-
 export type Plugin = {
   name: string,
   version: string,
@@ -10,6 +9,8 @@ export type Plugin = {
   author: string,
   category: string,
   avatarUrl: string,
+  pending: boolean,
+  dependencies: string[],
   _links: Links
 };
 

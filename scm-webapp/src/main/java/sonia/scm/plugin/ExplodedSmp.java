@@ -63,7 +63,7 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
    * @param path
    * @param plugin
    */
-  ExplodedSmp(Path path, Plugin plugin)
+  ExplodedSmp(Path path, InstalledPluginDescriptor plugin)
   {
     logger.trace("create exploded scm for plugin {} and dependencies {}", plugin.getInformation().getName(), plugin.getDependencies());
     this.path = path;
@@ -163,7 +163,7 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
    *
    * @return plugin descriptor
    */
-  public Plugin getPlugin()
+  public InstalledPluginDescriptor getPlugin()
   {
     return plugin;
   }
@@ -202,5 +202,5 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
   private final Path path;
 
   /** plugin object */
-  private final Plugin plugin;
+  private final InstalledPluginDescriptor plugin;
 }

@@ -70,8 +70,6 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
   private String author;
   private String category;
   private String avatarUrl;
-  private PluginCondition condition;
-  private PluginState state;
 
   @Override
   public PluginInformation clone() {
@@ -83,10 +81,6 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
     clone.setAuthor(author);
     clone.setCategory(category);
     clone.setAvatarUrl(avatarUrl);
-    clone.setState(state);
-    if (condition != null) {
-      clone.setCondition(condition.clone());
-    }
     return clone;
   }
 

@@ -87,8 +87,8 @@ public final class PluginsInternal
    *
    * @throws IOException
    */
-  public static Set<PluginWrapper> collectPlugins(ClassLoaderLifeCycle classLoaderLifeCycle,
-                                                  Path directory)
+  public static Set<InstalledPlugin> collectPlugins(ClassLoaderLifeCycle classLoaderLifeCycle,
+                                                    Path directory)
     throws IOException
   {
     PluginProcessor processor = new PluginProcessor(classLoaderLifeCycle, directory);
@@ -105,7 +105,7 @@ public final class PluginsInternal
    *
    * @return
    */
-  public static File createPluginDirectory(File parent, Plugin plugin)
+  public static File createPluginDirectory(File parent, InstalledPluginDescriptor plugin)
   {
     PluginInformation info = plugin.getInformation();
 
@@ -159,7 +159,7 @@ public final class PluginsInternal
    *
    * @return
    */
-  public static Iterable<Plugin> unwrap(Iterable<PluginWrapper> wrapped)
+  public static Iterable<InstalledPluginDescriptor> unwrap(Iterable<InstalledPlugin> wrapped)
   {
     return Iterables.transform(wrapped, new Unwrap());
   }
@@ -188,7 +188,7 @@ public final class PluginsInternal
    * @version        Enter version here..., 14/06/05
    * @author         Enter your name here...
    */
-  private static class Unwrap implements Function<PluginWrapper, Plugin>
+  private static class Unwrap implements Function<InstalledPlugin, InstalledPluginDescriptor>
   {
 
     /**
@@ -200,9 +200,9 @@ public final class PluginsInternal
      * @return
      */
     @Override
-    public Plugin apply(PluginWrapper wrapper)
+    public InstalledPluginDescriptor apply(InstalledPlugin wrapper)
     {
-      return wrapper.getPlugin();
+      return wrapper.getDescriptor();
     }
   }
 }

@@ -36,27 +36,27 @@ package sonia.scm.plugin;
 import java.nio.file.Path;
 
 /**
- * Wrapper for a {@link Plugin}. The wrapper holds the directory,
+ * Wrapper for a {@link InstalledPluginDescriptor}. The wrapper holds the directory,
  * {@link ClassLoader} and {@link WebResourceLoader} of a plugin.
  *
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public final class PluginWrapper
+public final class InstalledPlugin implements Plugin
 {
 
   /**
    * Constructs a new plugin wrapper.
    *
-   * @param plugin wrapped plugin
+   * @param descriptor wrapped plugin
    * @param classLoader plugin class loader
    * @param webResourceLoader web resource loader
    * @param directory plugin directory
    */
-  public PluginWrapper(Plugin plugin, ClassLoader classLoader,
-    WebResourceLoader webResourceLoader, Path directory)
+  public InstalledPlugin(InstalledPluginDescriptor descriptor, ClassLoader classLoader,
+                         WebResourceLoader webResourceLoader, Path directory)
   {
-    this.plugin = plugin;
+    this.descriptor = descriptor;
     this.classLoader = classLoader;
     this.webResourceLoader = webResourceLoader;
     this.directory = directory;
@@ -94,18 +94,19 @@ public final class PluginWrapper
    */
   public String getId()
   {
-    return plugin.getInformation().getId();
+    return descriptor.getInformation().getId();
   }
 
   /**
-   * Returns the plugin.
+   * Returns the plugin descriptor.
    *
    *
-   * @return plugin
+   * @return plugin descriptor
    */
-  public Plugin getPlugin()
+  @Override
+  public InstalledPluginDescriptor getDescriptor()
   {
-    return plugin;
+    return descriptor;
   }
 
   /**
@@ -128,7 +129,7 @@ public final class PluginWrapper
   private final Path directory;
 
   /** plugin */
-  private final Plugin plugin;
+  private final InstalledPluginDescriptor descriptor;
 
   /** plugin web resource loader */
   private final WebResourceLoader webResourceLoader;

@@ -71,7 +71,7 @@ public class PluginTreeTest
   {
     PluginCondition condition = new PluginCondition("999",
                                   new ArrayList<String>(), "hit");
-    Plugin plugin = new Plugin(2, createInfo("a",  "1"), null, condition,
+    InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(2, createInfo("a",  "1"), null, condition,
                       false, null);
     ExplodedSmp smp = createSmp(plugin);
 
@@ -114,7 +114,7 @@ public class PluginTreeTest
   @Test(expected = PluginException.class)
   public void testScmVersion() throws IOException
   {
-    Plugin plugin = new Plugin(1, createInfo("a", "1"), null, null, false,
+    InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(1, createInfo("a", "1"), null, null, false,
                       null);
     ExplodedSmp smp = createSmp(plugin);
 
@@ -182,7 +182,7 @@ public class PluginTreeTest
    *
    * @throws IOException
    */
-  private ExplodedSmp createSmp(Plugin plugin) throws IOException
+  private ExplodedSmp createSmp(InstalledPluginDescriptor plugin) throws IOException
   {
     return new ExplodedSmp(tempFolder.newFile().toPath(), plugin);
   }
@@ -199,7 +199,7 @@ public class PluginTreeTest
    */
   private ExplodedSmp createSmp(String name) throws IOException
   {
-    return createSmp(new Plugin(2, createInfo(name, "1.0.0"), null, null,
+    return createSmp(new InstalledPluginDescriptor(2, createInfo(name, "1.0.0"), null, null,
       false, null));
   }
 
@@ -225,7 +225,7 @@ public class PluginTreeTest
       dependencySet.add(d);
     }
 
-    Plugin plugin = new Plugin(2, createInfo(name, "1"), null, null,
+    InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(2, createInfo(name, "1"), null, null,
                       false, dependencySet);
 
     return createSmp(plugin);

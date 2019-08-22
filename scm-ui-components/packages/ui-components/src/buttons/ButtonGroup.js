@@ -14,7 +14,7 @@ class ButtonGroup extends React.Component<Props> {
     const childWrapper = [];
     React.Children.forEach(children, child => {
       if (child) {
-        childWrapper.push(<p className="control">{child}</p>);
+        childWrapper.push(<p className="control" key={childWrapper.length}>{child}</p>);
       }
     });
 

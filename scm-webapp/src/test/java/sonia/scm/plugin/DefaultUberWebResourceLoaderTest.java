@@ -102,7 +102,7 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
   public void testGetResourceFromCache() {
     DefaultUberWebResourceLoader resourceLoader =
       new DefaultUberWebResourceLoader(servletContext,
-        new ArrayList<PluginWrapper>(), Stage.PRODUCTION);
+        new ArrayList<InstalledPlugin>(), Stage.PRODUCTION);
 
     resourceLoader.getCache().put("/myresource", GITHUB);
 
@@ -131,8 +131,8 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
   {
     File directory = temp.newFolder();
     File file = file(directory, "myresource");
-    PluginWrapper wrapper = createPluginWrapper(directory);
-    List<PluginWrapper> plugins = Lists.newArrayList(wrapper);
+    InstalledPlugin wrapper = createPluginWrapper(directory);
+    List<InstalledPlugin> plugins = Lists.newArrayList(wrapper);
     WebResourceLoader resourceLoader =
       new DefaultUberWebResourceLoader(servletContext, plugins);
 
@@ -170,8 +170,8 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
 
     File directory = temp.newFolder();
     File file = file(directory, "myresource");
-    PluginWrapper wrapper = createPluginWrapper(directory);
-    List<PluginWrapper> plugins = Lists.newArrayList(wrapper);
+    InstalledPlugin wrapper = createPluginWrapper(directory);
+    List<InstalledPlugin> plugins = Lists.newArrayList(wrapper);
 
     UberWebResourceLoader resourceLoader =
       new DefaultUberWebResourceLoader(servletContext, plugins);
@@ -197,11 +197,11 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
     WebResourceLoader loader = mock(WebResourceLoader.class);
     when(loader.getResource("/myresource")).thenReturn(url);
 
-    PluginWrapper pluginWrapper = mock(PluginWrapper.class);
-    when(pluginWrapper.getWebResourceLoader()).thenReturn(loader);
+    InstalledPlugin installedPlugin = mock(InstalledPlugin.class);
+    when(installedPlugin.getWebResourceLoader()).thenReturn(loader);
 
     WebResourceLoader resourceLoader =
-      new DefaultUberWebResourceLoader(servletContext, Lists.newArrayList(pluginWrapper));
+      new DefaultUberWebResourceLoader(servletContext, Lists.newArrayList(installedPlugin));
 
     assertNull(resourceLoader.getResource("/myresource"));
   }
@@ -214,11 +214,11 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
     WebResourceLoader loader = mock(WebResourceLoader.class);
     when(loader.getResource("/myresource")).thenReturn(url);
 
-    PluginWrapper pluginWrapper = mock(PluginWrapper.class);
-    when(pluginWrapper.getWebResourceLoader()).thenReturn(loader);
+    InstalledPlugin installedPlugin = mock(InstalledPlugin.class);
+    when(installedPlugin.getWebResourceLoader()).thenReturn(loader);
 
     UberWebResourceLoader resourceLoader =
-      new DefaultUberWebResourceLoader(servletContext, Lists.newArrayList(pluginWrapper));
+      new DefaultUberWebResourceLoader(servletContext, Lists.newArrayList(installedPlugin));
 
     List<URL> resources = resourceLoader.getResources("/myresource");
     Assertions.assertThat(resources).isEmpty();
@@ -232,7 +232,7 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
    *
    * @return
    */
-  private PluginWrapper createPluginWrapper(File directory)
+  private InstalledPlugin createPluginWrapper(File directory)
   {
     return createPluginWrapper(directory.toPath());
   }
@@ -245,9 +245,9 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
    *
    * @return
    */
-  private PluginWrapper createPluginWrapper(Path directory)
+  private InstalledPlugin createPluginWrapper(Path directory)
   {
-    return new PluginWrapper(null, null, new PathWebResourceLoader(directory),
+    return new InstalledPlugin(null, null, new PathWebResourceLoader(directory),
       directory);
   }
 
