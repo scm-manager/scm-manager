@@ -75,7 +75,7 @@ public class AvailablePluginResource {
     if (plugin.isPresent()) {
       return Response.ok(mapper.mapAvailable(plugin.get())).build();
     } else {
-      throw notFound(entity(InstalledPluginDescriptor.class, name));
+      throw notFound(entity("Plugin", name));
     }
   }
 

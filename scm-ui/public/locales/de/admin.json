@@ -39,12 +39,12 @@
       "abort": "Abbrechen",
       "author": "Autor",
       "version": "Version",
-      "dependencyNotification": "Mit diesem Plugin werden folgende Abhängigkeiten mit installieren wenn sie noch nicht vorhanden sind!",
+      "dependencyNotification": "Mit diesem Plugin werden folgende Abhängigkeiten mit installiert, wenn sie noch nicht vorhanden sind!",
       "dependencies": "Abhängigkeiten",
       "successNotification": "Das Plugin wurde erfolgreich installiert. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden:",
-      "reload": "jetzt new laden",
+      "reload": "jetzt neu laden",
       "restartNotification": "Der SCM-Manager Kontext sollte nur neu gestartet werden, wenn aktuell niemand damit arbeitet.",
-      "installPending": "Die folgenden Plugins werden installiert und anschließend wir der SCM-Manager Kontext neu gestartet."
+      "installPending": "Die folgenden Plugins werden installiert. Anschließend wird der SCM-Manager Kontext neu gestartet."
     }
   },
   "repositoryRole": {

@@ -9,7 +9,7 @@ const waitForRestart = () => {
     // we need some initial delay
     if (!started) {
       started = true;
-      setTimeout(executor, 100, resolve, reject);
+      setTimeout(executor, 1000, resolve, reject);
     } else {
       apiClient
         .get("")

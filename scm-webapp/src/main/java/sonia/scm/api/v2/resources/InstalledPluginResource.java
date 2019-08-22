@@ -75,7 +75,7 @@ public class InstalledPluginResource {
     if (pluginDto.isPresent()) {
       return Response.ok(mapper.mapInstalled(pluginDto.get())).build();
     } else {
-      throw notFound(entity(InstalledPluginDescriptor.class, name));
+      throw notFound(entity("Plugin", name));
     }
   }
 }
