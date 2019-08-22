@@ -10,6 +10,8 @@ import {
 } from "@scm-manager/ui-components";
 import type { PluginCollection } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
+import waitForRestart from "./waitForRestart";
+import InstallSuccessNotification from "./InstallSuccessNotification";
 
 type Props = {
   onClose: () => void,
@@ -40,14 +42,7 @@ class InstallPendingModal extends React.Component<Props, State> {
     if (error) {
       return <ErrorNotification error={error} />;
     } else if (success) {
-      return (
-        <Notification type="success">
-          {t("plugins.modal.successNotification")}{" "}
-          <a onClick={e => window.location.reload()}>
-            {t("plugins.modal.reload")}
-          </a>
-        </Notification>
-      );
+      return <InstallSuccessNotification />;
     } else {
       return (
         <Notification type="warning">
@@ -65,6 +60,7 @@ class InstallPendingModal extends React.Component<Props, State> {
 
     apiClient
       .post(collection._links.installPending.href)
+      .then(waitForRestart)
       .then(() => {
         this.setState({
           success: true,
@@ -92,7 +88,9 @@ class InstallPendingModal extends React.Component<Props, State> {
               {collection._embedded.plugins
                 .filter(plugin => plugin.pending)
                 .map(plugin => (
-                  <li key={plugin.name} className="has-text-weight-bold">{plugin.name}</li>
+                  <li key={plugin.name} className="has-text-weight-bold">
+                    {plugin.name}
+                  </li>
                 ))}
             </ul>
           </div>

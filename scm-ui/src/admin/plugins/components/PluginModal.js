@@ -14,6 +14,8 @@ import {
   Notification
 } from "@scm-manager/ui-components";
 import classNames from "classnames";
+import waitForRestart from "./waitForRestart";
+import InstallSuccessNotification from "./InstallSuccessNotification";
 
 type Props = {
   plugin: Plugin,
@@ -63,10 +65,20 @@ class PluginModal extends React.Component<Props, State> {
     };
 
     if (restart) {
-      this.setState({
-        ...newState,
-        success: true
-      });
+      waitForRestart()
+        .then(() => {
+          this.setState({
+            ...newState,
+            success: true
+          });
+        })
+        .catch(error => {
+          this.setState({
+            loading: false,
+            success: false,
+            error
+          });
+        });
     } else {
       this.setState(newState, () => {
         refresh();
@@ -150,12 +162,7 @@ class PluginModal extends React.Component<Props, State> {
     } else if (success) {
       return (
         <div className="media">
-          <Notification type="success">
-            {t("plugins.modal.successNotification")}{" "}
-            <a onClick={e => window.location.reload()}>
-              {t("plugins.modal.reload")}
-            </a>
-          </Notification>
+          <InstallSuccessNotification />
         </div>
       );
     } else if (restart) {
