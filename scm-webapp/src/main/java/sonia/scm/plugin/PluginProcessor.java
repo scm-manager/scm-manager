@@ -59,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
 
@@ -176,7 +177,7 @@ public final class PluginProcessor
     List<Path> dirs =
       collectPluginDirectories(pluginDirectory)
       .stream()
-      .filter(dir -> !dir.endsWith("sonia.scm.plugins"))
+      .filter(isPluginDirectory())
       .collect(toList());
 
     logger.debug("process {} directories: {}", dirs.size(), dirs);
@@ -198,6 +199,10 @@ public final class PluginProcessor
     logger.debug("collected {} plugins", wrappers.size());
 
     return ImmutableSet.copyOf(wrappers);
+  }
+
+  private Predicate<Path> isPluginDirectory() {
+    return dir -> new File(dir.resolve("META-INF/scm/plugin.xml").toString()).exists();
   }
 
   /**
