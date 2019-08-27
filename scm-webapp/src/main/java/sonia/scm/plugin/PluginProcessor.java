@@ -71,6 +71,7 @@ import static java.util.stream.Collectors.toList;
  *
  * TODO don't mix nio and io
  */
+@SuppressWarnings("squid:S3725") // performance is not critical, for this type of checks
 public final class PluginProcessor
 {
 
@@ -202,7 +203,7 @@ public final class PluginProcessor
   }
 
   private Predicate<Path> isPluginDirectory() {
-    return dir -> new File(dir.resolve("META-INF/scm/plugin.xml").toString()).exists();
+    return dir -> Files.exists(dir.resolve(DIRECTORY_METAINF).resolve("scm").resolve("plugin.xml"));
   }
 
   /**
