@@ -44,7 +44,7 @@ class Main extends React.Component<Props> {
           <Redirect exact from="/" to={url} />
           <Route exact path="/login" component={Login} />
           <Route path="/logout" component={Logout} />
-          <Redirect exact strict from="/repos" to={url} />
+          <Redirect exact strict from="/repos" to="/repos/" />
           <ProtectedRoute
             exact
             path="/repos/"
