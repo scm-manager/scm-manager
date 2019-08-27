@@ -139,7 +139,7 @@ public class PluginProcessorTest
     new File(pluginDirectory, "some-directory").mkdirs();
 
     copySmp(PLUGIN_A);
-    PluginWrapper plugin = collectAndGetFirst();
+    InstalledPlugin plugin = collectAndGetFirst();
 
     assertThat(plugin.getId(), is(PLUGIN_A.id));
   }
