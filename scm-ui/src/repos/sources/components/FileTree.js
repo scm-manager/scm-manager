@@ -17,6 +17,7 @@ import {
 } from "../modules/sources";
 import { withRouter } from "react-router-dom";
 import { compose } from "redux";
+import { binder } from "@scm-manager/ui-extensions";
 
 const styles = {
   iconColumn: {
@@ -124,6 +125,9 @@ class FileTree extends React.Component<Props> {
               <th className="is-hidden-mobile">
                 {t("sources.file-tree.description")}
               </th>
+              {binder.hasExtension("sourceView.right") && (
+                <th className="is-hidden-mobile" />
+              )}
             </tr>
           </thead>
           <tbody>
