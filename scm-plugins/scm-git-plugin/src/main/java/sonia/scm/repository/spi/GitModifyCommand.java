@@ -64,7 +64,9 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       for (ModifyCommandRequest.PartialRequest r: request.getRequests()) {
         r.execute(this);
       }
-      return null;
+      doCommit();
+      push();
+      return clone.getRepository().getRefDatabase().findRef("HEAD").getObjectId().name();
     }
 
     @Override
@@ -164,6 +166,16 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       } else {
         return request.getAuthor();
       }
+    }
+
+    private void push() {
+      try {
+        clone.push().call();
+      } catch (GitAPIException e) {
+        throw new IntegrateChangesFromWorkdirException(repository,
+          "could not push modified branch " + request.getBranch() + " into central repository", e);
+      }
+      LOG.debug("pushed modified branch {}", request.getBranch());
     }
   }
 
