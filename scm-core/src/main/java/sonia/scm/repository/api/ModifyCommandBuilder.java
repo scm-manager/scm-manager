@@ -4,10 +4,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.spi.ModifyCommand;
 import sonia.scm.repository.spi.ModifyCommandRequest;
 import sonia.scm.repository.util.WorkdirProvider;
+import sonia.scm.util.IOUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +42,8 @@ import java.util.function.Consumer;
  * </p>
  */
 public class ModifyCommandBuilder {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ModifyCommandBuilder.class);
 
   private final ModifyCommand command;
   private final File workdir;
@@ -109,8 +114,16 @@ public class ModifyCommandBuilder {
    * @return The revision of the new commit.
    */
   public String execute() {
-    Preconditions.checkArgument(request.isValid(), "commit message, author and branch are required");
-    return command.execute(request);
+    try {
+      Preconditions.checkArgument(request.isValid(), "commit message, author and branch are required");
+      return command.execute(request);
+    } finally {
+      try {
+        IOUtil.delete(workdir);
+      } catch (IOException e) {
+        LOG.warn("could not delete temporary workdir '{}'", workdir, e);
+      }
+    }
   }
 
   /**
