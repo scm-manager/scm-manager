@@ -1,15 +1,21 @@
 package sonia.scm.repository.spi;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.Validateable;
 import sonia.scm.repository.Person;
+import sonia.scm.util.IOUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class ModifyCommandRequest implements Resetable, Validateable {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ModifyCommandRequest.class);
 
   private final List<PartialRequest> requests = new ArrayList<>();
 
@@ -107,7 +113,11 @@ public class ModifyCommandRequest implements Resetable, Validateable {
     }
 
     void cleanup() {
-      content.delete(); // TODO Handle errors
+      try {
+        IOUtil.delete(content);
+      } catch (IOException e) {
+        LOG.warn("could not delete temporary file {}", content, e);
+      }
     }
   }
 
