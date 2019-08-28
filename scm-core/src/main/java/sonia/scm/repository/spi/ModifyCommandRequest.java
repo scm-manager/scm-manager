@@ -45,6 +45,18 @@ public class ModifyCommandRequest implements Resetable, Validateable {
     return Collections.unmodifiableList(requests);
   }
 
+  public Person getAuthor() {
+    return author;
+  }
+
+  public String getCommitMessage() {
+    return commitMessage;
+  }
+
+  public String getBranch() {
+    return branch;
+  }
+
   @Override
   public boolean isValid() {
     return StringUtils.isNotEmpty(commitMessage) && StringUtils.isNotEmpty(branch) && author != null && !requests.isEmpty();
