@@ -26,6 +26,7 @@
     "react": "^16.8.6",
     "react-diff-view": "^1.8.1",
     "react-dom": "^16.8.6",
+    "react-dropzone": "^10.1.8",
     "react-i18next": "^7.9.0",
     "react-jss": "^8.6.0",
     "react-redux": "^5.0.7",

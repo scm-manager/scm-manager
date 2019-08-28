@@ -181,5 +181,9 @@
     },
     "sideBySide": "side-by-side",
     "combined": "combined"
+  },
+  "fileUpload": {
+    "clickHere": "Click here to select your file",
+    "dragAndDrop": "Drag 'n' drop some files here"
   }
 }
