@@ -31,7 +31,6 @@
 
 package sonia.scm.repository.api;
 
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.cache.CacheManager;
@@ -237,6 +236,21 @@ public final class RepositoryService implements Closeable {
       repository.getNamespaceAndName());
 
     return new DiffCommandBuilder(provider.getDiffCommand(), provider.getSupportedFeatures());
+  }
+
+  /**
+   * The diff command shows differences between revisions for a specified file
+   * or the entire revision.
+   *
+   * @return instance of {@link DiffResultCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   */
+  public DiffResultCommandBuilder getDiffResultCommand() {
+    LOG.debug("create diff result command for repository {}",
+      repository.getNamespaceAndName());
+
+    return new DiffResultCommandBuilder(provider.getDiffResultCommand(), provider.getSupportedFeatures());
   }
 
   /**

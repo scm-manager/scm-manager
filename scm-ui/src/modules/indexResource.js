@@ -116,8 +116,12 @@ export function getUiPluginsLink(state: Object) {
   return getLink(state, "uiPlugins");
 }
 
-export function getPluginsLink(state: Object) {
-  return getLink(state, "plugins");
+export function getAvailablePluginsLink(state: Object) {
+  return getLink(state, "availablePlugins");
+}
+
+export function getInstalledPluginsLink(state: Object) {
+  return getLink(state, "installedPlugins");
 }
 
 export function getMeLink(state: Object) {
@@ -166,6 +170,10 @@ export function getGitConfigLink(state: Object) {
 
 export function getSvnConfigLink(state: Object) {
   return getLink(state, "svnConfig");
+}
+
+export function getLoginInfoLink(state: Object) {
+  return getLink(state, "loginInfo");
 }
 
 export function getUserAutoCompleteLink(state: Object): string {

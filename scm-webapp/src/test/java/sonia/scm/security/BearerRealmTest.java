@@ -90,12 +90,10 @@ class BearerRealmTest {
     Set<String> groups = ImmutableSet.of("HeartOfGold", "Puzzle42");
 
     when(accessToken.getSubject()).thenReturn("trillian");
-    when(accessToken.getGroups()).thenReturn(groups);
     when(accessToken.getClaims()).thenReturn(new HashMap<>());
     when(accessTokenResolver.resolve(bearerToken)).thenReturn(accessToken);
 
     when(realmHelper.authenticationInfoBuilder("trillian")).thenReturn(builder);
-    when(builder.withGroups(groups)).thenReturn(builder);
     when(builder.withCredentials("__bearer__")).thenReturn(builder);
     when(builder.withScope(any(Scope.class))).thenReturn(builder);
     when(builder.build()).thenReturn(authenticationInfo);

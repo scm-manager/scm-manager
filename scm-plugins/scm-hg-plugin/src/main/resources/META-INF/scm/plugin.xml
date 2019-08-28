@@ -46,15 +46,10 @@ jo
   <scm-version>2</scm-version>
 
   <information>
-    <author>Sebastian Sdorra</author>
-    <category>Mercurial</category>
-    <tags>
-      <tag>mercurial</tag>
-      <tag>hg</tag>
-      <tag>scm</tag>
-      <tag>vcs</tag>
-      <tag>dvcs</tag>
-    </tags>
+    <displayName>Mercurial</displayName>
+    <author>Cloudogu GmbH</author>
+    <category>Source Code Management</category>
+    <avatarUrl>/images/hg-logo.png</avatarUrl>
   </information>
 
   <conditions>

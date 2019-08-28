@@ -10,7 +10,6 @@
   </parent>
 
   <artifactId>scm-svn-plugin</artifactId>
-  <name>scm-svn-plugin</name>
   <packaging>smp</packaging>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
   <description>Plugin for the version control system Subversion</description>

@@ -19,7 +19,6 @@ public class ConfigDto extends HalRepresentation {
   private String proxyUser;
   private boolean enableProxy;
   private String realmDescription;
-  private boolean enableRepositoryArchive;
   private boolean disableGroupingGrid;
   private String dateFormat;
   private boolean anonymousAccessEnabled;
@@ -32,6 +31,7 @@ public class ConfigDto extends HalRepresentation {
   private long loginAttemptLimitTimeout;
   private boolean enabledXsrfProtection;
   private String namespaceStrategy;
+  private String loginInfoUrl;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package

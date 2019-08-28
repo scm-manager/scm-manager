@@ -1,17 +1,10 @@
 //@flow
 import React from "react";
-import {
-  Hunk,
-  Diff as DiffComponent,
-  getChangeKey,
-  Change,
-  DiffObjectProps,
-  File
-} from "react-diff-view";
+import {Change, Diff as DiffComponent, DiffObjectProps, File, getChangeKey, Hunk} from "react-diff-view";
 import injectSheets from "react-jss";
 import classNames from "classnames";
-import { translate } from "react-i18next";
-import { ButtonGroup, Button } from "../buttons";
+import {translate} from "react-i18next";
+import {Button, ButtonGroup} from "../buttons";
 
 const styles = {
   panel: {
@@ -46,6 +39,7 @@ const styles = {
 
 type Props = DiffObjectProps & {
   file: File,
+  collapsible: true,
   // context props
   classes: any,
   t: string => string
@@ -66,9 +60,11 @@ class DiffFile extends React.Component<Props, State> {
   }
 
   toggleCollapse = () => {
-    this.setState(state => ({
-      collapsed: !state.collapsed
-    }));
+    if (this.props.collapsable) {
+      this.setState(state => ({
+        collapsed: !state.collapsed
+      }));
+    }
   };
 
   toggleSideBySide = () => {
@@ -173,6 +169,9 @@ class DiffFile extends React.Component<Props, State> {
 
   renderChangeTag = (file: any) => {
     const { t, classes } = this.props;
+    if (!file.type) {
+      return;
+    }
     const key = "diff.changes." + file.type;
     let value = t(key);
     if (key === value) {
@@ -205,6 +204,7 @@ class DiffFile extends React.Component<Props, State> {
       file,
       fileControlFactory,
       fileAnnotationFactory,
+      collapsible,
       classes,
       t
     } = this.props;
@@ -227,6 +227,7 @@ class DiffFile extends React.Component<Props, State> {
         </div>
       );
     }
+    const collapseIcon = collapsible? <i className={icon} />: null;
 
     const fileControls = fileControlFactory
       ? fileControlFactory(file, this.setCollapse)
@@ -240,7 +241,7 @@ class DiffFile extends React.Component<Props, State> {
               onClick={this.toggleCollapse}
               title={this.hoverFileTitle(file)}
             >
-              <i className={icon} />
+              {collapseIcon}
               <span
                 className={classNames("is-ellipsis-overflow", classes.title)}
               >

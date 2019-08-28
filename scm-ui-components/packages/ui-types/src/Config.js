@@ -8,7 +8,6 @@ export type Config = {
   proxyUser: string | null,
   enableProxy: boolean,
   realmDescription: string,
-  enableRepositoryArchive: boolean,
   disableGroupingGrid: boolean,
   dateFormat: string,
   anonymousAccessEnabled: boolean,
@@ -21,5 +20,6 @@ export type Config = {
   loginAttemptLimitTimeout: number,
   enabledXsrfProtection: boolean,
   namespaceStrategy: string,
+  loginInfoUrl: string,
   _links: Links
 };

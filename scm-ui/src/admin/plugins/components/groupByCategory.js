@@ -6,7 +6,7 @@ export default function groupByCategory(
 ): PluginGroup[] {
   let groups = {};
   for (let plugin of plugins) {
-    const groupName = plugin.type;
+    const groupName = plugin.category;
 
     let group = groups[groupName];
     if (!group) {

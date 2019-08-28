@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
-import sonia.scm.plugin.PluginWrapper;
+import sonia.scm.plugin.InstalledPlugin;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +24,7 @@ public class UIPluginDtoCollectionMapper {
     this.mapper = mapper;
   }
 
-  public HalRepresentation map(Collection<PluginWrapper> plugins) {
+  public HalRepresentation map(Collection<InstalledPlugin> plugins) {
     List<UIPluginDto> dtos = plugins.stream().map(mapper::map).collect(toList());
     return new HalRepresentation(createLinks(), embedDtos(dtos));
   }

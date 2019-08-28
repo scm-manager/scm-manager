@@ -71,37 +71,37 @@ public class PluginProcessorTest
   /** Field description */
   private static final PluginResource PLUGIN_A =
     new PluginResource("sonia/scm/plugin/scm-a-plugin.smp", "scm-a-plugin.smp",
-      "sonia.scm.plugins:scm-a-plugin:1.0.0-SNAPSHOT");
+      "scm-a-plugin:1.0.0-SNAPSHOT");
 
   /** Field description */
   private static final PluginResource PLUGIN_B =
     new PluginResource("sonia/scm/plugin/scm-b-plugin.smp", "scm-b-plugin.smp",
-      "sonia.scm.plugins:scm-b-plugin:1.0.0-SNAPSHOT");
+      "scm-b-plugin:1.0.0-SNAPSHOT");
 
   /** Field description */
   private static final PluginResource PLUGIN_C =
     new PluginResource("sonia/scm/plugin/scm-c-plugin.smp", "scm-c-plugin.smp",
-      "sonia.scm.plugins:scm-c-plugin:1.0.0-SNAPSHOT");
+      "scm-c-plugin:1.0.0-SNAPSHOT");
 
   /** Field description */
   private static final PluginResource PLUGIN_D =
     new PluginResource("sonia/scm/plugin/scm-d-plugin.smp", "scm-d-plugin.smp",
-      "sonia.scm.plugins:scm-d-plugin:1.0.0-SNAPSHOT");
+      "scm-d-plugin:1.0.0-SNAPSHOT");
 
   /** Field description */
   private static final PluginResource PLUGIN_E =
     new PluginResource("sonia/scm/plugin/scm-e-plugin.smp", "scm-e-plugin.smp",
-      "sonia.scm.plugins:scm-e-plugin:1.0.0-SNAPSHOT");
+      "scm-e-plugin:1.0.0-SNAPSHOT");
 
   /** Field description */
   private static final PluginResource PLUGIN_F_1_0_0 =
     new PluginResource("sonia/scm/plugin/scm-f-plugin-1.0.0.smp",
-      "scm-f-plugin.smp", "sonia.scm.plugins:scm-f-plugin:1.0.0");
+      "scm-f-plugin.smp", "scm-f-plugin:1.0.0");
 
   /** Field description */
   private static final PluginResource PLUGIN_F_1_0_1 =
     new PluginResource("sonia/scm/plugin/scm-f-plugin-1.0.1.smp",
-      "scm-f-plugin.smp", "sonia.scm.plugins:scm-f-plugin:1.0.1");
+      "scm-f-plugin.smp", "scm-f-plugin:1.0.1");
 
   //~--- methods --------------------------------------------------------------
 
@@ -129,7 +129,17 @@ public class PluginProcessorTest
   {
     copySmp(PLUGIN_A);
 
-    PluginWrapper plugin = collectAndGetFirst();
+    InstalledPlugin plugin = collectAndGetFirst();
+
+    assertThat(plugin.getId(), is(PLUGIN_A.id));
+  }
+
+  @Test
+  public void shouldCollectPluginsAndDoNotFailOnNonPluginDirectories() throws IOException {
+    new File(pluginDirectory, "some-directory").mkdirs();
+
+    copySmp(PLUGIN_A);
+    InstalledPlugin plugin = collectAndGetFirst();
 
     assertThat(plugin.getId(), is(PLUGIN_A.id));
   }
@@ -145,15 +155,15 @@ public class PluginProcessorTest
   {
     copySmps(PLUGIN_A, PLUGIN_B);
 
-    Set<PluginWrapper> plugins = collectPlugins();
+    Set<InstalledPlugin> plugins = collectPlugins();
 
     assertThat(plugins, hasSize(2));
 
-    PluginWrapper a = findPlugin(plugins, PLUGIN_A.id);
+    InstalledPlugin a = findPlugin(plugins, PLUGIN_A.id);
 
     assertNotNull(a);
 
-    PluginWrapper b = findPlugin(plugins, PLUGIN_B.id);
+    InstalledPlugin b = findPlugin(plugins, PLUGIN_B.id);
 
     assertNotNull(b);
   }
@@ -178,7 +188,7 @@ public class PluginProcessorTest
   {
     copySmp(PLUGIN_A);
 
-    PluginWrapper plugin = collectAndGetFirst();
+    InstalledPlugin plugin = collectAndGetFirst();
     ClassLoader cl = plugin.getClassLoader();
 
     // load parent class
@@ -216,9 +226,9 @@ public class PluginProcessorTest
   {
     copySmps(PLUGIN_A, PLUGIN_B);
 
-    Set<PluginWrapper> plugins = collectPlugins();
+    Set<InstalledPlugin> plugins = collectPlugins();
 
-    PluginWrapper plugin = findPlugin(plugins, PLUGIN_B.id);
+    InstalledPlugin plugin = findPlugin(plugins, PLUGIN_B.id);
     ClassLoader cl = plugin.getClassLoader();
 
     // load parent class
@@ -247,7 +257,7 @@ public class PluginProcessorTest
   {
     copySmp(PLUGIN_A);
 
-    PluginWrapper plugin = collectAndGetFirst();
+    InstalledPlugin plugin = collectAndGetFirst();
     WebResourceLoader wrl = plugin.getWebResourceLoader();
 
     assertNotNull(wrl);
@@ -269,7 +279,7 @@ public class PluginProcessorTest
   {
     copySmp(PLUGIN_F_1_0_0);
 
-    PluginWrapper plugin = collectAndGetFirst();
+    InstalledPlugin plugin = collectAndGetFirst();
 
     assertThat(plugin.getId(), is(PLUGIN_F_1_0_0.id));
     copySmp(PLUGIN_F_1_0_1);
@@ -302,9 +312,9 @@ public class PluginProcessorTest
    *
    * @throws IOException
    */
-  private PluginWrapper collectAndGetFirst() throws IOException
+  private InstalledPlugin collectAndGetFirst() throws IOException
   {
-    Set<PluginWrapper> plugins = collectPlugins();
+    Set<InstalledPlugin> plugins = collectPlugins();
 
     assertThat(plugins, hasSize(1));
 
@@ -319,7 +329,7 @@ public class PluginProcessorTest
    *
    * @throws IOException
    */
-  private Set<PluginWrapper> collectPlugins() throws IOException
+  private Set<InstalledPlugin> collectPlugins() throws IOException
   {
     return processor.collectPlugins(PluginProcessorTest.class.getClassLoader());
   }
@@ -368,14 +378,14 @@ public class PluginProcessorTest
    *
    * @return
    */
-  private PluginWrapper findPlugin(Iterable<PluginWrapper> plugin,
-    final String id)
+  private InstalledPlugin findPlugin(Iterable<InstalledPlugin> plugin,
+                                     final String id)
   {
-    return Iterables.find(plugin, new Predicate<PluginWrapper>()
+    return Iterables.find(plugin, new Predicate<InstalledPlugin>()
     {
 
       @Override
-      public boolean apply(PluginWrapper input)
+      public boolean apply(InstalledPlugin input)
       {
         return id.equals(input.getId());
       }

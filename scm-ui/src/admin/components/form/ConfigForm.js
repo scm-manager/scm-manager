@@ -16,7 +16,7 @@ type Props = {
   configUpdatePermission: boolean,
   namespaceStrategies?: NamespaceStrategies,
   // context props
-  t: string => string,
+  t: string => string
 };
 
 type State = {
@@ -41,7 +41,6 @@ class ConfigForm extends React.Component<Props, State> {
         proxyUser: null,
         enableProxy: false,
         realmDescription: "",
-        enableRepositoryArchive: false,
         disableGroupingGrid: false,
         dateFormat: "",
         anonymousAccessEnabled: false,
@@ -54,6 +53,7 @@ class ConfigForm extends React.Component<Props, State> {
         loginAttemptLimitTimeout: 0,
         enabledXsrfProtection: true,
         namespaceStrategy: "",
+        loginInfoUrl: "",
         _links: {}
       },
       showNotification: false,
@@ -119,8 +119,8 @@ class ConfigForm extends React.Component<Props, State> {
         {noPermissionNotification}
         <GeneralSettings
           namespaceStrategies={namespaceStrategies}
+          loginInfoUrl={config.loginInfoUrl}
           realmDescription={config.realmDescription}
-          enableRepositoryArchive={config.enableRepositoryArchive}
           disableGroupingGrid={config.disableGroupingGrid}
           dateFormat={config.dateFormat}
           anonymousAccessEnabled={config.anonymousAccessEnabled}

@@ -67,7 +67,6 @@ public class ScmConfigurationToConfigDtoMapperTest {
     assertEquals("trillian" , dto.getProxyUser());
     assertTrue(dto.isEnableProxy());
     assertEquals("description" , dto.getRealmDescription());
-    assertTrue(dto.isEnableRepositoryArchive());
     assertTrue(dto.isDisableGroupingGrid());
     assertEquals("dd" , dto.getDateFormat());
     assertTrue(dto.isAnonymousAccessEnabled());
@@ -80,6 +79,7 @@ public class ScmConfigurationToConfigDtoMapperTest {
     assertEquals(2 , dto.getLoginAttemptLimitTimeout());
     assertTrue(dto.isEnabledXsrfProtection());
     assertEquals("username", dto.getNamespaceStrategy());
+    assertEquals("https://scm-manager.org/login-info", dto.getLoginInfoUrl());
 
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("update").get().getHref());
@@ -105,7 +105,6 @@ public class ScmConfigurationToConfigDtoMapperTest {
     config.setProxyUser("trillian");
     config.setEnableProxy(true);
     config.setRealmDescription("description");
-    config.setEnableRepositoryArchive(true);
     config.setDisableGroupingGrid(true);
     config.setDateFormat("dd");
     config.setAnonymousAccessEnabled(true);
@@ -118,6 +117,7 @@ public class ScmConfigurationToConfigDtoMapperTest {
     config.setLoginAttemptLimitTimeout(2);
     config.setEnabledXsrfProtection(true);
     config.setNamespaceStrategy("username");
+    config.setLoginInfoUrl("https://scm-manager.org/login-info");
     return config;
   }
 

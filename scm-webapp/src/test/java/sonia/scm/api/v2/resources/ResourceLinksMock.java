@@ -36,6 +36,10 @@ public class ResourceLinksMock {
     when(resourceLinks.modifications()).thenReturn(new ResourceLinks.ModificationsLinks(uriInfo));
     when(resourceLinks.repositoryType()).thenReturn(new ResourceLinks.RepositoryTypeLinks(uriInfo));
     when(resourceLinks.repositoryTypeCollection()).thenReturn(new ResourceLinks.RepositoryTypeCollectionLinks(uriInfo));
+    when(resourceLinks.installedPluginCollection()).thenReturn(new ResourceLinks.InstalledPluginCollectionLinks(uriInfo));
+    when(resourceLinks.availablePluginCollection()).thenReturn(new ResourceLinks.AvailablePluginCollectionLinks(uriInfo));
+    when(resourceLinks.installedPlugin()).thenReturn(new ResourceLinks.InstalledPluginLinks(uriInfo));
+    when(resourceLinks.availablePlugin()).thenReturn(new ResourceLinks.AvailablePluginLinks(uriInfo));
     when(resourceLinks.uiPluginCollection()).thenReturn(new ResourceLinks.UIPluginCollectionLinks(uriInfo));
     when(resourceLinks.uiPlugin()).thenReturn(new ResourceLinks.UIPluginLinks(uriInfo));
     when(resourceLinks.authentication()).thenReturn(new ResourceLinks.AuthenticationLinks(uriInfo));
@@ -46,7 +50,6 @@ public class ResourceLinksMock {
     when(resourceLinks.repositoryRole()).thenReturn(new ResourceLinks.RepositoryRoleLinks(uriInfo));
     when(resourceLinks.repositoryRoleCollection()).thenReturn(new ResourceLinks.RepositoryRoleCollectionLinks(uriInfo));
     when(resourceLinks.namespaceStrategies()).thenReturn(new ResourceLinks.NamespaceStrategiesLinks(uriInfo));
-    when(resourceLinks.pluginCollection()).thenReturn(new ResourceLinks.PluginCollectionLinks(uriInfo));
 
     return resourceLinks;
   }

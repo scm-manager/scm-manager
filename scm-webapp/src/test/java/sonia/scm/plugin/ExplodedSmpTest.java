@@ -60,12 +60,12 @@ public class ExplodedSmpTest
   @Test
   public void testCompareTo()
   {
-    ExplodedSmp e1 = create("a", "c", "1", "a:a");
+    ExplodedSmp e1 = create("a", "c", "1", "a");
     ExplodedSmp e3 = create("a", "a", "1");
     ExplodedSmp e2 = create("a", "b", "1");
     List<ExplodedSmp> es = list(e1, e2, e3);
 
-    is(es, 2, "c");
+    is(es, 2, "a");
   }
 
   /**
@@ -75,9 +75,9 @@ public class ExplodedSmpTest
   @Test(expected = PluginCircularDependencyException.class)
   public void testCompareToCyclicDependency()
   {
-    ExplodedSmp e1 = create("a", "a", "1", "a:c");
-    ExplodedSmp e2 = create("a", "b", "1");
-    ExplodedSmp e3 = create("a", "c", "1", "a:a");
+    ExplodedSmp e1 = create("a", "1", "c");
+    ExplodedSmp e2 = create("b", "1");
+    ExplodedSmp e3 = create("c", "1", "a");
 
     list(e1, e2, e3);
   }
@@ -89,9 +89,9 @@ public class ExplodedSmpTest
   @Test
   public void testCompareToTransitiveDependencies()
   {
-    ExplodedSmp e1 = create("a", "a", "1", "a:b");
-    ExplodedSmp e2 = create("a", "b", "1");
-    ExplodedSmp e3 = create("a", "c", "1", "a:a");
+    ExplodedSmp e1 = create("a", "1", "b");
+    ExplodedSmp e2 = create("b", "1");
+    ExplodedSmp e3 = create("c", "1", "a");
 
     List<ExplodedSmp> es = list(e1, e2, e3);
 
@@ -107,9 +107,9 @@ public class ExplodedSmpTest
   @Test
   public void testMultipleDependencies()
   {
-    ExplodedSmp e1 = create("a", "a", "1", "a:b", "a:c");
-    ExplodedSmp e2 = create("a", "b", "1", "a:c");
-    ExplodedSmp e3 = create("a", "c", "1");
+    ExplodedSmp e1 = create("a", "1", "b", "c");
+    ExplodedSmp e2 = create("b", "1", "c");
+    ExplodedSmp e3 = create("c", "1");
     List<ExplodedSmp> es = list(e1, e2, e3);
 
     is(es, 2, "a");
@@ -119,23 +119,21 @@ public class ExplodedSmpTest
    * Method description
    *
    *
-   * @param groupId
-   * @param artifactId
+   * @param name
    * @param version
    * @param dependencies
    *
    * @return
    */
-  private ExplodedSmp create(String groupId, String artifactId, String version,
+  private ExplodedSmp create(String name, String version,
     String... dependencies)
   {
     PluginInformation info = new PluginInformation();
 
-    info.setGroupId(groupId);
-    info.setArtifactId(artifactId);
+    info.setName(name);
     info.setVersion(version);
 
-    Plugin plugin = new Plugin(2, info, null, null, false,
+    InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(2, info, null, null, false,
                       Sets.newSet(dependencies));
 
     return new ExplodedSmp(null, plugin);
@@ -170,6 +168,6 @@ public class ExplodedSmpTest
    */
   private void is(List<ExplodedSmp> es, int p, String a)
   {
-    assertEquals(a, es.get(p).getPlugin().getInformation().getArtifactId());
+    assertEquals(a, es.get(p).getPlugin().getInformation().getName());
   }
 }

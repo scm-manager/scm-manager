@@ -34,7 +34,7 @@ class Main extends React.Component<Props> {
   render() {
     const { authenticated, links } = this.props;
     const redirectUrlFactory = binder.getExtension("main.redirect", this.props);
-    let url = "/repos";
+    let url = "/repos/";
     if (redirectUrlFactory) {
       url = redirectUrlFactory(this.props);
     }
@@ -44,9 +44,10 @@ class Main extends React.Component<Props> {
           <Redirect exact from="/" to={url} />
           <Route exact path="/login" component={Login} />
           <Route path="/logout" component={Logout} />
+          <Redirect exact strict from="/repos" to="/repos/" />
           <ProtectedRoute
             exact
-            path="/repos"
+            path="/repos/"
             component={Overview}
             authenticated={authenticated}
           />
@@ -67,9 +68,10 @@ class Main extends React.Component<Props> {
             component={RepositoryRoot}
             authenticated={authenticated}
           />
+          <Redirect exact strict from="/users" to="/users/" />
           <ProtectedRoute
             exact
-            path="/users"
+            path="/users/"
             component={Users}
             authenticated={authenticated}
           />
@@ -89,10 +91,10 @@ class Main extends React.Component<Props> {
             path="/user/:name"
             component={SingleUser}
           />
-
+          <Redirect exact strict from="/groups" to="/groups/" />
           <ProtectedRoute
             exact
-            path="/groups"
+            path="/groups/"
             component={Groups}
             authenticated={authenticated}
           />

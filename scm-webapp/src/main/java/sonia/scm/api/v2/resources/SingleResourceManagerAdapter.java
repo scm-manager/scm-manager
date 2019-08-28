@@ -2,17 +2,15 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
 import sonia.scm.ConcurrentModificationException;
+import sonia.scm.IllegalIdentifierChangeException;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.NotFoundException;
 
 import javax.ws.rs.core.Response;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
 /**
  * Adapter from resource http endpoints to managers, for Single resources (e.g. {@code /user/name}).
@@ -28,20 +26,11 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
                              DTO extends HalRepresentation> {
 
-  private final Function<Throwable, Optional<Response>> errorHandler;
   protected final Manager<MODEL_OBJECT> manager;
   protected final Class<MODEL_OBJECT> type;
 
   SingleResourceManagerAdapter(Manager<MODEL_OBJECT> manager, Class<MODEL_OBJECT> type) {
-    this(manager, type, e -> Optional.empty());
-  }
-
-  SingleResourceManagerAdapter(
-    Manager<MODEL_OBJECT> manager,
-    Class<MODEL_OBJECT> type,
-    Function<Throwable, Optional<Response>> errorHandler) {
     this.manager = manager;
-    this.errorHandler = errorHandler;
     this.type = type;
   }
 
@@ -65,7 +54,7 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     MODEL_OBJECT existingModelObject = reader.get();
     MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
     if (!hasSameKey.test(changedModelObject)) {
-      return Response.status(BAD_REQUEST).entity("illegal change of id").build();
+      throw new IllegalIdentifierChangeException("illegal change of id");
     }
     else if (modelObjectWasModifiedConcurrently(existingModelObject, changedModelObject)) {
       throw new ConcurrentModificationException(type, keyExtractor.apply(existingModelObject));
@@ -74,12 +63,8 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
   }
 
   private Response update(MODEL_OBJECT item) {
-    try {
-      manager.modify(item);
-      return Response.noContent().build();
-    } catch (RuntimeException ex) {
-      return createErrorResponse(ex);
-    }
+    manager.modify(item);
+    return Response.noContent().build();
   }
 
   private boolean modelObjectWasModifiedConcurrently(MODEL_OBJECT existing, MODEL_OBJECT updated) {
@@ -100,20 +85,11 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     MODEL_OBJECT item = manager.get(name);
 
     if (item != null) {
-      try {
-        manager.delete(item);
-        return Response.noContent().build();
-      } catch (RuntimeException ex) {
-        return createErrorResponse(ex);
-      }
+      manager.delete(item);
+      return Response.noContent().build();
     } else {
       return Response.noContent().build();
     }
-  }
-
-  private Response createErrorResponse(RuntimeException throwable) {
-    return errorHandler.apply(throwable)
-      .orElseThrow(() -> throwable);
   }
 
   protected String getId(MODEL_OBJECT item) {

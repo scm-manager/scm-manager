@@ -33,6 +33,11 @@ class EdisonHalAppender implements HalAppender {
     embeddedBuilder.with(rel, embedded);
   }
 
+  @Override
+  public void appendEmbedded(String rel, List<HalRepresentation> embedded) {
+    embeddedBuilder.with(rel, embedded);
+  }
+
   private static class EdisonLinkArrayBuilder implements LinkArrayBuilder {
 
     private final Links.Builder builder;

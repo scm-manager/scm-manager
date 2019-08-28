@@ -59,7 +59,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     Command.BLAME,
     Command.BROWSE,
     Command.CAT,
-    Command.DIFF, 
+    Command.DIFF,
+    Command.DIFF_RESULT,
     Command.LOG,
     Command.TAGS,
     Command.BRANCHES, 
@@ -166,6 +167,11 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   public DiffCommand getDiffCommand()
   {
     return new GitDiffCommand(context, repository);
+  }
+
+  @Override
+  public DiffResultCommand getDiffResultCommand() {
+    return new GitDiffResultCommand(context, repository);
   }
 
   /**

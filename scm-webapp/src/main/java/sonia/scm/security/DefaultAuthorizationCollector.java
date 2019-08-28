@@ -52,17 +52,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
-import sonia.scm.group.GroupNames;
+import sonia.scm.group.GroupCollector;
 import sonia.scm.group.GroupPermissions;
 import sonia.scm.plugin.Extension;
-import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.user.User;
 import sonia.scm.user.UserPermissions;
 import sonia.scm.util.Util;
 
 import java.util.Collection;
+import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -88,19 +89,21 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
   /**
    * Constructs ...
-   *  @param cacheManager
+   * @param cacheManager
    * @param repositoryDAO
    * @param securitySystem
    * @param repositoryPermissionProvider
+   * @param groupCollector
    */
   @Inject
   public DefaultAuthorizationCollector(CacheManager cacheManager,
-                                       RepositoryDAO repositoryDAO, SecuritySystem securitySystem, RepositoryPermissionProvider repositoryPermissionProvider)
+                                       RepositoryDAO repositoryDAO, SecuritySystem securitySystem, RepositoryPermissionProvider repositoryPermissionProvider, GroupCollector groupCollector)
   {
     this.cache = cacheManager.getCache(CACHE_NAME);
     this.repositoryDAO = repositoryDAO;
     this.securitySystem = securitySystem;
     this.repositoryPermissionProvider = repositoryPermissionProvider;
+    this.groupCollector = groupCollector;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -145,16 +148,16 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
     Preconditions.checkNotNull(user, "no user found in principal collection");
 
-    GroupNames groupNames = principals.oneByType(GroupNames.class);
+    Set<String> groups = groupCollector.collect(user.getName());
 
-    CacheKey cacheKey = new CacheKey(user.getId(), groupNames);
+    CacheKey cacheKey = new CacheKey(user.getId(), groups);
 
     AuthorizationInfo info = cache.get(cacheKey);
 
     if (info == null)
     {
       logger.trace("collect AuthorizationInfo for user {}", user.getName());
-      info = createAuthorizationInfo(user, groupNames);
+      info = createAuthorizationInfo(user, groups);
       cache.put(cacheKey, info);
     }
     else if (logger.isTraceEnabled())
@@ -166,7 +169,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   }
 
   private void collectGlobalPermissions(Builder<String> builder,
-    final User user, final GroupNames groups)
+    final User user, final Set<String> groups)
   {
     Collection<AssignedPermission> globalPermissions =
       securitySystem.getPermissions((AssignedPermission input) -> isUserPermitted(user, groups, input));
@@ -181,7 +184,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   }
 
   private void collectRepositoryPermissions(Builder<String> builder, User user,
-    GroupNames groups)
+    Set<String> groups)
   {
     for (Repository repository : repositoryDAO.getAll())
     {
@@ -190,7 +193,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   }
 
   private void collectRepositoryPermissions(Builder<String> builder,
-    Repository repository, User user, GroupNames groups)
+    Repository repository, User user, Set<String> groups)
   {
     Collection<RepositoryPermission> repositoryPermissions = repository.getPermissions();
 
@@ -245,7 +248,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       .getVerbs();
   }
 
-  private AuthorizationInfo createAuthorizationInfo(User user, GroupNames groups) {
+  private AuthorizationInfo createAuthorizationInfo(User user, Set<String> groups) {
     Builder<String> builder = ImmutableSet.builder();
 
     collectGlobalPermissions(builder, user, groups);
@@ -279,7 +282,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
   //~--- get methods ----------------------------------------------------------
 
-  private boolean isUserPermitted(User user, GroupNames groups,
+  private boolean isUserPermitted(User user, Set<String> groups,
     PermissionObject perm)
   {
     //J-
@@ -314,7 +317,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
    */
   private static class CacheKey
   {
-    private CacheKey(String username, GroupNames groupnames)
+    private CacheKey(String username, Set<String> groupnames)
     {
       this.username = username;
       this.groupnames = groupnames;
@@ -356,7 +359,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     //~--- fields -------------------------------------------------------------
 
     /** group names */
-    private final GroupNames groupnames;
+    private final Set<String> groupnames;
 
     /** username */
     private final String username;
@@ -374,4 +377,5 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   private final SecuritySystem securitySystem;
 
   private final RepositoryPermissionProvider repositoryPermissionProvider;
+  private final GroupCollector groupCollector;
 }

@@ -10,7 +10,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)

@@ -123,23 +123,6 @@ public class TestData {
     ;
   }
 
-  public static void createUserPermission(String username, String roleName, String repositoryType) {
-    String defaultPermissionUrl = TestData.getDefaultPermissionUrl(USER_SCM_ADMIN, USER_SCM_ADMIN, repositoryType);
-    LOG.info("create permission with name {} and role {} using the endpoint: {}", username, roleName, defaultPermissionUrl);
-    given(VndMediaType.REPOSITORY_PERMISSION)
-      .when()
-      .content("{\n" +
-        "\t\"role\": " + roleName + ",\n" +
-        "\t\"name\": \"" + username + "\",\n" +
-        "\t\"groupPermission\": false\n" +
-        "\t\n" +
-        "}")
-      .post(defaultPermissionUrl)
-      .then()
-      .statusCode(HttpStatus.SC_CREATED)
-    ;
-  }
-
   public static List<Map> getUserPermissions(String username, String password, String repositoryType) {
     return callUserPermissions(username, password, repositoryType, HttpStatus.SC_OK)
       .extract()
@@ -245,7 +228,6 @@ public class TestData {
       .add("contact", "zaphod.beeblebrox@hitchhiker.com")
       .add("description", "Heart of Gold")
       .add("name", getDefaultRepoName(repositoryType))
-      .add("archived", false)
       .add("type", repositoryType)
       .build().toString();
   }

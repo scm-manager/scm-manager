@@ -65,7 +65,7 @@ public final class Plugins
   {
     try
     {
-      context = JAXBContext.newInstance(Plugin.class, ScmModule.class);
+      context = JAXBContext.newInstance(InstalledPluginDescriptor.class, ScmModule.class);
     }
     catch (JAXBException ex)
     {
@@ -91,7 +91,7 @@ public final class Plugins
    *
    * @return
    */
-  public static Plugin parsePluginDescriptor(Path path)
+  public static InstalledPluginDescriptor parsePluginDescriptor(Path path)
   {
     return parsePluginDescriptor(Files.asByteSource(path.toFile()));
   }
@@ -104,15 +104,15 @@ public final class Plugins
    *
    * @return
    */
-  public static Plugin parsePluginDescriptor(ByteSource data)
+  public static InstalledPluginDescriptor parsePluginDescriptor(ByteSource data)
   {
     Preconditions.checkNotNull(data, "data parameter is required");
 
-    Plugin plugin;
+    InstalledPluginDescriptor plugin;
 
     try (InputStream stream = data.openStream())
     {
-      plugin = (Plugin) context.createUnmarshaller().unmarshal(stream);
+      plugin = (InstalledPluginDescriptor) context.createUnmarshaller().unmarshal(stream);
     }
     catch (JAXBException ex)
     {

@@ -1,25 +1,20 @@
 // @flow
 import React from "react";
-import { translate } from "react-i18next";
-import type {
-  RepositoryRole,
-  PermissionCollection,
-  PermissionCreateEntry,
-  SelectValue
-} from "@scm-manager/ui-types";
+import {translate} from "react-i18next";
+import type {PermissionCollection, PermissionCreateEntry, RepositoryRole, SelectValue} from "@scm-manager/ui-types";
 import {
-  Subtitle,
-  SubmitButton,
   Button,
+  GroupAutocomplete,
   LabelWithHelpIcon,
   Radio,
-  GroupAutocomplete,
+  SubmitButton,
+  Subtitle,
   UserAutocomplete
 } from "@scm-manager/ui-components";
 import * as validator from "../components/permissionValidation";
 import RoleSelector from "../components/RoleSelector";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
-import { findVerbsForRole } from "../modules/permissions";
+import {findVerbsForRole} from "../modules/permissions";
 
 type Props = {
   availableRoles: RepositoryRole[],

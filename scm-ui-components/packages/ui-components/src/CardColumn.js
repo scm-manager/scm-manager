@@ -25,12 +25,17 @@ const styles = {
   },
   content: {
     display: "flex",
-    flexGrow: 1
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "space-between"
   },
   footer: {
     display: "flex",
     marginTop: "auto",
     paddingBottom: "1.5rem"
+  },
+  noBottomMargin: {
+    marginBottom: "0 !important"
   }
 };
 
@@ -38,24 +43,37 @@ type Props = {
   title: string,
   description: string,
   avatar: React.Node,
+  contentRight?: React.Node,
   footerLeft: React.Node,
   footerRight: React.Node,
-  link: string,
+  link?: string,
+  action?: () => void,
+
   // context props
   classes: any
 };
 
 class CardColumn extends React.Component<Props> {
   createLink = () => {
-    const { link } = this.props;
+    const { link, action } = this.props;
     if (link) {
       return <Link className="overlay-column" to={link} />;
+    } else if (action) {
+      return <a className="overlay-column" onClick={e => {e.preventDefault(); action();}} href="#" />;
     }
     return null;
   };
 
   render() {
-    const { avatar, title, description, footerLeft, footerRight, classes } = this.props;
+    const {
+      avatar,
+      title,
+      description,
+      contentRight,
+      footerLeft,
+      footerRight,
+      classes
+    } = this.props;
     const link = this.createLink();
     return (
       <>
@@ -64,16 +82,29 @@ class CardColumn extends React.Component<Props> {
           <figure className={classNames(classes.centerImage, "media-left")}>
             {avatar}
           </figure>
-          <div className={classNames("media-content", "text-box", classes.flexFullHeight)}>
+          <div
+            className={classNames(
+              "media-content",
+              "text-box",
+              classes.flexFullHeight
+            )}
+          >
             <div className={classes.content}>
-              <div className="content shorten-text">
+              <div
+                className={classNames(
+                  "content",
+                  "shorten-text",
+                  classes.noBottomMargin
+                )}
+              >
                 <p className="is-marginless">
                   <strong>{title}</strong>
                 </p>
                 <p className="shorten-text">{description}</p>
               </div>
+              {contentRight && contentRight}
             </div>
-            <div className={classNames(classes.footer, "level")}>
+            <div className={classNames("level", classes.footer)}>
               <div className="level-left is-hidden-mobile">{footerLeft}</div>
               <div className="level-right is-mobile">{footerRight}</div>
             </div>

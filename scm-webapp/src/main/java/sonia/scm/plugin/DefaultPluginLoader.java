@@ -85,7 +85,7 @@ public class DefaultPluginLoader implements PluginLoader
    * @param installedPlugins
    */
   public DefaultPluginLoader(ServletContext servletContext, ClassLoader parent,
-    Set<PluginWrapper> installedPlugins)
+    Set<InstalledPlugin> installedPlugins)
   {
     this.installedPlugins = installedPlugins;
     this.uberClassLoader = new UberClassLoader(parent, installedPlugins);
@@ -95,7 +95,7 @@ public class DefaultPluginLoader implements PluginLoader
     try
     {
       JAXBContext context = JAXBContext.newInstance(ScmModule.class,
-                              Plugin.class);
+                              InstalledPluginDescriptor.class);
 
       modules = getInstalled(parent, context, PATH_MODULECONFIG);
 
@@ -141,7 +141,7 @@ public class DefaultPluginLoader implements PluginLoader
    * @return
    */
   @Override
-  public Collection<PluginWrapper> getInstalledPlugins()
+  public Collection<InstalledPlugin> getInstalledPlugins()
   {
     return installedPlugins;
   }
@@ -178,7 +178,7 @@ public class DefaultPluginLoader implements PluginLoader
    *
    * @return
    */
-  private Iterable<Plugin> unwrap()
+  private Iterable<InstalledPluginDescriptor> unwrap()
   {
     return PluginsInternal.unwrap(installedPlugins);
   }
@@ -227,7 +227,7 @@ public class DefaultPluginLoader implements PluginLoader
   private final ExtensionProcessor extensionProcessor;
 
   /** Field description */
-  private final Set<PluginWrapper> installedPlugins;
+  private final Set<InstalledPlugin> installedPlugins;
 
   /** Field description */
   private final Set<ScmModule> modules;

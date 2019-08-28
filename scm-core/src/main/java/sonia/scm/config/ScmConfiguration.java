@@ -73,7 +73,12 @@ public class ScmConfiguration implements Configuration {
    * Default plugin url
    */
   public static final String DEFAULT_PLUGINURL =
-    "http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false";
+    "http://download.scm-manager.org/api/v2/plugins.json?os={os}&arch={arch}&snapshot=false&version={version}";
+
+  /**
+   * Default url for login information (plugin and feature tips on the login page).
+   */
+  public static final String DEFAULT_LOGIN_INFO_URL = "https://login-info.scm-manager.org/api/v1/login-info";
 
   /**
    * Default plugin url from version 1.0
@@ -156,7 +161,6 @@ public class ScmConfiguration implements Configuration {
    * Authentication realm for basic authentication.
    */
   private String realmDescription = HttpUtil.AUTHENTICATION_REALM;
-  private boolean enableRepositoryArchive = false;
   private boolean disableGroupingGrid = false;
   /**
    * JavaScript date format from moment.js
@@ -176,6 +180,9 @@ public class ScmConfiguration implements Configuration {
 
   @XmlElement(name = "namespace-strategy")
   private String namespaceStrategy = "UsernameNamespaceStrategy";
+
+  @XmlElement(name = "login-info-url")
+  private String loginInfoUrl = DEFAULT_LOGIN_INFO_URL;
 
 
   /**
@@ -210,12 +217,12 @@ public class ScmConfiguration implements Configuration {
     this.forceBaseUrl = other.forceBaseUrl;
     this.baseUrl = other.baseUrl;
     this.disableGroupingGrid = other.disableGroupingGrid;
-    this.enableRepositoryArchive = other.enableRepositoryArchive;
     this.skipFailedAuthenticators = other.skipFailedAuthenticators;
     this.loginAttemptLimit = other.loginAttemptLimit;
     this.loginAttemptLimitTimeout = other.loginAttemptLimitTimeout;
     this.enabledXsrfProtection = other.enabledXsrfProtection;
     this.namespaceStrategy = other.namespaceStrategy;
+    this.loginInfoUrl = other.loginInfoUrl;
   }
 
   /**
@@ -334,10 +341,6 @@ public class ScmConfiguration implements Configuration {
     return enableProxy;
   }
 
-  public boolean isEnableRepositoryArchive() {
-    return enableRepositoryArchive;
-  }
-
   public boolean isForceBaseUrl() {
     return forceBaseUrl;
   }
@@ -350,6 +353,9 @@ public class ScmConfiguration implements Configuration {
     return namespaceStrategy;
   }
 
+  public String getLoginInfoUrl() {
+    return loginInfoUrl;
+  }
 
   /**
    * Returns true if failed authenticators are skipped.
@@ -379,16 +385,6 @@ public class ScmConfiguration implements Configuration {
 
   public void setEnableProxy(boolean enableProxy) {
     this.enableProxy = enableProxy;
-  }
-
-  /**
-   * Enable or disable the repository archive. Default is disabled.
-   *
-   * @param enableRepositoryArchive true to disable the repository archive
-   * @since 1.14
-   */
-  public void setEnableRepositoryArchive(boolean enableRepositoryArchive) {
-    this.enableRepositoryArchive = enableRepositoryArchive;
   }
 
   public void setForceBaseUrl(boolean forceBaseUrl) {
@@ -475,6 +471,10 @@ public class ScmConfiguration implements Configuration {
 
   public void setNamespaceStrategy(String namespaceStrategy) {
     this.namespaceStrategy = namespaceStrategy;
+  }
+
+  public void setLoginInfoUrl(String loginInfoUrl) {
+    this.loginInfoUrl = loginInfoUrl;
   }
 
   @Override

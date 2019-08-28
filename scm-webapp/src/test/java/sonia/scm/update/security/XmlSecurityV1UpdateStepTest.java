@@ -11,10 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.security.AssignedPermission;
 import sonia.scm.store.ConfigurationEntryStore;
-import sonia.scm.store.ConfigurationEntryStoreFactory;
-import sonia.scm.store.InMemoryConfigurationEntryStore;
 import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
-import sonia.scm.update.security.XmlSecurityV1UpdateStep;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;

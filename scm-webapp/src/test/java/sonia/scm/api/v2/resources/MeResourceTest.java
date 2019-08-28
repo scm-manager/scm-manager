@@ -2,6 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import com.google.common.collect.ImmutableSet;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -16,6 +17,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.ContextEntry;
+import sonia.scm.group.GroupCollector;
 import sonia.scm.user.InvalidPasswordException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -28,7 +30,12 @@ import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
@@ -51,6 +58,9 @@ public class MeResourceTest {
   private ScmPathInfoStore scmPathInfoStore;
 
   @Mock
+  private GroupCollector groupCollector;
+
+  @Mock
   private UserManager userManager;
 
   @InjectMocks
@@ -69,6 +79,7 @@ public class MeResourceTest {
     when(userManager.create(userCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
     doNothing().when(userManager).modify(userCaptor.capture());
     doNothing().when(userManager).delete(userCaptor.capture());
+    when(groupCollector.collect("trillian")).thenReturn(ImmutableSet.of("group1", "group2"));
     when(userManager.isTypeDefault(userCaptor.capture())).thenCallRealMethod();
     when(userManager.getDefaultType()).thenReturn("xml");
     MeResource meResource = new MeResource(meDtoFactory, userManager, passwordService);

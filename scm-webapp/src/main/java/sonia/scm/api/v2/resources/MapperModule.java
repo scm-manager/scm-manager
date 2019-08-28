@@ -54,5 +54,7 @@ public class MapperModule extends AbstractModule {
     bind(UIPluginDtoCollectionMapper.class);
 
     bind(ScmPathInfoStore.class).in(ServletScopes.REQUEST);
+
+    bind(PluginDtoMapper.class).to(Mappers.getMapper(PluginDtoMapper.class).getClass());
   }
 }

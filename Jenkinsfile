@@ -7,12 +7,15 @@ import com.cloudogu.ces.cesbuildlib.*
 node('docker') {
 
   // Change this as when we go back to default - necessary for proper SonarQube analysis
-  mainBranch = "2.0.0-m3"
+  mainBranch = '2.0.0-m3'
 
   properties([
     // Keep only the last 10 build to preserve space
     buildDiscarder(logRotator(numToKeepStr: '10')),
-    disableConcurrentBuilds()
+    disableConcurrentBuilds(),
+    parameters([
+      string(name: 'dockerTag', trim: true, defaultValue: 'latest', description: 'Extra Docker Tag for cloudogu/scm-manager image')
+    ])
   ])
 
   timeout(activity: true, time: 30, unit: 'MINUTES') {
@@ -51,9 +54,9 @@ node('docker') {
 
       if (isMainBranch()) {
 
-//        stage('Lifecycle') {
-//          nexusPolicyEvaluation iqApplication: selectedApplication('scm'), iqScanPatterns: [[scanPattern: 'scm-server/target/scm-server-app.zip']], iqStage: 'build'
-//        }
+        stage('Lifecycle') {
+          nexusPolicyEvaluation iqApplication: selectedApplication('scm'), iqScanPatterns: [[scanPattern: 'scm-server/target/scm-server-app.zip']], iqStage: 'build'
+        }
 
         stage('Archive') {
           archiveArtifacts 'scm-webapp/target/scm-webapp.war'
@@ -66,6 +69,13 @@ node('docker') {
           docker.withRegistry('', 'hub.docker.com-cesmarvin') {
             image.push(dockerImageTag)
             image.push('latest')
+            if (!'latest'.equals(params.dockerTag)) {
+              image.push(params.dockerTag)
+
+              def newDockerTag = "2.0.0-${commitHash.substring(0,7)}-dev-${params.dockerTag}"
+              currentBuild.description = newDockerTag
+              image.push(newDockerTag)
+            }
           }
         }
 
@@ -92,7 +102,7 @@ String mainBranch
 
 Maven setupMavenBuild() {
   // Keep this version number in sync with .mvn/maven-wrapper.properties
-  Maven mvn = new MavenInDocker(this, "3.5.2-jdk-8")
+  Maven mvn = new MavenInDocker(this, '3.5.2-jdk-8')
 
   if (isMainBranch()) {
     // Release starts javadoc, which takes very long, so do only for certain branches

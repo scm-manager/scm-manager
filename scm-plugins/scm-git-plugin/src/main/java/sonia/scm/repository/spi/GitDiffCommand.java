@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,9 +24,8 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
 
 
@@ -34,148 +33,41 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Strings;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevTree;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.treewalk.EmptyTreeIterator;
-import org.eclipse.jgit.treewalk.TreeWalk;
-import org.eclipse.jgit.treewalk.filter.PathFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
-import sonia.scm.util.Util;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GitDiffCommand extends AbstractGitCommand implements DiffCommand
-{
+public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
 
-  /**
-   * the logger for GitDiffCommand
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GitDiffCommand.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param context
-   * @param repository
-   */
-  public GitDiffCommand(GitContext context, Repository repository)
-  {
+  GitDiffCommand(GitContext context, Repository repository) {
     super(context, repository);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param output
-   */
   @Override
-  public void getDiffResult(DiffCommandRequest request, OutputStream output)
-  {
-    RevWalk walk = null;
-    TreeWalk treeWalk = null;
-    DiffFormatter formatter = null;
+  public void getDiffResult(DiffCommandRequest request, OutputStream output) throws IOException {
+    @SuppressWarnings("squid:S2095") // repository will be closed with the RepositoryService
+    org.eclipse.jgit.lib.Repository repository = open();
+    try (DiffFormatter formatter = new DiffFormatter(new BufferedOutputStream(output))) {
+      formatter.setRepository(repository);
 
-    try
-    {
-      org.eclipse.jgit.lib.Repository gr = open();
+      Differ.Diff diff = Differ.diff(repository, request);
 
-      walk = new RevWalk(gr);
-
-      ObjectId revision = gr.resolve(request.getRevision());
-      RevCommit commit = walk.parseCommit(revision);
-
-      walk.markStart(commit);
-      commit = walk.next();
-      treeWalk = new TreeWalk(gr);
-      treeWalk.reset();
-      treeWalk.setRecursive(true);
-
-      if (Util.isNotEmpty(request.getPath()))
-      {
-        treeWalk.setFilter(PathFilter.create(request.getPath()));
-      }
-
-
-      if (!Strings.isNullOrEmpty(request.getAncestorChangeset()))
-      {
-        ObjectId otherRevision = gr.resolve(request.getAncestorChangeset());
-        ObjectId ancestorId = computeCommonAncestor(gr, revision, otherRevision);
-        RevTree tree = walk.parseCommit(ancestorId).getTree();
-        treeWalk.addTree(tree);
-      }
-      else if (commit.getParentCount() > 0)
-      {
-        RevTree tree = commit.getParent(0).getTree();
-
-        if (tree != null)
-        {
-          treeWalk.addTree(tree);
-        }
-        else
-        {
-          treeWalk.addTree(new EmptyTreeIterator());
-        }
-      }
-      else
-      {
-        treeWalk.addTree(new EmptyTreeIterator());
-      }
-
-      treeWalk.addTree(commit.getTree());
-      formatter = new DiffFormatter(new BufferedOutputStream(output));
-      formatter.setRepository(gr);
-
-      List<DiffEntry> entries = DiffEntry.scan(treeWalk);
-
-      for (DiffEntry e : entries)
-      {
-        if (!e.getOldId().equals(e.getNewId()))
-        {
+      for (DiffEntry e : diff.getEntries()) {
+        if (!e.getOldId().equals(e.getNewId())) {
           formatter.format(e);
         }
       }
 
       formatter.flush();
     }
-    catch (Exception ex)
-    {
-      // TODO throw exception
-      logger.error("could not create diff", ex);
-    }
-    finally
-    {
-      GitUtil.release(walk);
-      GitUtil.release(treeWalk);
-      GitUtil.release(formatter);
-    }
-  }
-
-  private ObjectId computeCommonAncestor(org.eclipse.jgit.lib.Repository repository, ObjectId revision1, ObjectId revision2) throws IOException {
-    return GitUtil.computeCommonAncestor(repository, revision1, revision2);
   }
 
 }

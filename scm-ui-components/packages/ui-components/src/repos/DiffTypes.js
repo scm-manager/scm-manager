@@ -27,12 +27,17 @@ export type Hunk = {
   content: string
 };
 
+export type ChangeType = "insert" | "delete" | "normal";
+
 export type Change = {
   content: string,
-  isNormal: boolean,
-  newLineNumber: number,
-  oldLineNumber: number,
-  type: string
+  isNormal?: boolean,
+  isInsert?: boolean,
+  isDelete?: boolean,
+  lineNumber?: number,
+  newLineNumber?: number,
+  oldLineNumber?: number,
+  type: ChangeType
 };
 
 export type BaseContext = {

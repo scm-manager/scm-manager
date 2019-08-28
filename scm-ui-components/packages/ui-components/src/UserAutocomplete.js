@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import { translate } from "react-i18next";
+import {translate} from "react-i18next";
 import type AutocompleteProps from "./UserGroupAutocomplete";
 import UserGroupAutocomplete from "./UserGroupAutocomplete";
 

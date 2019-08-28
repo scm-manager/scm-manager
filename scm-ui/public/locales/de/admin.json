@@ -6,8 +6,18 @@
       "settingsNavLink": "Einstellungen",
       "generalNavLink": "Generell"
     },
-    "information":  {
-      "currentAppVersion": "Aktuelle Software-Versionsnummer"
+    "info":  {
+      "currentAppVersion": "Aktuelle Software-Versionsnummer",
+      "communityTitle": "Community Support",
+      "communityIconAlt": "Community Support Icon",
+      "communityInfo": "Das SCM-Manager Support-Team steht für allgemeine Fragen, die Meldung von Fehlern sowie Anfragen für Features gerne für Sie über die offiziellen Kanäle bereit.",
+      "communityButton": "Unser Team kontaktieren",
+      "enterpriseTitle": "Enterprise Support",
+      "enterpriseIconAlt": "Enterprise Support Icon",
+      "enterpriseInfo": "Sie benötigen Unterstützung bei der Integration von SCM-Manager in Ihre Prozesse, bei der Anpassung des Tools auf Ihre Anforderungen oder einfach ein Service Level Agreement (SLA)?",
+      "enterprisePartner": "Treten Sie mit unserem Entwicklungs-Partner Cloudogu in Kontakt! Das Team freut sich auf den Austausch über Ihre individuellen Anforderungen und erstellt Ihnen gerne ein maßgeschneidertes Angebot.",
+      "enterpriseLink": "https://cloudogu.com/de/scm-manager-enterprise/",
+      "enterpriseButton": "Enterprise Support anfragen"
     }
   },
   "plugins": {
@@ -19,7 +29,23 @@
       "installedNavLink": "Installiert",
       "availableNavLink": "Verfügbar"
     },
-    "noPlugins": "Keine Plugins gefunden."
+    "installPending": "Austehende Plugins installieren",
+    "noPlugins": "Keine Plugins gefunden.",
+    "modal": {
+      "title": "{{name}} Plugin installieren",
+      "restart": "Neustarten um Plugin zu aktivieren",
+      "install": "Installieren",
+      "installAndRestart": "Installieren und Neustarten",
+      "abort": "Abbrechen",
+      "author": "Autor",
+      "version": "Version",
+      "dependencyNotification": "Mit diesem Plugin werden folgende Abhängigkeiten mit installiert, wenn sie noch nicht vorhanden sind!",
+      "dependencies": "Abhängigkeiten",
+      "successNotification": "Das Plugin wurde erfolgreich installiert. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden:",
+      "reload": "jetzt neu laden",
+      "restartNotification": "Der SCM-Manager Kontext sollte nur neu gestartet werden, wenn aktuell niemand damit arbeitet.",
+      "installPending": "Die folgenden Plugins werden installiert. Anschließend wird der SCM-Manager Kontext neu gestartet."
+    }
   },
   "repositoryRole": {
     "navLink": "Berechtigungsrollen",

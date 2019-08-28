@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import type { SelectValue } from "@scm-manager/ui-types";
+import type {SelectValue} from "@scm-manager/ui-types";
 import Autocomplete from "./Autocomplete";
 
 export type AutocompleteProps = {

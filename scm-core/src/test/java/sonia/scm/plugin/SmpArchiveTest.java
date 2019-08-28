@@ -85,7 +85,7 @@ public class SmpArchiveTest
   public void testExtract()
     throws IOException, ParserConfigurationException, SAXException
   {
-    File archive = createArchive("sonia.sample", "sample", "1.0");
+    File archive = createArchive("sonia.sample", "1.0");
     File target = tempFolder.newFolder();
 
     IOUtil.mkdirs(target);
@@ -112,8 +112,8 @@ public class SmpArchiveTest
   @Test
   public void testGetPlugin() throws IOException
   {
-    File archive = createArchive("sonia.sample", "sample", "1.0");
-    Plugin plugin = SmpArchive.create(archive).getPlugin();
+    File archive = createArchive("sonia.sample", "1.0");
+    InstalledPluginDescriptor plugin = SmpArchive.create(archive).getPlugin();
 
     assertNotNull(plugin);
 
@@ -121,8 +121,7 @@ public class SmpArchiveTest
 
     assertNotNull(info);
 
-    assertEquals("sonia.sample", info.getGroupId());
-    assertEquals("sample", info.getArtifactId());
+    assertEquals("sonia.sample", info.getName());
     assertEquals("1.0", info.getVersion());
   }
 
@@ -132,22 +131,9 @@ public class SmpArchiveTest
    * @throws IOException
    */
   @Test(expected = PluginException.class)
-  public void testWithMissingArtifactId() throws IOException
+  public void testWithMissingName() throws IOException
   {
-    File archive = createArchive("sonia.sample", null, "1.0");
-
-    SmpArchive.create(archive).getPlugin();
-  }
-
-  /**
-   * Method description
-   *
-   * @throws IOException
-   */
-  @Test(expected = PluginException.class)
-  public void testWithMissingGroupId() throws IOException
-  {
-    File archive = createArchive(null, "sample", "1.0");
+    File archive = createArchive( null, "1.0");
 
     SmpArchive.create(archive).getPlugin();
   }
@@ -160,7 +146,7 @@ public class SmpArchiveTest
   @Test(expected = PluginException.class)
   public void testWithMissingVersion() throws IOException
   {
-    File archive = createArchive("sonia.sample", "sample", null);
+    File archive = createArchive("sonia.sample", null);
 
     SmpArchive.create(archive).getPlugin();
   }
@@ -169,13 +155,12 @@ public class SmpArchiveTest
    * Method description
    *
    *
-   * @param groupId
-   * @param artifactId
+   * @param name
    * @param version
    *
    * @return
    */
-  private File createArchive(String groupId, String artifactId, String version)
+  private File createArchive(String name, String version)
   {
     File archiveFile;
 
@@ -183,7 +168,7 @@ public class SmpArchiveTest
     {
       File descriptor = tempFolder.newFile();
 
-      writeDescriptor(descriptor, groupId, artifactId, version);
+      writeDescriptor(descriptor, name, version);
       archiveFile = tempFolder.newFile();
 
       try (ZipOutputStream zos =
@@ -229,14 +214,13 @@ public class SmpArchiveTest
    *
    *
    * @param descriptor
-   * @param groupId
-   * @param artifactId
+   * @param name
    * @param version
    *
    * @throws IOException
    */
-  private void writeDescriptor(File descriptor, String groupId,
-    String artifactId, String version)
+  private void writeDescriptor(File descriptor, String name,
+    String version)
     throws IOException
   {
     try
@@ -252,8 +236,7 @@ public class SmpArchiveTest
         writer.writeStartDocument();
         writer.writeStartElement("plugin");
         writer.writeStartElement("information");
-        writeElement(writer, "groupId", groupId);
-        writeElement(writer, "artifactId", artifactId);
+        writeElement(writer, "name", name);
         writeElement(writer, "version", version);
 
         writer.writeEndElement();

@@ -1,5 +1,5 @@
 // @flow
-import React from "react";
+import * as React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import { compose } from "redux";
@@ -17,8 +17,14 @@ import {
   getPluginCollection,
   isFetchPluginsPending
 } from "../modules/plugins";
-import PluginsList from "../components/PluginsList";
-import { getPluginsLink } from "../../../modules/indexResource";
+import PluginsList from "../components/PluginList";
+import {
+  getAvailablePluginsLink,
+  getInstalledPluginsLink
+} from "../../../modules/indexResource";
+import PluginTopActions from "../components/PluginTopActions";
+import PluginBottomActions from "../components/PluginBottomActions";
+import InstallPendingAction from "../components/InstallPendingAction";
 
 type Props = {
   loading: boolean,
@@ -26,7 +32,8 @@ type Props = {
   collection: PluginCollection,
   baseUrl: string,
   installed: boolean,
-  pluginsLink: string,
+  availablePluginsLink: string,
+  installedPluginsLink: string,
 
   // context objects
   t: string => string,
@@ -37,12 +44,72 @@ type Props = {
 
 class PluginsOverview extends React.Component<Props> {
   componentDidMount() {
-    const { fetchPluginsByLink, pluginsLink } = this.props;
-    fetchPluginsByLink(pluginsLink);
+    const {
+      installed,
+      fetchPluginsByLink,
+      availablePluginsLink,
+      installedPluginsLink
+    } = this.props;
+    fetchPluginsByLink(installed ? installedPluginsLink : availablePluginsLink);
   }
 
+  componentDidUpdate(prevProps) {
+    const {
+      installed,
+    } = this.props;
+    if (prevProps.installed !== installed) {
+      this.fetchPlugins();
+    }
+  }
+
+  fetchPlugins = () => {
+    const {
+      installed,
+      fetchPluginsByLink,
+      availablePluginsLink,
+      installedPluginsLink
+    } = this.props;
+    fetchPluginsByLink(
+      installed ? installedPluginsLink : availablePluginsLink
+    );
+  };
+
+  renderHeader = (actions: React.Node) => {
+    const { installed, t } = this.props;
+    return (
+      <div className="columns">
+        <div className="column">
+          <Title title={t("plugins.title")} />
+          <Subtitle
+            subtitle={
+              installed
+                ? t("plugins.installedSubtitle")
+                : t("plugins.availableSubtitle")
+            }
+          />
+        </div>
+        <PluginTopActions>{actions}</PluginTopActions>
+      </div>
+    );
+  };
+
+  renderFooter = (actions: React.Node) => {
+    if (actions) {
+      return <PluginBottomActions>{actions}</PluginBottomActions>;
+    }
+    return null;
+  };
+
+  createActions = () => {
+    const { collection } = this.props;
+    if (collection._links.installPending) {
+      return <InstallPendingAction collection={collection} />;
+    }
+    return null;
+  };
+
   render() {
-    const { loading, error, collection, installed, t } = this.props;
+    const { loading, error, collection } = this.props;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -52,17 +119,13 @@ class PluginsOverview extends React.Component<Props> {
       return <Loading />;
     }
 
+    const actions = this.createActions();
     return (
       <>
-        <Title title={t("plugins.title")} />
-        <Subtitle
-          subtitle={
-            installed
-              ? t("plugins.installedSubtitle")
-              : t("plugins.availableSubtitle")
-          }
-        />
+        {this.renderHeader(actions)}
+        <hr className="header-with-actions" />
         {this.renderPluginsList()}
+        {this.renderFooter(actions)}
       </>
     );
   }
@@ -71,7 +134,7 @@ class PluginsOverview extends React.Component<Props> {
     const { collection, t } = this.props;
 
     if (collection._embedded && collection._embedded.plugins.length > 0) {
-      return <PluginsList plugins={collection._embedded.plugins} />;
+      return <PluginsList plugins={collection._embedded.plugins} refresh={this.fetchPlugins} />;
     }
     return <Notification type="info">{t("plugins.noPlugins")}</Notification>;
   }
@@ -81,13 +144,15 @@ const mapStateToProps = state => {
   const collection = getPluginCollection(state);
   const loading = isFetchPluginsPending(state);
   const error = getFetchPluginsFailure(state);
-  const pluginsLink = getPluginsLink(state);
+  const availablePluginsLink = getAvailablePluginsLink(state);
+  const installedPluginsLink = getInstalledPluginsLink(state);
 
   return {
     collection,
     loading,
     error,
-    pluginsLink
+    availablePluginsLink,
+    installedPluginsLink
   };
 };
 

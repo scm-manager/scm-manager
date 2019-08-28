@@ -4,7 +4,7 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.plugin.PluginWrapper;
+import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.security.AllowAnonymousAccess;
 import sonia.scm.web.VndMediaType;
 
@@ -46,7 +46,7 @@ public class UIPluginResource {
   @TypeHint(CollectionDto.class)
   @Produces(VndMediaType.UI_PLUGIN_COLLECTION)
   public Response getInstalledPlugins() {
-    List<PluginWrapper> plugins = pluginLoader.getInstalledPlugins()
+    List<InstalledPlugin> plugins = pluginLoader.getInstalledPlugins()
       .stream()
       .filter(this::filter)
       .collect(Collectors.toList());
@@ -85,8 +85,8 @@ public class UIPluginResource {
     }
   }
 
-  private boolean filter(PluginWrapper plugin) {
-    return plugin.getPlugin().getResources() != null;
+  private boolean filter(InstalledPlugin plugin) {
+    return plugin.getDescriptor().getResources() != null;
   }
 
 }

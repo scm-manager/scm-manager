@@ -21,7 +21,7 @@ class ChangesetButtonGroup extends React.Component<Props> {
     const sourcesLink = createSourcesLink(repository, changeset);
 
     return (
-      <ButtonAddons className="is-pulled-right">
+      <ButtonAddons className="is-marginless">
         <Button link={changesetLink} className="reduced-mobile">
           <span className="icon">
             <i className="fas fa-exchange-alt" />

@@ -5,14 +5,15 @@ import type { PluginGroup } from "@scm-manager/ui-types";
 import PluginEntry from "./PluginEntry";
 
 type Props = {
-  group: PluginGroup
+  group: PluginGroup,
+  refresh: () => void
 };
 
 class PluginGroupEntry extends React.Component<Props> {
   render() {
-    const { group } = this.props;
-    const entries = group.plugins.map((plugin, index) => {
-      return <PluginEntry plugin={plugin} key={index} />;
+    const { group, refresh } = this.props;
+    const entries = group.plugins.map(plugin => {
+      return <PluginEntry plugin={plugin} key={plugin.name} refresh={refresh} />;
     });
     return <CardColumnGroup name={group.name} elements={entries} />;
   }

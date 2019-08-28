@@ -1,19 +1,19 @@
 //@flow
 import React from "react";
-import { apiClient } from "../apiclient";
+import {apiClient} from "../apiclient";
 import ErrorNotification from "../ErrorNotification";
 import parser from "gitdiff-parser";
 
 import Loading from "../Loading";
 import Diff from "./Diff";
-import type {DiffObjectProps} from "./DiffTypes";
+import type {DiffObjectProps, File} from "./DiffTypes";
 
 type Props = DiffObjectProps & {
   url: string
 };
 
 type State = {
-  diff?: any,
+  diff?: File[],
   loading: boolean,
   error?: Error
 };
@@ -47,7 +47,8 @@ class LoadingDiff extends React.Component<Props, State> {
       .get(url)
       .then(response => response.text())
       .then(parser.parse)
-      .then(diff => {
+      // $FlowFixMe
+      .then((diff: File[]) => {
         this.setState({
           loading: false,
           diff: diff

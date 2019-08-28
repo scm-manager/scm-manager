@@ -6,8 +6,18 @@
       "settingsNavLink": "Settings",
       "generalNavLink": "General"
     },
-    "information":  {
-      "currentAppVersion": "Current Application Version"
+    "info": {
+      "currentAppVersion": "Current Application Version",
+      "communityTitle": "Community Support",
+      "communityIconAlt": "Community Support Icon",
+      "communityInfo": "Contact the SCM-Manager support team for questions about SCM-Manager, to report bugs or to request features through the official channels.",
+      "communityButton": "Contact our team",
+      "enterpriseTitle": "Enterprise Support",
+      "enterpriseIconAlt": "Enterprise Support Icon",
+      "enterpriseInfo": "You require support with the integration of SCM-Manager into your processes, with the customization of the tool or simply a service level agreement (SLA)?",
+      "enterprisePartner": "Contact our development partner Cloudogu! Their team is looking forward to discussing your individual requirements with you and will be more than happy to give you a quote.",
+      "enterpriseLink": "https://cloudogu.com/en/scm-manager-enterprise/",
+      "enterpriseButton": "Request Enterprise Support"
     }
   },
   "plugins": {
@@ -19,7 +29,23 @@
       "installedNavLink": "Installed",
       "availableNavLink": "Available"
     },
-    "noPlugins": "No plugins found."
+    "installPending": "Install pending plugins",
+    "noPlugins": "No plugins found.",
+    "modal": {
+      "title": "Install {{name}} Plugin",
+      "restart": "Restart to activate",
+      "install": "Install",
+      "installAndRestart": "Install and Restart",
+      "abort": "Abort",
+      "author": "Author",
+      "version": "Version",
+      "dependencyNotification": "With this plugin, the following dependencies will be installed if they are not available yet!",
+      "dependencies": "Dependencies",
+      "successNotification": "Successful installed plugin. You have to reload the page, to see ui changes:",
+      "reload": "reload now",
+      "restartNotification": "You should only restart the scm-manager context if no one else is currently working with it.",
+      "installPending": "The following plugins will be installed and after installation the scm-manager context will be restarted."
+    }
   },
   "repositoryRole": {
     "navLink": "Permission Roles",
@@ -43,7 +69,7 @@
       "permissions": "Permissions",
       "submit": "Save"
     },
-    "delete" : {
+    "delete": {
       "button": "Löschen",
       "subtitle": "Berechtigungsrolle löschen",
       "confirmAlert": {

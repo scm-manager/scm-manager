@@ -36,14 +36,14 @@
   },
   "general-settings": {
     "realm-description": "Realm Description",
-    "enable-repository-archive": "Enable Repository Archive",
     "disable-grouping-grid": "Disable Grouping Grid",
     "date-format": "Date Format",
     "anonymous-access-enabled": "Anonymous Access Enabled",
     "skip-failed-authenticators": "Skip Failed Authenticators",
-    "plugin-url": "Plugin URL",
+    "plugin-url": "Plugin Center URL",
     "enabled-xsrf-protection": "Enabled XSRF Protection",
-    "namespace-strategy": "Namespace Strategy"
+    "namespace-strategy": "Namespace Strategy",
+    "login-info-url": "Login Info URL"
   },
   "validation": {
     "date-format-invalid": "The date format is not valid",
@@ -54,9 +54,8 @@
   "help": {
     "realmDescriptionHelpText": "Enter authentication realm description.",
     "dateFormatHelpText": "Moments date format. Please have a look at the MomentJS documentation.",
-    "pluginRepositoryHelpText": "The url of the plugin repository. Explanation of the placeholders: version = SCM-Manager Version; os = Operation System; arch = Architecture",
+    "pluginUrlHelpText": "The url of the Plugin Center API. Explanation of the placeholders: version = SCM-Manager Version; os = Operation System; arch = Architecture",
     "enableForwardingHelpText": "Enable mod_proxy port forwarding.",
-    "enableRepositoryArchiveHelpText": "Enable repository archives. A complete page reload is required after a change of this value.",
     "disableGroupingGridHelpText": "Disable repository Groups. A complete page reload is required after a change of this value.",
     "allowAnonymousAccessHelpText": "Anonymous users have read access on public repositories.",
     "skipFailedAuthenticatorsHelpText": "Do not stop the authentication chain, if an authenticator finds the user but fails to authenticate the user.",
@@ -73,6 +72,7 @@
     "proxyUserHelpText": "The username for the proxy server authentication.",
     "proxyExcludesHelpText": "Glob patterns for hostnames, which should be excluded from proxy settings.",
     "enableXsrfProtectionHelpText": "Enable XSRF Cookie Protection. Note: This feature is still experimental.",
-    "nameSpaceStrategyHelpText": "The namespace strategy."
+    "nameSpaceStrategyHelpText": "The namespace strategy.",
+    "loginInfoUrlHelpText": "URL to login information (plugin and feature tips at login page). If this is omitted, no login information will be displayed."
   }
 }
