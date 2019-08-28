@@ -2,7 +2,7 @@ package sonia.scm.repository.spi;
 
 import java.io.File;
 
-public interface ModificationCommand {
+public interface ModifyCommand {
   String commit();
 
   void delete(String toBeDeleted);

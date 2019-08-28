@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import sonia.scm.repository.spi.ModificationCommand;
+import sonia.scm.repository.spi.ModifyCommand;
 import sonia.scm.repository.util.WorkdirProvider;
 
 import java.io.ByteArrayInputStream;
@@ -31,19 +31,19 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(TempDirectory.class)
-class ModificationCommandBuilderTest {
+class ModifyCommandBuilderTest {
 
   @Mock
-  ModificationCommand command;
+  ModifyCommand command;
   @Mock
   WorkdirProvider workdirProvider;
 
-  ModificationCommandBuilder commandBuilder;
+  ModifyCommandBuilder commandBuilder;
 
   @BeforeEach
   void initWorkdir(@TempDirectory.TempDir Path temp) throws IOException {
     lenient().when(workdirProvider.createNewWorkdir()).thenReturn(temp.toFile());
-    commandBuilder = new ModificationCommandBuilder(command, workdirProvider);
+    commandBuilder = new ModifyCommandBuilder(command, workdirProvider);
   }
 
   @Test

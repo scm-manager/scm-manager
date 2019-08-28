@@ -3,7 +3,7 @@ package sonia.scm.repository.api;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
-import sonia.scm.repository.spi.ModificationCommand;
+import sonia.scm.repository.spi.ModifyCommand;
 import sonia.scm.repository.util.WorkdirProvider;
 
 import java.io.File;
@@ -14,19 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ModificationCommandBuilder {
+public class ModifyCommandBuilder {
 
-  private final ModificationCommand command;
+  private final ModifyCommand command;
   private final File workdir;
 
   private final List<FileModification> modifications = new ArrayList<>();
 
-  ModificationCommandBuilder(ModificationCommand command, WorkdirProvider workdirProvider) {
+  ModifyCommandBuilder(ModifyCommand command, WorkdirProvider workdirProvider) {
     this.command = command;
     this.workdir = workdirProvider.createNewWorkdir();
   }
 
-  ModificationCommandBuilder setBranchToModify(String branchToModify) {
+  ModifyCommandBuilder setBranchToModify(String branchToModify) {
     return this;
   }
 
@@ -42,12 +42,12 @@ public class ModificationCommandBuilder {
     );
   }
 
-  ModificationCommandBuilder deleteFile(String path) {
+  ModifyCommandBuilder deleteFile(String path) {
     modifications.add(new DeleteFile(path));
     return this;
   }
 
-  ModificationCommandBuilder moveFile(String sourcePath, String targetPath) {
+  ModifyCommandBuilder moveFile(String sourcePath, String targetPath) {
     modifications.add(new MoveFile(sourcePath, targetPath));
     return this;
   }
@@ -164,15 +164,15 @@ public class ModificationCommandBuilder {
       this.contentConsumer = contentConsumer;
     }
 
-    public ModificationCommandBuilder withData(ByteSource data) throws IOException {
+    public ModifyCommandBuilder withData(ByteSource data) throws IOException {
       Content content = loadData(data);
       contentConsumer.accept(content);
-      return ModificationCommandBuilder.this;
+      return ModifyCommandBuilder.this;
     }
-    public ModificationCommandBuilder withData(InputStream data) throws IOException {
+    public ModifyCommandBuilder withData(InputStream data) throws IOException {
       Content content = loadData(data);
       contentConsumer.accept(content);
-      return ModificationCommandBuilder.this;
+      return ModifyCommandBuilder.this;
     }
   }
 
