@@ -27,26 +27,28 @@ class FileButtonGroup extends React.Component<Props> {
 
     return (
       <ButtonAddons>
-        <Button
-          action={this.showSources}
-          className="reduced-mobile"
-          color={this.color(!historyIsSelected)}
-        >
-          <span className="icon">
-            <i className="fas fa-code" />
-          </span>
-          <span>{t("sources.content.sourcesButton")}</span>
-        </Button>
-        <Button
-          action={this.showHistory}
-          className="reduced-mobile"
-          color={this.color(historyIsSelected)}
-        >
-          <span className="icon">
-            <i className="fas fa-history" />
-          </span>
-          <span>{t("sources.content.historyButton")}</span>
-        </Button>
+        <div title={t("sources.content.sourcesButton")}>
+          <Button
+            action={this.showSources}
+            className="reduced"
+            color={this.color(!historyIsSelected)}
+          >
+            <span className="icon">
+              <i className="fas fa-code" />
+            </span>
+          </Button>
+        </div>
+        <div title={t("sources.content.historyButton")}>
+          <Button
+            action={this.showHistory}
+            className="reduced"
+            color={this.color(historyIsSelected)}
+          >
+            <span className="icon">
+              <i className="fas fa-history" />
+            </span>
+          </Button>
+        </div>
       </ButtonAddons>
     );
   }
