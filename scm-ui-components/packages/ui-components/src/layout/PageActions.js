@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default class PageActions extends React.Component<Props> {
-  displayName: string = "PageActions";
+  static displayName = "PageActions";
 
   render() {
     return <>{this.renderContent()}</>;

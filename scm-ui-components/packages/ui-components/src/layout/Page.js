@@ -44,6 +44,11 @@ class Page extends React.Component<Props> {
     );
   }
 
+  isPageAction(node: any) {
+    return node.displayName === PageActions.displayName
+      || (node.type && node.type.displayName ===  PageActions.displayName);
+  }
+
   renderPageHeader() {
     const { error, title, subtitle, children, classes } = this.props;
 
@@ -51,7 +56,7 @@ class Page extends React.Component<Props> {
     let pageActionsExists = false;
     React.Children.forEach(children, child => {
       if (child && !error) {
-        if (child.displayName === PageActions.displayName) {
+        if (this.isPageAction(child)) {
           pageActions = (
             <div
               className={classNames(
@@ -97,7 +102,7 @@ class Page extends React.Component<Props> {
     let content = [];
     React.Children.forEach(children, child => {
       if (child) {
-        if (child.displayName !== PageActions.displayName) {
+        if (!this.isPageAction(child)) {
           content.push(child);
         }
       }
