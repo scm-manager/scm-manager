@@ -1,20 +1,33 @@
 //@flow
 import React from "react";
-import {fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending} from "../modules/repos";
+import {
+  fetchRepoByName,
+  getFetchRepoFailure,
+  getRepository,
+  isFetchRepoPending
+} from "../modules/repos";
 
-import {connect} from "react-redux";
-import {Redirect, Route, Switch} from "react-router-dom";
-import type {Repository} from "@scm-manager/ui-types";
+import { connect } from "react-redux";
+import { Redirect, Route, Switch } from "react-router-dom";
+import type { Repository } from "@scm-manager/ui-types";
 
-import {ErrorPage, Loading, Navigation, NavLink, Page, Section, SubNavigation} from "@scm-manager/ui-components";
-import {translate} from "react-i18next";
+import {
+  ErrorPage,
+  Loading,
+  Navigation,
+  NavLink,
+  Page,
+  Section,
+  SubNavigation
+} from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
 import BranchesOverview from "../branches/containers/BranchesOverview";
 import CreateBranch from "../branches/containers/CreateBranch";
 import Permissions from "../permissions/containers/Permissions";
 
-import type {History} from "history";
+import type { History } from "history";
 import EditRepoNavLink from "../components/EditRepoNavLink";
 import BranchRoot from "../branches/containers/BranchRoot";
 import ChangesetsRoot from "./ChangesetsRoot";
@@ -22,8 +35,8 @@ import ChangesetView from "./ChangesetView";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
-import {getLinks, getRepositoriesLink} from "../../modules/indexResource";
-import {binder, ExtensionPoint} from "@scm-manager/ui-extensions";
+import { getLinks, getRepositoriesLink } from "../../modules/indexResource";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   namespace: string,
@@ -143,6 +156,17 @@ class RepositoryRoot extends React.Component<Props> {
                 exact={true}
                 render={() => (
                   <Sources repository={repository} baseUrl={`${url}/sources`} />
+                )}
+              />
+              <Route
+                path={`${url}/sources/upload/:revision`}
+                exact={true}
+                render={() => (
+                  <ExtensionPoint
+                    name="repo.branch.fileUpload"
+                    props={{}}
+                    renderAll={false}
+                  />
                 )}
               />
               <Route
