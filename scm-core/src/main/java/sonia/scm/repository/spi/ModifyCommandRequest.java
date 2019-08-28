@@ -5,6 +5,7 @@ import sonia.scm.Validateable;
 import sonia.scm.repository.Person;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -63,7 +64,7 @@ public class ModifyCommandRequest implements Resetable, Validateable {
   }
 
   public interface PartialRequest {
-    void execute(ModifyCommand.Worker worker);
+    void execute(ModifyCommand.Worker worker) throws IOException;
   }
 
   public static class DeleteFileRequest implements PartialRequest {
@@ -121,7 +122,7 @@ public class ModifyCommandRequest implements Resetable, Validateable {
     }
 
     @Override
-    public void execute(ModifyCommand.Worker worker) {
+    public void execute(ModifyCommand.Worker worker) throws IOException {
       worker.create(path, getContent());
       cleanup();
     }

@@ -69,7 +69,7 @@ class ModifyCommandBuilderTest {
   }
 
   @Test
-  void shouldExecuteDelete() {
+  void shouldExecuteDelete() throws IOException {
     initCommand()
       .deleteFile("toBeDeleted")
       .execute();
@@ -80,7 +80,7 @@ class ModifyCommandBuilderTest {
   }
 
   @Test
-  void shouldExecuteMove() {
+  void shouldExecuteMove() throws IOException {
     initCommand()
       .moveFile("source", "target")
       .execute();
@@ -157,9 +157,11 @@ class ModifyCommandBuilderTest {
     assertThat(contentCaptor).contains("content");
   }
 
-  private void executeRequest() {
+  private void executeRequest() throws IOException {
     ModifyCommandRequest request = requestCaptor.getValue();
-    request.getRequests().forEach(r -> r.execute(worker));
+    for (ModifyCommandRequest.PartialRequest r : request.getRequests()) {
+      r.execute(worker);
+    }
   }
 
   private ModifyCommandBuilder initCommand() {
