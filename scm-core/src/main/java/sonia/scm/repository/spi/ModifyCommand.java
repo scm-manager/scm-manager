@@ -3,13 +3,16 @@ package sonia.scm.repository.spi;
 import java.io.File;
 
 public interface ModifyCommand {
-  String commit();
 
-  void delete(String toBeDeleted);
+  String execute(ModifyCommandRequest request);
 
-  void create(String toBeCreated, File file);
+  interface Worker {
+    void delete(String toBeDeleted);
 
-  void modify(String path, File file);
+    void create(String toBeCreated, File file);
 
-  void move(String sourcePath, String targetPath);
+    void modify(String path, File file);
+
+    void move(String sourcePath, String targetPath);
+  }
 }
