@@ -24,7 +24,7 @@ public class RepositoryServiceTest {
 
   @Test
   public void shouldReturnMatchingProtocolsFromProvider() {
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()));
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null);
     Stream<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
 
     assertThat(sizeOf(supportedProtocols.collect(Collectors.toList()))).isEqualTo(1);
@@ -32,7 +32,7 @@ public class RepositoryServiceTest {
 
   @Test
   public void shouldFindKnownProtocol() {
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()));
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null);
 
     HttpScmProtocol protocol = repositoryService.getProtocol(HttpScmProtocol.class);
 
@@ -41,7 +41,7 @@ public class RepositoryServiceTest {
 
   @Test
   public void shouldFailForUnknownProtocol() {
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()));
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null);
 
     assertThrows(IllegalArgumentException.class, () -> {
       repositoryService.getProtocol(UnknownScmProtocol.class);

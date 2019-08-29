@@ -61,6 +61,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.spi.RepositoryServiceResolver;
+import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.security.ScmSecurityException;
 
 import java.util.Set;
@@ -256,7 +257,7 @@ public final class RepositoryServiceFactory
         }
 
         service = new RepositoryService(cacheManager, provider, repository,
-          preProcessorUtil, protocolProviders);
+          preProcessorUtil, protocolProviders, workdirProvider);
 
         break;
       }
@@ -373,4 +374,6 @@ public final class RepositoryServiceFactory
   private final Set<RepositoryServiceResolver> resolvers;
 
   private Set<ScmProtocolProvider> protocolProviders;
+
+  private WorkdirProvider workdirProvider;
 }

@@ -7,29 +7,21 @@ import sonia.scm.repository.Repository;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 public abstract class SimpleWorkdirFactory<R, C> implements WorkdirFactory<R, C> {
 
   private static final Logger logger = LoggerFactory.getLogger(SimpleWorkdirFactory.class);
 
-  private final File poolDirectory;
+  private final WorkdirProvider workdirProvider;
 
-  public SimpleWorkdirFactory() {
-    this(new File(System.getProperty("scm.workdir" , System.getProperty("java.io.tmpdir")), "scm-work"));
-  }
-
-  public SimpleWorkdirFactory(File poolDirectory) {
-    this.poolDirectory = poolDirectory;
-    if (!poolDirectory.exists() && !poolDirectory.mkdirs()) {
-      throw new IllegalStateException("could not create pool directory " + poolDirectory);
-    }
+  public SimpleWorkdirFactory(WorkdirProvider workdirProvider) {
+    this.workdirProvider = workdirProvider;
   }
 
   @Override
   public WorkingCopy<R> createWorkingCopy(C context) {
     try {
-      File directory = createNewWorkdir();
+      File directory = workdirProvider.createNewWorkdir();
       ParentAndClone<R> parentAndClone = cloneRepository(context, directory);
       return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), this::close, directory);
     } catch (IOException e) {
@@ -44,10 +36,6 @@ public abstract class SimpleWorkdirFactory<R, C> implements WorkdirFactory<R, C>
   protected abstract void closeRepository(R repository) throws Exception;
 
   protected abstract ParentAndClone<R> cloneRepository(C context, File target) throws IOException;
-
-  private File createNewWorkdir() throws IOException {
-    return Files.createTempDirectory(poolDirectory.toPath(),"workdir").toFile();
-  }
 
   private void close(R repository) {
     try {

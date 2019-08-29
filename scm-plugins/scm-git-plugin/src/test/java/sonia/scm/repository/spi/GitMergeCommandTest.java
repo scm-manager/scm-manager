@@ -24,6 +24,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
+import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.user.User;
 
 import java.io.IOException;
@@ -244,6 +245,6 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitMergeCommand createCommand() {
-    return new GitMergeCommand(createContext(), repository, new SimpleGitWorkdirFactory());
+    return new GitMergeCommand(createContext(), repository, new SimpleGitWorkdirFactory(new WorkdirProvider()));
   }
 }

@@ -11,6 +11,7 @@ import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.HookContextFactory;
+import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.repository.util.WorkingCopy;
 
 import java.io.File;
@@ -29,19 +30,21 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
   // keep this so that it will not be garbage collected (Transport keeps this in a week reference)
   private ScmTransportProtocol proto;
+  private WorkdirProvider workdirProvider;
 
   @Before
-  public void bindScmProtocol() {
+  public void bindScmProtocol() throws IOException {
     HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
     HookEventFacade hookEventFacade = new HookEventFacade(of(mock(RepositoryManager.class)), hookContextFactory);
     GitRepositoryHandler gitRepositoryHandler = mock(GitRepositoryHandler.class);
     proto = new ScmTransportProtocol(of(hookEventFacade), of(gitRepositoryHandler));
     Transport.register(proto);
+    workdirProvider = new WorkdirProvider(temporaryFolder.newFolder());
   }
 
   @Test
   public void emptyPoolShouldCreateNewWorkdir() throws IOException {
-    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(temporaryFolder.newFolder());
+    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(workdirProvider);
     File masterRepo = createRepositoryDirectory();
 
     try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
@@ -59,7 +62,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
   @Test
   public void cloneFromPoolShouldNotBeReused() throws IOException {
-    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(temporaryFolder.newFolder());
+    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(workdirProvider);
 
     File firstDirectory;
     try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
@@ -73,7 +76,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
   @Test
   public void cloneFromPoolShouldBeDeletedOnClose() throws IOException {
-    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(temporaryFolder.newFolder());
+    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(workdirProvider);
 
     File directory;
     try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {

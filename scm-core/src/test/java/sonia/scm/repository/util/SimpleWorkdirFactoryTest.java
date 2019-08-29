@@ -28,7 +28,8 @@ public class SimpleWorkdirFactoryTest {
 
   @Before
   public void initFactory() throws IOException {
-    simpleWorkdirFactory = new SimpleWorkdirFactory<Closeable, Context>(temporaryFolder.newFolder()) {
+    WorkdirProvider workdirProvider = new WorkdirProvider(temporaryFolder.newFolder());
+    simpleWorkdirFactory = new SimpleWorkdirFactory<Closeable, Context>(workdirProvider) {
       @Override
       protected Repository getScmRepository(Context context) {
         return REPOSITORY;

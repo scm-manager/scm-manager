@@ -7,16 +7,16 @@ import org.eclipse.jgit.transport.ScmTransportProtocol;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.util.SimpleWorkdirFactory;
+import sonia.scm.repository.util.WorkdirProvider;
 
+import javax.inject.Inject;
 import java.io.File;
 
 public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, GitContext> implements GitWorkdirFactory {
 
-  public SimpleGitWorkdirFactory() {
-  }
-
-  SimpleGitWorkdirFactory(File poolDirectory) {
-    super(poolDirectory);
+  @Inject
+  public SimpleGitWorkdirFactory(WorkdirProvider workdirProvider) {
+    super(workdirProvider);
   }
 
   @Override
