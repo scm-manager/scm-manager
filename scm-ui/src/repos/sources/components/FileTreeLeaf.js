@@ -92,11 +92,11 @@ class FileTreeLeaf extends React.Component<Props> {
         >
           {file.description}
         </td>
-        {binder.hasExtension("sourceView.right") && (
+        {binder.hasExtension("repos.sources.tree.row.right") && (
           <td>
             {!file.directory && (
               <ExtensionPoint
-                name="sourceView.right"
+                name="repos.sources.tree.row.right"
                 props={{ file }}
                 renderAll={true}
               />
