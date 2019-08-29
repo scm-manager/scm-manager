@@ -66,6 +66,8 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("new_file", newFile));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
+    command.execute(request);
+
     TreeAssertions assertions = canonicalTreeParser -> assertThat(canonicalTreeParser.findFile("new_file")).isTrue();
 
     assertInTree(assertions);

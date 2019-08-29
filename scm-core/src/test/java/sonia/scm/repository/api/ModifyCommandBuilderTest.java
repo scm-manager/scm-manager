@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junitpioneer.jupiter.TempDirectory;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -43,20 +42,27 @@ class ModifyCommandBuilderTest {
   @Mock
   ModifyCommand.Worker worker;
 
-  @Captor
-  ArgumentCaptor<ModifyCommandRequest> requestCaptor;
-
   ModifyCommandBuilder commandBuilder;
+  Path workdir;
 
   @BeforeEach
   void initWorkdir(@TempDirectory.TempDir Path temp) throws IOException {
-    lenient().when(workdirProvider.createNewWorkdir()).thenReturn(temp.toFile());
+    workdir = Files.createDirectory(temp.resolve("workdir"));
+    lenient().when(workdirProvider.createNewWorkdir()).thenReturn(workdir.toFile());
     commandBuilder = new ModifyCommandBuilder(command, workdirProvider);
   }
 
   @BeforeEach
   void initRequestCaptor() {
-    when(command.execute(requestCaptor.capture())).thenReturn("target");
+    when(command.execute(any())).thenAnswer(
+      invocation -> {
+        ModifyCommandRequest request = invocation.getArgument(0);
+        for (ModifyCommandRequest.PartialRequest r : request.getRequests()) {
+          r.execute(worker);
+        }
+        return "target";
+      }
+    );
   }
 
   @Test
@@ -74,8 +80,6 @@ class ModifyCommandBuilderTest {
       .deleteFile("toBeDeleted")
       .execute();
 
-    executeRequest();
-
     verify(worker).delete("toBeDeleted");
   }
 
@@ -84,8 +88,6 @@ class ModifyCommandBuilderTest {
     initCommand()
       .moveFile("source", "target")
       .execute();
-
-    executeRequest();
 
     verify(worker).move("source", "target");
   }
@@ -99,8 +101,6 @@ class ModifyCommandBuilderTest {
     initCommand()
       .createFile("toBeCreated").withData(ByteSource.wrap("content".getBytes()))
       .execute();
-
-    executeRequest();
 
     assertThat(nameCaptor.getValue()).isEqualTo("toBeCreated");
     assertThat(contentCaptor).contains("content");
@@ -116,8 +116,6 @@ class ModifyCommandBuilderTest {
       .createFile("toBeCreated").withData(new ByteArrayInputStream("content".getBytes()))
       .execute();
 
-    executeRequest();
-
     assertThat(nameCaptor.getValue()).isEqualTo("toBeCreated");
     assertThat(contentCaptor).contains("content");
   }
@@ -132,8 +130,6 @@ class ModifyCommandBuilderTest {
       .createFile("toBeCreated_1").withData(new ByteArrayInputStream("content_1".getBytes()))
       .createFile("toBeCreated_2").withData(new ByteArrayInputStream("content_2".getBytes()))
       .execute();
-
-    executeRequest();
 
     List<String> createdNames = nameCaptor.getAllValues();
     assertThat(createdNames.get(0)).isEqualTo("toBeCreated_1");
@@ -151,17 +147,8 @@ class ModifyCommandBuilderTest {
       .modifyFile("toBeModified").withData(ByteSource.wrap("content".getBytes()))
       .execute();
 
-    executeRequest();
-
     assertThat(nameCaptor.getValue()).isEqualTo("toBeModified");
     assertThat(contentCaptor).contains("content");
-  }
-
-  private void executeRequest() throws IOException {
-    ModifyCommandRequest request = requestCaptor.getValue();
-    for (ModifyCommandRequest.PartialRequest r : request.getRequests()) {
-      r.execute(worker);
-    }
   }
 
   private ModifyCommandBuilder initCommand() {
@@ -180,8 +167,6 @@ class ModifyCommandBuilderTest {
     initCommand()
       .modifyFile("toBeModified").withData(ByteSource.wrap("content".getBytes()))
       .execute();
-
-    executeRequest();
 
     assertThat(Files.list(temp)).isEmpty();
   }
