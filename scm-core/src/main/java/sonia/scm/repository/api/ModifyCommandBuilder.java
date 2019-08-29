@@ -68,7 +68,10 @@ public class ModifyCommandBuilder {
 
   /**
    * Create a new file. The content of the file will be specified in a subsequent call to
-   * {@link SimpleContentLoader#withData(ByteSource)} or {@link SimpleContentLoader#withData(InputStream)}.
+   * {@link ContentLoader#withData(ByteSource)} or {@link ContentLoader#withData(InputStream)}.
+   * By default, an {@link sonia.scm.AlreadyExistsException} will be thrown, when there already
+   * exists a file with the given path. You can disable this setting
+   * {@link WithOverwriteFlagContentLoader#setOverwrite(boolean)} to <code>true</code>.
    * @param path The path and the name of the file that should be created.
    * @return The loader to specify the content of the new file.
    */
@@ -80,7 +83,7 @@ public class ModifyCommandBuilder {
 
   /**
    * Modify an existing file. The new content of the file will be specified in a subsequent call to
-   * {@link SimpleContentLoader#withData(ByteSource)} or {@link SimpleContentLoader#withData(InputStream)}.
+   * {@link ContentLoader#withData(ByteSource)} or {@link ContentLoader#withData(InputStream)}.
    * @param path The path and the name of the file that should be modified.
    * @return The loader to specify the new content of the file.
    */
