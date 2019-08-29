@@ -167,6 +167,10 @@
     "CHRM7IQzo1": {
       "displayName": "Änderung fehlgeschlagen",
       "description": "Die Änderung ist fehlgeschlagen. Bitte wenden Sie sich an ihren Administrator für weitere Hinweise."
+    },
+    "thbsUFokjk": {
+      "displayName": "Unerlaubte Änderung eines Schlüsselwerts",
+      "description": "Ein Schlüsselwert wurde unerlaubterweise geändert."
     }
   },
   "namespaceStrategies": {

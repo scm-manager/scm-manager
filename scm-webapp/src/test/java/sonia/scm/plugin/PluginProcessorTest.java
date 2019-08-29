@@ -134,6 +134,16 @@ public class PluginProcessorTest
     assertThat(plugin.getId(), is(PLUGIN_A.id));
   }
 
+  @Test
+  public void shouldCollectPluginsAndDoNotFailOnNonPluginDirectories() throws IOException {
+    new File(pluginDirectory, "some-directory").mkdirs();
+
+    copySmp(PLUGIN_A);
+    InstalledPlugin plugin = collectAndGetFirst();
+
+    assertThat(plugin.getId(), is(PLUGIN_A.id));
+  }
+
   /**
    * Method description
    *

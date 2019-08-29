@@ -59,6 +59,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
+
+import static java.util.stream.Collectors.toList;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -68,6 +71,7 @@ import java.util.Set;
  *
  * TODO don't mix nio and io
  */
+@SuppressWarnings("squid:S3725") // performance is not critical, for this type of checks
 public final class PluginProcessor
 {
 
@@ -171,7 +175,11 @@ public final class PluginProcessor
 
     extract(archives);
 
-    List<Path> dirs = collectPluginDirectories(pluginDirectory);
+    List<Path> dirs =
+      collectPluginDirectories(pluginDirectory)
+      .stream()
+      .filter(isPluginDirectory())
+      .collect(toList());
 
     logger.debug("process {} directories: {}", dirs.size(), dirs);
 
@@ -192,6 +200,10 @@ public final class PluginProcessor
     logger.debug("collected {} plugins", wrappers.size());
 
     return ImmutableSet.copyOf(wrappers);
+  }
+
+  private Predicate<Path> isPluginDirectory() {
+    return dir -> Files.exists(dir.resolve(DIRECTORY_METAINF).resolve("scm").resolve("plugin.xml"));
   }
 
   /**

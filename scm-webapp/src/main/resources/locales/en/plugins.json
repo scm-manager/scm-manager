@@ -167,6 +167,10 @@
     "CHRM7IQzo1": {
       "displayName": "Change failed",
       "description": "The change failed. Please contact your administrator for further assistance."
+    },
+    "thbsUFokjk": {
+      "displayName": "Illegal change of an identifier",
+      "description": "A identifier value has been changed in the entity. This is not allowed."
     }
   },
   "namespaceStrategies": {

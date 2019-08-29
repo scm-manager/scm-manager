@@ -184,17 +184,19 @@ public class ModifyCommandBuilder {
     }
   }
 
+  @SuppressWarnings("UnstableApiUsage") // Files only used internal
   private File loadData(ByteSource data) throws IOException {
     File file = createTemporaryFile();
     data.copyTo(Files.asByteSink(file));
     return file;
   }
 
+  @SuppressWarnings("UnstableApiUsage") // Files and ByteStreams only used internal
   private File loadData(InputStream data) throws IOException {
     File file = createTemporaryFile();
-    OutputStream out = Files.asByteSink(file).openBufferedStream();
-    ByteStreams.copy(data, out);
-    out.close();
+    try (OutputStream out = Files.asByteSink(file).openBufferedStream()) {
+      ByteStreams.copy(data, out);
+    }
     return file;
   }
 
