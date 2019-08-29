@@ -7,6 +7,7 @@ import FileIcon from "./FileIcon";
 import { Link } from "react-router-dom";
 import type { File } from "@scm-manager/ui-types";
 import classNames from "classnames";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
 const styles = {
   iconColumn: {
@@ -75,14 +76,33 @@ class FileTreeLeaf extends React.Component<Props> {
     return (
       <tr>
         <td className={classes.iconColumn}>{this.createFileIcon(file)}</td>
-        <td className={classNames(classes.wordBreakMinWidth, "is-word-break")}>{this.createFileName(file)}</td>
+        <td className={classNames(classes.wordBreakMinWidth, "is-word-break")}>
+          {this.createFileName(file)}
+        </td>
         <td className="is-hidden-mobile">{fileSize}</td>
         <td className="is-hidden-mobile">
           <DateFromNow date={file.lastModified} />
         </td>
-        <td className={classNames(classes.wordBreakMinWidth, "is-word-break", "is-hidden-mobile")}>
+        <td
+          className={classNames(
+            classes.wordBreakMinWidth,
+            "is-word-break",
+            "is-hidden-mobile"
+          )}
+        >
           {file.description}
         </td>
+        {binder.hasExtension("repos.sources.tree.row.right") && (
+          <td>
+            {!file.directory && (
+              <ExtensionPoint
+                name="repos.sources.tree.row.right"
+                props={{ file }}
+                renderAll={true}
+              />
+            )}
+          </td>
+        )}
       </tr>
     );
   }

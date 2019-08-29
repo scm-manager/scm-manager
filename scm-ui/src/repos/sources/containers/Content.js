@@ -2,7 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { File, Repository } from "@scm-manager/ui-types";
-import { DateFromNow } from "@scm-manager/ui-components";
+import { DateFromNow, ButtonGroup } from "@scm-manager/ui-components";
 import FileSize from "../components/FileSize";
 import injectSheet from "react-jss";
 import classNames from "classnames";
@@ -96,7 +96,16 @@ class Content extends React.Component<Props, State> {
             />
             <span className="is-word-break">{file.name}</span>
           </div>
-          <div className="media-right">{selector}</div>
+          <div className="buttons is-grouped">
+            <div className={classes.marginInHeader}>{selector}</div>
+            <ButtonGroup>
+              <ExtensionPoint
+                name="repos.sources.content.actionbar"
+                props={{ file }}
+                renderAll={true}
+              />
+            </ButtonGroup>
+          </div>
         </article>
       </span>
     );
