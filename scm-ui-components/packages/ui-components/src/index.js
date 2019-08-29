@@ -36,7 +36,6 @@ export { default as ErrorBoundary } from "./ErrorBoundary";
 export { default as OverviewPageActions } from "./OverviewPageActions.js";
 export { default as CardColumnGroup } from "./CardColumnGroup";
 export { default as CardColumn } from "./CardColumn";
-export { default as FileUploadDropzone } from "./FileUploadDropzone";
 
 export { apiClient } from "./apiclient.js";
 export * from "./errors";

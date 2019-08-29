@@ -10,6 +10,7 @@ type Props = {
   revision: string,
   path: string,
   baseUrl: string,
+  branch: string,
   classes: any
 };
 
@@ -59,7 +60,7 @@ class Breadcrumb extends React.Component<Props> {
   }
 
   render() {
-    const { classes, baseUrl, revision } = this.props;
+    const { classes, baseUrl, revision, path } = this.props;
 
     return (
       <>
@@ -73,7 +74,7 @@ class Breadcrumb extends React.Component<Props> {
               <ButtonGroup>
                 <ExtensionPoint
                   name="sourceView.actionbar.right"
-                  props={{baseUrl, revision}}
+                  props={{ baseUrl, revision, path }}
                   renderAll={true}
                 />
               </ButtonGroup>

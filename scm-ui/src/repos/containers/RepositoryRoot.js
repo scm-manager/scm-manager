@@ -159,17 +159,6 @@ class RepositoryRoot extends React.Component<Props> {
                 )}
               />
               <Route
-                path={`${url}/sources/upload/:revision`}
-                exact={true}
-                render={() => (
-                  <ExtensionPoint
-                    name="repo.branch.fileUpload"
-                    props={{}}
-                    renderAll={false}
-                  />
-                )}
-              />
-              <Route
                 path={`${url}/sources/:revision/:path*`}
                 render={() => (
                   <Sources repository={repository} baseUrl={`${url}/sources`} />
