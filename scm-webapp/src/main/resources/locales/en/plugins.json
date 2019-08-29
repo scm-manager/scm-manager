@@ -171,6 +171,10 @@
     "thbsUFokjk": {
       "displayName": "Illegal change of an identifier",
       "description": "A identifier value has been changed in the entity. This is not allowed."
+    },
+    "40RaYIeeR1": {
+      "displayName": "No changes were made",
+      "description": "No changes were made to the files of the repository. Therefor no new commit could be created."
     }
   },
   "namespaceStrategies": {

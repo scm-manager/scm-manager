@@ -2,6 +2,8 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import sonia.scm.BadRequestException;
+import sonia.scm.ContextEntry;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
@@ -44,9 +46,10 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     @Override
     String run() throws IOException {
       checkOutBranch(request.getBranch());
-      for (ModifyCommandRequest.PartialRequest r: request.getRequests()) {
+      for (ModifyCommandRequest.PartialRequest r : request.getRequests()) {
         r.execute(this);
       }
+      failIfNotChanged(NoChangesMadeException::new);
       doCommit(request.getCommitMessage(), request.getAuthor());
       push();
       return getClone().getRepository().getRefDatabase().findRef("HEAD").getObjectId().name();
@@ -85,6 +88,17 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     @Override
     public void move(String sourcePath, String targetPath) {
 
+    }
+
+    private class NoChangesMadeException extends BadRequestException {
+      public NoChangesMadeException() {
+        super(ContextEntry.ContextBuilder.entity(context.getRepository()).build(), "no changes detected to branch " + ModifyWorker.this.request.getBranch());
+      }
+
+      @Override
+      public String getCode() {
+        return "40RaYIeeR1";
+      }
     }
   }
 

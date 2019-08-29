@@ -171,6 +171,10 @@
     "thbsUFokjk": {
       "displayName": "Unerlaubte Änderung eines Schlüsselwerts",
       "description": "Ein Schlüsselwert wurde unerlaubterweise geändert."
+    },
+    "40RaYIeeR1": {
+      "displayName": "Es wurden keine Änderungen durchgeführt",
+      "description": "Das Repository wurde nicht verändert. Daher konnte kein neuer Commit erzeugt werden."
     }
   },
   "namespaceStrategies": {

@@ -14,6 +14,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
+import sonia.scm.BadRequestException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.util.WorkdirProvider;
 
@@ -106,6 +107,21 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     TreeAssertions assertions = canonicalTreeParser -> assertThat(canonicalTreeParser.findFile("a.txt")).isTrue();
 
     assertInTree(assertions);
+  }
+
+  @Test(expected = BadRequestException.class)
+  public void shouldFailIfNoChangesMade() throws IOException, GitAPIException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "b\n".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setBranch("master");
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("b.txt", newFile, true));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
   }
 
   private void assertInTree(TreeAssertions assertions) throws IOException, GitAPIException {

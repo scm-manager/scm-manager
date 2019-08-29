@@ -43,6 +43,7 @@ import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitUtil;
@@ -55,7 +56,10 @@ import sonia.scm.user.User;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
@@ -200,14 +204,26 @@ class AbstractGitCommand
       }
     }
 
-    void doCommit(String message, Person author) {
+    void failIfNotChanged(Supplier<RuntimeException> doThrow) {
+      try {
+        if (clone.status().call().isClean()) {
+          throw doThrow.get();
+        }
+      } catch (GitAPIException e) {
+        throw new InternalRepositoryException(context.getRepository(), "could not read status of repository", e);
+      }
+    }
+
+    Optional<RevCommit> doCommit(String message, Person author) {
       Person authorToUse = determineAuthor(author);
       try {
         if (!clone.status().call().isClean()) {
-          clone.commit()
+          return of(clone.commit()
             .setAuthor(authorToUse.getName(), authorToUse.getMail())
             .setMessage(message)
-            .call();
+            .call());
+        } else {
+          return empty();
         }
       } catch (GitAPIException e) {
         throw new InternalRepositoryException(context.getRepository(), "could not commit changes", e);
