@@ -10,7 +10,7 @@ public interface ModifyCommand {
   interface Worker {
     void delete(String toBeDeleted);
 
-    void create(String toBeCreated, File file) throws IOException;
+    void create(String toBeCreated, File file, boolean overwrite) throws IOException;
 
     void modify(String path, File file);
 

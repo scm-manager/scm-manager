@@ -13,6 +13,7 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import sonia.scm.AlreadyExistsException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.util.WorkdirProvider;
 
@@ -41,7 +42,7 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setBranch("master");
     request.setCommitMessage("test commit");
-    request.addRequest(new ModifyCommandRequest.CreateFileRequest("new_file", newFile));
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("new_file", newFile, false));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     String newRef = command.execute(request);
@@ -63,12 +64,46 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setBranch("master");
     request.setCommitMessage("test commit");
-    request.addRequest(new ModifyCommandRequest.CreateFileRequest("new_file", newFile));
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("new_file", newFile, false));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     command.execute(request);
 
     TreeAssertions assertions = canonicalTreeParser -> assertThat(canonicalTreeParser.findFile("new_file")).isTrue();
+
+    assertInTree(assertions);
+  }
+
+  @Test(expected = AlreadyExistsException.class)
+  public void shouldFailIfOverwritingExistingFileWithoutOverwriteFlag() throws IOException, GitAPIException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setBranch("master");
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("a.txt", newFile, false));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+  }
+
+  @Test
+  public void shouldOverwriteExistingFileIfOverwriteFlagSet() throws IOException, GitAPIException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setBranch("master");
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("a.txt", newFile, true));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+
+    TreeAssertions assertions = canonicalTreeParser -> assertThat(canonicalTreeParser.findFile("a.txt")).isTrue();
 
     assertInTree(assertions);
   }

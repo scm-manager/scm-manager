@@ -8,8 +8,13 @@ import sonia.scm.repository.Repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static sonia.scm.AlreadyExistsException.alreadyExists;
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 public class GitModifyCommand extends AbstractGitCommand implements ModifyCommand {
 
@@ -48,10 +53,18 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     }
 
     @Override
-    public void create(String toBeCreated, File file) throws IOException {
+    public void create(String toBeCreated, File file, boolean overwrite) throws IOException {
       Path targetFile = new File(workDir, toBeCreated).toPath();
       Files.createDirectories(targetFile.getParent());
-      Files.copy(file.toPath(), targetFile);
+      if (overwrite) {
+        Files.copy(file.toPath(), targetFile, REPLACE_EXISTING);
+      } else {
+        try {
+          Files.copy(file.toPath(), targetFile);
+        } catch (FileAlreadyExistsException e) {
+          throw alreadyExists(entity("file", toBeCreated).in("branch", request.getBranch()).in(context.getRepository()));
+        }
+      }
       try {
         getClone().add().addFilepattern(toBeCreated).call();
       } catch (GitAPIException e) {

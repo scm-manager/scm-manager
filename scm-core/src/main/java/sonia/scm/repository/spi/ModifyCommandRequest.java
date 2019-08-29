@@ -124,15 +124,17 @@ public class ModifyCommandRequest implements Resetable, Validateable {
   public static class CreateFileRequest extends ContentModificationRequest {
 
     private final String path;
+    private final boolean overwrite;
 
-    public CreateFileRequest(String path, File content) {
+    public CreateFileRequest(String path, File content, boolean overwrite) {
       super(content);
       this.path = path;
+      this.overwrite = overwrite;
     }
 
     @Override
     public void execute(ModifyCommand.Worker worker) throws IOException {
-      worker.create(path, getContent());
+      worker.create(path, getContent(), overwrite);
       cleanup();
     }
   }

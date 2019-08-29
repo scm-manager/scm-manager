@@ -16,12 +16,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
  * Use this {@link ModifyCommandBuilder} to make file changes to the head of a branch. You can
  * <ul>
- *   <li>create new files ({@link #createFile(String)}</li>
+ *   <li>create new files ({@link #createFile(String)} (with the option to overwrite a file, if it already exists; by
+ *   default a {@link sonia.scm.AlreadyExistsException} will be thrown)</li>
  *   <li>modify existing files ({@link #modifyFile(String)}</li>
  *   <li>delete existing files ({@link #deleteFile(String)}</li>
  *   <li>move/rename existing files ({@link #moveFile(String, String)}</li>
@@ -66,24 +68,24 @@ public class ModifyCommandBuilder {
 
   /**
    * Create a new file. The content of the file will be specified in a subsequent call to
-   * {@link ContentLoader#withData(ByteSource)} or {@link ContentLoader#withData(InputStream)}.
+   * {@link SimpleContentLoader#withData(ByteSource)} or {@link SimpleContentLoader#withData(InputStream)}.
    * @param path The path and the name of the file that should be created.
    * @return The loader to specify the content of the new file.
    */
-  public ContentLoader createFile(String path) {
-    return new ContentLoader(
-      content -> request.addRequest(new ModifyCommandRequest.CreateFileRequest(path, content))
+  public WithOverwriteFlagContentLoader createFile(String path) {
+    return new WithOverwriteFlagContentLoader(
+      (content, overwrite) -> request.addRequest(new ModifyCommandRequest.CreateFileRequest(path, content, overwrite))
     );
   }
 
   /**
    * Modify an existing file. The new content of the file will be specified in a subsequent call to
-   * {@link ContentLoader#withData(ByteSource)} or {@link ContentLoader#withData(InputStream)}.
+   * {@link SimpleContentLoader#withData(ByteSource)} or {@link SimpleContentLoader#withData(InputStream)}.
    * @param path The path and the name of the file that should be modified.
    * @return The loader to specify the new content of the file.
    */
-  public ContentLoader modifyFile(String path) {
-    return new ContentLoader(
+  public SimpleContentLoader modifyFile(String path) {
+    return new SimpleContentLoader(
       content -> request.addRequest(new ModifyCommandRequest.ModifyFileRequest(path, content))
     );
   }
@@ -153,34 +155,73 @@ public class ModifyCommandBuilder {
     return this;
   }
 
-  public class ContentLoader {
-
-    private final Consumer<File> contentConsumer;
-
-    private ContentLoader(Consumer<File> contentConsumer) {
-      this.contentConsumer = contentConsumer;
-    }
-
+  public interface ContentLoader {
     /**
      * Specify the data of the file using a {@link ByteSource}.
+     *
      * @return The builder instance.
      * @throws IOException If the data could not be read.
      */
-    public ModifyCommandBuilder withData(ByteSource data) throws IOException {
-      File content = loadData(data);
-      contentConsumer.accept(content);
-      return ModifyCommandBuilder.this;
-    }
+    ModifyCommandBuilder withData(ByteSource data) throws IOException;
 
     /**
      * Specify the data of the file using an {@link InputStream}.
      * @return The builder instance.
      * @throws IOException If the data could not be read.
      */
+    ModifyCommandBuilder withData(InputStream data) throws IOException;
+  }
+
+  public class SimpleContentLoader implements ContentLoader {
+
+    private final Consumer<File> contentConsumer;
+
+    private SimpleContentLoader(Consumer<File> contentConsumer) {
+      this.contentConsumer = contentConsumer;
+    }
+
+    @Override
+    public ModifyCommandBuilder withData(ByteSource data) throws IOException {
+      File content = loadData(data);
+      contentConsumer.accept(content);
+      return ModifyCommandBuilder.this;
+    }
+
+    @Override
     public ModifyCommandBuilder withData(InputStream data) throws IOException {
       File content = loadData(data);
       contentConsumer.accept(content);
       return ModifyCommandBuilder.this;
+    }
+  }
+
+  public class WithOverwriteFlagContentLoader implements ContentLoader {
+
+    private final ContentLoader contentLoader;
+    private boolean overwrite = false;
+
+    private WithOverwriteFlagContentLoader(BiConsumer<File, Boolean> contentConsumer) {
+      this.contentLoader = new SimpleContentLoader(file -> contentConsumer.accept(file, overwrite));
+    }
+
+    /**
+     * Set this to <code>true</code> to overwrite the file if it already exists. Otherwise an
+     * {@link sonia.scm.AlreadyExistsException} will be thrown.
+     * @return This loader instance.
+     */
+    public WithOverwriteFlagContentLoader setOverwrite(boolean overwrite) {
+      this.overwrite = overwrite;
+      return this;
+    }
+
+    @Override
+    public ModifyCommandBuilder withData(ByteSource data) throws IOException {
+      return contentLoader.withData(data);
+    }
+
+    @Override
+    public ModifyCommandBuilder withData(InputStream data) throws IOException {
+      return contentLoader.withData(data);
     }
   }
 
