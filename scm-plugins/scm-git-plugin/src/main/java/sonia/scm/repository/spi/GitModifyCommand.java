@@ -2,6 +2,7 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.revwalk.RevCommit;
 import sonia.scm.BadRequestException;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.GitWorkdirFactory;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static sonia.scm.AlreadyExistsException.alreadyExists;
@@ -50,9 +52,9 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
         r.execute(this);
       }
       failIfNotChanged(NoChangesMadeException::new);
-      doCommit(request.getCommitMessage(), request.getAuthor());
+      Optional<RevCommit> revCommit = doCommit(request.getCommitMessage(), request.getAuthor());
       push();
-      return getClone().getRepository().getRefDatabase().findRef("HEAD").getObjectId().name();
+      return revCommit.orElseThrow(NoChangesMadeException::new).name();
     }
 
     @Override
