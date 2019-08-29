@@ -115,7 +115,7 @@ public class ModifyCommandBuilder {
    */
   public String execute() {
     try {
-      Preconditions.checkArgument(request.isValid(), "commit message, author and branch are required");
+      Preconditions.checkArgument(request.isValid(), "commit message, branch and at least one request are required");
       return command.execute(request);
     } finally {
       try {
