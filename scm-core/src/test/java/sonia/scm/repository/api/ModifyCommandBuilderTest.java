@@ -1,6 +1,7 @@
 package sonia.scm.repository.api;
 
 import com.google.common.io.ByteSource;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +26,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.lenient;
@@ -57,7 +59,9 @@ class ModifyCommandBuilderTest {
     when(command.execute(any())).thenAnswer(
       invocation -> {
         ModifyCommandRequest request = invocation.getArgument(0);
-        request.getRequests().forEach(r -> r.execute(worker));
+        for (ModifyCommandRequest.PartialRequest r : request.getRequests()) {
+          r.execute(worker);
+        }
         return "target";
       }
     );
@@ -73,7 +77,7 @@ class ModifyCommandBuilderTest {
   }
 
   @Test
-  void shouldExecuteDelete() {
+  void shouldExecuteDelete() throws IOException {
     initCommand()
       .deleteFile("toBeDeleted")
       .execute();
@@ -82,7 +86,7 @@ class ModifyCommandBuilderTest {
   }
 
   @Test
-  void shouldExecuteMove() {
+  void shouldExecuteMove() throws IOException {
     initCommand()
       .moveFile("source", "target")
       .execute();
@@ -94,7 +98,7 @@ class ModifyCommandBuilderTest {
   void shouldExecuteCreateWithByteSourceContent() throws IOException {
     ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
     List<String> contentCaptor = new ArrayList<>();
-    doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any());
+    doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any(), anyBoolean());
 
     initCommand()
       .createFile("toBeCreated").withData(ByteSource.wrap("content".getBytes()))
@@ -108,7 +112,7 @@ class ModifyCommandBuilderTest {
   void shouldExecuteCreateWithInputStreamContent() throws IOException {
     ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
     List<String> contentCaptor = new ArrayList<>();
-    doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any());
+    doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any(), anyBoolean());
 
     initCommand()
       .createFile("toBeCreated").withData(new ByteArrayInputStream("content".getBytes()))
@@ -119,10 +123,42 @@ class ModifyCommandBuilderTest {
   }
 
   @Test
+  void shouldExecuteCreateWithOverwriteFalseAsDefault() throws IOException {
+    ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<Boolean> overwriteCaptor = ArgumentCaptor.forClass(Boolean.class);
+    List<String> contentCaptor = new ArrayList<>();
+    doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any(), overwriteCaptor.capture());
+
+    initCommand()
+      .createFile("toBeCreated").withData(new ByteArrayInputStream("content".getBytes()))
+      .execute();
+
+    assertThat(nameCaptor.getValue()).isEqualTo("toBeCreated");
+    assertThat(overwriteCaptor.getValue()).isFalse();
+    assertThat(contentCaptor).contains("content");
+  }
+
+  @Test
+  void shouldExecuteCreateWithOverwriteIfSet() throws IOException {
+    ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<Boolean> overwriteCaptor = ArgumentCaptor.forClass(Boolean.class);
+    List<String> contentCaptor = new ArrayList<>();
+    doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any(), overwriteCaptor.capture());
+
+    initCommand()
+      .createFile("toBeCreated").setOverwrite(true).withData(new ByteArrayInputStream("content".getBytes()))
+      .execute();
+
+    assertThat(nameCaptor.getValue()).isEqualTo("toBeCreated");
+    assertThat(overwriteCaptor.getValue()).isTrue();
+    assertThat(contentCaptor).contains("content");
+  }
+
+  @Test
   void shouldExecuteCreateMultipleTimes() throws IOException {
     ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
     List<String> contentCaptor = new ArrayList<>();
-    doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any());
+    doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any(), anyBoolean());
 
     initCommand()
       .createFile("toBeCreated_1").withData(new ByteArrayInputStream("content_1".getBytes()))

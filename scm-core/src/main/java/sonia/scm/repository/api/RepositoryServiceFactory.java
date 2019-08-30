@@ -136,13 +136,14 @@ public final class RepositoryServiceFactory
    * @param resolvers a set of {@link RepositoryServiceResolver}
    * @param preProcessorUtil helper object for pre processor handling
    *
+   * @param workdirProvider
    * @since 1.21
    */
   @Inject
   public RepositoryServiceFactory(ScmConfiguration configuration,
-    CacheManager cacheManager, RepositoryManager repositoryManager,
-    Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
-    Set<ScmProtocolProvider> protocolProviders)
+                                  CacheManager cacheManager, RepositoryManager repositoryManager,
+                                  Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
+                                  Set<ScmProtocolProvider> protocolProviders, WorkdirProvider workdirProvider)
   {
     this.configuration = configuration;
     this.cacheManager = cacheManager;
@@ -150,6 +151,7 @@ public final class RepositoryServiceFactory
     this.resolvers = resolvers;
     this.preProcessorUtil = preProcessorUtil;
     this.protocolProviders = protocolProviders;
+    this.workdirProvider = workdirProvider;
 
     ScmEventBus.getInstance().register(new CacheClearHook(cacheManager));
   }
@@ -375,5 +377,5 @@ public final class RepositoryServiceFactory
 
   private Set<ScmProtocolProvider> protocolProviders;
 
-  private WorkdirProvider workdirProvider;
+  private final WorkdirProvider workdirProvider;
 }
