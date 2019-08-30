@@ -54,17 +54,15 @@ class ApiClient {
     return this.httpRequestWithJSONBody("POST", url, contentType, payload);
   }
 
-  postBinary(contentType: string, url: string, files: File[]) {
+  postBinary(url: string, fileAppender: FormData => void) {
     let formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      formData.append("file" + i, files[i]);
-    }
+    fileAppender(formData);
 
     let options: RequestOptions = {
       method: "POST",
       body: formData
     };
-    return this.httpRequestWithBinaryBody(options, contentType, url);
+    return this.httpRequestWithBinaryBody(options, url);
   }
 
   put(url: string, payload: any, contentType: string = "application/json") {
@@ -97,13 +95,15 @@ class ApiClient {
       method: method,
       body: JSON.stringify(payload)
     };
-    return this.httpRequestWithBinaryBody(options, contentType, url);
+    return this.httpRequestWithBinaryBody(options, url, contentType);
   }
 
-  httpRequestWithBinaryBody(options: RequestOptions, contentType: string, url: string) {
+  httpRequestWithBinaryBody(options: RequestOptions, url: string, contentType?: string) {
     options = Object.assign(options, fetchOptions);
-    // $FlowFixMe
-    options.headers["Content-Type"] = contentType;
+    if (contentType) {
+      // $FlowFixMe
+      options.headers["Content-Type"] = contentType;
+    }
 
     return fetch(createUrl(url), options).then(handleFailure);
   }
