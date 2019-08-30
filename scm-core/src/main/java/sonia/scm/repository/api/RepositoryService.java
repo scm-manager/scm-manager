@@ -40,6 +40,7 @@ import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
+import sonia.scm.repository.util.WorkdirProvider;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -91,22 +92,25 @@ public final class RepositoryService implements Closeable {
   private final RepositoryServiceProvider provider;
   private final Repository repository;
   private final Set<ScmProtocolProvider> protocolProviders;
+  private final WorkdirProvider workdirProvider;
 
   /**
    * Constructs a new {@link RepositoryService}. This constructor should only
    * be called from the {@link RepositoryServiceFactory}.
-   *  @param cacheManager     cache manager
+   * @param cacheManager     cache manager
    * @param provider         implementation for {@link RepositoryServiceProvider}
    * @param repository       the repository
+   * @param workdirProvider
    */
   RepositoryService(CacheManager cacheManager,
-    RepositoryServiceProvider provider, Repository repository,
-    PreProcessorUtil preProcessorUtil, Set<ScmProtocolProvider> protocolProviders) {
+                    RepositoryServiceProvider provider, Repository repository,
+                    PreProcessorUtil preProcessorUtil, Set<ScmProtocolProvider> protocolProviders, WorkdirProvider workdirProvider) {
     this.cacheManager = cacheManager;
     this.provider = provider;
     this.repository = repository;
     this.preProcessorUtil = preProcessorUtil;
     this.protocolProviders = protocolProviders;
+    this.workdirProvider = workdirProvider;
   }
 
   /**
@@ -397,6 +401,27 @@ public final class RepositoryService implements Closeable {
       repository.getNamespaceAndName());
 
     return new MergeCommandBuilder(provider.getMergeCommand());
+  }
+
+  /**
+   * The modify command makes changes to the head of a branch. It is possible to
+   * <ul>
+   * <li>create new files</li>
+   * <li>delete existing files</li>
+   * <li>modify/replace files</li>
+   * <li>move files</li>
+   * </ul>
+   *
+   * @return instance of {@link ModifyCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   * @since 2.0.0
+   */
+  public ModifyCommandBuilder getModifyCommand() {
+    LOG.debug("create modify command for repository {}",
+      repository.getNamespaceAndName());
+
+    return new ModifyCommandBuilder(provider.getModifyCommand(), workdirProvider);
   }
 
   /**

@@ -100,7 +100,7 @@ class Content extends React.Component<Props, State> {
             <div className={classes.marginInHeader}>{selector}</div>
             <ButtonGroup>
               <ExtensionPoint
-                name="fileView.actionbar.right"
+                name="repos.sources.content.actionbar"
                 props={{ file }}
                 renderAll={true}
               />

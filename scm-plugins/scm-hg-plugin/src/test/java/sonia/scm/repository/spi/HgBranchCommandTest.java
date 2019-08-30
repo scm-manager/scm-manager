@@ -7,6 +7,7 @@ import org.junit.Test;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.api.BranchRequest;
+import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
     HgRepositoryEnvironmentBuilder hgRepositoryEnvironmentBuilder =
       new HgRepositoryEnvironmentBuilder(handler, HgTestUtil.createHookManager());
 
-    SimpleHgWorkdirFactory workdirFactory = new SimpleHgWorkdirFactory(Providers.of(hgRepositoryEnvironmentBuilder)) {
+    SimpleHgWorkdirFactory workdirFactory = new SimpleHgWorkdirFactory(Providers.of(hgRepositoryEnvironmentBuilder), new WorkdirProvider()) {
       @Override
       public void configure(PullCommand pullCommand) {
         // we do not want to configure http hooks in this unit test

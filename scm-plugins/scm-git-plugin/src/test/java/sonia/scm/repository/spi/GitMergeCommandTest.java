@@ -10,29 +10,17 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.transport.ScmTransportProtocol;
-import org.eclipse.jgit.transport.Transport;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import sonia.scm.NotFoundException;
-import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.PreProcessorUtil;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.MergeCommandResult;
-import sonia.scm.repository.api.MergeDryRunCommandResult;
+import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.user.User;
 
 import java.io.IOException;
 
-import static com.google.inject.util.Providers.of;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini", username = "admin", password = "secret")
 public class GitMergeCommandTest extends AbstractGitCommandTestBase {
@@ -244,6 +232,6 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitMergeCommand createCommand() {
-    return new GitMergeCommand(createContext(), repository, new SimpleGitWorkdirFactory());
+    return new GitMergeCommand(createContext(), repository, new SimpleGitWorkdirFactory(new WorkdirProvider()));
   }
 }

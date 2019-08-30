@@ -275,4 +275,12 @@ public abstract class RepositoryServiceProvider implements Closeable
   {
     throw new CommandNotSupportedException(Command.MERGE);
   }
+
+  /**
+   * @since 2.0
+   */
+  public ModifyCommand getModifyCommand()
+  {
+    throw new CommandNotSupportedException(Command.MODIFY);
+  }
 }

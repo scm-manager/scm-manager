@@ -2,6 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
 import sonia.scm.ConcurrentModificationException;
+import sonia.scm.IllegalIdentifierChangeException;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.NotFoundException;
@@ -10,8 +11,6 @@ import javax.ws.rs.core.Response;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
 /**
  * Adapter from resource http endpoints to managers, for Single resources (e.g. {@code /user/name}).
@@ -55,7 +54,7 @@ class SingleResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     MODEL_OBJECT existingModelObject = reader.get();
     MODEL_OBJECT changedModelObject = applyChanges.apply(existingModelObject);
     if (!hasSameKey.test(changedModelObject)) {
-      return Response.status(BAD_REQUEST).entity("illegal change of id").build();
+      throw new IllegalIdentifierChangeException("illegal change of id");
     }
     else if (modelObjectWasModifiedConcurrently(existingModelObject, changedModelObject)) {
       throw new ConcurrentModificationException(type, keyExtractor.apply(existingModelObject));

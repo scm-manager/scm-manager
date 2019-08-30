@@ -125,7 +125,7 @@ class FileTree extends React.Component<Props> {
               <th className="is-hidden-mobile">
                 {t("sources.file-tree.description")}
               </th>
-              {binder.hasExtension("sourceView.right") && (
+              {binder.hasExtension("repos.sources.tree.row.right") && (
                 <th className="is-hidden-mobile" />
               )}
             </tr>

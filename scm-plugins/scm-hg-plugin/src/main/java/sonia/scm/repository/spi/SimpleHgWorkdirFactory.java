@@ -4,6 +4,7 @@ import com.aragost.javahg.Repository;
 import com.aragost.javahg.commands.CloneCommand;
 import com.aragost.javahg.commands.PullCommand;
 import sonia.scm.repository.util.SimpleWorkdirFactory;
+import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import javax.inject.Inject;
@@ -18,7 +19,8 @@ public class SimpleHgWorkdirFactory extends SimpleWorkdirFactory<Repository, HgC
   private final Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder;
 
   @Inject
-  public SimpleHgWorkdirFactory(Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder) {
+  public SimpleHgWorkdirFactory(Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder, WorkdirProvider workdirProvider) {
+    super(workdirProvider);
     this.hgRepositoryEnvironmentBuilder = hgRepositoryEnvironmentBuilder;
   }
   @Override

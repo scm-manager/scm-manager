@@ -269,6 +269,11 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   }
 
   @Override
+  public ModifyCommand getModifyCommand() {
+    return new GitModifyCommand(context, repository, handler.getWorkdirFactory());
+  }
+
+  @Override
   public Set<Feature> getSupportedFeatures() {
     return FEATURES;
   }
