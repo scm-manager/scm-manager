@@ -1,16 +1,18 @@
 //@flow
 import React from "react";
 import { Link } from "react-router-dom";
+import type { Branch } from "@scm-manager/ui-types";
 import injectSheet from "react-jss";
 import { ExtensionPoint, binder } from "@scm-manager/ui-extensions";
 import {ButtonGroup} from "./buttons";
 import classNames from "classnames";
 
 type Props = {
+  branch: Branch,
+  defaultBranch: Branch,
   revision: string,
   path: string,
   baseUrl: string,
-  branch: string,
   classes: any
 };
 
@@ -60,7 +62,7 @@ class Breadcrumb extends React.Component<Props> {
   }
 
   render() {
-    const { classes, baseUrl, revision, path } = this.props;
+    const { classes, baseUrl, branch, defaultBranch, path } = this.props;
 
     return (
       <>
@@ -74,7 +76,7 @@ class Breadcrumb extends React.Component<Props> {
               <ButtonGroup>
                 <ExtensionPoint
                   name="sourceView.actionbar.right"
-                  props={{ baseUrl, revision, path }}
+                  props={{ baseUrl, branch: branch ? branch : defaultBranch, path }}
                   renderAll={true}
                 />
               </ButtonGroup>

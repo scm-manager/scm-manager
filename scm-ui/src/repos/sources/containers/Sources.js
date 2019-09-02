@@ -36,7 +36,19 @@ type Props = {
   t: string => string
 };
 
-class Sources extends React.Component<Props> {
+type State = {
+  selectedBranch: any
+};
+
+class Sources extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      selectedBranch: null
+    };
+  }
+
   componentDidMount() {
     const {
       fetchBranches,
@@ -60,12 +72,14 @@ class Sources extends React.Component<Props> {
     const { baseUrl, history, path } = this.props;
     let url;
     if (branch) {
+      this.setState({selectedBranch: branch});
       if (path) {
         url = `${baseUrl}/${encodeURIComponent(branch.name)}/${path}`;
       } else {
         url = `${baseUrl}/${encodeURIComponent(branch.name)}/`;
       }
     } else {
+      this.setState({selectedBranch: null});
       url = `${baseUrl}/`;
     }
     history.push(url);
@@ -75,12 +89,15 @@ class Sources extends React.Component<Props> {
     const {
       repository,
       baseUrl,
+      branches,
       loading,
       error,
       revision,
       path,
       currentFileIsDirectory
     } = this.props;
+
+    const {selectedBranch} = this.state;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -94,7 +111,15 @@ class Sources extends React.Component<Props> {
       return (
         <div className="panel">
           {this.renderBranchSelector()}
-          <Breadcrumb revision={encodeURIComponent(revision)} path={path} baseUrl={baseUrl} />
+          <Breadcrumb
+            revision={encodeURIComponent(revision)}
+            path={path}
+            baseUrl={baseUrl}
+            branch={selectedBranch}
+            defaultBranch={
+              branches && branches.filter(b => b.defaultBranch === true)[0]
+            }
+          />
           <FileTree
             repository={repository}
             revision={revision}
