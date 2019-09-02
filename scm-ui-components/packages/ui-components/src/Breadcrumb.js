@@ -71,11 +71,11 @@ class Breadcrumb extends React.Component<Props> {
             <ul>{this.renderPath()}</ul>
           </nav>
           {
-            binder.hasExtension("sourceView.actionbar.right") &&
+            binder.hasExtension("repos.sources.actionbar") &&
             <div className={classes.buttonGroup}>
               <ButtonGroup>
                 <ExtensionPoint
-                  name="sourceView.actionbar.right"
+                  name="repos.sources.actionbar"
                   props={{ baseUrl, branch: branch ? branch : defaultBranch, path }}
                   renderAll={true}
                 />
