@@ -5,6 +5,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import sonia.scm.BadRequestException;
+import sonia.scm.ConcurrentModificationException;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
@@ -50,6 +51,11 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     String run() throws IOException {
       if (!StringUtils.isEmpty(request.getBranch())) {
         checkOutBranch(request.getBranch());
+      }
+      if (!StringUtils.isEmpty(request.getExpectedRevision())) {
+        if (!request.getExpectedRevision().equals(getCurrentRevision().getName())) {
+          throw new ConcurrentModificationException("branch", request.getBranch() == null? "default": request.getBranch());
+        }
       }
       for (ModifyCommandRequest.PartialRequest r : request.getRequests()) {
         r.execute(this);

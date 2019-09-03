@@ -58,15 +58,6 @@ public class ModifyCommandBuilder {
   }
 
   /**
-   * Set the branch that should be modified. The new commit will be made for this branch.
-   * @param branchToModify The branch to modify.
-   * @return This builder instance.
-   */
-  public ModifyCommandBuilder setBranchToModify(String branchToModify) {
-    return this;
-  }
-
-  /**
    * Create a new file. The content of the file will be specified in a subsequent call to
    * {@link ContentLoader#withData(ByteSource)} or {@link ContentLoader#withData(InputStream)}.
    * By default, an {@link sonia.scm.AlreadyExistsException} will be thrown, when there already
@@ -155,6 +146,17 @@ public class ModifyCommandBuilder {
    */
   public ModifyCommandBuilder setBranch(String branch) {
     request.setBranch(branch);
+    return this;
+  }
+
+  /**
+   * Set the expected revision of the branch, before the changes are applied. If the branch does not have the
+   * expected revision, a concurrent modification exception will be thrown when the command is executed and no
+   * changes will be applied.
+   * @return This builder instance.
+   */
+  public ModifyCommandBuilder setExpectedRevision(String expectedRevision) {
+    request.setExpectedRevision(expectedRevision);
     return this;
   }
 
