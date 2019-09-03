@@ -65,7 +65,7 @@ public class ModifyCommandRequest implements Resetable, Validateable {
 
   @Override
   public boolean isValid() {
-    return StringUtils.isNotEmpty(commitMessage) && StringUtils.isNotEmpty(branch) && !requests.isEmpty();
+    return StringUtils.isNotEmpty(commitMessage) && !requests.isEmpty();
   }
 
   public interface PartialRequest {
