@@ -77,7 +77,12 @@ class Breadcrumb extends React.Component<Props> {
               <ButtonGroup>
                 <ExtensionPoint
                   name="repos.sources.actionbar"
-                  props={{ baseUrl, branch: branch ? branch : defaultBranch, path, isBranchUrl: branches && branches.filter(b => b.name === revision).length > 0 }}
+                  props={{
+                    baseUrl,
+                    branch: branch ? branch : defaultBranch,
+                    path,
+                    isBranchUrl: branches &&
+                      branches.filter(b => b.name.replace("/", "%2F") === revision).length > 0 }}
                   renderAll={true}
                 />
               </ButtonGroup>
