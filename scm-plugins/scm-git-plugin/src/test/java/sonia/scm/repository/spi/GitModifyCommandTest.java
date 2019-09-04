@@ -16,6 +16,7 @@ import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
+import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.util.WorkdirProvider;
 
@@ -152,6 +153,21 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("irrelevant", newFile, true));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
     request.setExpectedRevision("abc");
+
+    command.execute(request);
+  }
+
+  @Test(expected = ScmConstraintViolationException.class)
+  public void shouldFailWithConstraintViolationIfBranchIsNoBranch() throws IOException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "irrelevant\n".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.setBranch("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("irrelevant", newFile, true));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     command.execute(request);
   }
