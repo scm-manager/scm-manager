@@ -84,11 +84,12 @@ class Sources extends React.Component<Props, State> {
     if (this.shouldRedirect()) {
       const defaultBranches = branches.filter(b => b.defaultBranch);
 
-      if (defaultBranches.length > 0)
+      if (defaultBranches.length > 0) {
         this.setState({ selectedBranch: defaultBranches[0] });
-      this.props.history.push(
-        `${baseUrl}/${defaultBranches[0].name.replace("/", "%2F")}/`
-      );
+        this.props.history.push(
+          `${baseUrl}/${defaultBranches[0].name.replace("/", "%2F")}/`
+        );
+      }
     }
   };
 
