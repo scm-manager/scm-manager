@@ -93,12 +93,8 @@ class Sources extends React.Component<Props, State> {
   };
 
   shouldRedirect = () => {
-    const { branches, location } = this.props;
-    return (
-      branches &&
-      (location.pathname.endsWith("sources") ||
-        location.pathname.endsWith("sources/"))
-    );
+    const { branches, revision } = this.props;
+    return branches && !revision;
   };
 
   branchSelected = (branch?: Branch) => {
