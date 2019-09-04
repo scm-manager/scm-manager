@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.BadRequestException;
+import sonia.scm.ConcurrentModificationException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.util.WorkdirProvider;
 
@@ -56,7 +57,7 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void shouldCreateCommitOnSelectedBranch() throws IOException, GitAPIException {
+  public void shouldCreateCommitOnSelectedBranch() throws IOException {
     File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
@@ -95,7 +96,7 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test(expected = AlreadyExistsException.class)
-  public void shouldFailIfOverwritingExistingFileWithoutOverwriteFlag() throws IOException, GitAPIException {
+  public void shouldFailIfOverwritingExistingFileWithoutOverwriteFlag() throws IOException {
     File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
@@ -136,6 +137,21 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     request.setCommitMessage("test commit");
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("b.txt", newFile, true));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+  }
+
+  @Test(expected = ConcurrentModificationException.class)
+  public void shouldFailBranchDoesNotHaveExpectedRevision() throws IOException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "irrelevant\n".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("irrelevant", newFile, true));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+    request.setExpectedRevision("abc");
 
     command.execute(request);
   }

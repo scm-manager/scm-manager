@@ -240,6 +240,10 @@ class AbstractGitCommand
       logger.debug("pushed changes");
     }
 
+    Ref getCurrentRevision() throws IOException {
+      return getClone().getRepository().getRefDatabase().findRef("HEAD");
+    }
+
     private Person determineAuthor(Person author) {
       if (author == null) {
         Subject subject = SecurityUtils.getSubject();
