@@ -8,7 +8,7 @@ public interface ModifyCommand {
   String execute(ModifyCommandRequest request);
 
   interface Worker {
-    void delete(String toBeDeleted);
+    void delete(String toBeDeleted) throws IOException;
 
     void create(String toBeCreated, File file, boolean overwrite) throws IOException;
 
