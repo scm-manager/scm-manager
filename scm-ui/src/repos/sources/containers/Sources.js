@@ -69,7 +69,7 @@ class Sources extends React.Component<Props, State> {
     fetchBranches(repository);
     fetchSources(repository, revision, path);
 
-    if (branches) {
+    if (this.shouldRedirect()) {
       const defaultBranches = branches.filter(b => b.defaultBranch);
 
       if (defaultBranches.length > 0)
@@ -91,12 +91,7 @@ class Sources extends React.Component<Props, State> {
       fetchSources(repository, revision, path);
     }
 
-    const currentUrl = this.props.location.pathname;
-
-    if (
-      branches &&
-      (currentUrl.endsWith("sources") || currentUrl.endsWith("sources/"))
-    ) {
+    if (this.shouldRedirect()) {
       const defaultBranches = branches.filter(b => b.defaultBranch);
 
       if (defaultBranches.length > 0)
@@ -104,6 +99,15 @@ class Sources extends React.Component<Props, State> {
       this.props.history.push(`${baseUrl}/${defaultBranches[0].name}/`);
     }
   }
+
+  shouldRedirect = () => {
+    const { branches, location } = this.props;
+    return (
+      branches &&
+      (location.pathname.endsWith("sources") ||
+        location.pathname.endsWith("sources/"))
+    );
+  };
 
   branchSelected = (branch?: Branch) => {
     const { baseUrl, history, path } = this.props;
