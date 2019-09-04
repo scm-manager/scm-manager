@@ -41,7 +41,6 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.setBranch("master");
     request.setCommitMessage("test commit");
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("new_file", newFile, false));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
@@ -57,13 +56,33 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldCreateCommitOnSelectedBranch() throws IOException, GitAPIException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.setBranch("test-branch");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("new_file", newFile, false));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    String newRef = command.execute(request);
+
+    ObjectId commitId = ObjectId.fromString(newRef);
+    try (RevWalk revWalk = new RevWalk(createContext().open())) {
+      RevCommit commit = revWalk.parseCommit(commitId);
+      assertThat(commit.getParent(0).name()).isEqualTo("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
+    }
+  }
+
+  @Test
   public void shouldCreateNewFile() throws IOException, GitAPIException {
     File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.setBranch("master");
     request.setCommitMessage("test commit");
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("new_file", newFile, false));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
@@ -82,7 +101,6 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.setBranch("master");
     request.setCommitMessage("test commit");
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("a.txt", newFile, false));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
@@ -97,7 +115,6 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.setBranch("master");
     request.setCommitMessage("test commit");
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("a.txt", newFile, true));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
@@ -110,13 +127,12 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test(expected = BadRequestException.class)
-  public void shouldFailIfNoChangesMade() throws IOException, GitAPIException {
+  public void shouldFailIfNoChangesMade() throws IOException {
     File newFile = Files.write(temporaryFolder.newFile().toPath(), "b\n".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.setBranch("master");
     request.setCommitMessage("test commit");
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("b.txt", newFile, true));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));

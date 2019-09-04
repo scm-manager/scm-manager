@@ -1,5 +1,6 @@
 package sonia.scm.repository.spi;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -47,7 +48,9 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
 
     @Override
     String run() throws IOException {
-      checkOutBranch(request.getBranch());
+      if (!StringUtils.isEmpty(request.getBranch())) {
+        checkOutBranch(request.getBranch());
+      }
       for (ModifyCommandRequest.PartialRequest r : request.getRequests()) {
         r.execute(this);
       }
@@ -67,7 +70,11 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
         try {
           Files.copy(file.toPath(), targetFile);
         } catch (FileAlreadyExistsException e) {
-          throw alreadyExists(entity("file", toBeCreated).in("branch", request.getBranch()).in(context.getRepository()));
+          ContextEntry.ContextBuilder contextBuilder = entity("file", toBeCreated);
+          if (!StringUtils.isEmpty(request.getBranch())) {
+            contextBuilder.in("branch", request.getBranch());
+          }
+          throw alreadyExists(contextBuilder.in(context.getRepository()));
         }
       }
       try {
