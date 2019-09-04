@@ -10,6 +10,7 @@ import classNames from "classnames";
 type Props = {
   branch: Branch,
   defaultBranch: Branch,
+  branches: Branch[],
   revision: string,
   path: string,
   baseUrl: string,
@@ -62,7 +63,7 @@ class Breadcrumb extends React.Component<Props> {
   }
 
   render() {
-    const { classes, baseUrl, branch, defaultBranch, path } = this.props;
+    const { classes, baseUrl, branch, defaultBranch, branches, revision, path } = this.props;
 
     return (
       <>
@@ -76,7 +77,7 @@ class Breadcrumb extends React.Component<Props> {
               <ButtonGroup>
                 <ExtensionPoint
                   name="repos.sources.actionbar"
-                  props={{ baseUrl, branch: branch ? branch : defaultBranch, path }}
+                  props={{ baseUrl, branch: branch ? branch : defaultBranch, path, isBranchUrl: branches && branches.filter(b => b.name === revision).length > 0 }}
                   renderAll={true}
                 />
               </ButtonGroup>

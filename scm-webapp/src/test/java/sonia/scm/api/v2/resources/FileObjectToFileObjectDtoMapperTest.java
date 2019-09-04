@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.SubRepository;
@@ -49,7 +50,7 @@ public class FileObjectToFileObjectDtoMapperTest {
   @Test
   public void shouldMapAttributesCorrectly() {
     FileObject fileObject = createFileObject();
-    FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("namespace", "name"), "revision");
+    FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("namespace", "name"), new BrowserResult("revision", fileObject));
 
     assertEqualAttributes(fileObject, dto);
   }
@@ -57,7 +58,7 @@ public class FileObjectToFileObjectDtoMapperTest {
   @Test
   public void shouldHaveCorrectSelfLinkForDirectory() {
     FileObject fileObject = createDirectoryObject();
-    FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("namespace", "name"), "revision");
+    FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("namespace", "name"), new BrowserResult("revision", fileObject));
 
     assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo(expectedBaseUri.resolve("namespace/name/sources/revision/foo/bar").toString());
   }
@@ -66,7 +67,7 @@ public class FileObjectToFileObjectDtoMapperTest {
   public void shouldHaveCorrectContentLink() {
     FileObject fileObject = createFileObject();
     fileObject.setDirectory(false);
-    FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("namespace", "name"), "revision");
+    FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("namespace", "name"), new BrowserResult("revision", fileObject));
 
     assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo(expectedBaseUri.resolve("namespace/name/content/revision/foo/bar").toString());
   }
@@ -84,7 +85,7 @@ public class FileObjectToFileObjectDtoMapperTest {
     mapper.setRegistry(registry);
 
     FileObject fileObject = createFileObject();
-    FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("hitchhiker", "hog"), "42");
+    FileObjectDto dto = mapper.map(fileObject, new NamespaceAndName("hitchhiker", "hog"), new BrowserResult("42", fileObject));
 
     assertThat(dto.getLinks().getLinkBy("hog").get().getHref()).isEqualTo("http://hitchhiker/hog/foo/42");
   }

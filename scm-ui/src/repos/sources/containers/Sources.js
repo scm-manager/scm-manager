@@ -1,20 +1,25 @@
 // @flow
 import React from "react";
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
-import type {Branch, Repository} from "@scm-manager/ui-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import type { Branch, Repository } from "@scm-manager/ui-types";
 import FileTree from "../components/FileTree";
-import {BranchSelector, Breadcrumb, ErrorNotification, Loading} from "@scm-manager/ui-components";
-import {translate} from "react-i18next";
+import {
+  BranchSelector,
+  Breadcrumb,
+  ErrorNotification,
+  Loading
+} from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 import {
   fetchBranches,
   getBranches,
   getFetchBranchesFailure,
   isFetchBranchesPending
 } from "../../branches/modules/branches";
-import {compose} from "redux";
+import { compose } from "redux";
 import Content from "./Content";
-import {fetchSources, isDirectory} from "../modules/sources";
+import { fetchSources, isDirectory } from "../modules/sources";
 
 type Props = {
   repository: Repository,
@@ -33,6 +38,7 @@ type Props = {
   // Context props
   history: any,
   match: any,
+  location: any,
   t: string => string
 };
 
@@ -55,16 +61,47 @@ class Sources extends React.Component<Props, State> {
       repository,
       revision,
       path,
+      branches,
+      baseUrl,
       fetchSources
     } = this.props;
 
     fetchBranches(repository);
     fetchSources(repository, revision, path);
+
+    if (branches) {
+      const defaultBranches = branches.filter(b => b.defaultBranch);
+
+      if (defaultBranches.length > 0)
+        this.setState({ selectedBranch: defaultBranches[0] });
+      this.props.history.push(`${baseUrl}/${defaultBranches[0].name}/`);
+    }
   }
+
   componentDidUpdate(prevProps) {
-    const { fetchSources, repository, revision, path } = this.props;
+    const {
+      fetchSources,
+      repository,
+      revision,
+      path,
+      branches,
+      baseUrl
+    } = this.props;
     if (prevProps.revision !== revision || prevProps.path !== path) {
       fetchSources(repository, revision, path);
+    }
+
+    const currentUrl = this.props.location.pathname;
+
+    if (
+      branches &&
+      (currentUrl.endsWith("sources") || currentUrl.endsWith("sources/"))
+    ) {
+      const defaultBranches = branches.filter(b => b.defaultBranch);
+
+      if (defaultBranches.length > 0)
+        this.setState({ selectedBranch: defaultBranches[0] });
+      this.props.history.push(`${baseUrl}/${defaultBranches[0].name}/`);
     }
   }
 
@@ -72,14 +109,14 @@ class Sources extends React.Component<Props, State> {
     const { baseUrl, history, path } = this.props;
     let url;
     if (branch) {
-      this.setState({selectedBranch: branch});
+      this.setState({ selectedBranch: branch });
       if (path) {
         url = `${baseUrl}/${encodeURIComponent(branch.name)}/${path}`;
       } else {
         url = `${baseUrl}/${encodeURIComponent(branch.name)}/`;
       }
     } else {
-      this.setState({selectedBranch: null});
+      this.setState({ selectedBranch: null });
       url = `${baseUrl}/`;
     }
     history.push(url);
@@ -97,7 +134,7 @@ class Sources extends React.Component<Props, State> {
       currentFileIsDirectory
     } = this.props;
 
-    const {selectedBranch} = this.state;
+    const { selectedBranch } = this.state;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -119,6 +156,7 @@ class Sources extends React.Component<Props, State> {
             defaultBranch={
               branches && branches.filter(b => b.defaultBranch === true)[0]
             }
+            branches={branches && branches}
           />
           <FileTree
             repository={repository}

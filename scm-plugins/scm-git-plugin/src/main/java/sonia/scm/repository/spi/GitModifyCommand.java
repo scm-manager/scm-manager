@@ -3,6 +3,8 @@ package sonia.scm.repository.spi;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
@@ -23,6 +25,7 @@ import java.util.Optional;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static sonia.scm.AlreadyExistsException.alreadyExists;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
 public class GitModifyCommand extends AbstractGitCommand implements ModifyCommand {
 
@@ -54,6 +57,9 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       if (!StringUtils.isEmpty(request.getBranch())) {
         checkOutBranch(request.getBranch());
       }
+      Ref head = getClone().getRepository().exactRef(Constants.HEAD);
+      doThrow().violation("branch has to be a valid branch, no revision", "branch", request.getBranch()).when(head == null || !head.isSymbolic());
+      getClone().getRepository().getFullBranch();
       if (!StringUtils.isEmpty(request.getExpectedRevision())) {
         if (!request.getExpectedRevision().equals(getCurrentRevision().getName())) {
           throw new ConcurrentModificationException("branch", request.getBranch() == null? "default": request.getBranch());
