@@ -53,18 +53,28 @@ import java.io.Serializable;
 public class BrowserResult implements Serializable {
 
   private String revision;
+  private String requestedRevision;
   private FileObject file;
 
   public BrowserResult() {
   }
 
   public BrowserResult(String revision, FileObject file) {
+    this(revision, revision, file);
+  }
+
+  public BrowserResult(String revision, String requestedRevision, FileObject file) {
     this.revision = revision;
+    this.requestedRevision = requestedRevision;
     this.file = file;
   }
 
   public String getRevision() {
     return revision;
+  }
+
+  public String getRequestedRevision() {
+    return requestedRevision;
   }
 
   public FileObject getFile() {

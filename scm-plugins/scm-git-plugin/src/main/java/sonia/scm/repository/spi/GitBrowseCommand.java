@@ -124,7 +124,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
     if (revId != null)
     {
-      result = new BrowserResult(revId.getName(), getEntry(repo, request, revId));
+      result = new BrowserResult(revId.getName(), request.getRevision(), getEntry(repo, request, revId));
     }
     else
     {
@@ -138,7 +138,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         logger.warn("could not find head of repository, empty?");
       }
 
-      result = new BrowserResult(Constants.HEAD, createEmtpyRoot());
+      result = new BrowserResult(Constants.HEAD, request.getRevision(), createEmtpyRoot());
     }
 
     return result;
