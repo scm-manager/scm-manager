@@ -61,49 +61,42 @@ class Sources extends React.Component<Props, State> {
       repository,
       revision,
       path,
-      branches,
-      baseUrl,
       fetchSources
     } = this.props;
 
     fetchBranches(repository);
     fetchSources(repository, revision, path);
 
-    if (branches) {
-      const defaultBranches = branches.filter(b => b.defaultBranch);
-
-      if (defaultBranches.length > 0)
-        this.setState({ selectedBranch: defaultBranches[0] });
-      this.props.history.push(`${baseUrl}/${defaultBranches[0].name}/`);
-    }
+    this.redirectToDefaultBranch();
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      fetchSources,
-      repository,
-      revision,
-      path,
-      branches,
-      baseUrl
-    } = this.props;
+    const { fetchSources, repository, revision, path } = this.props;
     if (prevProps.revision !== revision || prevProps.path !== path) {
       fetchSources(repository, revision, path);
     }
 
-    const currentUrl = this.props.location.pathname;
+    this.redirectToDefaultBranch();
+  }
 
-    if (
-      branches &&
-      (currentUrl.endsWith("sources") || currentUrl.endsWith("sources/"))
-    ) {
+  redirectToDefaultBranch = () => {
+    const { branches, baseUrl } = this.props;
+    if (this.shouldRedirect()) {
       const defaultBranches = branches.filter(b => b.defaultBranch);
 
-      if (defaultBranches.length > 0)
+      if (defaultBranches.length > 0) {
         this.setState({ selectedBranch: defaultBranches[0] });
-      this.props.history.push(`${baseUrl}/${defaultBranches[0].name}/`);
+        this.props.history.push(
+          `${baseUrl}/${encodeURIComponent(defaultBranches[0].name)}/`
+        );
+      }
     }
-  }
+  };
+
+  shouldRedirect = () => {
+    const { branches, revision } = this.props;
+    return branches && !revision;
+  };
 
   branchSelected = (branch?: Branch) => {
     const { baseUrl, history, path } = this.props;

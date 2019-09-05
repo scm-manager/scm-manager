@@ -19,6 +19,7 @@ export { default as Paginator } from "./Paginator.js";
 export { default as LinkPaginator } from "./LinkPaginator.js";
 export { default as StatePaginator } from "./StatePaginator.js";
 
+export { default as FileSize } from "./FileSize.js";
 export { default as ProtectedRoute } from "./ProtectedRoute.js";
 export { default as Help } from "./Help";
 export { default as HelpIcon } from "./HelpIcon";

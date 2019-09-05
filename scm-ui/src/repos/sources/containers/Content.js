@@ -2,8 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { File, Repository } from "@scm-manager/ui-types";
-import { DateFromNow, ButtonGroup } from "@scm-manager/ui-components";
-import FileSize from "../components/FileSize";
+import { DateFromNow, ButtonGroup, FileSize } from "@scm-manager/ui-components";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 import FileButtonGroup from "../components/content/FileButtonGroup";
