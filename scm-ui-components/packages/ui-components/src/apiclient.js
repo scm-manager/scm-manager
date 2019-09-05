@@ -3,16 +3,15 @@ import { contextPath } from "./urls";
 import { createBackendError, ForbiddenError, isBackendError, UnauthorizedError } from "./errors";
 import type { BackendErrorContent } from "./errors";
 
-const fetchOptions: RequestOptions = {
-  credentials: "same-origin",
-  headers: {
+const applyFetchOptions: (RequestOptions) => RequestOptions = o => {
+  o.credentials = "same-origin";
+  o.headers = {
     Cache: "no-cache",
     // identify the request as ajax request
     "X-Requested-With": "XMLHttpRequest"
-  }
+  };
+  return o;
 };
-
-
 
 function handleFailure(response: Response) {
   if (!response.ok) {
@@ -47,11 +46,22 @@ export function createUrl(url: string) {
 
 class ApiClient {
   get(url: string): Promise<Response> {
-    return fetch(createUrl(url), fetchOptions).then(handleFailure);
+    return fetch(createUrl(url), applyFetchOptions).then(handleFailure);
   }
 
   post(url: string, payload: any, contentType: string = "application/json") {
     return this.httpRequestWithJSONBody("POST", url, contentType, payload);
+  }
+
+  postBinary(url: string, fileAppender: FormData => void) {
+    let formData = new FormData();
+    fileAppender(formData);
+
+    let options: RequestOptions = {
+      method: "POST",
+      body: formData
+    };
+    return this.httpRequestWithBinaryBody(options, url);
   }
 
   put(url: string, payload: any, contentType: string = "application/json") {
@@ -62,7 +72,7 @@ class ApiClient {
     let options: RequestOptions = {
       method: "HEAD"
     };
-    options = Object.assign(options, fetchOptions);
+    options = applyFetchOptions(options);
     return fetch(createUrl(url), options).then(handleFailure);
   }
 
@@ -70,7 +80,7 @@ class ApiClient {
     let options: RequestOptions = {
       method: "DELETE"
     };
-    options = Object.assign(options, fetchOptions);
+    options = applyFetchOptions(options);
     return fetch(createUrl(url), options).then(handleFailure);
   }
 
@@ -84,9 +94,15 @@ class ApiClient {
       method: method,
       body: JSON.stringify(payload)
     };
-    options = Object.assign(options, fetchOptions);
-    // $FlowFixMe
-    options.headers["Content-Type"] = contentType;
+    return this.httpRequestWithBinaryBody(options, url, contentType);
+  }
+
+  httpRequestWithBinaryBody(options: RequestOptions, url: string, contentType?: string) {
+    options = applyFetchOptions(options);
+    if (contentType) {
+      // $FlowFixMe
+      options.headers["Content-Type"] = contentType;
+    }
 
     return fetch(createUrl(url), options).then(handleFailure);
   }

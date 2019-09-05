@@ -1,9 +1,16 @@
 //@flow
 import React from "react";
 import { Link } from "react-router-dom";
+import type { Branch } from "@scm-manager/ui-types";
 import injectSheet from "react-jss";
+import { ExtensionPoint, binder } from "@scm-manager/ui-extensions";
+import {ButtonGroup} from "./buttons";
+import classNames from "classnames";
 
 type Props = {
+  branch: Branch,
+  defaultBranch: Branch,
+  branches: Branch[],
   revision: string,
   path: string,
   baseUrl: string,
@@ -13,6 +20,17 @@ type Props = {
 const styles = {
   noMargin: {
     margin: "0"
+  },
+  flexRow: {
+    display: "flex",
+    flexDirection: "row"
+  },
+  flexStart: {
+    flex: "1"
+  },
+  buttonGroup: {
+    alignSelf: "center",
+    paddingRight: "1rem"
   }
 };
 
@@ -45,13 +63,32 @@ class Breadcrumb extends React.Component<Props> {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, baseUrl, branch, defaultBranch, branches, revision, path } = this.props;
 
     return (
       <>
-        <nav className="breadcrumb sources-breadcrumb" aria-label="breadcrumbs">
-          <ul>{this.renderPath()}</ul>
-        </nav>
+        <div className={classes.flexRow}>
+          <nav className={classNames(classes.flexStart, "breadcrumb sources-breadcrumb")} aria-label="breadcrumbs">
+            <ul>{this.renderPath()}</ul>
+          </nav>
+          {
+            binder.hasExtension("repos.sources.actionbar") &&
+            <div className={classes.buttonGroup}>
+              <ButtonGroup>
+                <ExtensionPoint
+                  name="repos.sources.actionbar"
+                  props={{
+                    baseUrl,
+                    branch: branch ? branch : defaultBranch,
+                    path,
+                    isBranchUrl: branches &&
+                      branches.filter(b => b.name.replace("/", "%2F") === revision).length > 0 }}
+                  renderAll={true}
+                />
+              </ButtonGroup>
+            </div>
+          }
+        </div>
         <hr className={classes.noMargin} />
       </>
     );

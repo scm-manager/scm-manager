@@ -22,6 +22,7 @@ public class ModifyCommandRequest implements Resetable, Validateable {
   private Person author;
   private String commitMessage;
   private String branch;
+  private String expectedRevision;
 
   @Override
   public void reset() {
@@ -63,9 +64,17 @@ public class ModifyCommandRequest implements Resetable, Validateable {
     return branch;
   }
 
+  public String getExpectedRevision() {
+    return expectedRevision;
+  }
+
   @Override
   public boolean isValid() {
-    return StringUtils.isNotEmpty(commitMessage) && StringUtils.isNotEmpty(branch) && !requests.isEmpty();
+    return StringUtils.isNotEmpty(commitMessage) && !requests.isEmpty();
+  }
+
+  public void setExpectedRevision(String expectedRevision) {
+    this.expectedRevision = expectedRevision;
   }
 
   public interface PartialRequest {

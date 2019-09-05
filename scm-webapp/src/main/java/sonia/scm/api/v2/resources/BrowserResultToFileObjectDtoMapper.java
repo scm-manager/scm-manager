@@ -15,7 +15,7 @@ public class BrowserResultToFileObjectDtoMapper {
   }
 
   public FileObjectDto map(BrowserResult browserResult, NamespaceAndName namespaceAndName) {
-    FileObjectDto fileObjectDto = fileObjectToFileObjectDtoMapper.map(browserResult.getFile(), namespaceAndName, browserResult.getRevision());
+    FileObjectDto fileObjectDto = fileObjectToFileObjectDtoMapper.map(browserResult.getFile(), namespaceAndName, browserResult);
     fileObjectDto.setRevision( browserResult.getRevision() );
     return fileObjectDto;
   }

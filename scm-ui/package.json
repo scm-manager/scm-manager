@@ -26,6 +26,7 @@
     "react": "^16.8.6",
     "react-diff-view": "^1.8.1",
     "react-dom": "^16.8.6",
+    "react-dropzone": "^10.1.8",
     "react-i18next": "^7.9.0",
     "react-jss": "^8.6.0",
     "react-redux": "^5.0.7",
@@ -55,7 +56,7 @@
     "pre-commit": "jest && flow && eslint src"
   },
   "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.29",
+    "@scm-manager/ui-bundler": "^0.0.31",
     "concat": "^1.0.3",
     "copyfiles": "^2.0.0",
     "enzyme": "^3.3.0",

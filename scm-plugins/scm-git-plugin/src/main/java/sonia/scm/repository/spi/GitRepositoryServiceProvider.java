@@ -68,7 +68,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     Command.OUTGOING,
     Command.PUSH,
     Command.PULL,
-    Command.MERGE
+    Command.MERGE,
+    Command.MODIFY
   );
   protected static final Set<Feature> FEATURES = EnumSet.of(Feature.INCOMING_REVISION);
   //J+

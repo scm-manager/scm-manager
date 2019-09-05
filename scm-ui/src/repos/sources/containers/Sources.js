@@ -1,20 +1,25 @@
 // @flow
 import React from "react";
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
-import type {Branch, Repository} from "@scm-manager/ui-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import type { Branch, Repository } from "@scm-manager/ui-types";
 import FileTree from "../components/FileTree";
-import {BranchSelector, Breadcrumb, ErrorNotification, Loading} from "@scm-manager/ui-components";
-import {translate} from "react-i18next";
+import {
+  BranchSelector,
+  Breadcrumb,
+  ErrorNotification,
+  Loading
+} from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 import {
   fetchBranches,
   getBranches,
   getFetchBranchesFailure,
   isFetchBranchesPending
 } from "../../branches/modules/branches";
-import {compose} from "redux";
+import { compose } from "redux";
 import Content from "./Content";
-import {fetchSources, isDirectory} from "../modules/sources";
+import { fetchSources, isDirectory } from "../modules/sources";
 
 type Props = {
   repository: Repository,
@@ -33,10 +38,23 @@ type Props = {
   // Context props
   history: any,
   match: any,
+  location: any,
   t: string => string
 };
 
-class Sources extends React.Component<Props> {
+type State = {
+  selectedBranch: any
+};
+
+class Sources extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      selectedBranch: null
+    };
+  }
+
   componentDidMount() {
     const {
       fetchBranches,
@@ -48,24 +66,50 @@ class Sources extends React.Component<Props> {
 
     fetchBranches(repository);
     fetchSources(repository, revision, path);
+
+    this.redirectToDefaultBranch();
   }
+
   componentDidUpdate(prevProps) {
     const { fetchSources, repository, revision, path } = this.props;
     if (prevProps.revision !== revision || prevProps.path !== path) {
       fetchSources(repository, revision, path);
     }
+
+    this.redirectToDefaultBranch();
   }
+
+  redirectToDefaultBranch = () => {
+    const { branches, baseUrl } = this.props;
+    if (this.shouldRedirect()) {
+      const defaultBranches = branches.filter(b => b.defaultBranch);
+
+      if (defaultBranches.length > 0) {
+        this.setState({ selectedBranch: defaultBranches[0] });
+        this.props.history.push(
+          `${baseUrl}/${encodeURIComponent(defaultBranches[0].name)}/`
+        );
+      }
+    }
+  };
+
+  shouldRedirect = () => {
+    const { branches, revision } = this.props;
+    return branches && !revision;
+  };
 
   branchSelected = (branch?: Branch) => {
     const { baseUrl, history, path } = this.props;
     let url;
     if (branch) {
+      this.setState({ selectedBranch: branch });
       if (path) {
         url = `${baseUrl}/${encodeURIComponent(branch.name)}/${path}`;
       } else {
         url = `${baseUrl}/${encodeURIComponent(branch.name)}/`;
       }
     } else {
+      this.setState({ selectedBranch: null });
       url = `${baseUrl}/`;
     }
     history.push(url);
@@ -75,12 +119,15 @@ class Sources extends React.Component<Props> {
     const {
       repository,
       baseUrl,
+      branches,
       loading,
       error,
       revision,
       path,
       currentFileIsDirectory
     } = this.props;
+
+    const { selectedBranch } = this.state;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -94,7 +141,16 @@ class Sources extends React.Component<Props> {
       return (
         <div className="panel">
           {this.renderBranchSelector()}
-          <Breadcrumb revision={encodeURIComponent(revision)} path={path} baseUrl={baseUrl} />
+          <Breadcrumb
+            revision={encodeURIComponent(revision)}
+            path={path}
+            baseUrl={baseUrl}
+            branch={selectedBranch}
+            defaultBranch={
+              branches && branches.filter(b => b.defaultBranch === true)[0]
+            }
+            branches={branches && branches}
+          />
           <FileTree
             repository={repository}
             revision={revision}

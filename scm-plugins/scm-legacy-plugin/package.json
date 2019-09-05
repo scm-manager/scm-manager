@@ -11,10 +11,9 @@
   "dependencies": {
     "@scm-manager/ui-components": "latest",
     "@scm-manager/ui-extensions": "^0.1.1",
-    "react-redux": "^5.0.7",
     "@scm-manager/ui-types": "latest"
   },
   "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.25"
+    "@scm-manager/ui-bundler": "^0.0.31"
   }
 }
