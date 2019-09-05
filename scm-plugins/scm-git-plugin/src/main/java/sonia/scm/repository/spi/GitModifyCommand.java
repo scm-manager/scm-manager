@@ -9,7 +9,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.ContextEntry;
-import sonia.scm.ScmConstraintViolationException;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Optional;
 
@@ -83,11 +84,7 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
         try {
           Files.copy(file.toPath(), targetFile);
         } catch (FileAlreadyExistsException e) {
-          ContextEntry.ContextBuilder contextBuilder = entity("file", toBeCreated);
-          if (!StringUtils.isEmpty(request.getBranch())) {
-            contextBuilder.in("branch", request.getBranch());
-          }
-          throw alreadyExists(contextBuilder.in(context.getRepository()));
+          throw alreadyExists(createFileContext(toBeCreated));
         }
       }
       try {
@@ -98,8 +95,27 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     }
 
     @Override
-    public void delete(String toBeDeleted) {
+    public void delete(String toBeDeleted) throws IOException {
+      Path fileToBeDeleted = new File(workDir, toBeDeleted).toPath();
+      try {
+        Files.delete(fileToBeDeleted);
+      } catch (NoSuchFileException e) {
+        throw NotFoundException.notFound(createFileContext(toBeDeleted));
+      }
+      try {
+        getClone().rm().addFilepattern(toBeDeleted).call();
+      } catch (GitAPIException e) {
+        throwInternalRepositoryException("could not remove file from index", e);
+      }
+    }
 
+    private ContextEntry.ContextBuilder createFileContext(String toBeDeleted) {
+      ContextEntry.ContextBuilder contextBuilder = entity("file", toBeDeleted);
+      if (!StringUtils.isEmpty(request.getBranch())) {
+        contextBuilder.in("branch", request.getBranch());
+      }
+      contextBuilder.in(context.getRepository());
+      return contextBuilder;
     }
 
     @Override

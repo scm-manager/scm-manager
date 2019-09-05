@@ -16,6 +16,7 @@ import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
+import sonia.scm.NotFoundException;
 import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.util.WorkdirProvider;
@@ -153,6 +154,47 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("irrelevant", newFile, true));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
     request.setExpectedRevision("abc");
+
+    command.execute(request);
+  }
+
+  @Test
+  public void shouldDeleteExistingFile() throws IOException, GitAPIException {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt"));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+
+    TreeAssertions assertions = canonicalTreeParser -> assertThat(canonicalTreeParser.findFile("a.txt")).isFalse();
+
+    assertInTree(assertions);
+  }
+
+  @Test(expected = NotFoundException.class)
+  public void shouldThrowNotFoundExceptionWhenFileToDeleteDoesNotExist() {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("no/such/file"));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+  }
+
+  @Test(expected = NotFoundException.class)
+  public void shouldThrowNotFoundExceptionWhenBranchDoesNotExist() {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setBranch("does-not-exist");
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt"));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     command.execute(request);
   }

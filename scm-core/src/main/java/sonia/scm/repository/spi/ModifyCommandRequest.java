@@ -89,7 +89,7 @@ public class ModifyCommandRequest implements Resetable, Validateable {
     }
 
     @Override
-    public void execute(ModifyCommand.Worker worker) {
+    public void execute(ModifyCommand.Worker worker) throws IOException {
       worker.delete(path);
     }
   }
