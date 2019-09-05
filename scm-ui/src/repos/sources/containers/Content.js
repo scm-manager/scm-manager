@@ -69,7 +69,7 @@ class Content extends React.Component<Props, State> {
   }
 
   showHeader() {
-    const { file, classes } = this.props;
+    const { file, revision, classes } = this.props;
     const { showHistory, collapsed } = this.state;
     const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
 
@@ -101,7 +101,7 @@ class Content extends React.Component<Props, State> {
             <ButtonGroup>
               <ExtensionPoint
                 name="repos.sources.content.actionbar"
-                props={{ file }}
+                props={{ file, revision }}
                 renderAll={true}
               />
             </ButtonGroup>
