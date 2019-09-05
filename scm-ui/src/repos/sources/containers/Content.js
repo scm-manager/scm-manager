@@ -2,7 +2,12 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type { File, Repository } from "@scm-manager/ui-types";
-import { DateFromNow, ButtonGroup, FileSize } from "@scm-manager/ui-components";
+import {
+  DateFromNow,
+  ButtonGroup,
+  FileSize,
+  ErrorNotification
+} from "@scm-manager/ui-components";
 import injectSheet from "react-jss";
 import classNames from "classnames";
 import FileButtonGroup from "../components/content/FileButtonGroup";
@@ -14,7 +19,6 @@ import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   loading: boolean,
-  error: Error,
   file: File,
   repository: Repository,
   revision: string,
@@ -25,7 +29,8 @@ type Props = {
 
 type State = {
   collapsed: boolean,
-  showHistory: boolean
+  showHistory: boolean,
+  errorFromExtension?: Error
 };
 
 const styles = {
@@ -67,6 +72,10 @@ class Content extends React.Component<Props, State> {
     });
   }
 
+  handleExtensionError = (error: Error) => {
+    this.setState({ errorFromExtension: error });
+  };
+
   showHeader() {
     const { file, revision, classes } = this.props;
     const { showHistory, collapsed } = this.state;
@@ -100,7 +109,11 @@ class Content extends React.Component<Props, State> {
             <ButtonGroup>
               <ExtensionPoint
                 name="repos.sources.content.actionbar"
-                props={{ file, revision }}
+                props={{
+                  file,
+                  revision,
+                  handleExtensionError: this.handleExtensionError
+                }}
                 renderAll={true}
               />
             </ButtonGroup>
@@ -167,7 +180,7 @@ class Content extends React.Component<Props, State> {
 
   render() {
     const { file, revision, repository, path } = this.props;
-    const { showHistory } = this.state;
+    const { showHistory, errorFromExtension } = this.state;
 
     const header = this.showHeader();
     const content =
@@ -190,6 +203,7 @@ class Content extends React.Component<Props, State> {
           {moreInformation}
           {content}
         </div>
+        {errorFromExtension && <ErrorNotification error={errorFromExtension} />}
       </div>
     );
   }
