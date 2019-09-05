@@ -87,7 +87,7 @@ class Sources extends React.Component<Props, State> {
       if (defaultBranches.length > 0) {
         this.setState({ selectedBranch: defaultBranches[0] });
         this.props.history.push(
-          `${baseUrl}/${defaultBranches[0].name.replace("/", "%2F")}/`
+          `${baseUrl}/${encodeURIComponent(defaultBranches[0].name)}/`
         );
       }
     }
