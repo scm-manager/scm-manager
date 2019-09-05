@@ -1,8 +1,7 @@
 //@flow
 import * as React from "react";
 import injectSheet from "react-jss";
-import { DateFromNow } from "@scm-manager/ui-components";
-import FileSize from "./FileSize";
+import { DateFromNow, FileSize } from "@scm-manager/ui-components";
 import FileIcon from "./FileIcon";
 import { Link } from "react-router-dom";
 import type { File } from "@scm-manager/ui-types";
