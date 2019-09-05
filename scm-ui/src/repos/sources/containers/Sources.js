@@ -157,6 +157,7 @@ class Sources extends React.Component<Props, State> {
               branches && branches.filter(b => b.defaultBranch === true)[0]
             }
             branches={branches && branches}
+            repository={repository}
           />
           <FileTree
             repository={repository}
