@@ -8,7 +8,9 @@ type Props = {
   children: React.Node
 };
 
-class PageActions extends React.Component<Props> {
+export default class PageActions extends React.Component<Props> {
+  static displayName = "PageActions";
+
   render() {
     return <>{this.renderContent()}</>;
   }
@@ -24,5 +26,3 @@ class PageActions extends React.Component<Props> {
     return children;
   }
 }
-
-export default PageActions;

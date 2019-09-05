@@ -28,7 +28,7 @@ class Modal extends React.Component<Props> {
         <div className="modal-background" />
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">{title}</p>
+            <p className="modal-card-title is-marginless">{title}</p>
             <button
               className="delete"
               aria-label="close"
