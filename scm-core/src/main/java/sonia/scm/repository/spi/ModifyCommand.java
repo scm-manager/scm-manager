@@ -12,7 +12,7 @@ public interface ModifyCommand {
 
     void create(String toBeCreated, File file, boolean overwrite) throws IOException;
 
-    void modify(String path, File file);
+    void modify(String path, File file) throws IOException;
 
     void move(String sourcePath, String targetPath);
   }

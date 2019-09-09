@@ -129,6 +129,38 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     assertInTree(assertions);
   }
 
+  @Test
+  public void shouldModifyExistingFile() throws IOException, GitAPIException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.ModifyFileRequest("a.txt", newFile));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+
+    TreeAssertions assertions = canonicalTreeParser -> assertThat(canonicalTreeParser.findFile("a.txt")).isTrue();
+
+    assertInTree(assertions);
+  }
+
+  @Test(expected = NotFoundException.class)
+  public void shouldFailIfFileToModifyDoesNotExist() throws IOException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.ModifyFileRequest("no.such.file", newFile));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+  }
+
   @Test(expected = BadRequestException.class)
   public void shouldFailIfNoChangesMade() throws IOException {
     File newFile = Files.write(temporaryFolder.newFile().toPath(), "b\n".getBytes()).toFile();
