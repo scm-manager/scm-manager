@@ -1,10 +1,9 @@
 //@flow
 import React from "react";
-import { Link } from "react-router-dom";
-import type { Branch, Repository } from "@scm-manager/ui-types";
+import {Link} from "react-router-dom";
+import type {Branch, Repository} from "@scm-manager/ui-types";
 import injectSheet from "react-jss";
-import { ExtensionPoint, binder } from "@scm-manager/ui-extensions";
-import {ButtonGroup} from "./buttons";
+import {binder, ExtensionPoint} from "@scm-manager/ui-extensions";
 import classNames from "classnames";
 
 type Props = {
@@ -64,33 +63,48 @@ class Breadcrumb extends React.Component<Props> {
   }
 
   render() {
-    const { classes, baseUrl, branch, defaultBranch, branches, revision, path, repository } = this.props;
+    const {
+      classes,
+      baseUrl,
+      branch,
+      defaultBranch,
+      branches,
+      revision,
+      path,
+      repository
+    } = this.props;
 
     return (
       <>
         <div className={classes.flexRow}>
-          <nav className={classNames(classes.flexStart, "breadcrumb sources-breadcrumb")} aria-label="breadcrumbs">
+          <nav
+            className={classNames(
+              classes.flexStart,
+              "breadcrumb sources-breadcrumb"
+            )}
+            aria-label="breadcrumbs"
+          >
             <ul>{this.renderPath()}</ul>
           </nav>
-          {
-            binder.hasExtension("repos.sources.actionbar") &&
+          {binder.hasExtension("repos.sources.actionbar") && (
             <div className={classes.buttonGroup}>
-              <ButtonGroup>
-                <ExtensionPoint
-                  name="repos.sources.actionbar"
-                  props={{
-                    baseUrl,
-                    branch: branch ? branch : defaultBranch,
-                    path,
-                    isBranchUrl: branches &&
-                      branches.filter(b => b.name.replace("/", "%2F") === revision).length > 0,
-                    repository
-                  }}
-                  renderAll={true}
-                />
-              </ButtonGroup>
+              <ExtensionPoint
+                name="repos.sources.actionbar"
+                props={{
+                  baseUrl,
+                  branch: branch ? branch : defaultBranch,
+                  path,
+                  isBranchUrl:
+                    branches &&
+                    branches.filter(
+                      b => b.name.replace("/", "%2F") === revision
+                    ).length > 0,
+                  repository
+                }}
+                renderAll={true}
+              />
             </div>
-          }
+          )}
         </div>
         <hr className={classes.noMargin} />
       </>
