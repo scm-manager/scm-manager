@@ -111,6 +111,20 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     command.execute(request);
   }
 
+  @Test(expected = AlreadyExistsException.class)
+  public void shouldFailIfPathAlreadyExistsAsAFile() throws IOException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("a.txt/newFile", newFile, false));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+  }
+
   @Test
   public void shouldOverwriteExistingFileIfOverwriteFlagSet() throws IOException, GitAPIException {
     File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
@@ -127,6 +141,38 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     TreeAssertions assertions = canonicalTreeParser -> assertThat(canonicalTreeParser.findFile("a.txt")).isTrue();
 
     assertInTree(assertions);
+  }
+
+  @Test
+  public void shouldModifyExistingFile() throws IOException, GitAPIException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.ModifyFileRequest("a.txt", newFile));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+
+    TreeAssertions assertions = canonicalTreeParser -> assertThat(canonicalTreeParser.findFile("a.txt")).isTrue();
+
+    assertInTree(assertions);
+  }
+
+  @Test(expected = NotFoundException.class)
+  public void shouldFailIfFileToModifyDoesNotExist() throws IOException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.ModifyFileRequest("no.such.file", newFile));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
   }
 
   @Test(expected = BadRequestException.class)
