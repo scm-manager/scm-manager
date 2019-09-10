@@ -111,6 +111,20 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     command.execute(request);
   }
 
+  @Test(expected = AlreadyExistsException.class)
+  public void shouldFailIfPathAlreadyExistsAsAFile() throws IOException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("a.txt/newFile", newFile, false));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+  }
+
   @Test
   public void shouldOverwriteExistingFileIfOverwriteFlagSet() throws IOException, GitAPIException {
     File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
