@@ -178,22 +178,18 @@ public class DefaultPluginManager implements PluginManager {
 
   private List<AvailablePlugin> collectPluginsToInstall(String name) {
     List<AvailablePlugin> plugins = new ArrayList<>();
-    collectPluginsToInstall(plugins, name);
+    collectPluginsToInstall(plugins, name, true);
     return plugins;
   }
 
-  private boolean isInstalledOrPending(String name) {
-    return getInstalled(name).isPresent() || getPending(name).isPresent();
-  }
-
-  private void collectPluginsToInstall(List<AvailablePlugin> plugins, String name) {
-    if (!isInstalledOrPending(name)) {
+  private void collectPluginsToInstall(List<AvailablePlugin> plugins, String name, boolean isUpdate) {
+    if (!isInstalledOrPending(name) || isUpdate && isUpdatable(name)) {
       AvailablePlugin plugin = getAvailable(name).orElseThrow(() -> NotFoundException.notFound(entity(AvailablePlugin.class, name)));
 
       Set<String> dependencies = plugin.getDescriptor().getDependencies();
       if (dependencies != null) {
         for (String dependency: dependencies){
-          collectPluginsToInstall(plugins, dependency);
+          collectPluginsToInstall(plugins, dependency, false);
         }
       }
 
@@ -201,5 +197,13 @@ public class DefaultPluginManager implements PluginManager {
     } else {
       LOG.info("plugin {} is already installed or installation is pending, skipping installation", name);
     }
+  }
+
+  private boolean isInstalledOrPending(String name) {
+    return getInstalled(name).isPresent() || getPending(name).isPresent();
+  }
+
+  private boolean isUpdatable(String name) {
+    return getAvailable(name).isPresent() && !getPending(name).isPresent();
   }
 }
