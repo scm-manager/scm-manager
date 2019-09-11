@@ -2,9 +2,9 @@
 
 import { validation } from "@scm-manager/ui-components";
 
-const { isNameValid, isMailValid } = validation;
+const { isNameValid, isMailValid, isValidPath } = validation;
 
-export { isNameValid, isMailValid };
+export { isNameValid, isMailValid, isValidPath };
 
 export const isDisplayNameValid = (displayName: string) => {
   if (displayName) {
