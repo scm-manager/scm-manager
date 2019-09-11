@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Getter;
@@ -16,6 +17,8 @@ public class PluginDto extends HalRepresentation {
 
   private String name;
   private String version;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private String newVersion;
   private String displayName;
   private String description;
   private String author;

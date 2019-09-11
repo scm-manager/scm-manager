@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.lifecycle.RestartEvent;
+import sonia.scm.version.Version;
 
 //~--- JDK imports ------------------------------------------------------------
 import javax.inject.Inject;
@@ -83,7 +84,7 @@ public class DefaultPluginManager implements PluginManager {
     return center.getAvailable()
       .stream()
       .filter(filterByName(name))
-      .filter(this::isNotInstalled)
+      .filter(this::isNotInstalledOrMoreUpToDate)
       .map(p -> getPending(name).orElse(p))
       .findFirst();
   }
@@ -116,7 +117,7 @@ public class DefaultPluginManager implements PluginManager {
     PluginPermissions.read().check();
     return center.getAvailable()
       .stream()
-      .filter(this::isNotInstalled)
+      .filter(this::isNotInstalledOrMoreUpToDate)
       .map(p -> getPending(p.getDescriptor().getInformation().getName()).orElse(p))
       .collect(Collectors.toList());
   }
@@ -125,8 +126,14 @@ public class DefaultPluginManager implements PluginManager {
     return plugin -> name.equals(plugin.getDescriptor().getInformation().getName());
   }
 
-  private boolean isNotInstalled(AvailablePlugin availablePlugin) {
-    return !getInstalled(availablePlugin.getDescriptor().getInformation().getName()).isPresent();
+  private boolean isNotInstalledOrMoreUpToDate(AvailablePlugin availablePlugin) {
+    return getInstalled(availablePlugin.getDescriptor().getInformation().getName())
+      .map(installedPlugin -> availableIsMoreUpToDateThanInstalled(availablePlugin, installedPlugin))
+      .orElse(true);
+  }
+
+  private boolean availableIsMoreUpToDateThanInstalled(AvailablePlugin availablePlugin, InstalledPlugin installed) {
+    return Version.parse(availablePlugin.getDescriptor().getInformation().getVersion()).isNewer(installed.getDescriptor().getInformation().getVersion());
   }
 
   @Override

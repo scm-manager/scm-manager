@@ -29,6 +29,7 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Optional;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -87,7 +88,7 @@ class InstalledPluginResourceTest {
     void getInstalledPlugins() throws URISyntaxException, UnsupportedEncodingException {
       InstalledPlugin installedPlugin = createPlugin();
       when(pluginManager.getInstalled()).thenReturn(Collections.singletonList(installedPlugin));
-      when(collectionMapper.mapInstalled(Collections.singletonList(installedPlugin))).thenReturn(new MockedResultDto());
+      when(collectionMapper.mapInstalled(Collections.singletonList(installedPlugin), Collections.emptyList())).thenReturn(new MockedResultDto());
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/installed");
       request.accept(VndMediaType.PLUGIN_COLLECTION);
@@ -110,7 +111,7 @@ class InstalledPluginResourceTest {
 
       PluginDto pluginDto = new PluginDto();
       pluginDto.setName("pluginName");
-      when(mapper.mapInstalled(installedPlugin)).thenReturn(pluginDto);
+      when(mapper.mapInstalled(installedPlugin, emptyList())).thenReturn(pluginDto);
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/installed/pluginName");
       request.accept(VndMediaType.PLUGIN);
