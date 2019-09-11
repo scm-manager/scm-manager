@@ -67,7 +67,8 @@ public abstract class PluginDtoMapper {
     Links.Builder links = linkingTo()
       .self(resourceLinks.installedPlugin()
         .self(information.getName()));
-    if (availablePlugin.isPresent()
+    if (!plugin.isCore()
+      && availablePlugin.isPresent()
       && !availablePlugin.get().isPending()
       && PluginPermissions.manage().isPermitted()
     ) {
@@ -80,6 +81,8 @@ public abstract class PluginDtoMapper {
       dto.setNewVersion(value.getDescriptor().getInformation().getVersion());
       dto.setPending(value.isPending());
     });
+
+    dto.setCore(plugin.isCore());
 
     return dto;
   }

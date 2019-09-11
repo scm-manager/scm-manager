@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
+import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.lifecycle.RestartEvent;
 
@@ -175,6 +176,31 @@ class DefaultPluginManagerTest {
 
       verify(installer).install(git);
       verify(eventBus, never()).post(any());
+    }
+
+    @Test
+    void shouldUpdateNormalPlugin() {
+      AvailablePlugin available = createAvailable("scm-git-plugin", "2");
+      InstalledPlugin installed = createInstalled("scm-git-plugin", "1");
+      when(installed.isCore()).thenReturn(false);
+      lenient().when(center.getAvailable()).thenReturn(ImmutableSet.of(available));
+      when(loader.getInstalledPlugins()).thenReturn(ImmutableSet.of(installed));
+
+      manager.install("scm-git-plugin", false);
+
+      verify(installer).install(available);
+      verify(eventBus, never()).post(any());
+    }
+
+    @Test
+    void shouldNotUpdateCorePlugin() {
+      AvailablePlugin available = createAvailable("scm-git-plugin", "2");
+      InstalledPlugin installed = createInstalled("scm-git-plugin", "1");
+      when(installed.isCore()).thenReturn(true);
+      lenient().when(center.getAvailable()).thenReturn(ImmutableSet.of(available));
+      when(loader.getInstalledPlugins()).thenReturn(ImmutableSet.of(installed));
+
+      assertThrows(ScmConstraintViolationException.class, () -> manager.install("scm-git-plugin", false));
     }
 
     @Test

@@ -40,6 +40,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
+import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.version.Version;
@@ -54,6 +55,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
 /**
  *
@@ -139,6 +141,13 @@ public class DefaultPluginManager implements PluginManager {
   @Override
   public void install(String name, boolean restartAfterInstallation) {
     PluginPermissions.manage().check();
+
+    getInstalled(name)
+      .map(InstalledPlugin::isCore)
+      .ifPresent(
+        core -> doThrow().violation("plugin is a core plugin and cannot be updated").when(core)
+      );
+
     List<AvailablePlugin> plugins = collectPluginsToInstall(name);
     List<PendingPluginInstallation> pendingInstallations = new ArrayList<>();
     for (AvailablePlugin plugin : plugins) {

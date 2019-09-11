@@ -25,6 +25,8 @@ public class PluginDto extends HalRepresentation {
   private String category;
   private String avatarUrl;
   private boolean pending;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private Boolean core;
   private Set<String> dependencies;
 
   public PluginDto(Links links) {
