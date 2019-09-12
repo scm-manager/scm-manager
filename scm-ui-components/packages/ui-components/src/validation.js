@@ -17,6 +17,6 @@ export const isNumberValid = (number: string) => {
 
 const pathRegex = /^((?!\/{2,}).)*$/;
 
-export const isValidPath = (path: string) => {
+export const isPathValid = (path: string) => {
   return pathRegex.test(path);
 };
