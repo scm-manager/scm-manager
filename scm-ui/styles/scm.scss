@@ -97,22 +97,15 @@ $danger-50: scale-color($danger, $lightness: 50%);
 $danger-25: scale-color($danger, $lightness: 75%);
 
 :root {
-  --dark: #{$dark};
-  --dark-75: #{$dark-75};
-  --dark-50: #{$dark-50};
-  --dark-25: #{$dark-25};
-  --info: #{$info};
-  --info-75: #{$info-75};
-  --info-50: #{$info-50};
-  --info-25: #{$info-25};
-  --link: #{$link};
-  --link-75: #{$link-75};
-  --link-50: #{$link-50};
-  --link-25: #{$link-25};
+  // asc sorted derived-variables
   --primary: #{$primary};
   --primary-75: #{$primary-75};
   --primary-50: #{$primary-50};
   --primary-25: #{$primary-25};
+  --info: #{$info};
+  --info-75: #{$info-75};
+  --info-50: #{$info-50};
+  --info-25: #{$info-25};
   --success: #{$success};
   --success-75: #{$success-75};
   --success-50: #{$success-50};
@@ -125,6 +118,18 @@ $danger-25: scale-color($danger, $lightness: 75%);
   --danger-75: #{$danger-75};
   --danger-50: #{$danger-50};
   --danger-25: #{$danger-25};
+  --light: #{$light};
+  --dark: #{$dark};
+  --dark-75: #{$dark-75};
+  --dark-50: #{$dark-50};
+  --dark-25: #{$dark-25};
+  --background: #{$background};
+  --border: #{$border};
+  --text: #{$text};
+  --link: #{$link};
+  --link-75: #{$link-75};
+  --link-50: #{$link-50};
+  --link-25: #{$link-25};
 }
 
 .has-background-dark-75 {
