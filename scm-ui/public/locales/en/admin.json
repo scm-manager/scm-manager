@@ -70,13 +70,13 @@
       "submit": "Save"
     },
     "delete": {
-      "button": "Löschen",
-      "subtitle": "Berechtigungsrolle löschen",
+      "button": "Delete",
+      "subtitle": "Delete permission role",
       "confirmAlert": {
-        "title": "Berechtigungsrolle löschen",
-        "message": "Soll die Berechtigungsrolle wirklich gelöscht werden? Alle Nutzer dieser Rolle verlieren Ihre Berechtigungen.",
-        "submit": "Ja",
-        "cancel": "Nein"
+        "title": "Delete permission role",
+        "message": "Do you really want to delete this permission role? All users will lose their corresponding permissions.",
+        "submit": "Yes",
+        "cancel": "No"
       }
     }
   }
