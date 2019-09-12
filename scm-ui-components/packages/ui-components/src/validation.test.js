@@ -106,13 +106,13 @@ describe("test path validation", () => {
   const invalid = ["//", "some//path", "end//"];
   for (let path of invalid) {
     it(`should return false for '${path}'`, () => {
-      expect(validator.isValidPath(path)).toBe(false);
+      expect(validator.isPathValid(path)).toBe(false);
     });
   }
   const valid = ["", "/", "dir", "some/path", "end/"];
   for (let path of valid) {
     it(`should return true for '${path}'`, () => {
-      expect(validator.isValidPath(path)).toBe(true);
+      expect(validator.isPathValid(path)).toBe(true);
     });
   }
 });
