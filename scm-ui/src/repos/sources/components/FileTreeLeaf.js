@@ -92,7 +92,7 @@ class FileTreeLeaf extends React.Component<Props> {
           {file.description}
         </td>
         {binder.hasExtension("repos.sources.tree.row.right") && (
-          <td>
+          <td className="is-hidden-mobile">
             {!file.directory && (
               <ExtensionPoint
                 name="repos.sources.tree.row.right"

@@ -77,7 +77,7 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     @Override
     public void create(String toBeCreated, File file, boolean overwrite) throws IOException {
       Path targetFile = new File(workDir, toBeCreated).toPath();
-      Files.createDirectories(targetFile.getParent());
+      createDirectories(targetFile);
       if (overwrite) {
         Files.move(file.toPath(), targetFile, REPLACE_EXISTING);
       } else {
@@ -88,7 +88,7 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
         }
       }
       try {
-        getClone().add().addFilepattern(toBeCreated).call();
+        addFileToGit(toBeCreated);
       } catch (GitAPIException e) {
         throwInternalRepositoryException("could not add new file to index", e);
       }
@@ -97,16 +97,20 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     @Override
     public void modify(String path, File file) throws IOException {
       Path targetFile = new File(workDir, path).toPath();
-      Files.createDirectories(targetFile.getParent());
+      createDirectories(targetFile);
       if (!targetFile.toFile().exists()) {
         throw notFound(createFileContext(path));
       }
       Files.move(file.toPath(), targetFile, REPLACE_EXISTING);
       try {
-        getClone().add().addFilepattern(path).call();
+        addFileToGit(path);
       } catch (GitAPIException e) {
         throwInternalRepositoryException("could not add new file to index", e);
       }
+    }
+
+    private void addFileToGit(String toBeCreated) throws GitAPIException {
+      getClone().add().addFilepattern(removeStartingPathSeparators(toBeCreated)).call();
     }
 
     @Override
@@ -118,9 +122,24 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
         throw notFound(createFileContext(toBeDeleted));
       }
       try {
-        getClone().rm().addFilepattern(toBeDeleted).call();
+        getClone().rm().addFilepattern(removeStartingPathSeparators(toBeDeleted)).call();
       } catch (GitAPIException e) {
         throwInternalRepositoryException("could not remove file from index", e);
+      }
+    }
+
+    private String removeStartingPathSeparators(String path) {
+      while (path.startsWith(File.separator)) {
+        path = path.substring(1);
+      }
+      return path;
+    }
+
+    private void createDirectories(Path targetFile) throws IOException {
+      try {
+        Files.createDirectories(targetFile.getParent());
+      } catch (FileAlreadyExistsException e) {
+        throw alreadyExists(createFileContext(targetFile.toString()));
       }
     }
 

@@ -97,6 +97,24 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     assertInTree(assertions);
   }
 
+  @Test
+  public void shouldCreateNewFileWhenPathStartsWithSlash() throws IOException, GitAPIException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("/new_file", newFile, false));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+
+    TreeAssertions assertions = canonicalTreeParser -> assertThat(canonicalTreeParser.findFile("new_file")).isTrue();
+
+    assertInTree(assertions);
+  }
+
   @Test(expected = AlreadyExistsException.class)
   public void shouldFailIfOverwritingExistingFileWithoutOverwriteFlag() throws IOException {
     File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
@@ -106,6 +124,20 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("test commit");
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("a.txt", newFile, false));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+  }
+
+  @Test(expected = AlreadyExistsException.class)
+  public void shouldFailIfPathAlreadyExistsAsAFile() throws IOException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("a.txt/newFile", newFile, false));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     command.execute(request);
