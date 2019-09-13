@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
+import org.apache.shiro.ShiroException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.jboss.resteasy.core.Dispatcher;
@@ -35,6 +36,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -65,7 +68,8 @@ class AvailablePluginResourceTest {
 
   PluginRootResource pluginRootResource;
 
-  private final Subject subject = mock(Subject.class);
+  @Mock
+  Subject subject;
 
 
   @BeforeEach
@@ -82,7 +86,7 @@ class AvailablePluginResourceTest {
     @BeforeEach
     void bindSubject() {
       ThreadContext.bind(subject);
-      when(subject.isPermitted(any(String.class))).thenReturn(true);
+      doNothing().when(subject).checkPermission(any(String.class));
     }
 
     @AfterEach
@@ -203,10 +207,15 @@ class AvailablePluginResourceTest {
   class WithoutAuthorization {
 
     @BeforeEach
-    void unbindSubject() {
-      ThreadContext.unbindSubject();
+    void bindSubject() {
+      ThreadContext.bind(subject);
+      doThrow(new ShiroException()).when(subject).checkPermission(any(String.class));
     }
 
+    @AfterEach
+    public void unbindSubject() {
+      ThreadContext.unbindSubject();
+    }
     @Test
     void shouldNotGetAvailablePluginsIfMissingPermission() throws URISyntaxException {
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available");
@@ -214,6 +223,7 @@ class AvailablePluginResourceTest {
       MockHttpResponse response = new MockHttpResponse();
 
       assertThrows(UnhandledException.class, () -> dispatcher.invoke(request, response));
+      verify(subject).checkPermission(any(String.class));
     }
 
     @Test
@@ -223,16 +233,17 @@ class AvailablePluginResourceTest {
       MockHttpResponse response = new MockHttpResponse();
 
       assertThrows(UnhandledException.class, () -> dispatcher.invoke(request, response));
+      verify(subject).checkPermission(any(String.class));
     }
 
     @Test
     void shouldNotInstallPluginIfMissingPermission() throws URISyntaxException {
-      ThreadContext.unbindSubject();
       MockHttpRequest request = MockHttpRequest.post("/v2/plugins/available/pluginName/install");
       request.accept(VndMediaType.PLUGIN);
       MockHttpResponse response = new MockHttpResponse();
 
       assertThrows(UnhandledException.class, () -> dispatcher.invoke(request, response));
+      verify(subject).checkPermission(any(String.class));
     }
   }
 
