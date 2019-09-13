@@ -97,6 +97,10 @@ $danger-50: scale-color($danger, $lightness: 50%);
 $danger-25: scale-color($danger, $lightness: 75%);
 
 :root {
+  // asc sorted initial variables
+  --black: #{$black};
+  --white: #{$white};
+
   // asc sorted derived-variables
   --primary: #{$primary};
   --primary-75: #{$primary-75};
