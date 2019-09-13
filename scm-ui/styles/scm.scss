@@ -207,6 +207,48 @@ $danger-25: scale-color($danger, $lightness: 75%);
   background-color: $danger-25;
 }
 
+// outline option for tags
+.is-outline-black {
+  color: $black;
+  border-color: $black;
+}
+.is-outline-dark {
+  color: $dark;
+  border-color: $dark;
+}
+.is-outline-light {
+  color: $light;
+  border-color: $light;
+}
+.is-outline-white {
+  color: $white;
+  border-color: $white;
+}
+.is-outline-primary {
+  color: $primary;
+  border-color: $primary;
+}
+.is-outline-link {
+  color: $link;
+  border-color: $link;
+}
+.is-outline-info {
+  color: $info;
+  border-color: $info;
+}
+.is-outline-success {
+  color: $success;
+  border-color: $success;
+}
+.is-outline-warning {
+  color: $warning;
+  border-color: $warning;
+}
+.is-outline-danger {
+  color: $danger;
+  border-color: $danger;
+}
+
 // buttons
 .button {
   padding-left: 1.5em;
