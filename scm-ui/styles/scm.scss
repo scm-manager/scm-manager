@@ -133,67 +133,67 @@ $danger-25: scale-color($danger, $lightness: 75%);
 }
 
 .has-background-dark-75 {
-  background-color: scale-color($dark, $lightness: 25%);
+  background-color: $dark-75;
 }
 .has-background-dark-50 {
-  background-color: scale-color($dark, $lightness: 50%);
+  background-color: $dark-50;
 }
 .has-background-dark-25 {
-  background-color: scale-color($dark, $lightness: 75%);
+  background-color: $dark-25;
 }
 .has-background-info-75 {
-  background-color: scale-color($info, $lightness: 25%);
+  background-color: $info-75;
 }
 .has-background-info-50 {
-  background-color: scale-color($info, $lightness: 50%);
+  background-color: $info-50;
 }
 .has-background-info-25 {
-  background-color: scale-color($info, $lightness: 75%);
+  background-color: $info-25;
 }
 .has-background-link-75 {
-  background-color: scale-color($link, $lightness: 25%);
+  background-color: $link-75;
 }
 .has-background-link-50 {
-  background-color: scale-color($link, $lightness: 50%);
+  background-color: $link-50;
 }
 .has-background-link-25 {
-  background-color: scale-color($link, $lightness: 75%);
+  background-color: $link-25;
 }
 .has-background-primary-75 {
-  background-color: scale-color($primary, $lightness: 25%);
+  background-color: $primary-75;
 }
 .has-background-primary-50 {
-  background-color: scale-color($primary, $lightness: 50%);
+  background-color: $primary-50;
 }
 .has-background-primary-25 {
-  background-color: scale-color($primary, $lightness: 75%);
+  background-color: $primary-25;
 }
 .has-background-success-75 {
-  background-color: scale-color($success, $lightness: 25%);
+  background-color: $success-75;
 }
 .has-background-success-50 {
-  background-color: scale-color($success, $lightness: 50%);
+  background-color: $success-50;
 }
 .has-background-success-25 {
-  background-color: scale-color($success, $lightness: 75%);
+  background-color: $success-25;
 }
 .has-background-warning-75 {
-  background-color: scale-color($warning, $lightness: 25%);
+  background-color: $warning-75;
 }
 .has-background-warning-50 {
-  background-color: scale-color($warning, $lightness: 50%);
+  background-color: $warning-50;
 }
 .has-background-warning-25 {
-  background-color: scale-color($warning, $lightness: 75%);
+  background-color: $warning-25;
 }
 .has-background-danger-75 {
-  background-color: scale-color($danger, $lightness: 25%);
+  background-color: $danger-75;
 }
 .has-background-danger-50 {
-  background-color: scale-color($danger, $lightness: 50%);
+  background-color: $danger-50;
 }
 .has-background-danger-25 {
-  background-color: scale-color($danger, $lightness: 75%);
+  background-color: $danger-25;
 }
 
 // import at the end, because we need a lot of stuff from bulma/bulma
