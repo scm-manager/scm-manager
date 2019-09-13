@@ -34,6 +34,11 @@ const styles = {
   },
   changeType: {
     marginLeft: ".75rem"
+  },
+  diff: {
+    "& > colgroup .diff-gutter-col": {
+      width: "3.25rem"
+    }
   }
 };
 
@@ -221,7 +226,7 @@ class DiffFile extends React.Component<Props, State> {
       body = (
         <div className="panel-block is-paddingless is-size-7">
           {fileAnnotations}
-          <DiffComponent viewType={viewType}>
+          <DiffComponent className={classes.diff} viewType={viewType}>
             {file.hunks.map(this.renderHunk)}
           </DiffComponent>
         </div>
