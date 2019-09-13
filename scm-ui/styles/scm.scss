@@ -1,10 +1,10 @@
 @import "bulma/sass/utilities/initial-variables";
 @import "bulma/sass/utilities/functions";
 
+$turquoise: #00d1df;
 $blue: #33b2e8;
 $cyan: $blue;
 $green: #00c79b;
-$mint: #11dfd0;
 
 .is-ellipsis-overflow {
   overflow: hidden;
@@ -96,6 +96,7 @@ $danger-75: scale-color($danger, $lightness: 25%);
 $danger-50: scale-color($danger, $lightness: 50%);
 $danger-25: scale-color($danger, $lightness: 75%);
 
+// css vars for external reuse
 :root {
   // asc sorted initial variables
   --black: #{$black};
@@ -136,6 +137,12 @@ $danger-25: scale-color($danger, $lightness: 75%);
   --link-25: #{$link-25};
 }
 
+// readability issues with original color
+.has-text-warning {
+  color: #FFB600;
+}
+
+// border and background colors
 .has-background-dark-75 {
   background-color: $dark-75;
 }
@@ -200,7 +207,104 @@ $danger-25: scale-color($danger, $lightness: 75%);
   background-color: $danger-25;
 }
 
-// import at the end, because we need a lot of stuff from bulma/bulma
+// buttons
+.button {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  height: 2.5rem;
+  font-weight: 600;
+
+  &.is-primary:hover,
+  &.is-primary.is-hovered {
+    background-color: scale-color($primary, $lightness: -10%);
+  }
+
+  &.is-primary:active,
+  &.is-primary.is-active {
+    background-color: scale-color($primary, $lightness: -20%);
+  }
+
+  &.is-primary[disabled] {
+    background-color: scale-color($primary, $lightness: 75%);
+    opacity: 1;
+  }
+
+  &.is-info:hover,
+  &.is-info.is-hovered {
+    background-color: scale-color($info, $lightness: -10%);
+  }
+
+  &.is-info:active,
+  &.is-info.is-active {
+    background-color: scale-color($info, $lightness: -20%);
+  }
+
+  &.is-info[disabled] {
+    background-color: scale-color($info, $lightness: 75%);
+    opacity: 1;
+  }
+
+  &.is-link:hover,
+  &.is-link.is-hovered {
+    background-color: scale-color($link, $lightness: -10%);
+  }
+
+  &.is-link:active,
+  &.is-link.is-active {
+    background-color: scale-color($link, $lightness: -20%);
+  }
+
+  &.is-link[disabled] {
+    background-color: scale-color($link, $lightness: 75%);
+    opacity: 1;
+  }
+
+  &.is-success:hover,
+  &.is-success.is-hovered {
+    background-color: scale-color($success, $lightness: -10%);
+  }
+
+  &.is-success:active,
+  &.is-success.is-active {
+    background-color: scale-color($success, $lightness: -20%);
+  }
+
+  &.is-success[disabled] {
+    background-color: scale-color($success, $lightness: 75%);
+    opacity: 1;
+  }
+
+  &.is-warning:hover,
+  &.is-warning.is-hovered {
+    background-color: scale-color($warning, $lightness: -10%);
+  }
+
+  &.is-warning:active,
+  &.is-warning.is-active {
+    background-color: scale-color($warning, $lightness: -20%);
+  }
+
+  &.is-warning[disabled] {
+    background-color: scale-color($warning, $lightness: 75%);
+    opacity: 1;
+  }
+
+  &.is-danger:hover,
+  &.is-danger.is-hovered {
+    background-color: scale-color($danger, $lightness: -10%);
+  }
+
+  &.is-danger:active,
+  &.is-danger.is-active {
+    background-color: scale-color($danger, $lightness: -20%);
+  }
+
+  &.is-danger[disabled] {
+    background-color: scale-color($danger, $lightness: 75%);
+    opacity: 1;
+  }
+}
+
 .box-link-shadow {
   &:hover,
   &:focus {
@@ -240,26 +344,7 @@ ul.is-separated {
   font-weight: bold;
 }
 
-// buttons
 .button {
-  padding-left: 1.5em;
-  padding-right: 1.5em;
-  height: 2.5rem;
-
-  &.is-primary {
-    background-color: #00d1df;
-  }
-  &.is-primary:hover,
-  &.is-primary.is-hovered {
-    background-color: #00b9c6;
-  }
-  &.is-primary:active,
-  &.is-primary.is-active {
-    background-color: #00a1ac;
-  }
-  &.is-primary[disabled] {
-    background-color: #40dde7;
-  }
   &.reduced-mobile {
     @media screen and (max-width: 1087px) {
       > span:nth-child(2) {
@@ -281,7 +366,7 @@ ul.is-separated {
   }
 }
 
-// multiline Columns
+// columns
 .columns.is-multiline {
   .column {
     height: 120px;
@@ -499,14 +584,19 @@ form .field:not(.is-grouped) {
 .pagination-ellipsis {
   padding-left: 1.5em;
   padding-right: 1.5em;
-  height: 2.5rem;
+  height: 2.8rem;
+  min-width: 5rem;
 }
 .pagination-previous,
 .pagination-next {
+  height: 2.8rem;
   min-width: 6.75em;
 }
+.pagination-link.is-current {
+  opacity: 1;
+}
 
-// dark hero colors
+// hero
 .hero.is-dark {
   background-color: #002e4b;
   background-image: url(../images/scmManagerHero.jpg);
@@ -528,7 +618,7 @@ form .field:not(.is-grouped) {
   background-color: whitesmoke;
 }
 
-// sidebar menu
+// aside
 .aside-background {
   bottom: 0;
   left: 50%;
@@ -537,6 +627,8 @@ form .field:not(.is-grouped) {
   top: 0;
   background-color: whitesmoke;
 }
+
+// menu
 .menu {
   div {
     height: 100%;
@@ -544,7 +636,6 @@ form .field:not(.is-grouped) {
     margin-bottom: 1rem;
   }
 }
-
 .menu-label {
   color: #fff;
   font-size: 1em;
@@ -614,17 +705,6 @@ form .field:not(.is-grouped) {
   }
 }
 
-// modal
-.modal {
-  .modal-card-foot {
-    justify-content: flex-end; // pulled-right
-  }
-}
-
-.modal-card-body div div:last-child {
-  border-bottom: none;
-}
-
 .sub-menu li {
   line-height: 1;
 
@@ -648,6 +728,17 @@ form .field:not(.is-grouped) {
   i {
     display: none;
   }
+}
+
+// modal
+.modal {
+  .modal-card-foot {
+    justify-content: flex-end; // pulled-right
+  }
+}
+
+.modal-card-body div div:last-child {
+  border-bottom: none;
 }
 
 // cursor
