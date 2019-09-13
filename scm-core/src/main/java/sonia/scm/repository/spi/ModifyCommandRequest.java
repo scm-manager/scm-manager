@@ -122,10 +122,12 @@ public class ModifyCommandRequest implements Resetable, Validateable {
     }
 
     void cleanup() {
-      try {
-        IOUtil.delete(content);
-      } catch (IOException e) {
-        LOG.warn("could not delete temporary file {}", content, e);
+      if (content.exists()) {
+        try {
+          IOUtil.delete(content);
+        } catch (IOException e) {
+          LOG.warn("could not delete temporary file {}", content, e);
+        }
       }
     }
   }

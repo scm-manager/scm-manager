@@ -2,16 +2,22 @@
 @import "bulma/sass/utilities/functions";
 
 $blue: #33b2e8;
+$cyan: $blue;
+$green: #00c79b;
 $mint: #11dfd0;
-
-$info: $blue;
-
-// $footer-background-color
 
 .is-ellipsis-overflow {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.is-word-break {
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  word-break: break-all;
 }
 
 .has-rounded-border {
@@ -27,14 +33,6 @@ $info: $blue;
   margin: 0 !important;
   // 3.8em for line-numbers
   padding: 0 0 0 3.8em !important;
-}
-
-.is-word-break {
-  -webkit-hyphens: auto;
-  -moz-hyphens: auto;
-  -ms-hyphens: auto;
-  hyphens: auto;
-  word-break: break-all;
 }
 
 .main {
@@ -75,6 +73,128 @@ hr.header-with-actions {
 // 6. Import the rest of Bulma
 @import "bulma/bulma";
 @import "bulma-tooltip/dist/css/bulma-tooltip";
+
+$dark-75: scale-color($dark, $lightness: 25%);
+$dark-50: scale-color($dark, $lightness: 50%);
+$dark-25: scale-color($dark, $lightness: 75%);
+$info-75: scale-color($info, $lightness: 25%);
+$info-50: scale-color($info, $lightness: 50%);
+$info-25: scale-color($info, $lightness: 75%);
+$link-75: scale-color($link, $lightness: 25%);
+$link-50: scale-color($link, $lightness: 50%);
+$link-25: scale-color($link, $lightness: 75%);
+$primary-75: scale-color($primary, $lightness: 25%);
+$primary-50: scale-color($primary, $lightness: 50%);
+$primary-25: scale-color($primary, $lightness: 75%);
+$success-75: scale-color($success, $lightness: 25%);
+$success-50: scale-color($success, $lightness: 50%);
+$success-25: scale-color($success, $lightness: 75%);
+$warning-75: scale-color($warning, $lightness: 25%);
+$warning-50: scale-color($warning, $lightness: 50%);
+$warning-25: scale-color($warning, $lightness: 75%);
+$danger-75: scale-color($danger, $lightness: 25%);
+$danger-50: scale-color($danger, $lightness: 50%);
+$danger-25: scale-color($danger, $lightness: 75%);
+
+:root {
+  // asc sorted derived-variables
+  --primary: #{$primary};
+  --primary-75: #{$primary-75};
+  --primary-50: #{$primary-50};
+  --primary-25: #{$primary-25};
+  --info: #{$info};
+  --info-75: #{$info-75};
+  --info-50: #{$info-50};
+  --info-25: #{$info-25};
+  --success: #{$success};
+  --success-75: #{$success-75};
+  --success-50: #{$success-50};
+  --success-25: #{$success-25};
+  --warning: #{$warning};
+  --warning-75: #{$warning-75};
+  --warning-50: #{$warning-50};
+  --warning-25: #{$warning-25};
+  --danger: #{$danger};
+  --danger-75: #{$danger-75};
+  --danger-50: #{$danger-50};
+  --danger-25: #{$danger-25};
+  --light: #{$light};
+  --dark: #{$dark};
+  --dark-75: #{$dark-75};
+  --dark-50: #{$dark-50};
+  --dark-25: #{$dark-25};
+  --background: #{$background};
+  --border: #{$border};
+  --text: #{$text};
+  --link: #{$link};
+  --link-75: #{$link-75};
+  --link-50: #{$link-50};
+  --link-25: #{$link-25};
+}
+
+.has-background-dark-75 {
+  background-color: scale-color($dark, $lightness: 25%);
+}
+.has-background-dark-50 {
+  background-color: scale-color($dark, $lightness: 50%);
+}
+.has-background-dark-25 {
+  background-color: scale-color($dark, $lightness: 75%);
+}
+.has-background-info-75 {
+  background-color: scale-color($info, $lightness: 25%);
+}
+.has-background-info-50 {
+  background-color: scale-color($info, $lightness: 50%);
+}
+.has-background-info-25 {
+  background-color: scale-color($info, $lightness: 75%);
+}
+.has-background-link-75 {
+  background-color: scale-color($link, $lightness: 25%);
+}
+.has-background-link-50 {
+  background-color: scale-color($link, $lightness: 50%);
+}
+.has-background-link-25 {
+  background-color: scale-color($link, $lightness: 75%);
+}
+.has-background-primary-75 {
+  background-color: scale-color($primary, $lightness: 25%);
+}
+.has-background-primary-50 {
+  background-color: scale-color($primary, $lightness: 50%);
+}
+.has-background-primary-25 {
+  background-color: scale-color($primary, $lightness: 75%);
+}
+.has-background-success-75 {
+  background-color: scale-color($success, $lightness: 25%);
+}
+.has-background-success-50 {
+  background-color: scale-color($success, $lightness: 50%);
+}
+.has-background-success-25 {
+  background-color: scale-color($success, $lightness: 75%);
+}
+.has-background-warning-75 {
+  background-color: scale-color($warning, $lightness: 25%);
+}
+.has-background-warning-50 {
+  background-color: scale-color($warning, $lightness: 50%);
+}
+.has-background-warning-25 {
+  background-color: scale-color($warning, $lightness: 75%);
+}
+.has-background-danger-75 {
+  background-color: scale-color($danger, $lightness: 25%);
+}
+.has-background-danger-50 {
+  background-color: scale-color($danger, $lightness: 50%);
+}
+.has-background-danger-25 {
+  background-color: scale-color($danger, $lightness: 75%);
+}
 
 // import at the end, because we need a lot of stuff from bulma/bulma
 .box-link-shadow {
