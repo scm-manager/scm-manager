@@ -18,7 +18,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.AvailablePluginDescriptor;
-import sonia.scm.plugin.PluginCondition;
+import sonia.scm.plugin.InstalledPlugin;
+import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
 
@@ -27,7 +28,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.util.Collections;
 
 import static java.net.URI.create;
 import static java.util.Collections.singletonList;
@@ -76,6 +76,11 @@ class PendingPluginResourceTest {
       dto.setName(((AvailablePlugin)invocation.getArgument(0)).getDescriptor().getInformation().getName());
       return dto;
     });
+    lenient().when(mapper.mapInstalled(any(), any())).thenAnswer(invocation -> {
+      PluginDto dto = new PluginDto();
+      dto.setName(((InstalledPlugin)invocation.getArgument(0)).getDescriptor().getInformation().getName());
+      return dto;
+    });
   }
 
   @Nested
@@ -94,7 +99,7 @@ class PendingPluginResourceTest {
 
     @Test
     void shouldGetEmptyPluginListsWithoutInstallLinkWhenNoPendingPluginsPresent() throws URISyntaxException, UnsupportedEncodingException {
-      AvailablePlugin availablePlugin = createAvailablePlugin("not-available-plugin");
+      AvailablePlugin availablePlugin = createAvailablePlugin("not-pending-plugin");
       when(availablePlugin.isPending()).thenReturn(false);
       when(pluginManager.getAvailable()).thenReturn(singletonList(availablePlugin));
 
@@ -103,12 +108,12 @@ class PendingPluginResourceTest {
 
       assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
       assertThat(response.getContentAsString()).contains("\"_links\":{\"self\":{\"href\":\"/v2/plugins/pending\"}}");
-      assertThat(response.getContentAsString()).doesNotContain("not-available-plugin");
+      assertThat(response.getContentAsString()).doesNotContain("not-pending-plugin");
     }
 
     @Test
-    void shouldGetPendingAvailablePluginListsWithInstallLink() throws URISyntaxException, UnsupportedEncodingException {
-      AvailablePlugin availablePlugin = createAvailablePlugin("available-plugin");
+    void shouldGetPendingAvailablePluginListWithInstallLink() throws URISyntaxException, UnsupportedEncodingException {
+      AvailablePlugin availablePlugin = createAvailablePlugin("pending-available-plugin");
       when(availablePlugin.isPending()).thenReturn(true);
       when(pluginManager.getAvailable()).thenReturn(singletonList(availablePlugin));
 
@@ -116,7 +121,24 @@ class PendingPluginResourceTest {
       dispatcher.invoke(request, response);
 
       assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
-      assertThat(response.getContentAsString()).contains("\"_embedded\":{\"available\":[{\"name\":\"available-plugin\"");
+      assertThat(response.getContentAsString()).contains("\"new\":[{\"name\":\"pending-available-plugin\"");
+      assertThat(response.getContentAsString()).contains("\"install\":{\"href\":\"/v2/plugins/pending/install\"}");
+      System.out.println(response.getContentAsString());
+    }
+
+    @Test
+    void shouldGetPendingUpdatePluginListWithInstallLink() throws URISyntaxException, UnsupportedEncodingException {
+      AvailablePlugin availablePlugin = createAvailablePlugin("available-plugin");
+      when(availablePlugin.isPending()).thenReturn(true);
+      when(pluginManager.getAvailable()).thenReturn(singletonList(availablePlugin));
+      InstalledPlugin installedPlugin = createInstalledPlugin("available-plugin");
+      when(pluginManager.getInstalled()).thenReturn(singletonList(installedPlugin));
+
+      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/pending");
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+      assertThat(response.getContentAsString()).contains("\"update\":[{\"name\":\"available-plugin\"");
       assertThat(response.getContentAsString()).contains("\"install\":{\"href\":\"/v2/plugins/pending/install\"}");
       System.out.println(response.getContentAsString());
     }
@@ -182,11 +204,24 @@ class PendingPluginResourceTest {
   }
 
   private AvailablePlugin createAvailablePlugin(PluginInformation pluginInformation) {
-    AvailablePluginDescriptor descriptor = new AvailablePluginDescriptor(
-      pluginInformation, new PluginCondition(), Collections.emptySet(), "https://download.hitchhiker.com", null
-    );
+    AvailablePluginDescriptor descriptor = mock(AvailablePluginDescriptor.class);
+    lenient().when(descriptor.getInformation()).thenReturn(pluginInformation);
     AvailablePlugin availablePlugin = mock(AvailablePlugin.class);
     lenient().when(availablePlugin.getDescriptor()).thenReturn(descriptor);
     return availablePlugin;
+  }
+
+  private InstalledPlugin createInstalledPlugin(String name) {
+    PluginInformation pluginInformation = new PluginInformation();
+    pluginInformation.setName(name);
+    return createInstalledPlugin(pluginInformation);
+  }
+
+  private InstalledPlugin createInstalledPlugin(PluginInformation pluginInformation) {
+    InstalledPluginDescriptor descriptor = mock(InstalledPluginDescriptor.class);
+    lenient().when(descriptor.getInformation()).thenReturn(pluginInformation);
+    InstalledPlugin installedPlugin = mock(InstalledPlugin.class);
+    lenient().when(installedPlugin.getDescriptor()).thenReturn(descriptor);
+    return installedPlugin;
   }
 }

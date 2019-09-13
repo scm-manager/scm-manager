@@ -6,6 +6,7 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import sonia.scm.plugin.AvailablePlugin;
+import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.web.VndMediaType;
@@ -16,7 +17,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
@@ -50,6 +53,14 @@ public class PendingPluginResource {
       .stream()
       .filter(AvailablePlugin::isPending)
       .collect(toList());
+    List<InstalledPlugin> installed = pluginManager.getInstalled();
+
+    Stream<AvailablePlugin> newPlugins = pending
+      .stream()
+      .filter(a -> !contains(installed, a));
+    Stream<InstalledPlugin> updatePlugins = installed
+      .stream()
+      .filter(i -> contains(pending, i));
 
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.pendingPluginCollection().self());
 
@@ -58,9 +69,26 @@ public class PendingPluginResource {
     }
 
     Embedded.Builder embedded = Embedded.embeddedBuilder();
-    embedded.with("available", pending.stream().map(mapper::mapAvailable).collect(toList()));
+    embedded.with("new", newPlugins.map(mapper::mapAvailable).collect(toList()));
+    embedded.with("update", updatePlugins.map(i -> mapper.mapInstalled(i, pending)).collect(toList()));
 
     return Response.ok(new HalRepresentation(linksBuilder.build(), embedded.build())).build();
+  }
+
+  private boolean contains(Collection<InstalledPlugin> installedPlugins, AvailablePlugin availablePlugin) {
+    return installedPlugins
+      .stream()
+      .anyMatch(installedPlugin -> haveSameName(installedPlugin, availablePlugin));
+  }
+
+  private boolean contains(Collection<AvailablePlugin> availablePlugins, InstalledPlugin installedPlugin) {
+    return availablePlugins
+      .stream()
+      .anyMatch(availablePlugin -> haveSameName(installedPlugin, availablePlugin));
+  }
+
+  private boolean haveSameName(InstalledPlugin installedPlugin, AvailablePlugin availablePlugin) {
+    return installedPlugin.getDescriptor().getInformation().getName().equals(availablePlugin.getDescriptor().getInformation().getName());
   }
 
   @POST
