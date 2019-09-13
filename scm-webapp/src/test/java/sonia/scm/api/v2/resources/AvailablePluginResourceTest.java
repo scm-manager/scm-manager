@@ -49,9 +49,6 @@ class AvailablePluginResourceTest {
   private Dispatcher dispatcher;
 
   @Mock
-  Provider<InstalledPluginResource> installedPluginResourceProvider;
-
-  @Mock
   Provider<AvailablePluginResource> availablePluginResourceProvider;
 
   @Mock
@@ -75,7 +72,7 @@ class AvailablePluginResourceTest {
   @BeforeEach
   void prepareEnvironment() {
     dispatcher = MockDispatcherFactory.createDispatcher();
-    pluginRootResource = new PluginRootResource(installedPluginResourceProvider, availablePluginResourceProvider);
+    pluginRootResource = new PluginRootResource(null, availablePluginResourceProvider, null);
     when(availablePluginResourceProvider.get()).thenReturn(availablePluginResource);
     dispatcher.getRegistry().addSingletonResource(pluginRootResource);
   }
@@ -163,17 +160,6 @@ class AvailablePluginResourceTest {
       dispatcher.invoke(request, response);
 
       verify(pluginManager).install("pluginName", false);
-      assertThat(HttpServletResponse.SC_OK).isEqualTo(response.getStatus());
-    }
-
-    @Test
-    void installPendingPlugin() throws URISyntaxException {
-      MockHttpRequest request = MockHttpRequest.post("/v2/plugins/available/install-pending");
-      MockHttpResponse response = new MockHttpResponse();
-
-      dispatcher.invoke(request, response);
-
-      verify(pluginManager).installPendingAndRestart();
       assertThat(HttpServletResponse.SC_OK).isEqualTo(response.getStatus());
     }
   }

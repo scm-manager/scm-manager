@@ -65,7 +65,7 @@ class InstalledPluginResourceTest {
   @BeforeEach
   void prepareEnvironment() {
     dispatcher = MockDispatcherFactory.createDispatcher();
-    pluginRootResource = new PluginRootResource(installedPluginResourceProvider, availablePluginResourceProvider);
+    pluginRootResource = new PluginRootResource(installedPluginResourceProvider, null, null);
     when(installedPluginResourceProvider.get()).thenReturn(installedPluginResource);
     dispatcher.getRegistry().addSingletonResource(pluginRootResource);
   }

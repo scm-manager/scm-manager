@@ -54,6 +54,9 @@ public class IndexDtoGenerator extends HalAppenderMapper {
         builder.single(link("installedPlugins", resourceLinks.installedPluginCollection().self()));
         builder.single(link("availablePlugins", resourceLinks.availablePluginCollection().self()));
       }
+      if (PluginPermissions.manage().isPermitted()) {
+        builder.single(link("pendingPlugins", resourceLinks.pendingPluginCollection().self()));
+      }
       if (UserPermissions.list().isPermitted()) {
         builder.single(link("users", resourceLinks.userCollection().self()));
       }

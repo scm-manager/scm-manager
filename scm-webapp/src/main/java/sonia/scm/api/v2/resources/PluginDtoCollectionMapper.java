@@ -53,10 +53,6 @@ public class PluginDtoCollectionMapper {
     Links.Builder linksBuilder = linkingTo()
       .with(Links.linkingTo().self(baseUrl).build());
 
-    if (PluginPermissions.manage().isPermitted() && containsPending(plugins)) {
-      linksBuilder.single(Link.link("installPending", resourceLinks.availablePluginCollection().installPending()));
-    }
-
     return linksBuilder.build();
   }
 
