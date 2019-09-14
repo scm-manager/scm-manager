@@ -256,6 +256,10 @@ $danger-25: scale-color($danger, $lightness: 75%);
   height: 2.5rem;
   font-weight: 600;
 
+  &[disabled] {
+    opacity: 1;
+  }
+
   &.is-primary:hover,
   &.is-primary.is-hovered {
     background-color: scale-color($primary, $lightness: -10%);
@@ -268,7 +272,6 @@ $danger-25: scale-color($danger, $lightness: 75%);
 
   &.is-primary[disabled] {
     background-color: scale-color($primary, $lightness: 75%);
-    opacity: 1;
   }
 
   &.is-info:hover,
@@ -283,7 +286,6 @@ $danger-25: scale-color($danger, $lightness: 75%);
 
   &.is-info[disabled] {
     background-color: scale-color($info, $lightness: 75%);
-    opacity: 1;
   }
 
   &.is-link:hover,
@@ -298,7 +300,6 @@ $danger-25: scale-color($danger, $lightness: 75%);
 
   &.is-link[disabled] {
     background-color: scale-color($link, $lightness: 75%);
-    opacity: 1;
   }
 
   &.is-success:hover,
@@ -313,7 +314,6 @@ $danger-25: scale-color($danger, $lightness: 75%);
 
   &.is-success[disabled] {
     background-color: scale-color($success, $lightness: 75%);
-    opacity: 1;
   }
 
   &.is-warning:hover,
@@ -328,7 +328,6 @@ $danger-25: scale-color($danger, $lightness: 75%);
 
   &.is-warning[disabled] {
     background-color: scale-color($warning, $lightness: 75%);
-    opacity: 1;
   }
 
   &.is-danger:hover,
@@ -343,7 +342,6 @@ $danger-25: scale-color($danger, $lightness: 75%);
 
   &.is-danger[disabled] {
     background-color: scale-color($danger, $lightness: 75%);
-    opacity: 1;
   }
 }
 
