@@ -139,7 +139,7 @@ $danger-25: scale-color($danger, $lightness: 75%);
 
 // readability issues with original color
 .has-text-warning {
-  color: #FFB600;
+  color: #FFB600 !important;
 }
 
 // border and background colors
