@@ -10,26 +10,37 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
+import org.junitpioneer.jupiter.TempDirectory;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
+import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.lifecycle.RestartEvent;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static sonia.scm.plugin.PluginTestHelper.createAvailable;
 import static sonia.scm.plugin.PluginTestHelper.createInstalled;
 
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(TempDirectory.class)
 class DefaultPluginManagerTest {
 
   @Mock
@@ -305,6 +316,34 @@ class DefaultPluginManagerTest {
       assertThat(available.get(0).isPending()).isTrue();
     }
 
+    @Test
+    void shouldThrowExceptionWhenUninstallingUnknownPlugin() {
+      assertThrows(NotFoundException.class, () -> manager.uninstall("no-such-plugin", false));
+    }
+
+    @Test
+    void shouldUseDependencyTrackerForUninstall() {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      InstalledPlugin reviewPlugin = createInstalled("scm-review-plugin");
+      when(reviewPlugin.getDescriptor().getDependencies()).thenReturn(singleton("scm-mail-plugin"));
+
+      when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(mailPlugin, reviewPlugin));
+      manager.computeRequiredPlugins();
+
+      assertThrows(ScmConstraintViolationException.class, () -> manager.uninstall("scm-mail-plugin", false));
+    }
+
+    @Test
+    void shouldCreateUninstallFile(@TempDirectory.TempDir Path temp) {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      when(mailPlugin.getDirectory()).thenReturn(temp);
+
+      when(loader.getInstalledPlugins()).thenReturn(singletonList(mailPlugin));
+
+      manager.uninstall("scm-mail-plugin", false);
+
+      assertThat(temp.resolve("uninstall")).exists();
+    }
   }
 
   @Nested
@@ -348,6 +387,11 @@ class DefaultPluginManagerTest {
     @Test
     void shouldThrowAuthorizationExceptionsForInstallMethod() {
       assertThrows(AuthorizationException.class, () -> manager.install("test", false));
+    }
+
+    @Test
+    void shouldThrowAuthorizationExceptionsForUninstallMethod() {
+      assertThrows(AuthorizationException.class, () -> manager.uninstall("test", false));
     }
 
     @Test

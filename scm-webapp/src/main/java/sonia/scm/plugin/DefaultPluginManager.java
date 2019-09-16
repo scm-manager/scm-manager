@@ -33,8 +33,7 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
-
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
@@ -43,9 +42,11 @@ import sonia.scm.NotFoundException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.lifecycle.RestartEvent;
 
-//~--- JDK imports ------------------------------------------------------------
 import javax.inject.Inject;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -53,6 +54,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -67,7 +70,8 @@ public class DefaultPluginManager implements PluginManager {
   private final PluginLoader loader;
   private final PluginCenter center;
   private final PluginInstaller installer;
-  private final List<PendingPluginInstallation> pendingQueue = new ArrayList<>();
+  private final Collection<PendingPluginInstallation> pendingQueue = new ArrayList<>();
+  private final PluginDependencyTracker dependencyTracker = new PluginDependencyTracker();
 
   @Inject
   public DefaultPluginManager(ScmEventBus eventBus, PluginLoader loader, PluginCenter center, PluginInstaller installer) {
@@ -75,6 +79,16 @@ public class DefaultPluginManager implements PluginManager {
     this.loader = loader;
     this.center = center;
     this.installer = installer;
+
+    this.computeRequiredPlugins();
+  }
+
+  @VisibleForTesting
+  synchronized void computeRequiredPlugins() {
+    loader.getInstalledPlugins()
+      .stream()
+      .map(InstalledPlugin::getDescriptor)
+      .forEach(dependencyTracker::addInstalled);
   }
 
   @Override
@@ -150,6 +164,21 @@ public class DefaultPluginManager implements PluginManager {
       } else {
         pendingQueue.addAll(pendingInstallations);
       }
+    }
+  }
+
+  @Override
+  public void uninstall(String name, boolean restartAfterInstallation) {
+    PluginPermissions.manage().check();
+    InstalledPlugin installed = getInstalled(name)
+      .orElseThrow(() -> NotFoundException.notFound(entity(InstalledPlugin.class, name)));
+
+    dependencyTracker.removeInstalled(installed.getDescriptor());
+
+    try {
+      Files.createFile(installed.getDirectory().resolve("uninstall"));
+    } catch (IOException e) {
+      throw new PluginException("could not mark plugin " + name + " in path " + installed.getDirectory() + " for uninstall", e);
     }
   }
 
