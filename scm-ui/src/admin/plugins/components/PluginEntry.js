@@ -35,6 +35,11 @@ const styles = {
     position: "absolute",
     right: 0,
     top: 0
+  },
+  layout: {
+    "& .level": {
+      paddingBottom: "0.5rem"
+    }
   }
 };
 
@@ -128,7 +133,7 @@ class PluginEntry extends React.Component<Props, State> {
   };
 
   render() {
-    const { plugin } = this.props;
+    const { plugin, classes } = this.props;
     const { showModal } = this.state;
     const avatar = this.createAvatar(plugin);
     const actionbar = this.createActionbar();
@@ -139,6 +144,7 @@ class PluginEntry extends React.Component<Props, State> {
     return (
       <>
         <CardColumn
+          className={classes.layout}
           action={this.isInstallable() ? this.toggleModal : null}
           avatar={avatar}
           title={plugin.displayName ? plugin.displayName : plugin.name}
