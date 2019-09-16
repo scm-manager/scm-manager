@@ -122,7 +122,7 @@ class PendingPluginResourceTest {
 
       assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
       assertThat(response.getContentAsString()).contains("\"new\":[{\"name\":\"pending-available-plugin\"");
-      assertThat(response.getContentAsString()).contains("\"install\":{\"href\":\"/v2/plugins/pending/install\"}");
+      assertThat(response.getContentAsString()).contains("\"execute\":{\"href\":\"/v2/plugins/pending/install\"}");
       System.out.println(response.getContentAsString());
     }
 
@@ -139,7 +139,7 @@ class PendingPluginResourceTest {
 
       assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
       assertThat(response.getContentAsString()).contains("\"update\":[{\"name\":\"available-plugin\"");
-      assertThat(response.getContentAsString()).contains("\"install\":{\"href\":\"/v2/plugins/pending/install\"}");
+      assertThat(response.getContentAsString()).contains("\"execute\":{\"href\":\"/v2/plugins/pending/install\"}");
       System.out.println(response.getContentAsString());
     }
 
