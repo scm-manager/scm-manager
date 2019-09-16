@@ -11,7 +11,7 @@ import {
 import type { PendingPlugins } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
 import waitForRestart from "./waitForRestart";
-import InstallSuccessNotification from "./SuccessNotification";
+import SuccessNotification from "./SuccessNotification";
 
 type Props = {
   onClose: () => void,
@@ -42,7 +42,7 @@ class ExecutePendingModal extends React.Component<Props, State> {
     if (error) {
       return <ErrorNotification error={error} />;
     } else if (success) {
-      return <InstallSuccessNotification />;
+      return <SuccessNotification />;
     } else {
       return (
         <Notification type="warning">
@@ -52,7 +52,7 @@ class ExecutePendingModal extends React.Component<Props, State> {
     }
   };
 
-  installAndRestart = () => {
+  executeAndRestart = () => {
     const { pendingPlugins } = this.props;
     this.setState({
       loading: true
@@ -144,7 +144,7 @@ class ExecutePendingModal extends React.Component<Props, State> {
           color="warning"
           label={t("plugins.modal.executeAndRestart")}
           loading={loading}
-          action={this.installAndRestart}
+          action={this.executeAndRestart}
           disabled={error || success}
         />
         <Button label={t("plugins.modal.abort")} action={onClose} />
