@@ -5,8 +5,13 @@ import type { Plugin } from "@scm-manager/ui-types";
 import { CardColumn } from "@scm-manager/ui-components";
 import PluginAvatar from "./PluginAvatar";
 import classNames from "classnames";
-import InstallPluginModal from "./InstallPluginModal";
-import UpdatePluginModal from "./UpdatePluginModal";
+import PluginModal from "./PluginModal";
+
+
+const PluginAction = {
+  INSTALL: "install",
+  UPDATE: "update"
+};
 
 type Props = {
   plugin: Plugin,
@@ -103,16 +108,18 @@ class PluginEntry extends React.Component<Props, State> {
     const { plugin, refresh } = this.props;
     if (this.isInstallable()) {
       return (
-        <InstallPluginModal
+        <PluginModal
           plugin={plugin}
+          pluginAction={PluginAction.INSTALL}
           refresh={refresh}
           onClose={this.toggleModal}
         />
       );
     } else if (this.isUpdatable()) {
       return (
-        <UpdatePluginModal
+        <PluginModal
           plugin={plugin}
+          pluginAction={PluginAction.UPDATE}
           refresh={refresh}
           onClose={this.toggleModal}
         />
