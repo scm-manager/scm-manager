@@ -74,6 +74,13 @@ public abstract class PluginDtoMapper {
     ) {
       links.single(link("update", resourceLinks.availablePlugin().install(information.getName())));
     }
+    if (!plugin.isCore()
+      && (!availablePlugin.isPresent() || !availablePlugin.get().isPending())
+      && PluginPermissions.manage().isPermitted()
+      // TODO check if plugin is no dependency of another plugin
+    ) {
+      links.single(link("uninstall", resourceLinks.installedPlugin().uninstall(information.getName())));
+    }
 
     PluginDto dto = new PluginDto(links.build());
 

@@ -666,6 +666,10 @@ class ResourceLinks {
     String self(String id) {
       return installedPluginLinkBuilder.method("installedPlugins").parameters().method("getInstalledPlugin").parameters(id).href();
     }
+
+    public String uninstall(String name) {
+      return installedPluginLinkBuilder.method("installedPlugins").parameters().method("uninstallPlugin").parameters(name).href();
+    }
   }
 
   public InstalledPluginCollectionLinks installedPluginCollection() {
