@@ -83,6 +83,7 @@ public abstract class PluginDtoMapper {
     });
 
     dto.setCore(plugin.isCore());
+    dto.setMarkedForUninstall(plugin.isMarkedForUninstall());
 
     return dto;
   }
