@@ -27,16 +27,10 @@ class PluginDependencyTracker {
   }
 
   private void addDependency(String from, String to) {
-    plugins.computeIfAbsent(to, name -> createInitialDependencyCollection(from));
+    plugins.computeIfAbsent(to, name -> new HashSet<>()).add(from);
   }
 
   private void removeDependency(String from, String to) {
     plugins.get(to).remove(from);
-  }
-
-  private Collection<String> createInitialDependencyCollection(String from) {
-    Collection<String> dependencies = new HashSet<>();
-    dependencies.add(from);
-    return dependencies;
   }
 }

@@ -73,7 +73,7 @@ class PluginDependencyTrackerTest {
     PluginDependencyTracker pluginDependencyTracker = new PluginDependencyTracker();
     pluginDependencyTracker.addInstalled(review);
     pluginDependencyTracker.addInstalled(jira);
-    pluginDependencyTracker.removeInstalled(jira);
+    pluginDependencyTracker.removeInstalled(review);
 
     boolean mayUninstall = pluginDependencyTracker.mayUninstall("scm-mail-plugin");
     assertThat(mayUninstall).isFalse();
