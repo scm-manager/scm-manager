@@ -47,19 +47,20 @@ public final class InstalledPlugin implements Plugin
 
   /**
    * Constructs a new plugin wrapper.
-   *
-   * @param descriptor wrapped plugin
+   *  @param descriptor wrapped plugin
    * @param classLoader plugin class loader
    * @param webResourceLoader web resource loader
    * @param directory plugin directory
+   * @param core marked as core or not
    */
   public InstalledPlugin(InstalledPluginDescriptor descriptor, ClassLoader classLoader,
-                         WebResourceLoader webResourceLoader, Path directory)
+                         WebResourceLoader webResourceLoader, Path directory, boolean core)
   {
     this.descriptor = descriptor;
     this.classLoader = classLoader;
     this.webResourceLoader = webResourceLoader;
     this.directory = directory;
+    this.core = core;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -120,6 +121,10 @@ public final class InstalledPlugin implements Plugin
     return webResourceLoader;
   }
 
+  public boolean isCore() {
+    return core;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** plugin class loader */
@@ -133,4 +138,6 @@ public final class InstalledPlugin implements Plugin
 
   /** plugin web resource loader */
   private final WebResourceLoader webResourceLoader;
+
+  private final boolean core;
 }

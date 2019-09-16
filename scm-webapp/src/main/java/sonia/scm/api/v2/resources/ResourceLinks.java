@@ -715,12 +715,28 @@ class ResourceLinks {
       availablePluginCollectionLinkBuilder = new LinkBuilder(pathInfo, PluginRootResource.class, AvailablePluginResource.class);
     }
 
+    String self() {
+      return availablePluginCollectionLinkBuilder.method("availablePlugins").parameters().method("getAvailablePlugins").parameters().href();
+    }
+  }
+
+  public PendingPluginCollectionLinks pendingPluginCollection() {
+    return new PendingPluginCollectionLinks(scmPathInfoStore.get());
+  }
+
+  static class PendingPluginCollectionLinks {
+    private final LinkBuilder pendingPluginCollectionLinkBuilder;
+
+    PendingPluginCollectionLinks(ScmPathInfo pathInfo) {
+      pendingPluginCollectionLinkBuilder = new LinkBuilder(pathInfo, PluginRootResource.class, PendingPluginResource.class);
+    }
+
     String installPending() {
-      return availablePluginCollectionLinkBuilder.method("availablePlugins").parameters().method("installPending").parameters().href();
+      return pendingPluginCollectionLinkBuilder.method("pendingPlugins").parameters().method("installPending").parameters().href();
     }
 
     String self() {
-      return availablePluginCollectionLinkBuilder.method("availablePlugins").parameters().method("getAvailablePlugins").parameters().href();
+      return pendingPluginCollectionLinkBuilder.method("pendingPlugins").parameters().method("getPending").parameters().href();
     }
   }
 

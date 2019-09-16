@@ -17,7 +17,9 @@ import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginInformation;
 
 import java.net.URI;
+import java.util.Collections;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -76,7 +78,7 @@ class PluginDtoMapperTest {
   void shouldAppendInstalledSelfLink() {
     InstalledPlugin plugin = createInstalled(createPluginInformation());
 
-    PluginDto dto = mapper.mapInstalled(plugin);
+    PluginDto dto = mapper.mapInstalled(plugin, emptyList());
     assertThat(dto.getLinks().getLinkBy("self").get().getHref())
       .isEqualTo("https://hitchhiker.com/v2/plugins/installed/scm-cas-plugin");
   }
