@@ -7,7 +7,8 @@ type Props = {
   color?: string,
   icon?: string,
   label: string,
-  title?: string
+  title?: string,
+  onClick?: () => void
 };
 
 class Tag extends React.Component<Props> {
@@ -16,7 +17,7 @@ class Tag extends React.Component<Props> {
   };
 
   render() {
-    const { icon, label, title, color, className } = this.props;
+    const { className, color, icon, label, title, onClick } = this.props;
     let showIcon = null;
     if (icon) {
       showIcon = (
@@ -30,6 +31,7 @@ class Tag extends React.Component<Props> {
       <span
         className={classNames("tag", `is-${color}`, className)}
         title={title}
+        onClick={onClick}
       >
         {showIcon}
         {label}
