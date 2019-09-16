@@ -1,0 +1,65 @@
+{
+  "user": {
+    "name": "Nombre de usuario",
+    "displayName": "Nombre a mostrar",
+    "mail": "Correo electrónico",
+    "password": "Contraseña",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "type": "Tipo",
+    "creationDate": "Fecha de creación",
+    "lastModified": "Última modificación"
+  },
+  "validation": {
+    "mail-invalid": "El correo electrónico es incorrecto",
+    "name-invalid": "El nombre es incorrecto",
+    "displayname-invalid": "El nombre a mostrar es incorrecto"
+  },
+  "help": {
+    "usernameHelpText": "Nombre único del usuario.",
+    "displayNameHelpText": "Nombre de usuario a mostrar.",
+    "mailHelpText": "Dirección de correo electrónico del usuario.",
+    "adminHelpText": "Un administrador es capaz de crear, modificar y borrar repositorios, grupos y usuarios.",
+    "activeHelpText": "Activar o desactivar el usuario."
+  },
+  "users": {
+    "title": "Usuarios",
+    "subtitle": "Crear, leer, actualizar y borrar usuarios",
+    "noUsers": "No se han encontrado usuarios.",
+    "createButton": "Crear usuario"
+  },
+  "singleUser": {
+    "errorTitle": "Error",
+    "errorSubtitle": "Error de usuario desconocido",
+    "menu": {
+      "navigationLabel": "Menú de usuario",
+      "informationNavLink": "Información",
+      "settingsNavLink": "Ajustes",
+      "generalNavLink": "General",
+      "setPasswordNavLink": "Contraseña",
+      "setPermissionsNavLink": "Permisos"
+    }
+  },
+  "createUser": {
+    "title": "Crear usuario",
+    "subtitle": "Crear un nuevo usuario"
+  },
+  "deleteUser": {
+    "subtitle": "Borrar usuario",
+    "button": "Borrar",
+    "confirmAlert": {
+      "title": "Borrar usuario",
+      "message": "¿Realmente desea borrar el usuario?",
+      "submit": "Sí",
+      "cancel": "No"
+    }
+  },
+  "singleUserPassword": {
+    "button": "Guardar",
+    "setPasswordSuccessful": "Contraseña guardada correctamente"
+  },
+  "userForm": {
+    "subtitle": "Editar usuario",
+    "button": "Guardar"
+  }
+}
