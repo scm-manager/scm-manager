@@ -346,6 +346,18 @@ class DefaultPluginManagerTest {
     }
 
     @Test
+    void shouldMarkPluginForUninstall(@TempDirectory.TempDir Path temp) {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      when(mailPlugin.getDirectory()).thenReturn(temp);
+
+      when(loader.getInstalledPlugins()).thenReturn(singletonList(mailPlugin));
+
+      manager.uninstall("scm-mail-plugin", false);
+
+      verify(mailPlugin).setMarkedForUninstall(true);
+    }
+
+    @Test
     void shouldThrowExceptionWhenUninstallingCorePlugin(@TempDirectory.TempDir Path temp) {
       InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
       when(mailPlugin.getDirectory()).thenReturn(temp);

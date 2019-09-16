@@ -127,6 +127,14 @@ public final class InstalledPlugin implements Plugin
     return core;
   }
 
+  public boolean isMarkedForUninstall() {
+    return markedForUninstall;
+  }
+
+  public void setMarkedForUninstall(boolean markedForUninstall) {
+    this.markedForUninstall = markedForUninstall;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** plugin class loader */
@@ -142,4 +150,6 @@ public final class InstalledPlugin implements Plugin
   private final WebResourceLoader webResourceLoader;
 
   private final boolean core;
+
+  private boolean markedForUninstall;
 }
