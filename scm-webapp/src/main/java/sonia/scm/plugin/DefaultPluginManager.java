@@ -188,6 +188,7 @@ public class DefaultPluginManager implements PluginManager {
     PluginPermissions.manage().check();
     InstalledPlugin installed = getInstalled(name)
       .orElseThrow(() -> NotFoundException.notFound(entity(InstalledPlugin.class, name)));
+    doThrow().violation("plugin is a core plugin and cannot be uninstalled").when(installed.isCore());
 
     dependencyTracker.removeInstalled(installed.getDescriptor());
 

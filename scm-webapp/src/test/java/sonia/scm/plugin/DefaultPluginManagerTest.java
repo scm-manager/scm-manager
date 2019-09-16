@@ -344,6 +344,19 @@ class DefaultPluginManagerTest {
 
       assertThat(temp.resolve("uninstall")).exists();
     }
+
+    @Test
+    void shouldThrowExceptionWhenUninstallingCorePlugin(@TempDirectory.TempDir Path temp) {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      when(mailPlugin.getDirectory()).thenReturn(temp);
+      when(mailPlugin.isCore()).thenReturn(true);
+
+      when(loader.getInstalledPlugins()).thenReturn(singletonList(mailPlugin));
+
+      assertThrows(ScmConstraintViolationException.class, () -> manager.uninstall("scm-mail-plugin", false));
+
+      assertThat(temp.resolve("uninstall")).doesNotExist();
+    }
   }
 
   @Nested
