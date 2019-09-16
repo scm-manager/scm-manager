@@ -26,6 +26,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
+import static sonia.scm.plugin.PluginTestHelper.createAvailable;
+import static sonia.scm.plugin.PluginTestHelper.createInstalled;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultPluginManagerTest {
@@ -354,33 +356,4 @@ class DefaultPluginManagerTest {
     }
 
   }
-
-  private AvailablePlugin createAvailable(String name) {
-    PluginInformation information = new PluginInformation();
-    information.setName(name);
-    return createAvailable(information);
-  }
-
-  private InstalledPlugin createInstalled(String name) {
-    PluginInformation information = new PluginInformation();
-    information.setName(name);
-    return createInstalled(information);
-  }
-
-  private InstalledPlugin createInstalled(PluginInformation information) {
-    InstalledPlugin plugin = mock(InstalledPlugin.class, Answers.RETURNS_DEEP_STUBS);
-    returnInformation(plugin, information);
-    return plugin;
-  }
-
-  private AvailablePlugin createAvailable(PluginInformation information) {
-    AvailablePluginDescriptor descriptor = mock(AvailablePluginDescriptor.class);
-    lenient().when(descriptor.getInformation()).thenReturn(information);
-    return new AvailablePlugin(descriptor);
-  }
-
-  private void returnInformation(Plugin mockedPlugin, PluginInformation information) {
-    when(mockedPlugin.getDescriptor().getInformation()).thenReturn(information);
-  }
-
 }

@@ -21,6 +21,8 @@ import java.net.URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static sonia.scm.plugin.PluginTestHelper.createAvailable;
+import static sonia.scm.plugin.PluginTestHelper.createInstalled;
 
 @ExtendWith(MockitoExtension.class)
 class PluginDtoMapperTest {
@@ -72,22 +74,16 @@ class PluginDtoMapperTest {
 
   @Test
   void shouldAppendInstalledSelfLink() {
-    InstalledPlugin plugin = createInstalled();
+    InstalledPlugin plugin = createInstalled(createPluginInformation());
 
     PluginDto dto = mapper.mapInstalled(plugin);
     assertThat(dto.getLinks().getLinkBy("self").get().getHref())
       .isEqualTo("https://hitchhiker.com/v2/plugins/installed/scm-cas-plugin");
   }
 
-  private InstalledPlugin createInstalled(PluginInformation information) {
-    InstalledPlugin plugin = mock(InstalledPlugin.class, Answers.RETURNS_DEEP_STUBS);
-    when(plugin.getDescriptor().getInformation()).thenReturn(information);
-    return plugin;
-  }
-
   @Test
   void shouldAppendAvailableSelfLink() {
-    AvailablePlugin plugin = createAvailable();
+    AvailablePlugin plugin = createAvailable(createPluginInformation());
 
     PluginDto dto = mapper.mapAvailable(plugin);
     assertThat(dto.getLinks().getLinkBy("self").get().getHref())
@@ -96,7 +92,7 @@ class PluginDtoMapperTest {
 
   @Test
   void shouldNotAppendInstallLinkWithoutPermissions() {
-    AvailablePlugin plugin = createAvailable();
+    AvailablePlugin plugin = createAvailable(createPluginInformation());
 
     PluginDto dto = mapper.mapAvailable(plugin);
     assertThat(dto.getLinks().getLinkBy("install")).isEmpty();
@@ -105,7 +101,7 @@ class PluginDtoMapperTest {
   @Test
   void shouldAppendInstallLink() {
     when(subject.isPermitted("plugin:manage")).thenReturn(true);
-    AvailablePlugin plugin = createAvailable();
+    AvailablePlugin plugin = createAvailable(createPluginInformation());
 
     PluginDto dto = mapper.mapAvailable(plugin);
     assertThat(dto.getLinks().getLinkBy("install").get().getHref())
@@ -123,25 +119,10 @@ class PluginDtoMapperTest {
 
   @Test
   void shouldAppendDependencies() {
-    AvailablePlugin plugin = createAvailable();
+    AvailablePlugin plugin = createAvailable(createPluginInformation());
     when(plugin.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("one", "two"));
 
     PluginDto dto = mapper.mapAvailable(plugin);
     assertThat(dto.getDependencies()).containsOnly("one", "two");
   }
-
-  private InstalledPlugin createInstalled() {
-    return createInstalled(createPluginInformation());
-  }
-
-  private AvailablePlugin createAvailable() {
-    return createAvailable(createPluginInformation());
-  }
-
-  private AvailablePlugin createAvailable(PluginInformation information) {
-    AvailablePluginDescriptor descriptor = mock(AvailablePluginDescriptor.class);
-    when(descriptor.getInformation()).thenReturn(information);
-    return new AvailablePlugin(descriptor);
-  }
-
 }
