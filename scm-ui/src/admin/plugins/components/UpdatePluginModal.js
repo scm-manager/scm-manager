@@ -15,7 +15,7 @@ import {
 } from "@scm-manager/ui-components";
 import classNames from "classnames";
 import waitForRestart from "./waitForRestart";
-import InstallSuccessNotification from "./InstallSuccessNotification";
+import SuccessNotification from "./SuccessNotification";
 
 type Props = {
   plugin: Plugin,
@@ -38,14 +38,14 @@ const styles = {
   userLabelAlignment: {
     textAlign: "left",
     marginRight: 0,
-    minWidth: "5.5em"
+    minWidth: "9em"
   },
   userFieldFlex: {
     flexGrow: 4
   }
 };
 
-class PluginModal extends React.Component<Props, State> {
+class UpdatePluginModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -55,7 +55,7 @@ class PluginModal extends React.Component<Props, State> {
     };
   }
 
-  onInstallSuccess = () => {
+  onUpdateSuccess = () => {
     const { restart } = this.state;
     const { refresh, onClose } = this.props;
 
@@ -87,7 +87,7 @@ class PluginModal extends React.Component<Props, State> {
     }
   };
 
-  install = (e: Event) => {
+  update = (e: Event) => {
     const { restart } = this.state;
     const { plugin } = this.props;
     this.setState({
@@ -95,8 +95,8 @@ class PluginModal extends React.Component<Props, State> {
     });
     e.preventDefault();
     apiClient
-      .post(plugin._links.install.href + "?restart=" + restart.toString())
-      .then(this.onInstallSuccess)
+      .post(plugin._links.update.href + "?restart=" + restart.toString())
+      .then(this.onUpdateSuccess)
       .catch(error => {
         this.setState({
           loading: false,
@@ -110,17 +110,17 @@ class PluginModal extends React.Component<Props, State> {
     const { loading, error, restart, success } = this.state;
 
     let color = "primary";
-    let label = "plugins.modal.install";
+    let label = "plugins.modal.update";
     if (restart) {
       color = "warning";
-      label = "plugins.modal.installAndRestart";
+      label = "plugins.modal.updateAndRestart";
     }
     return (
       <ButtonGroup>
         <Button
           label={t(label)}
           color={color}
-          action={this.install}
+          action={this.update}
           loading={loading}
           disabled={!!error || success}
         />
@@ -162,7 +162,7 @@ class PluginModal extends React.Component<Props, State> {
     } else if (success) {
       return (
         <div className="media">
-          <InstallSuccessNotification />
+          <SuccessNotification />
         </div>
       );
     } else if (restart) {
@@ -221,7 +221,7 @@ class PluginModal extends React.Component<Props, State> {
                   "field-label is-inline-flex"
                 )}
               >
-                {t("plugins.modal.version")}:
+                {t("plugins.modal.currentVersion")}:
               </div>
               <div
                 className={classNames(
@@ -230,6 +230,24 @@ class PluginModal extends React.Component<Props, State> {
                 )}
               >
                 {plugin.version}
+              </div>
+            </div>
+            <div className="field is-horizontal">
+              <div
+                className={classNames(
+                  classes.userLabelAlignment,
+                  "field-label is-inline-flex"
+                )}
+              >
+                {t("plugins.modal.newVersion")}:
+              </div>
+              <div
+                className={classNames(
+                  classes.userFieldFlex,
+                  "field-body is-inline-flex"
+                )}
+              >
+                {plugin.newVersion}
               </div>
             </div>
 
@@ -252,7 +270,7 @@ class PluginModal extends React.Component<Props, State> {
 
     return (
       <Modal
-        title={t("plugins.modal.title", {
+        title={t("plugins.modal.title.update", {
           name: plugin.displayName ? plugin.displayName : plugin.name
         })}
         closeFunction={() => onClose()}
@@ -267,4 +285,4 @@ class PluginModal extends React.Component<Props, State> {
 export default compose(
   injectSheet(styles),
   translate("admin")
-)(PluginModal);
+)(UpdatePluginModal);

@@ -15,6 +15,17 @@ export const FETCH_PLUGIN_PENDING = `${FETCH_PLUGIN}_${types.PENDING_SUFFIX}`;
 export const FETCH_PLUGIN_SUCCESS = `${FETCH_PLUGIN}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_PLUGIN_FAILURE = `${FETCH_PLUGIN}_${types.FAILURE_SUFFIX}`;
 
+export const FETCH_PENDING_PLUGINS = "scm/plugins/FETCH_PENDING_PLUGINS";
+export const FETCH_PENDING_PLUGINS_PENDING = `${FETCH_PENDING_PLUGINS}_${
+  types.PENDING_SUFFIX
+}`;
+export const FETCH_PENDING_PLUGINS_SUCCESS = `${FETCH_PENDING_PLUGINS}_${
+  types.SUCCESS_SUFFIX
+}`;
+export const FETCH_PENDING_PLUGINS_FAILURE = `${FETCH_PENDING_PLUGINS}_${
+  types.FAILURE_SUFFIX
+}`;
+
 // fetch plugins
 export function fetchPluginsByLink(link: string) {
   return function(dispatch: any) {
@@ -105,8 +116,44 @@ export function fetchPluginFailure(name: string, error: Error): Action {
   };
 }
 
+// fetch pending plugins
+export function fetchPendingPlugins(link: string) {
+  return function(dispatch: any) {
+    dispatch(fetchPendingPluginsPending());
+    return apiClient
+      .get(link)
+      .then(response => response.json())
+      .then(PendingPlugins => {
+        dispatch(fetchPendingPluginsSuccess(PendingPlugins));
+      })
+      .catch(err => {
+        dispatch(fetchPendingPluginsFailure(err));
+      });
+  };
+}
+
+export function fetchPendingPluginsPending(): Action {
+  return {
+    type: FETCH_PENDING_PLUGINS_PENDING
+  };
+}
+
+export function fetchPendingPluginsSuccess(PendingPlugins: {}): Action {
+  return {
+    type: FETCH_PENDING_PLUGINS_SUCCESS,
+    payload: PendingPlugins
+  };
+}
+
+export function fetchPendingPluginsFailure(err: Error): Action {
+  return {
+    type: FETCH_PENDING_PLUGINS_FAILURE,
+    payload: err
+  };
+}
+
 // reducer
-function normalizeByName(pluginCollection: PluginCollection) {
+function normalizeByName(state: Object, pluginCollection: PluginCollection) {
   const names = [];
   const byNames = {};
   for (const plugin of pluginCollection._embedded.plugins) {
@@ -114,6 +161,7 @@ function normalizeByName(pluginCollection: PluginCollection) {
     byNames[plugin.name] = plugin;
   }
   return {
+    ...state,
     list: {
       ...pluginCollection,
       _embedded: {
@@ -144,9 +192,11 @@ export default function reducer(
 
   switch (action.type) {
     case FETCH_PLUGINS_SUCCESS:
-      return normalizeByName(action.payload);
+      return normalizeByName(state, action.payload);
     case FETCH_PLUGIN_SUCCESS:
       return reducerByNames(state, action.payload);
+    case FETCH_PENDING_PLUGINS_SUCCESS:
+      return { ...state, pending: action.payload };
     default:
       return state;
   }
@@ -188,4 +238,18 @@ export function isFetchPluginPending(state: Object, name: string) {
 
 export function getFetchPluginFailure(state: Object, name: string) {
   return getFailure(state, FETCH_PLUGIN, name);
+}
+
+export function getPendingPlugins(state: Object) {
+  if (state.plugins && state.plugins.pending) {
+    return state.plugins.pending;
+  }
+}
+
+export function isFetchPendingPluginsPending(state: Object) {
+  return isPending(state, FETCH_PENDING_PLUGINS);
+}
+
+export function getFetchPendingPluginsFailure(state: Object) {
+  return getFailure(state, FETCH_PENDING_PLUGINS);
 }

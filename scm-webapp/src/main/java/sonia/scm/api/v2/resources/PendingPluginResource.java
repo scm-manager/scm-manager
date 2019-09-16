@@ -64,13 +64,16 @@ public class PendingPluginResource {
 
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.pendingPluginCollection().self());
 
-    if (!pending.isEmpty()) {
-      linksBuilder.single(link("install", resourceLinks.pendingPluginCollection().installPending()));
+    List<PluginDto> newPluginDtos = newPlugins.map(mapper::mapAvailable).collect(toList());
+    List<PluginDto> updatePluginDtos = updatePlugins.map(i -> mapper.mapInstalled(i, pending)).collect(toList());
+
+    if (newPluginDtos.size() > 0 || updatePluginDtos.size() > 0) {
+      linksBuilder.single(link("execute", resourceLinks.pendingPluginCollection().installPending()));
     }
 
     Embedded.Builder embedded = Embedded.embeddedBuilder();
-    embedded.with("new", newPlugins.map(mapper::mapAvailable).collect(toList()));
-    embedded.with("update", updatePlugins.map(i -> mapper.mapInstalled(i, pending)).collect(toList()));
+    embedded.with("new", newPluginDtos);
+    embedded.with("update", updatePluginDtos);
 
     return Response.ok(new HalRepresentation(linksBuilder.build(), embedded.build())).build();
   }
