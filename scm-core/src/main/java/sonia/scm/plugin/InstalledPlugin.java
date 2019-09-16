@@ -45,6 +45,8 @@ import java.nio.file.Path;
 public final class InstalledPlugin implements Plugin
 {
 
+  public static final String UNINSTALL_MARKER_FILENAME = "uninstall";
+
   /**
    * Constructs a new plugin wrapper.
    *  @param descriptor wrapped plugin

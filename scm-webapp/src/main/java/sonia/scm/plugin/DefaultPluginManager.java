@@ -39,7 +39,6 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
-import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.version.Version;
@@ -193,7 +192,7 @@ public class DefaultPluginManager implements PluginManager {
     dependencyTracker.removeInstalled(installed.getDescriptor());
 
     try {
-      Files.createFile(installed.getDirectory().resolve("uninstall"));
+      Files.createFile(installed.getDirectory().resolve(InstalledPlugin.UNINSTALL_MARKER_FILENAME));
     } catch (IOException e) {
       throw new PluginException("could not mark plugin " + name + " in path " + installed.getDirectory() + " for uninstall", e);
     }

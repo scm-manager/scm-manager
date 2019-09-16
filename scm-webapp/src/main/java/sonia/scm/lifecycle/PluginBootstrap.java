@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -78,9 +79,34 @@ public final class PluginBootstrap {
         LOG.info("core plugin extraction is disabled");
       }
 
+      uninstallMarkedPlugins(pluginDirectory.toPath());
       return PluginsInternal.collectPlugins(classLoaderLifeCycle, pluginDirectory.toPath());
     } catch (IOException ex) {
       throw new PluginLoadException("could not load plugins", ex);
+    }
+  }
+
+  private void uninstallMarkedPlugins(Path pluginDirectory) {
+    try {
+      java.nio.file.Files.list(pluginDirectory)
+        .filter(java.nio.file.Files::isDirectory)
+        .filter(this::isMarkedForUninstall)
+        .forEach(this::uninstall);
+    } catch (IOException e) {
+      LOG.warn("error occurred while checking for plugins that should be uninstalled", e);
+    }
+  }
+
+  private boolean isMarkedForUninstall(Path path) {
+    return java.nio.file.Files.exists(path.resolve(InstalledPlugin.UNINSTALL_MARKER_FILENAME));
+  }
+
+  private void uninstall(Path path) {
+    try {
+      LOG.info("deleting plugin directory {}", path);
+      IOUtil.delete(path.toFile());
+    } catch (IOException e) {
+      LOG.warn("could not delete plugin directory {}", path, e);
     }
   }
 
@@ -95,7 +121,6 @@ public final class PluginBootstrap {
       }
     }
   }
-
 
   private boolean isCorePluginExtractionDisabled() {
     return Boolean.getBoolean("sonia.scm.boot.disable-core-plugin-extraction");
