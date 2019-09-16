@@ -139,7 +139,7 @@ $danger-25: scale-color($danger, $lightness: 75%);
 
 // readability issues with original color
 .has-text-warning {
-  color: #FFB600 !important;
+  color: #ffb600 !important;
 }
 
 // border and background colors
@@ -208,45 +208,50 @@ $danger-25: scale-color($danger, $lightness: 75%);
 }
 
 // outline option for tags
-.is-outline-black {
-  color: $black;
-  border-color: $black;
-}
-.is-outline-dark {
-  color: $dark;
-  border-color: $dark;
-}
-.is-outline-light {
-  color: $light;
-  border-color: $light;
-}
-.is-outline-white {
-  color: $white;
-  border-color: $white;
-}
-.is-outline-primary {
-  color: $primary;
-  border-color: $primary;
-}
-.is-outline-link {
-  color: $link;
-  border-color: $link;
-}
-.is-outline-info {
-  color: $info;
-  border-color: $info;
-}
-.is-outline-success {
-  color: $success;
-  border-color: $success;
-}
-.is-outline-warning {
-  color: $warning;
-  border-color: $warning;
-}
-.is-outline-danger {
-  color: $danger;
-  border-color: $danger;
+.tag:not(body) {
+  border: 1px solid transparent;
+  background-color: red; //TODO: replace with transparent
+
+  &.is-outline-black {
+    color: $black;
+    border-color: $black;
+  }
+  &.is-outline-dark {
+    color: $dark;
+    border-color: $dark;
+  }
+  &.is-outline-light {
+    color: $light;
+    border-color: $light;
+  }
+  &.is-outline-white {
+    color: $white;
+    border-color: $white;
+  }
+  &.is-outline-primary {
+    color: $primary;
+    border-color: $primary;
+  }
+  &.is-outline-link {
+    color: $link;
+    border-color: $link;
+  }
+  &.is-outline-info {
+    color: $info;
+    border-color: $info;
+  }
+  &.is-outline-success {
+    color: $success;
+    border-color: $success;
+  }
+  &.is-outline-warning {
+    color: $warning;
+    border-color: $warning;
+  }
+  &.is-outline-danger {
+    color: $danger;
+    border-color: $danger;
+  }
 }
 
 // buttons
