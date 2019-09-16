@@ -212,6 +212,10 @@ $danger-25: scale-color($danger, $lightness: 75%);
   border: 1px solid transparent;
   background-color: red; //TODO: replace with transparent
 
+  &.is-delete {
+    background-color: $light;
+  }
+
   &.is-outline-black {
     color: $black;
     border-color: $black;
@@ -382,11 +386,6 @@ ul.is-separated {
   > li:last-child:after {
     content: "";
   }
-}
-
-.user {
-  display: inline-block;
-  font-weight: bold;
 }
 
 .button {
