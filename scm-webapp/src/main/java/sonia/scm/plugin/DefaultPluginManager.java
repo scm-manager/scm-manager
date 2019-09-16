@@ -82,15 +82,16 @@ public class DefaultPluginManager implements PluginManager {
     this.center = center;
     this.installer = installer;
 
-    this.computeRequiredPlugins();
+    this.computeInstallationDependencies();
   }
 
   @VisibleForTesting
-  synchronized void computeRequiredPlugins() {
+  synchronized void computeInstallationDependencies() {
     loader.getInstalledPlugins()
       .stream()
       .map(InstalledPlugin::getDescriptor)
       .forEach(dependencyTracker::addInstalled);
+    updateMayUninstallFlag();
   }
 
   @Override
@@ -166,6 +167,7 @@ public class DefaultPluginManager implements PluginManager {
     for (AvailablePlugin plugin : plugins) {
       try {
         PendingPluginInstallation pending = installer.install(plugin);
+        dependencyTracker.addInstalled(plugin.getDescriptor());
         pendingInstallations.add(pending);
       } catch (PluginInstallException ex) {
         cancelPending(pendingInstallations);
@@ -178,6 +180,7 @@ public class DefaultPluginManager implements PluginManager {
         restart("plugin installation");
       } else {
         pendingQueue.addAll(pendingInstallations);
+        updateMayUninstallFlag();
       }
     }
   }
@@ -197,6 +200,23 @@ public class DefaultPluginManager implements PluginManager {
     } catch (IOException e) {
       throw new PluginException("could not mark plugin " + name + " in path " + installed.getDirectory() + " for uninstall", e);
     }
+
+    if (restartAfterInstallation) {
+      restart("plugin installation");
+    } else {
+      updateMayUninstallFlag();
+    }
+  }
+
+  private void updateMayUninstallFlag() {
+    loader.getInstalledPlugins()
+      .forEach(p -> p.setUninstallable(isUninstallable(p)));
+  }
+
+  private boolean isUninstallable(InstalledPlugin p) {
+    return !p.isCore()
+      && !p.isMarkedForUninstall()
+      && dependencyTracker.mayUninstall(p.getDescriptor().getInformation().getName());
   }
 
   @Override

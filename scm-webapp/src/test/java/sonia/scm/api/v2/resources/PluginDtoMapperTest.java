@@ -127,4 +127,15 @@ class PluginDtoMapperTest {
     PluginDto dto = mapper.mapAvailable(plugin);
     assertThat(dto.getDependencies()).containsOnly("one", "two");
   }
+
+  @Test
+  void shouldAppendUninstallLink() {
+    when(subject.isPermitted("plugin:manage")).thenReturn(true);
+    InstalledPlugin plugin = createInstalled(createPluginInformation());
+    when(plugin.isUninstallable()).thenReturn(true);
+
+    PluginDto dto = mapper.mapInstalled(plugin, emptyList());
+    assertThat(dto.getLinks().getLinkBy("uninstall").get().getHref())
+      .isEqualTo("https://hitchhiker.com/v2/plugins/installed/scm-cas-plugin/uninstall");
+  }
 }

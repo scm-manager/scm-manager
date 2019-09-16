@@ -135,7 +135,14 @@ public final class InstalledPlugin implements Plugin
     this.markedForUninstall = markedForUninstall;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  public boolean isUninstallable() {
+    return uninstallable;
+  }
+
+  public void setUninstallable(boolean uninstallable) {
+    this.uninstallable = uninstallable;
+  }
+//~--- fields ---------------------------------------------------------------
 
   /** plugin class loader */
   private final ClassLoader classLoader;
@@ -151,5 +158,6 @@ public final class InstalledPlugin implements Plugin
 
   private final boolean core;
 
-  private boolean markedForUninstall;
+  private boolean markedForUninstall = false;
+  private boolean uninstallable = false;
 }

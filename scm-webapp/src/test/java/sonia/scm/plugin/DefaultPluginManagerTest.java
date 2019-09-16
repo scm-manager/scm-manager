@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -328,7 +329,7 @@ class DefaultPluginManagerTest {
       when(reviewPlugin.getDescriptor().getDependencies()).thenReturn(singleton("scm-mail-plugin"));
 
       when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(mailPlugin, reviewPlugin));
-      manager.computeRequiredPlugins();
+      manager.computeInstallationDependencies();
 
       assertThrows(ScmConstraintViolationException.class, () -> manager.uninstall("scm-mail-plugin", false));
     }
@@ -368,6 +369,51 @@ class DefaultPluginManagerTest {
       assertThrows(ScmConstraintViolationException.class, () -> manager.uninstall("scm-mail-plugin", false));
 
       assertThat(temp.resolve("uninstall")).doesNotExist();
+    }
+
+    @Test
+    void shouldMarkUninstallablePlugins() {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      InstalledPlugin reviewPlugin = createInstalled("scm-review-plugin");
+      when(reviewPlugin.getDescriptor().getDependencies()).thenReturn(singleton("scm-mail-plugin"));
+
+      when(loader.getInstalledPlugins()).thenReturn(asList(mailPlugin, reviewPlugin));
+
+      manager.computeInstallationDependencies();
+
+      verify(reviewPlugin).setUninstallable(true);
+      verify(mailPlugin).setUninstallable(false);
+    }
+
+    @Test
+    void shouldUpdateMayUninstallFlagAfterDependencyIsUninstalled() {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      InstalledPlugin reviewPlugin = createInstalled("scm-review-plugin");
+      when(reviewPlugin.getDescriptor().getDependencies()).thenReturn(singleton("scm-mail-plugin"));
+
+      when(loader.getInstalledPlugins()).thenReturn(asList(mailPlugin, reviewPlugin));
+
+      manager.computeInstallationDependencies();
+
+      manager.uninstall("scm-review-plugin", false);
+
+      verify(mailPlugin).setUninstallable(true);
+    }
+
+    @Test
+    void shouldUpdateMayUninstallFlagAfterDependencyIsInstalled() {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      AvailablePlugin reviewPlugin = createAvailable("scm-review-plugin");
+      when(reviewPlugin.getDescriptor().getDependencies()).thenReturn(singleton("scm-mail-plugin"));
+
+      when(loader.getInstalledPlugins()).thenReturn(singletonList(mailPlugin));
+      when(center.getAvailable()).thenReturn(singleton(reviewPlugin));
+
+      manager.computeInstallationDependencies();
+
+      manager.install("scm-review-plugin", false);
+
+      verify(mailPlugin).setUninstallable(false);
     }
   }
 
