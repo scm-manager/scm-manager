@@ -1,10 +1,18 @@
 //@flow
 import React from "react";
-import {Change, Diff as DiffComponent, DiffObjectProps, File, getChangeKey, Hunk} from "react-diff-view";
+import {
+  Change,
+  Diff as DiffComponent,
+  DiffObjectProps,
+  File,
+  getChangeKey,
+  Hunk
+} from "react-diff-view";
 import injectSheets from "react-jss";
 import classNames from "classnames";
-import {translate} from "react-i18next";
-import {Button, ButtonGroup} from "../buttons";
+import { translate } from "react-i18next";
+import { Button, ButtonGroup } from "../buttons";
+import Tag from "../Tag";
 
 const styles = {
   panel: {
@@ -183,24 +191,18 @@ class DiffFile extends React.Component<Props, State> {
       value = file.type;
     }
     const color =
-      value === "added"
-        ? "is-success"
-        : value === "deleted"
-          ? "is-danger"
-          : "is-info";
+      value === "added" ? "success" : value === "deleted" ? "danger" : "info";
 
     return (
-      <span
+      <Tag
         className={classNames(
-          "tag",
           "is-rounded",
           "has-text-weight-normal",
-          color,
           classes.changeType
         )}
-      >
-        {value}
-      </span>
+        color={color}
+        label={value}
+      />
     );
   };
 
@@ -232,7 +234,7 @@ class DiffFile extends React.Component<Props, State> {
         </div>
       );
     }
-    const collapseIcon = collapsible? <i className={icon} />: null;
+    const collapseIcon = collapsible ? <i className={icon} /> : null;
 
     const fileControls = fileControlFactory
       ? fileControlFactory(file, this.setCollapse)

@@ -10,7 +10,7 @@ type Props = {
 class ChangesetTag extends React.Component<Props> {
   render() {
     const { tag } = this.props;
-    return <ChangesetTagBase icon={"fa-tag"} label={tag.name} />;
+    return <ChangesetTagBase icon="tag" label={tag.name} />;
   }
 }
 
