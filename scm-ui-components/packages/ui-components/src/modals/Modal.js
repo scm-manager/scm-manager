@@ -8,13 +8,12 @@ type Props = {
   body: any,
   footer?: any,
   active: boolean,
+  className?: string
 };
-
-
 
 class Modal extends React.Component<Props> {
   render() {
-    const { title, closeFunction, body, footer, active } = this.props;
+    const { title, closeFunction, body, footer, active, className } = this.props;
 
     const isActive = active ? "is-active" : null;
 
@@ -24,7 +23,7 @@ class Modal extends React.Component<Props> {
     }
 
     return (
-      <div className={classNames("modal", isActive)}>
+      <div className={classNames("modal", className, isActive)}>
         <div className="modal-background" />
         <div className="modal-card">
           <header className="modal-card-head">
