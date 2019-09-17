@@ -72,7 +72,7 @@ public class PendingPluginResource {
     List<PluginDto> uninstallDtos = uninstallPlugins.map(i -> mapper.mapInstalled(i, pending)).collect(toList());
 
     if (!installDtos.isEmpty() || !updateDtos.isEmpty() || !uninstallDtos.isEmpty()) {
-      linksBuilder.single(link("install", resourceLinks.pendingPluginCollection().installPending()));
+      linksBuilder.single(link("execute", resourceLinks.pendingPluginCollection().executePending()));
     }
 
     Embedded.Builder embedded = Embedded.embeddedBuilder();
@@ -100,14 +100,14 @@ public class PendingPluginResource {
   }
 
   @POST
-  @Path("/install")
+  @Path("/execute")
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response installPending() {
+  public Response executePending() {
     PluginPermissions.manage().check();
-    pluginManager.installPendingAndRestart();
+    pluginManager.executePendingAndRestart();
     return Response.ok().build();
   }
 }

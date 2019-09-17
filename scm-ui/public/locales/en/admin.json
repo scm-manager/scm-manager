@@ -29,22 +29,32 @@
       "installedNavLink": "Installed",
       "availableNavLink": "Available"
     },
-    "installPending": "Install pending plugins",
+    "executePending": "Execute pending plugin changes",
     "noPlugins": "No plugins found.",
     "modal": {
-      "title": "Install {{name}} Plugin",
+      "title": {
+        "install": "Install {{name}} Plugin",
+        "update": "Update {{name}} Plugin"
+      },
       "restart": "Restart to activate",
       "install": "Install",
+      "update": "Update",
+      "installQueue": "Will be installed:",
+      "updateQueue": "Will be updated:",
       "installAndRestart": "Install and Restart",
+      "updateAndRestart": "Update and Restart",
+      "executeAndRestart": "Execute and Restart",
       "abort": "Abort",
       "author": "Author",
       "version": "Version",
+      "currentVersion": "Installed version",
+      "newVersion": "New version",
       "dependencyNotification": "With this plugin, the following dependencies will be installed if they are not available yet!",
       "dependencies": "Dependencies",
       "successNotification": "Successful installed plugin. You have to reload the page, to see ui changes:",
       "reload": "reload now",
       "restartNotification": "You should only restart the scm-manager context if no one else is currently working with it.",
-      "installPending": "The following plugins will be installed and after installation the scm-manager context will be restarted."
+      "executePending": "The following plugin changes will be executed and after that the scm-manager context will be restarted."
     }
   },
   "repositoryRole": {

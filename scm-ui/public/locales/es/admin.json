@@ -1,0 +1,83 @@
+{
+  "admin": {
+    "menu": {
+      "navigationLabel": "Menú de administración",
+      "informationNavLink": "Información",
+      "settingsNavLink": "Ajustes",
+      "generalNavLink": "General"
+    },
+    "info": {
+      "currentAppVersion": "Versión actual de la aplicación",
+      "communityTitle": "Soporte de la comunidad",
+      "communityIconAlt": "Icono del soporte de la comunidad",
+      "communityInfo": "Contacte con el equipo de soporte de SCM-Manager para questiones acerca de SCM-Manager, para informar de errores o pedir nuevas funcionalidades use los canales oficiales.",
+      "communityButton": "Contactar con nuestro equipo",
+      "enterpriseTitle": "Soporte empresarial",
+      "enterpriseIconAlt": "Icono del soporte para empresas",
+      "enterpriseInfo": "¿Necesita ayuda para la integración de SMC-Manager en sus procesos, con la personalización de la herramienta o simplemente un acuerdo de nivel de servicio (SLA)?",
+      "enterprisePartner": "Póngase en contacto con nuestro socio de desarrollo Cloudogu! Su equipo está esperando para tratar sus requisitos con usted y estará encantado de darle un presupuesto.",
+      "enterpriseLink": "https://cloudogu.com/en/scm-manager-enterprise/",
+      "enterpriseButton": "Pedir soporte empresarial"
+    }
+  },
+  "plugins": {
+    "title": "Complementos",
+    "installedSubtitle": "Complementos instalados",
+    "availableSubtitle": "Complementos disponibles",
+    "menu": {
+      "pluginsNavLink": "Complementos",
+      "installedNavLink": "Instalados",
+      "availableNavLink": "Disponibles"
+    },
+    "installPending": "Instalar los complementos pendientes",
+    "noPlugins": "No se han encontrado complementos.",
+    "modal": {
+      "title": "Instalar complemento {{name}} ",
+      "restart": "Reiniciar para activar",
+      "install": "Instalar",
+      "installAndRestart": "Instalar y reiniciar",
+      "abort": "Cancelar",
+      "author": "Autor",
+      "version": "Versión",
+      "dependencyNotification": "Con este complemento las siguientes dependencias serán instaladas si no lo han sido ya",
+      "dependencies": "Dependencias",
+      "successNotification": "Complemento instalado correctamente. Necesita recargar la página para ver los cambios:",
+      "reload": "recargar ahora",
+      "restartNotification": "Usted debería reiniciar scm-manager sólo si actualmente no hay nadie trabajando con el.",
+      "installPending": "Los siguientes complementos serán instalados y después de la instalación sdm-manager será reiniciado."
+    }
+  },
+  "repositoryRole": {
+    "navLink": "Roles y permisos",
+    "title": "Roles y permisos",
+    "errorTitle": "Error",
+    "errorSubtitle": "Error desconocido",
+    "createSubtitle": "Crear nuevo rol",
+    "editSubtitle": "Editar rol",
+    "overview": {
+      "title": "Visión general de todos los roles",
+      "noPermissionRoles": "No se han encontrado roles.",
+      "createButton": "Crear rol"
+    },
+    "editButton": "Editar",
+    "name": "Nombre",
+    "type": "Tipo",
+    "verbs": "Permisos",
+    "system": "Sistema",
+    "form": {
+      "name": "Nombre",
+      "permissions": "Permisos",
+      "submit": "Guardar"
+    },
+    "delete": {
+      "button": "Borrar",
+      "subtitle": "Eliminar el rol",
+      "confirmAlert": {
+        "title": "Eliminar el rol",
+        "message": "¿Realmente desea borrar el rol? Todos los usuarios de este rol perderń sus permisos.",
+        "submit": "Sí",
+        "cancel": "No"
+      }
+    }
+  }
+}

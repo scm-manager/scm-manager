@@ -735,8 +735,8 @@ class ResourceLinks {
       pendingPluginCollectionLinkBuilder = new LinkBuilder(pathInfo, PluginRootResource.class, PendingPluginResource.class);
     }
 
-    String installPending() {
-      return pendingPluginCollectionLinkBuilder.method("pendingPlugins").parameters().method("installPending").parameters().href();
+    String executePending() {
+      return pendingPluginCollectionLinkBuilder.method("pendingPlugins").parameters().method("executePending").parameters().href();
     }
 
     String self() {

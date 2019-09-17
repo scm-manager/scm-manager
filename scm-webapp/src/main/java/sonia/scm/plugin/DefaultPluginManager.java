@@ -220,10 +220,10 @@ public class DefaultPluginManager implements PluginManager {
   }
 
   @Override
-  public void installPendingAndRestart() {
+  public void executePendingAndRestart() {
     PluginPermissions.manage().check();
     if (!pendingQueue.isEmpty()) {
-      restart("install pending plugins");
+      restart("execute pending plugin changes");
     }
   }
 

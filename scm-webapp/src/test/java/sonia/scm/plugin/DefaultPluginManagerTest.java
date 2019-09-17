@@ -283,14 +283,14 @@ class DefaultPluginManagerTest {
       when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
 
       manager.install("scm-review-plugin", false);
-      manager.installPendingAndRestart();
+      manager.executePendingAndRestart();
 
       verify(eventBus).post(any(RestartEvent.class));
     }
 
     @Test
     void shouldNotSendRestartEventWithoutPendingPlugins() {
-      manager.installPendingAndRestart();
+      manager.executePendingAndRestart();
 
       verify(eventBus, never()).post(any());
     }
@@ -466,8 +466,8 @@ class DefaultPluginManagerTest {
     }
 
     @Test
-    void shouldThrowAuthorizationExceptionsForInstallPendingAndRestart() {
-      assertThrows(AuthorizationException.class, () -> manager.installPendingAndRestart());
+    void shouldThrowAuthorizationExceptionsForExecutePendingAndRestart() {
+      assertThrows(AuthorizationException.class, () -> manager.executePendingAndRestart());
     }
 
   }
