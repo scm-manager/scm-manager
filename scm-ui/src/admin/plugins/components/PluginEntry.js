@@ -189,7 +189,11 @@ class PluginEntry extends React.Component<Props, State> {
       <>
         <CardColumn
           className={classes.layout}
-          action={this.isInstallable() ? this.toggleModal : null}
+          action={
+            this.isInstallable()
+              ? () => this.toggleModal("showInstallModal")
+              : null
+          }
           avatar={avatar}
           title={plugin.displayName ? plugin.displayName : plugin.name}
           description={plugin.description}
