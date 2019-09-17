@@ -191,7 +191,7 @@ class DiffFile extends React.Component<Props, State> {
       value = file.type;
     }
     const color =
-      value === "added" ? "success" : value === "deleted" ? "danger" : "info";
+      value === "added" ? "outline-success" : value === "deleted" ? "outline-danger" : "outline-info";
 
     return (
       <Tag
