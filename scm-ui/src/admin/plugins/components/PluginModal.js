@@ -103,6 +103,8 @@ class PluginModal extends React.Component<Props, State> {
       pluginActionLink = plugin._links.install.href;
     } else if (pluginAction === "update") {
       pluginActionLink = plugin._links.update.href;
+    } else if (pluginAction === "uninstall") {
+      pluginActionLink = plugin._links.uninstall.href;
     }
     return pluginActionLink + "?restart=" + restart.toString();
   };
@@ -256,49 +258,48 @@ class PluginModal extends React.Component<Props, State> {
                 </div>
               </div>
             )}
-            {pluginAction === "update" && (
-              <>
-                <div className="field is-horizontal">
-                  <div
-                    className={classNames(
-                      classes.userLabelAlignment,
-                      classes.userLabelMarginLarge,
-                      "field-label is-inline-flex"
-                    )}
-                  >
-                    {t("plugins.modal.currentVersion")}:
-                  </div>
-                  <div
-                    className={classNames(
-                      classes.userFieldFlex,
-                      "field-body is-inline-flex"
-                    )}
-                  >
-                    {plugin.version}
-                  </div>
+            {(pluginAction === "update" || pluginAction === "uninstall") && (
+              <div className="field is-horizontal">
+                <div
+                  className={classNames(
+                    classes.userLabelAlignment,
+                    classes.userLabelMarginLarge,
+                    "field-label is-inline-flex"
+                  )}
+                >
+                  {t("plugins.modal.currentVersion")}:
                 </div>
-                <div className="field is-horizontal">
-                  <div
-                    className={classNames(
-                      classes.userLabelAlignment,
-                      classes.userLabelMarginLarge,
-                      "field-label is-inline-flex"
-                    )}
-                  >
-                    {t("plugins.modal.newVersion")}:
-                  </div>
-                  <div
-                    className={classNames(
-                      classes.userFieldFlex,
-                      "field-body is-inline-flex"
-                    )}
-                  >
-                    {plugin.newVersion}
-                  </div>
+                <div
+                  className={classNames(
+                    classes.userFieldFlex,
+                    "field-body is-inline-flex"
+                  )}
+                >
+                  {plugin.version}
                 </div>
-              </>
+              </div>
             )}
-
+            {pluginAction === "update" && (
+              <div className="field is-horizontal">
+                <div
+                  className={classNames(
+                    classes.userLabelAlignment,
+                    classes.userLabelMarginLarge,
+                    "field-label is-inline-flex"
+                  )}
+                >
+                  {t("plugins.modal.newVersion")}:
+                </div>
+                <div
+                  className={classNames(
+                    classes.userFieldFlex,
+                    "field-body is-inline-flex"
+                  )}
+                >
+                  {plugin.newVersion}
+                </div>
+              </div>
+            )}
             {this.renderDependencies()}
           </div>
         </div>

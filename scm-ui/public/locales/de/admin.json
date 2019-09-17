@@ -34,15 +34,19 @@
     "modal": {
       "title": {
         "install": "{{name}} Plugin installieren",
-        "update": "{{name}} Plugin aktualisieren"
+        "update": "{{name}} Plugin aktualisieren",
+        "uninstall": "{{name}} Plugin deinstallieren"
       },
       "restart": "Neustarten um Plugin zu aktivieren",
       "install": "Installieren",
       "update": "Aktualisieren",
+      "uninstall": "Deinstallieren",
       "installQueue": "Werden installiert:",
       "updateQueue": "Werden aktualisiert:",
+      "uninstallQueue": "Werden deinstalliert:",
       "installAndRestart": "Installieren und Neustarten",
       "updateAndRestart": "Aktualisieren und Neustarten",
+      "uninstallAndRestart": "Deinstallieren and Neustarten",
       "executeAndRestart": "Ausführen und Neustarten",
       "abort": "Abbrechen",
       "author": "Autor",

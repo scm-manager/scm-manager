@@ -7,10 +7,10 @@ import PluginAvatar from "./PluginAvatar";
 import classNames from "classnames";
 import PluginModal from "./PluginModal";
 
-
 const PluginAction = {
   INSTALL: "install",
-  UPDATE: "update"
+  UPDATE: "update",
+  UNINSTALL: "uninstall"
 };
 
 type Props = {
@@ -22,7 +22,9 @@ type Props = {
 };
 
 type State = {
-  showModal: boolean
+  showInstallModal: boolean,
+  showUpdateModal: boolean,
+  showUninstallModal: boolean
 };
 
 const styles = {
@@ -45,6 +47,12 @@ const styles = {
     "& .level": {
       paddingBottom: "0.5rem"
     }
+  },
+  actionbar: {
+    display: "flex",
+    "& span + span": {
+      marginLeft: "0.5rem"
+    }
   }
 };
 
@@ -53,7 +61,9 @@ class PluginEntry extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      showModal: false
+      showInstallModal: false,
+      showUpdateModal: false,
+      showUninstallModal: false
     };
   }
 
@@ -61,10 +71,9 @@ class PluginEntry extends React.Component<Props, State> {
     return <PluginAvatar plugin={plugin} />;
   };
 
-  toggleModal = () => {
-    this.setState(prevState => ({
-      showModal: !prevState.showModal
-    }));
+  toggleModal = (showModal: string) => {
+    const oldValue = this.state[showModal];
+    this.setState({ [showModal]: !oldValue });
   };
 
   createFooterRight = (plugin: Plugin) => {
@@ -81,72 +90,100 @@ class PluginEntry extends React.Component<Props, State> {
     return plugin._links && plugin._links.update && plugin._links.update.href;
   };
 
+  isUninstallable = () => {
+    const { plugin } = this.props;
+    return (
+      plugin._links && plugin._links.uninstall && plugin._links.uninstall.href
+    );
+  };
+
   createActionbar = () => {
     const { classes } = this.props;
-    if (this.isInstallable()) {
-      return (
-        <span
-          className={classNames(classes.link, classes.topRight, "level-item")}
-          onClick={this.toggleModal}
-        >
-          <i className="fas fa-download has-text-info" />
-        </span>
-      );
-    } else if (this.isUpdatable()) {
-      return (
-        <span
-          className={classNames(classes.link, classes.topRight, "level-item")}
-          onClick={this.toggleModal}
-        >
-          <i className="fas fa-sync-alt has-text-info" />
-        </span>
-      );
-    }
+    return (
+      <div className={classNames(classes.actionbar, classes.topRight)}>
+        {this.isInstallable() && (
+          <span
+            className={classNames(classes.link, "level-item")}
+            onClick={() => this.toggleModal("showInstallModal")}
+          >
+            <i className="fas fa-download has-text-info" />
+          </span>
+        )}
+        {this.isUninstallable() && (
+          <span
+            className={classNames(classes.link, "level-item")}
+            onClick={() => this.toggleModal("showUninstallModal")}
+          >
+            <i className="fas fa-trash has-text-info" />
+          </span>
+        )}
+        {this.isUpdatable() && (
+          <span
+            className={classNames(classes.link, "level-item")}
+            onClick={() => this.toggleModal("showUpdateModal")}
+          >
+            <i className="fas fa-sync-alt has-text-info" />
+          </span>
+        )}
+      </div>
+    );
   };
 
   renderModal = () => {
     const { plugin, refresh } = this.props;
-    if (this.isInstallable()) {
+    if (this.state.showInstallModal && this.isInstallable()) {
       return (
         <PluginModal
           plugin={plugin}
           pluginAction={PluginAction.INSTALL}
           refresh={refresh}
-          onClose={this.toggleModal}
+          onClose={() => this.toggleModal("showInstallModal")}
         />
       );
-    } else if (this.isUpdatable()) {
+    } else if (this.state.showUpdateModal && this.isUpdatable()) {
       return (
         <PluginModal
           plugin={plugin}
           pluginAction={PluginAction.UPDATE}
           refresh={refresh}
-          onClose={this.toggleModal}
+          onClose={() => this.toggleModal("showUpdateModal")}
         />
       );
+    } else if (this.state.showUninstallModal && this.isUninstallable()) {
+      return (
+        <PluginModal
+          plugin={plugin}
+          pluginAction={PluginAction.UNINSTALL}
+          refresh={refresh}
+          onClose={() => this.toggleModal("showUninstallModal")}
+        />
+      );
+    } else {
+      return null;
     }
   };
 
   createPendingSpinner = () => {
     const { plugin, classes } = this.props;
-    if (plugin.pending) {
-      return (
-        <span className={classes.topRight}>
-          <i className="fas fa-spinner fa-spin has-text-info" />
-        </span>
-      );
-    }
-    return null;
+    return (
+      <span className={classes.topRight}>
+        <i
+          className={classNames(
+            "fas fa-spinner fa-lg fa-spin",
+            plugin.markedForUninstall ? "has-text-danger" : "has-text-info"
+          )}
+        />
+      </span>
+    );
   };
 
   render() {
     const { plugin, classes } = this.props;
-    const { showModal } = this.state;
     const avatar = this.createAvatar(plugin);
     const actionbar = this.createActionbar();
     const footerRight = this.createFooterRight(plugin);
 
-    const modal = showModal ? this.renderModal() : null;
+    const modal = this.renderModal();
 
     return (
       <>
@@ -157,7 +194,9 @@ class PluginEntry extends React.Component<Props, State> {
           title={plugin.displayName ? plugin.displayName : plugin.name}
           description={plugin.description}
           contentRight={
-            plugin.pending ? this.createPendingSpinner() : actionbar
+            plugin.pending || plugin.markedForUninstall
+              ? this.createPendingSpinner()
+              : actionbar
           }
           footerRight={footerRight}
         />
