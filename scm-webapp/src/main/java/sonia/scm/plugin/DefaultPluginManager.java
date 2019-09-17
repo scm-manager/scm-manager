@@ -40,8 +40,10 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
+import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.lifecycle.RestartEvent;
+import sonia.scm.version.Version;
 
 //~--- JDK imports ------------------------------------------------------------
 import javax.inject.Inject;
@@ -53,6 +55,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
 /**
  *
@@ -83,7 +86,7 @@ public class DefaultPluginManager implements PluginManager {
     return center.getAvailable()
       .stream()
       .filter(filterByName(name))
-      .filter(this::isNotInstalled)
+      .filter(this::isNotInstalledOrMoreUpToDate)
       .map(p -> getPending(name).orElse(p))
       .findFirst();
   }
@@ -116,7 +119,7 @@ public class DefaultPluginManager implements PluginManager {
     PluginPermissions.read().check();
     return center.getAvailable()
       .stream()
-      .filter(this::isNotInstalled)
+      .filter(this::isNotInstalledOrMoreUpToDate)
       .map(p -> getPending(p.getDescriptor().getInformation().getName()).orElse(p))
       .collect(Collectors.toList());
   }
@@ -125,13 +128,26 @@ public class DefaultPluginManager implements PluginManager {
     return plugin -> name.equals(plugin.getDescriptor().getInformation().getName());
   }
 
-  private boolean isNotInstalled(AvailablePlugin availablePlugin) {
-    return !getInstalled(availablePlugin.getDescriptor().getInformation().getName()).isPresent();
+  private boolean isNotInstalledOrMoreUpToDate(AvailablePlugin availablePlugin) {
+    return getInstalled(availablePlugin.getDescriptor().getInformation().getName())
+      .map(installedPlugin -> availableIsMoreUpToDateThanInstalled(availablePlugin, installedPlugin))
+      .orElse(true);
+  }
+
+  private boolean availableIsMoreUpToDateThanInstalled(AvailablePlugin availablePlugin, InstalledPlugin installed) {
+    return Version.parse(availablePlugin.getDescriptor().getInformation().getVersion()).isNewer(installed.getDescriptor().getInformation().getVersion());
   }
 
   @Override
   public void install(String name, boolean restartAfterInstallation) {
     PluginPermissions.manage().check();
+
+    getInstalled(name)
+      .map(InstalledPlugin::isCore)
+      .ifPresent(
+        core -> doThrow().violation("plugin is a core plugin and cannot be updated").when(core)
+      );
+
     List<AvailablePlugin> plugins = collectPluginsToInstall(name);
     List<PendingPluginInstallation> pendingInstallations = new ArrayList<>();
     for (AvailablePlugin plugin : plugins) {
@@ -171,22 +187,18 @@ public class DefaultPluginManager implements PluginManager {
 
   private List<AvailablePlugin> collectPluginsToInstall(String name) {
     List<AvailablePlugin> plugins = new ArrayList<>();
-    collectPluginsToInstall(plugins, name);
+    collectPluginsToInstall(plugins, name, true);
     return plugins;
   }
 
-  private boolean isInstalledOrPending(String name) {
-    return getInstalled(name).isPresent() || getPending(name).isPresent();
-  }
-
-  private void collectPluginsToInstall(List<AvailablePlugin> plugins, String name) {
-    if (!isInstalledOrPending(name)) {
+  private void collectPluginsToInstall(List<AvailablePlugin> plugins, String name, boolean isUpdate) {
+    if (!isInstalledOrPending(name) || isUpdate && isUpdatable(name)) {
       AvailablePlugin plugin = getAvailable(name).orElseThrow(() -> NotFoundException.notFound(entity(AvailablePlugin.class, name)));
 
       Set<String> dependencies = plugin.getDescriptor().getDependencies();
       if (dependencies != null) {
         for (String dependency: dependencies){
-          collectPluginsToInstall(plugins, dependency);
+          collectPluginsToInstall(plugins, dependency, false);
         }
       }
 
@@ -194,5 +206,13 @@ public class DefaultPluginManager implements PluginManager {
     } else {
       LOG.info("plugin {} is already installed or installation is pending, skipping installation", name);
     }
+  }
+
+  private boolean isInstalledOrPending(String name) {
+    return getInstalled(name).isPresent() || getPending(name).isPresent();
+  }
+
+  private boolean isUpdatable(String name) {
+    return getAvailable(name).isPresent() && !getPending(name).isPresent();
   }
 }

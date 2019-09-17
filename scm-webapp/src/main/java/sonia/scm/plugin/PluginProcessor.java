@@ -461,13 +461,16 @@ public final class PluginProcessor
     Path descriptorPath = directory.resolve(PluginConstants.FILE_DESCRIPTOR);
 
     if (Files.exists(descriptorPath)) {
+
+      boolean core = Files.exists(directory.resolve("core"));
+
       ClassLoader cl = createClassLoader(classLoader, smp);
 
       InstalledPluginDescriptor descriptor = createDescriptor(cl, descriptorPath);
 
       WebResourceLoader resourceLoader = createWebResourceLoader(directory);
 
-      plugin = new InstalledPlugin(descriptor, cl, resourceLoader, directory);
+      plugin = new InstalledPlugin(descriptor, cl, resourceLoader, directory, core);
     } else {
       logger.warn("found plugin directory without plugin descriptor");
     }

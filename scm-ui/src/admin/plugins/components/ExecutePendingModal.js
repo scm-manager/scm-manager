@@ -8,14 +8,14 @@ import {
   Modal,
   Notification
 } from "@scm-manager/ui-components";
-import type { PluginCollection } from "@scm-manager/ui-types";
+import type { PendingPlugins } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
 import waitForRestart from "./waitForRestart";
-import InstallSuccessNotification from "./InstallSuccessNotification";
+import SuccessNotification from "./SuccessNotification";
 
 type Props = {
   onClose: () => void,
-  collection: PluginCollection,
+  pendingPlugins: PendingPlugins,
 
   // context props
   t: string => string
@@ -27,7 +27,7 @@ type State = {
   error?: Error
 };
 
-class InstallPendingModal extends React.Component<Props, State> {
+class ExecutePendingModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -42,7 +42,7 @@ class InstallPendingModal extends React.Component<Props, State> {
     if (error) {
       return <ErrorNotification error={error} />;
     } else if (success) {
-      return <InstallSuccessNotification />;
+      return <SuccessNotification />;
     } else {
       return (
         <Notification type="warning">
@@ -52,14 +52,14 @@ class InstallPendingModal extends React.Component<Props, State> {
     }
   };
 
-  installAndRestart = () => {
-    const { collection } = this.props;
+  executeAndRestart = () => {
+    const { pendingPlugins } = this.props;
     this.setState({
       loading: true
     });
 
     apiClient
-      .post(collection._links.installPending.href)
+      .post(pendingPlugins._links.execute.href)
       .then(waitForRestart)
       .then(() => {
         this.setState({
@@ -77,22 +77,57 @@ class InstallPendingModal extends React.Component<Props, State> {
       });
   };
 
+  renderInstallQueue = () => {
+    const { pendingPlugins, t } = this.props;
+    return (
+      <>
+        {pendingPlugins._embedded &&
+          pendingPlugins._embedded.new.length > 0 && (
+            <>
+              <strong>{t("plugins.modal.installQueue")}</strong>
+              <ul>
+                {pendingPlugins._embedded.new
+                  .filter(plugin => plugin.pending)
+                  .map(plugin => (
+                    <li key={plugin.name}>{plugin.name}</li>
+                  ))}
+              </ul>
+            </>
+          )}
+      </>
+    );
+  };
+
+  renderUpdateQueue = () => {
+    const { pendingPlugins, t } = this.props;
+    return (
+      <>
+        {pendingPlugins._embedded &&
+          pendingPlugins._embedded.update.length > 0 && (
+            <>
+              <strong>{t("plugins.modal.updateQueue")}</strong>
+              <ul>
+                {pendingPlugins._embedded.update
+                  .filter(plugin => plugin.pending)
+                  .map(plugin => (
+                    <li key={plugin.name}>{plugin.name}</li>
+                  ))}
+              </ul>
+            </>
+          )}
+      </>
+    );
+  };
+
   renderBody = () => {
-    const { collection, t } = this.props;
+    const { t } = this.props;
     return (
       <>
         <div className="media">
           <div className="content">
-            <p>{t("plugins.modal.installPending")}</p>
-            <ul>
-              {collection._embedded.plugins
-                .filter(plugin => plugin.pending)
-                .map(plugin => (
-                  <li key={plugin.name} className="has-text-weight-bold">
-                    {plugin.name}
-                  </li>
-                ))}
-            </ul>
+            <p>{t("plugins.modal.executePending")}</p>
+            {this.renderInstallQueue()}
+            {this.renderUpdateQueue()}
           </div>
         </div>
         <div className="media">{this.renderNotifications()}</div>
@@ -107,9 +142,9 @@ class InstallPendingModal extends React.Component<Props, State> {
       <ButtonGroup>
         <Button
           color="warning"
-          label={t("plugins.modal.installAndRestart")}
+          label={t("plugins.modal.executeAndRestart")}
           loading={loading}
-          action={this.installAndRestart}
+          action={this.executeAndRestart}
           disabled={error || success}
         />
         <Button label={t("plugins.modal.abort")} action={onClose} />
@@ -121,7 +156,7 @@ class InstallPendingModal extends React.Component<Props, State> {
     const { onClose, t } = this.props;
     return (
       <Modal
-        title={t("plugins.modal.installAndRestart")}
+        title={t("plugins.modal.executeAndRestart")}
         closeFunction={onClose}
         body={this.renderBody()}
         footer={this.renderFooter()}
@@ -131,4 +166,4 @@ class InstallPendingModal extends React.Component<Props, State> {
   }
 }
 
-export default translate("admin")(InstallPendingModal);
+export default translate("admin")(ExecutePendingModal);

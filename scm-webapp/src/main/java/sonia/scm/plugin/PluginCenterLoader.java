@@ -33,8 +33,8 @@ class PluginCenterLoader {
       LOG.info("fetch plugins from {}", url);
       PluginCenterDto pluginCenterDto = client.get(url).request().contentFromJson(PluginCenterDto.class);
       return mapper.map(pluginCenterDto);
-    } catch (IOException ex) {
-      LOG.error("failed to load plugins from plugin center, returning empty list");
+    } catch (Exception ex) {
+      LOG.error("failed to load plugins from plugin center, returning empty list", ex);
       return Collections.emptySet();
     }
   }

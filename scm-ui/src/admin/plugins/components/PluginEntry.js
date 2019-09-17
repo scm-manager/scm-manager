@@ -4,8 +4,14 @@ import injectSheet from "react-jss";
 import type { Plugin } from "@scm-manager/ui-types";
 import { CardColumn } from "@scm-manager/ui-components";
 import PluginAvatar from "./PluginAvatar";
-import PluginModal from "./PluginModal";
 import classNames from "classnames";
+import PluginModal from "./PluginModal";
+
+
+const PluginAction = {
+  INSTALL: "install",
+  UPDATE: "update"
+};
 
 type Props = {
   plugin: Plugin,
@@ -22,12 +28,23 @@ type State = {
 const styles = {
   link: {
     cursor: "pointer",
-    pointerEvents: "all"
+    pointerEvents: "all",
+    padding: "0.5rem",
+    border: "solid 1px var(--dark-25)",
+    borderRadius: "4px",
+    "&:hover": {
+      borderColor: "var(--dark-50)"
+    }
   },
-  spinner: {
+  topRight: {
     position: "absolute",
     right: 0,
     top: 0
+  },
+  layout: {
+    "& .level": {
+      paddingBottom: "0.5rem"
+    }
   }
 };
 
@@ -59,16 +76,53 @@ class PluginEntry extends React.Component<Props, State> {
     return plugin._links && plugin._links.install && plugin._links.install.href;
   };
 
-  createFooterLeft = () => {
+  isUpdatable = () => {
+    const { plugin } = this.props;
+    return plugin._links && plugin._links.update && plugin._links.update.href;
+  };
+
+  createActionbar = () => {
     const { classes } = this.props;
     if (this.isInstallable()) {
       return (
         <span
-          className={classNames(classes.link, "level-item")}
+          className={classNames(classes.link, classes.topRight, "level-item")}
           onClick={this.toggleModal}
         >
           <i className="fas fa-download has-text-info" />
         </span>
+      );
+    } else if (this.isUpdatable()) {
+      return (
+        <span
+          className={classNames(classes.link, classes.topRight, "level-item")}
+          onClick={this.toggleModal}
+        >
+          <i className="fas fa-sync-alt has-text-info" />
+        </span>
+      );
+    }
+  };
+
+  renderModal = () => {
+    const { plugin, refresh } = this.props;
+    if (this.isInstallable()) {
+      return (
+        <PluginModal
+          plugin={plugin}
+          pluginAction={PluginAction.INSTALL}
+          refresh={refresh}
+          onClose={this.toggleModal}
+        />
+      );
+    } else if (this.isUpdatable()) {
+      return (
+        <PluginModal
+          plugin={plugin}
+          pluginAction={PluginAction.UPDATE}
+          refresh={refresh}
+          onClose={this.toggleModal}
+        />
       );
     }
   };
@@ -77,7 +131,7 @@ class PluginEntry extends React.Component<Props, State> {
     const { plugin, classes } = this.props;
     if (plugin.pending) {
       return (
-        <span className={classes.spinner}>
+        <span className={classes.topRight}>
           <i className="fas fa-spinner fa-spin has-text-info" />
         </span>
       );
@@ -86,29 +140,25 @@ class PluginEntry extends React.Component<Props, State> {
   };
 
   render() {
-    const { plugin, refresh } = this.props;
+    const { plugin, classes } = this.props;
     const { showModal } = this.state;
     const avatar = this.createAvatar(plugin);
-    const footerLeft = this.createFooterLeft();
+    const actionbar = this.createActionbar();
     const footerRight = this.createFooterRight(plugin);
 
-    const modal = showModal ? (
-      <PluginModal
-        plugin={plugin}
-        refresh={refresh}
-        onClose={this.toggleModal}
-      />
-    ) : null;
+    const modal = showModal ? this.renderModal() : null;
 
     return (
       <>
         <CardColumn
+          className={classes.layout}
           action={this.isInstallable() ? this.toggleModal : null}
           avatar={avatar}
           title={plugin.displayName ? plugin.displayName : plugin.name}
           description={plugin.description}
-          contentRight={this.createPendingSpinner()}
-          footerLeft={footerLeft}
+          contentRight={
+            plugin.pending ? this.createPendingSpinner() : actionbar
+          }
           footerRight={footerRight}
         />
         {modal}

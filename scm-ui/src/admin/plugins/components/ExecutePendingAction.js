@@ -1,12 +1,12 @@
 // @flow
 import React from "react";
 import { Button } from "@scm-manager/ui-components";
-import type { PluginCollection } from "@scm-manager/ui-types";
+import type { PendingPlugins } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
-import InstallPendingModal from "./InstallPendingModal";
+import ExecutePendingModal from "./ExecutePendingModal";
 
 type Props = {
-  collection: PluginCollection,
+  pendingPlugins: PendingPlugins,
 
   // context props
   t: string => string
@@ -16,7 +16,7 @@ type State = {
   showModal: boolean
 };
 
-class InstallPendingAction extends React.Component<Props, State> {
+class ExecutePendingAction extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -38,11 +38,11 @@ class InstallPendingAction extends React.Component<Props, State> {
 
   renderModal = () => {
     const { showModal } = this.state;
-    const { collection } = this.props;
+    const { pendingPlugins } = this.props;
     if (showModal) {
       return (
-        <InstallPendingModal
-          collection={collection}
+        <ExecutePendingModal
+          pendingPlugins={pendingPlugins}
           onClose={this.closeModal}
         />
       );
@@ -57,7 +57,7 @@ class InstallPendingAction extends React.Component<Props, State> {
         {this.renderModal()}
         <Button
           color="primary"
-          label={t("plugins.installPending")}
+          label={t("plugins.executePending")}
           action={this.openModal}
         />
       </>
@@ -65,4 +65,4 @@ class InstallPendingAction extends React.Component<Props, State> {
   }
 }
 
-export default translate("admin")(InstallPendingAction);
+export default translate("admin")(ExecutePendingAction);

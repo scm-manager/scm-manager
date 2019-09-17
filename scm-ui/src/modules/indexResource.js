@@ -124,6 +124,10 @@ export function getInstalledPluginsLink(state: Object) {
   return getLink(state, "installedPlugins");
 }
 
+export function getPendingPluginsLink(state: Object) {
+  return getLink(state, "pendingPlugins");
+}
+
 export function getMeLink(state: Object) {
   return getLink(state, "me");
 }

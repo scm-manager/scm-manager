@@ -4,7 +4,7 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.plugin.AvailablePlugin;
-import sonia.scm.plugin.InstalledPluginDescriptor;
+import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.web.VndMediaType;
@@ -19,6 +19,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -51,8 +52,13 @@ public class AvailablePluginResource {
   @Produces(VndMediaType.PLUGIN_COLLECTION)
   public Response getAvailablePlugins() {
     PluginPermissions.read().check();
-    List<AvailablePlugin> available = pluginManager.getAvailable();
+    List<InstalledPlugin> installed = pluginManager.getInstalled();
+    List<AvailablePlugin> available = pluginManager.getAvailable().stream().filter(a -> notInstalled(a, installed)).collect(Collectors.toList());
     return Response.ok(collectionMapper.mapAvailable(available)).build();
+  }
+
+  private boolean notInstalled(AvailablePlugin a, List<InstalledPlugin> installed) {
+    return installed.stream().noneMatch(installedPlugin -> installedPlugin.getDescriptor().getInformation().getName().equals(a.getDescriptor().getInformation().getName()));
   }
 
   /**
@@ -93,18 +99,6 @@ public class AvailablePluginResource {
   public Response installPlugin(@PathParam("name") String name, @QueryParam("restart") boolean restartAfterInstallation) {
     PluginPermissions.manage().check();
     pluginManager.install(name, restartAfterInstallation);
-    return Response.ok().build();
-  }
-
-  @POST
-  @Path("/install-pending")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  public Response installPending() {
-    PluginPermissions.manage().check();
-    pluginManager.installPendingAndRestart();
     return Response.ok().build();
   }
 }

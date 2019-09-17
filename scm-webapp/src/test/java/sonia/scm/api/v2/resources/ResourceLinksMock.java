@@ -38,6 +38,7 @@ public class ResourceLinksMock {
     when(resourceLinks.repositoryTypeCollection()).thenReturn(new ResourceLinks.RepositoryTypeCollectionLinks(uriInfo));
     when(resourceLinks.installedPluginCollection()).thenReturn(new ResourceLinks.InstalledPluginCollectionLinks(uriInfo));
     when(resourceLinks.availablePluginCollection()).thenReturn(new ResourceLinks.AvailablePluginCollectionLinks(uriInfo));
+    when(resourceLinks.pendingPluginCollection()).thenReturn(new ResourceLinks.PendingPluginCollectionLinks(uriInfo));
     when(resourceLinks.installedPlugin()).thenReturn(new ResourceLinks.InstalledPluginLinks(uriInfo));
     when(resourceLinks.availablePlugin()).thenReturn(new ResourceLinks.AvailablePluginLinks(uriInfo));
     when(resourceLinks.uiPluginCollection()).thenReturn(new ResourceLinks.UIPluginCollectionLinks(uriInfo));
