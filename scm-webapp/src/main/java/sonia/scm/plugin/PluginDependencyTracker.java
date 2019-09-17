@@ -12,7 +12,9 @@ class PluginDependencyTracker {
   private final Map<String, Collection<String>> plugins = new HashMap<>();
 
   void addInstalled(PluginDescriptor plugin) {
-    plugin.getDependencies().forEach(dependency -> addDependency(plugin.getInformation().getName(), dependency));
+    if (plugin.getDependencies() != null) {
+      plugin.getDependencies().forEach(dependency -> addDependency(plugin.getInformation().getName(), dependency));
+    }
   }
 
   void removeInstalled(PluginDescriptor plugin) {
