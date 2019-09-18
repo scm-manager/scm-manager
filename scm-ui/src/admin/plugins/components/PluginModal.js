@@ -16,6 +16,7 @@ import {
 import classNames from "classnames";
 import waitForRestart from "./waitForRestart";
 import SuccessNotification from "./SuccessNotification";
+import { PluginAction } from "./PluginEntry";
 
 type Props = {
   plugin: Plugin,
@@ -99,11 +100,11 @@ class PluginModal extends React.Component<Props, State> {
 
     let pluginActionLink = "";
 
-    if (pluginAction === "install") {
+    if (pluginAction === PluginAction.INSTALL) {
       pluginActionLink = plugin._links.install.href;
-    } else if (pluginAction === "update") {
+    } else if (pluginAction === PluginAction.UPDATE) {
       pluginActionLink = plugin._links.update.href;
-    } else if (pluginAction === "uninstall") {
+    } else if (pluginAction === PluginAction.UNINSTALL) {
       pluginActionLink = plugin._links.uninstall.href;
     }
     return pluginActionLink + "?restart=" + restart.toString();
@@ -220,7 +221,7 @@ class PluginModal extends React.Component<Props, State> {
               <div
                 className={classNames(
                   classes.userLabelAlignment,
-                  pluginAction === "install"
+                  pluginAction === PluginAction.INSTALL
                     ? classes.userLabelMarginSmall
                     : classes.userLabelMarginLarge,
                   "field-label is-inline-flex"
@@ -237,7 +238,7 @@ class PluginModal extends React.Component<Props, State> {
                 {plugin.author}
               </div>
             </div>
-            {pluginAction === "install" && (
+            {pluginAction === PluginAction.INSTALL && (
               <div className="field is-horizontal">
                 <div
                   className={classNames(
@@ -258,7 +259,8 @@ class PluginModal extends React.Component<Props, State> {
                 </div>
               </div>
             )}
-            {(pluginAction === "update" || pluginAction === "uninstall") && (
+            {(pluginAction === PluginAction.UPDATE ||
+              pluginAction === PluginAction.UNINSTALL) && (
               <div className="field is-horizontal">
                 <div
                   className={classNames(
@@ -279,7 +281,7 @@ class PluginModal extends React.Component<Props, State> {
                 </div>
               </div>
             )}
-            {pluginAction === "update" && (
+            {pluginAction === PluginAction.UPDATE && (
               <div className="field is-horizontal">
                 <div
                   className={classNames(

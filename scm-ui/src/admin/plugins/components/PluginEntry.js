@@ -7,7 +7,7 @@ import PluginAvatar from "./PluginAvatar";
 import classNames from "classnames";
 import PluginModal from "./PluginModal";
 
-const PluginAction = {
+export const PluginAction = {
   INSTALL: "install",
   UPDATE: "update",
   UNINSTALL: "uninstall"
