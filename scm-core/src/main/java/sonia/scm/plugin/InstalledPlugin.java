@@ -45,6 +45,8 @@ import java.nio.file.Path;
 public final class InstalledPlugin implements Plugin
 {
 
+  public static final String UNINSTALL_MARKER_FILENAME = "uninstall";
+
   /**
    * Constructs a new plugin wrapper.
    *  @param descriptor wrapped plugin
@@ -125,7 +127,22 @@ public final class InstalledPlugin implements Plugin
     return core;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  public boolean isMarkedForUninstall() {
+    return markedForUninstall;
+  }
+
+  public void setMarkedForUninstall(boolean markedForUninstall) {
+    this.markedForUninstall = markedForUninstall;
+  }
+
+  public boolean isUninstallable() {
+    return uninstallable;
+  }
+
+  public void setUninstallable(boolean uninstallable) {
+    this.uninstallable = uninstallable;
+  }
+//~--- fields ---------------------------------------------------------------
 
   /** plugin class loader */
   private final ClassLoader classLoader;
@@ -140,4 +157,7 @@ public final class InstalledPlugin implements Plugin
   private final WebResourceLoader webResourceLoader;
 
   private final boolean core;
+
+  private boolean markedForUninstall = false;
+  private boolean uninstallable = false;
 }

@@ -30,6 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 
 import static java.net.URI.create;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -122,8 +123,7 @@ class PendingPluginResourceTest {
 
       assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
       assertThat(response.getContentAsString()).contains("\"new\":[{\"name\":\"pending-available-plugin\"");
-      assertThat(response.getContentAsString()).contains("\"execute\":{\"href\":\"/v2/plugins/pending/install\"}");
-      System.out.println(response.getContentAsString());
+      assertThat(response.getContentAsString()).contains("\"execute\":{\"href\":\"/v2/plugins/pending/execute\"}");
     }
 
     @Test
@@ -139,18 +139,32 @@ class PendingPluginResourceTest {
 
       assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
       assertThat(response.getContentAsString()).contains("\"update\":[{\"name\":\"available-plugin\"");
-      assertThat(response.getContentAsString()).contains("\"execute\":{\"href\":\"/v2/plugins/pending/install\"}");
-      System.out.println(response.getContentAsString());
+      assertThat(response.getContentAsString()).contains("\"execute\":{\"href\":\"/v2/plugins/pending/execute\"}");
     }
 
     @Test
-    void shouldInstallPendingPlugins() throws URISyntaxException {
-      MockHttpRequest request = MockHttpRequest.post("/v2/plugins/pending/install");
+    void shouldGetPendingUninstallPluginListWithInstallLink() throws URISyntaxException, UnsupportedEncodingException {
+      when(pluginManager.getAvailable()).thenReturn(emptyList());
+      InstalledPlugin installedPlugin = createInstalledPlugin("uninstalled-plugin");
+      when(installedPlugin.isMarkedForUninstall()).thenReturn(true);
+      when(pluginManager.getInstalled()).thenReturn(singletonList(installedPlugin));
+
+      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/pending");
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+      assertThat(response.getContentAsString()).contains("\"uninstall\":[{\"name\":\"uninstalled-plugin\"");
+      assertThat(response.getContentAsString()).contains("\"execute\":{\"href\":\"/v2/plugins/pending/execute\"}");
+    }
+
+    @Test
+    void shouldExecutePendingPlugins() throws URISyntaxException {
+      MockHttpRequest request = MockHttpRequest.post("/v2/plugins/pending/execute");
 
       dispatcher.invoke(request, response);
 
       assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
-      verify(pluginManager).installPendingAndRestart();
+      verify(pluginManager).executePendingAndRestart();
     }
   }
 
@@ -175,17 +189,17 @@ class PendingPluginResourceTest {
       dispatcher.invoke(request, response);
 
       assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_UNAUTHORIZED);
-      verify(pluginManager, never()).installPendingAndRestart();
+      verify(pluginManager, never()).executePendingAndRestart();
     }
 
     @Test
-    void shouldNotInstallPendingPlugins() throws URISyntaxException {
-      MockHttpRequest request = MockHttpRequest.post("/v2/plugins/pending/install");
+    void shouldNotExecutePendingPlugins() throws URISyntaxException {
+      MockHttpRequest request = MockHttpRequest.post("/v2/plugins/pending/execute");
 
       dispatcher.invoke(request, response);
 
       assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_UNAUTHORIZED);
-      verify(pluginManager, never()).installPendingAndRestart();
+      verify(pluginManager, never()).executePendingAndRestart();
     }
   }
 

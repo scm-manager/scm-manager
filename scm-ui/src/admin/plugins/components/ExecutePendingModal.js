@@ -86,11 +86,9 @@ class ExecutePendingModal extends React.Component<Props, State> {
             <>
               <strong>{t("plugins.modal.installQueue")}</strong>
               <ul>
-                {pendingPlugins._embedded.new
-                  .filter(plugin => plugin.pending)
-                  .map(plugin => (
-                    <li key={plugin.name}>{plugin.name}</li>
-                  ))}
+                {pendingPlugins._embedded.new.map(plugin => (
+                  <li key={plugin.name}>{plugin.name}</li>
+                ))}
               </ul>
             </>
           )}
@@ -107,11 +105,28 @@ class ExecutePendingModal extends React.Component<Props, State> {
             <>
               <strong>{t("plugins.modal.updateQueue")}</strong>
               <ul>
-                {pendingPlugins._embedded.update
-                  .filter(plugin => plugin.pending)
-                  .map(plugin => (
-                    <li key={plugin.name}>{plugin.name}</li>
-                  ))}
+                {pendingPlugins._embedded.update.map(plugin => (
+                  <li key={plugin.name}>{plugin.name}</li>
+                ))}
+              </ul>
+            </>
+          )}
+      </>
+    );
+  };
+
+  renderUninstallQueue = () => {
+    const { pendingPlugins, t } = this.props;
+    return (
+      <>
+        {pendingPlugins._embedded &&
+          pendingPlugins._embedded.uninstall.length > 0 && (
+            <>
+              <strong>{t("plugins.modal.uninstallQueue")}</strong>
+              <ul>
+                {pendingPlugins._embedded.uninstall.map(plugin => (
+                  <li key={plugin.name}>{plugin.name}</li>
+                ))}
               </ul>
             </>
           )}
@@ -128,6 +143,7 @@ class ExecutePendingModal extends React.Component<Props, State> {
             <p>{t("plugins.modal.executePending")}</p>
             {this.renderInstallQueue()}
             {this.renderUpdateQueue()}
+            {this.renderUninstallQueue()}
           </div>
         </div>
         <div className="media">{this.renderNotifications()}</div>

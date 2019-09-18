@@ -33,21 +33,21 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
-
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
-import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.version.Version;
 
-//~--- JDK imports ------------------------------------------------------------
 import javax.inject.Inject;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -56,6 +56,8 @@ import java.util.stream.Collectors;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -70,7 +72,8 @@ public class DefaultPluginManager implements PluginManager {
   private final PluginLoader loader;
   private final PluginCenter center;
   private final PluginInstaller installer;
-  private final List<PendingPluginInstallation> pendingQueue = new ArrayList<>();
+  private final Collection<PendingPluginInstallation> pendingQueue = new ArrayList<>();
+  private final PluginDependencyTracker dependencyTracker = new PluginDependencyTracker();
 
   @Inject
   public DefaultPluginManager(ScmEventBus eventBus, PluginLoader loader, PluginCenter center, PluginInstaller installer) {
@@ -78,6 +81,17 @@ public class DefaultPluginManager implements PluginManager {
     this.loader = loader;
     this.center = center;
     this.installer = installer;
+
+    this.computeInstallationDependencies();
+  }
+
+  @VisibleForTesting
+  synchronized void computeInstallationDependencies() {
+    loader.getInstalledPlugins()
+      .stream()
+      .map(InstalledPlugin::getDescriptor)
+      .forEach(dependencyTracker::addInstalled);
+    updateMayUninstallFlag();
   }
 
   @Override
@@ -153,6 +167,7 @@ public class DefaultPluginManager implements PluginManager {
     for (AvailablePlugin plugin : plugins) {
       try {
         PendingPluginInstallation pending = installer.install(plugin);
+        dependencyTracker.addInstalled(plugin.getDescriptor());
         pendingInstallations.add(pending);
       } catch (PluginInstallException ex) {
         cancelPending(pendingInstallations);
@@ -165,15 +180,50 @@ public class DefaultPluginManager implements PluginManager {
         restart("plugin installation");
       } else {
         pendingQueue.addAll(pendingInstallations);
+        updateMayUninstallFlag();
       }
     }
   }
 
   @Override
-  public void installPendingAndRestart() {
+  public void uninstall(String name, boolean restartAfterInstallation) {
     PluginPermissions.manage().check();
-    if (!pendingQueue.isEmpty()) {
-      restart("install pending plugins");
+    InstalledPlugin installed = getInstalled(name)
+      .orElseThrow(() -> NotFoundException.notFound(entity(InstalledPlugin.class, name)));
+    doThrow().violation("plugin is a core plugin and cannot be uninstalled").when(installed.isCore());
+
+    dependencyTracker.removeInstalled(installed.getDescriptor());
+    installed.setMarkedForUninstall(true);
+
+    try {
+      Files.createFile(installed.getDirectory().resolve(InstalledPlugin.UNINSTALL_MARKER_FILENAME));
+    } catch (IOException e) {
+      throw new PluginException("could not mark plugin " + name + " in path " + installed.getDirectory() + " for uninstall", e);
+    }
+
+    if (restartAfterInstallation) {
+      restart("plugin installation");
+    } else {
+      updateMayUninstallFlag();
+    }
+  }
+
+  private void updateMayUninstallFlag() {
+    loader.getInstalledPlugins()
+      .forEach(p -> p.setUninstallable(isUninstallable(p)));
+  }
+
+  private boolean isUninstallable(InstalledPlugin p) {
+    return !p.isCore()
+      && !p.isMarkedForUninstall()
+      && dependencyTracker.mayUninstall(p.getDescriptor().getInformation().getName());
+  }
+
+  @Override
+  public void executePendingAndRestart() {
+    PluginPermissions.manage().check();
+    if (!pendingQueue.isEmpty() || getInstalled().stream().anyMatch(InstalledPlugin::isMarkedForUninstall)) {
+      restart("execute pending plugin changes");
     }
   }
 

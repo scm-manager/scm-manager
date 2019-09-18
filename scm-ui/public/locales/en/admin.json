@@ -34,15 +34,19 @@
     "modal": {
       "title": {
         "install": "Install {{name}} Plugin",
-        "update": "Update {{name}} Plugin"
+        "update": "Update {{name}} Plugin",
+        "uninstall": "Uninstall {{name}} Plugin"
       },
       "restart": "Restart to activate",
       "install": "Install",
       "update": "Update",
+      "uninstall": "Uninstall",
       "installQueue": "Will be installed:",
       "updateQueue": "Will be updated:",
+      "uninstallQueue": "Will be uninstalled:",
       "installAndRestart": "Install and Restart",
       "updateAndRestart": "Update and Restart",
+      "uninstallAndRestart": "Uninstall and Restart",
       "executeAndRestart": "Execute and Restart",
       "abort": "Abort",
       "author": "Author",

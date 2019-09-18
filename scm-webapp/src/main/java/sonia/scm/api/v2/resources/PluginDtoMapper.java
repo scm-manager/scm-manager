@@ -74,6 +74,12 @@ public abstract class PluginDtoMapper {
     ) {
       links.single(link("update", resourceLinks.availablePlugin().install(information.getName())));
     }
+    if (plugin.isUninstallable()
+      && (!availablePlugin.isPresent() || !availablePlugin.get().isPending())
+      && PluginPermissions.manage().isPermitted()
+    ) {
+      links.single(link("uninstall", resourceLinks.installedPlugin().uninstall(information.getName())));
+    }
 
     PluginDto dto = new PluginDto(links.build());
 
@@ -83,6 +89,7 @@ public abstract class PluginDtoMapper {
     });
 
     dto.setCore(plugin.isCore());
+    dto.setMarkedForUninstall(plugin.isMarkedForUninstall());
 
     return dto;
   }
