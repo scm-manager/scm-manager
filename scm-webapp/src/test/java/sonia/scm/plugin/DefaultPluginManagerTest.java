@@ -415,6 +415,18 @@ class DefaultPluginManagerTest {
 
       verify(mailPlugin).setUninstallable(false);
     }
+
+    @Test
+    void shouldRestartWithUninstallOnly() {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      when(mailPlugin.isMarkedForUninstall()).thenReturn(true);
+
+      when(loader.getInstalledPlugins()).thenReturn(singletonList(mailPlugin));
+
+      manager.executePendingAndRestart();
+
+      verify(eventBus).post(any(RestartEvent.class));
+    }
   }
 
   @Nested

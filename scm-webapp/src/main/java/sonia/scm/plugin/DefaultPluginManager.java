@@ -222,7 +222,7 @@ public class DefaultPluginManager implements PluginManager {
   @Override
   public void executePendingAndRestart() {
     PluginPermissions.manage().check();
-    if (!pendingQueue.isEmpty()) {
+    if (!pendingQueue.isEmpty() || getInstalled().stream().anyMatch(InstalledPlugin::isMarkedForUninstall)) {
       restart("execute pending plugin changes");
     }
   }
