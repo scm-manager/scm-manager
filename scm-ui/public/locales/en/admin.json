@@ -37,7 +37,7 @@
         "update": "Update {{name}} Plugin",
         "uninstall": "Uninstall {{name}} Plugin"
       },
-      "restart": "Restart to activate",
+      "restart": "Restart to make plugin changes effective",
       "install": "Install",
       "update": "Update",
       "uninstall": "Uninstall",

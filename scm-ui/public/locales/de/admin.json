@@ -29,7 +29,7 @@
       "installedNavLink": "Installiert",
       "availableNavLink": "Verfügbar"
     },
-    "executePending": "Austehende Plugin-Änderungen ausführen",
+    "executePending": "Ausstehende Plugin-Änderungen ausführen",
     "noPlugins": "Keine Plugins gefunden.",
     "modal": {
       "title": {
@@ -37,7 +37,7 @@
         "update": "{{name}} Plugin aktualisieren",
         "uninstall": "{{name}} Plugin deinstallieren"
       },
-      "restart": "Neustarten um Plugin zu aktivieren",
+      "restart": "Neustarten, um Plugin-Änderungen wirksam zu machen",
       "install": "Installieren",
       "update": "Aktualisieren",
       "uninstall": "Deinstallieren",

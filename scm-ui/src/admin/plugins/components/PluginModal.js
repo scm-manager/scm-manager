@@ -45,7 +45,7 @@ const styles = {
     minWidth: "5.5em"
   },
   userLabelMarginLarge: {
-    minWidth: "9em"
+    minWidth: "10em"
   },
   userFieldFlex: {
     flexGrow: 4
@@ -130,7 +130,7 @@ class PluginModal extends React.Component<Props, State> {
     const { pluginAction, onClose, t } = this.props;
     const { loading, error, restart, success } = this.state;
 
-    let color = "primary";
+    let color = pluginAction === PluginAction.UNINSTALL ? "warning" : "primary";
     let label = `plugins.modal.${pluginAction}`;
     if (restart) {
       color = "warning";
