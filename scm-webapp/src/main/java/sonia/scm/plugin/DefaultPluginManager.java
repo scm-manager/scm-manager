@@ -195,11 +195,7 @@ public class DefaultPluginManager implements PluginManager {
     dependencyTracker.removeInstalled(installed.getDescriptor());
     installed.setMarkedForUninstall(true);
 
-    try {
-      Files.createFile(installed.getDirectory().resolve(InstalledPlugin.UNINSTALL_MARKER_FILENAME));
-    } catch (IOException e) {
-      throw new PluginException("could not mark plugin " + name + " in path " + installed.getDirectory() + " for uninstall", e);
-    }
+    createMarkerFile(installed, InstalledPlugin.UNINSTALL_MARKER_FILENAME);
 
     if (restartAfterInstallation) {
       restart("plugin installation");
@@ -217,6 +213,19 @@ public class DefaultPluginManager implements PluginManager {
     return !p.isCore()
       && !p.isMarkedForUninstall()
       && dependencyTracker.mayUninstall(p.getDescriptor().getInformation().getName());
+  }
+
+  private void markAsCore(InstalledPlugin plugin) {
+    createMarkerFile(plugin, PluginConstants.FILE_CORE);
+    plugin.markAsCore();
+  }
+
+  private void createMarkerFile(InstalledPlugin plugin, String markerFile) {
+    try {
+      Files.createFile(plugin.getDirectory().resolve(markerFile));
+    } catch (IOException e) {
+      throw new PluginException("could not mark plugin " + plugin.getId() + " in path " + plugin.getDirectory() + "as " + markerFile, e);
+    }
   }
 
   @Override
