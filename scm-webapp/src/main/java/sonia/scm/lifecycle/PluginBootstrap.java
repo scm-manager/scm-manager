@@ -33,6 +33,7 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public final class PluginBootstrap {
 
@@ -87,8 +88,8 @@ public final class PluginBootstrap {
   }
 
   private void uninstallMarkedPlugins(Path pluginDirectory) {
-    try {
-      java.nio.file.Files.list(pluginDirectory)
+    try (Stream<Path> list = java.nio.file.Files.list(pluginDirectory)) {
+      list
         .filter(java.nio.file.Files::isDirectory)
         .filter(this::isMarkedForUninstall)
         .forEach(this::uninstall);
