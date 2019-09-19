@@ -196,6 +196,10 @@ $danger-25: scale-color($danger, $lightness: 75%);
   background-color: $danger-25;
 }
 
+.has-background-brown {
+  background-color: #000000b3;
+}
+
 // import at the end, because we need a lot of stuff from bulma/bulma
 .box-link-shadow {
   &:hover,
