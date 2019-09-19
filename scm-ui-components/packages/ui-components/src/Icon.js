@@ -24,6 +24,6 @@ export default class Icon extends React.Component<Props> {
         />
       );
     }
-    return <i className={classNames("fas", "fa-" + name, `has-text-${color}`)} />;
+    return <i className={classNames("fas", "fa-" + name, `has-text-${color}`, className)} />;
   }
 }
