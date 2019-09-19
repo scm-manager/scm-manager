@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 type Props = {
   className?: string,
-  color?: string,
+  color: string,
   icon?: string,
   label: string,
   title?: string,

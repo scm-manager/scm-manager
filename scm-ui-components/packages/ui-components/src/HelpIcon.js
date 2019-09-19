@@ -1,22 +1,24 @@
 //@flow
 import React from "react";
 import injectSheet from "react-jss";
-import classNames from "classnames";
+import Icon from "./Icon";
 
 type Props = {
   classes: any
 };
 
 const styles = {
-    textinfo: {
-      color: "#98d8f3 !important" 
-    }
+  textinfo: {
+    color: "#98d8f3 !important"
+  }
 };
 
 class HelpIcon extends React.Component<Props> {
   render() {
     const { classes } = this.props;
-    return <i className={classNames("fa fa-question-circle has-text-info", classes.textinfo)}></i>;
+    return (
+      <Icon className={classes.textinfo} name="question-circle" />
+    );
   }
 }
 
