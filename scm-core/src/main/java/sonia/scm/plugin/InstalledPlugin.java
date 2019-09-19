@@ -143,9 +143,6 @@ public final class InstalledPlugin implements Plugin
     this.uninstallable = uninstallable;
   }
 
-  public void markAsCore() {
-    this.core = true;
-  }
 //~--- fields ---------------------------------------------------------------
 
   /** plugin class loader */
@@ -160,7 +157,7 @@ public final class InstalledPlugin implements Plugin
   /** plugin web resource loader */
   private final WebResourceLoader webResourceLoader;
 
-  private boolean core;
+  private final boolean core;
 
   private boolean markedForUninstall = false;
   private boolean uninstallable = false;

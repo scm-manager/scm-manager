@@ -215,11 +215,6 @@ public class DefaultPluginManager implements PluginManager {
       && dependencyTracker.mayUninstall(p.getDescriptor().getInformation().getName());
   }
 
-  private void markAsCore(InstalledPlugin plugin) {
-    createMarkerFile(plugin, PluginConstants.FILE_CORE);
-    plugin.markAsCore();
-  }
-
   private void createMarkerFile(InstalledPlugin plugin, String markerFile) {
     try {
       Files.createFile(plugin.getDirectory().resolve(markerFile));
