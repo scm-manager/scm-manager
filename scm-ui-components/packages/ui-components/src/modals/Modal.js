@@ -9,7 +9,7 @@ type Props = {
   footer?: any,
   active: boolean,
   className?: string,
-  headColor?: string
+  headColor: string
 };
 
 class Modal extends React.Component<Props> {
