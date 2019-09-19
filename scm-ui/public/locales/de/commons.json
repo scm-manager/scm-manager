@@ -76,8 +76,6 @@
   "password": {
     "label": "Passwort",
     "newPassword": "Neues Passwort",
-    "passwordHelpText": "Klartext Passwort des Benutzers.",
-    "passwordConfirmHelpText": "Passwort zur Bestätigen wiederholen.",
     "currentPassword": "Aktuelles Passwort",
     "currentPasswordHelpText": "Dieses Passwort wird momentan bereits verwendet.",
     "confirmPassword": "Passwort wiederholen",

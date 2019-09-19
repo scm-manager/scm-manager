@@ -49,7 +49,6 @@ class PasswordConfirmation extends React.Component<Props, State> {
             value={this.state.password ? this.state.password : ""}
             validationError={!this.state.passwordValid}
             errorMessage={t("password.passwordInvalid")}
-            helpText={t("password.passwordHelpText")}
           />
         </div>
         <div className="column is-half">
@@ -60,7 +59,6 @@ class PasswordConfirmation extends React.Component<Props, State> {
             value={this.state ? this.state.confirmedPassword : ""}
             validationError={this.state.passwordConfirmationFailed}
             errorMessage={t("password.passwordConfirmFailed")}
-            helpText={t("password.passwordConfirmHelpText")}
           />
         </div>
       </div>
