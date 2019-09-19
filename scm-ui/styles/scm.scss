@@ -207,6 +207,10 @@ $danger-25: scale-color($danger, $lightness: 75%);
   background-color: $danger-25;
 }
 
+.has-background-brown {
+  background-color: #000000b3;
+}
+
 // tags
 .tag:not(body) {
   border: 1px solid transparent;
