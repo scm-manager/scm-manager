@@ -11,9 +11,11 @@ import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
@@ -79,5 +81,22 @@ public class InstalledPluginResource {
     } else {
       throw notFound(entity("Plugin", name));
     }
+  }
+
+  /**
+   * Triggers plugin uninstall.
+   * @param name plugin name
+   * @return HTTP Status.
+   */
+  @POST
+  @Path("/{name}/uninstall")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  public Response uninstallPlugin(@PathParam("name") String name, @QueryParam("restart") boolean restartAfterInstallation) {
+    PluginPermissions.manage().check();
+    pluginManager.uninstall(name, restartAfterInstallation);
+    return Response.ok().build();
   }
 }

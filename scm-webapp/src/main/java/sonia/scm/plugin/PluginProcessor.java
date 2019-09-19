@@ -462,7 +462,7 @@ public final class PluginProcessor
 
     if (Files.exists(descriptorPath)) {
 
-      boolean core = Files.exists(directory.resolve("core"));
+      boolean core = Files.exists(directory.resolve(PluginConstants.FILE_CORE));
 
       ClassLoader cl = createClassLoader(classLoader, smp);
 

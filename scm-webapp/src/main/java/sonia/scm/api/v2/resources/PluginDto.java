@@ -27,6 +27,7 @@ public class PluginDto extends HalRepresentation {
   private boolean pending;
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Boolean core;
+  private Boolean markedForUninstall;
   private Set<String> dependencies;
 
   public PluginDto(Links links) {

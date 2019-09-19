@@ -11,6 +11,7 @@ export type Plugin = {
   category: string,
   avatarUrl: string,
   pending: boolean,
+  markedForUninstall?: boolean,
   dependencies: string[],
   _links: Links
 };
@@ -31,5 +32,6 @@ export type PendingPlugins = {
   _embedded: {
     new: [],
     update: [],
+    uninstall: []
   }
 }

@@ -61,19 +61,24 @@ public class PendingPluginResource {
     Stream<InstalledPlugin> updatePlugins = installed
       .stream()
       .filter(i -> contains(pending, i));
+    Stream<InstalledPlugin> uninstallPlugins = installed
+      .stream()
+      .filter(InstalledPlugin::isMarkedForUninstall);
 
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.pendingPluginCollection().self());
 
-    List<PluginDto> newPluginDtos = newPlugins.map(mapper::mapAvailable).collect(toList());
-    List<PluginDto> updatePluginDtos = updatePlugins.map(i -> mapper.mapInstalled(i, pending)).collect(toList());
+    List<PluginDto> installDtos = newPlugins.map(mapper::mapAvailable).collect(toList());
+    List<PluginDto> updateDtos = updatePlugins.map(i -> mapper.mapInstalled(i, pending)).collect(toList());
+    List<PluginDto> uninstallDtos = uninstallPlugins.map(i -> mapper.mapInstalled(i, pending)).collect(toList());
 
-    if (newPluginDtos.size() > 0 || updatePluginDtos.size() > 0) {
-      linksBuilder.single(link("execute", resourceLinks.pendingPluginCollection().installPending()));
+    if (!installDtos.isEmpty() || !updateDtos.isEmpty() || !uninstallDtos.isEmpty()) {
+      linksBuilder.single(link("execute", resourceLinks.pendingPluginCollection().executePending()));
     }
 
     Embedded.Builder embedded = Embedded.embeddedBuilder();
-    embedded.with("new", newPluginDtos);
-    embedded.with("update", updatePluginDtos);
+    embedded.with("new", installDtos);
+    embedded.with("update", updateDtos);
+    embedded.with("uninstall", uninstallDtos);
 
     return Response.ok(new HalRepresentation(linksBuilder.build(), embedded.build())).build();
   }
@@ -95,14 +100,14 @@ public class PendingPluginResource {
   }
 
   @POST
-  @Path("/install")
+  @Path("/execute")
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response installPending() {
+  public Response executePending() {
     PluginPermissions.manage().check();
-    pluginManager.installPendingAndRestart();
+    pluginManager.executePendingAndRestart();
     return Response.ok().build();
   }
 }
