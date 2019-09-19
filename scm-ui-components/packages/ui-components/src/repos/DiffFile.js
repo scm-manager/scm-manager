@@ -46,6 +46,10 @@ const styles = {
   diff: {
     "& > colgroup .diff-gutter-col": {
       width: "3.25rem"
+    },
+    /* prevent following content from moving down */
+    "& > .diff-gutter:empty:hover::after": {
+      fontSize: "0.7rem"
     }
   }
 };
