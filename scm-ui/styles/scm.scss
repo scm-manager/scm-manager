@@ -207,8 +207,8 @@ $danger-25: scale-color($danger, $lightness: 75%);
   background-color: $danger-25;
 }
 
-.has-background-brown {
-  background-color: #000000b3;
+.has-background-warning-invert {
+  background-color: $warning-invert;
 }
 
 // tags
@@ -220,43 +220,46 @@ $danger-25: scale-color($danger, $lightness: 75%);
     background-color: $light;
   }
 
-  &.is-outline-black {
+  &.is-outlined {
+    background-color: $white;
+  }
+  &.is-black.is-outlined {
     color: $black;
     border-color: $black;
   }
-  &.is-outline-dark {
+  &.is-dark.is-outlined {
     color: $dark;
     border-color: $dark;
   }
-  &.is-outline-light {
+  &.is-light.is-outlined {
     color: $light;
     border-color: $light;
   }
-  &.is-outline-white {
+  &.is-white.is-outlined {
     color: $white;
     border-color: $white;
   }
-  &.is-outline-primary {
+  &.is-primary.is-outlined {
     color: $primary;
     border-color: $primary;
   }
-  &.is-outline-link {
+  &.is-link.is-outlined {
     color: $link;
     border-color: $link;
   }
-  &.is-outline-info {
+  &.is-info.is-outlined {
     color: $info;
     border-color: $info;
   }
-  &.is-outline-success {
+  &.is-success.is-outlined {
     color: $success;
     border-color: $success;
   }
-  &.is-outline-warning {
+  &.is-warning.is-outlined {
     color: $warning;
     border-color: $warning;
   }
-  &.is-outline-danger {
+  &.is-danger.is-outlined {
     color: $danger;
     border-color: $danger;
   }
