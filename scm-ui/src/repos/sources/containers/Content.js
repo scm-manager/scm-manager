@@ -106,17 +106,15 @@ class Content extends React.Component<Props, State> {
           </div>
           <div className="buttons is-grouped">
             <div className={classes.marginInHeader}>{selector}</div>
-            <ButtonGroup>
-              <ExtensionPoint
-                name="repos.sources.content.actionbar"
-                props={{
-                  file,
-                  revision,
-                  handleExtensionError: this.handleExtensionError
-                }}
-                renderAll={true}
-              />
-            </ButtonGroup>
+            <ExtensionPoint
+              name="repos.sources.content.actionbar"
+              props={{
+                file,
+                revision,
+                handleExtensionError: this.handleExtensionError
+              }}
+              renderAll={true}
+            />
           </div>
         </article>
       </span>

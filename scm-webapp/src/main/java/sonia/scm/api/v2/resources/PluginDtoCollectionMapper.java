@@ -26,8 +26,11 @@ public class PluginDtoCollectionMapper {
     this.mapper = mapper;
   }
 
-  public HalRepresentation mapInstalled(List<InstalledPlugin> plugins) {
-    List<PluginDto> dtos = plugins.stream().map(mapper::mapInstalled).collect(toList());
+  public HalRepresentation mapInstalled(List<InstalledPlugin> plugins, List<AvailablePlugin> availablePlugins) {
+    List<PluginDto> dtos = plugins
+      .stream()
+      .map(i -> mapper.mapInstalled(i, availablePlugins))
+      .collect(toList());
     return new HalRepresentation(createInstalledPluginsLinks(), embedDtos(dtos));
   }
 
@@ -49,10 +52,6 @@ public class PluginDtoCollectionMapper {
 
     Links.Builder linksBuilder = linkingTo()
       .with(Links.linkingTo().self(baseUrl).build());
-
-    if (PluginPermissions.manage().isPermitted() && containsPending(plugins)) {
-      linksBuilder.single(Link.link("installPending", resourceLinks.availablePluginCollection().installPending()));
-    }
 
     return linksBuilder.build();
   }

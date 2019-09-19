@@ -666,6 +666,10 @@ class ResourceLinks {
     String self(String id) {
       return installedPluginLinkBuilder.method("installedPlugins").parameters().method("getInstalledPlugin").parameters(id).href();
     }
+
+    public String uninstall(String name) {
+      return installedPluginLinkBuilder.method("installedPlugins").parameters().method("uninstallPlugin").parameters(name).href();
+    }
   }
 
   public InstalledPluginCollectionLinks installedPluginCollection() {
@@ -715,12 +719,28 @@ class ResourceLinks {
       availablePluginCollectionLinkBuilder = new LinkBuilder(pathInfo, PluginRootResource.class, AvailablePluginResource.class);
     }
 
-    String installPending() {
-      return availablePluginCollectionLinkBuilder.method("availablePlugins").parameters().method("installPending").parameters().href();
+    String self() {
+      return availablePluginCollectionLinkBuilder.method("availablePlugins").parameters().method("getAvailablePlugins").parameters().href();
+    }
+  }
+
+  public PendingPluginCollectionLinks pendingPluginCollection() {
+    return new PendingPluginCollectionLinks(scmPathInfoStore.get());
+  }
+
+  static class PendingPluginCollectionLinks {
+    private final LinkBuilder pendingPluginCollectionLinkBuilder;
+
+    PendingPluginCollectionLinks(ScmPathInfo pathInfo) {
+      pendingPluginCollectionLinkBuilder = new LinkBuilder(pathInfo, PluginRootResource.class, PendingPluginResource.class);
+    }
+
+    String executePending() {
+      return pendingPluginCollectionLinkBuilder.method("pendingPlugins").parameters().method("executePending").parameters().href();
     }
 
     String self() {
-      return availablePluginCollectionLinkBuilder.method("availablePlugins").parameters().method("getAvailablePlugins").parameters().href();
+      return pendingPluginCollectionLinkBuilder.method("pendingPlugins").parameters().method("getPending").parameters().href();
     }
   }
 

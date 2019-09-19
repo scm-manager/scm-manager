@@ -3,28 +3,31 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import { compose } from "redux";
-import type { PluginCollection } from "@scm-manager/ui-types";
+import type { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import {
+  ErrorNotification,
   Loading,
-  Title,
-  Subtitle,
   Notification,
-  ErrorNotification
+  Subtitle,
+  Title
 } from "@scm-manager/ui-components";
 import {
+  fetchPendingPlugins,
   fetchPluginsByLink,
   getFetchPluginsFailure,
+  getPendingPlugins,
   getPluginCollection,
   isFetchPluginsPending
 } from "../modules/plugins";
 import PluginsList from "../components/PluginList";
 import {
   getAvailablePluginsLink,
-  getInstalledPluginsLink
+  getInstalledPluginsLink,
+  getPendingPluginsLink
 } from "../../../modules/indexResource";
 import PluginTopActions from "../components/PluginTopActions";
 import PluginBottomActions from "../components/PluginBottomActions";
-import InstallPendingAction from "../components/InstallPendingAction";
+import ExecutePendingAction from "../components/ExecutePendingAction";
 
 type Props = {
   loading: boolean,
@@ -34,12 +37,15 @@ type Props = {
   installed: boolean,
   availablePluginsLink: string,
   installedPluginsLink: string,
+  pendingPluginsLink: string,
+  pendingPlugins: PendingPlugins,
 
   // context objects
   t: string => string,
 
   // dispatched functions
-  fetchPluginsByLink: (link: string) => void
+  fetchPluginsByLink: (link: string) => void,
+  fetchPendingPlugins: (link: string) => void
 };
 
 class PluginsOverview extends React.Component<Props> {
@@ -48,15 +54,16 @@ class PluginsOverview extends React.Component<Props> {
       installed,
       fetchPluginsByLink,
       availablePluginsLink,
-      installedPluginsLink
+      installedPluginsLink,
+      pendingPluginsLink,
+      fetchPendingPlugins
     } = this.props;
     fetchPluginsByLink(installed ? installedPluginsLink : availablePluginsLink);
+    fetchPendingPlugins(pendingPluginsLink);
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      installed,
-    } = this.props;
+    const { installed } = this.props;
     if (prevProps.installed !== installed) {
       this.fetchPlugins();
     }
@@ -67,11 +74,12 @@ class PluginsOverview extends React.Component<Props> {
       installed,
       fetchPluginsByLink,
       availablePluginsLink,
-      installedPluginsLink
+      installedPluginsLink,
+      pendingPluginsLink,
+      fetchPendingPlugins
     } = this.props;
-    fetchPluginsByLink(
-      installed ? installedPluginsLink : availablePluginsLink
-    );
+    fetchPluginsByLink(installed ? installedPluginsLink : availablePluginsLink);
+    fetchPendingPlugins(pendingPluginsLink);
   };
 
   renderHeader = (actions: React.Node) => {
@@ -101,9 +109,13 @@ class PluginsOverview extends React.Component<Props> {
   };
 
   createActions = () => {
-    const { collection } = this.props;
-    if (collection._links.installPending) {
-      return <InstallPendingAction collection={collection} />;
+    const { pendingPlugins } = this.props;
+    if (
+      pendingPlugins &&
+      pendingPlugins._links &&
+      pendingPlugins._links.execute
+    ) {
+      return <ExecutePendingAction pendingPlugins={pendingPlugins} />;
     }
     return null;
   };
@@ -134,7 +146,12 @@ class PluginsOverview extends React.Component<Props> {
     const { collection, t } = this.props;
 
     if (collection._embedded && collection._embedded.plugins.length > 0) {
-      return <PluginsList plugins={collection._embedded.plugins} refresh={this.fetchPlugins} />;
+      return (
+        <PluginsList
+          plugins={collection._embedded.plugins}
+          refresh={this.fetchPlugins}
+        />
+      );
     }
     return <Notification type="info">{t("plugins.noPlugins")}</Notification>;
   }
@@ -146,13 +163,17 @@ const mapStateToProps = state => {
   const error = getFetchPluginsFailure(state);
   const availablePluginsLink = getAvailablePluginsLink(state);
   const installedPluginsLink = getInstalledPluginsLink(state);
+  const pendingPluginsLink = getPendingPluginsLink(state);
+  const pendingPlugins = getPendingPlugins(state);
 
   return {
     collection,
     loading,
     error,
     availablePluginsLink,
-    installedPluginsLink
+    installedPluginsLink,
+    pendingPluginsLink,
+    pendingPlugins
   };
 };
 
@@ -160,6 +181,9 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchPluginsByLink: (link: string) => {
       dispatch(fetchPluginsByLink(link));
+    },
+    fetchPendingPlugins: (link: string) => {
+      dispatch(fetchPendingPlugins(link));
     }
   };
 };

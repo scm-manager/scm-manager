@@ -248,7 +248,7 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
   private InstalledPlugin createPluginWrapper(Path directory)
   {
     return new InstalledPlugin(null, null, new PathWebResourceLoader(directory),
-      directory);
+      directory, false);
   }
 
   //~--- fields ---------------------------------------------------------------

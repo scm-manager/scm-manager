@@ -15,10 +15,12 @@ import {
 } from "@scm-manager/ui-components";
 import classNames from "classnames";
 import waitForRestart from "./waitForRestart";
-import InstallSuccessNotification from "./InstallSuccessNotification";
+import SuccessNotification from "./SuccessNotification";
+import { PluginAction } from "./PluginEntry";
 
 type Props = {
   plugin: Plugin,
+  pluginAction: string,
   refresh: () => void,
   onClose: () => void,
 
@@ -37,8 +39,13 @@ type State = {
 const styles = {
   userLabelAlignment: {
     textAlign: "left",
-    marginRight: 0,
+    marginRight: 0
+  },
+  userLabelMarginSmall: {
     minWidth: "5.5em"
+  },
+  userLabelMarginLarge: {
+    minWidth: "10em"
   },
   userFieldFlex: {
     flexGrow: 4
@@ -55,7 +62,7 @@ class PluginModal extends React.Component<Props, State> {
     };
   }
 
-  onInstallSuccess = () => {
+  onSuccess = () => {
     const { restart } = this.state;
     const { refresh, onClose } = this.props;
 
@@ -87,16 +94,30 @@ class PluginModal extends React.Component<Props, State> {
     }
   };
 
-  install = (e: Event) => {
+  createPluginActionLink = () => {
+    const { plugin, pluginAction } = this.props;
     const { restart } = this.state;
-    const { plugin } = this.props;
+
+    let pluginActionLink = "";
+
+    if (pluginAction === PluginAction.INSTALL) {
+      pluginActionLink = plugin._links.install.href;
+    } else if (pluginAction === PluginAction.UPDATE) {
+      pluginActionLink = plugin._links.update.href;
+    } else if (pluginAction === PluginAction.UNINSTALL) {
+      pluginActionLink = plugin._links.uninstall.href;
+    }
+    return pluginActionLink + "?restart=" + restart.toString();
+  };
+
+  handlePluginAction = (e: Event) => {
     this.setState({
       loading: true
     });
     e.preventDefault();
     apiClient
-      .post(plugin._links.install.href + "?restart=" + restart.toString())
-      .then(this.onInstallSuccess)
+      .post(this.createPluginActionLink())
+      .then(this.onSuccess)
       .catch(error => {
         this.setState({
           loading: false,
@@ -106,21 +127,21 @@ class PluginModal extends React.Component<Props, State> {
   };
 
   footer = () => {
-    const { onClose, t } = this.props;
+    const { pluginAction, onClose, t } = this.props;
     const { loading, error, restart, success } = this.state;
 
-    let color = "primary";
-    let label = "plugins.modal.install";
+    let color = pluginAction === PluginAction.UNINSTALL ? "warning" : "primary";
+    let label = `plugins.modal.${pluginAction}`;
     if (restart) {
       color = "warning";
-      label = "plugins.modal.installAndRestart";
+      label = `plugins.modal.${pluginAction}AndRestart`;
     }
     return (
       <ButtonGroup>
         <Button
           label={t(label)}
           color={color}
-          action={this.install}
+          action={this.handlePluginAction}
           loading={loading}
           disabled={!!error || success}
         />
@@ -162,7 +183,7 @@ class PluginModal extends React.Component<Props, State> {
     } else if (success) {
       return (
         <div className="media">
-          <InstallSuccessNotification />
+          <SuccessNotification />
         </div>
       );
     } else if (restart) {
@@ -185,7 +206,7 @@ class PluginModal extends React.Component<Props, State> {
 
   render() {
     const { restart } = this.state;
-    const { plugin, onClose, classes, t } = this.props;
+    const { plugin, pluginAction, onClose, classes, t } = this.props;
 
     const body = (
       <>
@@ -200,6 +221,9 @@ class PluginModal extends React.Component<Props, State> {
               <div
                 className={classNames(
                   classes.userLabelAlignment,
+                  pluginAction === PluginAction.INSTALL
+                    ? classes.userLabelMarginSmall
+                    : classes.userLabelMarginLarge,
                   "field-label is-inline-flex"
                 )}
               >
@@ -214,25 +238,70 @@ class PluginModal extends React.Component<Props, State> {
                 {plugin.author}
               </div>
             </div>
-            <div className="field is-horizontal">
-              <div
-                className={classNames(
-                  classes.userLabelAlignment,
-                  "field-label is-inline-flex"
-                )}
-              >
-                {t("plugins.modal.version")}:
+            {pluginAction === PluginAction.INSTALL && (
+              <div className="field is-horizontal">
+                <div
+                  className={classNames(
+                    classes.userLabelAlignment,
+                    classes.userLabelMarginSmall,
+                    "field-label is-inline-flex"
+                  )}
+                >
+                  {t("plugins.modal.version")}:
+                </div>
+                <div
+                  className={classNames(
+                    classes.userFieldFlex,
+                    "field-body is-inline-flex"
+                  )}
+                >
+                  {plugin.version}
+                </div>
               </div>
-              <div
-                className={classNames(
-                  classes.userFieldFlex,
-                  "field-body is-inline-flex"
-                )}
-              >
-                {plugin.version}
+            )}
+            {(pluginAction === PluginAction.UPDATE ||
+              pluginAction === PluginAction.UNINSTALL) && (
+              <div className="field is-horizontal">
+                <div
+                  className={classNames(
+                    classes.userLabelAlignment,
+                    classes.userLabelMarginLarge,
+                    "field-label is-inline-flex"
+                  )}
+                >
+                  {t("plugins.modal.currentVersion")}:
+                </div>
+                <div
+                  className={classNames(
+                    classes.userFieldFlex,
+                    "field-body is-inline-flex"
+                  )}
+                >
+                  {plugin.version}
+                </div>
               </div>
-            </div>
-
+            )}
+            {pluginAction === PluginAction.UPDATE && (
+              <div className="field is-horizontal">
+                <div
+                  className={classNames(
+                    classes.userLabelAlignment,
+                    classes.userLabelMarginLarge,
+                    "field-label is-inline-flex"
+                  )}
+                >
+                  {t("plugins.modal.newVersion")}:
+                </div>
+                <div
+                  className={classNames(
+                    classes.userFieldFlex,
+                    "field-body is-inline-flex"
+                  )}
+                >
+                  {plugin.newVersion}
+                </div>
+              </div>
+            )}
             {this.renderDependencies()}
           </div>
         </div>
@@ -252,7 +321,7 @@ class PluginModal extends React.Component<Props, State> {
 
     return (
       <Modal
-        title={t("plugins.modal.title", {
+        title={t(`plugins.modal.title.${pluginAction}`, {
           name: plugin.displayName ? plugin.displayName : plugin.name
         })}
         closeFunction={() => onClose()}

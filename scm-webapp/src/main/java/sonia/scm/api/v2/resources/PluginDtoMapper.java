@@ -11,6 +11,9 @@ import sonia.scm.plugin.PluginPermissions;
 
 import javax.inject.Inject;
 
+import java.util.List;
+import java.util.Optional;
+
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
@@ -22,8 +25,8 @@ public abstract class PluginDtoMapper {
 
   public abstract void map(PluginInformation plugin, @MappingTarget PluginDto dto);
 
-  public PluginDto mapInstalled(InstalledPlugin plugin) {
-    PluginDto dto = createDtoForInstalled(plugin);
+  public PluginDto mapInstalled(InstalledPlugin plugin, List<AvailablePlugin> availablePlugins) {
+    PluginDto dto = createDtoForInstalled(plugin, availablePlugins);
     map(dto, plugin);
     return dto;
   }
@@ -57,13 +60,43 @@ public abstract class PluginDtoMapper {
     return new PluginDto(links.build());
   }
 
-  private PluginDto createDtoForInstalled(InstalledPlugin plugin) {
+  private PluginDto createDtoForInstalled(InstalledPlugin plugin, List<AvailablePlugin> availablePlugins) {
     PluginInformation information = plugin.getDescriptor().getInformation();
+    Optional<AvailablePlugin> availablePlugin = checkForUpdates(plugin, availablePlugins);
 
     Links.Builder links = linkingTo()
       .self(resourceLinks.installedPlugin()
         .self(information.getName()));
+    if (!plugin.isCore()
+      && availablePlugin.isPresent()
+      && !availablePlugin.get().isPending()
+      && PluginPermissions.manage().isPermitted()
+    ) {
+      links.single(link("update", resourceLinks.availablePlugin().install(information.getName())));
+    }
+    if (plugin.isUninstallable()
+      && (!availablePlugin.isPresent() || !availablePlugin.get().isPending())
+      && PluginPermissions.manage().isPermitted()
+    ) {
+      links.single(link("uninstall", resourceLinks.installedPlugin().uninstall(information.getName())));
+    }
 
-    return new PluginDto(links.build());
+    PluginDto dto = new PluginDto(links.build());
+
+    availablePlugin.ifPresent(value -> {
+      dto.setNewVersion(value.getDescriptor().getInformation().getVersion());
+      dto.setPending(value.isPending());
+    });
+
+    dto.setCore(plugin.isCore());
+    dto.setMarkedForUninstall(plugin.isMarkedForUninstall());
+
+    return dto;
+  }
+
+  private Optional<AvailablePlugin> checkForUpdates(InstalledPlugin plugin, List<AvailablePlugin> availablePlugins) {
+    return availablePlugins.stream()
+      .filter(a -> a.getDescriptor().getInformation().getName().equals(plugin.getDescriptor().getInformation().getName()))
+      .findAny();
   }
 }

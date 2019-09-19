@@ -10,24 +10,38 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
+import org.junitpioneer.jupiter.TempDirectory;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
+import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.lifecycle.RestartEvent;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static sonia.scm.plugin.PluginTestHelper.createAvailable;
+import static sonia.scm.plugin.PluginTestHelper.createInstalled;
 
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(TempDirectory.class)
 class DefaultPluginManagerTest {
 
   @Mock
@@ -269,14 +283,14 @@ class DefaultPluginManagerTest {
       when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
 
       manager.install("scm-review-plugin", false);
-      manager.installPendingAndRestart();
+      manager.executePendingAndRestart();
 
       verify(eventBus).post(any(RestartEvent.class));
     }
 
     @Test
     void shouldNotSendRestartEventWithoutPendingPlugins() {
-      manager.installPendingAndRestart();
+      manager.executePendingAndRestart();
 
       verify(eventBus, never()).post(any());
     }
@@ -303,6 +317,116 @@ class DefaultPluginManagerTest {
       assertThat(available.get(0).isPending()).isTrue();
     }
 
+    @Test
+    void shouldThrowExceptionWhenUninstallingUnknownPlugin() {
+      assertThrows(NotFoundException.class, () -> manager.uninstall("no-such-plugin", false));
+    }
+
+    @Test
+    void shouldUseDependencyTrackerForUninstall() {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      InstalledPlugin reviewPlugin = createInstalled("scm-review-plugin");
+      when(reviewPlugin.getDescriptor().getDependencies()).thenReturn(singleton("scm-mail-plugin"));
+
+      when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(mailPlugin, reviewPlugin));
+      manager.computeInstallationDependencies();
+
+      assertThrows(ScmConstraintViolationException.class, () -> manager.uninstall("scm-mail-plugin", false));
+    }
+
+    @Test
+    void shouldCreateUninstallFile(@TempDirectory.TempDir Path temp) {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      when(mailPlugin.getDirectory()).thenReturn(temp);
+
+      when(loader.getInstalledPlugins()).thenReturn(singletonList(mailPlugin));
+
+      manager.uninstall("scm-mail-plugin", false);
+
+      assertThat(temp.resolve("uninstall")).exists();
+    }
+
+    @Test
+    void shouldMarkPluginForUninstall(@TempDirectory.TempDir Path temp) {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      when(mailPlugin.getDirectory()).thenReturn(temp);
+
+      when(loader.getInstalledPlugins()).thenReturn(singletonList(mailPlugin));
+
+      manager.uninstall("scm-mail-plugin", false);
+
+      verify(mailPlugin).setMarkedForUninstall(true);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUninstallingCorePlugin(@TempDirectory.TempDir Path temp) {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      when(mailPlugin.getDirectory()).thenReturn(temp);
+      when(mailPlugin.isCore()).thenReturn(true);
+
+      when(loader.getInstalledPlugins()).thenReturn(singletonList(mailPlugin));
+
+      assertThrows(ScmConstraintViolationException.class, () -> manager.uninstall("scm-mail-plugin", false));
+
+      assertThat(temp.resolve("uninstall")).doesNotExist();
+    }
+
+    @Test
+    void shouldMarkUninstallablePlugins() {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      InstalledPlugin reviewPlugin = createInstalled("scm-review-plugin");
+      when(reviewPlugin.getDescriptor().getDependencies()).thenReturn(singleton("scm-mail-plugin"));
+
+      when(loader.getInstalledPlugins()).thenReturn(asList(mailPlugin, reviewPlugin));
+
+      manager.computeInstallationDependencies();
+
+      verify(reviewPlugin).setUninstallable(true);
+      verify(mailPlugin).setUninstallable(false);
+    }
+
+    @Test
+    void shouldUpdateMayUninstallFlagAfterDependencyIsUninstalled() {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      InstalledPlugin reviewPlugin = createInstalled("scm-review-plugin");
+      when(reviewPlugin.getDescriptor().getDependencies()).thenReturn(singleton("scm-mail-plugin"));
+
+      when(loader.getInstalledPlugins()).thenReturn(asList(mailPlugin, reviewPlugin));
+
+      manager.computeInstallationDependencies();
+
+      manager.uninstall("scm-review-plugin", false);
+
+      verify(mailPlugin).setUninstallable(true);
+    }
+
+    @Test
+    void shouldUpdateMayUninstallFlagAfterDependencyIsInstalled() {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      AvailablePlugin reviewPlugin = createAvailable("scm-review-plugin");
+      when(reviewPlugin.getDescriptor().getDependencies()).thenReturn(singleton("scm-mail-plugin"));
+
+      when(loader.getInstalledPlugins()).thenReturn(singletonList(mailPlugin));
+      when(center.getAvailable()).thenReturn(singleton(reviewPlugin));
+
+      manager.computeInstallationDependencies();
+
+      manager.install("scm-review-plugin", false);
+
+      verify(mailPlugin).setUninstallable(false);
+    }
+
+    @Test
+    void shouldRestartWithUninstallOnly() {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      when(mailPlugin.isMarkedForUninstall()).thenReturn(true);
+
+      when(loader.getInstalledPlugins()).thenReturn(singletonList(mailPlugin));
+
+      manager.executePendingAndRestart();
+
+      verify(eventBus).post(any(RestartEvent.class));
+    }
   }
 
   @Nested
@@ -349,38 +473,14 @@ class DefaultPluginManagerTest {
     }
 
     @Test
-    void shouldThrowAuthorizationExceptionsForInstallPendingAndRestart() {
-      assertThrows(AuthorizationException.class, () -> manager.installPendingAndRestart());
+    void shouldThrowAuthorizationExceptionsForUninstallMethod() {
+      assertThrows(AuthorizationException.class, () -> manager.uninstall("test", false));
+    }
+
+    @Test
+    void shouldThrowAuthorizationExceptionsForExecutePendingAndRestart() {
+      assertThrows(AuthorizationException.class, () -> manager.executePendingAndRestart());
     }
 
   }
-
-  private AvailablePlugin createAvailable(String name) {
-    PluginInformation information = new PluginInformation();
-    information.setName(name);
-    return createAvailable(information);
-  }
-
-  private InstalledPlugin createInstalled(String name) {
-    PluginInformation information = new PluginInformation();
-    information.setName(name);
-    return createInstalled(information);
-  }
-
-  private InstalledPlugin createInstalled(PluginInformation information) {
-    InstalledPlugin plugin = mock(InstalledPlugin.class, Answers.RETURNS_DEEP_STUBS);
-    returnInformation(plugin, information);
-    return plugin;
-  }
-
-  private AvailablePlugin createAvailable(PluginInformation information) {
-    AvailablePluginDescriptor descriptor = mock(AvailablePluginDescriptor.class);
-    lenient().when(descriptor.getInformation()).thenReturn(information);
-    return new AvailablePlugin(descriptor);
-  }
-
-  private void returnInformation(Plugin mockedPlugin, PluginInformation information) {
-    when(mockedPlugin.getDescriptor().getInformation()).thenReturn(information);
-  }
-
 }
