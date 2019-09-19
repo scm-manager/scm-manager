@@ -15,27 +15,25 @@ class MemberNameTable extends React.Component<Props, State> {
   render() {
     const { t } = this.props;
     return (
-      <div>
-        <table className="table is-hoverable is-fullwidth">
-          <tbody>
-            {this.props.members.map(member => {
-              return (
-                <tr key={member}>
-                  <td key={member}>{member}</td>
-                  <td>
-                    <RemoveEntryOfTableButton
-                      entryname={member}
-                      removeEntry={this.removeEntry}
-                      disabled={false}
-                      label={t("remove-member-button.label")}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      <table className="table is-hoverable is-fullwidth">
+        <tbody>
+          {this.props.members.map(member => {
+            return (
+              <tr key={member}>
+                <td key={member}>{member}</td>
+                <td>
+                  <RemoveEntryOfTableButton
+                    entryname={member}
+                    removeEntry={this.removeEntry}
+                    disabled={false}
+                    label={t("remove-member-button.label")}
+                  />
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     );
   }
 
