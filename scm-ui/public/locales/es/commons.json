@@ -1,0 +1,90 @@
+{
+  "login": {
+    "title": "Iniciar sesión",
+    "subtitle": "Por favor inicie sesión para continuar",
+    "logo-alt": "SCM-Manager",
+    "username-placeholder": "Su nombre de usuario",
+    "password-placeholder": "Su contraseña",
+    "submit": "Iniciar sesión",
+    "plugin": "Plugin",
+    "feature": "Feature",
+    "tip": "Tip",
+    "loading": "Cargando ...",
+    "error": "Error"
+  },
+  "logout": {
+    "error": {
+      "title": "Cierre de sesión fallido",
+      "subtitle": "Ha ocurrido un error al cerrar la sesión"
+    }
+  },
+  "app": {
+    "error": {
+      "title": "Error",
+      "subtitle": "Ha ocurrido un error desconocido"
+    }
+  },
+  "errorNotification": {
+    "prefix": "Error",
+    "loginLink": "Aquí puede iniciar la sesión de nuevo.",
+    "timeout": "La sesión ha caducado",
+    "wrongLoginCredentials": "Credenciales incorrectas",
+    "forbidden": "Usted no tiene permiso para ver esta sección"
+  },
+  "loading": {
+    "alt": "Cargando ..."
+  },
+  "logo": {
+    "alt": "SCM-Manager"
+  },
+  "primary-navigation": {
+    "repositories": "Repositorios",
+    "users": "Usuarios",
+    "logout": "Cerrar sesión",
+    "groups": "Grupos",
+    "admin": "Administración"
+  },
+  "filterEntries": "Filtrar entradas",
+  "autocomplete": {
+    "group": "Grupo",
+    "user": "Usuario",
+    "noGroupOptions": "No hay sugerencias disponibles",
+    "groupPlaceholder": "Nombre del grupo",
+    "noUserOptions": "No hay sugerencias disponibles",
+    "userPlaceholder": "Nombre de usuario",
+    "loading": "Cargando..."
+  },
+  "paginator": {
+    "next": "Siguiente",
+    "previous": "Anterior"
+  },
+  "profile": {
+    "navigationLabel": "Menú de sección",
+    "informationNavLink": "Información",
+    "changePasswordNavLink": "Cambiar contraseña",
+    "settingsNavLink": "Ajustes",
+    "username": "Nombre de usuario",
+    "displayName": "Nombre a mostrar",
+    "mail": "Correo electrónico",
+    "groups": "Grupos",
+    "information": "Información",
+    "change-password": "Cambiar contraseña",
+    "error-title": "Error",
+    "error-subtitle": "No se puede mostrar la sección",
+    "error": "Error",
+    "error-message": "'me' no está definido"
+  },
+  "password": {
+    "label": "Contraseña",
+    "newPassword": "Nueva contraseña",
+    "passwordHelpText": "Contraseña del usuario en texto plano",
+    "passwordConfirmHelpText": "Repita la contraseña para confirmar",
+    "currentPassword": "Contraseña actual",
+    "currentPasswordHelpText": "La contraseña ya está en uso",
+    "confirmPassword": "Confirme la contraseña",
+    "passwordInvalid": "La contraseña debe tener entre 6 y 32 caracteres",
+    "passwordConfirmFailed": "Las contraseñas deben ser identicas",
+    "submit": "Guardar",
+    "changedSuccessfully": "Contraseña cambiada correctamente"
+  }
+}

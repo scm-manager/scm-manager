@@ -82,7 +82,15 @@ public interface PluginManager {
   void install(String name, boolean restartAfterInstallation);
 
   /**
+   * Marks the plugin with the given name for uninstall.
+   *
+   * @param name plugin name
+   * @param restartAfterInstallation restart context after plugin has been marked to really uninstall the plugin
+   */
+  void uninstall(String name, boolean restartAfterInstallation);
+
+  /**
    * Install all pending plugins and restart the scm context.
    */
-  void installPendingAndRestart();
+  void executePendingAndRestart();
 }

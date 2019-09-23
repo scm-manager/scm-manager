@@ -1,0 +1,186 @@
+{
+  "permissions": {
+    "*": {
+      "displayName": "Administrador global",
+      "description": "Puede administrar la instancia completa"
+    },
+    "repository": {
+      "read,pull": {
+        "*": {
+          "displayName": "Leer todos los repositorios",
+          "description": "Puede ver y clonar todos los repositorios"
+        }
+      },
+      "read,pull,push": {
+        "*": {
+          "displayName": "Escribir todos los repositorios",
+          "description": "Puede ver, clonar y enviar cambios a todos los repositorios"
+        }
+      },
+      "*": {
+        "displayName": "Poseer todos los repositorios",
+        "description": "Puede ver, clonar, enviar cambios, configurar y eliminar todos los repositorios"
+      },
+      "create": {
+        "displayName": "Crear repositorios",
+        "description": "Puede crear repositorios"
+      }
+    },
+    "user": {
+      "*": {
+        "displayName": "Administrar usuarios",
+        "description": "Puede administrar todos los usuarios"
+      }
+    },
+    "group": {
+      "*": {
+        "displayName": "Administrar grupos",
+        "description": "Puede administrar todos los grupos"
+      }
+    },
+    "permission": {
+      "*": {
+        "displayName": "Administrar permisos",
+        "description": "Puede administrar permisos (addicionalmente necesita 'administrar usuarios' y/o 'administrar grupos')."
+      }
+    },
+    "configuration": {
+      "list": {
+        "displayName": "Administración basíca",
+        "description": "Prerequisito para todos los permisos administrativos. Sin este permiso la configuración no será visible."
+      },
+      "read,write": {
+        "global": {
+          "displayName": "Administrar núcleo",
+          "description": "Puede administrar las opciones centrales de SCM-Manager"
+        },
+        "*": {
+          "displayName": "Administrar núcleo y complementos",
+          "description": "Puede configurar las opciones centrales de SCM-Manager y todos los complementos (plugins)"
+        }
+      }
+    },
+    "repositoryRole": {
+      "read,write": {
+        "displayName": "Administrar permisos de roles de repositorio personalizados",
+        "description": "Puede crear, modificar y borrar roles de repositorios personalizados y sus permisos"
+      }
+    },
+    "plugin": {
+      "read": {
+        "displayName": "Leer todos los complementos",
+        "description": "Puede leer todos los complementos instalados y los disponibles"
+      },
+      "read,write": {
+        "displayName": "Leer y gestionar todos los complementos",
+        "description": "Puede leer y gestionar todos los complementos instalados y los diponibles"
+      }
+    },
+    "unknown": "Permiso desconocido"
+  },
+  "verbs": {
+    "repository": {
+      "read": {
+        "displayName": "leer repositorio",
+        "description": "Puede leer el repositorio dentro de SCM-Manager"
+      },
+      "modify": {
+        "displayName": "modificar los metadatos del repositorio",
+        "description": "Puede modificar las propiedades básicas del repositorio"
+      },
+      "delete": {
+        "displayName": "borrar repositorio",
+        "description": "Puede borrar el repositorio"
+      },
+      "pull": {
+        "displayName": "Traer los cambios o crear copia local del repositorio (pull/checkout)",
+        "description": "Puede traer los cambios o crear una copia de trabajo local desde el repositorio (pull/checkout)"
+      },
+      "push": {
+        "displayName": "Publicar o enviar cambios al repositorio (push/commit)",
+        "description": "Puede cambiar el contenido del repositorio (push/commit)"
+      },
+      "permissionRead": {
+        "displayName": "leer permisos",
+        "description": "Puede ver los permisos del repositorio"
+      },
+      "permissionWrite": {
+        "displayName": "modificar permisos",
+        "description": "Puede modificar los permisos del repositorio"
+      },
+      "*": {
+        "displayName": "poseer repositorio",
+        "description": "Puede cambiar todo en el repositorio (incluidos los demás permisos)"
+      }
+    }
+  },
+  "errors": {
+    "context": "Contexto",
+    "errorCode": "Código de error",
+    "transactionId": "Identificador de la transacción",
+    "moreInfo": "Para más información ver",
+    "violations": "Violaciones:",
+    "AGR7UzkhA1": {
+      "displayName": "No encontrado",
+      "description": "No se pudo encontrar la entidad solicitada. Puede haber sido eliminado en otra sesión"
+    },
+    "FtR7UznKU1": {
+      "displayName": "Ya existe",
+      "description": "Ya hay una entidad con el mismo valor de clave."
+    },
+    "9BR7qpDAe1": {
+      "displayName": "No se permite cambiar la contraseña",
+      "description": "No tiene permiso para cambiar la contraseña."
+    },
+    "2wR7UzpPG1": {
+      "displayName": "Modificaciones actuales",
+      "description": "La entidad ha sido modificada concurrentemente por otro usuario o proceso. Por favor recarge la entidad."
+    },
+    "9SR8G0kmU1": {
+      "displayName": "Funcionalidad no soportada",
+      "description": "El sistema de control de versiones de este repositorio no admite la funcionalidad solicitada."
+    },
+    "CmR8GCJb31": {
+      "displayName": "Error interno del servidor",
+      "description": "Se ha producido un error interno en el servidor. Por favor contacte con su administrador para obtener más ayuda."
+    },
+    "92RCCCMHO1": {
+      "displayName": "No se ha podido encontrar la URL interna",
+      "description": "Una petición interna no ha podido ser manejada por el servidor. Por favor contacte con su administrador para obtener más ayuda."
+    },
+    "2VRCrvpL71": {
+      "displayName": "Formato de datos invorrecto",
+      "description": "Los datos enviados al servidor son son correctos. Por favor revise los datos enviados o contacte con su administrador para obtener más ayuda."
+    },
+    "8pRBYDURx1": {
+      "displayName": "Tipo de datos incorrecto",
+      "description": "El tipo de los datos enviados el servidor es incorrecto. Por favor contacte con su administrador para obtener más ayuda."
+    },
+    "1wR7ZBe7H1": {
+      "displayName": "Entrada incorrecta",
+      "description": "Los datos no pueden ser validados. Por favor corríjalos e inténtelo de nuevo."
+    },
+    "3zR9vPNIE1": {
+      "displayName": "Entrada incorrecta",
+      "description": "Los datos no pueden ser validados. Por favor corríjalos e inténtelo de nuevo."
+    },
+    "CHRM7IQzo1": {
+      "displayName": "Cambio fallido",
+      "description": "El cambio ha fallado. Por favor contacte con su administrador para obtener más ayuda."
+    },
+    "thbsUFokjk": {
+      "displayName": "Cambio inválido en el identificador",
+      "description": "Un identificador ha sido cambiado en la entidad. Esto no está permitido."
+    },
+    "40RaYIeeR1": {
+      "displayName": "No se han efectuado modificaciones.",
+      "description": "Ningún fichero del repositorio ha sido modificado. Por lo tanto, no se confirmará ninguna modificación."
+    }
+  },
+  "namespaceStrategies": {
+    "UsernameNamespaceStrategy":  "Nombre de usuario",
+    "CustomNamespaceStrategy":  "Personalizar",
+    "CurrentYearNamespaceStrategy":  "Año actual",
+    "RepositoryTypeNamespaceStrategy": "Tipo de repositorio"
+  }
+}

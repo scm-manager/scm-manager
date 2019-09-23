@@ -25,7 +25,7 @@ export type { SubRepository, File } from "./Sources";
 
 export type { SelectValue, AutocompleteObject } from "./Autocomplete";
 
-export type { Plugin, PluginCollection, PluginGroup } from "./Plugin";
+export type { Plugin, PluginCollection, PluginGroup, PendingPlugins } from "./Plugin";
 
 export type { RepositoryRole } from "./RepositoryRole";
 

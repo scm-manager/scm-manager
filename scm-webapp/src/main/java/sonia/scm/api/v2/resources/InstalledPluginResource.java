@@ -3,17 +3,19 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.InstalledPlugin;
-import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +52,8 @@ public class InstalledPluginResource {
   public Response getInstalledPlugins() {
     PluginPermissions.read().check();
     List<InstalledPlugin> plugins = pluginManager.getInstalled();
-    return Response.ok(collectionMapper.mapInstalled(plugins)).build();
+    List<AvailablePlugin> available = pluginManager.getAvailable();
+    return Response.ok(collectionMapper.mapInstalled(plugins, available)).build();
   }
 
   /**
@@ -72,10 +75,28 @@ public class InstalledPluginResource {
   public Response getInstalledPlugin(@PathParam("name") String name) {
     PluginPermissions.read().check();
     Optional<InstalledPlugin> pluginDto = pluginManager.getInstalled(name);
+    List<AvailablePlugin> available = pluginManager.getAvailable();
     if (pluginDto.isPresent()) {
-      return Response.ok(mapper.mapInstalled(pluginDto.get())).build();
+      return Response.ok(mapper.mapInstalled(pluginDto.get(), available)).build();
     } else {
       throw notFound(entity("Plugin", name));
     }
+  }
+
+  /**
+   * Triggers plugin uninstall.
+   * @param name plugin name
+   * @return HTTP Status.
+   */
+  @POST
+  @Path("/{name}/uninstall")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  public Response uninstallPlugin(@PathParam("name") String name, @QueryParam("restart") boolean restartAfterInstallation) {
+    PluginPermissions.manage().check();
+    pluginManager.uninstall(name, restartAfterInstallation);
+    return Response.ok().build();
   }
 }

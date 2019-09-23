@@ -4,8 +4,14 @@ import injectSheet from "react-jss";
 import type { Plugin } from "@scm-manager/ui-types";
 import { CardColumn } from "@scm-manager/ui-components";
 import PluginAvatar from "./PluginAvatar";
-import PluginModal from "./PluginModal";
 import classNames from "classnames";
+import PluginModal from "./PluginModal";
+
+export const PluginAction = {
+  INSTALL: "install",
+  UPDATE: "update",
+  UNINSTALL: "uninstall"
+};
 
 type Props = {
   plugin: Plugin,
@@ -16,18 +22,37 @@ type Props = {
 };
 
 type State = {
-  showModal: boolean
+  showInstallModal: boolean,
+  showUpdateModal: boolean,
+  showUninstallModal: boolean
 };
 
 const styles = {
   link: {
     cursor: "pointer",
-    pointerEvents: "all"
+    pointerEvents: "all",
+    padding: "0.5rem",
+    border: "solid 1px var(--dark-25)",
+    borderRadius: "4px",
+    "&:hover": {
+      borderColor: "var(--dark-50)"
+    }
   },
-  spinner: {
+  topRight: {
     position: "absolute",
     right: 0,
     top: 0
+  },
+  layout: {
+    "& .level": {
+      paddingBottom: "0.5rem"
+    }
+  },
+  actionbar: {
+    display: "flex",
+    "& span + span": {
+      marginLeft: "0.5rem"
+    }
   }
 };
 
@@ -36,7 +61,9 @@ class PluginEntry extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      showModal: false
+      showInstallModal: false,
+      showUpdateModal: false,
+      showUninstallModal: false
     };
   }
 
@@ -44,10 +71,9 @@ class PluginEntry extends React.Component<Props, State> {
     return <PluginAvatar plugin={plugin} />;
   };
 
-  toggleModal = () => {
-    this.setState(prevState => ({
-      showModal: !prevState.showModal
-    }));
+  toggleModal = (showModal: string) => {
+    const oldValue = this.state[showModal];
+    this.setState({ [showModal]: !oldValue });
   };
 
   createFooterRight = (plugin: Plugin) => {
@@ -59,56 +85,123 @@ class PluginEntry extends React.Component<Props, State> {
     return plugin._links && plugin._links.install && plugin._links.install.href;
   };
 
-  createFooterLeft = () => {
+  isUpdatable = () => {
+    const { plugin } = this.props;
+    return plugin._links && plugin._links.update && plugin._links.update.href;
+  };
+
+  isUninstallable = () => {
+    const { plugin } = this.props;
+    return (
+      plugin._links && plugin._links.uninstall && plugin._links.uninstall.href
+    );
+  };
+
+  createActionbar = () => {
     const { classes } = this.props;
-    if (this.isInstallable()) {
+    return (
+      <div className={classNames(classes.actionbar, classes.topRight)}>
+        {this.isInstallable() && (
+          <span
+            className={classNames(classes.link, "level-item")}
+            onClick={() => this.toggleModal("showInstallModal")}
+          >
+            <i className="fas fa-download has-text-info" />
+          </span>
+        )}
+        {this.isUninstallable() && (
+          <span
+            className={classNames(classes.link, "level-item")}
+            onClick={() => this.toggleModal("showUninstallModal")}
+          >
+            <i className="fas fa-trash has-text-info" />
+          </span>
+        )}
+        {this.isUpdatable() && (
+          <span
+            className={classNames(classes.link, "level-item")}
+            onClick={() => this.toggleModal("showUpdateModal")}
+          >
+            <i className="fas fa-sync-alt has-text-info" />
+          </span>
+        )}
+      </div>
+    );
+  };
+
+  renderModal = () => {
+    const { plugin, refresh } = this.props;
+    if (this.state.showInstallModal && this.isInstallable()) {
       return (
-        <span
-          className={classNames(classes.link, "level-item")}
-          onClick={this.toggleModal}
-        >
-          <i className="fas fa-download has-text-info" />
-        </span>
+        <PluginModal
+          plugin={plugin}
+          pluginAction={PluginAction.INSTALL}
+          refresh={refresh}
+          onClose={() => this.toggleModal("showInstallModal")}
+        />
       );
+    } else if (this.state.showUpdateModal && this.isUpdatable()) {
+      return (
+        <PluginModal
+          plugin={plugin}
+          pluginAction={PluginAction.UPDATE}
+          refresh={refresh}
+          onClose={() => this.toggleModal("showUpdateModal")}
+        />
+      );
+    } else if (this.state.showUninstallModal && this.isUninstallable()) {
+      return (
+        <PluginModal
+          plugin={plugin}
+          pluginAction={PluginAction.UNINSTALL}
+          refresh={refresh}
+          onClose={() => this.toggleModal("showUninstallModal")}
+        />
+      );
+    } else {
+      return null;
     }
   };
 
   createPendingSpinner = () => {
     const { plugin, classes } = this.props;
-    if (plugin.pending) {
-      return (
-        <span className={classes.spinner}>
-          <i className="fas fa-spinner fa-spin has-text-info" />
-        </span>
-      );
-    }
-    return null;
+    return (
+      <span className={classes.topRight}>
+        <i
+          className={classNames(
+            "fas fa-spinner fa-lg fa-spin",
+            plugin.markedForUninstall ? "has-text-danger" : "has-text-info"
+          )}
+        />
+      </span>
+    );
   };
 
   render() {
-    const { plugin, refresh } = this.props;
-    const { showModal } = this.state;
+    const { plugin, classes } = this.props;
     const avatar = this.createAvatar(plugin);
-    const footerLeft = this.createFooterLeft();
+    const actionbar = this.createActionbar();
     const footerRight = this.createFooterRight(plugin);
 
-    const modal = showModal ? (
-      <PluginModal
-        plugin={plugin}
-        refresh={refresh}
-        onClose={this.toggleModal}
-      />
-    ) : null;
+    const modal = this.renderModal();
 
     return (
       <>
         <CardColumn
-          action={this.isInstallable() ? this.toggleModal : null}
+          className={classes.layout}
+          action={
+            this.isInstallable()
+              ? () => this.toggleModal("showInstallModal")
+              : null
+          }
           avatar={avatar}
           title={plugin.displayName ? plugin.displayName : plugin.name}
           description={plugin.description}
-          contentRight={this.createPendingSpinner()}
-          footerLeft={footerLeft}
+          contentRight={
+            plugin.pending || plugin.markedForUninstall
+              ? this.createPendingSpinner()
+              : actionbar
+          }
           footerRight={footerRight}
         />
         {modal}

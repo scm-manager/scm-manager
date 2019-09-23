@@ -46,6 +46,10 @@ const styles = {
   diff: {
     "& > colgroup .diff-gutter-col": {
       width: "3.25rem"
+    },
+    /* prevent following content from moving down */
+    "& > .diff-gutter:empty:hover::after": {
+      fontSize: "0.7rem"
     }
   }
 };
@@ -191,7 +195,7 @@ class DiffFile extends React.Component<Props, State> {
       value = file.type;
     }
     const color =
-      value === "added" ? "outline-success" : value === "deleted" ? "outline-danger" : "outline-info";
+      value === "added" ? "success is-outlined" : value === "deleted" ? "danger is-outlined" : "info is-outlined";
 
     return (
       <Tag

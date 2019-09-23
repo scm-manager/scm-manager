@@ -29,22 +29,36 @@
       "installedNavLink": "Installiert",
       "availableNavLink": "Verfügbar"
     },
-    "installPending": "Austehende Plugins installieren",
+    "executePending": "Ausstehende Plugin-Änderungen ausführen",
     "noPlugins": "Keine Plugins gefunden.",
     "modal": {
-      "title": "{{name}} Plugin installieren",
-      "restart": "Neustarten um Plugin zu aktivieren",
+      "title": {
+        "install": "{{name}} Plugin installieren",
+        "update": "{{name}} Plugin aktualisieren",
+        "uninstall": "{{name}} Plugin deinstallieren"
+      },
+      "restart": "Neustarten, um Plugin-Änderungen wirksam zu machen",
       "install": "Installieren",
+      "update": "Aktualisieren",
+      "uninstall": "Deinstallieren",
+      "installQueue": "Werden installiert:",
+      "updateQueue": "Werden aktualisiert:",
+      "uninstallQueue": "Werden deinstalliert:",
       "installAndRestart": "Installieren und Neustarten",
+      "updateAndRestart": "Aktualisieren und Neustarten",
+      "uninstallAndRestart": "Deinstallieren and Neustarten",
+      "executeAndRestart": "Ausführen und Neustarten",
       "abort": "Abbrechen",
       "author": "Autor",
       "version": "Version",
+      "currentVersion": "Installierte Version",
+      "newVersion": "Neue Version",
       "dependencyNotification": "Mit diesem Plugin werden folgende Abhängigkeiten mit installiert, wenn sie noch nicht vorhanden sind!",
       "dependencies": "Abhängigkeiten",
       "successNotification": "Das Plugin wurde erfolgreich installiert. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden:",
       "reload": "jetzt neu laden",
       "restartNotification": "Der SCM-Manager Kontext sollte nur neu gestartet werden, wenn aktuell niemand damit arbeitet.",
-      "installPending": "Die folgenden Plugins werden installiert. Anschließend wird der SCM-Manager Kontext neu gestartet."
+      "executePending": "Die folgenden Plugin-Änderungen werden ausgeführt. Anschließend wird der SCM-Manager Kontext neu gestartet."
     }
   },
   "repositoryRole": {

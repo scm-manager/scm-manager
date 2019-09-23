@@ -43,7 +43,28 @@ type Props = {
 class ChangesetsRoot extends React.Component<Props> {
   componentDidMount() {
     this.props.fetchBranches(this.props.repository);
+    this.redirectToDefaultBranch();
   }
+
+  redirectToDefaultBranch = () => {
+    if (this.shouldRedirectToDefaultBranch()) {
+      const defaultBranches = this.props.branches.filter(
+        b => b.defaultBranch === true
+      );
+      if (defaultBranches.length > 0) {
+        this.branchSelected(defaultBranches[0]);
+      }
+    }
+  };
+
+  shouldRedirectToDefaultBranch = () => {
+    return (
+      this.props.branches &&
+      this.props.branches.length > 0 &&
+      this.props.selected !==
+        this.props.branches.filter(b => b.defaultBranch === true)[0]
+    );
+  };
 
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {

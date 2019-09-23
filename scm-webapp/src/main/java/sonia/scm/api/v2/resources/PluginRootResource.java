@@ -9,11 +9,13 @@ public class PluginRootResource {
 
   private Provider<InstalledPluginResource> installedPluginResourceProvider;
   private Provider<AvailablePluginResource> availablePluginResourceProvider;
+  private Provider<PendingPluginResource> pendingPluginResourceProvider;
 
   @Inject
-  public PluginRootResource(Provider<InstalledPluginResource> installedPluginResourceProvider, Provider<AvailablePluginResource> availablePluginResourceProvider) {
+  public PluginRootResource(Provider<InstalledPluginResource> installedPluginResourceProvider, Provider<AvailablePluginResource> availablePluginResourceProvider, Provider<PendingPluginResource> pendingPluginResourceProvider) {
     this.installedPluginResourceProvider = installedPluginResourceProvider;
     this.availablePluginResourceProvider = availablePluginResourceProvider;
+    this.pendingPluginResourceProvider = pendingPluginResourceProvider;
   }
 
   @Path("/installed")
@@ -23,4 +25,7 @@ public class PluginRootResource {
 
   @Path("/available")
   public AvailablePluginResource availablePlugins() { return availablePluginResourceProvider.get(); }
+
+  @Path("/pending")
+  public PendingPluginResource pendingPlugins() { return pendingPluginResourceProvider.get(); }
 }

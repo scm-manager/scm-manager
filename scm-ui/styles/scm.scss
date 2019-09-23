@@ -96,6 +96,8 @@ $danger-75: scale-color($danger, $lightness: 25%);
 $danger-50: scale-color($danger, $lightness: 50%);
 $danger-25: scale-color($danger, $lightness: 75%);
 
+/*
+// not supported by ie
 // css vars for external reuse
 :root {
   // asc sorted initial variables
@@ -136,6 +138,7 @@ $danger-25: scale-color($danger, $lightness: 75%);
   --link-50: #{$link-50};
   --link-25: #{$link-25};
 }
+*/
 
 // readability issues with original color
 .has-text-warning {
@@ -207,6 +210,10 @@ $danger-25: scale-color($danger, $lightness: 75%);
   background-color: $danger-25;
 }
 
+.has-background-warning-invert {
+  background-color: $warning-invert;
+}
+
 // tags
 .tag:not(body) {
   border: 1px solid transparent;
@@ -216,43 +223,46 @@ $danger-25: scale-color($danger, $lightness: 75%);
     background-color: $light;
   }
 
-  &.is-outline-black {
+  &.is-outlined {
+    background-color: $white;
+  }
+  &.is-black.is-outlined {
     color: $black;
     border-color: $black;
   }
-  &.is-outline-dark {
+  &.is-dark.is-outlined {
     color: $dark;
     border-color: $dark;
   }
-  &.is-outline-light {
+  &.is-light.is-outlined {
     color: $light;
     border-color: $light;
   }
-  &.is-outline-white {
+  &.is-white.is-outlined {
     color: $white;
     border-color: $white;
   }
-  &.is-outline-primary {
+  &.is-primary.is-outlined {
     color: $primary;
     border-color: $primary;
   }
-  &.is-outline-link {
+  &.is-link.is-outlined {
     color: $link;
     border-color: $link;
   }
-  &.is-outline-info {
+  &.is-info.is-outlined {
     color: $info;
     border-color: $info;
   }
-  &.is-outline-success {
+  &.is-success.is-outlined {
     color: $success;
     border-color: $success;
   }
-  &.is-outline-warning {
+  &.is-warning.is-outlined {
     color: $warning;
     border-color: $warning;
   }
-  &.is-outline-danger {
+  &.is-danger.is-outlined {
     color: $danger;
     border-color: $danger;
   }
@@ -351,226 +361,6 @@ $danger-25: scale-color($danger, $lightness: 75%);
 
   &.is-danger[disabled] {
     background-color: scale-color($danger, $lightness: 75%);
-  }
-
-  &.is-outline-black {
-    color: $black;
-    border-color: $black;
-  }
-
-  &.is-outline-black:hover,
-  &.is-outline-black.is-hovered {
-    color: scale-color($black, $lightness: -10%);
-    border-color: scale-color($black, $lightness: -10%);
-  }
-
-  &.is-outline-black:active,
-  &.is-outline-black.is-active {
-    color: scale-color($black, $lightness: -20%);
-    border-color: scale-color($black, $lightness: -20%);
-  }
-
-  &.is-outline-black[disabled] {
-    color: scale-color($black, $lightness: 75%);
-    border-color: scale-color($black, $lightness: 75%);
-  }
-
-  &.is-outline-dark {
-    color: $dark;
-    border-color: $dark;
-  }
-
-  &.is-outline-dark:hover,
-  &.is-outline-dark.is-hovered {
-    color: scale-color($dark, $lightness: -10%);
-    border-color: scale-color($dark, $lightness: -10%);
-  }
-
-  &.is-outline-dark:active,
-  &.is-outline-dark.is-active {
-    color: scale-color($dark, $lightness: -20%);
-    border-color: scale-color($dark, $lightness: -20%);
-  }
-
-  &.is-outline-dark[disabled] {
-    color: scale-color($dark, $lightness: 75%);
-    border-color: scale-color($dark, $lightness: 75%);
-  }
-
-  &.is-outline-light {
-    /*color: $light;*/
-    border-color: $light;
-  }
-
-  &.is-outline-light:hover,
-  &.is-outline-light.is-hovered {
-    /* color: scale-color($light, $lightness: -10%); */
-    border-color: scale-color($light, $lightness: -10%);
-  }
-
-  &.is-outline-light:active,
-  &.is-outline-light.is-active {
-    /* color: scale-color($light, $lightness: -20%); */
-    border-color: scale-color($light, $lightness: -20%);
-  }
-
-  &.is-outline-light[disabled] {
-    /* color: scale-color($light, $lightness: 75%); */
-    border-color: scale-color($light, $lightness: 75%);
-  }
-
-  &.is-outline-white {
-    /*color: $white;*/
-    border-color: $white;
-  }
-
-  &.is-outline-white:hover,
-  &.is-outline-white.is-hovered {
-    /* color: scale-color($white, $lightness: -10%); */
-    border-color: scale-color($white, $lightness: -10%);
-  }
-
-  &.is-outline-white:active,
-  &.is-outline-white.is-active {
-    /* color: scale-color($white, $lightness: -20%); */
-    border-color: scale-color($white, $lightness: -20%);
-  }
-
-  &.is-outline-white[disabled] {
-    /* color: scale-color($white, $lightness: 75%); */
-    border-color: scale-color($white, $lightness: 75%);
-  }
-
-  &.is-outline-primary {
-    color: $primary;
-    border-color: $primary;
-  }
-
-  &.is-outline-primary:hover,
-  &.is-outline-primary.is-hovered {
-    color: scale-color($primary, $lightness: -10%);
-    border-color: scale-color($primary, $lightness: -10%);
-  }
-
-  &.is-outline-primary:active,
-  &.is-outline-primary.is-active {
-    color: scale-color($primary, $lightness: -20%);
-    border-color: scale-color($primary, $lightness: -20%);
-  }
-
-  &.is-outline-primary[disabled] {
-    color: scale-color($primary, $lightness: 75%);
-    border-color: scale-color($primary, $lightness: 75%);
-  }
-
-  &.is-outline-link {
-    color: $link;
-    border-color: $link;
-  }
-
-  &.is-outline-link:hover,
-  &.is-outline-link.is-hovered {
-    color: scale-color($link, $lightness: -10%);
-    border-color: scale-color($link, $lightness: -10%);
-  }
-
-  &.is-outline-link:active,
-  &.is-outline-link.is-active {
-    color: scale-color($link, $lightness: -20%);
-    border-color: scale-color($link, $lightness: -20%);
-  }
-
-  &.is-outline-link[disabled] {
-    color: scale-color($link, $lightness: 75%);
-    border-color: scale-color($link, $lightness: 75%);
-  }
-
-  &.is-outline-info {
-    color: $info;
-    border-color: $info;
-  }
-
-  &.is-outline-info:hover,
-  &.is-outline-info.is-hovered {
-    color: scale-color($info, $lightness: -10%);
-    border-color: scale-color($info, $lightness: -10%);
-  }
-
-  &.is-outline-info:active,
-  &.is-outline-info.is-active {
-    color: scale-color($info, $lightness: -20%);
-    border-color: scale-color($info, $lightness: -20%);
-  }
-
-  &.is-outline-info[disabled] {
-    color: scale-color($info, $lightness: 75%);
-    border-color: scale-color($info, $lightness: 75%);
-  }
-
-  &.is-outline-success {
-    color: $success;
-    border-color: $success;
-  }
-
-  &.is-outline-success:hover,
-  &.is-outline-success.is-hovered {
-    color: scale-color($success, $lightness: -10%);
-    border-color: scale-color($success, $lightness: -10%);
-  }
-
-  &.is-outline-success:active,
-  &.is-outline-success.is-active {
-    color: scale-color($success, $lightness: -20%);
-    border-color: scale-color($success, $lightness: -20%);
-  }
-
-  &.is-outline-success[disabled] {
-    color: scale-color($success, $lightness: 75%);
-    border-color: scale-color($success, $lightness: 75%);
-  }
-
-  /*&.is-outline-warning {
-    color: $warning;
-    border-color: $warning;
-  }
-
-  &.is-outline-warning:hover,
-  &.is-outline-warning.is-hovered {
-    color: scale-color($warning, $lightness: -10%);
-    border-color: scale-color($warning, $lightness: -10%);
-  }
-
-  &.is-outline-warning:active,
-  &.is-outline-warning.is-active {
-    color: scale-color($warning, $lightness: -20%);
-    border-color: scale-color($warning, $lightness: -20%);
-  }
-
-  &.is-outline-warning[disabled] {
-    color: scale-color($warning, $lightness: 75%);
-    border-color: scale-color($warning, $lightness: 75%);
-  }*/
-
-  &.is-outline-danger {
-    color: $danger;
-    border-color: $danger;
-  }
-
-  &.is-outline-danger:hover,
-  &.is-outline-danger.is-hovered {
-    color: scale-color($danger, $lightness: -10%);
-    border-color: scale-color($danger, $lightness: -10%);
-  }
-
-  &.is-outline-danger:active,
-  &.is-outline-danger.is-active {
-    color: scale-color($danger, $lightness: -20%);
-    border-color: scale-color($danger, $lightness: -20%);
-  }
-
-  &.is-outline-danger[disabled] {
-    color: scale-color($danger, $lightness: 75%);
-    border-color: scale-color($danger, $lightness: 75%);
   }
 
   &.reduced-mobile {

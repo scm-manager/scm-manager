@@ -1,0 +1,189 @@
+{
+  "repository": {
+    "namespace": "Espacio de nombres",
+    "name": "Nombre",
+    "type": "Tipo",
+    "contact": "Contacto",
+    "description": "Descripción",
+    "creationDate": "Fecha de creación",
+    "lastModified": "Última modificación"
+  },
+  "validation": {
+    "namespace-invalid": "El espacio de nombres del repositorio es incorrecto",
+    "name-invalid": "El nombre del repositorio es incorrecto",
+    "contact-invalid": "El contacto debe ser una dirección de correo electrónico válida",
+    "branch": {
+      "nameInvalid": "El nombre de la rama es incorrecto"
+    }
+  },
+  "help": {
+    "namespaceHelpText": "El espacio de nombres del repositorio. Este nombre formará parte de la URL del repositorio.",
+    "nameHelpText": "El nombre del repositorio. Este nombre formará parte de la URL del repositorio.",
+    "typeHelpText": "El tipo del repositorio (Mercurial, Git or Subversion).",
+    "contactHelpText": "Dirección del correo electrónico de la persona responsable del repositorio.",
+    "descriptionHelpText": "Breve descripción del repositorio."
+  },
+  "repositoryRoot": {
+    "errorTitle": "Error",
+    "errorSubtitle": "Error de repositorio desconocido",
+    "menu": {
+      "navigationLabel": "Menú de repositorio",
+      "informationNavLink": "Información",
+      "branchesNavLink": "Ramas",
+      "historyNavLink": "Commits",
+      "sourcesNavLink": "Fuentes",
+      "settingsNavLink": "Ajustes",
+      "generalNavLink": "General",
+      "permissionsNavLink": "Permisos"
+    }
+  },
+  "overview": {
+    "title": "Repositorios",
+    "subtitle": "Visión general de los repositorios disponibles",
+    "noRepositories": "No se han encontrado repositorios.",
+    "createButton": "Crear repositorio"
+  },
+  "create": {
+    "title": "Crear repositorio",
+    "subtitle": "Crear un nuevo repositorio"
+  },
+  "branches": {
+    "overview": {
+      "title": "Vivisón general de todas las ramas",
+      "noBranches": "No se han encontrado ramas.",
+      "createButton": "Crear rama"
+    },
+    "table": {
+      "branches": "Ramas"
+    },
+    "create": {
+      "title": "Crear rama",
+      "source": "Rama padre",
+      "name": "Nombre",
+      "submit": "Crear rama"
+    }
+  },
+  "branch": {
+    "name": "Nombre:",
+    "commits": "Commits",
+    "sources": "Fuentes",
+    "defaultTag": "Por defecto"
+  },
+  "changesets": {
+    "errorTitle": "Error",
+    "errorSubtitle": "No se han podido recuperar los changesets",
+    "noChangesets": "No se han encontrado changesets para esta rama branch.",
+    "branchSelectorLabel": "Ramas"
+  },
+  "changeset": {
+    "description": "Descripción",
+    "summary": "El changeset {{id}} fue entregado {{time}}",
+    "shortSummary": "Entregado {{id}} {{time}}",
+    "tags": "Etiquetas",
+    "diffNotSupported": "La comparación de changesets no es soportada por el tipo de repositorio",
+    "author": {
+      "prefix": "Creado por",
+      "mailto": "Enviar correo electrónico a"
+    },
+    "buttons": {
+      "details": "Detalles",
+      "sources": "Fuentes"
+    }
+  },
+  "repositoryForm": {
+    "subtitle": "Editar repositorio",
+    "submit": "Guardar"
+  },
+  "sources": {
+    "file-tree": {
+      "name": "Nombre",
+      "length": "Longitud",
+      "lastModified": "Última modificación",
+      "description": "Descripción",
+      "branch": "Rama"
+    },
+    "content": {
+      "historyButton": "Historia",
+      "sourcesButton": "Fuentes",
+      "downloadButton": "Descargar",
+      "path": "Ruta",
+      "branch": "Rama",
+      "lastModified": "Última modificación",
+      "description": "Discripción",
+      "size": "tamaño"
+    },
+    "noSources": "No se han encontrado fuentes para esta rama."
+  },
+  "permission": {
+    "title": "Editar permisos",
+    "user": "Usuario",
+    "group": "Grupo",
+    "error-title": "Error",
+    "error-subtitle": "Error de permisos desconocido",
+    "name": "Usuario o grupo",
+    "role": "Rol",
+    "custom": "Personalizar",
+    "permissions": "Permisos",
+    "group-permission": "Permiso de grupo",
+    "user-permission": "Permiso de usuario",
+    "edit-permission": {
+      "delete-button": "Borrar",
+      "save-button": "Guardar cambios"
+    },
+    "advanced-button": {
+      "label": "Avanzado"
+    },
+    "delete-permission-button": {
+      "label": "Borrar",
+      "confirm-alert": {
+        "title": "Borrar permiso",
+        "message": "¿Realmente desea borrar el permiso?",
+        "submit": "Sí",
+        "cancel": "No"
+      }
+    },
+    "add-permission": {
+      "add-permission-heading": "Añadir nuevo permiso",
+      "submit-button": "Guardar",
+      "name-input-invalid": "¡No se permiten permisos vacíos! ¡Si el permiso no está vacío, su nombre es inválido o ya existe!"
+    },
+    "help": {
+      "groupPermissionHelpText": "Establece si un permiso es de grupo. Si no está marcado es un permiso de usuario.",
+      "nameHelpText": "Gestionar los permisos de un usuario o grupo.",
+      "roleHelpText": "READ = leer; WRITE = leer and escribir; OWNER = leer, escribir y también la capacidad de gestionar las propiedades y permisos. Si no hay nada seleccionado use el botón 'Avanzado' para ver los permisos en detalle.",
+      "permissionsHelpText": "Use esto para especificar su propio conjunto de permisos independientemente de los roles predefinidos."
+    },
+    "advanced": {
+      "dialog": {
+        "title": "Permisos avanzados",
+        "submit": "Guardar",
+        "abort": "Cancelar"
+      }
+    }
+  },
+  "deleteRepo": {
+    "subtitle": "Borrar repositorio",
+    "button": "Borrar",
+    "confirmAlert": {
+      "title": "Borrar repositorio",
+      "message": "¿Realmente desea borrar el repositorio?",
+      "submit": "sí",
+      "cancel": "No"
+    }
+  },
+  "diff": {
+    "changes": {
+      "add": "añadido",
+      "delete":  "borrado",
+      "modify": "modificado",
+      "rename": "renombrado",
+      "copy": "copiado"
+    },
+    "sideBySide": "dos columnas",
+    "combined": "combinado"
+  },
+  "fileUpload": {
+    "clickHere": "Haga click aquí para seleccionar su fichero",
+    "dragAndDrop": "Arrastre y suelte los ficheros aquí"
+  }
+}

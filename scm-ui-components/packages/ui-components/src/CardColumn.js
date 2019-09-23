@@ -48,6 +48,7 @@ type Props = {
   footerRight: React.Node,
   link?: string,
   action?: () => void,
+  className?: string,
 
   // context props
   classes: any
@@ -72,13 +73,14 @@ class CardColumn extends React.Component<Props> {
       contentRight,
       footerLeft,
       footerRight,
-      classes
+      classes,
+      className
     } = this.props;
     const link = this.createLink();
     return (
       <>
         {link}
-        <article className={classNames("media", classes.inner)}>
+        <article className={classNames("media", className, classes.inner)}>
           <figure className={classNames(classes.centerImage, "media-left")}>
             {avatar}
           </figure>

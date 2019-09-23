@@ -29,10 +29,12 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Optional;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static sonia.scm.plugin.PluginTestHelper.createInstalled;
 
 @ExtendWith(MockitoExtension.class)
 class InstalledPluginResourceTest {
@@ -64,7 +66,7 @@ class InstalledPluginResourceTest {
   @BeforeEach
   void prepareEnvironment() {
     dispatcher = MockDispatcherFactory.createDispatcher();
-    pluginRootResource = new PluginRootResource(installedPluginResourceProvider, availablePluginResourceProvider);
+    pluginRootResource = new PluginRootResource(installedPluginResourceProvider, null, null);
     when(installedPluginResourceProvider.get()).thenReturn(installedPluginResource);
     dispatcher.getRegistry().addSingletonResource(pluginRootResource);
   }
@@ -85,9 +87,9 @@ class InstalledPluginResourceTest {
 
     @Test
     void getInstalledPlugins() throws URISyntaxException, UnsupportedEncodingException {
-      InstalledPlugin installedPlugin = createPlugin();
+      InstalledPlugin installedPlugin = createInstalled("");
       when(pluginManager.getInstalled()).thenReturn(Collections.singletonList(installedPlugin));
-      when(collectionMapper.mapInstalled(Collections.singletonList(installedPlugin))).thenReturn(new MockedResultDto());
+      when(collectionMapper.mapInstalled(Collections.singletonList(installedPlugin), Collections.emptyList())).thenReturn(new MockedResultDto());
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/installed");
       request.accept(VndMediaType.PLUGIN_COLLECTION);
@@ -104,13 +106,13 @@ class InstalledPluginResourceTest {
       PluginInformation pluginInformation = new PluginInformation();
       pluginInformation.setVersion("2.0.0");
       pluginInformation.setName("pluginName");
-      InstalledPlugin installedPlugin = createPlugin(pluginInformation);
+      InstalledPlugin installedPlugin = createInstalled(pluginInformation);
 
       when(pluginManager.getInstalled("pluginName")).thenReturn(Optional.of(installedPlugin));
 
       PluginDto pluginDto = new PluginDto();
       pluginDto.setName("pluginName");
-      when(mapper.mapInstalled(installedPlugin)).thenReturn(pluginDto);
+      when(mapper.mapInstalled(installedPlugin, emptyList())).thenReturn(pluginDto);
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/installed/pluginName");
       request.accept(VndMediaType.PLUGIN);
@@ -121,18 +123,6 @@ class InstalledPluginResourceTest {
       assertThat(HttpServletResponse.SC_OK).isEqualTo(response.getStatus());
       assertThat(response.getContentAsString()).contains("\"name\":\"pluginName\"");
     }
-  }
-
-  private InstalledPlugin createPlugin() {
-    return createPlugin(new PluginInformation());
-  }
-
-  private InstalledPlugin createPlugin(PluginInformation information) {
-    InstalledPlugin plugin = mock(InstalledPlugin.class);
-    InstalledPluginDescriptor descriptor = mock(InstalledPluginDescriptor.class);
-    lenient().when(descriptor.getInformation()).thenReturn(information);
-    lenient().when(plugin.getDescriptor()).thenReturn(descriptor);
-    return plugin;
   }
 
   @Nested
