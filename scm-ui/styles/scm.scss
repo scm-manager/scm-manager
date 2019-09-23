@@ -96,6 +96,8 @@ $danger-75: scale-color($danger, $lightness: 25%);
 $danger-50: scale-color($danger, $lightness: 50%);
 $danger-25: scale-color($danger, $lightness: 75%);
 
+/*
+// not supported by ie
 // css vars for external reuse
 :root {
   // asc sorted initial variables
@@ -136,6 +138,7 @@ $danger-25: scale-color($danger, $lightness: 75%);
   --link-50: #{$link-50};
   --link-25: #{$link-25};
 }
+*/
 
 // readability issues with original color
 .has-text-warning {
