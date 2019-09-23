@@ -567,10 +567,6 @@ ul.is-separated {
   .panel-block {
     display: block;
     border: none;
-
-    & .inline-comment + .inline-comment {
-      border-top: 1px solid $border,
-    }
   }
 
   .panel-footer {
