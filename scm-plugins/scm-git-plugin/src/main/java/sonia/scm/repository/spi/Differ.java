@@ -10,11 +10,15 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
+import sonia.scm.BadRequestException;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.util.Util;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.Collections.emptyList;
 
 final class Differ implements AutoCloseable {
 
@@ -55,7 +59,9 @@ final class Differ implements AutoCloseable {
       if (!Strings.isNullOrEmpty(request.getAncestorChangeset()))
       {
         ObjectId otherRevision = repository.resolve(request.getAncestorChangeset());
-        ObjectId ancestorId = computeCommonAncestor(repository, revision, otherRevision);
+        ObjectId ancestorId =
+          computeCommonAncestor(repository, revision, otherRevision)
+            .orElseThrow(NoCommonHistoryException::new);
         RevTree tree = walk.parseCommit(ancestorId).getTree();
         treeWalk.addTree(tree);
       }
@@ -82,7 +88,7 @@ final class Differ implements AutoCloseable {
     return new Differ(commit, walk, treeWalk);
   }
 
-  private static ObjectId computeCommonAncestor(org.eclipse.jgit.lib.Repository repository, ObjectId revision1, ObjectId revision2) throws IOException {
+  private static Optional<ObjectId> computeCommonAncestor(org.eclipse.jgit.lib.Repository repository, ObjectId revision1, ObjectId revision2) throws IOException {
     return GitUtil.computeCommonAncestor(repository, revision1, revision2);
   }
 
@@ -113,6 +119,18 @@ final class Differ implements AutoCloseable {
 
     public List<DiffEntry> getEntries() {
       return entries;
+    }
+  }
+
+  private static class NoCommonHistoryException extends BadRequestException {
+
+    private NoCommonHistoryException() {
+      super(emptyList(), "no common history");
+    }
+
+    @Override
+    public String getCode() {
+      return "4iRct4avG1";
     }
   }
 }

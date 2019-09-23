@@ -175,6 +175,10 @@
     "40RaYIeeR1": {
       "displayName": "Es wurden keine Änderungen durchgeführt",
       "description": "Das Repository wurde nicht verändert. Daher konnte kein neuer Commit erzeugt werden."
+    },
+    "4iRct4avG1": {
+      "displayName": "Die Revisionen haben keinen gemeinsamen Ursprung",
+      "description": "Die Historie der Revisionen hat keinen gemeinsamen Urspung und kann somit auch nicht gegen einen solchen verglichen werden."
     }
   },
   "namespaceStrategies": {

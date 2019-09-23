@@ -175,6 +175,10 @@
     "40RaYIeeR1": {
       "displayName": "No changes were made",
       "description": "No changes were made to the files of the repository. Therefor no new commit could be created."
+    },
+    "4iRct4avG1": {
+      "displayName": "The revisions have unrelated histories",
+      "description": "The revisions have unrelated histories. Therefor there is no common commit to compare with."
     }
   },
   "namespaceStrategies": {

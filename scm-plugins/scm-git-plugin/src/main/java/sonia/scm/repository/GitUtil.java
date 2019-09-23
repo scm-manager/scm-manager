@@ -70,6 +70,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -722,12 +723,13 @@ public final class GitUtil
   /**
    * Computes the first common ancestor of two revisions, aka merge base.
    */
-  public static ObjectId computeCommonAncestor(org.eclipse.jgit.lib.Repository repository, ObjectId revision1, ObjectId revision2) throws IOException {
+  public static Optional<ObjectId> computeCommonAncestor(org.eclipse.jgit.lib.Repository repository, ObjectId revision1, ObjectId revision2) throws IOException {
     try (RevWalk mergeBaseWalk = new RevWalk(repository)) {
       mergeBaseWalk.setRevFilter(RevFilter.MERGE_BASE);
       mergeBaseWalk.markStart(mergeBaseWalk.lookupCommit(revision1));
       mergeBaseWalk.markStart(mergeBaseWalk.parseCommit(revision2));
-      return mergeBaseWalk.next().getId();
+      RevCommit commonAncestor = mergeBaseWalk.next();
+      return ofNullable(commonAncestor).map(RevCommit::getId);
     }
   }
 
