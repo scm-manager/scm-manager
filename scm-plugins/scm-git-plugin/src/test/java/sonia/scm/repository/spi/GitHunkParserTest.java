@@ -68,6 +68,17 @@ class GitHunkParserTest {
     " a\n" +
     "~illegal line\n";
 
+  private static final String NO_NEWLINE_DIFF = "diff --git a/.editorconfig b/.editorconfig\n" +
+    "index ea2a3ba..2f02f32 100644\n" +
+    "--- a/.editorconfig\n" +
+    "+++ b/.editorconfig\n" +
+    "@@ -10,3 +10,4 @@\n" +
+    " indent_style = space\n" +
+    " indent_size = 2\n" +
+    " charset = utf-8\n" +
+    "+added line\n" +
+    "\\ No newline at end of file\n";
+
   @Test
   void shouldParseHunks() {
     List<Hunk> hunks = new GitHunkParser().parse(DIFF_001);
@@ -125,6 +136,27 @@ class GitHunkParserTest {
   @Test
   void shouldFailForIllegalLine() {
     assertThrows(IllegalStateException.class, () -> new GitHunkParser().parse(ILLEGAL_DIFF));
+  }
+
+  @Test
+  void shouldIgnoreNoNewlineLine() {
+    List<Hunk> hunks = new GitHunkParser().parse(NO_NEWLINE_DIFF);
+
+    Hunk hunk = hunks.get(0);
+
+    Iterator<DiffLine> lines = hunk.iterator();
+
+    DiffLine line1 = lines.next();
+    assertThat(line1.getOldLineNumber()).hasValue(10);
+    assertThat(line1.getNewLineNumber()).hasValue(10);
+    assertThat(line1.getContent()).isEqualTo("indent_style = space");
+
+    lines.next();
+    lines.next();
+    DiffLine lastLine = lines.next();
+    assertThat(lastLine.getOldLineNumber()).isEmpty();
+    assertThat(lastLine.getNewLineNumber()).hasValue(13);
+    assertThat(lastLine.getContent()).isEqualTo("added line");
   }
 
   private void assertHunk(Hunk hunk, int oldStart, int oldLineCount, int newStart, int newLineCount) {
