@@ -1,7 +1,6 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import RemoveEntryOfTableButton from "../buttons/RemoveEntryOfTableButton";
 import TagGroup from "../TagGroup";
 
 type Props = {
@@ -10,7 +9,7 @@ type Props = {
   t: string => string
 };
 
-class MemberNameTable extends React.Component<Props> {
+class MemberNameTagGroup extends React.Component<Props> {
   render() {
     const { members, t } = this.props;
 
@@ -29,4 +28,4 @@ class MemberNameTable extends React.Component<Props> {
   };
 }
 
-export default translate("groups")(MemberNameTable);
+export default translate("groups")(MemberNameTagGroup);
