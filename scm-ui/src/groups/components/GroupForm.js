@@ -82,10 +82,6 @@ class GroupForm extends React.Component<Props, State> {
     const { loadUserSuggestions, t } = this.props;
     return (
       <>
-        <LabelWithHelpIcon
-          label={t("group.members")}
-          helpText={t("groupForm.help.memberHelpText")}
-        />
         <MemberNameTable
           members={group.members}
           memberListChanged={this.memberListChanged}
