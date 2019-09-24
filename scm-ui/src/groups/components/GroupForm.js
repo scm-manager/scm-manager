@@ -4,8 +4,7 @@ import { translate } from "react-i18next";
 import {
   Subtitle,
   AutocompleteAddEntryToTableField,
-  LabelWithHelpIcon,
-  MemberNameTable,
+  MemberNameTagGroup,
   InputField,
   SubmitButton,
   Textarea,
@@ -82,7 +81,7 @@ class GroupForm extends React.Component<Props, State> {
     const { loadUserSuggestions, t } = this.props;
     return (
       <>
-        <MemberNameTable
+        <MemberNameTagGroup
           members={group.members}
           memberListChanged={this.memberListChanged}
         />
@@ -90,7 +89,6 @@ class GroupForm extends React.Component<Props, State> {
           addEntry={this.addMember}
           disabled={false}
           buttonLabel={t("add-member-button.label")}
-          fieldLabel={t("add-member-textfield.label")}
           errorMessage={t("add-member-textfield.error")}
           loadSuggestions={loadUserSuggestions}
           placeholder={t("add-member-autocomplete.placeholder")}

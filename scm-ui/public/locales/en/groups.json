@@ -38,15 +38,11 @@
   "add-member-button": {
     "label": "Add Member"
   },
-  "remove-member-button": {
-    "label": "Remove Member"
-  },
   "add-member-textfield": {
-    "label": "Add Member",
     "error": "Invalid member name"
   },
   "add-member-autocomplete": {
-    "placeholder": "Enter Member",
+    "placeholder": "Add Member",
     "loading": "Loading...",
     "no-options": "No suggestion available"
   },
