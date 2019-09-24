@@ -50,6 +50,9 @@ const styles = {
     /* prevent following content from moving down */
     "& > .diff-gutter:empty:hover::after": {
       fontSize: "0.7rem"
+    },
+    "& .diff-line": {
+      fontSize: "0.75rem"
     }
   }
 };
@@ -57,6 +60,7 @@ const styles = {
 type Props = DiffObjectProps & {
   file: File,
   collapsible: true,
+
   // context props
   classes: any,
   t: string => string
@@ -230,7 +234,7 @@ class DiffFile extends React.Component<Props, State> {
         : null;
       icon = "fa fa-angle-down";
       body = (
-        <div className="panel-block is-paddingless is-size-7">
+        <div className="panel-block is-paddingless">
           {fileAnnotations}
           <DiffComponent className={classes.diff} viewType={viewType}>
             {file.hunks.map(this.renderHunk)}
