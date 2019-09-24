@@ -171,6 +171,6 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitBrowseCommand createCommand() {
-    return new GitBrowseCommand(createContext(), repository);
+    return new GitBrowseCommand(createContext(), repository, null);
   }
 }

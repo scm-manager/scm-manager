@@ -58,6 +58,7 @@ import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SubRepository;
 import sonia.scm.util.Util;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -86,18 +87,20 @@ public class GitBrowseCommand extends AbstractGitCommand
    */
   private static final Logger logger =
     LoggerFactory.getLogger(GitBrowseCommand.class);
+  private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
-   *
-   * @param context
+   *  @param context
    * @param repository
+   * @param lfsBlobStoreFactory
    */
-  public GitBrowseCommand(GitContext context, Repository repository)
+  public GitBrowseCommand(GitContext context, Repository repository, LfsBlobStoreFactory lfsBlobStoreFactory)
   {
     super(context, repository);
+    this.lfsBlobStoreFactory = lfsBlobStoreFactory;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -375,7 +378,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     Map<String, SubRepository> subRepositories;
     try ( ByteArrayOutputStream baos = new ByteArrayOutputStream() )
     {
-      new GitCatCommand(context, repository).getContent(repo, revision,
+      new GitCatCommand(context, repository, lfsBlobStoreFactory).getContent(repo, revision,
         PATH_MODULES, baos);
       subRepositories = GitSubModuleParser.parse(baos.toString());
     }
