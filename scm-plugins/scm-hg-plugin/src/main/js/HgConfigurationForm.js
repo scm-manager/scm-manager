@@ -5,15 +5,15 @@ import { translate } from "react-i18next";
 import { InputField, Checkbox } from "@scm-manager/ui-components";
 
 type Configuration = {
-  "hgBinary": string,
-  "pythonBinary": string,
-  "pythonPath"?: string,
-  "encoding": string,
-  "useOptimizedBytecode": boolean,
-  "showRevisionInId": boolean,
-  "disableHookSSLValidation": boolean,
-  "enableHttpPostArgs": boolean,
-  "_links": Links
+  hgBinary: string,
+  pythonBinary: string,
+  pythonPath?: string,
+  encoding: string,
+  useOptimizedBytecode: boolean,
+  showRevisionInId: boolean,
+  disableHookSSLValidation: boolean,
+  enableHttpPostArgs: boolean,
+  _links: Links
 };
 
 type Props = {
@@ -23,29 +23,26 @@ type Props = {
   onConfigurationChange: (Configuration, boolean) => void,
 
   // context props
-  t: (string) => string
-}
+  t: string => string
+};
 
 type State = Configuration & {
   validationErrors: string[]
 };
 
 class HgConfigurationForm extends React.Component<Props, State> {
-
   constructor(props: Props) {
     super(props);
     this.state = { ...props.initialConfiguration, validationErrors: [] };
   }
 
   updateValidationStatus = () => {
-    const requiredFields = [
-      "hgBinary", "pythonBinary", "encoding"
-    ];
+    const requiredFields = ["hgBinary", "pythonBinary", "encoding"];
 
     const validationErrors = [];
     for (let field of requiredFields) {
       if (!this.state[field]) {
-        validationErrors.push( field );
+        validationErrors.push(field);
       }
     }
 
@@ -56,58 +53,73 @@ class HgConfigurationForm extends React.Component<Props, State> {
     return validationErrors.length === 0;
   };
 
-
   hasValidationError = (name: string) => {
     return this.state.validationErrors.indexOf(name) >= 0;
   };
 
   handleChange = (value: any, name: string) => {
-    this.setState({
-      [name]: value
-    }, () => this.props.onConfigurationChange(this.state, this.updateValidationStatus()));
+    this.setState(
+      {
+        [name]: value
+      },
+      () =>
+        this.props.onConfigurationChange(
+          this.state,
+          this.updateValidationStatus()
+        )
+    );
   };
 
   inputField = (name: string) => {
     const { readOnly, t } = this.props;
-    return <InputField
-      name={ name }
-      label={t("scm-hg-plugin.config." + name)}
-      helpText={t("scm-hg-plugin.config." + name + "HelpText")}
-      value={this.state[name]}
-      onChange={this.handleChange}
-      validationError={this.hasValidationError(name)}
-      errorMessage={t("scm-hg-plugin.config.required")}
-      disabled={readOnly}
-    />;
+    return (
+      <div className="column is-half">
+        <InputField
+          name={name}
+          label={t("scm-hg-plugin.config." + name)}
+          helpText={t("scm-hg-plugin.config." + name + "HelpText")}
+          value={this.state[name]}
+          onChange={this.handleChange}
+          validationError={this.hasValidationError(name)}
+          errorMessage={t("scm-hg-plugin.config.required")}
+          disabled={readOnly}
+        />
+      </div>
+    );
   };
 
   checkbox = (name: string) => {
     const { readOnly, t } = this.props;
-    return <Checkbox
-      name={ name }
-      label={t("scm-hg-plugin.config." + name)}
-      helpText={t("scm-hg-plugin.config." + name + "HelpText")}
-      checked={this.state[name]}
-      onChange={this.handleChange}
-      disabled={readOnly}
-    />;
+    return (
+      <Checkbox
+        name={name}
+        label={t("scm-hg-plugin.config." + name)}
+        helpText={t("scm-hg-plugin.config." + name + "HelpText")}
+        checked={this.state[name]}
+        onChange={this.handleChange}
+        disabled={readOnly}
+      />
+    );
   };
 
   render() {
     return (
-      <>
+      <div className="columns is-multiline">
         {this.inputField("hgBinary")}
         {this.inputField("pythonBinary")}
         {this.inputField("pythonPath")}
         {this.inputField("encoding")}
-        {this.checkbox("useOptimizedBytecode")}
-        {this.checkbox("showRevisionInId")}
-        {this.checkbox("disableHookSSLValidation")}
-        {this.checkbox("enableHttpPostArgs")}
-      </>
+        <div className="column is-half">
+          {this.checkbox("useOptimizedBytecode")}
+          {this.checkbox("showRevisionInId")}
+        </div>
+        <div className="column is-half">
+          {this.checkbox("disableHookSSLValidation")}
+          {this.checkbox("enableHttpPostArgs")}
+        </div>
+      </div>
     );
   }
-
 }
 
 export default translate("plugins")(HgConfigurationForm);
