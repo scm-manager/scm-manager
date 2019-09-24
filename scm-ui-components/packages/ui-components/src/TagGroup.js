@@ -39,14 +39,14 @@ class TagGroup extends React.Component<Props> {
         ) : (
           ""
         )}
-        {items.map(item => {
+        {items.map((item, key) => {
           return (
-            <div className="control">
+            <div className="control" key={key}>
               <div className="tags has-addons">
                 <Tag
                   color="info"
                   label={item}
-                  onRemove={this.removeEntry}
+                  onRemove={() => this.removeEntry(item)}
                 />
               </div>
             </div>

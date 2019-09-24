@@ -19,7 +19,7 @@ class MemberNameTable extends React.Component<Props> {
         items={members}
         label={t("group.members")}
         helpText={t("groupForm.help.memberHelpText")}
-        onRemove={() => this.removeEntry}
+        onRemove={this.removeEntry}
       />
     );
   }
