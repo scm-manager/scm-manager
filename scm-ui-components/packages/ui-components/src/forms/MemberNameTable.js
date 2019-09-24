@@ -2,44 +2,30 @@
 import React from "react";
 import { translate } from "react-i18next";
 import RemoveEntryOfTableButton from "../buttons/RemoveEntryOfTableButton";
+import TagGroup from "../TagGroup";
 
 type Props = {
   members: string[],
-  t: string => string,
-  memberListChanged: (string[]) => void
+  memberListChanged: (string[]) => void,
+  t: string => string
 };
 
-type State = {};
-
-class MemberNameTable extends React.Component<Props, State> {
+class MemberNameTable extends React.Component<Props> {
   render() {
-    const { t } = this.props;
+    const { members, t } = this.props;
+
     return (
-      <table className="table is-hoverable is-fullwidth">
-        <tbody>
-          {this.props.members.map(member => {
-            return (
-              <tr key={member}>
-                <td key={member}>{member}</td>
-                <td>
-                  <RemoveEntryOfTableButton
-                    entryname={member}
-                    removeEntry={this.removeEntry}
-                    disabled={false}
-                    label={t("remove-member-button.label")}
-                  />
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <TagGroup
+        items={members}
+        label={t("group.members")}
+        helpText={t("groupForm.help.memberHelpText")}
+        onRemove={() => this.removeEntry}
+      />
     );
   }
 
-  removeEntry = (membername: string) => {
-    const newMembers = this.props.members.filter(name => name !== membername);
-    this.props.memberListChanged(newMembers);
+  removeEntry = (member: string[]) => {
+    this.props.memberListChanged(member);
   };
 }
 

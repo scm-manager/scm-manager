@@ -1,8 +1,9 @@
 //@flow
 import React from "react";
 import injectSheet from "react-jss";
-import Tooltip from './Tooltip';
-import HelpIcon from './HelpIcon';
+import classNames from "classnames";
+import Tooltip from "./Tooltip";
+import HelpIcon from "./HelpIcon";
 
 const styles = {
   tooltip: {
@@ -14,21 +15,22 @@ const styles = {
 
 type Props = {
   message: string,
+  className?: string,
   classes: any
-}
+};
 
 class Help extends React.Component<Props> {
-
   render() {
-    const { message, classes } = this.props;
+    const { message, className, classes } = this.props;
     return (
-      <Tooltip className={classes.tooltip} message={message}>
+      <Tooltip
+        className={classNames(classes.tooltip, className)}
+        message={message}
+      >
         <HelpIcon />
       </Tooltip>
     );
   }
-
 }
 
 export default injectSheet(styles)(Help);
-

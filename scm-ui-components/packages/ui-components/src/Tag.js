@@ -8,7 +8,8 @@ type Props = {
   icon?: string,
   label: string,
   title?: string,
-  onClick?: () => void
+  onClick?: () => void,
+  onRemove?: () => void
 };
 
 class Tag extends React.Component<Props> {
@@ -17,25 +18,41 @@ class Tag extends React.Component<Props> {
   };
 
   render() {
-    const { className, color, icon, label, title, onClick } = this.props;
+    const {
+      className,
+      color,
+      icon,
+      label,
+      title,
+      onClick,
+      onRemove
+    } = this.props;
     let showIcon = null;
     if (icon) {
       showIcon = (
         <>
-          <i className={classNames("fas", `fa-${icon}`)} />&nbsp;
+          <i className={classNames("fas", `fa-${icon}`)} />
+          &nbsp;
         </>
       );
     }
+    let showDelete = null;
+    if (onRemove) {
+      showDelete = <a className="tag is-delete" onClick={onRemove} />;
+    }
 
     return (
-      <span
-        className={classNames("tag", `is-${color}`, className)}
-        title={title}
-        onClick={onClick}
-      >
-        {showIcon}
-        {label}
-      </span>
+      <>
+        <span
+          className={classNames("tag", `is-${color}`, className)}
+          title={title}
+          onClick={onClick}
+        >
+          {showIcon}
+          {label}
+        </span>
+        {showDelete}
+      </>
     );
   }
 }

@@ -24,6 +24,7 @@ export { default as ProtectedRoute } from "./ProtectedRoute.js";
 export { default as Help } from "./Help";
 export { default as HelpIcon } from "./HelpIcon";
 export { default as Tag } from "./Tag";
+export { default as TagGroup } from "./TagGroup";
 export { default as Tooltip } from "./Tooltip";
 // TODO do we need this? getPageFromMatch is already exported by urls
 export { getPageFromMatch } from "./urls";
