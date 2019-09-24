@@ -44,6 +44,7 @@ const styles = {
     marginLeft: ".75rem"
   },
   diff: {
+    /* column sizing */
     "& > colgroup .diff-gutter-col": {
       width: "3.25rem"
     },
@@ -51,8 +52,17 @@ const styles = {
     "& > .diff-gutter:empty:hover::after": {
       fontSize: "0.7rem"
     },
+    /* smaller font size for code */
     "& .diff-line": {
       fontSize: "0.75rem"
+    },
+    /* comment padding for sideBySide view */
+    "&.split .diff-widget-content .is-indented-line": {
+      paddingLeft: "3.25rem"
+    },
+    /* comment padding for combined view */
+    "&.unified .diff-widget-content .is-indented-line": {
+      paddingLeft: "6.5rem"
     }
   }
 };
@@ -199,7 +209,11 @@ class DiffFile extends React.Component<Props, State> {
       value = file.type;
     }
     const color =
-      value === "added" ? "success is-outlined" : value === "deleted" ? "danger is-outlined" : "info is-outlined";
+      value === "added"
+        ? "success is-outlined"
+        : value === "deleted"
+          ? "danger is-outlined"
+          : "info is-outlined";
 
     return (
       <Tag
@@ -236,7 +250,10 @@ class DiffFile extends React.Component<Props, State> {
       body = (
         <div className="panel-block is-paddingless">
           {fileAnnotations}
-          <DiffComponent className={classes.diff} viewType={viewType}>
+          <DiffComponent
+            className={classNames(viewType, classes.diff)}
+            viewType={viewType}
+          >
             {file.hunks.map(this.renderHunk)}
           </DiffComponent>
         </div>
