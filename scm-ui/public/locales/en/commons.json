@@ -24,6 +24,9 @@
       "subtitle": "Unknown error occurred"
     }
   },
+  "breadcrumb": {
+    "home": "Main page"
+  },
   "errorNotification": {
     "prefix": "Error",
     "loginLink": "You can login here again.",
