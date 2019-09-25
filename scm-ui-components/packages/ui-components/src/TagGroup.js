@@ -44,7 +44,7 @@ class TagGroup extends React.Component<Props> {
             <div className="control" key={key}>
               <div className="tags has-addons">
                 <Tag
-                  color="info"
+                  color="info is-outlined"
                   label={item}
                   onRemove={() => this.removeEntry(item)}
                 />
