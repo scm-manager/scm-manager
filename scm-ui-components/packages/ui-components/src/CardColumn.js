@@ -21,12 +21,12 @@ const styles = {
   flexFullHeight: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     alignSelf: "stretch"
   },
   footer: {
     display: "flex",
-    paddingBottom: "1.5rem",
+    paddingBottom: "1rem",
   },
   topPart: {
     display: "flex"
