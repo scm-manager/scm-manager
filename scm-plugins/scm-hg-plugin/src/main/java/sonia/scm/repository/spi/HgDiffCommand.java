@@ -72,19 +72,19 @@ public class HgDiffCommand extends AbstractCommand implements DiffCommand
   @Override
   public DiffCommandBuilder.OutputStreamConsumer getDiffResult(DiffCommandRequest request)
   {
-    com.aragost.javahg.Repository hgRepo = open();
-
-    HgDiffInternalCommand cmd = HgDiffInternalCommand.on(hgRepo);
-    DiffFormat format = request.getFormat();
-
-    if (format == DiffFormat.GIT)
-    {
-      cmd.git();
-    }
-
-    cmd.change(HgUtil.getRevision(request.getRevision()));
-
     return output -> {
+      com.aragost.javahg.Repository hgRepo = open();
+
+      HgDiffInternalCommand cmd = HgDiffInternalCommand.on(hgRepo);
+      DiffFormat format = request.getFormat();
+
+      if (format == DiffFormat.GIT)
+      {
+        cmd.git();
+      }
+
+      cmd.change(HgUtil.getRevision(request.getRevision()));
+
       InputStream inputStream = null;
 
       try {
