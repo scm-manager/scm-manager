@@ -162,9 +162,9 @@ class UserForm extends React.Component<Props, State> {
               />
             </div>
           </div>
+          {passwordChangeField}
           <div className="columns">
             <div className="column">
-              {passwordChangeField}
               <Checkbox
                 label={t("user.active")}
                 onChange={this.handleActiveChange}

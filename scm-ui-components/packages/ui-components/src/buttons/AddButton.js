@@ -4,7 +4,7 @@ import Button, { type ButtonProps } from "./Button";
 
 class AddButton extends React.Component<ButtonProps> {
   render() {
-    return <Button color="default" {...this.props} />;
+    return <Button color="default" icon="plus" {...this.props} />;
   }
 }
 

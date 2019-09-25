@@ -24,6 +24,9 @@
       "subtitle": "Unknown error occurred"
     }
   },
+  "breadcrumb": {
+    "home": "Main page"
+  },
   "errorNotification": {
     "prefix": "Error",
     "loginLink": "You can login here again.",
@@ -77,8 +80,6 @@
   "password": {
     "label": "Password",
     "newPassword": "New password",
-    "passwordHelpText": "Plain text password of the user",
-    "passwordConfirmHelpText": "Repeat the password for confirmation",
     "currentPassword": "Current password",
     "currentPasswordHelpText": "The password currently in use",
     "confirmPassword": "Confirm password",
