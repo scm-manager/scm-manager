@@ -2,6 +2,7 @@
 
 export { default as AddEntryToTableField } from "./AddEntryToTableField.js";
 export { default as AutocompleteAddEntryToTableField } from "./AutocompleteAddEntryToTableField.js";
+export { default as TagGroup } from "./TagGroup.js";
 export { default as MemberNameTagGroup } from "./MemberNameTagGroup.js";
 export { default as Checkbox } from "./Checkbox.js";
 export { default as Radio } from "./Radio.js";

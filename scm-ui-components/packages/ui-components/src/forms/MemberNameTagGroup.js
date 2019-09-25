@@ -1,7 +1,8 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import TagGroup from "../TagGroup";
+import type { DisplayedUser } from "@scm-manager/ui-types";
+import TagGroup from "./TagGroup";
 
 type Props = {
   members: string[],
@@ -12,10 +13,12 @@ type Props = {
 class MemberNameTagGroup extends React.Component<Props> {
   render() {
     const { members, t } = this.props;
-
+    const membersExtended = members.map(id => {
+      return { id, displayName: id, mail: "" };
+    });
     return (
       <TagGroup
-        items={members}
+        items={membersExtended}
         label={t("group.members")}
         helpText={t("groupForm.help.memberHelpText")}
         onRemove={this.removeEntry}
@@ -23,8 +26,11 @@ class MemberNameTagGroup extends React.Component<Props> {
     );
   }
 
-  removeEntry = (member: string[]) => {
-    this.props.memberListChanged(member);
+  removeEntry = (membersExtended: DisplayedUser[]) => {
+    const members = membersExtended.map(function(item) {
+      return item["id"];
+    });
+    this.props.memberListChanged(members);
   };
 }
 

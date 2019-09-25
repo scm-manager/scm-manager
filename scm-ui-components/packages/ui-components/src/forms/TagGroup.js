@@ -1,13 +1,14 @@
 //@flow
 import * as React from "react";
 import injectSheet from "react-jss";
-import { Help, Tag } from "./index";
+import type { DisplayedUser } from "@scm-manager/ui-types";
+import { Help, Tag } from "../index";
 
 type Props = {
-  items: string[],
+  items: DisplayedUser[],
   label: string,
   helpText?: string,
-  onRemove: (string[]) => void,
+  onRemove: (DisplayedUser[]) => void,
 
   // context props
   classes: Object
@@ -45,7 +46,7 @@ class TagGroup extends React.Component<Props> {
               <div className="tags has-addons">
                 <Tag
                   color="info is-outlined"
-                  label={item}
+                  label={item.displayName}
                   onRemove={() => this.removeEntry(item)}
                 />
               </div>
@@ -56,7 +57,7 @@ class TagGroup extends React.Component<Props> {
     );
   }
 
-  removeEntry = (item: string) => {
+  removeEntry = item => {
     const newItems = this.props.items.filter(name => name !== item);
     this.props.onRemove(newItems);
   };
