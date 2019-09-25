@@ -21,7 +21,8 @@ const styles = {
     marginTop: "0.5em"
   },
   content: {
-    marginLeft: "1.5em"
+    marginLeft: "1.5em",
+    minHeight: "10.5rem"
   },
   link: {
     display: "block",
