@@ -23,6 +23,9 @@
       "subtitle": "Ein unbekannter Fehler ist aufgetreten."
     }
   },
+  "breadcrumb": {
+    "home": "Hauptseite"
+  },
   "errorNotification": {
     "prefix": "Fehler",
     "loginLink": "Erneute Anmeldung",
