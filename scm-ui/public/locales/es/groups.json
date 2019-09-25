@@ -38,15 +38,11 @@
   "add-member-button": {
     "label": "Añadir miembro"
   },
-  "remove-member-button": {
-    "label": "Eliminar miembro"
-  },
   "add-member-textfield": {
-    "label": "Añadir miembro",
     "error": "El nombre del miembro es incorrecto"
   },
   "add-member-autocomplete": {
-    "placeholder": "Introducir el nombre del miembro",
+    "placeholder": "Añadir miembro",
     "loading": "Cargando...",
     "no-options": "No hay sugerencias disponibles"
   },

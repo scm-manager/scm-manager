@@ -110,30 +110,42 @@ class ChangeUserPassword extends React.Component<Props, State> {
     return (
       <form onSubmit={this.submit}>
         {message}
-        <InputField
-          label={t("password.currentPassword")}
-          type="password"
-          onChange={oldPassword =>
-            this.setState({ ...this.state, oldPassword })
-          }
-          value={this.state.oldPassword ? this.state.oldPassword : ""}
-          helpText={t("password.currentPasswordHelpText")}
-        />
+        <div className="columns">
+          <div className="column">
+            <InputField
+              label={t("password.currentPassword")}
+              type="password"
+              onChange={oldPassword =>
+                this.setState({ ...this.state, oldPassword })
+              }
+              value={this.state.oldPassword ? this.state.oldPassword : ""}
+              helpText={t("password.currentPasswordHelpText")}
+            />
+          </div>
+        </div>
         <PasswordConfirmation
           passwordChanged={this.passwordChanged}
           key={this.state.passwordChanged ? "changed" : "unchanged"}
         />
-        <SubmitButton
-          disabled={!this.isValid()}
-          loading={loading}
-          label={t("password.submit")}
-        />
+        <div className="columns">
+          <div className="column">
+            <SubmitButton
+              disabled={!this.isValid()}
+              loading={loading}
+              label={t("password.submit")}
+            />
+          </div>
+        </div>
       </form>
     );
   }
 
   passwordChanged = (password: string, passwordValid: boolean) => {
-    this.setState({ ...this.state, password, passwordValid: (!!password && passwordValid) });
+    this.setState({
+      ...this.state,
+      password,
+      passwordValid: !!password && passwordValid
+    });
   };
 
   onClose = () => {

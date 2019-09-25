@@ -38,15 +38,11 @@
   "add-member-button": {
     "label": "Mitglied hinzufügen"
   },
-  "remove-member-button": {
-    "label": "Mitglied entfernen"
-  },
   "add-member-textfield": {
-    "label": "Mitglied hinzufügen",
     "error": "Ungültiger Name für Mitglied"
   },
   "add-member-autocomplete": {
-    "placeholder": "Benutzername eingeben",
+    "placeholder": "Mitglied hinzufügen",
     "loading": "Suche...",
     "no-options": "Kein Vorschlag für Benutzername verfügbar"
   },
