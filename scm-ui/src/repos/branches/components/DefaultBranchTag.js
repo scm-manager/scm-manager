@@ -1,11 +1,13 @@
 //@flow
 import React from "react";
 import injectSheet from "react-jss";
-import classNames from "classnames";
 import { translate } from "react-i18next";
+import { Tag } from "@scm-manager/ui-components";
 
 type Props = {
   defaultBranch?: boolean,
+
+  // context props
   classes: any,
   t: string => string
 };
@@ -23,9 +25,11 @@ class DefaultBranchTag extends React.Component<Props> {
 
     if (defaultBranch) {
       return (
-        <span className={classNames("tag is-dark", classes.tag)}>
-          {t("branch.defaultTag")}
-        </span>
+        <Tag
+          className={classes.tag}
+          color="dark"
+          label={t("branch.defaultTag")}
+        />
       );
     }
     return null;

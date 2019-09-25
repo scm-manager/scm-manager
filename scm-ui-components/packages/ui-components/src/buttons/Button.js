@@ -2,6 +2,7 @@
 import * as React from "react";
 import classNames from "classnames";
 import { withRouter } from "react-router-dom";
+import Icon from "../Icon";
 
 export type ButtonProps = {
   label?: string,
@@ -9,10 +10,12 @@ export type ButtonProps = {
   disabled?: boolean,
   action?: (event: Event) => void,
   link?: string,
-  fullWidth?: boolean,
   className?: string,
+  icon?: string,
+  fullWidth?: boolean,
+  reducedMobile?: boolean,
   children?: React.Node,
-  
+
   // context props
   classes: any
 };
@@ -47,12 +50,40 @@ class Button extends React.Component<Props> {
       disabled,
       type,
       color,
+      className,
+      icon,
       fullWidth,
-      children,
-      className
+      reducedMobile,
+      children
     } = this.props;
     const loadingClass = loading ? "is-loading" : "";
     const fullWidthClass = fullWidth ? "is-fullwidth" : "";
+    const reducedMobileClass = reducedMobile ? "is-reduced-mobile" : "";
+    if (icon) {
+      return (
+        <button
+          type={type}
+          disabled={disabled}
+          onClick={this.onClick}
+          className={classNames(
+            "button",
+            "is-" + color,
+            loadingClass,
+            fullWidthClass,
+            reducedMobileClass,
+            className
+          )}
+        >
+          <span className="icon is-medium">
+            <Icon name={icon} color="inherit" />
+          </span>
+          <span>
+            {label} {children}
+          </span>
+        </button>
+      );
+    }
+
     return (
       <button
         type={type}
@@ -69,8 +100,7 @@ class Button extends React.Component<Props> {
         {label} {children}
       </button>
     );
-  };
-
+  }
 }
 
 export default withRouter(Button);

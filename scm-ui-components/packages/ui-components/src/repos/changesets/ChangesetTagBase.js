@@ -1,31 +1,19 @@
 //@flow
 import React from "react";
-import injectSheet from "react-jss";
-import classNames from "classnames";
-
-const styles = {
-  spacing: {
-    marginRight: ".25rem"
-  }
-};
+import Tag from "../../Tag";
 
 type Props = {
   icon: string,
-  label: string,
-
-  // context props
-  classes: Object
+  label: string
 };
 
 class ChangesetTagBase extends React.Component<Props> {
   render() {
-    const { icon, label, classes } = this.props;
+    const { icon, label } = this.props;
     return (
-      <span className={classNames("tag", "is-info")}>
-        <span className={classNames("fa", icon, classes.spacing)} /> {label}
-      </span>
+      <Tag color="info" icon={icon} label={label} />
     );
   }
 }
 
-export default injectSheet(styles)(ChangesetTagBase);
+export default ChangesetTagBase;

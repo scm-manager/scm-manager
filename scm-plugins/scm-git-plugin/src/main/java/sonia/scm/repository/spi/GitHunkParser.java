@@ -79,7 +79,9 @@ final class GitHunkParser {
         ++oldLineCounter;
         break;
       default:
-        throw new IllegalStateException("cannot handle diff line: " + line);
+        if (!line.equals("\\ No newline at end of file")) {
+          throw new IllegalStateException("cannot handle diff line: " + line);
+        }
     }
   }
 

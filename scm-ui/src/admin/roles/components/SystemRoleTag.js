@@ -1,8 +1,8 @@
 //@flow
 import React from "react";
 import injectSheet from "react-jss";
-import classNames from "classnames";
 import { translate } from "react-i18next";
+import { Tag } from "@scm-manager/ui-components";
 
 type Props = {
   system?: boolean,
@@ -25,9 +25,11 @@ class SystemRoleTag extends React.Component<Props> {
 
     if (system) {
       return (
-        <span className={classNames("tag is-dark", classes.tag)}>
-          {t("repositoryRole.system")}
-        </span>
+        <Tag
+          className={classes.tag}
+          color="dark"
+          label={t("repositoryRole.system")}
+        />
       );
     }
     return null;

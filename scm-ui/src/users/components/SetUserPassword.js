@@ -105,17 +105,25 @@ class SetUserPassword extends React.Component<Props, State> {
           passwordChanged={this.passwordChanged}
           key={this.state.passwordChanged ? "changed" : "unchanged"}
         />
-        <SubmitButton
-          disabled={!this.state.passwordValid}
-          loading={loading}
-          label={t("singleUserPassword.button")}
-        />
+        <div className="columns">
+          <div className="column">
+            <SubmitButton
+              disabled={!this.state.passwordValid}
+              loading={loading}
+              label={t("singleUserPassword.button")}
+            />
+          </div>
+        </div>
       </form>
     );
   }
 
   passwordChanged = (password: string, passwordValid: boolean) => {
-    this.setState({ ...this.state, password, passwordValid: (!!password && passwordValid) });
+    this.setState({
+      ...this.state,
+      password,
+      passwordValid: !!password && passwordValid
+    });
   };
 
   onClose = () => {

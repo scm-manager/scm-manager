@@ -3,7 +3,7 @@ export type { Action } from "./Action";
 export type { Link, Links, Collection, PagedCollection } from "./hal";
 
 export type { Me } from "./Me";
-export type { User } from "./User";
+export type { DisplayedUser, User } from "./User";
 export type { Group, Member } from "./Group";
 
 export type { Repository, RepositoryCollection, RepositoryGroup } from "./Repositories";

@@ -25,7 +25,7 @@ const styles = {
     }
   },
   avatarFigure: {
-    marginTop: ".25rem",
+    marginTop: ".5rem",
     marginRight: ".5rem"
   },
   avatarImage: {
@@ -34,6 +34,9 @@ const styles = {
   },
   metadata: {
     marginLeft: 0
+  },
+  authorMargin: {
+    marginTop: "0.5rem"
   },
   isVcentered: {
     alignSelf: "center"
@@ -70,15 +73,6 @@ class ChangesetRow extends React.Component<Props> {
           <div className="column is-three-fifths">
             <div className="columns is-gapless">
               <div className="column is-four-fifths">
-                <h4 className="has-text-weight-bold is-ellipsis-overflow">
-                  <ExtensionPoint
-                    name="changeset.description"
-                    props={{ changeset, value: description.title }}
-                    renderAll={false}
-                  >
-                    {description.title}
-                  </ExtensionPoint>
-                </h4>
                 <div className="media">
                   <AvatarWrapper>
                     <figure
@@ -90,6 +84,15 @@ class ChangesetRow extends React.Component<Props> {
                     </figure>
                   </AvatarWrapper>
                   <div className={classNames(classes.metadata, "media-right")}>
+                    <h4 className="has-text-weight-bold is-ellipsis-overflow">
+                      <ExtensionPoint
+                        name="changeset.description"
+                        props={{ changeset, value: description.title }}
+                        renderAll={false}
+                      >
+                        {description.title}
+                      </ExtensionPoint>
+                    </h4>
                     <p className="is-hidden-touch">
                       <Interpolate
                         i18nKey="changeset.summary"
@@ -104,7 +107,7 @@ class ChangesetRow extends React.Component<Props> {
                         time={dateFromNow}
                       />
                     </p>
-                    <p className="is-size-7">
+                    <p className={classNames("is-size-7", classes.authorMargin)}>
                       <ChangesetAuthor changeset={changeset} />
                     </p>
                   </div>

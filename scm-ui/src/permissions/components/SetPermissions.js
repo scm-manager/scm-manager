@@ -1,24 +1,29 @@
 // @flow
 import React from "react";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
+import injectSheet from "react-jss";
+import classNames from "classnames";
 import type { Link } from "@scm-manager/ui-types";
 import {
   Notification,
   ErrorNotification,
   SubmitButton
 } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
+import { getLink } from "../../modules/indexResource";
 import {
   loadPermissionsForEntity,
   setPermissions
 } from "./handlePermissions";
 import PermissionCheckbox from "./PermissionCheckbox";
-import { connect } from "react-redux";
-import { getLink } from "../../modules/indexResource";
 
 type Props = {
-  t: string => string,
   availablePermissionLink: string,
-  selectedPermissionsLink: Link
+  selectedPermissionsLink: Link,
+
+  // context props
+  classes: any,
+  t: string => string
 };
 
 type State = {
@@ -28,6 +33,17 @@ type State = {
   permissionsChanged: boolean,
   permissionsSubmitted: boolean,
   overwritePermissionsLink?: Link
+};
+
+const styles = {
+  permissionsWrapper: {
+    paddingBottom: "0",
+
+    "& .field .control": {
+      width: "100%",
+      wordWrap: "break-word"
+    }
+  }
 };
 
 class SetPermissions extends React.Component<Props, State> {
@@ -135,17 +151,35 @@ class SetPermissions extends React.Component<Props, State> {
   }
 
   renderPermissions = () => {
+    const { classes } = this.props;
     const { overwritePermissionsLink, permissions } = this.state;
-    return Object.keys(permissions).map(p => (
-      <div key={p}>
-        <PermissionCheckbox
-          permission={p}
-          checked={permissions[p]}
-          onChange={this.valueChanged}
-          disabled={!overwritePermissionsLink}
-        />
+    const permissionArray = Object.keys(permissions);
+    return (
+      <div className="columns">
+        <div className={classNames("column", "is-half", classes.permissionsWrapper)}>
+          {permissionArray.slice(0, (permissionArray.length/2)+1).map(p => (
+            <PermissionCheckbox
+              key={p}
+              permission={p}
+              checked={permissions[p]}
+              onChange={this.valueChanged}
+              disabled={!overwritePermissionsLink}
+            />
+          ))}
+        </div>
+        <div className={classNames("column", "is-half", classes.permissionsWrapper)}>
+          {permissionArray.slice((permissionArray.length/2)+1, permissionArray.length).map(p => (
+            <PermissionCheckbox
+              key={p}
+              permission={p}
+              checked={permissions[p]}
+              onChange={this.valueChanged}
+              disabled={!overwritePermissionsLink}
+            />
+          ))}
+        </div>
       </div>
-    ));
+    );
   };
 
   valueChanged = (value: boolean, name: string) => {
@@ -174,5 +208,4 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps)(
-  translate("permissions")(SetPermissions)
-);
+  injectSheet(styles)(translate("permissions")(SetPermissions)));
