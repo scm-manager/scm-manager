@@ -29,22 +29,36 @@
       "installedNavLink": "Instalados",
       "availableNavLink": "Disponibles"
     },
-    "installPending": "Instalar los complementos pendientes",
+    "executePending": "Ejecutar los complementos pendientes",
     "noPlugins": "No se han encontrado complementos.",
     "modal": {
-      "title": "Instalar complemento {{name}} ",
+      "title": {
+        "install": "Instalar complemento {{name}}",
+        "update": "Actualizar complemento {{name}}",
+        "uninstall": "Desinstalar complemento {{name}}"
+      },
       "restart": "Reiniciar para activar",
       "install": "Instalar",
+      "update": "Actualizar",
+      "uninstall": "Desinstalar",
+      "installQueue": "Será instalado:",
+      "updateQueue": "Será actualizado:",
+      "uninstallQueue": "Será desinstalado:",
       "installAndRestart": "Instalar y reiniciar",
+      "updateAndRestart": "Actualizar y reiniciar",
+      "uninstallAndRestart": "Desinstalar y reiniciar",
+      "executeAndRestart": "Ejecutar y reiniciar",
       "abort": "Cancelar",
       "author": "Autor",
       "version": "Versión",
+      "currentVersion": "Versión instalada",
+      "newVersion": "Nueva versión",
       "dependencyNotification": "Con este complemento las siguientes dependencias serán instaladas si no lo han sido ya",
       "dependencies": "Dependencias",
       "successNotification": "Complemento instalado correctamente. Necesita recargar la página para ver los cambios:",
       "reload": "recargar ahora",
       "restartNotification": "Usted debería reiniciar scm-manager sólo si actualmente no hay nadie trabajando con el.",
-      "installPending": "Los siguientes complementos serán instalados y después de la instalación sdm-manager será reiniciado."
+      "executePending": "Se ejecutarán los siguientes cambios en el complemento y luego se reiniciará el contexto scm-manager."
     }
   },
   "repositoryRole": {
