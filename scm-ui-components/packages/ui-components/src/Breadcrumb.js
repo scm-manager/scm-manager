@@ -33,6 +33,9 @@ const styles = {
   flexStart: {
     flex: "1"
   },
+  homeIcon: {
+    lineHeight: "1.5rem"
+  },
   buttonGroup: {
     alignSelf: "center",
     paddingRight: "1rem"
@@ -94,6 +97,7 @@ class Breadcrumb extends React.Component<Props> {
               <li>
                 <Link to={baseUrl + "/" + revision + "/"}>
                   <Icon
+                    className={classes.homeIcon}
                     title={t("breadcrumb.home")}
                     name="home"
                     color="inherit"
