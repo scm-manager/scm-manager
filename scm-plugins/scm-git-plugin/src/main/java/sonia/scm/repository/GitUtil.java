@@ -42,7 +42,10 @@ import com.google.common.collect.Multimap;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.attributes.Attribute;
+import org.eclipse.jgit.attributes.Attributes;
 import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lib.AnyObjectId;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
@@ -55,6 +58,7 @@ import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.FS;
+import org.eclipse.jgit.util.LfsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
@@ -65,10 +69,12 @@ import sonia.scm.web.GitUserAgentProvider;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -728,6 +734,20 @@ public final class GitUtil
       mergeBaseWalk.markStart(mergeBaseWalk.lookupCommit(revision1));
       mergeBaseWalk.markStart(mergeBaseWalk.parseCommit(revision2));
       return mergeBaseWalk.next().getId();
+    }
+  }
+
+  public static Optional<LfsPointer> getLfsPointer(org.eclipse.jgit.lib.Repository repo, String path, RevCommit commit, TreeWalk treeWalk) throws IOException {
+    Attributes attributes = LfsFactory.getAttributesForPath(repo, path, commit);
+
+    Attribute filter = attributes.get("filter");
+    if (filter != null && "lfs".equals(filter.getValue())) {
+      ObjectId blobId = treeWalk.getObjectId(0);
+      try (InputStream is = repo.open(blobId, Constants.OBJ_BLOB).openStream()) {
+        return of(LfsPointer.parseLfsPointer(is));
+      }
+    } else {
+      return empty();
     }
   }
 

@@ -50,6 +50,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.store.Blob;
+import sonia.scm.store.BlobStore;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
@@ -59,6 +60,7 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Optional;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -126,29 +128,27 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
     treeWalk.setFilter(PathFilter.create(path));
 
     if (treeWalk.next() && treeWalk.getFileMode(0).getObjectType() == Constants.OBJ_BLOB) {
-      Attributes attributes = LfsFactory.getAttributesForPath(repo, path, entry);
-
-      Attribute filter = attributes.get("filter");
-      if (filter != null && "lfs".equals(filter.getValue())) {
-        return loadFromLfsStore(repo, treeWalk, revWalk);
+      Optional<LfsPointer> lfsPointer = GitUtil.getLfsPointer(repo, path, entry, treeWalk);
+      if (lfsPointer.isPresent()) {
+        return loadFromLfsStore(treeWalk, revWalk, lfsPointer.get());
+      } else {
+        return loadFromGit(repo, treeWalk, revWalk);
       }
-
-      ObjectId blobId = treeWalk.getObjectId(0);
-      ObjectLoader loader = repo.open(blobId);
-
-      return new GitObjectLoaderWrapper(loader, treeWalk, revWalk);
     } else {
       throw notFound(entity("Path", path).in("Revision", revId.getName()).in(repository));
     }
   }
 
-  private Loader loadFromLfsStore(Repository repo, TreeWalk treeWalk, RevWalk revWalk) throws IOException {
+  private Loader loadFromGit(Repository repo, TreeWalk treeWalk, RevWalk revWalk) throws IOException {
     ObjectId blobId = treeWalk.getObjectId(0);
-    LfsPointer lfsPointer;
-    try (InputStream is = repo.open(blobId, Constants.OBJ_BLOB).openStream()) {
-      lfsPointer = LfsPointer.parseLfsPointer(is);
-    }
-    Blob blob = lfsBlobStoreFactory.getLfsBlobStore(repository).get(lfsPointer.getOid().getName());
+    ObjectLoader loader = repo.open(blobId);
+
+    return new GitObjectLoaderWrapper(loader, treeWalk, revWalk);
+  }
+
+  private Loader loadFromLfsStore(TreeWalk treeWalk, RevWalk revWalk, LfsPointer lfsPointer) throws IOException {
+    BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
+    Blob blob = lfsBlobStore.get(lfsPointer.getOid().getName());
     GitUtil.release(revWalk);
     GitUtil.release(treeWalk);
     return new BlobLoader(blob);
