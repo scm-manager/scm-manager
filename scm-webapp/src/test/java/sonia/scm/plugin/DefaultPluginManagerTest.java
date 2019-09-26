@@ -359,6 +359,24 @@ class DefaultPluginManagerTest {
     }
 
     @Test
+    void shouldNotChangeStateWhenUninstallFileCouldNotBeCreated() {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      InstalledPlugin reviewPlugin = createInstalled("scm-review-plugin");
+      when(reviewPlugin.getDescriptor().getDependencies()).thenReturn(singleton("scm-mail-plugin"));
+
+      when(reviewPlugin.getDirectory()).thenThrow(new PluginException("when the file could not be written an exception like this is thrown"));
+
+      when(loader.getInstalledPlugins()).thenReturn(asList(mailPlugin, reviewPlugin));
+
+      manager.computeInstallationDependencies();
+
+      assertThrows(PluginException.class, () -> manager.uninstall("scm-review-plugin", false));
+
+      verify(mailPlugin, never()).setMarkedForUninstall(true);
+      assertThrows(ScmConstraintViolationException.class, () -> manager.uninstall("scm-mail-plugin", false));
+    }
+
+    @Test
     void shouldThrowExceptionWhenUninstallingCorePlugin(@TempDirectory.TempDir Path temp) {
       InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
       when(mailPlugin.getDirectory()).thenReturn(temp);

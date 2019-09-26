@@ -193,9 +193,14 @@ public class DefaultPluginManager implements PluginManager {
     doThrow().violation("plugin is a core plugin and cannot be uninstalled").when(installed.isCore());
 
     dependencyTracker.removeInstalled(installed.getDescriptor());
-    installed.setMarkedForUninstall(true);
 
-    createMarkerFile(installed, InstalledPlugin.UNINSTALL_MARKER_FILENAME);
+    try {
+      createMarkerFile(installed, InstalledPlugin.UNINSTALL_MARKER_FILENAME);
+      installed.setMarkedForUninstall(true);
+    } catch (RuntimeException e) {
+      dependencyTracker.addInstalled(installed.getDescriptor());
+      throw e;
+    }
 
     if (restartAfterInstallation) {
       restart("plugin installation");
