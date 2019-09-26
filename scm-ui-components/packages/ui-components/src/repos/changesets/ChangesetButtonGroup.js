@@ -16,24 +16,22 @@ type Props = {
 class ChangesetButtonGroup extends React.Component<Props> {
   render() {
     const { repository, changeset, t } = this.props;
-
     const changesetLink = createChangesetLink(repository, changeset);
     const sourcesLink = createSourcesLink(repository, changeset);
-
     return (
       <ButtonAddons className="is-marginless">
-        <Button link={changesetLink} className="reduced-mobile">
-          <span className="icon">
-            <i className="fas fa-exchange-alt" />
-          </span>
-          <span>{t("changeset.buttons.details")}</span>
-        </Button>
-        <Button link={sourcesLink} className="reduced-mobile">
-          <span className="icon">
-            <i className="fas fa-code" />
-          </span>
-          <span>{t("changeset.buttons.sources")}</span>
-        </Button>
+        <Button
+          link={changesetLink}
+          icon="exchange-alt"
+          label={t("changeset.buttons.details")}
+          reducedMobile={true}
+        />
+        <Button
+          link={sourcesLink}
+          icon="code"
+          label={t("changeset.buttons.sources")}
+          reducedMobile={true}
+        />
       </ButtonAddons>
     );
   }
