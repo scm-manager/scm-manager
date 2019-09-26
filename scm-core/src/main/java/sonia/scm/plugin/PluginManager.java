@@ -93,4 +93,6 @@ public interface PluginManager {
    * Install all pending plugins and restart the scm context.
    */
   void executePendingAndRestart();
+
+  void cancelInstallations();
 }

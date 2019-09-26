@@ -20,6 +20,8 @@ import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.lifecycle.RestartEvent;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -444,6 +446,28 @@ class DefaultPluginManagerTest {
       manager.executePendingAndRestart();
 
       verify(eventBus).post(any(RestartEvent.class));
+    }
+
+    @Test
+    void shouldUndoPendingInstallations(@TempDirectory.TempDir Path temp) throws IOException {
+      InstalledPlugin mailPlugin = createInstalled("scm-ssh-plugin");
+      Path mailPluginPath = temp.resolve("scm-mail-plugin");
+      Files.createDirectories(mailPluginPath);
+      when(mailPlugin.getDirectory()).thenReturn(mailPluginPath);
+      when(loader.getInstalledPlugins()).thenReturn(singletonList(mailPlugin));
+
+      AvailablePlugin git = createAvailable("scm-git-plugin");
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(git));
+      PendingPluginInstallation gitPendingPluginInformation = mock(PendingPluginInstallation.class);
+      when(installer.install(git)).thenReturn(gitPendingPluginInformation);
+
+      manager.install("scm-git-plugin", false);
+      manager.uninstall("scm-ssh-plugin", false);
+
+      manager.cancelInstallations();
+
+      assertThat(mailPluginPath.resolve("uninstall")).doesNotExist();
+      verify(gitPendingPluginInformation).cancel();
     }
   }
 

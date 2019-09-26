@@ -44,8 +44,8 @@ import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.version.Version;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -72,7 +72,8 @@ public class DefaultPluginManager implements PluginManager {
   private final PluginLoader loader;
   private final PluginCenter center;
   private final PluginInstaller installer;
-  private final Collection<PendingPluginInstallation> pendingQueue = new ArrayList<>();
+  private final Collection<PendingPluginInstallation> pendingInstallQueue = new ArrayList<>();
+  private final Collection<PendingPluginUninstallation> pendingUninstallQueue = new ArrayList<>();
   private final PluginDependencyTracker dependencyTracker = new PluginDependencyTracker();
 
   @Inject
@@ -106,7 +107,7 @@ public class DefaultPluginManager implements PluginManager {
   }
 
   private Optional<AvailablePlugin> getPending(String name) {
-    return pendingQueue
+    return pendingInstallQueue
       .stream()
       .map(PendingPluginInstallation::getPlugin)
       .filter(filterByName(name))
@@ -179,7 +180,7 @@ public class DefaultPluginManager implements PluginManager {
       if (restartAfterInstallation) {
         restart("plugin installation");
       } else {
-        pendingQueue.addAll(pendingInstallations);
+        pendingInstallQueue.addAll(pendingInstallations);
         updateMayUninstallFlag();
       }
     }
@@ -192,15 +193,8 @@ public class DefaultPluginManager implements PluginManager {
       .orElseThrow(() -> NotFoundException.notFound(entity(InstalledPlugin.class, name)));
     doThrow().violation("plugin is a core plugin and cannot be uninstalled").when(installed.isCore());
 
-    dependencyTracker.removeInstalled(installed.getDescriptor());
 
-    try {
-      createMarkerFile(installed, InstalledPlugin.UNINSTALL_MARKER_FILENAME);
-      installed.setMarkedForUninstall(true);
-    } catch (RuntimeException e) {
-      dependencyTracker.addInstalled(installed.getDescriptor());
-      throw e;
-    }
+    markForUninstall(installed);
 
     if (restartAfterInstallation) {
       restart("plugin installation");
@@ -220,18 +214,22 @@ public class DefaultPluginManager implements PluginManager {
       && dependencyTracker.mayUninstall(p.getDescriptor().getInformation().getName());
   }
 
-  private void createMarkerFile(InstalledPlugin plugin, String markerFile) {
+  private void markForUninstall(InstalledPlugin plugin) {
+    dependencyTracker.removeInstalled(plugin.getDescriptor());
     try {
-      Files.createFile(plugin.getDirectory().resolve(markerFile));
-    } catch (IOException e) {
-      throw new PluginException("could not mark plugin " + plugin.getId() + " in path " + plugin.getDirectory() + "as " + markerFile, e);
+      Path file = Files.createFile(plugin.getDirectory().resolve(InstalledPlugin.UNINSTALL_MARKER_FILENAME));
+      pendingUninstallQueue.add(new PendingPluginUninstallation(plugin, file));
+      plugin.setMarkedForUninstall(true);
+    } catch (Exception e) {
+      dependencyTracker.addInstalled(plugin.getDescriptor());
+      throw new PluginException("could not mark plugin " + plugin.getId() + " in path " + plugin.getDirectory() + "as " + InstalledPlugin.UNINSTALL_MARKER_FILENAME, e);
     }
   }
 
   @Override
   public void executePendingAndRestart() {
     PluginPermissions.manage().check();
-    if (!pendingQueue.isEmpty() || getInstalled().stream().anyMatch(InstalledPlugin::isMarkedForUninstall)) {
+    if (!pendingInstallQueue.isEmpty() || getInstalled().stream().anyMatch(InstalledPlugin::isMarkedForUninstall)) {
       restart("execute pending plugin changes");
     }
   }
@@ -273,5 +271,11 @@ public class DefaultPluginManager implements PluginManager {
 
   private boolean isUpdatable(String name) {
     return getAvailable(name).isPresent() && !getPending(name).isPresent();
+  }
+
+  @Override
+  public void cancelInstallations() {
+    pendingUninstallQueue.forEach(PendingPluginUninstallation::cancel);
+    pendingInstallQueue.forEach(PendingPluginInstallation::cancel);
   }
 }
