@@ -274,7 +274,8 @@ public class DefaultPluginManager implements PluginManager {
   }
 
   @Override
-  public void cancelInstallations() {
+  public void cancelPending() {
+    PluginPermissions.manage().check();
     pendingUninstallQueue.forEach(PendingPluginUninstallation::cancel);
     pendingInstallQueue.forEach(PendingPluginInstallation::cancel);
   }

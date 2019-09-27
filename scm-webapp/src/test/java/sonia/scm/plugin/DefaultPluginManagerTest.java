@@ -467,7 +467,7 @@ class DefaultPluginManagerTest {
       manager.install("scm-git-plugin", false);
       manager.uninstall("scm-ssh-plugin", false);
 
-      manager.cancelInstallations();
+      manager.cancelPending();
 
       assertThat(mailPluginPath.resolve("uninstall")).doesNotExist();
       verify(gitPendingPluginInformation).cancel();
@@ -529,5 +529,9 @@ class DefaultPluginManagerTest {
       assertThrows(AuthorizationException.class, () -> manager.executePendingAndRestart());
     }
 
+    @Test
+    void shouldThrowAuthorizationExceptionsForCancelPending() {
+      assertThrows(AuthorizationException.class, () -> manager.cancelPending());
+    }
   }
 }

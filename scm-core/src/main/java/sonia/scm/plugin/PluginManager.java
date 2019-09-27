@@ -94,5 +94,5 @@ public interface PluginManager {
    */
   void executePendingAndRestart();
 
-  void cancelInstallations();
+  void cancelPending();
 }
