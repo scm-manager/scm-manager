@@ -1,11 +1,16 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.util.Providers;
+import org.apache.shiro.ShiroException;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,6 +24,8 @@ import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 
@@ -44,6 +51,9 @@ class PendingPluginResourceTest {
   @Mock
   PluginDtoMapper mapper;
 
+  @Mock
+  Subject subject;
+
   @InjectMocks
   PendingPluginResource pendingPluginResource;
 
@@ -52,6 +62,7 @@ class PendingPluginResourceTest {
   @BeforeEach
   void prepareEnvironment() {
     dispatcher = MockDispatcherFactory.createDispatcher();
+    dispatcher.getProviderFactory().register(new PermissionExceptionMapper());
     PluginRootResource pluginRootResource = new PluginRootResource(null, null, Providers.of(pendingPluginResource));
     dispatcher.getRegistry().addSingletonResource(pluginRootResource);
   }
@@ -70,83 +81,138 @@ class PendingPluginResourceTest {
     });
   }
 
-  @Test
-  void shouldGetEmptyPluginListsWithoutInstallLinkWhenNoPendingPluginsPresent() throws URISyntaxException, UnsupportedEncodingException {
-    AvailablePlugin availablePlugin = createAvailablePlugin("not-pending-plugin");
-    when(availablePlugin.isPending()).thenReturn(false);
-    when(pluginManager.getAvailable()).thenReturn(singletonList(availablePlugin));
+  @Nested
+  class withAuthorization {
 
-    MockHttpRequest request = MockHttpRequest.get("/v2/plugins/pending");
-    dispatcher.invoke(request, response);
+    @BeforeEach
+    void bindSubject() {
+      ThreadContext.bind(subject);
+      lenient().when(subject.isPermitted("plugin:manage")).thenReturn(true);
+    }
 
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
-    assertThat(response.getContentAsString()).contains("\"_links\":{\"self\":{\"href\":\"/v2/plugins/pending\"}}");
-    assertThat(response.getContentAsString()).doesNotContain("not-pending-plugin");
+    @AfterEach
+    void unbindSubject() {
+      ThreadContext.unbindSubject();
+    }
+
+    @Test
+    void shouldGetEmptyPluginListsWithoutInstallLinkWhenNoPendingPluginsPresent() throws URISyntaxException, UnsupportedEncodingException {
+      AvailablePlugin availablePlugin = createAvailablePlugin("not-pending-plugin");
+      when(availablePlugin.isPending()).thenReturn(false);
+      when(pluginManager.getAvailable()).thenReturn(singletonList(availablePlugin));
+
+      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/pending");
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+      assertThat(response.getContentAsString()).contains("\"_links\":{\"self\":{\"href\":\"/v2/plugins/pending\"}}");
+      assertThat(response.getContentAsString()).doesNotContain("not-pending-plugin");
+    }
+
+    @Test
+    void shouldGetPendingAvailablePluginListWithInstallAndCancelLink() throws URISyntaxException, UnsupportedEncodingException {
+      AvailablePlugin availablePlugin = createAvailablePlugin("pending-available-plugin");
+      when(availablePlugin.isPending()).thenReturn(true);
+      when(pluginManager.getAvailable()).thenReturn(singletonList(availablePlugin));
+
+      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/pending");
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+      assertThat(response.getContentAsString()).contains("\"new\":[{\"name\":\"pending-available-plugin\"");
+      assertThat(response.getContentAsString()).contains("\"execute\":{\"href\":\"/v2/plugins/pending/execute\"}");
+      assertThat(response.getContentAsString()).contains("\"cancel\":{\"href\":\"/v2/plugins/pending/cancel\"}");
+    }
+
+    @Test
+    void shouldGetPendingUpdatePluginListWithInstallLink() throws URISyntaxException, UnsupportedEncodingException {
+      AvailablePlugin availablePlugin = createAvailablePlugin("available-plugin");
+      when(availablePlugin.isPending()).thenReturn(true);
+      when(pluginManager.getAvailable()).thenReturn(singletonList(availablePlugin));
+      InstalledPlugin installedPlugin = createInstalledPlugin("available-plugin");
+      when(pluginManager.getInstalled()).thenReturn(singletonList(installedPlugin));
+
+      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/pending");
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+      assertThat(response.getContentAsString()).contains("\"update\":[{\"name\":\"available-plugin\"");
+      assertThat(response.getContentAsString()).contains("\"execute\":{\"href\":\"/v2/plugins/pending/execute\"}");
+    }
+
+    @Test
+    void shouldGetPendingUninstallPluginListWithInstallLink() throws URISyntaxException, UnsupportedEncodingException {
+      when(pluginManager.getAvailable()).thenReturn(emptyList());
+      InstalledPlugin installedPlugin = createInstalledPlugin("uninstalled-plugin");
+      when(installedPlugin.isMarkedForUninstall()).thenReturn(true);
+      when(pluginManager.getInstalled()).thenReturn(singletonList(installedPlugin));
+
+      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/pending");
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+      assertThat(response.getContentAsString()).contains("\"uninstall\":[{\"name\":\"uninstalled-plugin\"");
+      assertThat(response.getContentAsString()).contains("\"execute\":{\"href\":\"/v2/plugins/pending/execute\"}");
+    }
+
+    @Test
+    void shouldExecutePendingPlugins() throws URISyntaxException {
+      MockHttpRequest request = MockHttpRequest.post("/v2/plugins/pending/execute");
+
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+      verify(pluginManager).executePendingAndRestart();
+    }
+
+    @Test
+    void shouldCancelPendingPlugins() throws URISyntaxException {
+      MockHttpRequest request = MockHttpRequest.post("/v2/plugins/pending/cancel");
+
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+      verify(pluginManager).cancelPending();
+    }
+
   }
 
-  @Test
-  void shouldGetPendingAvailablePluginListWithInstallLink() throws URISyntaxException, UnsupportedEncodingException {
-    AvailablePlugin availablePlugin = createAvailablePlugin("pending-available-plugin");
-    when(availablePlugin.isPending()).thenReturn(true);
-    when(pluginManager.getAvailable()).thenReturn(singletonList(availablePlugin));
+  @Nested
+  class WithoutAuthorization {
 
-    MockHttpRequest request = MockHttpRequest.get("/v2/plugins/pending");
-    dispatcher.invoke(request, response);
+    @BeforeEach
+    void bindSubject() {
+      ThreadContext.bind(subject);
+      when(subject.isPermitted("plugin:manage")).thenReturn(false);
+    }
 
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
-    assertThat(response.getContentAsString()).contains("\"new\":[{\"name\":\"pending-available-plugin\"");
-    assertThat(response.getContentAsString()).contains("\"execute\":{\"href\":\"/v2/plugins/pending/execute\"}");
+    @AfterEach
+    void unbindSubject() {
+      ThreadContext.unbindSubject();
+    }
+
+    @Test
+    void shouldGetPendingAvailablePluginListWithoutInstallAndCancelLink() throws URISyntaxException, UnsupportedEncodingException {
+      AvailablePlugin availablePlugin = createAvailablePlugin("pending-available-plugin");
+      when(availablePlugin.isPending()).thenReturn(true);
+      when(pluginManager.getAvailable()).thenReturn(singletonList(availablePlugin));
+
+      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/pending");
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+      assertThat(response.getContentAsString()).contains("\"new\":[{\"name\":\"pending-available-plugin\"");
+      assertThat(response.getContentAsString()).doesNotContain("\"execute\":{\"href\":\"/v2/plugins/pending/execute\"}");
+      assertThat(response.getContentAsString()).doesNotContain("\"cancel\":{\"href\":\"/v2/plugins/pending/cancel\"}");
+    }
   }
 
-  @Test
-  void shouldGetPendingUpdatePluginListWithInstallLink() throws URISyntaxException, UnsupportedEncodingException {
-    AvailablePlugin availablePlugin = createAvailablePlugin("available-plugin");
-    when(availablePlugin.isPending()).thenReturn(true);
-    when(pluginManager.getAvailable()).thenReturn(singletonList(availablePlugin));
-    InstalledPlugin installedPlugin = createInstalledPlugin("available-plugin");
-    when(pluginManager.getInstalled()).thenReturn(singletonList(installedPlugin));
+  static class PermissionExceptionMapper implements ExceptionMapper<ShiroException> {
 
-    MockHttpRequest request = MockHttpRequest.get("/v2/plugins/pending");
-    dispatcher.invoke(request, response);
-
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
-    assertThat(response.getContentAsString()).contains("\"update\":[{\"name\":\"available-plugin\"");
-    assertThat(response.getContentAsString()).contains("\"execute\":{\"href\":\"/v2/plugins/pending/execute\"}");
-  }
-
-  @Test
-  void shouldGetPendingUninstallPluginListWithInstallLink() throws URISyntaxException, UnsupportedEncodingException {
-    when(pluginManager.getAvailable()).thenReturn(emptyList());
-    InstalledPlugin installedPlugin = createInstalledPlugin("uninstalled-plugin");
-    when(installedPlugin.isMarkedForUninstall()).thenReturn(true);
-    when(pluginManager.getInstalled()).thenReturn(singletonList(installedPlugin));
-
-    MockHttpRequest request = MockHttpRequest.get("/v2/plugins/pending");
-    dispatcher.invoke(request, response);
-
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
-    assertThat(response.getContentAsString()).contains("\"uninstall\":[{\"name\":\"uninstalled-plugin\"");
-    assertThat(response.getContentAsString()).contains("\"execute\":{\"href\":\"/v2/plugins/pending/execute\"}");
-  }
-
-  @Test
-  void shouldExecutePendingPlugins() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.post("/v2/plugins/pending/execute");
-
-    dispatcher.invoke(request, response);
-
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
-    verify(pluginManager).executePendingAndRestart();
-  }
-
-  @Test
-  void shouldCancelPendingPlugins() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.post("/v2/plugins/pending/cancel");
-
-    dispatcher.invoke(request, response);
-
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
-    verify(pluginManager).cancelPending();
+    @Override
+    public Response toResponse(ShiroException exception) {
+      return Response.status(401).entity(exception.getMessage()).build();
+    }
   }
 
   private AvailablePlugin createAvailablePlugin(String name) {
