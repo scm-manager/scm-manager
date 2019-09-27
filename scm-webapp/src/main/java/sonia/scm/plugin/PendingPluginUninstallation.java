@@ -24,6 +24,7 @@ class PendingPluginUninstallation {
     LOG.info("cancel uninstallation of plugin {}", name);
     try {
       Files.delete(uninstallFile);
+      plugin.setMarkedForUninstall(false);
     } catch (IOException ex) {
       throw new PluginFailedToCancelInstallationException("failed to cancel uninstallation of plugin " + name, ex);
     }

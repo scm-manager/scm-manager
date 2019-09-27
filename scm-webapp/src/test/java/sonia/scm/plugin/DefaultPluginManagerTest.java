@@ -32,6 +32,7 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
@@ -455,6 +456,8 @@ class DefaultPluginManagerTest {
       Files.createDirectories(mailPluginPath);
       when(mailPlugin.getDirectory()).thenReturn(mailPluginPath);
       when(loader.getInstalledPlugins()).thenReturn(singletonList(mailPlugin));
+      ArgumentCaptor<Boolean> uninstallCaptor = ArgumentCaptor.forClass(Boolean.class);
+      doNothing().when(mailPlugin).setMarkedForUninstall(uninstallCaptor.capture());
 
       AvailablePlugin git = createAvailable("scm-git-plugin");
       when(center.getAvailable()).thenReturn(ImmutableSet.of(git));
@@ -468,6 +471,8 @@ class DefaultPluginManagerTest {
 
       assertThat(mailPluginPath.resolve("uninstall")).doesNotExist();
       verify(gitPendingPluginInformation).cancel();
+      Boolean lasUninstallMarkerSet = uninstallCaptor.getAllValues().get(uninstallCaptor.getAllValues().size() - 1);
+      assertThat(lasUninstallMarkerSet).isFalse();
     }
   }
 
