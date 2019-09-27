@@ -112,33 +112,33 @@ class PluginsOverview extends React.Component<Props> {
   };
 
   createActions = () => {
-    const {pendingPlugins, collection} = this.props;
+    const { pendingPlugins, collection } = this.props;
     return (
       <ButtonGroup>
         {pendingPlugins &&
-        pendingPlugins._links &&
-        pendingPlugins._links.execute && (
-          <MultiPluginAction
-            pendingPlugins={pendingPlugins}
-            actionType={MultiPluginActionType.EXECUTE_PENDING}
-          />
-        )}
+          pendingPlugins._links &&
+          pendingPlugins._links.execute && (
+            <MultiPluginAction
+              pendingPlugins={pendingPlugins}
+              actionType={MultiPluginActionType.EXECUTE_PENDING}
+            />
+          )}
         {pendingPlugins &&
-        pendingPlugins._links &&
-        pendingPlugins._links.cancel && (
-          <MultiPluginAction
-            pendingPlugins={pendingPlugins}
-            actionType={MultiPluginActionType.CANCEL_PENDING}
-          />
-        )}
+          pendingPlugins._links &&
+          pendingPlugins._links.cancel && (
+            <MultiPluginAction
+              pendingPlugins={pendingPlugins}
+              actionType={MultiPluginActionType.CANCEL_PENDING}
+            />
+          )}
         {collection &&
-        collection._links &&
-        !collection._links.update && (
-          <MultiPluginAction
-            installedPlugins={collection}
-            actionType={MultiPluginActionType.UPDATE_ALL}
-          />
-        )}
+          collection._links &&
+          collection._links.update && (
+            <MultiPluginAction
+              installedPlugins={collection}
+              actionType={MultiPluginActionType.UPDATE_ALL}
+            />
+          )}
       </ButtonGroup>
     );
   };
