@@ -50,16 +50,7 @@ type Props = {
 
 class PluginsOverview extends React.Component<Props> {
   componentDidMount() {
-    const {
-      installed,
-      fetchPluginsByLink,
-      availablePluginsLink,
-      installedPluginsLink,
-      pendingPluginsLink,
-      fetchPendingPlugins
-    } = this.props;
-    fetchPluginsByLink(installed ? installedPluginsLink : availablePluginsLink);
-    fetchPendingPlugins(pendingPluginsLink);
+    this.fetchPlugins();
   }
 
   componentDidUpdate(prevProps) {
@@ -79,7 +70,9 @@ class PluginsOverview extends React.Component<Props> {
       fetchPendingPlugins
     } = this.props;
     fetchPluginsByLink(installed ? installedPluginsLink : availablePluginsLink);
-    fetchPendingPlugins(pendingPluginsLink);
+    if (pendingPluginsLink) {
+      fetchPendingPlugins(pendingPluginsLink);
+    }
   };
 
   renderHeader = (actions: React.Node) => {
