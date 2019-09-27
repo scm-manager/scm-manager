@@ -5,6 +5,7 @@ import { translate } from "react-i18next";
 import { compose } from "redux";
 import type { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import {
+  ButtonGroup,
   ErrorNotification,
   Loading,
   Notification,
@@ -27,7 +28,9 @@ import {
 } from "../../../modules/indexResource";
 import PluginTopActions from "../components/PluginTopActions";
 import PluginBottomActions from "../components/PluginBottomActions";
-import ExecutePendingAction from "../components/ExecutePendingAction";
+import MultiPluginAction, {
+  MultiPluginActionType
+} from "../components/MultiPluginAction";
 
 type Props = {
   loading: boolean,
@@ -109,15 +112,35 @@ class PluginsOverview extends React.Component<Props> {
   };
 
   createActions = () => {
-    const { pendingPlugins } = this.props;
-    if (
-      pendingPlugins &&
-      pendingPlugins._links &&
-      pendingPlugins._links.execute
-    ) {
-      return <ExecutePendingAction pendingPlugins={pendingPlugins} />;
-    }
-    return null;
+    const {pendingPlugins, collection} = this.props;
+    return (
+      <ButtonGroup>
+        {pendingPlugins &&
+        pendingPlugins._links &&
+        pendingPlugins._links.execute && (
+          <MultiPluginAction
+            pendingPlugins={pendingPlugins}
+            actionType={MultiPluginActionType.EXECUTE_PENDING}
+          />
+        )}
+        {pendingPlugins &&
+        pendingPlugins._links &&
+        pendingPlugins._links.cancel && (
+          <MultiPluginAction
+            pendingPlugins={pendingPlugins}
+            actionType={MultiPluginActionType.CANCEL_PENDING}
+          />
+        )}
+        {collection &&
+        collection._links &&
+        !collection._links.update && (
+          <MultiPluginAction
+            installedPlugins={collection}
+            actionType={MultiPluginActionType.UPDATE_ALL}
+          />
+        )}
+      </ButtonGroup>
+    );
   };
 
   render() {

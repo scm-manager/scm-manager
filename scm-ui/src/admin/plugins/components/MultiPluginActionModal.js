@@ -8,14 +8,17 @@ import {
   Modal,
   Notification
 } from "@scm-manager/ui-components";
-import type { PendingPlugins } from "@scm-manager/ui-types";
+import type { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
 import waitForRestart from "./waitForRestart";
 import SuccessNotification from "./SuccessNotification";
+import { MultiPluginActionType } from "./MultiPluginAction";
 
 type Props = {
   onClose: () => void,
-  pendingPlugins: PendingPlugins,
+  actionType: string,
+  pendingPlugins?: PendingPlugins,
+  installedPlugins?: PluginCollection,
 
   // context props
   t: string => string
@@ -27,7 +30,7 @@ type State = {
   error?: Error
 };
 
-class ExecutePendingModal extends React.Component<Props, State> {
+class MultiPluginActionModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -52,6 +55,18 @@ class ExecutePendingModal extends React.Component<Props, State> {
     }
   };
 
+  executeAction = () => {
+    const { actionType } = this.props;
+
+    if (actionType === MultiPluginActionType.EXECUTE_PENDING) {
+      this.executeAndRestart();
+    } else if (actionType === MultiPluginActionType.CANCEL_PENDING) {
+      this.cancelPending();
+    } else if (actionType === MultiPluginActionType.UPDATE_ALL) {
+      this.updateAllWithRestart();
+    }
+  };
+
   executeAndRestart = () => {
     const { pendingPlugins } = this.props;
     this.setState({
@@ -64,8 +79,7 @@ class ExecutePendingModal extends React.Component<Props, State> {
       .then(() => {
         this.setState({
           success: true,
-          loading: false,
-          error: undefined
+          loading: false
         });
       })
       .catch(error => {
@@ -77,11 +91,96 @@ class ExecutePendingModal extends React.Component<Props, State> {
       });
   };
 
+  cancelPending = () => {
+    const { pendingPlugins } = this.props;
+    this.setState({
+      loading: true
+    });
+
+    apiClient
+      .post(pendingPlugins._links.cancel.href)
+      .then(() => {
+        this.setState({
+          success: true,
+          loading: false
+        });
+      })
+      .catch(error => {
+        this.setState({
+          success: false,
+          loading: false,
+          error: error
+        });
+      });
+  };
+
+  updateAllWithRestart = () => {
+    const { installedPlugins } = this.props;
+    this.setState({
+      loading: true
+    });
+
+    apiClient
+      .post(installedPlugins._links.update.href)
+      .then(waitForRestart)
+      .then(() => {
+        this.setState({
+          success: true,
+          loading: false
+        });
+      })
+      .catch(error => {
+        this.setState({
+          success: false,
+          loading: false,
+          error: error
+        });
+      });
+  };
+
+  renderModalContent = () => {
+    const { actionType } = this.props;
+
+    if (actionType === MultiPluginActionType.UPDATE_ALL) {
+      return <>{this.renderUpdatable()}</>;
+    } else {
+      return (
+        <>
+          {this.renderInstallQueue()}
+          {this.renderUpdateQueue()}
+          {this.renderUninstallQueue()}
+        </>
+      );
+    }
+  };
+
+  renderUpdatable = () => {
+    const { installedPlugins } = this.props;
+    return (
+      <>
+        {installedPlugins &&
+          installedPlugins._embedded &&
+          installedPlugins._embedded.plugins && (
+            <>
+              <ul>
+                {installedPlugins._embedded.plugins
+                  .filter(plugin => plugin._links && plugin._links.update)
+                  .map(plugin => (
+                    <li key={plugin.name}>{plugin.name}</li>
+                  ))}
+              </ul>
+            </>
+          )}
+      </>
+    );
+  };
+
   renderInstallQueue = () => {
     const { pendingPlugins, t } = this.props;
     return (
       <>
-        {pendingPlugins._embedded &&
+        {pendingPlugins &&
+          pendingPlugins._embedded &&
           pendingPlugins._embedded.new.length > 0 && (
             <>
               <strong>{t("plugins.modal.installQueue")}</strong>
@@ -100,7 +199,8 @@ class ExecutePendingModal extends React.Component<Props, State> {
     const { pendingPlugins, t } = this.props;
     return (
       <>
-        {pendingPlugins._embedded &&
+        {pendingPlugins &&
+          pendingPlugins._embedded &&
           pendingPlugins._embedded.update.length > 0 && (
             <>
               <strong>{t("plugins.modal.updateQueue")}</strong>
@@ -119,7 +219,8 @@ class ExecutePendingModal extends React.Component<Props, State> {
     const { pendingPlugins, t } = this.props;
     return (
       <>
-        {pendingPlugins._embedded &&
+        {pendingPlugins &&
+          pendingPlugins._embedded &&
           pendingPlugins._embedded.uninstall.length > 0 && (
             <>
               <strong>{t("plugins.modal.uninstallQueue")}</strong>
@@ -141,9 +242,7 @@ class ExecutePendingModal extends React.Component<Props, State> {
         <div className="media">
           <div className="content">
             <p>{t("plugins.modal.executePending")}</p>
-            {this.renderInstallQueue()}
-            {this.renderUpdateQueue()}
-            {this.renderUninstallQueue()}
+            {this.renderModalContent()}
           </div>
         </div>
         <div className="media">{this.renderNotifications()}</div>
@@ -160,7 +259,7 @@ class ExecutePendingModal extends React.Component<Props, State> {
           color="warning"
           label={t("plugins.modal.executeAndRestart")}
           loading={loading}
-          action={this.executeAndRestart}
+          action={this.executeAction}
           disabled={error || success}
         />
         <Button label={t("plugins.modal.abort")} action={onClose} />
@@ -182,4 +281,4 @@ class ExecutePendingModal extends React.Component<Props, State> {
   }
 }
 
-export default translate("admin")(ExecutePendingModal);
+export default translate("admin")(MultiPluginActionModal);
