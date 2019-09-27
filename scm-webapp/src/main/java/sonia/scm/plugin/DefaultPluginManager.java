@@ -139,6 +139,14 @@ public class DefaultPluginManager implements PluginManager {
       .collect(Collectors.toList());
   }
 
+  @Override
+  public List<InstalledPlugin> getUpdatable() {
+    return getInstalled()
+      .stream()
+      .filter(p -> isUpdatable(p.getDescriptor().getInformation().getName()))
+      .collect(Collectors.toList());
+  }
+
   private <T extends Plugin> Predicate<T> filterByName(String name) {
     return plugin -> name.equals(plugin.getDescriptor().getInformation().getName());
   }

@@ -3,16 +3,15 @@ package sonia.scm.api.v2.resources;
 import com.google.inject.Inject;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.InstalledPlugin;
-import sonia.scm.plugin.PluginPermissions;
+import sonia.scm.plugin.PluginManager;
 
 import java.util.List;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
-import static de.otto.edison.hal.Link.*;
+import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 import static java.util.stream.Collectors.toList;
 
@@ -20,11 +19,13 @@ public class PluginDtoCollectionMapper {
 
   private final ResourceLinks resourceLinks;
   private final PluginDtoMapper mapper;
+  private final PluginManager manager;
 
   @Inject
-  public PluginDtoCollectionMapper(ResourceLinks resourceLinks, PluginDtoMapper mapper) {
+  public PluginDtoCollectionMapper(ResourceLinks resourceLinks, PluginDtoMapper mapper, PluginManager manager) {
     this.resourceLinks = resourceLinks;
     this.mapper = mapper;
+    this.manager = manager;
   }
 
   public HalRepresentation mapInstalled(List<InstalledPlugin> plugins, List<AvailablePlugin> availablePlugins) {
@@ -46,7 +47,9 @@ public class PluginDtoCollectionMapper {
     Links.Builder linksBuilder = linkingTo()
       .with(Links.linkingTo().self(baseUrl).build());
 
-    linksBuilder.single(link("update", resourceLinks.installedPluginCollection().update()));
+    if (!manager.getUpdatable().isEmpty()) {
+      linksBuilder.single(link("update", resourceLinks.installedPluginCollection().update()));
+    }
 
     return linksBuilder.build();
   }

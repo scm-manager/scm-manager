@@ -74,6 +74,13 @@ public interface PluginManager {
   List<AvailablePlugin> getAvailable();
 
   /**
+   * Returns all updatable plugins.
+   *
+   * @return a list of updatable plugins.
+   */
+  List<InstalledPlugin> getUpdatable();
+
+  /**
    * Installs the plugin with the given name from the list of available plugins.
    *
    * @param name plugin name
