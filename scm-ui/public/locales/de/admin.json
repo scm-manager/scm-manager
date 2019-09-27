@@ -30,6 +30,8 @@
       "availableNavLink": "Verfügbar"
     },
     "executePending": "Ausstehende Plugin-Änderungen ausführen",
+    "updateAll": "Alle Plugins aktualisieren",
+    "cancelPending": "Ausstehende Plugin-Änderungen abbrechen",
     "noPlugins": "Keine Plugins gefunden.",
     "modal": {
       "title": {

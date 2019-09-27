@@ -12,6 +12,7 @@ import sonia.scm.plugin.PluginPermissions;
 import java.util.List;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
+import static de.otto.edison.hal.Link.*;
 import static de.otto.edison.hal.Links.linkingTo;
 import static java.util.stream.Collectors.toList;
 
@@ -44,6 +45,9 @@ public class PluginDtoCollectionMapper {
 
     Links.Builder linksBuilder = linkingTo()
       .with(Links.linkingTo().self(baseUrl).build());
+
+    linksBuilder.single(link("update", resourceLinks.installedPluginCollection().update()));
+
     return linksBuilder.build();
   }
 

@@ -155,13 +155,14 @@ class MultiPluginActionModal extends React.Component<Props, State> {
   };
 
   renderUpdatable = () => {
-    const { installedPlugins } = this.props;
+    const {installedPlugins, t} = this.props;
     return (
       <>
         {installedPlugins &&
           installedPlugins._embedded &&
           installedPlugins._embedded.plugins && (
             <>
+              <strong>{t("plugins.modal.updateQueue")}</strong>
               <ul>
                 {installedPlugins._embedded.plugins
                   .filter(plugin => plugin._links && plugin._links.update)

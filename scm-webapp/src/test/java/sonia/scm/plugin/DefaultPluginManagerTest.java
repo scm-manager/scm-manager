@@ -474,6 +474,39 @@ class DefaultPluginManagerTest {
       Boolean lasUninstallMarkerSet = uninstallCaptor.getAllValues().get(uninstallCaptor.getAllValues().size() - 1);
       assertThat(lasUninstallMarkerSet).isFalse();
     }
+
+    @Test
+    void shouldUpdateAllPlugins() {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      InstalledPlugin reviewPlugin = createInstalled("scm-review-plugin");
+
+      when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(mailPlugin, reviewPlugin));
+
+      AvailablePlugin newMailPlugin = createAvailable("scm-mail-plugin", "2.0.0");
+      AvailablePlugin newReviewPlugin = createAvailable("scm-review-plugin", "2.0.0");
+
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(newMailPlugin, newReviewPlugin));
+
+      manager.updateAll(false);
+
+      verify(installer).install(newMailPlugin);
+      verify(installer).install(newReviewPlugin);
+    }
+
+
+    @Test
+    void shouldNotUpdateToOldPluginVersions() {
+      InstalledPlugin scriptPlugin = createInstalled("scm-script-plugin");
+
+      when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(scriptPlugin));
+      AvailablePlugin oldScriptPlugin = createAvailable("scm-script-plugin", "0.9");
+
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(oldScriptPlugin));
+
+      manager.updateAll(false);
+
+      verify(installer, never()).install(oldScriptPlugin);
+    }
   }
 
   @Nested
@@ -532,6 +565,11 @@ class DefaultPluginManagerTest {
     @Test
     void shouldThrowAuthorizationExceptionsForCancelPending() {
       assertThrows(AuthorizationException.class, () -> manager.cancelPending());
+    }
+
+    @Test
+    void shouldThrowAuthorizationExceptionsForUpdateAll() {
+      assertThrows(AuthorizationException.class, () -> manager.updateAll(false));
     }
   }
 }

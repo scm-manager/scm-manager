@@ -94,5 +94,13 @@ public interface PluginManager {
    */
   void executePendingAndRestart();
 
+  /**
+   * Cancel all pending plugins.
+   */
   void cancelPending();
+
+  /**
+   * Update all installed plugins.
+   */
+  void updateAll(boolean restartAfterInstallation);
 }

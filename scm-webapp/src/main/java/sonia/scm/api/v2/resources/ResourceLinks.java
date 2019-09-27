@@ -686,6 +686,10 @@ class ResourceLinks {
     String self() {
       return installedPluginCollectionLinkBuilder.method("installedPlugins").parameters().method("getInstalledPlugins").parameters().href();
     }
+
+    String update() {
+      return installedPluginCollectionLinkBuilder.method("installedPlugins").parameters().method("updateAll").parameters().href();
+    }
   }
 
   public AvailablePluginLinks availablePlugin() {

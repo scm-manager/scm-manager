@@ -193,7 +193,6 @@ public class DefaultPluginManager implements PluginManager {
       .orElseThrow(() -> NotFoundException.notFound(entity(InstalledPlugin.class, name)));
     doThrow().violation("plugin is a core plugin and cannot be uninstalled").when(installed.isCore());
 
-
     markForUninstall(installed);
 
     if (restartAfterInstallation) {
@@ -278,5 +277,20 @@ public class DefaultPluginManager implements PluginManager {
     PluginPermissions.manage().check();
     pendingUninstallQueue.forEach(PendingPluginUninstallation::cancel);
     pendingInstallQueue.forEach(PendingPluginInstallation::cancel);
+  }
+
+  @Override
+  public void updateAll(boolean restartAfterInstallation) {
+    PluginPermissions.manage().check();
+
+    for (InstalledPlugin installedPlugin : getInstalled()) {
+      String pluginName = installedPlugin.getDescriptor().getInformation().getName();
+      if (isUpdatable(pluginName)) {
+        install(pluginName, false);
+      }
+      if (restartAfterInstallation) {
+        restart("update all plugin");
+      }
+    }
   }
 }
