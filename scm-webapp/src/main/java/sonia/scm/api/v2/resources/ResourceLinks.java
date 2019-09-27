@@ -743,6 +743,10 @@ class ResourceLinks {
       return pendingPluginCollectionLinkBuilder.method("pendingPlugins").parameters().method("executePending").parameters().href();
     }
 
+    String cancelPending() {
+      return pendingPluginCollectionLinkBuilder.method("pendingPlugins").parameters().method("cancelPending").parameters().href();
+    }
+
     String self() {
       return pendingPluginCollectionLinkBuilder.method("pendingPlugins").parameters().method("getPending").parameters().href();
     }

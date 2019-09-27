@@ -8,6 +8,7 @@ import de.otto.edison.hal.Links;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginManager;
+import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -68,8 +69,12 @@ public class PendingPluginResource {
     List<PluginDto> updateDtos = updatePlugins.map(i -> mapper.mapInstalled(i, pending)).collect(toList());
     List<PluginDto> uninstallDtos = uninstallPlugins.map(i -> mapper.mapInstalled(i, pending)).collect(toList());
 
-    if (!installDtos.isEmpty() || !updateDtos.isEmpty() || !uninstallDtos.isEmpty()) {
+    if (
+      PluginPermissions.manage().isPermitted() &&
+      (!installDtos.isEmpty() || !updateDtos.isEmpty() || !uninstallDtos.isEmpty())
+    ) {
       linksBuilder.single(link("execute", resourceLinks.pendingPluginCollection().executePending()));
+      linksBuilder.single(link("cancel", resourceLinks.pendingPluginCollection().cancelPending()));
     }
 
     Embedded.Builder embedded = Embedded.embeddedBuilder();
