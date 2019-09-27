@@ -8,7 +8,6 @@ import de.otto.edison.hal.Links;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -46,8 +45,6 @@ public class PendingPluginResource {
   })
   @Produces(VndMediaType.PLUGIN_COLLECTION)
   public Response getPending() {
-    PluginPermissions.manage().check();
-
     List<AvailablePlugin> pending = pluginManager
       .getAvailable()
       .stream()
@@ -106,8 +103,18 @@ public class PendingPluginResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response executePending() {
-    PluginPermissions.manage().check();
     pluginManager.executePendingAndRestart();
+    return Response.ok().build();
+  }
+
+  @POST
+  @Path("/cancel")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  public Response cancelPending() {
+    pluginManager.cancelPending();
     return Response.ok().build();
   }
 }
