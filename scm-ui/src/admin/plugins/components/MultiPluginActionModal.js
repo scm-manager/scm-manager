@@ -63,7 +63,7 @@ class MultiPluginActionModal extends React.Component<Props, State> {
     } else if (actionType === MultiPluginActionType.CANCEL_PENDING) {
       this.cancelPending();
     } else if (actionType === MultiPluginActionType.UPDATE_ALL) {
-      this.updateAllWithRestart();
+      this.updateAll();
     }
   };
 
@@ -97,24 +97,10 @@ class MultiPluginActionModal extends React.Component<Props, State> {
       loading: true
     });
 
-    apiClient
-      .post(pendingPlugins._links.cancel.href)
-      .then(() => {
-        this.setState({
-          success: true,
-          loading: false
-        });
-      })
-      .catch(error => {
-        this.setState({
-          success: false,
-          loading: false,
-          error: error
-        });
-      });
+    apiClient.post(pendingPlugins._links.cancel.href).then(() => this.reload());
   };
 
-  updateAllWithRestart = () => {
+  updateAll = () => {
     const { installedPlugins } = this.props;
     this.setState({
       loading: true
@@ -122,20 +108,11 @@ class MultiPluginActionModal extends React.Component<Props, State> {
 
     apiClient
       .post(installedPlugins._links.update.href)
-      .then(waitForRestart)
-      .then(() => {
-        this.setState({
-          success: true,
-          loading: false
-        });
-      })
-      .catch(error => {
-        this.setState({
-          success: false,
-          loading: false,
-          error: error
-        });
-      });
+      .then(() => this.reload());
+  };
+
+  reload = () => {
+    window.location.reload(true);
   };
 
   renderModalContent = () => {
@@ -155,7 +132,7 @@ class MultiPluginActionModal extends React.Component<Props, State> {
   };
 
   renderUpdatable = () => {
-    const {installedPlugins, t} = this.props;
+    const { installedPlugins, t } = this.props;
     return (
       <>
         {installedPlugins &&
@@ -236,17 +213,43 @@ class MultiPluginActionModal extends React.Component<Props, State> {
     );
   };
 
+  renderDescription = () => {
+    const { t, actionType } = this.props;
+
+    if (actionType === MultiPluginActionType.EXECUTE_PENDING) {
+      return t("plugins.modal.executePending");
+    } else if (actionType === MultiPluginActionType.CANCEL_PENDING) {
+      return t("plugins.modal.cancelPending");
+    } else if (actionType === MultiPluginActionType.UPDATE_ALL) {
+      return t("plugins.modal.updateAllInfo");
+    }
+  };
+
+  renderLabel = () => {
+    const { t, actionType } = this.props;
+
+    if (actionType === MultiPluginActionType.EXECUTE_PENDING) {
+      return t("plugins.modal.executeAndRestart");
+    } else if (actionType === MultiPluginActionType.CANCEL_PENDING) {
+      return t("plugins.cancelPending");
+    } else if (actionType === MultiPluginActionType.UPDATE_ALL) {
+      return t("plugins.updateAll");
+    }
+  };
+
   renderBody = () => {
-    const { t } = this.props;
+    const { actionType } = this.props;
     return (
       <>
         <div className="media">
           <div className="content">
-            <p>{t("plugins.modal.executePending")}</p>
+            <p>{this.renderDescription()}</p>
             {this.renderModalContent()}
           </div>
         </div>
-        <div className="media">{this.renderNotifications()}</div>
+        {actionType === MultiPluginActionType.EXECUTE_PENDING && (
+          <div className="media">{this.renderNotifications()}</div>
+        )}
       </>
     );
   };
@@ -258,7 +261,7 @@ class MultiPluginActionModal extends React.Component<Props, State> {
       <ButtonGroup>
         <Button
           color="warning"
-          label={t("plugins.modal.executeAndRestart")}
+          label={this.renderLabel()}
           loading={loading}
           action={this.executeAction}
           disabled={error || success}
@@ -269,10 +272,10 @@ class MultiPluginActionModal extends React.Component<Props, State> {
   };
 
   render() {
-    const { onClose, t } = this.props;
+    const { onClose } = this.props;
     return (
       <Modal
-        title={t("plugins.modal.executeAndRestart")}
+        title={this.renderLabel()}
         closeFunction={onClose}
         body={this.renderBody()}
         footer={this.renderFooter()}

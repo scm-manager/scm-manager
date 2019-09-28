@@ -144,6 +144,7 @@ public class DefaultPluginManager implements PluginManager {
     return getInstalled()
       .stream()
       .filter(p -> isUpdatable(p.getDescriptor().getInformation().getName()))
+      .filter(p -> !p.isMarkedForUninstall())
       .collect(Collectors.toList());
   }
 
@@ -285,22 +286,19 @@ public class DefaultPluginManager implements PluginManager {
     PluginPermissions.manage().check();
     pendingUninstallQueue.forEach(PendingPluginUninstallation::cancel);
     pendingInstallQueue.forEach(PendingPluginInstallation::cancel);
+    pendingUninstallQueue.clear();
+    pendingInstallQueue.clear();
+    getInstalled().forEach(p -> p.setUninstallable(isUninstallable(p)));
   }
 
   @Override
   public void updateAll() {
     PluginPermissions.manage().check();
-    boolean pluginUpdated = false;
-
     for (InstalledPlugin installedPlugin : getInstalled()) {
       String pluginName = installedPlugin.getDescriptor().getInformation().getName();
       if (isUpdatable(pluginName)) {
         install(pluginName, false);
-        pluginUpdated = true;
       }
-    }
-    if (pluginUpdated) {
-      restart("update all plugins");
     }
   }
 }
