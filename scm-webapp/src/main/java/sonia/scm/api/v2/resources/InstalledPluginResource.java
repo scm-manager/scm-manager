@@ -67,7 +67,7 @@ public class InstalledPluginResource {
   })
   @TypeHint(CollectionDto.class)
   public Response updateAll(@QueryParam("restart") boolean restartAfterInstallation) {
-    pluginManager.updateAll(restartAfterInstallation);
+    pluginManager.updateAll();
     return Response.ok().build();
   }
 

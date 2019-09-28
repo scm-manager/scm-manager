@@ -487,7 +487,7 @@ class DefaultPluginManagerTest {
 
       when(center.getAvailable()).thenReturn(ImmutableSet.of(newMailPlugin, newReviewPlugin));
 
-      manager.updateAll(false);
+      manager.updateAll();
 
       verify(installer).install(newMailPlugin);
       verify(installer).install(newReviewPlugin);
@@ -503,7 +503,7 @@ class DefaultPluginManagerTest {
 
       when(center.getAvailable()).thenReturn(ImmutableSet.of(oldScriptPlugin));
 
-      manager.updateAll(false);
+      manager.updateAll();
 
       verify(installer, never()).install(oldScriptPlugin);
     }
@@ -569,7 +569,7 @@ class DefaultPluginManagerTest {
 
     @Test
     void shouldThrowAuthorizationExceptionsForUpdateAll() {
-      assertThrows(AuthorizationException.class, () -> manager.updateAll(false));
+      assertThrows(AuthorizationException.class, () -> manager.updateAll());
     }
   }
 }

@@ -109,5 +109,5 @@ public interface PluginManager {
   /**
    * Update all installed plugins.
    */
-  void updateAll(boolean restartAfterInstallation);
+  void updateAll();
 }

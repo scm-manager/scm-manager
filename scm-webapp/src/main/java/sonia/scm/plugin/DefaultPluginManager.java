@@ -288,17 +288,19 @@ public class DefaultPluginManager implements PluginManager {
   }
 
   @Override
-  public void updateAll(boolean restartAfterInstallation) {
+  public void updateAll() {
     PluginPermissions.manage().check();
+    boolean pluginUpdated = false;
 
     for (InstalledPlugin installedPlugin : getInstalled()) {
       String pluginName = installedPlugin.getDescriptor().getInformation().getName();
       if (isUpdatable(pluginName)) {
         install(pluginName, false);
+        pluginUpdated = true;
       }
-      if (restartAfterInstallation) {
-        restart("update all plugin");
-      }
+    }
+    if (pluginUpdated) {
+      restart("update all plugins");
     }
   }
 }
