@@ -47,15 +47,17 @@ import sonia.scm.repository.Repository;
 public class HgRepositoryServiceResolver implements RepositoryServiceResolver
 {
 
-  private HgRepositoryHandler handler;
-  private HgHookManager hookManager;
+  private final HgRepositoryHandler handler;
+  private final HgHookManager hookManager;
+  private final HgWorkdirFactory workdirFactory;
 
   @Inject
   public HgRepositoryServiceResolver(HgRepositoryHandler handler,
-    HgHookManager hookManager)
+                                     HgHookManager hookManager, HgWorkdirFactory workdirFactory)
   {
     this.handler = handler;
     this.hookManager = hookManager;
+    this.workdirFactory = workdirFactory;
   }
 
   @Override
@@ -63,7 +65,7 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
     HgRepositoryServiceProvider provider = null;
 
     if (HgRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new HgRepositoryServiceProvider(handler, hookManager, repository);
+      provider = new HgRepositoryServiceProvider(handler, hookManager, repository, workdirFactory);
     }
 
     return provider;
