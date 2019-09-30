@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { Button } from "@scm-manager/ui-components";
-import type {PendingPlugins, PluginCollection} from "@scm-manager/ui-types";
+import type { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
 import MultiPluginActionModal from "./MultiPluginActionModal";
 
@@ -17,7 +17,7 @@ type Props = {
   installedPlugins?: PluginCollection,
 
   // context props
-  t: string => string
+  t: (key: string, params?: Object) => string
 };
 
 type State = {
@@ -39,19 +39,25 @@ class MultiPluginAction extends React.Component<Props, State> {
   };
 
   renderLabel = () => {
-    const {t, actionType} = this.props;
+    const { t, actionType, installedPlugins } = this.props;
+    const outdatedPlugins =
+      actionType === MultiPluginActionType.UPDATE_ALL &&
+      installedPlugins._embedded.plugins.filter(p => p._links.update).length;
+
     if (actionType === MultiPluginActionType.EXECUTE_PENDING) {
       return t("plugins.executePending");
     } else if (actionType === MultiPluginActionType.CANCEL_PENDING) {
       return t("plugins.cancelPending");
     } else {
-      return t("plugins.updateAll");
+      return t("plugins.outdatedPlugins", {
+        count: outdatedPlugins
+      });
     }
   };
 
   renderModal = () => {
     const { showModal } = this.state;
-    const {pendingPlugins, installedPlugins, actionType} = this.props;
+    const { pendingPlugins, installedPlugins, actionType } = this.props;
     if (showModal) {
       return (
         <MultiPluginActionModal
@@ -73,12 +79,26 @@ class MultiPluginAction extends React.Component<Props, State> {
     return null;
   };
 
+  renderIcon = () => {
+    const { actionType } = this.props;
+
+    if (actionType === MultiPluginActionType.EXECUTE_PENDING) {
+      return "arrow-circle-right";
+    } else if (actionType === MultiPluginActionType.CANCEL_PENDING) {
+      return "times";
+    } else {
+      return "sync-alt";
+    }
+  };
+
   render() {
     return (
       <>
         {this.renderModal()}
         <Button
           color="primary"
+          reducedMobile={true}
+          icon={this.renderIcon()}
           label={this.renderLabel()}
           action={this.toggleModal}
         />

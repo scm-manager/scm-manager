@@ -113,34 +113,47 @@ class PluginsOverview extends React.Component<Props> {
 
   createActions = () => {
     const { pendingPlugins, collection } = this.props;
-    return (
-      <ButtonGroup>
-        {pendingPlugins &&
-          pendingPlugins._links &&
-          pendingPlugins._links.execute && (
-            <MultiPluginAction
-              pendingPlugins={pendingPlugins}
-              actionType={MultiPluginActionType.EXECUTE_PENDING}
-            />
-          )}
-        {pendingPlugins &&
-          pendingPlugins._links &&
-          pendingPlugins._links.cancel && (
-            <MultiPluginAction
-              pendingPlugins={pendingPlugins}
-              actionType={MultiPluginActionType.CANCEL_PENDING}
-            />
-          )}
-        {collection &&
-          collection._links &&
-          collection._links.update && (
-            <MultiPluginAction
-              installedPlugins={collection}
-              actionType={MultiPluginActionType.UPDATE_ALL}
-            />
-          )}
-      </ButtonGroup>
-    );
+    const buttons = [];
+
+    if (
+      pendingPlugins &&
+      pendingPlugins._links &&
+      pendingPlugins._links.execute
+    ) {
+      buttons.push(
+        <MultiPluginAction
+          pendingPlugins={pendingPlugins}
+          actionType={MultiPluginActionType.EXECUTE_PENDING}
+        />
+      );
+    }
+
+    if (
+      pendingPlugins &&
+      pendingPlugins._links &&
+      pendingPlugins._links.cancel
+    ) {
+      buttons.push(
+        <MultiPluginAction
+          pendingPlugins={pendingPlugins}
+          actionType={MultiPluginActionType.CANCEL_PENDING}
+        />
+      );
+    }
+
+    if (collection && collection._links && collection._links.update) {
+      buttons.push(
+        <MultiPluginAction
+          installedPlugins={collection}
+          actionType={MultiPluginActionType.UPDATE_ALL}
+        />
+      );
+    }
+
+    if (buttons.length > 0) {
+      return <ButtonGroup>{buttons}</ButtonGroup>;
+    }
+    return null;
   };
 
   render() {

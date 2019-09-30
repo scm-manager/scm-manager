@@ -29,9 +29,11 @@
       "installedNavLink": "Installiert",
       "availableNavLink": "Verfügbar"
     },
-    "executePending": "Ausstehende Änderungen ausführen",
+    "executePending": "Änderungen ausführen",
+    "outdatedPlugins": "{{count}} veraltetes Plugin",
+    "outdatedPlugins_plural": "{{count}} veraltete Plugins",
     "updateAll": "Alle Plugins aktualisieren",
-    "cancelPending": "Ausstehende Änderungen abbrechen",
+    "cancelPending": "Änderungen abbrechen",
     "noPlugins": "Keine Plugins gefunden.",
     "modal": {
       "title": {
@@ -50,7 +52,7 @@
       "updateAndRestart": "Aktualisieren und Neustarten",
       "uninstallAndRestart": "Deinstallieren and Neustarten",
       "executeAndRestart": "Ausführen und Neustarten",
-      "updateAllAndRestart": "Alle aktualisieren und Neustarten",
+      "updateAll": "Alle Plugins aktualisieren",
       "abort": "Abbrechen",
       "author": "Autor",
       "version": "Version",

@@ -66,7 +66,7 @@ public class InstalledPluginResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(CollectionDto.class)
-  public Response updateAll(@QueryParam("restart") boolean restartAfterInstallation) {
+  public Response updateAll() {
     pluginManager.updateAll();
     return Response.ok().build();
   }
