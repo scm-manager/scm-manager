@@ -7,6 +7,7 @@ import {translate} from "react-i18next";
 
 type Props = {
   changeset: Changeset,
+  defaultCollapse?: boolean,
 
   // context props
   t: string => string
@@ -23,12 +24,12 @@ class ChangesetDiff extends React.Component<Props> {
   }
 
   render() {
-    const { changeset, t } = this.props;
+    const { changeset, defaultCollapse, t } = this.props;
     if (!this.isDiffSupported(changeset)) {
       return <Notification type="danger">{t("changeset.diffNotSupported")}</Notification>;
     } else {
       const url = this.createUrl(changeset);
-      return <LoadingDiff url={url} />;
+      return <LoadingDiff url={url} defaultCollapse={defaultCollapse} />;
     }
   }
 

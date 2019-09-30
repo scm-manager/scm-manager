@@ -73,7 +73,8 @@
     "errorTitle": "Fehler",
     "errorSubtitle": "Changesets konnten nicht abgerufen werden",
     "noChangesets": "Keine Changesets in diesem Branch gefunden.",
-    "branchSelectorLabel": "Branches"
+    "branchSelectorLabel": "Branches",
+    "collapseDiffs": "Auf-/Zuklappen"
   },
   "changeset": {
     "description": "Beschreibung",
