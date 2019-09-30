@@ -70,7 +70,7 @@ const styles = {
 
 type Props = DiffObjectProps & {
   file: File,
-  collapsible: boolean,
+  defaultCollapse: boolean,
 
   // context props
   classes: any,
@@ -84,19 +84,20 @@ type State = {
 
 class DiffFile extends React.Component<Props, State> {
   static defaultProps = {
-    collapsible: true
+    defaultCollapse: false
   };
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      collapsed: false,
+      collapsed: this.props.defaultCollapse,
       sideBySide: false
     };
   }
 
   toggleCollapse = () => {
-    if (this.props.collapsible) {
+    const { file } = this.props;
+    if(file && !file.isBinaray) {
       this.setState(state => ({
         collapsed: !state.collapsed
       }));
@@ -178,7 +179,8 @@ class DiffFile extends React.Component<Props, State> {
     ) {
       return (
         <>
-          {file.oldPath} <Icon name="arrow-right" color="inherit" /> {file.newPath}
+          {file.oldPath} <Icon name="arrow-right" color="inherit" />{" "}
+          {file.newPath}
         </>
       );
     } else if (file.type === "delete") {
@@ -238,7 +240,6 @@ class DiffFile extends React.Component<Props, State> {
       file,
       fileControlFactory,
       fileAnnotationFactory,
-      collapsible,
       classes,
       t
     } = this.props;
@@ -264,7 +265,9 @@ class DiffFile extends React.Component<Props, State> {
         </div>
       );
     }
-    const collapseIcon = collapsible ? <Icon name={icon} color="inherit" /> : null;
+    const collapseIcon = !file.isBinary ? (
+      <Icon name={icon} color="inherit" />
+    ) : null;
 
     const fileControls = fileControlFactory
       ? fileControlFactory(file, this.setCollapse)
