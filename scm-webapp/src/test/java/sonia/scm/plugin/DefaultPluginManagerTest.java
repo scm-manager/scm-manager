@@ -38,6 +38,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static sonia.scm.plugin.PluginTestHelper.createAvailable;
@@ -473,6 +474,12 @@ class DefaultPluginManagerTest {
       verify(gitPendingPluginInformation).cancel();
       Boolean lasUninstallMarkerSet = uninstallCaptor.getAllValues().get(uninstallCaptor.getAllValues().size() - 1);
       assertThat(lasUninstallMarkerSet).isFalse();
+
+      Files.createFile(mailPluginPath.resolve("uninstall"));
+
+      manager.cancelPending();
+      verify(gitPendingPluginInformation, times(1)).cancel();
+      assertThat(mailPluginPath.resolve("uninstall")).exists();
     }
 
     @Test
