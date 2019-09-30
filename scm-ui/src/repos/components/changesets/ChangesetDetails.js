@@ -63,7 +63,7 @@ class ChangesetDetails extends React.Component<Props, State> {
 
     return (
       <>
-        <div className="content">
+        <div className="content is-marginless">
           <h4>
             <ExtensionPoint
               name="changeset.description"
