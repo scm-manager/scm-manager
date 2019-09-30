@@ -285,20 +285,10 @@ class DiffFile extends React.Component<Props, State> {
               <ButtonGroup>
                 <Button
                   action={this.toggleSideBySide}
-                  className="reduced-mobile"
-                >
-                  <span className="icon is-small">
-                    <i
-                      className={classNames(
-                        "fas",
-                        sideBySide ? "fa-align-left" : "fa-columns"
-                      )}
-                    />
-                  </span>
-                  <span>
-                    {t(sideBySide ? "diff.combined" : "diff.sideBySide")}
-                  </span>
-                </Button>
+                  icon={sideBySide ? "align-left" : "columns"}
+                  label={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
+                  reducedMobile={true}
+                />
                 {fileControls}
               </ButtonGroup>
             </div>
