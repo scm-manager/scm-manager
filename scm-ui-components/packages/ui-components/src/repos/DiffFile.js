@@ -13,6 +13,7 @@ import classNames from "classnames";
 import { translate } from "react-i18next";
 import { Button, ButtonGroup } from "../buttons";
 import Tag from "../Tag";
+import Icon from "../Icon";
 
 const styles = {
   panel: {
@@ -177,7 +178,7 @@ class DiffFile extends React.Component<Props, State> {
     ) {
       return (
         <>
-          {file.oldPath} <i className="fa fa-arrow-right" /> {file.newPath}
+          {file.oldPath} <Icon name="arrow-right" color="inherit" /> {file.newPath}
         </>
       );
     } else if (file.type === "delete") {
@@ -245,12 +246,12 @@ class DiffFile extends React.Component<Props, State> {
     const viewType = sideBySide ? "split" : "unified";
 
     let body = null;
-    let icon = "fa fa-angle-right";
+    let icon = "angle-right";
     if (!collapsed) {
       const fileAnnotations = fileAnnotationFactory
         ? fileAnnotationFactory(file)
         : null;
-      icon = "fa fa-angle-down";
+      icon = "angle-down";
       body = (
         <div className="panel-block is-paddingless">
           {fileAnnotations}
@@ -263,7 +264,7 @@ class DiffFile extends React.Component<Props, State> {
         </div>
       );
     }
-    const collapseIcon = collapsible ? <i className={icon} /> : null;
+    const collapseIcon = collapsible ? <Icon name={icon} color="inherit" /> : null;
 
     const fileControls = fileControlFactory
       ? fileControlFactory(file, this.setCollapse)
