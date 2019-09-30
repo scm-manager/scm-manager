@@ -69,7 +69,7 @@ const styles = {
 
 type Props = DiffObjectProps & {
   file: File,
-  collapsible: true,
+  collapsible: boolean,
 
   // context props
   classes: any,
@@ -82,6 +82,10 @@ type State = {
 };
 
 class DiffFile extends React.Component<Props, State> {
+  static defaultProps = {
+    collapsible: true
+  };
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -91,7 +95,7 @@ class DiffFile extends React.Component<Props, State> {
   }
 
   toggleCollapse = () => {
-    if (this.props.collapsable) {
+    if (this.props.collapsible) {
       this.setState(state => ({
         collapsed: !state.collapsed
       }));
