@@ -173,7 +173,7 @@ class PluginsOverview extends React.Component<Props, State> {
           key={"updateAll"}
           icon={"sync-alt"}
           label={this.computeUpdateAllSize()}
-          onClick={() => this.setState({ showUpdateAllModal: true })}
+          action={() => this.setState({ showUpdateAllModal: true })}
         />
       );
     }
@@ -195,8 +195,30 @@ class PluginsOverview extends React.Component<Props, State> {
   };
 
   render() {
-    const { loading, error, collection, pendingPlugins } = this.props;
+    const { loading, error, collection } = this.props;
 
+    if (error) {
+      return <ErrorNotification error={error} />;
+    }
+
+    if (!collection || loading) {
+      return <Loading />;
+    }
+
+    const actions = this.createActions();
+    return (
+      <>
+        {this.renderHeader(actions)}
+        <hr className="header-with-actions" />
+        {this.renderPluginsList()}
+        {this.renderFooter(actions)}
+        {this.renderModals()}
+      </>
+    );
+  }
+
+  renderModals = () => {
+    const { collection, pendingPlugins } = this.props;
     const {
       showPendingModal,
       showCancelModal,
@@ -229,25 +251,7 @@ class PluginsOverview extends React.Component<Props, State> {
         />
       );
     }
-
-    if (error) {
-      return <ErrorNotification error={error} />;
-    }
-
-    if (!collection || loading) {
-      return <Loading />;
-    }
-
-    const actions = this.createActions();
-    return (
-      <>
-        {this.renderHeader(actions)}
-        <hr className="header-with-actions" />
-        {this.renderPluginsList()}
-        {this.renderFooter(actions)}
-      </>
-    );
-  }
+  };
 
   renderPluginsList() {
     const { collection, t } = this.props;
