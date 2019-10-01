@@ -39,6 +39,7 @@ import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 /**
  *
@@ -49,11 +50,13 @@ public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
 
   private final GitRepositoryHandler handler;
   private final GitRepositoryConfigStoreProvider storeProvider;
+  private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
   @Inject
-  public GitRepositoryServiceResolver(GitRepositoryHandler handler, GitRepositoryConfigStoreProvider storeProvider) {
+  public GitRepositoryServiceResolver(GitRepositoryHandler handler, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory) {
     this.handler = handler;
     this.storeProvider = storeProvider;
+    this.lfsBlobStoreFactory = lfsBlobStoreFactory;
   }
 
   @Override
@@ -61,7 +64,7 @@ public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
     GitRepositoryServiceProvider provider = null;
 
     if (GitRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new GitRepositoryServiceProvider(handler, repository, storeProvider);
+      provider = new GitRepositoryServiceProvider(handler, repository, storeProvider, lfsBlobStoreFactory);
     }
 
     return provider;

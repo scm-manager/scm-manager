@@ -44,7 +44,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
     ByteArrayOutputStream output = new ByteArrayOutputStream();
-    gitDiffCommand.getDiffResult(diffCommandRequest, output);
+    gitDiffCommand.getDiffResult(diffCommandRequest).accept(output);
     assertEquals(DIFF_FILE_A + DIFF_FILE_B, output.toString());
   }
 
@@ -54,7 +54,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("test-branch");
     ByteArrayOutputStream output = new ByteArrayOutputStream();
-    gitDiffCommand.getDiffResult(diffCommandRequest, output);
+    gitDiffCommand.getDiffResult(diffCommandRequest).accept(output);
     assertEquals(DIFF_FILE_A + DIFF_FILE_B, output.toString());
   }
 
@@ -65,7 +65,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
     diffCommandRequest.setRevision("test-branch");
     diffCommandRequest.setPath("a.txt");
     ByteArrayOutputStream output = new ByteArrayOutputStream();
-    gitDiffCommand.getDiffResult(diffCommandRequest, output);
+    gitDiffCommand.getDiffResult(diffCommandRequest).accept(output);
     assertEquals(DIFF_FILE_A, output.toString());
   }
 
@@ -76,7 +76,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
     diffCommandRequest.setRevision("master");
     diffCommandRequest.setAncestorChangeset("test-branch");
     ByteArrayOutputStream output = new ByteArrayOutputStream();
-    gitDiffCommand.getDiffResult(diffCommandRequest, output);
+    gitDiffCommand.getDiffResult(diffCommandRequest).accept(output);
     assertEquals(DIFF_FILE_A_MULTIPLE_REVISIONS + DIFF_FILE_F_MULTIPLE_REVISIONS, output.toString());
   }
 
@@ -88,7 +88,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
     diffCommandRequest.setAncestorChangeset("test-branch");
     diffCommandRequest.setPath("a.txt");
     ByteArrayOutputStream output = new ByteArrayOutputStream();
-    gitDiffCommand.getDiffResult(diffCommandRequest, output);
+    gitDiffCommand.getDiffResult(diffCommandRequest).accept(output);
     assertEquals(DIFF_FILE_A_MULTIPLE_REVISIONS, output.toString());
   }
 }

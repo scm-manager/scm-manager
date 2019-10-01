@@ -1,10 +1,19 @@
 //@flow
 import React from "react";
-import {Change, Diff as DiffComponent, DiffObjectProps, File, getChangeKey, Hunk} from "react-diff-view";
+import {
+  Change,
+  Diff as DiffComponent,
+  DiffObjectProps,
+  File,
+  getChangeKey,
+  Hunk
+} from "react-diff-view";
 import injectSheets from "react-jss";
 import classNames from "classnames";
-import {translate} from "react-i18next";
-import {Button, ButtonGroup} from "../buttons";
+import { translate } from "react-i18next";
+import { Button, ButtonGroup } from "../buttons";
+import Tag from "../Tag";
+import Icon from "../Icon";
 
 const styles = {
   panel: {
@@ -34,12 +43,35 @@ const styles = {
   },
   changeType: {
     marginLeft: ".75rem"
+  },
+  diff: {
+    /* column sizing */
+    "& > colgroup .diff-gutter-col": {
+      width: "3.25rem"
+    },
+    /* prevent following content from moving down */
+    "& > .diff-gutter:empty:hover::after": {
+      fontSize: "0.7rem"
+    },
+    /* smaller font size for code */
+    "& .diff-line": {
+      fontSize: "0.75rem"
+    },
+    /* comment padding for sideBySide view */
+    "&.split .diff-widget-content .is-indented-line": {
+      paddingLeft: "3.25rem"
+    },
+    /* comment padding for combined view */
+    "&.unified .diff-widget-content .is-indented-line": {
+      paddingLeft: "6.5rem"
+    }
   }
 };
 
 type Props = DiffObjectProps & {
   file: File,
-  collapsible: true,
+  defaultCollapse: boolean,
+
   // context props
   classes: any,
   t: string => string
@@ -51,16 +83,21 @@ type State = {
 };
 
 class DiffFile extends React.Component<Props, State> {
+  static defaultProps = {
+    defaultCollapse: false
+  };
+
   constructor(props: Props) {
     super(props);
     this.state = {
-      collapsed: false,
+      collapsed: this.props.defaultCollapse,
       sideBySide: false
     };
   }
 
   toggleCollapse = () => {
-    if (this.props.collapsable) {
+    const { file } = this.props;
+    if(file && !file.isBinaray) {
       this.setState(state => ({
         collapsed: !state.collapsed
       }));
@@ -142,7 +179,8 @@ class DiffFile extends React.Component<Props, State> {
     ) {
       return (
         <>
-          {file.oldPath} <i className="fa fa-arrow-right" /> {file.newPath}
+          {file.oldPath} <Icon name="arrow-right" color="inherit" />{" "}
+          {file.newPath}
         </>
       );
     } else if (file.type === "delete") {
@@ -179,23 +217,21 @@ class DiffFile extends React.Component<Props, State> {
     }
     const color =
       value === "added"
-        ? "is-success"
+        ? "success is-outlined"
         : value === "deleted"
-          ? "is-danger"
-          : "is-info";
+          ? "danger is-outlined"
+          : "info is-outlined";
 
     return (
-      <span
+      <Tag
         className={classNames(
-          "tag",
           "is-rounded",
           "has-text-weight-normal",
-          color,
           classes.changeType
         )}
-      >
-        {value}
-      </span>
+        color={color}
+        label={value}
+      />
     );
   };
 
@@ -204,7 +240,6 @@ class DiffFile extends React.Component<Props, State> {
       file,
       fileControlFactory,
       fileAnnotationFactory,
-      collapsible,
       classes,
       t
     } = this.props;
@@ -212,22 +247,27 @@ class DiffFile extends React.Component<Props, State> {
     const viewType = sideBySide ? "split" : "unified";
 
     let body = null;
-    let icon = "fa fa-angle-right";
+    let icon = "angle-right";
     if (!collapsed) {
       const fileAnnotations = fileAnnotationFactory
         ? fileAnnotationFactory(file)
         : null;
-      icon = "fa fa-angle-down";
+      icon = "angle-down";
       body = (
-        <div className="panel-block is-paddingless is-size-7">
+        <div className="panel-block is-paddingless">
           {fileAnnotations}
-          <DiffComponent viewType={viewType}>
+          <DiffComponent
+            className={classNames(viewType, classes.diff)}
+            viewType={viewType}
+          >
             {file.hunks.map(this.renderHunk)}
           </DiffComponent>
         </div>
       );
     }
-    const collapseIcon = collapsible? <i className={icon} />: null;
+    const collapseIcon = !file.isBinary ? (
+      <Icon name={icon} color="inherit" />
+    ) : null;
 
     const fileControls = fileControlFactory
       ? fileControlFactory(file, this.setCollapse)
@@ -253,20 +293,10 @@ class DiffFile extends React.Component<Props, State> {
               <ButtonGroup>
                 <Button
                   action={this.toggleSideBySide}
-                  className="reduced-mobile"
-                >
-                  <span className="icon is-small">
-                    <i
-                      className={classNames(
-                        "fas",
-                        sideBySide ? "fa-align-left" : "fa-columns"
-                      )}
-                    />
-                  </span>
-                  <span>
-                    {t(sideBySide ? "diff.combined" : "diff.sideBySide")}
-                  </span>
-                </Button>
+                  icon={sideBySide ? "align-left" : "columns"}
+                  label={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
+                  reducedMobile={true}
+                />
                 {fileControls}
               </ButtonGroup>
             </div>

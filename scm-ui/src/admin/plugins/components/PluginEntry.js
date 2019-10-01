@@ -1,8 +1,9 @@
 //@flow
 import React from "react";
 import injectSheet from "react-jss";
+import { translate } from "react-i18next";
 import type { Plugin } from "@scm-manager/ui-types";
-import { CardColumn } from "@scm-manager/ui-components";
+import { CardColumn, Icon } from "@scm-manager/ui-components";
 import PluginAvatar from "./PluginAvatar";
 import classNames from "classnames";
 import PluginModal from "./PluginModal";
@@ -18,7 +19,8 @@ type Props = {
   refresh: () => void,
 
   // context props
-  classes: any
+  classes: any,
+  t: string => string
 };
 
 type State = {
@@ -31,21 +33,12 @@ const styles = {
   link: {
     cursor: "pointer",
     pointerEvents: "all",
+    marginBottom: "0 !important",
     padding: "0.5rem",
-    border: "solid 1px var(--dark-25)",
+    border: "solid 1px #cdcdcd", // $dark-25
     borderRadius: "4px",
     "&:hover": {
-      borderColor: "var(--dark-50)"
-    }
-  },
-  topRight: {
-    position: "absolute",
-    right: 0,
-    top: 0
-  },
-  layout: {
-    "& .level": {
-      paddingBottom: "0.5rem"
+      borderColor: "#9a9a9a" // $dark-50
     }
   },
   actionbar: {
@@ -98,15 +91,15 @@ class PluginEntry extends React.Component<Props, State> {
   };
 
   createActionbar = () => {
-    const { classes } = this.props;
+    const { classes, t } = this.props;
     return (
-      <div className={classNames(classes.actionbar, classes.topRight)}>
+      <div className={classes.actionbar}>
         {this.isInstallable() && (
           <span
             className={classNames(classes.link, "level-item")}
             onClick={() => this.toggleModal("showInstallModal")}
           >
-            <i className="fas fa-download has-text-info" />
+            <Icon title={t("plugins.modal.install")} name="download" color="info" />
           </span>
         )}
         {this.isUninstallable() && (
@@ -114,7 +107,7 @@ class PluginEntry extends React.Component<Props, State> {
             className={classNames(classes.link, "level-item")}
             onClick={() => this.toggleModal("showUninstallModal")}
           >
-            <i className="fas fa-trash has-text-info" />
+            <Icon title={t("plugins.modal.uninstall")} name="trash" color="info" />
           </span>
         )}
         {this.isUpdatable() && (
@@ -122,7 +115,7 @@ class PluginEntry extends React.Component<Props, State> {
             className={classNames(classes.link, "level-item")}
             onClick={() => this.toggleModal("showUpdateModal")}
           >
-            <i className="fas fa-sync-alt has-text-info" />
+            <Icon title={t("plugins.modal.update")} name="sync-alt" color="info" />
           </span>
         )}
       </div>
@@ -178,7 +171,7 @@ class PluginEntry extends React.Component<Props, State> {
   };
 
   render() {
-    const { plugin, classes } = this.props;
+    const { plugin } = this.props;
     const avatar = this.createAvatar(plugin);
     const actionbar = this.createActionbar();
     const footerRight = this.createFooterRight(plugin);
@@ -188,7 +181,6 @@ class PluginEntry extends React.Component<Props, State> {
     return (
       <>
         <CardColumn
-          className={classes.layout}
           action={
             this.isInstallable()
               ? () => this.toggleModal("showInstallModal")
@@ -210,4 +202,4 @@ class PluginEntry extends React.Component<Props, State> {
   }
 }
 
-export default injectSheet(styles)(PluginEntry);
+export default injectSheet(styles)(translate("admin")(PluginEntry));

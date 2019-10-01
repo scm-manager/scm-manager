@@ -1,24 +1,27 @@
 //@flow
 import React from "react";
-import type { Tag } from "@scm-manager/ui-types";
-import ChangesetTagBase from "./ChangesetTagBase";
 import { translate } from "react-i18next";
+import type { Tag } from "@scm-manager/ui-types";
 import Tooltip from "../../Tooltip";
+import ChangesetTagBase from "./ChangesetTagBase";
 
 type Props = {
   tags: Tag[],
 
   // context props
-  t: (string) => string
+  t: string => string
 };
 
 class ChangesetTagsCollapsed extends React.Component<Props> {
   render() {
     const { tags, t } = this.props;
-    const message = tags.map((tag) => tag.name).join(", ");
+    const message = tags.map(tag => tag.name).join(", ");
     return (
       <Tooltip location="top" message={message}>
-        <ChangesetTagBase icon={"fa-tags"} label={ tags.length + " " + t("changeset.tags") } />
+        <ChangesetTagBase
+          icon="tags"
+          label={tags.length + " " + t("changeset.tags")}
+        />
       </Tooltip>
     );
   }

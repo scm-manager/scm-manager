@@ -1,10 +1,12 @@
 //@flow
 import React from "react";
-import {Link} from "react-router-dom";
-import type {Branch, Repository} from "@scm-manager/ui-types";
+import { Link } from "react-router-dom";
+import { translate } from "react-i18next";
 import injectSheet from "react-jss";
-import {binder, ExtensionPoint} from "@scm-manager/ui-extensions";
 import classNames from "classnames";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import type { Branch, Repository } from "@scm-manager/ui-types";
+import Icon from "./Icon";
 
 type Props = {
   repository: Repository,
@@ -14,7 +16,10 @@ type Props = {
   revision: string,
   path: string,
   baseUrl: string,
-  classes: any
+
+  // Context props
+  classes: any,
+  t: string => string
 };
 
 const styles = {
@@ -27,6 +32,9 @@ const styles = {
   },
   flexStart: {
     flex: "1"
+  },
+  homeIcon: {
+    lineHeight: "1.5rem"
   },
   buttonGroup: {
     alignSelf: "center",
@@ -45,7 +53,7 @@ class Breadcrumb extends React.Component<Props> {
         if (paths.length - 1 === index) {
           return (
             <li className="is-active" key={index}>
-              <Link to={"#"} aria-current="page">
+              <Link to="#" aria-current="page">
                 {path}
               </Link>
             </li>
@@ -59,19 +67,20 @@ class Breadcrumb extends React.Component<Props> {
       });
       return map;
     }
-    return <li />;
+    return null;
   }
 
   render() {
     const {
-      classes,
       baseUrl,
       branch,
       defaultBranch,
       branches,
       revision,
       path,
-      repository
+      repository,
+      classes,
+      t
     } = this.props;
 
     return (
@@ -84,7 +93,19 @@ class Breadcrumb extends React.Component<Props> {
             )}
             aria-label="breadcrumbs"
           >
-            <ul>{this.renderPath()}</ul>
+            <ul>
+              <li>
+                <Link to={baseUrl + "/" + revision + "/"}>
+                  <Icon
+                    className={classes.homeIcon}
+                    title={t("breadcrumb.home")}
+                    name="home"
+                    color="inherit"
+                  />
+                </Link>
+              </li>
+              {this.renderPath()}
+            </ul>
           </nav>
           {binder.hasExtension("repos.sources.actionbar") && (
             <div className={classes.buttonGroup}>
@@ -112,4 +133,4 @@ class Breadcrumb extends React.Component<Props> {
   }
 }
 
-export default injectSheet(styles)(Breadcrumb);
+export default translate("commons")(injectSheet(styles)(Breadcrumb));

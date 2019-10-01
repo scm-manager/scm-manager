@@ -18,7 +18,15 @@ class Modal extends React.Component<Props> {
   };
 
   render() {
-    const { title, closeFunction, body, footer, active, className, headColor } = this.props;
+    const {
+      title,
+      closeFunction,
+      body,
+      footer,
+      active,
+      className,
+      headColor
+    } = this.props;
 
     const isActive = active ? "is-active" : null;
 
@@ -31,7 +39,12 @@ class Modal extends React.Component<Props> {
       <div className={classNames("modal", className, isActive)}>
         <div className="modal-background" />
         <div className="modal-card">
-          <header className={classNames("modal-card-head", `has-background-${headColor}`)}>
+          <header
+            className={classNames(
+              "modal-card-head",
+              `has-background-${headColor}`
+            )}
+          >
             <p className="modal-card-title is-marginless">{title}</p>
             <button
               className="delete"

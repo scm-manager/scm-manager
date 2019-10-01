@@ -1,10 +1,10 @@
 @import "bulma/sass/utilities/initial-variables";
 @import "bulma/sass/utilities/functions";
 
+$turquoise: #00d1df;
 $blue: #33b2e8;
 $cyan: $blue;
 $green: #00c79b;
-$mint: #11dfd0;
 
 .is-ellipsis-overflow {
   overflow: hidden;
@@ -36,7 +36,7 @@ $mint: #11dfd0;
 }
 
 .main {
-  min-height: calc(100vh - 260px);
+  min-height: calc(100vh - 300px);
 }
 
 // shown in top section when pageactions set
@@ -96,7 +96,14 @@ $danger-75: scale-color($danger, $lightness: 25%);
 $danger-50: scale-color($danger, $lightness: 50%);
 $danger-25: scale-color($danger, $lightness: 75%);
 
+/*
+// not supported by ie
+// css vars for external reuse
 :root {
+  // asc sorted initial variables
+  --black: #{$black};
+  --white: #{$white};
+
   // asc sorted derived-variables
   --primary: #{$primary};
   --primary-75: #{$primary-75};
@@ -131,7 +138,14 @@ $danger-25: scale-color($danger, $lightness: 75%);
   --link-50: #{$link-50};
   --link-25: #{$link-25};
 }
+*/
 
+// readability issues with original color
+.has-text-warning {
+  color: #ffb600 !important;
+}
+
+// border and background colors
 .has-background-dark-75 {
   background-color: $dark-75;
 }
@@ -196,11 +210,183 @@ $danger-25: scale-color($danger, $lightness: 75%);
   background-color: $danger-25;
 }
 
-.has-background-brown {
-  background-color: #000000b3;
+.has-background-warning-invert {
+  background-color: $warning-invert;
 }
 
-// import at the end, because we need a lot of stuff from bulma/bulma
+// tags
+.tag:not(body) {
+  border: 1px solid transparent;
+  background-color: $white;
+
+  &.is-delete {
+    background-color: $light;
+  }
+
+  &.is-outlined {
+    background-color: $white;
+  }
+  &.is-black.is-outlined {
+    color: $black;
+    border-color: $black;
+  }
+  &.is-dark.is-outlined {
+    color: $dark;
+    border-color: $dark;
+  }
+  &.is-light.is-outlined {
+    color: $light;
+    border-color: $light;
+  }
+  &.is-white.is-outlined {
+    color: $white;
+    border-color: $white;
+  }
+  &.is-primary.is-outlined {
+    color: $primary;
+    border-color: $primary;
+  }
+  &.is-link.is-outlined {
+    color: $link;
+    border-color: $link;
+  }
+  &.is-info.is-outlined {
+    color: $info;
+    border-color: $info;
+  }
+  &.is-success.is-outlined {
+    color: $success;
+    border-color: $success;
+  }
+  &.is-warning.is-outlined {
+    color: $warning;
+    border-color: $warning;
+  }
+  &.is-danger.is-outlined {
+    color: $danger;
+    border-color: $danger;
+  }
+}
+
+// buttons
+.button {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  height: 2.5rem;
+  font-weight: 600;
+
+  &[disabled] {
+    opacity: 1;
+  }
+
+  &.is-primary:hover,
+  &.is-primary.is-hovered {
+    background-color: scale-color($primary, $lightness: -10%);
+  }
+
+  &.is-primary:active,
+  &.is-primary.is-active {
+    background-color: scale-color($primary, $lightness: -20%);
+  }
+
+  &.is-primary[disabled] {
+    background-color: scale-color($primary, $lightness: 75%);
+  }
+
+  &.is-info:hover,
+  &.is-info.is-hovered {
+    background-color: scale-color($info, $lightness: -10%);
+  }
+
+  &.is-info:active,
+  &.is-info.is-active {
+    background-color: scale-color($info, $lightness: -20%);
+  }
+
+  &.is-info[disabled] {
+    background-color: scale-color($info, $lightness: 75%);
+  }
+
+  &.is-link:hover,
+  &.is-link.is-hovered {
+    background-color: scale-color($link, $lightness: -10%);
+  }
+
+  &.is-link:active,
+  &.is-link.is-active {
+    background-color: scale-color($link, $lightness: -20%);
+  }
+
+  &.is-link[disabled] {
+    background-color: scale-color($link, $lightness: 75%);
+  }
+
+  &.is-success:hover,
+  &.is-success.is-hovered {
+    background-color: scale-color($success, $lightness: -10%);
+  }
+
+  &.is-success:active,
+  &.is-success.is-active {
+    background-color: scale-color($success, $lightness: -20%);
+  }
+
+  &.is-success[disabled] {
+    background-color: scale-color($success, $lightness: 75%);
+  }
+
+  &.is-warning:hover,
+  &.is-warning.is-hovered {
+    background-color: scale-color($warning, $lightness: -10%);
+  }
+
+  &.is-warning:active,
+  &.is-warning.is-active {
+    background-color: scale-color($warning, $lightness: -20%);
+  }
+
+  &.is-warning[disabled] {
+    background-color: scale-color($warning, $lightness: 75%);
+  }
+
+  &.is-danger:hover,
+  &.is-danger.is-hovered {
+    background-color: scale-color($danger, $lightness: -10%);
+  }
+
+  &.is-danger:active,
+  &.is-danger.is-active {
+    background-color: scale-color($danger, $lightness: -20%);
+  }
+
+  &.is-danger[disabled] {
+    background-color: scale-color($danger, $lightness: 75%);
+  }
+
+  &.is-reduced-mobile,
+  &.reduced-mobile {
+    font-size: 0.9rem;
+
+    @media screen and (max-width: 1087px) {
+      > span:nth-child(2) {
+        display: none;
+      }
+    }
+    @media screen and (max-width: 1087px) and (min-width: 769px) {
+      // simultaneously with left margin of Bulma
+      > .icon:first-child:not(:last-child) {
+        margin: 0;
+      }
+    }
+    @media screen and (max-width: 768px) {
+      // simultaneously with left margin of Bulma
+      .icon:first-child:not(:last-child) {
+        margin-right: calc(-0.375em - 1px);
+      }
+    }
+  }
+}
+
 .box-link-shadow {
   &:hover,
   &:focus {
@@ -235,53 +421,7 @@ ul.is-separated {
   }
 }
 
-.user {
-  display: inline-block;
-  font-weight: bold;
-}
-
-// buttons
-.button {
-  padding-left: 1.5em;
-  padding-right: 1.5em;
-  height: 2.5rem;
-
-  &.is-primary {
-    background-color: #00d1df;
-  }
-  &.is-primary:hover,
-  &.is-primary.is-hovered {
-    background-color: #00b9c6;
-  }
-  &.is-primary:active,
-  &.is-primary.is-active {
-    background-color: #00a1ac;
-  }
-  &.is-primary[disabled] {
-    background-color: #40dde7;
-  }
-  &.reduced-mobile {
-    @media screen and (max-width: 1087px) {
-      > span:nth-child(2) {
-        display: none;
-      }
-    }
-    @media screen and (max-width: 1087px) and (min-width: 769px) {
-      // simultaneously with left margin of Bulma
-      > .icon:first-child:not(:last-child) {
-        margin: 0;
-      }
-    }
-    @media screen and (max-width: 768px) {
-      // simultaneously with left margin of Bulma
-      .icon:first-child:not(:last-child) {
-        margin-right: calc(-0.375em - 1px);
-      }
-    }
-  }
-}
-
-// multiline Columns
+// columns
 .columns.is-multiline {
   .column {
     height: 120px;
@@ -416,7 +556,7 @@ ul.is-separated {
 
   .panel-heading {
     border: none;
-    border-bottom: 1px solid #dbdbdb;
+    border-bottom: 1px solid $border;
     border-radius: 0.25rem 0.25rem 0 0;
 
     > .field {
@@ -427,14 +567,6 @@ ul.is-separated {
   .panel-block {
     display: block;
     border: none;
-
-    & .comment-wrapper:first-child div:first-child {
-      border-top: none;
-    }
-
-    & .diff-widget-content div {
-      border-bottom: none;
-    }
   }
 
   .panel-footer {
@@ -445,7 +577,7 @@ ul.is-separated {
     line-height: 1.25;
     padding: 0.5em 0.75em;
     border: none;
-    border-top: 1px solid #dbdbdb;
+    border-top: 1px solid $border;
     border-radius: 0 0 0.25rem 0.25rem;
   }
 }
@@ -468,10 +600,6 @@ form .field:not(.is-grouped) {
       border-color: #7a7a7a;
     }
   }
-}
-
-.is-icon {
-  color: $grey-light;
 }
 
 // label with help-icon compensation
@@ -499,14 +627,19 @@ form .field:not(.is-grouped) {
 .pagination-ellipsis {
   padding-left: 1.5em;
   padding-right: 1.5em;
-  height: 2.5rem;
+  height: 2.8rem;
+  min-width: 5rem;
 }
 .pagination-previous,
 .pagination-next {
+  height: 2.8rem;
   min-width: 6.75em;
 }
+.pagination-link.is-current {
+  opacity: 1;
+}
 
-// dark hero colors
+// hero
 .hero.is-dark {
   background-color: #002e4b;
   background-image: url(../images/scmManagerHero.jpg);
@@ -528,7 +661,7 @@ form .field:not(.is-grouped) {
   background-color: whitesmoke;
 }
 
-// sidebar menu
+// aside
 .aside-background {
   bottom: 0;
   left: 50%;
@@ -537,6 +670,8 @@ form .field:not(.is-grouped) {
   top: 0;
   background-color: whitesmoke;
 }
+
+// menu
 .menu {
   div {
     height: 100%;
@@ -544,7 +679,6 @@ form .field:not(.is-grouped) {
     margin-bottom: 1rem;
   }
 }
-
 .menu-label {
   color: #fff;
   font-size: 1em;
@@ -614,17 +748,6 @@ form .field:not(.is-grouped) {
   }
 }
 
-// modal
-.modal {
-  .modal-card-foot {
-    justify-content: flex-end; // pulled-right
-  }
-}
-
-.modal-card-body div div:last-child {
-  border-bottom: none;
-}
-
 .sub-menu li {
   line-height: 1;
 
@@ -648,6 +771,17 @@ form .field:not(.is-grouped) {
   i {
     display: none;
   }
+}
+
+// modal
+.modal {
+  .modal-card-foot {
+    justify-content: flex-end; // pulled-right
+  }
+}
+
+.modal-card-body div div:last-child {
+  border-bottom: none;
 }
 
 // cursor

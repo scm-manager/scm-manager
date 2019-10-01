@@ -1,6 +1,12 @@
 //@flow
 import type { Links } from "./hal";
 
+export type DisplayedUser = {
+  id: string,
+  displayName: string,
+  mail: string
+};
+
 export type User = {
   displayName: string,
   name: string,

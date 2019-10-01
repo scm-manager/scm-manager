@@ -24,6 +24,9 @@
       "subtitle": "Ha ocurrido un error desconocido"
     }
   },
+  "breadcrumb": {
+    "home": "Página principal"
+  },
   "errorNotification": {
     "prefix": "Error",
     "loginLink": "Aquí puede iniciar la sesión de nuevo.",

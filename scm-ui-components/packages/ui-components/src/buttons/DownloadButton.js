@@ -13,7 +13,7 @@ class DownloadButton extends React.Component<Props> {
     const { displayName, url, disabled, onClick } = this.props;
     const onClickOrDefault = !!onClick ? onClick : () => {};
     return (
-      <a className="button is-large is-link" href={url} disabled={disabled} onClick={onClickOrDefault}>
+      <a className="button is-link" href={url} disabled={disabled} onClick={onClickOrDefault}>
         <span className="icon is-medium">
           <i className="fas fa-arrow-circle-down" />
         </span>

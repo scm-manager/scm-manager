@@ -21,21 +21,22 @@ const styles = {
   flexFullHeight: {
     display: "flex",
     flexDirection: "column",
+    justifyContent: "space-around",
     alignSelf: "stretch"
-  },
-  content: {
-    display: "flex",
-    flexGrow: 1,
-    alignItems: "center",
-    justifyContent: "space-between"
   },
   footer: {
     display: "flex",
-    marginTop: "auto",
-    paddingBottom: "1.5rem"
+    paddingBottom: "1rem",
   },
-  noBottomMargin: {
-    marginBottom: "0 !important"
+  topPart: {
+    display: "flex"
+  },
+  contentRight: {
+    marginLeft: "auto"
+  },
+  contentLeft: {
+    marginBottom: "0 !important",
+    overflow: "hidden"
   }
 };
 
@@ -91,25 +92,26 @@ class CardColumn extends React.Component<Props> {
               classes.flexFullHeight
             )}
           >
-            <div className={classes.content}>
+            <div className={classes.topPart}>
               <div
                 className={classNames(
                   "content",
-                  "shorten-text",
-                  classes.noBottomMargin
+                  classes.contentLeft
                 )}
               >
-                <p className="is-marginless">
+                <p className="shorten-text is-marginless">
                   <strong>{title}</strong>
                 </p>
                 <p className="shorten-text">{description}</p>
               </div>
+              <div className={classes.contentRight}>
               {contentRight && contentRight}
+              </div>
             </div>
-            <div className={classNames("level", classes.footer)}>
-              <div className="level-left is-hidden-mobile">{footerLeft}</div>
-              <div className="level-right is-mobile">{footerRight}</div>
-            </div>
+              <div className={classNames("level", classes.footer)}>
+                <div className="level-left is-hidden-mobile">{footerLeft}</div>
+                <div className="level-right is-mobile is-marginless">{footerRight}</div>
+              </div>
           </div>
         </article>
       </>
