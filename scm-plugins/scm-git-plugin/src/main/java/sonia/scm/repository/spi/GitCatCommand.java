@@ -32,8 +32,6 @@
 
 package sonia.scm.repository.spi;
 
-import org.eclipse.jgit.attributes.Attribute;
-import org.eclipse.jgit.attributes.Attributes;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lib.Constants;
@@ -45,7 +43,6 @@ import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
-import org.eclipse.jgit.util.LfsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitUtil;
