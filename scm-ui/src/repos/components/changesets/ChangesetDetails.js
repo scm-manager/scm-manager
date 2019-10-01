@@ -35,6 +35,9 @@ const styles = {
   spacing: {
     marginRight: "1em"
   },
+  bottomMargin: {
+    marginBottom: "1rem !important"
+  },
   tags: {
     "& .tag": {
       marginLeft: ".25rem"
@@ -108,6 +111,7 @@ class ChangesetDetails extends React.Component<Props, State> {
         </div>
         <div>
           <Level
+            className={classes.bottomMargin}
             right={
               <Button
                 action={this.collapseDiffs}
