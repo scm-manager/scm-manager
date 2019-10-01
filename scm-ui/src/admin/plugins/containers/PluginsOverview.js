@@ -28,9 +28,7 @@ import {
 } from "../../../modules/indexResource";
 import PluginTopActions from "../components/PluginTopActions";
 import PluginBottomActions from "../components/PluginBottomActions";
-import MultiPluginAction, {
-  MultiPluginActionType
-} from "../components/MultiPluginAction";
+import MultiPluginAction from "../components/MultiPluginAction";
 import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
@@ -47,7 +45,7 @@ type Props = {
   pendingPlugins: PendingPlugins,
 
   // context objects
-  t: string => string,
+  t: (key: string, params?: Object) => string,
 
   // dispatched functions
   fetchPluginsByLink: (link: string) => void,
@@ -132,7 +130,7 @@ class PluginsOverview extends React.Component<Props, State> {
   };
 
   createActions = () => {
-    const { pendingPlugins, collection } = this.props;
+    const { pendingPlugins, collection, t } = this.props;
     const buttons = [];
 
     if (
@@ -142,11 +140,11 @@ class PluginsOverview extends React.Component<Props, State> {
     ) {
       buttons.push(
         <MultiPluginAction
-          key={MultiPluginActionType.EXECUTE_PENDING}
-          pendingPlugins={pendingPlugins}
+          key={"executePending"}
+          icon={"arrow-circle-right"}
+          label={t("plugins.executePending")}
           refresh={this.fetchPlugins}
           onClick={() => this.setState({showPendingModal: true})}
-          actionType={MultiPluginActionType.EXECUTE_PENDING}
         />
       );
     }
@@ -158,11 +156,11 @@ class PluginsOverview extends React.Component<Props, State> {
     ) {
       buttons.push(
         <MultiPluginAction
-          key={MultiPluginActionType.CANCEL_PENDING}
-          pendingPlugins={pendingPlugins}
+          key={"cancelPending"}
+          icon={"times"}
+          label={t("plugins.cancelPending")}
           refresh={this.fetchPlugins}
           onClick={() => this.setState({showCancelModal: true})}
-          actionType={MultiPluginActionType.CANCEL_PENDING}
         />
       );
     }
@@ -170,11 +168,11 @@ class PluginsOverview extends React.Component<Props, State> {
     if (collection && collection._links && collection._links.update) {
       buttons.push(
         <MultiPluginAction
-          key={MultiPluginActionType.UPDATE_ALL}
-          installedPlugins={collection}
+          key={"updateAll"}
+          icon={"sync-alt"}
+          label={this.computeUpdateAllSize()}
           refresh={this.fetchPlugins}
           onClick={() => this.setState({showUpdateAllModal: true})}
-          actionType={MultiPluginActionType.UPDATE_ALL}
         />
       );
     }
@@ -183,6 +181,16 @@ class PluginsOverview extends React.Component<Props, State> {
       return <ButtonGroup>{buttons}</ButtonGroup>;
     }
     return null;
+  };
+
+  computeUpdateAllSize = () => {
+    const {collection, t} = this.props;
+    const outdatedPlugins = collection._embedded.plugins.filter(
+      p => p._links.update
+    ).length;
+    return t("plugins.outdatedPlugins", {
+      count: outdatedPlugins
+    });
   };
 
   render() {

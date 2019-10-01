@@ -11,56 +11,21 @@ export const MultiPluginActionType = {
 };
 
 type Props = {
-  actionType: string,
-  pendingPlugins?: PendingPlugins,
-  installedPlugins?: PluginCollection,
-  refresh: () => void,
+  icon: string,
+  label: string,
   onClick: () => void,
-
-  // context props
-  t: (key: string, params?: Object) => string
 };
 
 class MultiPluginAction extends React.Component<Props> {
-
-  renderLabel = () => {
-    const { t, actionType, installedPlugins } = this.props;
-
-    if (actionType === MultiPluginActionType.EXECUTE_PENDING) {
-      return t("plugins.executePending");
-    } else if (actionType === MultiPluginActionType.CANCEL_PENDING) {
-      return t("plugins.cancelPending");
-    } else {
-      const outdatedPlugins = installedPlugins._embedded.plugins.filter(
-        p => p._links.update
-      ).length;
-      return t("plugins.outdatedPlugins", {
-        count: outdatedPlugins
-      });
-    }
-  };
-
-  renderIcon = () => {
-    const { actionType } = this.props;
-
-    if (actionType === MultiPluginActionType.EXECUTE_PENDING) {
-      return "arrow-circle-right";
-    } else if (actionType === MultiPluginActionType.CANCEL_PENDING) {
-      return "times";
-    } else {
-      return "sync-alt";
-    }
-  };
-
   render() {
-    const { onClick } = this.props;
+    const { onClick, icon, label } = this.props;
     return (
       <>
         <Button
           color="primary"
           reducedMobile={true}
-          icon={this.renderIcon()}
-          label={this.renderLabel()}
+          icon={icon}
+          label={label}
           action={() => onClick()}
         />
       </>
@@ -68,4 +33,4 @@ class MultiPluginAction extends React.Component<Props> {
   }
 }
 
-export default translate("admin")(MultiPluginAction);
+export default MultiPluginAction;
