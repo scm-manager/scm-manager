@@ -32,7 +32,7 @@ type State = {
   error?: Error
 };
 
-class MultiPluginActionModal extends React.Component<Props, State> {
+class PluginActionModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -42,7 +42,7 @@ class MultiPluginActionModal extends React.Component<Props, State> {
   }
 
   renderNotifications = () => {
-    const {children} = this.props;
+    const { children } = this.props;
     const { error, success } = this.state;
     if (error) {
       return <ErrorNotification error={error} />;
@@ -58,7 +58,8 @@ class MultiPluginActionModal extends React.Component<Props, State> {
       loading: true
     });
 
-    this.props.execute()
+    this.props
+      .execute()
       .then(() => {
         this.setState({
           success: true,
@@ -212,4 +213,4 @@ class MultiPluginActionModal extends React.Component<Props, State> {
   }
 }
 
-export default translate("admin")(MultiPluginActionModal);
+export default translate("admin")(PluginActionModal);
