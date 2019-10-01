@@ -127,19 +127,14 @@ class MultiPluginActionModal extends React.Component<Props, State> {
   };
 
   renderModalContent = () => {
-    const { actionType } = this.props;
-
-    if (actionType === MultiPluginActionType.UPDATE_ALL) {
-      return this.renderUpdatable();
-    } else {
-      return (
-        <>
-          {this.renderInstallQueue()}
-          {this.renderUpdateQueue()}
-          {this.renderUninstallQueue()}
-        </>
-      );
-    }
+    return (
+      <>
+        {this.renderUpdatable()}
+        {this.renderInstallQueue()}
+        {this.renderUpdateQueue()}
+        {this.renderUninstallQueue()}
+      </>
+    );
   };
 
   renderUpdatable = () => {

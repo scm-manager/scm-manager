@@ -41,15 +41,15 @@ class MultiPluginAction extends React.Component<Props, State> {
 
   renderLabel = () => {
     const { t, actionType, installedPlugins } = this.props;
-    const outdatedPlugins =
-      actionType === MultiPluginActionType.UPDATE_ALL &&
-      installedPlugins._embedded.plugins.filter(p => p._links.update).length;
 
     if (actionType === MultiPluginActionType.EXECUTE_PENDING) {
       return t("plugins.executePending");
     } else if (actionType === MultiPluginActionType.CANCEL_PENDING) {
       return t("plugins.cancelPending");
     } else {
+      const outdatedPlugins = installedPlugins._embedded.plugins.filter(
+        p => p._links.update
+      ).length;
       return t("plugins.outdatedPlugins", {
         count: outdatedPlugins
       });
@@ -58,20 +58,17 @@ class MultiPluginAction extends React.Component<Props, State> {
 
   renderModal = () => {
     const { showModal } = this.state;
-    const { pendingPlugins, installedPlugins, actionType, refresh } = this.props;
+    const {
+      pendingPlugins,
+      installedPlugins,
+      actionType,
+      refresh
+    } = this.props;
     if (showModal) {
       return (
         <MultiPluginActionModal
-          pendingPlugins={
-            actionType === MultiPluginActionType.UPDATE_ALL
-              ? null
-              : pendingPlugins
-          }
-          installedPlugins={
-            actionType !== MultiPluginActionType.UPDATE_ALL
-              ? null
-              : installedPlugins
-          }
+          pendingPlugins={pendingPlugins}
+          installedPlugins={installedPlugins}
           onClose={this.toggleModal}
           refresh={refresh}
           actionType={actionType}
