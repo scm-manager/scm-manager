@@ -1,18 +1,14 @@
 // @flow
-import React from "react";
+import * as React from "react";
 import {
-  apiClient,
   Button,
   ButtonGroup,
   ErrorNotification,
-  Modal,
-  Notification
+  Modal
 } from "@scm-manager/ui-components";
 import type { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
-import waitForRestart from "./waitForRestart";
 import SuccessNotification from "./SuccessNotification";
-import { MultiPluginActionType } from "./MultiPluginAction";
 
 type Props = {
   onClose: () => void,
@@ -20,6 +16,11 @@ type Props = {
   pendingPlugins?: PendingPlugins,
   installedPlugins?: PluginCollection,
   refresh: () => void,
+  execute: () => Promise<any>,
+  description: string,
+  label: string,
+
+  children?: React.Node,
 
   // context props
   t: string => string
@@ -41,42 +42,23 @@ class MultiPluginActionModal extends React.Component<Props, State> {
   }
 
   renderNotifications = () => {
-    const { t } = this.props;
+    const {children} = this.props;
     const { error, success } = this.state;
     if (error) {
       return <ErrorNotification error={error} />;
     } else if (success) {
       return <SuccessNotification />;
     } else {
-      return (
-        <Notification type="warning">
-          {t("plugins.modal.restartNotification")}
-        </Notification>
-      );
+      return children;
     }
   };
 
   executeAction = () => {
-    const { actionType } = this.props;
-
-    if (actionType === MultiPluginActionType.EXECUTE_PENDING) {
-      this.executeAndRestart();
-    } else if (actionType === MultiPluginActionType.CANCEL_PENDING) {
-      this.cancelPending();
-    } else if (actionType === MultiPluginActionType.UPDATE_ALL) {
-      this.updateAll();
-    }
-  };
-
-  executeAndRestart = () => {
-    const { pendingPlugins } = this.props;
     this.setState({
       loading: true
     });
 
-    apiClient
-      .post(pendingPlugins._links.execute.href)
-      .then(waitForRestart)
+    this.props.execute()
       .then(() => {
         this.setState({
           success: true,
@@ -90,40 +72,6 @@ class MultiPluginActionModal extends React.Component<Props, State> {
           error: error
         });
       });
-  };
-
-  cancelPending = () => {
-    const { pendingPlugins } = this.props;
-    this.setState({
-      loading: true
-    });
-
-    apiClient
-      .post(pendingPlugins._links.cancel.href)
-      .then(() => this.refresh())
-      .catch(error => {
-        this.setState({
-          success: false,
-          loading: false,
-          error: error
-        });
-      });
-  };
-
-  updateAll = () => {
-    const { installedPlugins } = this.props;
-    this.setState({
-      loading: true
-    });
-
-    apiClient
-      .post(installedPlugins._links.update.href)
-      .then(() => this.refresh());
-  };
-
-  refresh = () => {
-    this.props.refresh();
-    this.props.onClose();
   };
 
   renderModalContent = () => {
@@ -219,49 +167,16 @@ class MultiPluginActionModal extends React.Component<Props, State> {
     );
   };
 
-  renderDescription = () => {
-    const { t, actionType } = this.props;
-
-    if (actionType === MultiPluginActionType.EXECUTE_PENDING) {
-      return t("plugins.modal.executePending");
-    } else if (actionType === MultiPluginActionType.CANCEL_PENDING) {
-      return t("plugins.modal.cancelPending");
-    } else if (actionType === MultiPluginActionType.UPDATE_ALL) {
-      return t("plugins.modal.updateAllInfo");
-    }
-  };
-
-  renderLabel = () => {
-    const { t, actionType } = this.props;
-
-    if (actionType === MultiPluginActionType.EXECUTE_PENDING) {
-      return t("plugins.modal.executeAndRestart");
-    } else if (actionType === MultiPluginActionType.CANCEL_PENDING) {
-      return t("plugins.cancelPending");
-    } else if (actionType === MultiPluginActionType.UPDATE_ALL) {
-      return t("plugins.updateAll");
-    }
-  };
-
   renderBody = () => {
-    const { actionType } = this.props;
-    const { error } = this.state;
     return (
       <>
         <div className="media">
           <div className="content">
-            <p>{this.renderDescription()}</p>
+            <p>{this.props.description}</p>
             {this.renderModalContent()}
           </div>
         </div>
-        {!!error && (
-          <div className="media">
-            <ErrorNotification error={error} />
-          </div>
-        )}
-        {actionType === MultiPluginActionType.EXECUTE_PENDING && (
-          <div className="media">{this.renderNotifications()}</div>
-        )}
+        <div className="media">{this.renderNotifications()}</div>
       </>
     );
   };
@@ -273,7 +188,7 @@ class MultiPluginActionModal extends React.Component<Props, State> {
       <ButtonGroup>
         <Button
           color="warning"
-          label={this.renderLabel()}
+          label={this.props.label}
           loading={loading}
           action={this.executeAction}
           disabled={error || success}
@@ -287,7 +202,7 @@ class MultiPluginActionModal extends React.Component<Props, State> {
     const { onClose } = this.props;
     return (
       <Modal
-        title={this.renderLabel()}
+        title={this.props.label}
         closeFunction={onClose}
         body={this.renderBody()}
         footer={this.renderFooter()}

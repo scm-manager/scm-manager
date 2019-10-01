@@ -3,7 +3,6 @@ import React from "react";
 import { Button } from "@scm-manager/ui-components";
 import type { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
-import MultiPluginActionModal from "./MultiPluginActionModal";
 
 export const MultiPluginActionType = {
   UPDATE_ALL: "updateAll",
@@ -16,28 +15,13 @@ type Props = {
   pendingPlugins?: PendingPlugins,
   installedPlugins?: PluginCollection,
   refresh: () => void,
+  onClick: () => void,
 
   // context props
   t: (key: string, params?: Object) => string
 };
 
-type State = {
-  showModal: boolean
-};
-
-class MultiPluginAction extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      showModal: false
-    };
-  }
-
-  toggleModal = () => {
-    this.setState(state => ({
-      showModal: !state.showModal
-    }));
-  };
+class MultiPluginAction extends React.Component<Props> {
 
   renderLabel = () => {
     const { t, actionType, installedPlugins } = this.props;
@@ -56,28 +40,6 @@ class MultiPluginAction extends React.Component<Props, State> {
     }
   };
 
-  renderModal = () => {
-    const { showModal } = this.state;
-    const {
-      pendingPlugins,
-      installedPlugins,
-      actionType,
-      refresh
-    } = this.props;
-    if (showModal) {
-      return (
-        <MultiPluginActionModal
-          pendingPlugins={pendingPlugins}
-          installedPlugins={installedPlugins}
-          onClose={this.toggleModal}
-          refresh={refresh}
-          actionType={actionType}
-        />
-      );
-    }
-    return null;
-  };
-
   renderIcon = () => {
     const { actionType } = this.props;
 
@@ -91,15 +53,15 @@ class MultiPluginAction extends React.Component<Props, State> {
   };
 
   render() {
+    const { onClick } = this.props;
     return (
       <>
-        {this.renderModal()}
         <Button
           color="primary"
           reducedMobile={true}
           icon={this.renderIcon()}
           label={this.renderLabel()}
-          action={this.toggleModal}
+          action={() => onClick()}
         />
       </>
     );
