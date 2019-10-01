@@ -122,6 +122,7 @@ class PluginsOverview extends React.Component<Props> {
     ) {
       buttons.push(
         <MultiPluginAction
+          key={MultiPluginActionType.EXECUTE_PENDING}
           pendingPlugins={pendingPlugins}
           actionType={MultiPluginActionType.EXECUTE_PENDING}
         />
@@ -135,6 +136,7 @@ class PluginsOverview extends React.Component<Props> {
     ) {
       buttons.push(
         <MultiPluginAction
+          key={MultiPluginActionType.CANCEL_PENDING}
           pendingPlugins={pendingPlugins}
           actionType={MultiPluginActionType.CANCEL_PENDING}
         />
@@ -144,6 +146,7 @@ class PluginsOverview extends React.Component<Props> {
     if (collection && collection._links && collection._links.update) {
       buttons.push(
         <MultiPluginAction
+          key={MultiPluginActionType.UPDATE_ALL}
           installedPlugins={collection}
           actionType={MultiPluginActionType.UPDATE_ALL}
         />
