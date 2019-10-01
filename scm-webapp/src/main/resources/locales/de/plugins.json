@@ -178,7 +178,7 @@
     },
     "65RdZ5atX1": {
       "displayName": "Fehler beim Löschen von Plugin-Dateien",
-      "description": "Einige Dateien für die Plugin-Deinstallation konnten nicht gelöscht werden. Dieses kann zu Inkonsistenzen führen, so dass der SCM-Manager nicht mehr korrekt starten kann. Bitte prüfen Sie die Logs und bereinigen Sie das Plugin-Verzeichnis des SCM-Managers manuell."
+      "description": "Einige Dateien für die Plugin-Deinstallation konnten nicht gelöscht werden. Dieses kann zu Inkonsistenzen führen, so dass der SCM-Manager nicht mehr korrekt starten kann. Bitte prüfen Sie die Logs und bereinigen Sie das Plugin-Verzeichnis des SCM-Managers manuell. Um die Installation eines Plugins abzubrechen, löschen Sie die zugehörige smp Datei aus dem Plugin-Verzeichnis. Um ein Entfernen eines Plugins zu verhindern, entfernen Sie die Datei namens 'uninstall' aus dem entsprechenden Verzeichnis des Plugins."
     }
   },
   "namespaceStrategies": {
