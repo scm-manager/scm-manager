@@ -4,6 +4,7 @@ import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -20,6 +21,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import java.io.IOException;
 
 public class DiffRootResource {
 
@@ -55,20 +57,17 @@ public class DiffRootResource {
     @ResponseCode(code = 404, condition = "not found, no revision with the specified param for the repository available or repository not found"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision , @Pattern(regexp = DIFF_FORMAT_VALUES_REGEX) @DefaultValue("NATIVE") @QueryParam("format") String format ){
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision , @Pattern(regexp = DIFF_FORMAT_VALUES_REGEX) @DefaultValue("NATIVE") @QueryParam("format") String format ) throws IOException {
     HttpUtil.checkForCRLFInjection(revision);
     DiffFormat diffFormat = DiffFormat.valueOf(format);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      StreamingOutput responseEntry = output -> {
-        repositoryService.getDiffCommand()
-          .setRevision(revision)
-            .setFormat(diffFormat)
-          .retrieveContent(output);
-      };
-      return Response.ok(responseEntry)
+      DiffCommandBuilder.OutputStreamConsumer outputStreamConsumer = repositoryService.getDiffCommand()
+        .setRevision(revision)
+        .setFormat(diffFormat)
+        .retrieveContent();
+      return Response.ok((StreamingOutput) outputStreamConsumer::accept)
         .header(HEADER_CONTENT_DISPOSITION, HttpUtil.createContentDispositionAttachmentHeader(String.format("%s-%s.diff", name, revision)))
         .build();
     }
   }
-
 }

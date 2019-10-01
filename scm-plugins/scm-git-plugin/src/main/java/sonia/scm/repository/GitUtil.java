@@ -62,6 +62,7 @@ import org.eclipse.jgit.util.LfsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
+import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.GitUserAgentProvider;
@@ -76,6 +77,7 @@ import java.util.concurrent.TimeUnit;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -733,7 +735,11 @@ public final class GitUtil
       mergeBaseWalk.setRevFilter(RevFilter.MERGE_BASE);
       mergeBaseWalk.markStart(mergeBaseWalk.lookupCommit(revision1));
       mergeBaseWalk.markStart(mergeBaseWalk.parseCommit(revision2));
-      return mergeBaseWalk.next().getId();
+      RevCommit ancestor = mergeBaseWalk.next();
+      doThrow()
+        .violation("revisions " + revision1.name() + " and " + revision2.name() + " are not related and therefore do not have a common ancestor", "revisions")
+        .when(ancestor == null);
+      return ancestor.getId();
     }
   }
 
