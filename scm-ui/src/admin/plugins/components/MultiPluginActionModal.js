@@ -97,7 +97,16 @@ class MultiPluginActionModal extends React.Component<Props, State> {
       loading: true
     });
 
-    apiClient.post(pendingPlugins._links.cancel.href).then(() => this.reload());
+    apiClient
+      .post(pendingPlugins._links.cancel.href)
+      .then(() => this.reload())
+      .catch(error => {
+        this.setState({
+          success: false,
+          loading: false,
+          error: error
+        });
+      });
   };
 
   updateAll = () => {
@@ -239,6 +248,7 @@ class MultiPluginActionModal extends React.Component<Props, State> {
 
   renderBody = () => {
     const { actionType } = this.props;
+    const { error } = this.state;
     return (
       <>
         <div className="media">
@@ -247,6 +257,11 @@ class MultiPluginActionModal extends React.Component<Props, State> {
             {this.renderModalContent()}
           </div>
         </div>
+        {!!error && (
+          <div className="media">
+            <ErrorNotification error={error} />
+          </div>
+        )}
         {actionType === MultiPluginActionType.EXECUTE_PENDING && (
           <div className="media">{this.renderNotifications()}</div>
         )}

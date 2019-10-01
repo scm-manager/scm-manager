@@ -175,6 +175,10 @@
     "40RaYIeeR1": {
       "displayName": "No changes were made",
       "description": "No changes were made to the files of the repository. Therefor no new commit could be created."
+    },
+    "65RdZ5atX1": {
+      "displayName": "Error removing plugin files",
+      "description": "Some files to cancel the plugin (un)installation could not be deleted. This can lead to inconsistencies so that the SCM-Manager cannot restart properly. Please check the logs and clean up the plugin folder manually."
     }
   },
   "namespaceStrategies": {

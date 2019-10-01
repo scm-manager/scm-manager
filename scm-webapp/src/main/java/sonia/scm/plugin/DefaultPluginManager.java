@@ -288,7 +288,7 @@ public class DefaultPluginManager implements PluginManager {
     pendingInstallQueue.forEach(PendingPluginInstallation::cancel);
     pendingUninstallQueue.clear();
     pendingInstallQueue.clear();
-    getInstalled().forEach(p -> p.setUninstallable(isUninstallable(p)));
+    updateMayUninstallFlag();
   }
 
   @Override

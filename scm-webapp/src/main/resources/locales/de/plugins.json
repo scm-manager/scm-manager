@@ -175,6 +175,10 @@
     "40RaYIeeR1": {
       "displayName": "Es wurden keine Änderungen durchgeführt",
       "description": "Das Repository wurde nicht verändert. Daher konnte kein neuer Commit erzeugt werden."
+    },
+    "65RdZ5atX1": {
+      "displayName": "Fehler beim Löschen von Plugin-Dateien",
+      "description": "Einige Dateien für die Plugin-Deinstallation konnten nicht gelöscht werden. Dieses kann zu Inkonsistenzen führen, so dass der SCM-Manager nicht mehr korrekt starten kann. Bitte prüfen Sie die Logs und bereinigen Sie das Plugin-Verzeichnis des SCM-Managers manuell."
     }
   },
   "namespaceStrategies": {
