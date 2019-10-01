@@ -124,6 +124,7 @@ class PluginsOverview extends React.Component<Props> {
         <MultiPluginAction
           key={MultiPluginActionType.EXECUTE_PENDING}
           pendingPlugins={pendingPlugins}
+          refresh={this.fetchPlugins}
           actionType={MultiPluginActionType.EXECUTE_PENDING}
         />
       );
@@ -138,6 +139,7 @@ class PluginsOverview extends React.Component<Props> {
         <MultiPluginAction
           key={MultiPluginActionType.CANCEL_PENDING}
           pendingPlugins={pendingPlugins}
+          refresh={this.fetchPlugins}
           actionType={MultiPluginActionType.CANCEL_PENDING}
         />
       );
@@ -148,6 +150,7 @@ class PluginsOverview extends React.Component<Props> {
         <MultiPluginAction
           key={MultiPluginActionType.UPDATE_ALL}
           installedPlugins={collection}
+          refresh={this.fetchPlugins}
           actionType={MultiPluginActionType.UPDATE_ALL}
         />
       );

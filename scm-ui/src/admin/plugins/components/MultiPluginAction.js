@@ -15,6 +15,7 @@ type Props = {
   actionType: string,
   pendingPlugins?: PendingPlugins,
   installedPlugins?: PluginCollection,
+  refresh: () => void,
 
   // context props
   t: (key: string, params?: Object) => string
@@ -57,7 +58,7 @@ class MultiPluginAction extends React.Component<Props, State> {
 
   renderModal = () => {
     const { showModal } = this.state;
-    const { pendingPlugins, installedPlugins, actionType } = this.props;
+    const { pendingPlugins, installedPlugins, actionType, refresh } = this.props;
     if (showModal) {
       return (
         <MultiPluginActionModal
@@ -72,6 +73,7 @@ class MultiPluginAction extends React.Component<Props, State> {
               : installedPlugins
           }
           onClose={this.toggleModal}
+          refresh={refresh}
           actionType={actionType}
         />
       );

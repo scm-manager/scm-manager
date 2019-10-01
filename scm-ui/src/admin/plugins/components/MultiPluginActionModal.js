@@ -19,6 +19,7 @@ type Props = {
   actionType: string,
   pendingPlugins?: PendingPlugins,
   installedPlugins?: PluginCollection,
+  refresh: () => void,
 
   // context props
   t: string => string
@@ -99,7 +100,7 @@ class MultiPluginActionModal extends React.Component<Props, State> {
 
     apiClient
       .post(pendingPlugins._links.cancel.href)
-      .then(() => this.reload())
+      .then(() => this.refresh())
       .catch(error => {
         this.setState({
           success: false,
@@ -117,18 +118,19 @@ class MultiPluginActionModal extends React.Component<Props, State> {
 
     apiClient
       .post(installedPlugins._links.update.href)
-      .then(() => this.reload());
+      .then(() => this.refresh());
   };
 
-  reload = () => {
-    window.location.reload(true);
+  refresh = () => {
+    this.props.refresh();
+    this.props.onClose();
   };
 
   renderModalContent = () => {
     const { actionType } = this.props;
 
     if (actionType === MultiPluginActionType.UPDATE_ALL) {
-      return <>{this.renderUpdatable()}</>;
+      return this.renderUpdatable();
     } else {
       return (
         <>
