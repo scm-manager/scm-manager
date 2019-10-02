@@ -74,6 +74,13 @@ public interface PluginManager {
   List<AvailablePlugin> getAvailable();
 
   /**
+   * Returns all updatable plugins.
+   *
+   * @return a list of updatable plugins.
+   */
+  List<InstalledPlugin> getUpdatable();
+
+  /**
    * Installs the plugin with the given name from the list of available plugins.
    *
    * @param name plugin name
@@ -93,4 +100,14 @@ public interface PluginManager {
    * Install all pending plugins and restart the scm context.
    */
   void executePendingAndRestart();
+
+  /**
+   * Cancel all pending plugins.
+   */
+  void cancelPending();
+
+  /**
+   * Update all installed plugins.
+   */
+  void updateAll();
 }

@@ -28,8 +28,9 @@ class PendingPluginInstallation {
     LOG.info("cancel installation of plugin {}", name);
     try {
       Files.delete(file);
+      plugin.cancelInstallation();
     } catch (IOException ex) {
-      throw new PluginFailedToCancelInstallationException("failed to cancel installation of plugin " + name, ex);
+      throw new PluginFailedToCancelInstallationException("failed to cancel plugin installation ", name, ex);
     }
   }
 }

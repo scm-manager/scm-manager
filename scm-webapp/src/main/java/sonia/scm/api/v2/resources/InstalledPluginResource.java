@@ -57,6 +57,21 @@ public class InstalledPluginResource {
   }
 
   /**
+   * Updates all installed plugins.
+   */
+  @POST
+  @Path("/update")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  @TypeHint(CollectionDto.class)
+  public Response updateAll() {
+    pluginManager.updateAll();
+    return Response.ok().build();
+  }
+
+  /**
    * Returns the installed plugin with the given id.
    *
    * @param name name of plugin
