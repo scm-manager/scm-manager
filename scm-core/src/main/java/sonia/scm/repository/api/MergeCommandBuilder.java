@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.spi.MergeCommand;
 import sonia.scm.repository.spi.MergeCommandRequest;
+import sonia.scm.repository.util.AuthorUtil;
 
 /**
  * Use this {@link MergeCommandBuilder} to merge two branches of a repository ({@link #executeMerge()}) or to check if
@@ -126,6 +127,7 @@ public class MergeCommandBuilder {
    * @return The result of the merge.
    */
   public MergeCommandResult executeMerge() {
+    AuthorUtil.setAuthorIfNotAvailable(request);
     Preconditions.checkArgument(request.isValid(), "revision to merge and target revision is required");
     return mergeCommand.merge(request);
   }

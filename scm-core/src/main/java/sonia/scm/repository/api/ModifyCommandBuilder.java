@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.spi.ModifyCommand;
 import sonia.scm.repository.spi.ModifyCommandRequest;
+import sonia.scm.repository.util.AuthorUtil;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.util.IOUtil;
 
@@ -110,6 +111,7 @@ public class ModifyCommandBuilder {
    * @return The revision of the new commit.
    */
   public String execute() {
+    AuthorUtil.setAuthorIfNotAvailable(request);
     try {
       Preconditions.checkArgument(request.isValid(), "commit message, branch and at least one request are required");
       return command.execute(request);
