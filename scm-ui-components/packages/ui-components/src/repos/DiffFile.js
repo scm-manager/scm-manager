@@ -95,9 +95,19 @@ class DiffFile extends React.Component<Props, State> {
     };
   }
 
+  // collapse diff by clicking collapseDiffs button
+  componentDidUpdate(prevProps) {
+    const { defaultCollapse } = this.props;
+    if (prevProps.defaultCollapse !== defaultCollapse) {
+      this.setState({
+        collapsed: defaultCollapse
+      });
+    }
+  }
+
   toggleCollapse = () => {
     const { file } = this.props;
-    if(file && !file.isBinaray) {
+    if (file && !file.isBinaray) {
       this.setState(state => ({
         collapsed: !state.collapsed
       }));

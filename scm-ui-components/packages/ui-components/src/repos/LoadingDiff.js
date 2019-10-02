@@ -9,7 +9,8 @@ import Diff from "./Diff";
 import type {DiffObjectProps, File} from "./DiffTypes";
 
 type Props = DiffObjectProps & {
-  url: string
+  url: string,
+  defaultCollapse?: boolean
 };
 
 type State = {

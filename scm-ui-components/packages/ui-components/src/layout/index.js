@@ -2,6 +2,7 @@
 
 export { default as Footer } from "./Footer.js";
 export { default as Header } from "./Header.js";
+export { default as Level } from "./Level.js";
 export { default as Page } from "./Page.js";
 export { default as PageActions } from "./PageActions.js";
 export { default as Subtitle } from "./Subtitle.js";

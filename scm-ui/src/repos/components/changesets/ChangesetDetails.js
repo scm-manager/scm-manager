@@ -1,9 +1,10 @@
 //@flow
 import React from "react";
-import type { Changeset, Repository } from "@scm-manager/ui-types";
 import { Interpolate, translate } from "react-i18next";
 import injectSheet from "react-jss";
-
+import classNames from "classnames";
+import type { Changeset, Repository, Tag } from "@scm-manager/ui-types";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import {
   DateFromNow,
   ChangesetId,
@@ -12,16 +13,30 @@ import {
   ChangesetDiff,
   AvatarWrapper,
   AvatarImage,
-  changesets
+  changesets,
+  Level,
+  Button
 } from "@scm-manager/ui-components";
 
-import classNames from "classnames";
-import type { Tag } from "@scm-manager/ui-types";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+type Props = {
+  changeset: Changeset,
+  repository: Repository,
+
+  // context props
+  t: string => string,
+  classes: any
+};
+
+type State = {
+  collapsed: boolean
+};
 
 const styles = {
   spacing: {
     marginRight: "1em"
+  },
+  bottomMargin: {
+    marginBottom: "1rem !important"
   },
   tags: {
     "& .tag": {
@@ -30,16 +45,17 @@ const styles = {
   }
 };
 
-type Props = {
-  changeset: Changeset,
-  repository: Repository,
-  t: string => string,
-  classes: any
-};
+class ChangesetDetails extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      collapsed: false
+    };
+  }
 
-class ChangesetDetails extends React.Component<Props> {
   render() {
-    const { changeset, repository, classes } = this.props;
+    const { changeset, repository, classes, t } = this.props;
+    const { collapsed } = this.state;
 
     const description = changesets.parseDescription(changeset.description);
 
@@ -49,8 +65,8 @@ class ChangesetDetails extends React.Component<Props> {
     const date = <DateFromNow date={changeset.date} />;
 
     return (
-      <div>
-        <div className="content">
+      <>
+        <div className="content is-marginless">
           <h4>
             <ExtensionPoint
               name="changeset.description"
@@ -71,16 +87,11 @@ class ChangesetDetails extends React.Component<Props> {
                 <ChangesetAuthor changeset={changeset} />
               </p>
               <p>
-                <Interpolate
-                  i18nKey="changeset.summary"
-                  id={id}
-                  time={date}
-                />
+                <Interpolate i18nKey="changeset.summary" id={id} time={date} />
               </p>
             </div>
             <div className="media-right">{this.renderTags()}</div>
           </article>
-
           <p>
             {description.message.split("\n").map((item, key) => {
               return (
@@ -99,9 +110,21 @@ class ChangesetDetails extends React.Component<Props> {
           </p>
         </div>
         <div>
-          <ChangesetDiff changeset={changeset} />
+          <Level
+            className={classes.bottomMargin}
+            right={
+              <Button
+                action={this.collapseDiffs}
+                color="default"
+                icon={collapsed ? "eye" : "eye-slash"}
+                label={t("changesets.collapseDiffs")}
+                reducedMobile={true}
+              />
+            }
+          />
+          <ChangesetDiff changeset={changeset} defaultCollapse={collapsed} />
         </div>
-      </div>
+      </>
     );
   }
 
@@ -123,6 +146,12 @@ class ChangesetDetails extends React.Component<Props> {
       );
     }
     return null;
+  };
+
+  collapseDiffs = () => {
+    this.setState(state => ({
+      collapsed: !state.collapsed
+    }));
   };
 }
 
