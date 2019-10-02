@@ -39,13 +39,12 @@ import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.spi.javahg.HgDiffInternalCommand;
 import sonia.scm.web.HgUtil;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -71,41 +70,36 @@ public class HgDiffCommand extends AbstractCommand implements DiffCommand
   //~--- get methods ----------------------------------------------------------
 
   @Override
-  public void getDiffResult(DiffCommandRequest request, OutputStream output)
-    throws IOException
+  public DiffCommandBuilder.OutputStreamConsumer getDiffResult(DiffCommandRequest request)
   {
-    com.aragost.javahg.Repository hgRepo = open();
+    return output -> {
+      com.aragost.javahg.Repository hgRepo = open();
 
-    HgDiffInternalCommand cmd = HgDiffInternalCommand.on(hgRepo);
-    DiffFormat format = request.getFormat();
+      HgDiffInternalCommand cmd = HgDiffInternalCommand.on(hgRepo);
+      DiffFormat format = request.getFormat();
 
-    if (format == DiffFormat.GIT)
-    {
-      cmd.git();
-    }
-
-    cmd.change(HgUtil.getRevision(request.getRevision()));
-
-    InputStream inputStream = null;
-
-    try
-    {
-
-      if (!Strings.isNullOrEmpty(request.getPath()))
+      if (format == DiffFormat.GIT)
       {
-        inputStream = cmd.stream(hgRepo.file(request.getPath()));
-      }
-      else
-      {
-        inputStream = cmd.stream();
+        cmd.git();
       }
 
-      ByteStreams.copy(inputStream, output);
+      cmd.change(HgUtil.getRevision(request.getRevision()));
 
-    }
-    finally
-    {
-      Closeables.close(inputStream, true);
-    }
+      InputStream inputStream = null;
+
+      try {
+
+        if (!Strings.isNullOrEmpty(request.getPath())) {
+          inputStream = cmd.stream(hgRepo.file(request.getPath()));
+        } else {
+          inputStream = cmd.stream();
+        }
+
+        ByteStreams.copy(inputStream, output);
+
+      } finally {
+        Closeables.close(inputStream, true);
+      }
+    };
   }
 }

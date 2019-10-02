@@ -40,7 +40,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.spi.DiffCommand;
-import sonia.scm.util.IOUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -103,16 +102,12 @@ public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCom
    * Passes the difference of the given parameter to the outputstream.
    *
    *
-   * @param outputStream outputstream for the difference
-   *
-   * @return {@code this}
+   * @return A consumer that expects the output stream for the difference
    *
    * @throws IOException
    */
-  public DiffCommandBuilder retrieveContent(OutputStream outputStream) throws IOException {
-    getDiffResult(outputStream);
-
-    return this;
+  public OutputStreamConsumer retrieveContent() throws IOException {
+    return getDiffResult();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -125,21 +120,10 @@ public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCom
    * @throws IOException
    */
   public String getContent() throws IOException {
-    String content = null;
-    ByteArrayOutputStream baos = null;
-
-    try
-    {
-      baos = new ByteArrayOutputStream();
-      getDiffResult(baos);
-      content = baos.toString();
+    try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+      getDiffResult();
+      return baos.toString();
     }
-    finally
-    {
-      IOUtil.close(baos);
-    }
-
-    return content;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -169,25 +153,25 @@ public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCom
    * Method description
    *
    *
-   * @param outputStream
-   *
    * @throws IOException
+   * @return
    */
-  private void getDiffResult(OutputStream outputStream) throws IOException {
-    Preconditions.checkNotNull(outputStream, "OutputStream is required");
+  private OutputStreamConsumer getDiffResult() throws IOException {
     Preconditions.checkArgument(request.isValid(),
       "path and/or revision is required");
 
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("create diff for {}", request);
-    }
+    logger.debug("create diff for {}", request);
 
-    diffCommand.getDiffResult(request, outputStream);
+    return diffCommand.getDiffResult(request);
   }
 
   @Override
   DiffCommandBuilder self() {
     return this;
+  }
+
+  @FunctionalInterface
+  public interface OutputStreamConsumer {
+    void accept(OutputStream outputStream) throws IOException;
   }
 }

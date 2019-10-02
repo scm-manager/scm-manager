@@ -31,15 +31,12 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.DiffCommandBuilder;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  *
@@ -52,22 +49,25 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
   }
 
   @Override
-  public void getDiffResult(DiffCommandRequest request, OutputStream output) throws IOException {
+  public DiffCommandBuilder.OutputStreamConsumer getDiffResult(DiffCommandRequest request) throws IOException {
     @SuppressWarnings("squid:S2095") // repository will be closed with the RepositoryService
     org.eclipse.jgit.lib.Repository repository = open();
-    try (DiffFormatter formatter = new DiffFormatter(new BufferedOutputStream(output))) {
-      formatter.setRepository(repository);
 
-      Differ.Diff diff = Differ.diff(repository, request);
+    Differ.Diff diff = Differ.diff(repository, request);
 
-      for (DiffEntry e : diff.getEntries()) {
-        if (!e.getOldId().equals(e.getNewId())) {
-          formatter.format(e);
+    return output -> {
+      try (DiffFormatter formatter = new DiffFormatter(output)) {
+        formatter.setRepository(repository);
+
+        for (DiffEntry e : diff.getEntries()) {
+          if (!e.getOldId().equals(e.getNewId())) {
+            formatter.format(e);
+          }
         }
-      }
 
-      formatter.flush();
-    }
+        formatter.flush();
+      }
+    };
   }
 
 }

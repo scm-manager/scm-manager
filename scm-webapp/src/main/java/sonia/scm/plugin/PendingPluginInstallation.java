@@ -29,7 +29,7 @@ class PendingPluginInstallation {
     try {
       Files.delete(file);
     } catch (IOException ex) {
-      throw new PluginFailedToCancelInstallationException("failed to cancel installation of plugin " + name, ex);
+      throw new PluginFailedToCancelInstallationException("failed to cancel plugin installation ", name, ex);
     }
   }
 }

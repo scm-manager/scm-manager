@@ -13,6 +13,7 @@ import classNames from "classnames";
 import { translate } from "react-i18next";
 import { Button, ButtonGroup } from "../buttons";
 import Tag from "../Tag";
+import Icon from "../Icon";
 
 const styles = {
   panel: {
@@ -69,7 +70,7 @@ const styles = {
 
 type Props = DiffObjectProps & {
   file: File,
-  collapsible: true,
+  defaultCollapse: boolean,
 
   // context props
   classes: any,
@@ -82,16 +83,31 @@ type State = {
 };
 
 class DiffFile extends React.Component<Props, State> {
+  static defaultProps = {
+    defaultCollapse: false
+  };
+
   constructor(props: Props) {
     super(props);
     this.state = {
-      collapsed: false,
+      collapsed: this.props.defaultCollapse,
       sideBySide: false
     };
   }
 
+  // collapse diff by clicking collapseDiffs button
+  componentDidUpdate(prevProps) {
+    const { defaultCollapse } = this.props;
+    if (prevProps.defaultCollapse !== defaultCollapse) {
+      this.setState({
+        collapsed: defaultCollapse
+      });
+    }
+  }
+
   toggleCollapse = () => {
-    if (this.props.collapsable) {
+    const { file } = this.props;
+    if (file && !file.isBinaray) {
       this.setState(state => ({
         collapsed: !state.collapsed
       }));
@@ -173,7 +189,8 @@ class DiffFile extends React.Component<Props, State> {
     ) {
       return (
         <>
-          {file.oldPath} <i className="fa fa-arrow-right" /> {file.newPath}
+          {file.oldPath} <Icon name="arrow-right" color="inherit" />{" "}
+          {file.newPath}
         </>
       );
     } else if (file.type === "delete") {
@@ -233,7 +250,6 @@ class DiffFile extends React.Component<Props, State> {
       file,
       fileControlFactory,
       fileAnnotationFactory,
-      collapsible,
       classes,
       t
     } = this.props;
@@ -241,12 +257,12 @@ class DiffFile extends React.Component<Props, State> {
     const viewType = sideBySide ? "split" : "unified";
 
     let body = null;
-    let icon = "fa fa-angle-right";
+    let icon = "angle-right";
     if (!collapsed) {
       const fileAnnotations = fileAnnotationFactory
         ? fileAnnotationFactory(file)
         : null;
-      icon = "fa fa-angle-down";
+      icon = "angle-down";
       body = (
         <div className="panel-block is-paddingless">
           {fileAnnotations}
@@ -259,7 +275,9 @@ class DiffFile extends React.Component<Props, State> {
         </div>
       );
     }
-    const collapseIcon = collapsible ? <i className={icon} /> : null;
+    const collapseIcon = !file.isBinary ? (
+      <Icon name={icon} color="inherit" />
+    ) : null;
 
     const fileControls = fileControlFactory
       ? fileControlFactory(file, this.setCollapse)
@@ -285,20 +303,10 @@ class DiffFile extends React.Component<Props, State> {
               <ButtonGroup>
                 <Button
                   action={this.toggleSideBySide}
-                  className="reduced-mobile"
-                >
-                  <span className="icon is-small">
-                    <i
-                      className={classNames(
-                        "fas",
-                        sideBySide ? "fa-align-left" : "fa-columns"
-                      )}
-                    />
-                  </span>
-                  <span>
-                    {t(sideBySide ? "diff.combined" : "diff.sideBySide")}
-                  </span>
-                </Button>
+                  icon={sideBySide ? "align-left" : "columns"}
+                  label={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
+                  reducedMobile={true}
+                />
                 {fileControls}
               </ButtonGroup>
             </div>

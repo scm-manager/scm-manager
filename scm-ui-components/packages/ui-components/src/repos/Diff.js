@@ -4,7 +4,8 @@ import DiffFile from "./DiffFile";
 import type {DiffObjectProps, File} from "./DiffTypes";
 
 type Props = DiffObjectProps & {
-  diff: File[]
+  diff: File[],
+  defaultCollapse?: boolean
 };
 
 class Diff extends React.Component<Props> {
@@ -17,7 +18,7 @@ class Diff extends React.Component<Props> {
     return (
       <>
         {diff.map((file, index) => (
-          <DiffFile key={index} file={file} {...fileProps} />
+          <DiffFile key={index} file={file} {...fileProps} {...this.props} />
         ))}
       </>
     );

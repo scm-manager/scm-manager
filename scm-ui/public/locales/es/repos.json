@@ -73,7 +73,8 @@
     "errorTitle": "Error",
     "errorSubtitle": "No se han podido recuperar los changesets",
     "noChangesets": "No se han encontrado changesets para esta rama branch.",
-    "branchSelectorLabel": "Ramas"
+    "branchSelectorLabel": "Ramas",
+    "collapseDiffs": "Colapso"
   },
   "changeset": {
     "description": "Descripción",

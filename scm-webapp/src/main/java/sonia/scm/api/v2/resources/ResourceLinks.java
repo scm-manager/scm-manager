@@ -686,6 +686,10 @@ class ResourceLinks {
     String self() {
       return installedPluginCollectionLinkBuilder.method("installedPlugins").parameters().method("getInstalledPlugins").parameters().href();
     }
+
+    String update() {
+      return installedPluginCollectionLinkBuilder.method("installedPlugins").parameters().method("updateAll").parameters().href();
+    }
   }
 
   public AvailablePluginLinks availablePlugin() {
@@ -737,6 +741,10 @@ class ResourceLinks {
 
     String executePending() {
       return pendingPluginCollectionLinkBuilder.method("pendingPlugins").parameters().method("executePending").parameters().href();
+    }
+
+    String cancelPending() {
+      return pendingPluginCollectionLinkBuilder.method("pendingPlugins").parameters().method("cancelPending").parameters().href();
     }
 
     String self() {
