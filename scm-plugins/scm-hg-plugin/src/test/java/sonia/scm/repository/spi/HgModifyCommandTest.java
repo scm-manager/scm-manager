@@ -7,6 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
+import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.Person;
@@ -35,7 +36,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     when(hookManager.getCredentials()).thenReturn("SECRET:SECRET");
     when(hookManager.createUrl()).thenReturn("http://localhost");
     HgRepositoryEnvironmentBuilder environmentBuilder = new HgRepositoryEnvironmentBuilder(handler, hookManager);
-    hgModifyCommand = new HgModifyCommand(handler, cmdContext, new SimpleHgWorkdirFactory(Providers.of(environmentBuilder), new WorkdirProvider()));
+    hgModifyCommand = new HgModifyCommand(cmdContext, new SimpleHgWorkdirFactory(Providers.of(environmentBuilder), new WorkdirProvider()));
   }
 
   @After
@@ -159,11 +160,8 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     hgModifyCommand.execute(request);
   }
 
-  @Test(expected = IndexOutOfBoundsException.class)
-  public void shouldThrowIndexOutOfBoundExceptionIfRequestIsMissing() throws IOException {
-    ModifyCommandRequest request = new ModifyCommandRequest();
-    request.setCommitMessage("I found the answer");
-    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
-    hgModifyCommand.execute(request);
+  @Test(expected = NoChangesMadeException.class)
+  public void shouldThrowNoChangesMadeExceptionIfEmptyLocalChangesetAfterRequest() {
+    hgModifyCommand.execute(new ModifyCommandRequest());
   }
 }

@@ -6,9 +6,9 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
-import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.ContextEntry;
+import sonia.scm.NoChangesMadeException;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
@@ -68,10 +68,10 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       for (ModifyCommandRequest.PartialRequest r : request.getRequests()) {
         r.execute(this);
       }
-      failIfNotChanged(NoChangesMadeException::new);
+      failIfNotChanged(() -> new NoChangesMadeException(repository, ModifyWorker.this.request.getBranch()));
       Optional<RevCommit> revCommit = doCommit(request.getCommitMessage(), request.getAuthor());
       push();
-      return revCommit.orElseThrow(NoChangesMadeException::new).name();
+      return revCommit.orElseThrow(() -> new NoChangesMadeException(repository, ModifyWorker.this.request.getBranch())).name();
     }
 
     @Override
@@ -155,17 +155,6 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     @Override
     public void move(String sourcePath, String targetPath) {
 
-    }
-
-    private class NoChangesMadeException extends BadRequestException {
-      public NoChangesMadeException() {
-        super(ContextEntry.ContextBuilder.entity(context.getRepository()).build(), "no changes detected to branch " + ModifyWorker.this.request.getBranch());
-      }
-
-      @Override
-      public String getCode() {
-        return "40RaYIeeR1";
-      }
     }
   }
 

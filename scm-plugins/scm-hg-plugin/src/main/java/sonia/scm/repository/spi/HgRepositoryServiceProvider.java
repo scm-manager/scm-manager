@@ -242,7 +242,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public ModifyCommand getModifyCommand() {
-    return new HgModifyCommand(handler, context, workdirFactory);
+    return new HgModifyCommand(context, workdirFactory);
   }
 
   /**

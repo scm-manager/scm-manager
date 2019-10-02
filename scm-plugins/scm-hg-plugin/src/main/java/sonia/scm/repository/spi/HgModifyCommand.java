@@ -6,9 +6,10 @@ import com.aragost.javahg.commands.CommitCommand;
 import com.aragost.javahg.commands.ExecutionException;
 import com.aragost.javahg.commands.PushCommand;
 import com.aragost.javahg.commands.RemoveCommand;
+import com.aragost.javahg.commands.StatusCommand;
 import org.apache.commons.lang.StringUtils;
 import sonia.scm.ContextEntry;
-import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.NoChangesMadeException;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.util.WorkingCopy;
 
@@ -26,12 +27,10 @@ import static sonia.scm.NotFoundException.notFound;
 
 public class HgModifyCommand implements ModifyCommand {
 
-  private final HgRepositoryHandler handler;
   private HgCommandContext context;
   private final HgWorkdirFactory workdirFactory;
 
-  public HgModifyCommand(HgRepositoryHandler handler, HgCommandContext context, HgWorkdirFactory workdirFactory) {
-    this.handler = handler;
+  public HgModifyCommand(HgCommandContext context, HgWorkdirFactory workdirFactory) {
     this.context = context;
     this.workdirFactory = workdirFactory;
   }
@@ -115,7 +114,9 @@ public class HgModifyCommand implements ModifyCommand {
           }
         }
       );
-
+      if (StatusCommand.on(workingRepository).lines().isEmpty()) {
+        throw new NoChangesMadeException(context.getScmRepository());
+      }
       CommitCommand.on(workingRepository).user(String.format("%s <%s>", request.getAuthor().getName(), request.getAuthor().getMail())).message(request.getCommitMessage()).execute();
       List<Changeset> execute = PushCommand.on(workingRepository).execute();
       return execute.get(0).getNode();
