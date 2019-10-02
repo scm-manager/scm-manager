@@ -62,7 +62,6 @@ import org.eclipse.jgit.util.LfsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
-import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.GitUserAgentProvider;
@@ -77,7 +76,6 @@ import java.util.concurrent.TimeUnit;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -87,7 +85,7 @@ import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
  */
 public final class GitUtil
 {
-  
+
   private static final GitUserAgentProvider GIT_USER_AGENT_PROVIDER = new GitUserAgentProvider();
 
   /** Field description */
@@ -333,14 +331,14 @@ public final class GitUtil
 
     return branch;
   }
-  
+
   /**
    * Returns {@code true} if the provided reference name is a branch name.
-   * 
+   *
    * @param refName reference name
-   * 
+   *
    * @return {@code true} if the name is a branch name
-   * 
+   *
    * @since 1.50
    */
   public static boolean isBranch(String refName)
@@ -619,11 +617,11 @@ public final class GitUtil
 
   /**
    * Returns the name of the tag or {@code null} if the the ref is not a tag.
-   * 
+   *
    * @param refName ref name
-   * 
+   *
    * @return name of tag or {@link null}
-   * 
+   *
    * @since 1.50
    */
   public static String getTagName(String refName)
@@ -696,7 +694,7 @@ public final class GitUtil
   {
     //J-
     return fs.resolve(dir, DIRECTORY_OBJETCS).exists()
-      && fs.resolve(dir, DIRECTORY_REFS).exists() 
+      && fs.resolve(dir, DIRECTORY_REFS).exists()
       &&!fs.resolve(dir, DIRECTORY_DOTGIT).exists();
     //J+
   }
@@ -736,9 +734,10 @@ public final class GitUtil
       mergeBaseWalk.markStart(mergeBaseWalk.lookupCommit(revision1));
       mergeBaseWalk.markStart(mergeBaseWalk.parseCommit(revision2));
       RevCommit ancestor = mergeBaseWalk.next();
-      doThrow()
-        .violation("revisions " + revision1.name() + " and " + revision2.name() + " are not related and therefore do not have a common ancestor", "revisions")
-        .when(ancestor == null);
+      if (ancestor == null) {
+        String msg = "revisions %s and %s are not related and therefore do not have a common ancestor";
+        throw new NoCommonHistoryException(String.format(msg, revision1.name(), revision2.name()));
+      }
       return ancestor.getId();
     }
   }
