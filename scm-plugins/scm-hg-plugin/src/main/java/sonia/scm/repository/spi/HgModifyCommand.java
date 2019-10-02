@@ -3,6 +3,7 @@ package sonia.scm.repository.spi;
 import com.aragost.javahg.Changeset;
 import com.aragost.javahg.Repository;
 import com.aragost.javahg.commands.CommitCommand;
+import com.aragost.javahg.commands.ExecutionException;
 import com.aragost.javahg.commands.PushCommand;
 import com.aragost.javahg.commands.RemoveCommand;
 import org.apache.commons.lang.StringUtils;
@@ -21,6 +22,7 @@ import java.util.List;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static sonia.scm.AlreadyExistsException.alreadyExists;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 public class HgModifyCommand implements ModifyCommand {
 
@@ -51,6 +53,7 @@ public class HgModifyCommand implements ModifyCommand {
               @Override
               public void create(String toBeCreated, File file, boolean overwrite) throws IOException {
                 Path targetFile = new File(workingRepository.getDirectory(), toBeCreated).toPath();
+                createDirectories(targetFile);
                 if (overwrite) {
                   Files.move(file.toPath(), targetFile, REPLACE_EXISTING);
                 } else {
@@ -62,19 +65,28 @@ public class HgModifyCommand implements ModifyCommand {
                 }
                 try {
                   addFileToHg(targetFile.toFile());
-                } catch (Exception e) {
+                } catch (ExecutionException e) {
                   throwInternalRepositoryException("could not add new file to index", e);
                 }
               }
 
               @Override
-              public void modify(String path, File file) {
-
+              public void modify(String path, File file) throws IOException {
+                Path targetFile = new File(workingRepository.getDirectory(), path).toPath();
+                createDirectories(targetFile);
+                if (!targetFile.toFile().exists()) {
+                  throw notFound(createFileContext(path));
+                }
+                Files.move(file.toPath(), targetFile, REPLACE_EXISTING);
+                try {
+                  addFileToHg(targetFile.toFile());
+                } catch (ExecutionException e) {
+                  throwInternalRepositoryException("could not modify existing file", e);
+                }
               }
 
               @Override
               public void move(String sourcePath, String targetPath) {
-
               }
 
               private void createDirectories(Path targetFile) throws IOException {
@@ -97,20 +109,18 @@ public class HgModifyCommand implements ModifyCommand {
               private void addFileToHg(File file) {
                 workingRepository.workingCopy().add(file.getAbsolutePath());
               }
-
             });
           } catch (IOException e) {
-            e.printStackTrace(); // TODO
+            throwInternalRepositoryException("could not execute command on repository", e);
           }
         }
       );
 
       CommitCommand.on(workingRepository).user(String.format("%s <%s>", request.getAuthor().getName(), request.getAuthor().getMail())).message(request.getCommitMessage()).execute();
       List<Changeset> execute = PushCommand.on(workingRepository).execute();
-      System.out.println(execute);
       return execute.get(0).getNode();
-    } catch (IOException e) {
-      e.printStackTrace();
+    } catch (IOException | ExecutionException e) {
+      throwInternalRepositoryException("could not execute command on repository", e);
       return null;
     }
   }
