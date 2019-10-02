@@ -14,6 +14,13 @@ public class PluginTestHelper {
     return createAvailable(information);
   }
 
+  public static AvailablePlugin createAvailable(String name, String version) {
+    PluginInformation information = new PluginInformation();
+    information.setName(name);
+    information.setVersion(version);
+    return createAvailable(information);
+  }
+
   public static InstalledPlugin createInstalled(String name) {
     PluginInformation information = new PluginInformation();
     information.setName(name);

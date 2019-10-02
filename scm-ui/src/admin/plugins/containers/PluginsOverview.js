@@ -5,11 +5,13 @@ import { translate } from "react-i18next";
 import { compose } from "redux";
 import type { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import {
+  ButtonGroup,
   ErrorNotification,
   Loading,
   Notification,
   Subtitle,
-  Title
+  Title,
+  Button
 } from "@scm-manager/ui-components";
 import {
   fetchPendingPlugins,
@@ -27,7 +29,9 @@ import {
 } from "../../../modules/indexResource";
 import PluginTopActions from "../components/PluginTopActions";
 import PluginBottomActions from "../components/PluginBottomActions";
-import ExecutePendingAction from "../components/ExecutePendingAction";
+import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
+import CancelPendingActionModal from "../components/CancelPendingActionModal";
+import UpdateAllActionModal from "../components/UpdateAllActionModal";
 
 type Props = {
   loading: boolean,
@@ -41,25 +45,31 @@ type Props = {
   pendingPlugins: PendingPlugins,
 
   // context objects
-  t: string => string,
+  t: (key: string, params?: Object) => string,
 
   // dispatched functions
   fetchPluginsByLink: (link: string) => void,
   fetchPendingPlugins: (link: string) => void
 };
 
-class PluginsOverview extends React.Component<Props> {
+type State = {
+  showPendingModal: boolean,
+  showUpdateAllModal: boolean,
+  showCancelModal: boolean
+};
+
+class PluginsOverview extends React.Component<Props, State> {
+  constructor(props: Props, context: *) {
+    super(props, context);
+    this.state = {
+      showPendingModal: false,
+      showUpdateAllModal: false,
+      showCancelModal: false
+    };
+  }
+
   componentDidMount() {
-    const {
-      installed,
-      fetchPluginsByLink,
-      availablePluginsLink,
-      installedPluginsLink,
-      pendingPluginsLink,
-      fetchPendingPlugins
-    } = this.props;
-    fetchPluginsByLink(installed ? installedPluginsLink : availablePluginsLink);
-    fetchPendingPlugins(pendingPluginsLink);
+    this.fetchPlugins();
   }
 
   componentDidUpdate(prevProps) {
@@ -79,7 +89,9 @@ class PluginsOverview extends React.Component<Props> {
       fetchPendingPlugins
     } = this.props;
     fetchPluginsByLink(installed ? installedPluginsLink : availablePluginsLink);
-    fetchPendingPlugins(pendingPluginsLink);
+    if (pendingPluginsLink) {
+      fetchPendingPlugins(pendingPluginsLink);
+    }
   };
 
   renderHeader = (actions: React.Node) => {
@@ -109,15 +121,70 @@ class PluginsOverview extends React.Component<Props> {
   };
 
   createActions = () => {
-    const { pendingPlugins } = this.props;
+    const { pendingPlugins, collection, t } = this.props;
+    const buttons = [];
+
     if (
       pendingPlugins &&
       pendingPlugins._links &&
       pendingPlugins._links.execute
     ) {
-      return <ExecutePendingAction pendingPlugins={pendingPlugins} />;
+      buttons.push(
+        <Button
+          color="primary"
+          reducedMobile={true}
+          key={"executePending"}
+          icon={"arrow-circle-right"}
+          label={t("plugins.executePending")}
+          action={() => this.setState({ showPendingModal: true })}
+        />
+      );
+    }
+
+    if (
+      pendingPlugins &&
+      pendingPlugins._links &&
+      pendingPlugins._links.cancel
+    ) {
+      buttons.push(
+        <Button
+          color="primary"
+          reducedMobile={true}
+          key={"cancelPending"}
+          icon={"times"}
+          label={t("plugins.cancelPending")}
+          action={() => this.setState({ showCancelModal: true })}
+        />
+      );
+    }
+
+    if (collection && collection._links && collection._links.update) {
+      buttons.push(
+        <Button
+          color="primary"
+          reducedMobile={true}
+          key={"updateAll"}
+          icon={"sync-alt"}
+          label={this.computeUpdateAllSize()}
+          action={() => this.setState({ showUpdateAllModal: true })}
+        />
+      );
+    }
+
+    if (buttons.length > 0) {
+      return <ButtonGroup>{buttons}</ButtonGroup>;
     }
     return null;
+  };
+
+  computeUpdateAllSize = () => {
+    const { collection, t } = this.props;
+    const outdatedPlugins = collection._embedded.plugins.filter(
+      p => p._links.update
+    ).length;
+    return t("plugins.outdatedPlugins", {
+      count: outdatedPlugins
+    });
   };
 
   render() {
@@ -138,9 +205,46 @@ class PluginsOverview extends React.Component<Props> {
         <hr className="header-with-actions" />
         {this.renderPluginsList()}
         {this.renderFooter(actions)}
+        {this.renderModals()}
       </>
     );
   }
+
+  renderModals = () => {
+    const { collection, pendingPlugins } = this.props;
+    const {
+      showPendingModal,
+      showCancelModal,
+      showUpdateAllModal
+    } = this.state;
+
+    if (showPendingModal) {
+      return (
+        <ExecutePendingActionModal
+          onClose={() => this.setState({ showPendingModal: false })}
+          pendingPlugins={pendingPlugins}
+        />
+      );
+    }
+    if (showCancelModal) {
+      return (
+        <CancelPendingActionModal
+          onClose={() => this.setState({ showCancelModal: false })}
+          refresh={this.fetchPlugins}
+          pendingPlugins={pendingPlugins}
+        />
+      );
+    }
+    if (showUpdateAllModal) {
+      return (
+        <UpdateAllActionModal
+          onClose={() => this.setState({ showUpdateAllModal: false })}
+          refresh={this.fetchPlugins}
+          installedPlugins={collection}
+        />
+      );
+    }
+  };
 
   renderPluginsList() {
     const { collection, t } = this.props;

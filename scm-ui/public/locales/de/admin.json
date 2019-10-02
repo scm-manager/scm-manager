@@ -29,7 +29,11 @@
       "installedNavLink": "Installiert",
       "availableNavLink": "Verfügbar"
     },
-    "executePending": "Ausstehende Plugin-Änderungen ausführen",
+    "executePending": "Änderungen ausführen",
+    "outdatedPlugins": "{{count}} veraltetes Plugin",
+    "outdatedPlugins_plural": "{{count}} veraltete Plugins",
+    "updateAll": "Alle Plugins aktualisieren",
+    "cancelPending": "Änderungen abbrechen",
     "noPlugins": "Keine Plugins gefunden.",
     "modal": {
       "title": {
@@ -48,6 +52,7 @@
       "updateAndRestart": "Aktualisieren und Neustarten",
       "uninstallAndRestart": "Deinstallieren and Neustarten",
       "executeAndRestart": "Ausführen und Neustarten",
+      "updateAll": "Alle Plugins aktualisieren",
       "abort": "Abbrechen",
       "author": "Autor",
       "version": "Version",
@@ -58,7 +63,9 @@
       "successNotification": "Das Plugin wurde erfolgreich installiert. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden:",
       "reload": "jetzt neu laden",
       "restartNotification": "Der SCM-Manager Kontext sollte nur neu gestartet werden, wenn aktuell niemand damit arbeitet.",
-      "executePending": "Die folgenden Plugin-Änderungen werden ausgeführt. Anschließend wird der SCM-Manager Kontext neu gestartet."
+      "executePending": "Die folgenden Plugin-Änderungen werden ausgeführt. Anschließend wird der SCM-Manager Kontext neu gestartet.",
+      "cancelPending": "Die folgenden Plugin-Änderungen werden abgebrochen und zurückgesetzt.",
+      "updateAllInfo": "Die folgenden Plugins werden aktualisiert. Die Änderungen werden nach dem nächsten Neustart wirksam."
     }
   },
   "repositoryRole": {
