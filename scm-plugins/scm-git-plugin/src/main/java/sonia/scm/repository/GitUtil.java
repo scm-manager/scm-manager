@@ -735,7 +735,8 @@ public final class GitUtil
       mergeBaseWalk.markStart(mergeBaseWalk.parseCommit(revision2));
       RevCommit ancestor = mergeBaseWalk.next();
       if (ancestor == null) {
-        throw new NoCommonHistoryException();
+        String msg = "revisions %s and %s are not related and therefore do not have a common ancestor";
+        throw new NoCommonHistoryException(String.format(msg, revision1.name(), revision2.name()));
       }
       return ancestor.getId();
     }

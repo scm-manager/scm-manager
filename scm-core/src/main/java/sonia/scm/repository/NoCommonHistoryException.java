@@ -8,7 +8,11 @@ import static java.util.Collections.emptyList;
 public class NoCommonHistoryException extends BadRequestException {
 
   public NoCommonHistoryException() {
-    super(emptyList(), "no common history");
+    this("no common history");
+  }
+
+  public NoCommonHistoryException(String message) {
+    super(emptyList(), message);
   }
 
   @Override
