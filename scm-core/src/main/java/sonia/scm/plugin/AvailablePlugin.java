@@ -5,7 +5,7 @@ import com.google.common.base.Preconditions;
 public class AvailablePlugin implements Plugin {
 
   private final AvailablePluginDescriptor pluginDescriptor;
-  private final boolean pending;
+  private boolean pending;
 
   public AvailablePlugin(AvailablePluginDescriptor pluginDescriptor) {
     this(pluginDescriptor, false);
@@ -23,6 +23,10 @@ public class AvailablePlugin implements Plugin {
 
   public boolean isPending() {
     return pending;
+  }
+
+  public void cancelInstallation() {
+    this.pending = false;
   }
 
   public AvailablePlugin install() {

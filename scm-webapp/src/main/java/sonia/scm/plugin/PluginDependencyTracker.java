@@ -33,6 +33,10 @@ class PluginDependencyTracker {
   }
 
   private void removeDependency(String from, String to) {
-    plugins.get(to).remove(from);
+    Collection<String> dependencies = plugins.get(to);
+    if (dependencies == null) {
+      throw new NullPointerException("inverse dependencies not found for " + to);
+    }
+    dependencies.remove(from);
   }
 }

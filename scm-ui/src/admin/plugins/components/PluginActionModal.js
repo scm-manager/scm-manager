@@ -1,21 +1,26 @@
 // @flow
-import React from "react";
+import * as React from "react";
 import {
-  apiClient,
   Button,
   ButtonGroup,
   ErrorNotification,
-  Modal,
-  Notification
+  Modal
 } from "@scm-manager/ui-components";
-import type { PendingPlugins } from "@scm-manager/ui-types";
+import type { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
-import waitForRestart from "./waitForRestart";
 import SuccessNotification from "./SuccessNotification";
 
 type Props = {
   onClose: () => void,
-  pendingPlugins: PendingPlugins,
+  actionType: string,
+  pendingPlugins?: PendingPlugins,
+  installedPlugins?: PluginCollection,
+  refresh: () => void,
+  execute: () => Promise<any>,
+  description: string,
+  label: string,
+
+  children?: React.Node,
 
   // context props
   t: string => string
@@ -27,7 +32,7 @@ type State = {
   error?: Error
 };
 
-class ExecutePendingModal extends React.Component<Props, State> {
+class PluginActionModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -37,35 +42,28 @@ class ExecutePendingModal extends React.Component<Props, State> {
   }
 
   renderNotifications = () => {
-    const { t } = this.props;
+    const { children } = this.props;
     const { error, success } = this.state;
     if (error) {
       return <ErrorNotification error={error} />;
     } else if (success) {
       return <SuccessNotification />;
     } else {
-      return (
-        <Notification type="warning">
-          {t("plugins.modal.restartNotification")}
-        </Notification>
-      );
+      return children;
     }
   };
 
-  executeAndRestart = () => {
-    const { pendingPlugins } = this.props;
+  executeAction = () => {
     this.setState({
       loading: true
     });
 
-    apiClient
-      .post(pendingPlugins._links.execute.href)
-      .then(waitForRestart)
+    this.props
+      .execute()
       .then(() => {
         this.setState({
           success: true,
-          loading: false,
-          error: undefined
+          loading: false
         });
       })
       .catch(error => {
@@ -77,11 +75,45 @@ class ExecutePendingModal extends React.Component<Props, State> {
       });
   };
 
+  renderModalContent = () => {
+    return (
+      <>
+        {this.renderUpdatable()}
+        {this.renderInstallQueue()}
+        {this.renderUpdateQueue()}
+        {this.renderUninstallQueue()}
+      </>
+    );
+  };
+
+  renderUpdatable = () => {
+    const { installedPlugins, t } = this.props;
+    return (
+      <>
+        {installedPlugins &&
+          installedPlugins._embedded &&
+          installedPlugins._embedded.plugins && (
+            <>
+              <strong>{t("plugins.modal.updateQueue")}</strong>
+              <ul>
+                {installedPlugins._embedded.plugins
+                  .filter(plugin => plugin._links && plugin._links.update)
+                  .map(plugin => (
+                    <li key={plugin.name}>{plugin.name}</li>
+                  ))}
+              </ul>
+            </>
+          )}
+      </>
+    );
+  };
+
   renderInstallQueue = () => {
     const { pendingPlugins, t } = this.props;
     return (
       <>
-        {pendingPlugins._embedded &&
+        {pendingPlugins &&
+          pendingPlugins._embedded &&
           pendingPlugins._embedded.new.length > 0 && (
             <>
               <strong>{t("plugins.modal.installQueue")}</strong>
@@ -100,7 +132,8 @@ class ExecutePendingModal extends React.Component<Props, State> {
     const { pendingPlugins, t } = this.props;
     return (
       <>
-        {pendingPlugins._embedded &&
+        {pendingPlugins &&
+          pendingPlugins._embedded &&
           pendingPlugins._embedded.update.length > 0 && (
             <>
               <strong>{t("plugins.modal.updateQueue")}</strong>
@@ -119,7 +152,8 @@ class ExecutePendingModal extends React.Component<Props, State> {
     const { pendingPlugins, t } = this.props;
     return (
       <>
-        {pendingPlugins._embedded &&
+        {pendingPlugins &&
+          pendingPlugins._embedded &&
           pendingPlugins._embedded.uninstall.length > 0 && (
             <>
               <strong>{t("plugins.modal.uninstallQueue")}</strong>
@@ -135,15 +169,12 @@ class ExecutePendingModal extends React.Component<Props, State> {
   };
 
   renderBody = () => {
-    const { t } = this.props;
     return (
       <>
         <div className="media">
           <div className="content">
-            <p>{t("plugins.modal.executePending")}</p>
-            {this.renderInstallQueue()}
-            {this.renderUpdateQueue()}
-            {this.renderUninstallQueue()}
+            <p>{this.props.description}</p>
+            {this.renderModalContent()}
           </div>
         </div>
         <div className="media">{this.renderNotifications()}</div>
@@ -158,9 +189,9 @@ class ExecutePendingModal extends React.Component<Props, State> {
       <ButtonGroup>
         <Button
           color="warning"
-          label={t("plugins.modal.executeAndRestart")}
+          label={this.props.label}
           loading={loading}
-          action={this.executeAndRestart}
+          action={this.executeAction}
           disabled={error || success}
         />
         <Button label={t("plugins.modal.abort")} action={onClose} />
@@ -169,10 +200,10 @@ class ExecutePendingModal extends React.Component<Props, State> {
   };
 
   render() {
-    const { onClose, t } = this.props;
+    const { onClose } = this.props;
     return (
       <Modal
-        title={t("plugins.modal.executeAndRestart")}
+        title={this.props.label}
         closeFunction={onClose}
         body={this.renderBody()}
         footer={this.renderFooter()}
@@ -182,4 +213,4 @@ class ExecutePendingModal extends React.Component<Props, State> {
   }
 }
 
-export default translate("admin")(ExecutePendingModal);
+export default translate("admin")(PluginActionModal);

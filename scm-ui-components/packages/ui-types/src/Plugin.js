@@ -17,6 +17,7 @@ export type Plugin = {
 };
 
 export type PluginCollection = Collection & {
+  _links: Links,
   _embedded: {
     plugins: Plugin[] | string[]
   }
