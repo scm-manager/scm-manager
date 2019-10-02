@@ -21,7 +21,9 @@ const styles = {
   },
   /* remove bottom border for collapsed panels */
   panelCollapsed: {
-    borderBottom: "none"
+    "& .panel-heading": {
+      borderBottom: "none"
+    }
   },
   /* breaks into a second row
      when buttons and title become too long */
@@ -111,7 +113,7 @@ class DiffFile extends React.Component<Props, State> {
 
   toggleCollapse = () => {
     const { file } = this.props;
-    if (file && !file.isBinaray) {
+    if (file && !file.isBinary) {
       this.setState(state => ({
         collapsed: !state.collapsed
       }));
@@ -279,15 +281,20 @@ class DiffFile extends React.Component<Props, State> {
         </div>
       );
     }
-    const collapseIcon = !file.isBinary ? (
-      <Icon name={icon} color="inherit" />
-    ) : null;
+    const collapseIcon =
+      file && !file.isBinary ? <Icon name={icon} color="inherit" /> : null;
 
     const fileControls = fileControlFactory
       ? fileControlFactory(file, this.setCollapse)
       : null;
     return (
-      <div className={classNames("panel", classes.panel, collapsed ? classes.panelCollapsed : "")}>
+      <div
+        className={classNames(
+          "panel",
+          classes.panel,
+          (file && file.isBinary) || collapsed ? classes.panelCollapsed : ""
+        )}
+      >
         <div className="panel-heading">
           <div className={classNames("level", classes.level)}>
             <div
