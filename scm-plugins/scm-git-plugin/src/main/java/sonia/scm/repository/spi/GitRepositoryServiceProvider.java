@@ -273,7 +273,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public ModifyCommand getModifyCommand() {
-    return new GitModifyCommand(context, repository, handler.getWorkdirFactory());
+    return new GitModifyCommand(context, repository, handler.getWorkdirFactory(), lfsBlobStoreFactory);
   }
 
   @Override

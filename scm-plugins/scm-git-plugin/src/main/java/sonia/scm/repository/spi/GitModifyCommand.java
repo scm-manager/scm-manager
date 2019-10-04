@@ -3,6 +3,7 @@ package sonia.scm.repository.spi;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.attributes.FilterCommandRegistry;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -12,6 +13,7 @@ import sonia.scm.ContextEntry;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,10 +32,12 @@ import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 public class GitModifyCommand extends AbstractGitCommand implements ModifyCommand {
 
   private final GitWorkdirFactory workdirFactory;
+  private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
-  GitModifyCommand(GitContext context, Repository repository, GitWorkdirFactory workdirFactory) {
+  GitModifyCommand(GitContext context, Repository repository, GitWorkdirFactory workdirFactory, LfsBlobStoreFactory lfsBlobStoreFactory) {
     super(context, repository);
     this.workdirFactory = workdirFactory;
+    this.lfsBlobStoreFactory = lfsBlobStoreFactory;
   }
 
   @Override
@@ -87,10 +91,17 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
           throw alreadyExists(createFileContext(toBeCreated));
         }
       }
+
+      LfsBlobStoreCleanFilterFactory cleanFilterFactory = new LfsBlobStoreCleanFilterFactory(lfsBlobStoreFactory, repository, targetFile);
+
+      String registerKey = "git-lfs clean -- '" + toBeCreated + "'";
+      FilterCommandRegistry.register(registerKey, cleanFilterFactory::createFilter);
       try {
         addFileToGit(toBeCreated);
       } catch (GitAPIException e) {
         throwInternalRepositoryException("could not add new file to index", e);
+      } finally {
+        FilterCommandRegistry.unregister(registerKey);
       }
     }
 
