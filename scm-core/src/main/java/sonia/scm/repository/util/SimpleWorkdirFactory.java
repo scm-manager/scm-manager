@@ -19,10 +19,10 @@ public abstract class SimpleWorkdirFactory<R, C> implements WorkdirFactory<R, C>
   }
 
   @Override
-  public WorkingCopy<R> createWorkingCopy(C context) {
+  public WorkingCopy<R> createWorkingCopy(C context, String initialBranch) {
     try {
       File directory = workdirProvider.createNewWorkdir();
-      ParentAndClone<R> parentAndClone = cloneRepository(context, directory);
+      ParentAndClone<R> parentAndClone = cloneRepository(context, directory, initialBranch);
       return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), this::close, directory);
     } catch (IOException e) {
       throw new InternalRepositoryException(getScmRepository(context), "could not clone repository in temporary directory", e);
@@ -35,7 +35,7 @@ public abstract class SimpleWorkdirFactory<R, C> implements WorkdirFactory<R, C>
   // We do allow implementations to throw arbitrary exceptions here, so that we can handle them in close
   protected abstract void closeRepository(R repository) throws Exception;
 
-  protected abstract ParentAndClone<R> cloneRepository(C context, File target) throws IOException;
+  protected abstract ParentAndClone<R> cloneRepository(C context, File target, String initialBranch) throws IOException;
 
   private void close(R repository) {
     try {
