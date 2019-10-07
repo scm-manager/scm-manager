@@ -4,7 +4,7 @@ import com.aragost.javahg.Changeset;
 import com.aragost.javahg.Repository;
 import com.aragost.javahg.commands.CommitCommand;
 import com.aragost.javahg.commands.ExecutionException;
-import com.aragost.javahg.commands.PushCommand;
+import com.aragost.javahg.commands.PullCommand;
 import com.aragost.javahg.commands.RemoveCommand;
 import com.aragost.javahg.commands.StatusCommand;
 import org.apache.commons.lang.StringUtils;
@@ -118,11 +118,23 @@ public class HgModifyCommand implements ModifyCommand {
         throw new NoChangesMadeException(context.getScmRepository());
       }
       CommitCommand.on(workingRepository).user(String.format("%s <%s>", request.getAuthor().getName(), request.getAuthor().getMail())).message(request.getCommitMessage()).execute();
-      List<Changeset> execute = PushCommand.on(workingRepository).execute();
+      List<Changeset> execute = pullModifyChangesToCentralRepository(request, workingCopy);
       return execute.get(0).getNode();
-    } catch (IOException | ExecutionException e) {
+    } catch (ExecutionException e) {
       throwInternalRepositoryException("could not execute command on repository", e);
       return null;
+    }
+  }
+
+  private List<Changeset> pullModifyChangesToCentralRepository(ModifyCommandRequest request, WorkingCopy<com.aragost.javahg.Repository> workingCopy) {
+    try {
+      com.aragost.javahg.commands.PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
+      workdirFactory.configure(pullCommand);
+      return pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
+    } catch (Exception e) {
+      throw new IntegrateChangesFromWorkdirException(context.getScmRepository(),
+        String.format("Could not pull modify changes from working copy to central repository", request.getBranch()),
+        e);
     }
   }
 
