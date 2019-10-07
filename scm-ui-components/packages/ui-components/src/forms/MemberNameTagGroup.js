@@ -7,6 +7,8 @@ import TagGroup from "./TagGroup";
 type Props = {
   members: string[],
   memberListChanged: (string[]) => void,
+  label?: string,
+  helpText?: string,
   t: string => string
 };
 
