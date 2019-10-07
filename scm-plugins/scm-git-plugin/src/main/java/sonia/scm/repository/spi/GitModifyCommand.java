@@ -143,11 +143,6 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       contextBuilder.in(context.getRepository());
       return contextBuilder;
     }
-
-    @Override
-    public void move(String sourcePath, String targetPath) {
-
-    }
   }
 
   private String throwInternalRepositoryException(String message, Exception e) {

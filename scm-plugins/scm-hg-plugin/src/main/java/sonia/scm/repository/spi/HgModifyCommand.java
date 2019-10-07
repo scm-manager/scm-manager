@@ -84,10 +84,6 @@ public class HgModifyCommand implements ModifyCommand {
                 }
               }
 
-              @Override
-              public void move(String sourcePath, String targetPath) {
-              }
-
               private void createDirectories(Path targetFile) throws IOException {
                 try {
                   Files.createDirectories(targetFile.getParent());

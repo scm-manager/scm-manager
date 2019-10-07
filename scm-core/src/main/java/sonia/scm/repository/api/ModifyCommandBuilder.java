@@ -96,17 +96,6 @@ public class ModifyCommandBuilder {
   }
 
   /**
-   * Move an existing file.
-   * @param sourcePath The path and the name of the file that should be moved.
-   * @param targetPath The new path and name the file should be moved to.
-   * @return This builder instance.
-   */
-  public ModifyCommandBuilder moveFile(String sourcePath, String targetPath) {
-    request.addRequest(new ModifyCommandRequest.MoveFileRequest(sourcePath, targetPath));
-    return this;
-  }
-
-  /**
    * Apply the changes and create a new commit with the given message and author.
    * @return The revision of the new commit.
    */

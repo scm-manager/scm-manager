@@ -3,19 +3,11 @@ package sonia.scm.repository.util;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.spi.MergeCommandRequest;
-import sonia.scm.repository.spi.ModifyCommandRequest;
 import sonia.scm.user.User;
 
 public class AuthorUtil {
 
-  public static void setAuthorIfNotAvailable(ModifyCommandRequest request) {
-    if (request.getAuthor() == null) {
-      request.setAuthor(createAuthorFromSubject());
-    }
-  }
-
-  public static void setAuthorIfNotAvailable(MergeCommandRequest request) {
+  public static void setAuthorIfNotAvailable(CommandWithAuthor request) {
     if (request.getAuthor() == null) {
       request.setAuthor(createAuthorFromSubject());
     }
@@ -27,5 +19,11 @@ public class AuthorUtil {
     String name = user.getDisplayName();
     String email = user.getMail();
     return new Person(name, email);
+  }
+
+  public interface CommandWithAuthor {
+    Person getAuthor();
+
+    void setAuthor(Person person);
   }
 }

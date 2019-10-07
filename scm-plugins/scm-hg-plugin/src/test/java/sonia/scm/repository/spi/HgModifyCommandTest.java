@@ -10,6 +10,7 @@ import sonia.scm.AlreadyExistsException;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.HgHookManager;
+import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
@@ -19,8 +20,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
@@ -31,12 +30,16 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
   @Before
   public void initHgModifyCommand() {
-    HgHookManager hookManager = mock(HgHookManager.class);
-    when(hookManager.getChallenge()).thenReturn("CHALLENGE");
-    when(hookManager.getCredentials()).thenReturn("SECRET:SECRET");
-    when(hookManager.createUrl()).thenReturn("http://localhost");
+    HgHookManager hookManager = HgTestUtil.createHookManager();
     HgRepositoryEnvironmentBuilder environmentBuilder = new HgRepositoryEnvironmentBuilder(handler, hookManager);
-    hgModifyCommand = new HgModifyCommand(cmdContext, new SimpleHgWorkdirFactory(Providers.of(environmentBuilder), new WorkdirProvider()));
+    SimpleHgWorkdirFactory workdirFactory = new SimpleHgWorkdirFactory(Providers.of(environmentBuilder), new WorkdirProvider()) {
+      @Override
+      public void configure(com.aragost.javahg.commands.PullCommand pullCommand) {
+        // we do not want to configure http hooks in this unit test
+      }
+    };
+    hgModifyCommand = new HgModifyCommand(cmdContext, workdirFactory
+    );
   }
 
   @After
