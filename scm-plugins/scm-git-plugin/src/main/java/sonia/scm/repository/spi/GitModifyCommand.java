@@ -1,5 +1,6 @@
 package sonia.scm.repository.spi;
 
+import com.google.common.util.concurrent.Striped;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -22,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static sonia.scm.AlreadyExistsException.alreadyExists;
@@ -30,6 +32,8 @@ import static sonia.scm.NotFoundException.notFound;
 import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
 public class GitModifyCommand extends AbstractGitCommand implements ModifyCommand {
+
+  private static final Striped<Lock> REGISTER_LOCKS = Striped.lock(5);
 
   private final GitWorkdirFactory workdirFactory;
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
@@ -92,17 +96,7 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
         }
       }
 
-      LfsBlobStoreCleanFilterFactory cleanFilterFactory = new LfsBlobStoreCleanFilterFactory(lfsBlobStoreFactory, repository, targetFile);
-
-      String registerKey = "git-lfs clean -- '" + toBeCreated + "'";
-      FilterCommandRegistry.register(registerKey, cleanFilterFactory::createFilter);
-      try {
-        addFileToGit(toBeCreated);
-      } catch (GitAPIException e) {
-        throwInternalRepositoryException("could not add new file to index", e);
-      } finally {
-        FilterCommandRegistry.unregister(registerKey);
-      }
+      addToGitWithLfsSupport(toBeCreated, targetFile);
     }
 
     @Override
@@ -113,10 +107,26 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
         throw notFound(createFileContext(path));
       }
       Files.move(file.toPath(), targetFile, REPLACE_EXISTING);
+
+      addToGitWithLfsSupport(path, targetFile);
+    }
+
+    private void addToGitWithLfsSupport(String path, Path targetFile) {
+      REGISTER_LOCKS.get(targetFile).lock();
       try {
-        addFileToGit(path);
-      } catch (GitAPIException e) {
-        throwInternalRepositoryException("could not add new file to index", e);
+        LfsBlobStoreCleanFilterFactory cleanFilterFactory = new LfsBlobStoreCleanFilterFactory(lfsBlobStoreFactory, repository, targetFile);
+
+        String registerKey = "git-lfs clean -- '" + path + "'";
+        FilterCommandRegistry.register(registerKey, cleanFilterFactory::createFilter);
+        try {
+          addFileToGit(path);
+        } catch (GitAPIException e) {
+          throwInternalRepositoryException("could not add file to index", e);
+        } finally {
+          FilterCommandRegistry.unregister(registerKey);
+        }
+      } finally {
+        REGISTER_LOCKS.get(targetFile).unlock();
       }
     }
 
