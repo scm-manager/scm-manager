@@ -5,22 +5,27 @@
     "scm-plugins/*"
   ],
   "scripts": {
-    "build": "webpack --mode=development --config=scm-ui/config/webpack.config.js"
+    "build": "webpack --mode=development --config=scm-ui/scripts/webpack.config.js",
+    "serve": "webpack-dev-server --config=scm-ui/scripts/webpack.config.js"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.6.2",
+    "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.2.0",
     "file-loader": "^4.2.0",
     "flow-bin": "^0.108.0",
+    "mustache": "^3.1.0",
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.0",
     "script-loader": "^0.7.2",
     "style-loader": "^1.0.0",
     "terser-webpack-plugin": "^2.1.2",
     "webpack": "^4.41.0",
-    "webpack-cli": "^3.3.9"
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.2"
   }
 }

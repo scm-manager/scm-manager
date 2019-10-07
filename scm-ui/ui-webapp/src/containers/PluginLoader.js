@@ -3,6 +3,7 @@ import * as React from "react";
 import { apiClient, Loading } from "@scm-manager/ui-components";
 import { getUiPluginsLink } from "../modules/indexResource";
 import { connect } from "react-redux";
+import loadBundle from "./loadBundle";
 
 type Props = {
   loaded: boolean,
@@ -73,28 +74,9 @@ class PluginLoader extends React.Component<Props, State> {
 
     const promises = [];
     for (let bundle of plugin.bundles) {
-      promises.push(this.loadBundle(bundle));
+      promises.push(loadBundle(bundle));
     }
     return Promise.all(promises);
-  };
-
-  loadBundle = (bundle: string) => {
-    return fetch(bundle, {
-      credentials: "same-origin",
-      headers: {
-        Cache: "no-cache",
-        // identify the request as ajax request
-        "X-Requested-With": "XMLHttpRequest"
-      }
-    })
-      .then(response => {
-        return response.text();
-      })
-      .then(script => {
-        // TODO is this safe???
-        // eslint-disable-next-line no-eval
-        eval(script); // NOSONAR
-      });
   };
 
   render() {

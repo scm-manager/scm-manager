@@ -4,12 +4,6 @@
   "version": "2.0.0-SNAPSHOT",
   "license": "BSD-3-Clause",
   "scripts": {
-    "build": "ui-bundler plugin"
-  },
-  "dependencies": {
-    "@scm-manager/ui-extensions": "^0.1.2"
-  },
-  "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.31"
+    "build": "webpack --mode=development"
   }
 }

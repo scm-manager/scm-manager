@@ -1,16 +1,25 @@
 const path = require("path");
 
 module.exports = {
-  context: path.resolve(__dirname, ".."),
   entry: {
-    webapp: "./ui-webapp/src/index.js"
+    "scm-legacy-plugin": "./src/main/js/index.js"
   },
+  devtool: "source-map",
   target: "web",
   node: {
     fs: "empty",
     net: "empty",
     tls: "empty"
   },
+  externals: [
+    "react",
+    "react-dom",
+    // "react-jss",
+    "react-i18next",
+    "@scm-manager/ui-types",
+    "@scm-manager/ui-extensions",
+    "@scm-manager/ui-components"
+  ],
   module: {
     rules: [
       {
@@ -52,7 +61,9 @@ module.exports = {
     ]
   },
   output: {
-    path: path.resolve(__dirname, "..", "target"),
-    filename: "[name].bundle.js"
+    path: path.join(__dirname, "target", "scm-legacy-plugin-2.0.0-SNAPSHOT", "webapp", "plugins"),
+    filename: "[name].bundle.js",
+    library: "scm-legacy-plugin",
+    libraryTarget: "amd"
   }
 };

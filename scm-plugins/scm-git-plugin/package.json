@@ -2,31 +2,7 @@
   "name": "@scm-manager/scm-git-plugin",
   "version": "2.0.0-SNAPSHOT",
   "license": "BSD-3-Clause",
-  "main": "dist/scm-git-plugin.js",
-  "bundle": {
-    "type": "plugin",
-    "entry": "./src/main/js/index.js"
-  },
   "scripts": {
-    "build": "ui-bundler bundle",
-    "lint": "ui-bundler serve",
-    "flow": "flow check"
-  },
-  "dependencies": {
-    "@scm-manager/ui-extensions": "^0.1.2",
-    "@scm-manager/ui-types": "link:../../scm-ui/ui-types",
-    "@scm-manager/ui-vendor": "link:../../scm-ui/ui-vendor",
-    "@scm-manager/ui-components": "link:../../scm-ui/ui-components",
-    "react": "^16.10.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.6.2",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/preset-env": "^7.6.2",
-    "@babel/preset-flow": "^7.0.0",
-    "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.6",
-    "react-i18next": "^10.13.1",
-    "react-jss": "^10.0.0"
+    "build": "webpack --mode=development"
   }
 }

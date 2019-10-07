@@ -47,6 +47,7 @@
         <groupId>com.github.sdorra</groupId>
         <artifactId>buildfrontend-maven-plugin</artifactId>
         <configuration>
+          <workingDirectory>${basedir}/..</workingDirectory>
           <node>
             <version>${nodejs.version}</version>
           </node>
@@ -96,11 +97,7 @@
           <failOnMissingWebXml>false</failOnMissingWebXml>
           <webResources>
             <resource>
-              <directory>ui-webapp/dist</directory>
-              <targetPath>bundles</targetPath>
-            </resource>
-            <resource>
-              <directory>ui-vendor/dist</directory>
+              <directory>target/bundles</directory>
               <targetPath>bundles</targetPath>
             </resource>
             <resource>
