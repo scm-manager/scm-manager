@@ -263,8 +263,8 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     command.execute(request);
   }
 
-  @Test(expected = ScmConstraintViolationException.class)
-  public void shouldFailWithConstraintViolationIfBranchIsNoBranch() throws IOException {
+  @Test(expected = NotFoundException.class)
+  public void shouldFailWithNotFoundExceptionIfBranchIsNoBranch() throws IOException {
     File newFile = Files.write(temporaryFolder.newFile().toPath(), "irrelevant\n".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
