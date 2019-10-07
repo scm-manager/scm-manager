@@ -397,11 +397,11 @@ $danger-25: scale-color($danger, $lightness: 75%);
   }
 }
 
-@import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
-$fa-font-path: "webfonts";
-@import "@fortawesome/fontawesome-free/scss/solid.scss";
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+@import "~@fortawesome/fontawesome-free/scss/solid";
 
-@import "react-diff-view/index";
+@import "~react-diff-view/index";
 
 // NEW STYLES
 
@@ -642,7 +642,7 @@ form .field:not(.is-grouped) {
 // hero
 .hero.is-dark {
   background-color: #002e4b;
-  background-image: url(../images/scmManagerHero.jpg);
+  background-image: url(images/scmManagerHero.jpg);
   background-size: cover;
   background-position: top center;
 

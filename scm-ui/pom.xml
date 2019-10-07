@@ -30,6 +30,20 @@
     <plugins>
 
       <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${basedir}</directory>
+              <includes>
+                <include>**/ui-**/dist/**</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+
+      <plugin>
         <groupId>com.github.sdorra</groupId>
         <artifactId>buildfrontend-maven-plugin</artifactId>
         <configuration>
@@ -43,26 +57,6 @@
           <script>run</script>
         </configuration>
         <executions>
-          <execution>
-            <id>link-ui-types</id>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>install-link</goal>
-            </goals>
-            <configuration>
-              <pkg>@scm-manager/ui-types</pkg>
-            </configuration>
-          </execution>
-          <execution>
-            <id>link-ui-components</id>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>install-link</goal>
-            </goals>
-            <configuration>
-              <pkg>@scm-manager/ui-components</pkg>
-            </configuration>
-          </execution>
           <execution>
             <id>install</id>
             <phase>process-resources</phase>
@@ -80,7 +74,7 @@
               <script>build</script>
             </configuration>
           </execution>
-          <execution>
+          <!--execution>
             <id>test</id>
             <phase>test</phase>
             <goals>
@@ -90,7 +84,7 @@
               <script>test-ci</script>
               <skip>${skipTests}</skip>
             </configuration>
-          </execution>
+          </execution-->
         </executions>
       </plugin>
 
@@ -102,7 +96,15 @@
           <failOnMissingWebXml>false</failOnMissingWebXml>
           <webResources>
             <resource>
-              <directory>public</directory>
+              <directory>ui-webapp/dist</directory>
+              <targetPath>bundles</targetPath>
+            </resource>
+            <resource>
+              <directory>ui-vendor/dist</directory>
+              <targetPath>bundles</targetPath>
+            </resource>
+            <resource>
+              <directory>ui-webapp/public</directory>
             </resource>
           </webResources>
         </configuration>

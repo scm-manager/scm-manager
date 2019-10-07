@@ -1,0 +1,24 @@
+{
+  "name": "@scm-manager/ui-types",
+  "version": "2.0.0-SNAPSHOT",
+  "description": "Flow types for SCM-Manager related Objects",
+  "main": "dist/ui-types.js",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "repository": "https://bitbucket.org/sdorra/scm-manager",
+  "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
+  "license": "BSD-3-Clause",
+  "scripts": {
+    "check": "flow check"
+  },
+  "bundle": {
+    "type": "library",
+    "entry": "./src/index.js"
+  },
+  "devDependencies": {
+    "@scm-manager/ui-vendor": "link:../ui-vendor",
+    "flow-bin": "^0.108.0"
+  }
+}

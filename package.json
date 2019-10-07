@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "workspaces": [
+    "scm-ui/*",
+    "scm-plugins/*"
+  ],
+  "scripts": {
+    "build": "webpack --mode=development --config=scm-ui/config/webpack.config.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
+    "file-loader": "^4.2.0",
+    "flow-bin": "^0.108.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.0",
+    "script-loader": "^0.7.2",
+    "style-loader": "^1.0.0",
+    "terser-webpack-plugin": "^2.1.2",
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9"
+  }
+}

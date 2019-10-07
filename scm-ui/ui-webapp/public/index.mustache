@@ -36,9 +36,9 @@
     <script>
       window.ctxPath = "{{ contextPath }}";
     </script>
-    <script src="{{ contextPath }}/polyfills.bundle.js"></script>
-    <script src="{{ contextPath }}/vendor.bundle.js"></script>
-    <script src="{{ contextPath }}/scm-ui.bundle.js"></script>
+    <script src="{{ contextPath }}/bundles/polyfills.bundle.js"></script>
+    <script src="{{ contextPath }}/bundles/vendor-{{mode}}.bundle.js"></script>
+    <script src="{{ contextPath }}/bundles/ui-webapp.js"></script>
 
     {{#liveReloadURL}}
     <script src="{{liveReloadURL}}"></script>

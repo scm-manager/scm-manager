@@ -1,7 +1,8 @@
 {
   "name": "@scm-manager/scm-svn-plugin",
   "main": "src/main/js/index.js",
-  "license" : "BSD-3-Clause",
+  "version": "2.0.0-SNAPSHOT",
+  "license": "BSD-3-Clause",
   "scripts": {
     "build": "ui-bundler plugin"
   },

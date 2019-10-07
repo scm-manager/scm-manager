@@ -1,7 +1,8 @@
 {
   "name": "@scm-manager/scm-hg-plugin",
-  "main": "src/main/js/index.js",
+  "version": "2.0.0-SNAPSHOT",
   "license": "BSD-3-Clause",
+  "main": "src/main/js/index.js",
   "scripts": {
     "build": "ui-bundler plugin"
   },

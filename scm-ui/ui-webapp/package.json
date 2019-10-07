@@ -1,9 +1,14 @@
 {
   "homepage": "/scm",
-  "name": "scm-ui",
+  "name": "@scm-manager/ui-webapp",
   "version": "0.1.0",
   "private": true,
-  "main": "src/index.js",
+  "main": "dist/ui-webapp.js",
+  "bundle": {
+    "type": "webapp",
+    "entry": "./src/index.js",
+    "publicPath": "./public"
+  },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "@fortawesome/fontawesome-free": "^5.3.1",
@@ -56,7 +61,7 @@
     "pre-commit": "jest && flow && eslint src"
   },
   "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.31",
+    "@scm-manager/ui-components": "2.0.0-SNAPSHOT",
     "concat": "^1.0.3",
     "copyfiles": "^2.0.0",
     "enzyme": "^3.3.0",
@@ -71,6 +76,7 @@
     "prettier": "^1.13.7",
     "react-router-enzyme-context": "^1.2.0",
     "react-test-renderer": "^16.4.1",
-    "redux-mock-store": "^1.5.3"
+    "redux-mock-store": "^1.5.3",
+    "systemjs": "0.21.6"
   }
 }
