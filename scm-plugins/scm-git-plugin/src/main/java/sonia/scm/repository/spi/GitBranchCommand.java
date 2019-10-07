@@ -58,11 +58,8 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
 
   @Override
   public Branch branch(BranchRequest request) {
-    try (WorkingCopy<org.eclipse.jgit.lib.Repository> workingCopy = workdirFactory.createWorkingCopy(context)) {
+    try (WorkingCopy<org.eclipse.jgit.lib.Repository> workingCopy = workdirFactory.createWorkingCopy(context, request.getParentBranch())) {
       Git clone = new Git(workingCopy.getWorkingRepository());
-      if (request.getParentBranch() != null) {
-        clone.checkout().setName("origin/" + request.getParentBranch()).call();
-      }
       Ref ref = clone.branchCreate().setName(request.getNewBranch()).call();
       Iterable<PushResult> call = clone.push().add(request.getNewBranch()).call();
       StreamSupport.stream(call.spliterator(), false)

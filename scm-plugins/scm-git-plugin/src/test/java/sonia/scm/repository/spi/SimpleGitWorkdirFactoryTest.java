@@ -20,8 +20,6 @@ import java.io.IOException;
 import static com.google.inject.util.Providers.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 
 public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
@@ -43,11 +41,11 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void emptyPoolShouldCreateNewWorkdir() throws IOException {
+  public void emptyPoolShouldCreateNewWorkdir() {
     SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(workdirProvider);
     File masterRepo = createRepositoryDirectory();
 
-    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
+    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
 
       assertThat(workingCopy.getDirectory())
         .exists()
@@ -61,25 +59,37 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void cloneFromPoolShouldNotBeReused() throws IOException {
+  public void shouldCheckoutInitialBranch() {
+    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(workdirProvider);
+
+    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext(), "test-branch")) {
+      assertThat(new File(workingCopy.getWorkingRepository().getWorkTree(), "a.txt"))
+        .exists()
+        .isFile()
+        .hasContent("a and b");
+    }
+  }
+
+  @Test
+  public void cloneFromPoolShouldNotBeReused() {
     SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(workdirProvider);
 
     File firstDirectory;
-    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
+    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
       firstDirectory = workingCopy.getDirectory();
     }
-    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
+    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
       File secondDirectory = workingCopy.getDirectory();
       assertThat(secondDirectory).isNotEqualTo(firstDirectory);
     }
   }
 
   @Test
-  public void cloneFromPoolShouldBeDeletedOnClose() throws IOException {
+  public void cloneFromPoolShouldBeDeletedOnClose() {
     SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(workdirProvider);
 
     File directory;
-    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext())) {
+    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
       directory = workingCopy.getWorkingRepository().getWorkTree();
     }
     assertThat(directory).doesNotExist();

@@ -33,18 +33,14 @@ package sonia.scm.repository.spi;
 import com.aragost.javahg.Changeset;
 import com.aragost.javahg.commands.CommitCommand;
 import com.aragost.javahg.commands.PullCommand;
-import com.aragost.javahg.commands.UpdateCommand;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Branch;
-import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.util.WorkingCopy;
 import sonia.scm.user.User;
-
-import java.io.IOException;
 
 /**
  * Mercurial implementation of the {@link BranchCommand}.
@@ -63,10 +59,8 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
 
   @Override
   public Branch branch(BranchRequest request) {
-    try (WorkingCopy<com.aragost.javahg.Repository> workingCopy = workdirFactory.createWorkingCopy(getContext())) {
+    try (WorkingCopy<com.aragost.javahg.Repository> workingCopy = workdirFactory.createWorkingCopy(getContext(), request.getParentBranch())) {
       com.aragost.javahg.Repository repository = workingCopy.getWorkingRepository();
-
-      checkoutParentBranchIfSpecified(request, repository);
 
       Changeset emptyChangeset = createNewBranchWithEmptyCommit(request, repository);
 
@@ -76,16 +70,6 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
       pullNewBranchIntoCentralRepository(request, workingCopy);
 
       return Branch.normalBranch(request.getNewBranch(), emptyChangeset.getNode());
-    }
-  }
-
-  private void checkoutParentBranchIfSpecified(BranchRequest request, com.aragost.javahg.Repository repository) {
-    if (request.getParentBranch() != null) {
-      try {
-        UpdateCommand.on(repository).rev(request.getParentBranch()).execute();
-      } catch (IOException e) {
-        throw new InternalRepositoryException(getRepository(), "Could not check out parent branch " + request.getParentBranch(), e);
-      }
     }
   }
 
