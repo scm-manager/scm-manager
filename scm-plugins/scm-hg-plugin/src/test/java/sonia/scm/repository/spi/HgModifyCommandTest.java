@@ -1,7 +1,6 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.util.Providers;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,11 +39,6 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     };
     hgModifyCommand = new HgModifyCommand(cmdContext, workdirFactory
     );
-  }
-
-  @After
-  public void closeRepository() throws IOException {
-    cmdContext.close();
   }
 
   @Test
