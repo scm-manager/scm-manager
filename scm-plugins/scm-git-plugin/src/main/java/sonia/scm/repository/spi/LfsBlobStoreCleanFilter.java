@@ -1,5 +1,6 @@
 package sonia.scm.repository.spi;
 
+import com.google.common.io.ByteStreams;
 import org.eclipse.jgit.attributes.FilterCommand;
 import org.eclipse.jgit.lfs.Lfs;
 import org.eclipse.jgit.lfs.LfsPointer;
@@ -8,6 +9,7 @@ import org.eclipse.jgit.lfs.lib.LongObjectId;
 import org.eclipse.jgit.lib.Repository;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
+import sonia.scm.util.IOUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,9 +32,6 @@ public class LfsBlobStoreCleanFilter extends FilterCommand {
   private Lfs lfsUtil;
   private final BlobStore lfsBlobStore;
   private final Path targetFile;
-  private final DigestOutputStream digestOutputStream;
-
-  private long size;
 
   public LfsBlobStoreCleanFilter(Repository db, InputStream in, OutputStream out, BlobStore lfsBlobStore, Path targetFile)
     throws IOException {
@@ -41,61 +40,52 @@ public class LfsBlobStoreCleanFilter extends FilterCommand {
     this.lfsBlobStore = lfsBlobStore;
     this.targetFile = targetFile;
     Files.createDirectories(lfsUtil.getLfsTmpDir());
-
-
-   MessageDigest md ;
-    try {
-      md = MessageDigest.getInstance(LONG_HASH_FUNCTION);
-    } catch (NoSuchAlgorithmException e) {
-      throw new RuntimeException(e);
-    }
-    digestOutputStream = new DigestOutputStream(new OutputStream() {
-      @Override
-      public void write(int b) {
-      }
-    }, md);
-
   }
 
   @Override
   public int run() throws IOException {
+    DigestOutputStream digestOutputStream = createDigestStream();
     try {
-      byte[] buf = new byte[8192];
-      int length = in.read(buf);
-      if (length != -1) {
-        digestOutputStream.write(buf, 0, length);
-        size += length;
-        return length;
-      } else {
-        digestOutputStream.close();
-        AnyLongObjectId loid = LongObjectId.fromRaw(digestOutputStream.getMessageDigest().digest());
+      long size = ByteStreams.copy(in, digestOutputStream);
+      AnyLongObjectId loid = LongObjectId.fromRaw(digestOutputStream.getMessageDigest().digest());
 
-        Blob existingBlob = lfsBlobStore.get(loid.getName());
-        if (existingBlob != null) {
-          long blobSize = existingBlob.getSize();
-          if (blobSize != size) {
-            throw new RuntimeException("lfs entry already exists for loid " + loid.getName() + " but has wrong size");
-          }
-        } else {
-          Blob newBlob = lfsBlobStore.create(loid.getName());
-          OutputStream outputStream = newBlob.getOutputStream();
-          Files.copy(targetFile, outputStream);
-          newBlob.commit();
+      Blob existingBlob = lfsBlobStore.get(loid.getName());
+      if (existingBlob != null) {
+        long blobSize = existingBlob.getSize();
+        if (blobSize != size) {
+          // Mathematicians say this will never happen
+          throw new RuntimeException("lfs entry already exists for loid " + loid.getName() + " but has wrong size");
         }
+      } else {
+        Blob newBlob = lfsBlobStore.create(loid.getName());
+        OutputStream outputStream = newBlob.getOutputStream();
+        Files.copy(targetFile, outputStream);
+        newBlob.commit();
+      }
 
-        LfsPointer lfsPointer = new LfsPointer(loid, size);
-        lfsPointer.encode(out);
-        in.close();
-        out.close();
-        return -1;
-      }
-    } catch (IOException e) {
-      if (digestOutputStream != null) {
-        digestOutputStream.close();
-      }
-      in.close();
-      out.close();
-      throw e;
+      LfsPointer lfsPointer = new LfsPointer(loid, size);
+      lfsPointer.encode(out);
+      return -1;
+    } finally {
+      IOUtil.close(digestOutputStream);
+      IOUtil.close(in);
+      IOUtil.close(out);
     }
+  }
+
+  private DigestOutputStream createDigestStream() {
+    MessageDigest md ;
+    try {
+      md = MessageDigest.getInstance(LONG_HASH_FUNCTION);
+    } catch (NoSuchAlgorithmException e) {
+      // Yes there is such a hash function (should be sha256)
+      throw new RuntimeException(e);
+    }
+    return new DigestOutputStream(new OutputStream() {
+      @Override
+      public void write(int b) {
+        // no further target here, we are just interested in the digest
+      }
+    }, md);
   }
 }
