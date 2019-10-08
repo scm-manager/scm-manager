@@ -17,10 +17,7 @@ const Switcher = styled(ButtonAddons)`
 `;
 
 type Props = {
-  repository: Repository,
-
-  // context props
-  classes: Object
+  repository: Repository
 }
 
 type State = {
