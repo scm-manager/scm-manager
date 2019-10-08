@@ -56,7 +56,7 @@
   </conditions>
 
   <resources>
-    <script>plugins/scm-legacy-plugin.bundle.js</script>
+    <script>assets/scm-legacy-plugin.bundle.js</script>
   </resources>
 
 </plugin>

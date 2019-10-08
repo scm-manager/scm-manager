@@ -58,7 +58,7 @@ module.exports = {
     ]
   },
   output: {
-    path: path.resolve(__dirname, "..", "target", "bundles"),
+    path: path.resolve(__dirname, "..", "target", "assets"),
     filename: "[name].bundle.js"
   },
   devServer: {
@@ -77,6 +77,6 @@ module.exports = {
       };
       app.use(createIndexMiddleware(templatePath, renderParams));
     },
-    publicPath: '/bundles/'
+    publicPath: '/assets/'
   }
 };

@@ -97,8 +97,8 @@
           <failOnMissingWebXml>false</failOnMissingWebXml>
           <webResources>
             <resource>
-              <directory>target/bundles</directory>
-              <targetPath>bundles</targetPath>
+              <directory>target/assets</directory>
+              <targetPath>assets</targetPath>
             </resource>
             <resource>
               <directory>ui-webapp/public</directory>

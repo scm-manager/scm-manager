@@ -57,7 +57,7 @@
   </conditions>
 
   <resources>
-    <script>plugins/scm-svn-plugin.bundle.js</script>
+    <script>assets/scm-svn-plugin.bundle.js</script>
   </resources>
 
 </plugin>

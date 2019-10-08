@@ -10,6 +10,7 @@ import * as ReactI18Next from "react-i18next";
 import * as ClassNames from "classnames";
 import * as UIExtensions from "@scm-manager/ui-extensions";
 import * as UIComponents from "@scm-manager/ui-components";
+import { urls } from "@scm-manager/ui-components";
 
 /**
  credentials: "same-origin",
@@ -21,7 +22,7 @@ import * as UIComponents from "@scm-manager/ui-components";
 */
 
 SystemJS.config({
-  baseURL: "/plugins",
+  baseURL: urls.withContextPath("/assets"),
   meta: {
     "/*": {
       esModule: true,

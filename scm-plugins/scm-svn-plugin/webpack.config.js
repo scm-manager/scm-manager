@@ -61,7 +61,7 @@ module.exports = {
     ]
   },
   output: {
-    path: path.join(__dirname, "target", "scm-svn-plugin-2.0.0-SNAPSHOT", "webapp", "plugins"),
+    path: path.join(__dirname, "target", "scm-svn-plugin-2.0.0-SNAPSHOT", "webapp", "assets"),
     filename: "[name].bundle.js",
     library: "scm-svn-plugin",
     libraryTarget: "amd"

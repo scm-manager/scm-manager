@@ -57,7 +57,7 @@
   </conditions>
 
   <resources>
-    <script>plugins/scm-git-plugin.bundle.js</script>
+    <script>assets/scm-git-plugin.bundle.js</script>
   </resources>
   
 </plugin>

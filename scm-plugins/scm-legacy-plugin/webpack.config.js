@@ -61,7 +61,7 @@ module.exports = {
     ]
   },
   output: {
-    path: path.join(__dirname, "target", "scm-legacy-plugin-2.0.0-SNAPSHOT", "webapp", "plugins"),
+    path: path.join(__dirname, "target", "scm-legacy-plugin-2.0.0-SNAPSHOT", "webapp", "assets"),
     filename: "[name].bundle.js",
     library: "scm-legacy-plugin",
     libraryTarget: "amd"

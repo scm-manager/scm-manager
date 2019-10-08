@@ -61,7 +61,7 @@ module.exports = {
     ]
   },
   output: {
-    path: path.join(__dirname, "target", "scm-hg-plugin-2.0.0-SNAPSHOT", "webapp", "plugins"),
+    path: path.join(__dirname, "target", "scm-hg-plugin-2.0.0-SNAPSHOT", "webapp", "assets"),
     filename: "[name].bundle.js",
     library: "scm-hg-plugin",
     libraryTarget: "amd"
