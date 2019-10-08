@@ -7,23 +7,14 @@ import com.aragost.javahg.commands.ExecutionException;
 import com.aragost.javahg.commands.PullCommand;
 import com.aragost.javahg.commands.RemoveCommand;
 import com.aragost.javahg.commands.StatusCommand;
-import org.apache.commons.lang.StringUtils;
-import sonia.scm.ContextEntry;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.util.WorkingCopy;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import static sonia.scm.AlreadyExistsException.alreadyExists;
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
-import static sonia.scm.NotFoundException.notFound;
 
 public class HgModifyCommand implements ModifyCommand {
 
@@ -43,62 +34,34 @@ public class HgModifyCommand implements ModifyCommand {
       request.getRequests().forEach(
         partialRequest -> {
           try {
-            partialRequest.execute(new Worker() {
-              @Override
-              public void delete(String toBeDeleted) {
-                RemoveCommand.on(workingRepository).execute(toBeDeleted);
-              }
+            partialRequest.execute(new ModifyWorkerHelper() {
 
               @Override
-              public void create(String toBeCreated, File file, boolean overwrite) throws IOException {
-                Path targetFile = new File(workingRepository.getDirectory(), toBeCreated).toPath();
-                createDirectories(targetFile);
-                if (overwrite) {
-                  Files.move(file.toPath(), targetFile, REPLACE_EXISTING);
-                } else {
-                  try {
-                    Files.move(file.toPath(), targetFile);
-                  } catch (FileAlreadyExistsException e) {
-                    throw alreadyExists(createFileContext(toBeCreated));
-                  }
-                }
+              public void addFileToScm(String name, Path file) {
                 try {
-                  addFileToHg(targetFile.toFile());
+                  addFileToHg(file.toFile());
                 } catch (ExecutionException e) {
                   throwInternalRepositoryException("could not add new file to index", e);
                 }
               }
 
               @Override
-              public void modify(String path, File file) throws IOException {
-                Path targetFile = new File(workingRepository.getDirectory(), path).toPath();
-                createDirectories(targetFile);
-                if (!targetFile.toFile().exists()) {
-                  throw notFound(createFileContext(path));
-                }
-                Files.move(file.toPath(), targetFile, REPLACE_EXISTING);
-                try {
-                  addFileToHg(targetFile.toFile());
-                } catch (ExecutionException e) {
-                  throwInternalRepositoryException("could not modify existing file", e);
-                }
+              public void doScmDelete(String toBeDeleted) {
+                RemoveCommand.on(workingRepository).execute(toBeDeleted);
               }
 
-              private void createDirectories(Path targetFile) throws IOException {
-                try {
-                  Files.createDirectories(targetFile.getParent());
-                } catch (FileAlreadyExistsException e) {
-                  throw alreadyExists(createFileContext(targetFile.toString()));
-                }
+              @Override
+              public sonia.scm.repository.Repository getRepository() {
+                return context.getScmRepository();
               }
 
-              private ContextEntry.ContextBuilder createFileContext(String path) {
-                ContextEntry.ContextBuilder contextBuilder = entity("file", path);
-                if (!StringUtils.isEmpty(request.getBranch())) {
-                  contextBuilder.in("branch", request.getBranch());
-                }
-                contextBuilder.in(context.getScmRepository());
-                return contextBuilder;
+              @Override
+              public String getBranch() {
+                return request.getBranch();
+              }
+
+              public File getWorkDir() {
+                return workingRepository.getDirectory();
               }
 
               private void addFileToHg(File file) {

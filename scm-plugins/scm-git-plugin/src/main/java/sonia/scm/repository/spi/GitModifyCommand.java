@@ -5,7 +5,6 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import sonia.scm.ConcurrentModificationException;
-import sonia.scm.ContextEntry;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
@@ -13,16 +12,8 @@ import sonia.scm.repository.Repository;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Optional;
-
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import static sonia.scm.AlreadyExistsException.alreadyExists;
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
-import static sonia.scm.NotFoundException.notFound;
 
 public class GitModifyCommand extends AbstractGitCommand implements ModifyCommand {
 
@@ -38,7 +29,7 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     return inClone(clone -> new ModifyWorker(clone, request), workdirFactory, request.getBranch());
   }
 
-  private class ModifyWorker extends GitCloneWorker<String> implements Worker {
+  private class ModifyWorker extends GitCloneWorker<String> implements ModifyWorkerHelper {
 
     private final File workDir;
     private final ModifyCommandRequest request;
@@ -67,35 +58,9 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     }
 
     @Override
-    public void create(String toBeCreated, File file, boolean overwrite) throws IOException {
-      Path targetFile = new File(workDir, toBeCreated).toPath();
-      createDirectories(targetFile);
-      if (overwrite) {
-        Files.move(file.toPath(), targetFile, REPLACE_EXISTING);
-      } else {
-        try {
-          Files.move(file.toPath(), targetFile);
-        } catch (FileAlreadyExistsException e) {
-          throw alreadyExists(createFileContext(toBeCreated));
-        }
-      }
+    public void addFileToScm(String name, Path file) {
       try {
-        addFileToGit(toBeCreated);
-      } catch (GitAPIException e) {
-        throwInternalRepositoryException("could not add new file to index", e);
-      }
-    }
-
-    @Override
-    public void modify(String path, File file) throws IOException {
-      Path targetFile = new File(workDir, path).toPath();
-      createDirectories(targetFile);
-      if (!targetFile.toFile().exists()) {
-        throw notFound(createFileContext(path));
-      }
-      Files.move(file.toPath(), targetFile, REPLACE_EXISTING);
-      try {
-        addFileToGit(path);
+        addFileToGit(name);
       } catch (GitAPIException e) {
         throwInternalRepositoryException("could not add new file to index", e);
       }
@@ -106,13 +71,7 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     }
 
     @Override
-    public void delete(String toBeDeleted) throws IOException {
-      Path fileToBeDeleted = new File(workDir, toBeDeleted).toPath();
-      try {
-        Files.delete(fileToBeDeleted);
-      } catch (NoSuchFileException e) {
-        throw notFound(createFileContext(toBeDeleted));
-      }
+    public void doScmDelete(String toBeDeleted) {
       try {
         getClone().rm().addFilepattern(removeStartingPathSeparators(toBeDeleted)).call();
       } catch (GitAPIException e) {
@@ -120,28 +79,26 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       }
     }
 
+    @Override
+    public File getWorkDir() {
+      return workDir;
+    }
+
+    @Override
+    public Repository getRepository() {
+      return repository;
+    }
+
+    @Override
+    public String getBranch() {
+      return request.getBranch();
+    }
+
     private String removeStartingPathSeparators(String path) {
       while (path.startsWith(File.separator)) {
         path = path.substring(1);
       }
       return path;
-    }
-
-    private void createDirectories(Path targetFile) throws IOException {
-      try {
-        Files.createDirectories(targetFile.getParent());
-      } catch (FileAlreadyExistsException e) {
-        throw alreadyExists(createFileContext(targetFile.toString()));
-      }
-    }
-
-    private ContextEntry.ContextBuilder createFileContext(String path) {
-      ContextEntry.ContextBuilder contextBuilder = entity("file", path);
-      if (!StringUtils.isEmpty(request.getBranch())) {
-        contextBuilder.in("branch", request.getBranch());
-      }
-      contextBuilder.in(context.getRepository());
-      return contextBuilder;
     }
   }
 
