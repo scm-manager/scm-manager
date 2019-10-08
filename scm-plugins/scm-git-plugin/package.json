@@ -4,5 +4,9 @@
   "license": "BSD-3-Clause",
   "scripts": {
     "build": "webpack --mode=development"
+  },
+  "devDependencies": {
+    "flow-bin": "^0.109.0",
+    "flow-typed": "^2.6.1"
   }
 }
