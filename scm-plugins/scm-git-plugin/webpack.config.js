@@ -14,8 +14,8 @@ module.exports = {
   externals: [
     "react",
     "react-dom",
-    // "react-jss",
     "react-i18next",
+    "styled-components",
     "@scm-manager/ui-types",
     "@scm-manager/ui-extensions",
     "@scm-manager/ui-components"

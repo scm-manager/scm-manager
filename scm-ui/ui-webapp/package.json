@@ -43,6 +43,7 @@
     "redux-devtools-extension": "^2.13.5",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
+    "styled-components": "^4.4.0",
     "whatwg-fetch": "^3.0.0"
   },
   "scripts": {

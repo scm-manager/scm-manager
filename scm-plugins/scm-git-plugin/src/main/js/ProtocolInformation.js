@@ -4,18 +4,17 @@ import { ButtonAddons, Button } from "@scm-manager/ui-components";
 import type { Repository } from "@scm-manager/ui-types";
 import CloneInformation from "./CloneInformation";
 import type { Link } from "@scm-manager/ui-types";
-import injectSheets from "react-jss";
+import styled from "styled-components";
 
-const styles = {
-  protocols: {
-    position: "relative"
-  },
-  switcher: {
-    position: "absolute",
-    top: 0,
-    right: 0
-  }
-};
+const Wrapper = styled.div`
+  position: relative;
+`;
+
+const Switcher = styled(ButtonAddons)`
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
 
 type Props = {
   repository: Repository,
@@ -76,7 +75,7 @@ class ProtocolInformation extends React.Component<Props, State> {
   };
 
   render() {
-    const { repository, classes } = this.props;
+    const { repository } = this.props;
 
     const protocols = repository._links["protocol"];
     if (!protocols || protocols.length === 0) {
@@ -94,15 +93,15 @@ class ProtocolInformation extends React.Component<Props, State> {
     }
 
     return (
-     <div className={classes.protocols}>
-       <ButtonAddons className={classes.switcher}>
+     <Wrapper>
+       <Switcher>
          {protocols.map(this.renderProtocolButton)}
-       </ButtonAddons>
+       </Switcher>
        { cloneInformation }
-     </div>
+     </Wrapper>
     );
   }
 
 }
 
-export default injectSheets(styles)(ProtocolInformation);
+export default ProtocolInformation;
