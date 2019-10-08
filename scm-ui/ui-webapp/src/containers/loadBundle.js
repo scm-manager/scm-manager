@@ -1,3 +1,5 @@
+/* global SystemJS */
+// eslint-disable-next-line import/no-webpack-loader-syntax
 import "script-loader!../../../../node_modules/systemjs/dist/system.js";
 
 import * as React from "react";
@@ -12,14 +14,7 @@ import * as UIExtensions from "@scm-manager/ui-extensions";
 import * as UIComponents from "@scm-manager/ui-components";
 import { urls } from "@scm-manager/ui-components";
 
-/**
- credentials: "same-origin",
- headers: {
-    Cache: "no-cache",
-    // identify the request as ajax request
-    "X-Requested-With": "XMLHttpRequest"
-  }
-*/
+// TODO add headers "Cache": "no-cache", "X-Requested-With": "XMLHttpRequest"
 
 SystemJS.config({
   baseURL: urls.withContextPath("/assets"),
@@ -54,4 +49,4 @@ expose("classnames", ClassNames);
 expose("@scm-manager/ui-extensions", UIExtensions);
 expose("@scm-manager/ui-components", UIComponents);
 
-export default (plugin: string) => SystemJS.import(plugin);
+export default (plugin) => SystemJS.import(plugin);

@@ -1,0 +1,19 @@
+{
+  "name": "@scm-manager/eslint-config",
+  "version": "2.0.0-SNAPSHOT",
+  "description": "ESLint configuration for scm-manager and its plugins",
+  "main": "index.js",
+  "author": "Sebastian Sdorra <s.sdorra@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.5.1",
+    "eslint-config-react-app": "^5.0.2",
+    "eslint-plugin-flowtype": "^4.3.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react-hooks": "^2.1.2"
+  }
+}
