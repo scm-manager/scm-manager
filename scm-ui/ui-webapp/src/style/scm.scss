@@ -5,6 +5,7 @@ $turquoise: #00d1df;
 $blue: #33b2e8;
 $cyan: $blue;
 $green: #00c79b;
+$blue-light: #98d8f3;
 
 .is-ellipsis-overflow {
   overflow: hidden;
@@ -145,6 +146,10 @@ $danger-25: scale-color($danger, $lightness: 75%);
   color: #ffb600 !important;
 }
 
+.has-text-blue-light {
+  color: $blue-light !important;
+}
+
 // border and background colors
 .has-background-dark-75 {
   background-color: $dark-75;
@@ -212,6 +217,9 @@ $danger-25: scale-color($danger, $lightness: 75%);
 
 .has-background-warning-invert {
   background-color: $warning-invert;
+}
+.has-background-blue-light {
+  background-color: $blue-light;
 }
 
 // tags
@@ -589,7 +597,7 @@ form .field:not(.is-grouped) {
 .input,
 .textarea {
   /*background-color: whitesmoke;*/
-  border-color: #98d8f3;
+  border-color: $blue-light;
   box-shadow: none;
 }
 

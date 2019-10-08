@@ -1,28 +1,20 @@
 //@flow
 import React from "react";
-import injectSheet from "react-jss";
-import { type ButtonProps } from "./Button";
-import classNames from "classnames";
-import Button from "./Button";
+import styled from "styled-components";
+import Button, { type ButtonProps } from "./Button";
 
-const styles = {
-  spacing: {
-    marginTop: "2em",
-    border: "2px solid #e9f7fd",
-    padding: "1em 1em"
-  }
-  
-};
+const Wrapper = styled.div`
+  margin-top: 2em;
+  padding: 1em 1em;
+  border: 2px solid #e9f7fd;
+`;
 
-class CreateButton extends React.Component<ButtonProps> {
+export default class CreateButton extends React.Component<ButtonProps> {
   render() {
-    const { classes } = this.props;
     return (
-      <div className={classNames("has-text-centered", classes.spacing)}>
+      <Wrapper className="has-text-centered">
         <Button color="primary" {...this.props} />
-      </div>
+      </Wrapper>
     );
   }
 }
-
-export default injectSheet(styles)(CreateButton);

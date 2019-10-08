@@ -1,5 +1,8 @@
 //@flow
 import React from "react";
+import { translate } from "react-i18next";
+import classNames from "classnames";
+import styled from "styled-components";
 import {
   Change,
   Diff as DiffComponent,
@@ -8,71 +11,14 @@ import {
   getChangeKey,
   Hunk
 } from "react-diff-view";
-import injectSheets from "react-jss";
-import classNames from "classnames";
-import { translate } from "react-i18next";
 import { Button, ButtonGroup } from "../buttons";
 import Tag from "../Tag";
-
-const styles = {
-  panel: {
-    fontSize: "1rem"
-  },
-  /* breaks into a second row
-     when buttons and title become too long */
-  level: {
-    flexWrap: "wrap"
-  },
-  titleHeader: {
-    display: "flex",
-    maxWidth: "100%",
-    cursor: "pointer"
-  },
-  title: {
-    marginLeft: ".25rem",
-    fontSize: "1rem"
-  },
-  /* align child to right */
-  buttonHeader: {
-    display: "flex",
-    marginLeft: "auto"
-  },
-  hunkDivider: {
-    margin: ".5rem 0"
-  },
-  changeType: {
-    marginLeft: ".75rem"
-  },
-  diff: {
-    /* column sizing */
-    "& > colgroup .diff-gutter-col": {
-      width: "3.25rem"
-    },
-    /* prevent following content from moving down */
-    "& > .diff-gutter:empty:hover::after": {
-      fontSize: "0.7rem"
-    },
-    /* smaller font size for code */
-    "& .diff-line": {
-      fontSize: "0.75rem"
-    },
-    /* comment padding for sideBySide view */
-    "&.split .diff-widget-content .is-indented-line": {
-      paddingLeft: "3.25rem"
-    },
-    /* comment padding for combined view */
-    "&.unified .diff-widget-content .is-indented-line": {
-      paddingLeft: "6.5rem"
-    }
-  }
-};
 
 type Props = DiffObjectProps & {
   file: File,
   collapsible: true,
 
   // context props
-  classes: any,
   t: string => string
 };
 
@@ -80,6 +26,64 @@ type State = {
   collapsed: boolean,
   sideBySide: boolean
 };
+
+const DiffFilePanel = styled.div`
+  ${props =>
+    props.file &&
+    props.file.isBinary && {
+      borderBottom: "none"
+    }};
+`;
+
+const FlexWrapLevel = styled.div`
+  /* breaks into a second row
+     when buttons and title become too long */
+  flex-wrap: wrap;
+`;
+
+const FullWidthTitleHeader = styled.div`
+  max-width: 100%;
+`;
+
+const TitleWrapper = styled.span`
+  margin-left: 0.25rem;
+`;
+
+const ButtonWrapper = styled.div`
+  /* align child to right */
+  margin-left: auto;
+`;
+
+const HunkDivider = styled.hr`
+  margin: 0.5rem 0;
+`;
+
+const ChangeTypeTag = styled(Tag)`
+  marginleft: ".75rem";
+`;
+
+const ModifiedDiffComponent = styled(DiffComponent)`
+  /* column sizing */
+  > colgroup .diff-gutter-col: {
+    width: 3.25rem;
+  }
+  /* prevent following content from moving down */
+  > .diff-gutter:empty:hover::after: {
+    font-size: 0.7rem;
+  }
+  /* smaller font size for code */
+  & .diff-line: {
+    font-size: 0.75rem;
+  }
+  /* comment padding for sidebyside view */
+  &.split .diff-widget-content .is-indented-line: {
+    padding-left: 3.25rem;
+  }
+  /* comment padding for combined view */
+  &.unified .diff-widget-content .is-indented-line: {
+    padding-left: 6.5rem;
+  }
+`;
 
 class DiffFile extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -111,9 +115,8 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   createHunkHeader = (hunk: Hunk, i: number) => {
-    const { classes } = this.props;
     if (i > 0) {
-      return <hr className={classes.hunkDivider} />;
+      return <HunkDivider />;
     }
     return null;
   };
@@ -199,7 +202,7 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   renderChangeTag = (file: any) => {
-    const { t, classes } = this.props;
+    const { t } = this.props;
     if (!file.type) {
       return;
     }
@@ -216,12 +219,8 @@ class DiffFile extends React.Component<Props, State> {
           : "info is-outlined";
 
     return (
-      <Tag
-        className={classNames(
-          "is-rounded",
-          "has-text-weight-normal",
-          classes.changeType
-        )}
+      <ChangeTypeTag
+        className={classNames("is-rounded", "has-text-weight-normal")}
         color={color}
         label={value}
       />
@@ -234,7 +233,6 @@ class DiffFile extends React.Component<Props, State> {
       fileControlFactory,
       fileAnnotationFactory,
       collapsible,
-      classes,
       t
     } = this.props;
     const { collapsed, sideBySide } = this.state;
@@ -250,12 +248,9 @@ class DiffFile extends React.Component<Props, State> {
       body = (
         <div className="panel-block is-paddingless">
           {fileAnnotations}
-          <DiffComponent
-            className={classNames(viewType, classes.diff)}
-            viewType={viewType}
-          >
+          <ModifiedDiffComponent className={viewType} viewType={viewType}>
             {file.hunks.map(this.renderHunk)}
-          </DiffComponent>
+          </ModifiedDiffComponent>
         </div>
       );
     }
@@ -265,23 +260,27 @@ class DiffFile extends React.Component<Props, State> {
       ? fileControlFactory(file, this.setCollapse)
       : null;
     return (
-      <div className={classNames("panel", classes.panel)}>
+      <DiffFilePanel className={classNames("panel", "is-size-6")}>
         <div className="panel-heading">
-          <div className={classNames("level", classes.level)}>
-            <div
-              className={classNames("level-left", classes.titleHeader)}
+          <FlexWrapLevel className="level">
+            <FullWidthTitleHeader
+              className={classNames(
+                "level-left",
+                "is-flex",
+                "has-cursor-pointer"
+              )}
               onClick={this.toggleCollapse}
               title={this.hoverFileTitle(file)}
             >
               {collapseIcon}
-              <span
-                className={classNames("is-ellipsis-overflow", classes.title)}
+              <TitleWrapper
+                className={classNames("is-ellipsis-overflow", "is-size-6")}
               >
                 {this.renderFileTitle(file)}
-              </span>
+              </TitleWrapper>
               {this.renderChangeTag(file)}
-            </div>
-            <div className={classNames("level-right", classes.buttonHeader)}>
+            </FullWidthTitleHeader>
+            <ButtonWrapper className={classNames("level-right", "is-flex")}>
               <ButtonGroup>
                 <Button
                   action={this.toggleSideBySide}
@@ -301,13 +300,13 @@ class DiffFile extends React.Component<Props, State> {
                 </Button>
                 {fileControls}
               </ButtonGroup>
-            </div>
-          </div>
+            </ButtonWrapper>
+          </FlexWrapLevel>
         </div>
         {body}
-      </div>
+      </DiffFilePanel>
     );
   }
 }
 
-export default injectSheets(styles)(translate("repos")(DiffFile));
+export default translate("repos")(DiffFile);

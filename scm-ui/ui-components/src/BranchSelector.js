@@ -1,41 +1,34 @@
-// @flow
-
+//@flow
 import React from "react";
-import type { Branch } from "@scm-manager/ui-types";
-import injectSheet from "react-jss";
 import classNames from "classnames";
+import styled from "styled-components";
+import type { Branch } from "@scm-manager/ui-types";
 import DropDown from "./forms/DropDown";
 
-const styles = {
-  zeroflex: {
-    flexBasis: "inherit",
-    flexGrow: 0
-  },
-  minWidthOfControl: {
-    minWidth: "10rem"
-  },
-  labelSizing: {
-    fontSize: "1rem !important"
-  },
-  noBottomMargin: {
-    marginBottom: "0 !important"
-  }
-};
-
 type Props = {
-  branches: Branch[], // TODO: Use generics?
+  branches: Branch[],
   selected: (branch?: Branch) => void,
   selectedBranch?: string,
   label: string,
-  disabled?: boolean,
-
-  // context props
-  classes: Object
+  disabled?: boolean
 };
 
 type State = { selectedBranch?: Branch };
 
-class BranchSelector extends React.Component<Props, State> {
+const ZeroflexFieldLabel = styled.label`
+  flex-basis: inherit;
+  flex-grow: 0;
+`;
+
+const MinWidthControl = styled.div`
+  min-width: 10rem;
+`;
+
+const NoBottomMarginField = styled.div`
+  margin-bottom: 0 !important;
+`;
+
+export default class BranchSelector extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {};
@@ -52,32 +45,19 @@ class BranchSelector extends React.Component<Props, State> {
   }
 
   render() {
-    const { branches, classes, label, disabled } = this.props;
+    const { branches, label, disabled } = this.props;
 
     if (branches) {
       return (
-        <div
-          className={classNames(
-            "field",
-            "is-horizontal"
-          )}
-        >
-          <div
-            className={classNames("field-label", "is-normal", classes.zeroflex)}
+        <div className={classNames("field", "is-horizontal")}>
+          <ZeroflexFieldLabel
+            className={classNames("field-label", "is-normal")}
           >
-            <label className={classNames("label", classes.labelSizing)}>
-              {label}
-            </label>
-          </div>
+            <div className={classNames("label", "is-size-6")}>{label}</div>
+          </ZeroflexFieldLabel>
           <div className="field-body">
-            <div
-              className={classNames(
-                "field",
-                "is-narrow",
-                classes.noBottomMargin
-              )}
-            >
-              <div className={classNames("control", classes.minWidthOfControl)}>
+            <NoBottomMarginField className={classNames("field", "is-narrow")}>
+              <MinWidthControl classname="control">
                 <DropDown
                   className="is-fullwidth"
                   options={branches.map(b => b.name)}
@@ -89,8 +69,8 @@ class BranchSelector extends React.Component<Props, State> {
                       : ""
                   }
                 />
-              </div>
-            </div>
+              </MinWidthControl>
+            </NoBottomMarginField>
           </div>
         </div>
       );
@@ -113,5 +93,3 @@ class BranchSelector extends React.Component<Props, State> {
     this.setState({ selectedBranch: branch });
   };
 }
-
-export default injectSheet(styles)(BranchSelector);

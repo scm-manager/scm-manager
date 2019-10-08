@@ -1,15 +1,13 @@
 //@flow
 import React from "react";
-import injectSheet from "react-jss";
-import classNames from "classnames";
 import { translate } from "react-i18next";
+import styled from "styled-components";
 
 type Props = {
   filter: string => void,
   value?: string,
 
   // context props
-  classes: Object,
   t: string => string
 };
 
@@ -17,15 +15,9 @@ type State = {
   value: string
 };
 
-const styles = {
-  inputField: {
-    float: "right",
-    marginTop: "1.25rem"
-  },
-  inputHeight: {
-    height: "2.5rem"
-  }
-};
+const FixedHeightInput = styled.input`
+  height: 2.5rem;
+`;
 
 class FilterInput extends React.Component<Props, State> {
   constructor(props) {
@@ -43,15 +35,12 @@ class FilterInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { classes, t } = this.props;
+    const { t } = this.props;
     return (
-      <form
-        className={classNames(classes.inputField, "input-field")}
-        onSubmit={this.handleSubmit}
-      >
+      <form className="input-field" onSubmit={this.handleSubmit}>
         <div className="control has-icons-left">
-          <input
-            className={classNames(classes.inputHeight, "input")}
+          <FixedHeightInput
+            className="input"
             type="search"
             placeholder={t("filterEntries")}
             value={this.state.value}
@@ -66,4 +55,4 @@ class FilterInput extends React.Component<Props, State> {
   }
 }
 
-export default injectSheet(styles)(translate("commons")(FilterInput));
+export default translate("commons")(FilterInput);

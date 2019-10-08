@@ -1,6 +1,5 @@
 //@flow
 import * as React from "react";
-import injectSheet from "react-jss";
 import type { DisplayedUser } from "@scm-manager/ui-types";
 import { Help, Tag } from "../index";
 
@@ -8,24 +7,15 @@ type Props = {
   items: DisplayedUser[],
   label: string,
   helpText?: string,
-  onRemove: (DisplayedUser[]) => void,
-
-  // context props
-  classes: Object
+  onRemove: (DisplayedUser[]) => void
 };
 
-const styles = {
-  help: {
-    position: "relative"
-  }
-};
-
-class TagGroup extends React.Component<Props> {
+export default class TagGroup extends React.Component<Props> {
   render() {
-    const { items, label, helpText, classes } = this.props;
+    const { items, label, helpText } = this.props;
     let help = null;
     if (helpText) {
-      help = <Help className={classes.help} message={helpText} />;
+      help = <Help className="is-relative" message={helpText} />;
     }
     return (
       <div className="field is-grouped is-grouped-multiline">
@@ -62,5 +52,3 @@ class TagGroup extends React.Component<Props> {
     this.props.onRemove(newItems);
   };
 }
-
-export default injectSheet(styles)(TagGroup);

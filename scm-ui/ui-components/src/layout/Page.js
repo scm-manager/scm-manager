@@ -1,7 +1,7 @@
 //@flow
 import * as React from "react";
-import injectSheet from "react-jss";
 import classNames from "classnames";
+import styled from "styled-components";
 import Loading from "./../Loading";
 import ErrorNotification from "./../ErrorNotification";
 import Title from "./Title";
@@ -15,20 +15,20 @@ type Props = {
   loading?: boolean,
   error?: Error,
   showContentOnError?: boolean,
-  children: React.Node,
-
-  // context props
-  classes: Object
+  children: React.Node
 };
 
-const styles = {
-  actions: {
-    display: "flex",
-    justifyContent: "flex-end"
+const PageActionContainer = styled.div`
+  justify-content: flex-end;
+  align-items: center;
+
+  // every child except first
+  > * ~ * {
+    margin-left: 1.25rem;
   }
-};
+`;
 
-class Page extends React.Component<Props> {
+export default class Page extends React.Component<Props> {
   render() {
     const { error } = this.props;
     return (
@@ -45,12 +45,14 @@ class Page extends React.Component<Props> {
   }
 
   isPageAction(node: any) {
-    return node.displayName === PageActions.displayName
-      || (node.type && node.type.displayName ===  PageActions.displayName);
+    return (
+      node.displayName === PageActions.displayName ||
+      (node.type && node.type.displayName === PageActions.displayName)
+    );
   }
 
   renderPageHeader() {
-    const { error, title, subtitle, children, classes } = this.props;
+    const { error, title, subtitle, children } = this.props;
 
     let pageActions = null;
     let pageActionsExists = false;
@@ -58,14 +60,16 @@ class Page extends React.Component<Props> {
       if (child && !error) {
         if (this.isPageAction(child)) {
           pageActions = (
-            <div
+            <PageActionContainer
               className={classNames(
-                classes.actions,
-                "column is-three-fifths is-mobile-action-spacing"
+                "column",
+                "is-three-fifths",
+                "is-mobile-action-spacing",
+                "is-flex"
               )}
             >
               {child}
-            </div>
+            </PageActionContainer>
           );
           pageActionsExists = true;
         }
@@ -110,5 +114,3 @@ class Page extends React.Component<Props> {
     return content;
   }
 }
-
-export default injectSheet(styles)(Page);

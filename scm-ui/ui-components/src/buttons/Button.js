@@ -14,10 +14,7 @@ export type ButtonProps = {
   icon?: string,
   fullWidth?: boolean,
   reducedMobile?: boolean,
-  children?: React.Node,
-
-  // context props
-  classes: any
+  children?: React.Node
 };
 
 type Props = ButtonProps & {

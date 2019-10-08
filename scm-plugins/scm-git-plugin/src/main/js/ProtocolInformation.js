@@ -1,10 +1,9 @@
 //@flow
 import React from "react";
-import { ButtonAddons, Button } from "@scm-manager/ui-components";
-import type { Repository } from "@scm-manager/ui-types";
-import CloneInformation from "./CloneInformation";
-import type { Link } from "@scm-manager/ui-types";
 import styled from "styled-components";
+import type { Repository, Link } from "@scm-manager/ui-types";
+import { ButtonAddons, Button } from "@scm-manager/ui-components";
+import CloneInformation from "./CloneInformation";
 
 const Wrapper = styled.div`
   position: relative;
@@ -18,7 +17,7 @@ const Switcher = styled(ButtonAddons)`
 
 type Props = {
   repository: Repository
-}
+};
 
 type State = {
   selected?: Link
@@ -39,8 +38,7 @@ function selectHttpOrFirst(repository: Repository) {
   return undefined;
 }
 
-class ProtocolInformation extends React.Component<Props, State> {
-
+export default class ProtocolInformation extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -60,12 +58,12 @@ class ProtocolInformation extends React.Component<Props, State> {
     let color = null;
 
     const { selected } = this.state;
-    if ( selected && protocol.name === selected.name ) {
+    if (selected && protocol.name === selected.name) {
       color = "link is-selected";
     }
 
     return (
-      <Button color={ color } action={() => this.selectProtocol(protocol)}>
+      <Button color={color} action={() => this.selectProtocol(protocol)}>
         {name.toUpperCase()}
       </Button>
     );
@@ -80,25 +78,24 @@ class ProtocolInformation extends React.Component<Props, State> {
     }
 
     if (protocols.length === 1) {
-      return <CloneInformation url={protocols[0].href} repository={repository} />;
+      return (
+        <CloneInformation url={protocols[0].href} repository={repository} />
+      );
     }
 
     const { selected } = this.state;
     let cloneInformation = null;
     if (selected) {
-      cloneInformation = <CloneInformation repository={repository} url={selected.href} />;
+      cloneInformation = (
+        <CloneInformation repository={repository} url={selected.href} />
+      );
     }
 
     return (
-     <Wrapper>
-       <Switcher>
-         {protocols.map(this.renderProtocolButton)}
-       </Switcher>
-       { cloneInformation }
-     </Wrapper>
+      <Wrapper>
+        <Switcher>{protocols.map(this.renderProtocolButton)}</Switcher>
+        {cloneInformation}
+      </Wrapper>
     );
   }
-
 }
-
-export default ProtocolInformation;

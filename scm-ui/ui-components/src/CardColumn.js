@@ -1,44 +1,8 @@
 //@flow
 import * as React from "react";
-import injectSheet from "react-jss";
 import classNames from "classnames";
-
+import styled from "styled-components";
 import { Link } from "react-router-dom";
-
-const styles = {
-  inner: {
-    position: "relative",
-    pointerEvents: "none",
-    zIndex: 1
-  },
-  innerLink: {
-    pointerEvents: "all"
-  },
-  centerImage: {
-    marginTop: "0.8em",
-    marginLeft: "1em !important"
-  },
-  flexFullHeight: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-around",
-    alignSelf: "stretch"
-  },
-  footer: {
-    display: "flex",
-    paddingBottom: "1rem",
-  },
-  topPart: {
-    display: "flex"
-  },
-  contentRight: {
-    marginLeft: "auto"
-  },
-  contentLeft: {
-    marginBottom: "0 !important",
-    overflow: "hidden"
-  }
-};
 
 type Props = {
   title: string,
@@ -49,19 +13,54 @@ type Props = {
   footerRight: React.Node,
   link?: string,
   action?: () => void,
-  className?: string,
-
-  // context props
-  classes: any
+  className?: string
 };
 
-class CardColumn extends React.Component<Props> {
+const NoEventWrapper = styled.article`
+  pointer-events: none;
+  z-index: 1;
+`;
+
+const AvatarWrapper = styled.figure`
+  margin-top: 0.8em;
+  margin-left: 1em !important;
+`;
+
+const FlexFullHeight = styled.div`
+  flex-direction: column;
+  justify-content: space-around;
+  align-self: stretch;
+`;
+
+const FooterWrapper = styled.div`
+  padding-bottom: 1rem;
+`;
+
+const ContentLeft = styled.div`
+  margin-bottom: 0 !important;
+  overflow: hidden;
+`;
+
+const ContentRight = styled.div`
+  margin-left: auto;
+`;
+
+export default class CardColumn extends React.Component<Props> {
   createLink = () => {
     const { link, action } = this.props;
     if (link) {
       return <Link className="overlay-column" to={link} />;
     } else if (action) {
-      return <a className="overlay-column" onClick={e => {e.preventDefault(); action();}} href="#" />;
+      return (
+        <a
+          className="overlay-column"
+          onClick={e => {
+            e.preventDefault();
+            action();
+          }}
+          href="#"
+        />
+      );
     }
     return null;
   };
@@ -74,49 +73,37 @@ class CardColumn extends React.Component<Props> {
       contentRight,
       footerLeft,
       footerRight,
-      classes,
       className
     } = this.props;
     const link = this.createLink();
     return (
       <>
         {link}
-        <article className={classNames("media", className, classes.inner)}>
-          <figure className={classNames(classes.centerImage, "media-left")}>
-            {avatar}
-          </figure>
-          <div
-            className={classNames(
-              "media-content",
-              "text-box",
-              classes.flexFullHeight
-            )}
+        <NoEventWrapper
+          className={classNames("media", "is-relative", className)}
+        >
+          <AvatarWrapper className="media-left">{avatar}</AvatarWrapper>
+          <FlexFullHeight
+            className={classNames("media-content", "text-box", "is-flex")}
           >
-            <div className={classes.topPart}>
-              <div
-                className={classNames(
-                  "content",
-                  classes.contentLeft
-                )}
-              >
+            <div className="is-flex">
+              <ContentLeft className="content">
                 <p className="shorten-text is-marginless">
                   <strong>{title}</strong>
                 </p>
                 <p className="shorten-text">{description}</p>
-              </div>
-              <div className={classes.contentRight}>
-              {contentRight && contentRight}
-              </div>
+              </ContentLeft>
+              <ContentRight>{contentRight && contentRight}</ContentRight>
             </div>
-              <div className={classNames("level", classes.footer)}>
-                <div className="level-left is-hidden-mobile">{footerLeft}</div>
-                <div className="level-right is-mobile is-marginless">{footerRight}</div>
+            <FooterWrapper className={classNames("level", "is-flex")}>
+              <div className="level-left is-hidden-mobile">{footerLeft}</div>
+              <div className="level-right is-mobile is-marginless">
+                {footerRight}
               </div>
-          </div>
-        </article>
+            </FooterWrapper>
+          </FlexFullHeight>
+        </NoEventWrapper>
       </>
     );
   }
 }
-
-export default injectSheet(styles)(CardColumn);
