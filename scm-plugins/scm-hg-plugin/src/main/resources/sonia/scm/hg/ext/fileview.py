@@ -34,7 +34,7 @@ Prints date, size and last message of files.
 """
 
 from collections import defaultdict
-from mercurial import cmdutil,util
+from mercurial import scmutil
 
 cmdtable = {}
 
@@ -273,7 +273,7 @@ class File_Viewer:
     ('t', 'transport', False, 'format the output for command server'),
   ])
 def fileview(ui, repo, **opts):
-  revCtx = repo[opts["revision"]]
+    revCtx = scmutil.revsingle(repo, opts["revision"])
   subrepos = {}
   if not opts["disableSubRepositoryDetection"]:
     subrepos = collect_sub_repositories(revCtx)
