@@ -845,13 +845,6 @@
     react "^16.4.2"
     react-dom "^16.4.2"
 
-"@scm-manager/ui-types@link:scm-ui/ui-types":
-  version "2.0.0-SNAPSHOT"
-
-"@scm-manager/ui-vendor@link:scm-ui/ui-vendor":
-  version "0.0.0"
-  uid ""
-
 "@sindresorhus/is@^0.7.0":
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
