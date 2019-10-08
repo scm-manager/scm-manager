@@ -5,6 +5,8 @@ import com.github.sdorra.shiro.SubjectAware;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -35,6 +37,16 @@ public class GitModifyCommand_LFSTest extends AbstractGitCommandTestBase {
   public ShiroRule shiro = new ShiroRule();
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory = mock(LfsBlobStoreFactory.class);
+
+  @Before
+  public void registerFilter() {
+    new GitLfsFilterModule().configure(null);
+  }
+
+  @After
+  public void unregisterFilter() {
+    new GitLfsFilterModule().unregister();
+  }
 
   @Test
   public void shouldCreateCommit() throws IOException, GitAPIException {

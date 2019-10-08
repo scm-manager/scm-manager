@@ -15,9 +15,16 @@ import java.util.regex.Pattern;
 
 @Extension
 public class GitLfsFilterModule implements Module {
+
+  public static final Pattern COMMAND_NAME_PATTERN = Pattern.compile("git-lfs (smudge|clean) -- .*");
+
   @Override
   public void configure(Binder binder) {
-    FilterCommandRegistry.register(Pattern.compile("git-lfs (smudge|clean) -- .*"), NoOpFilterCommand::new);
+    FilterCommandRegistry.register(COMMAND_NAME_PATTERN, NoOpFilterCommand::new);
+  }
+
+  void unregister() {
+    FilterCommandRegistry.unregister(COMMAND_NAME_PATTERN);
   }
 
   private static class NoOpFilterCommand extends FilterCommand {
