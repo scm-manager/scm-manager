@@ -6,6 +6,8 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.attributes.FilterCommandRegistry;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.ContextEntry;
@@ -30,6 +32,7 @@ import static sonia.scm.NotFoundException.notFound;
 
 public class GitModifyCommand extends AbstractGitCommand implements ModifyCommand {
 
+  private static final Logger LOG = LoggerFactory.getLogger(GitModifyCommand.class);
   private static final Striped<Lock> REGISTER_LOCKS = Striped.lock(5);
 
   private final GitWorkdirFactory workdirFactory;
@@ -109,12 +112,14 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
         LfsBlobStoreCleanFilterFactory cleanFilterFactory = new LfsBlobStoreCleanFilterFactory(lfsBlobStoreFactory, repository, targetFile);
 
         String registerKey = "git-lfs clean -- '" + path + "'";
+        LOG.info("register lfs filter command factory for command '{}'", registerKey);
         FilterCommandRegistry.register(registerKey, cleanFilterFactory::createFilter);
         try {
           addFileToGit(path);
         } catch (GitAPIException e) {
           throwInternalRepositoryException("could not add file to index", e);
         } finally {
+          LOG.info("unregister lfs filter command factory for command \"{}\"", registerKey);
           FilterCommandRegistry.unregister(registerKey);
         }
       } finally {

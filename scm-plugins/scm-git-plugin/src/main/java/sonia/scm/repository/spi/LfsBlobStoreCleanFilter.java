@@ -7,6 +7,8 @@ import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lfs.lib.AnyLongObjectId;
 import org.eclipse.jgit.lfs.lib.LongObjectId;
 import org.eclipse.jgit.lib.Repository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
 import sonia.scm.util.IOUtil;
@@ -28,6 +30,7 @@ import static org.eclipse.jgit.lfs.lib.Constants.LONG_HASH_FUNCTION;
  */
 public class LfsBlobStoreCleanFilter extends FilterCommand {
 
+  private static final Logger LOG = LoggerFactory.getLogger(LfsBlobStoreCleanFilter.class);
 
   private Lfs lfsUtil;
   private final BlobStore lfsBlobStore;
@@ -44,20 +47,24 @@ public class LfsBlobStoreCleanFilter extends FilterCommand {
 
   @Override
   public int run() throws IOException {
+    LOG.info("running scm lfs filter for file {}", targetFile);
     DigestOutputStream digestOutputStream = createDigestStream();
     try {
       long size = ByteStreams.copy(in, digestOutputStream);
       AnyLongObjectId loid = LongObjectId.fromRaw(digestOutputStream.getMessageDigest().digest());
+      String hash = loid.getName();
 
-      Blob existingBlob = lfsBlobStore.get(loid.getName());
+      Blob existingBlob = lfsBlobStore.get(hash);
       if (existingBlob != null) {
+        LOG.info("found existing lfs blob for oid {}", hash);
         long blobSize = existingBlob.getSize();
         if (blobSize != size) {
           // Mathematicians say this will never happen
-          throw new RuntimeException("lfs entry already exists for loid " + loid.getName() + " but has wrong size");
+          throw new RuntimeException("lfs entry already exists for loid " + hash + " but has wrong size");
         }
       } else {
-        Blob newBlob = lfsBlobStore.create(loid.getName());
+        LOG.info("uploading new lfs blob for oid {}", hash);
+        Blob newBlob = lfsBlobStore.create(hash);
         OutputStream outputStream = newBlob.getOutputStream();
         Files.copy(targetFile, outputStream);
         newBlob.commit();

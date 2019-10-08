@@ -65,7 +65,6 @@ public class GitModifyCommand_LFSTest extends AbstractGitCommandTestBase {
 
   @Test
   public void shouldCreateSecondCommits() throws IOException, GitAPIException {
-    new GitLfsFilterModule().configure(null);
     createCommit("new_lfs.png", "new content", "fe32608c9ef5b6cf7e3f946480253ff76f24f4ec0678f3d0f07f9844cbff9601", new ByteArrayOutputStream());
 
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
