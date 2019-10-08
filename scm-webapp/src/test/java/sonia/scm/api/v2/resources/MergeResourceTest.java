@@ -108,10 +108,7 @@ public class MergeResourceTest extends RepositoryTestBase {
     @Test
     void shouldHandleSuccessfulMerge() throws Exception {
       when(mergeCommand.merge(any())).thenReturn(MergeCommandResult.success());
-      User user = createDummyUser("dummy");
-      PrincipalCollection collection = mock(PrincipalCollection.class);
-      when(subject.getPrincipals()).thenReturn(collection);
-      when(collection.oneByType(User.class)).thenReturn(user);
+      mockUser();
 
       URL url = Resources.getResource("sonia/scm/api/v2/mergeCommand.json");
       byte[] mergeCommandJson = Resources.toByteArray(url);
@@ -129,10 +126,7 @@ public class MergeResourceTest extends RepositoryTestBase {
     @Test
     void shouldHandleFailedMerge() throws Exception {
       when(mergeCommand.merge(any())).thenReturn(MergeCommandResult.failure(asList("file1", "file2")));
-      User user = createDummyUser("dummy");
-      PrincipalCollection collection = mock(PrincipalCollection.class);
-      when(subject.getPrincipals()).thenReturn(collection);
-      when(collection.oneByType(User.class)).thenReturn(user);
+      mockUser();
 
       URL url = Resources.getResource("sonia/scm/api/v2/mergeCommand.json");
       byte[] mergeCommandJson = Resources.toByteArray(url);
@@ -201,13 +195,11 @@ public class MergeResourceTest extends RepositoryTestBase {
       assertThat(response.getStatus()).isEqualTo(204);
     }
 
-    private User createDummyUser(String name) {
-      User user = new User();
-      user.setName(name);
-      user.setType("xml");
-      user.setPassword("secret");
-      user.setCreationDate(System.currentTimeMillis());
-      return user;
+
+    private void mockUser() {
+      PrincipalCollection collection = mock(PrincipalCollection.class);
+      when(subject.getPrincipals()).thenReturn(collection);
+      when(collection.oneByType(User.class)).thenReturn(new User("dummy"));
     }
   }
 }

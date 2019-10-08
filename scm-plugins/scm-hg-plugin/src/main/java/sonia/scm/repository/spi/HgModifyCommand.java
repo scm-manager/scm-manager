@@ -92,7 +92,7 @@ public class HgModifyCommand implements ModifyCommand {
       return pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
     } catch (Exception e) {
       throw new IntegrateChangesFromWorkdirException(context.getScmRepository(),
-        String.format("Could not pull modify changes from working copy to central repository", request.getBranch()),
+        String.format("Could not pull modify changes from working copy to central repository for branch %s", request.getBranch()),
         e);
     }
   }

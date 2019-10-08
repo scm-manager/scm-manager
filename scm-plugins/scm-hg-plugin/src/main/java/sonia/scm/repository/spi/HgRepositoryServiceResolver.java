@@ -49,15 +49,13 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
 
   private final HgRepositoryHandler handler;
   private final HgHookManager hookManager;
-  private final HgWorkdirFactory workdirFactory;
 
   @Inject
   public HgRepositoryServiceResolver(HgRepositoryHandler handler,
-                                     HgHookManager hookManager, HgWorkdirFactory workdirFactory)
+                                     HgHookManager hookManager)
   {
     this.handler = handler;
     this.hookManager = hookManager;
-    this.workdirFactory = workdirFactory;
   }
 
   @Override
@@ -65,7 +63,7 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
     HgRepositoryServiceProvider provider = null;
 
     if (HgRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new HgRepositoryServiceProvider(handler, hookManager, repository, workdirFactory);
+      provider = new HgRepositoryServiceProvider(handler, hookManager, repository);
     }
 
     return provider;

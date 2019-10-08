@@ -78,11 +78,10 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   //~--- constructors ---------------------------------------------------------
 
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
-                              HgHookManager hookManager, Repository repository, HgWorkdirFactory workdirFactory)
+                              HgHookManager hookManager, Repository repository)
   {
     this.repository = repository;
     this.handler = handler;
-    this.workdirFactory = workdirFactory;
     this.repositoryDirectory = handler.getDirectory(repository.getId());
     this.context = new HgCommandContext(hookManager, handler, repository,
       repositoryDirectory);
@@ -294,6 +293,4 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   private File repositoryDirectory;
-
-  private final HgWorkdirFactory workdirFactory;
 }
