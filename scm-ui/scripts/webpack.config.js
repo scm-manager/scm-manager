@@ -10,7 +10,7 @@ module.exports = {
       "./ui-webapp/src/index.js"
     ]
   },
-  devtool: "source-map",
+  devtool: "cheap-module-eval-source-map",
   target: "web",
   node: {
     fs: "empty",
@@ -27,8 +27,10 @@ module.exports = {
       },
       {
         test: /\.(js|jsx)$/,
-        // exclude: /node_modules/,
-        use: {
+        exclude: /node_modules/,
+        use: [{
+          loader: "thread-loader"
+        }, {
           loader: "babel-loader",
           options: {
             presets: [
@@ -38,7 +40,7 @@ module.exports = {
             ],
             plugins: ["@babel/plugin-proposal-class-properties"]
           }
-        }
+        }]
       },
       {
         test: /\.(css|scss|sass)$/i,
@@ -62,8 +64,8 @@ module.exports = {
     filename: "[name].bundle.js"
   },
   devServer: {
-    contentBase: path.join(__dirname, '..', "ui-webapp", "public"),
-    compress: true,
+    contentBase: path.join(__dirname, "..", "ui-webapp", "public"),
+    compress: false,
     historyApiFallback: true,
     overlay: true,
     port: 3000,
@@ -71,12 +73,25 @@ module.exports = {
       app.use(createContextPathMiddleware("/scm"));
     },
     after: function(app) {
-      const templatePath = path.join(__dirname, '..', "ui-webapp", "public", "index.mustache");
+      const templatePath = path.join(__dirname, "..", "ui-webapp", "public", "index.mustache");
       const renderParams = {
         contextPath: "/scm"
       };
       app.use(createIndexMiddleware(templatePath, renderParams));
     },
-    publicPath: '/assets/'
+    publicPath: "/assets/"
+  },
+  optimization: {
+    runtimeChunk: "single",
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          enforce: true,
+          chunks: "all"
+        }
+      }
+    }
   }
 };

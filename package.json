@@ -6,7 +6,7 @@
   ],
   "scripts": {
     "build": "webpack --mode=development --config=scm-ui/scripts/webpack.config.js",
-    "serve": "webpack-dev-server --config=scm-ui/scripts/webpack.config.js"
+    "serve": "webpack-dev-server --mode=development --config=scm-ui/scripts/webpack.config.js"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
@@ -22,8 +22,10 @@
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.0",
     "script-loader": "^0.7.2",
+    "speed-measure-webpack-plugin": "^1.3.1",
     "style-loader": "^1.0.0",
     "terser-webpack-plugin": "^2.1.2",
+    "thread-loader": "^2.1.3",
     "webpack": "^4.41.0",
     "webpack-cli": "^3.3.9",
     "webpack-dev-server": "^3.8.2"
