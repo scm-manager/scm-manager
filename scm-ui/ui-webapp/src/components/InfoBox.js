@@ -34,7 +34,7 @@ const LightBlueIcon = styled(Icon)`
 `;
 
 const ContentWrapper = styled.div`
-  min-height: 1.5rem;
+  min-height: 10.5rem;
   margin-left: 1.5em;
 `;
 
