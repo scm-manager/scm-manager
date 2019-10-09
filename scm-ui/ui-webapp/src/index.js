@@ -20,8 +20,6 @@ import { urls } from "@scm-manager/ui-components";
 import jss from "jss";
 import jssNested from "jss-nested";
 
-import "./style/scm.scss";
-
 // setup jss and install required plugins
 jss.setup(jssNested());
 
