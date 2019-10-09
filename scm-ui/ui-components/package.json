@@ -21,7 +21,6 @@
     "fetch-mock": "^7.2.5",
     "flow-bin": "^0.109.0",
     "flow-typed": "^2.5.1",
-    "jest": "^23.5.0",
     "raf": "^3.4.0",
     "react-router-enzyme-context": "^1.2.0"
   },
@@ -43,5 +42,10 @@
   },
   "resolutions": {
     "gitdiff-parser": "https://github.com/cloudogu/gitdiff-parser#3a72da4a8e3d9bfb4b9e01a43e85628c19f26cc4"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.js$": "../scripts/babelMonoRepoTransformer.js"
+    }
   }
 }

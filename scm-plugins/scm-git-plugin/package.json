@@ -8,5 +8,10 @@
   "devDependencies": {
     "flow-bin": "^0.109.0",
     "flow-typed": "^2.6.1"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.js$": "../../scm-ui/scripts/babelMonoRepoTransformer.js"
+    }
   }
 }

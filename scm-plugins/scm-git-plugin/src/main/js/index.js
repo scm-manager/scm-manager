@@ -12,7 +12,8 @@ import RepositoryConfig from "./RepositoryConfig";
 
 // repository
 
-const gitPredicate = (props: Object) => {
+// @visibleForTesting
+export const gitPredicate = (props: Object) => {
   return props.repository && props.repository.type === "git";
 };
 
