@@ -29,8 +29,7 @@ type State = {
 
 const DiffFilePanel = styled.div`
   ${props =>
-    props.file &&
-    props.file.isBinary && {
+    props.isBinary && {
       borderBottom: "none"
     }};
 `;
@@ -260,7 +259,10 @@ class DiffFile extends React.Component<Props, State> {
       ? fileControlFactory(file, this.setCollapse)
       : null;
     return (
-      <DiffFilePanel className={classNames("panel", "is-size-6")}>
+      <DiffFilePanel
+        className={classNames("panel", "is-size-6")}
+        isBinary={file && file.isBinary}
+      >
         <div className="panel-heading">
           <FlexWrapLevel className="level">
             <FullWidthTitleHeader
