@@ -18,7 +18,7 @@
 
   <properties>
     <sonar.language>js</sonar.language>
-    <sonar.sources>src</sonar.sources>
+    <sonar.inclusions>src/**</sonar.inclusions>
     <sonar.test.exclusions>**/*.test.js,src/tests/**</sonar.test.exclusions>
     <sonar.coverage.exclusions>**/*.test.js,src/tests/**</sonar.coverage.exclusions>
     <sonar.javascript.jstest.reportsPath>target/jest-reports</sonar.javascript.jstest.reportsPath>
@@ -28,20 +28,6 @@
   <build>
     <finalName>scm-ui</finalName>
     <plugins>
-
-      <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>${basedir}</directory>
-              <includes>
-                <include>**/ui-**/dist/**</include>
-              </includes>
-            </fileset>
-          </filesets>
-        </configuration>
-      </plugin>
 
       <plugin>
         <groupId>com.github.sdorra</groupId>
