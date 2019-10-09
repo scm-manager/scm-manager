@@ -64,23 +64,23 @@ const ChangeTypeTag = styled(Tag)`
 
 const ModifiedDiffComponent = styled(DiffComponent)`
   /* column sizing */
-  > colgroup .diff-gutter-col: {
+  > colgroup .diff-gutter-col {
     width: 3.25rem;
   }
   /* prevent following content from moving down */
-  > .diff-gutter:empty:hover::after: {
+  > .diff-gutter:empty:hover::after {
     font-size: 0.7rem;
   }
   /* smaller font size for code */
-  & .diff-line: {
+  & .diff-line {
     font-size: 0.75rem;
   }
   /* comment padding for sidebyside view */
-  &.split .diff-widget-content .is-indented-line: {
+  &.split .diff-widget-content .is-indented-line {
     padding-left: 3.25rem;
   }
   /* comment padding for combined view */
-  &.unified .diff-widget-content .is-indented-line: {
+  &.unified .diff-widget-content .is-indented-line {
     padding-left: 6.5rem;
   }
 `;

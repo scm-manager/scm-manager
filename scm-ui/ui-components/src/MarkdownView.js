@@ -18,21 +18,21 @@ type Props = {
 };
 
 const MarkdownWrapper = styled.div`
-  > .content: {
-    > h1, h2, h3, h4, h5, h6: {
+  > .content {
+    > h1, h2, h3, h4, h5, h6 {
       margin: 0.5rem 0;
       font-size: 0.9rem;
     }
-    > h1: {
+    > h1 {
       font-weight: 700;
     }
-    > h2: {
+    > h2 {
       font-weight: 600;
     }
-    > h3, h4, h5, h6: {
+    > h3, h4, h5, h6 {
       font-weight: 500;
     }
-    & strong: {
+    & strong {
       font-weight: 500;
     }
   }
