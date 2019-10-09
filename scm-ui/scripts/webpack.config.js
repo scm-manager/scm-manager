@@ -1,8 +1,6 @@
 const path = require("path");
 const createIndexMiddleware = require("./IndexMiddleware");
 const createContextPathMiddleware = require("./ContextPathMiddleware");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
-  .BundleAnalyzerPlugin;
 
 module.exports = {
   context: path.resolve(__dirname, ".."),

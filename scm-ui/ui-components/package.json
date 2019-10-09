@@ -11,12 +11,10 @@
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
   "license": "BSD-3-Clause",
   "scripts": {
-    "update-index": "create-index -r src",
     "eslint-fix": "eslint src --fix",
     "test": "jest"
   },
   "devDependencies": {
-    "create-index": "^2.3.0",
     "enzyme": "^3.5.0",
     "enzyme-adapter-react-16": "^1.3.1",
     "fetch-mock": "^7.5.1",
@@ -29,7 +27,7 @@
     "@scm-manager/ui-extensions": "^0.1.2",
     "@scm-manager/ui-types": "2.0.0-SNAPSHOT",
     "classnames": "^2.2.6",
-    "moment": "^2.22.2",
+    "date-fns": "^2.4.1",
     "query-string": "5",
     "react": "^16.8.6",
     "react-diff-view": "^1.8.1",

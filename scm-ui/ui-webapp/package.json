@@ -19,7 +19,6 @@
     "i18next-fetch-backend": "^0.1.0",
     "jss-nested": "^6.0.1",
     "memoize-one": "^5.0.4",
-    "moment": "^2.22.2",
     "query-string": "5",
     "react": "^16.8.6",
     "react-diff-view": "^1.8.1",
