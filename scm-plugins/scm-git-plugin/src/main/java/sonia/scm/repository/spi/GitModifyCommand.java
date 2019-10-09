@@ -1,27 +1,38 @@
 package sonia.scm.repository.spi;
 
+import com.google.common.util.concurrent.Striped;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.attributes.FilterCommandRegistry;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
 
 public class GitModifyCommand extends AbstractGitCommand implements ModifyCommand {
 
-  private final GitWorkdirFactory workdirFactory;
+  private static final Logger LOG = LoggerFactory.getLogger(GitModifyCommand.class);
+  private static final Striped<Lock> REGISTER_LOCKS = Striped.lock(5);
 
-  GitModifyCommand(GitContext context, Repository repository, GitWorkdirFactory workdirFactory) {
+  private final GitWorkdirFactory workdirFactory;
+  private final LfsBlobStoreFactory lfsBlobStoreFactory;
+
+  GitModifyCommand(GitContext context, Repository repository, GitWorkdirFactory workdirFactory, LfsBlobStoreFactory lfsBlobStoreFactory) {
     super(context, repository);
     this.workdirFactory = workdirFactory;
+    this.lfsBlobStoreFactory = lfsBlobStoreFactory;
   }
 
   @Override
@@ -43,10 +54,9 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     @Override
     String run() throws IOException {
       getClone().getRepository().getFullBranch();
-      if (!StringUtils.isEmpty(request.getExpectedRevision())) {
-        if (!request.getExpectedRevision().equals(getCurrentRevision().getName())) {
-          throw new ConcurrentModificationException("branch", request.getBranch() == null? "default": request.getBranch());
-        }
+      if (!StringUtils.isEmpty(request.getExpectedRevision())
+        && !request.getExpectedRevision().equals(getCurrentRevision().getName())) {
+        throw new ConcurrentModificationException("branch", request.getBranch() == null ? "default" : request.getBranch());
       }
       for (ModifyCommandRequest.PartialRequest r : request.getRequests()) {
         r.execute(this);
@@ -59,10 +69,27 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
 
     @Override
     public void addFileToScm(String name, Path file) {
+      addToGitWithLfsSupport(name, file);
+    }
+
+    private void addToGitWithLfsSupport(String path, Path targetFile) {
+      REGISTER_LOCKS.get(targetFile).lock();
       try {
-        addFileToGit(name);
-      } catch (GitAPIException e) {
-        throwInternalRepositoryException("could not add new file to index", e);
+        LfsBlobStoreCleanFilterFactory cleanFilterFactory = new LfsBlobStoreCleanFilterFactory(lfsBlobStoreFactory, repository, targetFile);
+
+        String registerKey = "git-lfs clean -- '" + path + "'";
+        LOG.debug("register lfs filter command factory for command '{}'", registerKey);
+        FilterCommandRegistry.register(registerKey, cleanFilterFactory::createFilter);
+        try {
+          addFileToGit(path);
+        } catch (GitAPIException e) {
+          throwInternalRepositoryException("could not add file to index", e);
+        } finally {
+          LOG.debug("unregister lfs filter command factory for command \"{}\"", registerKey);
+          FilterCommandRegistry.unregister(registerKey);
+        }
+      } finally {
+        REGISTER_LOCKS.get(targetFile).unlock();
       }
     }
 
@@ -100,9 +127,9 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       }
       return path;
     }
-  }
 
-  private String throwInternalRepositoryException(String message, Exception e) {
-    throw new InternalRepositoryException(context.getRepository(), message, e);
+    private String throwInternalRepositoryException(String message, Exception e) {
+      throw new InternalRepositoryException(context.getRepository(), message, e);
+    }
   }
 }

@@ -16,12 +16,14 @@ import org.junit.rules.TemporaryFolder;
 import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.util.WorkdirProvider;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 @SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini", username = "admin", password = "secret")
 public class GitModifyCommand_withEmptyRepositoryTest extends AbstractGitCommandTestBase {
@@ -32,6 +34,8 @@ public class GitModifyCommand_withEmptyRepositoryTest extends AbstractGitCommand
   public BindTransportProtocolRule transportProtocolRule = new BindTransportProtocolRule();
   @Rule
   public ShiroRule shiro = new ShiroRule();
+
+  private final LfsBlobStoreFactory lfsBlobStoreFactory = mock(LfsBlobStoreFactory.class);
 
   @Test
   public void shouldCreateNewFileInEmptyRepository() throws IOException, GitAPIException {
@@ -74,7 +78,7 @@ public class GitModifyCommand_withEmptyRepositoryTest extends AbstractGitCommand
   }
 
   private GitModifyCommand createCommand() {
-    return new GitModifyCommand(createContext(), repository, new SimpleGitWorkdirFactory(new WorkdirProvider()));
+    return new GitModifyCommand(createContext(), repository, new SimpleGitWorkdirFactory(new WorkdirProvider()), lfsBlobStoreFactory);
   }
 
   @FunctionalInterface
