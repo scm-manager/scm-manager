@@ -1,7 +1,6 @@
 package sonia.scm.repository.api;
 
 import com.google.common.io.ByteSource;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,15 +82,6 @@ class ModifyCommandBuilderTest {
       .execute();
 
     verify(worker).delete("toBeDeleted");
-  }
-
-  @Test
-  void shouldExecuteMove() throws IOException {
-    initCommand()
-      .moveFile("source", "target")
-      .execute();
-
-    verify(worker).move("source", "target");
   }
 
   @Test
