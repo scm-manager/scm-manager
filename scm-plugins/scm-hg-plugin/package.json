@@ -4,7 +4,7 @@
   "license": "BSD-3-Clause",
   "main": "src/main/js/index.js",
   "scripts": {
-    "build": "webpack --mode=development"
+    "build": "webpack --mode=production"
   },
   "jest": {
     "transform": {

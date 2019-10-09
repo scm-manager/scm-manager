@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
-import ReactSyntaxHighlighter from "react-syntax-highlighter";
-import { arduinoLight } from "react-syntax-highlighter/dist/styles/hljs";
+import { LightAsync as ReactSyntaxHighlighter } from "react-syntax-highlighter";
+import { arduinoLight } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 
 type Props = {
   language: string,
