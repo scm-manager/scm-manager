@@ -1,59 +1,62 @@
 //@flow
 import React from "react";
-import type { Changeset, Repository } from "@scm-manager/ui-types";
-
-import classNames from "classnames";
 import { Interpolate, translate } from "react-i18next";
-import ChangesetId from "./ChangesetId";
-import injectSheet from "react-jss";
-import { DateFromNow } from "../..";
-import ChangesetAuthor from "./ChangesetAuthor";
-import { parseDescription } from "./changesets";
-import { AvatarWrapper, AvatarImage } from "../../avatar";
+import classNames from "classnames";
+import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import type { Changeset, Repository } from "@scm-manager/ui-types";
+import DateFromNow from "../../DateFromNow";
+import { AvatarWrapper, AvatarImage } from "../../avatar";
+import { parseDescription } from "./changesets";
+import ChangesetId from "./ChangesetId";
+import ChangesetAuthor from "./ChangesetAuthor";
 import ChangesetTags from "./ChangesetTags";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
-
-const styles = {
-  changeset: {
-    // & references parent rule
-    // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
-    "& + &": {
-      borderTop: "1px solid rgba(219, 219, 219, 0.5)",
-      marginTop: "1rem",
-      paddingTop: "1rem"
-    }
-  },
-  avatarFigure: {
-    marginTop: ".5rem",
-    marginRight: ".5rem"
-  },
-  avatarImage: {
-    height: "35px",
-    width: "35px"
-  },
-  metadata: {
-    marginLeft: 0
-  },
-  authorMargin: {
-    marginTop: "0.5rem"
-  },
-  isVcentered: {
-    alignSelf: "center"
-  },
-  flexVcenter: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end"
-  }
-};
 
 type Props = {
   repository: Repository,
   changeset: Changeset,
-  t: any,
-  classes: any
+
+  // context props
+  t: string => string
 };
+
+const Wrapper = styled.div`
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + &: {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+`;
+
+const AvatarFigure = styled.figure`
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+`;
+
+const FixedSizedAvatar = styled.div`
+  width: 35px;
+  height: 35px;
+`;
+
+const Metadata = styled.div`
+  margin-left: 0;
+`;
+
+const AuthorWrapper = styled.p`
+  margin-top: 0.5rem;
+`;
+
+const VCenteredColumn = styled.div`
+  align-self: center;
+`;
+
+const VCenteredChildColumn = styled.div`
+  align-items: center;
+  justify-content: flex-end;
+`;
 
 class ChangesetRow extends React.Component<Props> {
   createChangesetId = (changeset: Changeset) => {
@@ -62,28 +65,26 @@ class ChangesetRow extends React.Component<Props> {
   };
 
   render() {
-    const { repository, changeset, classes } = this.props;
+    const { repository, changeset } = this.props;
     const description = parseDescription(changeset.description);
     const changesetId = this.createChangesetId(changeset);
     const dateFromNow = <DateFromNow date={changeset.date} />;
 
     return (
-      <div className={classes.changeset}>
+      <Wrapper>
         <div className="columns is-gapless is-mobile">
           <div className="column is-three-fifths">
             <div className="columns is-gapless">
               <div className="column is-four-fifths">
                 <div className="media">
                   <AvatarWrapper>
-                    <figure
-                      className={classNames(classes.avatarFigure, "media-left")}
-                    >
-                      <div className={classNames("image", classes.avatarImage)}>
+                    <AvatarFigure className="media-left">
+                      <FixedSizedAvatar className="image">
                         <AvatarImage person={changeset.author} />
-                      </div>
-                    </figure>
+                      </FixedSizedAvatar>
+                    </AvatarFigure>
                   </AvatarWrapper>
-                  <div className={classNames(classes.metadata, "media-right")}>
+                  <Metadata className="media-right">
                     <h4 className="has-text-weight-bold is-ellipsis-overflow">
                       <ExtensionPoint
                         name="changeset.description"
@@ -107,18 +108,18 @@ class ChangesetRow extends React.Component<Props> {
                         time={dateFromNow}
                       />
                     </p>
-                    <p className={classNames("is-size-7", classes.authorMargin)}>
+                    <AuthorWrapper className="is-size-7">
                       <ChangesetAuthor changeset={changeset} />
-                    </p>
-                  </div>
+                    </AuthorWrapper>
+                  </Metadata>
                 </div>
               </div>
-              <div className={classNames("column", classes.isVcentered)}>
+              <VCenteredColumn className="column">
                 <ChangesetTags changeset={changeset} />
-              </div>
+              </VCenteredColumn>
             </div>
           </div>
-          <div className={classNames("column", classes.flexVcenter)}>
+          <VCenteredChildColumn className={classNames("column", "is-flex")}>
             <ChangesetButtonGroup
               repository={repository}
               changeset={changeset}
@@ -128,11 +129,11 @@ class ChangesetRow extends React.Component<Props> {
               props={{ repository, changeset }}
               renderAll={true}
             />
-          </div>
+          </VCenteredChildColumn>
         </div>
-      </div>
+      </Wrapper>
     );
   }
 }
 
-export default injectSheet(styles)(translate("repos")(ChangesetRow));
+export default translate("repos")(ChangesetRow);

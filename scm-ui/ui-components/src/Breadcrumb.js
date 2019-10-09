@@ -2,8 +2,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { translate } from "react-i18next";
-import injectSheet from "react-jss";
 import classNames from "classnames";
+import styled from "styled-components";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import type { Branch, Repository } from "@scm-manager/ui-types";
 import Icon from "./Icon";
@@ -18,29 +18,21 @@ type Props = {
   baseUrl: string,
 
   // Context props
-  classes: any,
   t: string => string
 };
 
-const styles = {
-  noMargin: {
-    margin: "0"
-  },
-  flexRow: {
-    display: "flex",
-    flexDirection: "row"
-  },
-  flexStart: {
-    flex: "1"
-  },
-  homeIcon: {
-    lineHeight: "1.5rem"
-  },
-  buttonGroup: {
-    alignSelf: "center",
-    paddingRight: "1rem"
-  }
-};
+const FlexStartNav = styled.nav`
+  flex: 1;
+`;
+
+const HomeIcon = styled(Icon)`
+  line-height: 1.5rem;
+`;
+
+const ActionWrapper = styled.div`
+  align-self: center;
+  padding-right: 1rem;
+`;
 
 class Breadcrumb extends React.Component<Props> {
   renderPath() {
@@ -79,25 +71,20 @@ class Breadcrumb extends React.Component<Props> {
       revision,
       path,
       repository,
-      classes,
       t
     } = this.props;
 
     return (
       <>
-        <div className={classes.flexRow}>
-          <nav
-            className={classNames(
-              classes.flexStart,
-              "breadcrumb sources-breadcrumb"
-            )}
+        <div className="is-flex">
+          <FlexStartNav
+            className={classNames("breadcrumb", "sources-breadcrumb")}
             aria-label="breadcrumbs"
           >
             <ul>
               <li>
                 <Link to={baseUrl + "/" + revision + "/"}>
-                  <Icon
-                    className={classes.homeIcon}
+                  <HomeIcon
                     title={t("breadcrumb.home")}
                     name="home"
                     color="inherit"
@@ -106,9 +93,9 @@ class Breadcrumb extends React.Component<Props> {
               </li>
               {this.renderPath()}
             </ul>
-          </nav>
+          </FlexStartNav>
           {binder.hasExtension("repos.sources.actionbar") && (
-            <div className={classes.buttonGroup}>
+            <ActionWrapper>
               <ExtensionPoint
                 name="repos.sources.actionbar"
                 props={{
@@ -124,13 +111,13 @@ class Breadcrumb extends React.Component<Props> {
                 }}
                 renderAll={true}
               />
-            </div>
+            </ActionWrapper>
           )}
         </div>
-        <hr className={classes.noMargin} />
+        <hr className="is-marginless" />
       </>
     );
   }
 }
 
-export default translate("commons")(injectSheet(styles)(Breadcrumb));
+export default translate("commons")(Breadcrumb);

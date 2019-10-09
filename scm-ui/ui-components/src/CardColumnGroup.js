@@ -1,37 +1,26 @@
 //@flow
 import * as React from "react";
-import injectSheet from "react-jss";
 import classNames from "classnames";
-
-const styles = {
-  pointer: {
-    cursor: "pointer",
-    fontSize: "1.5rem"
-  },
-  repoGroup: {
-    marginBottom: "1em"
-  },
-  wrapper: {
-    padding: "0 0.75rem"
-  },
-  clearfix: {
-    clear: "both"
-  }
-};
+import styled from "styled-components";
 
 type Props = {
   name: string,
-  elements: React.Node[],
-
-  // context props
-  classes: any
+  elements: React.Node[]
 };
 
 type State = {
   collapsed: boolean
 };
 
-class CardColumnGroup extends React.Component<Props, State> {
+const Container = styled.div`
+  margin-bottom: 1em;
+`;
+
+const Wrapper = styled.div`
+  padding: 0 0.75rem;
+`;
+
+export default class CardColumnGroup extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -58,7 +47,7 @@ class CardColumnGroup extends React.Component<Props, State> {
   };
 
   render() {
-    const { name, elements, classes } = this.props;
+    const { name, elements } = this.props;
     const { collapsed } = this.state;
 
     const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
@@ -84,20 +73,20 @@ class CardColumnGroup extends React.Component<Props, State> {
       });
     }
     return (
-      <div className={classes.repoGroup}>
+      <Container className={classNames("is-clearfix")}>
         <h2>
-          <span className={classes.pointer} onClick={this.toggleCollapse}>
+          <span
+            className={classNames("is-size-4", "has-cursor-pointer")}
+            onClick={this.toggleCollapse}
+          >
             <i className={classNames("fa", icon)} /> {name}
           </span>
         </h2>
         <hr />
-        <div className={classNames("columns", "is-multiline", classes.wrapper)}>
+        <Wrapper className={classNames("columns", "is-multiline")}>
           {content}
-        </div>
-        <div className={classes.clearfix} />
-      </div>
+        </Wrapper>
+      </Container>
     );
   }
 }
-
-export default injectSheet(styles)(CardColumnGroup);

@@ -1,8 +1,8 @@
 //@flow
 import React from "react";
 import { withRouter } from "react-router-dom";
-import injectSheet from "react-jss";
 import Markdown from "react-markdown/with-html";
+import styled from "styled-components";
 import { binder } from "@scm-manager/ui-extensions";
 import SyntaxHighlighter from "./SyntaxHighlighter";
 import MarkdownHeadingRenderer from "./MarkdownHeadingRenderer";
@@ -14,32 +14,29 @@ type Props = {
   enableAnchorHeadings: boolean,
 
   // context props
-  classes: any,
   location: any
 };
 
-const styles = {
-  markdown: {
-    "& > .content": {
-      "& > h1, h2, h3, h4, h5, h6": {
-        margin: "0.5rem 0",
-        fontSize: "0.9rem"
-      },
-      "& > h1": {
-        fontWeight: "700"
-      },
-      "& > h2": {
-        fontWeight: "600"
-      },
-      "& > h3, h4, h5, h6": {
-        fontWeight: "500"
-      },
-      "& strong": {
-        fontWeight: "500"
-      }
+const MarkdownWrapper = styled.div`
+  > .content: {
+    > h1, h2, h3, h4, h5, h6: {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+    }
+    > h1: {
+      font-weight: 700;
+    }
+    > h2: {
+      font-weight: 600;
+    }
+    > h3, h4, h5, h6: {
+      font-weight: 500;
+    }
+    & strong: {
+      font-weight: 500;
     }
   }
-};
+`;
 
 class MarkdownView extends React.Component<Props> {
   static defaultProps = {
@@ -72,8 +69,7 @@ class MarkdownView extends React.Component<Props> {
       content,
       renderers,
       renderContext,
-      enableAnchorHeadings,
-      classes
+      enableAnchorHeadings
     } = this.props;
 
     const rendererFactory = binder.getExtension("markdown-renderer-factory");
@@ -96,7 +92,7 @@ class MarkdownView extends React.Component<Props> {
     }
 
     return (
-      <div className={classes.markdown} ref={el => (this.contentRef = el)}>
+      <MarkdownWrapper ref={el => (this.contentRef = el)}>
         <Markdown
           className="content"
           skipHtml={true}
@@ -104,9 +100,9 @@ class MarkdownView extends React.Component<Props> {
           source={content}
           renderers={rendererList}
         />
-      </div>
+      </MarkdownWrapper>
     );
   }
 }
 
-export default injectSheet(styles)(withRouter(MarkdownView));
+export default withRouter(MarkdownView);
