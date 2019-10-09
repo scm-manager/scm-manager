@@ -4,8 +4,7 @@
   "version": "2.0.0-SNAPSHOT",
   "license": "BSD-3-Clause",
   "scripts": {
-    "build": "webpack --mode=development",
-    "test": "jest --config=../../scm-ui/scripts/jest-plugin.config.js"
+    "build": "webpack --mode=development"
   },
   "jest": {
     "transform": {

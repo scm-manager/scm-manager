@@ -58,7 +58,7 @@
     "copyfiles": "^2.0.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
-    "fetch-mock": "^6.5.0",
+    "fetch-mock": "^7.5.1",
     "flow-bin": "^0.109.0",
     "flow-typed": "^2.6.1",
     "node-sass": "^4.9.3",

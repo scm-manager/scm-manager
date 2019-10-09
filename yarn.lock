@@ -3863,16 +3863,7 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "^2.0.0"
 
-fetch-mock@^6.5.0:
-  version "6.5.2"
-  resolved "https://registry.yarnpkg.com/fetch-mock/-/fetch-mock-6.5.2.tgz#b3842b305c13ea0f81c85919cfaa7de387adfa3e"
-  integrity sha512-EIvbpCLBTYyDLu4HJiqD7wC8psDwTUaPaWXNKZbhNO/peUYKiNp5PkZGKRJtnTxaPQu71ivqafvjpM7aL+MofQ==
-  dependencies:
-    babel-polyfill "^6.26.0"
-    glob-to-regexp "^0.4.0"
-    path-to-regexp "^2.2.1"
-
-fetch-mock@^7.2.5:
+fetch-mock@^7.5.1:
   version "7.5.1"
   resolved "https://registry.yarnpkg.com/fetch-mock/-/fetch-mock-7.5.1.tgz#78fc8e4ffc7d7cdd6048b6e501f21be2db489352"
   integrity sha512-yTb46p7y14bfyWCox50lYqs6NRSo7XPOKzsnLzrSOqRWAGLsvF+aAv0dPkTLeKaBeH3aVSVwWeXzMrctXEZVag==
@@ -4289,8 +4280,7 @@ getpass@^0.1.1:
 
 gitdiff-parser@^0.1.2:
   version "0.1.2"
-  resolved "https://registry.yarnpkg.com/gitdiff-parser/-/gitdiff-parser-0.1.2.tgz#26a256e05e9c2d5016b512a96c1dacb40862b92a"
-  integrity sha512-glDM6E1AwLYYTOPyI0CqamNEUSuwwAkmwULWpE2sHMpMZNzGJwErt7+eV+yIZcsbDza0pVSlwlBHFWbTf2Wu7A==
+  resolved "https://github.com/cloudogu/gitdiff-parser#3a72da4a8e3d9bfb4b9e01a43e85628c19f26cc4"
 
 glob-parent@^3.1.0:
   version "3.1.0"
