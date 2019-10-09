@@ -6,6 +6,8 @@ import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
+import sonia.scm.user.User;
+import sonia.scm.user.UserManager;
 import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.VndMediaType;
 
@@ -29,15 +31,17 @@ public class ConfigResource {
   private final ScmConfigurationToConfigDtoMapper configToDtoMapper;
   private final ScmConfiguration configuration;
   private final NamespaceStrategyValidator namespaceStrategyValidator;
+  private final UserManager userManager;
 
   @Inject
   public ConfigResource(ConfigDtoToScmConfigurationMapper dtoToConfigMapper,
                         ScmConfigurationToConfigDtoMapper configToDtoMapper,
-                        ScmConfiguration configuration, NamespaceStrategyValidator namespaceStrategyValidator) {
+                        ScmConfiguration configuration, NamespaceStrategyValidator namespaceStrategyValidator, UserManager userManager) {
     this.dtoToConfigMapper = dtoToConfigMapper;
     this.configToDtoMapper = configToDtoMapper;
     this.configuration = configuration;
     this.namespaceStrategyValidator = namespaceStrategyValidator;
+    this.userManager = userManager;
   }
 
   /**
@@ -90,6 +94,10 @@ public class ConfigResource {
     synchronized (ScmConfiguration.class) {
       configuration.load(config);
       ScmConfigurationUtil.getInstance().store(configuration);
+    }
+
+    if (config.isAnonymousAccessEnabled() && !userManager.contains("_anonymous")) {
+      userManager.create(new User("_anonymous"));
     }
 
     return Response.noContent().build();

@@ -16,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
+import sonia.scm.user.User;
+import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +31,9 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @SubjectAware(
@@ -51,6 +55,9 @@ public class ConfigResourceTest {
   private ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @Mock
+  private UserManager userManager;
+
+  @Mock
   private NamespaceStrategyValidator namespaceStrategyValidator;
 
   @InjectMocks
@@ -69,7 +76,7 @@ public class ConfigResourceTest {
   public void prepareEnvironment() {
     initMocks(this);
 
-    ConfigResource configResource = new ConfigResource(dtoToConfigMapper, configToDtoMapper, createConfiguration(), namespaceStrategyValidator);
+    ConfigResource configResource = new ConfigResource(dtoToConfigMapper, configToDtoMapper, createConfiguration(), namespaceStrategyValidator, userManager);
 
     dispatcher.getRegistry().addSingletonResource(configResource);
   }
@@ -115,6 +122,45 @@ public class ConfigResourceTest {
   }
 
   @Test
+  @SubjectAware(username = "readWrite")
+  public void shouldUpdateConfigAndCreateAnonymousUser() throws URISyntaxException, IOException {
+    MockHttpRequest request = post("sonia/scm/api/v2/config-test-update-with-anonymous-access.json");
+
+    MockHttpResponse response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+
+    request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
+    response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    assertTrue(response.getContentAsString().contains("\"proxyPassword\":\"newPassword\""));
+    assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config"));
+    assertTrue("link not found", response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config"));
+    verify(userManager).create(new User("_anonymous"));
+  }
+
+  @Test
+  @SubjectAware(username = "readWrite")
+  public void shouldUpdateConfigAndNotCreateAnonymousUserIfAlreadyExists() throws URISyntaxException, IOException {
+    when(userManager.contains("_anonymous")).thenReturn(true);
+    MockHttpRequest request = post("sonia/scm/api/v2/config-test-update-with-anonymous-access.json");
+
+    MockHttpResponse response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+
+    request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
+    response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    assertTrue(response.getContentAsString().contains("\"proxyPassword\":\"newPassword\""));
+    assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config"));
+    assertTrue("link not found", response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config"));
+    verify(userManager, never()).create(new User("_anonymous"));
+  }
+
+  @Test
   @SubjectAware(username = "readOnly")
   public void shouldNotUpdateConfigWhenNotAuthorized() throws URISyntaxException, IOException {
     MockHttpRequest request = post("sonia/scm/api/v2/config-test-update.json");
@@ -152,6 +198,7 @@ public class ConfigResourceTest {
   private static ScmConfiguration createConfiguration() {
     ScmConfiguration scmConfiguration = new ScmConfiguration();
     scmConfiguration.setProxyPassword("heartOfGold");
+    scmConfiguration.setAnonymousAccessEnabled(true);
 
     return scmConfiguration;
   }

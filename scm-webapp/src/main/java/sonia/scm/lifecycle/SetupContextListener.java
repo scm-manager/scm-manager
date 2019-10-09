@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
@@ -47,12 +48,14 @@ public class SetupContextListener implements ServletContextListener {
     private final UserManager userManager;
     private final PasswordService passwordService;
     private final PermissionAssigner permissionAssigner;
+    private final ScmConfiguration scmConfiguration;
 
     @Inject
-    public SetupAction(UserManager userManager, PasswordService passwordService, PermissionAssigner permissionAssigner) {
+    public SetupAction(UserManager userManager, PasswordService passwordService, PermissionAssigner permissionAssigner, ScmConfiguration scmConfiguration) {
       this.userManager = userManager;
       this.passwordService = passwordService;
       this.permissionAssigner = permissionAssigner;
+      this.scmConfiguration = scmConfiguration;
     }
 
     @Override
@@ -60,6 +63,13 @@ public class SetupContextListener implements ServletContextListener {
       if (isFirstStart()) {
         createAdminAccount();
       }
+      if (anonymousUserRequiredButNotExists()) {
+        userManager.create(new User("_anonymous"));
+      }
+    }
+
+    private boolean anonymousUserRequiredButNotExists() {
+      return scmConfiguration.isAnonymousAccessEnabled() && !userManager.contains("_anonymous");
     }
 
     private boolean isFirstStart() {
