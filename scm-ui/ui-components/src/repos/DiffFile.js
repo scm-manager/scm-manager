@@ -28,10 +28,7 @@ type State = {
 };
 
 const DiffFilePanel = styled.div`
-  ${props =>
-    props.isBinary && {
-      borderBottom: "none"
-    }};
+  ${props => (props.isBinary ? "border-bottom: none" : "")};
 `;
 
 const FlexWrapLevel = styled.div`
@@ -58,7 +55,7 @@ const HunkDivider = styled.hr`
 `;
 
 const ChangeTypeTag = styled(Tag)`
-  marginleft: ".75rem";
+  margin-left: ".75rem";
 `;
 
 const ModifiedDiffComponent = styled(DiffComponent)`
