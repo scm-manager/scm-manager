@@ -38,7 +38,10 @@ public class DefaultGroupCollector implements GroupCollector {
   public Set<String> collect(String principal) {
     ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
-    builder.add(AUTHENTICATED);
+    if (principal != "_anonymous") {
+      builder.add(AUTHENTICATED);
+    }
+
     builder.addAll(resolveExternalGroups(principal));
     appendInternalGroups(principal, builder);
 
