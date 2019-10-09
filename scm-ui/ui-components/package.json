@@ -12,7 +12,8 @@
   "license": "BSD-3-Clause",
   "scripts": {
     "update-index": "create-index -r src",
-    "eslint-fix": "eslint src --fix"
+    "eslint-fix": "eslint src --fix",
+    "test": "jest"
   },
   "devDependencies": {
     "create-index": "^2.3.0",

@@ -1,7 +1,7 @@
 // @flow
 import { gitPredicate } from "./index";
 
-describe("test gi predicate", () => {
+describe("test git predicate", () => {
   it("should return false", () => {
     expect(gitPredicate()).toBe(false);
     expect(gitPredicate({})).toBe(false);
@@ -10,6 +10,6 @@ describe("test gi predicate", () => {
   });
 
   it("should return true", () => {
-    expect(gitPredicate({ repository: { type: "fir" } })).toBe(true);
+    expect(gitPredicate({ repository: { type: "git" } })).toBe(true);
   });
 });

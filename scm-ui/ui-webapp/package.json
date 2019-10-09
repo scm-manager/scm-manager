@@ -49,8 +49,7 @@
     "build-js": "ui-bundler bundle --mode=production target/scm-ui/scm-ui.bundle.js",
     "build-vendor": "ui-bundler vendor --mode=production target/scm-ui/vendor.bundle.js",
     "build": "npm-run-all -s webfonts build-css polyfills build-vendor build-js",
-    "test": "ui-bundler test",
-    "test-ci": "ui-bundler test --ci",
+    "test": "jest",
     "flow": "flow",
     "pre-commit": "jest && flow && eslint src"
   },

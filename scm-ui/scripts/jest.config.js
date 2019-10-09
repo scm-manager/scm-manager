@@ -12,7 +12,11 @@ module.exports = {
     "default",
     [
       "jest-junit",
-      { outputDirectory: reportDirectory, outputName: "TEST-all.xml" }
+      {
+        suiteName: "SCM-UI Package tests",
+        outputDirectory: reportDirectory,
+        outputName: "TEST-scm-ui.xml"
+      }
     ]
   ]
 };
