@@ -1,7 +1,11 @@
 // @flow
 import React from "react";
-import type { RepositoryRole, Permission } from "@scm-manager/ui-types";
+import { connect } from "react-redux";
+import type { History } from "history";
 import { translate } from "react-i18next";
+import styled from "styled-components";
+import type { RepositoryRole, Permission } from "@scm-manager/ui-types";
+import { Button, Icon } from "@scm-manager/ui-components";
 import {
   modifyPermission,
   isModifyPermissionPending,
@@ -9,14 +13,9 @@ import {
   isDeletePermissionPending,
   findVerbsForRole
 } from "../modules/permissions";
-import { connect } from "react-redux";
-import type { History } from "history";
-import { Button, Icon } from "@scm-manager/ui-components";
 import DeletePermissionButton from "../components/buttons/DeletePermissionButton";
 import RoleSelector from "../components/RoleSelector";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
-import classNames from "classnames";
-import injectSheet from "react-jss";
 
 type Props = {
   availableRepositoryRoles: RepositoryRole[],
@@ -39,8 +38,7 @@ type Props = {
     namespace: string,
     name: string
   ) => void,
-  deleteLoading: boolean,
-  classes: any
+  deleteLoading: boolean
 };
 
 type State = {
@@ -48,15 +46,14 @@ type State = {
   showAdvancedDialog: boolean
 };
 
-const styles = {
-  centerMiddle: {
-    display: "table-cell",
-    verticalAlign: "middle !important"
-  },
-  columnWidth: {
-    width: "100%"
-  }
-};
+const FullWidthTr = styled.tr`
+  width: 100%;
+`;
+
+const VCenteredTd = styled.td`
+  display: table-cell;
+  vertical-align: middle !important;
+`;
 
 class SinglePermission extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -103,16 +100,15 @@ class SinglePermission extends React.Component<Props, State> {
   };
 
   render() {
-    const { permission, showAdvancedDialog } = this.state;
     const {
-      t,
       availableRepositoryRoles,
       availableRepositoryVerbs,
       loading,
       namespace,
       repoName,
-      classes
+      t
     } = this.props;
+    const { permission, showAdvancedDialog } = this.state;
     const availableRoleNames =
       !!availableRepositoryRoles && availableRepositoryRoles.map(r => r.name);
     const readOnly = !this.mayChangePermissions();
@@ -151,18 +147,18 @@ class SinglePermission extends React.Component<Props, State> {
       );
 
     return (
-      <tr className={classes.columnWidth}>
-        <td className={classes.centerMiddle}>
+      <FullWidthTr>
+        <VCenteredTd>
           {iconType} {permission.name}
-        </td>
+        </VCenteredTd>
         {roleSelector}
-        <td className={classes.centerMiddle}>
+        <VCenteredTd>
           <Button
             label={t("permission.advanced-button.label")}
             action={this.handleDetailedPermissionsPressed}
           />
-        </td>
-        <td className={classNames("is-darker", classes.centerMiddle)}>
+        </VCenteredTd>
+        <VCenteredTd className="is-darker">
           <DeletePermissionButton
             permission={permission}
             namespace={namespace}
@@ -171,8 +167,8 @@ class SinglePermission extends React.Component<Props, State> {
             loading={this.props.deleteLoading}
           />
           {advancedDialog}
-        </td>
-      </tr>
+        </VCenteredTd>
+      </FullWidthTr>
     );
   }
 
@@ -274,4 +270,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("repos")(injectSheet(styles)(SinglePermission)));
+)(translate("repos")(SinglePermission));

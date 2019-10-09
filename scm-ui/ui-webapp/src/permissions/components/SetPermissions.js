@@ -2,8 +2,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
-import injectSheet from "react-jss";
 import classNames from "classnames";
+import styled from "styled-components";
 import type { Link } from "@scm-manager/ui-types";
 import {
   Notification,
@@ -11,10 +11,7 @@ import {
   SubmitButton
 } from "@scm-manager/ui-components";
 import { getLink } from "../../modules/indexResource";
-import {
-  loadPermissionsForEntity,
-  setPermissions
-} from "./handlePermissions";
+import { loadPermissionsForEntity, setPermissions } from "./handlePermissions";
 import PermissionCheckbox from "./PermissionCheckbox";
 
 type Props = {
@@ -22,7 +19,6 @@ type Props = {
   selectedPermissionsLink: Link,
 
   // context props
-  classes: any,
   t: string => string
 };
 
@@ -35,16 +31,14 @@ type State = {
   overwritePermissionsLink?: Link
 };
 
-const styles = {
-  permissionsWrapper: {
-    paddingBottom: "0",
+const PermissionsWrapper = styled.div`
+  padding-bottom: 0;
 
-    "& .field .control": {
-      width: "100%",
-      wordWrap: "break-word"
-    }
+  & .field .control {
+    width: 100%;
+    word-wrap: break-word;
   }
-};
+`;
 
 class SetPermissions extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -151,13 +145,12 @@ class SetPermissions extends React.Component<Props, State> {
   }
 
   renderPermissions = () => {
-    const { classes } = this.props;
     const { overwritePermissionsLink, permissions } = this.state;
     const permissionArray = Object.keys(permissions);
     return (
       <div className="columns">
-        <div className={classNames("column", "is-half", classes.permissionsWrapper)}>
-          {permissionArray.slice(0, (permissionArray.length/2)+1).map(p => (
+        <PermissionsWrapper className={classNames("column", "is-half")}>
+          {permissionArray.slice(0, permissionArray.length / 2 + 1).map(p => (
             <PermissionCheckbox
               key={p}
               permission={p}
@@ -166,18 +159,20 @@ class SetPermissions extends React.Component<Props, State> {
               disabled={!overwritePermissionsLink}
             />
           ))}
-        </div>
-        <div className={classNames("column", "is-half", classes.permissionsWrapper)}>
-          {permissionArray.slice((permissionArray.length/2)+1, permissionArray.length).map(p => (
-            <PermissionCheckbox
-              key={p}
-              permission={p}
-              checked={permissions[p]}
-              onChange={this.valueChanged}
-              disabled={!overwritePermissionsLink}
-            />
-          ))}
-        </div>
+        </PermissionsWrapper>
+        <PermissionsWrapper className={classNames("column", "is-half")}>
+          {permissionArray
+            .slice(permissionArray.length / 2 + 1, permissionArray.length)
+            .map(p => (
+              <PermissionCheckbox
+                key={p}
+                permission={p}
+                checked={permissions[p]}
+                onChange={this.valueChanged}
+                disabled={!overwritePermissionsLink}
+              />
+            ))}
+        </PermissionsWrapper>
       </div>
     );
   };
@@ -208,4 +203,5 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps)(
-  injectSheet(styles)(translate("permissions")(SetPermissions)));
+  translate("permissions")(SetPermissions)
+);

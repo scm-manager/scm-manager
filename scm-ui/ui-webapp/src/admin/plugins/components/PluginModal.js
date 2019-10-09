@@ -1,8 +1,8 @@
 //@flow
 import React from "react";
-import { compose } from "redux";
 import { translate } from "react-i18next";
-import injectSheet from "react-jss";
+import classNames from "classnames";
+import styled from "styled-components";
 import type { Plugin } from "@scm-manager/ui-types";
 import {
   apiClient,
@@ -13,7 +13,6 @@ import {
   Modal,
   Notification
 } from "@scm-manager/ui-components";
-import classNames from "classnames";
 import waitForRestart from "./waitForRestart";
 import SuccessNotification from "./SuccessNotification";
 import { PluginAction } from "./PluginEntry";
@@ -25,7 +24,6 @@ type Props = {
   onClose: () => void,
 
   // context props
-  classes: any,
   t: (key: string, params?: Object) => string
 };
 
@@ -36,21 +34,16 @@ type State = {
   error?: Error
 };
 
-const styles = {
-  userLabelAlignment: {
-    textAlign: "left",
-    marginRight: 0
-  },
-  userLabelMarginSmall: {
-    minWidth: "5.5em"
-  },
-  userLabelMarginLarge: {
-    minWidth: "10em"
-  },
-  userFieldFlex: {
-    flexGrow: 4
-  }
-};
+const ListParent = styled.div`
+  margin-right: 0;
+  min-width: ${props =>
+    props.pluginAction === PluginAction.INSTALL ? "5.5em" : "10em"};
+  text-align: left;
+`;
+
+const ListChild = styled.div`
+  flex-grow: 4;
+`;
 
 class PluginModal extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -151,7 +144,7 @@ class PluginModal extends React.Component<Props, State> {
   };
 
   renderDependencies() {
-    const { plugin, classes, t } = this.props;
+    const { plugin, t } = this.props;
 
     let dependencies = null;
     if (plugin.dependencies && plugin.dependencies.length > 0) {
@@ -159,7 +152,7 @@ class PluginModal extends React.Component<Props, State> {
         <div className="media">
           <Notification type="warning">
             <strong>{t("plugins.modal.dependencyNotification")}</strong>
-            <ul className={classes.listSpacing}>
+            <ul>
               {plugin.dependencies.map((dependency, index) => {
                 return <li key={index}>{dependency}</li>;
               })}
@@ -206,7 +199,7 @@ class PluginModal extends React.Component<Props, State> {
 
   render() {
     const { restart } = this.state;
-    const { plugin, pluginAction, onClose, classes, t } = this.props;
+    const { plugin, pluginAction, onClose, t } = this.props;
 
     const body = (
       <>
@@ -218,88 +211,58 @@ class PluginModal extends React.Component<Props, State> {
         <div className="media">
           <div className="media-content">
             <div className="field is-horizontal">
-              <div
-                className={classNames(
-                  classes.userLabelAlignment,
-                  pluginAction === PluginAction.INSTALL
-                    ? classes.userLabelMarginSmall
-                    : classes.userLabelMarginLarge,
-                  "field-label is-inline-flex"
-                )}
+              <ListParent
+                className={classNames("field-label", "is-inline-flex")}
+                pluginAction={pluginAction}
               >
                 {t("plugins.modal.author")}:
-              </div>
-              <div
-                className={classNames(
-                  classes.userFieldFlex,
-                  "field-body is-inline-flex"
-                )}
-              >
+              </ListParent>
+              <ListChild className={classNames("field-body", "is-inline-flex")}>
                 {plugin.author}
-              </div>
+              </ListChild>
             </div>
             {pluginAction === PluginAction.INSTALL && (
               <div className="field is-horizontal">
-                <div
-                  className={classNames(
-                    classes.userLabelAlignment,
-                    classes.userLabelMarginSmall,
-                    "field-label is-inline-flex"
-                  )}
+                <ListParent
+                  className={classNames("field-label", "is-inline-flex")}
+                  pluginAction={pluginAction}
                 >
                   {t("plugins.modal.version")}:
-                </div>
-                <div
-                  className={classNames(
-                    classes.userFieldFlex,
-                    "field-body is-inline-flex"
-                  )}
+                </ListParent>
+                <ListChild
+                  className={classNames("field-body", "is-inline-flex")}
                 >
                   {plugin.version}
-                </div>
+                </ListChild>
               </div>
             )}
             {(pluginAction === PluginAction.UPDATE ||
               pluginAction === PluginAction.UNINSTALL) && (
               <div className="field is-horizontal">
-                <div
-                  className={classNames(
-                    classes.userLabelAlignment,
-                    classes.userLabelMarginLarge,
-                    "field-label is-inline-flex"
-                  )}
+                <ListParent
+                  className={classNames("field-label", "is-inline-flex")}
                 >
                   {t("plugins.modal.currentVersion")}:
-                </div>
-                <div
-                  className={classNames(
-                    classes.userFieldFlex,
-                    "field-body is-inline-flex"
-                  )}
+                </ListParent>
+                <ListChild
+                  className={classNames("field-body", "is-inline-flex")}
                 >
                   {plugin.version}
-                </div>
+                </ListChild>
               </div>
             )}
             {pluginAction === PluginAction.UPDATE && (
               <div className="field is-horizontal">
-                <div
-                  className={classNames(
-                    classes.userLabelAlignment,
-                    classes.userLabelMarginLarge,
-                    "field-label is-inline-flex"
-                  )}
+                <ListParent
+                  className={classNames("field-label", "is-inline-flex")}
                 >
                   {t("plugins.modal.newVersion")}:
-                </div>
-                <div
-                  className={classNames(
-                    classes.userFieldFlex,
-                    "field-body is-inline-flex"
-                  )}
+                </ListParent>
+                <ListChild
+                  className={classNames("field-body", "is-inline-flex")}
                 >
                   {plugin.newVersion}
-                </div>
+                </ListChild>
               </div>
             )}
             {this.renderDependencies()}
@@ -333,7 +296,4 @@ class PluginModal extends React.Component<Props, State> {
   }
 }
 
-export default compose(
-  injectSheet(styles),
-  translate("admin")
-)(PluginModal);
+export default translate("admin")(PluginModal);

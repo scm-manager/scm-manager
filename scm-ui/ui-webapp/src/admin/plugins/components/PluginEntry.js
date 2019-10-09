@@ -1,11 +1,11 @@
 //@flow
 import React from "react";
-import injectSheet from "react-jss";
 import { translate } from "react-i18next";
+import classNames from "classnames";
+import styled from "styled-components";
 import type { Plugin } from "@scm-manager/ui-types";
 import { CardColumn, Icon } from "@scm-manager/ui-components";
 import PluginAvatar from "./PluginAvatar";
-import classNames from "classnames";
 import PluginModal from "./PluginModal";
 
 export const PluginAction = {
@@ -19,7 +19,6 @@ type Props = {
   refresh: () => void,
 
   // context props
-  classes: any,
   t: string => string
 };
 
@@ -29,25 +28,24 @@ type State = {
   showUninstallModal: boolean
 };
 
-const styles = {
-  link: {
-    cursor: "pointer",
-    pointerEvents: "all",
-    marginBottom: "0 !important",
-    padding: "0.5rem",
-    border: "solid 1px #cdcdcd", // $dark-25
-    borderRadius: "4px",
-    "&:hover": {
-      borderColor: "#9a9a9a" // $dark-50
-    }
-  },
-  actionbar: {
-    display: "flex",
-    "& span + span": {
-      marginLeft: "0.5rem"
-    }
+const ActionbarWrapper = styled.div`
+  & span + span {
+    margin-left: 0.5rem;
   }
-};
+`;
+
+const IconWrapper = styled.span`
+  margin-bottom: 0 !important;
+  padding: 0.5rem;
+  border: 1px solid #cdcdcd; // $dark-25
+  border-radius: 4px;
+  cursor: pointer;
+  pointer-events: all;
+
+  &:hover {
+    border-color: #9a9a9a; // $dark-50
+  }
+`;
 
 class PluginEntry extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -91,34 +89,46 @@ class PluginEntry extends React.Component<Props, State> {
   };
 
   createActionbar = () => {
-    const { classes, t } = this.props;
+    const { t } = this.props;
     return (
-      <div className={classes.actionbar}>
+      <ActionbarWrapper className="is-flex">
         {this.isInstallable() && (
-          <span
-            className={classNames(classes.link, "level-item")}
+          <IconWrapper
+            className="level-item"
             onClick={() => this.toggleModal("showInstallModal")}
           >
-            <Icon title={t("plugins.modal.install")} name="download" color="info" />
-          </span>
+            <Icon
+              title={t("plugins.modal.install")}
+              name="download"
+              color="info"
+            />
+          </IconWrapper>
         )}
         {this.isUninstallable() && (
-          <span
-            className={classNames(classes.link, "level-item")}
+          <IconWrapper
+            className="level-item"
             onClick={() => this.toggleModal("showUninstallModal")}
           >
-            <Icon title={t("plugins.modal.uninstall")} name="trash" color="info" />
-          </span>
+            <Icon
+              title={t("plugins.modal.uninstall")}
+              name="trash"
+              color="info"
+            />
+          </IconWrapper>
         )}
         {this.isUpdatable() && (
-          <span
-            className={classNames(classes.link, "level-item")}
+          <IconWrapper
+            className="level-item"
             onClick={() => this.toggleModal("showUpdateModal")}
           >
-            <Icon title={t("plugins.modal.update")} name="sync-alt" color="info" />
-          </span>
+            <Icon
+              title={t("plugins.modal.update")}
+              name="sync-alt"
+              color="info"
+            />
+          </IconWrapper>
         )}
-      </div>
+      </ActionbarWrapper>
     );
   };
 
@@ -157,16 +167,13 @@ class PluginEntry extends React.Component<Props, State> {
   };
 
   createPendingSpinner = () => {
-    const { plugin, classes } = this.props;
+    const { plugin } = this.props;
     return (
-      <span className={classes.topRight}>
-        <i
-          className={classNames(
-            "fas fa-spinner fa-lg fa-spin",
-            plugin.markedForUninstall ? "has-text-danger" : "has-text-info"
-          )}
-        />
-      </span>
+      <Icon
+        className="fa-spin fa-lg"
+        name="spinner"
+        color={plugin.markedForUninstall ? "danger" : "info"}
+      />
     );
   };
 
@@ -202,4 +209,4 @@ class PluginEntry extends React.Component<Props, State> {
   }
 }
 
-export default injectSheet(styles)(translate("admin")(PluginEntry));
+export default translate("admin")(PluginEntry);

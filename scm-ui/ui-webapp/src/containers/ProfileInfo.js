@@ -1,27 +1,18 @@
 // @flow
 import React from "react";
+import { translate } from "react-i18next";
 import type { Me } from "@scm-manager/ui-types";
 import {
   MailLink,
   AvatarWrapper,
   AvatarImage
 } from "@scm-manager/ui-components";
-import { compose } from "redux";
-import { translate } from "react-i18next";
-import injectSheet from "react-jss";
 
 type Props = {
   me: Me,
 
   // Context props
-  classes: any,
   t: string => string
-};
-
-const styles = {
-  spacing: {
-    padding: "0 !important"
-  }
 };
 
 class ProfileInfo extends React.Component<Props> {
@@ -62,14 +53,14 @@ class ProfileInfo extends React.Component<Props> {
   }
 
   renderGroups() {
-    const { me, t, classes } = this.props;
+    const { me, t } = this.props;
 
     let groups = null;
     if (me.groups.length > 0) {
       groups = (
         <tr>
           <th>{t("profile.groups")}</th>
-          <td className={classes.spacing}>
+          <td className="is-paddingless">
             <ul>
               {me.groups.map(group => {
                 return <li>{group}</li>;
@@ -83,7 +74,4 @@ class ProfileInfo extends React.Component<Props> {
   }
 }
 
-export default compose(
-  injectSheet(styles),
-  translate("commons")
-)(ProfileInfo);
+export default translate("commons")(ProfileInfo);

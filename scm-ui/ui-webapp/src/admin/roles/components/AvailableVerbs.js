@@ -1,7 +1,5 @@
 //@flow
 import React from "react";
-import { compose } from "redux";
-import injectSheet from "react-jss";
 import { translate } from "react-i18next";
 import type { RepositoryRole } from "@scm-manager/ui-types";
 
@@ -9,25 +7,18 @@ type Props = {
   role: RepositoryRole,
 
   // context props
-  classes: any,
   t: string => string
-};
-
-const styles = {
-  spacing: {
-    padding: "0 !important"
-  }
 };
 
 class AvailableVerbs extends React.Component<Props> {
   render() {
-    const { role, t, classes } = this.props;
+    const { role, t } = this.props;
 
     let verbs = null;
     if (role.verbs.length > 0) {
       verbs = (
         <tr>
-          <td className={classes.spacing}>
+          <td className="is-paddingless">
             <ul>
               {role.verbs.map(verb => {
                 return (
@@ -43,7 +34,4 @@ class AvailableVerbs extends React.Component<Props> {
   }
 }
 
-export default compose(
-  injectSheet(styles),
-  translate("plugins")
-)(AvailableVerbs);
+export default translate("plugins")(AvailableVerbs);

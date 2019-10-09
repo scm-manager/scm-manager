@@ -4,12 +4,13 @@ import { translate } from "react-i18next";
 import { ButtonAddons, Button } from "@scm-manager/ui-components";
 
 type Props = {
+  className?: string,
   t: string => string,
   historyIsSelected: boolean,
   showHistory: boolean => void
 };
 
-class FileButtonGroup extends React.Component<Props> {
+class FileButtonAddons extends React.Component<Props> {
   showHistory = () => {
     this.props.showHistory(true);
   };
@@ -23,10 +24,10 @@ class FileButtonGroup extends React.Component<Props> {
   };
 
   render() {
-    const { t, historyIsSelected } = this.props;
+    const { className, t, historyIsSelected } = this.props;
 
     return (
-      <ButtonAddons>
+      <ButtonAddons className={className}>
         <div title={t("sources.content.sourcesButton")}>
           <Button
             action={this.showSources}
@@ -54,4 +55,4 @@ class FileButtonGroup extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(FileButtonGroup);
+export default translate("repos")(FileButtonAddons);

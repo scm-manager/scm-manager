@@ -1,21 +1,21 @@
 // @flow
 import React from "react";
+import { connect } from "react-redux";
 import { translate } from "react-i18next";
+import classNames from "classnames";
+import styled from "styled-components";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import type { File, Repository } from "@scm-manager/ui-types";
 import {
   DateFromNow,
-  ButtonGroup,
   FileSize,
-  ErrorNotification
+  ErrorNotification,
+  Icon
 } from "@scm-manager/ui-components";
-import injectSheet from "react-jss";
-import classNames from "classnames";
-import FileButtonGroup from "../components/content/FileButtonGroup";
+import { getSources } from "../modules/sources";
+import FileButtonAddons from "../components/content/FileButtonAddons";
 import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
-import { getSources } from "../modules/sources";
-import { connect } from "react-redux";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   loading: boolean,
@@ -23,7 +23,8 @@ type Props = {
   repository: Repository,
   revision: string,
   path: string,
-  classes: any,
+
+  // context props
   t: string => string
 };
 
@@ -33,21 +34,25 @@ type State = {
   errorFromExtension?: Error
 };
 
-const styles = {
-  pointer: {
-    cursor: "pointer"
-  },
-  marginInHeader: {
-    marginRight: "0.5em"
-  },
-  isVerticalCenter: {
-    display: "flex",
-    alignItems: "center"
-  },
-  hasBackground: {
-    backgroundColor: "#FBFBFB"
-  }
-};
+const VCenteredChild = styled.article`
+  align-items: center;
+`;
+
+const RightMarginIcon = styled(Icon)`
+  margin-right: 0.5em;
+`;
+
+const RightMarginFileButtonAddons = styled(FileButtonAddons)`
+  margin-right: 0.5em;
+`;
+
+const LighterGreyBackgroundPanelBlock = styled.div`
+  background-color: #fbfbfb;
+`;
+
+const LighterGreyBackgroundTable = styled.table`
+  background-color: #fbfbfb;
+`;
 
 class Content extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -77,12 +82,12 @@ class Content extends React.Component<Props, State> {
   };
 
   showHeader() {
-    const { file, revision, classes } = this.props;
+    const { file, revision } = this.props;
     const { showHistory, collapsed } = this.state;
-    const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
+    const icon = collapsed ? "angle-right" : "angle-down";
 
     const selector = file._links.history ? (
-      <FileButtonGroup
+      <RightMarginFileButtonAddons
         file={file}
         historyIsSelected={showHistory}
         showHistory={(changeShowHistory: boolean) =>
@@ -92,20 +97,14 @@ class Content extends React.Component<Props, State> {
     ) : null;
 
     return (
-      <span className={classes.pointer}>
-        <article className={classNames("media", classes.isVerticalCenter)}>
+      <span className="has-cursor-pointer">
+        <VCenteredChild className={classNames("media", "is-flex")}>
           <div className="media-content" onClick={this.toggleCollapse}>
-            <i
-              className={classNames(
-                "fa is-medium",
-                icon,
-                classes.marginInHeader
-              )}
-            />
+            <RightMarginIcon name={icon} color="inherit" />
             <span className="is-word-break">{file.name}</span>
           </div>
           <div className="buttons is-grouped">
-            <div className={classes.marginInHeader}>{selector}</div>
+            {selector}
             <ExtensionPoint
               name="repos.sources.content.actionbar"
               props={{
@@ -116,14 +115,14 @@ class Content extends React.Component<Props, State> {
               renderAll={true}
             />
           </div>
-        </article>
+        </VCenteredChild>
       </span>
     );
   }
 
   showMoreInformation() {
     const collapsed = this.state.collapsed;
-    const { classes, file, revision, t, repository } = this.props;
+    const { file, revision, t, repository } = this.props;
     const date = <DateFromNow date={file.lastModified} />;
     const description = file.description ? (
       <p>
@@ -140,8 +139,8 @@ class Content extends React.Component<Props, State> {
     const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
     if (!collapsed) {
       return (
-        <div className={classNames("panel-block", classes.hasBackground)}>
-          <table className={classNames("table", classes.hasBackground)}>
+        <LighterGreyBackgroundPanelBlock className="panel-block">
+          <LighterGreyBackgroundTable className="table">
             <tbody>
               <tr>
                 <td>{t("sources.content.path")}</td>
@@ -169,8 +168,8 @@ class Content extends React.Component<Props, State> {
                 props={{ file, repository, revision }}
               />
             </tbody>
-          </table>
-        </div>
+          </LighterGreyBackgroundTable>
+        </LighterGreyBackgroundPanelBlock>
       );
     }
     return null;
@@ -217,6 +216,4 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   };
 };
 
-export default injectSheet(styles)(
-  connect(mapStateToProps)(translate("repos")(Content))
-);
+export default connect(mapStateToProps)(translate("repos")(Content));

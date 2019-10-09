@@ -1,9 +1,11 @@
 //@flow
 import React from "react";
-import { translate } from "react-i18next";
+import { compose } from "redux";
 import { connect } from "react-redux";
-import injectSheet from "react-jss";
-import FileTreeLeaf from "./FileTreeLeaf";
+import { withRouter } from "react-router-dom";
+import { translate } from "react-i18next";
+import styled from "styled-components";
+import { binder } from "@scm-manager/ui-extensions";
 import type { Repository, File } from "@scm-manager/ui-types";
 import {
   ErrorNotification,
@@ -15,15 +17,7 @@ import {
   isFetchSourcesPending,
   getSources
 } from "../modules/sources";
-import { withRouter } from "react-router-dom";
-import { compose } from "redux";
-import { binder } from "@scm-manager/ui-extensions";
-
-const styles = {
-  iconColumn: {
-    width: "16px"
-  }
-};
+import FileTreeLeaf from "./FileTreeLeaf";
 
 type Props = {
   loading: boolean,
@@ -33,11 +27,15 @@ type Props = {
   revision: string,
   path: string,
   baseUrl: string,
+
   // context props
-  classes: any,
   t: string => string,
   match: any
 };
+
+const FixedWidthTh = styled.th`
+  width: 16px;
+`;
 
 export function findParent(path: string) {
   if (path.endsWith("/")) {
@@ -70,7 +68,7 @@ class FileTree extends React.Component<Props> {
   }
 
   renderSourcesTable() {
-    const { tree, revision, path, baseUrl, classes, t } = this.props;
+    const { tree, revision, path, baseUrl, t } = this.props;
 
     const files = [];
 
@@ -114,7 +112,7 @@ class FileTree extends React.Component<Props> {
         <table className="table table-hover table-sm is-fullwidth">
           <thead>
             <tr>
-              <th className={classes.iconColumn} />
+              <FixedWidthTh />
               <th>{t("sources.file-tree.name")}</th>
               <th className="is-hidden-mobile">
                 {t("sources.file-tree.length")}
@@ -165,4 +163,4 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 export default compose(
   withRouter,
   connect(mapStateToProps)
-)(injectSheet(styles)(translate("repos")(FileTree)));
+)(translate("repos")(FileTree));

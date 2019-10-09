@@ -18,7 +18,7 @@ class RepositoryEntry extends React.Component<Props> {
     if (repository._links["branches"]) {
       return (
         <RepositoryEntryLink
-          iconClass="fas fa-code-branch fa-lg"
+          icon="code-branch"
           to={repositoryLink + "/branches"}
         />
       );
@@ -30,7 +30,7 @@ class RepositoryEntry extends React.Component<Props> {
     if (repository._links["changesets"]) {
       return (
         <RepositoryEntryLink
-          iconClass="fas fa-exchange-alt fa-lg"
+          icon="exchange-alt"
           to={repositoryLink + "/changesets"}
         />
       );
@@ -41,10 +41,7 @@ class RepositoryEntry extends React.Component<Props> {
   renderSourcesLink = (repository: Repository, repositoryLink: string) => {
     if (repository._links["sources"]) {
       return (
-        <RepositoryEntryLink
-          iconClass="fa-code fa-lg"
-          to={repositoryLink + "/sources"}
-        />
+        <RepositoryEntryLink icon="code" to={repositoryLink + "/sources"} />
       );
     }
     return null;
@@ -54,7 +51,7 @@ class RepositoryEntry extends React.Component<Props> {
     if (repository._links["update"]) {
       return (
         <RepositoryEntryLink
-          iconClass="fa-cog fa-lg"
+          icon="cog"
           to={repositoryLink + "/settings/general"}
         />
       );

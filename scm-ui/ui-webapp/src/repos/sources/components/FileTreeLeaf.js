@@ -1,29 +1,21 @@
 //@flow
 import * as React from "react";
-import injectSheet from "react-jss";
+import { Link } from "react-router-dom";
+import classNames from "classnames";
+import styled from "styled-components";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import type { File } from "@scm-manager/ui-types";
 import { DateFromNow, FileSize } from "@scm-manager/ui-components";
 import FileIcon from "./FileIcon";
-import { Link } from "react-router-dom";
-import type { File } from "@scm-manager/ui-types";
-import classNames from "classnames";
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
-
-const styles = {
-  iconColumn: {
-    width: "16px"
-  },
-  wordBreakMinWidth: {
-    minWidth: "10em"
-  }
-};
 
 type Props = {
   file: File,
-  baseUrl: string,
-
-  // context props
-  classes: any
+  baseUrl: string
 };
+
+const MinWidthTd = styled.td`
+  min-width: 10em;
+`;
 
 export function createLink(base: string, file: File) {
   let link = base;
@@ -40,7 +32,7 @@ export function createLink(base: string, file: File) {
   return link;
 }
 
-class FileTreeLeaf extends React.Component<Props> {
+export default class FileTreeLeaf extends React.Component<Props> {
   createLink = (file: File) => {
     return createLink(this.props.baseUrl, file);
   };
@@ -68,29 +60,23 @@ class FileTreeLeaf extends React.Component<Props> {
   };
 
   render() {
-    const { file, classes } = this.props;
+    const { file } = this.props;
 
     const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
 
     return (
       <tr>
-        <td className={classes.iconColumn}>{this.createFileIcon(file)}</td>
-        <td className={classNames(classes.wordBreakMinWidth, "is-word-break")}>
+        <td>{this.createFileIcon(file)}</td>
+        <MinWidthTd className="is-word-break">
           {this.createFileName(file)}
-        </td>
+        </MinWidthTd>
         <td className="is-hidden-mobile">{fileSize}</td>
         <td className="is-hidden-mobile">
           <DateFromNow date={file.lastModified} />
         </td>
-        <td
-          className={classNames(
-            classes.wordBreakMinWidth,
-            "is-word-break",
-            "is-hidden-mobile"
-          )}
-        >
+        <MinWidthTd className={classNames("is-word-break", "is-hidden-mobile")}>
           {file.description}
-        </td>
+        </MinWidthTd>
         {binder.hasExtension("repos.sources.tree.row.right") && (
           <td className="is-hidden-mobile">
             {!file.directory && (
@@ -106,5 +92,3 @@ class FileTreeLeaf extends React.Component<Props> {
     );
   }
 }
-
-export default injectSheet(styles)(FileTreeLeaf);

@@ -1,23 +1,18 @@
 //@flow
 import React from "react";
+import { connect } from "react-redux";
 import { Redirect, withRouter } from "react-router-dom";
+import { compose } from "redux";
+import { translate } from "react-i18next";
+import styled from "styled-components";
 import {
   login,
   isAuthenticated,
   isLoginPending,
   getLoginFailure
 } from "../modules/auth";
-import { connect } from "react-redux";
 import { getLoginLink, getLoginInfoLink } from "../modules/indexResource";
 import LoginInfo from "../components/LoginInfo";
-import classNames from "classnames";
-import injectSheet from "react-jss";
-
-const styles = {
-  section: {
-    paddingTop: "2em"
-  }
-};
 
 type Props = {
   authenticated: boolean,
@@ -30,14 +25,16 @@ type Props = {
   login: (link: string, username: string, password: string) => void,
 
   // context props
-  classes: any,
   t: string => string,
   from: any,
   location: any
 };
 
-class Login extends React.Component<Props> {
+const HeroSection = styled.section`
+  padding-top: 2em;
+`;
 
+class Login extends React.Component<Props> {
   handleLogin = (username: string, password: string): void => {
     const { link, login } = this.props;
     login(link, username, password);
@@ -45,18 +42,18 @@ class Login extends React.Component<Props> {
 
   renderRedirect = () => {
     const { from } = this.props.location.state || { from: { pathname: "/" } };
-    return <Redirect to={from}/>;
+    return <Redirect to={from} />;
   };
 
   render() {
-    const { authenticated, classes, ...restProps } = this.props;
+    const { authenticated, ...restProps } = this.props;
 
     if (authenticated) {
       return this.renderRedirect();
     }
 
     return (
-      <section className={classNames("hero", classes.section )}>
+      <HeroSection className="hero">
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
@@ -64,8 +61,8 @@ class Login extends React.Component<Props> {
             </div>
           </div>
         </div>
-      </section>
-      );
+      </HeroSection>
+    );
   }
 }
 
@@ -91,10 +88,10 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const StyledLogin = injectSheet(styles)(
+export default compose(
+  withRouter,
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(Login)
-);
-export default withRouter(StyledLogin);
+  )
+)(Login);

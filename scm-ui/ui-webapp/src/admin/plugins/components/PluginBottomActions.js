@@ -1,30 +1,21 @@
 // @flow
 import * as React from "react";
-import classNames from "classnames";
-import injectSheet from "react-jss";
-
-const styles = {
-  container: {
-    border: "2px solid #e9f7fd",
-    padding: "1em 1em",
-    marginTop: "2em",
-    display: "flex",
-    justifyContent: "center"
-  }
-};
+import styled from "styled-components";
 
 type Props = {
-  children?: React.Node,
-
-  // context props
-  classes: any
+  children?: React.Node
 };
 
-class PluginBottomActions extends React.Component<Props> {
+const ActionWrapper = styled.div`
+  justify-content: center;
+  margin-top: 2em;
+  padding: 1em 1em;
+  border: 2px solid #e9f7df;
+`;
+
+export default class PluginBottomActions extends React.Component<Props> {
   render() {
-    const { children, classes } = this.props;
-    return <div className={classNames(classes.container)}>{children}</div>;
+    const { children } = this.props;
+    return <ActionWrapper className="is-flex">{children}</ActionWrapper>;
   }
 }
-
-export default injectSheet(styles)(PluginBottomActions);

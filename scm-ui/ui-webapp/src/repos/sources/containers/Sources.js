@@ -116,15 +116,12 @@ class Sources extends React.Component<Props, State> {
     const {
       repository,
       baseUrl,
-      branches,
       loading,
       error,
       revision,
       path,
       currentFileIsDirectory
     } = this.props;
-
-    const { selectedBranch } = this.state;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -138,17 +135,7 @@ class Sources extends React.Component<Props, State> {
       return (
         <div className="panel">
           {this.renderBranchSelector()}
-          <Breadcrumb
-            revision={encodeURIComponent(revision)}
-            path={path}
-            baseUrl={baseUrl}
-            branch={selectedBranch}
-            defaultBranch={
-              branches && branches.filter(b => b.defaultBranch === true)[0]
-            }
-            branches={branches && branches}
-            repository={repository}
-          />
+          {this.renderBreadcrumb()}
           <FileTree
             repository={repository}
             revision={revision}
@@ -179,6 +166,28 @@ class Sources extends React.Component<Props, State> {
             }}
           />
         </div>
+      );
+    }
+    return null;
+  };
+
+  renderBreadcrumb = () => {
+    const { revision, path, baseUrl, branches, repository } = this.props;
+    const { selectedBranch } = this.state;
+
+    if (revision) {
+      return (
+        <Breadcrumb
+          revision={encodeURIComponent(revision)}
+          path={path}
+          baseUrl={baseUrl}
+          branch={selectedBranch}
+          defaultBranch={
+            branches && branches.filter(b => b.defaultBranch === true)[0]
+          }
+          branches={branches && branches}
+          repository={repository}
+        />
       );
     }
     return null;
