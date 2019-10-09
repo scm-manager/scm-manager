@@ -54,10 +54,9 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     @Override
     String run() throws IOException {
       getClone().getRepository().getFullBranch();
-      if (!StringUtils.isEmpty(request.getExpectedRevision())) {
-        if (!request.getExpectedRevision().equals(getCurrentRevision().getName())) {
-          throw new ConcurrentModificationException("branch", request.getBranch() == null? "default": request.getBranch());
-        }
+      if (!StringUtils.isEmpty(request.getExpectedRevision())
+        && !request.getExpectedRevision().equals(getCurrentRevision().getName())) {
+        throw new ConcurrentModificationException("branch", request.getBranch() == null ? "default" : request.getBranch());
       }
       for (ModifyCommandRequest.PartialRequest r : request.getRequests()) {
         r.execute(this);
@@ -128,9 +127,9 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       }
       return path;
     }
-  }
 
-  private String throwInternalRepositoryException(String message, Exception e) {
-    throw new InternalRepositoryException(context.getRepository(), message, e);
+    private String throwInternalRepositoryException(String message, Exception e) {
+      throw new InternalRepositoryException(context.getRepository(), message, e);
+    }
   }
 }
