@@ -29,10 +29,13 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: [{
+          loader: "cache-loader"
+        },{
           loader: "thread-loader"
         }, {
           loader: "babel-loader",
           options: {
+            cacheDirectory: true,
             presets: [
               "@babel/preset-env",
               "@babel/preset-react",
