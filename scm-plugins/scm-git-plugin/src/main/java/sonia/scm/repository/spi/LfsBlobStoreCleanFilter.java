@@ -2,11 +2,9 @@ package sonia.scm.repository.spi;
 
 import com.google.common.io.ByteStreams;
 import org.eclipse.jgit.attributes.FilterCommand;
-import org.eclipse.jgit.lfs.Lfs;
 import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lfs.lib.AnyLongObjectId;
 import org.eclipse.jgit.lfs.lib.LongObjectId;
-import org.eclipse.jgit.lib.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.store.Blob;
@@ -28,26 +26,24 @@ import static org.eclipse.jgit.lfs.lib.Constants.LONG_HASH_FUNCTION;
  * Adapted version of JGit's {@link org.eclipse.jgit.lfs.CleanFilter} to write the
  * lfs file directly to the lfs blob store.
  */
-public class LfsBlobStoreCleanFilter extends FilterCommand {
+class LfsBlobStoreCleanFilter extends FilterCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(LfsBlobStoreCleanFilter.class);
 
-  private Lfs lfsUtil;
   private final BlobStore lfsBlobStore;
   private final Path targetFile;
 
-  public LfsBlobStoreCleanFilter(Repository db, InputStream in, OutputStream out, BlobStore lfsBlobStore, Path targetFile)
-    throws IOException {
+  LfsBlobStoreCleanFilter(InputStream in, OutputStream out, BlobStore lfsBlobStore, Path targetFile) {
     super(in, out);
-    lfsUtil = new Lfs(db);
     this.lfsBlobStore = lfsBlobStore;
     this.targetFile = targetFile;
-    Files.createDirectories(lfsUtil.getLfsTmpDir());
   }
 
   @Override
+  // Suppress warning for RuntimeException after check for wrong size, because mathematicians say this will never happen
+  @SuppressWarnings("squid:S00112")
   public int run() throws IOException {
-    LOG.info("running scm lfs filter for file {}", targetFile);
+    LOG.debug("running scm lfs filter for file {}", targetFile);
     DigestOutputStream digestOutputStream = createDigestStream();
     try {
       long size = ByteStreams.copy(in, digestOutputStream);
@@ -56,14 +52,13 @@ public class LfsBlobStoreCleanFilter extends FilterCommand {
 
       Blob existingBlob = lfsBlobStore.get(hash);
       if (existingBlob != null) {
-        LOG.info("found existing lfs blob for oid {}", hash);
+        LOG.debug("found existing lfs blob for oid {}", hash);
         long blobSize = existingBlob.getSize();
         if (blobSize != size) {
-          // Mathematicians say this will never happen
           throw new RuntimeException("lfs entry already exists for loid " + hash + " but has wrong size");
         }
       } else {
-        LOG.info("uploading new lfs blob for oid {}", hash);
+        LOG.debug("uploading new lfs blob for oid {}", hash);
         Blob newBlob = lfsBlobStore.create(hash);
         OutputStream outputStream = newBlob.getOutputStream();
         Files.copy(targetFile, outputStream);
@@ -80,6 +75,8 @@ public class LfsBlobStoreCleanFilter extends FilterCommand {
     }
   }
 
+  // Suppress warning for RuntimeException after check for wrong size, because hash alg for sha256 is built in
+  @SuppressWarnings("squid:S00112")
   private DigestOutputStream createDigestStream() {
     MessageDigest md ;
     try {

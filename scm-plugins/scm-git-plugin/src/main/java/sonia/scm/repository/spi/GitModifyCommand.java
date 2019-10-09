@@ -112,14 +112,14 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
         LfsBlobStoreCleanFilterFactory cleanFilterFactory = new LfsBlobStoreCleanFilterFactory(lfsBlobStoreFactory, repository, targetFile);
 
         String registerKey = "git-lfs clean -- '" + path + "'";
-        LOG.info("register lfs filter command factory for command '{}'", registerKey);
+        LOG.debug("register lfs filter command factory for command '{}'", registerKey);
         FilterCommandRegistry.register(registerKey, cleanFilterFactory::createFilter);
         try {
           addFileToGit(path);
         } catch (GitAPIException e) {
           throwInternalRepositoryException("could not add file to index", e);
         } finally {
-          LOG.info("unregister lfs filter command factory for command \"{}\"", registerKey);
+          LOG.debug("unregister lfs filter command factory for command \"{}\"", registerKey);
           FilterCommandRegistry.unregister(registerKey);
         }
       } finally {
