@@ -66,7 +66,8 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
     Command.INCOMING,
     Command.OUTGOING,
     Command.PUSH,
-    Command.PULL
+    Command.PULL,
+    Command.MODIFY
   );
   //J+
 
@@ -77,7 +78,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   //~--- constructors ---------------------------------------------------------
 
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
-    HgHookManager hookManager, Repository repository)
+                              HgHookManager hookManager, Repository repository)
   {
     this.repository = repository;
     this.handler = handler;
@@ -236,6 +237,11 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   public PushCommand getPushCommand()
   {
     return new HgPushCommand(handler, context, repository);
+  }
+
+  @Override
+  public ModifyCommand getModifyCommand() {
+    return new HgModifyCommand(context, handler.getWorkdirFactory());
   }
 
   /**
