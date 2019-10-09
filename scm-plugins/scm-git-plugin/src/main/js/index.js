@@ -14,7 +14,7 @@ import RepositoryConfig from "./RepositoryConfig";
 
 // @visibleForTesting
 export const gitPredicate = (props: Object) => {
-  return props.repository && props.repository.type === "git";
+  return !!(props && props.repository && props.repository.type === "git");
 };
 
 binder.bind(

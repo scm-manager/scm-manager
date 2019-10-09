@@ -29,22 +29,26 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: [{
-          loader: "cache-loader"
-        },{
-          loader: "thread-loader"
-        }, {
-          loader: "babel-loader",
-          options: {
-            cacheDirectory: true,
-            presets: [
-              "@babel/preset-env",
-              "@babel/preset-react",
-              "@babel/preset-flow"
-            ],
-            plugins: ["@babel/plugin-proposal-class-properties"]
+        use: [
+          {
+            loader: "cache-loader"
+          },
+          {
+            loader: "thread-loader"
+          },
+          {
+            loader: "babel-loader",
+            options: {
+              cacheDirectory: true,
+              presets: [
+                "@babel/preset-env",
+                "@babel/preset-react",
+                "@babel/preset-flow"
+              ],
+              plugins: ["@babel/plugin-proposal-class-properties"]
+            }
           }
-        }]
+        ]
       },
       {
         test: /\.(css|scss|sass)$/i,
@@ -77,7 +81,13 @@ module.exports = {
       app.use(createContextPathMiddleware("/scm"));
     },
     after: function(app) {
-      const templatePath = path.join(__dirname, "..", "ui-webapp", "public", "index.mustache");
+      const templatePath = path.join(
+        __dirname,
+        "..",
+        "ui-webapp",
+        "public",
+        "index.mustache"
+      );
       const renderParams = {
         contextPath: "/scm"
       };
@@ -88,12 +98,16 @@ module.exports = {
   optimization: {
     runtimeChunk: "single",
     splitChunks: {
+      chunks: "all",
       cacheGroups: {
-        vendor: {
+        vendors: {
           test: /[\\/]node_modules[\\/]/,
-          name: "vendors",
-          enforce: true,
-          chunks: "all"
+          priority: -10
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true
         }
       }
     }

@@ -4,6 +4,11 @@
   "version": "2.0.0-SNAPSHOT",
   "license": "BSD-3-Clause",
   "scripts": {
-    "build": "webpack --mode=development"
+    "build": "webpack --mode=production"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.js$": "../../scm-ui/scripts/babelPluginTransformer.js"
+    }
   }
 }

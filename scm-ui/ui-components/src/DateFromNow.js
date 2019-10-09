@@ -1,12 +1,15 @@
 //@flow
 import React from "react";
-import moment from "moment";
 import { translate } from "react-i18next";
+import { formatDistance, format, parseISO } from "date-fns";
+import { enUS, de, es } from "date-fns/locale";
 import styled from "styled-components";
 
-// fix german locale
-// https://momentjscom.readthedocs.io/en/latest/moment/00-use-it/07-browserify/
-import "moment/locale/de";
+const supportedLocales = {
+  enUS,
+  de,
+  es
+};
 
 type Props = {
   date?: string,
@@ -15,25 +18,37 @@ type Props = {
   i18n: any
 };
 
-const Date = styled.time`
+const DateElement = styled.time`
   border-bottom: 1px dotted rgba(219, 219, 219);
   cursor: help;
 `;
 
 class DateFromNow extends React.Component<Props> {
-  render() {
-    const { i18n, date } = this.props;
-
-    if (date) {
-      const dateWithLocale = moment(date).locale(i18n.language);
-
-      return (
-        <Date title={dateWithLocale.format()}>
-          {dateWithLocale.fromNow()}
-        </Date>
-      );
+  getLocale = () => {
+    const { i18n } = this.props;
+    const locale = supportedLocales[i18n.language];
+    if (!locale) {
+      return enUS;
     }
+    return locale;
+  };
 
+  createOptions = () => {
+    const locale = this.getLocale();
+    return {
+      locale
+    };
+  };
+
+  render() {
+    const { date } = this.props;
+    if (date) {
+      const isoDate = parseISO(date);
+      const options = this.createOptions();
+      const distance = formatDistance(isoDate, new Date(), options);
+      const formatted = format(isoDate, "yyyy-MM-dd HH:mm:ss", options);
+      return <DateElement title={formatted}>{distance}</DateElement>;
+    }
     return null;
   }
 }

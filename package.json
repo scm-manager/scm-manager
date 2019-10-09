@@ -5,7 +5,8 @@
     "scm-plugins/*"
   ],
   "scripts": {
-    "build": "webpack --mode=development --config=scm-ui/scripts/webpack.config.js",
+    "build": "webpack --mode=production --config=scm-ui/scripts/webpack.config.js",
+    "build:dev": "webpack --mode=development --config=scm-ui/scripts/webpack.config.js",
     "test": "jest --config=scm-ui/scripts/jest.config.js",
     "serve": "webpack-dev-server --mode=development --config=scm-ui/scripts/webpack.config.js"
   },
