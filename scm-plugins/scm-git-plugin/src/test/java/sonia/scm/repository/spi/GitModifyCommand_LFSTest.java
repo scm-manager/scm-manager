@@ -40,12 +40,12 @@ public class GitModifyCommand_LFSTest extends AbstractGitCommandTestBase {
 
   @Before
   public void registerFilter() {
-    new GitLfsFilterModule().configure(null);
+    new GitLfsFilterContextListener(contextProvider).contextInitialized(null);
   }
 
   @After
   public void unregisterFilter() {
-    new GitLfsFilterModule().unregister();
+    new GitLfsFilterContextListener(contextProvider).contextDestroyed(null);
   }
 
   @Test
