@@ -18,7 +18,7 @@
 
   <properties>
     <sonar.language>js</sonar.language>
-    <sonar.inclusions>src/**</sonar.inclusions>
+    <sonar.inclusions>*/src/**</sonar.inclusions>
     <sonar.test.exclusions>**/*.test.js,src/tests/**</sonar.test.exclusions>
     <sonar.coverage.exclusions>**/*.test.js,src/tests/**</sonar.coverage.exclusions>
     <sonar.javascript.jstest.reportsPath>target/jest-reports</sonar.javascript.jstest.reportsPath>
