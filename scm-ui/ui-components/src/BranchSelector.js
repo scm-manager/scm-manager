@@ -15,7 +15,7 @@ type Props = {
 
 type State = { selectedBranch?: Branch };
 
-const ZeroflexFieldLabel = styled.label`
+const ZeroflexFieldLabel = styled.div`
   flex-basis: inherit;
   flex-grow: 0;
 `;
@@ -53,7 +53,7 @@ export default class BranchSelector extends React.Component<Props, State> {
           <ZeroflexFieldLabel
             className={classNames("field-label", "is-normal")}
           >
-            <div className={classNames("label", "is-size-6")}>{label}</div>
+            <label className={classNames("label", "is-size-6")}>{label}</label>
           </ZeroflexFieldLabel>
           <div className="field-body">
             <NoBottomMarginField className={classNames("field", "is-narrow")}>
