@@ -281,7 +281,7 @@ $danger-25: scale-color($danger, $lightness: 75%);
   padding-left: 1.5em;
   padding-right: 1.5em;
   height: 2.5rem;
-  font-weight: 600;
+  font-weight: $weight-semibold;
 
   &[disabled] {
     opacity: 1;
@@ -795,6 +795,11 @@ form .field:not(.is-grouped) {
 // cursor
 .has-cursor-pointer {
   cursor: pointer;
+}
+
+// until update to bulma version 0.7.5
+.has-text-weight-medium {
+  font-weight: 500 !important;
 }
 
 @import "bulma-popover/css/bulma-popover";
