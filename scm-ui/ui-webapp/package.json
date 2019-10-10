@@ -61,6 +61,9 @@
     "redux-mock-store": "^1.5.3",
     "systemjs": "0.21.6"
   },
+  "babel": {
+    "presets": ["@scm-manager/babel-preset"]
+  },
   "jest": {
     "transform": {
       "^.+\\.js$": "../scripts/babelMonoRepoTransformer.js"

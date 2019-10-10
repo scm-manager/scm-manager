@@ -41,11 +41,8 @@ module.exports = {
             options: {
               cacheDirectory: true,
               presets: [
-                "@babel/preset-env",
-                "@babel/preset-react",
-                "@babel/preset-flow"
-              ],
-              plugins: ["@babel/plugin-proposal-class-properties"]
+                "@scm-manager/babel-preset"
+              ]
             }
           }
         ]

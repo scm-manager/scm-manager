@@ -1,0 +1,12 @@
+{
+  "name": "@scm-manager/plugin-scripts",
+  "version": "2.0.0-SNAPSHOT",
+  "license": "BSD-3-Clause",
+  "description": "Plugin scripts",
+  "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
+  "private": false,
+  "dependencies": {
+    "@scm-manager/babel-preset": "2.0.0-SNAPSHOT",
+    "@scm-manager/eslint-config": "2.0.0-SNAPSHOT"
+  }
+}

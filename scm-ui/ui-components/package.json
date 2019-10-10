@@ -44,6 +44,9 @@
     "react-select": "^2.1.2",
     "react-syntax-highlighter": "^11.0.2"
   },
+  "babel": {
+    "presets": ["@scm-manager/babel-preset"]
+  },
   "jest": {
     "transform": {
       "^.+\\.js$": "../scripts/babelMonoRepoTransformer.js"
