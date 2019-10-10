@@ -39,9 +39,8 @@
     "react-diff-view": "^1.8.1",
     "react-dom": "^16.8.6",
     "react-i18next": "^7.9.0",
-    "react-jss": "^8.6.1",
     "react-markdown": "^4.0.6",
-    "react-router-dom": "^4.3.1",
+    "react-router-dom": "^5.1.2",
     "react-select": "^2.1.2",
     "react-syntax-highlighter": "^11.0.2"
   },
