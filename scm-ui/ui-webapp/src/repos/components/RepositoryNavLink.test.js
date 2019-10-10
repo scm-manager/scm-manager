@@ -1,9 +1,7 @@
 // @flow
 import React from "react";
 import { shallow, mount } from "@scm-manager/ui-tests/enzyme-router";
-import "@scm-manager/ui-tests/enzyme";
 import "@scm-manager/ui-tests/i18n";
-
 import RepositoryNavLink from "./RepositoryNavLink";
 
 describe("RepositoryNavLink", () => {

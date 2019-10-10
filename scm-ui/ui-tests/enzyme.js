@@ -1,5 +1,5 @@
 import "raf/polyfill";
-import { configure } from "enzyme";
+import Enzyme from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 
 // Temporary hack to suppress error
@@ -9,4 +9,4 @@ window.requestAnimationFrame = function(callback) {
   return 0;
 };
 
-configure({ adapter: new Adapter() });
+Enzyme.configure({ adapter: new Adapter() });

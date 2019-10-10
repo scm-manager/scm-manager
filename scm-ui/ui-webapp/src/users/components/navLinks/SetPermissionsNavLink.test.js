@@ -1,8 +1,8 @@
 import React from "react";
-import { shallow } from "enzyme";
 import "@scm-manager/ui-tests/enzyme";
 import "@scm-manager/ui-tests/i18n";
 import SetPermissionsNavLink from "./SetPermissionsNavLink";
+import { shallow } from "enzyme";
 
 it("should render nothing, if the permissions link is missing", () => {
   const user = {
