@@ -866,7 +866,7 @@
     <!-- *UserPassword JS files are excluded because extraction of common code would not make the code more readable -->
     <sonar.cpd.exclusions>**/*StoreFactory.java,**/*UserPassword.js</sonar.cpd.exclusions>
 
-    <sonar.nodejs.executable>./scm-ui/target/frontend/buildfrontend-node/node-v${node.version}-linux-x64/bin/node</sonar.nodejs.executable>
+    <sonar.nodejs.executable>./scm-ui/target/frontend/buildfrontend-node/node-v${nodejs.version}-linux-x64/bin/node</sonar.nodejs.executable>
 
 
   </properties>
