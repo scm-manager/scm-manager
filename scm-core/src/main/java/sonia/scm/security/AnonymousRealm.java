@@ -5,8 +5,15 @@ import com.google.inject.Inject;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
 import org.apache.shiro.realm.AuthenticatingRealm;
+import sonia.scm.SCMContext;
+import sonia.scm.plugin.Extension;
 
+import javax.inject.Singleton;
+
+@Singleton
+@Extension
 public class AnonymousRealm extends AuthenticatingRealm {
 
   /**
@@ -25,10 +32,11 @@ public class AnonymousRealm extends AuthenticatingRealm {
     this.helper = helperFactory.create(REALM);
 
     setAuthenticationTokenClass(AnonymousToken.class);
+    setCredentialsMatcher(new AllowAllCredentialsMatcher());
   }
 
   @Override
   protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-    return helper.authenticationInfoBuilder("_anonymous").build();
+    return helper.authenticationInfoBuilder(SCMContext.USER_ANONYMOUS).build();
   }
 }

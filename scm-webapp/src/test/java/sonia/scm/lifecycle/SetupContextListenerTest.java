@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
@@ -112,7 +113,7 @@ class SetupContextListenerTest {
 
     setupContextListener.contextInitialized(null);
 
-    verify(userManager).create(new User("_anonymous"));
+    verify(userManager).create(SCMContext.ANONYMOUS);
   }
 
   @Test
@@ -122,18 +123,18 @@ class SetupContextListenerTest {
 
     setupContextListener.contextInitialized(null);
 
-    verify(userManager, never()).create(new User("_anonymous"));
+    verify(userManager, never()).create(SCMContext.ANONYMOUS);
   }
 
   @Test
   void shouldNotCreateAnonymousUserIfAlreadyExists() {
-    List<User> users = Lists.newArrayList(new User("_anonymous"));
+    List<User> users = Lists.newArrayList(SCMContext.ANONYMOUS);
     when(userManager.getAll()).thenReturn(users);
     when(scmConfiguration.isAnonymousAccessEnabled()).thenReturn(true);
 
     setupContextListener.contextInitialized(null);
 
-    verify(userManager, times(1)).create(new User("_anonymous"));
+    verify(userManager, times(1)).create(SCMContext.ANONYMOUS);
   }
 
   private void verifyAdminPermissionsAssigned() {

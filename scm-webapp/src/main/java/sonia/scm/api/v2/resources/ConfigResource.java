@@ -3,10 +3,10 @@ package sonia.scm.api.v2.resources;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import sonia.scm.SCMContext;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
-import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.VndMediaType;
@@ -96,8 +96,8 @@ public class ConfigResource {
       ScmConfigurationUtil.getInstance().store(configuration);
     }
 
-    if (config.isAnonymousAccessEnabled() && !userManager.contains("_anonymous")) {
-      userManager.create(new User("_anonymous"));
+    if (config.isAnonymousAccessEnabled() && !userManager.contains(SCMContext.USER_ANONYMOUS)) {
+      userManager.create(SCMContext.ANONYMOUS);
     }
 
     return Response.noContent().build();

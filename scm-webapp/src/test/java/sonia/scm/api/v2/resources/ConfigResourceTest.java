@@ -14,9 +14,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
-import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
@@ -137,13 +137,13 @@ public class ConfigResourceTest {
     assertTrue(response.getContentAsString().contains("\"proxyPassword\":\"newPassword\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config"));
     assertTrue("link not found", response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config"));
-    verify(userManager).create(new User("_anonymous"));
+    verify(userManager).create(SCMContext.ANONYMOUS);
   }
 
   @Test
   @SubjectAware(username = "readWrite")
   public void shouldUpdateConfigAndNotCreateAnonymousUserIfAlreadyExists() throws URISyntaxException, IOException {
-    when(userManager.contains("_anonymous")).thenReturn(true);
+    when(userManager.contains(SCMContext.USER_ANONYMOUS)).thenReturn(true);
     MockHttpRequest request = post("sonia/scm/api/v2/config-test-update-with-anonymous-access.json");
 
     MockHttpResponse response = new MockHttpResponse();
@@ -157,7 +157,7 @@ public class ConfigResourceTest {
     assertTrue(response.getContentAsString().contains("\"proxyPassword\":\"newPassword\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config"));
     assertTrue("link not found", response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config"));
-    verify(userManager, never()).create(new User("_anonymous"));
+    verify(userManager, never()).create(SCMContext.ANONYMOUS);
   }
 
   @Test

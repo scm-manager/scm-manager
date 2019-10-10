@@ -51,7 +51,7 @@ public final class SCMContext
   public static final String DEFAULT_PACKAGE = "sonia.scm";
 
   /** Name of the anonymous user */
-  public static final String USER_ANONYMOUS = "anonymous";
+  public static final String USER_ANONYMOUS = "_anonymous";
 
   /**
    * the anonymous user
