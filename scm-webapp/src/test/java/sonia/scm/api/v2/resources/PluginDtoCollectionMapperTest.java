@@ -10,15 +10,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.AvailablePluginDescriptor;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginInformation;
+import sonia.scm.plugin.PluginManager;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,6 +38,9 @@ class PluginDtoCollectionMapperTest {
   @InjectMocks
   PluginDtoMapperImpl pluginDtoMapper;
 
+  @Mock
+  PluginManager manager;
+
   Subject subject = mock(Subject.class);
   ThreadState subjectThreadState = new SubjectThreadState(subject);
 
@@ -41,6 +48,11 @@ class PluginDtoCollectionMapperTest {
   void bindSubject() {
     subjectThreadState.bind();
     ThreadContext.bind(subject);
+  }
+
+  @BeforeEach
+  void mockPluginManager() {
+    lenient().when(manager.getUpdatable()).thenReturn(new ArrayList<>());
   }
 
   @AfterEach
@@ -51,7 +63,7 @@ class PluginDtoCollectionMapperTest {
 
   @Test
   void shouldMapInstalledPluginsWithoutUpdateWhenNoNewerVersionIsAvailable() {
-    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper);
+    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
 
     HalRepresentation result = mapper.mapInstalled(
       singletonList(createInstalledPlugin("scm-some-plugin", "1")),
@@ -66,7 +78,7 @@ class PluginDtoCollectionMapperTest {
 
   @Test
   void shouldSetNewVersionInInstalledPluginWhenAvailableVersionIsNewer() {
-    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper);
+    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper,manager);
 
     HalRepresentation result = mapper.mapInstalled(
       singletonList(createInstalledPlugin("scm-some-plugin", "1")),
@@ -80,7 +92,7 @@ class PluginDtoCollectionMapperTest {
   @Test
   void shouldNotAddInstallLinkForNewVersionWhenNotPermitted() {
     when(subject.isPermitted("plugin:manage")).thenReturn(false);
-    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper);
+    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
 
     HalRepresentation result = mapper.mapInstalled(
       singletonList(createInstalledPlugin("scm-some-plugin", "1")),
@@ -93,7 +105,7 @@ class PluginDtoCollectionMapperTest {
   @Test
   void shouldNotAddInstallLinkForNewVersionWhenInstallationIsPending() {
     when(subject.isPermitted("plugin:manage")).thenReturn(true);
-    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper);
+    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
 
     AvailablePlugin availablePlugin = createAvailablePlugin("scm-some-plugin", "2");
     when(availablePlugin.isPending()).thenReturn(true);
@@ -108,7 +120,7 @@ class PluginDtoCollectionMapperTest {
   @Test
   void shouldAddInstallLinkForNewVersionWhenPermitted() {
     when(subject.isPermitted("plugin:manage")).thenReturn(true);
-    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper);
+    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
 
     HalRepresentation result = mapper.mapInstalled(
       singletonList(createInstalledPlugin("scm-some-plugin", "1")),
@@ -121,7 +133,7 @@ class PluginDtoCollectionMapperTest {
   @Test
   void shouldSetInstalledPluginPendingWhenCorrespondingAvailablePluginIsPending() {
     when(subject.isPermitted("plugin:manage")).thenReturn(true);
-    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper);
+    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
 
     AvailablePlugin availablePlugin = createAvailablePlugin("scm-some-plugin", "2");
     when(availablePlugin.isPending()).thenReturn(true);

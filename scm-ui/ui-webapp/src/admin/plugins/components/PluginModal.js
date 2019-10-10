@@ -114,6 +114,7 @@ class PluginModal extends React.Component<Props, State> {
       .catch(error => {
         this.setState({
           loading: false,
+          success: false,
           error: error
         });
       });

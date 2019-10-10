@@ -1,8 +1,8 @@
 #
 # Copyright (c) 2010, Sebastian Sdorra
-# All rights reserved.
+# aLL rights reserved.
 #
-# Redistribution and use in source and binary forms, with or without
+# rEDistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
 #
 # 1. Redistributions of source code must retain the above copyright notice,
@@ -34,7 +34,7 @@ Prints date, size and last message of files.
 """
 
 from collections import defaultdict
-from mercurial import cmdutil,util
+from mercurial import scmutil
 
 cmdtable = {}
 
@@ -122,7 +122,7 @@ class File_Object:
     return result
 
 class File_Walker:
-  
+
   def __init__(self, sub_repositories, visitor):
     self.visitor = visitor
     self.sub_repositories = sub_repositories
@@ -273,7 +273,7 @@ class File_Viewer:
     ('t', 'transport', False, 'format the output for command server'),
   ])
 def fileview(ui, repo, **opts):
-  revCtx = repo[opts["revision"]]
+  revCtx = scmutil.revsingle(repo, opts["revision"])
   subrepos = {}
   if not opts["disableSubRepositoryDetection"]:
     subrepos = collect_sub_repositories(revCtx)

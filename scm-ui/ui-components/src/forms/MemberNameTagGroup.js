@@ -7,20 +7,22 @@ import TagGroup from "./TagGroup";
 type Props = {
   members: string[],
   memberListChanged: (string[]) => void,
+  label?: string,
+  helpText?: string,
   t: string => string
 };
 
 class MemberNameTagGroup extends React.Component<Props> {
   render() {
-    const { members, t } = this.props;
+    const { members, label, helpText, t } = this.props;
     const membersExtended = members.map(id => {
       return { id, displayName: id, mail: "" };
     });
     return (
       <TagGroup
         items={membersExtended}
-        label={t("group.members")}
-        helpText={t("groupForm.help.memberHelpText")}
+        label={label ? label : t("group.members")}
+        helpText={helpText ? helpText : t("groupForm.help.memberHelpText")}
         onRemove={this.removeEntry}
       />
     );

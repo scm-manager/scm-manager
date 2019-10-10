@@ -46,8 +46,6 @@ public class PendingPluginResource {
   })
   @Produces(VndMediaType.PLUGIN_COLLECTION)
   public Response getPending() {
-    PluginPermissions.manage().check();
-
     List<AvailablePlugin> pending = pluginManager
       .getAvailable()
       .stream()
@@ -71,8 +69,12 @@ public class PendingPluginResource {
     List<PluginDto> updateDtos = updatePlugins.map(i -> mapper.mapInstalled(i, pending)).collect(toList());
     List<PluginDto> uninstallDtos = uninstallPlugins.map(i -> mapper.mapInstalled(i, pending)).collect(toList());
 
-    if (!installDtos.isEmpty() || !updateDtos.isEmpty() || !uninstallDtos.isEmpty()) {
+    if (
+      PluginPermissions.manage().isPermitted() &&
+      (!installDtos.isEmpty() || !updateDtos.isEmpty() || !uninstallDtos.isEmpty())
+    ) {
       linksBuilder.single(link("execute", resourceLinks.pendingPluginCollection().executePending()));
+      linksBuilder.single(link("cancel", resourceLinks.pendingPluginCollection().cancelPending()));
     }
 
     Embedded.Builder embedded = Embedded.embeddedBuilder();
@@ -106,8 +108,18 @@ public class PendingPluginResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response executePending() {
-    PluginPermissions.manage().check();
     pluginManager.executePendingAndRestart();
+    return Response.ok().build();
+  }
+
+  @POST
+  @Path("/cancel")
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  public Response cancelPending() {
+    pluginManager.cancelPending();
     return Response.ok().build();
   }
 }

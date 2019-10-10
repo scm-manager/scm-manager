@@ -10,6 +10,7 @@ import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -138,14 +139,13 @@ public class IncomingRootResource {
     HttpUtil.checkForCRLFInjection(target);
     DiffFormat diffFormat = DiffFormat.valueOf(format);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      StreamingOutput responseEntry = output ->
-        repositoryService.getDiffCommand()
-          .setRevision(source)
-          .setAncestorChangeset(target)
-          .setFormat(diffFormat)
-          .retrieveContent(output);
+      DiffCommandBuilder.OutputStreamConsumer outputStreamConsumer = repositoryService.getDiffCommand()
+        .setRevision(source)
+        .setAncestorChangeset(target)
+        .setFormat(diffFormat)
+        .retrieveContent();
 
-      return Response.ok(responseEntry)
+      return Response.ok((StreamingOutput) outputStreamConsumer::accept)
         .header(HEADER_CONTENT_DISPOSITION, HttpUtil.createContentDispositionAttachmentHeader(String.format("%s-%s.diff", name, source)))
         .build();
     }

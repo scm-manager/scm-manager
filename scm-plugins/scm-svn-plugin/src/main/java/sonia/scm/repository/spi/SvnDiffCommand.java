@@ -46,10 +46,9 @@ import org.tmatesoft.svn.core.wc.SVNRevision;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnUtil;
+import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.util.Util;
-
-import java.io.OutputStream;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -70,33 +69,34 @@ public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand {
   }
 
   @Override
-  public void getDiffResult(DiffCommandRequest request, OutputStream output) {
+  public DiffCommandBuilder.OutputStreamConsumer getDiffResult(DiffCommandRequest request) {
     logger.debug("create diff for {}", request);
     Preconditions.checkNotNull(request, "request is required");
-    Preconditions.checkNotNull(output, "outputstream is required");
 
     String path = request.getPath();
-    SVNClientManager clientManager = null;
-    try {
-      SVNURL svnurl = context.createUrl();
-      if (Util.isNotEmpty(path)) {
-        svnurl = svnurl.appendPath(path, true);
+    return output -> {
+      SVNClientManager clientManager = null;
+      try {
+        SVNURL svnurl = context.createUrl();
+        if (Util.isNotEmpty(path)) {
+          svnurl = svnurl.appendPath(path, true);
+        }
+        clientManager = SVNClientManager.newInstance();
+        SVNDiffClient diffClient = clientManager.getDiffClient();
+        diffClient.setDiffGenerator(new SvnNewDiffGenerator(new SCMSvnDiffGenerator()));
+
+        long currentRev = SvnUtil.getRevisionNumber(request.getRevision(), repository);
+
+        diffClient.setGitDiffFormat(request.getFormat() == DiffFormat.GIT);
+
+        diffClient.doDiff(svnurl, SVNRevision.HEAD,
+          SVNRevision.create(currentRev - 1), SVNRevision.create(currentRev),
+          SVNDepth.INFINITY, false, output);
+      } catch (SVNException ex) {
+        throw new InternalRepositoryException(repository, "could not create diff", ex);
+      } finally {
+        SvnUtil.dispose(clientManager);
       }
-      clientManager = SVNClientManager.newInstance();
-      SVNDiffClient diffClient = clientManager.getDiffClient();
-      diffClient.setDiffGenerator(new SvnNewDiffGenerator(new SCMSvnDiffGenerator()));
-
-      long currentRev = SvnUtil.getRevisionNumber(request.getRevision(), repository);
-
-      diffClient.setGitDiffFormat(request.getFormat() == DiffFormat.GIT);
-
-      diffClient.doDiff(svnurl, SVNRevision.HEAD,
-        SVNRevision.create(currentRev - 1), SVNRevision.create(currentRev),
-        SVNDepth.INFINITY, false, output);
-    } catch (SVNException ex) {
-      throw new InternalRepositoryException(repository, "could not create diff", ex);
-    } finally {
-      SvnUtil.dispose(clientManager);
-    }
+    };
   }
 }

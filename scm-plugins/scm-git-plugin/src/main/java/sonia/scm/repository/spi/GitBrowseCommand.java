@@ -38,6 +38,7 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
@@ -57,13 +58,17 @@ import sonia.scm.repository.GitSubModuleParser;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SubRepository;
+import sonia.scm.store.Blob;
+import sonia.scm.store.BlobStore;
 import sonia.scm.util.Util;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -86,18 +91,20 @@ public class GitBrowseCommand extends AbstractGitCommand
    */
   private static final Logger logger =
     LoggerFactory.getLogger(GitBrowseCommand.class);
+  private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
-   *
-   * @param context
+   *  @param context
    * @param repository
+   * @param lfsBlobStoreFactory
    */
-  public GitBrowseCommand(GitContext context, Repository repository)
+  public GitBrowseCommand(GitContext context, Repository repository, LfsBlobStoreFactory lfsBlobStoreFactory)
   {
     super(context, repository);
+    this.lfsBlobStoreFactory = lfsBlobStoreFactory;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -167,7 +174,7 @@ public class GitBrowseCommand extends AbstractGitCommand
    * @throws IOException
    */
   private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
-    BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk)
+                                      BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk)
     throws IOException {
 
     FileObject file = new FileObject();
@@ -195,13 +202,22 @@ public class GitBrowseCommand extends AbstractGitCommand
       ObjectLoader loader = repo.open(treeWalk.getObjectId(0));
 
       file.setDirectory(loader.getType() == Constants.OBJ_TREE);
-      file.setLength(loader.getSize());
 
       // don't show message and date for directories to improve performance
       if (!file.isDirectory() &&!request.isDisableLastCommit())
       {
         logger.trace("fetch last commit for {} at {}", path, revId.getName());
         RevCommit commit = getLatestCommit(repo, revId, path);
+
+        Optional<LfsPointer> lfsPointer = GitUtil.getLfsPointer(repo, path, commit, treeWalk);
+
+        if (lfsPointer.isPresent()) {
+          BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
+          Blob blob = lfsBlobStore.get(lfsPointer.get().getOid().getName());
+          file.setLength(blob.getSize());
+        } else {
+          file.setLength(loader.getSize());
+        }
 
         if (commit != null)
         {
@@ -232,7 +248,7 @@ public class GitBrowseCommand extends AbstractGitCommand
    * @return
    */
   private RevCommit getLatestCommit(org.eclipse.jgit.lib.Repository repo,
-    ObjectId revId, String path)
+                                    ObjectId revId, String path)
   {
     RevCommit result = null;
     RevWalk walk = null;
@@ -339,7 +355,7 @@ public class GitBrowseCommand extends AbstractGitCommand
   }
 
   private FileObject findFirstMatch(org.eclipse.jgit.lib.Repository repo,
-                        BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException {
+                                    BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException {
     String[] pathElements = request.getPath().split("/");
     int currentDepth = 0;
     int limit = pathElements.length;
@@ -364,7 +380,7 @@ public class GitBrowseCommand extends AbstractGitCommand
   @SuppressWarnings("unchecked")
   private Map<String,
     SubRepository> getSubRepositories(org.eclipse.jgit.lib.Repository repo,
-      ObjectId revision)
+                                      ObjectId revision)
     throws IOException {
     if (logger.isDebugEnabled())
     {
@@ -375,7 +391,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     Map<String, SubRepository> subRepositories;
     try ( ByteArrayOutputStream baos = new ByteArrayOutputStream() )
     {
-      new GitCatCommand(context, repository).getContent(repo, revision,
+      new GitCatCommand(context, repository, lfsBlobStoreFactory).getContent(repo, revision,
         PATH_MODULES, baos);
       subRepositories = GitSubModuleParser.parse(baos.toString());
     }
@@ -389,7 +405,7 @@ public class GitBrowseCommand extends AbstractGitCommand
   }
 
   private SubRepository getSubRepository(org.eclipse.jgit.lib.Repository repo,
-    ObjectId revId, String path)
+                                         ObjectId revId, String path)
     throws IOException {
     Map<String, SubRepository> subRepositories = subrepositoryCache.get(revId);
 
@@ -410,7 +426,7 @@ public class GitBrowseCommand extends AbstractGitCommand
   }
 
   //~--- fields ---------------------------------------------------------------
-  
+
   /** sub repository cache */
   private final Map<ObjectId, Map<String, SubRepository>> subrepositoryCache = Maps.newHashMap();
 }

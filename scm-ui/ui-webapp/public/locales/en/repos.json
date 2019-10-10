@@ -73,7 +73,8 @@
     "errorTitle": "Error",
     "errorSubtitle": "Could not fetch changesets",
     "noChangesets": "No changesets found for this branch.",
-    "branchSelectorLabel": "Branches"
+    "branchSelectorLabel": "Branches",
+    "collapseDiffs": "Collapse"
   },
   "changeset": {
     "description": "Description",

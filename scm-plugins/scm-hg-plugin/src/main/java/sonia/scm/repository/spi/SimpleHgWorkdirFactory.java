@@ -1,8 +1,10 @@
 package sonia.scm.repository.spi;
 
+import com.aragost.javahg.BaseRepository;
 import com.aragost.javahg.Repository;
 import com.aragost.javahg.commands.CloneCommand;
 import com.aragost.javahg.commands.PullCommand;
+import com.aragost.javahg.commands.flags.CloneCommandFlags;
 import sonia.scm.repository.util.SimpleWorkdirFactory;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
@@ -24,12 +26,19 @@ public class SimpleHgWorkdirFactory extends SimpleWorkdirFactory<Repository, HgC
     this.hgRepositoryEnvironmentBuilder = hgRepositoryEnvironmentBuilder;
   }
   @Override
-  public ParentAndClone<Repository> cloneRepository(HgCommandContext context, File target) throws IOException {
+  public ParentAndClone<Repository> cloneRepository(HgCommandContext context, File target, String initialBranch) throws IOException {
     BiConsumer<sonia.scm.repository.Repository, Map<String, String>> repositoryMapBiConsumer =
       (repository, environment) -> hgRepositoryEnvironmentBuilder.get().buildFor(repository, null, environment);
     Repository centralRepository = context.openWithSpecialEnvironment(repositoryMapBiConsumer);
-    CloneCommand.on(centralRepository).execute(target.getAbsolutePath());
-    return new ParentAndClone<>(centralRepository, Repository.open(target));
+    CloneCommand cloneCommand = CloneCommandFlags.on(centralRepository);
+    if (initialBranch != null) {
+      cloneCommand.updaterev(initialBranch);
+    }
+    cloneCommand.execute(target.getAbsolutePath());
+
+    BaseRepository clone = Repository.open(target);
+
+    return new ParentAndClone<>(centralRepository, clone);
   }
 
   @Override

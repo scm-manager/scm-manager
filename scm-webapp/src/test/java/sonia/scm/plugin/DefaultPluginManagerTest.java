@@ -20,6 +20,8 @@ import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.lifecycle.RestartEvent;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -30,11 +32,13 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static sonia.scm.plugin.PluginTestHelper.createAvailable;
@@ -359,6 +363,24 @@ class DefaultPluginManagerTest {
     }
 
     @Test
+    void shouldNotChangeStateWhenUninstallFileCouldNotBeCreated() {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      InstalledPlugin reviewPlugin = createInstalled("scm-review-plugin");
+      when(reviewPlugin.getDescriptor().getDependencies()).thenReturn(singleton("scm-mail-plugin"));
+
+      when(reviewPlugin.getDirectory()).thenThrow(new PluginException("when the file could not be written an exception like this is thrown"));
+
+      when(loader.getInstalledPlugins()).thenReturn(asList(mailPlugin, reviewPlugin));
+
+      manager.computeInstallationDependencies();
+
+      assertThrows(PluginException.class, () -> manager.uninstall("scm-review-plugin", false));
+
+      verify(mailPlugin, never()).setMarkedForUninstall(true);
+      assertThrows(ScmConstraintViolationException.class, () -> manager.uninstall("scm-mail-plugin", false));
+    }
+
+    @Test
     void shouldThrowExceptionWhenUninstallingCorePlugin(@TempDirectory.TempDir Path temp) {
       InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
       when(mailPlugin.getDirectory()).thenReturn(temp);
@@ -427,6 +449,71 @@ class DefaultPluginManagerTest {
 
       verify(eventBus).post(any(RestartEvent.class));
     }
+
+    @Test
+    void shouldUndoPendingInstallations(@TempDirectory.TempDir Path temp) throws IOException {
+      InstalledPlugin mailPlugin = createInstalled("scm-ssh-plugin");
+      Path mailPluginPath = temp.resolve("scm-mail-plugin");
+      Files.createDirectories(mailPluginPath);
+      when(mailPlugin.getDirectory()).thenReturn(mailPluginPath);
+      when(loader.getInstalledPlugins()).thenReturn(singletonList(mailPlugin));
+      ArgumentCaptor<Boolean> uninstallCaptor = ArgumentCaptor.forClass(Boolean.class);
+      doNothing().when(mailPlugin).setMarkedForUninstall(uninstallCaptor.capture());
+
+      AvailablePlugin git = createAvailable("scm-git-plugin");
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(git));
+      PendingPluginInstallation gitPendingPluginInformation = mock(PendingPluginInstallation.class);
+      when(installer.install(git)).thenReturn(gitPendingPluginInformation);
+
+      manager.install("scm-git-plugin", false);
+      manager.uninstall("scm-ssh-plugin", false);
+
+      manager.cancelPending();
+
+      assertThat(mailPluginPath.resolve("uninstall")).doesNotExist();
+      verify(gitPendingPluginInformation).cancel();
+      Boolean lasUninstallMarkerSet = uninstallCaptor.getAllValues().get(uninstallCaptor.getAllValues().size() - 1);
+      assertThat(lasUninstallMarkerSet).isFalse();
+
+      Files.createFile(mailPluginPath.resolve("uninstall"));
+
+      manager.cancelPending();
+      verify(gitPendingPluginInformation, times(1)).cancel();
+      assertThat(mailPluginPath.resolve("uninstall")).exists();
+    }
+
+    @Test
+    void shouldUpdateAllPlugins() {
+      InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
+      InstalledPlugin reviewPlugin = createInstalled("scm-review-plugin");
+
+      when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(mailPlugin, reviewPlugin));
+
+      AvailablePlugin newMailPlugin = createAvailable("scm-mail-plugin", "2.0.0");
+      AvailablePlugin newReviewPlugin = createAvailable("scm-review-plugin", "2.0.0");
+
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(newMailPlugin, newReviewPlugin));
+
+      manager.updateAll();
+
+      verify(installer).install(newMailPlugin);
+      verify(installer).install(newReviewPlugin);
+    }
+
+
+    @Test
+    void shouldNotUpdateToOldPluginVersions() {
+      InstalledPlugin scriptPlugin = createInstalled("scm-script-plugin");
+
+      when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(scriptPlugin));
+      AvailablePlugin oldScriptPlugin = createAvailable("scm-script-plugin", "0.9");
+
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(oldScriptPlugin));
+
+      manager.updateAll();
+
+      verify(installer, never()).install(oldScriptPlugin);
+    }
   }
 
   @Nested
@@ -482,5 +569,14 @@ class DefaultPluginManagerTest {
       assertThrows(AuthorizationException.class, () -> manager.executePendingAndRestart());
     }
 
+    @Test
+    void shouldThrowAuthorizationExceptionsForCancelPending() {
+      assertThrows(AuthorizationException.class, () -> manager.cancelPending());
+    }
+
+    @Test
+    void shouldThrowAuthorizationExceptionsForUpdateAll() {
+      assertThrows(AuthorizationException.class, () -> manager.updateAll());
+    }
   }
 }

@@ -30,6 +30,8 @@
       "availableNavLink": "Disponibles"
     },
     "executePending": "Ejecutar los complementos pendientes",
+    "updateAll": "Actualizar todos los complementos",
+    "cancelPending": "Cancelar los complementos pendientes",
     "noPlugins": "No se han encontrado complementos.",
     "modal": {
       "title": {
