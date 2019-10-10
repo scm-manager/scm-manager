@@ -13,10 +13,11 @@ import {
 } from "react-diff-view";
 import { Button, ButtonGroup } from "../buttons";
 import Tag from "../Tag";
+import Icon from "../Icon";
 
 type Props = DiffObjectProps & {
   file: File,
-  collapsible: true,
+  defaultCollapse: boolean,
 
   // context props
   t: string => string
@@ -28,7 +29,8 @@ type State = {
 };
 
 const DiffFilePanel = styled.div`
-  ${props => (props.isBinary ? "border-bottom: none" : "")};
+  /* remove bottom border for collapsed panels */
+  ${props => (props.collapsed ? "border-bottom: none;" : "")};
 `;
 
 const FlexWrapLevel = styled.div`
@@ -55,7 +57,7 @@ const HunkDivider = styled.hr`
 `;
 
 const ChangeTypeTag = styled(Tag)`
-  margin-left: ".75rem";
+  marginleft: ".75rem";
 `;
 
 const ModifiedDiffComponent = styled(DiffComponent)`
@@ -82,16 +84,31 @@ const ModifiedDiffComponent = styled(DiffComponent)`
 `;
 
 class DiffFile extends React.Component<Props, State> {
+  static defaultProps = {
+    defaultCollapse: false
+  };
+
   constructor(props: Props) {
     super(props);
     this.state = {
-      collapsed: false,
+      collapsed: this.props.defaultCollapse,
       sideBySide: false
     };
   }
 
+  // collapse diff by clicking collapseDiffs button
+  componentDidUpdate(prevProps) {
+    const { defaultCollapse } = this.props;
+    if (prevProps.defaultCollapse !== defaultCollapse) {
+      this.setState({
+        collapsed: defaultCollapse
+      });
+    }
+  }
+
   toggleCollapse = () => {
-    if (this.props.collapsable) {
+    const { file } = this.props;
+    if (file && !file.isBinary) {
       this.setState(state => ({
         collapsed: !state.collapsed
       }));
@@ -172,7 +189,8 @@ class DiffFile extends React.Component<Props, State> {
     ) {
       return (
         <>
-          {file.oldPath} <i className="fa fa-arrow-right" /> {file.newPath}
+          {file.oldPath} <Icon name="arrow-right" color="inherit" />{" "}
+          {file.newPath}
         </>
       );
     } else if (file.type === "delete") {
@@ -224,23 +242,17 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   render() {
-    const {
-      file,
-      fileControlFactory,
-      fileAnnotationFactory,
-      collapsible,
-      t
-    } = this.props;
+    const { file, fileControlFactory, fileAnnotationFactory, t } = this.props;
     const { collapsed, sideBySide } = this.state;
     const viewType = sideBySide ? "split" : "unified";
 
     let body = null;
-    let icon = "fa fa-angle-right";
+    let icon = "angle-right";
     if (!collapsed) {
       const fileAnnotations = fileAnnotationFactory
         ? fileAnnotationFactory(file)
         : null;
-      icon = "fa fa-angle-down";
+      icon = "angle-down";
       body = (
         <div className="panel-block is-paddingless">
           {fileAnnotations}
@@ -250,7 +262,9 @@ class DiffFile extends React.Component<Props, State> {
         </div>
       );
     }
-    const collapseIcon = collapsible ? <i className={icon} /> : null;
+    const collapseIcon = file && !file.isBinary ? (
+      <Icon name={icon} color="inherit" />
+    ) : null;
 
     const fileControls = fileControlFactory
       ? fileControlFactory(file, this.setCollapse)
@@ -258,7 +272,7 @@ class DiffFile extends React.Component<Props, State> {
     return (
       <DiffFilePanel
         className={classNames("panel", "is-size-6")}
-        isBinary={file && file.isBinary}
+        collapsed={(file && file.isBinary) || collapsed}
       >
         <div className="panel-heading">
           <FlexWrapLevel className="level">
@@ -283,20 +297,10 @@ class DiffFile extends React.Component<Props, State> {
               <ButtonGroup>
                 <Button
                   action={this.toggleSideBySide}
-                  className="reduced-mobile"
-                >
-                  <span className="icon is-small">
-                    <i
-                      className={classNames(
-                        "fas",
-                        sideBySide ? "fa-align-left" : "fa-columns"
-                      )}
-                    />
-                  </span>
-                  <span>
-                    {t(sideBySide ? "diff.combined" : "diff.sideBySide")}
-                  </span>
-                </Button>
+                  icon={sideBySide ? "align-left" : "columns"}
+                  label={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
+                  reducedMobile={true}
+                />
                 {fileControls}
               </ButtonGroup>
             </ButtonWrapper>
