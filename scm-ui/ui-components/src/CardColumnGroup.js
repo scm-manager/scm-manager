@@ -73,7 +73,7 @@ export default class CardColumnGroup extends React.Component<Props, State> {
       });
     }
     return (
-      <Container className={classNames("is-clearfix")}>
+      <Container>
         <h2>
           <span
             className={classNames("is-size-4", "has-cursor-pointer")}
@@ -86,6 +86,7 @@ export default class CardColumnGroup extends React.Component<Props, State> {
         <Wrapper className={classNames("columns", "is-multiline")}>
           {content}
         </Wrapper>
+        <div className="is-clearfix" />
       </Container>
     );
   }
