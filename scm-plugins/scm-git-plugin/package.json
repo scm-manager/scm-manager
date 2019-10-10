@@ -4,7 +4,7 @@
   "license": "BSD-3-Clause",
   "scripts": {
     "build": "webpack --mode=production",
-    "test": "jest --config=../../scm-ui/scripts/jest-plugin.config.js"
+    "test": "jest"
   },
   "devDependencies": {
     "flow-bin": "^0.109.0",
