@@ -1,7 +1,6 @@
 import React from "react";
-import { mount, shallow } from "enzyme";
-import "../../tests/enzyme";
-import "../../tests/i18n";
+import {mount, shallow } from "@scm-manager/ui-tests/enzyme-router";
+import "@scm-manager/ui-tests/i18n";
 import ReactRouterEnzymeContext from "react-router-enzyme-context";
 import PermissionsNavLink from "./PermissionsNavLink";
 

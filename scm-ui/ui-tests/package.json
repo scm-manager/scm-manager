@@ -1,0 +1,15 @@
+{
+  "name": "@scm-manager/ui-tests",
+  "version": "2.0.0-SNAPSHOT",
+  "description": "UI-Tests helpers",
+  "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
+  "license": "BSD-3-Clause",
+  "private": false,
+  "dependencies": {
+    "enzyme": "^3.10.0",
+    "enzyme-context": "^1.1.2",
+    "enzyme-context-react-router-4": "^2.0.0",
+    "jest": "^24.9.0",
+    "raf": "^3.4.1"
+  }
+}
