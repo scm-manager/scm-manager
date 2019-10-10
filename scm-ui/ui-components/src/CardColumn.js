@@ -17,6 +17,7 @@ type Props = {
 };
 
 const NoEventWrapper = styled.article`
+  position: relative;
   pointer-events: none;
   z-index: 1;
 `;
@@ -79,9 +80,7 @@ export default class CardColumn extends React.Component<Props> {
     return (
       <>
         {link}
-        <NoEventWrapper
-          className={classNames("media", "is-relative", className)}
-        >
+        <NoEventWrapper className={classNames("media", className)}>
           <AvatarWrapper className="media-left">{avatar}</AvatarWrapper>
           <FlexFullHeight
             className={classNames("media-content", "text-box", "is-flex")}
