@@ -7,7 +7,7 @@ module.exports = {
   entry: {
     webapp: [
       "./ui-webapp/src/webpack-public-path.js",
-      "./ui-webapp/src/style/scm.scss",
+      "./ui-styles/src/scm.scss",
       "./ui-webapp/src/index.js"
     ]
   },
