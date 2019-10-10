@@ -39,6 +39,7 @@ import sonia.scm.repository.Feature;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -76,9 +77,10 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   //~--- constructors ---------------------------------------------------------
 
-  public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository, GitRepositoryConfigStoreProvider storeProvider) {
+  public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory) {
     this.handler = handler;
     this.repository = repository;
+    this.lfsBlobStoreFactory = lfsBlobStoreFactory;
     this.context = new GitContext(handler.getDirectory(repository.getId()), repository, storeProvider);
   }
 
@@ -143,7 +145,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public BrowseCommand getBrowseCommand()
   {
-    return new GitBrowseCommand(context, repository);
+    return new GitBrowseCommand(context, repository, lfsBlobStoreFactory);
   }
 
   /**
@@ -155,7 +157,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public CatCommand getCatCommand()
   {
-    return new GitCatCommand(context, repository);
+    return new GitCatCommand(context, repository, lfsBlobStoreFactory);
   }
 
   /**
@@ -271,7 +273,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public ModifyCommand getModifyCommand() {
-    return new GitModifyCommand(context, repository, handler.getWorkdirFactory());
+    return new GitModifyCommand(context, repository, handler.getWorkdirFactory(), lfsBlobStoreFactory);
   }
 
   @Override
@@ -281,11 +283,13 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private GitContext context;
+  private final GitContext context;
 
   /** Field description */
-  private GitRepositoryHandler handler;
+  private final GitRepositoryHandler handler;
 
   /** Field description */
-  private Repository repository;
+  private final Repository repository;
+
+  private final LfsBlobStoreFactory lfsBlobStoreFactory;
 }

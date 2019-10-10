@@ -3,8 +3,8 @@ import React from "react";
 import { Interpolate, translate } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import type { Changeset, Repository, Tag } from "@scm-manager/ui-types";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import type { Changeset, Repository, Tag } from "@scm-manager/ui-types";
 import {
   DateFromNow,
   ChangesetId,
@@ -13,7 +13,9 @@ import {
   ChangesetDiff,
   AvatarWrapper,
   AvatarImage,
-  changesets
+  changesets,
+  Level,
+  Button
 } from "@scm-manager/ui-components";
 
 type Props = {
@@ -22,6 +24,10 @@ type Props = {
 
   // context props
   t: string => string
+};
+
+type State = {
+  collapsed: boolean
 };
 
 const RightMarginP = styled.p`
@@ -34,20 +40,31 @@ const TagsWrapper = styled.div`
   }
 `;
 
-class ChangesetDetails extends React.Component<Props> {
+const BottomMarginLevel = styled(Level)`
+  margin-bottom: 1rem !important;
+`;
+
+class ChangesetDetails extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      collapsed: false
+    };
+  }
+
   render() {
-    const { changeset, repository } = this.props;
+    const { changeset, repository, t } = this.props;
+    const { collapsed } = this.state;
 
     const description = changesets.parseDescription(changeset.description);
-
     const id = (
       <ChangesetId repository={repository} changeset={changeset} link={false} />
     );
     const date = <DateFromNow date={changeset.date} />;
 
     return (
-      <div>
-        <div className="content">
+      <>
+        <div className={classNames("content", "is-marginless")}>
           <h4>
             <ExtensionPoint
               name="changeset.description"
@@ -92,9 +109,20 @@ class ChangesetDetails extends React.Component<Props> {
           </p>
         </div>
         <div>
-          <ChangesetDiff changeset={changeset} />
+          <BottomMarginLevel
+            right={
+              <Button
+                action={this.collapseDiffs}
+                color="default"
+                icon={collapsed ? "eye" : "eye-slash"}
+                label={t("changesets.collapseDiffs")}
+                reducedMobile={true}
+              />
+            }
+          />
+          <ChangesetDiff changeset={changeset} defaultCollapse={collapsed} />
         </div>
-      </div>
+      </>
     );
   }
 
@@ -114,6 +142,12 @@ class ChangesetDetails extends React.Component<Props> {
       );
     }
     return null;
+  };
+
+  collapseDiffs = () => {
+    this.setState(state => ({
+      collapsed: !state.collapsed
+    }));
   };
 }
 

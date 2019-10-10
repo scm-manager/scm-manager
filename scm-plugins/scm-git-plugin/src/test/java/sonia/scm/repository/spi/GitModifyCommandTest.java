@@ -20,12 +20,14 @@ import sonia.scm.NotFoundException;
 import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.util.WorkdirProvider;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 @SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini", username = "admin", password = "secret")
 public class GitModifyCommandTest extends AbstractGitCommandTestBase {
@@ -36,6 +38,8 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
   public BindTransportProtocolRule transportProtocolRule = new BindTransportProtocolRule();
   @Rule
   public ShiroRule shiro = new ShiroRule();
+
+  private final LfsBlobStoreFactory lfsBlobStoreFactory = mock(LfsBlobStoreFactory.class);
 
   @Test
   public void shouldCreateCommit() throws IOException, GitAPIException {
@@ -263,8 +267,8 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     command.execute(request);
   }
 
-  @Test(expected = ScmConstraintViolationException.class)
-  public void shouldFailWithConstraintViolationIfBranchIsNoBranch() throws IOException {
+  @Test(expected = NotFoundException.class)
+  public void shouldFailWithNotFoundExceptionIfBranchIsNoBranch() throws IOException {
     File newFile = Files.write(temporaryFolder.newFile().toPath(), "irrelevant\n".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
@@ -296,7 +300,7 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitModifyCommand createCommand() {
-    return new GitModifyCommand(createContext(), repository, new SimpleGitWorkdirFactory(new WorkdirProvider()));
+    return new GitModifyCommand(createContext(), repository, new SimpleGitWorkdirFactory(new WorkdirProvider()), lfsBlobStoreFactory);
   }
 
   @FunctionalInterface

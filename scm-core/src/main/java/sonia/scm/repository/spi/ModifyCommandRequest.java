@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.Validateable;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.util.AuthorUtil.CommandWithAuthor;
 import sonia.scm.util.IOUtil;
 
 import java.io.File;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ModifyCommandRequest implements Resetable, Validateable {
+public class ModifyCommandRequest implements Resetable, Validateable, CommandWithAuthor {
 
   private static final Logger LOG = LoggerFactory.getLogger(ModifyCommandRequest.class);
 
@@ -91,21 +92,6 @@ public class ModifyCommandRequest implements Resetable, Validateable {
     @Override
     public void execute(ModifyCommand.Worker worker) throws IOException {
       worker.delete(path);
-    }
-  }
-
-  public static class MoveFileRequest implements PartialRequest {
-    private final String sourcePath;
-    private final String targetPath;
-
-    public MoveFileRequest(String sourcePath, String targetPath) {
-      this.sourcePath = sourcePath;
-      this.targetPath = targetPath;
-    }
-
-    @Override
-    public void execute(ModifyCommand.Worker worker) {
-      worker.move(sourcePath, targetPath);
     }
   }
 

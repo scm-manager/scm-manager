@@ -171,7 +171,7 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setAncestorChangeset(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retrieveContent(any())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.retrieveContent()).thenReturn(output -> {});
     MockHttpRequest request = MockHttpRequest
       .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff")
       .accept(VndMediaType.DIFF);
@@ -206,7 +206,7 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setAncestorChangeset(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retrieveContent(any())).thenThrow(new NotFoundException("Text", "x"));
+    when(diffCommandBuilder.retrieveContent()).thenThrow(new NotFoundException("Text", "x"));
 
     MockHttpRequest request = MockHttpRequest
       .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff")
@@ -223,7 +223,7 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setAncestorChangeset(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retrieveContent(any())).thenThrow(new NotFoundException("Text", "x"));
+    when(diffCommandBuilder.retrieveContent()).thenThrow(new NotFoundException("Text", "x"));
     MockHttpRequest request = MockHttpRequest
       .get(INCOMING_DIFF_URL + "ny%0D%0ASet-cookie:%20Tamper=3079675143472450634/ny%0D%0ASet-cookie:%20Tamper=3079675143472450634/diff")
       .accept(VndMediaType.DIFF);
@@ -240,7 +240,7 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
     when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setAncestorChangeset(anyString())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.retrieveContent(any())).thenThrow(new NotFoundException("Test", "test"));
+    when(diffCommandBuilder.retrieveContent()).thenThrow(new NotFoundException("Test", "test"));
     MockHttpRequest request = MockHttpRequest
       .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff?format=Unknown")
       .accept(VndMediaType.DIFF);

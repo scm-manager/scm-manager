@@ -55,7 +55,7 @@ final class Differ implements AutoCloseable {
       if (!Strings.isNullOrEmpty(request.getAncestorChangeset()))
       {
         ObjectId otherRevision = repository.resolve(request.getAncestorChangeset());
-        ObjectId ancestorId = computeCommonAncestor(repository, revision, otherRevision);
+        ObjectId ancestorId = GitUtil.computeCommonAncestor(repository, revision, otherRevision);
         RevTree tree = walk.parseCommit(ancestorId).getTree();
         treeWalk.addTree(tree);
       }
@@ -80,10 +80,6 @@ final class Differ implements AutoCloseable {
       treeWalk.addTree(commit.getTree());
 
     return new Differ(commit, walk, treeWalk);
-  }
-
-  private static ObjectId computeCommonAncestor(org.eclipse.jgit.lib.Repository repository, ObjectId revision1, ObjectId revision2) throws IOException {
-    return GitUtil.computeCommonAncestor(repository, revision1, revision2);
   }
 
   private Diff diff() throws IOException {
@@ -115,4 +111,5 @@ final class Differ implements AutoCloseable {
       return entries;
     }
   }
+
 }

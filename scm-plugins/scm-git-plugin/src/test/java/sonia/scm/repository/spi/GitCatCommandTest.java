@@ -39,12 +39,18 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.GitRepositoryConfig;
+import sonia.scm.store.Blob;
+import sonia.scm.store.BlobStore;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link GitCatCommand}.
@@ -136,10 +142,35 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
     CatCommandRequest request = new CatCommandRequest();
     request.setPath("b.txt");
 
-    InputStream catResultStream = new GitCatCommand(createContext(), repository).getCatResultStream(request);
+    InputStream catResultStream = new GitCatCommand(createContext(), repository, null).getCatResultStream(request);
 
     assertEquals('b', catResultStream.read());
     assertEquals('\n', catResultStream.read());
+    assertEquals(-1, catResultStream.read());
+
+    catResultStream.close();
+  }
+
+  @Test
+  public void testLfsStream() throws IOException {
+    LfsBlobStoreFactory lfsBlobStoreFactory = mock(LfsBlobStoreFactory.class);
+    BlobStore blobStore = mock(BlobStore.class);
+    Blob blob = mock(Blob.class);
+    when(lfsBlobStoreFactory.getLfsBlobStore(repository)).thenReturn(blobStore);
+    when(blobStore.get("d2252bd9fde1bb2ae7531b432c48262c3cbe4df4376008986980de40a7c9cf8b"))
+      .thenReturn(blob);
+    when(blob.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[]{'i', 's'}));
+
+    CatCommandRequest request = new CatCommandRequest();
+    request.setRevision("lfs-test");
+    request.setPath("lfs-image.png");
+
+    InputStream catResultStream = new GitCatCommand(createContext(), repository, lfsBlobStoreFactory)
+      .getCatResultStream(request);
+
+    assertEquals('i', catResultStream.read());
+    assertEquals('s', catResultStream.read());
+
     assertEquals(-1, catResultStream.read());
 
     catResultStream.close();
@@ -151,7 +182,7 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
 
     try
     {
-      new GitCatCommand(createContext(), repository).getCatResult(request,
+      new GitCatCommand(createContext(), repository, null).getCatResult(request,
                         baos);
     }
     finally

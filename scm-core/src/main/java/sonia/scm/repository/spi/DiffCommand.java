@@ -33,8 +33,9 @@
 
 package sonia.scm.repository.spi;
 
+import sonia.scm.repository.api.DiffCommandBuilder;
+
 import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  *
@@ -49,10 +50,9 @@ public interface DiffCommand
    *
    *
    * @param request
-   * @param output
-   *
    * @throws IOException
    * @throws RuntimeException
+   * @return
    */
-  public void getDiffResult(DiffCommandRequest request, OutputStream output) throws IOException;
+  DiffCommandBuilder.OutputStreamConsumer getDiffResult(DiffCommandRequest request) throws IOException;
 }

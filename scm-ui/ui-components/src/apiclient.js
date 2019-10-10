@@ -46,7 +46,7 @@ export function createUrl(url: string) {
 
 class ApiClient {
   get(url: string): Promise<Response> {
-    return fetch(createUrl(url), applyFetchOptions).then(handleFailure);
+    return fetch(createUrl(url), applyFetchOptions({})).then(handleFailure);
   }
 
   post(url: string, payload: any, contentType: string = "application/json") {

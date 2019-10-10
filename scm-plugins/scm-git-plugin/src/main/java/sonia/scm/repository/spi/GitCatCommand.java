@@ -33,6 +33,7 @@
 package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.errors.MissingObjectException;
+import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
@@ -45,13 +46,18 @@ import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.store.Blob;
+import sonia.scm.store.BlobStore;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.Closeable;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Optional;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -61,15 +67,18 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
 
   private static final Logger logger = LoggerFactory.getLogger(GitCatCommand.class);
 
-  public GitCatCommand(GitContext context, sonia.scm.repository.Repository repository) {
+  private final LfsBlobStoreFactory lfsBlobStoreFactory;
+
+  public GitCatCommand(GitContext context, sonia.scm.repository.Repository repository, LfsBlobStoreFactory lfsBlobStoreFactory) {
     super(context, repository);
+    this.lfsBlobStoreFactory = lfsBlobStoreFactory;
   }
 
   @Override
   public void getCatResult(CatCommandRequest request, OutputStream output) throws IOException {
     logger.debug("try to read content for {}", request);
-    try (ClosableObjectLoaderContainer closableObjectLoaderContainer = getLoader(request)) {
-      closableObjectLoaderContainer.objectLoader.copyTo(output);
+    try (Loader closableObjectLoaderContainer = getLoader(request)) {
+      closableObjectLoaderContainer.copyTo(output);
     }
   }
 
@@ -80,18 +89,18 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
   }
 
   void getContent(org.eclipse.jgit.lib.Repository repo, ObjectId revId, String path, OutputStream output) throws IOException {
-    try (ClosableObjectLoaderContainer closableObjectLoaderContainer = getLoader(repo, revId, path)) {
-      closableObjectLoaderContainer.objectLoader.copyTo(output);
+    try (Loader closableObjectLoaderContainer = getLoader(repo, revId, path)) {
+      closableObjectLoaderContainer.copyTo(output);
     }
   }
 
-  private ClosableObjectLoaderContainer getLoader(CatCommandRequest request) throws IOException {
+  private Loader getLoader(CatCommandRequest request) throws IOException {
     org.eclipse.jgit.lib.Repository repo = open();
     ObjectId revId = getCommitOrDefault(repo, request.getRevision());
     return getLoader(repo, revId, request.getPath());
   }
 
-  private ClosableObjectLoaderContainer getLoader(Repository repo, ObjectId revId, String path) throws IOException {
+  private Loader getLoader(Repository repo, ObjectId revId, String path) throws IOException {
     TreeWalk treeWalk = new TreeWalk(repo);
     treeWalk.setRecursive(Util.nonNull(path).contains("/"));
 
@@ -116,21 +125,67 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
     treeWalk.setFilter(PathFilter.create(path));
 
     if (treeWalk.next() && treeWalk.getFileMode(0).getObjectType() == Constants.OBJ_BLOB) {
-      ObjectId blobId = treeWalk.getObjectId(0);
-      ObjectLoader loader = repo.open(blobId);
-
-      return new ClosableObjectLoaderContainer(loader, treeWalk, revWalk);
+      Optional<LfsPointer> lfsPointer = GitUtil.getLfsPointer(repo, path, entry, treeWalk);
+      if (lfsPointer.isPresent()) {
+        return loadFromLfsStore(treeWalk, revWalk, lfsPointer.get());
+      } else {
+        return loadFromGit(repo, treeWalk, revWalk);
+      }
     } else {
       throw notFound(entity("Path", path).in("Revision", revId.getName()).in(repository));
     }
   }
 
-  private static class ClosableObjectLoaderContainer implements Closeable {
+  private Loader loadFromGit(Repository repo, TreeWalk treeWalk, RevWalk revWalk) throws IOException {
+    ObjectId blobId = treeWalk.getObjectId(0);
+    ObjectLoader loader = repo.open(blobId);
+
+    return new GitObjectLoaderWrapper(loader, treeWalk, revWalk);
+  }
+
+  private Loader loadFromLfsStore(TreeWalk treeWalk, RevWalk revWalk, LfsPointer lfsPointer) throws IOException {
+    BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
+    Blob blob = lfsBlobStore.get(lfsPointer.getOid().getName());
+    GitUtil.release(revWalk);
+    GitUtil.release(treeWalk);
+    return new BlobLoader(blob);
+  }
+
+  private interface Loader extends Closeable {
+    void copyTo(OutputStream output) throws IOException;
+
+    InputStream openStream() throws IOException;
+  }
+
+  private static class BlobLoader implements Loader {
+    private final InputStream inputStream;
+
+    private BlobLoader(Blob blob) throws IOException {
+      this.inputStream = blob.getInputStream();
+    }
+
+    @Override
+    public void copyTo(OutputStream output) throws IOException {
+      IOUtil.copy(inputStream, output);
+    }
+
+    @Override
+    public InputStream openStream() {
+      return inputStream;
+    }
+
+    @Override
+    public void close() throws IOException {
+      this.inputStream.close();
+    }
+  }
+
+  private static class GitObjectLoaderWrapper implements Loader {
     private final ObjectLoader objectLoader;
     private final TreeWalk treeWalk;
     private final RevWalk revWalk;
 
-    private ClosableObjectLoaderContainer(ObjectLoader objectLoader, TreeWalk treeWalk, RevWalk revWalk) {
+    private GitObjectLoaderWrapper(ObjectLoader objectLoader, TreeWalk treeWalk, RevWalk revWalk) {
       this.objectLoader = objectLoader;
       this.treeWalk = treeWalk;
       this.revWalk = revWalk;
@@ -141,14 +196,22 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
       GitUtil.release(revWalk);
       GitUtil.release(treeWalk);
     }
+
+    public void copyTo(OutputStream output) throws IOException {
+      this.objectLoader.copyTo(output);
+    }
+
+    public InputStream openStream() throws IOException {
+      return objectLoader.openStream();
+    }
   }
 
   private static class InputStreamWrapper extends FilterInputStream {
 
-    private final ClosableObjectLoaderContainer container;
+    private final Loader container;
 
-    private InputStreamWrapper(ClosableObjectLoaderContainer container) throws IOException {
-      super(container.objectLoader.openStream());
+    private InputStreamWrapper(Loader container) throws IOException {
+      super(container.openStream());
       this.container = container;
     }
 

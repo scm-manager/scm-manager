@@ -38,7 +38,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
   @Override
   public MergeCommandResult merge(MergeCommandRequest request) {
-    return inClone(clone -> new MergeWorker(clone, request), workdirFactory);
+    return inClone(clone -> new MergeWorker(clone, request), workdirFactory, request.getTargetBranch());
   }
 
   @Override
@@ -72,7 +72,6 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
     @Override
     MergeCommandResult run() throws IOException {
-      checkOutTargetBranch();
       MergeResult result = doMergeInClone();
       if (result.getMergeStatus().isSuccessful()) {
         doCommit();
@@ -81,10 +80,6 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       } else {
         return analyseFailure(result);
       }
-    }
-
-    private void checkOutTargetBranch() throws IOException {
-      checkOutBranch(target);
     }
 
     private MergeResult doMergeInClone() throws IOException {

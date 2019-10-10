@@ -5,10 +5,11 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import sonia.scm.Validateable;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.util.AuthorUtil.CommandWithAuthor;
 
 import java.io.Serializable;
 
-public class MergeCommandRequest implements Validateable, Resetable, Serializable, Cloneable {
+public class MergeCommandRequest implements Validateable, Resetable, Serializable, Cloneable, CommandWithAuthor {
 
   private static final long serialVersionUID = -2650236557922431528L;
 

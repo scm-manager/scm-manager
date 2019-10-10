@@ -71,5 +71,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(translate("changesets")(ChangesetView))
+  )(translate("repos")(ChangesetView))
 );
