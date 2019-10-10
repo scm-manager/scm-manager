@@ -6,12 +6,12 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
 import org.apache.shiro.SecurityUtils;
+import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupPermissions;
 import sonia.scm.plugin.PluginPermissions;
-import sonia.scm.repository.RepositoryRolePermissions;
 import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.UserPermissions;
 
@@ -50,6 +50,11 @@ public class IndexDtoGenerator extends HalAppenderMapper {
         link("me", resourceLinks.me().self()),
         link("logout", resourceLinks.authentication().logout())
       );
+
+      if (SecurityUtils.getSubject().getPrincipal().equals(SCMContext.USER_ANONYMOUS)) {
+        builder.single(link("login", resourceLinks.authentication().jsonLogin()));
+      }
+
       if (PluginPermissions.read().isPermitted()) {
         builder.single(link("installedPlugins", resourceLinks.installedPluginCollection().self()));
         builder.single(link("availablePlugins", resourceLinks.availablePluginCollection().self()));

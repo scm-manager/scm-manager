@@ -1,15 +1,16 @@
 // @flow
-import type { Me } from "@scm-manager/ui-types";
+import type {Me} from "@scm-manager/ui-types";
 import * as types from "./types";
 
-import { apiClient, UnauthorizedError } from "@scm-manager/ui-components";
-import { isPending } from "./pending";
-import { getFailure } from "./failure";
+import {apiClient, UnauthorizedError} from "@scm-manager/ui-components";
+import {isPending} from "./pending";
+import {getFailure} from "./failure";
 import {
   callFetchIndexResources,
   fetchIndexResources,
   fetchIndexResourcesPending,
-  fetchIndexResourcesSuccess
+  fetchIndexResourcesSuccess,
+  getLoginLink
 } from "./indexResource";
 
 // Action
@@ -44,13 +45,11 @@ export default function reducer(
     case FETCH_ME_SUCCESS:
       return {
         ...state,
-        me: action.payload,
-        authenticated: true
+        me: action.payload
       };
     case FETCH_ME_UNAUTHORIZED:
       return {
-        me: {},
-        authenticated: false
+        me: {}
       };
     case LOGOUT_SUCCESS:
       return initialState;
@@ -240,7 +239,7 @@ const stateAuth = (state: Object): Object => {
 };
 
 export const isAuthenticated = (state: Object) => {
-  if (stateAuth(state).authenticated) {
+  if (state.auth.me && !getLoginLink(state)) {
     return true;
   }
   return false;

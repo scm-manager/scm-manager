@@ -2,13 +2,13 @@
 import React from "react";
 import { Redirect, withRouter } from "react-router-dom";
 import {
-  login,
+  getLoginFailure,
   isAuthenticated,
   isLoginPending,
-  getLoginFailure
+  login
 } from "../modules/auth";
 import { connect } from "react-redux";
-import { getLoginLink, getLoginInfoLink } from "../modules/indexResource";
+import { getLoginInfoLink, getLoginLink } from "../modules/indexResource";
 import LoginInfo from "../components/LoginInfo";
 import classNames from "classnames";
 import injectSheet from "react-jss";
@@ -37,7 +37,6 @@ type Props = {
 };
 
 class Login extends React.Component<Props> {
-
   handleLogin = (username: string, password: string): void => {
     const { link, login } = this.props;
     login(link, username, password);
@@ -45,7 +44,7 @@ class Login extends React.Component<Props> {
 
   renderRedirect = () => {
     const { from } = this.props.location.state || { from: { pathname: "/" } };
-    return <Redirect to={from}/>;
+    return <Redirect to={from} />;
   };
 
   render() {
@@ -56,7 +55,7 @@ class Login extends React.Component<Props> {
     }
 
     return (
-      <section className={classNames("hero", classes.section )}>
+      <section className={classNames("hero", classes.section)}>
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
@@ -65,7 +64,7 @@ class Login extends React.Component<Props> {
           </div>
         </div>
       </section>
-      );
+    );
   }
 }
 
