@@ -46,13 +46,12 @@ public class IndexDtoGenerator extends HalAppenderMapper {
     }
 
     if (SecurityUtils.getSubject().isAuthenticated()) {
-      builder.single(
-        link("me", resourceLinks.me().self()),
-        link("logout", resourceLinks.authentication().logout())
-      );
+      builder.single(link("me", resourceLinks.me().self()));
 
       if (SecurityUtils.getSubject().getPrincipal().equals(SCMContext.USER_ANONYMOUS)) {
         builder.single(link("login", resourceLinks.authentication().jsonLogin()));
+      } else {
+        builder.single(link("logout", resourceLinks.authentication().logout()));
       }
 
       if (PluginPermissions.read().isPermitted()) {

@@ -39,7 +39,7 @@ import sonia.scm.user.User;
 import sonia.scm.util.ServiceUtil;
 
 /**
- * The SCMConext searches a implementation of {@link SCMContextProvider} and
+ * The SCMContext searches a implementation of {@link SCMContextProvider} and
  * holds a singleton instance of this implementation.
  *
  * @author Sebastian Sdorra
