@@ -36,7 +36,8 @@ class DateFromNow extends React.Component<Props> {
   createOptions = () => {
     const locale = this.getLocale();
     return {
-      locale
+      locale,
+      addSuffix: true
     };
   };
 
