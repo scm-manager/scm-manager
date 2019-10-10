@@ -43,6 +43,7 @@ const FixedSizedAvatar = styled.div`
 
 const Metadata = styled.div`
   margin-left: 0;
+  width: 100%;
 `;
 
 const AuthorWrapper = styled.p`

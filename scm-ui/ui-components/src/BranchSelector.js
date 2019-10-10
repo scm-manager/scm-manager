@@ -57,7 +57,7 @@ export default class BranchSelector extends React.Component<Props, State> {
           </ZeroflexFieldLabel>
           <div className="field-body">
             <NoBottomMarginField className={classNames("field", "is-narrow")}>
-              <MinWidthControl classname="control">
+              <MinWidthControl className="control">
                 <DropDown
                   className="is-fullwidth"
                   options={branches.map(b => b.name)}

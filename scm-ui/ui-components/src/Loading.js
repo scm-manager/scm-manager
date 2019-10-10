@@ -10,12 +10,14 @@ type Props = {
 };
 
 const Wrapper = styled.div`
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 256px;
 `;
 
 const FixedSizedImage = styled(Image)`
+  margin-bottom: 0.75rem;
   width: 128px;
   height: 128px;
 `;
