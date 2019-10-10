@@ -2,8 +2,8 @@
 
 import React from "react";
 import { shallow } from "enzyme";
-import "../../../tests/enzyme";
-import "../../../tests/i18n";
+import "@scm-manager/ui-tests/enzyme";
+import "@scm-manager/ui-tests/i18n";
 import EditGroupNavLink from "./EditGroupNavLink";
 
 it("should render nothing, if the edit link is missing", () => {

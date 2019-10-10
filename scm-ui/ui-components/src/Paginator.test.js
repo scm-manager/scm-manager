@@ -1,8 +1,8 @@
 // @flow
 import React from "react";
 import { mount, shallow } from "enzyme";
-import "./tests/enzyme";
-import "./tests/i18n";
+import "@scm-manager/ui-tests/enzyme";
+import "@scm-manager/ui-tests/i18n";
 import ReactRouterEnzymeContext from "react-router-enzyme-context";
 import Paginator from "./Paginator";
 

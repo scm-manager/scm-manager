@@ -1,13 +1,12 @@
 // @flow
 import React from "react";
-import { shallow, mount } from "enzyme";
-import "../../tests/enzyme";
-import "../../tests/i18n";
-import ReactRouterEnzymeContext from "react-router-enzyme-context";
+import { shallow, mount } from "@scm-manager/ui-tests/enzyme-router";
+import "@scm-manager/ui-tests/enzyme";
+import "@scm-manager/ui-tests/i18n";
+
 import RepositoryNavLink from "./RepositoryNavLink";
 
 describe("RepositoryNavLink", () => {
-  const options = new ReactRouterEnzymeContext();
 
   it("should render nothing, if the sources link is missing", () => {
     const repository = {
@@ -24,8 +23,7 @@ describe("RepositoryNavLink", () => {
         to="/sources"
         label="Sources"
         activeOnlyWhenExact={true}
-      />,
-      options.get()
+      />
     );
     expect(navLink.text()).toBe("");
   });
@@ -49,8 +47,7 @@ describe("RepositoryNavLink", () => {
         to="/sources"
         label="Sources"
         activeOnlyWhenExact={true}
-      />,
-      options.get()
+      />
     );
     expect(navLink.text()).toBe("Sources");
   });
