@@ -14,8 +14,6 @@
     "presets": ["@scm-manager/babel-preset"]
   },
   "jest": {
-    "transform": {
-      "^.+\\.js$": "../../scm-ui/scripts/babelPluginTransformer.js"
-    }
+    "preset": "@scm-manager/jest-preset"
   }
 }

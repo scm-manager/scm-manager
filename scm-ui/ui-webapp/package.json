@@ -65,8 +65,6 @@
     "presets": ["@scm-manager/babel-preset"]
   },
   "jest": {
-    "transform": {
-      "^.+\\.js$": "../scripts/babelMonoRepoTransformer.js"
-    }
+    "preset": "@scm-manager/jest-preset"
   }
 }

@@ -4,7 +4,7 @@ const reportDirectory = path.join(rootDir, "target", "jest-reports");
 
 module.exports = {
   rootDir,
-  transform: { "^.+\\.js$": "./scripts/babelMonoRepoTransformer.js" },
+  transform: { "^.+\\.js$": "@scm-manager/jest-preset" },
   collectCoverage: true,
   coverageDirectory: path.join(reportDirectory, "coverage"),
   coveragePathIgnorePatterns: ["src/tests/.*"],

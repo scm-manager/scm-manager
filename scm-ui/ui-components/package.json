@@ -48,11 +48,6 @@
     "presets": ["@scm-manager/babel-preset"]
   },
   "jest": {
-    "transform": {
-      "^.+\\.js$": "../scripts/babelMonoRepoTransformer.js"
-    },
-    "moduleNameMapper": {
-      "\\.(css|scss|sass)$": "<rootDir>/src/tests/styleMock.js"
-    }
+    "preset": "@scm-manager/jest-preset"
   }
 }
