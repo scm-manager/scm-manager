@@ -2,7 +2,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Loading, ErrorPage, Title } from "@scm-manager/ui-components";
-import { Route } from "react-router";
+import { Route } from "react-router-dom";
 import type { History } from "history";
 import { translate } from "react-i18next";
 import type { RepositoryRole } from "@scm-manager/ui-types";

@@ -10,7 +10,7 @@ import {
   NavLink,
   ErrorPage
 } from "@scm-manager/ui-components";
-import { Route } from "react-router";
+import { Route } from "react-router-dom";
 import { Details } from "./../components/table";
 import EditUser from "./EditUser";
 import type { User } from "@scm-manager/ui-types";

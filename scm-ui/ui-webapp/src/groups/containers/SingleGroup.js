@@ -10,7 +10,7 @@ import {
   Section,
   NavLink
 } from "@scm-manager/ui-components";
-import { Route } from "react-router";
+import { Route } from "react-router-dom";
 import { Details } from "./../components/table";
 import {
   EditGroupNavLink,
