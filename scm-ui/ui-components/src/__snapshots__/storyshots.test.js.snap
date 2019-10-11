@@ -18,11 +18,11 @@ exports[`Storyshots Button Colors 1`] = `
     className="sc-bwzfXH EEAiO"
   >
     <button
-      className="button is-success"
+      className="button is-link"
       onClick={[Function]}
       type="button"
     >
-      success
+      link
        
     </button>
   </div>
@@ -35,6 +35,18 @@ exports[`Storyshots Button Colors 1`] = `
       type="button"
     >
       info
+       
+    </button>
+  </div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
+      className="button is-success"
+      onClick={[Function]}
+      type="button"
+    >
+      success
        
     </button>
   </div>
@@ -66,11 +78,59 @@ exports[`Storyshots Button Colors 1`] = `
     className="sc-bwzfXH EEAiO"
   >
     <button
+      className="button is-white"
+      onClick={[Function]}
+      type="button"
+    >
+      white
+       
+    </button>
+  </div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
+      className="button is-light"
+      onClick={[Function]}
+      type="button"
+    >
+      light
+       
+    </button>
+  </div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
+      className="button is-dark"
+      onClick={[Function]}
+      type="button"
+    >
+      dark
+       
+    </button>
+  </div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
       className="button is-black"
       onClick={[Function]}
       type="button"
     >
       black
+       
+    </button>
+  </div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
+      className="button is-text"
+      onClick={[Function]}
+      type="button"
+    >
+      text
        
     </button>
   </div>
