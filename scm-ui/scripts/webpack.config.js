@@ -113,7 +113,7 @@ module.exports = [{
 }, {
   context: path.resolve(__dirname, ".."),
   entry: {
-    polyfill: "./ui-polyfill/src/index.js"
+    polyfills: "./ui-polyfill/src/index.js"
   },
   output: {
     path: path.resolve(__dirname, "..", "target", "assets"),

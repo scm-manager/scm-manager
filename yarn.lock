@@ -2516,6 +2516,11 @@ babel-code-frame@^6.22.0:
     esutils "^2.0.2"
     js-tokens "^3.0.2"
 
+babel-core@7.0.0-bridge.0:
+  version "7.0.0-bridge.0"
+  resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-7.0.0-bridge.0.tgz#95a492ddd90f9b4e9a4a1da14eb335b87b634ece"
+  integrity sha512-poPX9mZH/5CSanm50Q+1toVci6pv5KSRv/5TWCwtzQS5XEwn40BcCrgIeMFWP9CKKIniKXNxoIOnOq4VVlGXhg==
+
 babel-eslint@^10.0.3:
   version "10.0.3"
   resolved "https://registry.yarnpkg.com/babel-eslint/-/babel-eslint-10.0.3.tgz#81a2c669be0f205e19462fed2482d33e4687a88a"
@@ -5855,7 +5860,7 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-gitdiff-parser@^0.1.2:
+gitdiff-parser@^0.1.2, "gitdiff-parser@https://github.com/cloudogu/gitdiff-parser#3a72da4a8e3d9bfb4b9e01a43e85628c19f26cc4":
   version "0.1.2"
   resolved "https://github.com/cloudogu/gitdiff-parser#3a72da4a8e3d9bfb4b9e01a43e85628c19f26cc4"
 
