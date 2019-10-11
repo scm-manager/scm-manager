@@ -34,12 +34,7 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            presets: [
-              "@babel/preset-env",
-              "@babel/preset-react",
-              "@babel/preset-flow"
-            ],
-            plugins: ["@babel/plugin-proposal-class-properties"]
+            presets: ["@scm-manager/babel-preset"]
           }
         }
       },
@@ -61,7 +56,13 @@ module.exports = {
     ]
   },
   output: {
-    path: path.join(__dirname, "target", "scm-git-plugin-2.0.0-SNAPSHOT", "webapp", "assets"),
+    path: path.join(
+      __dirname,
+      "target",
+      "scm-git-plugin-2.0.0-SNAPSHOT",
+      "webapp",
+      "assets"
+    ),
     filename: "[name].bundle.js",
     library: "scm-git-plugin",
     libraryTarget: "amd"

@@ -1,0 +1,13 @@
+{
+  "name": "@scm-manager/ui-polyfill",
+  "version": "2.0.0-SNAPSHOT",
+  "description": "Polyfills for SCM-Manager UI",
+  "main": "src/index.js",
+  "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
+  "license": "BSD-3-Clause",
+  "private": true,
+  "dependencies": {
+    "@babel/polyfill": "^7.6.0",
+    "whatwg-fetch": "^3.0.0"
+  }
+}

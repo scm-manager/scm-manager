@@ -2,7 +2,7 @@ const path = require("path");
 const createIndexMiddleware = require("./IndexMiddleware");
 const createContextPathMiddleware = require("./ContextPathMiddleware");
 
-module.exports = {
+module.exports = [{
   context: path.resolve(__dirname, ".."),
   entry: {
     webapp: [
@@ -99,7 +99,8 @@ module.exports = {
       cacheGroups: {
         vendors: {
           test: /[\\/]node_modules[\\/]/,
-          priority: -10
+          priority: -10,
+          // chunks: chunk => chunk.name !== "polyfill"
         },
         default: {
           minChunks: 2,
@@ -109,4 +110,13 @@ module.exports = {
       }
     }
   }
-};
+}, {
+  context: path.resolve(__dirname, ".."),
+  entry: {
+    polyfill: "./ui-polyfill/src/index.js"
+  },
+  output: {
+    path: path.resolve(__dirname, "..", "target", "assets"),
+    filename: "[name].bundle.js"
+  }
+}];
