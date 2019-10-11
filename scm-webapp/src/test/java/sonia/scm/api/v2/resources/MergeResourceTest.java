@@ -3,6 +3,7 @@ package sonia.scm.api.v2.resources;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
 import com.google.inject.util.Providers;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.jboss.resteasy.core.Dispatcher;
@@ -24,6 +25,7 @@ import sonia.scm.repository.api.MergeDryRunCommandResult;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.MergeCommand;
+import sonia.scm.user.User;
 import sonia.scm.web.VndMediaType;
 
 import java.net.URL;
@@ -32,6 +34,7 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static sonia.scm.repository.RepositoryTestData.createHeartOfGold;
 
@@ -105,6 +108,7 @@ public class MergeResourceTest extends RepositoryTestBase {
     @Test
     void shouldHandleSuccessfulMerge() throws Exception {
       when(mergeCommand.merge(any())).thenReturn(MergeCommandResult.success());
+      mockUser();
 
       URL url = Resources.getResource("sonia/scm/api/v2/mergeCommand.json");
       byte[] mergeCommandJson = Resources.toByteArray(url);
@@ -122,6 +126,7 @@ public class MergeResourceTest extends RepositoryTestBase {
     @Test
     void shouldHandleFailedMerge() throws Exception {
       when(mergeCommand.merge(any())).thenReturn(MergeCommandResult.failure(asList("file1", "file2")));
+      mockUser();
 
       URL url = Resources.getResource("sonia/scm/api/v2/mergeCommand.json");
       byte[] mergeCommandJson = Resources.toByteArray(url);
@@ -188,6 +193,13 @@ public class MergeResourceTest extends RepositoryTestBase {
       dispatcher.invoke(request, response);
 
       assertThat(response.getStatus()).isEqualTo(204);
+    }
+
+
+    private void mockUser() {
+      PrincipalCollection collection = mock(PrincipalCollection.class);
+      when(subject.getPrincipals()).thenReturn(collection);
+      when(collection.oneByType(User.class)).thenReturn(new User("dummy"));
     }
   }
 }

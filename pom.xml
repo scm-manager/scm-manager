@@ -843,7 +843,7 @@
     <shiro.version>1.4.0</shiro.version>
 
     <!-- repository libraries -->
-    <jgit.version>v5.4.0.201906121030-r-scm1</jgit.version>
+    <jgit.version>v5.4.0.201906121030-r-scm2</jgit.version>
     <svnkit.version>1.9.0-scm3</svnkit.version>
 
     <!-- util libraries -->
