@@ -73,7 +73,7 @@ public class ScmConfiguration implements Configuration {
    * Default plugin url
    */
   public static final String DEFAULT_PLUGINURL =
-    "http://download.scm-manager.org/api/v2/plugins.json?os={os}&arch={arch}&snapshot=false&version={version}";
+    "https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}";
 
   /**
    * Default url for login information (plugin and feature tips on the login page).
