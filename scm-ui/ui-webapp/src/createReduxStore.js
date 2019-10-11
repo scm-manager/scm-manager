@@ -2,8 +2,6 @@
 import thunk from "redux-thunk";
 import logger from "redux-logger";
 import { createStore, compose, applyMiddleware, combineReducers } from "redux";
-import { routerReducer, routerMiddleware } from "react-router-redux";
-
 import users from "./users/modules/users";
 import repos from "./repos/modules/repos";
 import repositoryTypes from "./repos/modules/repositoryTypes";
@@ -20,15 +18,13 @@ import namespaceStrategies from "./admin/modules/namespaceStrategies";
 import indexResources from "./modules/indexResource";
 import plugins from "./admin/plugins/modules/plugins";
 
-import type { BrowserHistory } from "history/createBrowserHistory";
 import branches from "./repos/branches/modules/branches";
 
-function createReduxStore(history: BrowserHistory) {
+function createReduxStore() {
   const composeEnhancers =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
   const reducer = combineReducers({
-    router: routerReducer,
     pending,
     failure,
     indexResources,
@@ -49,7 +45,7 @@ function createReduxStore(history: BrowserHistory) {
 
   return createStore(
     reducer,
-    composeEnhancers(applyMiddleware(routerMiddleware(history), thunk, logger))
+    composeEnhancers(applyMiddleware(thunk, logger))
   );
 }
 

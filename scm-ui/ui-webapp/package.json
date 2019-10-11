@@ -6,7 +6,7 @@
   "main": "dist/ui-webapp.js",
   "dependencies": {
     "@scm-manager/ui-components": "2.0.0-SNAPSHOT",
-    "@scm-manager/ui-extensions": "^0.1.2",
+    "@scm-manager/ui-extensions": "2.0.0-SNAPSHOT",
     "classnames": "^2.2.5",
     "history": "^4.10.1",
     "i18next": "^11.4.0",
@@ -20,7 +20,6 @@
     "react-i18next": "^7.9.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^5.1.2",
-    "react-router-redux": "^5.0.0-alpha.9",
     "react-select": "^2.1.2",
     "redux": "^4.0.0",
     "redux-devtools-extension": "^2.13.5",

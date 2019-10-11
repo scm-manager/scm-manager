@@ -15,6 +15,7 @@ module.exports = {
     "react",
     "react-dom",
     "react-i18next",
+    "react-router-dom",
     "styled-components",
     "@scm-manager/ui-types",
     "@scm-manager/ui-extensions",

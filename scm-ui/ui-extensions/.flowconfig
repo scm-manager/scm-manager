@@ -1,0 +1,14 @@
+[ignore]
+.*/node_modules/module-deps/.*
+# This dir is used as yarn's cache (on Jenkins) - we don't want flow checks here.
+.*/.cache/.*
+
+[include]
+
+[libs]
+
+[lints]
+
+[options]
+
+[strict]

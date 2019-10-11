@@ -30,7 +30,7 @@
     "storybook-react-router": "^1.0.8"
   },
   "dependencies": {
-    "@scm-manager/ui-extensions": "^0.1.2",
+    "@scm-manager/ui-extensions": "2.0.0-SNAPSHOT",
     "@scm-manager/ui-types": "2.0.0-SNAPSHOT",
     "classnames": "^2.2.6",
     "date-fns": "^2.4.1",
