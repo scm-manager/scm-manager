@@ -1,14 +1,10 @@
 // @flow
 import React from "react";
-import { mount, shallow } from "enzyme";
-import "@scm-manager/ui-tests/enzyme";
+import { mount, shallow } from "@scm-manager/ui-tests/enzyme-router";
 import "@scm-manager/ui-tests/i18n";
-import ReactRouterEnzymeContext from "react-router-enzyme-context";
 import Paginator from "./Paginator";
 
 xdescribe("paginator rendering tests", () => {
-
-  const options = new ReactRouterEnzymeContext();
 
   const dummyLink = {
     href: "https://dummy"
@@ -23,8 +19,7 @@ xdescribe("paginator rendering tests", () => {
     };
 
     const paginator = shallow(
-      <Paginator collection={collection} />,
-      options.get()
+      <Paginator collection={collection} />
     );
     const buttons = paginator.find("Button");
     expect(buttons.length).toBe(7);
@@ -46,8 +41,7 @@ xdescribe("paginator rendering tests", () => {
     };
 
     const paginator = shallow(
-      <Paginator collection={collection} />,
-      options.get()
+      <Paginator collection={collection} />
     );
     const buttons = paginator.find("Button");
     expect(buttons.length).toBe(5);
@@ -86,8 +80,7 @@ xdescribe("paginator rendering tests", () => {
     };
 
     const paginator = shallow(
-      <Paginator collection={collection} />,
-      options.get()
+      <Paginator collection={collection} />
     );
     const buttons = paginator.find("Button");
     expect(buttons.length).toBe(6);
@@ -129,8 +122,7 @@ xdescribe("paginator rendering tests", () => {
     };
 
     const paginator = shallow(
-      <Paginator collection={collection} />,
-      options.get()
+      <Paginator collection={collection} />
     );
     const buttons = paginator.find("Button");
     expect(buttons.length).toBe(5);
@@ -169,8 +161,7 @@ xdescribe("paginator rendering tests", () => {
     };
 
     const paginator = shallow(
-      <Paginator collection={collection} />,
-      options.get()
+      <Paginator collection={collection} />
     );
     const buttons = paginator.find("Button");
     expect(buttons.length).toBe(6);
@@ -214,8 +205,7 @@ xdescribe("paginator rendering tests", () => {
     };
 
     const paginator = shallow(
-      <Paginator collection={collection} />,
-      options.get()
+      <Paginator collection={collection} />
     );
     const buttons = paginator.find("Button");
     expect(buttons.length).toBe(7);
@@ -272,8 +262,7 @@ xdescribe("paginator rendering tests", () => {
     };
 
     const paginator = mount(
-      <Paginator collection={collection} onPageChange={callMe} />,
-      options.get()
+      <Paginator collection={collection} onPageChange={callMe} />
     );
     paginator.find("Button.pagination-previous").simulate("click");
 
