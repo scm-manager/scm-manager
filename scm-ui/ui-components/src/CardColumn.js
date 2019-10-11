@@ -92,7 +92,7 @@ export default class CardColumn extends React.Component<Props> {
                 </p>
                 <p className="shorten-text">{description}</p>
               </ContentLeft>
-              <ContentRight>{contentRight && contentRight}</ContentRight>
+              <ContentRight>{contentRight}</ContentRight>
             </div>
             <FooterWrapper className={classNames("level", "is-flex")}>
               <div className="level-left is-hidden-mobile">{footerLeft}</div>
