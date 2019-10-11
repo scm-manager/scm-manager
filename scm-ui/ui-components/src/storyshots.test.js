@@ -1,12 +1,5 @@
-/*import initStoryshots from "@storybook/addon-storyshots";
+import initStoryshots from "@storybook/addon-storyshots";
 
 initStoryshots({
-});*/
-
-describe("noop", () => {
-
-  it("is all good", () => {
-
-  });
-
+  /* configuration options */
 });
