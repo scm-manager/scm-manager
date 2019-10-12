@@ -13,6 +13,15 @@ const supportedLocales = {
 
 type Props = {
   date?: string,
+  timeZone?: string,
+
+  /**
+   * baseDate is the date from which the distance is calculated,
+   * default is the current time (new Date()). This property
+   * is required to keep snapshots tests green over the time on
+   * ci server.
+   */
+  baseDate?: string,
 
   // context props
   i18n: any
@@ -34,11 +43,23 @@ class DateFromNow extends React.Component<Props> {
   };
 
   createOptions = () => {
-    const locale = this.getLocale();
-    return {
-      locale,
-      addSuffix: true
+    const { timeZone } = this.props;
+    const options: Object = {
+      addSuffix: true,
+      locate: this.getLocale(),
     };
+    if (timeZone) {
+      options.timeZone = timeZone;
+    }
+    return options;
+  };
+
+  getBaseDate = () => {
+    const { baseDate } = this.props;
+    if (baseDate) {
+      return parseISO(baseDate);
+    }
+    return new Date();
   };
 
   render() {
@@ -46,7 +67,7 @@ class DateFromNow extends React.Component<Props> {
     if (date) {
       const isoDate = parseISO(date);
       const options = this.createOptions();
-      const distance = formatDistance(isoDate, new Date(), options);
+      const distance = formatDistance(isoDate, this.getBaseDate(), options);
       const formatted = format(isoDate, "yyyy-MM-dd HH:mm:ss", options);
       return <DateElement title={formatted}>{distance}</DateElement>;
     }
