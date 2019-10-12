@@ -1,8 +1,8 @@
 import React from "react";
 import Button from "./Button";
 import { storiesOf } from "@storybook/react";
-import StoryRouter from "storybook-react-router";
 import styled from "styled-components";
+import { MemoryRouter } from 'react-router-dom';
 
 const colors = [
   "primary",
@@ -23,7 +23,9 @@ const Spacing = styled.div`
 `;
 
 storiesOf("Button", module)
-  .addDecorator(StoryRouter())
+  .addDecorator(story => (
+    <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>
+  ))
   .add("Colors", () => (
     <div>
       {colors.map(color => (
