@@ -155,5 +155,21 @@ exports[`Storyshots DateFromNow Default 1`] = `
       3 months ago
     </time>
   </p>
+  <p>
+    <time
+      className="sc-bdVaJa dkavpQ"
+      title="2019-10-12 13:56:40"
+    >
+      less than a minute ago
+    </time>
+  </p>
+  <p>
+    <time
+      className="sc-bdVaJa dkavpQ"
+      title="2019-10-11 13:56:40"
+    >
+      1 day ago
+    </time>
+  </p>
 </div>
 `;
