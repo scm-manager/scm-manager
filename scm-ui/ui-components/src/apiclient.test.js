@@ -1,6 +1,6 @@
 // @flow
 import { apiClient, createUrl } from "./apiclient";
-import {fetchMock} from "fetch-mock";
+import fetchMock from "fetch-mock";
 import { BackendError } from "./errors";
 
 describe("create url", () => {
