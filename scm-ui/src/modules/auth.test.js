@@ -1,32 +1,35 @@
 import reducer, {
-  fetchMeSuccess,
-  logout,
-  logoutSuccess,
-  loginSuccess,
-  fetchMeUnauthenticated,
-  LOGIN_SUCCESS,
-  login,
-  LOGIN_FAILURE,
-  LOGOUT_FAILURE,
-  LOGOUT_SUCCESS,
-  FETCH_ME_SUCCESS,
-  fetchMe,
+  FETCH_ME,
   FETCH_ME_FAILURE,
-  FETCH_ME_UNAUTHORIZED,
-  isAuthenticated,
-  LOGIN_PENDING,
   FETCH_ME_PENDING,
-  LOGOUT_PENDING,
+  FETCH_ME_SUCCESS,
+  FETCH_ME_UNAUTHORIZED,
+  fetchMe,
+  fetchMeSuccess,
+  fetchMeUnauthenticated,
+  getFetchMeFailure,
+  getLoginFailure,
+  getLogoutFailure,
   getMe,
+  isAuthenticated,
   isFetchMePending,
   isLoginPending,
   isLogoutPending,
-  getFetchMeFailure,
+  isRedirecting,
+  login,
   LOGIN,
-  FETCH_ME,
+  LOGIN_FAILURE,
+  LOGIN_PENDING,
+  LOGIN_SUCCESS,
+  loginSuccess,
+  logout,
   LOGOUT,
-  getLoginFailure,
-  getLogoutFailure, isRedirecting, LOGOUT_REDIRECT, redirectAfterLogout,
+  LOGOUT_FAILURE,
+  LOGOUT_PENDING,
+  LOGOUT_REDIRECT,
+  LOGOUT_SUCCESS,
+  logoutSuccess,
+  redirectAfterLogout
 } from "./auth";
 
 import configureMockStore from "redux-mock-store";
@@ -47,22 +50,18 @@ describe("auth reducer", () => {
   it("should set me and login on successful fetch of me", () => {
     const state = reducer(undefined, fetchMeSuccess(me));
     expect(state.me).toBe(me);
-    expect(state.authenticated).toBe(true);
   });
 
   it("should set authenticated to false", () => {
     const initialState = {
-      authenticated: true,
       me
     };
     const state = reducer(initialState, fetchMeUnauthenticated());
     expect(state.me.name).toBeUndefined();
-    expect(state.authenticated).toBe(false);
   });
 
   it("should reset the state after logout", () => {
     const initialState = {
-      authenticated: true,
       me
     };
     const state = reducer(initialState, logoutSuccess());
@@ -72,19 +71,16 @@ describe("auth reducer", () => {
 
   it("should keep state and set redirecting to true", () => {
     const initialState = {
-      authenticated: true,
       me
     };
     const state = reducer(initialState, redirectAfterLogout());
     expect(state.me).toBe(initialState.me);
-    expect(state.authenticated).toBe(initialState.authenticated);
     expect(state.redirecting).toBe(true);
   });
 
   it("should set state authenticated and me after login", () => {
     const state = reducer(undefined, loginSuccess(me));
     expect(state.me).toBe(me);
-    expect(state.authenticated).toBe(true);
   });
 });
 
@@ -359,10 +355,10 @@ describe("auth selectors", () => {
   });
 
   it("should return false, if redirecting is false", () => {
-    expect(isRedirecting({auth: { redirecting: false }})).toBe(false);
+    expect(isRedirecting({ auth: { redirecting: false } })).toBe(false);
   });
 
   it("should return true, if redirecting is true", () => {
-    expect(isRedirecting({auth: { redirecting: true }})).toBe(true);
+    expect(isRedirecting({ auth: { redirecting: true } })).toBe(true);
   });
 });
