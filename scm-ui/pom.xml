@@ -18,11 +18,11 @@
 
   <properties>
     <sonar.language>js</sonar.language>
-    <sonar.sources>ui-components/src/,ui-webapp/src</sonar.sources>
+    <sonar.sources>ui-extensions/src,ui-components/src,ui-webapp/src</sonar.sources>
     <sonar.test.exclusions>**/*.test.js,src/tests/**</sonar.test.exclusions>
     <sonar.coverage.exclusions>**/*.test.js,src/tests/**</sonar.coverage.exclusions>
     <sonar.javascript.jstest.reportsPath>target/jest-reports</sonar.javascript.jstest.reportsPath>
-    <sonar.javascript.lcov.reportPaths>target/jest-reports/coverage-*/lcov.info</sonar.javascript.lcov.reportPaths>
+    <sonar.javascript.lcov.reportPaths>target/jest-reports/coverage-ui-extensions/lcov.info,target/jest-reports/coverage-ui-components/lcov.info,target/jest-reports/coverage-ui-webapp/lcov.info</sonar.javascript.lcov.reportPaths>
   </properties>
 
   <build>
