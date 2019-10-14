@@ -13,6 +13,8 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HttpScmProtocol;
+import sonia.scm.security.Authentications;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
 
@@ -73,7 +75,11 @@ public class HttpProtocolServlet extends HttpServlet {
       resp.setStatus(HttpStatus.SC_NOT_FOUND);
     } catch (AuthorizationException e) {
       log.debug(e.getMessage());
-      resp.setStatus(HttpStatus.SC_FORBIDDEN);
+      if (Authentications.isAuthenticatedSubjectAnonymous()) {
+        HttpUtil.sendUnauthorized(resp);
+      } else {
+        resp.setStatus(HttpStatus.SC_FORBIDDEN);
+      }
     }
   }
 }
