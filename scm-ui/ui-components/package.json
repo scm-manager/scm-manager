@@ -11,7 +11,6 @@
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
   "license": "BSD-3-Clause",
   "scripts": {
-    "eslint-fix": "eslint src --fix",
     "test": "jest",
     "storybook": "start-storybook"
   },
@@ -50,5 +49,6 @@
   },
   "jest": {
     "preset": "@scm-manager/jest-preset"
-  }
+  },
+  "prettier": "@scm-manager/prettier-config"
 }

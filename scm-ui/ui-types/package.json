@@ -18,5 +18,6 @@
   },
   "babel": {
     "presets": ["@scm-manager/babel-preset"]
-  }
+  },
+  "prettier": "@scm-manager/prettier-config"
 }

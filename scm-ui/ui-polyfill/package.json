@@ -6,6 +6,7 @@
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
   "license": "BSD-3-Clause",
   "private": true,
+  "prettier": "@scm-manager/prettier-config",
   "dependencies": {
     "@babel/polyfill": "^7.6.0",
     "whatwg-fetch": "^3.0.0"

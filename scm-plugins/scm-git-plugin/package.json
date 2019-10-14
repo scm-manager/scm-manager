@@ -15,5 +15,6 @@
   },
   "jest": {
     "preset": "@scm-manager/jest-preset"
-  }
+  },
+  "prettier": "@scm-manager/prettier-config"
 }

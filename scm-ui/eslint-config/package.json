@@ -6,6 +6,7 @@
   "author": "Sebastian Sdorra <s.sdorra@gmail.com>",
   "license": "MIT",
   "private": false,
+  "prettier": "@scm-manager/prettier-config",
   "dependencies": {
     "babel-eslint": "^10.0.3",
     "eslint": "^6.5.1",

@@ -6,6 +6,7 @@
   "main": "index.js",
   "author": "Sebastian Sdorra <s.sdorra@cloudogu.com>",
   "private": false,
+  "prettier": "@scm-manager/prettier-config",
   "dependencies": {
     "@babel/core": "^7.6.3",
     "@babel/plugin-proposal-class-properties": "^7.5.5",

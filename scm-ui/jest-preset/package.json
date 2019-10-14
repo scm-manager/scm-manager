@@ -6,6 +6,7 @@
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
   "license": "BSD-3-Clause",
   "private": false,
+  "prettier": "@scm-manager/prettier-config",
   "dependencies": {
     "babel-jest": "^24.9.0",
     "babel-plugin-require-context-hook": "^1.0.0",

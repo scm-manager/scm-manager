@@ -5,6 +5,7 @@
   "description": "Plugin scripts",
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
   "private": false,
+  "prettier": "@scm-manager/prettier-config",
   "dependencies": {
     "@scm-manager/babel-preset": "2.0.0-SNAPSHOT",
     "@scm-manager/eslint-config": "2.0.0-SNAPSHOT"

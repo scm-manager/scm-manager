@@ -22,5 +22,6 @@
     "style-loader": "^1.0.0",
     "webpack": "^4.41.0",
     "webpack-dev-server": "^3.8.2"
-  }
+  },
+  "prettier": "@scm-manager/prettier-config"
 }
