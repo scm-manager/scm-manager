@@ -2,7 +2,6 @@ package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.util.Providers;
 import de.otto.edison.hal.HalRepresentation;
@@ -170,7 +169,6 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
 
   @TestFactory
   @DisplayName("test endpoints on missing permissions and user is not Admin")
-  @SubjectAware(username = "trillian")
   Stream<DynamicTest> missedPermissionUserForbiddenTestFactory() {
     when(subject.getPrincipal()).thenReturn("user");
     doThrow(AuthorizationException.class).when(repositoryManager).get(any(NamespaceAndName.class));
@@ -184,7 +182,6 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
 
   @TestFactory
   @DisplayName("test endpoints on missing permissions and user is not Admin")
-  @SubjectAware(username = "trillian")
   Stream<DynamicTest> missedPermissionAnonymousUnauthorizedTestFactory() {
     when(subject.getPrincipal()).thenReturn("_anonymous");
     doThrow(AuthorizationException.class).when(repositoryManager).get(any(NamespaceAndName.class));
