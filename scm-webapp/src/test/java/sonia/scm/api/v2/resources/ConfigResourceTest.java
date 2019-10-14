@@ -137,7 +137,6 @@ public class ConfigResourceTest {
     assertTrue(response.getContentAsString().contains("\"proxyPassword\":\"newPassword\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config"));
     assertTrue("link not found", response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config"));
-    verify(userManager).create(SCMContext.ANONYMOUS);
   }
 
   @Test

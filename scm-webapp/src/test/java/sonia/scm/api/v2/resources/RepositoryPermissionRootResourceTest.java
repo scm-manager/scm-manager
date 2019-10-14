@@ -2,6 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.util.Providers;
 import de.otto.edison.hal.HalRepresentation;
@@ -169,7 +170,9 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
 
   @TestFactory
   @DisplayName("test endpoints on missing permissions and user is not Admin")
+  @SubjectAware(username = "trillian")
   Stream<DynamicTest> missedPermissionUserForbiddenTestFactory() {
+    when(subject.getPrincipal()).thenReturn("user");
     doThrow(AuthorizationException.class).when(repositoryManager).get(any(NamespaceAndName.class));
     return createDynamicTestsToAssertResponses(
       requestGETPermission.expectedResponseStatus(403),
@@ -177,6 +180,20 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
       requestGETAllPermissions.expectedResponseStatus(403),
       requestDELETEPermission.expectedResponseStatus(403),
       requestPUTPermission.expectedResponseStatus(403));
+  }
+
+  @TestFactory
+  @DisplayName("test endpoints on missing permissions and user is not Admin")
+  @SubjectAware(username = "trillian")
+  Stream<DynamicTest> missedPermissionAnonymousUnauthorizedTestFactory() {
+    when(subject.getPrincipal()).thenReturn("_anonymous");
+    doThrow(AuthorizationException.class).when(repositoryManager).get(any(NamespaceAndName.class));
+    return createDynamicTestsToAssertResponses(
+      requestGETPermission.expectedResponseStatus(401),
+      requestPOSTPermission.expectedResponseStatus(401),
+      requestGETAllPermissions.expectedResponseStatus(401),
+      requestDELETEPermission.expectedResponseStatus(401),
+      requestPUTPermission.expectedResponseStatus(401));
   }
 
   @Test

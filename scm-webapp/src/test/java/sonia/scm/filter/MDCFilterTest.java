@@ -40,6 +40,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.MDC;
 import sonia.scm.AbstractTestBase;
+import sonia.scm.SCMContext;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -117,7 +118,7 @@ public class MDCFilterTest extends AbstractTestBase {
     filter.doFilter(request, response, chain);
     
     assertNotNull(chain.ctx);
-    assertEquals("anonymous", chain.ctx.get(MDCFilter.MDC_USERNAME));
+    assertEquals(SCMContext.USER_ANONYMOUS, chain.ctx.get(MDCFilter.MDC_USERNAME));
   }
   
   private static class MDCCapturingFilterChain implements FilterChain {

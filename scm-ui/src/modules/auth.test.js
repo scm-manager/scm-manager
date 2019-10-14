@@ -11,7 +11,6 @@ import reducer, {
   getLoginFailure,
   getLogoutFailure,
   getMe,
-  isAuthenticated,
   isFetchMePending,
   isLoginPending,
   isLogoutPending,
@@ -35,10 +34,7 @@ import reducer, {
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
-import {
-  FETCH_INDEXRESOURCES_PENDING,
-  FETCH_INDEXRESOURCES_SUCCESS
-} from "./indexResource";
+import {FETCH_INDEXRESOURCES_PENDING, FETCH_INDEXRESOURCES_SUCCESS} from "./indexResource";
 
 const me = {
   name: "tricia",
@@ -283,16 +279,6 @@ describe("auth actions", () => {
 
 describe("auth selectors", () => {
   const error = new Error("yo it failed");
-
-  it("should be false, if authenticated is undefined or false", () => {
-    expect(isAuthenticated({})).toBe(false);
-    expect(isAuthenticated({ auth: {} })).toBe(false);
-    expect(isAuthenticated({ auth: { authenticated: false } })).toBe(false);
-  });
-
-  it("should be true, if authenticated is true", () => {
-    expect(isAuthenticated({ auth: { authenticated: true } })).toBe(true);
-  });
 
   it("should return me", () => {
     expect(getMe({ auth: { me } })).toBe(me);
