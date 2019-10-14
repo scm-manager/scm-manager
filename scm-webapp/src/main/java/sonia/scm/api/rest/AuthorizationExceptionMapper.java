@@ -33,14 +33,18 @@ package sonia.scm.api.rest;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.SCMContext;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.Provider;
 
 /**
  *
@@ -49,20 +53,22 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 public class AuthorizationExceptionMapper
-  extends StatusExceptionMapper<AuthorizationException>
+  implements ExceptionMapper<AuthorizationException>
 {
 
   private static final Logger LOG = LoggerFactory.getLogger(AuthorizationExceptionMapper.class);
 
-  public AuthorizationExceptionMapper()
-  {
-    super(AuthorizationException.class, Response.Status.FORBIDDEN);
-  }
-
   @Override
   public Response toResponse(AuthorizationException exception) {
     LOG.info("user is missing permission: {}", exception.getMessage());
-    LOG.trace("AuthorizationException:", exception);
-    return super.toResponse(exception);
+    LOG.trace(getStatus().toString(), exception);
+    return Response.status(getStatus())
+      .entity(exception.getMessage())
+      .type(MediaType.TEXT_PLAIN_TYPE)
+      .build();
+  }
+
+  private Response.Status getStatus() {
+    return SecurityUtils.getSubject().getPrincipal().equals(SCMContext.USER_ANONYMOUS) ? Response.Status.UNAUTHORIZED : Response.Status.FORBIDDEN;
   }
 }
