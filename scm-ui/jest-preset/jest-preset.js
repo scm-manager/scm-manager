@@ -1,7 +1,7 @@
 const path = require("path");
-const rootDir = path.resolve(__dirname, "..");
-const reportDirectory = path.join(rootDir, "target", "jest-reports");
 const mockDirectory = path.resolve(__dirname, "src", "__mocks__");
+const findName = require("./src/findName");
+const findTarget = require("./src/findTarget");
 
 // Set timezone for tests, this is required to get same date values
 // accross diferent machines such ci-server and dev box.
@@ -10,11 +10,25 @@ const mockDirectory = path.resolve(__dirname, "src", "__mocks__");
 // @see https://stackoverflow.com/questions/56261381/how-do-i-set-a-timezone-in-my-jest-config
 process.env.TZ = "Europe/Berlin";
 
+const root = process.cwd();
+const name = findName(root);
+const target = findTarget(root);
+const reportDirectory = path.join(target, "jest-reports");
+
 module.exports = {
-  rootDir,
+  rootDir: root,
+  roots: [
+    root
+  ],
+  testPathDirs: [
+    path.join(root, "src")
+  ],
   transform: {
     "^.+\\.js$": "@scm-manager/jest-preset"
   },
+  transformIgnorePatterns: [
+    "node_modules/(?!(@scm-manager)/)"
+  ],
   moduleNameMapper: {
     "\\.(png|svg|jpg|gif|woff2?|eot|ttf)$": path.join(
       mockDirectory,
@@ -24,16 +38,22 @@ module.exports = {
   },
   setupFiles: [path.resolve(__dirname, "src", "setup.js")],
   collectCoverage: true,
-  coverageDirectory: path.join(reportDirectory, "coverage"),
-  coveragePathIgnorePatterns: ["src/tests/.*"],
+  collectCoverageFrom: [
+    "src/**/*.{js,jsx}"
+  ],
+  coverageDirectory: path.join(reportDirectory, "coverage-" + name),
+  coveragePathIgnorePatterns: [
+    "src/tests/.*",
+    "src/testing/.*"
+  ],
   reporters: [
     "default",
     [
       "jest-junit",
       {
-        suiteName: "SCM-UI Package tests",
+        suiteName: name + " tests",
         outputDirectory: reportDirectory,
-        outputName: "TEST-scm-ui.xml"
+        outputName: "TEST-" + name + ".xml"
       }
     ]
   ]

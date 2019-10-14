@@ -6,6 +6,7 @@
   "license": "BSD-3-Clause",
   "private": false,
   "dependencies": {
+    "babel-plugin-istanbul": "^5.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.0",
     "enzyme-context": "^1.1.2",

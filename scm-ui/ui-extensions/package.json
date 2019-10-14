@@ -5,6 +5,9 @@
   "license": "BSD-3-Clause",
   "private": false,
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "react": "^16.10.2"
   },
