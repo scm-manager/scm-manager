@@ -4,9 +4,9 @@ import com.cronutils.utils.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.SCMContext;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.security.Authentications;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -39,7 +39,7 @@ public class DefaultGroupCollector implements GroupCollector {
   public Set<String> collect(String principal) {
     ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
-    if (!principal.equals(SCMContext.USER_ANONYMOUS)) {
+    if (!Authentications.isSubjectAnonymous(principal)) {
       builder.add(AUTHENTICATED);
     }
 

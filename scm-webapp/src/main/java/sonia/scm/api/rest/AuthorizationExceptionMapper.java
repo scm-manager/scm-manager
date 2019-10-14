@@ -33,11 +33,10 @@ package sonia.scm.api.rest;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.SCMContext;
+import sonia.scm.security.Authentications;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -69,6 +68,6 @@ public class AuthorizationExceptionMapper
   }
 
   private Response.Status getStatus() {
-    return SecurityUtils.getSubject().getPrincipal().equals(SCMContext.USER_ANONYMOUS) ? Response.Status.UNAUTHORIZED : Response.Status.FORBIDDEN;
+    return Authentications.isAuthenticatedSubjectAnonymous() ? Response.Status.UNAUTHORIZED : Response.Status.FORBIDDEN;
   }
 }
