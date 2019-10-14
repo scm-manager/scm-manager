@@ -3,10 +3,12 @@
   "version": "2.0.0-SNAPSHOT",
   "license": "BSD-3-Clause",
   "scripts": {
-    "build": "webpack --mode=production",
+    "build": "ui-scripts plugin",
+    "watch": "ui-scripts plugin-watch",
     "test": "jest"
   },
   "devDependencies": {
+    "@scm-manager/ui-scripts": "2.0.0-SNAPSHOT",
     "flow-bin": "^0.109.0",
     "flow-typed": "^2.6.1"
   },
