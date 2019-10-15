@@ -741,6 +741,11 @@
     react "^16.4.2"
     react-dom "^16.4.2"
 
+"@scm-manager/ui-types@2.0.0-SNAPSHOT":
+  version "2.0.0-20190813-181402"
+  resolved "https://registry.yarnpkg.com/@scm-manager/ui-types/-/ui-types-2.0.0-20190813-181402.tgz#8aecf2c5b8fc55de7488d038d4a9ee78d1afe3bf"
+  integrity sha512-ysE4zqvy6IAFAtG2TSImFrrfnFi/PEqzja4lvsiu2AP1gy2I1ObSB1FSdQxUwdWkp5YNq5OkX1YOHGxOfQAGbg==
+
 "@types/node@*":
   version "10.12.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.0.tgz#ea6dcbddbc5b584c83f06c60e82736d8fbb0c235"
@@ -3654,9 +3659,9 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-gitdiff-parser@^0.1.2, "gitdiff-parser@https://github.com/cloudogu/gitdiff-parser#3a72da4a8e3d9bfb4b9e01a43e85628c19f26cc4":
+gitdiff-parser@^0.1.2, "gitdiff-parser@https://github.com/scm-manager/gitdiff-parser#6baa7278824ecd17a199d842ca720d0453f68982":
   version "0.1.2"
-  resolved "https://github.com/cloudogu/gitdiff-parser#3a72da4a8e3d9bfb4b9e01a43e85628c19f26cc4"
+  resolved "https://github.com/scm-manager/gitdiff-parser#6baa7278824ecd17a199d842ca720d0453f68982"
 
 glob-base@^0.3.0:
   version "0.3.0"
@@ -5439,6 +5444,7 @@ lodash.escape@^4.0.1:
 lodash.findlastindex@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.findlastindex/-/lodash.findlastindex-4.6.0.tgz#b8375ac0f02e9b926375cdf8dc3ea814abf9c6ac"
+  integrity sha1-uDdawPAum5Jjdc343D6oFKv5xqw=
 
 lodash.flattendeep@^4.4.0:
   version "4.4.0"
@@ -5455,6 +5461,7 @@ lodash.isfinite@^3.3.2:
 lodash.mapvalues@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.mapvalues/-/lodash.mapvalues-4.6.0.tgz#1bafa5005de9dd6f4f26668c30ca37230cc9689c"
+  integrity sha1-G6+lAF3p3W9PJmaMMMo3IwzJaJw=
 
 lodash.memoize@~3.0.3:
   version "3.0.4"
@@ -6708,6 +6715,7 @@ rc@^1.2.7:
 react-diff-view@^1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/react-diff-view/-/react-diff-view-1.8.1.tgz#0b9b4adcb92de6730d28177d68654dfcc2097f73"
+  integrity sha512-+soJL85Xnsak/VOdxSgiDKhhaFiOkckiswwrXdiWVCxV3LP9POyJR4AqGVFGdkntJ3YT63mtwTYuunFeId+XSA==
   dependencies:
     classnames "^2.2.6"
     gitdiff-parser "^0.1.2"
