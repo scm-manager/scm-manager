@@ -6,7 +6,6 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -83,7 +82,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void shouldNotMergeTwice() throws IOException, GitAPIException {
+  public void shouldAllowEmptyMergeCommit() {
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
     request.setTargetBranch("master");
@@ -91,19 +90,10 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     MergeCommandResult mergeCommandResult = command.merge(request);
-
     assertThat(mergeCommandResult.isSuccess()).isTrue();
 
-    Repository repository = createContext().open();
-    ObjectId firstMergeCommit = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call().iterator().next().getId();
-
     MergeCommandResult secondMergeCommandResult = command.merge(request);
-
     assertThat(secondMergeCommandResult.isSuccess()).isTrue();
-
-    ObjectId secondMergeCommit = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call().iterator().next().getId();
-
-    assertThat(secondMergeCommit).isEqualTo(firstMergeCommit);
   }
 
   @Test
