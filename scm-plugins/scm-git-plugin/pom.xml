@@ -51,7 +51,6 @@
         <extensions>true</extensions>
         <configuration>
           <corePlugin>true</corePlugin>
-          <restartNotifier>false</restartNotifier>
         </configuration>
       </plugin>
 

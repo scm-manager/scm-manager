@@ -1,16 +1,38 @@
 {
   "name": "@scm-manager/scm-hg-plugin",
+  "private": true,
   "version": "2.0.0-SNAPSHOT",
   "license": "BSD-3-Clause",
   "main": "src/main/js/index.js",
   "scripts": {
-    "build": "webpack --mode=production"
+    "build": "ui-scripts plugin",
+    "watch": "ui-scripts plugin-watch"
   },
   "babel": {
-    "presets": ["@scm-manager/babel-preset"]
+    "presets": [
+      "@scm-manager/babel-preset"
+    ]
   },
   "jest": {
     "preset": "@scm-manager/jest-preset"
   },
-  "prettier": "@scm-manager/prettier-config"
+  "prettier": "@scm-manager/prettier-config",
+  "dependencies": {
+    "@scm-manager/ui-components": "2.0.0-SNAPSHOT",
+    "@scm-manager/ui-extensions": "2.0.0-SNAPSHOT",
+    "@scm-manager/ui-types": "2.0.0-SNAPSHOT",
+    "react": "^16.10.2",
+    "react-i18next": "^10.13.1"
+  },
+  "devDependencies": {
+    "@scm-manager/babel-preset": "2.0.0-SNAPSHOT",
+    "@scm-manager/eslint-config": "2.0.0-SNAPSHOT",
+    "@scm-manager/jest-preset": "2.0.0-SNAPSHOT",
+    "@scm-manager/prettier-config": "2.0.0-SNAPSHOT",
+    "@scm-manager/ui-scripts": "2.0.0-SNAPSHOT",
+    "@scm-manager/ui-tests": "2.0.0-SNAPSHOT",
+    "flow-bin": "^0.109.0",
+    "flow-typed": "^2.6.1",
+    "jest": "^24.9.0"
+  }
 }

@@ -1,11 +1,13 @@
 [declarations]
 ../../scm-ui/ui-types/.*
 ../../scm-ui/ui-components/.*
+../../scm-ui/ui-extensions/.*
 
 [include]
 ./src/**
 ../../scm-ui/ui-types/.*
 ../../scm-ui/ui-components/.*
+../../scm-ui/ui-extensions/.*
 
 [options]
 module.system.node.resolve_dirname=../../node_modules

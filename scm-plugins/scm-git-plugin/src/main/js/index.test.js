@@ -1,4 +1,5 @@
 // @flow
+import "@scm-manager/ui-tests/i18n";
 import { gitPredicate } from "./index";
 
 describe("test git predicate", () => {
