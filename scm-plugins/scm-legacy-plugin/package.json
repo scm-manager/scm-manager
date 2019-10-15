@@ -1,5 +1,5 @@
 {
-  "name": "@scm-manager/legacy-plugin",
+  "name": "@scm-manager/scm-legacy-plugin",
   "private": true,
   "version": "2.0.0-SNAPSHOT",
   "license": "BSD-3-Clause",
