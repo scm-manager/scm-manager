@@ -15,7 +15,7 @@
     "storybook": "start-storybook"
   },
   "devDependencies": {
-    "@scm-manager/ui-tests": "2.0.0-SNAPSHOT",
+    "@scm-manager/ui-tests": "^2.0.0-SNAPSHOT",
     "@storybook/addon-actions": "^5.2.3",
     "@storybook/addon-storyshots": "^5.2.3",
     "@storybook/react": "^5.2.3",
@@ -28,8 +28,8 @@
     "storybook-addon-i18next": "^1.2.1"
   },
   "dependencies": {
-    "@scm-manager/ui-extensions": "2.0.0-SNAPSHOT",
-    "@scm-manager/ui-types": "2.0.0-SNAPSHOT",
+    "@scm-manager/ui-extensions": "^2.0.0-SNAPSHOT",
+    "@scm-manager/ui-types": "^2.0.0-SNAPSHOT",
     "classnames": "^2.2.6",
     "date-fns": "^2.4.1",
     "query-string": "5",

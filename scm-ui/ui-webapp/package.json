@@ -5,8 +5,8 @@
   "private": true,
   "main": "dist/ui-webapp.js",
   "dependencies": {
-    "@scm-manager/ui-components": "2.0.0-SNAPSHOT",
-    "@scm-manager/ui-extensions": "2.0.0-SNAPSHOT",
+    "@scm-manager/ui-components": "^2.0.0-SNAPSHOT",
+    "@scm-manager/ui-extensions": "^2.0.0-SNAPSHOT",
     "classnames": "^2.2.5",
     "history": "^4.10.1",
     "i18next": "^11.4.0",
@@ -43,7 +43,7 @@
     "pre-commit": "jest && flow && eslint src"
   },
   "devDependencies": {
-    "@scm-manager/ui-tests": "2.0.0-SNAPSHOT",
+    "@scm-manager/ui-tests": "^2.0.0-SNAPSHOT",
     "concat": "^1.0.3",
     "copyfiles": "^2.0.0",
     "fetch-mock": "^7.5.1",
