@@ -4,7 +4,7 @@
   "description": "Styles for SCM-Manager",
   "main": "src/scm.scss",
   "license": "BSD-3-Clause",
-  "private": false,
+  "private": true,
   "scripts": {
     "serve": "webpack-dev-server"
   },

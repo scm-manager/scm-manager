@@ -17,7 +17,9 @@
     "flow-bin": "^0.109.0"
   },
   "babel": {
-    "presets": ["@scm-manager/babel-preset"]
+    "presets": [
+      "@scm-manager/babel-preset"
+    ]
   },
   "prettier": "@scm-manager/prettier-config"
 }
