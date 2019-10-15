@@ -214,10 +214,10 @@ class AbstractGitCommand
       }
     }
 
-    Optional<RevCommit> doCommit(String message, Person author) {
+    Optional<RevCommit> doCommit(String message, Person author, boolean isMergeCommit) {
       Person authorToUse = determineAuthor(author);
       try {
-        if (!clone.status().call().isClean()) {
+        if (isMergeCommit || !clone.status().call().isClean()) {
           return of(clone.commit()
             .setAuthor(authorToUse.getName(), authorToUse.getMail())
             .setMessage(message)
