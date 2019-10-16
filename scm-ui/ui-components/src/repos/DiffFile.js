@@ -1,17 +1,10 @@
 //@flow
 import React from "react";
-import { translate } from "react-i18next";
+import {translate} from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import {
-  Change,
-  Diff as DiffComponent,
-  DiffObjectProps,
-  File,
-  getChangeKey,
-  Hunk
-} from "react-diff-view";
-import { Button, ButtonGroup } from "../buttons";
+import {Change, Diff as DiffComponent, DiffObjectProps, File, getChangeKey, Hunk} from "react-diff-view";
+import {Button, ButtonGroup} from "../buttons";
 import Tag from "../Tag";
 import Icon from "../Icon";
 
@@ -57,7 +50,7 @@ const HunkDivider = styled.hr`
 `;
 
 const ChangeTypeTag = styled(Tag)`
-  marginleft: ".75rem";
+  margin-left: .75rem;
 `;
 
 const ModifiedDiffComponent = styled(DiffComponent)`
