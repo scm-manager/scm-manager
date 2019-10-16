@@ -99,7 +99,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
     private void doCommit() {
       logger.debug("merged branch {} into {}", toMerge, target);
-      doCommit(MessageFormat.format(determineMessageTemplate(), toMerge, target), author, true);
+      doCommit(MessageFormat.format(determineMessageTemplate(), toMerge, target), author);
     }
 
     private String determineMessageTemplate() {
