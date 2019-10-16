@@ -408,7 +408,7 @@
         <plugin>
           <groupId>com.github.sdorra</groupId>
           <artifactId>buildfrontend-maven-plugin</artifactId>
-          <version>2.3.0</version>
+          <version>2.5.0</version>
         </plugin>
 
         <plugin>

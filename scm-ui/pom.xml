@@ -72,8 +72,6 @@
               <skip>${skipTests}</skip>
             </configuration>
           </execution>
-          <!--
-          TODO pass version to deploy script
           <execution>
             <id>deploy</id>
             <phase>deploy</phase>
@@ -82,9 +80,11 @@
             </goals>
             <configuration>
               <script>deploy</script>
+              <args>
+                <arg>${project.version}</arg>
+              </args>
             </configuration>
           </execution>
-          -->
         </executions>
       </plugin>
 

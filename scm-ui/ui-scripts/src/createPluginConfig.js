@@ -38,7 +38,9 @@ module.exports = function(mode) {
       "@scm-manager/ui-extensions",
       "@scm-manager/ui-components",
       "classnames",
-      "query-string"
+      "query-string",
+      "redux",
+      "react-redux"
     ],
     module: {
       rules: [
