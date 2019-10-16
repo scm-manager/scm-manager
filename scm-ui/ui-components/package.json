@@ -50,5 +50,8 @@
   "jest": {
     "preset": "@scm-manager/jest-preset"
   },
-  "prettier": "@scm-manager/prettier-config"
+  "prettier": "@scm-manager/prettier-config",
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -14,5 +14,8 @@
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.6.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

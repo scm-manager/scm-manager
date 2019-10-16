@@ -14,5 +14,8 @@
     "jest": "^24.9.0",
     "raf": "^3.4.1"
   },
-  "prettier": "@scm-manager/prettier-config"
+  "prettier": "@scm-manager/prettier-config",
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -29,5 +29,8 @@
     "rules": {
       "no-console": "off"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
