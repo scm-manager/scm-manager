@@ -36,7 +36,9 @@ module.exports = function(mode) {
       "styled-components",
       "@scm-manager/ui-types",
       "@scm-manager/ui-extensions",
-      "@scm-manager/ui-components"
+      "@scm-manager/ui-components",
+      "classnames",
+      "query-string"
     ],
     module: {
       rules: [
