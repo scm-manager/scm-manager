@@ -1,4 +1,4 @@
-const createSnapshotVersion = (baseVersion) => {
+const createSnapshotVersion = () => {
   const date = new Date();
   const year = date.getFullYear();
   const month = date.getMonth().toString().padStart(2, "0");
