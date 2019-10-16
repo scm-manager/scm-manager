@@ -1,18 +1,13 @@
 // @flow
 import React from "react";
-import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import {connect} from "react-redux";
+import {translate} from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import type { File, Repository } from "@scm-manager/ui-types";
-import {
-  DateFromNow,
-  FileSize,
-  ErrorNotification,
-  Icon
-} from "@scm-manager/ui-components";
-import { getSources } from "../modules/sources";
+import {ExtensionPoint} from "@scm-manager/ui-extensions";
+import type {File, Repository} from "@scm-manager/ui-types";
+import {DateFromNow, ErrorNotification, FileSize, Icon} from "@scm-manager/ui-components";
+import {getSources} from "../modules/sources";
 import FileButtonAddons from "../components/content/FileButtonAddons";
 import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
@@ -34,7 +29,7 @@ type State = {
   errorFromExtension?: Error
 };
 
-const VCenteredChild = styled.article`
+const VCenteredChild = styled.div`
   align-items: center;
 `;
 

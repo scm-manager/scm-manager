@@ -1,6 +1,13 @@
 // @flow
 import * as React from "react";
 import classNames from "classnames";
+import styled from "styled-components";
+
+const Flex = styled.div`
+  &.field:not(:last-child) {
+    margin-bottom: 0;
+  }
+`;
 
 type Props = {
   className?: string,
@@ -14,14 +21,18 @@ class ButtonAddons extends React.Component<Props> {
     const childWrapper = [];
     React.Children.forEach(children, child => {
       if (child) {
-        childWrapper.push(<p className="control" key={childWrapper.length}>{child}</p>);
+        childWrapper.push(
+          <p className="control" key={childWrapper.length}>
+            {child}
+          </p>
+        );
       }
     });
 
     return (
-      <div className={classNames("field", "has-addons", className)}>
+      <Flex className={classNames("field", "has-addons", className)}>
         {childWrapper}
-      </div>
+      </Flex>
     );
   }
 }
