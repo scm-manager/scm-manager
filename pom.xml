@@ -69,10 +69,9 @@
     <module>scm-annotation-processor</module>
     <module>scm-core</module>
     <module>scm-test</module>
-    <module>scm-ui-components</module>
+    <module>scm-ui</module>
     <module>scm-plugins</module>
     <module>scm-dao-xml</module>
-    <module>scm-ui</module>
     <module>scm-webapp</module>
     <module>scm-server</module>
     <module>scm-it</module>
@@ -437,7 +436,7 @@
         <plugin>
           <groupId>sonia.scm.maven</groupId>
           <artifactId>smp-maven-plugin</artifactId>
-          <version>1.0.0-alpha-6</version>
+          <version>1.0.0-alpha-7</version>
         </plugin>
 
         <plugin>
@@ -867,7 +866,7 @@
     <!-- *UserPassword JS files are excluded because extraction of common code would not make the code more readable -->
     <sonar.cpd.exclusions>**/*StoreFactory.java,**/*UserPassword.js</sonar.cpd.exclusions>
 
-    <sonar.nodejs.executable>./scm-ui/target/frontend/buildfrontend-node/node-v${node.version}-linux-x64/bin/node</sonar.nodejs.executable>
+    <sonar.nodejs.executable>./scm-ui/target/frontend/buildfrontend-node/node-v${nodejs.version}-linux-x64/bin/node</sonar.nodejs.executable>
 
 
   </properties>

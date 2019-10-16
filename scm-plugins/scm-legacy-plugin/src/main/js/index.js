@@ -1,5 +1,4 @@
 // @flow
-
 import React from "react";
 import {withRouter} from "react-router-dom";
 import {binder} from "@scm-manager/ui-extensions";
@@ -22,7 +21,7 @@ type State = {
 class LegacyRepositoryRedirect extends React.Component<Props, State> {
   constructor(props: Props, state: State) {
     super(props, state);
-    this.state = { error: null };
+    this.state = { error: undefined };
   }
 
   handleError = (error: Error) => {

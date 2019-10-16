@@ -44,10 +44,6 @@
         <artifactId>smp-maven-plugin</artifactId>
         <configuration>
           <corePlugin>true</corePlugin>
-          <links>
-            <link>@scm-manager/ui-types</link>
-            <link>@scm-manager/ui-components</link>
-          </links>
         </configuration>
       </plugin>
 

@@ -1,9 +1,17 @@
-[ignore]
-.*/node_modules/module-deps/.*
+[declarations]
+../../scm-ui/ui-types/.*
+../../scm-ui/ui-components/.*
+../../scm-ui/ui-extensions/.*
+../../scm-ui/ui-tests/.*
+
 
 [include]
-
-[libs]
-./node_modules/@scm-manager/ui-components/flow-typed
+./src/**
+../../scm-ui/ui-types/.*
+../../scm-ui/ui-components/.*
+../../scm-ui/ui-extensions/.*
+../../scm-ui/ui-tests/.*
 
 [options]
+module.system.node.resolve_dirname=../../node_modules
+module.name_mapper='^@scm-manager\/ui-\([a-zA-Z0-9_\-]+\)$' -> '<PROJECT_ROOT>/../../scm-ui/ui-\1'

@@ -1,0 +1,175 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots Button Colors 1`] = `
+<div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
+      className="button is-primary"
+      onClick={[Function]}
+      type="button"
+    >
+      primary
+       
+    </button>
+  </div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
+      className="button is-link"
+      onClick={[Function]}
+      type="button"
+    >
+      link
+       
+    </button>
+  </div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
+      className="button is-info"
+      onClick={[Function]}
+      type="button"
+    >
+      info
+       
+    </button>
+  </div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
+      className="button is-success"
+      onClick={[Function]}
+      type="button"
+    >
+      success
+       
+    </button>
+  </div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
+      className="button is-warning"
+      onClick={[Function]}
+      type="button"
+    >
+      warning
+       
+    </button>
+  </div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
+      className="button is-danger"
+      onClick={[Function]}
+      type="button"
+    >
+      danger
+       
+    </button>
+  </div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
+      className="button is-white"
+      onClick={[Function]}
+      type="button"
+    >
+      white
+       
+    </button>
+  </div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
+      className="button is-light"
+      onClick={[Function]}
+      type="button"
+    >
+      light
+       
+    </button>
+  </div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
+      className="button is-dark"
+      onClick={[Function]}
+      type="button"
+    >
+      dark
+       
+    </button>
+  </div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
+      className="button is-black"
+      onClick={[Function]}
+      type="button"
+    >
+      black
+       
+    </button>
+  </div>
+  <div
+    className="sc-bwzfXH EEAiO"
+  >
+    <button
+      className="button is-text"
+      onClick={[Function]}
+      type="button"
+    >
+      text
+       
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Storyshots DateFromNow Default 1`] = `
+<div>
+  <p>
+    <time
+      className="sc-bdVaJa dkavpQ"
+      title="2009-06-30 18:30:00"
+    >
+      over 10 years ago
+    </time>
+  </p>
+  <p>
+    <time
+      className="sc-bdVaJa dkavpQ"
+      title="2019-06-30 18:30:00"
+    >
+      3 months ago
+    </time>
+  </p>
+  <p>
+    <time
+      className="sc-bdVaJa dkavpQ"
+      title="2019-10-12 13:56:40"
+    >
+      less than a minute ago
+    </time>
+  </p>
+  <p>
+    <time
+      className="sc-bdVaJa dkavpQ"
+      title="2019-10-11 13:56:40"
+    >
+      1 day ago
+    </time>
+  </p>
+</div>
+`;

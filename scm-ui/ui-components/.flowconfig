@@ -1,0 +1,14 @@
+[ignore]
+
+[include]
+../ui-types
+
+[libs]
+
+[lints]
+
+[options]
+module.system.node.resolve_dirname=../../node_modules
+module.name_mapper='^@scm-manager\/ui-types$' -> '<PROJECT_ROOT>/../ui-types'
+
+[strict]

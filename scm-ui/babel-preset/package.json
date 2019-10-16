@@ -1,0 +1,18 @@
+{
+  "name": "@scm-manager/babel-preset",
+  "version": "2.0.0-SNAPSHOT",
+  "license": "BSD-3-Clause",
+  "description": "Babel configuration for scm-manager and its plugins",
+  "main": "index.js",
+  "author": "Sebastian Sdorra <s.sdorra@cloudogu.com>",
+  "private": false,
+  "prettier": "@scm-manager/prettier-config",
+  "dependencies": {
+    "@babel/core": "^7.6.3",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-optional-chaining": "^7.6.0",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/preset-react": "^7.6.3"
+  }
+}

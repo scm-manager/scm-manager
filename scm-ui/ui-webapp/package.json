@@ -1,0 +1,51 @@
+{
+  "homepage": "/scm",
+  "name": "@scm-manager/ui-webapp",
+  "version": "2.0.0-SNAPSHOT",
+  "private": true,
+  "main": "dist/ui-webapp.js",
+  "dependencies": {
+    "@scm-manager/ui-components": "^2.0.0-SNAPSHOT",
+    "@scm-manager/ui-extensions": "^2.0.0-SNAPSHOT",
+    "classnames": "^2.2.5",
+    "history": "^4.10.1",
+    "i18next": "^11.4.0",
+    "i18next-browser-languagedetector": "^2.2.2",
+    "i18next-fetch-backend": "^0.1.0",
+    "memoize-one": "^5.0.4",
+    "query-string": "5",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "react-i18next": "^7.9.0",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^5.1.2",
+    "react-select": "^2.1.2",
+    "redux": "^4.0.0",
+    "redux-devtools-extension": "^2.13.5",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^4.4.0",
+    "systemjs": "0.21.6"
+  },
+  "scripts": {
+    "test": "jest",
+    "flow": "flow"
+  },
+  "devDependencies": {
+    "@scm-manager/ui-tests": "^2.0.0-SNAPSHOT",
+    "fetch-mock": "^7.5.1",
+    "flow-bin": "^0.109.0",
+    "flow-typed": "^2.6.1",
+    "react-test-renderer": "^16.4.1",
+    "redux-mock-store": "^1.5.3"
+  },
+  "babel": {
+    "presets": [
+      "@scm-manager/babel-preset"
+    ]
+  },
+  "jest": {
+    "preset": "@scm-manager/jest-preset"
+  },
+  "prettier": "@scm-manager/prettier-config"
+}
