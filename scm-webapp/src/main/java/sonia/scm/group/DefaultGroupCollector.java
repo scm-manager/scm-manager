@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.security.Authentications;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,7 +39,10 @@ public class DefaultGroupCollector implements GroupCollector {
   public Set<String> collect(String principal) {
     ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
-    builder.add(AUTHENTICATED);
+    if (!Authentications.isSubjectAnonymous(principal)) {
+      builder.add(AUTHENTICATED);
+    }
+
     builder.addAll(resolveExternalGroups(principal));
     appendInternalGroups(principal, builder);
 

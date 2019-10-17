@@ -6,18 +6,18 @@ import { translate } from "react-i18next";
 import { withRouter } from "react-router-dom";
 import {
   fetchMe,
-  isAuthenticated,
+  getFetchMeFailure,
   getMe,
-  isFetchMePending,
-  getFetchMeFailure
+  isAuthenticated,
+  isFetchMePending
 } from "../modules/auth";
 
 import {
-  PrimaryNavigation,
-  Loading,
   ErrorPage,
   Footer,
-  Header
+  Header,
+  Loading,
+  PrimaryNavigation
 } from "@scm-manager/ui-components";
 import type { Links, Me } from "@scm-manager/ui-types";
 import {
@@ -50,23 +50,10 @@ class App extends Component<Props> {
   }
 
   render() {
-    const {
-      me,
-      loading,
-      error,
-      authenticated,
-      links,
-      t
-    } = this.props;
+    const { me, loading, error, authenticated, links, t } = this.props;
 
     let content;
-    const navigation = authenticated ? (
-      <PrimaryNavigation
-        links={links}
-      />
-    ) : (
-      ""
-    );
+    const navigation = authenticated ? <PrimaryNavigation links={links} /> : "";
 
     if (loading) {
       content = <Loading />;
@@ -85,7 +72,7 @@ class App extends Component<Props> {
       <div className="App">
         <Header>{navigation}</Header>
         {content}
-        <Footer me={me} />
+        {authenticated && <Footer me={me} />}
       </div>
     );
   }

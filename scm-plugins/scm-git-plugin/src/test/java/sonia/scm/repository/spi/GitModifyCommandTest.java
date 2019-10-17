@@ -17,7 +17,6 @@ import sonia.scm.AlreadyExistsException;
 import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NotFoundException;
-import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;

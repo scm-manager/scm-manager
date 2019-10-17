@@ -254,9 +254,11 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     collectGlobalPermissions(builder, user, groups);
     collectRepositoryPermissions(builder, user, groups);
     builder.add(canReadOwnUser(user));
-    builder.add(getUserAutocompletePermission());
-    builder.add(getGroupAutocompletePermission());
-    builder.add(getChangeOwnPasswordPermission(user));
+    if (!Authentications.isSubjectAnonymous(user.getName())) {
+      builder.add(getUserAutocompletePermission());
+      builder.add(getGroupAutocompletePermission());
+      builder.add(getChangeOwnPasswordPermission(user));
+    }
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(ImmutableSet.of(Role.USER));
     info.addStringPermissions(builder.build());

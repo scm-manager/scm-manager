@@ -13,7 +13,6 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;

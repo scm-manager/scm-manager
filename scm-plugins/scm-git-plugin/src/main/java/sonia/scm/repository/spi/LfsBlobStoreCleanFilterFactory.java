@@ -3,7 +3,6 @@ package sonia.scm.repository.spi;
 import org.eclipse.jgit.lib.Repository;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
@@ -20,7 +19,8 @@ class LfsBlobStoreCleanFilterFactory {
     this.targetFile = targetFile;
   }
 
-  @SuppressWarnings("squid:S1172") // suppress unused parameter to keep the api compatible to jgit's FilterCommandFactory
+  @SuppressWarnings("squid:S1172")
+    // suppress unused parameter to keep the api compatible to jgit's FilterCommandFactory
   LfsBlobStoreCleanFilter createFilter(Repository db, InputStream in, OutputStream out) {
     return new LfsBlobStoreCleanFilter(in, out, blobStoreFactory.getLfsBlobStore(repository), targetFile);
   }

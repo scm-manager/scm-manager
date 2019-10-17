@@ -6,12 +6,12 @@ import { compose } from "redux";
 import { translate } from "react-i18next";
 import styled from "styled-components";
 import {
-  login,
+  getLoginFailure,
   isAuthenticated,
   isLoginPending,
-  getLoginFailure
+  login
 } from "../modules/auth";
-import { getLoginLink, getLoginInfoLink } from "../modules/indexResource";
+import { getLoginInfoLink, getLoginLink } from "../modules/indexResource";
 import LoginInfo from "../components/LoginInfo";
 
 type Props = {

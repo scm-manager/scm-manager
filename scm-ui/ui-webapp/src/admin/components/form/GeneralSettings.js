@@ -1,8 +1,8 @@
 // @flow
 import React from "react";
-import { translate } from "react-i18next";
-import { Checkbox, InputField } from "@scm-manager/ui-components";
-import type { NamespaceStrategies } from "@scm-manager/ui-types";
+import {translate} from "react-i18next";
+import {Checkbox, InputField} from "@scm-manager/ui-components";
+import type {NamespaceStrategies} from "@scm-manager/ui-types";
 import NamespaceStrategySelect from "./NamespaceStrategySelect";
 
 type Props = {
@@ -30,6 +30,7 @@ class GeneralSettings extends React.Component<Props> {
       loginInfoUrl,
       pluginUrl,
       enabledXsrfProtection,
+      anonymousAccessEnabled,
       namespaceStrategy,
       hasUpdatePermission,
       namespaceStrategies
@@ -88,6 +89,15 @@ class GeneralSettings extends React.Component<Props> {
               helpText={t("help.pluginUrlHelpText")}
             />
           </div>
+          <div className="column is-half">
+            <Checkbox
+              checked={anonymousAccessEnabled}
+              label={t("general-settings.anonymous-access-enabled")}
+              onChange={this.handleEnableAnonymousAccess}
+              disabled={!hasUpdatePermission}
+              helpText={t("help.allowAnonymousAccessHelpText")}
+            />
+          </div>
         </div>
       </div>
     );
@@ -101,6 +111,9 @@ class GeneralSettings extends React.Component<Props> {
   };
   handleEnabledXsrfProtectionChange = (value: boolean) => {
     this.props.onChange(true, value, "enabledXsrfProtection");
+  };
+  handleEnableAnonymousAccess = (value: boolean) => {
+    this.props.onChange(true, value, "anonymousAccessEnabled");
   };
   handleNamespaceStrategyChange = (value: string) => {
     this.props.onChange(true, value, "namespaceStrategy");

@@ -36,6 +36,14 @@ public class RepositoryUtil {
     return REPOSITORY_CLIENT_FACTORY.create(repositoryType, httpProtocolUrl, username, password, folder);
   }
 
+  public static RepositoryClient createAnonymousRepositoryClient(String repositoryType, File folder) throws IOException {
+    String httpProtocolUrl = TestData.callRepository("scmadmin", "scmadmin", repositoryType, HttpStatus.SC_OK)
+      .extract()
+      .path("_links.protocol.find{it.name=='http'}.href");
+
+    return REPOSITORY_CLIENT_FACTORY.create(repositoryType, httpProtocolUrl, folder);
+  }
+
   public static String addAndCommitRandomFile(RepositoryClient client, String username) throws IOException {
     String uuid = UUID.randomUUID().toString();
     String name = "file-" + uuid + ".uuid";

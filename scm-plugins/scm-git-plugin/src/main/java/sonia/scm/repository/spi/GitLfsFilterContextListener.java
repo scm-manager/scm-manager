@@ -28,10 +28,10 @@ import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 public class GitLfsFilterContextListener implements ServletContextListener {
 
   public static final String GITCONFIG = "[filter \"lfs\"]\n" +
-        "clean = git-lfs clean -- %f\n" +
-        "smudge = git-lfs smudge -- %f\n" +
-        "process = git-lfs filter-process\n" +
-        "required = true\n";
+    "clean = git-lfs clean -- %f\n" +
+    "smudge = git-lfs smudge -- %f\n" +
+    "process = git-lfs filter-process\n" +
+    "required = true\n";
   public static final Pattern COMMAND_NAME_PATTERN = Pattern.compile("git-lfs (smudge|clean) -- .*");
 
   private static final Logger LOG = LoggerFactory.getLogger(GitLfsFilterContextListener.class);

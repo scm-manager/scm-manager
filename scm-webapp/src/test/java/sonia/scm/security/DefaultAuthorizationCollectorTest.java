@@ -48,6 +48,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.SCMContext;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupCollector;
@@ -169,6 +170,23 @@ public class DefaultAuthorizationCollectorTest {
     assertThat(authInfo.getRoles(), Matchers.contains(Role.USER));
     assertThat(authInfo.getStringPermissions(), hasSize(4));
     assertThat(authInfo.getStringPermissions(), containsInAnyOrder("user:autocomplete", "group:autocomplete", "user:changePassword:trillian", "user:read:trillian"));
+    assertThat(authInfo.getObjectPermissions(), nullValue());
+  }
+
+  /**
+   * Tests {@link AuthorizationCollector#collect(PrincipalCollection)} ()} without permissions.
+   */
+  @Test
+  @SubjectAware(
+    configuration = "classpath:sonia/scm/shiro-001.ini"
+  )
+  public void testCollectWithoutPermissionsForAnonymousUser() {
+    authenticate(SCMContext.ANONYMOUS, "anon");
+
+    AuthorizationInfo authInfo = collector.collect();
+    assertThat(authInfo.getRoles(), Matchers.contains(Role.USER));
+    assertThat(authInfo.getStringPermissions(), hasSize(1));
+    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("user:read:_anonymous"));
     assertThat(authInfo.getObjectPermissions(), nullValue());
   }
 

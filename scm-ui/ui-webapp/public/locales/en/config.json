@@ -57,7 +57,7 @@
     "pluginUrlHelpText": "The url of the Plugin Center API. Explanation of the placeholders: version = SCM-Manager Version; os = Operation System; arch = Architecture",
     "enableForwardingHelpText": "Enable mod_proxy port forwarding.",
     "disableGroupingGridHelpText": "Disable repository Groups. A complete page reload is required after a change of this value.",
-    "allowAnonymousAccessHelpText": "Anonymous users have read access on public repositories.",
+    "allowAnonymousAccessHelpText": "Anonymous users have access on granted repositories.",
     "skipFailedAuthenticatorsHelpText": "Do not stop the authentication chain, if an authenticator finds the user but fails to authenticate the user.",
     "adminGroupsHelpText": "Names of groups with admin permissions.",
     "adminUsersHelpText": "Names of users with admin permissions.",

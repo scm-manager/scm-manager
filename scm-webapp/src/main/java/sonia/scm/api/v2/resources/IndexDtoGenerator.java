@@ -11,7 +11,7 @@ import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupPermissions;
 import sonia.scm.plugin.PluginPermissions;
-import sonia.scm.repository.RepositoryRolePermissions;
+import sonia.scm.security.Authentications;
 import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.UserPermissions;
 
@@ -46,10 +46,14 @@ public class IndexDtoGenerator extends HalAppenderMapper {
     }
 
     if (SecurityUtils.getSubject().isAuthenticated()) {
-      builder.single(
-        link("me", resourceLinks.me().self()),
-        link("logout", resourceLinks.authentication().logout())
-      );
+      builder.single(link("me", resourceLinks.me().self()));
+
+      if (Authentications.isAuthenticatedSubjectAnonymous()) {
+        builder.single(link("login", resourceLinks.authentication().jsonLogin()));
+      } else {
+        builder.single(link("logout", resourceLinks.authentication().logout()));
+      }
+
       if (PluginPermissions.read().isPermitted()) {
         builder.single(link("installedPlugins", resourceLinks.installedPluginCollection().self()));
         builder.single(link("availablePlugins", resourceLinks.availablePluginCollection().self()));

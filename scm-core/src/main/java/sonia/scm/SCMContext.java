@@ -39,7 +39,7 @@ import sonia.scm.user.User;
 import sonia.scm.util.ServiceUtil;
 
 /**
- * The SCMConext searches a implementation of {@link SCMContextProvider} and
+ * The SCMContext searches a implementation of {@link SCMContextProvider} and
  * holds a singleton instance of this implementation.
  *
  * @author Sebastian Sdorra
@@ -51,7 +51,7 @@ public final class SCMContext
   public static final String DEFAULT_PACKAGE = "sonia.scm";
 
   /** Name of the anonymous user */
-  public static final String USER_ANONYMOUS = "anonymous";
+  public static final String USER_ANONYMOUS = "_anonymous";
 
   /**
    * the anonymous user

@@ -57,7 +57,7 @@
     "pluginUrlHelpText": "Die URL der Plugin Center API. Beschreibung der Platzhalter: version = SCM-Manager Version; os = Betriebssystem; arch = Architektur",
     "enableForwardingHelpText": "mod_proxy Port Weiterleitung aktivieren.",
     "disableGroupingGridHelpText": "Repository Gruppen deaktivieren. Nach einer Änderung an dieser Einstellung muss die Seite komplett neu geladen werden.",
-    "allowAnonymousAccessHelpText": "Anonyme Benutzer haben Zugriff auf öffentliche Repositories.",
+    "allowAnonymousAccessHelpText": "Anonyme Benutzer haben Zugriff auf freigegebene Repositories.",
     "skipFailedAuthenticatorsHelpText": "Die Kette der Authentifikatoren wird nicht beendet, wenn ein Authentifikator einen Benutzer findet, ihn aber nicht erfolgreich authentifizieren kann.",
     "adminGroupsHelpText": "Namen von Gruppen mit Admin-Berechtigungen.",
     "adminUsersHelpText": "Namen von Benutzern mit Admin-Berechtigungen.",
