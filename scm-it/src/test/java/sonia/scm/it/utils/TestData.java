@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static sonia.scm.it.utils.RestUtil.createResourceUrl;
 import static sonia.scm.it.utils.RestUtil.given;
+import static sonia.scm.it.utils.RestUtil.givenAnonymous;
 import static sonia.scm.it.utils.ScmTypes.availableScmTypes;
 
 public class TestData {
@@ -25,7 +26,7 @@ public class TestData {
   private static final Logger LOG = LoggerFactory.getLogger(TestData.class);
 
   public static final String USER_SCM_ADMIN = "scmadmin";
-  public static final String USER_ANONYMOUS = "anonymous";
+  public static final String USER_ANONYMOUS = "_anonymous";
 
   public static final Collection<String> READ = asList("read", "pull");
   public static final Collection<String> WRITE = asList("read", "write", "pull", "push");
@@ -139,6 +140,16 @@ public class TestData {
 
   public static ValidatableResponse callRepository(String username, String password, String repositoryType, int expectedStatusCode) {
     return given(VndMediaType.REPOSITORY, username, password)
+
+      .when()
+      .get(getDefaultRepositoryUrl(repositoryType))
+
+      .then()
+      .statusCode(expectedStatusCode);
+  }
+
+  public static ValidatableResponse callAnonymousRepository(String repositoryType, int expectedStatusCode) {
+    return givenAnonymous(VndMediaType.REPOSITORY)
 
       .when()
       .get(getDefaultRepositoryUrl(repositoryType))

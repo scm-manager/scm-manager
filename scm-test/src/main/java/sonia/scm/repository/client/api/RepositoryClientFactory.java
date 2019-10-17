@@ -123,6 +123,12 @@ public final class RepositoryClientFactory
       password, workingCopy));
   }
 
+  public RepositoryClient create(String type, String url, File workingCopy)
+    throws IOException
+  {
+    return new RepositoryClient(getProvider(type).create(url, null, null, workingCopy));
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**

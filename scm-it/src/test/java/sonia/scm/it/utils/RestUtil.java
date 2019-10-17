@@ -29,9 +29,13 @@ public class RestUtil {
   }
 
   public static RequestSpecification given(String mediaType, String username, String password) {
+    return givenAnonymous(mediaType)
+      .auth().preemptive().basic(username, password);
+  }
+
+  public static RequestSpecification givenAnonymous(String mediaType) {
     return RestAssured.given()
       .contentType(mediaType)
-      .accept(mediaType)
-      .auth().preemptive().basic(username, password);
+      .accept(mediaType);
   }
 }
