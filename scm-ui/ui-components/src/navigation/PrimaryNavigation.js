@@ -40,7 +40,7 @@ class PrimaryNavigation extends React.Component<Props> {
 
     if (binder.hasExtension("primary-navigation.logout", props)) {
       navigationItems.push(
-        <ExtensionPoint name="primary-navigation.logout" props={props} />
+        <ExtensionPoint key="primary-navigation.logout" name="primary-navigation.logout" props={props} />
       );
     } else {
       append("/logout", "/logout", "primary-navigation.logout", "logout");
@@ -59,7 +59,7 @@ class PrimaryNavigation extends React.Component<Props> {
     const append = this.createNavigationAppender(navigationItems);
     if (binder.hasExtension("primary-navigation.first-menu", props)) {
       navigationItems.push(
-        <ExtensionPoint name="primary-navigation.first-menu" props={props} />
+        <ExtensionPoint key="primary-navigation.first-menu" name="primary-navigation.first-menu" props={props} />
       );
     }
     append(
@@ -79,6 +79,7 @@ class PrimaryNavigation extends React.Component<Props> {
 
     navigationItems.push(
       <ExtensionPoint
+        key="primary-navigation"
         name="primary-navigation"
         renderAll={true}
         props={{ links: this.props.links }}
