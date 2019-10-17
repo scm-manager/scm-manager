@@ -1,6 +1,11 @@
 // @flow
 import React from "react";
-import { LightAsync as ReactSyntaxHighlighter } from "react-syntax-highlighter";
+
+// TODO fix code splitting in production
+// Storybook does not like the LightAsync import:
+// import { LightAsync as ReactSyntaxHighlighter } from "react-syntax-highlighter";
+// so we should use the default import for development and the LightAsync for production
+import ReactSyntaxHighlighter from "react-syntax-highlighter";
 import { arduinoLight } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 
 type Props = {

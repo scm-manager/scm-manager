@@ -1,1 +1,1 @@
-import 'storybook-addon-i18next/register';
+import "storybook-addon-i18next/register";

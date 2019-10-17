@@ -12,7 +12,9 @@
   "license": "BSD-3-Clause",
   "scripts": {
     "test": "jest",
-    "storybook": "start-storybook"
+    "storybook": "NODE_ENV=development start-storybook -s ../ui-webapp/public,src/__resources__",
+    "storyshots": "jest --testPathPattern=\"storyshots.test.js\" --testNamePattern \".*Button\" --collectCoverage=false",
+    "update-storyshots": "jest --testPathPattern=\"storyshots.test.js\" --testNamePattern \".*Button\" -u"
   },
   "devDependencies": {
     "@scm-manager/ui-tests": "^2.0.0-SNAPSHOT",
@@ -25,6 +27,7 @@
     "flow-bin": "^0.109.0",
     "flow-typed": "^2.5.1",
     "raf": "^3.4.0",
+    "react-test-renderer": "^16.10.2",
     "storybook-addon-i18next": "^1.2.1"
   },
   "dependencies": {

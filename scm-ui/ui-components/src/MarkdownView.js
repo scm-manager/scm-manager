@@ -11,6 +11,7 @@ type Props = {
   content: string,
   renderContext?: Object,
   renderers?: Object,
+  skipHtml?: boolean,
   enableAnchorHeadings: boolean,
 
   // context props
@@ -40,7 +41,8 @@ const MarkdownWrapper = styled.div`
 
 class MarkdownView extends React.Component<Props> {
   static defaultProps = {
-    enableAnchorHeadings: false
+    enableAnchorHeadings: false,
+    skipHtml: false
   };
 
   contentRef: ?HTMLDivElement;
@@ -69,7 +71,8 @@ class MarkdownView extends React.Component<Props> {
       content,
       renderers,
       renderContext,
-      enableAnchorHeadings
+      enableAnchorHeadings,
+      skipHtml
     } = this.props;
 
     const rendererFactory = binder.getExtension("markdown-renderer-factory");
@@ -95,8 +98,8 @@ class MarkdownView extends React.Component<Props> {
       <MarkdownWrapper ref={el => (this.contentRef = el)}>
         <Markdown
           className="content"
-          skipHtml={true}
-          escapeHtml={true}
+          skipHtml={skipHtml}
+          escapeHtml={skipHtml}
           source={content}
           renderers={rendererList}
         />

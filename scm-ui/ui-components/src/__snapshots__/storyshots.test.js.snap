@@ -1,9 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Storyshots Button Colors 1`] = `
+exports[`Storyshots Buttons|AddButton Default 1`] = `
+<div
+  className="sc-htoDjs bIDNS"
+>
+  <button
+    className="button is-primary"
+    onClick={[Function]}
+    type="button"
+  >
+    <span
+      className="icon is-medium"
+    >
+      <i
+        className="fas fa-plus has-text-inherit"
+      />
+    </span>
+    <span>
+       
+      Add
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Storyshots Buttons|Button Colors 1`] = `
 <div>
   <div
-    className="sc-bwzfXH EEAiO"
+    className="sc-htoDjs bIDNS"
   >
     <button
       className="button is-primary"
@@ -15,7 +39,7 @@ exports[`Storyshots Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-bwzfXH EEAiO"
+    className="sc-htoDjs bIDNS"
   >
     <button
       className="button is-link"
@@ -27,7 +51,7 @@ exports[`Storyshots Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-bwzfXH EEAiO"
+    className="sc-htoDjs bIDNS"
   >
     <button
       className="button is-info"
@@ -39,7 +63,7 @@ exports[`Storyshots Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-bwzfXH EEAiO"
+    className="sc-htoDjs bIDNS"
   >
     <button
       className="button is-success"
@@ -51,7 +75,7 @@ exports[`Storyshots Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-bwzfXH EEAiO"
+    className="sc-htoDjs bIDNS"
   >
     <button
       className="button is-warning"
@@ -63,7 +87,7 @@ exports[`Storyshots Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-bwzfXH EEAiO"
+    className="sc-htoDjs bIDNS"
   >
     <button
       className="button is-danger"
@@ -75,7 +99,7 @@ exports[`Storyshots Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-bwzfXH EEAiO"
+    className="sc-htoDjs bIDNS"
   >
     <button
       className="button is-white"
@@ -87,7 +111,7 @@ exports[`Storyshots Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-bwzfXH EEAiO"
+    className="sc-htoDjs bIDNS"
   >
     <button
       className="button is-light"
@@ -99,7 +123,7 @@ exports[`Storyshots Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-bwzfXH EEAiO"
+    className="sc-htoDjs bIDNS"
   >
     <button
       className="button is-dark"
@@ -111,7 +135,7 @@ exports[`Storyshots Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-bwzfXH EEAiO"
+    className="sc-htoDjs bIDNS"
   >
     <button
       className="button is-black"
@@ -123,7 +147,7 @@ exports[`Storyshots Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-bwzfXH EEAiO"
+    className="sc-htoDjs bIDNS"
   >
     <button
       className="button is-text"
@@ -134,6 +158,118 @@ exports[`Storyshots Button Colors 1`] = `
        
     </button>
   </div>
+</div>
+`;
+
+exports[`Storyshots Buttons|Button Loading 1`] = `
+<div
+  className="sc-htoDjs bIDNS"
+>
+  <button
+    className="button is-primary is-loading"
+    onClick={[Function]}
+    type="button"
+  >
+     
+    Loading Button
+  </button>
+</div>
+`;
+
+exports[`Storyshots Buttons|CreateButton Default 1`] = `
+<div
+  className="sc-htoDjs bIDNS"
+>
+  <div
+    className="sc-gzVnrw fzShco has-text-centered"
+  >
+    <button
+      className="button is-primary"
+      onClick={[Function]}
+      type="button"
+    >
+       
+      Create
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Buttons|DeleteButton Default 1`] = `
+<div
+  className="sc-htoDjs bIDNS"
+>
+  <button
+    className="button is-warning"
+    onClick={[Function]}
+    type="button"
+  >
+    <span
+      className="icon is-medium"
+    >
+      <i
+        className="fas fa-times has-text-inherit"
+      />
+    </span>
+    <span>
+       
+      Delete
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Storyshots Buttons|DownloadButton Default 1`] = `
+<div
+  className="sc-htoDjs bIDNS"
+>
+  <a
+    className="button is-link"
+    disabled={false}
+    href=""
+    onClick={[Function]}
+  >
+    <span
+      className="icon is-medium"
+    >
+      <i
+        className="fas fa-arrow-circle-down"
+      />
+    </span>
+    <span>
+      Download
+    </span>
+  </a>
+</div>
+`;
+
+exports[`Storyshots Buttons|EditButton Default 1`] = `
+<div
+  className="sc-htoDjs bIDNS"
+>
+  <button
+    className="button is-default"
+    onClick={[Function]}
+    type="button"
+  >
+     
+    Edit
+  </button>
+</div>
+`;
+
+exports[`Storyshots Buttons|SubmitButton Default 1`] = `
+<div
+  className="sc-htoDjs bIDNS"
+>
+  <button
+    className="button is-primary"
+    onClick={[Function]}
+    type="submit"
+  >
+     
+    Submit
+  </button>
 </div>
 `;
 
@@ -171,5 +307,33 @@ exports[`Storyshots DateFromNow Default 1`] = `
       1 day ago
     </time>
   </p>
+</div>
+`;
+
+exports[`Storyshots Loading Default 1`] = `
+<div>
+  <div
+    className="sc-bwzfXH fuRxdH is-flex"
+  >
+    <img
+      alt="loading.alt"
+      className="sc-htpNat bhQHKl"
+      src="/images/loading.svg"
+    />
+    <p
+      className="has-text-centered"
+    />
+  </div>
+</div>
+`;
+
+exports[`Storyshots Logo Default 1`] = `
+<div
+  className="sc-bxivhb gXEZub"
+>
+  <img
+    alt="logo.alt"
+    src="/images/logo.png"
+  />
 </div>
 `;
