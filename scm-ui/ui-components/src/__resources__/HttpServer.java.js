@@ -1,4 +1,4 @@
-package com.stackoverflow.q3732109;
+export default `package com.example;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,3 +29,4 @@ public class Test {
   }
 
 }
+`;

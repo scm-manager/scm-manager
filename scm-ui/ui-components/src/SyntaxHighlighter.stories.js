@@ -1,51 +1,36 @@
 // @flow
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { storiesOf } from "@storybook/react";
 import styled from "styled-components";
 import SyntaxHighlighter from "./SyntaxHighlighter";
-import Loading from "./Loading";
+
+import JavaHttpServer from "./__resources__/HttpServer.java";
+import GoHttpServer from "./__resources__/HttpServer.go";
+import JsHttpServer from "./__resources__/HttpServer.js.js";
+import PyHttpServer from "./__resources__/HttpServer.py";
 
 const Spacing = styled.div`
   padding: 1em;
 `;
 
-type Props = {
-  url: string,
-  language: string
-};
-
-const LoadingSyntaxHighlighter = ({ url, language }: Props) => {
-  const [content, setContent] = useState(undefined);
-  useEffect(() => {
-    fetch(url)
-      .then(response => response.text())
-      .then(setContent);
-  });
-  if (content) {
-    return <SyntaxHighlighter language={language} value={content} />;
-  } else {
-    return <Loading />;
-  }
-};
-
 storiesOf("SyntaxHighlighter", module)
   .add("Java", () => (
     <Spacing>
-      <LoadingSyntaxHighlighter language="java" url="/HttpServer.java" />
+      <SyntaxHighlighter language="java" value={JavaHttpServer} />
     </Spacing>
   ))
   .add("Go", () => (
     <Spacing>
-      <LoadingSyntaxHighlighter language="go" url="/HttpServer.go" />
+      <SyntaxHighlighter language="go" value={GoHttpServer} />
     </Spacing>
   ))
   .add("Javascript", () => (
     <Spacing>
-      <LoadingSyntaxHighlighter language="javascript" url="/HttpServer.js" />
+      <SyntaxHighlighter language="javascript" value={JsHttpServer} />
     </Spacing>
   ))
   .add("Python", () => (
     <Spacing>
-      <LoadingSyntaxHighlighter language="python" url="/HttpServer.py" />
+      <SyntaxHighlighter language="python" value={PyHttpServer} />
     </Spacing>
   ));

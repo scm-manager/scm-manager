@@ -1,4 +1,4 @@
-package main
+export default `package main
 
 import (
   "fmt"
@@ -15,3 +15,4 @@ func main() {
 
   http.ListenAndServe(":80", nil)
 }
+`;
