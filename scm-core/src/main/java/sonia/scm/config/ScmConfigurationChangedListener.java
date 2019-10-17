@@ -20,6 +20,10 @@ public class ScmConfigurationChangedListener {
 
   @Subscribe
   public void handleEvent(ScmConfigurationChangedEvent event) {
+    createAnonymousUserIfRequired(event);
+  }
+
+  private void createAnonymousUserIfRequired(ScmConfigurationChangedEvent event) {
     if (event.getConfiguration().isAnonymousAccessEnabled() && !userManager.contains(SCMContext.USER_ANONYMOUS)) {
       userManager.create(SCMContext.ANONYMOUS);
     }

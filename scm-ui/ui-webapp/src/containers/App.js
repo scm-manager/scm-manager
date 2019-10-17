@@ -38,10 +38,10 @@ class App extends Component<Props> {
   }
 
   render() {
-    const {me, loading, error, authenticated, links, t} = this.props;
+    const { me, loading, error, authenticated, links, t } = this.props;
 
     let content;
-    const navigation = authenticated ? <PrimaryNavigation links={links}/> : "";
+    const navigation = authenticated ? <PrimaryNavigation links={links} /> : "";
 
     if (loading) {
       content = <Loading />;
@@ -60,7 +60,7 @@ class App extends Component<Props> {
       <div className="App">
         <Header>{navigation}</Header>
         {content}
-        {authenticated && <Footer me={me}/>}
+        {authenticated && <Footer me={me} />}
       </div>
     );
   }

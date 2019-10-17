@@ -6,10 +6,10 @@ import sonia.scm.SCMContext;
 public class Authentications {
 
   public static boolean isAuthenticatedSubjectAnonymous() {
-    return SecurityUtils.getSubject().getPrincipal().equals(SCMContext.USER_ANONYMOUS);
+    return isSubjectAnonymous((String) SecurityUtils.getSubject().getPrincipal());
   }
 
   public static boolean isSubjectAnonymous(String principal) {
-    return principal.equals(SCMContext.USER_ANONYMOUS);
+    return SCMContext.USER_ANONYMOUS.equals(principal);
   }
 }

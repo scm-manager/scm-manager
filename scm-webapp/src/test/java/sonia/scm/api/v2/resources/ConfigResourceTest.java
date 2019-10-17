@@ -115,42 +115,6 @@ public class ConfigResourceTest {
   }
 
   @Test
-  @SubjectAware(username = "readWrite")
-  public void shouldUpdateConfigAndCreateAnonymousUser() throws URISyntaxException, IOException {
-    MockHttpRequest request = post("sonia/scm/api/v2/config-test-update-with-anonymous-access.json");
-
-    MockHttpResponse response = new MockHttpResponse();
-    dispatcher.invoke(request, response);
-    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
-
-    request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
-    response = new MockHttpResponse();
-    dispatcher.invoke(request, response);
-    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-    assertTrue(response.getContentAsString().contains("\"proxyPassword\":\"newPassword\""));
-    assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config"));
-    assertTrue("link not found", response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config"));
-  }
-
-  @Test
-  @SubjectAware(username = "readWrite")
-  public void shouldUpdateConfigAndNotCreateAnonymousUserIfAlreadyExists() throws URISyntaxException, IOException {
-    MockHttpRequest request = post("sonia/scm/api/v2/config-test-update-with-anonymous-access.json");
-
-    MockHttpResponse response = new MockHttpResponse();
-    dispatcher.invoke(request, response);
-    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
-
-    request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
-    response = new MockHttpResponse();
-    dispatcher.invoke(request, response);
-    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-    assertTrue(response.getContentAsString().contains("\"proxyPassword\":\"newPassword\""));
-    assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config"));
-    assertTrue("link not found", response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config"));
-  }
-
-  @Test
   @SubjectAware(username = "readOnly")
   public void shouldNotUpdateConfigWhenNotAuthorized() throws URISyntaxException, IOException {
     MockHttpRequest request = post("sonia/scm/api/v2/config-test-update.json");
@@ -188,7 +152,6 @@ public class ConfigResourceTest {
   private static ScmConfiguration createConfiguration() {
     ScmConfiguration scmConfiguration = new ScmConfiguration();
     scmConfiguration.setProxyPassword("heartOfGold");
-    scmConfiguration.setAnonymousAccessEnabled(true);
 
     return scmConfiguration;
   }
