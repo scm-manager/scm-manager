@@ -2,7 +2,6 @@ package sonia.scm.security;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
@@ -11,6 +10,8 @@ import sonia.scm.SCMContext;
 import sonia.scm.plugin.Extension;
 
 import javax.inject.Singleton;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 @Singleton
 @Extension
@@ -36,7 +37,8 @@ public class AnonymousRealm extends AuthenticatingRealm {
   }
 
   @Override
-  protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+  protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) {
+    checkArgument(authenticationToken instanceof AnonymousToken, "%s is required", AnonymousToken.class);
     return helper.authenticationInfoBuilder(SCMContext.USER_ANONYMOUS).build();
   }
 }
