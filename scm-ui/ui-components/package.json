@@ -13,8 +13,8 @@
   "scripts": {
     "test": "jest",
     "storybook": "NODE_ENV=development start-storybook -s ../ui-webapp/public,src/__resources__",
-    "storyshots": "jest --testPathPattern=\"storyshots.test.js\" --testNamePattern \".*Button\" --collectCoverage=false",
-    "update-storyshots": "jest --testPathPattern=\"storyshots.test.js\" --testNamePattern \".*Button\" -u"
+    "storyshots": "jest --testPathPattern=\"storyshots.test.js\" --collectCoverage=false",
+    "update-storyshots": "jest --testPathPattern=\"storyshots.test.js\" --testNamePattern \".*Button\" --collectCoverage=false -u"
   },
   "devDependencies": {
     "@scm-manager/ui-tests": "^2.0.0-SNAPSHOT",
