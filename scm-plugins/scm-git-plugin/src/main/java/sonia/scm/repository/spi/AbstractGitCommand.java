@@ -38,6 +38,7 @@ import com.google.common.base.Strings;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -217,7 +218,8 @@ class AbstractGitCommand
     Optional<RevCommit> doCommit(String message, Person author) {
       Person authorToUse = determineAuthor(author);
       try {
-        if (!clone.status().call().isClean()) {
+        Status status = clone.status().call();
+        if (!status.isClean() || isInMerge()) {
           return of(clone.commit()
             .setAuthor(authorToUse.getName(), authorToUse.getMail())
             .setMessage(message)
@@ -225,9 +227,13 @@ class AbstractGitCommand
         } else {
           return empty();
         }
-      } catch (GitAPIException e) {
+      } catch (GitAPIException | IOException e) {
         throw new InternalRepositoryException(context.getRepository(), "could not commit changes", e);
       }
+    }
+
+    private boolean isInMerge() throws IOException {
+      return clone.getRepository().readMergeHeads() != null && !clone.getRepository().readMergeHeads().isEmpty();
     }
 
     void push() {
