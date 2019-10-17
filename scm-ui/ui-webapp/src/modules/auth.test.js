@@ -35,7 +35,10 @@ import reducer, {
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
-import {FETCH_INDEXRESOURCES_PENDING, FETCH_INDEXRESOURCES_SUCCESS} from "./indexResource";
+import {
+  FETCH_INDEXRESOURCES_PENDING,
+  FETCH_INDEXRESOURCES_SUCCESS
+} from "./indexResource";
 
 const me = {
   name: "tricia",

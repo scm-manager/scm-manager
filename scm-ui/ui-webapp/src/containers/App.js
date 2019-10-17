@@ -1,13 +1,25 @@
 // @flow
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Main from "./Main";
-import {connect} from "react-redux";
-import {translate} from "react-i18next";
-import {withRouter} from "react-router-dom";
-import {fetchMe, getFetchMeFailure, getMe, isAuthenticated, isFetchMePending} from "../modules/auth";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
+import { withRouter } from "react-router-dom";
+import {
+  fetchMe,
+  getFetchMeFailure,
+  getMe,
+  isAuthenticated,
+  isFetchMePending
+} from "../modules/auth";
 
-import {ErrorPage, Footer, Header, Loading, PrimaryNavigation} from "@scm-manager/ui-components";
-import type {Links, Me} from "@scm-manager/ui-types";
+import {
+  ErrorPage,
+  Footer,
+  Header,
+  Loading,
+  PrimaryNavigation
+} from "@scm-manager/ui-components";
+import type { Links, Me } from "@scm-manager/ui-types";
 import {
   getFetchIndexResourcesFailure,
   getLinks,

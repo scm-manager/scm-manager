@@ -1,10 +1,10 @@
 // @flow
-import type {Me} from "@scm-manager/ui-types";
+import type { Me } from "@scm-manager/ui-types";
 import * as types from "./types";
 
-import {apiClient, UnauthorizedError} from "@scm-manager/ui-components";
-import {isPending} from "./pending";
-import {getFailure} from "./failure";
+import { apiClient, UnauthorizedError } from "@scm-manager/ui-components";
+import { isPending } from "./pending";
+import { getFailure } from "./failure";
 import {
   callFetchIndexResources,
   fetchIndexResources,
