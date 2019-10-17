@@ -181,7 +181,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
   }
 
   @TestFactory
-  @DisplayName("test endpoints on missing permissions and user is not Admin")
+  @DisplayName("test endpoints on missing permissions and is _anonymous")
   Stream<DynamicTest> missedPermissionAnonymousUnauthorizedTestFactory() {
     when(subject.getPrincipal()).thenReturn("_anonymous");
     doThrow(AuthorizationException.class).when(repositoryManager).get(any(NamespaceAndName.class));
