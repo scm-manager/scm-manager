@@ -48,6 +48,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
+import sonia.scm.security.Authentications;
 import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.Util;
 
@@ -378,7 +379,7 @@ public class DefaultUserManager extends AbstractUserManager
   public void changePasswordForLoggedInUser(String oldPassword, String newPassword) {
     User user = get((String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal());
 
-    if (!user.getPassword().equals(oldPassword)) {
+    if (!isAnonymousUser(user) && !user.getPassword().equals(oldPassword)) {
       throw new InvalidPasswordException(ContextEntry.ContextBuilder.entity("PasswordChange", "-").in(User.class, user.getName()));
     }
 
@@ -397,11 +398,15 @@ public class DefaultUserManager extends AbstractUserManager
     if (user == null) {
       throw new NotFoundException(User.class, userId);
     }
-    if (!isTypeDefault(user)) {
+    if (!isTypeDefault(user) || isAnonymousUser(user)) {
       throw new ChangePasswordNotAllowedException(ContextEntry.ContextBuilder.entity("PasswordChange", "-").in(User.class, user.getName()), user.getType());
     }
     user.setPassword(newPassword);
     this.modify(user);
+  }
+
+  private boolean isAnonymousUser(User user) {
+    return Authentications.isSubjectAnonymous(user.getName());
   }
 
   //~--- fields ---------------------------------------------------------------

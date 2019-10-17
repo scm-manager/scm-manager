@@ -12,14 +12,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import sonia.scm.SCMContext;
 import sonia.scm.group.GroupCollector;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
+import sonia.scm.user.UserPermissions;
 import sonia.scm.user.UserTestData;
 
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -154,6 +157,18 @@ class MeDtoFactoryTest {
     prepareSubject(user);
 
     when(subject.isPermitted("user:changePassword:trillian")).thenReturn(true);
+
+    MeDto dto = meDtoFactory.create();
+    assertThat(dto.getLinks().getLinkBy("password")).isNotPresent();
+  }
+
+  @Test
+  void shouldNotGetPasswordLinkForAnonymousUser() {
+    User user = SCMContext.ANONYMOUS;
+    prepareSubject(user);
+
+    when(userManager.isTypeDefault(any())).thenReturn(true);
+    when(UserPermissions.changePassword(user).isPermitted()).thenReturn(true);
 
     MeDto dto = meDtoFactory.create();
     assertThat(dto.getLinks().getLinkBy("password")).isNotPresent();
