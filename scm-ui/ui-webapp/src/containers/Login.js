@@ -11,7 +11,6 @@ import {
   isLoginPending,
   getLoginFailure
 } from "../modules/auth";
-import { connect } from "react-redux";
 import { getLoginInfoLink, getLoginLink } from "../modules/indexResource";
 import LoginInfo from "../components/LoginInfo";
 
