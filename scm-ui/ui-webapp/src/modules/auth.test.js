@@ -11,6 +11,7 @@ import reducer, {
   getLoginFailure,
   getLogoutFailure,
   getMe,
+  isAuthenticated,
   isFetchMePending,
   isLoginPending,
   isLogoutPending,
@@ -279,6 +280,21 @@ describe("auth actions", () => {
 
 describe("auth selectors", () => {
   const error = new Error("yo it failed");
+
+  it("should return true if me exist and login Link does not exist", () => {
+    expect(
+      isAuthenticated({ auth: { me }, indexResources: { links: {} } })
+    ).toBe(true);
+  });
+
+  it("should return false if me exist and login Link does exist", () => {
+    expect(
+      isAuthenticated({
+        auth: { me },
+        indexResources: { links: { login: { href: "login.href" } } }
+      })
+    ).toBe(false);
+  });
 
   it("should return me", () => {
     expect(getMe({ auth: { me } })).toBe(me);
