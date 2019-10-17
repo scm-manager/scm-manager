@@ -1,0 +1,27 @@
+{
+  "name": "@scm-manager/ui-styles",
+  "version": "2.0.0-SNAPSHOT",
+  "description": "Styles for SCM-Manager",
+  "main": "src/scm.scss",
+  "license": "BSD-3-Clause",
+  "private": true,
+  "scripts": {
+    "serve": "webpack-dev-server"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.11.2",
+    "bulma": "^0.7.5",
+    "bulma-popover": "^1.0.0",
+    "bulma-tooltip": "^3.0.0",
+    "react-diff-view": "^1.8.1"
+  },
+  "devDependencies": {
+    "css-loader": "^3.2.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.41.0",
+    "webpack-dev-server": "^3.8.2"
+  },
+  "prettier": "@scm-manager/prettier-config"
+}

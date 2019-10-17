@@ -18,11 +18,11 @@
 
   <properties>
     <sonar.language>js</sonar.language>
-    <sonar.sources>src</sonar.sources>
+    <sonar.sources>ui-extensions/src,ui-components/src,ui-webapp/src</sonar.sources>
     <sonar.test.exclusions>**/*.test.js,src/tests/**</sonar.test.exclusions>
     <sonar.coverage.exclusions>**/*.test.js,src/tests/**</sonar.coverage.exclusions>
     <sonar.javascript.jstest.reportsPath>target/jest-reports</sonar.javascript.jstest.reportsPath>
-    <sonar.javascript.lcov.reportPaths>target/jest-reports/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
+    <sonar.javascript.lcov.reportPaths>target/jest-reports/coverage-ui-extensions/lcov.info,target/jest-reports/coverage-ui-components/lcov.info,target/jest-reports/coverage-ui-webapp/lcov.info</sonar.javascript.lcov.reportPaths>
   </properties>
 
   <build>
@@ -33,6 +33,7 @@
         <groupId>com.github.sdorra</groupId>
         <artifactId>buildfrontend-maven-plugin</artifactId>
         <configuration>
+          <workingDirectory>${basedir}/..</workingDirectory>
           <node>
             <version>${nodejs.version}</version>
           </node>
@@ -43,26 +44,6 @@
           <script>run</script>
         </configuration>
         <executions>
-          <execution>
-            <id>link-ui-types</id>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>install-link</goal>
-            </goals>
-            <configuration>
-              <pkg>@scm-manager/ui-types</pkg>
-            </configuration>
-          </execution>
-          <execution>
-            <id>link-ui-components</id>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>install-link</goal>
-            </goals>
-            <configuration>
-              <pkg>@scm-manager/ui-components</pkg>
-            </configuration>
-          </execution>
           <execution>
             <id>install</id>
             <phase>process-resources</phase>
@@ -87,8 +68,21 @@
               <goal>run</goal>
             </goals>
             <configuration>
-              <script>test-ci</script>
+              <script>test</script>
               <skip>${skipTests}</skip>
+            </configuration>
+          </execution>
+          <execution>
+            <id>deploy</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <script>deploy</script>
+              <args>
+                <arg>${project.version}</arg>
+              </args>
             </configuration>
           </execution>
         </executions>
@@ -102,7 +96,11 @@
           <failOnMissingWebXml>false</failOnMissingWebXml>
           <webResources>
             <resource>
-              <directory>public</directory>
+              <directory>target/assets</directory>
+              <targetPath>assets</targetPath>
+            </resource>
+            <resource>
+              <directory>ui-webapp/public</directory>
             </resource>
           </webResources>
         </configuration>

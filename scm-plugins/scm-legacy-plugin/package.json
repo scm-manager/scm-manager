@@ -1,19 +1,23 @@
 {
-  "name": "@scm-manager/legacy-plugin",
+  "name": "@scm-manager/scm-legacy-plugin",
+  "private": true,
+  "version": "2.0.0-SNAPSHOT",
   "license": "BSD-3-Clause",
   "main": "src/main/js/index.js",
   "scripts": {
-    "build": "ui-bundler plugin",
-    "watch": "ui-bundler plugin -w",
-    "lint": "ui-bundler lint",
-    "flow": "flow check"
+    "build": "ui-scripts plugin",
+    "watch": "ui-scripts plugin-watch"
   },
+  "babel": {
+    "presets": [
+      "@scm-manager/babel-preset"
+    ]
+  },
+  "jest": {
+    "preset": "@scm-manager/jest-preset"
+  },
+  "prettier": "@scm-manager/prettier-config",
   "dependencies": {
-    "@scm-manager/ui-components": "latest",
-    "@scm-manager/ui-extensions": "^0.1.1",
-    "@scm-manager/ui-types": "latest"
-  },
-  "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.31"
+    "@scm-manager/ui-plugins": "^2.0.0-SNAPSHOT"
   }
 }

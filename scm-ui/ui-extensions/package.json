@@ -1,0 +1,26 @@
+{
+  "name": "@scm-manager/ui-extensions",
+  "version": "2.0.0-SNAPSHOT",
+  "main": "src/index.js",
+  "license": "BSD-3-Clause",
+  "private": false,
+  "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "^16.10.2"
+  },
+  "babel": {
+    "presets": [
+      "@scm-manager/babel-preset"
+    ]
+  },
+  "jest": {
+    "preset": "@scm-manager/jest-preset"
+  },
+  "prettier": "@scm-manager/prettier-config",
+  "publishConfig": {
+    "access": "public"
+  }
+}

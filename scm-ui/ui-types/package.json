@@ -1,0 +1,28 @@
+{
+  "name": "@scm-manager/ui-types",
+  "version": "2.0.0-SNAPSHOT",
+  "description": "Flow types for SCM-Manager related Objects",
+  "main": "src/index.js",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "repository": "https://bitbucket.org/sdorra/scm-manager",
+  "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
+  "license": "BSD-3-Clause",
+  "scripts": {
+    "check": "flow check"
+  },
+  "devDependencies": {
+    "flow-bin": "^0.109.0"
+  },
+  "babel": {
+    "presets": [
+      "@scm-manager/babel-preset"
+    ]
+  },
+  "prettier": "@scm-manager/prettier-config",
+  "publishConfig": {
+    "access": "public"
+  }
+}

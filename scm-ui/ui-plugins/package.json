@@ -1,0 +1,30 @@
+{
+  "name": "@scm-manager/ui-plugins",
+  "version": "2.0.0-SNAPSHOT",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "@scm-manager/babel-preset": "^2.0.0-SNAPSHOT",
+    "@scm-manager/eslint-config": "^2.0.0-SNAPSHOT",
+    "@scm-manager/jest-preset": "^2.0.0-SNAPSHOT",
+    "@scm-manager/prettier-config": "^2.0.0-SNAPSHOT",
+    "@scm-manager/ui-components": "^2.0.0-SNAPSHOT",
+    "@scm-manager/ui-extensions": "^2.0.0-SNAPSHOT",
+    "@scm-manager/ui-scripts": "^2.0.0-SNAPSHOT",
+    "@scm-manager/ui-tests": "^2.0.0-SNAPSHOT",
+    "@scm-manager/ui-types": "^2.0.0-SNAPSHOT",
+    "classnames": "^2.2.6",
+    "flow-bin": "^0.109.0",
+    "flow-typed": "^2.6.1",
+    "jest": "^24.9.0",
+    "query-string": "^5.0.1",
+    "react": "^16.10.2",
+    "react-i18next": "^7.9.0",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^5.1.2",
+    "redux": "^4.0.0",
+    "styled-components": "^4.4.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
