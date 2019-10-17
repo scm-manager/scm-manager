@@ -1,18 +1,12 @@
 //@flow
 import React from "react";
-import { connect } from "react-redux";
-import { Redirect, withRouter } from "react-router-dom";
-import { compose } from "redux";
-import { translate } from "react-i18next";
+import {connect} from "react-redux";
+import {Redirect, withRouter} from "react-router-dom";
+import {compose} from "redux";
+import {translate} from "react-i18next";
 import styled from "styled-components";
-import {
-  login,
-  isAuthenticated,
-  isLoginPending,
-  getLoginFailure
-} from "../modules/auth";
-import { connect } from "react-redux";
-import { getLoginInfoLink, getLoginLink } from "../modules/indexResource";
+import {getLoginFailure, isAuthenticated, isLoginPending, login} from "../modules/auth";
+import {getLoginInfoLink, getLoginLink} from "../modules/indexResource";
 import LoginInfo from "../components/LoginInfo";
 
 type Props = {
