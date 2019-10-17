@@ -57,7 +57,7 @@
     "pluginUrlHelpText": "La URL de la API del almacén de complementos. Explicación de los marcadores: version = Versión de SCM-Manager; os = Sistema operativo; arch = Arquitectura",
     "enableForwardingHelpText": "Habilitar el redireccionamiento de puertos para mod_proxy.",
     "disableGroupingGridHelpText": "Deshabilitar los grupos de repositorios. Se requiere una recarga completa de la página después de un cambio en este valor.",
-    "allowAnonymousAccessHelpText": "Los usuarios anónimos tienen acceso de lectura en los repositorios públicos.",
+    "allowAnonymousAccessHelpText": "Los usuarios anónimos tienen acceso a repositorios otorgados.",
     "skipFailedAuthenticatorsHelpText": "No detenga la cadena de autenticación si un autenticador encuentra al usuario pero no puede autenticarlo.",
     "adminGroupsHelpText": "Nombres de los grupos con permisos de administrador.",
     "adminUsersHelpText": "Nombres de los usuarios con permisos de administrador.",
