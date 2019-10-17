@@ -49,12 +49,8 @@ class ScmConfigurationChangedListenerTest {
 
   @Test
   void shouldNotCreateAnonymousUserIfAnonymousAccessDisabled() {
-    ScmConfiguration changes = new ScmConfiguration();
-    changes.setAnonymousAccessEnabled(false);
-    scmConfiguration.load(changes);
-
-    listener.handleEvent(new ScmConfigurationChangedEvent(scmConfiguration));
+    //anonymous access disabled by default
+     listener.handleEvent(new ScmConfigurationChangedEvent(scmConfiguration));
     verify(userManager, never()).create(any());
   }
-
 }

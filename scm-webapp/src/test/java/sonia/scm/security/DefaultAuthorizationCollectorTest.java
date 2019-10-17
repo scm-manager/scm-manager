@@ -181,10 +181,10 @@ public class DefaultAuthorizationCollectorTest {
     configuration = "classpath:sonia/scm/shiro-001.ini"
   )
   public void testCollectWithoutPermissionsForAnonymousUser() {
-    User anonymous = SCMContext.ANONYMOUS;
-    authenticate(anonymous, "anon");
+    authenticate(SCMContext.ANONYMOUS, "anon");
 
     AuthorizationInfo authInfo = collector.collect();
+    assertThat(authInfo.getRoles(), Matchers.contains(Role.USER));
     assertThat(authInfo.getStringPermissions(), hasSize(1));
     assertThat(authInfo.getStringPermissions(), containsInAnyOrder("user:read:_anonymous"));
     assertThat(authInfo.getObjectPermissions(), nullValue());
