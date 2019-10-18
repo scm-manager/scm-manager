@@ -12,9 +12,9 @@
   "license": "BSD-3-Clause",
   "scripts": {
     "test": "jest",
-    "storybook": "NODE_ENV=development start-storybook -s ../ui-webapp/public,src/__resources__",
+    "storybook": "start-storybook -s ../ui-webapp/public",
     "storyshots": "jest --testPathPattern=\"storyshots.test.js\" --collectCoverage=false",
-    "update-storyshots": "jest --testPathPattern=\"storyshots.test.js\" --testNamePattern \".*Button\" --collectCoverage=false -u"
+    "update-storyshots": "jest --testPathPattern=\"storyshots.test.js\" --collectCoverage=false -u"
   },
   "devDependencies": {
     "@scm-manager/ui-tests": "^2.0.0-SNAPSHOT",

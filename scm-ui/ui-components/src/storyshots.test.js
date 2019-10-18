@@ -2,6 +2,5 @@ import path from "path";
 import initStoryshots from "@storybook/addon-storyshots";
 
 initStoryshots({
-  configPath: path.resolve(__dirname, "..", ".storybook"),
-  storyKindRegex:/^((?!.*?MarkdownView|SyntaxHighlighter).)*$/
+  configPath: path.resolve(__dirname, "..", ".storybook")
 });

@@ -1,4 +1,4 @@
-from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
+export default `from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 
 PORT_NUMBER = 8080
 
@@ -18,3 +18,4 @@ try:
 except KeyboardInterrupt:
   print '^C received, shutting down the web server'
   server.socket.close()
+`;
