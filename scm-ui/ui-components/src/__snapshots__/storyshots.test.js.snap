@@ -1082,179 +1082,20 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
           </span>
         </code>
         <code>
-          <span
-            style={
-              Object {
-                "color": "#00979D",
-              }
-            }
-          >
-            package
-          </span>
-           main
+          package main
 
-
-          <span
-            style={
-              Object {
-                "color": "#00979D",
-              }
-            }
-          >
-            import
-          </span>
-           (
-    
-          <span
-            style={
-              Object {
-                "color": "#005C5F",
-              }
-            }
-          >
-            "fmt"
-          </span>
-          
-    
-          <span
-            style={
-              Object {
-                "color": "#005C5F",
-              }
-            }
-          >
-            "net/http"
-          </span>
-          
+import (
+    "fmt"
+    "net/http"
 )
 
-
-          <span
-            style={
-              Object {
-                "color": "#728E00",
-              }
-            }
-          >
-            <span
-              style={
-                Object {
-                  "color": "#00979D",
-                }
-              }
-            >
-              func
-            </span>
-             
-            <span
-              style={
-                Object {
-                  "color": "#880000",
-                  "fontWeight": "bold",
-                }
-              }
-            >
-              handler
-            </span>
-            <span
-              className="hljs-params"
-              style={Object {}}
-            >
-              (w http.ResponseWriter, r *http.Request)
-            </span>
-          </span>
-           {
-    fmt.Fprintf(w, 
-          <span
-            style={
-              Object {
-                "color": "#005C5F",
-              }
-            }
-          >
-            "Hi there, I love %s!"
-          </span>
-          , r.URL.Path[
-          <span
-            style={
-              Object {
-                "color": "#8A7B52",
-              }
-            }
-          >
-            1
-          </span>
-          :])
+func handler(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
 }
 
-
-          <span
-            style={
-              Object {
-                "color": "#728E00",
-              }
-            }
-          >
-            <span
-              style={
-                Object {
-                  "color": "#00979D",
-                }
-              }
-            >
-              func
-            </span>
-             
-            <span
-              style={
-                Object {
-                  "color": "#880000",
-                  "fontWeight": "bold",
-                }
-              }
-            >
-              main
-            </span>
-            <span
-              className="hljs-params"
-              style={Object {}}
-            >
-              ()
-            </span>
-          </span>
-           {
-    http.HandleFunc(
-          <span
-            style={
-              Object {
-                "color": "#005C5F",
-              }
-            }
-          >
-            "/"
-          </span>
-          , handler)
-    http.ListenAndServe(
-          <span
-            style={
-              Object {
-                "color": "#005C5F",
-              }
-            }
-          >
-            ":8080"
-          </span>
-          , 
-          <span
-            style={
-              Object {
-                "color": "#D35400",
-              }
-            }
-          >
-            nil
-          </span>
-          )
+func main() {
+    http.HandleFunc("/", handler)
+    http.ListenAndServe(":8080", nil)
 }
         </code>
       </pre>
