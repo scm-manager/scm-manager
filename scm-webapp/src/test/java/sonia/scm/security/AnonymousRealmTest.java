@@ -8,9 +8,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContext;
 import sonia.scm.user.UserDAO;
+
+import javax.ws.rs.NotAuthorizedException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -56,7 +57,7 @@ class AnonymousRealmTest {
   @Test
   void shouldThrowNotAuthorizedExceptionIfAnonymousUserNotExists() {
     when(userDAO.contains(SCMContext.USER_ANONYMOUS)).thenReturn(false);
-    assertThrows(ConfigurationException.class, () -> realm.doGetAuthenticationInfo(new AnonymousToken()));
+    assertThrows(NotAuthorizedException.class, () -> realm.doGetAuthenticationInfo(new AnonymousToken()));
   }
 
   @Test

@@ -6,12 +6,12 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
 import org.apache.shiro.realm.AuthenticatingRealm;
-import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContext;
 import sonia.scm.plugin.Extension;
 import sonia.scm.user.UserDAO;
 
 import javax.inject.Singleton;
+import javax.ws.rs.NotAuthorizedException;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -43,7 +43,7 @@ public class AnonymousRealm extends AuthenticatingRealm {
   @Override
   protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) {
     if (!userDAO.contains(SCMContext.USER_ANONYMOUS)) {
-     throw new ConfigurationException("trying to access anonymous but _anonymous user does not exist");
+     throw new NotAuthorizedException("trying to access anonymous but _anonymous user does not exist");
     }
     checkArgument(authenticationToken instanceof AnonymousToken, "%s is required", AnonymousToken.class);
     return helper.authenticationInfoBuilder(SCMContext.USER_ANONYMOUS).build();
