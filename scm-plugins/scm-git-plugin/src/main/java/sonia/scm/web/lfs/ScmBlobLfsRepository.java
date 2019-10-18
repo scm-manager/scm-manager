@@ -1,11 +1,13 @@
 package sonia.scm.web.lfs;
 
-import org.eclipse.jgit.lfs.Protocol;
 import org.eclipse.jgit.lfs.lib.AnyLongObjectId;
 import org.eclipse.jgit.lfs.server.LargeFileRepository;
 import org.eclipse.jgit.lfs.server.Response;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilderFactory;
+import sonia.scm.security.Scope;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
 
@@ -34,17 +36,19 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
    * proxy).
    */
   private final String baseUri;
+  private final Repository repository;
 
   /**
    * Creates a {@link ScmBlobLfsRepository} for the provided repository.
    *
+   * @param repository
    * @param blobStore           The SCM Blobstore used for this @{@link LargeFileRepository}.
    * @param tokenBuilderFactory
    * @param baseUri             This URI is used to determine the actual URI for Upload / Download. Must be full URI (or
    */
 
-  public ScmBlobLfsRepository(BlobStore blobStore, AccessTokenBuilderFactory tokenBuilderFactory, String baseUri) {
-
+  public ScmBlobLfsRepository(Repository repository, BlobStore blobStore, AccessTokenBuilderFactory tokenBuilderFactory, String baseUri) {
+    this.repository = repository;
     this.blobStore = blobStore;
     this.tokenBuilderFactory = tokenBuilderFactory;
     this.baseUri = baseUri;
@@ -53,13 +57,13 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
   @Override
   public Response.Action getDownloadAction(AnyLongObjectId id) {
 
-    return getAction(id);
+    return getAction(id, Scope.valueOf(RepositoryPermissions.read(repository).asShiroString(), RepositoryPermissions.pull(repository).asShiroString()));
   }
 
   @Override
   public Response.Action getUploadAction(AnyLongObjectId id, long size) {
 
-    return getAction(id);
+    return getAction(id, Scope.valueOf(RepositoryPermissions.read(repository).asShiroString(), RepositoryPermissions.pull(repository).asShiroString(), RepositoryPermissions.push(repository).asShiroString()));
   }
 
   @Override
@@ -88,7 +92,7 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
   /**
    * Constructs the Download / Upload actions to be supplied to the client.
    */
-  private Response.Action getAction(AnyLongObjectId id) {
+  private Response.Action getAction(AnyLongObjectId id, Scope scope) {
 
     //LFS protocol has to provide the information on where to put or get the actual content, i. e.
     //the actual URI for up- and download.
@@ -96,7 +100,12 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
     ExpiringAction a = new ExpiringAction();
     a.href = baseUri + id.getName();
 
-    AccessToken accessToken = tokenBuilderFactory.create().expiresIn(5, TimeUnit.MINUTES).build();
+    AccessToken accessToken =
+      tokenBuilderFactory
+        .create()
+        .expiresIn(5, TimeUnit.MINUTES)
+        .scope(scope)
+        .build();
     a.header = new HashMap<>();
     a.header.put("Authorization", "Bearer " + accessToken.compact());
     Instant expire = Instant.now().plus(5, ChronoUnit.MINUTES);

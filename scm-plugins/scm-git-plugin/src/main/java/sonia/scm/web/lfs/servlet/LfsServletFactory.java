@@ -50,7 +50,7 @@ public class LfsServletFactory {
     BlobStore blobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
     String baseUri = buildBaseUri(repository, request);
 
-    LargeFileRepository largeFileRepository = new ScmBlobLfsRepository(blobStore, tokenBuilderFactory, baseUri);
+    LargeFileRepository largeFileRepository = new ScmBlobLfsRepository(repository, blobStore, tokenBuilderFactory, baseUri);
     return new ScmLfsProtocolServlet(largeFileRepository);
   }
 
