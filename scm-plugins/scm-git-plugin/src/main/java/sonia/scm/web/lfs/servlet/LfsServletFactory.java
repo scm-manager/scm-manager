@@ -7,6 +7,7 @@ import org.eclipse.jgit.lfs.server.fs.FileLfsServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Repository;
+import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.store.BlobStore;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
@@ -30,10 +31,12 @@ public class LfsServletFactory {
   private static final Logger logger = LoggerFactory.getLogger(LfsServletFactory.class);
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
+  private final AccessTokenBuilderFactory tokenBuilderFactory;
 
   @Inject
-  public LfsServletFactory(LfsBlobStoreFactory lfsBlobStoreFactory) {
+  public LfsServletFactory(LfsBlobStoreFactory lfsBlobStoreFactory, AccessTokenBuilderFactory tokenBuilderFactory) {
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
+    this.tokenBuilderFactory = tokenBuilderFactory;
   }
 
   /**
@@ -47,7 +50,7 @@ public class LfsServletFactory {
     BlobStore blobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
     String baseUri = buildBaseUri(repository, request);
 
-    LargeFileRepository largeFileRepository = new ScmBlobLfsRepository(blobStore, baseUri);
+    LargeFileRepository largeFileRepository = new ScmBlobLfsRepository(blobStore, tokenBuilderFactory, baseUri);
     return new ScmLfsProtocolServlet(largeFileRepository);
   }
 

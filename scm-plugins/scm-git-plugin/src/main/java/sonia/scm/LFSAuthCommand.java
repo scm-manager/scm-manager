@@ -2,12 +2,14 @@ package sonia.scm;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
 import sonia.scm.protocolcommand.CommandInterpreter;
 import sonia.scm.protocolcommand.CommandInterpreterFactory;
-import sonia.scm.protocolcommand.RepositoryContext;
 import sonia.scm.protocolcommand.RepositoryContextResolver;
 import sonia.scm.protocolcommand.ScmCommandProtocol;
+import sonia.scm.protocolcommand.git.GitRepositoryContextResolver;
+import sonia.scm.repository.Repository;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilderFactory;
 
@@ -21,14 +23,20 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.String.format;
+
 @Extension
 public class LFSAuthCommand implements CommandInterpreterFactory {
 
   private final AccessTokenBuilderFactory tokenBuilderFactory;
+  private final GitRepositoryContextResolver gitRepositoryContextResolver;
+  private final ScmConfiguration configuration;
 
   @Inject
-  public LFSAuthCommand(AccessTokenBuilderFactory tokenBuilderFactory) {
+  public LFSAuthCommand(AccessTokenBuilderFactory tokenBuilderFactory, GitRepositoryContextResolver gitRepositoryContextResolver, ScmConfiguration configuration) {
     this.tokenBuilderFactory = tokenBuilderFactory;
+    this.gitRepositoryContextResolver = gitRepositoryContextResolver;
+    this.configuration = configuration;
   }
 
   @Override
@@ -36,7 +44,7 @@ public class LFSAuthCommand implements CommandInterpreterFactory {
     return command.startsWith("git-lfs-authenticate") ? Optional.of(new CommandInterpreter() {
       @Override
       public String[] getParsedArgs() {
-        return new String[0];
+        return new String[] {command.split("\\s+")[1]};
       }
 
       @Override
@@ -44,10 +52,13 @@ public class LFSAuthCommand implements CommandInterpreterFactory {
         return (context, repositoryContext) -> {
           AccessToken accessToken = tokenBuilderFactory.create().expiresIn(5, TimeUnit.MINUTES).build();
 
+          Repository repository = repositoryContext.getRepository();
+          String url = format("%s/repo/%s/%s.git/info/lfs/", configuration.getBaseUrl(), repository.getNamespace(), repository.getName());
+
           ObjectMapper objectMapper = new ObjectMapper();
           objectMapper.registerModule(new JaxbAnnotationModule());
           objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:MM:ss'Z'"));
-          LfsAuthResponse response = new LfsAuthResponse("http://localhost:8081/scm/repo/scmadmin/lfs.git/info/lfs/", new LfsAuthHeader(accessToken.compact()), Instant.now().plus(5, ChronoUnit.MINUTES));
+          LfsAuthResponse response = new LfsAuthResponse(url, new LfsAuthHeader(accessToken.compact()), Instant.now().plus(5, ChronoUnit.MINUTES));
           ByteArrayOutputStream buffer = new ByteArrayOutputStream();
           objectMapper.writeValue(buffer, response);
           context.getOutputStream().write(buffer.toString().getBytes());
@@ -56,7 +67,7 @@ public class LFSAuthCommand implements CommandInterpreterFactory {
 
       @Override
       public RepositoryContextResolver getRepositoryContextResolver() {
-        return args -> new RepositoryContext(null, null);
+        return gitRepositoryContextResolver;
       }
     }) : Optional.empty();
   }
