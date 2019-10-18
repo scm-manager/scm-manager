@@ -114,6 +114,8 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
     return a;
   }
 
+  @SuppressWarnings({"squid:ClassVariableVisibilityCheck", "squid:S00116"})
+  // This class is used for json serialization, only
   private static class ExpiringAction extends Response.Action {
     public String expires_at;
   }
