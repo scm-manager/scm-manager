@@ -8,7 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContext;
+import sonia.scm.user.UserDAO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -26,6 +28,9 @@ class AnonymousRealmTest {
   @Mock
   private DAORealmHelper.AuthenticationInfoBuilder builder;
 
+  @Mock
+  private UserDAO userDAO;
+
   @InjectMocks
   private AnonymousRealm realm;
 
@@ -35,20 +40,28 @@ class AnonymousRealmTest {
   @BeforeEach
   void prepareObjectUnderTest() {
     when(realmHelperFactory.create(AnonymousRealm.REALM)).thenReturn(realmHelper);
-    realm = new AnonymousRealm(realmHelperFactory);
+    realm = new AnonymousRealm(realmHelperFactory, userDAO);
   }
 
   @Test
   void shouldDoGetAuthentication() {
     when(realmHelper.authenticationInfoBuilder(SCMContext.USER_ANONYMOUS)).thenReturn(builder);
     when(builder.build()).thenReturn(authenticationInfo);
+    when(userDAO.contains(SCMContext.USER_ANONYMOUS)).thenReturn(true);
 
     AuthenticationInfo result = realm.doGetAuthenticationInfo(new AnonymousToken());
     assertThat(result).isSameAs(authenticationInfo);
   }
 
   @Test
+  void shouldThrowNotAuthorizedExceptionIfAnonymousUserNotExists() {
+    when(userDAO.contains(SCMContext.USER_ANONYMOUS)).thenReturn(false);
+    assertThrows(ConfigurationException.class, () -> realm.doGetAuthenticationInfo(new AnonymousToken()));
+  }
+
+  @Test
   void shouldThrowIllegalArgumentExceptionForWrongTypeOfToken() {
+    when(userDAO.contains(SCMContext.USER_ANONYMOUS)).thenReturn(true);
     assertThrows(IllegalArgumentException.class, () -> realm.doGetAuthenticationInfo(new UsernamePasswordToken()));
   }
 }
