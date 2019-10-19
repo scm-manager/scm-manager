@@ -1,7 +1,7 @@
-type Predicate = (props: object) => boolean;
+type Predicate = (props: any) => boolean;
 
 type ExtensionRegistration = {
-  predicate: (props: object) => boolean;
+  predicate: Predicate;
   extension: any;
 };
 

@@ -1,34 +1,36 @@
-import React from 'react';
-import ExtensionPoint from './ExtensionPoint';
-import { shallow, mount } from 'enzyme';
-import '@scm-manager/ui-tests/enzyme';
-import binder from './binder';
+import React from "react";
+import ExtensionPoint from "./ExtensionPoint";
+import { shallow, mount } from "enzyme";
+import "@scm-manager/ui-tests/enzyme";
+import binder from "./binder";
 
-jest.mock('./binder');
+jest.mock("./binder");
 
-describe('ExtensionPoint test', () => {
+const mockedBinder = binder as jest.Mocked<typeof binder>;
+
+describe("ExtensionPoint test", () => {
   beforeEach(() => {
-    binder.hasExtension.mockReset();
-    binder.getExtension.mockReset();
-    binder.getExtensions.mockReset();
+    mockedBinder.hasExtension.mockReset();
+    mockedBinder.getExtension.mockReset();
+    mockedBinder.getExtensions.mockReset();
   });
 
-  it('should render nothing, if no extension was bound', () => {
-    binder.hasExtension.mockReturnValue(true);
-    binder.getExtensions.mockReturnValue([]);
+  it("should render nothing, if no extension was bound", () => {
+    mockedBinder.hasExtension.mockReturnValue(true);
+    mockedBinder.getExtensions.mockReturnValue([]);
     const rendered = shallow(<ExtensionPoint name="something.special" />);
-    expect(rendered.text()).toBe('');
+    expect(rendered.text()).toBe("");
   });
 
-  it('should render the given component', () => {
+  it("should render the given component", () => {
     const label = () => {
       return <label>Extension One</label>;
     };
-    binder.hasExtension.mockReturnValue(true);
-    binder.getExtension.mockReturnValue(label);
+    mockedBinder.hasExtension.mockReturnValue(true);
+    mockedBinder.getExtension.mockReturnValue(label);
 
     const rendered = mount(<ExtensionPoint name="something.special" />);
-    expect(rendered.text()).toBe('Extension One');
+    expect(rendered.text()).toBe("Extension One");
   });
 
   // We use this wrapper since Enzyme cannot handle React Fragments (see https://github.com/airbnb/enzyme/issues/1213)
@@ -37,7 +39,7 @@ describe('ExtensionPoint test', () => {
       return <div>{super.render()}</div>;
     }
   }
-  it('should render the given components', () => {
+  it("should render the given components", () => {
     const labelOne = () => {
       return <label>Extension One</label>;
     };
@@ -45,18 +47,18 @@ describe('ExtensionPoint test', () => {
       return <label>Extension Two</label>;
     };
 
-    binder.hasExtension.mockReturnValue(true);
-    binder.getExtensions.mockReturnValue([labelOne, labelTwo]);
+    mockedBinder.hasExtension.mockReturnValue(true);
+    mockedBinder.getExtensions.mockReturnValue([labelOne, labelTwo]);
 
     const rendered = mount(
-      <ExtensionPointEnzymeFix name="something.special" renderAll={true} />,
+      <ExtensionPointEnzymeFix name="something.special" renderAll={true} />
     );
     const text = rendered.text();
-    expect(text).toContain('Extension One');
-    expect(text).toContain('Extension Two');
+    expect(text).toContain("Extension One");
+    expect(text).toContain("Extension Two");
   });
 
-  it('should render the given component, with the given props', () => {
+  it("should render the given component, with the given props", () => {
     type Props = {
       value: string;
     };
@@ -65,51 +67,51 @@ describe('ExtensionPoint test', () => {
       return <label>{props.value}</label>;
     };
 
-    binder.hasExtension.mockReturnValue(true);
-    binder.getExtension.mockReturnValue(label);
+    mockedBinder.hasExtension.mockReturnValue(true);
+    mockedBinder.getExtension.mockReturnValue(label);
 
     const rendered = mount(
       <ExtensionPoint
         name="something.special"
         props={{
-          value: 'Awesome',
+          value: "Awesome"
         }}
-      />,
+      />
     );
     const text = rendered.text();
-    expect(text).toContain('Awesome');
+    expect(text).toContain("Awesome");
   });
 
-  it('should render children, if no extension is bound', () => {
+  it("should render children, if no extension is bound", () => {
     const rendered = mount(
       <ExtensionPoint name="something.special">
         <p>Cool stuff</p>
-      </ExtensionPoint>,
+      </ExtensionPoint>
     );
     const text = rendered.text();
-    expect(text).toContain('Cool stuff');
+    expect(text).toContain("Cool stuff");
   });
 
-  it('should not render children, if an extension was bound', () => {
+  it("should not render children, if an extension was bound", () => {
     const label = () => {
       return <label>Bound Extension</label>;
     };
 
-    binder.hasExtension.mockReturnValue(true);
-    binder.getExtension.mockReturnValue(label);
+    mockedBinder.hasExtension.mockReturnValue(true);
+    mockedBinder.getExtension.mockReturnValue(label);
 
     const rendered = mount(
       <ExtensionPoint name="something.special">
         <p>Cool stuff</p>
-      </ExtensionPoint>,
+      </ExtensionPoint>
     );
     const text = rendered.text();
-    expect(text).toContain('Bound Extension');
+    expect(text).toContain("Bound Extension");
   });
 
-  it('should pass the context of the parent component', () => {
+  it("should pass the context of the parent component", () => {
     const UserContext = React.createContext({
-      name: 'anonymous',
+      name: "anonymous"
     });
 
     type HelloProps = {
@@ -128,14 +130,14 @@ describe('ExtensionPoint test', () => {
       );
     };
 
-    binder.hasExtension.mockReturnValue(true);
-    binder.getExtension.mockReturnValue(HelloUser);
+    mockedBinder.hasExtension.mockReturnValue(true);
+    mockedBinder.getExtension.mockReturnValue(HelloUser);
 
     const App = () => {
       return (
         <UserContext.Provider
           value={{
-            name: 'Trillian',
+            name: "Trillian"
           }}
         >
           <ExtensionPoint name="hello" />
@@ -145,6 +147,6 @@ describe('ExtensionPoint test', () => {
 
     const rendered = mount(<App />);
     const text = rendered.text();
-    expect(text).toBe('Hello Trillian');
+    expect(text).toBe("Hello Trillian");
   });
 });

@@ -1,11 +1,11 @@
-import * as React from 'react';
-import binder from './binder';
+import * as React from "react";
+import binder from "./binder";
 
 type Props = {
   name: string;
   renderAll?: boolean;
   props?: object;
-  children?: React.Node;
+  children?: React.ReactNode;
 };
 
 /**
