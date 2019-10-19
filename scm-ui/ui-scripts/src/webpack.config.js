@@ -9,9 +9,9 @@ module.exports = [
     context: root,
     entry: {
       webapp: [
-        "./ui-webapp/src/webpack-public-path.js",
+        "./ui-webapp/src/webpack-public-path.ts",
         "./ui-styles/src/scm.scss",
-        "./ui-webapp/src/index.js"
+        "./ui-webapp/src/index.tsx"
       ]
     },
     devtool: "cheap-module-eval-source-map",
@@ -30,7 +30,7 @@ module.exports = [
           }
         },
         {
-          test: /\.(js|jsx)$/,
+          test: /\.(js|ts|jsx|tsx)$/i,
           exclude: /node_modules/,
           use: [
             {
@@ -63,6 +63,11 @@ module.exports = [
           test: /\.(png|svg|jpg|gif|woff2?|eot|ttf)$/,
           use: ["file-loader"]
         }
+      ]
+    },
+    resolve: {
+      extensions: [
+        ".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"
       ]
     },
     output: {

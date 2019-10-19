@@ -12,6 +12,7 @@
     "deploy": "ui-scripts publish"
   },
   "devDependencies": {
+    "babel-plugin-reflow": "^0.2.7",
     "lerna": "^3.17.0"
   },
   "resolutions": {
