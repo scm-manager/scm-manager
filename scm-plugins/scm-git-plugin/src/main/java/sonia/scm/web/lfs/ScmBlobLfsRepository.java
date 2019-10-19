@@ -4,15 +4,11 @@ import org.eclipse.jgit.lfs.lib.AnyLongObjectId;
 import org.eclipse.jgit.lfs.server.LargeFileRepository;
 import org.eclipse.jgit.lfs.server.Response;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.security.AccessToken;
-import sonia.scm.security.AccessTokenBuilderFactory;
-import sonia.scm.security.Scope;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * This LargeFileRepository is used for jGit-Servlet implementation. Under the jgit LFS Servlet hood, the
@@ -24,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class ScmBlobLfsRepository implements LargeFileRepository {
 
   private final BlobStore blobStore;
-  private final AccessTokenBuilderFactory tokenBuilderFactory;
+  private final LfsAccessTokenFactory tokenFactory;
 
   /**
    * This URI is used to determine the actual URI for Upload / Download. Must be full URI (or rewritable by reverse
@@ -33,6 +29,10 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
   private final String baseUri;
   private final Repository repository;
 
+  /**
+   * A {@link ScmBlobLfsRepository} is created for either download or upload, not both. Therefore we can cache the
+   * access token and do not have to create them anew for each action.
+   */
   private AccessToken accessToken;
 
   /**
@@ -40,27 +40,31 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
    *
    * @param repository          The current scm repository this LFS repository is used for.
    * @param blobStore           The SCM Blobstore used for this @{@link LargeFileRepository}.
-   * @param tokenBuilderFactory The token builder used to create short lived access tokens.
+   * @param tokenFactory        The token builder for subsequent LFS requests.
    * @param baseUri             This URI is used to determine the actual URI for Upload / Download. Must be full URI (or
    */
 
-  public ScmBlobLfsRepository(Repository repository, BlobStore blobStore, AccessTokenBuilderFactory tokenBuilderFactory, String baseUri) {
+  public ScmBlobLfsRepository(Repository repository, BlobStore blobStore, LfsAccessTokenFactory tokenFactory, String baseUri) {
     this.repository = repository;
     this.blobStore = blobStore;
-    this.tokenBuilderFactory = tokenBuilderFactory;
+    this.tokenFactory = tokenFactory;
     this.baseUri = baseUri;
   }
 
   @Override
   public Response.Action getDownloadAction(AnyLongObjectId id) {
-
-    return getAction(id, Scope.valueOf(RepositoryPermissions.read(repository).asShiroString(), RepositoryPermissions.pull(repository).asShiroString()));
+    if (accessToken == null) {
+      accessToken = tokenFactory.getReadAccessToken(repository);
+    }
+    return getAction(id, accessToken);
   }
 
   @Override
   public Response.Action getUploadAction(AnyLongObjectId id, long size) {
-
-    return getAction(id, Scope.valueOf(RepositoryPermissions.read(repository).asShiroString(), RepositoryPermissions.pull(repository).asShiroString(), RepositoryPermissions.push(repository).asShiroString()));
+    if (accessToken == null) {
+      accessToken = tokenFactory.getWriteAccessToken(repository);
+    }
+    return getAction(id, accessToken);
   }
 
   @Override
@@ -89,23 +93,11 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
   /**
    * Constructs the Download / Upload actions to be supplied to the client.
    */
-  private Response.Action getAction(AnyLongObjectId id, Scope scope) {
+  private Response.Action getAction(AnyLongObjectId id, AccessToken token) {
 
     //LFS protocol has to provide the information on where to put or get the actual content, i. e.
     //the actual URI for up- and download.
 
-    return new ExpiringAction(baseUri + id.getName(), getAccessToken(scope));
+    return new ExpiringAction(baseUri + id.getName(), token);
   }
-
-  private AccessToken getAccessToken(Scope scope) {
-    if (accessToken == null) {
-      accessToken = tokenBuilderFactory
-        .create()
-        .expiresIn(5, TimeUnit.MINUTES)
-        .scope(scope)
-        .build();
-    }
-    return accessToken;
-  }
-
 }
