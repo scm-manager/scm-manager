@@ -5,14 +5,12 @@ export type Link = {
 
 type LinkValue = Link | Link[];
 
-// TODO use LinkValue
 export type Links = {
-  [key: string]: any;
+  [key: string]: LinkValue;
 };
 
 export type Collection = {
-  _embedded: object;
-  // $FlowFixMe
+  _embedded?: any;
   _links: Links;
 };
 

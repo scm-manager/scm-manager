@@ -14,7 +14,8 @@
     "check": "flow check"
   },
   "devDependencies": {
-    "flow-bin": "^0.109.0"
+    "flow-bin": "^0.109.0",
+    "typescript": "^3.6.4"
   },
   "babel": {
     "presets": [
