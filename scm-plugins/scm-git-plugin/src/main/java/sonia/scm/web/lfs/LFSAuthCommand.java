@@ -27,7 +27,7 @@ public class LFSAuthCommand implements CommandInterpreterFactory {
   private final LfsAccessTokenFactory tokenFactory;
   private final GitRepositoryContextResolver gitRepositoryContextResolver;
   private final ObjectMapper objectMapper;
-  private final String baseUrl;
+  private final ScmConfiguration configuration;
 
   @Inject
   public LFSAuthCommand(LfsAccessTokenFactory tokenFactory, GitRepositoryContextResolver gitRepositoryContextResolver, ScmConfiguration configuration) {
@@ -35,7 +35,7 @@ public class LFSAuthCommand implements CommandInterpreterFactory {
     this.gitRepositoryContextResolver = gitRepositoryContextResolver;
 
     objectMapper = new ObjectMapper();
-    baseUrl = configuration.getBaseUrl();
+    this.configuration = configuration;
   }
 
   @Override
@@ -78,7 +78,7 @@ public class LFSAuthCommand implements CommandInterpreterFactory {
     private ExpiringAction createResponseObject(RepositoryContext repositoryContext) {
       Repository repository = repositoryContext.getRepository();
 
-      String url = format(LFS_INFO_URL_PATTERN, baseUrl, repository.getNamespace(), repository.getName());
+      String url = format(LFS_INFO_URL_PATTERN, configuration.getBaseUrl(), repository.getNamespace(), repository.getName());
       AccessToken accessToken = tokenFactory.createReadAccessToken(repository);
 
       return new ExpiringAction(url, accessToken);
