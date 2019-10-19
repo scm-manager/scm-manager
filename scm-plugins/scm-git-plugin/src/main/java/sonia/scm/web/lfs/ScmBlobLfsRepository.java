@@ -12,11 +12,6 @@ import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -38,12 +33,14 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
   private final String baseUri;
   private final Repository repository;
 
+  private AccessToken accessToken;
+
   /**
    * Creates a {@link ScmBlobLfsRepository} for the provided repository.
    *
-   * @param repository
+   * @param repository          The current scm repository this LFS repository is used for.
    * @param blobStore           The SCM Blobstore used for this @{@link LargeFileRepository}.
-   * @param tokenBuilderFactory
+   * @param tokenBuilderFactory The token builder used to create short lived access tokens.
    * @param baseUri             This URI is used to determine the actual URI for Upload / Download. Must be full URI (or
    */
 
@@ -97,26 +94,18 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
     //LFS protocol has to provide the information on where to put or get the actual content, i. e.
     //the actual URI for up- and download.
 
-    ExpiringAction a = new ExpiringAction();
-    a.href = baseUri + id.getName();
+    return new ExpiringAction(baseUri + id.getName(), getAccessToken(scope));
+  }
 
-    AccessToken accessToken =
-      tokenBuilderFactory
+  private AccessToken getAccessToken(Scope scope) {
+    if (accessToken == null) {
+      accessToken = tokenBuilderFactory
         .create()
         .expiresIn(5, TimeUnit.MINUTES)
         .scope(scope)
         .build();
-    a.header = new HashMap<>();
-    a.header.put("Authorization", "Bearer " + accessToken.compact());
-    Instant expire = Instant.now().plus(5, ChronoUnit.MINUTES);
-    a.expires_at = new SimpleDateFormat("yyyy-MM-dd'T'HH:MM:ss'Z'").format(Date.from(expire));
-
-    return a;
+    }
+    return accessToken;
   }
 
-  @SuppressWarnings({"squid:ClassVariableVisibilityCheck", "squid:S00116"})
-  // This class is used for json serialization, only
-  private static class ExpiringAction extends Response.Action {
-    public String expires_at;
-  }
 }
