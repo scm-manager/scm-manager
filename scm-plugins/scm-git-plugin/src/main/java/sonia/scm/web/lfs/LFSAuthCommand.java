@@ -14,12 +14,15 @@ import sonia.scm.security.AccessToken;
 
 import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Optional;
 
 import static java.lang.String.format;
 
 @Extension
 public class LFSAuthCommand implements CommandInterpreterFactory {
+
+  private static final String LFS_INFO_URL_PATTERN = "%s/repo/%s/%s.git/info/lfs/";
 
   private final LfsAccessTokenFactory tokenFactory;
   private final GitRepositoryContextResolver gitRepositoryContextResolver;
@@ -48,7 +51,7 @@ public class LFSAuthCommand implements CommandInterpreterFactory {
 
     private final String command;
 
-    public LfsAuthCommandInterpreter(String command) {
+    LfsAuthCommandInterpreter(String command) {
       this.command = command;
     }
 
@@ -61,25 +64,30 @@ public class LFSAuthCommand implements CommandInterpreterFactory {
     @Override
     public ScmCommandProtocol getProtocolHandler() {
       return (context, repositoryContext) -> {
-        ExpiringAction response = createResponse(repositoryContext);
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        objectMapper.writeValue(buffer, response);
-        context.getOutputStream().write(buffer.toString().getBytes());
+        ExpiringAction response = createResponseObject(repositoryContext);
+        String buffer = serializeResponse(response);
+        context.getOutputStream().write(buffer.getBytes());
       };
-    }
-
-    private ExpiringAction createResponse(RepositoryContext repositoryContext) {
-      Repository repository = repositoryContext.getRepository();
-
-      String url = format("%s/repo/%s/%s.git/info/lfs/", baseUrl, repository.getNamespace(), repository.getName());
-      AccessToken accessToken = tokenFactory.getReadAccessToken(repository);
-
-      return new ExpiringAction(url, accessToken);
     }
 
     @Override
     public RepositoryContextResolver getRepositoryContextResolver() {
       return gitRepositoryContextResolver;
+    }
+
+    private ExpiringAction createResponseObject(RepositoryContext repositoryContext) {
+      Repository repository = repositoryContext.getRepository();
+
+      String url = format(LFS_INFO_URL_PATTERN, baseUrl, repository.getNamespace(), repository.getName());
+      AccessToken accessToken = tokenFactory.getReadAccessToken(repository);
+
+      return new ExpiringAction(url, accessToken);
+    }
+
+    private String serializeResponse(ExpiringAction response) throws IOException {
+      ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+      objectMapper.writeValue(buffer, response);
+      return buffer.toString();
     }
   }
 }
