@@ -54,7 +54,7 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
   @Override
   public Response.Action getDownloadAction(AnyLongObjectId id) {
     if (accessToken == null) {
-      accessToken = tokenFactory.getReadAccessToken(repository);
+      accessToken = tokenFactory.createReadAccessToken(repository);
     }
     return getAction(id, accessToken);
   }
@@ -62,7 +62,7 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
   @Override
   public Response.Action getUploadAction(AnyLongObjectId id, long size) {
     if (accessToken == null) {
-      accessToken = tokenFactory.getWriteAccessToken(repository);
+      accessToken = tokenFactory.createWriteAccessToken(repository);
     }
     return getAction(id, accessToken);
   }

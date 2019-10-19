@@ -18,14 +18,19 @@ public class LfsAccessTokenFactory {
     this.tokenBuilderFactory = tokenBuilderFactory;
   }
 
-  AccessToken getReadAccessToken(Repository repository) {
+  AccessToken createReadAccessToken(Repository repository) {
+    RepositoryPermissions.pull(repository).check();
+    RepositoryPermissions.read(repository).check();
     return createToken(
       Scope.valueOf(
         RepositoryPermissions.read(repository).asShiroString(),
         RepositoryPermissions.pull(repository).asShiroString()));
   }
 
-  AccessToken getWriteAccessToken(Repository repository) {
+  AccessToken createWriteAccessToken(Repository repository) {
+    RepositoryPermissions.read(repository).check();
+    RepositoryPermissions.pull(repository).check();
+    RepositoryPermissions.push(repository).check();
     return createToken(
       Scope.valueOf(
         RepositoryPermissions.read(repository).asShiroString(),
@@ -36,7 +41,7 @@ public class LfsAccessTokenFactory {
   private AccessToken createToken(Scope scope) {
     return tokenBuilderFactory
       .create()
-      .expiresIn(5, TimeUnit.MINUTES)
+      .expiresIn(1, TimeUnit.MINUTES)
       .scope(scope)
       .build();
   }

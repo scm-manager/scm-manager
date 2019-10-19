@@ -79,7 +79,7 @@ public class LFSAuthCommand implements CommandInterpreterFactory {
       Repository repository = repositoryContext.getRepository();
 
       String url = format(LFS_INFO_URL_PATTERN, baseUrl, repository.getNamespace(), repository.getName());
-      AccessToken accessToken = tokenFactory.getReadAccessToken(repository);
+      AccessToken accessToken = tokenFactory.createReadAccessToken(repository);
 
       return new ExpiringAction(url, accessToken);
     }
