@@ -6,6 +6,7 @@
   "private": false,
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
   "scripts": {
+    "typecheck": "tsc",
     "test": "jest"
   },
   "dependencies": {
