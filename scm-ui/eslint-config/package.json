@@ -8,6 +8,8 @@
   "private": false,
   "prettier": "@scm-manager/prettier-config",
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.4.0",
+    "@typescript-eslint/parser": "^2.4.0",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.5.1",
     "eslint-config-react-app": "^5.0.2",
