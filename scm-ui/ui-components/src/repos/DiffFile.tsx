@@ -1,35 +1,36 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import classNames from 'classnames';
-import styled from 'styled-components';
+import React from "react";
+import { translate, InjectedTranslateProps } from "react-i18next";
+import classNames from "classnames";
+import styled from "styled-components";
 import {
   Change,
   Diff as DiffComponent,
-  DiffObjectProps,
-  File,
   getChangeKey,
-  Hunk,
-} from 'react-diff-view';
-import { Button, ButtonGroup } from '../buttons';
-import Tag from '../Tag';
-import Icon from '../Icon';
+  Hunk
+} from "react-diff-view";
+import { Button, ButtonGroup } from "../buttons";
+import Tag from "../Tag";
+import Icon from "../Icon";
+import { File, Hunk as HunkType, DiffObjectProps } from "./DiffTypes";
+import { ReactNode } from "react";
 
-type Props = DiffObjectProps & {
-  file: File;
-  defaultCollapse: boolean;
+type Props = DiffObjectProps &
+  InjectedTranslateProps & {
+    file: File;
+    defaultCollapse?: boolean;
+  };
 
-  // context props
-  t: (p: string) => string;
+type Collapsible = {
+  collapsed?: boolean;
 };
 
-type State = {
-  collapsed: boolean;
+type State = Collapsible & {
   sideBySide: boolean;
 };
 
 const DiffFilePanel = styled.div`
   /* remove bottom border for collapsed panels */
-  ${props => (props.collapsed ? 'border-bottom: none;' : '')};
+  ${(props: Collapsible) => (props.collapsed ? "border-bottom: none;" : "")};
 `;
 
 const FlexWrapLevel = styled.div`
@@ -83,24 +84,24 @@ const ModifiedDiffComponent = styled(DiffComponent)`
 `;
 
 class DiffFile extends React.Component<Props, State> {
-  static defaultProps = {
-    defaultCollapse: false,
+  static defaultProps: Partial<Props> = {
+    defaultCollapse: false
   };
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      collapsed: this.props.defaultCollapse,
-      sideBySide: false,
+      collapsed: !!this.props.defaultCollapse,
+      sideBySide: false
     };
   }
 
   // collapse diff by clicking collapseDiffs button
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     const { defaultCollapse } = this.props;
     if (prevProps.defaultCollapse !== defaultCollapse) {
       this.setState({
-        collapsed: defaultCollapse,
+        collapsed: defaultCollapse
       });
     }
   }
@@ -109,67 +110,67 @@ class DiffFile extends React.Component<Props, State> {
     const { file } = this.props;
     if (file && !file.isBinary) {
       this.setState(state => ({
-        collapsed: !state.collapsed,
+        collapsed: !state.collapsed
       }));
     }
   };
 
   toggleSideBySide = () => {
     this.setState(state => ({
-      sideBySide: !state.sideBySide,
+      sideBySide: !state.sideBySide
     }));
   };
 
   setCollapse = (collapsed: boolean) => {
     this.setState({
-      collapsed,
+      collapsed
     });
   };
 
-  createHunkHeader = (hunk: Hunk, i: number) => {
+  createHunkHeader = (hunk: HunkType, i: number) => {
     if (i > 0) {
       return <HunkDivider />;
     }
     return null;
   };
 
-  collectHunkAnnotations = (hunk: Hunk) => {
+  collectHunkAnnotations = (hunk: HunkType) => {
     const { annotationFactory, file } = this.props;
     if (annotationFactory) {
       return annotationFactory({
         hunk,
-        file,
+        file
       });
     }
   };
 
-  handleClickEvent = (change: Change, hunk: Hunk) => {
+  handleClickEvent = (change: Change, hunk: HunkType) => {
     const { file, onClick } = this.props;
     const context = {
       changeId: getChangeKey(change),
       change,
       hunk,
-      file,
+      file
     };
     if (onClick) {
       onClick(context);
     }
   };
 
-  createCustomEvents = (hunk: Hunk) => {
+  createCustomEvents = (hunk: HunkType) => {
     const { onClick } = this.props;
     if (onClick) {
       return {
         gutter: {
           onClick: (change: Change) => {
             this.handleClickEvent(change, hunk);
-          },
-        },
+          }
+        }
       };
     }
   };
 
-  renderHunk = (hunk: Hunk, i: number) => {
+  renderHunk = (hunk: HunkType, i: number) => {
     return (
       <Hunk
         key={hunk.content}
@@ -181,59 +182,55 @@ class DiffFile extends React.Component<Props, State> {
     );
   };
 
-  renderFileTitle = (file: any) => {
+  renderFileTitle = (file: File) => {
     if (
       file.oldPath !== file.newPath &&
-      (file.type === 'copy' || file.type === 'rename')
+      (file.type === "copy" || file.type === "rename")
     ) {
       return (
         <>
-          {file.oldPath} <Icon name="arrow-right" color="inherit" />{' '}
+          {file.oldPath} <Icon name="arrow-right" color="inherit" />{" "}
           {file.newPath}
         </>
       );
-    } else if (file.type === 'delete') {
+    } else if (file.type === "delete") {
       return file.oldPath;
     }
     return file.newPath;
   };
 
-  hoverFileTitle = (file: any) => {
+  hoverFileTitle = (file: File): string => {
     if (
       file.oldPath !== file.newPath &&
-      (file.type === 'copy' || file.type === 'rename')
+      (file.type === "copy" || file.type === "rename")
     ) {
-      return (
-        <>
-          {file.oldPath} > {file.newPath}
-        </>
-      );
-    } else if (file.type === 'delete') {
+      return `${file.oldPath} > ${file.newPath}`;
+    } else if (file.type === "delete") {
       return file.oldPath;
     }
     return file.newPath;
   };
 
-  renderChangeTag = (file: any) => {
+  renderChangeTag = (file: File) => {
     const { t } = this.props;
     if (!file.type) {
       return;
     }
-    const key = 'diff.changes.' + file.type;
+    const key = "diff.changes." + file.type;
     let value = t(key);
     if (key === value) {
       value = file.type;
     }
     const color =
-      value === 'added'
-        ? 'success is-outlined'
-        : value === 'deleted'
-        ? 'danger is-outlined'
-        : 'info is-outlined';
+      value === "added"
+        ? "success is-outlined"
+        : value === "deleted"
+        ? "danger is-outlined"
+        : "info is-outlined";
 
     return (
       <ChangeTypeTag
-        className={classNames('is-rounded', 'has-text-weight-normal')}
+        className={classNames("is-rounded", "has-text-weight-normal")}
         color={color}
         label={value}
       />
@@ -243,15 +240,15 @@ class DiffFile extends React.Component<Props, State> {
   render() {
     const { file, fileControlFactory, fileAnnotationFactory, t } = this.props;
     const { collapsed, sideBySide } = this.state;
-    const viewType = sideBySide ? 'split' : 'unified';
+    const viewType = sideBySide ? "split" : "unified";
 
     let body = null;
-    let icon = 'angle-right';
+    let icon = "angle-right";
     if (!collapsed) {
       const fileAnnotations = fileAnnotationFactory
         ? fileAnnotationFactory(file)
         : null;
-      icon = 'angle-down';
+      icon = "angle-down";
       body = (
         <div className="panel-block is-paddingless">
           {fileAnnotations}
@@ -269,34 +266,34 @@ class DiffFile extends React.Component<Props, State> {
       : null;
     return (
       <DiffFilePanel
-        className={classNames('panel', 'is-size-6')}
+        className={classNames("panel", "is-size-6")}
         collapsed={(file && file.isBinary) || collapsed}
       >
         <div className="panel-heading">
           <FlexWrapLevel className="level">
             <FullWidthTitleHeader
               className={classNames(
-                'level-left',
-                'is-flex',
-                'has-cursor-pointer',
+                "level-left",
+                "is-flex",
+                "has-cursor-pointer"
               )}
               onClick={this.toggleCollapse}
               title={this.hoverFileTitle(file)}
             >
               {collapseIcon}
               <TitleWrapper
-                className={classNames('is-ellipsis-overflow', 'is-size-6')}
+                className={classNames("is-ellipsis-overflow", "is-size-6")}
               >
                 {this.renderFileTitle(file)}
               </TitleWrapper>
               {this.renderChangeTag(file)}
             </FullWidthTitleHeader>
-            <ButtonWrapper className={classNames('level-right', 'is-flex')}>
+            <ButtonWrapper className={classNames("level-right", "is-flex")}>
               <ButtonGroup>
                 <Button
                   action={this.toggleSideBySide}
-                  icon={sideBySide ? 'align-left' : 'columns'}
-                  label={t(sideBySide ? 'diff.combined' : 'diff.sideBySide')}
+                  icon={sideBySide ? "align-left" : "columns"}
+                  label={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
                   reducedMobile={true}
                 />
                 {fileControls}
@@ -310,4 +307,4 @@ class DiffFile extends React.Component<Props, State> {
   }
 }
 
-export default translate('repos')(DiffFile);
+export default translate("repos")(DiffFile);

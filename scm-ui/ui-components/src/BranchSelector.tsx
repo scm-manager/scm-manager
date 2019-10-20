@@ -1,8 +1,8 @@
-import React from 'react';
-import classNames from 'classnames';
-import styled from 'styled-components';
-import { Branch } from '@scm-manager/ui-types';
-import DropDown from './forms/DropDown';
+import React from "react";
+import classNames from "classnames";
+import styled from "styled-components";
+import { Branch } from "@scm-manager/ui-types";
+import DropDown from "./forms/DropDown";
 
 type Props = {
   branches: Branch[];
@@ -39,10 +39,10 @@ export default class BranchSelector extends React.Component<Props, State> {
     const { branches } = this.props;
     if (branches) {
       const selectedBranch = branches.find(
-        branch => branch.name === this.props.selectedBranch,
+        branch => branch.name === this.props.selectedBranch
       );
       this.setState({
-        selectedBranch,
+        selectedBranch
       });
     }
   }
@@ -52,14 +52,14 @@ export default class BranchSelector extends React.Component<Props, State> {
 
     if (branches) {
       return (
-        <div className={classNames('field', 'is-horizontal')}>
+        <div className={classNames("field", "is-horizontal")}>
           <ZeroflexFieldLabel
-            className={classNames('field-label', 'is-normal')}
+            className={classNames("field-label", "is-normal")}
           >
-            <label className={classNames('label', 'is-size-6')}>{label}</label>
+            <label className={classNames("label", "is-size-6")}>{label}</label>
           </ZeroflexFieldLabel>
           <div className="field-body">
-            <NoBottomMarginField className={classNames('field', 'is-narrow')}>
+            <NoBottomMarginField className={classNames("field", "is-narrow")}>
               <MinWidthControl className="control">
                 <DropDown
                   className="is-fullwidth"
@@ -69,7 +69,7 @@ export default class BranchSelector extends React.Component<Props, State> {
                   preselectedOption={
                     this.state.selectedBranch
                       ? this.state.selectedBranch.name
-                      : ''
+                      : ""
                   }
                 />
               </MinWidthControl>
@@ -87,7 +87,7 @@ export default class BranchSelector extends React.Component<Props, State> {
 
     if (!branchName) {
       this.setState({
-        selectedBranch: undefined,
+        selectedBranch: undefined
       });
       selected(undefined);
       return;
@@ -96,7 +96,7 @@ export default class BranchSelector extends React.Component<Props, State> {
 
     selected(branch);
     this.setState({
-      selectedBranch: branch,
+      selectedBranch: branch
     });
   };
 }

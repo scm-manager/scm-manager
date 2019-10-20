@@ -1,4 +1,4 @@
-import { Changeset, Repository } from '@scm-manager/ui-types';
+import { Changeset, Repository } from "@scm-manager/ui-types";
 
 export type Description = {
   title: string;
@@ -7,24 +7,24 @@ export type Description = {
 
 export function createChangesetLink(
   repository: Repository,
-  changeset: Changeset,
+  changeset: Changeset
 ) {
   return `/repo/${repository.namespace}/${repository.name}/changeset/${changeset.id}`;
 }
 
 export function createSourcesLink(
   repository: Repository,
-  changeset: Changeset,
+  changeset: Changeset
 ) {
   return `/repo/${repository.namespace}/${repository.name}/sources/${changeset.id}`;
 }
 
 export function parseDescription(description?: string): Description {
-  const desc = description ? description : '';
-  const lineBreak = desc.indexOf('\n');
+  const desc = description ? description : "";
+  const lineBreak = desc.indexOf("\n");
 
   let title;
-  let message = '';
+  let message = "";
 
   if (lineBreak > 0) {
     title = desc.substring(0, lineBreak);
@@ -35,6 +35,6 @@ export function parseDescription(description?: string): Description {
 
   return {
     title,
-    message,
+    message
   };
 }

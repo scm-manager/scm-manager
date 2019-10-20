@@ -1,8 +1,8 @@
-import * as React from 'react';
+import React, { ReactNode } from "react";
 
 type Props = {
   label: string;
-  children?: React.Node;
+  children?: ReactNode;
 };
 
 class Section extends React.Component<Props> {

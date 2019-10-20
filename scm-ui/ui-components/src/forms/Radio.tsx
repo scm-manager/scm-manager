@@ -1,5 +1,5 @@
-import React from 'react';
-import { Help } from '../index';
+import React, { ChangeEvent } from "react";
+import { Help } from "../index";
 
 type Props = {
   label?: string;
@@ -19,20 +19,33 @@ class Radio extends React.Component<Props> {
     }
   };
 
+  onValueChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (this.props.onChange) {
+      this.props.onChange(event.target.checked, this.props.name);
+    }
+  };
+
   render() {
     return (
-      <label className="radio" disabled={this.props.disabled}>
-        <input
-          type="radio"
-          name={this.props.name}
-          value={this.props.value}
-          checked={this.props.checked}
-          onChange={this.props.onChange}
-          disabled={this.props.disabled}
-        />{' '}
-        {this.props.label}
-        {this.renderHelp()}
-      </label>
+      <>
+        {/*
+        we have to ignore the next line, 
+        because jsx label does not the custom disabled attribute
+        but bulma does.
+        // @ts-ignore */}
+        <label className="radio" disabled={this.props.disabled}>
+          <input
+            type="radio"
+            name={this.props.name}
+            value={this.props.value}
+            checked={this.props.checked}
+            onChange={this.onValueChange}
+            disabled={this.props.disabled}
+          />{" "}
+          {this.props.label}
+          {this.renderHelp()}
+        </label>
+      </>
     );
   }
 }

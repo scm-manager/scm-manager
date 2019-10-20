@@ -1,6 +1,6 @@
-import React from 'react';
-import { Tag } from '@scm-manager/ui-types';
-import ChangesetTagBase from './ChangesetTagBase';
+import React from "react";
+import { Tag } from "@scm-manager/ui-types";
+import ChangesetTagBase from "./ChangesetTagBase";
 
 type Props = {
   tag: Tag;

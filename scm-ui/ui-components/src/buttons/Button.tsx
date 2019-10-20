@@ -1,36 +1,34 @@
-import * as React from 'react';
-import classNames from 'classnames';
-import { withRouter } from 'react-router-dom';
-import Icon from '../Icon';
+import React, { MouseEvent, ReactNode } from "react";
+import classNames from "classnames";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import Icon from "../Icon";
 
 export type ButtonProps = {
   label?: string;
   loading?: boolean;
   disabled?: boolean;
-  action?: (event: Event) => void;
+  action?: (event: MouseEvent) => void;
   link?: string;
   className?: string;
   icon?: string;
   fullWidth?: boolean;
   reducedMobile?: boolean;
-  children?: React.Node;
+  children?: ReactNode;
 };
 
-type Props = ButtonProps & {
-  type: string;
-  color: string;
-
-  // context prop
-  history: any;
-};
-
-class Button extends React.Component<Props> {
-  static defaultProps = {
-    type: 'button',
-    color: 'default',
+type Props = ButtonProps &
+  RouteComponentProps & {
+    type?: "button" | "submit" | "reset";
+    color?: string;
   };
 
-  onClick = (event: Event) => {
+class Button extends React.Component<Props> {
+  static defaultProps: Partial<Props> = {
+    type: "button",
+    color: "default"
+  };
+
+  onClick = (event: React.MouseEvent) => {
     const { action, link, history } = this.props;
     if (action) {
       action(event);
@@ -50,11 +48,11 @@ class Button extends React.Component<Props> {
       icon,
       fullWidth,
       reducedMobile,
-      children,
+      children
     } = this.props;
-    const loadingClass = loading ? 'is-loading' : '';
-    const fullWidthClass = fullWidth ? 'is-fullwidth' : '';
-    const reducedMobileClass = reducedMobile ? 'is-reduced-mobile' : '';
+    const loadingClass = loading ? "is-loading" : "";
+    const fullWidthClass = fullWidth ? "is-fullwidth" : "";
+    const reducedMobileClass = reducedMobile ? "is-reduced-mobile" : "";
     if (icon) {
       return (
         <button
@@ -62,12 +60,12 @@ class Button extends React.Component<Props> {
           disabled={disabled}
           onClick={this.onClick}
           className={classNames(
-            'button',
-            'is-' + color,
+            "button",
+            "is-" + color,
             loadingClass,
             fullWidthClass,
             reducedMobileClass,
-            className,
+            className
           )}
         >
           <span className="icon is-medium">
@@ -86,11 +84,11 @@ class Button extends React.Component<Props> {
         disabled={disabled}
         onClick={this.onClick}
         className={classNames(
-          'button',
-          'is-' + color,
+          "button",
+          "is-" + color,
           loadingClass,
           fullWidthClass,
-          className,
+          className
         )}
       >
         {label} {children}

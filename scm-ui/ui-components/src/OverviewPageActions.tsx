@@ -1,11 +1,11 @@
-import React from 'react';
-import { History } from 'history';
-import { withRouter } from 'react-router-dom';
-import classNames from 'classnames';
-import { Button, urls } from './index';
-import { FilterInput } from './forms';
+import React from "react";
+import { History } from "history";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import classNames from "classnames";
+import { Button, urls } from "./index";
+import { FilterInput } from "./forms";
 
-type Props = {
+type Props = RouteComponentProps & {
   showCreateButton: boolean;
   link: string;
   label?: string;
@@ -35,7 +35,7 @@ class OverviewPageActions extends React.Component<Props> {
     const { showCreateButton, link, label } = this.props;
     if (showCreateButton) {
       return (
-        <div className={classNames('input-button', 'control')}>
+        <div className={classNames("input-button", "control")}>
           <Button label={label} link={`/${link}/create`} color="primary" />
         </div>
       );

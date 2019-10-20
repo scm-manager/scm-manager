@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { Route, Redirect, withRouter } from 'react-router-dom';
+import React, { Component } from "react";
+import { Route, Redirect, withRouter, RouteComponentProps } from "react-router-dom";
 
-type Props = {
+type Props = RouteComponentProps & {
   authenticated?: boolean;
   component: Component<any, any>;
 };
@@ -15,10 +15,10 @@ class ProtectedRoute extends React.Component<Props> {
         return (
           <Redirect
             to={{
-              pathname: '/login',
+              pathname: "/login",
               state: {
-                from: routeProps.location,
-              },
+                from: routeProps.location
+              }
             }}
           />
         );

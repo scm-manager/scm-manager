@@ -3,4 +3,4 @@ export type Person = {
   mail?: string;
 };
 
-export const EXTENSION_POINT = 'avatar.factory';
+export const EXTENSION_POINT = "avatar.factory";

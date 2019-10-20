@@ -1,7 +1,7 @@
-import ChangesetRow from './ChangesetRow';
-import React from 'react';
+import ChangesetRow from "./ChangesetRow";
+import React from "react";
 
-import { Changeset, Repository } from '@scm-manager/ui-types';
+import { Changeset, Repository } from "@scm-manager/ui-types";
 
 type Props = {
   repository: Repository;

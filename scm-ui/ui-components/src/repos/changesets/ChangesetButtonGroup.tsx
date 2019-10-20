@@ -1,8 +1,8 @@
-import React from 'react';
-import { Changeset, Repository } from '@scm-manager/ui-types';
-import { ButtonAddons, Button } from '../../buttons';
-import { createChangesetLink, createSourcesLink } from './changesets';
-import { translate } from 'react-i18next';
+import React from "react";
+import { Changeset, Repository } from "@scm-manager/ui-types";
+import { ButtonAddons, Button } from "../../buttons";
+import { createChangesetLink, createSourcesLink } from "./changesets";
+import { translate } from "react-i18next";
 
 type Props = {
   repository: Repository;
@@ -22,13 +22,13 @@ class ChangesetButtonGroup extends React.Component<Props> {
         <Button
           link={changesetLink}
           icon="exchange-alt"
-          label={t('changeset.buttons.details')}
+          label={t("changeset.buttons.details")}
           reducedMobile={true}
         />
         <Button
           link={sourcesLink}
           icon="code"
-          label={t('changeset.buttons.sources')}
+          label={t("changeset.buttons.sources")}
           reducedMobile={true}
         />
       </ButtonAddons>
@@ -36,4 +36,4 @@ class ChangesetButtonGroup extends React.Component<Props> {
   }
 }
 
-export default translate('repos')(ChangesetButtonGroup);
+export default translate("repos")(ChangesetButtonGroup);

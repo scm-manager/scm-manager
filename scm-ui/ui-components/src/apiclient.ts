@@ -1,18 +1,18 @@
-import { contextPath } from './urls';
+import { contextPath } from "./urls";
 import {
   createBackendError,
   ForbiddenError,
   isBackendError,
-  UnauthorizedError,
-} from './errors';
-import { BackendErrorContent } from './errors';
+  UnauthorizedError
+} from "./errors";
+import { BackendErrorContent } from "./errors";
 
-const applyFetchOptions: (p: RequestOptions) => RequestOptions = o => {
-  o.credentials = 'same-origin';
+const applyFetchOptions: (p: RequestInit) => RequestInit = o => {
+  o.credentials = "same-origin";
   o.headers = {
-    Cache: 'no-cache',
+    Cache: "no-cache",
     // identify the request as ajax request
-    'X-Requested-With': 'XMLHttpRequest',
+    "X-Requested-With": "XMLHttpRequest"
   };
   return o;
 };
@@ -25,24 +25,24 @@ function handleFailure(response: Response) {
       });
     } else {
       if (response.status === 401) {
-        throw new UnauthorizedError('Unauthorized', 401);
+        throw new UnauthorizedError("Unauthorized", 401);
       } else if (response.status === 403) {
-        throw new ForbiddenError('Forbidden', 403);
+        throw new ForbiddenError("Forbidden", 403);
       }
 
-      throw new Error('server returned status code ' + response.status);
+      throw new Error("server returned status code " + response.status);
     }
   }
   return response;
 }
 
 export function createUrl(url: string) {
-  if (url.includes('://')) {
+  if (url.includes("://")) {
     return url;
   }
   let urlWithStartingSlash = url;
-  if (url.indexOf('/') !== 0) {
-    urlWithStartingSlash = '/' + urlWithStartingSlash;
+  if (url.indexOf("/") !== 0) {
+    urlWithStartingSlash = "/" + urlWithStartingSlash;
   }
   return `${contextPath}/api/v2${urlWithStartingSlash}`;
 }
@@ -52,36 +52,36 @@ class ApiClient {
     return fetch(createUrl(url), applyFetchOptions({})).then(handleFailure);
   }
 
-  post(url: string, payload: any, contentType: string = 'application/json') {
-    return this.httpRequestWithJSONBody('POST', url, contentType, payload);
+  post(url: string, payload: any, contentType: string = "application/json") {
+    return this.httpRequestWithJSONBody("POST", url, contentType, payload);
   }
 
   postBinary(url: string, fileAppender: (p: FormData) => void) {
     let formData = new FormData();
     fileAppender(formData);
 
-    let options: RequestOptions = {
-      method: 'POST',
-      body: formData,
+    let options: RequestInit = {
+      method: "POST",
+      body: formData
     };
     return this.httpRequestWithBinaryBody(options, url);
   }
 
-  put(url: string, payload: any, contentType: string = 'application/json') {
-    return this.httpRequestWithJSONBody('PUT', url, contentType, payload);
+  put(url: string, payload: any, contentType: string = "application/json") {
+    return this.httpRequestWithJSONBody("PUT", url, contentType, payload);
   }
 
   head(url: string) {
-    let options: RequestOptions = {
-      method: 'HEAD',
+    let options: RequestInit = {
+      method: "HEAD"
     };
     options = applyFetchOptions(options);
     return fetch(createUrl(url), options).then(handleFailure);
   }
 
   delete(url: string): Promise<Response> {
-    let options: RequestOptions = {
-      method: 'DELETE',
+    let options: RequestInit = {
+      method: "DELETE"
     };
     options = applyFetchOptions(options);
     return fetch(createUrl(url), options).then(handleFailure);
@@ -91,24 +91,27 @@ class ApiClient {
     method: string,
     url: string,
     contentType: string,
-    payload: any,
+    payload: any
   ): Promise<Response> {
-    let options: RequestOptions = {
+    let options: RequestInit = {
       method: method,
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payload)
     };
     return this.httpRequestWithBinaryBody(options, url, contentType);
   }
 
   httpRequestWithBinaryBody(
-    options: RequestOptions,
+    options: RequestInit,
     url: string,
-    contentType?: string,
+    contentType?: string
   ) {
     options = applyFetchOptions(options);
     if (contentType) {
-      // $FlowFixMe
-      options.headers['Content-Type'] = contentType;
+      if (!options.headers) {
+        options.headers = new Headers();
+      }
+      // @ts-ignore
+      options.headers["Content-Type"] = contentType;
     }
 
     return fetch(createUrl(url), options).then(handleFailure);

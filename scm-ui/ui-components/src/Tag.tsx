@@ -1,5 +1,5 @@
-import * as React from 'react';
-import classNames from 'classnames';
+import * as React from "react";
+import classNames from "classnames";
 
 type Props = {
   className?: string;
@@ -13,7 +13,7 @@ type Props = {
 
 class Tag extends React.Component<Props> {
   static defaultProps = {
-    color: 'light',
+    color: "light"
   };
 
   render() {
@@ -24,13 +24,13 @@ class Tag extends React.Component<Props> {
       label,
       title,
       onClick,
-      onRemove,
+      onRemove
     } = this.props;
     let showIcon = null;
     if (icon) {
       showIcon = (
         <>
-          <i className={classNames('fas', `fa-${icon}`)} />
+          <i className={classNames("fas", `fa-${icon}`)} />
           &nbsp;
         </>
       );
@@ -43,7 +43,7 @@ class Tag extends React.Component<Props> {
     return (
       <>
         <span
-          className={classNames('tag', `is-${color}`, className)}
+          className={classNames("tag", `is-${color}`, className)}
           title={title}
           onClick={onClick}
         >

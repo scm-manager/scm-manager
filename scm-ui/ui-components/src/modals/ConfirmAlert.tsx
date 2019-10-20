@@ -1,6 +1,6 @@
-import * as React from 'react';
-import ReactDOM from 'react-dom';
-import Modal from './Modal';
+import * as React from "react";
+import ReactDOM from "react-dom";
+import Modal from "./Modal";
 
 type Button = {
   label: string;
@@ -22,7 +22,10 @@ class ConfirmAlert extends React.Component<Props> {
   };
 
   close = () => {
-    ReactDOM.unmountComponentAtNode(document.getElementById('modalRoot'));
+    const container = document.getElementById("modalRoot");
+    if (container) {
+      ReactDOM.unmountComponentAtNode(container);
+    }
   };
 
   render() {
@@ -59,7 +62,7 @@ class ConfirmAlert extends React.Component<Props> {
 }
 
 export function confirmAlert(properties: Props) {
-  const root = document.getElementById('modalRoot');
+  const root = document.getElementById("modalRoot");
   if (root) {
     ReactDOM.render(<ConfirmAlert {...properties} />, root);
   }

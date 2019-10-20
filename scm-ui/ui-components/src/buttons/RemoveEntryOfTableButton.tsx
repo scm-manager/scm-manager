@@ -1,6 +1,6 @@
-import React from 'react';
-import { DeleteButton } from '.';
-import classNames from 'classnames';
+import React, { MouseEvent } from "react";
+import { DeleteButton } from ".";
+import classNames from "classnames";
 
 type Props = {
   entryname: string;
@@ -15,10 +15,10 @@ class RemoveEntryOfTableButton extends React.Component<Props, State> {
   render() {
     const { label, entryname, removeEntry, disabled } = this.props;
     return (
-      <div className={classNames('is-pulled-right')}>
+      <div className={classNames("is-pulled-right")}>
         <DeleteButton
           label={label}
-          action={(event: Event) => {
+          action={(event: MouseEvent) => {
             event.preventDefault();
             removeEntry(entryname);
           }}

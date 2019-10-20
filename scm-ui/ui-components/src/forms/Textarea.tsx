@@ -1,15 +1,10 @@
-import React from 'react';
-import LabelWithHelpIcon from './LabelWithHelpIcon';
-
-export type SelectItem = {
-  value: string;
-  label: string;
-};
+import React, { ChangeEvent } from "react";
+import LabelWithHelpIcon from "./LabelWithHelpIcon";
 
 type Props = {
   name?: string;
   label?: string;
-  placeholder?: SelectItem[];
+  placeholder?: string;
   value?: string;
   autofocus?: boolean;
   onChange: (value: string, name?: string) => void;
@@ -26,7 +21,7 @@ class Textarea extends React.Component<Props> {
     }
   }
 
-  handleInput = (event: SyntheticInputEvent<HTMLTextAreaElement>) => {
+  handleInput = (event: ChangeEvent<HTMLTextAreaElement>) => {
     this.props.onChange(event.target.value, this.props.name);
   };
 

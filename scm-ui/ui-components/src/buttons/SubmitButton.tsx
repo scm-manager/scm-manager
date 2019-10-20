@@ -1,5 +1,5 @@
-import React from 'react';
-import Button, { ButtonProps } from './Button';
+import React, { MouseEvent } from "react";
+import Button, { ButtonProps } from "./Button";
 
 type SubmitButtonProps = ButtonProps & {
   scrollToTop: boolean;
@@ -7,7 +7,7 @@ type SubmitButtonProps = ButtonProps & {
 
 class SubmitButton extends React.Component<SubmitButtonProps> {
   static defaultProps = {
-    scrollToTop: true,
+    scrollToTop: true
   };
 
   render() {
@@ -17,7 +17,7 @@ class SubmitButton extends React.Component<SubmitButtonProps> {
         type="submit"
         color="primary"
         {...this.props}
-        action={event => {
+        action={(event: MouseEvent) => {
           if (action) {
             action(event);
           }

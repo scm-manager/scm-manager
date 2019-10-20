@@ -1,10 +1,11 @@
-import React from 'react';
-import { Async, AsyncCreatable } from 'react-select';
-import { AutocompleteObject, SelectValue } from '@scm-manager/ui-types';
-import LabelWithHelpIcon from './forms/LabelWithHelpIcon';
+import React from "react";
+import { Async, AsyncCreatable } from "react-select";
+import { SelectValue } from "@scm-manager/ui-types";
+import LabelWithHelpIcon from "./forms/LabelWithHelpIcon";
+import { ActionMeta, ValueType } from "react-select/lib/types";
 
 type Props = {
-  loadSuggestions: (p: string) => Promise<AutocompleteObject>;
+  loadSuggestions: (p: string) => Promise<SelectValue[]>;
   valueSelected: (p: SelectValue) => void;
   label: string;
   helpText?: string;
@@ -19,25 +20,32 @@ type State = {};
 
 class Autocomplete extends React.Component<Props, State> {
   static defaultProps = {
-    placeholder: 'Type here',
-    loadingMessage: 'Loading...',
-    noOptionsMessage: 'No suggestion available',
+    placeholder: "Type here",
+    loadingMessage: "Loading...",
+    noOptionsMessage: "No suggestion available"
   };
 
-  handleInputChange = (newValue: SelectValue) => {
-    this.props.valueSelected(newValue);
+  handleInputChange = (
+    newValue: ValueType<SelectValue>,
+    action: ActionMeta
+  ) => {
+    this.selectValue(newValue as SelectValue);
+  };
+
+  selectValue = (value: SelectValue) => {
+    this.props.valueSelected(value);
   };
 
   // We overwrite this to avoid running into a bug (https://github.com/JedWatson/react-select/issues/2944)
   isValidNewOption = (
     inputValue: string,
-    selectValue: SelectValue,
-    selectOptions: SelectValue[],
-  ) => {
+    selectValue: ValueType<SelectValue>,
+    selectOptions: readonly SelectValue[]
+  ): boolean => {
     const isNotDuplicated = !selectOptions
       .map(option => option.label)
       .includes(inputValue);
-    const isNotEmpty = inputValue !== '';
+    const isNotEmpty = inputValue !== "";
     return isNotEmpty && isNotDuplicated;
   };
 
@@ -50,7 +58,7 @@ class Autocomplete extends React.Component<Props, State> {
       loadingMessage,
       noOptionsMessage,
       loadSuggestions,
-      creatable,
+      creatable
     } = this.props;
     return (
       <div className="field">
@@ -67,12 +75,12 @@ class Autocomplete extends React.Component<Props, State> {
               noOptionsMessage={() => noOptionsMessage}
               isValidNewOption={this.isValidNewOption}
               onCreateOption={value => {
-                this.handleInputChange({
+                this.selectValue({
                   label: value,
                   value: {
                     id: value,
-                    displayName: value,
-                  },
+                    displayName: value
+                  }
                 });
               }}
             />

@@ -1,8 +1,8 @@
-import React from 'react';
-import classNames from 'classnames';
-import styled from 'styled-components';
-import Tooltip from './Tooltip';
-import HelpIcon from './HelpIcon';
+import React from "react";
+import classNames from "classnames";
+import styled from "styled-components";
+import Tooltip from "./Tooltip";
+import HelpIcon from "./HelpIcon";
 
 type Props = {
   message: string;
@@ -19,7 +19,7 @@ export default class Help extends React.Component<Props> {
     const { message, className } = this.props;
     return (
       <HelpTooltip
-        className={classNames('is-inline-block', className)}
+        className={classNames("is-inline-block", className)}
         message={message}
       >
         <HelpIcon />

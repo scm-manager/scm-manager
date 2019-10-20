@@ -1,11 +1,11 @@
-import React from 'react';
-import { apiClient } from '../apiclient';
-import ErrorNotification from '../ErrorNotification';
-import parser from 'gitdiff-parser';
+import React from "react";
+import { apiClient } from "../apiclient";
+import ErrorNotification from "../ErrorNotification";
+import parser from "gitdiff-parser";
 
-import Loading from '../Loading';
-import Diff from './Diff';
-import { DiffObjectProps, File } from './DiffTypes';
+import Loading from "../Loading";
+import Diff from "./Diff";
+import { DiffObjectProps, File } from "./DiffTypes";
 
 type Props = DiffObjectProps & {
   url: string;
@@ -20,13 +20,13 @@ type State = {
 
 class LoadingDiff extends React.Component<Props, State> {
   static defaultProps = {
-    sideBySide: false,
+    sideBySide: false
   };
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      loading: true,
+      loading: true
     };
   }
 
@@ -47,16 +47,16 @@ class LoadingDiff extends React.Component<Props, State> {
       .then(response => response.text())
       .then(parser.parse)
       // $FlowFixMe
-      .then((diff: File[]) => {
+      .then((diff: any) => {
         this.setState({
           loading: false,
-          diff: diff,
+          diff: diff
         });
       })
-      .catch(error => {
+      .catch((error: Error) => {
         this.setState({
           loading: false,
-          error,
+          error
         });
       });
   };

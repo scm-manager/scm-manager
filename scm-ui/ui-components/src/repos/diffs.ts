@@ -1,7 +1,7 @@
-import { BaseContext, File, Hunk } from './DiffTypes';
+import { BaseContext, File, Hunk } from "./DiffTypes";
 
 export function getPath(file: File) {
-  if (file.type === 'delete') {
+  if (file.type === "delete") {
     return file.oldPath;
   }
   return file.newPath;

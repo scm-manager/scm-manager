@@ -1,8 +1,8 @@
-import * as React from 'react';
-import Logo from './../Logo';
+import React, { ReactNode } from "react";
+import Logo from "./../Logo";
 
 type Props = {
-  children?: React.Node;
+  children?: ReactNode;
 };
 
 class Header extends React.Component<Props> {

@@ -1,4 +1,4 @@
-import { Repository } from '@scm-manager/ui-types';
+import { Repository } from "@scm-manager/ui-types";
 
 // util methods for repositories
 

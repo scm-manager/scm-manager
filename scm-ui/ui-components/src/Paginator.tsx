@@ -1,7 +1,7 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { PagedCollection } from '@scm-manager/ui-types';
-import { Button } from './buttons';
+import React from "react";
+import { translate } from "react-i18next";
+import { PagedCollection, Link } from "@scm-manager/ui-types";
+import { Button } from "./buttons";
 
 type Props = {
   collection: PagedCollection;
@@ -17,7 +17,7 @@ class Paginator extends React.Component<Props> {
   createAction = (linkType: string) => () => {
     const { collection, onPageChange } = this.props;
     if (onPageChange) {
-      const link = collection._links[linkType];
+      const link = collection._links[linkType] as Link;
       if (link && link.href) {
         onPageChange(link.href);
       }
@@ -25,30 +25,30 @@ class Paginator extends React.Component<Props> {
   };
 
   renderFirstButton() {
-    return this.renderPageButton(1, 'first');
+    return this.renderPageButton(1, "first");
   }
 
   renderPreviousButton() {
     const { t } = this.props;
     return this.renderButton(
-      'pagination-previous',
-      t('paginator.previous'),
-      'prev',
+      "pagination-previous",
+      t("paginator.previous"),
+      "prev"
     );
   }
 
   renderNextButton() {
     const { t } = this.props;
-    return this.renderButton('pagination-next', t('paginator.next'), 'next');
+    return this.renderButton("pagination-next", t("paginator.next"), "next");
   }
 
   renderLastButton() {
     const { collection } = this.props;
-    return this.renderPageButton(collection.pageTotal, 'last');
+    return this.renderPageButton(collection.pageTotal, "last");
   }
 
   renderPageButton(page: number, linkType: string) {
-    return this.renderButton('pagination-link', page.toString(), linkType);
+    return this.renderButton("pagination-link", page.toString(), linkType);
   }
 
   renderButton(className: string, label: string, linkType: string) {
@@ -70,7 +70,7 @@ class Paginator extends React.Component<Props> {
     return (
       <Button
         className="pagination-link is-current"
-        label={page}
+        label={"" + page}
         disabled={true}
       />
     );
@@ -89,13 +89,13 @@ class Paginator extends React.Component<Props> {
       links.push(this.seperator());
     }
     if (page > 2) {
-      links.push(this.renderPageButton(page - 1, 'prev'));
+      links.push(this.renderPageButton(page - 1, "prev"));
     }
 
     links.push(this.currentPage(page));
 
     if (page + 1 < pageTotal) {
-      links.push(this.renderPageButton(page + 1, 'next'));
+      links.push(this.renderPageButton(page + 1, "next"));
     }
     if (page + 2 < pageTotal) links.push(this.seperator());
     //if there exists pages between next and last
@@ -118,4 +118,4 @@ class Paginator extends React.Component<Props> {
     );
   }
 }
-export default translate('commons')(Paginator);
+export default translate("commons")(Paginator);

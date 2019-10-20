@@ -1,5 +1,5 @@
-import * as React from 'react';
-import classNames from 'classnames';
+import * as React from "react";
+import classNames from "classnames";
 
 type Props = {
   title: string;
@@ -13,7 +13,7 @@ type Props = {
 
 class Modal extends React.Component<Props> {
   static defaultProps = {
-    headColor: 'light',
+    headColor: "light"
   };
 
   render() {
@@ -24,10 +24,10 @@ class Modal extends React.Component<Props> {
       footer,
       active,
       className,
-      headColor,
+      headColor
     } = this.props;
 
-    const isActive = active ? 'is-active' : null;
+    const isActive = active ? "is-active" : null;
 
     let showFooter = null;
     if (footer) {
@@ -35,13 +35,13 @@ class Modal extends React.Component<Props> {
     }
 
     return (
-      <div className={classNames('modal', className, isActive)}>
+      <div className={classNames("modal", className, isActive)}>
         <div className="modal-background" />
         <div className="modal-card">
           <header
             className={classNames(
-              'modal-card-head',
-              `has-background-${headColor}`,
+              "modal-card-head",
+              `has-background-${headColor}`
             )}
           >
             <p className="modal-card-title is-marginless">{title}</p>

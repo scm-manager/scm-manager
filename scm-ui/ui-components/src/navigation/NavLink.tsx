@@ -1,6 +1,6 @@
-import * as React from 'react';
-import classNames from 'classnames';
-import { Link, Route } from 'react-router-dom';
+import * as React from "react";
+import classNames from "classnames";
+import { Link, Route } from "react-router-dom";
 
 // TODO mostly copy of PrimaryNavigationLink
 
@@ -14,7 +14,7 @@ type Props = {
 
 class NavLink extends React.Component<Props> {
   static defaultProps = {
-    activeOnlyWhenExact: true,
+    activeOnlyWhenExact: true
   };
 
   isActive(route: any) {
@@ -29,14 +29,14 @@ class NavLink extends React.Component<Props> {
     if (icon) {
       showIcon = (
         <>
-          <i className={classNames(icon, 'fa-fw')} />{' '}
+          <i className={classNames(icon, "fa-fw")} />{" "}
         </>
       );
     }
 
     return (
       <li>
-        <Link className={this.isActive(route) ? 'is-active' : ''} to={to}>
+        <Link className={this.isActive(route) ? "is-active" : ""} to={to}>
           {showIcon}
           {label}
         </Link>

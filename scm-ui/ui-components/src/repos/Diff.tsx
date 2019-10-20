@@ -1,6 +1,6 @@
-import React from 'react';
-import DiffFile from './DiffFile';
-import { DiffObjectProps, File } from './DiffTypes';
+import React from "react";
+import DiffFile from "./DiffFile";
+import { DiffObjectProps, File } from "./DiffTypes";
 
 type Props = DiffObjectProps & {
   diff: File[];
@@ -8,8 +8,8 @@ type Props = DiffObjectProps & {
 };
 
 class Diff extends React.Component<Props> {
-  static defaultProps = {
-    sideBySide: false,
+  static defaultProps: Partial<Props> = {
+    sideBySide: false
   };
 
   render() {

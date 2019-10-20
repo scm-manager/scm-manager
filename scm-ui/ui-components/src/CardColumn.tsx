@@ -1,15 +1,15 @@
-import * as React from 'react';
-import classNames from 'classnames';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import React, { ReactNode } from "react";
+import classNames from "classnames";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 type Props = {
   title: string;
   description: string;
-  avatar: React.Node;
-  contentRight?: React.Node;
-  footerLeft: React.Node;
-  footerRight: React.Node;
+  avatar: ReactNode;
+  contentRight?: ReactNode;
+  footerLeft: ReactNode;
+  footerRight: ReactNode;
   link?: string;
   action?: () => void;
   className?: string;
@@ -73,16 +73,16 @@ export default class CardColumn extends React.Component<Props> {
       contentRight,
       footerLeft,
       footerRight,
-      className,
+      className
     } = this.props;
     const link = this.createLink();
     return (
       <>
         {link}
-        <NoEventWrapper className={classNames('media', className)}>
+        <NoEventWrapper className={classNames("media", className)}>
           <AvatarWrapper className="media-left">{avatar}</AvatarWrapper>
           <FlexFullHeight
-            className={classNames('media-content', 'text-box', 'is-flex')}
+            className={classNames("media-content", "text-box", "is-flex")}
           >
             <div className="is-flex">
               <ContentLeft className="content">
@@ -93,7 +93,7 @@ export default class CardColumn extends React.Component<Props> {
               </ContentLeft>
               <ContentRight>{contentRight}</ContentRight>
             </div>
-            <FooterWrapper className={classNames('level', 'is-flex')}>
+            <FooterWrapper className={classNames("level", "is-flex")}>
               <div className="level-left is-hidden-mobile">{footerLeft}</div>
               <div className="level-right is-mobile is-marginless">
                 {footerRight}

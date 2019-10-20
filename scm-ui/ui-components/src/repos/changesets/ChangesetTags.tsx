@@ -1,7 +1,7 @@
-import React from 'react';
-import { Changeset } from '@scm-manager/ui-types';
-import ChangesetTag from './ChangesetTag';
-import ChangesetTagsCollapsed from './ChangesetTagsCollapsed';
+import React from "react";
+import { Changeset } from "@scm-manager/ui-types";
+import ChangesetTag from "./ChangesetTag";
+import ChangesetTagsCollapsed from "./ChangesetTagsCollapsed";
 
 type Props = {
   changeset: Changeset;

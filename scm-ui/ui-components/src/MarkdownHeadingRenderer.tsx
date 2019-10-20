@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { withRouter } from 'react-router-dom';
-import { withContextPath } from './urls';
+import React, { ReactNode } from "react";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import { withContextPath } from "./urls";
 
 /**
  * Adds anchor links to markdown headings.
@@ -8,14 +8,13 @@ import { withContextPath } from './urls';
  * @see <a href="https://github.com/rexxars/react-markdown/issues/69">Headings are missing anchors / ids</a>
  */
 
-type Props = {
-  children: React.Node;
+type Props = RouteComponentProps & {
+  children: ReactNode;
   level: number;
-  location: any;
 };
 
-function flatten(text: string, child: any) {
-  return typeof child === 'string'
+function flatten(text: string, child: any): any {
+  return typeof child === "string"
     ? text + child
     : React.Children.toArray(child.props.children).reduce(flatten, text);
 }
@@ -26,19 +25,19 @@ function flatten(text: string, child: any) {
  * @VisibleForTesting
  */
 export function headingToAnchorId(heading: string) {
-  return heading.toLowerCase().replace(/\W/g, '-');
+  return heading.toLowerCase().replace(/\W/g, "-");
 }
 
 function MarkdownHeadingRenderer(props: Props) {
   const children = React.Children.toArray(props.children);
-  const heading = children.reduce(flatten, '');
+  const heading = children.reduce(flatten, "");
   const anchorId = headingToAnchorId(heading);
   const headingElement = React.createElement(
-    'h' + props.level,
+    "h" + props.level,
     {},
-    props.children,
+    props.children
   );
-  const href = withContextPath(props.location.pathname + '#' + anchorId);
+  const href = withContextPath(props.location.pathname + "#" + anchorId);
 
   return (
     <a id={`${anchorId}`} className="anchor" href={href}>

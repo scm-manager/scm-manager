@@ -1,5 +1,5 @@
-import React from 'react';
-import Help from '../Help';
+import React from "react";
+import Help from "../Help";
 
 type Props = {
   label?: string;
@@ -26,7 +26,7 @@ class LabelWithHelpIcon extends React.Component<Props> {
       );
     }
 
-    return '';
+    return "";
   }
 }
 

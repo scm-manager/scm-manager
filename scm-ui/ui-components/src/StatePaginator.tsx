@@ -1,7 +1,7 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { PagedCollection } from '@scm-manager/ui-types';
-import { Button } from './index';
+import React from "react";
+import { translate } from "react-i18next";
+import { PagedCollection } from "@scm-manager/ui-types";
+import { Button } from "./index";
 
 type Props = {
   collection: PagedCollection;
@@ -17,7 +17,7 @@ class StatePaginator extends React.Component<Props> {
     return (
       <Button
         className="pagination-link"
-        label={'1'}
+        label={"1"}
         disabled={false}
         action={() => this.updateCurrentPage(1)}
       />
@@ -36,7 +36,7 @@ class StatePaginator extends React.Component<Props> {
       <Button
         className="pagination-previous"
         label={label ? label : previousPage.toString()}
-        disabled={!this.hasLink('prev')}
+        disabled={!this.hasLink("prev")}
         action={() => this.updateCurrentPage(previousPage)}
       />
     );
@@ -54,7 +54,7 @@ class StatePaginator extends React.Component<Props> {
       <Button
         className="pagination-next"
         label={label ? label : nextPage.toString()}
-        disabled={!this.hasLink('next')}
+        disabled={!this.hasLink("next")}
         action={() => this.updateCurrentPage(nextPage)}
       />
     );
@@ -80,7 +80,7 @@ class StatePaginator extends React.Component<Props> {
     return (
       <Button
         className="pagination-link is-current"
-        label={page}
+        label={"" + page}
         disabled={true}
         action={() => this.updateCurrentPage(page)}
       />
@@ -119,15 +119,15 @@ class StatePaginator extends React.Component<Props> {
     const { t } = this.props;
     return (
       <nav className="pagination is-centered" aria-label="pagination">
-        {this.renderPreviousButton(t('paginator.previous'))}
+        {this.renderPreviousButton(t("paginator.previous"))}
         <ul className="pagination-list">
           {this.pageLinks().map((link, index) => {
             return <li key={index}>{link}</li>;
           })}
         </ul>
-        {this.renderNextButton(t('paginator.next'))}
+        {this.renderNextButton(t("paginator.next"))}
       </nav>
     );
   }
 }
-export default translate('commons')(StatePaginator);
+export default translate("commons")(StatePaginator);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 type Props = {
   bytes: number;
@@ -7,10 +7,10 @@ type Props = {
 class FileSize extends React.Component<Props> {
   static format(bytes: number) {
     if (!bytes) {
-      return '0 B';
+      return "0 B";
     }
 
-    const units = ['B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
+    const units = ["B", "K", "M", "G", "T", "P", "E", "Z", "Y"];
     const i = Math.floor(Math.log(bytes) / Math.log(1000));
 
     const size = i === 0 ? bytes : (bytes / 1000 ** i).toFixed(2);

@@ -1,5 +1,5 @@
-import React from 'react';
-import classNames from 'classnames';
+import React from "react";
+import classNames from "classnames";
 
 type Props = {
   title?: string;
@@ -10,7 +10,7 @@ type Props = {
 
 export default class Icon extends React.Component<Props> {
   static defaultProps = {
-    color: 'grey-light',
+    color: "grey-light"
   };
 
   render() {
@@ -20,11 +20,11 @@ export default class Icon extends React.Component<Props> {
         <i
           title={title}
           className={classNames(
-            'fas',
-            'fa-fw',
-            'fa-' + name,
+            "fas",
+            "fa-fw",
+            "fa-" + name,
             `has-text-${color}`,
-            className,
+            className
           )}
         />
       );
@@ -32,10 +32,10 @@ export default class Icon extends React.Component<Props> {
     return (
       <i
         className={classNames(
-          'fas',
-          'fa-' + name,
+          "fas",
+          "fa-" + name,
           `has-text-${color}`,
-          className,
+          className
         )}
       />
     );

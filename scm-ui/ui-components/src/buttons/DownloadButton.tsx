@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 type Props = {
   displayName: string;
@@ -12,17 +12,24 @@ class DownloadButton extends React.Component<Props> {
     const { displayName, url, disabled, onClick } = this.props;
     const onClickOrDefault = !!onClick ? onClick : () => {};
     return (
-      <a
-        className="button is-link"
-        href={url}
-        disabled={disabled}
-        onClick={onClickOrDefault}
-      >
-        <span className="icon is-medium">
-          <i className="fas fa-arrow-circle-down" />
-        </span>
-        <span>{displayName}</span>
-      </a>
+      <>
+        {/*
+        we have to ignore the next line, 
+        because jsx a does not the custom disabled attribute
+        but bulma does.
+        // @ts-ignore */}
+        <a
+          className="button is-link"
+          href={url}
+          disabled={disabled}
+          onClick={onClickOrDefault}
+        >
+          <span className="icon is-medium">
+            <i className="fas fa-arrow-circle-down" />
+          </span>
+          <span>{displayName}</span>
+        </a>
+      </>
     );
   }
 }

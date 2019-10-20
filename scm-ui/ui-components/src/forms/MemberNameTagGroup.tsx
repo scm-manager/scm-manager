@@ -1,7 +1,7 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { DisplayedUser } from '@scm-manager/ui-types';
-import TagGroup from './TagGroup';
+import React from "react";
+import { translate } from "react-i18next";
+import { DisplayedUser } from "@scm-manager/ui-types";
+import TagGroup from "./TagGroup";
 
 type Props = {
   members: string[];
@@ -18,14 +18,14 @@ class MemberNameTagGroup extends React.Component<Props> {
       return {
         id,
         displayName: id,
-        mail: '',
+        mail: ""
       };
     });
     return (
       <TagGroup
         items={membersExtended}
-        label={label ? label : t('group.members')}
-        helpText={helpText ? helpText : t('groupForm.help.memberHelpText')}
+        label={label ? label : t("group.members")}
+        helpText={helpText ? helpText : t("groupForm.help.memberHelpText")}
         onRemove={this.removeEntry}
       />
     );
@@ -33,10 +33,10 @@ class MemberNameTagGroup extends React.Component<Props> {
 
   removeEntry = (membersExtended: DisplayedUser[]) => {
     const members = membersExtended.map(function(item) {
-      return item['id'];
+      return item["id"];
     });
     this.props.memberListChanged(members);
   };
 }
 
-export default translate('groups')(MemberNameTagGroup);
+export default translate("groups")(MemberNameTagGroup);

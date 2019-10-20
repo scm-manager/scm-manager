@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React, { ReactNode } from "react";
 
 type Props = {
-  children?: React.Node;
+  children?: ReactNode;
 };
 
 class Navigation extends React.Component<Props> {

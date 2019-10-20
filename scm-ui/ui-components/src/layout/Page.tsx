@@ -1,12 +1,12 @@
-import * as React from 'react';
-import classNames from 'classnames';
-import styled from 'styled-components';
-import Loading from './../Loading';
-import ErrorNotification from './../ErrorNotification';
-import Title from './Title';
-import Subtitle from './Subtitle';
-import PageActions from './PageActions';
-import ErrorBoundary from '../ErrorBoundary';
+import React, { ReactNode } from "react";
+import classNames from "classnames";
+import styled from "styled-components";
+import Loading from "./../Loading";
+import ErrorNotification from "./../ErrorNotification";
+import Title from "./Title";
+import Subtitle from "./Subtitle";
+import PageActions from "./PageActions";
+import ErrorBoundary from "../ErrorBoundary";
 
 type Props = {
   title?: string;
@@ -14,7 +14,7 @@ type Props = {
   loading?: boolean;
   error?: Error;
   showContentOnError?: boolean;
-  children: React.Node;
+  children: ReactNode;
 };
 
 const PageActionContainer = styled.div`
@@ -61,10 +61,10 @@ export default class Page extends React.Component<Props> {
           pageActions = (
             <PageActionContainer
               className={classNames(
-                'column',
-                'is-three-fifths',
-                'is-mobile-action-spacing',
-                'is-flex',
+                "column",
+                "is-three-fifths",
+                "is-mobile-action-spacing",
+                "is-flex"
               )}
             >
               {child}
@@ -102,7 +102,7 @@ export default class Page extends React.Component<Props> {
       return <Loading />;
     }
 
-    let content = [];
+    let content: ReactNode[] = [];
     React.Children.forEach(children, child => {
       if (child) {
         if (!this.isPageAction(child)) {

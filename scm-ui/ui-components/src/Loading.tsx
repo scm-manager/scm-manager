@@ -1,7 +1,7 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import styled from 'styled-components';
-import Image from './Image';
+import React from "react";
+import { translate } from "react-i18next";
+import styled from "styled-components";
+import Image from "./Image";
 
 type Props = {
   t: (p: string) => string;
@@ -26,11 +26,11 @@ class Loading extends React.Component<Props> {
     const { message, t } = this.props;
     return (
       <Wrapper className="is-flex">
-        <FixedSizedImage src="/images/loading.svg" alt={t('loading.alt')} />
+        <FixedSizedImage src="/images/loading.svg" alt={t("loading.alt")} />
         <p className="has-text-centered">{message}</p>
       </Wrapper>
     );
   }
 }
 
-export default translate('commons')(Loading);
+export default translate("commons")(Loading);

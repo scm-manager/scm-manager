@@ -1,8 +1,8 @@
-import React from 'react';
-import { Changeset } from '@scm-manager/ui-types';
-import LoadingDiff from '../LoadingDiff';
-import Notification from '../../Notification';
-import { translate } from 'react-i18next';
+import React from "react";
+import { Changeset, Link } from "@scm-manager/ui-types";
+import LoadingDiff from "../LoadingDiff";
+import Notification from "../../Notification";
+import { translate } from "react-i18next";
 
 type Props = {
   changeset: Changeset;
@@ -18,7 +18,11 @@ class ChangesetDiff extends React.Component<Props> {
   }
 
   createUrl(changeset: Changeset) {
-    return changeset._links.diff.href + '?format=GIT';
+    if (changeset._links.diff) {
+      const link = changeset._links.diff as Link;
+      return link.href + "?format=GIT";
+    }
+    throw new Error("diff link is missing");
   }
 
   render() {
@@ -26,7 +30,7 @@ class ChangesetDiff extends React.Component<Props> {
     if (!this.isDiffSupported(changeset)) {
       return (
         <Notification type="danger">
-          {t('changeset.diffNotSupported')}
+          {t("changeset.diffNotSupported")}
         </Notification>
       );
     } else {
@@ -36,4 +40,4 @@ class ChangesetDiff extends React.Component<Props> {
   }
 }
 
-export default translate('repos')(ChangesetDiff);
+export default translate("repos")(ChangesetDiff);

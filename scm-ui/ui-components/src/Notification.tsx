@@ -1,24 +1,24 @@
-import * as React from 'react';
-import classNames from 'classnames';
+import React, { ReactNode } from "react";
+import classNames from "classnames";
 
 type NotificationType =
-  | 'primary'
-  | 'info'
-  | 'success'
-  | 'warning'
-  | 'danger'
-  | 'inherit';
+  | "primary"
+  | "info"
+  | "success"
+  | "warning"
+  | "danger"
+  | "inherit";
 
 type Props = {
   type: NotificationType;
   onClose?: () => void;
   className?: string;
-  children?: React.Node;
+  children?: ReactNode;
 };
 
 class Notification extends React.Component<Props> {
   static defaultProps = {
-    type: 'info',
+    type: "info"
   };
 
   renderCloseButton() {
@@ -26,16 +26,16 @@ class Notification extends React.Component<Props> {
     if (onClose) {
       return <button className="delete" onClick={onClose} />;
     }
-    return '';
+    return "";
   }
 
   render() {
     const { type, className, children } = this.props;
 
-    const color = type !== 'inherit' ? 'is-' + type : '';
+    const color = type !== "inherit" ? "is-" + type : "";
 
     return (
-      <div className={classNames('notification', color, className)}>
+      <div className={classNames("notification", color, className)}>
         {this.renderCloseButton()}
         {children}
       </div>

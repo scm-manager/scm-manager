@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { MouseEvent } from "react";
 
-import { AddButton } from '../buttons';
-import InputField from './InputField';
+import { AddButton } from "../buttons";
+import InputField from "./InputField";
 
 type Props = {
   addEntry: (p: string) => void;
@@ -21,7 +21,7 @@ class AddEntryToTableField extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      entryToAdd: '',
+      entryToAdd: ""
     };
   }
 
@@ -29,7 +29,7 @@ class AddEntryToTableField extends React.Component<Props, State> {
     const { validateEntry } = this.props;
     if (
       !this.state.entryToAdd ||
-      this.state.entryToAdd === '' ||
+      this.state.entryToAdd === "" ||
       !validateEntry
     ) {
       return true;
@@ -44,7 +44,7 @@ class AddEntryToTableField extends React.Component<Props, State> {
       buttonLabel,
       fieldLabel,
       errorMessage,
-      helpText,
+      helpText
     } = this.props;
     return (
       <div className="field">
@@ -61,13 +61,13 @@ class AddEntryToTableField extends React.Component<Props, State> {
         <AddButton
           label={buttonLabel}
           action={this.addButtonClicked}
-          disabled={disabled || this.state.entryToAdd === '' || !this.isValid()}
+          disabled={disabled || this.state.entryToAdd === "" || !this.isValid()}
         />
       </div>
     );
   }
 
-  addButtonClicked = (event: Event) => {
+  addButtonClicked = (event: MouseEvent) => {
     event.preventDefault();
     this.appendEntry();
   };
@@ -77,14 +77,14 @@ class AddEntryToTableField extends React.Component<Props, State> {
     this.props.addEntry(entryToAdd);
     this.setState({
       ...this.state,
-      entryToAdd: '',
+      entryToAdd: ""
     });
   };
 
   handleAddEntryChange = (entryname: string) => {
     this.setState({
       ...this.state,
-      entryToAdd: entryname,
+      entryToAdd: entryname
     });
   };
 }

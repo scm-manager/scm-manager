@@ -1,16 +1,17 @@
-import queryString from 'query-string';
+import queryString from "query-string";
 
-export const contextPath = window.ctxPath || '';
+//@ts-ignore
+export const contextPath = window.ctxPath || "";
 
 export function withContextPath(path: string) {
   return contextPath + path;
 }
 
 export function withEndingSlash(url: string) {
-  if (url.endsWith('/')) {
+  if (url.endsWith("/")) {
     return url;
   }
-  return url + '/';
+  return url + "/";
 }
 
 export function concat(base: string, ...parts: string[]) {

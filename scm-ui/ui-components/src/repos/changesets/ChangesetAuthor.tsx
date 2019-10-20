@@ -1,7 +1,7 @@
-import React from 'react';
-import { Changeset } from '@scm-manager/ui-types';
-import { ExtensionPoint } from '@scm-manager/ui-extensions';
-import { translate } from 'react-i18next';
+import React from "react";
+import { Changeset } from "@scm-manager/ui-types";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { translate } from "react-i18next";
 
 type Props = {
   changeset: Changeset;
@@ -28,8 +28,8 @@ class ChangesetAuthor extends React.Component<Props> {
     const { t } = this.props;
     return (
       <a
-        href={'mailto:' + mail}
-        title={t('changeset.author.mailto') + ' ' + mail}
+        href={"mailto:" + mail}
+        title={t("changeset.author.mailto") + " " + mail}
       >
         {name}
       </a>
@@ -40,11 +40,11 @@ class ChangesetAuthor extends React.Component<Props> {
     const { t } = this.props;
     return (
       <>
-        {t('changeset.author.prefix')} {child}
+        {t("changeset.author.prefix")} {child}
         <ExtensionPoint
           name="changesets.author.suffix"
           props={{
-            changeset: this.props.changeset,
+            changeset: this.props.changeset
           }}
           renderAll={true}
         />
@@ -53,4 +53,4 @@ class ChangesetAuthor extends React.Component<Props> {
   }
 }
 
-export default translate('repos')(ChangesetAuthor);
+export default translate("repos")(ChangesetAuthor);

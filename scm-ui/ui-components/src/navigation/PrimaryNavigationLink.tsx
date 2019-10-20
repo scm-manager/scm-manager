@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Route, Link } from 'react-router-dom';
+import * as React from "react";
+import { Route, Link } from "react-router-dom";
 
 type Props = {
   to: string;
@@ -12,7 +12,7 @@ class PrimaryNavigationLink extends React.Component<Props> {
   renderLink = (route: any) => {
     const { to, label } = this.props;
     return (
-      <li className={route.match ? 'is-active' : ''}>
+      <li className={route.match ? "is-active" : ""}>
         <Link to={to}>{label}</Link>
       </li>
     );

@@ -1,10 +1,10 @@
-import * as React from 'react';
-import classNames from 'classnames';
-import styled from 'styled-components';
+import React, { ReactNode } from "react";
+import classNames from "classnames";
+import styled from "styled-components";
 
 type Props = {
   name: string;
-  elements: React.Node[];
+  elements: ReactNode[];
 };
 
 type State = {
@@ -23,25 +23,25 @@ export default class CardColumnGroup extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      collapsed: false,
+      collapsed: false
     };
   }
 
   toggleCollapse = () => {
     this.setState(prevState => ({
-      collapsed: !prevState.collapsed,
+      collapsed: !prevState.collapsed
     }));
   };
 
-  isLastEntry = (array: React.Node[], index: number) => {
+  isLastEntry = (array: ReactNode[], index: number) => {
     return index === array.length - 1;
   };
 
-  isLengthOdd = (array: React.Node[]) => {
+  isLengthOdd = (array: ReactNode[]) => {
     return array.length % 2 !== 0;
   };
 
-  isFullSize = (array: React.Node[], index: number) => {
+  isFullSize = (array: ReactNode[], index: number) => {
     return this.isLastEntry(array, index) && this.isLengthOdd(array);
   };
 
@@ -49,20 +49,20 @@ export default class CardColumnGroup extends React.Component<Props, State> {
     const { name, elements } = this.props;
     const { collapsed } = this.state;
 
-    const icon = collapsed ? 'fa-angle-right' : 'fa-angle-down';
+    const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
     let content = null;
     if (!collapsed) {
       content = elements.map((entry, index) => {
         const fullColumnWidth = this.isFullSize(elements, index);
-        const sizeClass = fullColumnWidth ? 'is-full' : 'is-half';
+        const sizeClass = fullColumnWidth ? "is-full" : "is-half";
         return (
           <div
             className={classNames(
-              'box',
-              'box-link-shadow',
-              'column',
-              'is-clipped',
-              sizeClass,
+              "box",
+              "box-link-shadow",
+              "column",
+              "is-clipped",
+              sizeClass
             )}
             key={index}
           >
@@ -75,14 +75,14 @@ export default class CardColumnGroup extends React.Component<Props, State> {
       <Container>
         <h2>
           <span
-            className={classNames('is-size-4', 'has-cursor-pointer')}
+            className={classNames("is-size-4", "has-cursor-pointer")}
             onClick={this.toggleCollapse}
           >
-            <i className={classNames('fa', icon)} /> {name}
+            <i className={classNames("fa", icon)} /> {name}
           </span>
         </h2>
         <hr />
-        <Wrapper className={classNames('columns', 'is-multiline')}>
+        <Wrapper className={classNames("columns", "is-multiline")}>
           {content}
         </Wrapper>
         <div className="is-clearfix" />

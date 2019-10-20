@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { DisplayedUser } from '@scm-manager/ui-types';
-import { Help, Tag } from '../index';
+import * as React from "react";
+import { DisplayedUser } from "@scm-manager/ui-types";
+import { Help, Tag } from "../index";
 
 type Props = {
   items: DisplayedUser[];
@@ -23,11 +23,11 @@ export default class TagGroup extends React.Component<Props> {
             <strong>
               {label}
               {help}
-              {items.length > 0 ? ':' : ''}
+              {items.length > 0 ? ":" : ""}
             </strong>
           </div>
         ) : (
-          ''
+          ""
         )}
         {items.map((item, key) => {
           return (
@@ -46,7 +46,7 @@ export default class TagGroup extends React.Component<Props> {
     );
   }
 
-  removeEntry = item => {
+  removeEntry = (item: DisplayedUser) => {
     const newItems = this.props.items.filter(name => name !== item);
     this.props.onRemove(newItems);
   };

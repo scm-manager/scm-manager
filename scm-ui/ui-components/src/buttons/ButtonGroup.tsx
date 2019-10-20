@@ -1,28 +1,28 @@
-import * as React from 'react';
-import classNames from 'classnames';
+import React, { ReactNode } from "react";
+import classNames from "classnames";
 
 type Props = {
   className?: string;
-  children: React.Node;
+  children: ReactNode;
 };
 
 class ButtonGroup extends React.Component<Props> {
   render() {
     const { className, children } = this.props;
 
-    const childWrapper = [];
+    const childWrapper: ReactNode[] = [];
     React.Children.forEach(children, child => {
       if (child) {
         childWrapper.push(
           <div className="control" key={childWrapper.length}>
             {child}
-          </div>,
+          </div>
         );
       }
     });
 
     return (
-      <div className={classNames('field', 'is-grouped', className)}>
+      <div className={classNames("field", "is-grouped", className)}>
         {childWrapper}
       </div>
     );

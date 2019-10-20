@@ -1,8 +1,8 @@
-import React from 'react';
-import { binder } from '@scm-manager/ui-extensions';
-import { Image } from '..';
-import { Person } from './Avatar';
-import { EXTENSION_POINT } from './Avatar';
+import React from "react";
+import { binder } from "@scm-manager/ui-extensions";
+import { Image } from "..";
+import { Person } from "./Avatar";
+import { EXTENSION_POINT } from "./Avatar";
 
 type Props = {
   person: Person;

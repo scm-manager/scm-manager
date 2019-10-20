@@ -1,6 +1,6 @@
-import React from 'react';
-import ErrorNotification from './ErrorNotification';
-import { BackendError, ForbiddenError } from './errors';
+import React from "react";
+import ErrorNotification from "./ErrorNotification";
+import { BackendError, ForbiddenError } from "./errors";
 
 type Props = {
   error: Error;

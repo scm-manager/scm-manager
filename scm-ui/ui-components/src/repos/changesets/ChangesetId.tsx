@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
-import React from 'react';
-import { Changeset, Repository } from '@scm-manager/ui-types';
-import { createChangesetLink } from './changesets';
+import { Link } from "react-router-dom";
+import React from "react";
+import { Changeset, Repository } from "@scm-manager/ui-types";
+import { createChangesetLink } from "./changesets";
 
 type Props = {
   repository: Repository;
@@ -11,7 +11,7 @@ type Props = {
 
 export default class ChangesetId extends React.Component<Props> {
   static defaultProps = {
-    link: true,
+    link: true
   };
 
   shortId = (changeset: Changeset) => {

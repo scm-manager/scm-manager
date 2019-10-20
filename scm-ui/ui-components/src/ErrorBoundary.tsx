@@ -1,9 +1,9 @@
-import * as React from 'react';
-import ErrorNotification from './ErrorNotification';
+import React, { ReactNode } from "react";
+import ErrorNotification from "./ErrorNotification";
 
 type Props = {
   fallback?: React.ComponentType<any>;
-  children: React.Node;
+  children: ReactNode;
 };
 
 type ErrorInfo = {
@@ -25,7 +25,7 @@ class ErrorBoundary extends React.Component<Props, State> {
     // Catch errors in any components below and re-render with error message
     this.setState({
       error,
-      errorInfo,
+      errorInfo
     });
   }
 

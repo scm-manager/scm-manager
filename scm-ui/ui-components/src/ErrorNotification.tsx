@@ -1,8 +1,8 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { BackendError, ForbiddenError, UnauthorizedError } from './errors';
-import Notification from './Notification';
-import BackendErrorNotification from './BackendErrorNotification';
+import React from "react";
+import { translate } from "react-i18next";
+import { BackendError, ForbiddenError, UnauthorizedError } from "./errors";
+import Notification from "./Notification";
+import BackendErrorNotification from "./BackendErrorNotification";
 
 type Props = {
   t: (p: string) => string;
@@ -18,24 +18,24 @@ class ErrorNotification extends React.Component<Props> {
       } else if (error instanceof UnauthorizedError) {
         return (
           <Notification type="danger">
-            <strong>{t('errorNotification.prefix')}:</strong>{' '}
-            {t('errorNotification.timeout')}{' '}
+            <strong>{t("errorNotification.prefix")}:</strong>{" "}
+            {t("errorNotification.timeout")}{" "}
             <a href="javascript:window.location.reload(true)">
-              {t('errorNotification.loginLink')}
+              {t("errorNotification.loginLink")}
             </a>
           </Notification>
         );
       } else if (error instanceof ForbiddenError) {
         return (
           <Notification type="danger">
-            <strong>{t('errorNotification.prefix')}:</strong>{' '}
-            {t('errorNotification.forbidden')}
+            <strong>{t("errorNotification.prefix")}:</strong>{" "}
+            {t("errorNotification.forbidden")}
           </Notification>
         );
       } else {
         return (
           <Notification type="danger">
-            <strong>{t('errorNotification.prefix')}:</strong> {error.message}
+            <strong>{t("errorNotification.prefix")}:</strong> {error.message}
           </Notification>
         );
       }
@@ -44,4 +44,4 @@ class ErrorNotification extends React.Component<Props> {
   }
 }
 
-export default translate('commons')(ErrorNotification);
+export default translate("commons")(ErrorNotification);

@@ -54,19 +54,19 @@ export class ForbiddenError extends Error {
 
 export class NotFoundError extends BackendError {
   constructor(content: BackendErrorContent, statusCode: number) {
-    super(content, 'NotFoundError', statusCode);
+    super(content, "NotFoundError", statusCode);
   }
 }
 
 export class ConflictError extends BackendError {
   constructor(content: BackendErrorContent, statusCode: number) {
-    super(content, 'ConflictError', statusCode);
+    super(content, "ConflictError", statusCode);
   }
 }
 
 export function createBackendError(
   content: BackendErrorContent,
-  statusCode: number,
+  statusCode: number
 ) {
   switch (statusCode) {
     case 404:
@@ -74,13 +74,13 @@ export function createBackendError(
     case 409:
       return new ConflictError(content, statusCode);
     default:
-      return new BackendError(content, 'BackendError', statusCode);
+      return new BackendError(content, "BackendError", statusCode);
   }
 }
 
 export function isBackendError(response: Response) {
   return (
-    response.headers.get('Content-Type') ===
-    'application/vnd.scmm-error+json;v=2'
+    response.headers.get("Content-Type") ===
+    "application/vnd.scmm-error+json;v=2"
   );
 }

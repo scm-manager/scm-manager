@@ -1,27 +1,28 @@
-import React, { ReactNode } from 'react';
-import Button from './Button';
-import { storiesOf } from '@storybook/react';
-import styled from 'styled-components';
-import { MemoryRouter } from 'react-router-dom';
-import AddButton from './AddButton';
-import CreateButton from './CreateButton';
-import DeleteButton from './DeleteButton';
-import DownloadButton from './DownloadButton';
-import EditButton from './EditButton';
-import SubmitButton from './SubmitButton';
+import React, { ReactNode } from "react";
+import Button from "./Button";
+import { storiesOf } from "@storybook/react";
+import styled from "styled-components";
+import { MemoryRouter } from "react-router-dom";
+import AddButton from "./AddButton";
+import CreateButton from "./CreateButton";
+import DeleteButton from "./DeleteButton";
+import DownloadButton from "./DownloadButton";
+import EditButton from "./EditButton";
+import SubmitButton from "./SubmitButton";
+import { ReactElement } from "react";
 
 const colors = [
-  'primary',
-  'link',
-  'info',
-  'success',
-  'warning',
-  'danger',
-  'white',
-  'light',
-  'dark',
-  'black',
-  'text',
+  "primary",
+  "link",
+  "info",
+  "success",
+  "warning",
+  "danger",
+  "white",
+  "light",
+  "dark",
+  "black",
+  "text"
 ];
 
 const Spacing = styled.div`
@@ -29,14 +30,14 @@ const Spacing = styled.div`
 `;
 
 const RoutingDecorator = story => (
-  <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>
+  <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>
 );
 
 const SpacingDecorator = story => <Spacing>{story()}</Spacing>;
 
-storiesOf('Buttons|Button', module)
+storiesOf("Buttons|Button", module)
   .addDecorator(RoutingDecorator)
-  .add('Colors', () => (
+  .add("Colors", () => (
     <div>
       {colors.map(color => (
         <Spacing key={color}>
@@ -45,30 +46,36 @@ storiesOf('Buttons|Button', module)
       ))}
     </div>
   ))
-  .add('Loading', () => (
+  .add("Loading", () => (
     <Spacing>
-      <Button color={'primary'} loading={true}>
+      <Button color={"primary"} loading={true}>
         Loading Button
       </Button>
     </Spacing>
   ));
 
-const buttonStory = (name: string, storyFn: () => ReactNode) => {
-  return storiesOf('Buttons|' + name, module)
+const buttonStory = (name: string, storyFn: () => ReactElement) => {
+  return storiesOf("Buttons|" + name, module)
     .addDecorator(RoutingDecorator)
     .addDecorator(SpacingDecorator)
-    .add('Default', storyFn);
+    .add("Default", storyFn);
 };
 
-buttonStory('AddButton', () => <AddButton color={'primary'}>Add</AddButton>);
-buttonStory('CreateButton', () => <CreateButton>Create</CreateButton>);
-buttonStory('DeleteButton', () => <DeleteButton>Delete</DeleteButton>);
-buttonStory('DownloadButton', () => (
+buttonStory("AddButton", () => <AddButton>Add</AddButton>);
+buttonStory("CreateButton", () => <CreateButton>Create</CreateButton>);
+buttonStory("DeleteButton", () => <DeleteButton>Delete</DeleteButton>);
+buttonStory("DownloadButton", () => (
   <DownloadButton
     displayName="Download"
     disabled={false}
     url=""
   ></DownloadButton>
+)).add("Disabled", () => (
+  <DownloadButton
+    displayName="Download"
+    disabled={true}
+    url=""
+  ></DownloadButton>
 ));
-buttonStory('EditButton', () => <EditButton>Edit</EditButton>);
-buttonStory('SubmitButton', () => <SubmitButton>Submit</SubmitButton>);
+buttonStory("EditButton", () => <EditButton>Edit</EditButton>);
+buttonStory("SubmitButton", () => <SubmitButton>Submit</SubmitButton>);

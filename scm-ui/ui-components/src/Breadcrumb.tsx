@@ -1,11 +1,11 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { translate } from 'react-i18next';
-import classNames from 'classnames';
-import styled from 'styled-components';
-import { binder, ExtensionPoint } from '@scm-manager/ui-extensions';
-import { Branch, Repository } from '@scm-manager/ui-types';
-import Icon from './Icon';
+import React from "react";
+import { Link } from "react-router-dom";
+import { translate } from "react-i18next";
+import classNames from "classnames";
+import styled from "styled-components";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { Branch, Repository } from "@scm-manager/ui-types";
+import Icon from "./Icon";
 
 type Props = {
   repository: Repository;
@@ -38,9 +38,9 @@ class Breadcrumb extends React.Component<Props> {
     const { revision, path, baseUrl } = this.props;
 
     if (path) {
-      const paths = path.split('/');
+      const paths = path.split("/");
       const map = paths.map((path, index) => {
-        const currPath = paths.slice(0, index + 1).join('/');
+        const currPath = paths.slice(0, index + 1).join("/");
         if (paths.length - 1 === index) {
           return (
             <li className="is-active" key={index}>
@@ -52,7 +52,7 @@ class Breadcrumb extends React.Component<Props> {
         }
         return (
           <li key={index}>
-            <Link to={baseUrl + '/' + revision + '/' + currPath}>{path}</Link>
+            <Link to={baseUrl + "/" + revision + "/" + currPath}>{path}</Link>
           </li>
         );
       });
@@ -70,21 +70,21 @@ class Breadcrumb extends React.Component<Props> {
       revision,
       path,
       repository,
-      t,
+      t
     } = this.props;
 
     return (
       <>
         <div className="is-flex">
           <FlexStartNav
-            className={classNames('breadcrumb', 'sources-breadcrumb')}
+            className={classNames("breadcrumb", "sources-breadcrumb")}
             aria-label="breadcrumbs"
           >
             <ul>
               <li>
-                <Link to={baseUrl + '/' + revision + '/'}>
+                <Link to={baseUrl + "/" + revision + "/"}>
                   <HomeIcon
-                    title={t('breadcrumb.home')}
+                    title={t("breadcrumb.home")}
                     name="home"
                     color="inherit"
                   />
@@ -93,7 +93,7 @@ class Breadcrumb extends React.Component<Props> {
               {this.renderPath()}
             </ul>
           </FlexStartNav>
-          {binder.hasExtension('repos.sources.actionbar') && (
+          {binder.hasExtension("repos.sources.actionbar") && (
             <ActionWrapper>
               <ExtensionPoint
                 name="repos.sources.actionbar"
@@ -104,9 +104,9 @@ class Breadcrumb extends React.Component<Props> {
                   isBranchUrl:
                     branches &&
                     branches.filter(
-                      b => b.name.replace('/', '%2F') === revision,
+                      b => b.name.replace("/", "%2F") === revision
                     ).length > 0,
-                  repository,
+                  repository
                 }}
                 renderAll={true}
               />
@@ -119,4 +119,4 @@ class Breadcrumb extends React.Component<Props> {
   }
 }
 
-export default translate('commons')(Breadcrumb);
+export default translate("commons")(Breadcrumb);

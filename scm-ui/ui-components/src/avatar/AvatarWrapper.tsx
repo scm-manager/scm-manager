@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { binder } from '@scm-manager/ui-extensions';
-import { EXTENSION_POINT } from './Avatar';
+import React, { Component, ReactNode } from "react";
+import { binder } from "@scm-manager/ui-extensions";
+import { EXTENSION_POINT } from "./Avatar";
 
 type Props = {
-  children: React.Node;
+  children: ReactNode;
 };
 
-class AvatarWrapper extends React.Component<Props> {
+class AvatarWrapper extends Component<Props> {
   render() {
     if (binder.hasExtension(EXTENSION_POINT)) {
       return <>{this.props.children}</>;

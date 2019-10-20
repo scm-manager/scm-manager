@@ -1,5 +1,5 @@
-import React from 'react';
-import Tag from '../../Tag';
+import React from "react";
+import Tag from "../../Tag";
 
 type Props = {
   icon: string;

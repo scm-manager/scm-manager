@@ -1,8 +1,8 @@
-import React from 'react';
-import { BackendError } from './errors';
-import Notification from './Notification';
+import React from "react";
+import { BackendError } from "./errors";
+import Notification from "./Notification";
 
-import { translate } from 'react-i18next';
+import { translate } from "react-i18next";
 
 type Props = {
   error: BackendError;
@@ -29,7 +29,7 @@ class BackendErrorNotification extends React.Component<Props> {
 
   renderErrorName = () => {
     const { error, t } = this.props;
-    const translation = t('errors.' + error.errorCode + '.displayName');
+    const translation = t("errors." + error.errorCode + ".displayName");
     if (translation === error.errorCode) {
       return error.message;
     }
@@ -38,9 +38,9 @@ class BackendErrorNotification extends React.Component<Props> {
 
   renderErrorDescription = () => {
     const { error, t } = this.props;
-    const translation = t('errors.' + error.errorCode + '.description');
+    const translation = t("errors." + error.errorCode + ".description");
     if (translation === error.errorCode) {
-      return '';
+      return "";
     }
     return translation;
   };
@@ -51,7 +51,7 @@ class BackendErrorNotification extends React.Component<Props> {
       return (
         <>
           <p>
-            <strong>{t('errors.violations')}</strong>
+            <strong>{t("errors.violations")}</strong>
           </p>
           <ul>
             {error.violations.map((violation, index) => {
@@ -75,10 +75,10 @@ class BackendErrorNotification extends React.Component<Props> {
         {this.renderMoreInformationLink()}
         <div className="level is-size-7">
           <div className="left">
-            {t('errors.transactionId')} {error.transactionId}
+            {t("errors.transactionId")} {error.transactionId}
           </div>
           <div className="right">
-            {t('errors.errorCode')} {error.errorCode}
+            {t("errors.errorCode")} {error.errorCode}
           </div>
         </div>
       </>
@@ -91,7 +91,7 @@ class BackendErrorNotification extends React.Component<Props> {
       return (
         <>
           <p>
-            <strong>{t('errors.context')}</strong>
+            <strong>{t("errors.context")}</strong>
           </p>
           <ul>
             {error.context.map((context, index) => {
@@ -112,7 +112,7 @@ class BackendErrorNotification extends React.Component<Props> {
     if (error.url) {
       return (
         <p>
-          {t('errors.moreInfo')}{' '}
+          {t("errors.moreInfo")}{" "}
           <a href={error.url} target="_blank">
             {error.errorCode}
           </a>
@@ -122,4 +122,4 @@ class BackendErrorNotification extends React.Component<Props> {
   };
 }
 
-export default translate('plugins')(BackendErrorNotification);
+export default translate("plugins")(BackendErrorNotification);

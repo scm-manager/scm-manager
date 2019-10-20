@@ -1,5 +1,5 @@
-import React from 'react';
-import Button, { ButtonProps } from './Button';
+import React from "react";
+import Button, { ButtonProps } from "./Button";
 
 class AddButton extends React.Component<ButtonProps> {
   render() {

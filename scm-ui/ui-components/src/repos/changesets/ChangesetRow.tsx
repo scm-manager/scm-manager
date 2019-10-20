@@ -1,16 +1,16 @@
-import React from 'react';
-import { Interpolate, translate } from 'react-i18next';
-import classNames from 'classnames';
-import styled from 'styled-components';
-import { ExtensionPoint } from '@scm-manager/ui-extensions';
-import { Changeset, Repository } from '@scm-manager/ui-types';
-import DateFromNow from '../../DateFromNow';
-import { AvatarWrapper, AvatarImage } from '../../avatar';
-import { parseDescription } from './changesets';
-import ChangesetId from './ChangesetId';
-import ChangesetAuthor from './ChangesetAuthor';
-import ChangesetTags from './ChangesetTags';
-import ChangesetButtonGroup from './ChangesetButtonGroup';
+import React from "react";
+import { Interpolate, translate } from "react-i18next";
+import classNames from "classnames";
+import styled from "styled-components";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { Changeset, Repository } from "@scm-manager/ui-types";
+import DateFromNow from "../../DateFromNow";
+import { AvatarWrapper, AvatarImage } from "../../avatar";
+import { parseDescription } from "./changesets";
+import ChangesetId from "./ChangesetId";
+import ChangesetAuthor from "./ChangesetAuthor";
+import ChangesetTags from "./ChangesetTags";
+import ChangesetButtonGroup from "./ChangesetButtonGroup";
 
 type Props = {
   repository: Repository;
@@ -90,7 +90,7 @@ class ChangesetRow extends React.Component<Props> {
                         name="changeset.description"
                         props={{
                           changeset,
-                          value: description.title,
+                          value: description.title
                         }}
                         renderAll={false}
                       >
@@ -122,7 +122,7 @@ class ChangesetRow extends React.Component<Props> {
               </VCenteredColumn>
             </div>
           </div>
-          <VCenteredChildColumn className={classNames('column', 'is-flex')}>
+          <VCenteredChildColumn className={classNames("column", "is-flex")}>
             <ChangesetButtonGroup
               repository={repository}
               changeset={changeset}
@@ -131,7 +131,7 @@ class ChangesetRow extends React.Component<Props> {
               name="changeset.right"
               props={{
                 repository,
-                changeset,
+                changeset
               }}
               renderAll={true}
             />
@@ -142,4 +142,4 @@ class ChangesetRow extends React.Component<Props> {
   }
 }
 
-export default translate('repos')(ChangesetRow);
+export default translate("repos")(ChangesetRow);

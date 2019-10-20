@@ -1,6 +1,6 @@
-import React from 'react';
-import classNames from 'classnames';
-import LabelWithHelpIcon from './LabelWithHelpIcon';
+import React, { ChangeEvent } from "react";
+import classNames from "classnames";
+import LabelWithHelpIcon from "./LabelWithHelpIcon";
 
 export type SelectItem = {
   value: string;
@@ -29,18 +29,18 @@ class Select extends React.Component<Props> {
     }
   }
 
-  handleInput = (event: SyntheticInputEvent<HTMLSelectElement>) => {
+  handleInput = (event: ChangeEvent<HTMLSelectElement>) => {
     this.props.onChange(event.target.value, this.props.name);
   };
 
   render() {
     const { options, value, label, helpText, loading, disabled } = this.props;
-    const loadingClass = loading ? 'is-loading' : '';
+    const loadingClass = loading ? "is-loading" : "";
 
     return (
       <div className="field">
         <LabelWithHelpIcon label={label} helpText={helpText} />
-        <div className={classNames('control select', loadingClass)}>
+        <div className={classNames("control select", loadingClass)}>
           <select
             ref={input => {
               this.field = input;
@@ -51,7 +51,7 @@ class Select extends React.Component<Props> {
           >
             {options.map(opt => {
               return (
-                <option value={opt.value} key={'KEY_' + opt.value}>
+                <option value={opt.value} key={"KEY_" + opt.value}>
                   {opt.label}
                 </option>
               );

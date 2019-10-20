@@ -5,7 +5,7 @@ exports[`Storyshots Buttons|AddButton Default 1`] = `
   className="sc-htoDjs bIDNS"
 >
   <button
-    className="button is-primary"
+    className="button is-default"
     onClick={[Function]}
     type="button"
   >
@@ -243,6 +243,30 @@ exports[`Storyshots Buttons|DownloadButton Default 1`] = `
 </div>
 `;
 
+exports[`Storyshots Buttons|DownloadButton Disabled 1`] = `
+<div
+  className="sc-htoDjs bIDNS"
+>
+  <a
+    className="button is-link"
+    disabled={true}
+    href=""
+    onClick={[Function]}
+  >
+    <span
+      className="icon is-medium"
+    >
+      <i
+        className="fas fa-arrow-circle-down"
+      />
+    </span>
+    <span>
+      Download
+    </span>
+  </a>
+</div>
+`;
+
 exports[`Storyshots Buttons|EditButton Default 1`] = `
 <div
   className="sc-htoDjs bIDNS"
@@ -307,6 +331,128 @@ exports[`Storyshots DateFromNow Default 1`] = `
       1 day ago
     </time>
   </p>
+</div>
+`;
+
+exports[`Storyshots Forms|Checkbox Default 1`] = `
+<div
+  className="sc-gipzik xsalO"
+>
+  <div
+    className="field is-grouped"
+  >
+    <div
+      className="control"
+    >
+      <label
+        className="checkbox"
+      >
+        <input
+          checked={false}
+          onChange={[Function]}
+          type="checkbox"
+        />
+         
+        Not checked
+      </label>
+    </div>
+  </div>
+  <div
+    className="field is-grouped"
+  >
+    <div
+      className="control"
+    >
+      <label
+        className="checkbox"
+      >
+        <input
+          checked={true}
+          onChange={[Function]}
+          type="checkbox"
+        />
+         
+        Checked
+      </label>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Forms|Checkbox Disabled 1`] = `
+<div
+  className="sc-gipzik xsalO"
+>
+  <div
+    className="field is-grouped"
+  >
+    <div
+      className="control"
+    >
+      <label
+        className="checkbox"
+        disabled={true}
+      >
+        <input
+          checked={true}
+          disabled={true}
+          onChange={[Function]}
+          type="checkbox"
+        />
+         
+        Checked but disabled
+      </label>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Forms|Radio Default 1`] = `
+<div
+  className="sc-csuQGl fFFkRK"
+>
+  <label
+    className="radio"
+  >
+    <input
+      checked={false}
+      onChange={[Function]}
+      type="radio"
+    />
+     
+    Not checked
+  </label>
+  <label
+    className="radio"
+  >
+    <input
+      checked={true}
+      onChange={[Function]}
+      type="radio"
+    />
+     
+    Checked
+  </label>
+</div>
+`;
+
+exports[`Storyshots Forms|Radio Disabled 1`] = `
+<div
+  className="sc-csuQGl fFFkRK"
+>
+  <label
+    className="radio"
+    disabled={true}
+  >
+    <input
+      checked={true}
+      disabled={true}
+      onChange={[Function]}
+      type="radio"
+    />
+     
+    Checked but disabled
+  </label>
 </div>
 `;
 
@@ -967,120 +1113,6 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
           }
         }
       >
-        <code
-          style={
-            Object {
-              "float": "left",
-              "paddingRight": "10px",
-            }
-          }
-        >
-          <span
-            className="react-syntax-highlighter-line-number"
-            style={Object {}}
-          >
-            1
-
-          </span>
-          <span
-            className="react-syntax-highlighter-line-number"
-            style={Object {}}
-          >
-            2
-
-          </span>
-          <span
-            className="react-syntax-highlighter-line-number"
-            style={Object {}}
-          >
-            3
-
-          </span>
-          <span
-            className="react-syntax-highlighter-line-number"
-            style={Object {}}
-          >
-            4
-
-          </span>
-          <span
-            className="react-syntax-highlighter-line-number"
-            style={Object {}}
-          >
-            5
-
-          </span>
-          <span
-            className="react-syntax-highlighter-line-number"
-            style={Object {}}
-          >
-            6
-
-          </span>
-          <span
-            className="react-syntax-highlighter-line-number"
-            style={Object {}}
-          >
-            7
-
-          </span>
-          <span
-            className="react-syntax-highlighter-line-number"
-            style={Object {}}
-          >
-            8
-
-          </span>
-          <span
-            className="react-syntax-highlighter-line-number"
-            style={Object {}}
-          >
-            9
-
-          </span>
-          <span
-            className="react-syntax-highlighter-line-number"
-            style={Object {}}
-          >
-            10
-
-          </span>
-          <span
-            className="react-syntax-highlighter-line-number"
-            style={Object {}}
-          >
-            11
-
-          </span>
-          <span
-            className="react-syntax-highlighter-line-number"
-            style={Object {}}
-          >
-            12
-
-          </span>
-          <span
-            className="react-syntax-highlighter-line-number"
-            style={Object {}}
-          >
-            13
-
-          </span>
-          <span
-            className="react-syntax-highlighter-line-number"
-            style={Object {}}
-          >
-            14
-
-          </span>
-          <span
-            className="react-syntax-highlighter-line-number"
-            style={Object {}}
-          >
-            15
-
-          </span>
-        </code>
         <code>
           package main
 
@@ -1221,134 +1253,6 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
       }
     }
   >
-    <code
-      style={
-        Object {
-          "float": "left",
-          "paddingRight": "10px",
-        }
-      }
-    >
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        1
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        2
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        3
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        4
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        5
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        6
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        7
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        8
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        9
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        10
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        11
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        12
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        13
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        14
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        15
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        16
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        17
-
-      </span>
-    </code>
     <code>
       <span
         style={
@@ -1557,232 +1461,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
       }
     }
   >
-    <code
-      style={
-        Object {
-          "float": "left",
-          "paddingRight": "10px",
-        }
-      }
-    >
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        1
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        2
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        3
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        4
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        5
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        6
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        7
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        8
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        9
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        10
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        11
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        12
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        13
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        14
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        15
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        16
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        17
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        18
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        19
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        20
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        21
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        22
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        23
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        24
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        25
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        26
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        27
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        28
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        29
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        30
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        31
-
-      </span>
-    </code>
     <code>
       <span
         style={
@@ -2207,6 +1885,140 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
 </div>
 `;
 
+exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
+<div
+  className="sc-bZQynM hAJIOS"
+>
+  <pre
+    style={
+      Object {
+        "background": "#FFFFFF",
+        "color": "#434f54",
+        "display": "block",
+        "overflowX": "auto",
+        "padding": "0.5em",
+      }
+    }
+  >
+    <code>
+      <span
+        style={
+          Object {
+            "color": "#00979D",
+          }
+        }
+      >
+        var
+      </span>
+       http = 
+      <span
+        style={
+          Object {
+            "color": "#D35400",
+          }
+        }
+      >
+        require
+      </span>
+      (
+      <span
+        style={
+          Object {
+            "color": "#005C5F",
+          }
+        }
+      >
+        'http'
+      </span>
+      );
+
+http.createServer(
+      <span
+        style={
+          Object {
+            "color": "#728E00",
+          }
+        }
+      >
+        <span
+          style={
+            Object {
+              "color": "#00979D",
+            }
+          }
+        >
+          function
+        </span>
+         (
+        <span
+          className="hljs-params"
+          style={Object {}}
+        >
+          req, res
+        </span>
+        ) 
+      </span>
+      {
+  res.writeHead(
+      <span
+        style={
+          Object {
+            "color": "#8A7B52",
+          }
+        }
+      >
+        200
+      </span>
+      , {
+      <span
+        style={
+          Object {
+            "color": "#005C5F",
+          }
+        }
+      >
+        'Content-Type'
+      </span>
+      : 
+      <span
+        style={
+          Object {
+            "color": "#005C5F",
+          }
+        }
+      >
+        'text/plain'
+      </span>
+      });
+  res.write(
+      <span
+        style={
+          Object {
+            "color": "#005C5F",
+          }
+        }
+      >
+        'Hello World!'
+      </span>
+      );
+  res.end();
+}).listen(
+      <span
+        style={
+          Object {
+            "color": "#8A7B52",
+          }
+        }
+      >
+        8080
+      </span>
+      );
+
+    </code>
+  </pre>
+</div>
+`;
+
 exports[`Storyshots SyntaxHighlighter Python 1`] = `
 <div
   className="sc-bZQynM hAJIOS"
@@ -2222,155 +2034,6 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
       }
     }
   >
-    <code
-      style={
-        Object {
-          "float": "left",
-          "paddingRight": "10px",
-        }
-      }
-    >
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        1
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        2
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        3
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        4
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        5
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        6
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        7
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        8
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        9
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        10
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        11
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        12
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        13
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        14
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        15
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        16
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        17
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        18
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        19
-
-      </span>
-      <span
-        className="react-syntax-highlighter-line-number"
-        style={Object {}}
-      >
-        20
-
-      </span>
-    </code>
     <code>
       <span
         style={

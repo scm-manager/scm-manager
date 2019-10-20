@@ -1,5 +1,5 @@
-import React from 'react';
-import classNames from 'classnames';
+import React, { ChangeEvent } from "react";
+import classNames from "classnames";
 
 type Props = {
   options: string[];
@@ -17,14 +17,14 @@ class DropDown extends React.Component<Props> {
       optionValues,
       preselectedOption,
       className,
-      disabled,
+      disabled
     } = this.props;
     return (
       <div
-        className={classNames(className, 'select', disabled ? 'disabled' : '')}
+        className={classNames(className, "select", disabled ? "disabled" : "")}
       >
         <select
-          value={preselectedOption ? preselectedOption : ''}
+          value={preselectedOption ? preselectedOption : ""}
           onChange={this.change}
           disabled={disabled}
         >
@@ -48,7 +48,7 @@ class DropDown extends React.Component<Props> {
     );
   }
 
-  change = (event: SyntheticInputEvent<HTMLSelectElement>) => {
+  change = (event: ChangeEvent<HTMLSelectElement>) => {
     this.props.optionSelected(event.target.value);
   };
 }

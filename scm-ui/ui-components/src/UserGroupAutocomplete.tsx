@@ -1,10 +1,10 @@
-import React from 'react';
-import { SelectValue } from '@scm-manager/ui-types';
-import Autocomplete from './Autocomplete';
+import React from "react";
+import { SelectValue, AutocompleteObject } from "@scm-manager/ui-types";
+import Autocomplete from "./Autocomplete";
 
 export type AutocompleteProps = {
-  autocompleteLink: string;
-  valueSelected: (p: SelectValue) => void;
+  autocompleteLink?: string;
+  valueSelected?: (p: SelectValue) => void;
   value?: SelectValue;
 };
 
@@ -16,26 +16,28 @@ type Props = AutocompleteProps & {
 };
 
 export default class UserGroupAutocomplete extends React.Component<Props> {
-  loadSuggestions = (inputValue: string) => {
+  loadSuggestions = (inputValue: string): Promise<SelectValue[]> => {
     const url = this.props.autocompleteLink;
-    const link = url + '?q=';
+    const link = url + "?q=";
     return fetch(link + inputValue)
       .then(response => response.json())
-      .then(json => {
+      .then((json: AutocompleteObject[]) => {
         return json.map(element => {
           const label = element.displayName
             ? `${element.displayName} (${element.id})`
             : element.id;
           return {
             value: element,
-            label,
+            label
           };
         });
       });
   };
 
   selectName = (selection: SelectValue) => {
-    this.props.valueSelected(selection);
+    if (this.props.valueSelected) {
+      this.props.valueSelected(selection);
+    }
   };
 
   render() {

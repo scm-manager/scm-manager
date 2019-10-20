@@ -1,7 +1,8 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { Links } from '@scm-manager/ui-types';
-import { apiClient, SubmitButton, Loading, ErrorNotification } from '../';
+import React from "react";
+import { translate } from "react-i18next";
+import { Links, Link } from "@scm-manager/ui-types";
+import { apiClient, SubmitButton, Loading, ErrorNotification } from "../";
+import { FormEvent } from "react";
 
 type RenderProps = {
   readOnly: boolean;
@@ -25,7 +26,7 @@ type State = {
   error?: Error;
   fetching: boolean;
   modifying: boolean;
-  contentType?: string;
+  contentType?: string | null;
   configChanged: boolean;
 
   configuration?: ConfigurationType;
@@ -44,7 +45,7 @@ class Configuration extends React.Component<Props, State> {
       fetching: true,
       modifying: false,
       configChanged: false,
-      valid: false,
+      valid: false
     };
   }
 
@@ -60,23 +61,23 @@ class Configuration extends React.Component<Props, State> {
   }
 
   captureContentType = (response: Response) => {
-    const contentType = response.headers.get('Content-Type');
+    const contentType = response.headers.get("Content-Type");
     this.setState({
-      contentType,
+      contentType
     });
     return response;
   };
 
   getContentType = (): string => {
     const { contentType } = this.state;
-    return contentType ? contentType : 'application/json';
+    return contentType ? contentType : "application/json";
   };
 
   handleError = (error: Error) => {
     this.setState({
       error,
       fetching: false,
-      modifying: false,
+      modifying: false
     });
   };
 
@@ -84,16 +85,17 @@ class Configuration extends React.Component<Props, State> {
     this.setState({
       configuration,
       fetching: false,
-      error: undefined,
+      error: undefined
     });
   };
 
-  getModificationUrl = (): string | null | undefined => {
+  getModificationUrl = (): string | undefined => {
     const { configuration } = this.state;
     if (configuration) {
       const links = configuration._links;
       if (links && links.update) {
-        return links.update.href;
+        const link = links.update as Link;
+        return link.href;
       }
     }
   };
@@ -106,33 +108,40 @@ class Configuration extends React.Component<Props, State> {
   configurationChanged = (configuration: ConfigurationType, valid: boolean) => {
     this.setState({
       modifiedConfiguration: configuration,
-      valid,
+      valid
     });
   };
 
-  modifyConfiguration = (event: Event) => {
+  modifyConfiguration = (event: FormEvent) => {
     event.preventDefault();
 
     this.setState({
-      modifying: true,
+      modifying: true
     });
 
     const { modifiedConfiguration } = this.state;
 
+    const modificationUrl = this.getModificationUrl();
+    if (modificationUrl) {
     apiClient
       .put(
-        this.getModificationUrl(),
+        modificationUrl,
         modifiedConfiguration,
-        this.getContentType(),
+        this.getContentType()
       )
       .then(() =>
         this.setState({
           modifying: false,
           configChanged: true,
-          valid: false,
-        }),
+          valid: false
+        })
       )
       .catch(this.handleError);
+    } else {
+      this.setState({
+        error: new Error("no modification link available")
+      });
+    }
   };
 
   renderConfigChangedNotification = () => {
@@ -143,11 +152,11 @@ class Configuration extends React.Component<Props, State> {
             className="delete"
             onClick={() =>
               this.setState({
-                configChanged: false,
+                configChanged: false
               })
             }
           />
-          {this.props.t('config.form.submit-success-notification')}
+          {this.props.t("config.form.submit-success-notification")}
         </div>
       );
     }
@@ -168,7 +177,7 @@ class Configuration extends React.Component<Props, State> {
       const renderProps: RenderProps = {
         readOnly,
         initialConfiguration: configuration,
-        onConfigurationChange: this.configurationChanged,
+        onConfigurationChange: this.configurationChanged
       };
 
       return (
@@ -178,7 +187,7 @@ class Configuration extends React.Component<Props, State> {
             {this.props.render(renderProps)}
             <hr />
             <SubmitButton
-              label={t('config.form.submit')}
+              label={t("config.form.submit")}
               disabled={!valid || readOnly}
               loading={modifying}
             />
@@ -189,4 +198,4 @@ class Configuration extends React.Component<Props, State> {
   }
 }
 
-export default translate('config')(Configuration);
+export default translate("config")(Configuration);

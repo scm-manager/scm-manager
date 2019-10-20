@@ -1,6 +1,6 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import InputField from './InputField';
+import React from "react";
+import { translate } from "react-i18next";
+import InputField from "./InputField";
 
 type State = {
   password: string;
@@ -19,19 +19,19 @@ class PasswordConfirmation extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      password: '',
-      confirmedPassword: '',
+      password: "",
+      confirmedPassword: "",
       passwordValid: true,
-      passwordConfirmationFailed: false,
+      passwordConfirmationFailed: false
     };
   }
 
   componentDidMount() {
     this.setState({
-      password: '',
-      confirmedPassword: '',
+      password: "",
+      confirmedPassword: "",
       passwordValid: true,
-      passwordConfirmationFailed: false,
+      passwordConfirmationFailed: false
     });
   }
 
@@ -41,29 +41,29 @@ class PasswordConfirmation extends React.Component<Props, State> {
       <div className="columns is-multiline">
         <div className="column is-half">
           <InputField
-            label={t('password.newPassword')}
+            label={t("password.newPassword")}
             type="password"
             onChange={this.handlePasswordChange}
-            value={this.state.password ? this.state.password : ''}
+            value={this.state.password ? this.state.password : ""}
             validationError={!this.state.passwordValid}
-            errorMessage={t('password.passwordInvalid')}
+            errorMessage={t("password.passwordInvalid")}
           />
         </div>
         <div className="column is-half">
           <InputField
-            label={t('password.confirmPassword')}
+            label={t("password.confirmPassword")}
             type="password"
             onChange={this.handlePasswordValidationChange}
-            value={this.state ? this.state.confirmedPassword : ''}
+            value={this.state ? this.state.confirmedPassword : ""}
             validationError={this.state.passwordConfirmationFailed}
-            errorMessage={t('password.passwordConfirmFailed')}
+            errorMessage={t("password.passwordConfirmFailed")}
           />
         </div>
       </div>
     );
   }
 
-  validatePassword = password => {
+  validatePassword = (password: string) => {
     const { passwordValidator } = this.props;
     if (passwordValidator) {
       return passwordValidator(password);
@@ -78,9 +78,9 @@ class PasswordConfirmation extends React.Component<Props, State> {
     this.setState(
       {
         confirmedPassword,
-        passwordConfirmationFailed: !passwordConfirmed,
+        passwordConfirmationFailed: !passwordConfirmed
       },
-      this.propagateChange,
+      this.propagateChange
     );
   };
 
@@ -92,9 +92,9 @@ class PasswordConfirmation extends React.Component<Props, State> {
       {
         passwordValid: this.validatePassword(password),
         passwordConfirmationFailed,
-        password: password,
+        password: password
       },
-      this.propagateChange,
+      this.propagateChange
     );
   };
 
@@ -107,4 +107,4 @@ class PasswordConfirmation extends React.Component<Props, State> {
   };
 }
 
-export default translate('commons')(PasswordConfirmation);
+export default translate("commons")(PasswordConfirmation);

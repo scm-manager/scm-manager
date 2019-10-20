@@ -1,7 +1,7 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import AutocompleteProps from './UserGroupAutocomplete';
-import UserGroupAutocomplete from './UserGroupAutocomplete';
+import React from "react";
+import { translate } from "react-i18next";
+import AutocompleteProps from "./UserGroupAutocomplete";
+import UserGroupAutocomplete from "./UserGroupAutocomplete";
 
 type Props = AutocompleteProps & {
   // Context props
@@ -13,14 +13,14 @@ class GroupAutocomplete extends React.Component<Props> {
     const { t } = this.props;
     return (
       <UserGroupAutocomplete
-        label={t('autocomplete.group')}
-        noOptionsMessage={t('autocomplete.noGroupOptions')}
-        loadingMessage={t('autocomplete.loading')}
-        placeholder={t('autocomplete.groupPlaceholder')}
+        label={t("autocomplete.group")}
+        noOptionsMessage={t("autocomplete.noGroupOptions")}
+        loadingMessage={t("autocomplete.loading")}
+        placeholder={t("autocomplete.groupPlaceholder")}
         {...this.props}
       />
     );
   }
 }
 
-export default translate('commons')(GroupAutocomplete);
+export default translate("commons")(GroupAutocomplete);

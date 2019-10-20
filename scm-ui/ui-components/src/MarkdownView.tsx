@@ -1,20 +1,17 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
-import Markdown from 'react-markdown/with-html';
-import styled from 'styled-components';
-import { binder } from '@scm-manager/ui-extensions';
-import SyntaxHighlighter from './SyntaxHighlighter';
-import MarkdownHeadingRenderer from './MarkdownHeadingRenderer';
+import React from "react";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import Markdown from "react-markdown/with-html";
+import styled from "styled-components";
+import { binder } from "@scm-manager/ui-extensions";
+import SyntaxHighlighter from "./SyntaxHighlighter";
+import MarkdownHeadingRenderer from "./MarkdownHeadingRenderer";
 
-type Props = {
+type Props = RouteComponentProps & {
   content: string;
   renderContext?: object;
-  renderers?: object;
+  renderers?: any;
   skipHtml?: boolean;
-  enableAnchorHeadings: boolean;
-
-  // context props
-  location: any;
+  enableAnchorHeadings?: boolean;
 };
 
 const MarkdownWrapper = styled.div`
@@ -47,9 +44,9 @@ const MarkdownWrapper = styled.div`
 `;
 
 class MarkdownView extends React.Component<Props> {
-  static defaultProps = {
+  static defaultProps: Partial<Props> = {
     enableAnchorHeadings: false,
-    skipHtml: false,
+    skipHtml: false
   };
 
   contentRef: HTMLDivElement | null | undefined;
@@ -79,10 +76,10 @@ class MarkdownView extends React.Component<Props> {
       renderers,
       renderContext,
       enableAnchorHeadings,
-      skipHtml,
+      skipHtml
     } = this.props;
 
-    const rendererFactory = binder.getExtension('markdown-renderer-factory');
+    const rendererFactory = binder.getExtension("markdown-renderer-factory");
     let rendererList = renderers;
 
     if (rendererFactory) {

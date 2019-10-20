@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import Button, { ButtonProps } from './Button';
+import React from "react";
+import styled from "styled-components";
+import Button, { ButtonProps } from "./Button";
 
 const Wrapper = styled.div`
   margin-top: 2em;

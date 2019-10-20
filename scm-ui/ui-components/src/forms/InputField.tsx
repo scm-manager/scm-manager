@@ -1,6 +1,6 @@
-import React from 'react';
-import classNames from 'classnames';
-import LabelWithHelpIcon from './LabelWithHelpIcon';
+import React, { ChangeEvent, KeyboardEvent } from "react";
+import classNames from "classnames";
+import LabelWithHelpIcon from "./LabelWithHelpIcon";
 
 type Props = {
   label?: string;
@@ -19,8 +19,8 @@ type Props = {
 
 class InputField extends React.Component<Props> {
   static defaultProps = {
-    type: 'text',
-    placeholder: '',
+    type: "text",
+    placeholder: ""
   };
 
   field: HTMLInputElement | null | undefined;
@@ -31,16 +31,16 @@ class InputField extends React.Component<Props> {
     }
   }
 
-  handleInput = (event: SyntheticInputEvent<HTMLInputElement>) => {
+  handleInput = (event: ChangeEvent<HTMLInputElement>) => {
     this.props.onChange(event.target.value, this.props.name);
   };
 
-  handleKeyPress = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
+  handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
     const onReturnPressed = this.props.onReturnPressed;
     if (!onReturnPressed) {
       return;
     }
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       event.preventDefault();
       onReturnPressed();
     }
@@ -55,13 +55,13 @@ class InputField extends React.Component<Props> {
       errorMessage,
       disabled,
       label,
-      helpText,
+      helpText
     } = this.props;
-    const errorView = validationError ? 'is-danger' : '';
+    const errorView = validationError ? "is-danger" : "";
     const helper = validationError ? (
       <p className="help is-danger">{errorMessage}</p>
     ) : (
-      ''
+      ""
     );
     return (
       <div className="field">
@@ -71,7 +71,7 @@ class InputField extends React.Component<Props> {
             ref={input => {
               this.field = input;
             }}
-            className={classNames('input', errorView)}
+            className={classNames("input", errorView)}
             type={type}
             placeholder={placeholder}
             value={value}

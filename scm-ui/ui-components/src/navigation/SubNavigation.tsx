@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { Link, Route } from 'react-router-dom';
-import classNames from 'classnames';
+import React, { ReactNode } from "react";
+import { Link, Route } from "react-router-dom";
+import classNames from "classnames";
 
 type Props = {
   to: string;
@@ -8,12 +8,12 @@ type Props = {
   label: string;
   activeOnlyWhenExact?: boolean;
   activeWhenMatch?: (route: any) => boolean;
-  children?: React.Node;
+  children?: ReactNode;
 };
 
 class SubNavigation extends React.Component<Props> {
   static defaultProps = {
-    activeOnlyWhenExact: false,
+    activeOnlyWhenExact: false
   };
 
   isActive(route: any) {
@@ -24,7 +24,7 @@ class SubNavigation extends React.Component<Props> {
   renderLink = (route: any) => {
     const { to, icon, label } = this.props;
 
-    let defaultIcon = 'fas fa-cog';
+    let defaultIcon = "fas fa-cog";
     if (icon) {
       defaultIcon = icon;
     }
@@ -36,8 +36,8 @@ class SubNavigation extends React.Component<Props> {
 
     return (
       <li>
-        <Link className={this.isActive(route) ? 'is-active' : ''} to={to}>
-          <i className={classNames(defaultIcon, 'fa-fw')} /> {label}
+        <Link className={this.isActive(route) ? "is-active" : ""} to={to}>
+          <i className={classNames(defaultIcon, "fa-fw")} /> {label}
         </Link>
         {children}
       </li>
@@ -48,9 +48,9 @@ class SubNavigation extends React.Component<Props> {
     const { to, activeOnlyWhenExact } = this.props;
 
     // removes last part of url
-    let parents = to.split('/');
+    let parents = to.split("/");
     parents.splice(-1, 1);
-    let parent = parents.join('/');
+    let parent = parents.join("/");
 
     return (
       <Route

@@ -27,9 +27,9 @@ export { default as Tag } from "./Tag";
 export { default as Tooltip } from "./Tooltip";
 // TODO do we need this? getPageFromMatch is already exported by urls
 export { getPageFromMatch } from "./urls";
-export { default as Autocomplete} from "./Autocomplete";
-export { default as GroupAutocomplete} from "./GroupAutocomplete";
-export { default as UserAutocomplete} from "./UserAutocomplete";
+export { default as Autocomplete } from "./Autocomplete";
+export { default as GroupAutocomplete } from "./GroupAutocomplete";
+export { default as UserAutocomplete } from "./UserAutocomplete";
 export { default as BranchSelector } from "./BranchSelector";
 export { default as Breadcrumb } from "./Breadcrumb";
 export { default as MarkdownView } from "./MarkdownView";

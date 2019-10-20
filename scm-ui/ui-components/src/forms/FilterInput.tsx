@@ -1,6 +1,7 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import styled from 'styled-components';
+import React, { ChangeEvent } from "react";
+import { translate } from "react-i18next";
+import styled from "styled-components";
+import { FormEvent } from "react";
 
 type Props = {
   filter: (p: string) => void;
@@ -19,20 +20,20 @@ const FixedHeightInput = styled.input`
 `;
 
 class FilterInput extends React.Component<Props, State> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
-      value: this.props.value ? this.props.value : '',
+      value: this.props.value ? this.props.value : ""
     };
   }
 
-  handleChange = event => {
+  handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      value: event.target.value,
+      value: event.target.value
     });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event: FormEvent) => {
     this.props.filter(this.state.value);
     event.preventDefault();
   };
@@ -45,7 +46,7 @@ class FilterInput extends React.Component<Props, State> {
           <FixedHeightInput
             className="input"
             type="search"
-            placeholder={t('filterEntries')}
+            placeholder={t("filterEntries")}
             value={this.state.value}
             onChange={this.handleChange}
           />
@@ -58,4 +59,4 @@ class FilterInput extends React.Component<Props, State> {
   }
 }
 
-export default translate('commons')(FilterInput);
+export default translate("commons")(FilterInput);

@@ -1,6 +1,6 @@
-import * as React from 'react';
-import classNames from 'classnames';
-import styled from 'styled-components';
+import React, { ReactNode } from "react";
+import classNames from "classnames";
+import styled from "styled-components";
 
 const Flex = styled.div`
   &.field:not(:last-child) {
@@ -10,26 +10,26 @@ const Flex = styled.div`
 
 type Props = {
   className?: string;
-  children: React.Node;
+  children: ReactNode;
 };
 
 class ButtonAddons extends React.Component<Props> {
   render() {
     const { className, children } = this.props;
 
-    const childWrapper = [];
+    const childWrapper: ReactNode[] = [];
     React.Children.forEach(children, child => {
       if (child) {
         childWrapper.push(
           <p className="control" key={childWrapper.length}>
             {child}
-          </p>,
+          </p>
         );
       }
     });
 
     return (
-      <Flex className={classNames('field', 'has-addons', className)}>
+      <Flex className={classNames("field", "has-addons", className)}>
         {childWrapper}
       </Flex>
     );

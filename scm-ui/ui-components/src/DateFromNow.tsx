@@ -1,17 +1,23 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { formatDistance, format, parseISO } from 'date-fns';
-import { enUS, de, es } from 'date-fns/locale';
-import styled from 'styled-components';
+import React from "react";
+import { translate, InjectedI18nProps } from "react-i18next";
+import { formatDistance, format, parseISO, Locale } from "date-fns";
+import { enUS, de, es } from "date-fns/locale";
+import styled from "styled-components";
 
-const supportedLocales = {
-  enUS,
-  de,
-  es,
+type LocaleMap = {
+  [key: string]: Locale
 };
 
-type Props = {
-  date?: string;
+type DateInput = Date | string;
+
+const supportedLocales: LocaleMap = {
+  enUS,
+  de,
+  es
+};
+
+type Props = InjectedI18nProps & {
+  date?: DateInput;
   timeZone?: string;
 
   /**
@@ -20,10 +26,13 @@ type Props = {
    * is required to keep snapshots tests green over the time on
    * ci server.
    */
-  baseDate?: string;
+  baseDate?: DateInput;
+};
 
-  // context props
-  i18n: any;
+type Options = {
+  addSuffix: boolean;
+  locale: Locale;
+  timeZone?: string;
 };
 
 const DateElement = styled.time`
@@ -32,7 +41,7 @@ const DateElement = styled.time`
 `;
 
 class DateFromNow extends React.Component<Props> {
-  getLocale = () => {
+  getLocale = (): Locale => {
     const { i18n } = this.props;
     const locale = supportedLocales[i18n.language];
     if (!locale) {
@@ -43,9 +52,9 @@ class DateFromNow extends React.Component<Props> {
 
   createOptions = () => {
     const { timeZone } = this.props;
-    const options: object = {
+    const options: Options = {
       addSuffix: true,
-      locate: this.getLocale(),
+      locale: this.getLocale()
     };
     if (timeZone) {
       options.timeZone = timeZone;
@@ -53,10 +62,17 @@ class DateFromNow extends React.Component<Props> {
     return options;
   };
 
+  toDate = (value: DateInput): Date => {
+    if (value instanceof Date) {
+      return value as Date;
+    }
+    return parseISO(value);
+  }
+
   getBaseDate = () => {
     const { baseDate } = this.props;
     if (baseDate) {
-      return parseISO(baseDate);
+      return this.toDate(baseDate);
     }
     return new Date();
   };
@@ -64,10 +80,10 @@ class DateFromNow extends React.Component<Props> {
   render() {
     const { date } = this.props;
     if (date) {
-      const isoDate = parseISO(date);
+      const isoDate = this.toDate(date);
       const options = this.createOptions();
       const distance = formatDistance(isoDate, this.getBaseDate(), options);
-      const formatted = format(isoDate, 'yyyy-MM-dd HH:mm:ss', options);
+      const formatted = format(isoDate, "yyyy-MM-dd HH:mm:ss", options);
       return <DateElement title={formatted}>{distance}</DateElement>;
     }
     return null;

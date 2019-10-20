@@ -1,6 +1,6 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import Image from './Image';
+import React from "react";
+import { translate } from "react-i18next";
+import Image from "./Image";
 
 type Props = {
   t: (p: string) => string;
@@ -9,8 +9,8 @@ type Props = {
 class Logo extends React.Component<Props> {
   render() {
     const { t } = this.props;
-    return <Image src="/images/logo.png" alt={t('logo.alt')} />;
+    return <Image src="/images/logo.png" alt={t("logo.alt")} />;
   }
 }
 
-export default translate('commons')(Logo);
+export default translate("commons")(Logo);

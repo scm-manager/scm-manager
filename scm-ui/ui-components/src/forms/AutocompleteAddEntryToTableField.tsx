@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { MouseEvent } from "react";
 
-import { AutocompleteObject, SelectValue } from '@scm-manager/ui-types';
-import Autocomplete from '../Autocomplete';
-import AddButton from '../buttons/AddButton';
+import { AutocompleteObject, SelectValue } from "@scm-manager/ui-types";
+import Autocomplete from "../Autocomplete";
+import AddButton from "../buttons/AddButton";
 
 type Props = {
   addEntry: (p: SelectValue) => void;
@@ -10,7 +10,7 @@ type Props = {
   buttonLabel: string;
   fieldLabel: string;
   helpText?: string;
-  loadSuggestions: (p: string) => Promise<AutocompleteObject>;
+  loadSuggestions: (p: string) => Promise<SelectValue[]>;
   placeholder?: string;
   loadingMessage?: string;
   noOptionsMessage?: string;
@@ -24,7 +24,7 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      selectedValue: undefined,
+      selectedValue: undefined
     };
   }
   render() {
@@ -36,7 +36,7 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
       loadSuggestions,
       placeholder,
       loadingMessage,
-      noOptionsMessage,
+      noOptionsMessage
     } = this.props;
 
     const { selectedValue } = this.state;
@@ -63,7 +63,7 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
     );
   }
 
-  addButtonClicked = (event: Event) => {
+  addButtonClicked = (event: MouseEvent) => {
     event.preventDefault();
     this.appendEntry();
   };
@@ -73,20 +73,20 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
     if (!selectedValue) {
       return;
     }
-    // $FlowFixMe null is needed to clear the selection; undefined does not work
     this.setState(
+      // @ts-ignore null is needed to clear the selection; undefined does not work
       {
         ...this.state,
-        selectedValue: null,
+        selectedValue: null
       },
-      () => this.props.addEntry(selectedValue),
+      () => this.props.addEntry(selectedValue)
     );
   };
 
   handleAddEntryChange = (selection: SelectValue) => {
     this.setState({
       ...this.state,
-      selectedValue: selection,
+      selectedValue: selection
     });
   };
 }

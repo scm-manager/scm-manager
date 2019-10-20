@@ -1,14 +1,14 @@
-import * as React from 'react';
-import Loading from './../Loading';
+import React, { ReactNode } from "react";
+import Loading from "./../Loading";
 
 type Props = {
   loading?: boolean;
   error?: Error;
-  children: React.Node;
+  children: ReactNode;
 };
 
 export default class PageActions extends React.Component<Props> {
-  static displayName = 'PageActions';
+  static displayName = "PageActions";
 
   render() {
     return <>{this.renderContent()}</>;

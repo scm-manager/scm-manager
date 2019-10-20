@@ -1,5 +1,5 @@
-import React from 'react';
-import { withContextPath } from './urls';
+import React from "react";
+import { withContextPath } from "./urls";
 
 type Props = {
   src: string;
@@ -10,7 +10,7 @@ type Props = {
 class Image extends React.Component<Props> {
   createImageSrc = () => {
     const { src } = this.props;
-    if (src.startsWith('http')) {
+    if (src.startsWith("http")) {
       return src;
     }
     return withContextPath(src);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 type Props = {
   icon?: string;
@@ -14,7 +14,7 @@ class NavAction extends React.Component<Props> {
     if (icon) {
       showIcon = (
         <>
-          <i className={icon}></i>{' '}
+          <i className={icon}></i>{" "}
         </>
       );
     }
