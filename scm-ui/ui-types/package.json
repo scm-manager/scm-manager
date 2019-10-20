@@ -11,10 +11,9 @@
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
   "license": "BSD-3-Clause",
   "scripts": {
-    "check": "flow check"
+    "typecheck": "tsc"
   },
   "devDependencies": {
-    "flow-bin": "^0.109.0",
     "typescript": "^3.6.4"
   },
   "babel": {
