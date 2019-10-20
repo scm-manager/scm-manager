@@ -58,12 +58,23 @@ class CreatePermissionForm extends React.Component<Props, State> {
     };
   }
 
-  permissionScopeChanged = event => {
-    const groupPermission = event.target.value === 'GROUP_PERMISSION';
+  groupPermissionScopeChanged = (value: boolean) => {
+    if (value) {
+      this.permissionScopeChanged(true);
+    }
+  };
+
+  userPermissionScopeChanged = (value: boolean) => {
+    if (value) {
+      this.permissionScopeChanged(false);
+    }
+  };
+
+  permissionScopeChanged = (groupPermission: boolean) => {
     this.setState({
       value: undefined,
       name: '',
-      groupPermission: groupPermission,
+      groupPermission,
       valid: false,
     });
   };
@@ -132,14 +143,14 @@ class CreatePermissionForm extends React.Component<Props, State> {
                 value="USER_PERMISSION"
                 checked={!this.state.groupPermission}
                 label={t('permission.user-permission')}
-                onChange={this.permissionScopeChanged}
+                onChange={this.userPermissionScopeChanged}
               />
               <Radio
                 name="permission_scope"
                 value="GROUP_PERMISSION"
                 checked={this.state.groupPermission}
                 label={t('permission.group-permission')}
-                onChange={this.permissionScopeChanged}
+                onChange={this.groupPermissionScopeChanged}
               />
             </div>
           </div>
