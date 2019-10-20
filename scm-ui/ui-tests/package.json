@@ -5,6 +5,9 @@
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
   "license": "BSD-3-Clause",
   "private": false,
+  "scripts": {
+    "typecheck": "tsc"
+  },
   "dependencies": {
     "babel-plugin-istanbul": "^5.2.0",
     "enzyme": "^3.10.0",
