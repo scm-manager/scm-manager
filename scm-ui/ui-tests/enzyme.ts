@@ -9,4 +9,6 @@ window.requestAnimationFrame = function(callback) {
   return 0;
 };
 
-Enzyme.configure({ adapter: new Adapter() });
+Enzyme.configure({
+  adapter: new Adapter()
+});
