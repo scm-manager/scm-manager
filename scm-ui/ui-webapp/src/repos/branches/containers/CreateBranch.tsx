@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 import {
   ErrorNotification,
   Loading,
-  Subtitle,
-} from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
-import BranchForm from '../components/BranchForm';
-import { Repository, Branch, BranchRequest } from '@scm-manager/ui-types';
+  Subtitle
+} from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
+import BranchForm from "../components/BranchForm";
+import { Repository, Branch, BranchRequest } from "@scm-manager/ui-types";
 import {
   fetchBranches,
   getBranches,
@@ -16,12 +16,12 @@ import {
   isCreateBranchPending,
   getCreateBranchFailure,
   isFetchBranchesPending,
-  getFetchBranchesFailure,
-} from '../modules/branches';
-import { History } from 'history';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import queryString from 'query-string';
+  getFetchBranchesFailure
+} from "../modules/branches";
+import { History } from "history";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import queryString from "query-string";
 
 type Props = {
   loading?: boolean;
@@ -37,7 +37,7 @@ type Props = {
     createLink: string,
     repository: Repository,
     branch: BranchRequest,
-    callback?: (p: Branch) => void,
+    callback?: (p: Branch) => void
   ) => void;
   resetForm: (p: Repository) => void;
 
@@ -59,7 +59,7 @@ class CreateBranch extends React.Component<Props> {
     history.push(
       `/repo/${repository.namespace}/${
         repository.name
-      }/branch/${encodeURIComponent(branch.name)}/info`,
+      }/branch/${encodeURIComponent(branch.name)}/info`
     );
   };
 
@@ -68,7 +68,7 @@ class CreateBranch extends React.Component<Props> {
       this.props.createBranchesLink,
       this.props.repository,
       branch,
-      newBranch => this.branchCreated(newBranch),
+      newBranch => this.branchCreated(newBranch)
     );
   };
 
@@ -85,7 +85,7 @@ class CreateBranch extends React.Component<Props> {
       repository,
       branches,
       createBranchesLink,
-      location,
+      location
     } = this.props;
 
     if (error) {
@@ -98,7 +98,7 @@ class CreateBranch extends React.Component<Props> {
 
     return (
       <>
-        <Subtitle subtitle={t('branches.create.title')} />
+        <Subtitle subtitle={t("branches.create.title")} />
         <BranchForm
           submitForm={branchRequest => this.createBranch(branchRequest)}
           loading={loading}
@@ -121,13 +121,13 @@ const mapDispatchToProps = dispatch => {
       createLink: string,
       repository: Repository,
       branchRequest: BranchRequest,
-      callback?: (newBranch: Branch) => void,
+      callback?: (newBranch: Branch) => void
     ) => {
       dispatch(createBranch(createLink, repository, branchRequest, callback));
     },
     resetForm: (repository: Repository) => {
       dispatch(createBranchReset(repository));
-    },
+    }
   };
 };
 
@@ -145,13 +145,13 @@ const mapStateToProps = (state, ownProps) => {
     loading,
     error,
     branches,
-    createBranchesLink,
+    createBranchesLink
   };
 };
 
 export default withRouter(
   connect(
     mapStateToProps,
-    mapDispatchToProps,
-  )(translate('repos')(CreateBranch)),
+    mapDispatchToProps
+  )(translate("repos")(CreateBranch))
 );

@@ -1,7 +1,7 @@
-import React from 'react';
-import { CardColumnGroup } from '@scm-manager/ui-components';
-import { PluginGroup } from '@scm-manager/ui-types';
-import PluginEntry from './PluginEntry';
+import React from "react";
+import { CardColumnGroup } from "@scm-manager/ui-components";
+import { PluginGroup } from "@scm-manager/ui-types";
+import PluginEntry from "./PluginEntry";
 
 type Props = {
   group: PluginGroup;

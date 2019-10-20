@@ -1,7 +1,7 @@
-import React from 'react';
-import { Group } from '@scm-manager/ui-types';
-import { NavLink } from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
+import React from "react";
+import { Group } from "@scm-manager/ui-types";
+import { NavLink } from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 
 type Props = {
   group: Group;
@@ -21,9 +21,9 @@ class EditGroupNavLink extends React.Component<Props> {
       return null;
     }
     return (
-      <NavLink to={editUrl} label={t('singleGroup.menu.generalNavLink')} />
+      <NavLink to={editUrl} label={t("singleGroup.menu.generalNavLink")} />
     );
   }
 }
 
-export default translate('groups')(EditGroupNavLink);
+export default translate("groups")(EditGroupNavLink);

@@ -1,8 +1,8 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { Group } from '@scm-manager/ui-types';
-import { Icon } from '@scm-manager/ui-components';
+import React from "react";
+import { translate } from "react-i18next";
+import { Link } from "react-router-dom";
+import { Group } from "@scm-manager/ui-types";
+import { Icon } from "@scm-manager/ui-components";
 
 type Props = {
   group: Group;
@@ -20,9 +20,9 @@ class GroupRow extends React.Component<Props> {
     const { group, t } = this.props;
     const to = `/group/${group.name}`;
     const iconType = group.external ? (
-      <Icon title={t('group.external')} name="sign-out-alt fa-rotate-270" />
+      <Icon title={t("group.external")} name="sign-out-alt fa-rotate-270" />
     ) : (
-      <Icon title={t('group.internal')} name="sign-in-alt fa-rotate-90" />
+      <Icon title={t("group.internal")} name="sign-in-alt fa-rotate-90" />
     );
 
     return (
@@ -36,4 +36,4 @@ class GroupRow extends React.Component<Props> {
   }
 }
 
-export default translate('groups')(GroupRow);
+export default translate("groups")(GroupRow);

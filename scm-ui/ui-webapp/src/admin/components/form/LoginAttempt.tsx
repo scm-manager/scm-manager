@@ -1,10 +1,10 @@
-import React from 'react';
-import { translate } from 'react-i18next';
+import React from "react";
+import { translate } from "react-i18next";
 import {
   InputField,
   Subtitle,
-  validation as validator,
-} from '@scm-manager/ui-components';
+  validation as validator
+} from "@scm-manager/ui-components";
 
 type Props = {
   loginAttemptLimit: number;
@@ -25,7 +25,7 @@ class LoginAttempt extends React.Component<Props, State> {
 
     this.state = {
       loginAttemptLimitError: false,
-      loginAttemptLimitTimeoutError: false,
+      loginAttemptLimitTimeoutError: false
     };
   }
   render() {
@@ -33,33 +33,33 @@ class LoginAttempt extends React.Component<Props, State> {
       t,
       loginAttemptLimit,
       loginAttemptLimitTimeout,
-      hasUpdatePermission,
+      hasUpdatePermission
     } = this.props;
 
     return (
       <div>
-        <Subtitle subtitle={t('login-attempt.name')} />
+        <Subtitle subtitle={t("login-attempt.name")} />
         <div className="columns">
           <div className="column is-half">
             <InputField
-              label={t('login-attempt.login-attempt-limit')}
+              label={t("login-attempt.login-attempt-limit")}
               onChange={this.handleLoginAttemptLimitChange}
               value={loginAttemptLimit}
               disabled={!hasUpdatePermission}
               validationError={this.state.loginAttemptLimitError}
-              errorMessage={t('validation.login-attempt-limit-invalid')}
-              helpText={t('help.loginAttemptLimitHelpText')}
+              errorMessage={t("validation.login-attempt-limit-invalid")}
+              helpText={t("help.loginAttemptLimitHelpText")}
             />
           </div>
           <div className="column is-half">
             <InputField
-              label={t('login-attempt.login-attempt-limit-timeout')}
+              label={t("login-attempt.login-attempt-limit-timeout")}
               onChange={this.handleLoginAttemptLimitTimeoutChange}
               value={loginAttemptLimitTimeout}
               disabled={!hasUpdatePermission}
               validationError={this.state.loginAttemptLimitTimeoutError}
-              errorMessage={t('validation.login-attempt-limit-timeout-invalid')}
-              helpText={t('help.loginAttemptLimitTimeoutHelpText')}
+              errorMessage={t("validation.login-attempt-limit-timeout-invalid")}
+              helpText={t("help.loginAttemptLimitTimeoutHelpText")}
             />
           </div>
         </div>
@@ -71,26 +71,26 @@ class LoginAttempt extends React.Component<Props, State> {
   handleLoginAttemptLimitChange = (value: string) => {
     this.setState({
       ...this.state,
-      loginAttemptLimitError: !validator.isNumberValid(value),
+      loginAttemptLimitError: !validator.isNumberValid(value)
     });
     this.props.onChange(
       validator.isNumberValid(value),
       value,
-      'loginAttemptLimit',
+      "loginAttemptLimit"
     );
   };
 
   handleLoginAttemptLimitTimeoutChange = (value: string) => {
     this.setState({
       ...this.state,
-      loginAttemptLimitTimeoutError: !validator.isNumberValid(value),
+      loginAttemptLimitTimeoutError: !validator.isNumberValid(value)
     });
     this.props.onChange(
       validator.isNumberValid(value),
       value,
-      'loginAttemptLimitTimeout',
+      "loginAttemptLimitTimeout"
     );
   };
 }
 
-export default translate('config')(LoginAttempt);
+export default translate("config")(LoginAttempt);

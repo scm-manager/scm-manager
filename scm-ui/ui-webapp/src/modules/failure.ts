@@ -1,13 +1,13 @@
-import { Action } from '@scm-manager/ui-types';
+import { Action } from "@scm-manager/ui-types";
 
-const FAILURE_SUFFIX = '_FAILURE';
+const FAILURE_SUFFIX = "_FAILURE";
 const RESET_PATTERN = /^(.*)_(SUCCESS|RESET)$/;
 
 function extractIdentifierFromFailure(action: Action) {
   const type = action.type;
   let identifier = type.substring(0, type.length - FAILURE_SUFFIX.length);
   if (action.itemId) {
-    identifier += '/' + action.itemId;
+    identifier += "/" + action.itemId;
   }
   return identifier;
 }
@@ -15,7 +15,7 @@ function extractIdentifierFromFailure(action: Action) {
 function removeAllEntriesOfIdentifierFromState(
   state: object,
   payload: any,
-  identifier: string,
+  identifier: string
 ) {
   const newState = {};
   for (let failureType in state) {
@@ -39,8 +39,8 @@ function removeFromState(state: object, identifier: string) {
 export default function reducer(
   state: object = {},
   action: Action = {
-    type: 'UNKNOWN',
-  },
+    type: "UNKNOWN"
+  }
 ): object {
   const type = action.type;
   if (type.endsWith(FAILURE_SUFFIX)) {
@@ -53,20 +53,20 @@ export default function reducer(
     }
     return {
       ...state,
-      [identifier]: payload,
+      [identifier]: payload
     };
   } else {
     const match = RESET_PATTERN.exec(type);
     if (match) {
       let identifier = match[1];
       if (action.itemId) {
-        identifier += '/' + action.itemId;
+        identifier += "/" + action.itemId;
       }
       if (action.payload)
         return removeAllEntriesOfIdentifierFromState(
           state,
           action.payload,
-          identifier,
+          identifier
         );
       else return removeFromState(state, identifier);
     }
@@ -77,12 +77,12 @@ export default function reducer(
 export function getFailure(
   state: object,
   actionType: string,
-  itemId?: string | number,
+  itemId?: string | number
 ) {
   if (state.failure) {
     let identifier = actionType;
     if (itemId) {
-      identifier += '/' + itemId;
+      identifier += "/" + itemId;
     }
     return state.failure[identifier];
   }

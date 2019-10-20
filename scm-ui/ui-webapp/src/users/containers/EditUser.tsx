@@ -1,17 +1,17 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import UserForm from '../components/UserForm';
-import DeleteUser from './DeleteUser';
-import { User } from '@scm-manager/ui-types';
+import React from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import UserForm from "../components/UserForm";
+import DeleteUser from "./DeleteUser";
+import { User } from "@scm-manager/ui-types";
 import {
   modifyUser,
   isModifyUserPending,
   getModifyUserFailure,
-  modifyUserReset,
-} from '../modules/users';
-import { History } from 'history';
-import { ErrorNotification } from '@scm-manager/ui-components';
+  modifyUserReset
+} from "../modules/users";
+import { History } from "history";
+import { ErrorNotification } from "@scm-manager/ui-components";
 
 type Props = {
   loading: boolean;
@@ -62,7 +62,7 @@ const mapStateToProps = (state, ownProps) => {
   const error = getModifyUserFailure(state, ownProps.user.name);
   return {
     loading,
-    error,
+    error
   };
 };
 
@@ -73,11 +73,11 @@ const mapDispatchToProps = dispatch => {
     },
     modifyUserReset: (user: User) => {
       dispatch(modifyUserReset(user));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(withRouter(EditUser));

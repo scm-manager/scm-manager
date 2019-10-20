@@ -1,6 +1,6 @@
-import fetchMock from 'fetch-mock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import fetchMock from "fetch-mock";
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
 import {
   FETCH_NAMESPACESTRATEGIES_TYPES,
   FETCH_NAMESPACESTRATEGIES_TYPES_FAILURE,
@@ -12,67 +12,67 @@ import {
   default as reducer,
   getNamespaceStrategies,
   isFetchNamespaceStrategiesPending,
-  getFetchNamespaceStrategiesFailure,
-} from './namespaceStrategies';
-import { MODIFY_CONFIG_SUCCESS } from './config';
+  getFetchNamespaceStrategiesFailure
+} from "./namespaceStrategies";
+import { MODIFY_CONFIG_SUCCESS } from "./config";
 
 const strategies = {
-  current: 'UsernameNamespaceStrategy',
+  current: "UsernameNamespaceStrategy",
   available: [
-    'UsernameNamespaceStrategy',
-    'CustomNamespaceStrategy',
-    'CurrentYearNamespaceStrategy',
-    'RepositoryTypeNamespaceStrategy',
+    "UsernameNamespaceStrategy",
+    "CustomNamespaceStrategy",
+    "CurrentYearNamespaceStrategy",
+    "RepositoryTypeNamespaceStrategy"
   ],
   _links: {
     self: {
-      href: 'http://localhost:8081/scm/api/v2/namespaceStrategies',
-    },
-  },
+      href: "http://localhost:8081/scm/api/v2/namespaceStrategies"
+    }
+  }
 };
 
-describe('namespace strategy caching', () => {
-  it('should fetch strategies, on empty state', () => {
+describe("namespace strategy caching", () => {
+  it("should fetch strategies, on empty state", () => {
     expect(shouldFetchNamespaceStrategies({})).toBe(true);
   });
 
-  it('should fetch strategies, on empty namespaceStrategies node', () => {
+  it("should fetch strategies, on empty namespaceStrategies node", () => {
     const state = {
-      namespaceStrategies: {},
+      namespaceStrategies: {}
     };
     expect(shouldFetchNamespaceStrategies(state)).toBe(true);
   });
 
-  it('should not fetch strategies, on pending state', () => {
+  it("should not fetch strategies, on pending state", () => {
     const state = {
       pending: {
-        [FETCH_NAMESPACESTRATEGIES_TYPES]: true,
-      },
+        [FETCH_NAMESPACESTRATEGIES_TYPES]: true
+      }
     };
     expect(shouldFetchNamespaceStrategies(state)).toBe(false);
   });
 
-  it('should not fetch strategies, on failure state', () => {
+  it("should not fetch strategies, on failure state", () => {
     const state = {
       failure: {
-        [FETCH_NAMESPACESTRATEGIES_TYPES]: new Error('no...'),
-      },
+        [FETCH_NAMESPACESTRATEGIES_TYPES]: new Error("no...")
+      }
     };
     expect(shouldFetchNamespaceStrategies(state)).toBe(false);
   });
 
-  it('should not fetch strategies, if they are already fetched', () => {
+  it("should not fetch strategies, if they are already fetched", () => {
     const state = {
       namespaceStrategies: {
-        current: 'some',
-      },
+        current: "some"
+      }
     };
     expect(shouldFetchNamespaceStrategies(state)).toBe(false);
   });
 });
 
-describe('namespace strategies fetch', () => {
-  const URL = 'http://scm.hitchhiker.com/api/v2/namespaceStrategies';
+describe("namespace strategies fetch", () => {
+  const URL = "http://scm.hitchhiker.com/api/v2/namespaceStrategies";
   const mockStore = configureMockStore([thunk]);
 
   afterEach(() => {
@@ -86,24 +86,24 @@ describe('namespace strategies fetch', () => {
       indexResources: {
         links: {
           namespaceStrategies: {
-            href: URL,
-          },
-        },
-      },
+            href: URL
+          }
+        }
+      }
     });
   };
 
-  it('should successfully fetch strategies', () => {
+  it("should successfully fetch strategies", () => {
     fetchMock.getOnce(URL, strategies);
 
     const expectedActions = [
       {
-        type: FETCH_NAMESPACESTRATEGIES_TYPES_PENDING,
+        type: FETCH_NAMESPACESTRATEGIES_TYPES_PENDING
       },
       {
         type: FETCH_NAMESPACESTRATEGIES_TYPES_SUCCESS,
-        payload: strategies,
-      },
+        payload: strategies
+      }
     ];
 
     const store = createStore();
@@ -112,9 +112,9 @@ describe('namespace strategies fetch', () => {
     });
   });
 
-  it('should dispatch FETCH_NAMESPACESTRATEGIES_TYPES_FAILURE on server error', () => {
+  it("should dispatch FETCH_NAMESPACESTRATEGIES_TYPES_FAILURE on server error", () => {
     fetchMock.getOnce(URL, {
-      status: 500,
+      status: 500
     });
 
     const store = createStore();
@@ -126,75 +126,75 @@ describe('namespace strategies fetch', () => {
     });
   });
 
-  it('should not dispatch any action, if the strategies are already fetched', () => {
+  it("should not dispatch any action, if the strategies are already fetched", () => {
     const store = createStore({
-      namespaceStrategies: strategies,
+      namespaceStrategies: strategies
     });
     store.dispatch(fetchNamespaceStrategiesIfNeeded());
     expect(store.getActions().length).toBe(0);
   });
 });
 
-describe('namespace strategies reducer', () => {
-  it('should return unmodified state on unknown action', () => {
+describe("namespace strategies reducer", () => {
+  it("should return unmodified state on unknown action", () => {
     const state = {};
     expect(reducer(state)).toBe(state);
   });
 
-  it('should store the strategies on success', () => {
+  it("should store the strategies on success", () => {
     const newState = reducer({}, fetchNamespaceStrategiesSuccess(strategies));
     expect(newState).toBe(strategies);
   });
 
-  it('should clear store if config was modified', () => {
+  it("should clear store if config was modified", () => {
     const modifyConfigAction = {
       type: MODIFY_CONFIG_SUCCESS,
       payload: {
-        namespaceStrategy: 'CustomNamespaceStrategy',
-      },
+        namespaceStrategy: "CustomNamespaceStrategy"
+      }
     };
     const newState = reducer(strategies, modifyConfigAction);
-    expect(newState.current).toEqual('CustomNamespaceStrategy');
+    expect(newState.current).toEqual("CustomNamespaceStrategy");
   });
 });
 
-describe('namespace strategy selectors', () => {
-  const error = new Error('The end of the universe');
+describe("namespace strategy selectors", () => {
+  const error = new Error("The end of the universe");
 
-  it('should return an empty object', () => {
+  it("should return an empty object", () => {
     expect(getNamespaceStrategies({})).toEqual({});
   });
 
-  it('should return the namespace strategies', () => {
+  it("should return the namespace strategies", () => {
     const state = {
-      namespaceStrategies: strategies,
+      namespaceStrategies: strategies
     };
     expect(getNamespaceStrategies(state)).toBe(strategies);
   });
 
-  it('should return true, when fetch namespace strategies is pending', () => {
+  it("should return true, when fetch namespace strategies is pending", () => {
     const state = {
       pending: {
-        [FETCH_NAMESPACESTRATEGIES_TYPES]: true,
-      },
+        [FETCH_NAMESPACESTRATEGIES_TYPES]: true
+      }
     };
     expect(isFetchNamespaceStrategiesPending(state)).toEqual(true);
   });
 
-  it('should return false, when fetch strategies is not pending', () => {
+  it("should return false, when fetch strategies is not pending", () => {
     expect(isFetchNamespaceStrategiesPending({})).toEqual(false);
   });
 
-  it('should return error when fetch namespace strategies did fail', () => {
+  it("should return error when fetch namespace strategies did fail", () => {
     const state = {
       failure: {
-        [FETCH_NAMESPACESTRATEGIES_TYPES]: error,
-      },
+        [FETCH_NAMESPACESTRATEGIES_TYPES]: error
+      }
     };
     expect(getFetchNamespaceStrategiesFailure(state)).toEqual(error);
   });
 
-  it('should return undefined when fetch strategies did not fail', () => {
+  it("should return undefined when fetch strategies did not fail", () => {
     expect(getFetchNamespaceStrategiesFailure({})).toBe(undefined);
   });
 });

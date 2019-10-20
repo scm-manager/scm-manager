@@ -1,4 +1,4 @@
-import { Link } from '@scm-manager/ui-types';
+import { Link } from "@scm-manager/ui-types";
 
 export type InfoItem = {
   title: string;

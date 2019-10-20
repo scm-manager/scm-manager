@@ -1,8 +1,8 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import classNames from 'classnames';
-import styled from 'styled-components';
-import { Plugin } from '@scm-manager/ui-types';
+import React from "react";
+import { translate } from "react-i18next";
+import classNames from "classnames";
+import styled from "styled-components";
+import { Plugin } from "@scm-manager/ui-types";
 import {
   apiClient,
   Button,
@@ -10,11 +10,11 @@ import {
   Checkbox,
   ErrorNotification,
   Modal,
-  Notification,
-} from '@scm-manager/ui-components';
-import waitForRestart from './waitForRestart';
-import SuccessNotification from './SuccessNotification';
-import { PluginAction } from './PluginEntry';
+  Notification
+} from "@scm-manager/ui-components";
+import waitForRestart from "./waitForRestart";
+import SuccessNotification from "./SuccessNotification";
+import { PluginAction } from "./PluginEntry";
 
 type Props = {
   plugin: Plugin;
@@ -36,7 +36,7 @@ type State = {
 const ListParent = styled.div`
   margin-right: 0;
   min-width: ${props =>
-    props.pluginAction === PluginAction.INSTALL ? '5.5em' : '10em'};
+    props.pluginAction === PluginAction.INSTALL ? "5.5em" : "10em"};
   text-align: left;
 `;
 
@@ -50,7 +50,7 @@ class PluginModal extends React.Component<Props, State> {
     this.state = {
       loading: false,
       restart: false,
-      success: false,
+      success: false
     };
   }
 
@@ -60,7 +60,7 @@ class PluginModal extends React.Component<Props, State> {
 
     const newState = {
       loading: false,
-      error: undefined,
+      error: undefined
     };
 
     if (restart) {
@@ -68,14 +68,14 @@ class PluginModal extends React.Component<Props, State> {
         .then(() => {
           this.setState({
             ...newState,
-            success: true,
+            success: true
           });
         })
         .catch(error => {
           this.setState({
             loading: false,
             success: false,
-            error,
+            error
           });
         });
     } else {
@@ -90,7 +90,7 @@ class PluginModal extends React.Component<Props, State> {
     const { plugin, pluginAction } = this.props;
     const { restart } = this.state;
 
-    let pluginActionLink = '';
+    let pluginActionLink = "";
 
     if (pluginAction === PluginAction.INSTALL) {
       pluginActionLink = plugin._links.install.href;
@@ -99,12 +99,12 @@ class PluginModal extends React.Component<Props, State> {
     } else if (pluginAction === PluginAction.UNINSTALL) {
       pluginActionLink = plugin._links.uninstall.href;
     }
-    return pluginActionLink + '?restart=' + restart.toString();
+    return pluginActionLink + "?restart=" + restart.toString();
   };
 
   handlePluginAction = (e: Event) => {
     this.setState({
-      loading: true,
+      loading: true
     });
     e.preventDefault();
     apiClient
@@ -114,7 +114,7 @@ class PluginModal extends React.Component<Props, State> {
         this.setState({
           loading: false,
           success: false,
-          error: error,
+          error: error
         });
       });
   };
@@ -123,10 +123,10 @@ class PluginModal extends React.Component<Props, State> {
     const { pluginAction, onClose, t } = this.props;
     const { loading, error, restart, success } = this.state;
 
-    let color = pluginAction === PluginAction.UNINSTALL ? 'warning' : 'primary';
+    let color = pluginAction === PluginAction.UNINSTALL ? "warning" : "primary";
     let label = `plugins.modal.${pluginAction}`;
     if (restart) {
-      color = 'warning';
+      color = "warning";
       label = `plugins.modal.${pluginAction}AndRestart`;
     }
     return (
@@ -138,7 +138,7 @@ class PluginModal extends React.Component<Props, State> {
           loading={loading}
           disabled={!!error || success}
         />
-        <Button label={t('plugins.modal.abort')} action={onClose} />
+        <Button label={t("plugins.modal.abort")} action={onClose} />
       </ButtonGroup>
     );
   };
@@ -151,7 +151,7 @@ class PluginModal extends React.Component<Props, State> {
       dependencies = (
         <div className="media">
           <Notification type="warning">
-            <strong>{t('plugins.modal.dependencyNotification')}</strong>
+            <strong>{t("plugins.modal.dependencyNotification")}</strong>
             <ul>
               {plugin.dependencies.map((dependency, index) => {
                 return <li key={index}>{dependency}</li>;
@@ -183,7 +183,7 @@ class PluginModal extends React.Component<Props, State> {
       return (
         <div className="media">
           <Notification type="warning">
-            {t('plugins.modal.restartNotification')}
+            {t("plugins.modal.restartNotification")}
           </Notification>
         </div>
       );
@@ -193,7 +193,7 @@ class PluginModal extends React.Component<Props, State> {
 
   handleRestartChange = (value: boolean) => {
     this.setState({
-      restart: value,
+      restart: value
     });
   };
 
@@ -212,25 +212,25 @@ class PluginModal extends React.Component<Props, State> {
           <div className="media-content">
             <div className="field is-horizontal">
               <ListParent
-                className={classNames('field-label', 'is-inline-flex')}
+                className={classNames("field-label", "is-inline-flex")}
                 pluginAction={pluginAction}
               >
-                {t('plugins.modal.author')}:
+                {t("plugins.modal.author")}:
               </ListParent>
-              <ListChild className={classNames('field-body', 'is-inline-flex')}>
+              <ListChild className={classNames("field-body", "is-inline-flex")}>
                 {plugin.author}
               </ListChild>
             </div>
             {pluginAction === PluginAction.INSTALL && (
               <div className="field is-horizontal">
                 <ListParent
-                  className={classNames('field-label', 'is-inline-flex')}
+                  className={classNames("field-label", "is-inline-flex")}
                   pluginAction={pluginAction}
                 >
-                  {t('plugins.modal.version')}:
+                  {t("plugins.modal.version")}:
                 </ListParent>
                 <ListChild
-                  className={classNames('field-body', 'is-inline-flex')}
+                  className={classNames("field-body", "is-inline-flex")}
                 >
                   {plugin.version}
                 </ListChild>
@@ -240,12 +240,12 @@ class PluginModal extends React.Component<Props, State> {
               pluginAction === PluginAction.UNINSTALL) && (
               <div className="field is-horizontal">
                 <ListParent
-                  className={classNames('field-label', 'is-inline-flex')}
+                  className={classNames("field-label", "is-inline-flex")}
                 >
-                  {t('plugins.modal.currentVersion')}:
+                  {t("plugins.modal.currentVersion")}:
                 </ListParent>
                 <ListChild
-                  className={classNames('field-body', 'is-inline-flex')}
+                  className={classNames("field-body", "is-inline-flex")}
                 >
                   {plugin.version}
                 </ListChild>
@@ -254,12 +254,12 @@ class PluginModal extends React.Component<Props, State> {
             {pluginAction === PluginAction.UPDATE && (
               <div className="field is-horizontal">
                 <ListParent
-                  className={classNames('field-label', 'is-inline-flex')}
+                  className={classNames("field-label", "is-inline-flex")}
                 >
-                  {t('plugins.modal.newVersion')}:
+                  {t("plugins.modal.newVersion")}:
                 </ListParent>
                 <ListChild
-                  className={classNames('field-body', 'is-inline-flex')}
+                  className={classNames("field-body", "is-inline-flex")}
                 >
                   {plugin.newVersion}
                 </ListChild>
@@ -272,7 +272,7 @@ class PluginModal extends React.Component<Props, State> {
           <div className="media-content">
             <Checkbox
               checked={restart}
-              label={t('plugins.modal.restart')}
+              label={t("plugins.modal.restart")}
               onChange={this.handleRestartChange}
               disabled={false}
             />
@@ -285,7 +285,7 @@ class PluginModal extends React.Component<Props, State> {
     return (
       <Modal
         title={t(`plugins.modal.title.${pluginAction}`, {
-          name: plugin.displayName ? plugin.displayName : plugin.name,
+          name: plugin.displayName ? plugin.displayName : plugin.name
         })}
         closeFunction={() => onClose()}
         body={body}
@@ -296,4 +296,4 @@ class PluginModal extends React.Component<Props, State> {
   }
 }
 
-export default translate('admin')(PluginModal);
+export default translate("admin")(PluginModal);

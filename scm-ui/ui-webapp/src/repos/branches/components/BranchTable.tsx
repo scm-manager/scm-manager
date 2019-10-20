@@ -1,7 +1,7 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import BranchRow from './BranchRow';
-import { Branch } from '@scm-manager/ui-types';
+import React from "react";
+import { translate } from "react-i18next";
+import BranchRow from "./BranchRow";
+import { Branch } from "@scm-manager/ui-types";
 
 type Props = {
   baseUrl: string;
@@ -16,7 +16,7 @@ class BranchTable extends React.Component<Props> {
       <table className="card-table table is-hoverable is-fullwidth">
         <thead>
           <tr>
-            <th>{t('branches.table.branches')}</th>
+            <th>{t("branches.table.branches")}</th>
           </tr>
         </thead>
         <tbody>{this.renderRow()}</tbody>
@@ -36,4 +36,4 @@ class BranchTable extends React.Component<Props> {
   }
 }
 
-export default translate('repos')(BranchTable);
+export default translate("repos")(BranchTable);

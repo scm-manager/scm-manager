@@ -1,16 +1,16 @@
-import React from 'react';
-import RepositoryRoleForm from './RepositoryRoleForm';
-import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import React from "react";
+import RepositoryRoleForm from "./RepositoryRoleForm";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
 import {
   getModifyRoleFailure,
   isModifyRolePending,
-  modifyRole,
-} from '../modules/roles';
-import { ErrorNotification, Subtitle } from '@scm-manager/ui-components';
-import { RepositoryRole } from '@scm-manager/ui-types';
-import { History } from 'history';
-import DeleteRepositoryRole from './DeleteRepositoryRole';
+  modifyRole
+} from "../modules/roles";
+import { ErrorNotification, Subtitle } from "@scm-manager/ui-components";
+import { RepositoryRole } from "@scm-manager/ui-types";
+import { History } from "history";
+import DeleteRepositoryRole from "./DeleteRepositoryRole";
 
 type Props = {
   disabled: boolean;
@@ -28,7 +28,7 @@ type Props = {
 
 class EditRepositoryRole extends React.Component<Props> {
   repositoryRoleUpdated = () => {
-    this.props.history.push('/admin/roles/');
+    this.props.history.push("/admin/roles/");
   };
 
   updateRepositoryRole = (role: RepositoryRole) => {
@@ -44,7 +44,7 @@ class EditRepositoryRole extends React.Component<Props> {
 
     return (
       <>
-        <Subtitle subtitle={t('repositoryRole.editSubtitle')} />
+        <Subtitle subtitle={t("repositoryRole.editSubtitle")} />
         <RepositoryRoleForm
           role={this.props.role}
           submitForm={role => this.updateRepositoryRole(role)}
@@ -62,7 +62,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     loading,
-    error,
+    error
   };
 };
 
@@ -70,11 +70,11 @@ const mapDispatchToProps = dispatch => {
   return {
     updateRole: (role: RepositoryRole, callback?: () => void) => {
       dispatch(modifyRole(role, callback));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('admin')(EditRepositoryRole));
+  mapDispatchToProps
+)(translate("admin")(EditRepositoryRole));

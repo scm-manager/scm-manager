@@ -1,38 +1,38 @@
-import { apiClient } from '@scm-manager/ui-components';
-import { isPending } from '../../modules/pending';
-import { getFailure } from '../../modules/failure';
-import * as types from '../../modules/types';
-import { combineReducers, Dispatch } from 'redux';
-import { Action, PagedCollection, Group } from '@scm-manager/ui-types';
+import { apiClient } from "@scm-manager/ui-components";
+import { isPending } from "../../modules/pending";
+import { getFailure } from "../../modules/failure";
+import * as types from "../../modules/types";
+import { combineReducers, Dispatch } from "redux";
+import { Action, PagedCollection, Group } from "@scm-manager/ui-types";
 
-export const FETCH_GROUPS = 'scm/groups/FETCH_GROUPS';
+export const FETCH_GROUPS = "scm/groups/FETCH_GROUPS";
 export const FETCH_GROUPS_PENDING = `${FETCH_GROUPS}_${types.PENDING_SUFFIX}`;
 export const FETCH_GROUPS_SUCCESS = `${FETCH_GROUPS}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_GROUPS_FAILURE = `${FETCH_GROUPS}_${types.FAILURE_SUFFIX}`;
 
-export const FETCH_GROUP = 'scm/groups/FETCH_GROUP';
+export const FETCH_GROUP = "scm/groups/FETCH_GROUP";
 export const FETCH_GROUP_PENDING = `${FETCH_GROUP}_${types.PENDING_SUFFIX}`;
 export const FETCH_GROUP_SUCCESS = `${FETCH_GROUP}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_GROUP_FAILURE = `${FETCH_GROUP}_${types.FAILURE_SUFFIX}`;
 
-export const CREATE_GROUP = 'scm/groups/CREATE_GROUP';
+export const CREATE_GROUP = "scm/groups/CREATE_GROUP";
 export const CREATE_GROUP_PENDING = `${CREATE_GROUP}_${types.PENDING_SUFFIX}`;
 export const CREATE_GROUP_SUCCESS = `${CREATE_GROUP}_${types.SUCCESS_SUFFIX}`;
 export const CREATE_GROUP_FAILURE = `${CREATE_GROUP}_${types.FAILURE_SUFFIX}`;
 export const CREATE_GROUP_RESET = `${CREATE_GROUP}_${types.RESET_SUFFIX}`;
 
-export const MODIFY_GROUP = 'scm/groups/MODIFY_GROUP';
+export const MODIFY_GROUP = "scm/groups/MODIFY_GROUP";
 export const MODIFY_GROUP_PENDING = `${MODIFY_GROUP}_${types.PENDING_SUFFIX}`;
 export const MODIFY_GROUP_SUCCESS = `${MODIFY_GROUP}_${types.SUCCESS_SUFFIX}`;
 export const MODIFY_GROUP_FAILURE = `${MODIFY_GROUP}_${types.FAILURE_SUFFIX}`;
 export const MODIFY_GROUP_RESET = `${MODIFY_GROUP}_${types.RESET_SUFFIX}`;
 
-export const DELETE_GROUP = 'scm/groups/DELETE_GROUP';
+export const DELETE_GROUP = "scm/groups/DELETE_GROUP";
 export const DELETE_GROUP_PENDING = `${DELETE_GROUP}_${types.PENDING_SUFFIX}`;
 export const DELETE_GROUP_SUCCESS = `${DELETE_GROUP}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_GROUP_FAILURE = `${DELETE_GROUP}_${types.FAILURE_SUFFIX}`;
 
-const CONTENT_TYPE_GROUP = 'application/vnd.scmm-group+json;v=2';
+const CONTENT_TYPE_GROUP = "application/vnd.scmm-group+json;v=2";
 
 // fetch groups
 export function fetchGroups(link: string) {
@@ -43,7 +43,7 @@ export function fetchGroupsByPage(link: string, page: number, filter?: string) {
   // backend start counting by 0
   if (filter) {
     return fetchGroupsByLink(
-      `${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`,
+      `${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`
     );
   }
   return fetchGroupsByLink(`${link}?page=${page - 1}`);
@@ -66,14 +66,14 @@ export function fetchGroupsByLink(link: string) {
 
 export function fetchGroupsPending(): Action {
   return {
-    type: FETCH_GROUPS_PENDING,
+    type: FETCH_GROUPS_PENDING
   };
 }
 
 export function fetchGroupsSuccess(groups: any): Action {
   return {
     type: FETCH_GROUPS_SUCCESS,
-    payload: groups,
+    payload: groups
   };
 }
 
@@ -82,8 +82,8 @@ export function fetchGroupsFailure(url: string, error: Error): Action {
     type: FETCH_GROUPS_FAILURE,
     payload: {
       error,
-      url,
-    },
+      url
+    }
   };
 }
 
@@ -93,7 +93,7 @@ export function fetchGroupByLink(group: Group) {
 }
 
 export function fetchGroupByName(link: string, name: string) {
-  const groupUrl = link.endsWith('/') ? link + name : link + '/' + name;
+  const groupUrl = link.endsWith("/") ? link + name : link + "/" + name;
   return fetchGroup(groupUrl, name);
 }
 
@@ -118,7 +118,7 @@ export function fetchGroupPending(name: string): Action {
   return {
     type: FETCH_GROUP_PENDING,
     payload: name,
-    itemId: name,
+    itemId: name
   };
 }
 
@@ -126,7 +126,7 @@ export function fetchGroupSuccess(group: any): Action {
   return {
     type: FETCH_GROUP_SUCCESS,
     payload: group,
-    itemId: group.name,
+    itemId: group.name
   };
 }
 
@@ -135,9 +135,9 @@ export function fetchGroupFailure(name: string, error: Error): Action {
     type: FETCH_GROUP_FAILURE,
     payload: {
       name,
-      error,
+      error
     },
-    itemId: name,
+    itemId: name
   };
 }
 
@@ -161,26 +161,26 @@ export function createGroup(link: string, group: Group, callback?: () => void) {
 
 export function createGroupPending() {
   return {
-    type: CREATE_GROUP_PENDING,
+    type: CREATE_GROUP_PENDING
   };
 }
 
 export function createGroupSuccess() {
   return {
-    type: CREATE_GROUP_SUCCESS,
+    type: CREATE_GROUP_SUCCESS
   };
 }
 
 export function createGroupFailure(error: Error) {
   return {
     type: CREATE_GROUP_FAILURE,
-    payload: error,
+    payload: error
   };
 }
 
 export function createGroupReset() {
   return {
-    type: CREATE_GROUP_RESET,
+    type: CREATE_GROUP_RESET
   };
 }
 
@@ -209,7 +209,7 @@ export function modifyGroupPending(group: Group): Action {
   return {
     type: MODIFY_GROUP_PENDING,
     payload: group,
-    itemId: group.name,
+    itemId: group.name
   };
 }
 
@@ -217,7 +217,7 @@ export function modifyGroupSuccess(group: Group): Action {
   return {
     type: MODIFY_GROUP_SUCCESS,
     payload: group,
-    itemId: group.name,
+    itemId: group.name
   };
 }
 
@@ -226,16 +226,16 @@ export function modifyGroupFailure(group: Group, error: Error): Action {
     type: MODIFY_GROUP_FAILURE,
     payload: {
       error,
-      group,
+      group
     },
-    itemId: group.name,
+    itemId: group.name
   };
 }
 
 export function modifyGroupReset(group: Group): Action {
   return {
     type: MODIFY_GROUP_RESET,
-    itemId: group.name,
+    itemId: group.name
   };
 }
 
@@ -262,7 +262,7 @@ export function deleteGroupPending(group: Group): Action {
   return {
     type: DELETE_GROUP_PENDING,
     payload: group,
-    itemId: group.name,
+    itemId: group.name
   };
 }
 
@@ -270,7 +270,7 @@ export function deleteGroupSuccess(group: Group): Action {
   return {
     type: DELETE_GROUP_SUCCESS,
     payload: group,
-    itemId: group.name,
+    itemId: group.name
   };
 }
 
@@ -279,9 +279,9 @@ export function deleteGroupFailure(group: Group, error: Error): Action {
     type: DELETE_GROUP_FAILURE,
     payload: {
       error,
-      group,
+      group
     },
-    itemId: group.name,
+    itemId: group.name
   };
 }
 
@@ -289,7 +289,7 @@ export function deleteGroupFailure(group: Group, error: Error): Action {
 function extractGroupsByNames(
   groups: Group[],
   groupNames: string[],
-  oldGroupsByNames: object,
+  oldGroupsByNames: object
 ) {
   const groupsByNames = {};
 
@@ -322,7 +322,7 @@ function deleteGroupInEntries(groups: [], groupName: string) {
 const reducerByName = (state: any, groupname: string, newGroupState: any) => {
   const newGroupsByNames = {
     ...state,
-    [groupname]: newGroupState,
+    [groupname]: newGroupState
   };
 
   return newGroupsByNames;
@@ -340,18 +340,18 @@ function listReducer(state: any = {}, action: any = {}) {
           groupCreatePermission: !!action.payload._links.create,
           page: action.payload.page,
           pageTotal: action.payload.pageTotal,
-          _links: action.payload._links,
-        },
+          _links: action.payload._links
+        }
       };
     // Delete single group actions
     case DELETE_GROUP_SUCCESS:
       const newGroupEntries = deleteGroupInEntries(
         state.entries,
-        action.payload.name,
+        action.payload.name
       );
       return {
         ...state,
-        entries: newGroupEntries,
+        entries: newGroupEntries
       };
     default:
       return state;
@@ -366,14 +366,14 @@ function byNamesReducer(state: any = {}, action: any = {}) {
       const groupNames = groups.map(group => group.name);
       const byNames = extractGroupsByNames(groups, groupNames, state.byNames);
       return {
-        ...byNames,
+        ...byNames
       };
     case FETCH_GROUP_SUCCESS:
       return reducerByName(state, action.payload.name, action.payload);
     case DELETE_GROUP_SUCCESS:
       const newGroupByNames = deleteGroupInGroupsByNames(
         state,
-        action.payload.name,
+        action.payload.name
       );
       return newGroupByNames;
 
@@ -384,7 +384,7 @@ function byNamesReducer(state: any = {}, action: any = {}) {
 
 export default combineReducers({
   list: listReducer,
-  byNames: byNamesReducer,
+  byNames: byNamesReducer
 });
 
 // selectors

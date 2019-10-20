@@ -1,12 +1,12 @@
-import * as types from '../../modules/types';
-import { Action, NamespaceStrategies } from '@scm-manager/ui-types';
-import { apiClient } from '@scm-manager/ui-components';
-import { isPending } from '../../modules/pending';
-import { getFailure } from '../../modules/failure';
-import { MODIFY_CONFIG_SUCCESS } from './config';
+import * as types from "../../modules/types";
+import { Action, NamespaceStrategies } from "@scm-manager/ui-types";
+import { apiClient } from "@scm-manager/ui-components";
+import { isPending } from "../../modules/pending";
+import { getFailure } from "../../modules/failure";
+import { MODIFY_CONFIG_SUCCESS } from "./config";
 
 export const FETCH_NAMESPACESTRATEGIES_TYPES =
-  'scm/config/FETCH_NAMESPACESTRATEGIES_TYPES';
+  "scm/config/FETCH_NAMESPACESTRATEGIES_TYPES";
 export const FETCH_NAMESPACESTRATEGIES_TYPES_PENDING = `${FETCH_NAMESPACESTRATEGIES_TYPES}_${types.PENDING_SUFFIX}`;
 export const FETCH_NAMESPACESTRATEGIES_TYPES_SUCCESS = `${FETCH_NAMESPACESTRATEGIES_TYPES}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_NAMESPACESTRATEGIES_TYPES_FAILURE = `${FETCH_NAMESPACESTRATEGIES_TYPES}_${types.FAILURE_SUFFIX}`;
@@ -17,7 +17,7 @@ export function fetchNamespaceStrategiesIfNeeded() {
     if (shouldFetchNamespaceStrategies(state)) {
       return fetchNamespaceStrategies(
         dispatch,
-        state.indexResources.links.namespaceStrategies.href,
+        state.indexResources.links.namespaceStrategies.href
       );
     }
   };
@@ -48,23 +48,23 @@ export function shouldFetchNamespaceStrategies(state: object) {
 
 export function fetchNamespaceStrategiesPending(): Action {
   return {
-    type: FETCH_NAMESPACESTRATEGIES_TYPES_PENDING,
+    type: FETCH_NAMESPACESTRATEGIES_TYPES_PENDING
   };
 }
 
 export function fetchNamespaceStrategiesSuccess(
-  namespaceStrategies: NamespaceStrategies,
+  namespaceStrategies: NamespaceStrategies
 ): Action {
   return {
     type: FETCH_NAMESPACESTRATEGIES_TYPES_SUCCESS,
-    payload: namespaceStrategies,
+    payload: namespaceStrategies
   };
 }
 
 export function fetchNamespaceStrategiesFailure(error: Error): Action {
   return {
     type: FETCH_NAMESPACESTRATEGIES_TYPES_FAILURE,
-    payload: error,
+    payload: error
   };
 }
 
@@ -73,8 +73,8 @@ export function fetchNamespaceStrategiesFailure(error: Error): Action {
 export default function reducer(
   state: object = {},
   action: Action = {
-    type: 'UNKNOWN',
-  },
+    type: "UNKNOWN"
+  }
 ): object {
   if (
     action.type === FETCH_NAMESPACESTRATEGIES_TYPES_SUCCESS &&
@@ -85,7 +85,7 @@ export default function reducer(
     const config = action.payload;
     return {
       ...state,
-      current: config.namespaceStrategy,
+      current: config.namespaceStrategy
     };
   }
   return state;

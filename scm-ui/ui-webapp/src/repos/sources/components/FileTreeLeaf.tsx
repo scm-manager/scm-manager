@@ -1,11 +1,11 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import classNames from 'classnames';
-import styled from 'styled-components';
-import { binder, ExtensionPoint } from '@scm-manager/ui-extensions';
-import { File } from '@scm-manager/ui-types';
-import { DateFromNow, FileSize } from '@scm-manager/ui-components';
-import FileIcon from './FileIcon';
+import * as React from "react";
+import { Link } from "react-router-dom";
+import classNames from "classnames";
+import styled from "styled-components";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { File } from "@scm-manager/ui-types";
+import { DateFromNow, FileSize } from "@scm-manager/ui-components";
+import FileIcon from "./FileIcon";
 
 type Props = {
   file: File;
@@ -20,13 +20,13 @@ export function createLink(base: string, file: File) {
   let link = base;
   if (file.path) {
     let path = file.path;
-    if (path.startsWith('/')) {
+    if (path.startsWith("/")) {
       path = path.substring(1);
     }
-    link += '/' + path;
+    link += "/" + path;
   }
-  if (!link.endsWith('/')) {
-    link += '/';
+  if (!link.endsWith("/")) {
+    link += "/";
   }
   return link;
 }
@@ -61,7 +61,7 @@ export default class FileTreeLeaf extends React.Component<Props> {
   render() {
     const { file } = this.props;
 
-    const fileSize = file.directory ? '' : <FileSize bytes={file.length} />;
+    const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
 
     return (
       <tr>
@@ -73,16 +73,16 @@ export default class FileTreeLeaf extends React.Component<Props> {
         <td className="is-hidden-mobile">
           <DateFromNow date={file.lastModified} />
         </td>
-        <MinWidthTd className={classNames('is-word-break', 'is-hidden-mobile')}>
+        <MinWidthTd className={classNames("is-word-break", "is-hidden-mobile")}>
           {file.description}
         </MinWidthTd>
-        {binder.hasExtension('repos.sources.tree.row.right') && (
+        {binder.hasExtension("repos.sources.tree.row.right") && (
           <td className="is-hidden-mobile">
             {!file.directory && (
               <ExtensionPoint
                 name="repos.sources.tree.row.right"
                 props={{
-                  file,
+                  file
                 }}
                 renderAll={true}
               />

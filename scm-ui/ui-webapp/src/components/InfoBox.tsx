@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { translate } from 'react-i18next';
-import classNames from 'classnames';
-import styled from 'styled-components';
-import { InfoItem } from './InfoItem';
-import { Icon } from '@scm-manager/ui-components';
+import * as React from "react";
+import { translate } from "react-i18next";
+import classNames from "classnames";
+import styled from "styled-components";
+import { InfoItem } from "./InfoItem";
+import { Icon } from "@scm-manager/ui-components";
 
 type Props = {
-  type: 'plugin' | 'feature';
+  type: "plugin" | "feature";
   item: InfoItem;
 
   // context props
@@ -40,11 +40,11 @@ const ContentWrapper = styled.div`
 class InfoBox extends React.Component<Props> {
   renderBody = () => {
     const { item, t } = this.props;
-    const title = item ? item.title : t('login.loading');
-    const summary = item ? item.summary : t('login.loading');
+    const title = item ? item.title : t("login.loading");
+    const summary = item ? item.summary : t("login.loading");
 
     return (
-      <ContentWrapper className={classNames('media-content', 'content')}>
+      <ContentWrapper className={classNames("media-content", "content")}>
         <h4 className="has-text-link">{title}</h4>
         <p>{summary}</p>
       </ContentWrapper>
@@ -53,23 +53,23 @@ class InfoBox extends React.Component<Props> {
 
   render() {
     const { item, type, t } = this.props;
-    const icon = type === 'plugin' ? 'puzzle-piece' : 'star';
+    const icon = type === "plugin" ? "puzzle-piece" : "star";
     return (
       <BottomMarginA href={item._links.self.href}>
         <div className="box media">
           <figure className="media-left">
             <FixedSizedIconWrapper
               className={classNames(
-                'image',
-                'box',
-                'has-text-weight-bold',
-                'has-text-white',
-                'has-background-info',
+                "image",
+                "box",
+                "has-text-weight-bold",
+                "has-text-white",
+                "has-background-info"
               )}
             >
               <LightBlueIcon className="fa-2x" name={icon} color="inherit" />
-              <div className="is-size-4">{t('login.' + type)}</div>
-              <div className="is-size-4">{t('login.tip')}</div>
+              <div className="is-size-4">{t("login." + type)}</div>
+              <div className="is-size-4">{t("login.tip")}</div>
             </FixedSizedIconWrapper>
           </figure>
           {this.renderBody()}
@@ -79,4 +79,4 @@ class InfoBox extends React.Component<Props> {
   }
 }
 
-export default translate('commons')(InfoBox);
+export default translate("commons")(InfoBox);

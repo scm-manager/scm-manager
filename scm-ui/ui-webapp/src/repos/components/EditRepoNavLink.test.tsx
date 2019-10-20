@@ -1,34 +1,34 @@
-import React from 'react';
-import { shallow, mount } from '@scm-manager/ui-tests/enzyme-router';
-import '@scm-manager/ui-tests/enzyme';
-import '@scm-manager/ui-tests/i18n';
+import React from "react";
+import { shallow, mount } from "@scm-manager/ui-tests/enzyme-router";
+import "@scm-manager/ui-tests/enzyme";
+import "@scm-manager/ui-tests/i18n";
 
-import EditRepoNavLink from './EditRepoNavLink';
+import EditRepoNavLink from "./EditRepoNavLink";
 
-describe('GeneralNavLink', () => {
-  it('should render nothing, if the modify link is missing', () => {
+describe("GeneralNavLink", () => {
+  it("should render nothing, if the modify link is missing", () => {
     const repository = {
-      _links: {},
+      _links: {}
     };
 
     const navLink = shallow(
-      <EditRepoNavLink repository={repository} editUrl="" />,
+      <EditRepoNavLink repository={repository} editUrl="" />
     );
-    expect(navLink.text()).toBe('');
+    expect(navLink.text()).toBe("");
   });
 
-  it('should render the navLink', () => {
+  it("should render the navLink", () => {
     const repository = {
       _links: {
         update: {
-          href: '/repositories',
-        },
-      },
+          href: "/repositories"
+        }
+      }
     };
 
     const navLink = mount(
-      <EditRepoNavLink repository={repository} editUrl="" />,
+      <EditRepoNavLink repository={repository} editUrl="" />
     );
-    expect(navLink.text()).toBe('repositoryRoot.menu.generalNavLink');
+    expect(navLink.text()).toBe("repositoryRoot.menu.generalNavLink");
   });
 });

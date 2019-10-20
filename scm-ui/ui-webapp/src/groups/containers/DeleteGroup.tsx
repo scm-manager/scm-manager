@@ -1,20 +1,20 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { Group } from '@scm-manager/ui-types';
+import React from "react";
+import { translate } from "react-i18next";
+import { Group } from "@scm-manager/ui-types";
 import {
   Subtitle,
   DeleteButton,
   confirmAlert,
-  ErrorNotification,
-} from '@scm-manager/ui-components';
+  ErrorNotification
+} from "@scm-manager/ui-components";
 import {
   deleteGroup,
   getDeleteGroupFailure,
-  isDeleteGroupPending,
-} from '../modules/groups';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { History } from 'history';
+  isDeleteGroupPending
+} from "../modules/groups";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { History } from "history";
 
 type Props = {
   loading: boolean;
@@ -30,7 +30,7 @@ type Props = {
 
 export class DeleteGroup extends React.Component<Props> {
   static defaultProps = {
-    confirmDialog: true,
+    confirmDialog: true
   };
 
   deleteGroup = () => {
@@ -38,24 +38,24 @@ export class DeleteGroup extends React.Component<Props> {
   };
 
   groupDeleted = () => {
-    this.props.history.push('/groups/');
+    this.props.history.push("/groups/");
   };
 
   confirmDelete = () => {
     const { t } = this.props;
     confirmAlert({
-      title: t('deleteGroup.confirmAlert.title'),
-      message: t('deleteGroup.confirmAlert.message'),
+      title: t("deleteGroup.confirmAlert.title"),
+      message: t("deleteGroup.confirmAlert.message"),
       buttons: [
         {
-          label: t('deleteGroup.confirmAlert.submit'),
-          onClick: () => this.deleteGroup(),
+          label: t("deleteGroup.confirmAlert.submit"),
+          onClick: () => this.deleteGroup()
         },
         {
-          label: t('deleteGroup.confirmAlert.cancel'),
-          onClick: () => null,
-        },
-      ],
+          label: t("deleteGroup.confirmAlert.cancel"),
+          onClick: () => null
+        }
+      ]
     });
   };
 
@@ -73,12 +73,12 @@ export class DeleteGroup extends React.Component<Props> {
 
     return (
       <>
-        <Subtitle subtitle={t('deleteGroup.subtitle')} />
+        <Subtitle subtitle={t("deleteGroup.subtitle")} />
         <ErrorNotification error={error} />
         <div className="columns">
           <div className="column">
             <DeleteButton
-              label={t('deleteGroup.button')}
+              label={t("deleteGroup.button")}
               action={action}
               loading={loading}
             />
@@ -94,7 +94,7 @@ const mapStateToProps = (state, ownProps) => {
   const error = getDeleteGroupFailure(state, ownProps.group.name);
   return {
     loading,
-    error,
+    error
   };
 };
 
@@ -102,11 +102,11 @@ const mapDispatchToProps = dispatch => {
   return {
     deleteGroup: (group: Group, callback?: () => void) => {
       dispatch(deleteGroup(group, callback));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(withRouter(translate('groups')(DeleteGroup)));
+  mapDispatchToProps
+)(withRouter(translate("groups")(DeleteGroup)));

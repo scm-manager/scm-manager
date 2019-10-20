@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import { Repository } from '@scm-manager/ui-types';
+import { Repository } from "@scm-manager/ui-types";
 
-import groupByNamespace from './groupByNamespace';
-import RepositoryGroupEntry from './RepositoryGroupEntry';
+import groupByNamespace from "./groupByNamespace";
+import RepositoryGroupEntry from "./RepositoryGroupEntry";
 
 type Props = {
   repositories: Repository[];

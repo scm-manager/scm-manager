@@ -1,20 +1,20 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
-import classNames from 'classnames';
-import styled from 'styled-components';
-import { ExtensionPoint } from '@scm-manager/ui-extensions';
-import { File, Repository } from '@scm-manager/ui-types';
+import React from "react";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
+import classNames from "classnames";
+import styled from "styled-components";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { File, Repository } from "@scm-manager/ui-types";
 import {
   DateFromNow,
   ErrorNotification,
   FileSize,
-  Icon,
-} from '@scm-manager/ui-components';
-import { getSources } from '../modules/sources';
-import FileButtonAddons from '../components/content/FileButtonAddons';
-import SourcesView from './SourcesView';
-import HistoryView from './HistoryView';
+  Icon
+} from "@scm-manager/ui-components";
+import { getSources } from "../modules/sources";
+import FileButtonAddons from "../components/content/FileButtonAddons";
+import SourcesView from "./SourcesView";
+import HistoryView from "./HistoryView";
 
 type Props = {
   loading: boolean;
@@ -59,33 +59,33 @@ class Content extends React.Component<Props, State> {
 
     this.state = {
       collapsed: true,
-      showHistory: false,
+      showHistory: false
     };
   }
 
   toggleCollapse = () => {
     this.setState(prevState => ({
-      collapsed: !prevState.collapsed,
+      collapsed: !prevState.collapsed
     }));
   };
 
   setShowHistoryState(showHistory: boolean) {
     this.setState({
       ...this.state,
-      showHistory,
+      showHistory
     });
   }
 
   handleExtensionError = (error: Error) => {
     this.setState({
-      errorFromExtension: error,
+      errorFromExtension: error
     });
   };
 
   showHeader() {
     const { file, revision } = this.props;
     const { showHistory, collapsed } = this.state;
-    const icon = collapsed ? 'angle-right' : 'angle-down';
+    const icon = collapsed ? "angle-right" : "angle-down";
 
     const selector = file._links.history ? (
       <RightMarginFileButtonAddons
@@ -99,7 +99,7 @@ class Content extends React.Component<Props, State> {
 
     return (
       <span className="has-cursor-pointer">
-        <VCenteredChild className={classNames('media', 'is-flex')}>
+        <VCenteredChild className={classNames("media", "is-flex")}>
           <div className="media-content" onClick={this.toggleCollapse}>
             <RightMarginIcon name={icon} color="inherit" />
             <span className="is-word-break">{file.name}</span>
@@ -111,7 +111,7 @@ class Content extends React.Component<Props, State> {
               props={{
                 file,
                 revision,
-                handleExtensionError: this.handleExtensionError,
+                handleExtensionError: this.handleExtensionError
               }}
               renderAll={true}
             />
@@ -127,7 +127,7 @@ class Content extends React.Component<Props, State> {
     const date = <DateFromNow date={file.lastModified} />;
     const description = file.description ? (
       <p>
-        {file.description.split('\n').map((item, key) => {
+        {file.description.split("\n").map((item, key) => {
           return (
             <span key={key}>
               {item}
@@ -137,30 +137,30 @@ class Content extends React.Component<Props, State> {
         })}
       </p>
     ) : null;
-    const fileSize = file.directory ? '' : <FileSize bytes={file.length} />;
+    const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
     if (!collapsed) {
       return (
         <LighterGreyBackgroundPanelBlock className="panel-block">
           <LighterGreyBackgroundTable className="table">
             <tbody>
               <tr>
-                <td>{t('sources.content.path')}</td>
+                <td>{t("sources.content.path")}</td>
                 <td className="is-word-break">{file.path}</td>
               </tr>
               <tr>
-                <td>{t('sources.content.branch')}</td>
+                <td>{t("sources.content.branch")}</td>
                 <td className="is-word-break">{revision}</td>
               </tr>
               <tr>
-                <td>{t('sources.content.size')}</td>
+                <td>{t("sources.content.size")}</td>
                 <td>{fileSize}</td>
               </tr>
               <tr>
-                <td>{t('sources.content.lastModified')}</td>
+                <td>{t("sources.content.lastModified")}</td>
                 <td>{date}</td>
               </tr>
               <tr>
-                <td>{t('sources.content.description')}</td>
+                <td>{t("sources.content.description")}</td>
                 <td className="is-word-break">{description}</td>
               </tr>
               <ExtensionPoint
@@ -169,7 +169,7 @@ class Content extends React.Component<Props, State> {
                 props={{
                   file,
                   repository,
-                  revision,
+                  revision
                 }}
               />
             </tbody>
@@ -217,8 +217,8 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   const file = getSources(state, repository, revision, path);
 
   return {
-    file,
+    file
   };
 };
 
-export default connect(mapStateToProps)(translate('repos')(Content));
+export default connect(mapStateToProps)(translate("repos")(Content));

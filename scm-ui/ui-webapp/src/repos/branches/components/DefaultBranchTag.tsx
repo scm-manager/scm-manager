@@ -1,7 +1,7 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import styled from 'styled-components';
-import { Tag } from '@scm-manager/ui-components';
+import React from "react";
+import { translate } from "react-i18next";
+import styled from "styled-components";
+import { Tag } from "@scm-manager/ui-components";
 
 type Props = {
   defaultBranch?: boolean;
@@ -20,10 +20,10 @@ class DefaultBranchTag extends React.Component<Props> {
     const { defaultBranch, t } = this.props;
 
     if (defaultBranch) {
-      return <LeftMarginTag color="dark" label={t('branch.defaultTag')} />;
+      return <LeftMarginTag color="dark" label={t("branch.defaultTag")} />;
     }
     return null;
   }
 }
 
-export default translate('repos')(DefaultBranchTag);
+export default translate("repos")(DefaultBranchTag);

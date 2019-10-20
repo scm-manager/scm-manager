@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 import {
   fetchRepoByName,
   getFetchRepoFailure,
   getRepository,
-  isFetchRepoPending,
-} from '../modules/repos';
+  isFetchRepoPending
+} from "../modules/repos";
 
-import { connect } from 'react-redux';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import { Repository } from '@scm-manager/ui-types';
+import { connect } from "react-redux";
+import { Redirect, Route, Switch } from "react-router-dom";
+import { Repository } from "@scm-manager/ui-types";
 
 import {
   ErrorPage,
@@ -17,25 +17,25 @@ import {
   NavLink,
   Page,
   Section,
-  SubNavigation,
-} from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
-import RepositoryDetails from '../components/RepositoryDetails';
-import EditRepo from './EditRepo';
-import BranchesOverview from '../branches/containers/BranchesOverview';
-import CreateBranch from '../branches/containers/CreateBranch';
-import Permissions from '../permissions/containers/Permissions';
+  SubNavigation
+} from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
+import RepositoryDetails from "../components/RepositoryDetails";
+import EditRepo from "./EditRepo";
+import BranchesOverview from "../branches/containers/BranchesOverview";
+import CreateBranch from "../branches/containers/CreateBranch";
+import Permissions from "../permissions/containers/Permissions";
 
-import { History } from 'history';
-import EditRepoNavLink from '../components/EditRepoNavLink';
-import BranchRoot from '../branches/containers/BranchRoot';
-import ChangesetsRoot from './ChangesetsRoot';
-import ChangesetView from './ChangesetView';
-import PermissionsNavLink from '../components/PermissionsNavLink';
-import Sources from '../sources/containers/Sources';
-import RepositoryNavLink from '../components/RepositoryNavLink';
-import { getLinks, getRepositoriesLink } from '../../modules/indexResource';
-import { binder, ExtensionPoint } from '@scm-manager/ui-extensions';
+import { History } from "history";
+import EditRepoNavLink from "../components/EditRepoNavLink";
+import BranchRoot from "../branches/containers/BranchRoot";
+import ChangesetsRoot from "./ChangesetsRoot";
+import ChangesetView from "./ChangesetView";
+import PermissionsNavLink from "../components/PermissionsNavLink";
+import Sources from "../sources/containers/Sources";
+import RepositoryNavLink from "../components/RepositoryNavLink";
+import { getLinks, getRepositoriesLink } from "../../modules/indexResource";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   namespace: string;
@@ -63,7 +63,7 @@ class RepositoryRoot extends React.Component<Props> {
   }
 
   stripEndingSlash = (url: string) => {
-    if (url.endsWith('/')) {
+    if (url.endsWith("/")) {
       return url.substring(0, url.length - 1);
     }
     return url;
@@ -91,8 +91,8 @@ class RepositoryRoot extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t('repositoryRoot.errorTitle')}
-          subtitle={t('repositoryRoot.errorSubtitle')}
+          title={t("repositoryRoot.errorTitle")}
+          subtitle={t("repositoryRoot.errorSubtitle")}
           error={error}
         />
       );
@@ -107,22 +107,22 @@ class RepositoryRoot extends React.Component<Props> {
     const extensionProps = {
       repository,
       url,
-      indexLinks,
+      indexLinks
     };
 
     const redirectUrlFactory = binder.getExtension(
-      'repository.redirect',
-      this.props,
+      "repository.redirect",
+      this.props
     );
     let redirectedUrl;
     if (redirectUrlFactory) {
       redirectedUrl = url + redirectUrlFactory(this.props);
     } else {
-      redirectedUrl = url + '/info';
+      redirectedUrl = url + "/info";
     }
 
     return (
-      <Page title={repository.namespace + '/' + repository.name}>
+      <Page title={repository.namespace + "/" + repository.name}>
         <div className="columns">
           <div className="column is-three-quarters">
             <Switch>
@@ -215,7 +215,7 @@ class RepositoryRoot extends React.Component<Props> {
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t('repositoryRoot.menu.navigationLabel')}>
+              <Section label={t("repositoryRoot.menu.navigationLabel")}>
                 <ExtensionPoint
                   name="repository.navigation.topLevel"
                   props={extensionProps}
@@ -224,14 +224,14 @@ class RepositoryRoot extends React.Component<Props> {
                 <NavLink
                   to={`${url}/info`}
                   icon="fas fa-info-circle"
-                  label={t('repositoryRoot.menu.informationNavLink')}
+                  label={t("repositoryRoot.menu.informationNavLink")}
                 />
                 <RepositoryNavLink
                   repository={repository}
                   linkName="branches"
                   to={`${url}/branches/`}
                   icon="fas fa-code-branch"
-                  label={t('repositoryRoot.menu.branchesNavLink')}
+                  label={t("repositoryRoot.menu.branchesNavLink")}
                   activeWhenMatch={this.matchesBranches}
                   activeOnlyWhenExact={false}
                 />
@@ -240,7 +240,7 @@ class RepositoryRoot extends React.Component<Props> {
                   linkName="changesets"
                   to={`${url}/changesets/`}
                   icon="fas fa-exchange-alt"
-                  label={t('repositoryRoot.menu.historyNavLink')}
+                  label={t("repositoryRoot.menu.historyNavLink")}
                   activeWhenMatch={this.matchesChangesets}
                   activeOnlyWhenExact={false}
                 />
@@ -249,7 +249,7 @@ class RepositoryRoot extends React.Component<Props> {
                   linkName="sources"
                   to={`${url}/sources`}
                   icon="fas fa-code"
-                  label={t('repositoryRoot.menu.sourcesNavLink')}
+                  label={t("repositoryRoot.menu.sourcesNavLink")}
                   activeOnlyWhenExact={false}
                 />
                 <ExtensionPoint
@@ -259,7 +259,7 @@ class RepositoryRoot extends React.Component<Props> {
                 />
                 <SubNavigation
                   to={`${url}/settings/general`}
-                  label={t('repositoryRoot.menu.settingsNavLink')}
+                  label={t("repositoryRoot.menu.settingsNavLink")}
                 >
                   <EditRepoNavLink
                     repository={repository}
@@ -298,7 +298,7 @@ const mapStateToProps = (state, ownProps) => {
     loading,
     error,
     repoLink,
-    indexLinks,
+    indexLinks
   };
 };
 
@@ -306,11 +306,11 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchRepoByName: (link: string, namespace: string, name: string) => {
       dispatch(fetchRepoByName(link, namespace, name));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('repos')(RepositoryRoot));
+  mapDispatchToProps
+)(translate("repos")(RepositoryRoot));

@@ -1,7 +1,7 @@
-import { Repository, RepositoryGroup } from '@scm-manager/ui-types';
+import { Repository, RepositoryGroup } from "@scm-manager/ui-types";
 
 export default function groupByNamespace(
-  repositories: Repository[],
+  repositories: Repository[]
 ): RepositoryGroup[] {
   let groups = {};
   for (let repository of repositories) {
@@ -11,7 +11,7 @@ export default function groupByNamespace(
     if (!group) {
       group = {
         name: groupName,
-        repositories: [],
+        repositories: []
       };
       groups[groupName] = group;
     }

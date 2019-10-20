@@ -1,17 +1,17 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import UserForm from '../components/UserForm';
-import { User } from '@scm-manager/ui-types';
-import { History } from 'history';
+import React from "react";
+import { connect } from "react-redux";
+import UserForm from "../components/UserForm";
+import { User } from "@scm-manager/ui-types";
+import { History } from "history";
 import {
   createUser,
   createUserReset,
   isCreateUserPending,
-  getCreateUserFailure,
-} from '../modules/users';
-import { Page } from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
-import { getUsersLink } from '../../modules/indexResource';
+  getCreateUserFailure
+} from "../modules/users";
+import { Page } from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
+import { getUsersLink } from "../../modules/indexResource";
 
 type Props = {
   loading?: boolean;
@@ -34,12 +34,12 @@ class CreateUser extends React.Component<Props> {
 
   userCreated = (user: User) => {
     const { history } = this.props;
-    history.push('/user/' + user.name);
+    history.push("/user/" + user.name);
   };
 
   createUser = (user: User) => {
     this.props.addUser(this.props.usersLink, user, () =>
-      this.userCreated(user),
+      this.userCreated(user)
     );
   };
 
@@ -48,8 +48,8 @@ class CreateUser extends React.Component<Props> {
 
     return (
       <Page
-        title={t('createUser.title')}
-        subtitle={t('createUser.subtitle')}
+        title={t("createUser.title")}
+        subtitle={t("createUser.subtitle")}
         error={error}
         showContentOnError={true}
       >
@@ -69,7 +69,7 @@ const mapDispatchToProps = dispatch => {
     },
     resetForm: () => {
       dispatch(createUserReset());
-    },
+    }
   };
 };
 
@@ -80,11 +80,11 @@ const mapStateToProps = (state, ownProps) => {
   return {
     usersLink,
     loading,
-    error,
+    error
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('users')(CreateUser));
+  mapDispatchToProps
+)(translate("users")(CreateUser));

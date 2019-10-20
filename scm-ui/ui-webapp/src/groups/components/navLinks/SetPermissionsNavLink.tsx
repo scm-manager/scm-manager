@@ -1,7 +1,7 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { Group } from '@scm-manager/ui-types';
-import { NavLink } from '@scm-manager/ui-components';
+import React from "react";
+import { translate } from "react-i18next";
+import { Group } from "@scm-manager/ui-types";
+import { NavLink } from "@scm-manager/ui-components";
 
 type Props = {
   t: (p: string) => string;
@@ -19,7 +19,7 @@ class ChangePermissionNavLink extends React.Component<Props> {
     return (
       <NavLink
         to={permissionsUrl}
-        label={t('singleGroup.menu.setPermissionsNavLink')}
+        label={t("singleGroup.menu.setPermissionsNavLink")}
       />
     );
   }
@@ -29,4 +29,4 @@ class ChangePermissionNavLink extends React.Component<Props> {
   };
 }
 
-export default translate('groups')(ChangePermissionNavLink);
+export default translate("groups")(ChangePermissionNavLink);

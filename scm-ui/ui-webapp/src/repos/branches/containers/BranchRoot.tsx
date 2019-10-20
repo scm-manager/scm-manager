@@ -1,18 +1,18 @@
-import React from 'react';
-import BranchView from '../components/BranchView';
-import { connect } from 'react-redux';
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
-import { Repository, Branch } from '@scm-manager/ui-types';
+import React from "react";
+import BranchView from "../components/BranchView";
+import { connect } from "react-redux";
+import { Redirect, Route, Switch, withRouter } from "react-router-dom";
+import { Repository, Branch } from "@scm-manager/ui-types";
 import {
   fetchBranch,
   getBranch,
   getFetchBranchFailure,
-  isFetchBranchPending,
-} from '../modules/branches';
-import { ErrorNotification, Loading } from '@scm-manager/ui-components';
-import { History } from 'history';
-import { NotFoundError } from '@scm-manager/ui-components';
-import queryString from 'query-string';
+  isFetchBranchPending
+} from "../modules/branches";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { History } from "history";
+import { NotFoundError } from "@scm-manager/ui-components";
+import queryString from "query-string";
 
 type Props = {
   repository: Repository;
@@ -38,7 +38,7 @@ class BranchRoot extends React.Component<Props> {
   }
 
   stripEndingSlash = (url: string) => {
-    if (url.endsWith('/')) {
+    if (url.endsWith("/")) {
       return url.substring(0, url.length - 1);
     }
     return url;
@@ -56,7 +56,7 @@ class BranchRoot extends React.Component<Props> {
     if (error) {
       if (
         error instanceof NotFoundError &&
-        queryString.parse(location.search).create === 'true'
+        queryString.parse(location.search).create === "true"
       ) {
         return (
           <Redirect
@@ -97,7 +97,7 @@ const mapStateToProps = (state, ownProps) => {
     branchName,
     branch,
     loading,
-    error,
+    error
   };
 };
 
@@ -105,13 +105,13 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchBranch: (repository: Repository, branchName: string) => {
       dispatch(fetchBranch(repository, branchName));
-    },
+    }
   };
 };
 
 export default withRouter(
   connect(
     mapStateToProps,
-    mapDispatchToProps,
-  )(BranchRoot),
+    mapDispatchToProps
+  )(BranchRoot)
 );

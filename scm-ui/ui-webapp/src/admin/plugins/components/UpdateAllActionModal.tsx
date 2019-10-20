@@ -1,8 +1,8 @@
-import React from 'react';
-import PluginActionModal from './PluginActionModal';
-import { PluginCollection } from '@scm-manager/ui-types';
-import { apiClient } from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
+import React from "react";
+import PluginActionModal from "./PluginActionModal";
+import { PluginCollection } from "@scm-manager/ui-types";
+import { apiClient } from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 
 type Props = {
   onClose: () => void;
@@ -19,8 +19,8 @@ class UpdateAllActionModal extends React.Component<Props> {
 
     return (
       <PluginActionModal
-        description={t('plugins.modal.updateAll')}
-        label={t('plugins.updateAll')}
+        description={t("plugins.modal.updateAll")}
+        label={t("plugins.updateAll")}
         onClose={onClose}
         installedPlugins={installedPlugins}
         execute={this.updateAll}
@@ -37,4 +37,4 @@ class UpdateAllActionModal extends React.Component<Props> {
   };
 }
 
-export default translate('admin')(UpdateAllActionModal);
+export default translate("admin")(UpdateAllActionModal);

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Member } from '@scm-manager/ui-types';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Member } from "@scm-manager/ui-types";
 
 type Props = {
   member: Member;

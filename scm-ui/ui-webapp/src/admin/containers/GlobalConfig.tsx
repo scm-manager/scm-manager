@@ -1,6 +1,6 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { Title, Loading, ErrorNotification } from '@scm-manager/ui-components';
+import React from "react";
+import { translate } from "react-i18next";
+import { Title, Loading, ErrorNotification } from "@scm-manager/ui-components";
 import {
   fetchConfig,
   getFetchConfigFailure,
@@ -10,18 +10,18 @@ import {
   isModifyConfigPending,
   getConfigUpdatePermission,
   getModifyConfigFailure,
-  modifyConfigReset,
-} from '../modules/config';
-import { connect } from 'react-redux';
-import { Config, NamespaceStrategies } from '@scm-manager/ui-types';
-import ConfigForm from '../components/form/ConfigForm';
-import { getConfigLink } from '../../modules/indexResource';
+  modifyConfigReset
+} from "../modules/config";
+import { connect } from "react-redux";
+import { Config, NamespaceStrategies } from "@scm-manager/ui-types";
+import ConfigForm from "../components/form/ConfigForm";
+import { getConfigLink } from "../../modules/indexResource";
 import {
   fetchNamespaceStrategiesIfNeeded,
   getFetchNamespaceStrategiesFailure,
   getNamespaceStrategies,
-  isFetchNamespaceStrategiesPending,
-} from '../modules/namespaceStrategies';
+  isFetchNamespaceStrategiesPending
+} from "../modules/namespaceStrategies";
 
 type Props = {
   loading: boolean;
@@ -52,7 +52,7 @@ class GlobalConfig extends React.Component<Props, State> {
 
     this.state = {
       configReadPermission: true,
-      configChanged: false,
+      configChanged: false
     };
   }
 
@@ -63,7 +63,7 @@ class GlobalConfig extends React.Component<Props, State> {
       this.props.fetchConfig(this.props.configLink);
     } else {
       this.setState({
-        configReadPermission: false,
+        configReadPermission: false
       });
     }
   }
@@ -71,7 +71,7 @@ class GlobalConfig extends React.Component<Props, State> {
   modifyConfig = (config: Config) => {
     this.props.modifyConfig(config);
     this.setState({
-      configChanged: true,
+      configChanged: true
     });
   };
 
@@ -83,11 +83,11 @@ class GlobalConfig extends React.Component<Props, State> {
             className="delete"
             onClick={() =>
               this.setState({
-                configChanged: false,
+                configChanged: false
               })
             }
           />
-          {this.props.t('config.form.submit-success-notification')}
+          {this.props.t("config.form.submit-success-notification")}
         </div>
       );
     }
@@ -103,7 +103,7 @@ class GlobalConfig extends React.Component<Props, State> {
 
     return (
       <div>
-        <Title title={t('config.title')} />
+        <Title title={t("config.title")} />
         {this.renderError()}
         {this.renderContent()}
       </div>
@@ -124,7 +124,7 @@ class GlobalConfig extends React.Component<Props, State> {
       loading,
       config,
       configUpdatePermission,
-      namespaceStrategies,
+      namespaceStrategies
     } = this.props;
     const { configReadPermission } = this.state;
     if (!error) {
@@ -159,7 +159,7 @@ const mapDispatchToProps = dispatch => {
     },
     fetchNamespaceStrategiesIfNeeded: () => {
       dispatch(fetchNamespaceStrategiesIfNeeded());
-    },
+    }
   };
 };
 
@@ -184,11 +184,11 @@ const mapStateToProps = state => {
     config,
     configUpdatePermission,
     configLink,
-    namespaceStrategies,
+    namespaceStrategies
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('config')(GlobalConfig));
+  mapDispatchToProps
+)(translate("config")(GlobalConfig));

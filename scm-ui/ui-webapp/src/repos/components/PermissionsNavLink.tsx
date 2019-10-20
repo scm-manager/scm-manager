@@ -1,7 +1,7 @@
-import React from 'react';
-import { NavLink } from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
-import { Repository } from '@scm-manager/ui-types';
+import React from "react";
+import { NavLink } from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
+import { Repository } from "@scm-manager/ui-types";
 
 type Props = {
   permissionUrl: string;
@@ -21,10 +21,10 @@ class PermissionsNavLink extends React.Component<Props> {
     return (
       <NavLink
         to={permissionUrl}
-        label={t('repositoryRoot.menu.permissionsNavLink')}
+        label={t("repositoryRoot.menu.permissionsNavLink")}
       />
     );
   }
 }
 
-export default translate('repos')(PermissionsNavLink);
+export default translate("repos")(PermissionsNavLink);

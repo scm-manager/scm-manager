@@ -1,30 +1,30 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
+import React from "react";
+import { withRouter } from "react-router-dom";
 import {
   Branch,
   Changeset,
   PagedCollection,
-  Repository,
-} from '@scm-manager/ui-types';
+  Repository
+} from "@scm-manager/ui-types";
 import {
   fetchChangesets,
   getChangesets,
   getFetchChangesetsFailure,
   isFetchChangesetsPending,
-  selectListAsCollection,
-} from '../modules/changesets';
+  selectListAsCollection
+} from "../modules/changesets";
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import {
   ErrorNotification,
   getPageFromMatch,
   LinkPaginator,
   ChangesetList,
   Loading,
-  Notification,
-} from '@scm-manager/ui-components';
-import { compose } from 'redux';
-import { translate } from 'react-i18next';
+  Notification
+} from "@scm-manager/ui-components";
+import { compose } from "redux";
+import { translate } from "react-i18next";
 
 type Props = {
   repository: Repository;
@@ -67,7 +67,7 @@ class Changesets extends React.Component<Props> {
       return (
         <div className="panel-block">
           <Notification type="info">
-            {t('changesets.noChangesets')}
+            {t("changesets.noChangesets")}
           </Notification>
         </div>
       );
@@ -106,7 +106,7 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchChangesets: (repo: Repository, branch: Branch, page: number) => {
       dispatch(fetchChangesets(repo, branch, page));
-    },
+    }
   };
 };
 
@@ -123,15 +123,15 @@ const mapStateToProps = (state: any, ownProps: Props) => {
     list,
     page,
     loading,
-    error,
+    error
   };
 };
 
 export default compose(
-  translate('repos'),
+  translate("repos"),
   withRouter,
   connect(
     mapStateToProps,
-    mapDispatchToProps,
-  ),
+    mapDispatchToProps
+  )
 )(Changesets);

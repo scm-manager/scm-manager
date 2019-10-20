@@ -1,16 +1,16 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
-import { History } from 'history';
-import { User, PagedCollection } from '@scm-manager/ui-types';
+import React from "react";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
+import { History } from "history";
+import { User, PagedCollection } from "@scm-manager/ui-types";
 import {
   fetchUsersByPage,
   getUsersFromState,
   selectListAsCollection,
   isPermittedToCreateUsers,
   isFetchUsersPending,
-  getFetchUsersFailure,
-} from '../modules/users';
+  getFetchUsersFailure
+} from "../modules/users";
 import {
   Page,
   PageActions,
@@ -18,10 +18,10 @@ import {
   Notification,
   LinkPaginator,
   urls,
-  CreateButton,
-} from '@scm-manager/ui-components';
-import { UserTable } from './../components/table';
-import { getUsersLink } from '../../modules/indexResource';
+  CreateButton
+} from "@scm-manager/ui-components";
+import { UserTable } from "./../components/table";
+import { getUsersLink } from "../../modules/indexResource";
 
 type Props = {
   users: User[];
@@ -47,7 +47,7 @@ class Users extends React.Component<Props> {
     fetchUsersByPage(
       usersLink,
       page,
-      urls.getQueryStringFromLocation(location),
+      urls.getQueryStringFromLocation(location)
     );
   }
 
@@ -58,7 +58,7 @@ class Users extends React.Component<Props> {
       page,
       usersLink,
       location,
-      fetchUsersByPage,
+      fetchUsersByPage
     } = this.props;
     if (list && page && !loading) {
       const statePage: number = list.page + 1;
@@ -66,7 +66,7 @@ class Users extends React.Component<Props> {
         fetchUsersByPage(
           usersLink,
           page,
-          urls.getQueryStringFromLocation(location),
+          urls.getQueryStringFromLocation(location)
         );
       }
     }
@@ -76,8 +76,8 @@ class Users extends React.Component<Props> {
     const { users, loading, error, canAddUsers, t } = this.props;
     return (
       <Page
-        title={t('users.title')}
-        subtitle={t('users.subtitle')}
+        title={t("users.title")}
+        subtitle={t("users.subtitle")}
         loading={loading || !users}
         error={error}
       >
@@ -87,7 +87,7 @@ class Users extends React.Component<Props> {
           <OverviewPageActions
             showCreateButton={canAddUsers}
             link="users"
-            label={t('users.createButton')}
+            label={t("users.createButton")}
           />
         </PageActions>
       </Page>
@@ -108,14 +108,14 @@ class Users extends React.Component<Props> {
         </>
       );
     }
-    return <Notification type="info">{t('users.noUsers')}</Notification>;
+    return <Notification type="info">{t("users.noUsers")}</Notification>;
   }
 
   renderCreateButton() {
     const { canAddUsers, t } = this.props;
     if (canAddUsers) {
       return (
-        <CreateButton label={t('users.createButton')} link="/users/create" />
+        <CreateButton label={t("users.createButton")} link="/users/create" />
       );
     }
     return null;
@@ -139,7 +139,7 @@ const mapStateToProps = (state, ownProps) => {
     canAddUsers,
     list,
     page,
-    usersLink,
+    usersLink
   };
 };
 
@@ -147,11 +147,11 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchUsersByPage: (link: string, page: number, filter?: string) => {
       dispatch(fetchUsersByPage(link, page, filter));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('users')(Users));
+  mapDispatchToProps
+)(translate("users")(Users));

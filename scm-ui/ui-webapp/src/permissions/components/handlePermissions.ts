@@ -1,16 +1,16 @@
-import { apiClient } from '@scm-manager/ui-components';
+import { apiClient } from "@scm-manager/ui-components";
 
 export const CONTENT_TYPE_PERMISSIONS =
-  'application/vnd.scmm-permissionCollection+json;v=2';
+  "application/vnd.scmm-permissionCollection+json;v=2";
 
 export function setPermissions(url: string, permissions: string[]) {
   return apiClient
     .put(
       url,
       {
-        permissions: permissions,
+        permissions: permissions
       },
-      CONTENT_TYPE_PERMISSIONS,
+      CONTENT_TYPE_PERMISSIONS
     )
     .then(response => {
       return response;
@@ -19,7 +19,7 @@ export function setPermissions(url: string, permissions: string[]) {
 
 export function loadPermissionsForEntity(
   availableUrl: string,
-  userUrl: string,
+  userUrl: string
 ) {
   return Promise.all([
     apiClient.get(availableUrl).then(response => {
@@ -27,7 +27,7 @@ export function loadPermissionsForEntity(
     }),
     apiClient.get(userUrl).then(response => {
       return response.json();
-    }),
+    })
   ]).then(values => {
     const [availablePermissions, checkedPermissions] = values;
     const permissions = {};
@@ -35,7 +35,7 @@ export function loadPermissionsForEntity(
     checkedPermissions.permissions.forEach(p => (permissions[p] = true));
     return {
       permissions,
-      overwriteLink: checkedPermissions._links.overwrite,
+      overwriteLink: checkedPermissions._links.overwrite
     };
   });
 }

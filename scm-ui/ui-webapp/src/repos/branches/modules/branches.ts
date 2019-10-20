@@ -2,38 +2,38 @@ import {
   FAILURE_SUFFIX,
   PENDING_SUFFIX,
   SUCCESS_SUFFIX,
-  RESET_SUFFIX,
-} from '../../../modules/types';
-import { apiClient } from '@scm-manager/ui-components';
+  RESET_SUFFIX
+} from "../../../modules/types";
+import { apiClient } from "@scm-manager/ui-components";
 import {
   Action,
   Branch,
   BranchRequest,
-  Repository,
-} from '@scm-manager/ui-types';
-import { isPending } from '../../../modules/pending';
-import { getFailure } from '../../../modules/failure';
+  Repository
+} from "@scm-manager/ui-types";
+import { isPending } from "../../../modules/pending";
+import { getFailure } from "../../../modules/failure";
 
-import memoizeOne from 'memoize-one';
+import memoizeOne from "memoize-one";
 
-export const FETCH_BRANCHES = 'scm/repos/FETCH_BRANCHES';
+export const FETCH_BRANCHES = "scm/repos/FETCH_BRANCHES";
 export const FETCH_BRANCHES_PENDING = `${FETCH_BRANCHES}_${PENDING_SUFFIX}`;
 export const FETCH_BRANCHES_SUCCESS = `${FETCH_BRANCHES}_${SUCCESS_SUFFIX}`;
 export const FETCH_BRANCHES_FAILURE = `${FETCH_BRANCHES}_${FAILURE_SUFFIX}`;
 
-export const FETCH_BRANCH = 'scm/repos/FETCH_BRANCH';
+export const FETCH_BRANCH = "scm/repos/FETCH_BRANCH";
 export const FETCH_BRANCH_PENDING = `${FETCH_BRANCH}_${PENDING_SUFFIX}`;
 export const FETCH_BRANCH_SUCCESS = `${FETCH_BRANCH}_${SUCCESS_SUFFIX}`;
 export const FETCH_BRANCH_FAILURE = `${FETCH_BRANCH}_${FAILURE_SUFFIX}`;
 
-export const CREATE_BRANCH = 'scm/repos/CREATE_BRANCH';
+export const CREATE_BRANCH = "scm/repos/CREATE_BRANCH";
 export const CREATE_BRANCH_PENDING = `${CREATE_BRANCH}_${PENDING_SUFFIX}`;
 export const CREATE_BRANCH_SUCCESS = `${CREATE_BRANCH}_${SUCCESS_SUFFIX}`;
 export const CREATE_BRANCH_FAILURE = `${CREATE_BRANCH}_${FAILURE_SUFFIX}`;
 export const CREATE_BRANCH_RESET = `${CREATE_BRANCH}_${RESET_SUFFIX}`;
 
 const CONTENT_TYPE_BRANCH_REQUEST =
-  'application/vnd.scmm-branchRequest+json;v=2';
+  "application/vnd.scmm-branchRequest+json;v=2";
 
 // Fetching branches
 
@@ -43,9 +43,9 @@ export function fetchBranches(repository: Repository) {
       type: FETCH_BRANCHES_SUCCESS,
       payload: {
         repository,
-        data: {},
+        data: {}
       },
-      itemId: createKey(repository),
+      itemId: createKey(repository)
     };
   }
 
@@ -65,8 +65,8 @@ export function fetchBranches(repository: Repository) {
 
 export function fetchBranch(repository: Repository, name: string) {
   let link = repository._links.branches.href;
-  if (!link.endsWith('/')) {
-    link += '/';
+  if (!link.endsWith("/")) {
+    link += "/";
   }
   link += encodeURIComponent(name);
   return function(dispatch: any) {
@@ -91,13 +91,13 @@ export function createBranch(
   link: string,
   repository: Repository,
   branchRequest: BranchRequest,
-  callback?: (branch: Branch) => void,
+  callback?: (branch: Branch) => void
 ) {
   return function(dispatch: any) {
     dispatch(createBranchPending(repository));
     return apiClient
       .post(link, branchRequest, CONTENT_TYPE_BRANCH_REQUEST)
-      .then(response => response.headers.get('Location'))
+      .then(response => response.headers.get("Location"))
       .then(location => apiClient.get(location))
       .then(response => response.json())
       .then(branch => {
@@ -147,7 +147,7 @@ function getRepoState(state: object, repository: Repository) {
 
 export const isPermittedToCreateBranches = (
   state: object,
-  repository: Repository,
+  repository: Repository
 ): boolean => {
   const repoState = getRepoState(state, repository);
   return !!(
@@ -161,7 +161,7 @@ export const isPermittedToCreateBranches = (
 export function getBranch(
   state: object,
   repository: Repository,
-  name: string,
+  name: string
 ): Branch | null | undefined {
   const repoState = getRepoState(state, repository);
   if (repoState) {
@@ -172,7 +172,7 @@ export function getBranch(
 // Action creators
 export function isFetchBranchesPending(
   state: object,
-  repository: Repository,
+  repository: Repository
 ): boolean {
   return isPending(state, FETCH_BRANCHES, createKey(repository));
 }
@@ -185,9 +185,9 @@ export function fetchBranchesPending(repository: Repository) {
   return {
     type: FETCH_BRANCHES_PENDING,
     payload: {
-      repository,
+      repository
     },
-    itemId: createKey(repository),
+    itemId: createKey(repository)
   };
 }
 
@@ -196,9 +196,9 @@ export function fetchBranchesSuccess(data: string, repository: Repository) {
     type: FETCH_BRANCHES_SUCCESS,
     payload: {
       data,
-      repository,
+      repository
     },
-    itemId: createKey(repository),
+    itemId: createKey(repository)
   };
 }
 
@@ -207,9 +207,9 @@ export function fetchBranchesFailure(repository: Repository, error: Error) {
     type: FETCH_BRANCHES_FAILURE,
     payload: {
       error,
-      repository,
+      repository
     },
-    itemId: createKey(repository),
+    itemId: createKey(repository)
   };
 }
 
@@ -225,9 +225,9 @@ export function createBranchPending(repository: Repository): Action {
   return {
     type: CREATE_BRANCH_PENDING,
     payload: {
-      repository,
+      repository
     },
-    itemId: createKey(repository),
+    itemId: createKey(repository)
   };
 }
 
@@ -235,23 +235,23 @@ export function createBranchSuccess(repository: Repository): Action {
   return {
     type: CREATE_BRANCH_SUCCESS,
     payload: {
-      repository,
+      repository
     },
-    itemId: createKey(repository),
+    itemId: createKey(repository)
   };
 }
 
 export function createBranchFailure(
   repository: Repository,
-  error: Error,
+  error: Error
 ): Action {
   return {
     type: CREATE_BRANCH_FAILURE,
     payload: {
       repository,
-      error,
+      error
     },
-    itemId: createKey(repository),
+    itemId: createKey(repository)
   };
 }
 
@@ -259,69 +259,69 @@ export function createBranchReset(repository: Repository): Action {
   return {
     type: CREATE_BRANCH_RESET,
     payload: {
-      repository,
+      repository
     },
-    itemId: createKey(repository),
+    itemId: createKey(repository)
   };
 }
 
 export function isFetchBranchPending(
   state: object,
   repository: Repository,
-  name: string,
+  name: string
 ) {
-  return isPending(state, FETCH_BRANCH, createKey(repository) + '/' + name);
+  return isPending(state, FETCH_BRANCH, createKey(repository) + "/" + name);
 }
 
 export function getFetchBranchFailure(
   state: object,
   repository: Repository,
-  name: string,
+  name: string
 ) {
-  return getFailure(state, FETCH_BRANCH, createKey(repository) + '/' + name);
+  return getFailure(state, FETCH_BRANCH, createKey(repository) + "/" + name);
 }
 
 export function fetchBranchPending(
   repository: Repository,
-  name: string,
+  name: string
 ): Action {
   return {
     type: FETCH_BRANCH_PENDING,
     payload: {
       repository,
-      name,
+      name
     },
-    itemId: createKey(repository) + '/' + name,
+    itemId: createKey(repository) + "/" + name
   };
 }
 
 export function fetchBranchSuccess(
   repository: Repository,
-  branch: Branch,
+  branch: Branch
 ): Action {
   return {
     type: FETCH_BRANCH_SUCCESS,
     payload: {
       repository,
-      branch,
+      branch
     },
-    itemId: createKey(repository) + '/' + branch.name,
+    itemId: createKey(repository) + "/" + branch.name
   };
 }
 
 export function fetchBranchFailure(
   repository: Repository,
   name: string,
-  error: Error,
+  error: Error
 ): Action {
   return {
     type: FETCH_BRANCH_FAILURE,
     payload: {
       error,
       repository,
-      name,
+      name
     },
-    itemId: createKey(repository) + '/' + name,
+    itemId: createKey(repository) + "/" + name
   };
 }
 
@@ -345,12 +345,12 @@ const reduceByBranchesSuccess = (state, payload) => {
     return {
       [key]: {
         list: response,
-        byName,
-      },
+        byName
+      }
     };
   }
   return {
-    [key]: [],
+    [key]: []
   };
 };
 
@@ -369,15 +369,15 @@ const reduceByBranchSuccess = (state, payload) => {
 
   return {
     ...state,
-    [key]: repoState,
+    [key]: repoState
   };
 };
 
 export default function reducer(
   state: {} = {},
   action: Action = {
-    type: 'UNKNOWN',
-  },
+    type: "UNKNOWN"
+  }
 ): object {
   if (!action.payload) {
     return state;

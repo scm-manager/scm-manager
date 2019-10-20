@@ -1,16 +1,16 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
-import { History } from 'history';
-import { Group, PagedCollection } from '@scm-manager/ui-types';
+import React from "react";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
+import { History } from "history";
+import { Group, PagedCollection } from "@scm-manager/ui-types";
 import {
   fetchGroupsByPage,
   getGroupsFromState,
   isFetchGroupsPending,
   getFetchGroupsFailure,
   isPermittedToCreateGroups,
-  selectListAsCollection,
-} from '../modules/groups';
+  selectListAsCollection
+} from "../modules/groups";
 import {
   Page,
   PageActions,
@@ -18,10 +18,10 @@ import {
   Notification,
   LinkPaginator,
   urls,
-  CreateButton,
-} from '@scm-manager/ui-components';
-import { GroupTable } from './../components/table';
-import { getGroupsLink } from '../../modules/indexResource';
+  CreateButton
+} from "@scm-manager/ui-components";
+import { GroupTable } from "./../components/table";
+import { getGroupsLink } from "../../modules/indexResource";
 
 type Props = {
   groups: Group[];
@@ -47,7 +47,7 @@ class Groups extends React.Component<Props> {
     fetchGroupsByPage(
       groupLink,
       page,
-      urls.getQueryStringFromLocation(location),
+      urls.getQueryStringFromLocation(location)
     );
   }
 
@@ -58,7 +58,7 @@ class Groups extends React.Component<Props> {
       page,
       groupLink,
       location,
-      fetchGroupsByPage,
+      fetchGroupsByPage
     } = this.props;
     if (list && page && !loading) {
       const statePage: number = list.page + 1;
@@ -66,7 +66,7 @@ class Groups extends React.Component<Props> {
         fetchGroupsByPage(
           groupLink,
           page,
-          urls.getQueryStringFromLocation(location),
+          urls.getQueryStringFromLocation(location)
         );
       }
     }
@@ -76,8 +76,8 @@ class Groups extends React.Component<Props> {
     const { groups, loading, error, canAddGroups, t } = this.props;
     return (
       <Page
-        title={t('groups.title')}
-        subtitle={t('groups.subtitle')}
+        title={t("groups.title")}
+        subtitle={t("groups.subtitle")}
         loading={loading || !groups}
         error={error}
       >
@@ -87,7 +87,7 @@ class Groups extends React.Component<Props> {
           <OverviewPageActions
             showCreateButton={canAddGroups}
             link="groups"
-            label={t('create-group-button.label')}
+            label={t("create-group-button.label")}
           />
         </PageActions>
       </Page>
@@ -108,7 +108,7 @@ class Groups extends React.Component<Props> {
         </>
       );
     }
-    return <Notification type="info">{t('groups.noGroups')}</Notification>;
+    return <Notification type="info">{t("groups.noGroups")}</Notification>;
   }
 
   renderCreateButton() {
@@ -116,7 +116,7 @@ class Groups extends React.Component<Props> {
     if (canAddGroups) {
       return (
         <CreateButton
-          label={t('create-group-button.label')}
+          label={t("create-group-button.label")}
           link="/groups/create"
         />
       );
@@ -142,7 +142,7 @@ const mapStateToProps = (state, ownProps) => {
     canAddGroups,
     list,
     page,
-    groupLink,
+    groupLink
   };
 };
 
@@ -150,11 +150,11 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchGroupsByPage: (link: string, page: number, filter?: string) => {
       dispatch(fetchGroupsByPage(link, page, filter));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('groups')(Groups));
+  mapDispatchToProps
+)(translate("groups")(Groups));

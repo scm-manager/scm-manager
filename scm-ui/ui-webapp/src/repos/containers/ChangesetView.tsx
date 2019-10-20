@@ -1,16 +1,16 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { Changeset, Repository } from '@scm-manager/ui-types';
+import React from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { Changeset, Repository } from "@scm-manager/ui-types";
 import {
   fetchChangesetIfNeeded,
   getChangeset,
   getFetchChangesetFailure,
-  isFetchChangesetPending,
-} from '../modules/changesets';
-import ChangesetDetails from '../components/changesets/ChangesetDetails';
-import { translate } from 'react-i18next';
-import { ErrorPage, Loading } from '@scm-manager/ui-components';
+  isFetchChangesetPending
+} from "../modules/changesets";
+import ChangesetDetails from "../components/changesets/ChangesetDetails";
+import { translate } from "react-i18next";
+import { ErrorPage, Loading } from "@scm-manager/ui-components";
 
 type Props = {
   id: string;
@@ -36,8 +36,8 @@ class ChangesetView extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t('changesets.errorTitle')}
-          subtitle={t('changesets.errorSubtitle')}
+          title={t("changesets.errorTitle")}
+          subtitle={t("changesets.errorSubtitle")}
           error={error}
         />
       );
@@ -58,7 +58,7 @@ const mapStateToProps = (state, ownProps: Props) => {
   return {
     changeset,
     error,
-    loading,
+    loading
   };
 };
 
@@ -66,13 +66,13 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchChangesetIfNeeded: (repository: Repository, id: string) => {
       dispatch(fetchChangesetIfNeeded(repository, id));
-    },
+    }
   };
 };
 
 export default withRouter(
   connect(
     mapStateToProps,
-    mapDispatchToProps,
-  )(translate('repos')(ChangesetView)),
+    mapDispatchToProps
+  )(translate("repos")(ChangesetView))
 );

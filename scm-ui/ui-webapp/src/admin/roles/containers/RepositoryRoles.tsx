@@ -1,9 +1,9 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { translate } from 'react-i18next';
-import { History } from 'history';
-import { RepositoryRole, PagedCollection } from '@scm-manager/ui-types';
+import React from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { translate } from "react-i18next";
+import { History } from "history";
+import { RepositoryRole, PagedCollection } from "@scm-manager/ui-types";
 import {
   Title,
   Subtitle,
@@ -11,18 +11,18 @@ import {
   Notification,
   LinkPaginator,
   urls,
-  CreateButton,
-} from '@scm-manager/ui-components';
+  CreateButton
+} from "@scm-manager/ui-components";
 import {
   fetchRolesByPage,
   getRolesFromState,
   selectListAsCollection,
   isPermittedToCreateRoles,
   isFetchRolesPending,
-  getFetchRolesFailure,
-} from '../modules/roles';
-import PermissionRoleTable from '../components/PermissionRoleTable';
-import { getRepositoryRolesLink } from '../../../modules/indexResource';
+  getFetchRolesFailure
+} from "../modules/roles";
+import PermissionRoleTable from "../components/PermissionRoleTable";
+import { getRepositoryRolesLink } from "../../../modules/indexResource";
 
 type Props = {
   baseUrl: string;
@@ -56,7 +56,7 @@ class RepositoryRoles extends React.Component<Props> {
       page,
       rolesLink,
       location,
-      fetchRolesByPage,
+      fetchRolesByPage
     } = this.props;
     if (list && page && !loading) {
       const statePage: number = list.page + 1;
@@ -75,8 +75,8 @@ class RepositoryRoles extends React.Component<Props> {
 
     return (
       <>
-        <Title title={t('repositoryRole.title')} />
-        <Subtitle subtitle={t('repositoryRole.overview.title')} />
+        <Title title={t("repositoryRole.title")} />
+        <Subtitle subtitle={t("repositoryRole.overview.title")} />
         {this.renderPermissionsTable()}
         {this.renderCreateButton()}
       </>
@@ -95,7 +95,7 @@ class RepositoryRoles extends React.Component<Props> {
     }
     return (
       <Notification type="info">
-        {t('repositoryRole.overview.noPermissionRoles')}
+        {t("repositoryRole.overview.noPermissionRoles")}
       </Notification>
     );
   }
@@ -105,7 +105,7 @@ class RepositoryRoles extends React.Component<Props> {
     if (canAddRoles) {
       return (
         <CreateButton
-          label={t('repositoryRole.overview.createButton')}
+          label={t("repositoryRole.overview.createButton")}
           link={`${baseUrl}/create`}
         />
       );
@@ -131,7 +131,7 @@ const mapStateToProps = (state, ownProps) => {
     canAddRoles,
     list,
     page,
-    rolesLink,
+    rolesLink
   };
 };
 
@@ -139,13 +139,13 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchRolesByPage: (link: string, page: number) => {
       dispatch(fetchRolesByPage(link, page));
-    },
+    }
   };
 };
 
 export default withRouter(
   connect(
     mapStateToProps,
-    mapDispatchToProps,
-  )(translate('admin')(RepositoryRoles)),
+    mapDispatchToProps
+  )(translate("admin")(RepositoryRoles))
 );

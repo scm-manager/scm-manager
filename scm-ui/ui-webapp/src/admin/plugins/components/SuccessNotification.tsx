@@ -1,6 +1,6 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { Notification } from '@scm-manager/ui-components';
+import React from "react";
+import { translate } from "react-i18next";
+import { Notification } from "@scm-manager/ui-components";
 
 type Props = {
   // context props
@@ -12,13 +12,13 @@ class InstallSuccessNotification extends React.Component<Props> {
     const { t } = this.props;
     return (
       <Notification type="success">
-        {t('plugins.modal.successNotification')}{' '}
+        {t("plugins.modal.successNotification")}{" "}
         <a onClick={e => window.location.reload(true)}>
-          {t('plugins.modal.reload')}
+          {t("plugins.modal.reload")}
         </a>
       </Notification>
     );
   }
 }
 
-export default translate('admin')(InstallSuccessNotification);
+export default translate("admin")(InstallSuccessNotification);

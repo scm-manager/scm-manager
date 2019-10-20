@@ -1,7 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Branch } from '@scm-manager/ui-types';
-import DefaultBranchTag from './DefaultBranchTag';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Branch } from "@scm-manager/ui-types";
+import DefaultBranchTag from "./DefaultBranchTag";
 
 type Props = {
   baseUrl: string;

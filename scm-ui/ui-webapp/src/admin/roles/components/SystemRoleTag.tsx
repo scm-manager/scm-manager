@@ -1,7 +1,7 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import styled from 'styled-components';
-import { Tag } from '@scm-manager/ui-components';
+import React from "react";
+import { translate } from "react-i18next";
+import styled from "styled-components";
+import { Tag } from "@scm-manager/ui-components";
 
 type Props = {
   system?: boolean;
@@ -20,10 +20,10 @@ class SystemRoleTag extends React.Component<Props> {
     const { system, t } = this.props;
 
     if (system) {
-      return <LeftMarginTag color="dark" label={t('repositoryRole.system')} />;
+      return <LeftMarginTag color="dark" label={t("repositoryRole.system")} />;
     }
     return null;
   }
 }
 
-export default translate('admin')(SystemRoleTag);
+export default translate("admin")(SystemRoleTag);

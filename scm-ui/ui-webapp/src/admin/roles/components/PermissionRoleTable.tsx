@@ -1,7 +1,7 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { RepositoryRole } from '@scm-manager/ui-types';
-import PermissionRoleRow from './PermissionRoleRow';
+import React from "react";
+import { translate } from "react-i18next";
+import { RepositoryRole } from "@scm-manager/ui-types";
+import PermissionRoleRow from "./PermissionRoleRow";
 
 type Props = {
   baseUrl: string;
@@ -18,7 +18,7 @@ class PermissionRoleTable extends React.Component<Props> {
       <table className="card-table table is-hoverable is-fullwidth">
         <thead>
           <tr>
-            <th>{t('repositoryRole.name')}</th>
+            <th>{t("repositoryRole.name")}</th>
           </tr>
         </thead>
         <tbody>
@@ -33,4 +33,4 @@ class PermissionRoleTable extends React.Component<Props> {
   }
 }
 
-export default translate('admin')(PermissionRoleTable);
+export default translate("admin")(PermissionRoleTable);

@@ -1,8 +1,8 @@
-import React from 'react';
-import { Repository, Branch } from '@scm-manager/ui-types';
-import { translate } from 'react-i18next';
-import BranchButtonGroup from './BranchButtonGroup';
-import DefaultBranchTag from './DefaultBranchTag';
+import React from "react";
+import { Repository, Branch } from "@scm-manager/ui-types";
+import { translate } from "react-i18next";
+import BranchButtonGroup from "./BranchButtonGroup";
+import DefaultBranchTag from "./DefaultBranchTag";
 
 type Props = {
   repository: Repository;
@@ -18,7 +18,7 @@ class BranchDetail extends React.Component<Props> {
     return (
       <div className="media">
         <div className="media-content subtitle">
-          <strong>{t('branch.name')}</strong> {branch.name}{' '}
+          <strong>{t("branch.name")}</strong> {branch.name}{" "}
           <DefaultBranchTag defaultBranch={branch.defaultBranch} />
         </div>
         <div className="media-right">
@@ -29,4 +29,4 @@ class BranchDetail extends React.Component<Props> {
   }
 }
 
-export default translate('repos')(BranchDetail);
+export default translate("repos")(BranchDetail);

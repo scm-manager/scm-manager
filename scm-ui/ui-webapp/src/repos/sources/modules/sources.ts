@@ -1,10 +1,10 @@
-import * as types from '../../../modules/types';
-import { Repository, File, Action } from '@scm-manager/ui-types';
-import { apiClient } from '@scm-manager/ui-components';
-import { isPending } from '../../../modules/pending';
-import { getFailure } from '../../../modules/failure';
+import * as types from "../../../modules/types";
+import { Repository, File, Action } from "@scm-manager/ui-types";
+import { apiClient } from "@scm-manager/ui-components";
+import { isPending } from "../../../modules/pending";
+import { getFailure } from "../../../modules/failure";
 
-export const FETCH_SOURCES = 'scm/repos/FETCH_SOURCES';
+export const FETCH_SOURCES = "scm/repos/FETCH_SOURCES";
 export const FETCH_SOURCES_PENDING = `${FETCH_SOURCES}_${types.PENDING_SUFFIX}`;
 export const FETCH_SOURCES_SUCCESS = `${FETCH_SOURCES}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_SOURCES_FAILURE = `${FETCH_SOURCES}_${types.FAILURE_SUFFIX}`;
@@ -12,7 +12,7 @@ export const FETCH_SOURCES_FAILURE = `${FETCH_SOURCES}_${types.FAILURE_SUFFIX}`;
 export function fetchSources(
   repository: Repository,
   revision: string,
-  path: string,
+  path: string
 ) {
   return function(dispatch: any) {
     dispatch(fetchSourcesPending(repository, revision, path));
@@ -35,18 +35,18 @@ function createUrl(repository: Repository, revision: string, path: string) {
   }
 
   // TODO handle trailing slash
-  const pathDefined = path ? path : '';
+  const pathDefined = path ? path : "";
   return `${base}${encodeURIComponent(revision)}/${pathDefined}`;
 }
 
 export function fetchSourcesPending(
   repository: Repository,
   revision: string,
-  path: string,
+  path: string
 ): Action {
   return {
     type: FETCH_SOURCES_PENDING,
-    itemId: createItemId(repository, revision, path),
+    itemId: createItemId(repository, revision, path)
   };
 }
 
@@ -54,12 +54,12 @@ export function fetchSourcesSuccess(
   repository: Repository,
   revision: string,
   path: string,
-  sources: File,
+  sources: File
 ) {
   return {
     type: FETCH_SOURCES_SUCCESS,
     payload: sources,
-    itemId: createItemId(repository, revision, path),
+    itemId: createItemId(repository, revision, path)
   };
 }
 
@@ -67,18 +67,18 @@ export function fetchSourcesFailure(
   repository: Repository,
   revision: string,
   path: string,
-  error: Error,
+  error: Error
 ): Action {
   return {
     type: FETCH_SOURCES_FAILURE,
     payload: error,
-    itemId: createItemId(repository, revision, path),
+    itemId: createItemId(repository, revision, path)
   };
 }
 
 function createItemId(repository: Repository, revision: string, path: string) {
-  const revPart = revision ? revision : '_';
-  const pathPart = path ? path : '';
+  const revPart = revision ? revision : "_";
+  const pathPart = path ? path : "";
   return `${repository.namespace}/${repository.name}/${revPart}/${pathPart}`;
 }
 
@@ -87,13 +87,13 @@ function createItemId(repository: Repository, revision: string, path: string) {
 export default function reducer(
   state: any = {},
   action: Action = {
-    type: 'UNKNOWN',
-  },
+    type: "UNKNOWN"
+  }
 ): any {
   if (action.itemId && action.type === FETCH_SOURCES_SUCCESS) {
     return {
       ...state,
-      [action.itemId]: action.payload,
+      [action.itemId]: action.payload
     };
   }
   return state;
@@ -105,7 +105,7 @@ export function isDirectory(
   state: any,
   repository: Repository,
   revision: string,
-  path: string,
+  path: string
 ): boolean {
   const currentFile = getSources(state, repository, revision, path);
   if (currentFile && !currentFile.directory) {
@@ -119,7 +119,7 @@ export function getSources(
   state: any,
   repository: Repository,
   revision: string,
-  path: string,
+  path: string
 ): File | null | undefined {
   if (state.sources) {
     return state.sources[createItemId(repository, revision, path)];
@@ -131,12 +131,12 @@ export function isFetchSourcesPending(
   state: any,
   repository: Repository,
   revision: string,
-  path: string,
+  path: string
 ): boolean {
   return isPending(
     state,
     FETCH_SOURCES,
-    createItemId(repository, revision, path),
+    createItemId(repository, revision, path)
   );
 }
 
@@ -144,11 +144,11 @@ export function getFetchSourcesFailure(
   state: any,
   repository: Repository,
   revision: string,
-  path: string,
+  path: string
 ): Error | null | undefined {
   return getFailure(
     state,
     FETCH_SOURCES,
-    createItemId(repository, revision, path),
+    createItemId(repository, revision, path)
   );
 }

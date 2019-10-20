@@ -1,7 +1,7 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { Permission } from '@scm-manager/ui-types';
-import { confirmAlert } from '@scm-manager/ui-components';
+import React from "react";
+import { translate } from "react-i18next";
+import { Permission } from "@scm-manager/ui-types";
+import { confirmAlert } from "@scm-manager/ui-components";
 
 type Props = {
   permission: Permission;
@@ -12,39 +12,39 @@ type Props = {
   deletePermission: (
     permission: Permission,
     namespace: string,
-    repoName: string,
+    repoName: string
   ) => void;
   loading: boolean;
 };
 
 class DeletePermissionButton extends React.Component<Props> {
   static defaultProps = {
-    confirmDialog: true,
+    confirmDialog: true
   };
 
   deletePermission = () => {
     this.props.deletePermission(
       this.props.permission,
       this.props.namespace,
-      this.props.repoName,
+      this.props.repoName
     );
   };
 
   confirmDelete = () => {
     const { t } = this.props;
     confirmAlert({
-      title: t('permission.delete-permission-button.confirm-alert.title'),
-      message: t('permission.delete-permission-button.confirm-alert.message'),
+      title: t("permission.delete-permission-button.confirm-alert.title"),
+      message: t("permission.delete-permission-button.confirm-alert.message"),
       buttons: [
         {
-          label: t('permission.delete-permission-button.confirm-alert.submit'),
-          onClick: () => this.deletePermission(),
+          label: t("permission.delete-permission-button.confirm-alert.submit"),
+          onClick: () => this.deletePermission()
         },
         {
-          label: t('permission.delete-permission-button.confirm-alert.cancel'),
-          onClick: () => null,
-        },
-      ],
+          label: t("permission.delete-permission-button.confirm-alert.cancel"),
+          onClick: () => null
+        }
+      ]
     });
   };
 
@@ -69,4 +69,4 @@ class DeletePermissionButton extends React.Component<Props> {
   }
 }
 
-export default translate('repos')(DeletePermissionButton);
+export default translate("repos")(DeletePermissionButton);

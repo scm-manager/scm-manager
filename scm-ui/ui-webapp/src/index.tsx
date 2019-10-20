@@ -1,22 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Index from './containers/Index';
+import React from "react";
+import ReactDOM from "react-dom";
+import Index from "./containers/Index";
 
-import { I18nextProvider } from 'react-i18next';
-import i18n from './i18n';
+import { I18nextProvider } from "react-i18next";
+import i18n from "./i18n";
 
-import { Provider } from 'react-redux';
+import { Provider } from "react-redux";
 
-import createReduxStore from './createReduxStore';
-import { BrowserRouter as Router } from 'react-router-dom';
+import createReduxStore from "./createReduxStore";
+import { BrowserRouter as Router } from "react-router-dom";
 
-import { urls } from '@scm-manager/ui-components';
+import { urls } from "@scm-manager/ui-components";
 
 const store = createReduxStore();
 
-const root = document.getElementById('root');
+const root = document.getElementById("root");
 if (!root) {
-  throw new Error('could not find root element');
+  throw new Error("could not find root element");
 }
 
 ReactDOM.render(
@@ -27,5 +27,5 @@ ReactDOM.render(
       </Router>
     </I18nextProvider>
   </Provider>,
-  root,
+  root
 );

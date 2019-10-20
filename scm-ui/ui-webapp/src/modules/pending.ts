@@ -1,11 +1,11 @@
-import { Action } from '@scm-manager/ui-types';
-import * as types from './types';
+import { Action } from "@scm-manager/ui-types";
+import * as types from "./types";
 
-const PENDING_SUFFIX = '_' + types.PENDING_SUFFIX;
+const PENDING_SUFFIX = "_" + types.PENDING_SUFFIX;
 const RESET_ACTIONTYPES = [
   types.SUCCESS_SUFFIX,
   types.FAILURE_SUFFIX,
-  types.RESET_SUFFIX,
+  types.RESET_SUFFIX
 ];
 
 function removeFromState(state: object, identifier: string) {
@@ -21,7 +21,7 @@ function removeFromState(state: object, identifier: string) {
 function removeAllEntriesOfIdentifierFromState(
   state: object,
   payload: any,
-  identifier: string,
+  identifier: string
 ) {
   const newState = {};
   for (let childType in state) {
@@ -36,7 +36,7 @@ function extractIdentifierFromPending(action: Action) {
   const type = action.type;
   let identifier = type.substring(0, type.length - PENDING_SUFFIX.length);
   if (action.itemId) {
-    identifier += '/' + action.itemId;
+    identifier += "/" + action.itemId;
   }
   return identifier;
 }
@@ -44,30 +44,30 @@ function extractIdentifierFromPending(action: Action) {
 export default function reducer(
   state: object = {},
   action: Action = {
-    type: 'UNKNOWN',
-  },
+    type: "UNKNOWN"
+  }
 ): object {
   const type = action.type;
   if (type.endsWith(PENDING_SUFFIX)) {
     const identifier = extractIdentifierFromPending(action);
     return {
       ...state,
-      [identifier]: true,
+      [identifier]: true
     };
   } else {
-    const index = type.lastIndexOf('_');
+    const index = type.lastIndexOf("_");
     if (index > 0) {
       const actionType = type.substring(index + 1);
       if (RESET_ACTIONTYPES.indexOf(actionType) >= 0 || action.resetPending) {
         let identifier = type.substring(0, index);
         if (action.itemId) {
-          identifier += '/' + action.itemId;
+          identifier += "/" + action.itemId;
         }
         if (action.payload)
           return removeAllEntriesOfIdentifierFromState(
             state,
             action.payload,
-            identifier,
+            identifier
           );
         else return removeFromState(state, identifier);
       }
@@ -79,11 +79,11 @@ export default function reducer(
 export function isPending(
   state: object,
   actionType: string,
-  itemId?: string | number,
+  itemId?: string | number
 ) {
   let type = actionType;
   if (itemId) {
-    type += '/' + itemId;
+    type += "/" + itemId;
   }
   if (state.pending && state.pending[type]) {
     return true;

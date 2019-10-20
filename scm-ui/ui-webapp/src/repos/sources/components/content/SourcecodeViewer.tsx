@@ -1,8 +1,8 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { apiClient, SyntaxHighlighter } from '@scm-manager/ui-components';
-import { File } from '@scm-manager/ui-types';
-import { ErrorNotification, Loading } from '@scm-manager/ui-components';
+import React from "react";
+import { translate } from "react-i18next";
+import { apiClient, SyntaxHighlighter } from "@scm-manager/ui-components";
+import { File } from "@scm-manager/ui-types";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 
 type Props = {
   t: (p: string) => string;
@@ -21,8 +21,8 @@ class SourcecodeViewer extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      content: '',
-      loaded: false,
+      content: "",
+      loaded: false
     };
   }
 
@@ -34,13 +34,13 @@ class SourcecodeViewer extends React.Component<Props, State> {
           this.setState({
             ...this.state,
             error: result.error,
-            loaded: true,
+            loaded: true
           });
         } else {
           this.setState({
             ...this.state,
             content: result,
-            loaded: true,
+            loaded: true
           });
         }
       })
@@ -82,9 +82,9 @@ export function getContent(url: string) {
     })
     .catch(err => {
       return {
-        error: err,
+        error: err
       };
     });
 }
 
-export default translate('repos')(SourcecodeViewer);
+export default translate("repos")(SourcecodeViewer);

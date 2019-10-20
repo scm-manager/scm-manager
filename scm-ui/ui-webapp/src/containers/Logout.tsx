@@ -1,17 +1,17 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
-import { Redirect } from 'react-router-dom';
+import React from "react";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
+import { Redirect } from "react-router-dom";
 
 import {
   logout,
   isAuthenticated,
   isLogoutPending,
   getLogoutFailure,
-  isRedirecting,
-} from '../modules/auth';
-import { Loading, ErrorPage } from '@scm-manager/ui-components';
-import { getLogoutLink } from '../modules/indexResource';
+  isRedirecting
+} from "../modules/auth";
+import { Loading, ErrorPage } from "@scm-manager/ui-components";
+import { getLogoutLink } from "../modules/indexResource";
 
 type Props = {
   authenticated: boolean;
@@ -37,8 +37,8 @@ class Logout extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t('logout.error.title')}
-          subtitle={t('logout.error.subtitle')}
+          title={t("logout.error.title")}
+          subtitle={t("logout.error.subtitle")}
           error={error}
         />
       );
@@ -61,17 +61,17 @@ const mapStateToProps = state => {
     loading,
     redirecting,
     error,
-    logoutLink,
+    logoutLink
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    logout: (link: string) => dispatch(logout(link)),
+    logout: (link: string) => dispatch(logout(link))
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('commons')(Logout));
+  mapDispatchToProps
+)(translate("commons")(Logout));

@@ -1,31 +1,31 @@
-import React from 'react';
-import { shallow } from 'enzyme';
-import '@scm-manager/ui-tests/enzyme';
-import '@scm-manager/ui-tests/i18n';
-import EditGroupNavLink from './EditGroupNavLink';
+import React from "react";
+import { shallow } from "enzyme";
+import "@scm-manager/ui-tests/enzyme";
+import "@scm-manager/ui-tests/i18n";
+import EditGroupNavLink from "./EditGroupNavLink";
 
-it('should render nothing, if the edit link is missing', () => {
+it("should render nothing, if the edit link is missing", () => {
   const group = {
-    _links: {},
+    _links: {}
   };
 
   const navLink = shallow(
-    <EditGroupNavLink group={group} editUrl="/group/edit" />,
+    <EditGroupNavLink group={group} editUrl="/group/edit" />
   );
-  expect(navLink.text()).toBe('');
+  expect(navLink.text()).toBe("");
 });
 
-it('should render the navLink', () => {
+it("should render the navLink", () => {
   const group = {
     _links: {
       update: {
-        href: '/groups',
-      },
-    },
+        href: "/groups"
+      }
+    }
   };
 
   const navLink = shallow(
-    <EditGroupNavLink group={group} editUrl="/group/edit" />,
+    <EditGroupNavLink group={group} editUrl="/group/edit" />
   );
-  expect(navLink.text()).not.toBe('');
+  expect(navLink.text()).not.toBe("");
 });

@@ -1,20 +1,20 @@
-import React from 'react';
-import RepositoryRoleForm from './RepositoryRoleForm';
-import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
-import { ErrorNotification, Subtitle, Title } from '@scm-manager/ui-components';
+import React from "react";
+import RepositoryRoleForm from "./RepositoryRoleForm";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
+import { ErrorNotification, Subtitle, Title } from "@scm-manager/ui-components";
 import {
   createRole,
   getCreateRoleFailure,
   getFetchVerbsFailure,
-  isFetchVerbsPending,
-} from '../modules/roles';
-import { RepositoryRole } from '@scm-manager/ui-types';
+  isFetchVerbsPending
+} from "../modules/roles";
+import { RepositoryRole } from "@scm-manager/ui-types";
 import {
   getRepositoryRolesLink,
-  getRepositoryVerbsLink,
-} from '../../../modules/indexResource';
-import { History } from 'history';
+  getRepositoryVerbsLink
+} from "../../../modules/indexResource";
+import { History } from "history";
 
 type Props = {
   repositoryRolesLink: string;
@@ -31,12 +31,12 @@ type Props = {
 class CreateRepositoryRole extends React.Component<Props> {
   repositoryRoleCreated = (role: RepositoryRole) => {
     const { history } = this.props;
-    history.push('/admin/role/' + role.name + '/info');
+    history.push("/admin/role/" + role.name + "/info");
   };
 
   createRepositoryRole = (role: RepositoryRole) => {
     this.props.addRole(this.props.repositoryRolesLink, role, () =>
-      this.repositoryRoleCreated(role),
+      this.repositoryRoleCreated(role)
     );
   };
 
@@ -49,8 +49,8 @@ class CreateRepositoryRole extends React.Component<Props> {
 
     return (
       <>
-        <Title title={t('repositoryRole.title')} />
-        <Subtitle subtitle={t('repositoryRole.createSubtitle')} />
+        <Title title={t("repositoryRole.title")} />
+        <Subtitle subtitle={t("repositoryRole.createSubtitle")} />
         <RepositoryRoleForm
           submitForm={role => this.createRepositoryRole(role)}
         />
@@ -69,7 +69,7 @@ const mapStateToProps = (state, ownProps) => {
     loading,
     error,
     verbsLink,
-    repositoryRolesLink,
+    repositoryRolesLink
   };
 };
 
@@ -77,11 +77,11 @@ const mapDispatchToProps = dispatch => {
   return {
     addRole: (link: string, role: RepositoryRole, callback?: () => void) => {
       dispatch(createRole(link, role, callback));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('admin')(CreateRepositoryRole));
+  mapDispatchToProps
+)(translate("admin")(CreateRepositoryRole));

@@ -1,33 +1,33 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
-import { Page } from '@scm-manager/ui-components';
-import RepositoryForm from '../components/form';
+import React from "react";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
+import { Page } from "@scm-manager/ui-components";
+import RepositoryForm from "../components/form";
 import {
   Repository,
   RepositoryType,
-  NamespaceStrategies,
-} from '@scm-manager/ui-types';
+  NamespaceStrategies
+} from "@scm-manager/ui-types";
 import {
   fetchRepositoryTypesIfNeeded,
   getFetchRepositoryTypesFailure,
   getRepositoryTypes,
-  isFetchRepositoryTypesPending,
-} from '../modules/repositoryTypes';
+  isFetchRepositoryTypesPending
+} from "../modules/repositoryTypes";
 import {
   createRepo,
   createRepoReset,
   getCreateRepoFailure,
-  isCreateRepoPending,
-} from '../modules/repos';
-import { History } from 'history';
-import { getRepositoriesLink } from '../../modules/indexResource';
+  isCreateRepoPending
+} from "../modules/repos";
+import { History } from "history";
+import { getRepositoriesLink } from "../../modules/indexResource";
 import {
   fetchNamespaceStrategiesIfNeeded,
   getFetchNamespaceStrategiesFailure,
   getNamespaceStrategies,
-  isFetchNamespaceStrategiesPending,
-} from '../../admin/modules/namespaceStrategies';
+  isFetchNamespaceStrategiesPending
+} from "../../admin/modules/namespaceStrategies";
 
 type Props = {
   repositoryTypes: RepositoryType[];
@@ -43,7 +43,7 @@ type Props = {
   createRepo: (
     link: string,
     p2: Repository,
-    callback: (repo: Repository) => void,
+    callback: (repo: Repository) => void
   ) => void;
   resetForm: () => void;
 
@@ -62,7 +62,7 @@ class Create extends React.Component<Props> {
   repoCreated = (repo: Repository) => {
     const { history } = this.props;
 
-    history.push('/repo/' + repo.namespace + '/' + repo.name);
+    history.push("/repo/" + repo.namespace + "/" + repo.name);
   };
 
   render() {
@@ -72,14 +72,14 @@ class Create extends React.Component<Props> {
       repositoryTypes,
       namespaceStrategies,
       createRepo,
-      error,
+      error
     } = this.props;
 
     const { t, repoLink } = this.props;
     return (
       <Page
-        title={t('create.title')}
-        subtitle={t('create.subtitle')}
+        title={t("create.title")}
+        subtitle={t("create.subtitle")}
         loading={pageLoading}
         error={error}
         showContentOnError={true}
@@ -90,7 +90,7 @@ class Create extends React.Component<Props> {
           namespaceStrategy={namespaceStrategies.current}
           submitForm={repo => {
             createRepo(repoLink, repo, (repo: Repository) =>
-              this.repoCreated(repo),
+              this.repoCreated(repo)
             );
           }}
         />
@@ -117,7 +117,7 @@ const mapStateToProps = state => {
     pageLoading,
     createLoading,
     error,
-    repoLink,
+    repoLink
   };
 };
 
@@ -132,17 +132,17 @@ const mapDispatchToProps = dispatch => {
     createRepo: (
       link: string,
       repository: Repository,
-      callback: () => void,
+      callback: () => void
     ) => {
       dispatch(createRepo(link, repository, callback));
     },
     resetForm: () => {
       dispatch(createRepoReset());
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('repos')(Create));
+  mapDispatchToProps
+)(translate("repos")(Create));

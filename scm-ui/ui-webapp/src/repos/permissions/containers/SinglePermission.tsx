@@ -1,20 +1,20 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { History } from 'history';
-import { translate } from 'react-i18next';
-import styled from 'styled-components';
-import { RepositoryRole, Permission } from '@scm-manager/ui-types';
-import { Button, Icon } from '@scm-manager/ui-components';
+import React from "react";
+import { connect } from "react-redux";
+import { History } from "history";
+import { translate } from "react-i18next";
+import styled from "styled-components";
+import { RepositoryRole, Permission } from "@scm-manager/ui-types";
+import { Button, Icon } from "@scm-manager/ui-components";
 import {
   modifyPermission,
   isModifyPermissionPending,
   deletePermission,
   isDeletePermissionPending,
-  findVerbsForRole,
-} from '../modules/permissions';
-import DeletePermissionButton from '../components/buttons/DeletePermissionButton';
-import RoleSelector from '../components/RoleSelector';
-import AdvancedPermissionsDialog from './AdvancedPermissionsDialog';
+  findVerbsForRole
+} from "../modules/permissions";
+import DeletePermissionButton from "../components/buttons/DeletePermissionButton";
+import RoleSelector from "../components/RoleSelector";
+import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
 
 type Props = {
   availableRepositoryRoles: RepositoryRole[];
@@ -23,7 +23,7 @@ type Props = {
   modifyPermission: (
     permission: Permission,
     namespace: string,
-    name: string,
+    name: string
   ) => void;
   permission: Permission;
   t: (p: string) => string;
@@ -35,7 +35,7 @@ type Props = {
   deletePermission: (
     permission: Permission,
     namespace: string,
-    name: string,
+    name: string
   ) => void;
   deleteLoading: boolean;
 };
@@ -64,13 +64,13 @@ class SinglePermission extends React.Component<Props, State> {
 
     this.state = {
       permission: {
-        name: '',
+        name: "",
         role: undefined,
         verbs: defaultPermission.verbs,
         groupPermission: false,
-        _links: {},
+        _links: {}
       },
-      showAdvancedDialog: false,
+      showAdvancedDialog: false
     };
   }
 
@@ -84,8 +84,8 @@ class SinglePermission extends React.Component<Props, State> {
           role: permission.role,
           verbs: permission.verbs,
           groupPermission: permission.groupPermission,
-          _links: permission._links,
-        },
+          _links: permission._links
+        }
       });
     }
   }
@@ -94,7 +94,7 @@ class SinglePermission extends React.Component<Props, State> {
     this.props.deletePermission(
       this.props.permission,
       this.props.namespace,
-      this.props.repoName,
+      this.props.repoName
     );
   };
 
@@ -105,14 +105,14 @@ class SinglePermission extends React.Component<Props, State> {
       loading,
       namespace,
       repoName,
-      t,
+      t
     } = this.props;
     const { permission, showAdvancedDialog } = this.state;
     const availableRoleNames =
       !!availableRepositoryRoles && availableRepositoryRoles.map(r => r.name);
     const readOnly = !this.mayChangePermissions();
     const roleSelector = readOnly ? (
-      <td>{permission.role ? permission.role : t('permission.custom')}</td>
+      <td>{permission.role ? permission.role : t("permission.custom")}</td>
     ) : (
       <td>
         <RoleSelector
@@ -140,9 +140,9 @@ class SinglePermission extends React.Component<Props, State> {
 
     const iconType =
       permission && permission.groupPermission ? (
-        <Icon title={t('permission.group')} name="user-friends" />
+        <Icon title={t("permission.group")} name="user-friends" />
       ) : (
-        <Icon title={t('permission.user')} name="user" />
+        <Icon title={t("permission.user")} name="user" />
       );
 
     return (
@@ -153,7 +153,7 @@ class SinglePermission extends React.Component<Props, State> {
         {roleSelector}
         <VCenteredTd>
           <Button
-            label={t('permission.advanced-button.label')}
+            label={t("permission.advanced-button.label")}
             action={this.handleDetailedPermissionsPressed}
           />
         </VCenteredTd>
@@ -177,13 +177,13 @@ class SinglePermission extends React.Component<Props, State> {
 
   handleDetailedPermissionsPressed = () => {
     this.setState({
-      showAdvancedDialog: true,
+      showAdvancedDialog: true
     });
   };
 
   closeAdvancedPermissionsDialog = () => {
     this.setState({
-      showAdvancedDialog: false,
+      showAdvancedDialog: false
     });
   };
 
@@ -195,10 +195,10 @@ class SinglePermission extends React.Component<Props, State> {
         permission: {
           ...permission,
           role: undefined,
-          verbs: newVerbs,
-        },
+          verbs: newVerbs
+        }
       },
-      () => this.modifyPermissionVerbs(newVerbs),
+      () => this.modifyPermissionVerbs(newVerbs)
     );
   };
 
@@ -209,10 +209,10 @@ class SinglePermission extends React.Component<Props, State> {
         permission: {
           ...permission,
           role: role,
-          verbs: undefined,
-        },
+          verbs: undefined
+        }
       },
-      () => this.modifyPermissionRole(role),
+      () => this.modifyPermissionRole(role)
     );
   };
 
@@ -227,7 +227,7 @@ class SinglePermission extends React.Component<Props, State> {
     this.props.modifyPermission(
       permission,
       this.props.namespace,
-      this.props.repoName,
+      this.props.repoName
     );
   };
 
@@ -237,7 +237,7 @@ class SinglePermission extends React.Component<Props, State> {
     this.props.modifyPermission(
       permission,
       this.props.namespace,
-      this.props.repoName,
+      this.props.repoName
     );
   };
 }
@@ -248,18 +248,18 @@ const mapStateToProps = (state, ownProps) => {
     state,
     ownProps.namespace,
     ownProps.repoName,
-    permission,
+    permission
   );
   const deleteLoading = isDeletePermissionPending(
     state,
     ownProps.namespace,
     ownProps.repoName,
-    permission,
+    permission
   );
 
   return {
     loading,
-    deleteLoading,
+    deleteLoading
   };
 };
 
@@ -268,20 +268,20 @@ const mapDispatchToProps = dispatch => {
     modifyPermission: (
       permission: Permission,
       namespace: string,
-      repoName: string,
+      repoName: string
     ) => {
       dispatch(modifyPermission(permission, namespace, repoName));
     },
     deletePermission: (
       permission: Permission,
       namespace: string,
-      repoName: string,
+      repoName: string
     ) => {
       dispatch(deletePermission(permission, namespace, repoName));
-    },
+    }
   };
 };
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('repos')(SinglePermission));
+  mapDispatchToProps
+)(translate("repos")(SinglePermission));

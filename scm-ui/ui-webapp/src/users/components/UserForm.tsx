@@ -1,15 +1,15 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { User } from '@scm-manager/ui-types';
+import React from "react";
+import { translate } from "react-i18next";
+import { User } from "@scm-manager/ui-types";
 import {
   Subtitle,
   Checkbox,
   InputField,
   PasswordConfirmation,
   SubmitButton,
-  validation as validator,
-} from '@scm-manager/ui-components';
-import * as userValidator from './userValidation';
+  validation as validator
+} from "@scm-manager/ui-components";
+import * as userValidator from "./userValidation";
 
 type Props = {
   submitForm: (p: User) => void;
@@ -32,17 +32,17 @@ class UserForm extends React.Component<Props, State> {
 
     this.state = {
       user: {
-        name: '',
-        displayName: '',
-        mail: '',
-        password: '',
+        name: "",
+        displayName: "",
+        mail: "",
+        password: "",
         active: true,
-        _links: {},
+        _links: {}
       },
       mailValidationError: false,
       displayNameValidationError: false,
       nameValidationError: false,
-      passwordValid: false,
+      passwordValid: false
     };
   }
 
@@ -51,8 +51,8 @@ class UserForm extends React.Component<Props, State> {
     if (user) {
       this.setState({
         user: {
-          ...user,
-        },
+          ...user
+        }
       });
     }
   }
@@ -121,12 +121,12 @@ class UserForm extends React.Component<Props, State> {
       nameField = (
         <div className="column is-half">
           <InputField
-            label={t('user.name')}
+            label={t("user.name")}
             onChange={this.handleUsernameChange}
-            value={user ? user.name : ''}
+            value={user ? user.name : ""}
             validationError={this.state.nameValidationError}
-            errorMessage={t('validation.name-invalid')}
-            helpText={t('help.usernameHelpText')}
+            errorMessage={t("validation.name-invalid")}
+            helpText={t("help.usernameHelpText")}
           />
         </div>
       );
@@ -136,7 +136,7 @@ class UserForm extends React.Component<Props, State> {
       );
     } else {
       // edit existing user
-      subtitle = <Subtitle subtitle={t('userForm.subtitle')} />;
+      subtitle = <Subtitle subtitle={t("userForm.subtitle")} />;
     }
     return (
       <>
@@ -146,22 +146,22 @@ class UserForm extends React.Component<Props, State> {
             {nameField}
             <div className="column is-half">
               <InputField
-                label={t('user.displayName')}
+                label={t("user.displayName")}
                 onChange={this.handleDisplayNameChange}
-                value={user ? user.displayName : ''}
+                value={user ? user.displayName : ""}
                 validationError={this.state.displayNameValidationError}
-                errorMessage={t('validation.displayname-invalid')}
-                helpText={t('help.displayNameHelpText')}
+                errorMessage={t("validation.displayname-invalid")}
+                helpText={t("help.displayNameHelpText")}
               />
             </div>
             <div className="column is-half">
               <InputField
-                label={t('user.mail')}
+                label={t("user.mail")}
                 onChange={this.handleEmailChange}
-                value={user ? user.mail : ''}
+                value={user ? user.mail : ""}
                 validationError={this.state.mailValidationError}
-                errorMessage={t('validation.mail-invalid')}
-                helpText={t('help.mailHelpText')}
+                errorMessage={t("validation.mail-invalid")}
+                helpText={t("help.mailHelpText")}
               />
             </div>
           </div>
@@ -169,10 +169,10 @@ class UserForm extends React.Component<Props, State> {
           <div className="columns">
             <div className="column">
               <Checkbox
-                label={t('user.active')}
+                label={t("user.active")}
                 onChange={this.handleActiveChange}
                 checked={user ? user.active : false}
-                helpText={t('help.activeHelpText')}
+                helpText={t("help.activeHelpText")}
               />
             </div>
           </div>
@@ -181,7 +181,7 @@ class UserForm extends React.Component<Props, State> {
               <SubmitButton
                 disabled={!this.isValid()}
                 loading={loading}
-                label={t('userForm.button')}
+                label={t("userForm.button")}
               />
             </div>
           </div>
@@ -195,20 +195,20 @@ class UserForm extends React.Component<Props, State> {
       nameValidationError: !validator.isNameValid(name),
       user: {
         ...this.state.user,
-        name,
-      },
+        name
+      }
     });
   };
 
   handleDisplayNameChange = (displayName: string) => {
     this.setState({
       displayNameValidationError: !userValidator.isDisplayNameValid(
-        displayName,
+        displayName
       ),
       user: {
         ...this.state.user,
-        displayName,
-      },
+        displayName
+      }
     });
   };
 
@@ -217,8 +217,8 @@ class UserForm extends React.Component<Props, State> {
       mailValidationError: !validator.isMailValid(mail),
       user: {
         ...this.state.user,
-        mail,
-      },
+        mail
+      }
     });
   };
 
@@ -226,9 +226,9 @@ class UserForm extends React.Component<Props, State> {
     this.setState({
       user: {
         ...this.state.user,
-        password,
+        password
       },
-      passwordValid: !this.isFalsy(password) && passwordValid,
+      passwordValid: !this.isFalsy(password) && passwordValid
     });
   };
 
@@ -236,10 +236,10 @@ class UserForm extends React.Component<Props, State> {
     this.setState({
       user: {
         ...this.state.user,
-        active,
-      },
+        active
+      }
     });
   };
 }
 
-export default translate('users')(UserForm);
+export default translate("users")(UserForm);

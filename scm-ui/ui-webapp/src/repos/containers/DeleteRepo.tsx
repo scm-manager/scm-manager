@@ -1,20 +1,20 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { Repository } from '@scm-manager/ui-types';
+import React from "react";
+import { translate } from "react-i18next";
+import { Repository } from "@scm-manager/ui-types";
 import {
   Subtitle,
   DeleteButton,
   confirmAlert,
-  ErrorNotification,
-} from '@scm-manager/ui-components';
+  ErrorNotification
+} from "@scm-manager/ui-components";
 import {
   deleteRepo,
   getDeleteRepoFailure,
-  isDeleteRepoPending,
-} from '../modules/repos';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { History } from 'history';
+  isDeleteRepoPending
+} from "../modules/repos";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { History } from "history";
 
 type Props = {
   loading: boolean;
@@ -30,11 +30,11 @@ type Props = {
 
 class DeleteRepo extends React.Component<Props> {
   static defaultProps = {
-    confirmDialog: true,
+    confirmDialog: true
   };
 
   deleted = () => {
-    this.props.history.push('/repos/');
+    this.props.history.push("/repos/");
   };
 
   deleteRepo = () => {
@@ -44,18 +44,18 @@ class DeleteRepo extends React.Component<Props> {
   confirmDelete = () => {
     const { t } = this.props;
     confirmAlert({
-      title: t('deleteRepo.confirmAlert.title'),
-      message: t('deleteRepo.confirmAlert.message'),
+      title: t("deleteRepo.confirmAlert.title"),
+      message: t("deleteRepo.confirmAlert.message"),
       buttons: [
         {
-          label: t('deleteRepo.confirmAlert.submit'),
-          onClick: () => this.deleteRepo(),
+          label: t("deleteRepo.confirmAlert.submit"),
+          onClick: () => this.deleteRepo()
         },
         {
-          label: t('deleteRepo.confirmAlert.cancel'),
-          onClick: () => null,
-        },
-      ],
+          label: t("deleteRepo.confirmAlert.cancel"),
+          onClick: () => null
+        }
+      ]
     });
   };
 
@@ -74,12 +74,12 @@ class DeleteRepo extends React.Component<Props> {
     return (
       <>
         <hr />
-        <Subtitle subtitle={t('deleteRepo.subtitle')} />
+        <Subtitle subtitle={t("deleteRepo.subtitle")} />
         <ErrorNotification error={error} />
         <div className="columns">
           <div className="column">
             <DeleteButton
-              label={t('deleteRepo.button')}
+              label={t("deleteRepo.button")}
               action={action}
               loading={loading}
             />
@@ -96,7 +96,7 @@ const mapStateToProps = (state, ownProps) => {
   const error = getDeleteRepoFailure(state, namespace, name);
   return {
     loading,
-    error,
+    error
   };
 };
 
@@ -104,11 +104,11 @@ const mapDispatchToProps = dispatch => {
   return {
     deleteRepo: (repo: Repository, callback: () => void) => {
       dispatch(deleteRepo(repo, callback));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(withRouter(translate('repos')(DeleteRepo)));
+  mapDispatchToProps
+)(withRouter(translate("repos")(DeleteRepo)));

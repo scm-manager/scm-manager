@@ -1,23 +1,23 @@
-import { apiClient } from '@scm-manager/ui-components';
-import * as types from '../../modules/types';
-import { Action } from '@scm-manager/ui-types';
-import { isPending } from '../../modules/pending';
-import { getFailure } from '../../modules/failure';
-import { Dispatch } from 'redux';
-import { Config } from '@scm-manager/ui-types';
+import { apiClient } from "@scm-manager/ui-components";
+import * as types from "../../modules/types";
+import { Action } from "@scm-manager/ui-types";
+import { isPending } from "../../modules/pending";
+import { getFailure } from "../../modules/failure";
+import { Dispatch } from "redux";
+import { Config } from "@scm-manager/ui-types";
 
-export const FETCH_CONFIG = 'scm/config/FETCH_CONFIG';
+export const FETCH_CONFIG = "scm/config/FETCH_CONFIG";
 export const FETCH_CONFIG_PENDING = `${FETCH_CONFIG}_${types.PENDING_SUFFIX}`;
 export const FETCH_CONFIG_SUCCESS = `${FETCH_CONFIG}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_CONFIG_FAILURE = `${FETCH_CONFIG}_${types.FAILURE_SUFFIX}`;
 
-export const MODIFY_CONFIG = 'scm/config/MODIFY_CONFIG';
+export const MODIFY_CONFIG = "scm/config/MODIFY_CONFIG";
 export const MODIFY_CONFIG_PENDING = `${MODIFY_CONFIG}_${types.PENDING_SUFFIX}`;
 export const MODIFY_CONFIG_SUCCESS = `${MODIFY_CONFIG}_${types.SUCCESS_SUFFIX}`;
 export const MODIFY_CONFIG_FAILURE = `${MODIFY_CONFIG}_${types.FAILURE_SUFFIX}`;
 export const MODIFY_CONFIG_RESET = `${MODIFY_CONFIG}_${types.RESET_SUFFIX}`;
 
-const CONTENT_TYPE_CONFIG = 'application/vnd.scmm-config+json;v=2';
+const CONTENT_TYPE_CONFIG = "application/vnd.scmm-config+json;v=2";
 
 //fetch config
 export function fetchConfig(link: string) {
@@ -39,14 +39,14 @@ export function fetchConfig(link: string) {
 
 export function fetchConfigPending(): Action {
   return {
-    type: FETCH_CONFIG_PENDING,
+    type: FETCH_CONFIG_PENDING
   };
 }
 
 export function fetchConfigSuccess(config: Config): Action {
   return {
     type: FETCH_CONFIG_SUCCESS,
-    payload: config,
+    payload: config
   };
 }
 
@@ -54,8 +54,8 @@ export function fetchConfigFailure(error: Error): Action {
   return {
     type: FETCH_CONFIG_FAILURE,
     payload: {
-      error,
-    },
+      error
+    }
   };
 }
 
@@ -80,14 +80,14 @@ export function modifyConfig(config: Config, callback?: () => void) {
 export function modifyConfigPending(config: Config): Action {
   return {
     type: MODIFY_CONFIG_PENDING,
-    payload: config,
+    payload: config
   };
 }
 
 export function modifyConfigSuccess(config: Config): Action {
   return {
     type: MODIFY_CONFIG_SUCCESS,
-    payload: config,
+    payload: config
   };
 }
 
@@ -96,14 +96,14 @@ export function modifyConfigFailure(config: Config, error: Error): Action {
     type: MODIFY_CONFIG_FAILURE,
     payload: {
       error,
-      config,
-    },
+      config
+    }
   };
 }
 
 export function modifyConfigReset() {
   return {
-    type: MODIFY_CONFIG_RESET,
+    type: MODIFY_CONFIG_RESET
   };
 }
 
@@ -130,7 +130,7 @@ function reducer(state: any = {}, action: any = {}) {
       return {
         ...state,
         entries: config,
-        configUpdatePermission: action.payload._links.update ? true : false,
+        configUpdatePermission: action.payload._links.update ? true : false
       };
     default:
       return state;

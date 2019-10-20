@@ -1,4 +1,4 @@
-import { apiClient } from '@scm-manager/ui-components';
+import { apiClient } from "@scm-manager/ui-components";
 
 const waitForRestart = () => {
   const endTime = Number(new Date()) + 10000;
@@ -11,13 +11,13 @@ const waitForRestart = () => {
       setTimeout(executor, 1000, resolve, reject);
     } else {
       apiClient
-        .get('')
+        .get("")
         .then(resolve)
         .catch(() => {
           if (Number(new Date()) < endTime) {
             setTimeout(executor, 500, resolve, reject);
           } else {
-            reject(new Error('timeout reached'));
+            reject(new Error("timeout reached"));
           }
         });
     }

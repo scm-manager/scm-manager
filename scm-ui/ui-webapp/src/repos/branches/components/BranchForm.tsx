@@ -1,13 +1,13 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { Repository, Branch, BranchRequest } from '@scm-manager/ui-types';
+import React from "react";
+import { translate } from "react-i18next";
+import { Repository, Branch, BranchRequest } from "@scm-manager/ui-types";
 import {
   Select,
   InputField,
   SubmitButton,
-  validation as validator,
-} from '@scm-manager/ui-components';
-import { orderBranches } from '../util/orderBranches';
+  validation as validator
+} from "@scm-manager/ui-components";
+import { orderBranches } from "../util/orderBranches";
 
 type Props = {
   submitForm: (p: BranchRequest) => void;
@@ -31,7 +31,7 @@ class BranchForm extends React.Component<Props, State> {
 
     this.state = {
       nameValidationError: false,
-      name: props.transmittedName,
+      name: props.transmittedName
     };
   }
 
@@ -53,7 +53,7 @@ class BranchForm extends React.Component<Props, State> {
     if (this.isValid()) {
       this.props.submitForm({
         name: this.state.name,
-        parent: this.state.source,
+        parent: this.state.source
       });
     }
   };
@@ -64,7 +64,7 @@ class BranchForm extends React.Component<Props, State> {
     orderBranches(branches);
     const options = branches.map(branch => ({
       label: branch.name,
-      value: branch.name,
+      value: branch.name
     }));
 
     return (
@@ -74,7 +74,7 @@ class BranchForm extends React.Component<Props, State> {
             <div className="column">
               <Select
                 name="source"
-                label={t('branches.create.source')}
+                label={t("branches.create.source")}
                 options={options}
                 onChange={this.handleSourceChange}
                 loading={loading}
@@ -82,11 +82,11 @@ class BranchForm extends React.Component<Props, State> {
               />
               <InputField
                 name="name"
-                label={t('branches.create.name')}
+                label={t("branches.create.name")}
                 onChange={this.handleNameChange}
-                value={name ? name : ''}
+                value={name ? name : ""}
                 validationError={this.state.nameValidationError}
-                errorMessage={t('validation.branch.nameInvalid')}
+                errorMessage={t("validation.branch.nameInvalid")}
                 disabled={!!transmittedName || disabled}
               />
             </div>
@@ -96,7 +96,7 @@ class BranchForm extends React.Component<Props, State> {
               <SubmitButton
                 disabled={disabled || !this.isValid()}
                 loading={loading}
-                label={t('branches.create.submit')}
+                label={t("branches.create.submit")}
               />
             </div>
           </div>
@@ -108,7 +108,7 @@ class BranchForm extends React.Component<Props, State> {
   handleSourceChange = (source: string) => {
     this.setState({
       ...this.state,
-      source,
+      source
     });
   };
 
@@ -116,9 +116,9 @@ class BranchForm extends React.Component<Props, State> {
     this.setState({
       nameValidationError: !validator.isNameValid(name),
       ...this.state,
-      name,
+      name
     });
   };
 }
 
-export default translate('repos')(BranchForm);
+export default translate("repos")(BranchForm);

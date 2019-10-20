@@ -1,7 +1,7 @@
-import React from 'react';
-import { Repository } from '@scm-manager/ui-types';
-import { MailLink, DateFromNow } from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
+import React from "react";
+import { Repository } from "@scm-manager/ui-types";
+import { MailLink, DateFromNow } from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 
 type Props = {
   repository: Repository;
@@ -16,31 +16,31 @@ class RepositoryDetailTable extends React.Component<Props> {
       <table className="table">
         <tbody>
           <tr>
-            <th>{t('repository.name')}</th>
+            <th>{t("repository.name")}</th>
             <td>{repository.name}</td>
           </tr>
           <tr>
-            <th>{t('repository.type')}</th>
+            <th>{t("repository.type")}</th>
             <td>{repository.type}</td>
           </tr>
           <tr>
-            <th>{t('repository.contact')}</th>
+            <th>{t("repository.contact")}</th>
             <td>
               <MailLink address={repository.contact} />
             </td>
           </tr>
           <tr>
-            <th>{t('repository.description')}</th>
+            <th>{t("repository.description")}</th>
             <td>{repository.description}</td>
           </tr>
           <tr>
-            <th>{t('repository.creationDate')}</th>
+            <th>{t("repository.creationDate")}</th>
             <td>
               <DateFromNow date={repository.creationDate} />
             </td>
           </tr>
           <tr>
-            <th>{t('repository.lastModified')}</th>
+            <th>{t("repository.lastModified")}</th>
             <td>
               <DateFromNow date={repository.lastModified} />
             </td>
@@ -51,4 +51,4 @@ class RepositoryDetailTable extends React.Component<Props> {
   }
 }
 
-export default translate('repos')(RepositoryDetailTable);
+export default translate("repos")(RepositoryDetailTable);

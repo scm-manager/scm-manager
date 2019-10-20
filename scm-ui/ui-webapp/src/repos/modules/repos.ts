@@ -1,45 +1,45 @@
-import { apiClient } from '@scm-manager/ui-components';
-import * as types from '../../modules/types';
+import { apiClient } from "@scm-manager/ui-components";
+import * as types from "../../modules/types";
 import {
   Action,
   Repository,
-  RepositoryCollection,
-} from '@scm-manager/ui-types';
-import { isPending } from '../../modules/pending';
-import { getFailure } from '../../modules/failure';
+  RepositoryCollection
+} from "@scm-manager/ui-types";
+import { isPending } from "../../modules/pending";
+import { getFailure } from "../../modules/failure";
 
-export const FETCH_REPOS = 'scm/repos/FETCH_REPOS';
+export const FETCH_REPOS = "scm/repos/FETCH_REPOS";
 export const FETCH_REPOS_PENDING = `${FETCH_REPOS}_${types.PENDING_SUFFIX}`;
 export const FETCH_REPOS_SUCCESS = `${FETCH_REPOS}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_REPOS_FAILURE = `${FETCH_REPOS}_${types.FAILURE_SUFFIX}`;
 
-export const FETCH_REPO = 'scm/repos/FETCH_REPO';
+export const FETCH_REPO = "scm/repos/FETCH_REPO";
 export const FETCH_REPO_PENDING = `${FETCH_REPO}_${types.PENDING_SUFFIX}`;
 export const FETCH_REPO_SUCCESS = `${FETCH_REPO}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_REPO_FAILURE = `${FETCH_REPO}_${types.FAILURE_SUFFIX}`;
 
-export const CREATE_REPO = 'scm/repos/CREATE_REPO';
+export const CREATE_REPO = "scm/repos/CREATE_REPO";
 export const CREATE_REPO_PENDING = `${CREATE_REPO}_${types.PENDING_SUFFIX}`;
 export const CREATE_REPO_SUCCESS = `${CREATE_REPO}_${types.SUCCESS_SUFFIX}`;
 export const CREATE_REPO_FAILURE = `${CREATE_REPO}_${types.FAILURE_SUFFIX}`;
 export const CREATE_REPO_RESET = `${CREATE_REPO}_${types.RESET_SUFFIX}`;
 
-export const MODIFY_REPO = 'scm/repos/MODIFY_REPO';
+export const MODIFY_REPO = "scm/repos/MODIFY_REPO";
 export const MODIFY_REPO_PENDING = `${MODIFY_REPO}_${types.PENDING_SUFFIX}`;
 export const MODIFY_REPO_SUCCESS = `${MODIFY_REPO}_${types.SUCCESS_SUFFIX}`;
 export const MODIFY_REPO_FAILURE = `${MODIFY_REPO}_${types.FAILURE_SUFFIX}`;
 export const MODIFY_REPO_RESET = `${MODIFY_REPO}_${types.RESET_SUFFIX}`;
 
-export const DELETE_REPO = 'scm/repos/DELETE_REPO';
+export const DELETE_REPO = "scm/repos/DELETE_REPO";
 export const DELETE_REPO_PENDING = `${DELETE_REPO}_${types.PENDING_SUFFIX}`;
 export const DELETE_REPO_SUCCESS = `${DELETE_REPO}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_REPO_FAILURE = `${DELETE_REPO}_${types.FAILURE_SUFFIX}`;
 
-const CONTENT_TYPE = 'application/vnd.scmm-repository+json;v=2';
+const CONTENT_TYPE = "application/vnd.scmm-repository+json;v=2";
 
 // fetch repos
 
-const SORT_BY = 'sortBy=namespaceAndName';
+const SORT_BY = "sortBy=namespaceAndName";
 
 export function fetchRepos(link: string) {
   return fetchReposByLink(link);
@@ -48,7 +48,7 @@ export function fetchRepos(link: string) {
 export function fetchReposByPage(link: string, page: number, filter?: string) {
   if (filter) {
     return fetchReposByLink(
-      `${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`,
+      `${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`
     );
   }
   return fetchReposByLink(`${link}?page=${page - 1}`);
@@ -59,10 +59,10 @@ function appendSortByLink(url: string) {
     return url;
   }
   let urlWithSortBy = url;
-  if (url.includes('?')) {
-    urlWithSortBy += '&';
+  if (url.includes("?")) {
+    urlWithSortBy += "&";
   } else {
-    urlWithSortBy += '?';
+    urlWithSortBy += "?";
   }
   return urlWithSortBy + SORT_BY;
 }
@@ -85,21 +85,21 @@ export function fetchReposByLink(link: string) {
 
 export function fetchReposPending(): Action {
   return {
-    type: FETCH_REPOS_PENDING,
+    type: FETCH_REPOS_PENDING
   };
 }
 
 export function fetchReposSuccess(repositories: RepositoryCollection): Action {
   return {
     type: FETCH_REPOS_SUCCESS,
-    payload: repositories,
+    payload: repositories
   };
 }
 
 export function fetchReposFailure(err: Error): Action {
   return {
     type: FETCH_REPOS_FAILURE,
-    payload: err,
+    payload: err
   };
 }
 
@@ -109,7 +109,7 @@ export function fetchRepoByLink(repo: Repository) {
 }
 
 export function fetchRepoByName(link: string, namespace: string, name: string) {
-  const repoUrl = link.endsWith('/') ? link : link + '/';
+  const repoUrl = link.endsWith("/") ? link : link + "/";
   return fetchRepo(`${repoUrl}${namespace}/${name}`, namespace, name);
 }
 
@@ -133,9 +133,9 @@ export function fetchRepoPending(namespace: string, name: string): Action {
     type: FETCH_REPO_PENDING,
     payload: {
       namespace,
-      name,
+      name
     },
-    itemId: namespace + '/' + name,
+    itemId: namespace + "/" + name
   };
 }
 
@@ -143,23 +143,23 @@ export function fetchRepoSuccess(repository: Repository): Action {
   return {
     type: FETCH_REPO_SUCCESS,
     payload: repository,
-    itemId: createIdentifier(repository),
+    itemId: createIdentifier(repository)
   };
 }
 
 export function fetchRepoFailure(
   namespace: string,
   name: string,
-  error: Error,
+  error: Error
 ): Action {
   return {
     type: FETCH_REPO_FAILURE,
     payload: {
       namespace,
       name,
-      error,
+      error
     },
-    itemId: namespace + '/' + name,
+    itemId: namespace + "/" + name
   };
 }
 
@@ -168,14 +168,14 @@ export function fetchRepoFailure(
 export function createRepo(
   link: string,
   repository: Repository,
-  callback?: (repo: Repository) => void,
+  callback?: (repo: Repository) => void
 ) {
   return function(dispatch: any) {
     dispatch(createRepoPending());
     return apiClient
       .post(link, repository, CONTENT_TYPE)
       .then(response => {
-        const location = response.headers.get('Location');
+        const location = response.headers.get("Location");
         dispatch(createRepoSuccess());
         return apiClient.get(location);
       })
@@ -193,26 +193,26 @@ export function createRepo(
 
 export function createRepoPending(): Action {
   return {
-    type: CREATE_REPO_PENDING,
+    type: CREATE_REPO_PENDING
   };
 }
 
 export function createRepoSuccess(): Action {
   return {
-    type: CREATE_REPO_SUCCESS,
+    type: CREATE_REPO_SUCCESS
   };
 }
 
 export function createRepoFailure(err: Error): Action {
   return {
     type: CREATE_REPO_FAILURE,
-    payload: err,
+    payload: err
   };
 }
 
 export function createRepoReset(): Action {
   return {
-    type: CREATE_REPO_RESET,
+    type: CREATE_REPO_RESET
   };
 }
 
@@ -243,7 +243,7 @@ export function modifyRepoPending(repository: Repository): Action {
   return {
     type: MODIFY_REPO_PENDING,
     payload: repository,
-    itemId: createIdentifier(repository),
+    itemId: createIdentifier(repository)
   };
 }
 
@@ -251,21 +251,21 @@ export function modifyRepoSuccess(repository: Repository): Action {
   return {
     type: MODIFY_REPO_SUCCESS,
     payload: repository,
-    itemId: createIdentifier(repository),
+    itemId: createIdentifier(repository)
   };
 }
 
 export function modifyRepoFailure(
   repository: Repository,
-  error: Error,
+  error: Error
 ): Action {
   return {
     type: MODIFY_REPO_FAILURE,
     payload: {
       error,
-      repository,
+      repository
     },
-    itemId: createIdentifier(repository),
+    itemId: createIdentifier(repository)
   };
 }
 
@@ -273,9 +273,9 @@ export function modifyRepoReset(repository: Repository): Action {
   return {
     type: MODIFY_REPO_RESET,
     payload: {
-      repository,
+      repository
     },
-    itemId: createIdentifier(repository),
+    itemId: createIdentifier(repository)
   };
 }
 
@@ -302,7 +302,7 @@ export function deleteRepoPending(repository: Repository): Action {
   return {
     type: DELETE_REPO_PENDING,
     payload: repository,
-    itemId: createIdentifier(repository),
+    itemId: createIdentifier(repository)
   };
 }
 
@@ -310,32 +310,32 @@ export function deleteRepoSuccess(repository: Repository): Action {
   return {
     type: DELETE_REPO_SUCCESS,
     payload: repository,
-    itemId: createIdentifier(repository),
+    itemId: createIdentifier(repository)
   };
 }
 
 export function deleteRepoFailure(
   repository: Repository,
-  error: Error,
+  error: Error
 ): Action {
   return {
     type: DELETE_REPO_FAILURE,
     payload: {
       error,
-      repository,
+      repository
     },
-    itemId: createIdentifier(repository),
+    itemId: createIdentifier(repository)
   };
 }
 
 // reducer
 
 function createIdentifier(repository: Repository) {
-  return repository.namespace + '/' + repository.name;
+  return repository.namespace + "/" + repository.name;
 }
 
 function normalizeByNamespaceAndName(
-  repositoryCollection: RepositoryCollection,
+  repositoryCollection: RepositoryCollection
 ) {
   const names = [];
   const byNames = {};
@@ -348,10 +348,10 @@ function normalizeByNamespaceAndName(
     list: {
       ...repositoryCollection,
       _embedded: {
-        repositories: names,
-      },
+        repositories: names
+      }
     },
-    byNames: byNames,
+    byNames: byNames
   };
 }
 
@@ -361,16 +361,16 @@ const reducerByNames = (state: object, repository: Repository) => {
     ...state,
     byNames: {
       ...state.byNames,
-      [identifier]: repository,
-    },
+      [identifier]: repository
+    }
   };
 };
 
 export default function reducer(
   state: object = {},
   action: Action = {
-    type: 'UNKNOWN',
-  },
+    type: "UNKNOWN"
+  }
 ): object {
   if (!action.payload) {
     return state;
@@ -397,8 +397,8 @@ export function getRepositoryCollection(state: object) {
     return {
       ...state.repos.list,
       _embedded: {
-        repositories,
-      },
+        repositories
+      }
     };
   }
 }
@@ -413,24 +413,24 @@ export function getFetchReposFailure(state: object) {
 
 export function getRepository(state: object, namespace: string, name: string) {
   if (state.repos && state.repos.byNames) {
-    return state.repos.byNames[namespace + '/' + name];
+    return state.repos.byNames[namespace + "/" + name];
   }
 }
 
 export function isFetchRepoPending(
   state: object,
   namespace: string,
-  name: string,
+  name: string
 ) {
-  return isPending(state, FETCH_REPO, namespace + '/' + name);
+  return isPending(state, FETCH_REPO, namespace + "/" + name);
 }
 
 export function getFetchRepoFailure(
   state: object,
   namespace: string,
-  name: string,
+  name: string
 ) {
-  return getFailure(state, FETCH_REPO, namespace + '/' + name);
+  return getFailure(state, FETCH_REPO, namespace + "/" + name);
 }
 
 export function isAbleToCreateRepos(state: object) {
@@ -453,39 +453,39 @@ export function getCreateRepoFailure(state: object) {
 export function isModifyRepoPending(
   state: object,
   namespace: string,
-  name: string,
+  name: string
 ) {
-  return isPending(state, MODIFY_REPO, namespace + '/' + name);
+  return isPending(state, MODIFY_REPO, namespace + "/" + name);
 }
 
 export function getModifyRepoFailure(
   state: object,
   namespace: string,
-  name: string,
+  name: string
 ) {
-  return getFailure(state, MODIFY_REPO, namespace + '/' + name);
+  return getFailure(state, MODIFY_REPO, namespace + "/" + name);
 }
 
 export function isDeleteRepoPending(
   state: object,
   namespace: string,
-  name: string,
+  name: string
 ) {
-  return isPending(state, DELETE_REPO, namespace + '/' + name);
+  return isPending(state, DELETE_REPO, namespace + "/" + name);
 }
 
 export function getDeleteRepoFailure(
   state: object,
   namespace: string,
-  name: string,
+  name: string
 ) {
-  return getFailure(state, DELETE_REPO, namespace + '/' + name);
+  return getFailure(state, DELETE_REPO, namespace + "/" + name);
 }
 
 export function getPermissionsLink(
   state: object,
   namespace: string,
-  name: string,
+  name: string
 ) {
   const repo = getRepository(state, namespace, name);
   return repo && repo._links ? repo._links.permissions.href : undefined;

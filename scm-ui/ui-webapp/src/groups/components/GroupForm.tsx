@@ -1,5 +1,5 @@
-import React from 'react';
-import { translate } from 'react-i18next';
+import React from "react";
+import { translate } from "react-i18next";
 import {
   Subtitle,
   AutocompleteAddEntryToTableField,
@@ -7,11 +7,11 @@ import {
   InputField,
   SubmitButton,
   Textarea,
-  Checkbox,
-} from '@scm-manager/ui-components';
-import { Group, SelectValue } from '@scm-manager/ui-types';
+  Checkbox
+} from "@scm-manager/ui-components";
+import { Group, SelectValue } from "@scm-manager/ui-types";
 
-import * as validator from './groupValidation';
+import * as validator from "./groupValidation";
 
 type Props = {
   t: (p: string) => string;
@@ -31,17 +31,17 @@ class GroupForm extends React.Component<Props, State> {
     super(props);
     this.state = {
       group: {
-        name: '',
-        description: '',
+        name: "",
+        description: "",
         _embedded: {
-          members: [],
+          members: []
         },
         _links: {},
         members: [],
-        type: '',
-        external: false,
+        type: "",
+        external: false
       },
-      nameValidationError: false,
+      nameValidationError: false
     };
   }
 
@@ -51,8 +51,8 @@ class GroupForm extends React.Component<Props, State> {
       this.setState({
         ...this.state,
         group: {
-          ...group,
-        },
+          ...group
+        }
       });
     }
   }
@@ -92,12 +92,12 @@ class GroupForm extends React.Component<Props, State> {
         <AutocompleteAddEntryToTableField
           addEntry={this.addMember}
           disabled={false}
-          buttonLabel={t('add-member-button.label')}
-          errorMessage={t('add-member-textfield.error')}
+          buttonLabel={t("add-member-button.label")}
+          errorMessage={t("add-member-textfield.error")}
           loadSuggestions={loadUserSuggestions}
-          placeholder={t('add-member-autocomplete.placeholder')}
-          loadingMessage={t('add-member-autocomplete.loading')}
-          noOptionsMessage={t('add-member-autocomplete.no-options')}
+          placeholder={t("add-member-autocomplete.placeholder")}
+          loadingMessage={t("add-member-autocomplete.loading")}
+          noOptionsMessage={t("add-member-autocomplete.no-options")}
         />
       </>
     );
@@ -110,9 +110,9 @@ class GroupForm extends React.Component<Props, State> {
     }
     return (
       <Checkbox
-        label={t('group.external')}
+        label={t("group.external")}
         checked={group.external}
-        helpText={t('groupForm.help.externalHelpText')}
+        helpText={t("groupForm.help.externalHelpText")}
         onChange={this.handleExternalChange}
       />
     );
@@ -129,18 +129,18 @@ class GroupForm extends React.Component<Props, State> {
       // create new group
       nameField = (
         <InputField
-          label={t('group.name')}
-          errorMessage={t('groupForm.nameError')}
+          label={t("group.name")}
+          errorMessage={t("groupForm.nameError")}
           onChange={this.handleGroupNameChange}
           value={group.name}
           validationError={this.state.nameValidationError}
-          helpText={t('groupForm.help.nameHelpText')}
+          helpText={t("groupForm.help.nameHelpText")}
         />
       );
     } else if (group.external) {
-      subtitle = <Subtitle subtitle={t('groupForm.externalSubtitle')} />;
+      subtitle = <Subtitle subtitle={t("groupForm.externalSubtitle")} />;
     } else {
-      subtitle = <Subtitle subtitle={t('groupForm.subtitle')} />;
+      subtitle = <Subtitle subtitle={t("groupForm.subtitle")} />;
     }
 
     return (
@@ -149,18 +149,18 @@ class GroupForm extends React.Component<Props, State> {
         <form onSubmit={this.submit}>
           {nameField}
           <Textarea
-            label={t('group.description')}
-            errorMessage={t('groupForm.descriptionError')}
+            label={t("group.description")}
+            errorMessage={t("groupForm.descriptionError")}
             onChange={this.handleDescriptionChange}
             value={group.description}
             validationError={false}
-            helpText={t('groupForm.help.descriptionHelpText')}
+            helpText={t("groupForm.help.descriptionHelpText")}
           />
           {this.renderExternalField(group)}
           {this.renderMemberfields(group)}
           <SubmitButton
             disabled={!this.isValid()}
-            label={t('groupForm.submit')}
+            label={t("groupForm.submit")}
             loading={loading}
           />
         </form>
@@ -173,8 +173,8 @@ class GroupForm extends React.Component<Props, State> {
       ...this.state,
       group: {
         ...this.state.group,
-        members: membernames,
-      },
+        members: membernames
+      }
     });
   };
 
@@ -187,8 +187,8 @@ class GroupForm extends React.Component<Props, State> {
       ...this.state,
       group: {
         ...this.state.group,
-        members: [...this.state.group.members, value.value.id],
-      },
+        members: [...this.state.group.members, value.value.id]
+      }
     });
   };
 
@@ -201,8 +201,8 @@ class GroupForm extends React.Component<Props, State> {
       nameValidationError: !validator.isNameValid(name),
       group: {
         ...this.state.group,
-        name,
-      },
+        name
+      }
     });
   };
 
@@ -210,8 +210,8 @@ class GroupForm extends React.Component<Props, State> {
     this.setState({
       group: {
         ...this.state.group,
-        description,
-      },
+        description
+      }
     });
   };
 
@@ -219,10 +219,10 @@ class GroupForm extends React.Component<Props, State> {
     this.setState({
       group: {
         ...this.state.group,
-        external,
-      },
+        external
+      }
     });
   };
 }
 
-export default translate('groups')(GroupForm);
+export default translate("groups")(GroupForm);

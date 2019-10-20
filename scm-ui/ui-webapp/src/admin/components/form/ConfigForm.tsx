@@ -1,11 +1,11 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { SubmitButton, Notification } from '@scm-manager/ui-components';
-import { NamespaceStrategies, Config } from '@scm-manager/ui-types';
-import ProxySettings from './ProxySettings';
-import GeneralSettings from './GeneralSettings';
-import BaseUrlSettings from './BaseUrlSettings';
-import LoginAttempt from './LoginAttempt';
+import React from "react";
+import { translate } from "react-i18next";
+import { SubmitButton, Notification } from "@scm-manager/ui-components";
+import { NamespaceStrategies, Config } from "@scm-manager/ui-types";
+import ProxySettings from "./ProxySettings";
+import GeneralSettings from "./GeneralSettings";
+import BaseUrlSettings from "./BaseUrlSettings";
+import LoginAttempt from "./LoginAttempt";
 
 type Props = {
   submitForm: (p: Config) => void;
@@ -36,31 +36,31 @@ class ConfigForm extends React.Component<Props, State> {
       config: {
         proxyPassword: null,
         proxyPort: 0,
-        proxyServer: '',
+        proxyServer: "",
         proxyUser: null,
         enableProxy: false,
-        realmDescription: '',
+        realmDescription: "",
         disableGroupingGrid: false,
-        dateFormat: '',
+        dateFormat: "",
         anonymousAccessEnabled: false,
-        baseUrl: '',
+        baseUrl: "",
         forceBaseUrl: false,
         loginAttemptLimit: 0,
         proxyExcludes: [],
         skipFailedAuthenticators: false,
-        pluginUrl: '',
+        pluginUrl: "",
         loginAttemptLimitTimeout: 0,
         enabledXsrfProtection: true,
-        namespaceStrategy: '',
-        loginInfoUrl: '',
-        _links: {},
+        namespaceStrategy: "",
+        loginInfoUrl: "",
+        _links: {}
       },
       showNotification: false,
       error: {
         loginAttemptLimitTimeout: false,
-        loginAttemptLimit: false,
+        loginAttemptLimit: false
       },
-      changed: false,
+      changed: false
     };
   }
 
@@ -70,14 +70,14 @@ class ConfigForm extends React.Component<Props, State> {
       this.setState({
         ...this.state,
         config: {
-          ...config,
-        },
+          ...config
+        }
       });
     }
     if (!configUpdatePermission) {
       this.setState({
         ...this.state,
-        showNotification: true,
+        showNotification: true
       });
     }
   }
@@ -85,7 +85,7 @@ class ConfigForm extends React.Component<Props, State> {
   submit = (event: Event) => {
     event.preventDefault();
     this.setState({
-      changed: false,
+      changed: false
     });
     this.props.submitForm(this.state.config);
   };
@@ -96,7 +96,7 @@ class ConfigForm extends React.Component<Props, State> {
       t,
       namespaceStrategies,
       configReadPermission,
-      configUpdatePermission,
+      configUpdatePermission
     } = this.props;
     const config = this.state.config;
 
@@ -105,8 +105,8 @@ class ConfigForm extends React.Component<Props, State> {
     if (!configReadPermission) {
       return (
         <Notification
-          type={'danger'}
-          children={t('config.form.no-read-permission-notification')}
+          type={"danger"}
+          children={t("config.form.no-read-permission-notification")}
         />
       );
     }
@@ -114,8 +114,8 @@ class ConfigForm extends React.Component<Props, State> {
     if (this.state.showNotification) {
       noPermissionNotification = (
         <Notification
-          type={'info'}
-          children={t('config.form.no-write-permission-notification')}
+          type={"info"}
+          children={t("config.form.no-write-permission-notification")}
           onClose={() => this.onClose()}
         />
       );
@@ -160,10 +160,10 @@ class ConfigForm extends React.Component<Props, State> {
         />
         <hr />
         <ProxySettings
-          proxyPassword={config.proxyPassword ? config.proxyPassword : ''}
+          proxyPassword={config.proxyPassword ? config.proxyPassword : ""}
           proxyPort={config.proxyPort}
-          proxyServer={config.proxyServer ? config.proxyServer : ''}
-          proxyUser={config.proxyUser ? config.proxyUser : ''}
+          proxyServer={config.proxyServer ? config.proxyServer : ""}
+          proxyUser={config.proxyUser ? config.proxyUser : ""}
           enableProxy={config.enableProxy}
           proxyExcludes={config.proxyExcludes}
           onChange={(isValid, changedValue, name) =>
@@ -174,7 +174,7 @@ class ConfigForm extends React.Component<Props, State> {
         <hr />
         <SubmitButton
           loading={loading}
-          label={t('config.form.submit')}
+          label={t("config.form.submit")}
           disabled={
             !configUpdatePermission || this.hasError() || !this.state.changed
           }
@@ -188,13 +188,13 @@ class ConfigForm extends React.Component<Props, State> {
       ...this.state,
       config: {
         ...this.state.config,
-        [name]: changedValue,
+        [name]: changedValue
       },
       error: {
         ...this.state.error,
-        [name]: !isValid,
+        [name]: !isValid
       },
-      changed: true,
+      changed: true
     });
   };
 
@@ -208,9 +208,9 @@ class ConfigForm extends React.Component<Props, State> {
   onClose = () => {
     this.setState({
       ...this.state,
-      showNotification: false,
+      showNotification: false
     });
   };
 }
 
-export default translate('config')(ConfigForm);
+export default translate("config")(ConfigForm);

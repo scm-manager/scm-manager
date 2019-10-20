@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import SourcecodeViewer from '../components/content/SourcecodeViewer';
-import ImageViewer from '../components/content/ImageViewer';
-import DownloadViewer from '../components/content/DownloadViewer';
-import { ExtensionPoint } from '@scm-manager/ui-extensions';
-import { getContentType } from './contentType';
-import { File, Repository } from '@scm-manager/ui-types';
-import { ErrorNotification, Loading } from '@scm-manager/ui-components';
+import SourcecodeViewer from "../components/content/SourcecodeViewer";
+import ImageViewer from "../components/content/ImageViewer";
+import DownloadViewer from "../components/content/DownloadViewer";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { getContentType } from "./contentType";
+import { File, Repository } from "@scm-manager/ui-types";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 
 type Props = {
   repository: Repository;
@@ -27,9 +27,9 @@ class SourcesView extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      contentType: '',
-      language: '',
-      loaded: false,
+      contentType: "",
+      language: "",
+      loaded: false
     };
   }
 
@@ -41,14 +41,14 @@ class SourcesView extends React.Component<Props, State> {
           this.setState({
             ...this.state,
             error: result.error,
-            loaded: true,
+            loaded: true
           });
         } else {
           this.setState({
             ...this.state,
             contentType: result.type,
             language: result.language,
-            loaded: true,
+            loaded: true
           });
         }
       })
@@ -58,11 +58,11 @@ class SourcesView extends React.Component<Props, State> {
   showSources() {
     const { file, revision } = this.props;
     const { contentType, language } = this.state;
-    if (contentType.startsWith('image/')) {
+    if (contentType.startsWith("image/")) {
       return <ImageViewer file={file} />;
     } else if (language) {
       return <SourcecodeViewer file={file} language={language} />;
-    } else if (contentType.startsWith('text/')) {
+    } else if (contentType.startsWith("text/")) {
       return <SourcecodeViewer file={file} language="none" />;
     } else {
       return (
@@ -71,7 +71,7 @@ class SourcesView extends React.Component<Props, State> {
           props={{
             file,
             contentType,
-            revision,
+            revision
           }}
         >
           <DownloadViewer file={file} />

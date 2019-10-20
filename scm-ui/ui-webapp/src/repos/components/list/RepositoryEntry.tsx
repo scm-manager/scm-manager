@@ -1,8 +1,8 @@
-import React from 'react';
-import { Repository } from '@scm-manager/ui-types';
-import { CardColumn, DateFromNow } from '@scm-manager/ui-components';
-import RepositoryEntryLink from './RepositoryEntryLink';
-import RepositoryAvatar from './RepositoryAvatar';
+import React from "react";
+import { Repository } from "@scm-manager/ui-types";
+import { CardColumn, DateFromNow } from "@scm-manager/ui-components";
+import RepositoryEntryLink from "./RepositoryEntryLink";
+import RepositoryAvatar from "./RepositoryAvatar";
 
 type Props = {
   repository: Repository;
@@ -14,11 +14,11 @@ class RepositoryEntry extends React.Component<Props> {
   };
 
   renderBranchesLink = (repository: Repository, repositoryLink: string) => {
-    if (repository._links['branches']) {
+    if (repository._links["branches"]) {
       return (
         <RepositoryEntryLink
           icon="code-branch"
-          to={repositoryLink + '/branches'}
+          to={repositoryLink + "/branches"}
         />
       );
     }
@@ -26,11 +26,11 @@ class RepositoryEntry extends React.Component<Props> {
   };
 
   renderChangesetsLink = (repository: Repository, repositoryLink: string) => {
-    if (repository._links['changesets']) {
+    if (repository._links["changesets"]) {
       return (
         <RepositoryEntryLink
           icon="exchange-alt"
-          to={repositoryLink + '/changesets'}
+          to={repositoryLink + "/changesets"}
         />
       );
     }
@@ -38,20 +38,20 @@ class RepositoryEntry extends React.Component<Props> {
   };
 
   renderSourcesLink = (repository: Repository, repositoryLink: string) => {
-    if (repository._links['sources']) {
+    if (repository._links["sources"]) {
       return (
-        <RepositoryEntryLink icon="code" to={repositoryLink + '/sources'} />
+        <RepositoryEntryLink icon="code" to={repositoryLink + "/sources"} />
       );
     }
     return null;
   };
 
   renderModifyLink = (repository: Repository, repositoryLink: string) => {
-    if (repository._links['update']) {
+    if (repository._links["update"]) {
       return (
         <RepositoryEntryLink
           icon="cog"
-          to={repositoryLink + '/settings/general'}
+          to={repositoryLink + "/settings/general"}
         />
       );
     }

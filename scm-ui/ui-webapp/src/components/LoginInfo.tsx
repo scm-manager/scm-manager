@@ -1,8 +1,8 @@
-import React from 'react';
-import InfoBox from './InfoBox';
-import { InfoItem } from './InfoItem';
-import LoginForm from './LoginForm';
-import { Loading } from '@scm-manager/ui-components';
+import React from "react";
+import InfoBox from "./InfoBox";
+import { InfoItem } from "./InfoItem";
+import LoginForm from "./LoginForm";
+import { Loading } from "@scm-manager/ui-components";
 
 type Props = {
   loginInfoLink?: string;
@@ -25,7 +25,7 @@ class LoginInfo extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      loading: !!props.loginInfoLink,
+      loading: !!props.loginInfoLink
     };
   }
 
@@ -35,7 +35,7 @@ class LoginInfo extends React.Component<Props, State> {
       .then(info => {
         this.setState({
           info,
-          loading: false,
+          loading: false
         });
       });
   };
@@ -43,7 +43,7 @@ class LoginInfo extends React.Component<Props, State> {
   timeout = (ms: number, promise: Promise<any>) => {
     return new Promise<LoginInfoResponse>((resolve, reject) => {
       setTimeout(() => {
-        reject(new Error('timeout during fetch of login info'));
+        reject(new Error("timeout during fetch of login info"));
       }, ms);
       promise.then(resolve, reject);
     });
@@ -56,7 +56,7 @@ class LoginInfo extends React.Component<Props, State> {
     }
     this.timeout(1000, this.fetchLoginInfo(loginInfoLink)).catch(() => {
       this.setState({
-        loading: false,
+        loading: false
       });
     });
   }

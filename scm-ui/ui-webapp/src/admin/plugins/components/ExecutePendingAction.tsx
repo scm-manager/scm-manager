@@ -1,8 +1,8 @@
-import React from 'react';
-import { Button } from '@scm-manager/ui-components';
-import { PendingPlugins } from '@scm-manager/ui-types';
-import { translate } from 'react-i18next';
-import ExecutePendingModal from './ExecutePendingModal';
+import React from "react";
+import { Button } from "@scm-manager/ui-components";
+import { PendingPlugins } from "@scm-manager/ui-types";
+import { translate } from "react-i18next";
+import ExecutePendingModal from "./ExecutePendingModal";
 
 type Props = {
   pendingPlugins: PendingPlugins;
@@ -19,19 +19,19 @@ class ExecutePendingAction extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      showModal: false,
+      showModal: false
     };
   }
 
   openModal = () => {
     this.setState({
-      showModal: true,
+      showModal: true
     });
   };
 
   closeModal = () => {
     this.setState({
-      showModal: false,
+      showModal: false
     });
   };
 
@@ -56,7 +56,7 @@ class ExecutePendingAction extends React.Component<Props, State> {
         {this.renderModal()}
         <Button
           color="primary"
-          label={t('plugins.executePending')}
+          label={t("plugins.executePending")}
           action={this.openModal}
         />
       </>
@@ -64,4 +64,4 @@ class ExecutePendingAction extends React.Component<Props, State> {
   }
 }
 
-export default translate('admin')(ExecutePendingAction);
+export default translate("admin")(ExecutePendingAction);

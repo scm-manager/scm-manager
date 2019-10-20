@@ -1,7 +1,7 @@
-import React from 'react';
-import { Repository } from '@scm-manager/ui-types';
-import RepositoryDetailTable from './RepositoryDetailTable';
-import { ExtensionPoint } from '@scm-manager/ui-extensions';
+import React from "react";
+import { Repository } from "@scm-manager/ui-types";
+import RepositoryDetailTable from "./RepositoryDetailTable";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   repository: Repository;
@@ -19,7 +19,7 @@ class RepositoryDetails extends React.Component<Props> {
             name="repos.repository-details.information"
             renderAll={true}
             props={{
-              repository,
+              repository
             }}
           />
         </div>

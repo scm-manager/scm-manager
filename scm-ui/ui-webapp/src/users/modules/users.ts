@@ -1,38 +1,38 @@
-import { apiClient } from '@scm-manager/ui-components';
-import { isPending } from '../../modules/pending';
-import { getFailure } from '../../modules/failure';
-import * as types from '../../modules/types';
-import { combineReducers, Dispatch } from 'redux';
-import { User, Action, PagedCollection } from '@scm-manager/ui-types';
+import { apiClient } from "@scm-manager/ui-components";
+import { isPending } from "../../modules/pending";
+import { getFailure } from "../../modules/failure";
+import * as types from "../../modules/types";
+import { combineReducers, Dispatch } from "redux";
+import { User, Action, PagedCollection } from "@scm-manager/ui-types";
 
-export const FETCH_USERS = 'scm/users/FETCH_USERS';
+export const FETCH_USERS = "scm/users/FETCH_USERS";
 export const FETCH_USERS_PENDING = `${FETCH_USERS}_${types.PENDING_SUFFIX}`;
 export const FETCH_USERS_SUCCESS = `${FETCH_USERS}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_USERS_FAILURE = `${FETCH_USERS}_${types.FAILURE_SUFFIX}`;
 
-export const FETCH_USER = 'scm/users/FETCH_USER';
+export const FETCH_USER = "scm/users/FETCH_USER";
 export const FETCH_USER_PENDING = `${FETCH_USER}_${types.PENDING_SUFFIX}`;
 export const FETCH_USER_SUCCESS = `${FETCH_USER}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_USER_FAILURE = `${FETCH_USER}_${types.FAILURE_SUFFIX}`;
 
-export const CREATE_USER = 'scm/users/CREATE_USER';
+export const CREATE_USER = "scm/users/CREATE_USER";
 export const CREATE_USER_PENDING = `${CREATE_USER}_${types.PENDING_SUFFIX}`;
 export const CREATE_USER_SUCCESS = `${CREATE_USER}_${types.SUCCESS_SUFFIX}`;
 export const CREATE_USER_FAILURE = `${CREATE_USER}_${types.FAILURE_SUFFIX}`;
 export const CREATE_USER_RESET = `${CREATE_USER}_${types.RESET_SUFFIX}`;
 
-export const MODIFY_USER = 'scm/users/MODIFY_USER';
+export const MODIFY_USER = "scm/users/MODIFY_USER";
 export const MODIFY_USER_PENDING = `${MODIFY_USER}_${types.PENDING_SUFFIX}`;
 export const MODIFY_USER_SUCCESS = `${MODIFY_USER}_${types.SUCCESS_SUFFIX}`;
 export const MODIFY_USER_FAILURE = `${MODIFY_USER}_${types.FAILURE_SUFFIX}`;
 export const MODIFY_USER_RESET = `${MODIFY_USER}_${types.RESET_SUFFIX}`;
 
-export const DELETE_USER = 'scm/users/DELETE_USER';
+export const DELETE_USER = "scm/users/DELETE_USER";
 export const DELETE_USER_PENDING = `${DELETE_USER}_${types.PENDING_SUFFIX}`;
 export const DELETE_USER_SUCCESS = `${DELETE_USER}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_USER_FAILURE = `${DELETE_USER}_${types.FAILURE_SUFFIX}`;
 
-const CONTENT_TYPE_USER = 'application/vnd.scmm-user+json;v=2';
+const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
 
 // TODO i18n for error messages
 
@@ -46,7 +46,7 @@ export function fetchUsersByPage(link: string, page: number, filter?: string) {
   // backend start counting by 0
   if (filter) {
     return fetchUsersByLink(
-      `${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`,
+      `${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`
     );
   }
   return fetchUsersByLink(`${link}?page=${page - 1}`);
@@ -69,14 +69,14 @@ export function fetchUsersByLink(link: string) {
 
 export function fetchUsersPending(): Action {
   return {
-    type: FETCH_USERS_PENDING,
+    type: FETCH_USERS_PENDING
   };
 }
 
 export function fetchUsersSuccess(users: any): Action {
   return {
     type: FETCH_USERS_SUCCESS,
-    payload: users,
+    payload: users
   };
 }
 
@@ -85,14 +85,14 @@ export function fetchUsersFailure(url: string, error: Error): Action {
     type: FETCH_USERS_FAILURE,
     payload: {
       error,
-      url,
-    },
+      url
+    }
   };
 }
 
 //fetch user
 export function fetchUserByName(link: string, name: string) {
-  const userUrl = link.endsWith('/') ? link + name : link + '/' + name;
+  const userUrl = link.endsWith("/") ? link + name : link + "/" + name;
   return fetchUser(userUrl, name);
 }
 
@@ -121,7 +121,7 @@ export function fetchUserPending(name: string): Action {
   return {
     type: FETCH_USER_PENDING,
     payload: name,
-    itemId: name,
+    itemId: name
   };
 }
 
@@ -129,7 +129,7 @@ export function fetchUserSuccess(user: any): Action {
   return {
     type: FETCH_USER_SUCCESS,
     payload: user,
-    itemId: user.name,
+    itemId: user.name
   };
 }
 
@@ -138,9 +138,9 @@ export function fetchUserFailure(name: string, error: Error): Action {
     type: FETCH_USER_FAILURE,
     payload: {
       name,
-      error,
+      error
     },
-    itemId: name,
+    itemId: name
   };
 }
 
@@ -164,26 +164,26 @@ export function createUser(link: string, user: User, callback?: () => void) {
 export function createUserPending(user: User): Action {
   return {
     type: CREATE_USER_PENDING,
-    user,
+    user
   };
 }
 
 export function createUserSuccess(): Action {
   return {
-    type: CREATE_USER_SUCCESS,
+    type: CREATE_USER_SUCCESS
   };
 }
 
 export function createUserFailure(error: Error): Action {
   return {
     type: CREATE_USER_FAILURE,
-    payload: error,
+    payload: error
   };
 }
 
 export function createUserReset() {
   return {
-    type: CREATE_USER_RESET,
+    type: CREATE_USER_RESET
   };
 }
 
@@ -213,7 +213,7 @@ export function modifyUserPending(user: User): Action {
   return {
     type: MODIFY_USER_PENDING,
     payload: user,
-    itemId: user.name,
+    itemId: user.name
   };
 }
 
@@ -221,7 +221,7 @@ export function modifyUserSuccess(user: User): Action {
   return {
     type: MODIFY_USER_SUCCESS,
     payload: user,
-    itemId: user.name,
+    itemId: user.name
   };
 }
 
@@ -230,16 +230,16 @@ export function modifyUserFailure(user: User, error: Error): Action {
     type: MODIFY_USER_FAILURE,
     payload: {
       error,
-      user,
+      user
     },
-    itemId: user.name,
+    itemId: user.name
   };
 }
 
 export function modifyUserReset(user: User): Action {
   return {
     type: MODIFY_USER_RESET,
-    itemId: user.name,
+    itemId: user.name
   };
 }
 
@@ -266,7 +266,7 @@ export function deleteUserPending(user: User): Action {
   return {
     type: DELETE_USER_PENDING,
     payload: user,
-    itemId: user.name,
+    itemId: user.name
   };
 }
 
@@ -274,7 +274,7 @@ export function deleteUserSuccess(user: User): Action {
   return {
     type: DELETE_USER_SUCCESS,
     payload: user,
-    itemId: user.name,
+    itemId: user.name
   };
 }
 
@@ -283,16 +283,16 @@ export function deleteUserFailure(user: User, error: Error): Action {
     type: DELETE_USER_FAILURE,
     payload: {
       error,
-      user,
+      user
     },
-    itemId: user.name,
+    itemId: user.name
   };
 }
 
 function extractUsersByNames(
   users: User[],
   userNames: string[],
-  oldUsersByNames: object,
+  oldUsersByNames: object
 ) {
   const usersByNames = {};
 
@@ -325,7 +325,7 @@ function deleteUserInEntries(users: [], userName: string) {
 const reducerByName = (state: any, username: string, newUserState: any) => {
   return {
     ...state,
-    [username]: newUserState,
+    [username]: newUserState
   };
 };
 
@@ -341,19 +341,19 @@ function listReducer(state: any = {}, action: any = {}) {
           userCreatePermission: !!action.payload._links.create,
           page: action.payload.page,
           pageTotal: action.payload.pageTotal,
-          _links: action.payload._links,
-        },
+          _links: action.payload._links
+        }
       };
 
     // Delete single user actions
     case DELETE_USER_SUCCESS:
       const newUserEntries = deleteUserInEntries(
         state.entries,
-        action.payload.name,
+        action.payload.name
       );
       return {
         ...state,
-        entries: newUserEntries,
+        entries: newUserEntries
       };
     default:
       return state;
@@ -368,7 +368,7 @@ function byNamesReducer(state: any = {}, action: any = {}) {
       const userNames = users.map(user => user.name);
       const byNames = extractUsersByNames(users, userNames, state.byNames);
       return {
-        ...byNames,
+        ...byNames
       };
 
     // Fetch single user actions
@@ -385,7 +385,7 @@ function byNamesReducer(state: any = {}, action: any = {}) {
 
 export default combineReducers({
   list: listReducer,
-  byNames: byNamesReducer,
+  byNames: byNamesReducer
 });
 
 // selectors

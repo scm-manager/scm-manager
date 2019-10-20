@@ -1,15 +1,15 @@
-import React from 'react';
-import { shallow, mount } from '@scm-manager/ui-tests/enzyme-router';
-import '@scm-manager/ui-tests/i18n';
-import RepositoryNavLink from './RepositoryNavLink';
+import React from "react";
+import { shallow, mount } from "@scm-manager/ui-tests/enzyme-router";
+import "@scm-manager/ui-tests/i18n";
+import RepositoryNavLink from "./RepositoryNavLink";
 
-describe('RepositoryNavLink', () => {
-  it('should render nothing, if the sources link is missing', () => {
+describe("RepositoryNavLink", () => {
+  it("should render nothing, if the sources link is missing", () => {
     const repository = {
-      namespace: 'Namespace',
-      name: 'Repo',
-      type: 'GIT',
-      _links: {},
+      namespace: "Namespace",
+      name: "Repo",
+      type: "GIT",
+      _links: {}
     };
 
     const navLink = shallow(
@@ -19,21 +19,21 @@ describe('RepositoryNavLink', () => {
         to="/sources"
         label="Sources"
         activeOnlyWhenExact={true}
-      />,
+      />
     );
-    expect(navLink.text()).toBe('');
+    expect(navLink.text()).toBe("");
   });
 
-  it('should render the navLink', () => {
+  it("should render the navLink", () => {
     const repository = {
-      namespace: 'Namespace',
-      name: 'Repo',
-      type: 'GIT',
+      namespace: "Namespace",
+      name: "Repo",
+      type: "GIT",
       _links: {
         sources: {
-          href: '/sources',
-        },
-      },
+          href: "/sources"
+        }
+      }
     };
 
     const navLink = mount(
@@ -43,8 +43,8 @@ describe('RepositoryNavLink', () => {
         to="/sources"
         label="Sources"
         activeOnlyWhenExact={true}
-      />,
+      />
     );
-    expect(navLink.text()).toBe('Sources');
+    expect(navLink.text()).toBe("Sources");
   });
 });

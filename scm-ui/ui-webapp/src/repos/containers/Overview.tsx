@@ -1,16 +1,16 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
-import { History } from 'history';
-import { withRouter } from 'react-router-dom';
-import { RepositoryCollection } from '@scm-manager/ui-types';
+import React from "react";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
+import { History } from "history";
+import { withRouter } from "react-router-dom";
+import { RepositoryCollection } from "@scm-manager/ui-types";
 import {
   fetchReposByPage,
   getFetchReposFailure,
   getRepositoryCollection,
   isAbleToCreateRepos,
-  isFetchReposPending,
-} from '../modules/repos';
+  isFetchReposPending
+} from "../modules/repos";
 import {
   Page,
   PageActions,
@@ -18,10 +18,10 @@ import {
   CreateButton,
   Notification,
   LinkPaginator,
-  urls,
-} from '@scm-manager/ui-components';
-import RepositoryList from '../components/list';
-import { getRepositoriesLink } from '../../modules/indexResource';
+  urls
+} from "@scm-manager/ui-components";
+import RepositoryList from "../components/list";
+import { getRepositoriesLink } from "../../modules/indexResource";
 
 type Props = {
   loading: boolean;
@@ -46,7 +46,7 @@ class Overview extends React.Component<Props> {
     fetchReposByPage(
       reposLink,
       page,
-      urls.getQueryStringFromLocation(location),
+      urls.getQueryStringFromLocation(location)
     );
   }
 
@@ -57,7 +57,7 @@ class Overview extends React.Component<Props> {
       page,
       reposLink,
       location,
-      fetchReposByPage,
+      fetchReposByPage
     } = this.props;
     if (collection && page && !loading) {
       const statePage: number = collection.page + 1;
@@ -65,7 +65,7 @@ class Overview extends React.Component<Props> {
         fetchReposByPage(
           reposLink,
           page,
-          urls.getQueryStringFromLocation(location),
+          urls.getQueryStringFromLocation(location)
         );
       }
     }
@@ -75,8 +75,8 @@ class Overview extends React.Component<Props> {
     const { error, loading, showCreateButton, t } = this.props;
     return (
       <Page
-        title={t('overview.title')}
-        subtitle={t('overview.subtitle')}
+        title={t("overview.title")}
+        subtitle={t("overview.subtitle")}
         loading={loading}
         error={error}
       >
@@ -85,7 +85,7 @@ class Overview extends React.Component<Props> {
           <OverviewPageActions
             showCreateButton={showCreateButton}
             link="repos"
-            label={t('overview.createButton')}
+            label={t("overview.createButton")}
           />
         </PageActions>
       </Page>
@@ -108,7 +108,7 @@ class Overview extends React.Component<Props> {
       );
     }
     return (
-      <Notification type="info">{t('overview.noRepositories')}</Notification>
+      <Notification type="info">{t("overview.noRepositories")}</Notification>
     );
   }
 
@@ -129,7 +129,7 @@ class Overview extends React.Component<Props> {
     const { showCreateButton, t } = this.props;
     if (showCreateButton) {
       return (
-        <CreateButton label={t('overview.createButton')} link="/repos/create" />
+        <CreateButton label={t("overview.createButton")} link="/repos/create" />
       );
     }
     return null;
@@ -150,7 +150,7 @@ const mapStateToProps = (state, ownProps) => {
     error,
     page,
     showCreateButton,
-    reposLink,
+    reposLink
   };
 };
 
@@ -158,10 +158,10 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchReposByPage: (link: string, page: number, filter?: string) => {
       dispatch(fetchReposByPage(link, page, filter));
-    },
+    }
   };
 };
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('repos')(withRouter(Overview)));
+  mapDispatchToProps
+)(translate("repos")(withRouter(Overview)));

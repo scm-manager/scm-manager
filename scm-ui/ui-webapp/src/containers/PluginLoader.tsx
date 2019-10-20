@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { apiClient, Loading } from '@scm-manager/ui-components';
-import { getUiPluginsLink } from '../modules/indexResource';
-import { connect } from 'react-redux';
-import loadBundle from './loadBundle';
+import * as React from "react";
+import { apiClient, Loading } from "@scm-manager/ui-components";
+import { getUiPluginsLink } from "../modules/indexResource";
+import { connect } from "react-redux";
+import loadBundle from "./loadBundle";
 
 type Props = {
   loaded: boolean;
@@ -24,7 +24,7 @@ class PluginLoader extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      message: 'booting',
+      message: "booting"
     };
   }
 
@@ -32,7 +32,7 @@ class PluginLoader extends React.Component<Props, State> {
     const { loaded } = this.props;
     if (!loaded) {
       this.setState({
-        message: 'loading plugin information',
+        message: "loading plugin information"
       });
 
       this.getPlugins(this.props.link);
@@ -51,7 +51,7 @@ class PluginLoader extends React.Component<Props, State> {
 
   loadPlugins = (plugins: Plugin[]) => {
     this.setState({
-      message: 'loading plugins',
+      message: "loading plugins"
     });
 
     const promises = [];
@@ -68,7 +68,7 @@ class PluginLoader extends React.Component<Props, State> {
 
   loadPlugin = (plugin: Plugin) => {
     this.setState({
-      message: `loading ${plugin.name}`,
+      message: `loading ${plugin.name}`
     });
 
     const promises = [];
@@ -99,7 +99,7 @@ const comparePluginsByName = (a: Plugin, b: Plugin) => {
 const mapStateToProps = state => {
   const link = getUiPluginsLink(state);
   return {
-    link,
+    link
   };
 };
 

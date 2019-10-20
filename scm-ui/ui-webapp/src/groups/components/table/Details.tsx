@@ -1,8 +1,8 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { Group } from '@scm-manager/ui-types';
-import { DateFromNow, Checkbox } from '@scm-manager/ui-components';
-import GroupMember from './GroupMember';
+import React from "react";
+import { translate } from "react-i18next";
+import { Group } from "@scm-manager/ui-types";
+import { DateFromNow, Checkbox } from "@scm-manager/ui-components";
+import GroupMember from "./GroupMember";
 
 type Props = {
   group: Group;
@@ -18,31 +18,31 @@ class Details extends React.Component<Props> {
       <table className="table content">
         <tbody>
           <tr>
-            <th>{t('group.name')}</th>
+            <th>{t("group.name")}</th>
             <td>{group.name}</td>
           </tr>
           <tr>
-            <th>{t('group.description')}</th>
+            <th>{t("group.description")}</th>
             <td>{group.description}</td>
           </tr>
           <tr>
-            <th>{t('group.external')}</th>
+            <th>{t("group.external")}</th>
             <td>
               <Checkbox checked={group.external} />
             </td>
           </tr>
           <tr>
-            <th>{t('group.type')}</th>
+            <th>{t("group.type")}</th>
             <td>{group.type}</td>
           </tr>
           <tr>
-            <th>{t('group.creationDate')}</th>
+            <th>{t("group.creationDate")}</th>
             <td>
               <DateFromNow date={group.creationDate} />
             </td>
           </tr>
           <tr>
-            <th>{t('group.lastModified')}</th>
+            <th>{t("group.lastModified")}</th>
             <td>
               <DateFromNow date={group.lastModified} />
             </td>
@@ -60,7 +60,7 @@ class Details extends React.Component<Props> {
     if (group.members.length > 0) {
       member = (
         <tr>
-          <th>{t('group.members')}</th>
+          <th>{t("group.members")}</th>
           <td className="is-paddingless">
             <ul>
               {group._embedded.members.map((member, index) => {
@@ -75,4 +75,4 @@ class Details extends React.Component<Props> {
   }
 }
 
-export default translate('groups')(Details);
+export default translate("groups")(Details);

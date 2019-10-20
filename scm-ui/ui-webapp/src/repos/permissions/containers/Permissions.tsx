@@ -1,6 +1,6 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import React from "react";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
 import {
   createPermission,
   createPermissionReset,
@@ -20,30 +20,30 @@ import {
   isCreatePermissionPending,
   isFetchAvailablePermissionsPending,
   isFetchPermissionsPending,
-  modifyPermissionReset,
-} from '../modules/permissions';
+  modifyPermissionReset
+} from "../modules/permissions";
 import {
   ErrorPage,
   LabelWithHelpIcon,
   Loading,
-  Subtitle,
-} from '@scm-manager/ui-components';
+  Subtitle
+} from "@scm-manager/ui-components";
 import {
   Permission,
   PermissionCollection,
   PermissionCreateEntry,
-  RepositoryRole,
-} from '@scm-manager/ui-types';
-import SinglePermission from './SinglePermission';
-import CreatePermissionForm from './CreatePermissionForm';
-import { History } from 'history';
-import { getPermissionsLink } from '../../modules/repos';
+  RepositoryRole
+} from "@scm-manager/ui-types";
+import SinglePermission from "./SinglePermission";
+import CreatePermissionForm from "./CreatePermissionForm";
+import { History } from "history";
+import { getPermissionsLink } from "../../modules/repos";
 import {
   getGroupAutoCompleteLink,
   getRepositoryRolesLink,
   getRepositoryVerbsLink,
-  getUserAutoCompleteLink,
-} from '../../../modules/indexResource';
+  getUserAutoCompleteLink
+} from "../../../modules/indexResource";
 
 type Props = {
   availablePermissions: boolean;
@@ -65,7 +65,7 @@ type Props = {
   //dispatch functions
   fetchAvailablePermissionsIfNeeded: (
     repositoryRolesLink: string,
-    repositoryVerbsLink: string,
+    repositoryVerbsLink: string
   ) => void;
   fetchPermissions: (link: string, namespace: string, repoName: string) => void;
   createPermission: (
@@ -73,7 +73,7 @@ type Props = {
     permission: PermissionCreateEntry,
     namespace: string,
     repoName: string,
-    callback?: () => void,
+    callback?: () => void
   ) => void;
   createPermissionReset: (p1: string, p2: string) => void;
   modifyPermissionReset: (p1: string, p2: string) => void;
@@ -96,7 +96,7 @@ class Permissions extends React.Component<Props> {
       deletePermissionReset,
       permissionsLink,
       repositoryRolesLink,
-      repositoryVerbsLink,
+      repositoryVerbsLink
     } = this.props;
 
     createPermissionReset(namespace, repoName);
@@ -111,7 +111,7 @@ class Permissions extends React.Component<Props> {
       this.props.permissionsLink,
       permission,
       this.props.namespace,
-      this.props.repoName,
+      this.props.repoName
     );
   };
 
@@ -129,13 +129,13 @@ class Permissions extends React.Component<Props> {
       loadingCreatePermission,
       hasPermissionToCreate,
       userAutocompleteLink,
-      groupAutocompleteLink,
+      groupAutocompleteLink
     } = this.props;
     if (error) {
       return (
         <ErrorPage
-          title={t('permission.error-title')}
-          subtitle={t('permission.error-subtitle')}
+          title={t("permission.error-title")}
+          subtitle={t("permission.error-subtitle")}
           error={error}
         />
       );
@@ -159,26 +159,26 @@ class Permissions extends React.Component<Props> {
 
     return (
       <div>
-        <Subtitle subtitle={t('permission.title')} />
+        <Subtitle subtitle={t("permission.title")} />
         <table className="card-table table is-hoverable is-fullwidth">
           <thead>
             <tr>
               <th>
                 <LabelWithHelpIcon
-                  label={t('permission.name')}
-                  helpText={t('permission.help.nameHelpText')}
+                  label={t("permission.name")}
+                  helpText={t("permission.help.nameHelpText")}
                 />
               </th>
               <th>
                 <LabelWithHelpIcon
-                  label={t('permission.role')}
-                  helpText={t('permission.help.roleHelpText')}
+                  label={t("permission.role")}
+                  helpText={t("permission.help.roleHelpText")}
                 />
               </th>
               <th>
                 <LabelWithHelpIcon
-                  label={t('permission.permissions')}
-                  helpText={t('permission.help.permissionsHelpText')}
+                  label={t("permission.permissions")}
+                  helpText={t("permission.help.permissionsHelpText")}
                 />
               </th>
               <th />
@@ -221,7 +221,7 @@ const mapStateToProps = (state, ownProps) => {
   const loadingCreatePermission = isCreatePermissionPending(
     state,
     namespace,
-    repoName,
+    repoName
   );
   const hasPermissionToCreate = hasCreatePermission(state, namespace, repoName);
   const repositoryRolesLink = getRepositoryRolesLink(state);
@@ -248,7 +248,7 @@ const mapStateToProps = (state, ownProps) => {
     loadingCreatePermission,
     permissionsLink,
     groupAutocompleteLink,
-    userAutocompleteLink,
+    userAutocompleteLink
   };
 };
 
@@ -259,13 +259,13 @@ const mapDispatchToProps = dispatch => {
     },
     fetchAvailablePermissionsIfNeeded: (
       repositoryRolesLink: string,
-      repositoryVerbsLink: string,
+      repositoryVerbsLink: string
     ) => {
       dispatch(
         fetchAvailablePermissionsIfNeeded(
           repositoryRolesLink,
-          repositoryVerbsLink,
-        ),
+          repositoryVerbsLink
+        )
       );
     },
     createPermission: (
@@ -273,10 +273,10 @@ const mapDispatchToProps = dispatch => {
       permission: PermissionCreateEntry,
       namespace: string,
       repoName: string,
-      callback?: () => void,
+      callback?: () => void
     ) => {
       dispatch(
-        createPermission(link, permission, namespace, repoName, callback),
+        createPermission(link, permission, namespace, repoName, callback)
       );
     },
     createPermissionReset: (namespace: string, repoName: string) => {
@@ -287,11 +287,11 @@ const mapDispatchToProps = dispatch => {
     },
     deletePermissionReset: (namespace: string, repoName: string) => {
       dispatch(deletePermissionReset(namespace, repoName));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('repos')(Permissions));
+  mapDispatchToProps
+)(translate("repos")(Permissions));

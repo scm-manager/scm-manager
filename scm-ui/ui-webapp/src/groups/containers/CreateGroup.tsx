@@ -1,21 +1,21 @@
-import React from 'react';
+import React from "react";
 
-import { Page } from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
-import GroupForm from '../components/GroupForm';
-import { connect } from 'react-redux';
+import { Page } from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
+import GroupForm from "../components/GroupForm";
+import { connect } from "react-redux";
 import {
   createGroup,
   isCreateGroupPending,
   getCreateGroupFailure,
-  createGroupReset,
-} from '../modules/groups';
-import { Group } from '@scm-manager/ui-types';
-import { History } from 'history';
+  createGroupReset
+} from "../modules/groups";
+import { Group } from "@scm-manager/ui-types";
+import { History } from "history";
 import {
   getGroupsLink,
-  getUserAutoCompleteLink,
-} from '../../modules/indexResource';
+  getUserAutoCompleteLink
+} from "../../modules/indexResource";
 
 type Props = {
   t: (p: string) => string;
@@ -39,8 +39,8 @@ class CreateGroup extends React.Component<Props, State> {
     const { t, loading, error } = this.props;
     return (
       <Page
-        title={t('add-group.title')}
-        subtitle={t('add-group.subtitle')}
+        title={t("add-group.title")}
+        subtitle={t("add-group.subtitle")}
         error={error}
       >
         <div>
@@ -55,24 +55,24 @@ class CreateGroup extends React.Component<Props, State> {
   }
 
   loadUserAutocompletion = (inputValue: string) => {
-    const url = this.props.autocompleteLink + '?q=';
+    const url = this.props.autocompleteLink + "?q=";
     return fetch(url + inputValue)
       .then(response => response.json())
       .then(json => {
         return json.map(element => {
           return {
             value: element,
-            label: `${element.displayName} (${element.id})`,
+            label: `${element.displayName} (${element.id})`
           };
         });
       });
   };
   groupCreated = (group: Group) => {
-    this.props.history.push('/group/' + group.name);
+    this.props.history.push("/group/" + group.name);
   };
   createGroup = (group: Group) => {
     this.props.createGroup(this.props.createLink, group, () =>
-      this.groupCreated(group),
+      this.groupCreated(group)
     );
   };
 }
@@ -83,7 +83,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(createGroup(link, group, callback)),
     resetForm: () => {
       dispatch(createGroupReset());
-    },
+    }
   };
 };
 
@@ -96,11 +96,11 @@ const mapStateToProps = state => {
     createLink,
     loading,
     error,
-    autocompleteLink,
+    autocompleteLink
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('groups')(CreateGroup));
+  mapDispatchToProps
+)(translate("groups")(CreateGroup));

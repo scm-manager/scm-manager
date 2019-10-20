@@ -1,13 +1,13 @@
-import React from 'react';
-import { User } from '@scm-manager/ui-types';
+import React from "react";
+import { User } from "@scm-manager/ui-types";
 import {
   SubmitButton,
   Notification,
   ErrorNotification,
-  PasswordConfirmation,
-} from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
-import { setPassword } from './setPassword';
+  PasswordConfirmation
+} from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
+import { setPassword } from "./setPassword";
 
 type Props = {
   user: User;
@@ -27,20 +27,20 @@ class SetUserPassword extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      password: '',
+      password: "",
       loading: false,
       passwordConfirmationError: false,
       validatePasswordError: false,
-      validatePassword: '',
+      validatePassword: "",
       passwordChanged: false,
-      passwordValid: false,
+      passwordValid: false
     };
   }
 
   setLoadingState = () => {
     this.setState({
       ...this.state,
-      loading: true,
+      loading: true
     });
   };
 
@@ -48,7 +48,7 @@ class SetUserPassword extends React.Component<Props, State> {
     this.setState({
       ...this.state,
       error: error,
-      loading: false,
+      loading: false
     });
   };
 
@@ -57,7 +57,7 @@ class SetUserPassword extends React.Component<Props, State> {
       ...this.state,
       loading: false,
       passwordChanged: true,
-      password: '',
+      password: ""
     });
   };
 
@@ -88,8 +88,8 @@ class SetUserPassword extends React.Component<Props, State> {
     if (passwordChanged) {
       message = (
         <Notification
-          type={'success'}
-          children={t('singleUserPassword.setPasswordSuccessful')}
+          type={"success"}
+          children={t("singleUserPassword.setPasswordSuccessful")}
           onClose={() => this.onClose()}
         />
       );
@@ -102,14 +102,14 @@ class SetUserPassword extends React.Component<Props, State> {
         {message}
         <PasswordConfirmation
           passwordChanged={this.passwordChanged}
-          key={this.state.passwordChanged ? 'changed' : 'unchanged'}
+          key={this.state.passwordChanged ? "changed" : "unchanged"}
         />
         <div className="columns">
           <div className="column">
             <SubmitButton
               disabled={!this.state.passwordValid}
               loading={loading}
-              label={t('singleUserPassword.button')}
+              label={t("singleUserPassword.button")}
             />
           </div>
         </div>
@@ -121,16 +121,16 @@ class SetUserPassword extends React.Component<Props, State> {
     this.setState({
       ...this.state,
       password,
-      passwordValid: !!password && passwordValid,
+      passwordValid: !!password && passwordValid
     });
   };
 
   onClose = () => {
     this.setState({
       ...this.state,
-      passwordChanged: false,
+      passwordChanged: false
     });
   };
 }
 
-export default translate('users')(SetUserPassword);
+export default translate("users")(SetUserPassword);

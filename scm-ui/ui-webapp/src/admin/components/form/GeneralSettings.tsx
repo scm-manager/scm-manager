@@ -1,8 +1,8 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { Checkbox, InputField } from '@scm-manager/ui-components';
-import { NamespaceStrategies } from '@scm-manager/ui-types';
-import NamespaceStrategySelect from './NamespaceStrategySelect';
+import React from "react";
+import { translate } from "react-i18next";
+import { Checkbox, InputField } from "@scm-manager/ui-components";
+import { NamespaceStrategies } from "@scm-manager/ui-types";
+import NamespaceStrategySelect from "./NamespaceStrategySelect";
 
 type Props = {
   realmDescription: string;
@@ -32,7 +32,7 @@ class GeneralSettings extends React.Component<Props> {
       anonymousAccessEnabled,
       namespaceStrategy,
       hasUpdatePermission,
-      namespaceStrategies,
+      namespaceStrategies
     } = this.props;
 
     return (
@@ -40,61 +40,61 @@ class GeneralSettings extends React.Component<Props> {
         <div className="columns">
           <div className="column is-half">
             <InputField
-              label={t('general-settings.realm-description')}
+              label={t("general-settings.realm-description")}
               onChange={this.handleRealmDescriptionChange}
               value={realmDescription}
               disabled={!hasUpdatePermission}
-              helpText={t('help.realmDescriptionHelpText')}
+              helpText={t("help.realmDescriptionHelpText")}
             />
           </div>
           <div className="column is-half">
             <NamespaceStrategySelect
-              label={t('general-settings.namespace-strategy')}
+              label={t("general-settings.namespace-strategy")}
               onChange={this.handleNamespaceStrategyChange}
               value={namespaceStrategy}
               disabled={!hasUpdatePermission}
               namespaceStrategies={namespaceStrategies}
-              helpText={t('help.nameSpaceStrategyHelpText')}
+              helpText={t("help.nameSpaceStrategyHelpText")}
             />
           </div>
         </div>
         <div className="columns">
           <div className="column is-half">
             <InputField
-              label={t('general-settings.login-info-url')}
+              label={t("general-settings.login-info-url")}
               onChange={this.handleLoginInfoUrlChange}
               value={loginInfoUrl}
               disabled={!hasUpdatePermission}
-              helpText={t('help.loginInfoUrlHelpText')}
+              helpText={t("help.loginInfoUrlHelpText")}
             />
           </div>
           <div className="column is-half">
             <Checkbox
               checked={enabledXsrfProtection}
-              label={t('general-settings.enabled-xsrf-protection')}
+              label={t("general-settings.enabled-xsrf-protection")}
               onChange={this.handleEnabledXsrfProtectionChange}
               disabled={!hasUpdatePermission}
-              helpText={t('help.enableXsrfProtectionHelpText')}
+              helpText={t("help.enableXsrfProtectionHelpText")}
             />
           </div>
         </div>
         <div className="columns">
           <div className="column is-half">
             <InputField
-              label={t('general-settings.plugin-url')}
+              label={t("general-settings.plugin-url")}
               onChange={this.handlePluginCenterUrlChange}
               value={pluginUrl}
               disabled={!hasUpdatePermission}
-              helpText={t('help.pluginUrlHelpText')}
+              helpText={t("help.pluginUrlHelpText")}
             />
           </div>
           <div className="column is-half">
             <Checkbox
               checked={anonymousAccessEnabled}
-              label={t('general-settings.anonymous-access-enabled')}
+              label={t("general-settings.anonymous-access-enabled")}
               onChange={this.handleEnableAnonymousAccess}
               disabled={!hasUpdatePermission}
-              helpText={t('help.allowAnonymousAccessHelpText')}
+              helpText={t("help.allowAnonymousAccessHelpText")}
             />
           </div>
         </div>
@@ -103,23 +103,23 @@ class GeneralSettings extends React.Component<Props> {
   }
 
   handleLoginInfoUrlChange = (value: string) => {
-    this.props.onChange(true, value, 'loginInfoUrl');
+    this.props.onChange(true, value, "loginInfoUrl");
   };
   handleRealmDescriptionChange = (value: string) => {
-    this.props.onChange(true, value, 'realmDescription');
+    this.props.onChange(true, value, "realmDescription");
   };
   handleEnabledXsrfProtectionChange = (value: boolean) => {
-    this.props.onChange(true, value, 'enabledXsrfProtection');
+    this.props.onChange(true, value, "enabledXsrfProtection");
   };
   handleEnableAnonymousAccess = (value: boolean) => {
-    this.props.onChange(true, value, 'anonymousAccessEnabled');
+    this.props.onChange(true, value, "anonymousAccessEnabled");
   };
   handleNamespaceStrategyChange = (value: string) => {
-    this.props.onChange(true, value, 'namespaceStrategy');
+    this.props.onChange(true, value, "namespaceStrategy");
   };
   handlePluginCenterUrlChange = (value: string) => {
-    this.props.onChange(true, value, 'pluginUrl');
+    this.props.onChange(true, value, "pluginUrl");
   };
 }
 
-export default translate('config')(GeneralSettings);
+export default translate("config")(GeneralSettings);

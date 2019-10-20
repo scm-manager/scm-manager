@@ -1,7 +1,7 @@
-import React from 'react';
-import { Plugin } from '@scm-manager/ui-types';
-import PluginGroupEntry from '../components/PluginGroupEntry';
-import groupByCategory from './groupByCategory';
+import React from "react";
+import { Plugin } from "@scm-manager/ui-types";
+import PluginGroupEntry from "../components/PluginGroupEntry";
+import groupByCategory from "./groupByCategory";
 
 type Props = {
   plugins: Plugin[];

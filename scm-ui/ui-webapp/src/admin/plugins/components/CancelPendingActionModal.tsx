@@ -1,8 +1,8 @@
-import React from 'react';
-import PluginActionModal from './PluginActionModal';
-import { PendingPlugins } from '@scm-manager/ui-types';
-import { apiClient } from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
+import React from "react";
+import PluginActionModal from "./PluginActionModal";
+import { PendingPlugins } from "@scm-manager/ui-types";
+import { apiClient } from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 
 type Props = {
   onClose: () => void;
@@ -19,8 +19,8 @@ class CancelPendingActionModal extends React.Component<Props> {
 
     return (
       <PluginActionModal
-        description={t('plugins.modal.cancelPending')}
-        label={t('plugins.cancelPending')}
+        description={t("plugins.modal.cancelPending")}
+        label={t("plugins.cancelPending")}
         onClose={onClose}
         pendingPlugins={pendingPlugins}
         execute={this.cancelPending}
@@ -37,4 +37,4 @@ class CancelPendingActionModal extends React.Component<Props> {
   };
 }
 
-export default translate('admin')(CancelPendingActionModal);
+export default translate("admin")(CancelPendingActionModal);

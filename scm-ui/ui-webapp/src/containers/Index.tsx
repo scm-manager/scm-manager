@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import App from './App';
-import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
-import { withRouter } from 'react-router-dom';
+import React, { Component } from "react";
+import App from "./App";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
+import { withRouter } from "react-router-dom";
 
-import { Loading, ErrorBoundary } from '@scm-manager/ui-components';
+import { Loading, ErrorBoundary } from "@scm-manager/ui-components";
 import {
   fetchIndexResources,
   getFetchIndexResourcesFailure,
   getLinks,
-  isFetchIndexResourcesPending,
-} from '../modules/indexResource';
-import PluginLoader from './PluginLoader';
-import { IndexResources } from '@scm-manager/ui-types';
-import ScrollToTop from './ScrollToTop';
-import IndexErrorPage from './IndexErrorPage';
+  isFetchIndexResourcesPending
+} from "../modules/indexResource";
+import PluginLoader from "./PluginLoader";
+import { IndexResources } from "@scm-manager/ui-types";
+import ScrollToTop from "./ScrollToTop";
+import IndexErrorPage from "./IndexErrorPage";
 
 type Props = {
   error: Error;
@@ -36,7 +36,7 @@ class Index extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      pluginsLoaded: false,
+      pluginsLoaded: false
     };
   }
 
@@ -46,7 +46,7 @@ class Index extends Component<Props, State> {
 
   pluginLoaderCallback = () => {
     this.setState({
-      pluginsLoaded: true,
+      pluginsLoaded: true
     });
   };
 
@@ -77,7 +77,7 @@ class Index extends Component<Props, State> {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchIndexResources: () => dispatch(fetchIndexResources()),
+    fetchIndexResources: () => dispatch(fetchIndexResources())
   };
 };
 
@@ -88,13 +88,13 @@ const mapStateToProps = state => {
   return {
     loading,
     error,
-    indexResources,
+    indexResources
   };
 };
 
 export default withRouter(
   connect(
     mapStateToProps,
-    mapDispatchToProps,
-  )(translate('commons')(Index)),
+    mapDispatchToProps
+  )(translate("commons")(Index))
 );

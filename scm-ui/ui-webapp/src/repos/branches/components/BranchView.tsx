@@ -1,7 +1,7 @@
-import React from 'react';
-import BranchDetail from './BranchDetail';
-import { ExtensionPoint } from '@scm-manager/ui-extensions';
-import { Repository, Branch } from '@scm-manager/ui-types';
+import React from "react";
+import BranchDetail from "./BranchDetail";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { Repository, Branch } from "@scm-manager/ui-types";
 
 type Props = {
   repository: Repository;
@@ -22,7 +22,7 @@ class BranchView extends React.Component<Props> {
             renderAll={true}
             props={{
               repository,
-              branch,
+              branch
             }}
           />
         </div>

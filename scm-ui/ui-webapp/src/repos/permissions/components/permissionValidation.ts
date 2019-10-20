@@ -1,5 +1,5 @@
-import { validation } from '@scm-manager/ui-components';
-import { PermissionCollection } from '@scm-manager/ui-types';
+import { validation } from "@scm-manager/ui-components";
+import { PermissionCollection } from "@scm-manager/ui-types";
 
 const isNameValid = validation.isNameValid;
 
@@ -8,7 +8,7 @@ export { isNameValid };
 export const isPermissionValid = (
   name: string,
   groupPermission: boolean,
-  permissions: PermissionCollection,
+  permissions: PermissionCollection
 ) => {
   return (
     isNameValid(name) &&
@@ -19,7 +19,7 @@ export const isPermissionValid = (
 const currentPermissionIncludeName = (
   name: string,
   groupPermission: boolean,
-  permissions: PermissionCollection,
+  permissions: PermissionCollection
 ) => {
   for (let i = 0; i < permissions.length; i++) {
     if (

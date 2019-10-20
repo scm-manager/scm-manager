@@ -1,5 +1,5 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 import {
   Page,
   Loading,
@@ -7,29 +7,29 @@ import {
   SubNavigation,
   Section,
   NavLink,
-  ErrorPage,
-} from '@scm-manager/ui-components';
-import { Route } from 'react-router-dom';
-import { Details } from './../components/table';
-import EditUser from './EditUser';
-import { User } from '@scm-manager/ui-types';
-import { History } from 'history';
+  ErrorPage
+} from "@scm-manager/ui-components";
+import { Route } from "react-router-dom";
+import { Details } from "./../components/table";
+import EditUser from "./EditUser";
+import { User } from "@scm-manager/ui-types";
+import { History } from "history";
 import {
   fetchUserByName,
   getUserByName,
   isFetchUserPending,
-  getFetchUserFailure,
-} from '../modules/users';
+  getFetchUserFailure
+} from "../modules/users";
 import {
   EditUserNavLink,
   SetPasswordNavLink,
-  SetPermissionsNavLink,
-} from './../components/navLinks';
-import { translate } from 'react-i18next';
-import { getUsersLink } from '../../modules/indexResource';
-import SetUserPassword from '../components/SetUserPassword';
-import SetPermissions from '../../permissions/components/SetPermissions';
-import { ExtensionPoint } from '@scm-manager/ui-extensions';
+  SetPermissionsNavLink
+} from "./../components/navLinks";
+import { translate } from "react-i18next";
+import { getUsersLink } from "../../modules/indexResource";
+import SetUserPassword from "../components/SetUserPassword";
+import SetPermissions from "../../permissions/components/SetPermissions";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   name: string;
@@ -53,7 +53,7 @@ class SingleUser extends React.Component<Props> {
   }
 
   stripEndingSlash = (url: string) => {
-    if (url.endsWith('/')) {
+    if (url.endsWith("/")) {
       return url.substring(0, url.length - 2);
     }
     return url;
@@ -69,8 +69,8 @@ class SingleUser extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t('singleUser.errorTitle')}
-          subtitle={t('singleUser.errorSubtitle')}
+          title={t("singleUser.errorTitle")}
+          subtitle={t("singleUser.errorSubtitle")}
           error={error}
         />
       );
@@ -84,7 +84,7 @@ class SingleUser extends React.Component<Props> {
 
     const extensionProps = {
       user,
-      url,
+      url
     };
 
     return (
@@ -116,15 +116,15 @@ class SingleUser extends React.Component<Props> {
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t('singleUser.menu.navigationLabel')}>
+              <Section label={t("singleUser.menu.navigationLabel")}>
                 <NavLink
                   to={`${url}`}
                   icon="fas fa-info-circle"
-                  label={t('singleUser.menu.informationNavLink')}
+                  label={t("singleUser.menu.informationNavLink")}
                 />
                 <SubNavigation
                   to={`${url}/settings/general`}
-                  label={t('singleUser.menu.settingsNavLink')}
+                  label={t("singleUser.menu.settingsNavLink")}
                 >
                   <EditUserNavLink
                     user={user}
@@ -164,7 +164,7 @@ const mapStateToProps = (state, ownProps) => {
     name,
     user,
     loading,
-    error,
+    error
   };
 };
 
@@ -172,11 +172,11 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchUserByName: (link: string, name: string) => {
       dispatch(fetchUserByName(link, name));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('users')(SingleUser));
+  mapDispatchToProps
+)(translate("users")(SingleUser));

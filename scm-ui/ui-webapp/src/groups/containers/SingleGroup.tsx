@@ -1,5 +1,5 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 import {
   Page,
   ErrorPage,
@@ -7,28 +7,28 @@ import {
   Navigation,
   SubNavigation,
   Section,
-  NavLink,
-} from '@scm-manager/ui-components';
-import { Route } from 'react-router-dom';
-import { Details } from './../components/table';
+  NavLink
+} from "@scm-manager/ui-components";
+import { Route } from "react-router-dom";
+import { Details } from "./../components/table";
 import {
   EditGroupNavLink,
-  SetPermissionsNavLink,
-} from './../components/navLinks';
-import { Group } from '@scm-manager/ui-types';
-import { History } from 'history';
+  SetPermissionsNavLink
+} from "./../components/navLinks";
+import { Group } from "@scm-manager/ui-types";
+import { History } from "history";
 import {
   fetchGroupByName,
   getGroupByName,
   isFetchGroupPending,
-  getFetchGroupFailure,
-} from '../modules/groups';
+  getFetchGroupFailure
+} from "../modules/groups";
 
-import { translate } from 'react-i18next';
-import EditGroup from './EditGroup';
-import { getGroupsLink } from '../../modules/indexResource';
-import SetPermissions from '../../permissions/components/SetPermissions';
-import { ExtensionPoint } from '@scm-manager/ui-extensions';
+import { translate } from "react-i18next";
+import EditGroup from "./EditGroup";
+import { getGroupsLink } from "../../modules/indexResource";
+import SetPermissions from "../../permissions/components/SetPermissions";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   name: string;
@@ -52,7 +52,7 @@ class SingleGroup extends React.Component<Props> {
   }
 
   stripEndingSlash = (url: string) => {
-    if (url.endsWith('/')) {
+    if (url.endsWith("/")) {
       return url.substring(0, url.length - 2);
     }
     return url;
@@ -68,8 +68,8 @@ class SingleGroup extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t('singleGroup.errorTitle')}
-          subtitle={t('singleGroup.errorSubtitle')}
+          title={t("singleGroup.errorTitle")}
+          subtitle={t("singleGroup.errorSubtitle")}
           error={error}
         />
       );
@@ -83,7 +83,7 @@ class SingleGroup extends React.Component<Props> {
 
     const extensionProps = {
       group,
-      url,
+      url
     };
 
     return (
@@ -117,11 +117,11 @@ class SingleGroup extends React.Component<Props> {
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t('singleGroup.menu.navigationLabel')}>
+              <Section label={t("singleGroup.menu.navigationLabel")}>
                 <NavLink
                   to={`${url}`}
                   icon="fas fa-info-circle"
-                  label={t('singleGroup.menu.informationNavLink')}
+                  label={t("singleGroup.menu.informationNavLink")}
                 />
                 <ExtensionPoint
                   name="group.navigation"
@@ -130,7 +130,7 @@ class SingleGroup extends React.Component<Props> {
                 />
                 <SubNavigation
                   to={`${url}/settings/general`}
-                  label={t('singleGroup.menu.settingsNavLink')}
+                  label={t("singleGroup.menu.settingsNavLink")}
                 >
                   <EditGroupNavLink
                     group={group}
@@ -167,7 +167,7 @@ const mapStateToProps = (state, ownProps) => {
     group,
     loading,
     error,
-    groupLink,
+    groupLink
   };
 };
 
@@ -175,11 +175,11 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchGroupByName: (link: string, name: string) => {
       dispatch(fetchGroupByName(link, name));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('groups')(SingleGroup));
+  mapDispatchToProps
+)(translate("groups")(SingleGroup));

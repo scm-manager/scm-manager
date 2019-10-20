@@ -1,28 +1,28 @@
-import React from 'react';
+import React from "react";
 
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
-import { Links } from '@scm-manager/ui-types';
+import { Redirect, Route, Switch, withRouter } from "react-router-dom";
+import { Links } from "@scm-manager/ui-types";
 
-import Overview from '../repos/containers/Overview';
-import Users from '../users/containers/Users';
-import Login from '../containers/Login';
-import Logout from '../containers/Logout';
+import Overview from "../repos/containers/Overview";
+import Users from "../users/containers/Users";
+import Login from "../containers/Login";
+import Logout from "../containers/Logout";
 
-import { ProtectedRoute } from '@scm-manager/ui-components';
-import { binder, ExtensionPoint } from '@scm-manager/ui-extensions';
+import { ProtectedRoute } from "@scm-manager/ui-components";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
-import CreateUser from '../users/containers/CreateUser';
-import SingleUser from '../users/containers/SingleUser';
-import RepositoryRoot from '../repos/containers/RepositoryRoot';
-import Create from '../repos/containers/Create';
+import CreateUser from "../users/containers/CreateUser";
+import SingleUser from "../users/containers/SingleUser";
+import RepositoryRoot from "../repos/containers/RepositoryRoot";
+import Create from "../repos/containers/Create";
 
-import Groups from '../groups/containers/Groups';
-import SingleGroup from '../groups/containers/SingleGroup';
-import CreateGroup from '../groups/containers/CreateGroup';
+import Groups from "../groups/containers/Groups";
+import SingleGroup from "../groups/containers/SingleGroup";
+import CreateGroup from "../groups/containers/CreateGroup";
 
-import Admin from '../admin/containers/Admin';
+import Admin from "../admin/containers/Admin";
 
-import Profile from './Profile';
+import Profile from "./Profile";
 
 type Props = {
   authenticated?: boolean;
@@ -32,8 +32,8 @@ type Props = {
 class Main extends React.Component<Props> {
   render() {
     const { authenticated, links } = this.props;
-    const redirectUrlFactory = binder.getExtension('main.redirect', this.props);
-    let url = '/repos/';
+    const redirectUrlFactory = binder.getExtension("main.redirect", this.props);
+    let url = "/repos/";
     if (redirectUrlFactory) {
       url = redirectUrlFactory(this.props);
     }
@@ -128,7 +128,7 @@ class Main extends React.Component<Props> {
             renderAll={true}
             props={{
               authenticated,
-              links,
+              links
             }}
           />
         </Switch>

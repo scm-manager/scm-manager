@@ -1,21 +1,21 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Loading, ErrorPage, Title } from '@scm-manager/ui-components';
-import { Route } from 'react-router-dom';
-import { History } from 'history';
-import { translate } from 'react-i18next';
-import { RepositoryRole } from '@scm-manager/ui-types';
-import { getRepositoryRolesLink } from '../../../modules/indexResource';
-import { ExtensionPoint } from '@scm-manager/ui-extensions';
+import React from "react";
+import { connect } from "react-redux";
+import { Loading, ErrorPage, Title } from "@scm-manager/ui-components";
+import { Route } from "react-router-dom";
+import { History } from "history";
+import { translate } from "react-i18next";
+import { RepositoryRole } from "@scm-manager/ui-types";
+import { getRepositoryRolesLink } from "../../../modules/indexResource";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import {
   fetchRoleByName,
   getFetchRoleFailure,
   getRoleByName,
-  isFetchRolePending,
-} from '../modules/roles';
-import { withRouter } from 'react-router-dom';
-import PermissionRoleDetail from '../components/PermissionRoleDetails';
-import EditRepositoryRole from './EditRepositoryRole';
+  isFetchRolePending
+} from "../modules/roles";
+import { withRouter } from "react-router-dom";
+import PermissionRoleDetail from "../components/PermissionRoleDetails";
+import EditRepositoryRole from "./EditRepositoryRole";
 
 type Props = {
   roleName: string;
@@ -38,12 +38,12 @@ class SingleRepositoryRole extends React.Component<Props> {
   componentDidMount() {
     this.props.fetchRoleByName(
       this.props.repositoryRolesLink,
-      this.props.roleName,
+      this.props.roleName
     );
   }
 
   stripEndingSlash = (url: string) => {
-    if (url.endsWith('/')) {
+    if (url.endsWith("/")) {
       return url.substring(0, url.length - 2);
     }
     return url;
@@ -59,8 +59,8 @@ class SingleRepositoryRole extends React.Component<Props> {
     if (error) {
       return (
         <ErrorPage
-          title={t('repositoryRole.errorTitle')}
-          subtitle={t('repositoryRole.errorSubtitle')}
+          title={t("repositoryRole.errorTitle")}
+          subtitle={t("repositoryRole.errorSubtitle")}
           error={error}
         />
       );
@@ -74,12 +74,12 @@ class SingleRepositoryRole extends React.Component<Props> {
 
     const extensionProps = {
       role,
-      url,
+      url
     };
 
     return (
       <>
-        <Title title={t('repositoryRole.title')} />
+        <Title title={t("repositoryRole.title")} />
         <Route
           path={`${url}/info`}
           component={() => <PermissionRoleDetail role={role} url={url} />}
@@ -112,7 +112,7 @@ const mapStateToProps = (state, ownProps) => {
     roleName,
     role,
     loading,
-    error,
+    error
   };
 };
 
@@ -120,13 +120,13 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchRoleByName: (link: string, name: string) => {
       dispatch(fetchRoleByName(link, name));
-    },
+    }
   };
 };
 
 export default withRouter(
   connect(
     mapStateToProps,
-    mapDispatchToProps,
-  )(translate('admin')(SingleRepositoryRole)),
+    mapDispatchToProps
+  )(translate("admin")(SingleRepositoryRole))
 );

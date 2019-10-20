@@ -1,20 +1,20 @@
-import * as types from '../../../modules/types';
-import { isPending } from '../../../modules/pending';
-import { getFailure } from '../../../modules/failure';
-import { Action, Plugin, PluginCollection } from '@scm-manager/ui-types';
-import { apiClient } from '@scm-manager/ui-components';
+import * as types from "../../../modules/types";
+import { isPending } from "../../../modules/pending";
+import { getFailure } from "../../../modules/failure";
+import { Action, Plugin, PluginCollection } from "@scm-manager/ui-types";
+import { apiClient } from "@scm-manager/ui-components";
 
-export const FETCH_PLUGINS = 'scm/plugins/FETCH_PLUGINS';
+export const FETCH_PLUGINS = "scm/plugins/FETCH_PLUGINS";
 export const FETCH_PLUGINS_PENDING = `${FETCH_PLUGINS}_${types.PENDING_SUFFIX}`;
 export const FETCH_PLUGINS_SUCCESS = `${FETCH_PLUGINS}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_PLUGINS_FAILURE = `${FETCH_PLUGINS}_${types.FAILURE_SUFFIX}`;
 
-export const FETCH_PLUGIN = 'scm/plugins/FETCH_PLUGIN';
+export const FETCH_PLUGIN = "scm/plugins/FETCH_PLUGIN";
 export const FETCH_PLUGIN_PENDING = `${FETCH_PLUGIN}_${types.PENDING_SUFFIX}`;
 export const FETCH_PLUGIN_SUCCESS = `${FETCH_PLUGIN}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_PLUGIN_FAILURE = `${FETCH_PLUGIN}_${types.FAILURE_SUFFIX}`;
 
-export const FETCH_PENDING_PLUGINS = 'scm/plugins/FETCH_PENDING_PLUGINS';
+export const FETCH_PENDING_PLUGINS = "scm/plugins/FETCH_PENDING_PLUGINS";
 export const FETCH_PENDING_PLUGINS_PENDING = `${FETCH_PENDING_PLUGINS}_${types.PENDING_SUFFIX}`;
 export const FETCH_PENDING_PLUGINS_SUCCESS = `${FETCH_PENDING_PLUGINS}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_PENDING_PLUGINS_FAILURE = `${FETCH_PENDING_PLUGINS}_${types.FAILURE_SUFFIX}`;
@@ -37,21 +37,21 @@ export function fetchPluginsByLink(link: string) {
 
 export function fetchPluginsPending(): Action {
   return {
-    type: FETCH_PLUGINS_PENDING,
+    type: FETCH_PLUGINS_PENDING
   };
 }
 
 export function fetchPluginsSuccess(plugins: PluginCollection): Action {
   return {
     type: FETCH_PLUGINS_SUCCESS,
-    payload: plugins,
+    payload: plugins
   };
 }
 
 export function fetchPluginsFailure(err: Error): Action {
   return {
     type: FETCH_PLUGINS_FAILURE,
-    payload: err,
+    payload: err
   };
 }
 
@@ -61,7 +61,7 @@ export function fetchPluginByLink(plugin: Plugin) {
 }
 
 export function fetchPluginByName(link: string, name: string) {
-  const pluginUrl = link.endsWith('/') ? link : link + '/';
+  const pluginUrl = link.endsWith("/") ? link : link + "/";
   return fetchPlugin(pluginUrl + name, name);
 }
 
@@ -84,9 +84,9 @@ export function fetchPluginPending(name: string): Action {
   return {
     type: FETCH_PLUGIN_PENDING,
     payload: {
-      name,
+      name
     },
-    itemId: name,
+    itemId: name
   };
 }
 
@@ -94,7 +94,7 @@ export function fetchPluginSuccess(plugin: Plugin): Action {
   return {
     type: FETCH_PLUGIN_SUCCESS,
     payload: plugin,
-    itemId: plugin.name,
+    itemId: plugin.name
   };
 }
 
@@ -103,9 +103,9 @@ export function fetchPluginFailure(name: string, error: Error): Action {
     type: FETCH_PLUGIN_FAILURE,
     payload: {
       name,
-      error,
+      error
     },
-    itemId: name,
+    itemId: name
   };
 }
 
@@ -127,21 +127,21 @@ export function fetchPendingPlugins(link: string) {
 
 export function fetchPendingPluginsPending(): Action {
   return {
-    type: FETCH_PENDING_PLUGINS_PENDING,
+    type: FETCH_PENDING_PLUGINS_PENDING
   };
 }
 
 export function fetchPendingPluginsSuccess(PendingPlugins: {}): Action {
   return {
     type: FETCH_PENDING_PLUGINS_SUCCESS,
-    payload: PendingPlugins,
+    payload: PendingPlugins
   };
 }
 
 export function fetchPendingPluginsFailure(err: Error): Action {
   return {
     type: FETCH_PENDING_PLUGINS_FAILURE,
-    payload: err,
+    payload: err
   };
 }
 
@@ -158,10 +158,10 @@ function normalizeByName(state: object, pluginCollection: PluginCollection) {
     list: {
       ...pluginCollection,
       _embedded: {
-        plugins: names,
-      },
+        plugins: names
+      }
     },
-    byNames: byNames,
+    byNames: byNames
   };
 }
 
@@ -170,16 +170,16 @@ const reducerByNames = (state: object, plugin: Plugin) => {
     ...state,
     byNames: {
       ...state.byNames,
-      [plugin.name]: plugin,
-    },
+      [plugin.name]: plugin
+    }
   };
 };
 
 export default function reducer(
   state: object = {},
   action: Action = {
-    type: 'UNKNOWN',
-  },
+    type: "UNKNOWN"
+  }
 ): object {
   if (!action.payload) {
     return state;
@@ -193,7 +193,7 @@ export default function reducer(
     case FETCH_PENDING_PLUGINS_SUCCESS:
       return {
         ...state,
-        pending: action.payload,
+        pending: action.payload
       };
     default:
       return state;
@@ -210,8 +210,8 @@ export function getPluginCollection(state: object) {
     return {
       ...state.plugins.list,
       _embedded: {
-        plugins,
-      },
+        plugins
+      }
     };
   }
 }

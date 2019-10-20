@@ -1,9 +1,9 @@
-import React from 'react';
-import { Interpolate, translate } from 'react-i18next';
-import classNames from 'classnames';
-import styled from 'styled-components';
-import { ExtensionPoint } from '@scm-manager/ui-extensions';
-import { Changeset, Repository, Tag } from '@scm-manager/ui-types';
+import React from "react";
+import { Interpolate, translate } from "react-i18next";
+import classNames from "classnames";
+import styled from "styled-components";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { Changeset, Repository, Tag } from "@scm-manager/ui-types";
 import {
   DateFromNow,
   ChangesetId,
@@ -14,8 +14,8 @@ import {
   AvatarImage,
   changesets,
   Level,
-  Button,
-} from '@scm-manager/ui-components';
+  Button
+} from "@scm-manager/ui-components";
 
 type Props = {
   changeset: Changeset;
@@ -47,7 +47,7 @@ class ChangesetDetails extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      collapsed: false,
+      collapsed: false
     };
   }
 
@@ -63,13 +63,13 @@ class ChangesetDetails extends React.Component<Props, State> {
 
     return (
       <>
-        <div className={classNames('content', 'is-marginless')}>
+        <div className={classNames("content", "is-marginless")}>
           <h4>
             <ExtensionPoint
               name="changeset.description"
               props={{
                 changeset,
-                value: description.title,
+                value: description.title
               }}
               renderAll={false}
             >
@@ -78,7 +78,7 @@ class ChangesetDetails extends React.Component<Props, State> {
           </h4>
           <article className="media">
             <AvatarWrapper>
-              <RightMarginP className={classNames('image', 'is-64x64')}>
+              <RightMarginP className={classNames("image", "is-64x64")}>
                 <AvatarImage person={changeset.author} />
               </RightMarginP>
             </AvatarWrapper>
@@ -94,14 +94,14 @@ class ChangesetDetails extends React.Component<Props, State> {
           </article>
 
           <p>
-            {description.message.split('\n').map((item, key) => {
+            {description.message.split("\n").map((item, key) => {
               return (
                 <span key={key}>
                   <ExtensionPoint
                     name="changeset.description"
                     props={{
                       changeset,
-                      value: item,
+                      value: item
                     }}
                     renderAll={false}
                   >
@@ -119,8 +119,8 @@ class ChangesetDetails extends React.Component<Props, State> {
               <Button
                 action={this.collapseDiffs}
                 color="default"
-                icon={collapsed ? 'eye' : 'eye-slash'}
-                label={t('changesets.collapseDiffs')}
+                icon={collapsed ? "eye" : "eye-slash"}
+                label={t("changesets.collapseDiffs")}
                 reducedMobile={true}
               />
             }
@@ -151,9 +151,9 @@ class ChangesetDetails extends React.Component<Props, State> {
 
   collapseDiffs = () => {
     this.setState(state => ({
-      collapsed: !state.collapsed,
+      collapsed: !state.collapsed
     }));
   };
 }
 
-export default translate('repos')(ChangesetDetails);
+export default translate("repos")(ChangesetDetails);

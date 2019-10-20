@@ -1,4 +1,4 @@
-import { Plugin, PluginGroup } from '@scm-manager/ui-types';
+import { Plugin, PluginGroup } from "@scm-manager/ui-types";
 
 export default function groupByCategory(plugins: Plugin[]): PluginGroup[] {
   let groups = {};
@@ -9,7 +9,7 @@ export default function groupByCategory(plugins: Plugin[]): PluginGroup[] {
     if (!group) {
       group = {
         name: groupName,
-        plugins: [],
+        plugins: []
       };
       groups[groupName] = group;
     }

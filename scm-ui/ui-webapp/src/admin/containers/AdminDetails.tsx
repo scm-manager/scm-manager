@@ -1,9 +1,9 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
-import styled from 'styled-components';
-import { Image, Loading, Subtitle, Title } from '@scm-manager/ui-components';
-import { getAppVersion } from '../../modules/indexResource';
+import React from "react";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
+import styled from "styled-components";
+import { Image, Loading, Subtitle, Title } from "@scm-manager/ui-components";
+import { getAppVersion } from "../../modules/indexResource";
 
 type Props = {
   loading: boolean;
@@ -33,28 +33,28 @@ class AdminDetails extends React.Component<Props> {
 
     return (
       <>
-        <Title title={t('admin.info.currentAppVersion')} />
+        <Title title={t("admin.info.currentAppVersion")} />
         <Subtitle subtitle={this.props.version} />
         <BoxShadowBox className="box">
           <article className="media">
             <ImageWrapper className="media-left">
               <Image
                 src="/images/iconCommunitySupport.png"
-                alt={t('admin.info.communityIconAlt')}
+                alt={t("admin.info.communityIconAlt")}
               />
             </ImageWrapper>
             <div className="media-content">
               <div className="content">
                 <h3 className="has-text-weight-medium">
-                  {t('admin.info.communityTitle')}
+                  {t("admin.info.communityTitle")}
                 </h3>
-                <p>{t('admin.info.communityInfo')}</p>
+                <p>{t("admin.info.communityInfo")}</p>
                 <a
                   className="button is-info is-pulled-right"
                   target="_blank"
                   href="https://scm-manager.org/support/"
                 >
-                  {t('admin.info.communityButton')}
+                  {t("admin.info.communityButton")}
                 </a>
               </div>
             </div>
@@ -65,25 +65,25 @@ class AdminDetails extends React.Component<Props> {
             <ImageWrapper className="media-left">
               <Image
                 src="/images/iconEnterpriseSupport.png"
-                alt={t('admin.info.enterpriseIconAlt')}
+                alt={t("admin.info.enterpriseIconAlt")}
               />
             </ImageWrapper>
             <div className="media-content">
               <div className="content">
                 <h3 className="has-text-weight-medium">
-                  {t('admin.info.enterpriseTitle')}
+                  {t("admin.info.enterpriseTitle")}
                 </h3>
                 <p>
-                  {t('admin.info.enterpriseInfo')}
+                  {t("admin.info.enterpriseInfo")}
                   <br />
-                  <strong>{t('admin.info.enterprisePartner')}</strong>
+                  <strong>{t("admin.info.enterprisePartner")}</strong>
                 </p>
                 <a
                   className="button is-info is-pulled-right is-normal"
                   target="_blank"
-                  href={t('admin.info.enterpriseLink')}
+                  href={t("admin.info.enterpriseLink")}
                 >
-                  {t('admin.info.enterpriseButton')}
+                  {t("admin.info.enterpriseButton")}
                 </a>
               </div>
             </div>
@@ -97,8 +97,8 @@ class AdminDetails extends React.Component<Props> {
 const mapStateToProps = (state: any) => {
   const version = getAppVersion(state);
   return {
-    version,
+    version
   };
 };
 
-export default connect(mapStateToProps)(translate('admin')(AdminDetails));
+export default connect(mapStateToProps)(translate("admin")(AdminDetails));

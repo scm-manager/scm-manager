@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 import {
   File,
   Changeset,
   Repository,
-  PagedCollection,
-} from '@scm-manager/ui-types';
+  PagedCollection
+} from "@scm-manager/ui-types";
 import {
   ErrorNotification,
   Loading,
   StatePaginator,
-  ChangesetList,
-} from '@scm-manager/ui-components';
-import { getHistory } from './history';
+  ChangesetList
+} from "@scm-manager/ui-components";
+import { getHistory } from "./history";
 
 type Props = {
   file: File;
@@ -33,7 +33,7 @@ class HistoryView extends React.Component<Props, State> {
     this.state = {
       loaded: false,
       page: 1,
-      changesets: [],
+      changesets: []
     };
   }
 
@@ -49,7 +49,7 @@ class HistoryView extends React.Component<Props, State> {
           this.setState({
             ...this.state,
             error: result.error,
-            loaded: true,
+            loaded: true
           });
         } else {
           this.setState({
@@ -57,7 +57,7 @@ class HistoryView extends React.Component<Props, State> {
             loaded: true,
             changesets: result.changesets,
             pageCollection: result.pageCollection,
-            page: result.pageCollection.page,
+            page: result.pageCollection.page
           });
         }
       })
@@ -68,7 +68,7 @@ class HistoryView extends React.Component<Props, State> {
     const { file } = this.props;
     const internalPage = page - 1;
     this.updateHistory(
-      file._links.history.href + '?page=' + internalPage.toString(),
+      file._links.history.href + "?page=" + internalPage.toString()
     );
   }
 

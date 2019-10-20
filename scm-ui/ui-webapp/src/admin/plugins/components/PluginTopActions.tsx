@@ -1,6 +1,6 @@
-import * as React from 'react';
-import classNames from 'classnames';
-import styled from 'styled-components';
+import * as React from "react";
+import classNames from "classnames";
+import styled from "styled-components";
 
 type Props = {
   children?: React.Node;
@@ -17,10 +17,10 @@ export default class PluginTopActions extends React.Component<Props> {
     return (
       <ChildWrapper
         className={classNames(
-          'column',
-          'is-flex',
-          'is-one-fifths',
-          'is-mobile-action-spacing',
+          "column",
+          "is-flex",
+          "is-one-fifths",
+          "is-mobile-action-spacing"
         )}
       >
         {children}

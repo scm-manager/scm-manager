@@ -1,19 +1,19 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
-import { RepositoryRole } from '@scm-manager/ui-types';
-import { InputField, SubmitButton } from '@scm-manager/ui-components';
-import PermissionCheckbox from '../../../repos/permissions/components/PermissionCheckbox';
+import React from "react";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
+import { RepositoryRole } from "@scm-manager/ui-types";
+import { InputField, SubmitButton } from "@scm-manager/ui-components";
+import PermissionCheckbox from "../../../repos/permissions/components/PermissionCheckbox";
 import {
   fetchAvailableVerbs,
   getFetchVerbsFailure,
   getVerbsFromState,
-  isFetchVerbsPending,
-} from '../modules/roles';
+  isFetchVerbsPending
+} from "../modules/roles";
 import {
   getRepositoryRolesLink,
-  getRepositoryVerbsLink,
-} from '../../../modules/indexResource';
+  getRepositoryVerbsLink
+} from "../../../modules/indexResource";
 
 type Props = {
   role?: RepositoryRole;
@@ -39,11 +39,11 @@ class RepositoryRoleForm extends React.Component<Props, State> {
 
     this.state = {
       role: {
-        name: '',
+        name: "",
         verbs: [],
         system: false,
-        _links: {},
-      },
+        _links: {}
+      }
     };
   }
 
@@ -52,7 +52,7 @@ class RepositoryRoleForm extends React.Component<Props, State> {
     fetchAvailableVerbs(verbsLink);
     if (this.props.role) {
       this.setState({
-        role: this.props.role,
+        role: this.props.role
       });
     }
   }
@@ -74,8 +74,8 @@ class RepositoryRoleForm extends React.Component<Props, State> {
     this.setState({
       role: {
         ...this.state.role,
-        name,
-      },
+        name
+      }
     });
   };
 
@@ -90,8 +90,8 @@ class RepositoryRoleForm extends React.Component<Props, State> {
       ...this.state,
       role: {
         ...role,
-        verbs: newVerbs,
-      },
+        verbs: newVerbs
+      }
     });
   };
 
@@ -121,21 +121,21 @@ class RepositoryRoleForm extends React.Component<Props, State> {
       <form onSubmit={this.submit}>
         <InputField
           name="name"
-          label={t('repositoryRole.form.name')}
+          label={t("repositoryRole.form.name")}
           onChange={this.handleNameChange}
-          value={role.name ? role.name : ''}
+          value={role.name ? role.name : ""}
           disabled={!!this.props.role}
         />
         <div className="field">
           <label className="label">
-            {t('repositoryRole.form.permissions')}
+            {t("repositoryRole.form.permissions")}
           </label>
           {verbSelectBoxes}
         </div>
         <hr />
         <SubmitButton
           loading={loading}
-          label={t('repositoryRole.form.submit')}
+          label={t("repositoryRole.form.submit")}
           disabled={!this.isValid()}
         />
       </form>
@@ -155,7 +155,7 @@ const mapStateToProps = (state, ownProps) => {
     error,
     verbsLink,
     availableVerbs,
-    repositoryRolesLink,
+    repositoryRolesLink
   };
 };
 
@@ -163,11 +163,11 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchAvailableVerbs: (link: string) => {
       dispatch(fetchAvailableVerbs(link));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(translate('admin')(RepositoryRoleForm));
+  mapDispatchToProps
+)(translate("admin")(RepositoryRoleForm));

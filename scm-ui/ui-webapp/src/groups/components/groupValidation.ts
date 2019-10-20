@@ -1,4 +1,4 @@
-import { validation } from '@scm-manager/ui-components';
+import { validation } from "@scm-manager/ui-components";
 
 const isNameValid = validation.isNameValid;
 

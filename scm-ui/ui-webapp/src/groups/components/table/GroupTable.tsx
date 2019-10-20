@@ -1,7 +1,7 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import GroupRow from './GroupRow';
-import { Group } from '@scm-manager/ui-types';
+import React from "react";
+import { translate } from "react-i18next";
+import GroupRow from "./GroupRow";
+import { Group } from "@scm-manager/ui-types";
 
 type Props = {
   t: (p: string) => string;
@@ -15,8 +15,8 @@ class GroupTable extends React.Component<Props> {
       <table className="card-table table is-hoverable is-fullwidth">
         <thead>
           <tr>
-            <th>{t('group.name')}</th>
-            <th className="is-hidden-mobile">{t('group.description')}</th>
+            <th>{t("group.name")}</th>
+            <th className="is-hidden-mobile">{t("group.description")}</th>
           </tr>
         </thead>
         <tbody>
@@ -29,4 +29,4 @@ class GroupTable extends React.Component<Props> {
   }
 }
 
-export default translate('groups')(GroupTable);
+export default translate("groups")(GroupTable);

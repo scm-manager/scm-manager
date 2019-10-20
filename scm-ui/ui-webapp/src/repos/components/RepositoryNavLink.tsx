@@ -1,6 +1,6 @@
-import React from 'react';
-import { Repository } from '@scm-manager/ui-types';
-import { NavLink } from '@scm-manager/ui-components';
+import React from "react";
+import { Repository } from "@scm-manager/ui-types";
+import { NavLink } from "@scm-manager/ui-components";
 
 type Props = {
   repository: Repository;

@@ -1,24 +1,24 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { Branch, Repository } from '@scm-manager/ui-types';
-import FileTree from '../components/FileTree';
+import React from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { Branch, Repository } from "@scm-manager/ui-types";
+import FileTree from "../components/FileTree";
 import {
   BranchSelector,
   Breadcrumb,
   ErrorNotification,
-  Loading,
-} from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
+  Loading
+} from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 import {
   fetchBranches,
   getBranches,
   getFetchBranchesFailure,
-  isFetchBranchesPending,
-} from '../../branches/modules/branches';
-import { compose } from 'redux';
-import Content from './Content';
-import { fetchSources, isDirectory } from '../modules/sources';
+  isFetchBranchesPending
+} from "../../branches/modules/branches";
+import { compose } from "redux";
+import Content from "./Content";
+import { fetchSources, isDirectory } from "../modules/sources";
 
 type Props = {
   repository: Repository;
@@ -50,7 +50,7 @@ class Sources extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      selectedBranch: null,
+      selectedBranch: null
     };
   }
 
@@ -60,7 +60,7 @@ class Sources extends React.Component<Props, State> {
       repository,
       revision,
       path,
-      fetchSources,
+      fetchSources
     } = this.props;
 
     fetchBranches(repository);
@@ -99,7 +99,7 @@ class Sources extends React.Component<Props, State> {
     let url;
     if (branch) {
       this.setState({
-        selectedBranch: branch,
+        selectedBranch: branch
       });
       if (path) {
         url = `${baseUrl}/${encodeURIComponent(branch.name)}/${path}`;
@@ -108,7 +108,7 @@ class Sources extends React.Component<Props, State> {
       }
     } else {
       this.setState({
-        selectedBranch: null,
+        selectedBranch: null
       });
       url = `${baseUrl}/`;
     }
@@ -123,7 +123,7 @@ class Sources extends React.Component<Props, State> {
       error,
       revision,
       path,
-      currentFileIsDirectory,
+      currentFileIsDirectory
     } = this.props;
 
     if (error) {
@@ -163,7 +163,7 @@ class Sources extends React.Component<Props, State> {
           <BranchSelector
             branches={branches}
             selectedBranch={revision}
-            label={t('changesets.branchSelectorLabel')}
+            label={t("changesets.branchSelectorLabel")}
             selected={(b: Branch) => {
               this.branchSelected(b);
             }}
@@ -215,7 +215,7 @@ const mapStateToProps = (state, ownProps) => {
     loading,
     error,
     branches,
-    currentFileIsDirectory,
+    currentFileIsDirectory
   };
 };
 
@@ -226,15 +226,15 @@ const mapDispatchToProps = dispatch => {
     },
     fetchSources: (repository: Repository, revision: string, path: string) => {
       dispatch(fetchSources(repository, revision, path));
-    },
+    }
   };
 };
 
 export default compose(
-  translate('repos'),
+  translate("repos"),
   withRouter,
   connect(
     mapStateToProps,
-    mapDispatchToProps,
-  ),
+    mapDispatchToProps
+  )
 )(Sources);

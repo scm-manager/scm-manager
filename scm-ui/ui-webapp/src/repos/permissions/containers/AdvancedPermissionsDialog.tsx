@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 import {
   ButtonGroup,
   Button,
   SubmitButton,
-  Modal,
-} from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
-import PermissionCheckbox from '../components/PermissionCheckbox';
+  Modal
+} from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
+import PermissionCheckbox from "../components/PermissionCheckbox";
 
 type Props = {
   readOnly: boolean;
@@ -32,10 +32,10 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
       verb =>
         (verbs[verb] = props.selectedVerbs
           ? props.selectedVerbs.includes(verb)
-          : false),
+          : false)
     );
     this.state = {
-      verbs,
+      verbs
     };
   }
 
@@ -54,7 +54,7 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
     ));
 
     const submitButton = !readOnly ? (
-      <SubmitButton label={t('permission.advanced.dialog.submit')} />
+      <SubmitButton label={t("permission.advanced.dialog.submit")} />
     ) : null;
 
     const body = <>{verbSelectBoxes}</>;
@@ -64,7 +64,7 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
         <ButtonGroup>
           {submitButton}
           <Button
-            label={t('permission.advanced.dialog.abort')}
+            label={t("permission.advanced.dialog.abort")}
             action={onClose}
           />
         </ButtonGroup>
@@ -73,7 +73,7 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
 
     return (
       <Modal
-        title={t('permission.advanced.dialog.title')}
+        title={t("permission.advanced.dialog.title")}
         closeFunction={() => onClose()}
         body={body}
         footer={footer}
@@ -86,10 +86,10 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
     const { verbs } = this.state;
     const newVerbs = {
       ...verbs,
-      [name]: value,
+      [name]: value
     };
     this.setState({
-      verbs: newVerbs,
+      verbs: newVerbs
     });
   };
 
@@ -97,9 +97,9 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
     this.props.onSubmit(
       Object.entries(this.state.verbs)
         .filter(e => e[1])
-        .map(e => e[0]),
+        .map(e => e[0])
     );
   };
 }
 
-export default translate('repos')(AdvancedPermissionsDialog);
+export default translate("repos")(AdvancedPermissionsDialog);

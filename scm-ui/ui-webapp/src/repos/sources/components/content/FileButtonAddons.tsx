@@ -1,6 +1,6 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { ButtonAddons, Button } from '@scm-manager/ui-components';
+import React from "react";
+import { translate } from "react-i18next";
+import { ButtonAddons, Button } from "@scm-manager/ui-components";
 
 type Props = {
   className?: string;
@@ -19,7 +19,7 @@ class FileButtonAddons extends React.Component<Props> {
   };
 
   color = (selected: boolean) => {
-    return selected ? 'link is-selected' : null;
+    return selected ? "link is-selected" : null;
   };
 
   render() {
@@ -27,7 +27,7 @@ class FileButtonAddons extends React.Component<Props> {
 
     return (
       <ButtonAddons className={className}>
-        <div title={t('sources.content.sourcesButton')}>
+        <div title={t("sources.content.sourcesButton")}>
           <Button
             action={this.showSources}
             className="reduced"
@@ -38,7 +38,7 @@ class FileButtonAddons extends React.Component<Props> {
             </span>
           </Button>
         </div>
-        <div title={t('sources.content.historyButton')}>
+        <div title={t("sources.content.historyButton")}>
           <Button
             action={this.showHistory}
             className="reduced"
@@ -54,4 +54,4 @@ class FileButtonAddons extends React.Component<Props> {
   }
 }
 
-export default translate('repos')(FileButtonAddons);
+export default translate("repos")(FileButtonAddons);

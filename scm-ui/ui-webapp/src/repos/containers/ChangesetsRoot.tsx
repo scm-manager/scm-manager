@@ -1,21 +1,21 @@
-import React from 'react';
-import { Branch, Repository } from '@scm-manager/ui-types';
-import { translate } from 'react-i18next';
-import { Route, withRouter } from 'react-router-dom';
-import Changesets from './Changesets';
-import { connect } from 'react-redux';
+import React from "react";
+import { Branch, Repository } from "@scm-manager/ui-types";
+import { translate } from "react-i18next";
+import { Route, withRouter } from "react-router-dom";
+import Changesets from "./Changesets";
+import { connect } from "react-redux";
 import {
   BranchSelector,
   ErrorNotification,
-  Loading,
-} from '@scm-manager/ui-components';
+  Loading
+} from "@scm-manager/ui-components";
 import {
   fetchBranches,
   getBranches,
   getFetchBranchesFailure,
-  isFetchBranchesPending,
-} from '../branches/modules/branches';
-import { compose } from 'redux';
+  isFetchBranchesPending
+} from "../branches/modules/branches";
+import { compose } from "redux";
 
 type Props = {
   repository: Repository;
@@ -47,7 +47,7 @@ class ChangesetsRoot extends React.Component<Props> {
   redirectToDefaultBranch = () => {
     if (this.shouldRedirectToDefaultBranch()) {
       const defaultBranches = this.props.branches.filter(
-        b => b.defaultBranch === true,
+        b => b.defaultBranch === true
       );
       if (defaultBranches.length > 0) {
         this.branchSelected(defaultBranches[0]);
@@ -65,7 +65,7 @@ class ChangesetsRoot extends React.Component<Props> {
   };
 
   stripEndingSlash = (url: string) => {
-    if (url.endsWith('/')) {
+    if (url.endsWith("/")) {
       return url.substring(0, url.length - 1);
     }
     return url;
@@ -75,7 +75,7 @@ class ChangesetsRoot extends React.Component<Props> {
     let url;
     if (branch) {
       url = `${this.props.baseUrlWithBranch}/${encodeURIComponent(
-        branch.name,
+        branch.name
       )}/changesets/`;
     } else {
       url = `${this.props.baseUrlWithoutBranch}/`;
@@ -121,7 +121,7 @@ class ChangesetsRoot extends React.Component<Props> {
       return (
         <div className="panel-heading">
           <BranchSelector
-            label={t('changesets.branchSelectorLabel')}
+            label={t("changesets.branchSelectorLabel")}
             branches={branches}
             selectedBranch={selected}
             selected={(b: Branch) => {
@@ -139,7 +139,7 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchBranches: (repo: Repository) => {
       dispatch(fetchBranches(repo));
-    },
+    }
   };
 };
 
@@ -154,15 +154,15 @@ const mapStateToProps = (state: any, ownProps: Props) => {
     loading,
     error,
     branches,
-    selected,
+    selected
   };
 };
 
 export default compose(
   withRouter,
-  translate('repos'),
+  translate("repos"),
   connect(
     mapStateToProps,
-    mapDispatchToProps,
-  ),
+    mapDispatchToProps
+  )
 )(ChangesetsRoot);

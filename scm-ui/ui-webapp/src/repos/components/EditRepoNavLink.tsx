@@ -1,7 +1,7 @@
-import React from 'react';
-import { Repository } from '@scm-manager/ui-types';
-import { NavLink } from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
+import React from "react";
+import { Repository } from "@scm-manager/ui-types";
+import { NavLink } from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 
 type Props = {
   repository: Repository;
@@ -21,9 +21,9 @@ class EditRepoNavLink extends React.Component<Props> {
       return null;
     }
     return (
-      <NavLink to={editUrl} label={t('repositoryRoot.menu.generalNavLink')} />
+      <NavLink to={editUrl} label={t("repositoryRoot.menu.generalNavLink")} />
     );
   }
 }
 
-export default translate('repos')(EditRepoNavLink);
+export default translate("repos")(EditRepoNavLink);

@@ -1,22 +1,22 @@
-import React from 'react';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { translate } from 'react-i18next';
-import styled from 'styled-components';
-import { binder } from '@scm-manager/ui-extensions';
-import { Repository, File } from '@scm-manager/ui-types';
+import React from "react";
+import { compose } from "redux";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { translate } from "react-i18next";
+import styled from "styled-components";
+import { binder } from "@scm-manager/ui-extensions";
+import { Repository, File } from "@scm-manager/ui-types";
 import {
   ErrorNotification,
   Loading,
-  Notification,
-} from '@scm-manager/ui-components';
+  Notification
+} from "@scm-manager/ui-components";
 import {
   getFetchSourcesFailure,
   isFetchSourcesPending,
-  getSources,
-} from '../modules/sources';
-import FileTreeLeaf from './FileTreeLeaf';
+  getSources
+} from "../modules/sources";
+import FileTreeLeaf from "./FileTreeLeaf";
 
 type Props = {
   loading: boolean;
@@ -37,15 +37,15 @@ const FixedWidthTh = styled.th`
 `;
 
 export function findParent(path: string) {
-  if (path.endsWith('/')) {
+  if (path.endsWith("/")) {
     path = path.substring(0, path.length - 1);
   }
 
-  const index = path.lastIndexOf('/');
+  const index = path.lastIndexOf("/");
   if (index > 0) {
     return path.substring(0, index);
   }
-  return '';
+  return "";
 }
 
 class FileTree extends React.Component<Props> {
@@ -73,9 +73,9 @@ class FileTree extends React.Component<Props> {
 
     if (path) {
       files.push({
-        name: '..',
+        name: "..",
         path: findParent(path),
-        directory: true,
+        directory: true
       });
     }
 
@@ -102,9 +102,9 @@ class FileTree extends React.Component<Props> {
     if (files && files.length > 0) {
       let baseUrlWithRevision = baseUrl;
       if (revision) {
-        baseUrlWithRevision += '/' + encodeURIComponent(revision);
+        baseUrlWithRevision += "/" + encodeURIComponent(revision);
       } else {
-        baseUrlWithRevision += '/' + encodeURIComponent(tree.revision);
+        baseUrlWithRevision += "/" + encodeURIComponent(tree.revision);
       }
 
       return (
@@ -112,17 +112,17 @@ class FileTree extends React.Component<Props> {
           <thead>
             <tr>
               <FixedWidthTh />
-              <th>{t('sources.file-tree.name')}</th>
+              <th>{t("sources.file-tree.name")}</th>
               <th className="is-hidden-mobile">
-                {t('sources.file-tree.length')}
+                {t("sources.file-tree.length")}
               </th>
               <th className="is-hidden-mobile">
-                {t('sources.file-tree.lastModified')}
+                {t("sources.file-tree.lastModified")}
               </th>
               <th className="is-hidden-mobile">
-                {t('sources.file-tree.description')}
+                {t("sources.file-tree.description")}
               </th>
-              {binder.hasExtension('repos.sources.tree.row.right') && (
+              {binder.hasExtension("repos.sources.tree.row.right") && (
                 <th className="is-hidden-mobile" />
               )}
             </tr>
@@ -139,7 +139,7 @@ class FileTree extends React.Component<Props> {
         </table>
       );
     }
-    return <Notification type="info">{t('sources.noSources')}</Notification>;
+    return <Notification type="info">{t("sources.noSources")}</Notification>;
   }
 }
 
@@ -155,11 +155,11 @@ const mapStateToProps = (state: any, ownProps: Props) => {
     path,
     loading,
     error,
-    tree,
+    tree
   };
 };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps),
-)(translate('repos')(FileTree));
+  connect(mapStateToProps)
+)(translate("repos")(FileTree));

@@ -1,16 +1,16 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import classNames from 'classnames';
-import styled from 'styled-components';
-import { Plugin } from '@scm-manager/ui-types';
-import { CardColumn, Icon } from '@scm-manager/ui-components';
-import PluginAvatar from './PluginAvatar';
-import PluginModal from './PluginModal';
+import React from "react";
+import { translate } from "react-i18next";
+import classNames from "classnames";
+import styled from "styled-components";
+import { Plugin } from "@scm-manager/ui-types";
+import { CardColumn, Icon } from "@scm-manager/ui-components";
+import PluginAvatar from "./PluginAvatar";
+import PluginModal from "./PluginModal";
 
 export const PluginAction = {
-  INSTALL: 'install',
-  UPDATE: 'update',
-  UNINSTALL: 'uninstall',
+  INSTALL: "install",
+  UPDATE: "update",
+  UNINSTALL: "uninstall"
 };
 
 type Props = {
@@ -53,7 +53,7 @@ class PluginEntry extends React.Component<Props, State> {
     this.state = {
       showInstallModal: false,
       showUpdateModal: false,
-      showUninstallModal: false,
+      showUninstallModal: false
     };
   }
 
@@ -64,7 +64,7 @@ class PluginEntry extends React.Component<Props, State> {
   toggleModal = (showModal: string) => {
     const oldValue = this.state[showModal];
     this.setState({
-      [showModal]: !oldValue,
+      [showModal]: !oldValue
     });
   };
 
@@ -96,10 +96,10 @@ class PluginEntry extends React.Component<Props, State> {
         {this.isInstallable() && (
           <IconWrapper
             className="level-item"
-            onClick={() => this.toggleModal('showInstallModal')}
+            onClick={() => this.toggleModal("showInstallModal")}
           >
             <Icon
-              title={t('plugins.modal.install')}
+              title={t("plugins.modal.install")}
               name="download"
               color="info"
             />
@@ -108,10 +108,10 @@ class PluginEntry extends React.Component<Props, State> {
         {this.isUninstallable() && (
           <IconWrapper
             className="level-item"
-            onClick={() => this.toggleModal('showUninstallModal')}
+            onClick={() => this.toggleModal("showUninstallModal")}
           >
             <Icon
-              title={t('plugins.modal.uninstall')}
+              title={t("plugins.modal.uninstall")}
               name="trash"
               color="info"
             />
@@ -120,10 +120,10 @@ class PluginEntry extends React.Component<Props, State> {
         {this.isUpdatable() && (
           <IconWrapper
             className="level-item"
-            onClick={() => this.toggleModal('showUpdateModal')}
+            onClick={() => this.toggleModal("showUpdateModal")}
           >
             <Icon
-              title={t('plugins.modal.update')}
+              title={t("plugins.modal.update")}
               name="sync-alt"
               color="info"
             />
@@ -141,7 +141,7 @@ class PluginEntry extends React.Component<Props, State> {
           plugin={plugin}
           pluginAction={PluginAction.INSTALL}
           refresh={refresh}
-          onClose={() => this.toggleModal('showInstallModal')}
+          onClose={() => this.toggleModal("showInstallModal")}
         />
       );
     } else if (this.state.showUpdateModal && this.isUpdatable()) {
@@ -150,7 +150,7 @@ class PluginEntry extends React.Component<Props, State> {
           plugin={plugin}
           pluginAction={PluginAction.UPDATE}
           refresh={refresh}
-          onClose={() => this.toggleModal('showUpdateModal')}
+          onClose={() => this.toggleModal("showUpdateModal")}
         />
       );
     } else if (this.state.showUninstallModal && this.isUninstallable()) {
@@ -159,7 +159,7 @@ class PluginEntry extends React.Component<Props, State> {
           plugin={plugin}
           pluginAction={PluginAction.UNINSTALL}
           refresh={refresh}
-          onClose={() => this.toggleModal('showUninstallModal')}
+          onClose={() => this.toggleModal("showUninstallModal")}
         />
       );
     } else {
@@ -173,7 +173,7 @@ class PluginEntry extends React.Component<Props, State> {
       <Icon
         className="fa-spin fa-lg"
         name="spinner"
-        color={plugin.markedForUninstall ? 'danger' : 'info'}
+        color={plugin.markedForUninstall ? "danger" : "info"}
       />
     );
   };
@@ -191,7 +191,7 @@ class PluginEntry extends React.Component<Props, State> {
         <CardColumn
           action={
             this.isInstallable()
-              ? () => this.toggleModal('showInstallModal')
+              ? () => this.toggleModal("showInstallModal")
               : null
           }
           avatar={avatar}
@@ -210,4 +210,4 @@ class PluginEntry extends React.Component<Props, State> {
   }
 }
 
-export default translate('admin')(PluginEntry);
+export default translate("admin")(PluginEntry);

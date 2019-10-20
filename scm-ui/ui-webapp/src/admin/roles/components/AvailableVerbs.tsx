@@ -1,6 +1,6 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { RepositoryRole } from '@scm-manager/ui-types';
+import React from "react";
+import { translate } from "react-i18next";
+import { RepositoryRole } from "@scm-manager/ui-types";
 
 type Props = {
   role: RepositoryRole;
@@ -21,7 +21,7 @@ class AvailableVerbs extends React.Component<Props> {
             <ul>
               {role.verbs.map(verb => {
                 return (
-                  <li>{t('verbs.repository.' + verb + '.displayName')}</li>
+                  <li>{t("verbs.repository." + verb + ".displayName")}</li>
                 );
               })}
             </ul>
@@ -33,4 +33,4 @@ class AvailableVerbs extends React.Component<Props> {
   }
 }
 
-export default translate('plugins')(AvailableVerbs);
+export default translate("plugins")(AvailableVerbs);

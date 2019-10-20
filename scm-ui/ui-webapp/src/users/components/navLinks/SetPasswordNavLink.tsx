@@ -1,7 +1,7 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { User } from '@scm-manager/ui-types';
-import { NavLink } from '@scm-manager/ui-components';
+import React from "react";
+import { translate } from "react-i18next";
+import { User } from "@scm-manager/ui-types";
+import { NavLink } from "@scm-manager/ui-components";
 
 type Props = {
   t: (p: string) => string;
@@ -19,7 +19,7 @@ class ChangePasswordNavLink extends React.Component<Props> {
     return (
       <NavLink
         to={passwordUrl}
-        label={t('singleUser.menu.setPasswordNavLink')}
+        label={t("singleUser.menu.setPasswordNavLink")}
       />
     );
   }
@@ -29,4 +29,4 @@ class ChangePasswordNavLink extends React.Component<Props> {
   };
 }
 
-export default translate('users')(ChangePasswordNavLink);
+export default translate("users")(ChangePasswordNavLink);

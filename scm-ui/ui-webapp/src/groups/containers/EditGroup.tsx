@@ -1,18 +1,18 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import GroupForm from '../components/GroupForm';
+import React from "react";
+import { connect } from "react-redux";
+import GroupForm from "../components/GroupForm";
 import {
   modifyGroup,
   getModifyGroupFailure,
   isModifyGroupPending,
-  modifyGroupReset,
-} from '../modules/groups';
-import { History } from 'history';
-import { withRouter } from 'react-router-dom';
-import { Group } from '@scm-manager/ui-types';
-import { ErrorNotification } from '@scm-manager/ui-components';
-import { getUserAutoCompleteLink } from '../../modules/indexResource';
-import DeleteGroup from './DeleteGroup';
+  modifyGroupReset
+} from "../modules/groups";
+import { History } from "history";
+import { withRouter } from "react-router-dom";
+import { Group } from "@scm-manager/ui-types";
+import { ErrorNotification } from "@scm-manager/ui-components";
+import { getUserAutoCompleteLink } from "../../modules/indexResource";
+import DeleteGroup from "./DeleteGroup";
 
 type Props = {
   group: Group;
@@ -40,14 +40,14 @@ class EditGroup extends React.Component<Props> {
   };
 
   loadUserAutocompletion = (inputValue: string) => {
-    const url = this.props.autocompleteLink + '?q=';
+    const url = this.props.autocompleteLink + "?q=";
     return fetch(url + inputValue)
       .then(response => response.json())
       .then(json => {
         return json.map(element => {
           return {
             value: element,
-            label: `${element.displayName} (${element.id})`,
+            label: `${element.displayName} (${element.id})`
           };
         });
       });
@@ -80,7 +80,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     loading,
     error,
-    autocompleteLink,
+    autocompleteLink
   };
 };
 
@@ -91,11 +91,11 @@ const mapDispatchToProps = dispatch => {
     },
     modifyGroupReset: (group: Group) => {
       dispatch(modifyGroupReset(group));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(withRouter(EditGroup));

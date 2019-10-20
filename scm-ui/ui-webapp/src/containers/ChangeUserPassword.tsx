@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 import {
   ErrorNotification,
   InputField,
   Notification,
   PasswordConfirmation,
-  SubmitButton,
-} from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
-import { Me } from '@scm-manager/ui-types';
-import { changePassword } from '../modules/changePassword';
+  SubmitButton
+} from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
+import { Me } from "@scm-manager/ui-types";
+import { changePassword } from "../modules/changePassword";
 
 type Props = {
   me: Me;
@@ -29,21 +29,21 @@ class ChangeUserPassword extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      oldPassword: '',
-      password: '',
+      oldPassword: "",
+      password: "",
       loading: false,
       passwordConfirmationError: false,
       validatePasswordError: false,
-      validatePassword: '',
+      validatePassword: "",
       passwordChanged: false,
-      passwordValid: false,
+      passwordValid: false
     };
   }
 
   setLoadingState = () => {
     this.setState({
       ...this.state,
-      loading: true,
+      loading: true
     });
   };
 
@@ -51,7 +51,7 @@ class ChangeUserPassword extends React.Component<Props, State> {
     this.setState({
       ...this.state,
       error: error,
-      loading: false,
+      loading: false
     });
   };
 
@@ -60,8 +60,8 @@ class ChangeUserPassword extends React.Component<Props, State> {
       ...this.state,
       loading: false,
       passwordChanged: true,
-      oldPassword: '',
-      password: '',
+      oldPassword: "",
+      password: ""
     });
   };
 
@@ -97,8 +97,8 @@ class ChangeUserPassword extends React.Component<Props, State> {
     if (passwordChanged) {
       message = (
         <Notification
-          type={'success'}
-          children={t('password.changedSuccessfully')}
+          type={"success"}
+          children={t("password.changedSuccessfully")}
           onClose={() => this.onClose()}
         />
       );
@@ -112,29 +112,29 @@ class ChangeUserPassword extends React.Component<Props, State> {
         <div className="columns">
           <div className="column">
             <InputField
-              label={t('password.currentPassword')}
+              label={t("password.currentPassword")}
               type="password"
               onChange={oldPassword =>
                 this.setState({
                   ...this.state,
-                  oldPassword,
+                  oldPassword
                 })
               }
-              value={this.state.oldPassword ? this.state.oldPassword : ''}
-              helpText={t('password.currentPasswordHelpText')}
+              value={this.state.oldPassword ? this.state.oldPassword : ""}
+              helpText={t("password.currentPasswordHelpText")}
             />
           </div>
         </div>
         <PasswordConfirmation
           passwordChanged={this.passwordChanged}
-          key={this.state.passwordChanged ? 'changed' : 'unchanged'}
+          key={this.state.passwordChanged ? "changed" : "unchanged"}
         />
         <div className="columns">
           <div className="column">
             <SubmitButton
               disabled={!this.isValid()}
               loading={loading}
-              label={t('password.submit')}
+              label={t("password.submit")}
             />
           </div>
         </div>
@@ -146,16 +146,16 @@ class ChangeUserPassword extends React.Component<Props, State> {
     this.setState({
       ...this.state,
       password,
-      passwordValid: !!password && passwordValid,
+      passwordValid: !!password && passwordValid
     });
   };
 
   onClose = () => {
     this.setState({
       ...this.state,
-      passwordChanged: false,
+      passwordChanged: false
     });
   };
 }
 
-export default translate('commons')(ChangeUserPassword);
+export default translate("commons")(ChangeUserPassword);

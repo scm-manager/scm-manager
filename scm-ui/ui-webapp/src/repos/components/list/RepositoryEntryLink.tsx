@@ -1,7 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { Icon } from '@scm-manager/ui-components';
+import React from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { Icon } from "@scm-manager/ui-components";
 
 type Props = {
   to: string;

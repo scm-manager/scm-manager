@@ -1,22 +1,22 @@
-import React from 'react';
+import React from "react";
 
-import { Route, withRouter } from 'react-router-dom';
-import { getMe } from '../modules/auth';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
-import { Me } from '@scm-manager/ui-types';
+import { Route, withRouter } from "react-router-dom";
+import { getMe } from "../modules/auth";
+import { compose } from "redux";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
+import { Me } from "@scm-manager/ui-types";
 import {
   ErrorPage,
   Page,
   Navigation,
   SubNavigation,
   Section,
-  NavLink,
-} from '@scm-manager/ui-components';
-import ChangeUserPassword from './ChangeUserPassword';
-import ProfileInfo from './ProfileInfo';
-import { ExtensionPoint } from '@scm-manager/ui-extensions';
+  NavLink
+} from "@scm-manager/ui-components";
+import ChangeUserPassword from "./ChangeUserPassword";
+import ProfileInfo from "./ProfileInfo";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   me: Me;
@@ -29,7 +29,7 @@ type State = {};
 
 class Profile extends React.Component<Props, State> {
   stripEndingSlash = (url: string) => {
-    if (url.endsWith('/')) {
+    if (url.endsWith("/")) {
       return url.substring(0, url.length - 2);
     }
     return url;
@@ -47,11 +47,11 @@ class Profile extends React.Component<Props, State> {
     if (!me) {
       return (
         <ErrorPage
-          title={t('profile.error-title')}
-          subtitle={t('profile.error-subtitle')}
+          title={t("profile.error-title")}
+          subtitle={t("profile.error-subtitle")}
           error={{
-            name: t('profile.error'),
-            message: t('profile.error-message'),
+            name: t("profile.error"),
+            message: t("profile.error-message")
           }}
         />
       );
@@ -59,7 +59,7 @@ class Profile extends React.Component<Props, State> {
 
     const extensionProps = {
       me,
-      url,
+      url
     };
 
     return (
@@ -79,19 +79,19 @@ class Profile extends React.Component<Props, State> {
           </div>
           <div className="column">
             <Navigation>
-              <Section label={t('profile.navigationLabel')}>
+              <Section label={t("profile.navigationLabel")}>
                 <NavLink
                   to={`${url}`}
                   icon="fas fa-info-circle"
-                  label={t('profile.informationNavLink')}
+                  label={t("profile.informationNavLink")}
                 />
                 <SubNavigation
                   to={`${url}/settings/password`}
-                  label={t('profile.settingsNavLink')}
+                  label={t("profile.settingsNavLink")}
                 >
                   <NavLink
                     to={`${url}/settings/password`}
-                    label={t('profile.changePasswordNavLink')}
+                    label={t("profile.changePasswordNavLink")}
                   />
                   <ExtensionPoint
                     name="profile.setting"
@@ -110,12 +110,12 @@ class Profile extends React.Component<Props, State> {
 
 const mapStateToProps = state => {
   return {
-    me: getMe(state),
+    me: getMe(state)
   };
 };
 
 export default compose(
-  translate('commons'),
+  translate("commons"),
   connect(mapStateToProps),
-  withRouter,
+  withRouter
 )(Profile);

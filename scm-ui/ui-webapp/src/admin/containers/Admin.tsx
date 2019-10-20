@@ -1,29 +1,29 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import { ExtensionPoint } from '@scm-manager/ui-extensions';
-import { History } from 'history';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { Links } from '@scm-manager/ui-types';
+import React from "react";
+import { translate } from "react-i18next";
+import { Redirect, Route, Switch } from "react-router-dom";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { History } from "history";
+import { connect } from "react-redux";
+import { compose } from "redux";
+import { Links } from "@scm-manager/ui-types";
 import {
   Page,
   Navigation,
   NavLink,
   Section,
-  SubNavigation,
-} from '@scm-manager/ui-components';
+  SubNavigation
+} from "@scm-manager/ui-components";
 import {
   getLinks,
   getAvailablePluginsLink,
-  getInstalledPluginsLink,
-} from '../../modules/indexResource';
-import AdminDetails from './AdminDetails';
-import PluginsOverview from '../plugins/containers/PluginsOverview';
-import GlobalConfig from './GlobalConfig';
-import RepositoryRoles from '../roles/containers/RepositoryRoles';
-import SingleRepositoryRole from '../roles/containers/SingleRepositoryRole';
-import CreateRepositoryRole from '../roles/containers/CreateRepositoryRole';
+  getInstalledPluginsLink
+} from "../../modules/indexResource";
+import AdminDetails from "./AdminDetails";
+import PluginsOverview from "../plugins/containers/PluginsOverview";
+import GlobalConfig from "./GlobalConfig";
+import RepositoryRoles from "../roles/containers/RepositoryRoles";
+import SingleRepositoryRole from "../roles/containers/SingleRepositoryRole";
+import CreateRepositoryRole from "../roles/containers/CreateRepositoryRole";
 
 type Props = {
   links: Links;
@@ -38,8 +38,8 @@ type Props = {
 
 class Admin extends React.Component<Props> {
   stripEndingSlash = (url: string) => {
-    if (url.endsWith('/')) {
-      if (url.includes('role')) {
+    if (url.endsWith("/")) {
+      if (url.includes("role")) {
         return url.substring(0, url.length - 2);
       }
       return url.substring(0, url.length - 1);
@@ -63,7 +63,7 @@ class Admin extends React.Component<Props> {
     const url = this.matchedUrl();
     const extensionProps = {
       links,
-      url,
+      url
     };
 
     return (
@@ -157,28 +157,28 @@ class Admin extends React.Component<Props> {
           </div>
           <div className="column is-one-quarter">
             <Navigation>
-              <Section label={t('admin.menu.navigationLabel')}>
+              <Section label={t("admin.menu.navigationLabel")}>
                 <NavLink
                   to={`${url}/info`}
                   icon="fas fa-info-circle"
-                  label={t('admin.menu.informationNavLink')}
+                  label={t("admin.menu.informationNavLink")}
                 />
                 {(availablePluginsLink || installedPluginsLink) && (
                   <SubNavigation
                     to={`${url}/plugins/`}
                     icon="fas fa-puzzle-piece"
-                    label={t('plugins.menu.pluginsNavLink')}
+                    label={t("plugins.menu.pluginsNavLink")}
                   >
                     {installedPluginsLink && (
                       <NavLink
                         to={`${url}/plugins/installed/`}
-                        label={t('plugins.menu.installedNavLink')}
+                        label={t("plugins.menu.installedNavLink")}
                       />
                     )}
                     {availablePluginsLink && (
                       <NavLink
                         to={`${url}/plugins/available/`}
-                        label={t('plugins.menu.availableNavLink')}
+                        label={t("plugins.menu.availableNavLink")}
                       />
                     )}
                   </SubNavigation>
@@ -186,7 +186,7 @@ class Admin extends React.Component<Props> {
                 <NavLink
                   to={`${url}/roles/`}
                   icon="fas fa-user-shield"
-                  label={t('repositoryRole.navLink')}
+                  label={t("repositoryRole.navLink")}
                   activeWhenMatch={this.matchesRoles}
                   activeOnlyWhenExact={false}
                 />
@@ -197,11 +197,11 @@ class Admin extends React.Component<Props> {
                 />
                 <SubNavigation
                   to={`${url}/settings/general`}
-                  label={t('admin.menu.settingsNavLink')}
+                  label={t("admin.menu.settingsNavLink")}
                 >
                   <NavLink
                     to={`${url}/settings/general`}
-                    label={t('admin.menu.generalNavLink')}
+                    label={t("admin.menu.generalNavLink")}
                   />
                   <ExtensionPoint
                     name="admin.setting"
@@ -225,11 +225,11 @@ const mapStateToProps = (state: any) => {
   return {
     links,
     availablePluginsLink,
-    installedPluginsLink,
+    installedPluginsLink
   };
 };
 
 export default compose(
   connect(mapStateToProps),
-  translate('admin'),
+  translate("admin")
 )(Admin);

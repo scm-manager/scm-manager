@@ -1,55 +1,55 @@
-import { apiClient } from '@scm-manager/ui-components';
-import { isPending } from '../../../modules/pending';
-import { getFailure } from '../../../modules/failure';
-import * as types from '../../../modules/types';
-import { combineReducers, Dispatch } from 'redux';
-import { Action, PagedCollection, RepositoryRole } from '@scm-manager/ui-types';
+import { apiClient } from "@scm-manager/ui-components";
+import { isPending } from "../../../modules/pending";
+import { getFailure } from "../../../modules/failure";
+import * as types from "../../../modules/types";
+import { combineReducers, Dispatch } from "redux";
+import { Action, PagedCollection, RepositoryRole } from "@scm-manager/ui-types";
 
-export const FETCH_ROLES = 'scm/roles/FETCH_ROLES';
+export const FETCH_ROLES = "scm/roles/FETCH_ROLES";
 export const FETCH_ROLES_PENDING = `${FETCH_ROLES}_${types.PENDING_SUFFIX}`;
 export const FETCH_ROLES_SUCCESS = `${FETCH_ROLES}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_ROLES_FAILURE = `${FETCH_ROLES}_${types.FAILURE_SUFFIX}`;
 
-export const FETCH_ROLE = 'scm/roles/FETCH_ROLE';
+export const FETCH_ROLE = "scm/roles/FETCH_ROLE";
 export const FETCH_ROLE_PENDING = `${FETCH_ROLE}_${types.PENDING_SUFFIX}`;
 export const FETCH_ROLE_SUCCESS = `${FETCH_ROLE}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_ROLE_FAILURE = `${FETCH_ROLE}_${types.FAILURE_SUFFIX}`;
 
-export const CREATE_ROLE = 'scm/roles/CREATE_ROLE';
+export const CREATE_ROLE = "scm/roles/CREATE_ROLE";
 export const CREATE_ROLE_PENDING = `${CREATE_ROLE}_${types.PENDING_SUFFIX}`;
 export const CREATE_ROLE_SUCCESS = `${CREATE_ROLE}_${types.SUCCESS_SUFFIX}`;
 export const CREATE_ROLE_FAILURE = `${CREATE_ROLE}_${types.FAILURE_SUFFIX}`;
 export const CREATE_ROLE_RESET = `${CREATE_ROLE}_${types.RESET_SUFFIX}`;
 
-export const MODIFY_ROLE = 'scm/roles/MODIFY_ROLE';
+export const MODIFY_ROLE = "scm/roles/MODIFY_ROLE";
 export const MODIFY_ROLE_PENDING = `${MODIFY_ROLE}_${types.PENDING_SUFFIX}`;
 export const MODIFY_ROLE_SUCCESS = `${MODIFY_ROLE}_${types.SUCCESS_SUFFIX}`;
 export const MODIFY_ROLE_FAILURE = `${MODIFY_ROLE}_${types.FAILURE_SUFFIX}`;
 export const MODIFY_ROLE_RESET = `${MODIFY_ROLE}_${types.RESET_SUFFIX}`;
 
-export const DELETE_ROLE = 'scm/roles/DELETE_ROLE';
+export const DELETE_ROLE = "scm/roles/DELETE_ROLE";
 export const DELETE_ROLE_PENDING = `${DELETE_ROLE}_${types.PENDING_SUFFIX}`;
 export const DELETE_ROLE_SUCCESS = `${DELETE_ROLE}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_ROLE_FAILURE = `${DELETE_ROLE}_${types.FAILURE_SUFFIX}`;
 
-export const FETCH_VERBS = 'scm/roles/FETCH_VERBS';
+export const FETCH_VERBS = "scm/roles/FETCH_VERBS";
 export const FETCH_VERBS_PENDING = `${FETCH_VERBS}_${types.PENDING_SUFFIX}`;
 export const FETCH_VERBS_SUCCESS = `${FETCH_VERBS}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_VERBS_FAILURE = `${FETCH_VERBS}_${types.FAILURE_SUFFIX}`;
 
-const CONTENT_TYPE_ROLE = 'application/vnd.scmm-repositoryRole+json;v=2';
+const CONTENT_TYPE_ROLE = "application/vnd.scmm-repositoryRole+json;v=2";
 
 // fetch roles
 export function fetchRolesPending(): Action {
   return {
-    type: FETCH_ROLES_PENDING,
+    type: FETCH_ROLES_PENDING
   };
 }
 
 export function fetchRolesSuccess(roles: any): Action {
   return {
     type: FETCH_ROLES_SUCCESS,
-    payload: roles,
+    payload: roles
   };
 }
 
@@ -58,8 +58,8 @@ export function fetchRolesFailure(url: string, error: Error): Action {
     type: FETCH_ROLES_FAILURE,
     payload: {
       error,
-      url,
-    },
+      url
+    }
   };
 }
 
@@ -92,7 +92,7 @@ export function fetchRolePending(name: string): Action {
   return {
     type: FETCH_ROLE_PENDING,
     payload: name,
-    itemId: name,
+    itemId: name
   };
 }
 
@@ -100,7 +100,7 @@ export function fetchRoleSuccess(role: any): Action {
   return {
     type: FETCH_ROLE_SUCCESS,
     payload: role,
-    itemId: role.name,
+    itemId: role.name
   };
 }
 
@@ -109,9 +109,9 @@ export function fetchRoleFailure(name: string, error: Error): Action {
     type: FETCH_ROLE_FAILURE,
     payload: {
       name,
-      error,
+      error
     },
-    itemId: name,
+    itemId: name
   };
 }
 
@@ -133,7 +133,7 @@ function fetchRole(link: string, name: string) {
 }
 
 export function fetchRoleByName(link: string, name: string) {
-  const roleUrl = link.endsWith('/') ? link + name : link + '/' + name;
+  const roleUrl = link.endsWith("/") ? link + name : link + "/" + name;
   return fetchRole(roleUrl, name);
 }
 
@@ -145,33 +145,33 @@ export function fetchRoleByLink(role: RepositoryRole) {
 export function createRolePending(role: RepositoryRole): Action {
   return {
     type: CREATE_ROLE_PENDING,
-    role,
+    role
   };
 }
 
 export function createRoleSuccess(): Action {
   return {
-    type: CREATE_ROLE_SUCCESS,
+    type: CREATE_ROLE_SUCCESS
   };
 }
 
 export function createRoleFailure(error: Error): Action {
   return {
     type: CREATE_ROLE_FAILURE,
-    payload: error,
+    payload: error
   };
 }
 
 export function createRoleReset() {
   return {
-    type: CREATE_ROLE_RESET,
+    type: CREATE_ROLE_RESET
   };
 }
 
 export function createRole(
   link: string,
   role: RepositoryRole,
-  callback?: () => void,
+  callback?: () => void
 ) {
   return function(dispatch: Dispatch) {
     dispatch(createRolePending(role));
@@ -190,21 +190,21 @@ export function createRole(
 //fetch verbs
 export function fetchVerbsPending(): Action {
   return {
-    type: FETCH_VERBS_PENDING,
+    type: FETCH_VERBS_PENDING
   };
 }
 
 export function fetchVerbsSuccess(verbs: any): Action {
   return {
     type: FETCH_VERBS_SUCCESS,
-    payload: verbs,
+    payload: verbs
   };
 }
 
 export function fetchVerbsFailure(error: Error): Action {
   return {
     type: FETCH_VERBS_FAILURE,
-    payload: error,
+    payload: error
   };
 }
 
@@ -231,7 +231,7 @@ function verbReducer(state: any = {}, action: any = {}) {
       const verbs = action.payload.verbs;
       return {
         ...state,
-        verbs,
+        verbs
       };
     default:
       return state;
@@ -243,7 +243,7 @@ export function modifyRolePending(role: RepositoryRole): Action {
   return {
     type: MODIFY_ROLE_PENDING,
     payload: role,
-    itemId: role.name,
+    itemId: role.name
   };
 }
 
@@ -251,7 +251,7 @@ export function modifyRoleSuccess(role: RepositoryRole): Action {
   return {
     type: MODIFY_ROLE_SUCCESS,
     payload: role,
-    itemId: role.name,
+    itemId: role.name
   };
 }
 
@@ -260,16 +260,16 @@ export function modifyRoleFailure(role: RepositoryRole, error: Error): Action {
     type: MODIFY_ROLE_FAILURE,
     payload: {
       error,
-      role,
+      role
     },
-    itemId: role.name,
+    itemId: role.name
   };
 }
 
 export function modifyRoleReset(role: RepositoryRole): Action {
   return {
     type: MODIFY_ROLE_RESET,
-    itemId: role.name,
+    itemId: role.name
   };
 }
 
@@ -298,7 +298,7 @@ export function deleteRolePending(role: RepositoryRole): Action {
   return {
     type: DELETE_ROLE_PENDING,
     payload: role,
-    itemId: role.name,
+    itemId: role.name
   };
 }
 
@@ -306,7 +306,7 @@ export function deleteRoleSuccess(role: RepositoryRole): Action {
   return {
     type: DELETE_ROLE_SUCCESS,
     payload: role,
-    itemId: role.name,
+    itemId: role.name
   };
 }
 
@@ -315,9 +315,9 @@ export function deleteRoleFailure(role: RepositoryRole, error: Error): Action {
     type: DELETE_ROLE_FAILURE,
     payload: {
       error,
-      role,
+      role
     },
-    itemId: role.name,
+    itemId: role.name
   };
 }
 
@@ -341,7 +341,7 @@ export function deleteRole(role: RepositoryRole, callback?: () => void) {
 function extractRolesByNames(
   roles: RepositoryRole[],
   roleNames: string[],
-  oldRolesByNames: object,
+  oldRolesByNames: object
 ) {
   const rolesByNames = {};
 
@@ -374,7 +374,7 @@ function deleteRoleInEntries(roles: [], roleName: string) {
 const reducerByName = (state: any, rolename: string, newRoleState: any) => {
   return {
     ...state,
-    [rolename]: newRoleState,
+    [rolename]: newRoleState
   };
 };
 
@@ -390,19 +390,19 @@ function listReducer(state: any = {}, action: any = {}) {
           roleCreatePermission: !!action.payload._links.create,
           page: action.payload.page,
           pageTotal: action.payload.pageTotal,
-          _links: action.payload._links,
-        },
+          _links: action.payload._links
+        }
       };
 
     // Delete single role actions
     case DELETE_ROLE_SUCCESS:
       const newRoleEntries = deleteRoleInEntries(
         state.entries,
-        action.payload.name,
+        action.payload.name
       );
       return {
         ...state,
-        entries: newRoleEntries,
+        entries: newRoleEntries
       };
     default:
       return state;
@@ -417,7 +417,7 @@ function byNamesReducer(state: any = {}, action: any = {}) {
       const roleNames = roles.map(role => role.name);
       const byNames = extractRolesByNames(roles, roleNames, state.byNames);
       return {
-        ...byNames,
+        ...byNames
       };
 
     // Fetch single role actions
@@ -435,7 +435,7 @@ function byNamesReducer(state: any = {}, action: any = {}) {
 export default combineReducers({
   list: listReducer,
   byNames: byNamesReducer,
-  verbs: verbReducer,
+  verbs: verbReducer
 });
 
 // selectors

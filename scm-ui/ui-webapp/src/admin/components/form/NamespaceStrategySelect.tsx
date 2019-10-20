@@ -1,7 +1,7 @@
-import React from 'react';
-import { translate, TFunction } from 'react-i18next';
-import { Select } from '@scm-manager/ui-components';
-import { NamespaceStrategies } from '@scm-manager/ui-types';
+import React from "react";
+import { translate, TFunction } from "react-i18next";
+import { Select } from "@scm-manager/ui-components";
+import { NamespaceStrategies } from "@scm-manager/ui-types";
 
 type Props = {
   namespaceStrategies: NamespaceStrategies;
@@ -23,14 +23,14 @@ class NamespaceStrategySelect extends React.Component<Props> {
     }
 
     return available.map(ns => {
-      const key = 'namespaceStrategies.' + ns;
+      const key = "namespaceStrategies." + ns;
       let label = t(key);
       if (label === key) {
         label = ns;
       }
       return {
         value: ns,
-        label: label,
+        label: label
       };
     });
   };
@@ -63,4 +63,4 @@ class NamespaceStrategySelect extends React.Component<Props> {
   }
 }
 
-export default translate('plugins')(NamespaceStrategySelect);
+export default translate("plugins")(NamespaceStrategySelect);

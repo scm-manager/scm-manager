@@ -1,7 +1,7 @@
-import React from 'react';
-import { User } from '@scm-manager/ui-types';
-import { NavLink } from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
+import React from "react";
+import { User } from "@scm-manager/ui-types";
+import { NavLink } from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 
 type Props = {
   user: User;
@@ -20,8 +20,8 @@ class EditUserNavLink extends React.Component<Props> {
     if (!this.isEditable()) {
       return null;
     }
-    return <NavLink to={editUrl} label={t('singleUser.menu.generalNavLink')} />;
+    return <NavLink to={editUrl} label={t("singleUser.menu.generalNavLink")} />;
   }
 }
 
-export default translate('users')(EditUserNavLink);
+export default translate("users")(EditUserNavLink);

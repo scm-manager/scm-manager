@@ -1,30 +1,30 @@
-import React, { Component } from 'react';
-import Main from './Main';
-import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
-import { withRouter } from 'react-router-dom';
+import React, { Component } from "react";
+import Main from "./Main";
+import { connect } from "react-redux";
+import { translate } from "react-i18next";
+import { withRouter } from "react-router-dom";
 import {
   fetchMe,
   getFetchMeFailure,
   getMe,
   isAuthenticated,
-  isFetchMePending,
-} from '../modules/auth';
+  isFetchMePending
+} from "../modules/auth";
 
 import {
   ErrorPage,
   Footer,
   Header,
   Loading,
-  PrimaryNavigation,
-} from '@scm-manager/ui-components';
-import { Links, Me } from '@scm-manager/ui-types';
+  PrimaryNavigation
+} from "@scm-manager/ui-components";
+import { Links, Me } from "@scm-manager/ui-types";
 import {
   getFetchIndexResourcesFailure,
   getLinks,
   getMeLink,
-  isFetchIndexResourcesPending,
-} from '../modules/indexResource';
+  isFetchIndexResourcesPending
+} from "../modules/indexResource";
 
 type Props = {
   me: Me;
@@ -52,15 +52,15 @@ class App extends Component<Props> {
     const { me, loading, error, authenticated, links, t } = this.props;
 
     let content;
-    const navigation = authenticated ? <PrimaryNavigation links={links} /> : '';
+    const navigation = authenticated ? <PrimaryNavigation links={links} /> : "";
 
     if (loading) {
       content = <Loading />;
     } else if (error) {
       content = (
         <ErrorPage
-          title={t('app.error.title')}
-          subtitle={t('app.error.subtitle')}
+          title={t("app.error.title")}
+          subtitle={t("app.error.subtitle")}
           error={error}
         />
       );
@@ -79,7 +79,7 @@ class App extends Component<Props> {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchMe: (link: string) => dispatch(fetchMe(link)),
+    fetchMe: (link: string) => dispatch(fetchMe(link))
   };
 };
 
@@ -98,13 +98,13 @@ const mapStateToProps = state => {
     loading,
     error,
     links,
-    meLink,
+    meLink
   };
 };
 
 export default withRouter(
   connect(
     mapStateToProps,
-    mapDispatchToProps,
-  )(translate('commons')(App)),
+    mapDispatchToProps
+  )(translate("commons")(App))
 );

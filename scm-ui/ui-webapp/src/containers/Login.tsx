@@ -1,17 +1,17 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Redirect, withRouter } from 'react-router-dom';
-import { compose } from 'redux';
-import { translate } from 'react-i18next';
-import styled from 'styled-components';
+import React from "react";
+import { connect } from "react-redux";
+import { Redirect, withRouter } from "react-router-dom";
+import { compose } from "redux";
+import { translate } from "react-i18next";
+import styled from "styled-components";
 import {
   getLoginFailure,
   isAuthenticated,
   isLoginPending,
-  login,
-} from '../modules/auth';
-import { getLoginInfoLink, getLoginLink } from '../modules/indexResource';
-import LoginInfo from '../components/LoginInfo';
+  login
+} from "../modules/auth";
+import { getLoginInfoLink, getLoginLink } from "../modules/indexResource";
+import LoginInfo from "../components/LoginInfo";
 
 type Props = {
   authenticated: boolean;
@@ -42,8 +42,8 @@ class Login extends React.Component<Props> {
   renderRedirect = () => {
     const { from } = this.props.location.state || {
       from: {
-        pathname: '/',
-      },
+        pathname: "/"
+      }
     };
     return <Redirect to={from} />;
   };
@@ -80,14 +80,14 @@ const mapStateToProps = state => {
     loading,
     error,
     link,
-    loginInfoLink,
+    loginInfoLink
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     login: (loginLink: string, username: string, password: string) =>
-      dispatch(login(loginLink, username, password)),
+      dispatch(login(loginLink, username, password))
   };
 };
 
@@ -95,6 +95,6 @@ export default compose(
   withRouter,
   connect(
     mapStateToProps,
-    mapDispatchToProps,
-  ),
+    mapDispatchToProps
+  )
 )(Login);

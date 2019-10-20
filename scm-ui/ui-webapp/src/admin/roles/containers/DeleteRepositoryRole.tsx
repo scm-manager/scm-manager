@@ -1,20 +1,20 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { RepositoryRole } from '@scm-manager/ui-types';
+import React from "react";
+import { translate } from "react-i18next";
+import { RepositoryRole } from "@scm-manager/ui-types";
 import {
   Subtitle,
   DeleteButton,
   confirmAlert,
-  ErrorNotification,
-} from '@scm-manager/ui-components';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { History } from 'history';
+  ErrorNotification
+} from "@scm-manager/ui-components";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { History } from "history";
 import {
   deleteRole,
   getDeleteRoleFailure,
-  isDeleteRolePending,
-} from '../modules/roles';
+  isDeleteRolePending
+} from "../modules/roles";
 
 type Props = {
   loading: boolean;
@@ -30,11 +30,11 @@ type Props = {
 
 class DeleteRepositoryRole extends React.Component<Props> {
   static defaultProps = {
-    confirmDialog: true,
+    confirmDialog: true
   };
 
   roleDeleted = () => {
-    this.props.history.push('/admin/roles/');
+    this.props.history.push("/admin/roles/");
   };
 
   deleteRole = () => {
@@ -44,18 +44,18 @@ class DeleteRepositoryRole extends React.Component<Props> {
   confirmDelete = () => {
     const { t } = this.props;
     confirmAlert({
-      title: t('repositoryRole.delete.confirmAlert.title'),
-      message: t('repositoryRole.delete.confirmAlert.message'),
+      title: t("repositoryRole.delete.confirmAlert.title"),
+      message: t("repositoryRole.delete.confirmAlert.message"),
       buttons: [
         {
-          label: t('repositoryRole.delete.confirmAlert.submit'),
-          onClick: () => this.deleteRole(),
+          label: t("repositoryRole.delete.confirmAlert.submit"),
+          onClick: () => this.deleteRole()
         },
         {
-          label: t('repositoryRole.delete.confirmAlert.cancel'),
-          onClick: () => null,
-        },
-      ],
+          label: t("repositoryRole.delete.confirmAlert.cancel"),
+          onClick: () => null
+        }
+      ]
     });
   };
 
@@ -73,12 +73,12 @@ class DeleteRepositoryRole extends React.Component<Props> {
 
     return (
       <>
-        <Subtitle subtitle={t('repositoryRole.delete.subtitle')} />
+        <Subtitle subtitle={t("repositoryRole.delete.subtitle")} />
         <div className="columns">
           <div className="column">
             <ErrorNotification error={error} />
             <DeleteButton
-              label={t('repositoryRole.delete.button')}
+              label={t("repositoryRole.delete.button")}
               action={action}
               loading={loading}
             />
@@ -94,7 +94,7 @@ const mapStateToProps = (state, ownProps) => {
   const error = getDeleteRoleFailure(state, ownProps.role.name);
   return {
     loading,
-    error,
+    error
   };
 };
 
@@ -102,11 +102,11 @@ const mapDispatchToProps = dispatch => {
   return {
     deleteRole: (role: RepositoryRole, callback?: () => void) => {
       dispatch(deleteRole(role, callback));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(withRouter(translate('admin')(DeleteRepositoryRole)));
+  mapDispatchToProps
+)(withRouter(translate("admin")(DeleteRepositoryRole)));

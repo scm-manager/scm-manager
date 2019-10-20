@@ -1,7 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { RepositoryRole } from '@scm-manager/ui-types';
-import SystemRoleTag from './SystemRoleTag';
+import React from "react";
+import { Link } from "react-router-dom";
+import { RepositoryRole } from "@scm-manager/ui-types";
+import SystemRoleTag from "./SystemRoleTag";
 
 type Props = {
   baseUrl: string;

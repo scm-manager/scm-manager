@@ -1,6 +1,6 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { Checkbox } from '@scm-manager/ui-components';
+import React from "react";
+import { translate } from "react-i18next";
+import { Checkbox } from "@scm-manager/ui-components";
 
 type Props = {
   permission: string;
@@ -13,20 +13,20 @@ type Props = {
 class PermissionCheckbox extends React.Component<Props> {
   render() {
     const { t, permission, checked, onChange, disabled } = this.props;
-    const key = permission.split(':').join('.');
+    const key = permission.split(":").join(".");
     return (
       <Checkbox
         name={permission}
         label={this.translateOrDefault(
-          'permissions.' + key + '.displayName',
-          key,
+          "permissions." + key + ".displayName",
+          key
         )}
         checked={checked}
         onChange={onChange}
         disabled={disabled}
         helpText={this.translateOrDefault(
-          'permissions.' + key + '.description',
-          t('permissions.unknown'),
+          "permissions." + key + ".description",
+          t("permissions.unknown")
         )}
       />
     );
@@ -42,4 +42,4 @@ class PermissionCheckbox extends React.Component<Props> {
   };
 }
 
-export default translate('plugins')(PermissionCheckbox);
+export default translate("plugins")(PermissionCheckbox);

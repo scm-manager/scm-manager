@@ -1,20 +1,20 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { User } from '@scm-manager/ui-types';
+import React from "react";
+import { translate } from "react-i18next";
+import { User } from "@scm-manager/ui-types";
 import {
   Subtitle,
   DeleteButton,
   confirmAlert,
-  ErrorNotification,
-} from '@scm-manager/ui-components';
+  ErrorNotification
+} from "@scm-manager/ui-components";
 import {
   deleteUser,
   getDeleteUserFailure,
-  isDeleteUserPending,
-} from '../modules/users';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { History } from 'history';
+  isDeleteUserPending
+} from "../modules/users";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { History } from "history";
 
 type Props = {
   loading: boolean;
@@ -30,11 +30,11 @@ type Props = {
 
 class DeleteUser extends React.Component<Props> {
   static defaultProps = {
-    confirmDialog: true,
+    confirmDialog: true
   };
 
   userDeleted = () => {
-    this.props.history.push('/users/');
+    this.props.history.push("/users/");
   };
 
   deleteUser = () => {
@@ -44,18 +44,18 @@ class DeleteUser extends React.Component<Props> {
   confirmDelete = () => {
     const { t } = this.props;
     confirmAlert({
-      title: t('deleteUser.confirmAlert.title'),
-      message: t('deleteUser.confirmAlert.message'),
+      title: t("deleteUser.confirmAlert.title"),
+      message: t("deleteUser.confirmAlert.message"),
       buttons: [
         {
-          label: t('deleteUser.confirmAlert.submit'),
-          onClick: () => this.deleteUser(),
+          label: t("deleteUser.confirmAlert.submit"),
+          onClick: () => this.deleteUser()
         },
         {
-          label: t('deleteUser.confirmAlert.cancel'),
-          onClick: () => null,
-        },
-      ],
+          label: t("deleteUser.confirmAlert.cancel"),
+          onClick: () => null
+        }
+      ]
     });
   };
 
@@ -73,12 +73,12 @@ class DeleteUser extends React.Component<Props> {
 
     return (
       <>
-        <Subtitle subtitle={t('deleteUser.subtitle')} />
+        <Subtitle subtitle={t("deleteUser.subtitle")} />
         <ErrorNotification error={error} />
         <div className="columns">
           <div className="column">
             <DeleteButton
-              label={t('deleteUser.button')}
+              label={t("deleteUser.button")}
               action={action}
               loading={loading}
             />
@@ -94,7 +94,7 @@ const mapStateToProps = (state, ownProps) => {
   const error = getDeleteUserFailure(state, ownProps.user.name);
   return {
     loading,
-    error,
+    error
   };
 };
 
@@ -102,11 +102,11 @@ const mapDispatchToProps = dispatch => {
   return {
     deleteUser: (user: User, callback?: () => void) => {
       dispatch(deleteUser(user, callback));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(withRouter(translate('users')(DeleteUser)));
+  mapDispatchToProps
+)(withRouter(translate("users")(DeleteUser)));

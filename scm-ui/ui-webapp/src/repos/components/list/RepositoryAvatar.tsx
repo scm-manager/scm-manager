@@ -1,7 +1,7 @@
-import React from 'react';
-import { ExtensionPoint } from '@scm-manager/ui-extensions';
-import { Repository } from '@scm-manager/ui-types';
-import { Image } from '@scm-manager/ui-components';
+import React from "react";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { Repository } from "@scm-manager/ui-types";
+import { Image } from "@scm-manager/ui-components";
 
 type Props = {
   repository: Repository;
@@ -15,7 +15,7 @@ class RepositoryAvatar extends React.Component<Props> {
         <ExtensionPoint
           name="repos.repository-avatar"
           props={{
-            repository,
+            repository
           }}
         >
           <Image src="/images/blib.jpg" alt="Logo" />

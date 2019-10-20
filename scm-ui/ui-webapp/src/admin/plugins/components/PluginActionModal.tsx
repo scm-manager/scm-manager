@@ -1,13 +1,13 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   Button,
   ButtonGroup,
   ErrorNotification,
-  Modal,
-} from '@scm-manager/ui-components';
-import { PendingPlugins, PluginCollection } from '@scm-manager/ui-types';
-import { translate } from 'react-i18next';
-import SuccessNotification from './SuccessNotification';
+  Modal
+} from "@scm-manager/ui-components";
+import { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
+import { translate } from "react-i18next";
+import SuccessNotification from "./SuccessNotification";
 
 type Props = {
   onClose: () => void;
@@ -36,7 +36,7 @@ class PluginActionModal extends React.Component<Props, State> {
     super(props);
     this.state = {
       loading: false,
-      success: false,
+      success: false
     };
   }
 
@@ -54,7 +54,7 @@ class PluginActionModal extends React.Component<Props, State> {
 
   executeAction = () => {
     this.setState({
-      loading: true,
+      loading: true
     });
 
     this.props
@@ -62,14 +62,14 @@ class PluginActionModal extends React.Component<Props, State> {
       .then(() => {
         this.setState({
           success: true,
-          loading: false,
+          loading: false
         });
       })
       .catch(error => {
         this.setState({
           success: false,
           loading: false,
-          error: error,
+          error: error
         });
       });
   };
@@ -93,7 +93,7 @@ class PluginActionModal extends React.Component<Props, State> {
           installedPlugins._embedded &&
           installedPlugins._embedded.plugins && (
             <>
-              <strong>{t('plugins.modal.updateQueue')}</strong>
+              <strong>{t("plugins.modal.updateQueue")}</strong>
               <ul>
                 {installedPlugins._embedded.plugins
                   .filter(plugin => plugin._links && plugin._links.update)
@@ -115,7 +115,7 @@ class PluginActionModal extends React.Component<Props, State> {
           pendingPlugins._embedded &&
           pendingPlugins._embedded.new.length > 0 && (
             <>
-              <strong>{t('plugins.modal.installQueue')}</strong>
+              <strong>{t("plugins.modal.installQueue")}</strong>
               <ul>
                 {pendingPlugins._embedded.new.map(plugin => (
                   <li key={plugin.name}>{plugin.name}</li>
@@ -135,7 +135,7 @@ class PluginActionModal extends React.Component<Props, State> {
           pendingPlugins._embedded &&
           pendingPlugins._embedded.update.length > 0 && (
             <>
-              <strong>{t('plugins.modal.updateQueue')}</strong>
+              <strong>{t("plugins.modal.updateQueue")}</strong>
               <ul>
                 {pendingPlugins._embedded.update.map(plugin => (
                   <li key={plugin.name}>{plugin.name}</li>
@@ -155,7 +155,7 @@ class PluginActionModal extends React.Component<Props, State> {
           pendingPlugins._embedded &&
           pendingPlugins._embedded.uninstall.length > 0 && (
             <>
-              <strong>{t('plugins.modal.uninstallQueue')}</strong>
+              <strong>{t("plugins.modal.uninstallQueue")}</strong>
               <ul>
                 {pendingPlugins._embedded.uninstall.map(plugin => (
                   <li key={plugin.name}>{plugin.name}</li>
@@ -193,7 +193,7 @@ class PluginActionModal extends React.Component<Props, State> {
           action={this.executeAction}
           disabled={error || success}
         />
-        <Button label={t('plugins.modal.abort')} action={onClose} />
+        <Button label={t("plugins.modal.abort")} action={onClose} />
       </ButtonGroup>
     );
   };
@@ -212,4 +212,4 @@ class PluginActionModal extends React.Component<Props, State> {
   }
 }
 
-export default translate('admin')(PluginActionModal);
+export default translate("admin")(PluginActionModal);

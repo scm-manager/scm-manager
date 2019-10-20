@@ -1,18 +1,18 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import RepositoryForm from '../components/form';
-import DeleteRepo from './DeleteRepo';
-import { Repository } from '@scm-manager/ui-types';
+import React from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import RepositoryForm from "../components/form";
+import DeleteRepo from "./DeleteRepo";
+import { Repository } from "@scm-manager/ui-types";
 import {
   modifyRepo,
   isModifyRepoPending,
   getModifyRepoFailure,
-  modifyRepoReset,
-} from '../modules/repos';
-import { History } from 'history';
-import { ErrorNotification } from '@scm-manager/ui-components';
-import { ExtensionPoint } from '@scm-manager/ui-extensions';
+  modifyRepoReset
+} from "../modules/repos";
+import { History } from "history";
+import { ErrorNotification } from "@scm-manager/ui-components";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   loading: boolean;
@@ -39,7 +39,7 @@ class EditRepo extends React.Component<Props> {
   };
 
   stripEndingSlash = (url: string) => {
-    if (url.endsWith('/')) {
+    if (url.endsWith("/")) {
       return url.substring(0, url.length - 2);
     }
     return url;
@@ -56,7 +56,7 @@ class EditRepo extends React.Component<Props> {
 
     const extensionProps = {
       repository,
-      url,
+      url
     };
 
     return (
@@ -86,7 +86,7 @@ const mapStateToProps = (state, ownProps) => {
   const error = getModifyRepoFailure(state, namespace, name);
   return {
     loading,
-    error,
+    error
   };
 };
 
@@ -97,11 +97,11 @@ const mapDispatchToProps = dispatch => {
     },
     modifyRepoReset: (repo: Repository) => {
       dispatch(modifyRepoReset(repo));
-    },
+    }
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(withRouter(EditRepo));

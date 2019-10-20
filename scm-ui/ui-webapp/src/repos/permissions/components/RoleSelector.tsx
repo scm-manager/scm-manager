@@ -1,6 +1,6 @@
-import React from 'react';
-import { translate } from 'react-i18next';
-import { Select } from '@scm-manager/ui-components';
+import React from "react";
+import { translate } from "react-i18next";
+import { Select } from "@scm-manager/ui-components";
 
 type Props = {
   t: (p: string) => string;
@@ -20,19 +20,19 @@ class RoleSelector extends React.Component<Props> {
       handleRoleChange,
       loading,
       label,
-      helpText,
+      helpText
     } = this.props;
 
     if (!availableRoles) return null;
 
     const options = role
       ? this.createSelectOptions(availableRoles)
-      : ['', ...this.createSelectOptions(availableRoles)];
+      : ["", ...this.createSelectOptions(availableRoles)];
 
     return (
       <Select
         onChange={handleRoleChange}
-        value={role ? role : ''}
+        value={role ? role : ""}
         options={options}
         loading={loading}
         label={label}
@@ -45,10 +45,10 @@ class RoleSelector extends React.Component<Props> {
     return roles.map(role => {
       return {
         label: role,
-        value: role,
+        value: role
       };
     });
   }
 }
 
-export default translate('repos')(RoleSelector);
+export default translate("repos")(RoleSelector);

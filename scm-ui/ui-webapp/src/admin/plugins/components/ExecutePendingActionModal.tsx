@@ -1,9 +1,9 @@
-import React from 'react';
-import PluginActionModal from './PluginActionModal';
-import { PendingPlugins } from '@scm-manager/ui-types';
-import waitForRestart from './waitForRestart';
-import { apiClient, Notification } from '@scm-manager/ui-components';
-import { translate } from 'react-i18next';
+import React from "react";
+import PluginActionModal from "./PluginActionModal";
+import { PendingPlugins } from "@scm-manager/ui-types";
+import waitForRestart from "./waitForRestart";
+import { apiClient, Notification } from "@scm-manager/ui-components";
+import { translate } from "react-i18next";
 
 type Props = {
   onClose: () => void;
@@ -19,14 +19,14 @@ class ExecutePendingActionModal extends React.Component<Props> {
 
     return (
       <PluginActionModal
-        description={t('plugins.modal.executePending')}
-        label={t('plugins.modal.executeAndRestart')}
+        description={t("plugins.modal.executePending")}
+        label={t("plugins.modal.executeAndRestart")}
         onClose={onClose}
         pendingPlugins={pendingPlugins}
         execute={this.executeAndRestart}
       >
         <Notification type="warning">
-          {t('plugins.modal.restartNotification')}
+          {t("plugins.modal.restartNotification")}
         </Notification>
       </PluginActionModal>
     );
@@ -40,4 +40,4 @@ class ExecutePendingActionModal extends React.Component<Props> {
   };
 }
 
-export default translate('admin')(ExecutePendingActionModal);
+export default translate("admin")(ExecutePendingActionModal);

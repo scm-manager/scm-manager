@@ -1,25 +1,25 @@
-import React from 'react';
+import React from "react";
 import {
   fetchBranches,
   getBranches,
   getFetchBranchesFailure,
   isFetchBranchesPending,
-  isPermittedToCreateBranches,
-} from '../modules/branches';
-import { orderBranches } from '../util/orderBranches';
-import { connect } from 'react-redux';
-import { Branch, Repository } from '@scm-manager/ui-types';
-import { compose } from 'redux';
-import { translate } from 'react-i18next';
-import { withRouter } from 'react-router-dom';
+  isPermittedToCreateBranches
+} from "../modules/branches";
+import { orderBranches } from "../util/orderBranches";
+import { connect } from "react-redux";
+import { Branch, Repository } from "@scm-manager/ui-types";
+import { compose } from "redux";
+import { translate } from "react-i18next";
+import { withRouter } from "react-router-dom";
 import {
   CreateButton,
   ErrorNotification,
   Loading,
   Notification,
-  Subtitle,
-} from '@scm-manager/ui-components';
-import BranchTable from '../components/BranchTable';
+  Subtitle
+} from "@scm-manager/ui-components";
+import BranchTable from "../components/BranchTable";
 
 type Props = {
   repository: Repository;
@@ -57,7 +57,7 @@ class BranchesOverview extends React.Component<Props> {
 
     return (
       <>
-        <Subtitle subtitle={t('branches.overview.title')} />
+        <Subtitle subtitle={t("branches.overview.title")} />
         {this.renderBranchesTable()}
         {this.renderCreateButton()}
       </>
@@ -72,7 +72,7 @@ class BranchesOverview extends React.Component<Props> {
     }
     return (
       <Notification type="info">
-        {t('branches.overview.noBranches')}
+        {t("branches.overview.noBranches")}
       </Notification>
     );
   }
@@ -82,7 +82,7 @@ class BranchesOverview extends React.Component<Props> {
     if (showCreateButton) {
       return (
         <CreateButton
-          label={t('branches.overview.createButton')}
+          label={t("branches.overview.createButton")}
           link="./create"
         />
       );
@@ -103,7 +103,7 @@ const mapStateToProps = (state, ownProps) => {
     loading,
     error,
     branches,
-    showCreateButton,
+    showCreateButton
   };
 };
 
@@ -111,15 +111,15 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchBranches: (repository: Repository) => {
       dispatch(fetchBranches(repository));
-    },
+    }
   };
 };
 
 export default compose(
-  translate('repos'),
+  translate("repos"),
   withRouter,
   connect(
     mapStateToProps,
-    mapDispatchToProps,
-  ),
+    mapDispatchToProps
+  )
 )(BranchesOverview);

@@ -1,72 +1,72 @@
-import groupByNamespace from './groupByNamespace';
+import groupByNamespace from "./groupByNamespace";
 
 const base = {
-  type: 'git',
-  _links: {},
+  type: "git",
+  _links: {}
 };
 
 const slartiBlueprintsFjords = {
   ...base,
-  namespace: 'slarti',
-  name: 'fjords-blueprints',
+  namespace: "slarti",
+  name: "fjords-blueprints"
 };
 
 const slartiFjords = {
   ...base,
-  namespace: 'slarti',
-  name: 'fjords',
+  namespace: "slarti",
+  name: "fjords"
 };
 
 const hitchhikerRestand = {
   ...base,
-  namespace: 'hitchhiker',
-  name: 'restand',
+  namespace: "hitchhiker",
+  name: "restand"
 };
 const hitchhikerPuzzle42 = {
   ...base,
-  namespace: 'hitchhiker',
-  name: 'puzzle42',
+  namespace: "hitchhiker",
+  name: "puzzle42"
 };
 
 const hitchhikerHeartOfGold = {
   ...base,
-  namespace: 'hitchhiker',
-  name: 'heartOfGold',
+  namespace: "hitchhiker",
+  name: "heartOfGold"
 };
 
 const zaphodMarvinFirmware = {
   ...base,
-  namespace: 'zaphod',
-  name: 'marvin-firmware',
+  namespace: "zaphod",
+  name: "marvin-firmware"
 };
 
-it('should group the repositories by their namespace', () => {
+it("should group the repositories by their namespace", () => {
   const repositories = [
     zaphodMarvinFirmware,
     slartiBlueprintsFjords,
     hitchhikerRestand,
     slartiFjords,
     hitchhikerHeartOfGold,
-    hitchhikerPuzzle42,
+    hitchhikerPuzzle42
   ];
 
   const expected = [
     {
-      name: 'hitchhiker',
+      name: "hitchhiker",
       repositories: [
         hitchhikerHeartOfGold,
         hitchhikerPuzzle42,
-        hitchhikerRestand,
-      ],
+        hitchhikerRestand
+      ]
     },
     {
-      name: 'slarti',
-      repositories: [slartiFjords, slartiBlueprintsFjords],
+      name: "slarti",
+      repositories: [slartiFjords, slartiBlueprintsFjords]
     },
     {
-      name: 'zaphod',
-      repositories: [zaphodMarvinFirmware],
-    },
+      name: "zaphod",
+      repositories: [zaphodMarvinFirmware]
+    }
   ];
 
   expect(groupByNamespace(repositories)).toEqual(expected);

@@ -1,6 +1,6 @@
-import fetchMock from 'fetch-mock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import fetchMock from "fetch-mock";
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
 import {
   FETCH_REPOSITORY_TYPES,
   FETCH_REPOSITORY_TYPES_FAILURE,
@@ -11,91 +11,91 @@ import {
   getFetchRepositoryTypesFailure,
   getRepositoryTypes,
   isFetchRepositoryTypesPending,
-  shouldFetchRepositoryTypes,
-} from './repositoryTypes';
-import reducer from './repositoryTypes';
+  shouldFetchRepositoryTypes
+} from "./repositoryTypes";
+import reducer from "./repositoryTypes";
 
 const git = {
-  name: 'git',
-  displayName: 'Git',
+  name: "git",
+  displayName: "Git",
   _links: {
     self: {
-      href: 'http://localhost:8081/api/v2/repositoryTypes/git',
-    },
-  },
+      href: "http://localhost:8081/api/v2/repositoryTypes/git"
+    }
+  }
 };
 
 const hg = {
-  name: 'hg',
-  displayName: 'Mercurial',
+  name: "hg",
+  displayName: "Mercurial",
   _links: {
     self: {
-      href: 'http://localhost:8081/api/v2/repositoryTypes/hg',
-    },
-  },
+      href: "http://localhost:8081/api/v2/repositoryTypes/hg"
+    }
+  }
 };
 
 const svn = {
-  name: 'svn',
-  displayName: 'Subversion',
+  name: "svn",
+  displayName: "Subversion",
   _links: {
     self: {
-      href: 'http://localhost:8081/api/v2/repositoryTypes/svn',
-    },
-  },
+      href: "http://localhost:8081/api/v2/repositoryTypes/svn"
+    }
+  }
 };
 
 const collection = {
   _embedded: {
-    repositoryTypes: [git, hg, svn],
+    repositoryTypes: [git, hg, svn]
   },
   _links: {
     self: {
-      href: 'http://localhost:8081/api/v2/repositoryTypes',
-    },
-  },
+      href: "http://localhost:8081/api/v2/repositoryTypes"
+    }
+  }
 };
 
-describe('repository types caching', () => {
-  it('should fetch repository types, on empty state', () => {
+describe("repository types caching", () => {
+  it("should fetch repository types, on empty state", () => {
     expect(shouldFetchRepositoryTypes({})).toBe(true);
   });
 
-  it('should fetch repository types, if the state contains an empty array', () => {
+  it("should fetch repository types, if the state contains an empty array", () => {
     const state = {
-      repositoryTypes: [],
+      repositoryTypes: []
     };
     expect(shouldFetchRepositoryTypes(state)).toBe(true);
   });
 
-  it('should not fetch repository types, on pending state', () => {
+  it("should not fetch repository types, on pending state", () => {
     const state = {
       pending: {
-        [FETCH_REPOSITORY_TYPES]: true,
-      },
+        [FETCH_REPOSITORY_TYPES]: true
+      }
     };
     expect(shouldFetchRepositoryTypes(state)).toBe(false);
   });
 
-  it('should not fetch repository types, on failure state', () => {
+  it("should not fetch repository types, on failure state", () => {
     const state = {
       failure: {
-        [FETCH_REPOSITORY_TYPES]: new Error('no...'),
-      },
+        [FETCH_REPOSITORY_TYPES]: new Error("no...")
+      }
     };
     expect(shouldFetchRepositoryTypes(state)).toBe(false);
   });
 
-  it('should not fetch repository types, if they are already fetched', () => {
+  it("should not fetch repository types, if they are already fetched", () => {
     const state = {
-      repositoryTypes: [git, hg, svn],
+      repositoryTypes: [git, hg, svn]
     };
     expect(shouldFetchRepositoryTypes(state)).toBe(false);
   });
 });
 
-describe('repository types fetch', () => {
-  const URL = '/api/v2/repositoryTypes';
+describe("repository types fetch", () => {
+  const URL = "/api/v2/repositoryTypes";
   const mockStore = configureMockStore([thunk]);
 
   afterEach(() => {
@@ -103,17 +103,17 @@ describe('repository types fetch', () => {
     fetchMock.restore();
   });
 
-  it('should successfully fetch repository types', () => {
+  it("should successfully fetch repository types", () => {
     fetchMock.getOnce(URL, collection);
 
     const expectedActions = [
       {
-        type: FETCH_REPOSITORY_TYPES_PENDING,
+        type: FETCH_REPOSITORY_TYPES_PENDING
       },
       {
         type: FETCH_REPOSITORY_TYPES_SUCCESS,
-        payload: collection,
-      },
+        payload: collection
+      }
     ];
 
     const store = mockStore({});
@@ -122,9 +122,9 @@ describe('repository types fetch', () => {
     });
   });
 
-  it('should dispatch FETCH_REPOSITORY_TYPES_FAILURE on server error', () => {
+  it("should dispatch FETCH_REPOSITORY_TYPES_FAILURE on server error", () => {
     fetchMock.getOnce(URL, {
-      status: 500,
+      status: 500
     });
 
     const store = mockStore({});
@@ -136,63 +136,63 @@ describe('repository types fetch', () => {
     });
   });
 
-  it('should dispatch not dispatch any action, if the repository types are already fetched', () => {
+  it("should dispatch not dispatch any action, if the repository types are already fetched", () => {
     const store = mockStore({
-      repositoryTypes: [git, hg, svn],
+      repositoryTypes: [git, hg, svn]
     });
     store.dispatch(fetchRepositoryTypesIfNeeded());
     expect(store.getActions().length).toBe(0);
   });
 });
 
-describe('repository types reducer', () => {
-  it('should return unmodified state on unknown action', () => {
+describe("repository types reducer", () => {
+  it("should return unmodified state on unknown action", () => {
     const state = [];
     expect(reducer(state)).toBe(state);
   });
-  it('should store the repository types on FETCH_REPOSITORY_TYPES_SUCCESS', () => {
+  it("should store the repository types on FETCH_REPOSITORY_TYPES_SUCCESS", () => {
     const newState = reducer([], fetchRepositoryTypesSuccess(collection));
     expect(newState).toEqual([git, hg, svn]);
   });
 });
 
-describe('repository types selectors', () => {
-  const error = new Error('The end of the universe');
+describe("repository types selectors", () => {
+  const error = new Error("The end of the universe");
 
-  it('should return an emtpy array', () => {
+  it("should return an emtpy array", () => {
     expect(getRepositoryTypes({})).toEqual([]);
   });
 
-  it('should return the repository types', () => {
+  it("should return the repository types", () => {
     const state = {
-      repositoryTypes: [git, hg, svn],
+      repositoryTypes: [git, hg, svn]
     };
     expect(getRepositoryTypes(state)).toEqual([git, hg, svn]);
   });
 
-  it('should return true, when fetch repository types is pending', () => {
+  it("should return true, when fetch repository types is pending", () => {
     const state = {
       pending: {
-        [FETCH_REPOSITORY_TYPES]: true,
-      },
+        [FETCH_REPOSITORY_TYPES]: true
+      }
     };
     expect(isFetchRepositoryTypesPending(state)).toEqual(true);
   });
 
-  it('should return false, when fetch repos is not pending', () => {
+  it("should return false, when fetch repos is not pending", () => {
     expect(isFetchRepositoryTypesPending({})).toEqual(false);
   });
 
-  it('should return error when fetch repository types did fail', () => {
+  it("should return error when fetch repository types did fail", () => {
     const state = {
       failure: {
-        [FETCH_REPOSITORY_TYPES]: error,
-      },
+        [FETCH_REPOSITORY_TYPES]: error
+      }
     };
     expect(getFetchRepositoryTypesFailure(state)).toEqual(error);
   });
 
-  it('should return undefined when fetch repos did not fail', () => {
+  it("should return undefined when fetch repos did not fail", () => {
     expect(getFetchRepositoryTypesFailure({})).toBe(undefined);
   });
 });
