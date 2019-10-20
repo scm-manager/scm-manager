@@ -17,12 +17,12 @@
   <name>scm-ui</name>
 
   <properties>
-    <sonar.language>js</sonar.language>
+    <sonar.language>typescript</sonar.language>
     <sonar.sources>ui-extensions/src,ui-components/src,ui-webapp/src</sonar.sources>
     <sonar.test.exclusions>**/*.test.js,src/tests/**</sonar.test.exclusions>
     <sonar.coverage.exclusions>**/*.test.js,src/tests/**</sonar.coverage.exclusions>
-    <sonar.javascript.jstest.reportsPath>target/jest-reports</sonar.javascript.jstest.reportsPath>
-    <sonar.javascript.lcov.reportPaths>target/jest-reports/coverage-ui-extensions/lcov.info,target/jest-reports/coverage-ui-components/lcov.info,target/jest-reports/coverage-ui-webapp/lcov.info</sonar.javascript.lcov.reportPaths>
+    <sonar.typescript.jstest.reportsPath>target/jest-reports</sonar.typescript.jstest.reportsPath>
+    <sonar.typescript.lcov.reportPaths>target/jest-reports/coverage-ui-extensions/lcov.info,target/jest-reports/coverage-ui-components/lcov.info,target/jest-reports/coverage-ui-webapp/lcov.info</sonar.typescript.lcov.reportPaths>
   </properties>
 
   <build>
