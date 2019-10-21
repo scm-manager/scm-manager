@@ -1,6 +1,7 @@
 import React from "react";
 import { apiClient } from "../apiclient";
 import ErrorNotification from "../ErrorNotification";
+// @ts-ignore
 import parser from "gitdiff-parser";
 
 import Loading from "../Loading";

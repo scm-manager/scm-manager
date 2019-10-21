@@ -1,5 +1,6 @@
 import React from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
+// @ts-ignore
 import Markdown from "react-markdown/with-html";
 import styled from "styled-components";
 import { binder } from "@scm-manager/ui-extensions";

@@ -2,12 +2,12 @@ import React from "react";
 import { translate, InjectedTranslateProps } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
+// @ts-ignore
 import { Change, Diff as DiffComponent, getChangeKey, Hunk } from "react-diff-view";
 import { Button, ButtonGroup } from "../buttons";
 import Tag from "../Tag";
 import Icon from "../Icon";
 import { File, Hunk as HunkType, DiffObjectProps } from "./DiffTypes";
-import { ReactNode } from "react";
 
 type Props = DiffObjectProps &
   InjectedTranslateProps & {

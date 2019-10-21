@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 // We place the types here and not in @scm-manager/ui-types,
 // because they represent not a real scm-manager related type.
@@ -19,7 +19,7 @@ export type File = {
   oldRevision?: string;
   type: FileChangeType;
   // TODO does this property exists?
-  isBinary: boolean;
+  isBinary?: boolean;
 };
 
 export type Hunk = {

@@ -17,9 +17,11 @@ const Spacing = styled.div`
   padding: 1em;
 `;
 
-const RoutingDecorator = story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
+type StoryFn = () => ReactNode;
 
-const SpacingDecorator = story => <Spacing>{story()}</Spacing>;
+const RoutingDecorator = (story: StoryFn) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
+
+const SpacingDecorator = (story: StoryFn) => <Spacing>{story()}</Spacing>;
 
 storiesOf("Buttons|Button", module)
   .addDecorator(RoutingDecorator)
@@ -50,8 +52,9 @@ const buttonStory = (name: string, storyFn: () => ReactElement) => {
 buttonStory("AddButton", () => <AddButton>Add</AddButton>);
 buttonStory("CreateButton", () => <CreateButton>Create</CreateButton>);
 buttonStory("DeleteButton", () => <DeleteButton>Delete</DeleteButton>);
-buttonStory("DownloadButton", () => (
-  <DownloadButton displayName="Download" disabled={false} url=""></DownloadButton>
-)).add("Disabled", () => <DownloadButton displayName="Download" disabled={true} url=""></DownloadButton>);
+buttonStory("DownloadButton", () => <DownloadButton displayName="Download" disabled={false} url="" />).add(
+  "Disabled",
+  () => <DownloadButton displayName="Download" disabled={true} url=""></DownloadButton>
+);
 buttonStory("EditButton", () => <EditButton>Edit</EditButton>);
 buttonStory("SubmitButton", () => <SubmitButton>Submit</SubmitButton>);
