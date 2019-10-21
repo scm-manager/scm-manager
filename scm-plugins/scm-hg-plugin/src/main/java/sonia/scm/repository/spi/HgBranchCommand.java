@@ -59,7 +59,7 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
 
   @Override
   public Branch branch(BranchRequest request) {
-    try (WorkingCopy<com.aragost.javahg.Repository> workingCopy = workdirFactory.createWorkingCopy(getContext(), request.getParentBranch())) {
+    try (WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy = workdirFactory.createWorkingCopy(getContext(), request.getParentBranch())) {
       com.aragost.javahg.Repository repository = workingCopy.getWorkingRepository();
 
       Changeset emptyChangeset = createNewBranchWithEmptyCommit(request, repository);
@@ -83,7 +83,7 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
       .execute();
   }
 
-  private void pullNewBranchIntoCentralRepository(BranchRequest request, WorkingCopy<com.aragost.javahg.Repository> workingCopy) {
+  private void pullNewBranchIntoCentralRepository(BranchRequest request, WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy) {
     try {
       PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
       workdirFactory.configure(pullCommand);

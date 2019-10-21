@@ -8,7 +8,7 @@ import sonia.scm.repository.Repository;
 import java.io.File;
 import java.io.IOException;
 
-public abstract class SimpleWorkdirFactory<R, C> implements WorkdirFactory<R, C> {
+public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R, W, C> {
 
   private static final Logger logger = LoggerFactory.getLogger(SimpleWorkdirFactory.class);
 
@@ -19,11 +19,11 @@ public abstract class SimpleWorkdirFactory<R, C> implements WorkdirFactory<R, C>
   }
 
   @Override
-  public WorkingCopy<R> createWorkingCopy(C context, String initialBranch) {
+  public WorkingCopy<R, W> createWorkingCopy(C context, String initialBranch) {
     try {
       File directory = workdirProvider.createNewWorkdir();
-      ParentAndClone<R> parentAndClone = cloneRepository(context, directory, initialBranch);
-      return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), this::close, directory);
+      ParentAndClone<R, W> parentAndClone = cloneRepository(context, directory, initialBranch);
+      return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), this::closeWorkdir, this::closeCentral, directory);
     } catch (IOException e) {
       throw new InternalRepositoryException(getScmRepository(context), "could not clone repository in temporary directory", e);
     }
@@ -34,10 +34,11 @@ public abstract class SimpleWorkdirFactory<R, C> implements WorkdirFactory<R, C>
   @SuppressWarnings("squid:S00112")
   // We do allow implementations to throw arbitrary exceptions here, so that we can handle them in close
   protected abstract void closeRepository(R repository) throws Exception;
+  protected abstract void closeWorkdirInternal(W workdir) throws Exception;
 
-  protected abstract ParentAndClone<R> cloneRepository(C context, File target, String initialBranch) throws IOException;
+  protected abstract ParentAndClone<R, W> cloneRepository(C context, File target, String initialBranch) throws IOException;
 
-  private void close(R repository) {
+  private void closeCentral(R repository) {
     try {
       closeRepository(repository);
     } catch (Exception e) {
@@ -45,11 +46,19 @@ public abstract class SimpleWorkdirFactory<R, C> implements WorkdirFactory<R, C>
     }
   }
 
-  protected static class ParentAndClone<R> {
-    private final R parent;
-    private final R clone;
+  private void closeWorkdir(W repository) {
+    try {
+      closeWorkdirInternal(repository);
+    } catch (Exception e) {
+      logger.warn("could not close temporary repository clone", e);
+    }
+  }
 
-    public ParentAndClone(R parent, R clone) {
+  protected static class ParentAndClone<R, W> {
+    private final R parent;
+    private final W clone;
+
+    public ParentAndClone(R parent, W clone) {
       this.parent = parent;
       this.clone = clone;
     }
@@ -58,7 +67,7 @@ public abstract class SimpleWorkdirFactory<R, C> implements WorkdirFactory<R, C>
       return parent;
     }
 
-    public R getClone() {
+    public W getClone() {
       return clone;
     }
   }

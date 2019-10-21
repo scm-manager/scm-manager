@@ -45,7 +45,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
     SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(workdirProvider);
     File masterRepo = createRepositoryDirectory();
 
-    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
+    try (WorkingCopy<Repository, Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
 
       assertThat(workingCopy.getDirectory())
         .exists()
@@ -62,7 +62,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
   public void shouldCheckoutInitialBranch() {
     SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(workdirProvider);
 
-    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext(), "test-branch")) {
+    try (WorkingCopy<Repository, Repository> workingCopy = factory.createWorkingCopy(createContext(), "test-branch")) {
       assertThat(new File(workingCopy.getWorkingRepository().getWorkTree(), "a.txt"))
         .exists()
         .isFile()
@@ -75,10 +75,10 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
     SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(workdirProvider);
 
     File firstDirectory;
-    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
+    try (WorkingCopy<Repository, Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
       firstDirectory = workingCopy.getDirectory();
     }
-    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
+    try (WorkingCopy<Repository, Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
       File secondDirectory = workingCopy.getDirectory();
       assertThat(secondDirectory).isNotEqualTo(firstDirectory);
     }
@@ -89,7 +89,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
     SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(workdirProvider);
 
     File directory;
-    try (WorkingCopy<Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
+    try (WorkingCopy<Repository, Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
       directory = workingCopy.getWorkingRepository().getWorkTree();
     }
     assertThat(directory).doesNotExist();
