@@ -79,7 +79,7 @@ class LFSAuthCommandTest {
     CommandContext commandContext = createCommandContext();
     commandInterpreter.getProtocolHandler().handle(commandContext, createRepositoryContext());
     assertThat(commandContext.getOutputStream().toString())
-      .isEqualTo("{\"href\":\"http://example.com/repo/space/X.git/info/lfs/\",\"header\":{\"Authorization\":\"Bearer ACCESS_TOKEN\"},\"expires_at\":\"2007-05-03T12:05:30Z\"}");
+      .isEqualTo("{\"href\":\"http://example.com/repo/space/X.git/info/lfs/\",\"header\":{\"Authorization\":\"Bearer ACCESS_TOKEN\"},\"expires_at\":\"2007-05-03T10:15:30Z\"}");
   }
 
   private CommandContext createCommandContext() {
