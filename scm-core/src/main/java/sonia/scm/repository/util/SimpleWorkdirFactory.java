@@ -32,8 +32,10 @@ public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R,
   protected abstract Repository getScmRepository(C context);
 
   @SuppressWarnings("squid:S00112")
-  // We do allow implementations to throw arbitrary exceptions here, so that we can handle them in close
+  // We do allow implementations to throw arbitrary exceptions here, so that we can handle them in closeCentral
   protected abstract void closeRepository(R repository) throws Exception;
+  @SuppressWarnings("squid:S00112")
+  // We do allow implementations to throw arbitrary exceptions here, so that we can handle them in closeWorkdir
   protected abstract void closeWorkdirInternal(W workdir) throws Exception;
 
   protected abstract ParentAndClone<R, W> cloneRepository(C context, File target, String initialBranch) throws IOException;
