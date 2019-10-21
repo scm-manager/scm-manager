@@ -25,6 +25,7 @@ module.exports = {
         quotes: ["error", "double"],
         "jsx-a11y/href-no-hash": [0],
         "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/ban-ts-ignore": "warn",
         "no-console": "error"
       }
     }

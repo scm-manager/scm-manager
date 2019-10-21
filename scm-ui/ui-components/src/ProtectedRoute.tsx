@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { Route, Redirect, withRouter, RouteComponentProps } from "react-router-dom";
+import { Route, Redirect, withRouter, RouteComponentProps, RouteProps } from "react-router-dom";
 
-type Props = RouteComponentProps & {
-  authenticated?: boolean;
-  component: Component<any, any>;
-};
+type Props = RouteComponentProps &
+  RouteProps & {
+    authenticated?: boolean;
+  };
 
-class ProtectedRoute extends React.Component<Props> {
+class ProtectedRoute extends Component<Props> {
   renderRoute = (Component: any, authenticated?: boolean) => {
     return (routeProps: any) => {
       if (authenticated) {

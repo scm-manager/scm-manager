@@ -6,7 +6,8 @@
   "main": "src/main/js/index.js",
   "scripts": {
     "build": "ui-scripts plugin",
-    "watch": "ui-scripts plugin-watch"
+    "watch": "ui-scripts plugin-watch",
+    "typecheck": "tsc"
   },
   "babel": {
     "presets": [

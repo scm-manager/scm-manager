@@ -11,8 +11,8 @@ type Props = {
   autofocus?: boolean;
   onChange: (value: string, name?: string) => void;
   onReturnPressed?: () => void;
-  validationError: boolean;
-  errorMessage: string;
+  validationError?: boolean;
+  errorMessage?: string;
   disabled?: boolean;
   helpText?: string;
 };
