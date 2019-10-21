@@ -114,8 +114,8 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
         afterNL = false;
         buffer = new ByteArrayOutputStream();
         target.write(i);
-      } else if (buffer != null) {
-        if (i == (int) '\n') {
+      } else if (i == (int) '\n') {
+        if (buffer != null) {
           afterNL = true;
           byte[] bytes = buffer.toByteArray();
           String dequote = QuotedString.GIT_PATH.dequote(bytes, 0, bytes.length);
@@ -123,17 +123,19 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
           target.write(i);
           buffer = null;
         } else {
+          afterNL = true;
+          target.write(i);
+        }
+      } else {
+        if (buffer != null) {
           buffer.write(i);
           afterNL = false;
+        } else {
+          target.write(i);
+          afterNL = false;
+          minusCount = 0;
+          plusCount = 0;
         }
-      } else if (i == (int) '\n') {
-        afterNL = true;
-        target.write(i);
-      } else {
-        target.write(i);
-        afterNL = false;
-        minusCount = 0;
-        plusCount = 0;
       }
     }
   }
