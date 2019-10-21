@@ -2860,6 +2860,11 @@
     "@types/react-native" "*"
     csstype "^2.2.0"
 
+"@types/systemjs@^0.20.6":
+  version "0.20.6"
+  resolved "https://registry.yarnpkg.com/@types/systemjs/-/systemjs-0.20.6.tgz#79838d2b4bce9c014330efa0b4c7b9345e830a72"
+  integrity sha512-p3yv9sBBJXi3noUG216BpUI7VtVBUAvBIfZNTiDROUY31YBfsFHM4DreS7XMekN8IjtX0ysvCnm6r3WnirnNeA==
+
 "@types/webpack-env@*":
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.14.1.tgz#0d8a53f308f017c53a5ddc3d07f4d6fa76b790d7"
