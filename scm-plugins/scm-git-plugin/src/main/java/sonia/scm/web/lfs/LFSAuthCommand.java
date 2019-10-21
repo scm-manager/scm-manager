@@ -1,6 +1,7 @@
 package sonia.scm.web.lfs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Charsets;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
 import sonia.scm.protocolcommand.CommandInterpreter;
@@ -13,7 +14,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.security.AccessToken;
 
 import javax.inject.Inject;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -66,7 +66,7 @@ public class LFSAuthCommand implements CommandInterpreterFactory {
       return (context, repositoryContext) -> {
         ExpiringAction response = createResponseObject(repositoryContext);
         String buffer = serializeResponse(response);
-        context.getOutputStream().write(buffer.getBytes());
+        context.getOutputStream().write(buffer.getBytes(Charsets.UTF_8));
       };
     }
 
@@ -85,9 +85,7 @@ public class LFSAuthCommand implements CommandInterpreterFactory {
     }
 
     private String serializeResponse(ExpiringAction response) throws IOException {
-      ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-      objectMapper.writeValue(buffer, response);
-      return buffer.toString();
+      return objectMapper.writeValueAsString(response);
     }
   }
 }
