@@ -8,11 +8,7 @@ module.exports = [
   {
     context: root,
     entry: {
-      webapp: [
-        "./ui-webapp/src/webpack-public-path.ts",
-        "./ui-styles/src/scm.scss",
-        "./ui-webapp/src/index.tsx"
-      ]
+      webapp: ["./ui-webapp/src/webpack-public-path.ts", "./ui-styles/src/scm.scss", "./ui-webapp/src/index.tsx"]
     },
     devtool: "cheap-module-eval-source-map",
     target: "web",
@@ -66,9 +62,7 @@ module.exports = [
       ]
     },
     resolve: {
-      extensions: [
-        ".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"
-      ]
+      extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"]
     },
     output: {
       path: path.join(root, "target", "assets"),
@@ -84,12 +78,7 @@ module.exports = [
         app.use(createContextPathMiddleware("/scm"));
       },
       after: function(app) {
-        const templatePath = path.join(
-          root,
-          "ui-webapp",
-          "public",
-          "index.mustache"
-        );
+        const templatePath = path.join(root, "ui-webapp", "public", "index.mustache");
         const renderParams = {
           contextPath: "/scm"
         };
