@@ -52,7 +52,7 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
   }
 
   @Override
-  public Response.Action getDownloadAction(AnyLongObjectId id) {
+  public ExpiringAction getDownloadAction(AnyLongObjectId id) {
     if (accessToken == null) {
       accessToken = tokenFactory.createReadAccessToken(repository);
     }
@@ -60,7 +60,7 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
   }
 
   @Override
-  public Response.Action getUploadAction(AnyLongObjectId id, long size) {
+  public ExpiringAction getUploadAction(AnyLongObjectId id, long size) {
     if (accessToken == null) {
       accessToken = tokenFactory.createWriteAccessToken(repository);
     }
@@ -68,14 +68,14 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
   }
 
   @Override
-  public Response.Action getVerifyAction(AnyLongObjectId id) {
+  public ExpiringAction getVerifyAction(AnyLongObjectId id) {
 
     //validation is optional. We do not support it.
     return null;
   }
 
   @Override
-  public long getSize(AnyLongObjectId id) throws IOException {
+  public long getSize(AnyLongObjectId id) {
 
     //this needs to be size of what is will be written into the response of the download. Clients are likely to
     // verify it.
@@ -93,7 +93,7 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
   /**
    * Constructs the Download / Upload actions to be supplied to the client.
    */
-  private Response.Action getAction(AnyLongObjectId id, AccessToken token) {
+  private ExpiringAction getAction(AnyLongObjectId id, AccessToken token) {
 
     //LFS protocol has to provide the information on where to put or get the actual content, i. e.
     //the actual URI for up- and download.
