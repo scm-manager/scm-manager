@@ -33,10 +33,13 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.util.QuotedString;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffCommandBuilder;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  *
@@ -56,7 +59,7 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
     Differ.Diff diff = Differ.diff(repository, request);
 
     return output -> {
-      try (DiffFormatter formatter = new DiffFormatter(output)) {
+      try (DiffFormatter formatter = new DiffFormatter(new DequoteOutputStream(output))) {
         formatter.setRepository(repository);
 
         for (DiffEntry e : diff.getEntries()) {
@@ -70,4 +73,68 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
     };
   }
 
+  private static class DequoteOutputStream extends OutputStream {
+
+    private final OutputStream target;
+
+    private boolean afterNL = false;
+    private int minusCount = 0;
+    private int plusCount = 0;
+    private ByteArrayOutputStream buffer;
+
+    private DequoteOutputStream(OutputStream target) {
+      this.target = target;
+    }
+
+    @Override
+    public void write(int i) throws IOException {
+      if (i == (int) '+' && afterNL) {
+        plusCount = 1;
+        afterNL = false;
+        target.write(i);
+      } else if (i == (int) '+' && plusCount > 0) {
+        ++plusCount;
+        afterNL = false;
+        target.write(i);
+      } else if (i == (int) '-' && afterNL) {
+        minusCount = 1;
+        afterNL = false;
+        target.write(i);
+      } else if (i == (int) '-' && minusCount > 0) {
+        ++minusCount;
+        afterNL = false;
+        target.write(i);
+      } else if (i == (int) ' ' && plusCount == 3) {
+        buffer = new ByteArrayOutputStream();
+        afterNL = false;
+        plusCount = 0;
+        target.write(i);
+      } else if (i == (int) ' ' && minusCount == 3) {
+        minusCount = 0;
+        afterNL = false;
+        buffer = new ByteArrayOutputStream();
+        target.write(i);
+      } else if (buffer != null) {
+        if (i == (int) '\n') {
+          afterNL = true;
+          byte[] bytes = buffer.toByteArray();
+          String dequote = QuotedString.GIT_PATH.dequote(bytes, 0, bytes.length);
+          target.write(dequote.getBytes());
+          target.write(i);
+          buffer = null;
+        } else {
+          buffer.write(i);
+          afterNL = false;
+        }
+      } else if (i == (int) '\n') {
+        afterNL = true;
+        target.write(i);
+      } else {
+        target.write(i);
+        afterNL = false;
+        minusCount = 0;
+        plusCount = 0;
+      }
+    }
+  }
 }
