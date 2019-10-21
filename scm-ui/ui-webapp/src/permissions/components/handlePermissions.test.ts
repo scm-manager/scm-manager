@@ -27,10 +27,7 @@ describe("load permissions for entity", () => {
     }`;
 
   beforeEach(() => {
-    fetchMock.getOnce(
-      "/api/v2" + AVAILABLE_PERMISSIONS_URL,
-      availablePermissions
-    );
+    fetchMock.getOnce("/api/v2" + AVAILABLE_PERMISSIONS_URL, availablePermissions);
     fetchMock.getOnce("/api/v2" + USER_PERMISSIONS_URL, userPermissions);
   });
 
@@ -40,10 +37,7 @@ describe("load permissions for entity", () => {
   });
 
   it("should return permissions array", done => {
-    loadPermissionsForEntity(
-      AVAILABLE_PERMISSIONS_URL,
-      USER_PERMISSIONS_URL
-    ).then(result => {
+    loadPermissionsForEntity(AVAILABLE_PERMISSIONS_URL, USER_PERMISSIONS_URL).then(result => {
       const { permissions } = result;
       expect(Object.entries(permissions).length).toBe(3);
       expect(permissions["repository:read,pull:*"]).toBe(true);
@@ -54,10 +48,7 @@ describe("load permissions for entity", () => {
   });
 
   it("should return overwrite link", done => {
-    loadPermissionsForEntity(
-      AVAILABLE_PERMISSIONS_URL,
-      USER_PERMISSIONS_URL
-    ).then(result => {
+    loadPermissionsForEntity(AVAILABLE_PERMISSIONS_URL, USER_PERMISSIONS_URL).then(result => {
       const { overwriteLink } = result;
       expect(overwriteLink.href).toBe("/api/v2/users/rene/permissions");
       done();

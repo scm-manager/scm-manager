@@ -1,24 +1,11 @@
 import React from "react";
-import {
-  fetchRepoByName,
-  getFetchRepoFailure,
-  getRepository,
-  isFetchRepoPending
-} from "../modules/repos";
+import { fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending } from "../modules/repos";
 
 import { connect } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { Repository } from "@scm-manager/ui-types";
 
-import {
-  ErrorPage,
-  Loading,
-  Navigation,
-  NavLink,
-  Page,
-  Section,
-  SubNavigation
-} from "@scm-manager/ui-components";
+import { ErrorPage, Loading, Navigation, NavLink, Page, Section, SubNavigation } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
@@ -90,11 +77,7 @@ class RepositoryRoot extends React.Component<Props> {
 
     if (error) {
       return (
-        <ErrorPage
-          title={t("repositoryRoot.errorTitle")}
-          subtitle={t("repositoryRoot.errorSubtitle")}
-          error={error}
-        />
+        <ErrorPage title={t("repositoryRoot.errorTitle")} subtitle={t("repositoryRoot.errorSubtitle")} error={error} />
       );
     }
 
@@ -110,10 +93,7 @@ class RepositoryRoot extends React.Component<Props> {
       indexLinks
     };
 
-    const redirectUrlFactory = binder.getExtension(
-      "repository.redirect",
-      this.props
-    );
+    const redirectUrlFactory = binder.getExtension("repository.redirect", this.props);
     let redirectedUrl;
     if (redirectUrlFactory) {
       redirectedUrl = url + redirectUrlFactory(this.props);
@@ -127,41 +107,23 @@ class RepositoryRoot extends React.Component<Props> {
           <div className="column is-three-quarters">
             <Switch>
               <Redirect exact from={this.props.match.url} to={redirectedUrl} />
-              <Route
-                path={`${url}/info`}
-                exact
-                component={() => <RepositoryDetails repository={repository} />}
-              />
-              <Route
-                path={`${url}/settings/general`}
-                component={() => <EditRepo repository={repository} />}
-              />
+              <Route path={`${url}/info`} exact component={() => <RepositoryDetails repository={repository} />} />
+              <Route path={`${url}/settings/general`} component={() => <EditRepo repository={repository} />} />
               <Route
                 path={`${url}/settings/permissions`}
                 render={() => (
-                  <Permissions
-                    namespace={this.props.repository.namespace}
-                    repoName={this.props.repository.name}
-                  />
+                  <Permissions namespace={this.props.repository.namespace} repoName={this.props.repository.name} />
                 )}
               />
-              <Route
-                exact
-                path={`${url}/changeset/:id`}
-                render={() => <ChangesetView repository={repository} />}
-              />
+              <Route exact path={`${url}/changeset/:id`} render={() => <ChangesetView repository={repository} />} />
               <Route
                 path={`${url}/sources`}
                 exact={true}
-                render={() => (
-                  <Sources repository={repository} baseUrl={`${url}/sources`} />
-                )}
+                render={() => <Sources repository={repository} baseUrl={`${url}/sources`} />}
               />
               <Route
                 path={`${url}/sources/:revision/:path*`}
-                render={() => (
-                  <Sources repository={repository} baseUrl={`${url}/sources`} />
-                )}
+                render={() => <Sources repository={repository} baseUrl={`${url}/sources`} />}
               />
               <Route
                 path={`${url}/changesets`}
@@ -185,42 +147,21 @@ class RepositoryRoot extends React.Component<Props> {
               />
               <Route
                 path={`${url}/branch/:branch`}
-                render={() => (
-                  <BranchRoot
-                    repository={repository}
-                    baseUrl={`${url}/branch`}
-                  />
-                )}
+                render={() => <BranchRoot repository={repository} baseUrl={`${url}/branch`} />}
               />
               <Route
                 path={`${url}/branches`}
                 exact={true}
-                render={() => (
-                  <BranchesOverview
-                    repository={repository}
-                    baseUrl={`${url}/branch`}
-                  />
-                )}
+                render={() => <BranchesOverview repository={repository} baseUrl={`${url}/branch`} />}
               />
-              <Route
-                path={`${url}/branches/create`}
-                render={() => <CreateBranch repository={repository} />}
-              />
-              <ExtensionPoint
-                name="repository.route"
-                props={extensionProps}
-                renderAll={true}
-              />
+              <Route path={`${url}/branches/create`} render={() => <CreateBranch repository={repository} />} />
+              <ExtensionPoint name="repository.route" props={extensionProps} renderAll={true} />
             </Switch>
           </div>
           <div className="column">
             <Navigation>
               <Section label={t("repositoryRoot.menu.navigationLabel")}>
-                <ExtensionPoint
-                  name="repository.navigation.topLevel"
-                  props={extensionProps}
-                  renderAll={true}
-                />
+                <ExtensionPoint name="repository.navigation.topLevel" props={extensionProps} renderAll={true} />
                 <NavLink
                   to={`${url}/info`}
                   icon="fas fa-info-circle"
@@ -252,28 +193,11 @@ class RepositoryRoot extends React.Component<Props> {
                   label={t("repositoryRoot.menu.sourcesNavLink")}
                   activeOnlyWhenExact={false}
                 />
-                <ExtensionPoint
-                  name="repository.navigation"
-                  props={extensionProps}
-                  renderAll={true}
-                />
-                <SubNavigation
-                  to={`${url}/settings/general`}
-                  label={t("repositoryRoot.menu.settingsNavLink")}
-                >
-                  <EditRepoNavLink
-                    repository={repository}
-                    editUrl={`${url}/settings/general`}
-                  />
-                  <PermissionsNavLink
-                    permissionUrl={`${url}/settings/permissions`}
-                    repository={repository}
-                  />
-                  <ExtensionPoint
-                    name="repository.setting"
-                    props={extensionProps}
-                    renderAll={true}
-                  />
+                <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true} />
+                <SubNavigation to={`${url}/settings/general`} label={t("repositoryRoot.menu.settingsNavLink")}>
+                  <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
+                  <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
+                  <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
               </Section>
             </Navigation>

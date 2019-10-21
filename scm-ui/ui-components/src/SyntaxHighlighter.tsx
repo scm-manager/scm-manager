@@ -12,11 +12,7 @@ type Props = {
 class SyntaxHighlighter extends React.Component<Props> {
   render() {
     return (
-      <ReactSyntaxHighlighter
-        showLineNumbers={false}
-        language={this.props.language}
-        style={arduinoLight}
-      >
+      <ReactSyntaxHighlighter showLineNumbers={false} language={this.props.language} style={arduinoLight}>
         {this.props.value}
       </ReactSyntaxHighlighter>
     );

@@ -1,11 +1,6 @@
 import React from "react";
 import { User } from "@scm-manager/ui-types";
-import {
-  SubmitButton,
-  Notification,
-  ErrorNotification,
-  PasswordConfirmation
-} from "@scm-manager/ui-components";
+import { SubmitButton, Notification, ErrorNotification, PasswordConfirmation } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import { setPassword } from "./setPassword";
 

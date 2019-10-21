@@ -1,4 +1,4 @@
-import React, {ReactNode} from "react";
+import React, { ReactNode } from "react";
 import { translate } from "react-i18next";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
 import { Links } from "@scm-manager/ui-types";
@@ -18,14 +18,7 @@ class PrimaryNavigation extends React.Component<Props> {
     return (to: string, match: string, label: string, linkName: string) => {
       const link = links[linkName];
       if (link) {
-        const navigationItem = (
-          <PrimaryNavigationLink
-            to={to}
-            match={match}
-            label={t(label)}
-            key={linkName}
-          />
-        );
+        const navigationItem = <PrimaryNavigationLink to={to} match={match} label={t(label)} key={linkName} />;
         navigationItems.push(navigationItem);
       }
     };
@@ -41,11 +34,7 @@ class PrimaryNavigation extends React.Component<Props> {
 
     if (binder.hasExtension("primary-navigation.logout", props)) {
       navigationItems.push(
-        <ExtensionPoint
-          key="primary-navigation.logout"
-          name="primary-navigation.logout"
-          props={props}
-        />
+        <ExtensionPoint key="primary-navigation.logout" name="primary-navigation.logout" props={props} />
       );
     } else {
       append("/logout", "/logout", "primary-navigation.logout", "logout");
@@ -64,26 +53,12 @@ class PrimaryNavigation extends React.Component<Props> {
     const append = this.createNavigationAppender(navigationItems);
     if (binder.hasExtension("primary-navigation.first-menu", props)) {
       navigationItems.push(
-        <ExtensionPoint
-          key="primary-navigation.first-menu"
-          name="primary-navigation.first-menu"
-          props={props}
-        />
+        <ExtensionPoint key="primary-navigation.first-menu" name="primary-navigation.first-menu" props={props} />
       );
     }
-    append(
-      "/repos/",
-      "/(repo|repos)",
-      "primary-navigation.repositories",
-      "repositories"
-    );
+    append("/repos/", "/(repo|repos)", "primary-navigation.repositories", "repositories");
     append("/users/", "/(user|users)", "primary-navigation.users", "users");
-    append(
-      "/groups/",
-      "/(group|groups)",
-      "primary-navigation.groups",
-      "groups"
-    );
+    append("/groups/", "/(group|groups)", "primary-navigation.groups", "groups");
     append("/admin", "/admin", "primary-navigation.admin", "config");
 
     navigationItems.push(

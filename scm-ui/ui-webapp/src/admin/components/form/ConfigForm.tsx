@@ -91,24 +91,13 @@ class ConfigForm extends React.Component<Props, State> {
   };
 
   render() {
-    const {
-      loading,
-      t,
-      namespaceStrategies,
-      configReadPermission,
-      configUpdatePermission
-    } = this.props;
+    const { loading, t, namespaceStrategies, configReadPermission, configUpdatePermission } = this.props;
     const config = this.state.config;
 
     let noPermissionNotification = null;
 
     if (!configReadPermission) {
-      return (
-        <Notification
-          type={"danger"}
-          children={t("config.form.no-read-permission-notification")}
-        />
-      );
+      return <Notification type={"danger"} children={t("config.form.no-read-permission-notification")} />;
     }
 
     if (this.state.showNotification) {
@@ -135,27 +124,21 @@ class ConfigForm extends React.Component<Props, State> {
           pluginUrl={config.pluginUrl}
           enabledXsrfProtection={config.enabledXsrfProtection}
           namespaceStrategy={config.namespaceStrategy}
-          onChange={(isValid, changedValue, name) =>
-            this.onChange(isValid, changedValue, name)
-          }
+          onChange={(isValid, changedValue, name) => this.onChange(isValid, changedValue, name)}
           hasUpdatePermission={configUpdatePermission}
         />
         <hr />
         <LoginAttempt
           loginAttemptLimit={config.loginAttemptLimit}
           loginAttemptLimitTimeout={config.loginAttemptLimitTimeout}
-          onChange={(isValid, changedValue, name) =>
-            this.onChange(isValid, changedValue, name)
-          }
+          onChange={(isValid, changedValue, name) => this.onChange(isValid, changedValue, name)}
           hasUpdatePermission={configUpdatePermission}
         />
         <hr />
         <BaseUrlSettings
           baseUrl={config.baseUrl}
           forceBaseUrl={config.forceBaseUrl}
-          onChange={(isValid, changedValue, name) =>
-            this.onChange(isValid, changedValue, name)
-          }
+          onChange={(isValid, changedValue, name) => this.onChange(isValid, changedValue, name)}
           hasUpdatePermission={configUpdatePermission}
         />
         <hr />
@@ -166,18 +149,14 @@ class ConfigForm extends React.Component<Props, State> {
           proxyUser={config.proxyUser ? config.proxyUser : ""}
           enableProxy={config.enableProxy}
           proxyExcludes={config.proxyExcludes}
-          onChange={(isValid, changedValue, name) =>
-            this.onChange(isValid, changedValue, name)
-          }
+          onChange={(isValid, changedValue, name) => this.onChange(isValid, changedValue, name)}
           hasUpdatePermission={configUpdatePermission}
         />
         <hr />
         <SubmitButton
           loading={loading}
           label={t("config.form.submit")}
-          disabled={
-            !configUpdatePermission || this.hasError() || !this.state.changed
-          }
+          disabled={!configUpdatePermission || this.hasError() || !this.state.changed}
         />
       </form>
     );
@@ -199,10 +178,7 @@ class ConfigForm extends React.Component<Props, State> {
   };
 
   hasError = () => {
-    return (
-      this.state.error.loginAttemptLimit ||
-      this.state.error.loginAttemptLimitTimeout
-    );
+    return this.state.error.loginAttemptLimit || this.state.error.loginAttemptLimitTimeout;
   };
 
   onClose = () => {

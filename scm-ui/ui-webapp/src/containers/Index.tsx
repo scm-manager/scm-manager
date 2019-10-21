@@ -62,10 +62,7 @@ class Index extends Component<Props, State> {
       return (
         <ErrorBoundary fallback={IndexErrorPage}>
           <ScrollToTop>
-            <PluginLoader
-              loaded={pluginsLoaded}
-              callback={this.pluginLoaderCallback}
-            >
+            <PluginLoader loaded={pluginsLoaded} callback={this.pluginLoaderCallback}>
               <App />
             </PluginLoader>
           </ScrollToTop>

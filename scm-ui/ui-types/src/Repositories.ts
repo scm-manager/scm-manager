@@ -1,4 +1,4 @@
-import { PagedCollection, Links } from './hal';
+import { PagedCollection, Links } from "./hal";
 
 export type Repository = {
   namespace: string;

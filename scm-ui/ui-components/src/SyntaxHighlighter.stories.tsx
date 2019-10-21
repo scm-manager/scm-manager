@@ -5,7 +5,7 @@ import SyntaxHighlighter from "./SyntaxHighlighter";
 
 import JavaHttpServer from "./__resources__/HttpServer.java";
 import GoHttpServer from "./__resources__/HttpServer.go";
-import JsHttpServer from './__resources__/HttpServer.js';
+import JsHttpServer from "./__resources__/HttpServer.js";
 import PyHttpServer from "./__resources__/HttpServer.py";
 
 const Spacing = styled.div`
@@ -23,7 +23,7 @@ storiesOf("SyntaxHighlighter", module)
       <SyntaxHighlighter language="go" value={GoHttpServer} />
     </Spacing>
   ))
-  .add('Javascript', () => (
+  .add("Javascript", () => (
     <Spacing>
       <SyntaxHighlighter language="javascript" value={JsHttpServer} />
     </Spacing>

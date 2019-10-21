@@ -1,13 +1,7 @@
 import React, { ReactNode } from "react";
 import classNames from "classnames";
 
-type NotificationType =
-  | "primary"
-  | "info"
-  | "success"
-  | "warning"
-  | "danger"
-  | "inherit";
+type NotificationType = "primary" | "info" | "success" | "warning" | "danger" | "inherit";
 
 type Props = {
   type: NotificationType;

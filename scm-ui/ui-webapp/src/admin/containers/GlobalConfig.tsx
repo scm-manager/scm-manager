@@ -119,13 +119,7 @@ class GlobalConfig extends React.Component<Props, State> {
   };
 
   renderContent = () => {
-    const {
-      error,
-      loading,
-      config,
-      configUpdatePermission,
-      namespaceStrategies
-    } = this.props;
+    const { error, loading, config, configUpdatePermission, namespaceStrategies } = this.props;
     const { configReadPermission } = this.state;
     if (!error) {
       return (
@@ -165,13 +159,9 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   const loading =
-    isFetchConfigPending(state) ||
-    isModifyConfigPending(state) ||
-    isFetchNamespaceStrategiesPending(state);
+    isFetchConfigPending(state) || isModifyConfigPending(state) || isFetchNamespaceStrategiesPending(state);
   const error =
-    getFetchConfigFailure(state) ||
-    getModifyConfigFailure(state) ||
-    getFetchNamespaceStrategiesFailure(state);
+    getFetchConfigFailure(state) || getModifyConfigFailure(state) || getFetchNamespaceStrategiesFailure(state);
 
   const config = getConfig(state);
   const configUpdatePermission = getConfigUpdatePermission(state);

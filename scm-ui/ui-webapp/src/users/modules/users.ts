@@ -45,9 +45,7 @@ export function fetchUsers(link: string) {
 export function fetchUsersByPage(link: string, page: number, filter?: string) {
   // backend start counting by 0
   if (filter) {
-    return fetchUsersByLink(
-      `${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`
-    );
+    return fetchUsersByLink(`${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`);
   }
   return fetchUsersByLink(`${link}?page=${page - 1}`);
 }
@@ -289,34 +287,30 @@ export function deleteUserFailure(user: User, error: Error): Action {
   };
 }
 
-function extractUsersByNames(
-  users: User[],
-  userNames: string[],
-  oldUsersByNames: object
-) {
+function extractUsersByNames(users: User[], userNames: string[], oldUsersByNames: object) {
   const usersByNames = {};
 
-  for (let user of users) {
+  for (const user of users) {
     usersByNames[user.name] = user;
   }
 
-  for (let userName in oldUsersByNames) {
+  for (const userName in oldUsersByNames) {
     usersByNames[userName] = oldUsersByNames[userName];
   }
   return usersByNames;
 }
 
 function deleteUserInUsersByNames(users: {}, userName: string) {
-  let newUsers = {};
-  for (let username in users) {
+  const newUsers = {};
+  for (const username in users) {
     if (username !== userName) newUsers[username] = users[username];
   }
   return newUsers;
 }
 
 function deleteUserInEntries(users: [], userName: string) {
-  let newUsers = [];
-  for (let user of users) {
+  const newUsers = [];
+  for (const user of users) {
     if (user !== userName) newUsers.push(user);
   }
   return newUsers;
@@ -347,10 +341,7 @@ function listReducer(state: any = {}, action: any = {}) {
 
     // Delete single user actions
     case DELETE_USER_SUCCESS:
-      const newUserEntries = deleteUserInEntries(
-        state.entries,
-        action.payload.name
-      );
+      const newUserEntries = deleteUserInEntries(state.entries, action.payload.name);
       return {
         ...state,
         entries: newUserEntries
@@ -420,7 +411,7 @@ export function getUsersFromState(state: object) {
   }
   const userEntries: User[] = [];
 
-  for (let userName of userNames) {
+  for (const userName of userNames) {
     userEntries.push(state.users.byNames[userName]);
   }
 

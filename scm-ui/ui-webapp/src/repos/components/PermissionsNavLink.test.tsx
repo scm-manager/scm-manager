@@ -10,9 +10,7 @@ describe("PermissionsNavLink", () => {
       _links: {}
     };
 
-    const navLink = shallow(
-      <PermissionsNavLink repository={repository} permissionUrl="" />
-    );
+    const navLink = shallow(<PermissionsNavLink repository={repository} permissionUrl="" />);
     expect(navLink.text()).toBe("");
   });
 
@@ -25,9 +23,7 @@ describe("PermissionsNavLink", () => {
       }
     };
 
-    const navLink = mount(
-      <PermissionsNavLink repository={repository} permissionUrl="" />
-    );
+    const navLink = mount(<PermissionsNavLink repository={repository} permissionUrl="" />);
     expect(navLink.text()).toBe("repositoryRoot.menu.permissionsNavLink");
   });
 });

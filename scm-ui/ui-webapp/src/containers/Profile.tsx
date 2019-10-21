@@ -6,14 +6,7 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";
-import {
-  ErrorPage,
-  Page,
-  Navigation,
-  SubNavigation,
-  Section,
-  NavLink
-} from "@scm-manager/ui-components";
+import { ErrorPage, Page, Navigation, SubNavigation, Section, NavLink } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -67,37 +60,16 @@ class Profile extends React.Component<Props, State> {
         <div className="columns">
           <div className="column is-three-quarters">
             <Route path={url} exact render={() => <ProfileInfo me={me} />} />
-            <Route
-              path={`${url}/settings/password`}
-              render={() => <ChangeUserPassword me={me} />}
-            />
-            <ExtensionPoint
-              name="profile.route"
-              props={extensionProps}
-              renderAll={true}
-            />
+            <Route path={`${url}/settings/password`} render={() => <ChangeUserPassword me={me} />} />
+            <ExtensionPoint name="profile.route" props={extensionProps} renderAll={true} />
           </div>
           <div className="column">
             <Navigation>
               <Section label={t("profile.navigationLabel")}>
-                <NavLink
-                  to={`${url}`}
-                  icon="fas fa-info-circle"
-                  label={t("profile.informationNavLink")}
-                />
-                <SubNavigation
-                  to={`${url}/settings/password`}
-                  label={t("profile.settingsNavLink")}
-                >
-                  <NavLink
-                    to={`${url}/settings/password`}
-                    label={t("profile.changePasswordNavLink")}
-                  />
-                  <ExtensionPoint
-                    name="profile.setting"
-                    props={extensionProps}
-                    renderAll={true}
-                  />
+                <NavLink to={`${url}`} icon="fas fa-info-circle" label={t("profile.informationNavLink")} />
+                <SubNavigation to={`${url}/settings/password`} label={t("profile.settingsNavLink")}>
+                  <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
+                  <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
               </Section>
             </Navigation>

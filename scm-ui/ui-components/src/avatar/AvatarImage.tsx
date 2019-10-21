@@ -16,9 +16,7 @@ class AvatarImage extends React.Component<Props> {
     if (avatarFactory) {
       const avatar = avatarFactory(person);
 
-      return (
-        <Image className="has-rounded-border" src={avatar} alt={person.name} />
-      );
+      return <Image className="has-rounded-border" src={avatar} alt={person.name} />;
     }
 
     return null;

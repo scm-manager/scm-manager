@@ -4,6 +4,19 @@ import * as validation from "./validation";
 import * as urls from "./urls";
 import * as repositories from "./repositories";
 
+// not sure if it is required
+import {
+  File,
+  FileChangeType,
+  Hunk,
+  Change,
+  BaseContext,
+  AnnotationFactory,
+  AnnotationFactoryContext,
+  DiffEventHandler,
+  DiffEventContext
+} from "./repos";
+
 export { validation, urls, repositories };
 
 export { default as DateFromNow } from "./DateFromNow";
@@ -50,19 +63,6 @@ export * from "./layout";
 export * from "./modals";
 export * from "./navigation";
 export * from "./repos";
-
-// not sure if it is required
-import {
-  File,
-  FileChangeType,
-  Hunk,
-  Change,
-  BaseContext,
-  AnnotationFactory,
-  AnnotationFactoryContext,
-  DiffEventHandler,
-  DiffEventContext
-} from "./repos";
 
 export {
   File,

@@ -1,16 +1,6 @@
 import React from "react";
-import {
-  File,
-  Changeset,
-  Repository,
-  PagedCollection
-} from "@scm-manager/ui-types";
-import {
-  ErrorNotification,
-  Loading,
-  StatePaginator,
-  ChangesetList
-} from "@scm-manager/ui-components";
+import { File, Changeset, Repository, PagedCollection } from "@scm-manager/ui-types";
+import { ErrorNotification, Loading, StatePaginator, ChangesetList } from "@scm-manager/ui-components";
 import { getHistory } from "./history";
 
 type Props = {
@@ -67,9 +57,7 @@ class HistoryView extends React.Component<Props, State> {
   updatePage(page: number) {
     const { file } = this.props;
     const internalPage = page - 1;
-    this.updateHistory(
-      file._links.history.href + "?page=" + internalPage.toString()
-    );
+    this.updateHistory(file._links.history.href + "?page=" + internalPage.toString());
   }
 
   showHistory() {

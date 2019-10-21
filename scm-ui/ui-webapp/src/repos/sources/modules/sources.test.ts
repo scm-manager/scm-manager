@@ -16,8 +16,7 @@ import {
   isDirectory
 } from "./sources";
 
-const sourcesUrl =
-  "http://localhost:8081/scm/rest/api/v2/repositories/scm/core/sources/";
+const sourcesUrl = "http://localhost:8081/scm/rest/api/v2/repositories/scm/core/sources/";
 
 const repository: Repository = {
   name: "core",
@@ -185,21 +184,14 @@ describe("reducer tests", () => {
     const expectedState = {
       "scm/core/_/": collection
     };
-    expect(
-      reducer({}, fetchSourcesSuccess(repository, "", "", collection))
-    ).toEqual(expectedState);
+    expect(reducer({}, fetchSourcesSuccess(repository, "", "", collection))).toEqual(expectedState);
   });
 
   it("should store the collection, with revision and path", () => {
     const expectedState = {
       "scm/core/abc/src/main": collection
     };
-    expect(
-      reducer(
-        {},
-        fetchSourcesSuccess(repository, "abc", "src/main", collection)
-      )
-    ).toEqual(expectedState);
+    expect(reducer({}, fetchSourcesSuccess(repository, "abc", "src/main", collection))).toEqual(expectedState);
   });
 });
 
@@ -212,9 +204,7 @@ describe("selector tests", () => {
         }
       }
     };
-    expect(
-      isDirectory(state, repository, "abc", "src/main/package.json")
-    ).toBeFalsy();
+    expect(isDirectory(state, repository, "abc", "src/main/package.json")).toBeFalsy();
   });
 
   it("should return true if it is directory", () => {

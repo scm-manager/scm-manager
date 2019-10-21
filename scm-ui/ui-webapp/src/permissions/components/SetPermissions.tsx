@@ -4,11 +4,7 @@ import { translate } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Link } from "@scm-manager/ui-types";
-import {
-  Notification,
-  ErrorNotification,
-  SubmitButton
-} from "@scm-manager/ui-components";
+import { Notification, ErrorNotification, SubmitButton } from "@scm-manager/ui-components";
 import { getLink } from "../../modules/indexResource";
 import { loadPermissionsForEntity, setPermissions } from "./handlePermissions";
 import PermissionCheckbox from "./PermissionCheckbox";
@@ -78,17 +74,16 @@ class SetPermissions extends React.Component<Props, State> {
   };
 
   componentDidMount(): void {
-    loadPermissionsForEntity(
-      this.props.availablePermissionLink,
-      this.props.selectedPermissionsLink.href
-    ).then(response => {
-      const { permissions, overwriteLink } = response;
-      this.setState({
-        permissions: permissions,
-        loading: false,
-        overwritePermissionsLink: overwriteLink
-      });
-    });
+    loadPermissionsForEntity(this.props.availablePermissionLink, this.props.selectedPermissionsLink.href).then(
+      response => {
+        const { permissions, overwriteLink } = response;
+        this.setState({
+          permissions: permissions,
+          loading: false,
+          overwritePermissionsLink: overwriteLink
+        });
+      }
+    );
   }
 
   submit = (event: Event) => {
@@ -100,10 +95,7 @@ class SetPermissions extends React.Component<Props, State> {
         .filter(e => e[1])
         .map(e => e[0]);
       if (this.state.overwritePermissionsLink) {
-        setPermissions(
-          this.state.overwritePermissionsLink.href,
-          selectedPermissions
-        )
+        setPermissions(this.state.overwritePermissionsLink.href, selectedPermissions)
           .then(result => {
             this.setSuccessfulState();
           })
@@ -136,11 +128,7 @@ class SetPermissions extends React.Component<Props, State> {
       <form onSubmit={this.submit}>
         {message}
         {this.renderPermissions()}
-        <SubmitButton
-          disabled={!this.state.permissionsChanged}
-          loading={loading}
-          label={t("setPermissions.button")}
-        />
+        <SubmitButton disabled={!this.state.permissionsChanged} loading={loading} label={t("setPermissions.button")} />
       </form>
     );
   }
@@ -162,17 +150,15 @@ class SetPermissions extends React.Component<Props, State> {
           ))}
         </PermissionsWrapper>
         <PermissionsWrapper className={classNames("column", "is-half")}>
-          {permissionArray
-            .slice(permissionArray.length / 2 + 1, permissionArray.length)
-            .map(p => (
-              <PermissionCheckbox
-                key={p}
-                permission={p}
-                checked={permissions[p]}
-                onChange={this.valueChanged}
-                disabled={!overwritePermissionsLink}
-              />
-            ))}
+          {permissionArray.slice(permissionArray.length / 2 + 1, permissionArray.length).map(p => (
+            <PermissionCheckbox
+              key={p}
+              permission={p}
+              checked={permissions[p]}
+              onChange={this.valueChanged}
+              disabled={!overwritePermissionsLink}
+            />
+          ))}
         </PermissionsWrapper>
       </div>
     );
@@ -203,6 +189,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(
-  translate("permissions")(SetPermissions)
-);
+export default connect(mapStateToProps)(translate("permissions")(SetPermissions));

@@ -1,8 +1,8 @@
 import { Plugin, PluginGroup } from "@scm-manager/ui-types";
 
 export default function groupByCategory(plugins: Plugin[]): PluginGroup[] {
-  let groups = {};
-  for (let plugin of plugins) {
+  const groups = {};
+  for (const plugin of plugins) {
     const groupName = plugin.category;
 
     let group = groups[groupName];
@@ -16,8 +16,8 @@ export default function groupByCategory(plugins: Plugin[]): PluginGroup[] {
     group.plugins.push(plugin);
   }
 
-  let groupArray = [];
-  for (let groupName in groups) {
+  const groupArray = [];
+  for (const groupName in groups) {
     const group = groups[groupName];
     group.plugins.sort(sortByName);
     groupArray.push(groups[groupName]);

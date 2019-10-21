@@ -12,13 +12,9 @@ function extractIdentifierFromFailure(action: Action) {
   return identifier;
 }
 
-function removeAllEntriesOfIdentifierFromState(
-  state: object,
-  payload: any,
-  identifier: string
-) {
+function removeAllEntriesOfIdentifierFromState(state: object, payload: any, identifier: string) {
   const newState = {};
-  for (let failureType in state) {
+  for (const failureType in state) {
     if (failureType !== identifier && !failureType.startsWith(identifier)) {
       newState[failureType] = state[failureType];
     }
@@ -28,7 +24,7 @@ function removeAllEntriesOfIdentifierFromState(
 
 function removeFromState(state: object, identifier: string) {
   const newState = {};
-  for (let failureType in state) {
+  for (const failureType in state) {
     if (failureType !== identifier) {
       newState[failureType] = state[failureType];
     }
@@ -62,23 +58,14 @@ export default function reducer(
       if (action.itemId) {
         identifier += "/" + action.itemId;
       }
-      if (action.payload)
-        return removeAllEntriesOfIdentifierFromState(
-          state,
-          action.payload,
-          identifier
-        );
+      if (action.payload) return removeAllEntriesOfIdentifierFromState(state, action.payload, identifier);
       else return removeFromState(state, identifier);
     }
   }
   return state;
 }
 
-export function getFailure(
-  state: object,
-  actionType: string,
-  itemId?: string | number
-) {
+export function getFailure(state: object, actionType: string, itemId?: string | number) {
   if (state.failure) {
     let identifier = actionType;
     if (itemId) {

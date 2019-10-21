@@ -20,8 +20,7 @@ import plugins from "./admin/plugins/modules/plugins";
 import branches from "./repos/branches/modules/branches";
 
 function createReduxStore() {
-  const composeEnhancers =
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
   const reducer = combineReducers({
     pending,

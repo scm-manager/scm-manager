@@ -2,12 +2,7 @@ import React from "react";
 import { translate, InjectedTranslateProps } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import {
-  Change,
-  Diff as DiffComponent,
-  getChangeKey,
-  Hunk
-} from "react-diff-view";
+import { Change, Diff as DiffComponent, getChangeKey, Hunk } from "react-diff-view";
 import { Button, ButtonGroup } from "../buttons";
 import Tag from "../Tag";
 import Icon from "../Icon";
@@ -183,14 +178,10 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   renderFileTitle = (file: File) => {
-    if (
-      file.oldPath !== file.newPath &&
-      (file.type === "copy" || file.type === "rename")
-    ) {
+    if (file.oldPath !== file.newPath && (file.type === "copy" || file.type === "rename")) {
       return (
         <>
-          {file.oldPath} <Icon name="arrow-right" color="inherit" />{" "}
-          {file.newPath}
+          {file.oldPath} <Icon name="arrow-right" color="inherit" /> {file.newPath}
         </>
       );
     } else if (file.type === "delete") {
@@ -200,10 +191,7 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   hoverFileTitle = (file: File): string => {
-    if (
-      file.oldPath !== file.newPath &&
-      (file.type === "copy" || file.type === "rename")
-    ) {
+    if (file.oldPath !== file.newPath && (file.type === "copy" || file.type === "rename")) {
       return `${file.oldPath} > ${file.newPath}`;
     } else if (file.type === "delete") {
       return file.oldPath;
@@ -222,19 +210,9 @@ class DiffFile extends React.Component<Props, State> {
       value = file.type;
     }
     const color =
-      value === "added"
-        ? "success is-outlined"
-        : value === "deleted"
-        ? "danger is-outlined"
-        : "info is-outlined";
+      value === "added" ? "success is-outlined" : value === "deleted" ? "danger is-outlined" : "info is-outlined";
 
-    return (
-      <ChangeTypeTag
-        className={classNames("is-rounded", "has-text-weight-normal")}
-        color={color}
-        label={value}
-      />
-    );
+    return <ChangeTypeTag className={classNames("is-rounded", "has-text-weight-normal")} color={color} label={value} />;
   };
 
   render() {
@@ -245,9 +223,7 @@ class DiffFile extends React.Component<Props, State> {
     let body = null;
     let icon = "angle-right";
     if (!collapsed) {
-      const fileAnnotations = fileAnnotationFactory
-        ? fileAnnotationFactory(file)
-        : null;
+      const fileAnnotations = fileAnnotationFactory ? fileAnnotationFactory(file) : null;
       icon = "angle-down";
       body = (
         <div className="panel-block is-paddingless">
@@ -258,32 +234,20 @@ class DiffFile extends React.Component<Props, State> {
         </div>
       );
     }
-    const collapseIcon =
-      file && !file.isBinary ? <Icon name={icon} color="inherit" /> : null;
+    const collapseIcon = file && !file.isBinary ? <Icon name={icon} color="inherit" /> : null;
 
-    const fileControls = fileControlFactory
-      ? fileControlFactory(file, this.setCollapse)
-      : null;
+    const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
     return (
-      <DiffFilePanel
-        className={classNames("panel", "is-size-6")}
-        collapsed={(file && file.isBinary) || collapsed}
-      >
+      <DiffFilePanel className={classNames("panel", "is-size-6")} collapsed={(file && file.isBinary) || collapsed}>
         <div className="panel-heading">
           <FlexWrapLevel className="level">
             <FullWidthTitleHeader
-              className={classNames(
-                "level-left",
-                "is-flex",
-                "has-cursor-pointer"
-              )}
+              className={classNames("level-left", "is-flex", "has-cursor-pointer")}
               onClick={this.toggleCollapse}
               title={this.hoverFileTitle(file)}
             >
               {collapseIcon}
-              <TitleWrapper
-                className={classNames("is-ellipsis-overflow", "is-size-6")}
-              >
+              <TitleWrapper className={classNames("is-ellipsis-overflow", "is-size-6")}>
                 {this.renderFileTitle(file)}
               </TitleWrapper>
               {this.renderChangeTag(file)}

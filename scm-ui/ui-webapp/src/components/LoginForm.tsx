@@ -1,13 +1,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import styled from "styled-components";
-import {
-  Image,
-  ErrorNotification,
-  InputField,
-  SubmitButton,
-  UnauthorizedError
-} from "@scm-manager/ui-components";
+import { Image, ErrorNotification, InputField, SubmitButton, UnauthorizedError } from "@scm-manager/ui-components";
 
 type Props = {
   error?: Error;
@@ -104,11 +98,7 @@ class LoginForm extends React.Component<Props, State> {
               type="password"
               onChange={this.handlePasswordChange}
             />
-            <SubmitButton
-              label={t("login.submit")}
-              fullWidth={true}
-              loading={loading}
-            />
+            <SubmitButton label={t("login.submit")} fullWidth={true} loading={loading} />
           </form>
         </TopMarginBox>
       </div>

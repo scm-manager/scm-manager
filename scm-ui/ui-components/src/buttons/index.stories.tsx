@@ -11,27 +11,13 @@ import EditButton from "./EditButton";
 import SubmitButton from "./SubmitButton";
 import { ReactElement } from "react";
 
-const colors = [
-  "primary",
-  "link",
-  "info",
-  "success",
-  "warning",
-  "danger",
-  "white",
-  "light",
-  "dark",
-  "black",
-  "text"
-];
+const colors = ["primary", "link", "info", "success", "warning", "danger", "white", "light", "dark", "black", "text"];
 
 const Spacing = styled.div`
   padding: 1em;
 `;
 
-const RoutingDecorator = story => (
-  <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>
-);
+const RoutingDecorator = story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
 
 const SpacingDecorator = story => <Spacing>{story()}</Spacing>;
 
@@ -65,17 +51,7 @@ buttonStory("AddButton", () => <AddButton>Add</AddButton>);
 buttonStory("CreateButton", () => <CreateButton>Create</CreateButton>);
 buttonStory("DeleteButton", () => <DeleteButton>Delete</DeleteButton>);
 buttonStory("DownloadButton", () => (
-  <DownloadButton
-    displayName="Download"
-    disabled={false}
-    url=""
-  ></DownloadButton>
-)).add("Disabled", () => (
-  <DownloadButton
-    displayName="Download"
-    disabled={true}
-    url=""
-  ></DownloadButton>
-));
+  <DownloadButton displayName="Download" disabled={false} url=""></DownloadButton>
+)).add("Disabled", () => <DownloadButton displayName="Download" disabled={true} url=""></DownloadButton>);
 buttonStory("EditButton", () => <EditButton>Edit</EditButton>);
 buttonStory("SubmitButton", () => <SubmitButton>Submit</SubmitButton>);

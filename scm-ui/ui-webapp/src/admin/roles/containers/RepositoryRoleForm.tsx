@@ -4,16 +4,8 @@ import { translate } from "react-i18next";
 import { RepositoryRole } from "@scm-manager/ui-types";
 import { InputField, SubmitButton } from "@scm-manager/ui-components";
 import PermissionCheckbox from "../../../repos/permissions/components/PermissionCheckbox";
-import {
-  fetchAvailableVerbs,
-  getFetchVerbsFailure,
-  getVerbsFromState,
-  isFetchVerbsPending
-} from "../modules/roles";
-import {
-  getRepositoryRolesLink,
-  getRepositoryVerbsLink
-} from "../../../modules/indexResource";
+import { fetchAvailableVerbs, getFetchVerbsFailure, getVerbsFromState, isFetchVerbsPending } from "../modules/roles";
+import { getRepositoryRolesLink, getRepositoryVerbsLink } from "../../../modules/indexResource";
 
 type Props = {
   role?: RepositoryRole;
@@ -63,11 +55,7 @@ class RepositoryRoleForm extends React.Component<Props, State> {
 
   isValid = () => {
     const { role } = this.state;
-    return !(
-      this.isFalsy(role) ||
-      this.isFalsy(role.name) ||
-      this.isFalsy(role.verbs.length > 0)
-    );
+    return !(this.isFalsy(role) || this.isFalsy(role.name) || this.isFalsy(role.verbs.length > 0));
   };
 
   handleNameChange = (name: string) => {
@@ -82,9 +70,7 @@ class RepositoryRoleForm extends React.Component<Props, State> {
   handleVerbChange = (value: boolean, name: string) => {
     const { role } = this.state;
 
-    const newVerbs = value
-      ? [...role.verbs, name]
-      : role.verbs.filter(v => v !== name);
+    const newVerbs = value ? [...role.verbs, name] : role.verbs.filter(v => v !== name);
 
     this.setState({
       ...this.state,
@@ -127,17 +113,11 @@ class RepositoryRoleForm extends React.Component<Props, State> {
           disabled={!!this.props.role}
         />
         <div className="field">
-          <label className="label">
-            {t("repositoryRole.form.permissions")}
-          </label>
+          <label className="label">{t("repositoryRole.form.permissions")}</label>
           {verbSelectBoxes}
         </div>
         <hr />
-        <SubmitButton
-          loading={loading}
-          label={t("repositoryRole.form.submit")}
-          disabled={!this.isValid()}
-        />
+        <SubmitButton loading={loading} label={t("repositoryRole.form.submit")} disabled={!this.isValid()} />
       </form>
     );
   }

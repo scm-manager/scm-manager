@@ -50,9 +50,7 @@ describe("ExtensionPoint test", () => {
     mockedBinder.hasExtension.mockReturnValue(true);
     mockedBinder.getExtensions.mockReturnValue([labelOne, labelTwo]);
 
-    const rendered = mount(
-      <ExtensionPointEnzymeFix name="something.special" renderAll={true} />
-    );
+    const rendered = mount(<ExtensionPointEnzymeFix name="something.special" renderAll={true} />);
     const text = rendered.text();
     expect(text).toContain("Extension One");
     expect(text).toContain("Extension Two");
@@ -123,11 +121,7 @@ describe("ExtensionPoint test", () => {
     };
 
     const HelloUser = () => {
-      return (
-        <UserContext.Consumer>
-          {({ name }) => <Hello name={name} />}
-        </UserContext.Consumer>
-      );
+      return <UserContext.Consumer>{({ name }) => <Hello name={name} />}</UserContext.Consumer>;
     };
 
     mockedBinder.hasExtension.mockReturnValue(true);

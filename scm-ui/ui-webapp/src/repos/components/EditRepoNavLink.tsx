@@ -20,9 +20,7 @@ class EditRepoNavLink extends React.Component<Props> {
     if (!this.isEditable()) {
       return null;
     }
-    return (
-      <NavLink to={editUrl} label={t("repositoryRoot.menu.generalNavLink")} />
-    );
+    return <NavLink to={editUrl} label={t("repositoryRoot.menu.generalNavLink")} />;
   }
 }
 

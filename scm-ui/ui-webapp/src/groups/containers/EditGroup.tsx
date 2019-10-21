@@ -1,12 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import GroupForm from "../components/GroupForm";
-import {
-  modifyGroup,
-  getModifyGroupFailure,
-  isModifyGroupPending,
-  modifyGroupReset
-} from "../modules/groups";
+import { modifyGroup, getModifyGroupFailure, isModifyGroupPending, modifyGroupReset } from "../modules/groups";
 import { History } from "history";
 import { withRouter } from "react-router-dom";
 import { Group } from "@scm-manager/ui-types";

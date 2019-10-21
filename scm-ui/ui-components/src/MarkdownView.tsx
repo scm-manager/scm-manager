@@ -71,13 +71,7 @@ class MarkdownView extends React.Component<Props> {
   }
 
   render() {
-    const {
-      content,
-      renderers,
-      renderContext,
-      enableAnchorHeadings,
-      skipHtml
-    } = this.props;
+    const { content, renderers, renderContext, enableAnchorHeadings, skipHtml } = this.props;
 
     const rendererFactory = binder.getExtension("markdown-renderer-factory");
     let rendererList = renderers;

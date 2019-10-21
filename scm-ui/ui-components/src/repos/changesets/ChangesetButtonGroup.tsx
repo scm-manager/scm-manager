@@ -19,18 +19,8 @@ class ChangesetButtonGroup extends React.Component<Props> {
     const sourcesLink = createSourcesLink(repository, changeset);
     return (
       <ButtonAddons className="is-marginless">
-        <Button
-          link={changesetLink}
-          icon="exchange-alt"
-          label={t("changeset.buttons.details")}
-          reducedMobile={true}
-        />
-        <Button
-          link={sourcesLink}
-          icon="code"
-          label={t("changeset.buttons.sources")}
-          reducedMobile={true}
-        />
+        <Button link={changesetLink} icon="exchange-alt" label={t("changeset.buttons.details")} reducedMobile={true} />
+        <Button link={sourcesLink} icon="code" label={t("changeset.buttons.sources")} reducedMobile={true} />
       </ButtonAddons>
     );
   }

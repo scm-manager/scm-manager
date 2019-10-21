@@ -45,8 +45,7 @@ export default class Page extends React.Component<Props> {
 
   isPageAction(node: any) {
     return (
-      node.displayName === PageActions.displayName ||
-      (node.type && node.type.displayName === PageActions.displayName)
+      node.displayName === PageActions.displayName || (node.type && node.type.displayName === PageActions.displayName)
     );
   }
 
@@ -60,12 +59,7 @@ export default class Page extends React.Component<Props> {
         if (this.isPageAction(child)) {
           pageActions = (
             <PageActionContainer
-              className={classNames(
-                "column",
-                "is-three-fifths",
-                "is-mobile-action-spacing",
-                "is-flex"
-              )}
+              className={classNames("column", "is-three-fifths", "is-mobile-action-spacing", "is-flex")}
             >
               {child}
             </PageActionContainer>
@@ -74,9 +68,7 @@ export default class Page extends React.Component<Props> {
         }
       }
     });
-    let underline = pageActionsExists ? (
-      <hr className="header-with-actions" />
-    ) : null;
+    const underline = pageActionsExists ? <hr className="header-with-actions" /> : null;
 
     return (
       <>
@@ -102,7 +94,7 @@ export default class Page extends React.Component<Props> {
       return <Loading />;
     }
 
-    let content: ReactNode[] = [];
+    const content: ReactNode[] = [];
     React.Children.forEach(children, child => {
       if (child) {
         if (!this.isPageAction(child)) {

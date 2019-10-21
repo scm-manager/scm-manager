@@ -42,9 +42,7 @@ export function fetchGroups(link: string) {
 export function fetchGroupsByPage(link: string, page: number, filter?: string) {
   // backend start counting by 0
   if (filter) {
-    return fetchGroupsByLink(
-      `${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`
-    );
+    return fetchGroupsByLink(`${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`);
   }
   return fetchGroupsByLink(`${link}?page=${page - 1}`);
 }
@@ -286,34 +284,30 @@ export function deleteGroupFailure(group: Group, error: Error): Action {
 }
 
 //reducer
-function extractGroupsByNames(
-  groups: Group[],
-  groupNames: string[],
-  oldGroupsByNames: object
-) {
+function extractGroupsByNames(groups: Group[], groupNames: string[], oldGroupsByNames: object) {
   const groupsByNames = {};
 
-  for (let group of groups) {
+  for (const group of groups) {
     groupsByNames[group.name] = group;
   }
 
-  for (let groupName in oldGroupsByNames) {
+  for (const groupName in oldGroupsByNames) {
     groupsByNames[groupName] = oldGroupsByNames[groupName];
   }
   return groupsByNames;
 }
 
 function deleteGroupInGroupsByNames(groups: {}, groupName: string) {
-  let newGroups = {};
-  for (let groupname in groups) {
+  const newGroups = {};
+  for (const groupname in groups) {
     if (groupname !== groupName) newGroups[groupname] = groups[groupname];
   }
   return newGroups;
 }
 
 function deleteGroupInEntries(groups: [], groupName: string) {
-  let newGroups = [];
-  for (let group of groups) {
+  const newGroups = [];
+  for (const group of groups) {
     if (group !== groupName) newGroups.push(group);
   }
   return newGroups;
@@ -345,10 +339,7 @@ function listReducer(state: any = {}, action: any = {}) {
       };
     // Delete single group actions
     case DELETE_GROUP_SUCCESS:
-      const newGroupEntries = deleteGroupInEntries(
-        state.entries,
-        action.payload.name
-      );
+      const newGroupEntries = deleteGroupInEntries(state.entries, action.payload.name);
       return {
         ...state,
         entries: newGroupEntries
@@ -371,10 +362,7 @@ function byNamesReducer(state: any = {}, action: any = {}) {
     case FETCH_GROUP_SUCCESS:
       return reducerByName(state, action.payload.name, action.payload);
     case DELETE_GROUP_SUCCESS:
-      const newGroupByNames = deleteGroupInGroupsByNames(
-        state,
-        action.payload.name
-      );
+      const newGroupByNames = deleteGroupInGroupsByNames(state, action.payload.name);
       return newGroupByNames;
 
     default:
@@ -417,8 +405,7 @@ export const isPermittedToCreateGroups = (state: object): boolean => {
 };
 
 export function getCreateGroupLink(state: object) {
-  if (state.groups.list.entry && state.groups.list.entry._links)
-    return state.groups.list.entry._links.create.href;
+  if (state.groups.list.entry && state.groups.list.entry._links) return state.groups.list.entry._links.create.href;
   return undefined;
 }
 
@@ -429,7 +416,7 @@ export function getGroupsFromState(state: object) {
   }
   const groupEntries: Group[] = [];
 
-  for (let groupName of groupNames) {
+  for (const groupName of groupNames) {
     groupEntries.push(state.groups.byNames[groupName]);
   }
 

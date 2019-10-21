@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  ButtonGroup,
-  Button,
-  SubmitButton,
-  Modal
-} from "@scm-manager/ui-components";
+import { ButtonGroup, Button, SubmitButton, Modal } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import PermissionCheckbox from "../components/PermissionCheckbox";
 
@@ -29,10 +24,7 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
 
     const verbs = {};
     props.availableVerbs.forEach(
-      verb =>
-        (verbs[verb] = props.selectedVerbs
-          ? props.selectedVerbs.includes(verb)
-          : false)
+      verb => (verbs[verb] = props.selectedVerbs ? props.selectedVerbs.includes(verb) : false)
     );
     this.state = {
       verbs
@@ -44,18 +36,10 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
     const { verbs } = this.state;
 
     const verbSelectBoxes = Object.entries(verbs).map(e => (
-      <PermissionCheckbox
-        key={e[0]}
-        disabled={readOnly}
-        name={e[0]}
-        checked={e[1]}
-        onChange={this.handleChange}
-      />
+      <PermissionCheckbox key={e[0]} disabled={readOnly} name={e[0]} checked={e[1]} onChange={this.handleChange} />
     ));
 
-    const submitButton = !readOnly ? (
-      <SubmitButton label={t("permission.advanced.dialog.submit")} />
-    ) : null;
+    const submitButton = !readOnly ? <SubmitButton label={t("permission.advanced.dialog.submit")} /> : null;
 
     const body = <>{verbSelectBoxes}</>;
 
@@ -63,10 +47,7 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
       <form onSubmit={this.onSubmit}>
         <ButtonGroup>
           {submitButton}
-          <Button
-            label={t("permission.advanced.dialog.abort")}
-            action={onClose}
-          />
+          <Button label={t("permission.advanced.dialog.abort")} action={onClose} />
         </ButtonGroup>
       </form>
     );

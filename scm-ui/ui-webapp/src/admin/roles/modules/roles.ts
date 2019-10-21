@@ -168,11 +168,7 @@ export function createRoleReset() {
   };
 }
 
-export function createRole(
-  link: string,
-  role: RepositoryRole,
-  callback?: () => void
-) {
+export function createRole(link: string, role: RepositoryRole, callback?: () => void) {
   return function(dispatch: Dispatch) {
     dispatch(createRolePending(role));
     return apiClient
@@ -338,34 +334,30 @@ export function deleteRole(role: RepositoryRole, callback?: () => void) {
   };
 }
 
-function extractRolesByNames(
-  roles: RepositoryRole[],
-  roleNames: string[],
-  oldRolesByNames: object
-) {
+function extractRolesByNames(roles: RepositoryRole[], roleNames: string[], oldRolesByNames: object) {
   const rolesByNames = {};
 
-  for (let role of roles) {
+  for (const role of roles) {
     rolesByNames[role.name] = role;
   }
 
-  for (let roleName in oldRolesByNames) {
+  for (const roleName in oldRolesByNames) {
     rolesByNames[roleName] = oldRolesByNames[roleName];
   }
   return rolesByNames;
 }
 
 function deleteRoleInRolesByNames(roles: {}, roleName: string) {
-  let newRoles = {};
-  for (let rolename in roles) {
+  const newRoles = {};
+  for (const rolename in roles) {
     if (rolename !== roleName) newRoles[rolename] = roles[rolename];
   }
   return newRoles;
 }
 
 function deleteRoleInEntries(roles: [], roleName: string) {
-  let newRoles = [];
-  for (let role of roles) {
+  const newRoles = [];
+  for (const role of roles) {
     if (role !== roleName) newRoles.push(role);
   }
   return newRoles;
@@ -396,10 +388,7 @@ function listReducer(state: any = {}, action: any = {}) {
 
     // Delete single role actions
     case DELETE_ROLE_SUCCESS:
-      const newRoleEntries = deleteRoleInEntries(
-        state.entries,
-        action.payload.name
-      );
+      const newRoleEntries = deleteRoleInEntries(state.entries, action.payload.name);
       return {
         ...state,
         entries: newRoleEntries
@@ -468,7 +457,7 @@ export function getRolesFromState(state: object) {
   }
   const roleEntries: RepositoryRole[] = [];
 
-  for (let roleName of roleNames) {
+  for (const roleName of roleNames) {
     roleEntries.push(state.roles.byNames[roleName]);
   }
 

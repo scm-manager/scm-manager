@@ -17,17 +17,11 @@ class PermissionCheckbox extends React.Component<Props> {
     return (
       <Checkbox
         name={permission}
-        label={this.translateOrDefault(
-          "permissions." + key + ".displayName",
-          key
-        )}
+        label={this.translateOrDefault("permissions." + key + ".displayName", key)}
         checked={checked}
         onChange={onChange}
         disabled={disabled}
-        helpText={this.translateOrDefault(
-          "permissions." + key + ".description",
-          t("permissions.unknown")
-        )}
+        helpText={this.translateOrDefault("permissions." + key + ".description", t("permissions.unknown"))}
       />
     );
   }

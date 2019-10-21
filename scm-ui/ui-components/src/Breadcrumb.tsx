@@ -62,32 +62,16 @@ class Breadcrumb extends React.Component<Props> {
   }
 
   render() {
-    const {
-      baseUrl,
-      branch,
-      defaultBranch,
-      branches,
-      revision,
-      path,
-      repository,
-      t
-    } = this.props;
+    const { baseUrl, branch, defaultBranch, branches, revision, path, repository, t } = this.props;
 
     return (
       <>
         <div className="is-flex">
-          <FlexStartNav
-            className={classNames("breadcrumb", "sources-breadcrumb")}
-            aria-label="breadcrumbs"
-          >
+          <FlexStartNav className={classNames("breadcrumb", "sources-breadcrumb")} aria-label="breadcrumbs">
             <ul>
               <li>
                 <Link to={baseUrl + "/" + revision + "/"}>
-                  <HomeIcon
-                    title={t("breadcrumb.home")}
-                    name="home"
-                    color="inherit"
-                  />
+                  <HomeIcon title={t("breadcrumb.home")} name="home" color="inherit" />
                 </Link>
               </li>
               {this.renderPath()}
@@ -101,11 +85,7 @@ class Breadcrumb extends React.Component<Props> {
                   baseUrl,
                   branch: branch ? branch : defaultBranch,
                   path,
-                  isBranchUrl:
-                    branches &&
-                    branches.filter(
-                      b => b.name.replace("/", "%2F") === revision
-                    ).length > 0,
+                  isBranchUrl: branches && branches.filter(b => b.name.replace("/", "%2F") === revision).length > 0,
                   repository
                 }}
                 renderAll={true}

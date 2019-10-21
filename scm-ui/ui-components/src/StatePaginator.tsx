@@ -14,14 +14,7 @@ type Props = {
 
 class StatePaginator extends React.Component<Props> {
   renderFirstButton() {
-    return (
-      <Button
-        className="pagination-link"
-        label={"1"}
-        disabled={false}
-        action={() => this.updateCurrentPage(1)}
-      />
-    );
+    return <Button className="pagination-link" label={"1"} disabled={false} action={() => this.updateCurrentPage(1)} />;
   }
 
   updateCurrentPage = (newPage: number) => {

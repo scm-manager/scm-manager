@@ -25,10 +25,7 @@ class Autocomplete extends React.Component<Props, State> {
     noOptionsMessage: "No suggestion available"
   };
 
-  handleInputChange = (
-    newValue: ValueType<SelectValue>,
-    action: ActionMeta
-  ) => {
+  handleInputChange = (newValue: ValueType<SelectValue>, action: ActionMeta) => {
     this.selectValue(newValue as SelectValue);
   };
 
@@ -42,9 +39,7 @@ class Autocomplete extends React.Component<Props, State> {
     selectValue: ValueType<SelectValue>,
     selectOptions: readonly SelectValue[]
   ): boolean => {
-    const isNotDuplicated = !selectOptions
-      .map(option => option.label)
-      .includes(inputValue);
+    const isNotDuplicated = !selectOptions.map(option => option.label).includes(inputValue);
     const isNotEmpty = inputValue !== "";
     return isNotEmpty && isNotDuplicated;
   };

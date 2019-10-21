@@ -132,10 +132,7 @@ describe("plugins fetch", () => {
   });
 
   it("should successfully fetch scm-groupmanager-plugin by name", () => {
-    fetchMock.getOnce(
-      PLUGINS_URL + "/scm-groupmanager-plugin",
-      groupManagerPlugin
-    );
+    fetchMock.getOnce(PLUGINS_URL + "/scm-groupmanager-plugin", groupManagerPlugin);
 
     const expectedActions = [
       {
@@ -153,11 +150,9 @@ describe("plugins fetch", () => {
     ];
 
     const store = mockStore({});
-    return store
-      .dispatch(fetchPluginByName(URL, "scm-groupmanager-plugin"))
-      .then(() => {
-        expect(store.getActions()).toEqual(expectedActions);
-      });
+    return store.dispatch(fetchPluginByName(URL, "scm-groupmanager-plugin")).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
   });
 
   it("should dispatch FETCH_PLUGIN_FAILURE, if the request for scm-groupmanager-plugin by name fails", () => {
@@ -166,23 +161,18 @@ describe("plugins fetch", () => {
     });
 
     const store = mockStore({});
-    return store
-      .dispatch(fetchPluginByName(URL, "scm-groupmanager-plugin"))
-      .then(() => {
-        const actions = store.getActions();
-        expect(actions[0].type).toEqual(FETCH_PLUGIN_PENDING);
-        expect(actions[1].type).toEqual(FETCH_PLUGIN_FAILURE);
-        expect(actions[1].payload.name).toBe("scm-groupmanager-plugin");
-        expect(actions[1].payload.error).toBeDefined();
-        expect(actions[1].itemId).toBe("scm-groupmanager-plugin");
-      });
+    return store.dispatch(fetchPluginByName(URL, "scm-groupmanager-plugin")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(FETCH_PLUGIN_PENDING);
+      expect(actions[1].type).toEqual(FETCH_PLUGIN_FAILURE);
+      expect(actions[1].payload.name).toBe("scm-groupmanager-plugin");
+      expect(actions[1].payload.error).toBeDefined();
+      expect(actions[1].itemId).toBe("scm-groupmanager-plugin");
+    });
   });
 
   it("should successfully fetch scm-groupmanager-plugin", () => {
-    fetchMock.getOnce(
-      "http://localhost:8081/api/v2/ui/plugins/scm-groupmanager-plugin",
-      groupManagerPlugin
-    );
+    fetchMock.getOnce("http://localhost:8081/api/v2/ui/plugins/scm-groupmanager-plugin", groupManagerPlugin);
 
     const expectedActions = [
       {
@@ -206,12 +196,9 @@ describe("plugins fetch", () => {
   });
 
   it("should dispatch FETCH_PLUGIN_FAILURE, it the request for scm-groupmanager-plugin fails", () => {
-    fetchMock.getOnce(
-      "http://localhost:8081/api/v2/ui/plugins/scm-groupmanager-plugin",
-      {
-        status: 500
-      }
-    );
+    fetchMock.getOnce("http://localhost:8081/api/v2/ui/plugins/scm-groupmanager-plugin", {
+      status: 500
+    });
 
     const store = mockStore({});
     return store.dispatch(fetchPluginByLink(groupManagerPlugin)).then(() => {
@@ -255,18 +242,14 @@ describe("plugins reducer", () => {
       "scm-script-plugin",
       "scm-branchwp-plugin"
     ]);
-    expect(newState.byNames["scm-groupmanager-plugin"]).toBe(
-      groupManagerPlugin
-    );
+    expect(newState.byNames["scm-groupmanager-plugin"]).toBe(groupManagerPlugin);
     expect(newState.byNames["scm-script-plugin"]).toBe(scriptPlugin);
     expect(newState.byNames["scm-branchwp-plugin"]).toBe(branchwpPlugin);
   });
 
   it("should store the plugin at byNames", () => {
     const newState = reducer({}, fetchPluginSuccess(groupManagerPlugin));
-    expect(newState.byNames["scm-groupmanager-plugin"]).toBe(
-      groupManagerPlugin
-    );
+    expect(newState.byNames["scm-groupmanager-plugin"]).toBe(groupManagerPlugin);
   });
 });
 
@@ -334,9 +317,7 @@ describe("plugins selectors", () => {
         [FETCH_PLUGIN + "/scm-groupmanager-plugin"]: true
       }
     };
-    expect(isFetchPluginPending(state, "scm-groupmanager-plugin")).toEqual(
-      true
-    );
+    expect(isFetchPluginPending(state, "scm-groupmanager-plugin")).toEqual(true);
   });
 
   it("should return false, when fetch plugin is not pending", () => {
@@ -349,14 +330,10 @@ describe("plugins selectors", () => {
         [FETCH_PLUGIN + "/scm-groupmanager-plugin"]: error
       }
     };
-    expect(getFetchPluginFailure(state, "scm-groupmanager-plugin")).toEqual(
-      error
-    );
+    expect(getFetchPluginFailure(state, "scm-groupmanager-plugin")).toEqual(error);
   });
 
   it("should return undefined when fetch plugin did not fail", () => {
-    expect(getFetchPluginFailure({}, "scm-groupmanager-plugin")).toBe(
-      undefined
-    );
+    expect(getFetchPluginFailure({}, "scm-groupmanager-plugin")).toBe(undefined);
   });
 });

@@ -5,8 +5,7 @@ import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import { MODIFY_CONFIG_SUCCESS } from "./config";
 
-export const FETCH_NAMESPACESTRATEGIES_TYPES =
-  "scm/config/FETCH_NAMESPACESTRATEGIES_TYPES";
+export const FETCH_NAMESPACESTRATEGIES_TYPES = "scm/config/FETCH_NAMESPACESTRATEGIES_TYPES";
 export const FETCH_NAMESPACESTRATEGIES_TYPES_PENDING = `${FETCH_NAMESPACESTRATEGIES_TYPES}_${types.PENDING_SUFFIX}`;
 export const FETCH_NAMESPACESTRATEGIES_TYPES_SUCCESS = `${FETCH_NAMESPACESTRATEGIES_TYPES}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_NAMESPACESTRATEGIES_TYPES_FAILURE = `${FETCH_NAMESPACESTRATEGIES_TYPES}_${types.FAILURE_SUFFIX}`;
@@ -15,10 +14,7 @@ export function fetchNamespaceStrategiesIfNeeded() {
   return function(dispatch: any, getState: () => object) {
     const state = getState();
     if (shouldFetchNamespaceStrategies(state)) {
-      return fetchNamespaceStrategies(
-        dispatch,
-        state.indexResources.links.namespaceStrategies.href
-      );
+      return fetchNamespaceStrategies(dispatch, state.indexResources.links.namespaceStrategies.href);
     }
   };
 }
@@ -37,10 +33,7 @@ function fetchNamespaceStrategies(dispatch: any, url: string) {
 }
 
 export function shouldFetchNamespaceStrategies(state: object) {
-  if (
-    isFetchNamespaceStrategiesPending(state) ||
-    getFetchNamespaceStrategiesFailure(state)
-  ) {
+  if (isFetchNamespaceStrategiesPending(state) || getFetchNamespaceStrategiesFailure(state)) {
     return false;
   }
   return !state.namespaceStrategies || !state.namespaceStrategies.current;
@@ -52,9 +45,7 @@ export function fetchNamespaceStrategiesPending(): Action {
   };
 }
 
-export function fetchNamespaceStrategiesSuccess(
-  namespaceStrategies: NamespaceStrategies
-): Action {
+export function fetchNamespaceStrategiesSuccess(namespaceStrategies: NamespaceStrategies): Action {
   return {
     type: FETCH_NAMESPACESTRATEGIES_TYPES_SUCCESS,
     payload: namespaceStrategies
@@ -76,10 +67,7 @@ export default function reducer(
     type: "UNKNOWN"
   }
 ): object {
-  if (
-    action.type === FETCH_NAMESPACESTRATEGIES_TYPES_SUCCESS &&
-    action.payload
-  ) {
+  if (action.type === FETCH_NAMESPACESTRATEGIES_TYPES_SUCCESS && action.payload) {
     return action.payload;
   } else if (action.type === MODIFY_CONFIG_SUCCESS && action.payload) {
     const config = action.payload;

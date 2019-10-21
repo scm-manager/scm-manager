@@ -1,17 +1,8 @@
 import React from "react";
 import { translate } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import {
-  Subtitle,
-  DeleteButton,
-  confirmAlert,
-  ErrorNotification
-} from "@scm-manager/ui-components";
-import {
-  deleteRepo,
-  getDeleteRepoFailure,
-  isDeleteRepoPending
-} from "../modules/repos";
+import { Subtitle, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { deleteRepo, getDeleteRepoFailure, isDeleteRepoPending } from "../modules/repos";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { History } from "history";
@@ -78,11 +69,7 @@ class DeleteRepo extends React.Component<Props> {
         <ErrorNotification error={error} />
         <div className="columns">
           <div className="column">
-            <DeleteButton
-              label={t("deleteRepo.button")}
-              action={action}
-              loading={loading}
-            />
+            <DeleteButton label={t("deleteRepo.button")} action={action} loading={loading} />
           </div>
         </div>
       </>

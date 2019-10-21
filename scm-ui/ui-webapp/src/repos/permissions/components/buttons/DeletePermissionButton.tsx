@@ -9,11 +9,7 @@ type Props = {
   repoName: string;
   confirmDialog?: boolean;
   t: (p: string) => string;
-  deletePermission: (
-    permission: Permission,
-    namespace: string,
-    repoName: string
-  ) => void;
+  deletePermission: (permission: Permission, namespace: string, repoName: string) => void;
   loading: boolean;
 };
 
@@ -23,11 +19,7 @@ class DeletePermissionButton extends React.Component<Props> {
   };
 
   deletePermission = () => {
-    this.props.deletePermission(
-      this.props.permission,
-      this.props.namespace,
-      this.props.repoName
-    );
+    this.props.deletePermission(this.props.permission, this.props.namespace, this.props.repoName);
   };
 
   confirmDelete = () => {

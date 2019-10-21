@@ -18,8 +18,7 @@ class BranchDetail extends React.Component<Props> {
     return (
       <div className="media">
         <div className="media-content subtitle">
-          <strong>{t("branch.name")}</strong> {branch.name}{" "}
-          <DefaultBranchTag defaultBranch={branch.defaultBranch} />
+          <strong>{t("branch.name")}</strong> {branch.name} <DefaultBranchTag defaultBranch={branch.defaultBranch} />
         </div>
         <div className="media-right">
           <BranchButtonGroup repository={repository} branch={branch} />

@@ -34,13 +34,7 @@ class ChangesetView extends React.Component<Props> {
     const { changeset, loading, error, t, repository } = this.props;
 
     if (error) {
-      return (
-        <ErrorPage
-          title={t("changesets.errorTitle")}
-          subtitle={t("changesets.errorSubtitle")}
-          error={error}
-        />
-      );
+      return <ErrorPage title={t("changesets.errorTitle")} subtitle={t("changesets.errorSubtitle")} error={error} />;
     }
 
     if (!changeset || loading) return <Loading />;

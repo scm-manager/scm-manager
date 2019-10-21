@@ -1,10 +1,5 @@
 import { contextPath } from "./urls";
-import {
-  createBackendError,
-  ForbiddenError,
-  isBackendError,
-  UnauthorizedError
-} from "./errors";
+import { createBackendError, ForbiddenError, isBackendError, UnauthorizedError } from "./errors";
 import { BackendErrorContent } from "./errors";
 
 const applyFetchOptions: (p: RequestInit) => RequestInit = o => {
@@ -52,22 +47,22 @@ class ApiClient {
     return fetch(createUrl(url), applyFetchOptions({})).then(handleFailure);
   }
 
-  post(url: string, payload: any, contentType: string = "application/json") {
+  post(url: string, payload: any, contentType = "application/json") {
     return this.httpRequestWithJSONBody("POST", url, contentType, payload);
   }
 
   postBinary(url: string, fileAppender: (p: FormData) => void) {
-    let formData = new FormData();
+    const formData = new FormData();
     fileAppender(formData);
 
-    let options: RequestInit = {
+    const options: RequestInit = {
       method: "POST",
       body: formData
     };
     return this.httpRequestWithBinaryBody(options, url);
   }
 
-  put(url: string, payload: any, contentType: string = "application/json") {
+  put(url: string, payload: any, contentType = "application/json") {
     return this.httpRequestWithJSONBody("PUT", url, contentType, payload);
   }
 
@@ -87,24 +82,15 @@ class ApiClient {
     return fetch(createUrl(url), options).then(handleFailure);
   }
 
-  httpRequestWithJSONBody(
-    method: string,
-    url: string,
-    contentType: string,
-    payload: any
-  ): Promise<Response> {
-    let options: RequestInit = {
+  httpRequestWithJSONBody(method: string, url: string, contentType: string, payload: any): Promise<Response> {
+    const options: RequestInit = {
       method: method,
       body: JSON.stringify(payload)
     };
     return this.httpRequestWithBinaryBody(options, url, contentType);
   }
 
-  httpRequestWithBinaryBody(
-    options: RequestInit,
-    url: string,
-    contentType?: string
-  ) {
+  httpRequestWithBinaryBody(options: RequestInit, url: string, contentType?: string) {
     options = applyFetchOptions(options);
     if (contentType) {
       if (!options.headers) {
@@ -118,4 +104,4 @@ class ApiClient {
   }
 }
 
-export let apiClient = new ApiClient();
+export const apiClient = new ApiClient();

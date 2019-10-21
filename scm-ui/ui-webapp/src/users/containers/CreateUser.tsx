@@ -3,12 +3,7 @@ import { connect } from "react-redux";
 import UserForm from "../components/UserForm";
 import { User } from "@scm-manager/ui-types";
 import { History } from "history";
-import {
-  createUser,
-  createUserReset,
-  isCreateUserPending,
-  getCreateUserFailure
-} from "../modules/users";
+import { createUser, createUserReset, isCreateUserPending, getCreateUserFailure } from "../modules/users";
 import { Page } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import { getUsersLink } from "../../modules/indexResource";
@@ -38,25 +33,15 @@ class CreateUser extends React.Component<Props> {
   };
 
   createUser = (user: User) => {
-    this.props.addUser(this.props.usersLink, user, () =>
-      this.userCreated(user)
-    );
+    this.props.addUser(this.props.usersLink, user, () => this.userCreated(user));
   };
 
   render() {
     const { t, loading, error } = this.props;
 
     return (
-      <Page
-        title={t("createUser.title")}
-        subtitle={t("createUser.subtitle")}
-        error={error}
-        showContentOnError={true}
-      >
-        <UserForm
-          submitForm={user => this.createUser(user)}
-          loading={loading}
-        />
+      <Page title={t("createUser.title")} subtitle={t("createUser.subtitle")} error={error} showContentOnError={true}>
+        <UserForm submitForm={user => this.createUser(user)} loading={loading} />
       </Page>
     );
   }

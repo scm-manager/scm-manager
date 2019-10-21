@@ -3,12 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import FileTree from "../components/FileTree";
-import {
-  BranchSelector,
-  Breadcrumb,
-  ErrorNotification,
-  Loading
-} from "@scm-manager/ui-components";
+import { BranchSelector, Breadcrumb, ErrorNotification, Loading } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import {
   fetchBranches,
@@ -55,13 +50,7 @@ class Sources extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const {
-      fetchBranches,
-      repository,
-      revision,
-      path,
-      fetchSources
-    } = this.props;
+    const { fetchBranches, repository, revision, path, fetchSources } = this.props;
 
     fetchBranches(repository);
     fetchSources(repository, revision, path);
@@ -116,15 +105,7 @@ class Sources extends React.Component<Props, State> {
   };
 
   render() {
-    const {
-      repository,
-      baseUrl,
-      loading,
-      error,
-      revision,
-      path,
-      currentFileIsDirectory
-    } = this.props;
+    const { repository, baseUrl, loading, error, revision, path, currentFileIsDirectory } = this.props;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -139,18 +120,11 @@ class Sources extends React.Component<Props, State> {
         <div className="panel">
           {this.renderBranchSelector()}
           {this.renderBreadcrumb()}
-          <FileTree
-            repository={repository}
-            revision={revision}
-            path={path}
-            baseUrl={baseUrl}
-          />
+          <FileTree repository={repository} revision={revision} path={path} baseUrl={baseUrl} />
         </div>
       );
     } else {
-      return (
-        <Content repository={repository} revision={revision} path={path} />
-      );
+      return <Content repository={repository} revision={revision} path={path} />;
     }
   }
 
@@ -185,9 +159,7 @@ class Sources extends React.Component<Props, State> {
           path={path}
           baseUrl={baseUrl}
           branch={selectedBranch}
-          defaultBranch={
-            branches && branches.filter(b => b.defaultBranch === true)[0]
-          }
+          defaultBranch={branches && branches.filter(b => b.defaultBranch === true)[0]}
           branches={branches}
           repository={repository}
         />

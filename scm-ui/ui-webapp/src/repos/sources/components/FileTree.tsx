@@ -6,16 +6,8 @@ import { translate } from "react-i18next";
 import styled from "styled-components";
 import { binder } from "@scm-manager/ui-extensions";
 import { Repository, File } from "@scm-manager/ui-types";
-import {
-  ErrorNotification,
-  Loading,
-  Notification
-} from "@scm-manager/ui-components";
-import {
-  getFetchSourcesFailure,
-  isFetchSourcesPending,
-  getSources
-} from "../modules/sources";
+import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
+import { getFetchSourcesFailure, isFetchSourcesPending, getSources } from "../modules/sources";
 import FileTreeLeaf from "./FileTreeLeaf";
 
 type Props = {
@@ -113,27 +105,15 @@ class FileTree extends React.Component<Props> {
             <tr>
               <FixedWidthTh />
               <th>{t("sources.file-tree.name")}</th>
-              <th className="is-hidden-mobile">
-                {t("sources.file-tree.length")}
-              </th>
-              <th className="is-hidden-mobile">
-                {t("sources.file-tree.lastModified")}
-              </th>
-              <th className="is-hidden-mobile">
-                {t("sources.file-tree.description")}
-              </th>
-              {binder.hasExtension("repos.sources.tree.row.right") && (
-                <th className="is-hidden-mobile" />
-              )}
+              <th className="is-hidden-mobile">{t("sources.file-tree.length")}</th>
+              <th className="is-hidden-mobile">{t("sources.file-tree.lastModified")}</th>
+              <th className="is-hidden-mobile">{t("sources.file-tree.description")}</th>
+              {binder.hasExtension("repos.sources.tree.row.right") && <th className="is-hidden-mobile" />}
             </tr>
           </thead>
           <tbody>
             {files.map(file => (
-              <FileTreeLeaf
-                key={file.name}
-                file={file}
-                baseUrl={baseUrlWithRevision}
-              />
+              <FileTreeLeaf key={file.name} file={file} baseUrl={baseUrlWithRevision} />
             ))}
           </tbody>
         </table>

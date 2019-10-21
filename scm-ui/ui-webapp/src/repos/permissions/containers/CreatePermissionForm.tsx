@@ -1,11 +1,6 @@
 import React from "react";
 import { translate } from "react-i18next";
-import {
-  PermissionCollection,
-  PermissionCreateEntry,
-  RepositoryRole,
-  SelectValue
-} from "@scm-manager/ui-types";
+import { PermissionCollection, PermissionCreateEntry, RepositoryRole, SelectValue } from "@scm-manager/ui-types";
 import {
   Button,
   GroupAutocomplete,
@@ -103,11 +98,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
     this.setState({
       value,
       name: value.value.id,
-      valid: validator.isPermissionValid(
-        value.value.id,
-        this.state.groupPermission,
-        this.props.currentPermissions
-      )
+      valid: validator.isPermissionValid(value.value.id, this.state.groupPermission, this.props.currentPermissions)
     });
   };
 
@@ -131,9 +122,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
     return (
       <>
         <hr />
-        <Subtitle
-          subtitle={t("permission.add-permission.add-permission-heading")}
-        />
+        <Subtitle subtitle={t("permission.add-permission.add-permission-heading")} />
         {advancedDialog}
         <form onSubmit={this.submit}>
           <div className="field is-grouped">
@@ -155,9 +144,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
             </div>
           </div>
           <div className="columns">
-            <div className="column is-three-fifths">
-              {this.renderAutocompletionField()}
-            </div>
+            <div className="column is-three-fifths">{this.renderAutocompletionField()}</div>
             <div className="column is-two-fifths">
               <div className="columns">
                 <div className="column is-narrow">
@@ -174,10 +161,7 @@ class CreatePermissionForm extends React.Component<Props, State> {
                     label={t("permission.permissions")}
                     helpText={t("permission.help.permissionsHelpText")}
                   />
-                  <Button
-                    label={t("permission.advanced-button.label")}
-                    action={this.toggleAdvancedPermissionsDialog}
-                  />
+                  <Button label={t("permission.advanced-button.label")} action={this.toggleAdvancedPermissionsDialog} />
                 </div>
               </div>
             </div>

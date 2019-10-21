@@ -8,7 +8,7 @@ export function getProtocolLinkByType(repository: Repository, type: string) {
     if (!Array.isArray(protocols)) {
       protocols = [protocols];
     }
-    for (let proto of protocols) {
+    for (const proto of protocols) {
       if (proto.name === type) {
         return proto.href;
       }

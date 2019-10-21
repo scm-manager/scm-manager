@@ -1,16 +1,8 @@
 import { File, FileChangeType, Hunk } from "./DiffTypes";
-import {
-  getPath,
-  createHunkIdentifier,
-  createHunkIdentifierFromContext
-} from "./diffs";
+import { getPath, createHunkIdentifier, createHunkIdentifierFromContext } from "./diffs";
 
 describe("tests for diff util functions", () => {
-  const file = (
-    type: FileChangeType,
-    oldPath: string,
-    newPath: string
-  ): File => {
+  const file = (type: FileChangeType, oldPath: string, newPath: string): File => {
     return {
       hunks: [],
       type: type,

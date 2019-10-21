@@ -10,13 +10,7 @@ type Props = {
 class IndexErrorPage extends React.Component<Props> {
   render() {
     const { error, t } = this.props;
-    return (
-      <ErrorPage
-        title={t("app.error.title")}
-        subtitle={t("app.error.subtitle")}
-        error={error}
-      />
-    );
+    return <ErrorPage title={t("app.error.title")} subtitle={t("app.error.subtitle")} error={error} />;
   }
 }
 

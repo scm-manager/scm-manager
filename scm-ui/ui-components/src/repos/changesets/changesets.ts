@@ -5,17 +5,11 @@ export type Description = {
   message: string;
 };
 
-export function createChangesetLink(
-  repository: Repository,
-  changeset: Changeset
-) {
+export function createChangesetLink(repository: Repository, changeset: Changeset) {
   return `/repo/${repository.namespace}/${repository.name}/changeset/${changeset.id}`;
 }
 
-export function createSourcesLink(
-  repository: Repository,
-  changeset: Changeset
-) {
+export function createSourcesLink(repository: Repository, changeset: Changeset) {
   return `/repo/${repository.namespace}/${repository.name}/sources/${changeset.id}`;
 }
 

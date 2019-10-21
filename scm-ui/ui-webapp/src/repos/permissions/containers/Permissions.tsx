@@ -22,18 +22,8 @@ import {
   isFetchPermissionsPending,
   modifyPermissionReset
 } from "../modules/permissions";
-import {
-  ErrorPage,
-  LabelWithHelpIcon,
-  Loading,
-  Subtitle
-} from "@scm-manager/ui-components";
-import {
-  Permission,
-  PermissionCollection,
-  PermissionCreateEntry,
-  RepositoryRole
-} from "@scm-manager/ui-types";
+import { ErrorPage, LabelWithHelpIcon, Loading, Subtitle } from "@scm-manager/ui-components";
+import { Permission, PermissionCollection, PermissionCreateEntry, RepositoryRole } from "@scm-manager/ui-types";
 import SinglePermission from "./SinglePermission";
 import CreatePermissionForm from "./CreatePermissionForm";
 import { History } from "history";
@@ -63,10 +53,7 @@ type Props = {
   userAutocompleteLink: string;
 
   //dispatch functions
-  fetchAvailablePermissionsIfNeeded: (
-    repositoryRolesLink: string,
-    repositoryVerbsLink: string
-  ) => void;
+  fetchAvailablePermissionsIfNeeded: (repositoryRolesLink: string, repositoryVerbsLink: string) => void;
   fetchPermissions: (link: string, namespace: string, repoName: string) => void;
   createPermission: (
     link: string,
@@ -107,12 +94,7 @@ class Permissions extends React.Component<Props> {
   }
 
   createPermission = (permission: Permission) => {
-    this.props.createPermission(
-      this.props.permissionsLink,
-      permission,
-      this.props.namespace,
-      this.props.repoName
-    );
+    this.props.createPermission(this.props.permissionsLink, permission, this.props.namespace, this.props.repoName);
   };
 
   render() {
@@ -132,13 +114,7 @@ class Permissions extends React.Component<Props> {
       groupAutocompleteLink
     } = this.props;
     if (error) {
-      return (
-        <ErrorPage
-          title={t("permission.error-title")}
-          subtitle={t("permission.error-subtitle")}
-          error={error}
-        />
-      );
+      return <ErrorPage title={t("permission.error-title")} subtitle={t("permission.error-subtitle")} error={error} />;
     }
 
     if (loading || !permissions || !availablePermissions) {
@@ -164,16 +140,10 @@ class Permissions extends React.Component<Props> {
           <thead>
             <tr>
               <th>
-                <LabelWithHelpIcon
-                  label={t("permission.name")}
-                  helpText={t("permission.help.nameHelpText")}
-                />
+                <LabelWithHelpIcon label={t("permission.name")} helpText={t("permission.help.nameHelpText")} />
               </th>
               <th>
-                <LabelWithHelpIcon
-                  label={t("permission.role")}
-                  helpText={t("permission.help.roleHelpText")}
-                />
+                <LabelWithHelpIcon label={t("permission.role")} helpText={t("permission.help.roleHelpText")} />
               </th>
               <th>
                 <LabelWithHelpIcon
@@ -214,15 +184,9 @@ const mapStateToProps = (state, ownProps) => {
     getDeletePermissionsFailure(state, namespace, repoName) ||
     getModifyPermissionsFailure(state, namespace, repoName) ||
     getFetchAvailablePermissionsFailure(state);
-  const loading =
-    isFetchPermissionsPending(state, namespace, repoName) ||
-    isFetchAvailablePermissionsPending(state);
+  const loading = isFetchPermissionsPending(state, namespace, repoName) || isFetchAvailablePermissionsPending(state);
   const permissions = getPermissionsOfRepo(state, namespace, repoName);
-  const loadingCreatePermission = isCreatePermissionPending(
-    state,
-    namespace,
-    repoName
-  );
+  const loadingCreatePermission = isCreatePermissionPending(state, namespace, repoName);
   const hasPermissionToCreate = hasCreatePermission(state, namespace, repoName);
   const repositoryRolesLink = getRepositoryRolesLink(state);
   const repositoryVerbsLink = getRepositoryVerbsLink(state);
@@ -257,16 +221,8 @@ const mapDispatchToProps = dispatch => {
     fetchPermissions: (link: string, namespace: string, repoName: string) => {
       dispatch(fetchPermissions(link, namespace, repoName));
     },
-    fetchAvailablePermissionsIfNeeded: (
-      repositoryRolesLink: string,
-      repositoryVerbsLink: string
-    ) => {
-      dispatch(
-        fetchAvailablePermissionsIfNeeded(
-          repositoryRolesLink,
-          repositoryVerbsLink
-        )
-      );
+    fetchAvailablePermissionsIfNeeded: (repositoryRolesLink: string, repositoryVerbsLink: string) => {
+      dispatch(fetchAvailablePermissionsIfNeeded(repositoryRolesLink, repositoryVerbsLink));
     },
     createPermission: (
       link: string,
@@ -275,9 +231,7 @@ const mapDispatchToProps = dispatch => {
       repoName: string,
       callback?: () => void
     ) => {
-      dispatch(
-        createPermission(link, permission, namespace, repoName, callback)
-      );
+      dispatch(createPermission(link, permission, namespace, repoName, callback));
     },
     createPermissionReset: (namespace: string, repoName: string) => {
       dispatch(createPermissionReset(namespace, repoName));

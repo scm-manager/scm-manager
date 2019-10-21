@@ -31,31 +31,26 @@ const masterBranch = {
 
 describe("order branches", () => {
   it("should return branches", () => {
-    let branches = [branch1, branch2];
+    const branches = [branch1, branch2];
     orderBranches(branches);
     expect(branches).toEqual([branch1, branch2]);
   });
 
   it("should return defaultBranch first", () => {
-    let branches = [branch1, branch2, branch3];
+    const branches = [branch1, branch2, branch3];
     orderBranches(branches);
     expect(branches).toEqual([branch3, branch1, branch2]);
   });
 
   it("should order special branches as follows: master > default > develop", () => {
-    let branches = [defaultBranch, developBranch, masterBranch];
+    const branches = [defaultBranch, developBranch, masterBranch];
     orderBranches(branches);
     expect(branches).toEqual([masterBranch, defaultBranch, developBranch]);
   });
 
   it("should order special branches but starting with defaultBranch", () => {
-    let branches = [masterBranch, developBranch, defaultBranch, branch3];
+    const branches = [masterBranch, developBranch, defaultBranch, branch3];
     orderBranches(branches);
-    expect(branches).toEqual([
-      branch3,
-      masterBranch,
-      defaultBranch,
-      developBranch
-    ]);
+    expect(branches).toEqual([branch3, masterBranch, defaultBranch, developBranch]);
   });
 });

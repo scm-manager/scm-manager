@@ -44,30 +44,15 @@ type Props = {
 class Groups extends React.Component<Props> {
   componentDidMount() {
     const { fetchGroupsByPage, groupLink, page, location } = this.props;
-    fetchGroupsByPage(
-      groupLink,
-      page,
-      urls.getQueryStringFromLocation(location)
-    );
+    fetchGroupsByPage(groupLink, page, urls.getQueryStringFromLocation(location));
   }
 
   componentDidUpdate = (prevProps: Props) => {
-    const {
-      loading,
-      list,
-      page,
-      groupLink,
-      location,
-      fetchGroupsByPage
-    } = this.props;
+    const { loading, list, page, groupLink, location, fetchGroupsByPage } = this.props;
     if (list && page && !loading) {
       const statePage: number = list.page + 1;
       if (page !== statePage || prevProps.location.search !== location.search) {
-        fetchGroupsByPage(
-          groupLink,
-          page,
-          urls.getQueryStringFromLocation(location)
-        );
+        fetchGroupsByPage(groupLink, page, urls.getQueryStringFromLocation(location));
       }
     }
   };
@@ -75,20 +60,11 @@ class Groups extends React.Component<Props> {
   render() {
     const { groups, loading, error, canAddGroups, t } = this.props;
     return (
-      <Page
-        title={t("groups.title")}
-        subtitle={t("groups.subtitle")}
-        loading={loading || !groups}
-        error={error}
-      >
+      <Page title={t("groups.title")} subtitle={t("groups.subtitle")} loading={loading || !groups} error={error}>
         {this.renderGroupTable()}
         {this.renderCreateButton()}
         <PageActions>
-          <OverviewPageActions
-            showCreateButton={canAddGroups}
-            link="groups"
-            label={t("create-group-button.label")}
-          />
+          <OverviewPageActions showCreateButton={canAddGroups} link="groups" label={t("create-group-button.label")} />
         </PageActions>
       </Page>
     );
@@ -100,11 +76,7 @@ class Groups extends React.Component<Props> {
       return (
         <>
           <GroupTable groups={groups} />
-          <LinkPaginator
-            collection={list}
-            page={page}
-            filter={urls.getQueryStringFromLocation(location)}
-          />
+          <LinkPaginator collection={list} page={page} filter={urls.getQueryStringFromLocation(location)} />
         </>
       );
     }
@@ -114,12 +86,7 @@ class Groups extends React.Component<Props> {
   renderCreateButton() {
     const { canAddGroups, t } = this.props;
     if (canAddGroups) {
-      return (
-        <CreateButton
-          label={t("create-group-button.label")}
-          link="/groups/create"
-        />
-      );
+      return <CreateButton label={t("create-group-button.label")} link="/groups/create" />;
     }
     return null;
   }

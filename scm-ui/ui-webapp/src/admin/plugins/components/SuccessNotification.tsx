@@ -13,9 +13,7 @@ class InstallSuccessNotification extends React.Component<Props> {
     return (
       <Notification type="success">
         {t("plugins.modal.successNotification")}{" "}
-        <a onClick={e => window.location.reload(true)}>
-          {t("plugins.modal.reload")}
-        </a>
+        <a onClick={e => window.location.reload(true)}>{t("plugins.modal.reload")}</a>
       </Notification>
     );
   }

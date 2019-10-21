@@ -85,10 +85,7 @@ class GroupForm extends React.Component<Props, State> {
     const { loadUserSuggestions, t } = this.props;
     return (
       <>
-        <MemberNameTagGroup
-          members={group.members}
-          memberListChanged={this.memberListChanged}
-        />
+        <MemberNameTagGroup members={group.members} memberListChanged={this.memberListChanged} />
         <AutocompleteAddEntryToTableField
           addEntry={this.addMember}
           disabled={false}
@@ -158,11 +155,7 @@ class GroupForm extends React.Component<Props, State> {
           />
           {this.renderExternalField(group)}
           {this.renderMemberfields(group)}
-          <SubmitButton
-            disabled={!this.isValid()}
-            label={t("groupForm.submit")}
-            loading={loading}
-          />
+          <SubmitButton disabled={!this.isValid()} label={t("groupForm.submit")} loading={loading} />
         </form>
       </>
     );

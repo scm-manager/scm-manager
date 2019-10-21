@@ -149,11 +149,7 @@ const callFetchMe = (link: string): Promise<Me> => {
   });
 };
 
-export const login = (
-  loginLink: string,
-  username: string,
-  password: string
-) => {
+export const login = (loginLink: string, username: string, password: string) => {
   const login_data = {
     cookie: true,
     grant_type: "password",

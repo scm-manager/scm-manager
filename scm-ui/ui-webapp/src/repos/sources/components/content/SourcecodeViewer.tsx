@@ -63,9 +63,7 @@ class SourcecodeViewer extends React.Component<Props, State> {
       return null;
     }
 
-    return (
-      <SyntaxHighlighter language={getLanguage(language)} value={content} />
-    );
+    return <SyntaxHighlighter language={getLanguage(language)} value={content} />;
   }
 }
 

@@ -20,9 +20,7 @@ class AvailableVerbs extends React.Component<Props> {
           <td className="is-paddingless">
             <ul>
               {role.verbs.map(verb => {
-                return (
-                  <li>{t("verbs.repository." + verb + ".displayName")}</li>
-                );
+                return <li>{t("verbs.repository." + verb + ".displayName")}</li>;
               })}
             </ul>
           </td>

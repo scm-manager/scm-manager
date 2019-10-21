@@ -31,7 +31,7 @@ export class Binder {
     }
     const registration = {
       predicate: predicate ? predicate : () => true,
-      extension,
+      extension
     };
     this.extensionPoints[extensionPoint].push(registration);
   }

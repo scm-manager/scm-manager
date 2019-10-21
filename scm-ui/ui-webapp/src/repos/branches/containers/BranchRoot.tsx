@@ -3,12 +3,7 @@ import BranchView from "../components/BranchView";
 import { connect } from "react-redux";
 import { Redirect, Route, Switch, withRouter } from "react-router-dom";
 import { Repository, Branch } from "@scm-manager/ui-types";
-import {
-  fetchBranch,
-  getBranch,
-  getFetchBranchFailure,
-  isFetchBranchPending
-} from "../modules/branches";
+import { fetchBranch, getBranch, getFetchBranchFailure, isFetchBranchPending } from "../modules/branches";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import { History } from "history";
 import { NotFoundError } from "@scm-manager/ui-components";
@@ -54,10 +49,7 @@ class BranchRoot extends React.Component<Props> {
     const url = this.matchedUrl();
 
     if (error) {
-      if (
-        error instanceof NotFoundError &&
-        queryString.parse(location.search).create === "true"
-      ) {
+      if (error instanceof NotFoundError && queryString.parse(location.search).create === "true") {
         return (
           <Redirect
             to={`/repo/${repository.namespace}/${repository.name}/branches/create?name=${match.params.branch}`}
@@ -75,12 +67,7 @@ class BranchRoot extends React.Component<Props> {
     return (
       <Switch>
         <Redirect exact from={url} to={`${url}/info`} />
-        <Route
-          path={`${url}/info`}
-          component={() => (
-            <BranchView repository={repository} branch={branch} />
-          )}
-        />
+        <Route path={`${url}/info`} component={() => <BranchView repository={repository} branch={branch} />} />
       </Switch>
     );
   }

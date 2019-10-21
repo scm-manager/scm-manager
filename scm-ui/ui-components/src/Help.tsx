@@ -18,10 +18,7 @@ export default class Help extends React.Component<Props> {
   render() {
     const { message, className } = this.props;
     return (
-      <HelpTooltip
-        className={classNames("is-inline-block", className)}
-        message={message}
-      >
+      <HelpTooltip className={classNames("is-inline-block", className)} message={message}>
         <HelpIcon />
       </HelpTooltip>
     );

@@ -9,6 +9,4 @@ export { default as SubmitButton } from "./SubmitButton";
 export { default as DownloadButton } from "./DownloadButton";
 export { default as ButtonGroup } from "./ButtonGroup";
 export { default as ButtonAddons } from "./ButtonAddons";
-export {
-  default as RemoveEntryOfTableButton
-} from "./RemoveEntryOfTableButton";
+export { default as RemoveEntryOfTableButton } from "./RemoveEntryOfTableButton";

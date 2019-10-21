@@ -1,10 +1,6 @@
 import React from "react";
 import { translate } from "react-i18next";
-import {
-  InputField,
-  Subtitle,
-  validation as validator
-} from "@scm-manager/ui-components";
+import { InputField, Subtitle, validation as validator } from "@scm-manager/ui-components";
 
 type Props = {
   loginAttemptLimit: number;
@@ -29,12 +25,7 @@ class LoginAttempt extends React.Component<Props, State> {
     };
   }
   render() {
-    const {
-      t,
-      loginAttemptLimit,
-      loginAttemptLimitTimeout,
-      hasUpdatePermission
-    } = this.props;
+    const { t, loginAttemptLimit, loginAttemptLimitTimeout, hasUpdatePermission } = this.props;
 
     return (
       <div>
@@ -73,11 +64,7 @@ class LoginAttempt extends React.Component<Props, State> {
       ...this.state,
       loginAttemptLimitError: !validator.isNumberValid(value)
     });
-    this.props.onChange(
-      validator.isNumberValid(value),
-      value,
-      "loginAttemptLimit"
-    );
+    this.props.onChange(validator.isNumberValid(value), value, "loginAttemptLimit");
   };
 
   handleLoginAttemptLimitTimeoutChange = (value: string) => {
@@ -85,11 +72,7 @@ class LoginAttempt extends React.Component<Props, State> {
       ...this.state,
       loginAttemptLimitTimeoutError: !validator.isNumberValid(value)
     });
-    this.props.onChange(
-      validator.isNumberValid(value),
-      value,
-      "loginAttemptLimitTimeout"
-    );
+    this.props.onChange(validator.isNumberValid(value), value, "loginAttemptLimitTimeout");
   };
 }
 

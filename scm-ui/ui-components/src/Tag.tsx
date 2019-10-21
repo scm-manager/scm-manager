@@ -17,15 +17,7 @@ class Tag extends React.Component<Props> {
   };
 
   render() {
-    const {
-      className,
-      color,
-      icon,
-      label,
-      title,
-      onClick,
-      onRemove
-    } = this.props;
+    const { className, color, icon, label, title, onClick, onRemove } = this.props;
     let showIcon = null;
     if (icon) {
       showIcon = (
@@ -42,11 +34,7 @@ class Tag extends React.Component<Props> {
 
     return (
       <>
-        <span
-          className={classNames("tag", `is-${color}`, className)}
-          title={title}
-          onClick={onClick}
-        >
+        <span className={classNames("tag", `is-${color}`, className)} title={title} onClick={onClick}>
           {showIcon}
           {label}
         </span>

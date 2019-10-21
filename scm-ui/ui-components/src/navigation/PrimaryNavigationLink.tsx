@@ -21,13 +21,7 @@ class PrimaryNavigationLink extends React.Component<Props> {
   render() {
     const { to, match, activeOnlyWhenExact } = this.props;
     const path = match ? match : to;
-    return (
-      <Route
-        path={path}
-        exact={activeOnlyWhenExact}
-        children={this.renderLink}
-      />
-    );
+    return <Route path={path} exact={activeOnlyWhenExact} children={this.renderLink} />;
   }
 }
 

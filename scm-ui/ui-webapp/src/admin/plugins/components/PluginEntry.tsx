@@ -84,9 +84,7 @@ class PluginEntry extends React.Component<Props, State> {
 
   isUninstallable = () => {
     const { plugin } = this.props;
-    return (
-      plugin._links && plugin._links.uninstall && plugin._links.uninstall.href
-    );
+    return plugin._links && plugin._links.uninstall && plugin._links.uninstall.href;
   };
 
   createActionbar = () => {
@@ -94,39 +92,18 @@ class PluginEntry extends React.Component<Props, State> {
     return (
       <ActionbarWrapper className="is-flex">
         {this.isInstallable() && (
-          <IconWrapper
-            className="level-item"
-            onClick={() => this.toggleModal("showInstallModal")}
-          >
-            <Icon
-              title={t("plugins.modal.install")}
-              name="download"
-              color="info"
-            />
+          <IconWrapper className="level-item" onClick={() => this.toggleModal("showInstallModal")}>
+            <Icon title={t("plugins.modal.install")} name="download" color="info" />
           </IconWrapper>
         )}
         {this.isUninstallable() && (
-          <IconWrapper
-            className="level-item"
-            onClick={() => this.toggleModal("showUninstallModal")}
-          >
-            <Icon
-              title={t("plugins.modal.uninstall")}
-              name="trash"
-              color="info"
-            />
+          <IconWrapper className="level-item" onClick={() => this.toggleModal("showUninstallModal")}>
+            <Icon title={t("plugins.modal.uninstall")} name="trash" color="info" />
           </IconWrapper>
         )}
         {this.isUpdatable() && (
-          <IconWrapper
-            className="level-item"
-            onClick={() => this.toggleModal("showUpdateModal")}
-          >
-            <Icon
-              title={t("plugins.modal.update")}
-              name="sync-alt"
-              color="info"
-            />
+          <IconWrapper className="level-item" onClick={() => this.toggleModal("showUpdateModal")}>
+            <Icon title={t("plugins.modal.update")} name="sync-alt" color="info" />
           </IconWrapper>
         )}
       </ActionbarWrapper>
@@ -169,13 +146,7 @@ class PluginEntry extends React.Component<Props, State> {
 
   createPendingSpinner = () => {
     const { plugin } = this.props;
-    return (
-      <Icon
-        className="fa-spin fa-lg"
-        name="spinner"
-        color={plugin.markedForUninstall ? "danger" : "info"}
-      />
-    );
+    return <Icon className="fa-spin fa-lg" name="spinner" color={plugin.markedForUninstall ? "danger" : "info"} />;
   };
 
   render() {
@@ -189,19 +160,11 @@ class PluginEntry extends React.Component<Props, State> {
     return (
       <>
         <CardColumn
-          action={
-            this.isInstallable()
-              ? () => this.toggleModal("showInstallModal")
-              : null
-          }
+          action={this.isInstallable() ? () => this.toggleModal("showInstallModal") : null}
           avatar={avatar}
           title={plugin.displayName ? plugin.displayName : plugin.name}
           description={plugin.description}
-          contentRight={
-            plugin.pending || plugin.markedForUninstall
-              ? this.createPendingSpinner()
-              : actionbar
-          }
+          contentRight={plugin.pending || plugin.markedForUninstall ? this.createPendingSpinner() : actionbar}
           footerRight={footerRight}
         />
         {modal}

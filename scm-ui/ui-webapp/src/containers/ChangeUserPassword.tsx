@@ -96,11 +96,7 @@ class ChangeUserPassword extends React.Component<Props, State> {
 
     if (passwordChanged) {
       message = (
-        <Notification
-          type={"success"}
-          children={t("password.changedSuccessfully")}
-          onClose={() => this.onClose()}
-        />
+        <Notification type={"success"} children={t("password.changedSuccessfully")} onClose={() => this.onClose()} />
       );
     } else if (error) {
       message = <ErrorNotification error={error} />;
@@ -131,11 +127,7 @@ class ChangeUserPassword extends React.Component<Props, State> {
         />
         <div className="columns">
           <div className="column">
-            <SubmitButton
-              disabled={!this.isValid()}
-              loading={loading}
-              label={t("password.submit")}
-            />
+            <SubmitButton disabled={!this.isValid()} loading={loading} label={t("password.submit")} />
           </div>
         </div>
       </form>

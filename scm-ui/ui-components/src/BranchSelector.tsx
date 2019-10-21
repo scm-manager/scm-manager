@@ -38,9 +38,7 @@ export default class BranchSelector extends React.Component<Props, State> {
   componentDidMount() {
     const { branches } = this.props;
     if (branches) {
-      const selectedBranch = branches.find(
-        branch => branch.name === this.props.selectedBranch
-      );
+      const selectedBranch = branches.find(branch => branch.name === this.props.selectedBranch);
       this.setState({
         selectedBranch
       });
@@ -53,9 +51,7 @@ export default class BranchSelector extends React.Component<Props, State> {
     if (branches) {
       return (
         <div className={classNames("field", "is-horizontal")}>
-          <ZeroflexFieldLabel
-            className={classNames("field-label", "is-normal")}
-          >
+          <ZeroflexFieldLabel className={classNames("field-label", "is-normal")}>
             <label className={classNames("label", "is-size-6")}>{label}</label>
           </ZeroflexFieldLabel>
           <div className="field-body">
@@ -66,11 +62,7 @@ export default class BranchSelector extends React.Component<Props, State> {
                   options={branches.map(b => b.name)}
                   optionSelected={this.branchSelected}
                   disabled={!!disabled}
-                  preselectedOption={
-                    this.state.selectedBranch
-                      ? this.state.selectedBranch.name
-                      : ""
-                  }
+                  preselectedOption={this.state.selectedBranch ? this.state.selectedBranch.name : ""}
                 />
               </MinWidthControl>
             </NoBottomMarginField>

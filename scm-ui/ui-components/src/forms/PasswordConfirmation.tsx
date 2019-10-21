@@ -85,8 +85,7 @@ class PasswordConfirmation extends React.Component<Props, State> {
   };
 
   handlePasswordChange = (password: string) => {
-    const passwordConfirmationFailed =
-      password !== this.state.confirmedPassword;
+    const passwordConfirmationFailed = password !== this.state.confirmedPassword;
 
     this.setState(
       {

@@ -21,11 +21,7 @@ class ButtonGroup extends React.Component<Props> {
       }
     });
 
-    return (
-      <div className={classNames("field", "is-grouped", className)}>
-        {childWrapper}
-      </div>
-    );
+    return <div className={classNames("field", "is-grouped", className)}>{childWrapper}</div>;
   }
 }
 

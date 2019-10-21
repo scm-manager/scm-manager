@@ -4,12 +4,7 @@ import { withRouter } from "react-router-dom";
 import RepositoryForm from "../components/form";
 import DeleteRepo from "./DeleteRepo";
 import { Repository } from "@scm-manager/ui-types";
-import {
-  modifyRepo,
-  isModifyRepoPending,
-  getModifyRepoFailure,
-  modifyRepoReset
-} from "../modules/repos";
+import { modifyRepo, isModifyRepoPending, getModifyRepoFailure, modifyRepoReset } from "../modules/repos";
 import { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -69,11 +64,7 @@ class EditRepo extends React.Component<Props> {
             this.props.modifyRepo(repo, this.repoModified);
           }}
         />
-        <ExtensionPoint
-          name="repo-config.route"
-          props={extensionProps}
-          renderAll={true}
-        />
+        <ExtensionPoint name="repo-config.route" props={extensionProps} renderAll={true} />
         <DeleteRepo repository={repository} />
       </div>
     );

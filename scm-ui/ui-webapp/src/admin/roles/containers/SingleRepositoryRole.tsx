@@ -7,12 +7,7 @@ import { translate } from "react-i18next";
 import { RepositoryRole } from "@scm-manager/ui-types";
 import { getRepositoryRolesLink } from "../../../modules/indexResource";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import {
-  fetchRoleByName,
-  getFetchRoleFailure,
-  getRoleByName,
-  isFetchRolePending
-} from "../modules/roles";
+import { fetchRoleByName, getFetchRoleFailure, getRoleByName, isFetchRolePending } from "../modules/roles";
 import { withRouter } from "react-router-dom";
 import PermissionRoleDetail from "../components/PermissionRoleDetails";
 import EditRepositoryRole from "./EditRepositoryRole";
@@ -36,10 +31,7 @@ type Props = {
 
 class SingleRepositoryRole extends React.Component<Props> {
   componentDidMount() {
-    this.props.fetchRoleByName(
-      this.props.repositoryRolesLink,
-      this.props.roleName
-    );
+    this.props.fetchRoleByName(this.props.repositoryRolesLink, this.props.roleName);
   }
 
   stripEndingSlash = (url: string) => {
@@ -58,11 +50,7 @@ class SingleRepositoryRole extends React.Component<Props> {
 
     if (error) {
       return (
-        <ErrorPage
-          title={t("repositoryRole.errorTitle")}
-          subtitle={t("repositoryRole.errorSubtitle")}
-          error={error}
-        />
+        <ErrorPage title={t("repositoryRole.errorTitle")} subtitle={t("repositoryRole.errorSubtitle")} error={error} />
       );
     }
 
@@ -80,22 +68,13 @@ class SingleRepositoryRole extends React.Component<Props> {
     return (
       <>
         <Title title={t("repositoryRole.title")} />
-        <Route
-          path={`${url}/info`}
-          component={() => <PermissionRoleDetail role={role} url={url} />}
-        />
+        <Route path={`${url}/info`} component={() => <PermissionRoleDetail role={role} url={url} />} />
         <Route
           path={`${url}/edit`}
           exact
-          component={() => (
-            <EditRepositoryRole role={role} history={this.props.history} />
-          )}
+          component={() => <EditRepositoryRole role={role} history={this.props.history} />}
         />
-        <ExtensionPoint
-          name="roles.route"
-          props={extensionProps}
-          renderAll={true}
-        />
+        <ExtensionPoint name="roles.route" props={extensionProps} renderAll={true} />
       </>
     );
   }

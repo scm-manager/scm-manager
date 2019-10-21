@@ -13,10 +13,7 @@ class DownloadViewer extends React.Component<Props> {
     const { t, file } = this.props;
     return (
       <div className="has-text-centered">
-        <DownloadButton
-          url={file._links.self.href}
-          displayName={t("sources.content.downloadButton")}
-        />
+        <DownloadButton url={file._links.self.href} displayName={t("sources.content.downloadButton")} />
       </div>
     );
   }

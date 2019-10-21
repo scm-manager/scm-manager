@@ -23,9 +23,7 @@ class PermissionRoleTable extends React.Component<Props> {
         </thead>
         <tbody>
           {roles.map((role, index) => {
-            return (
-              <PermissionRoleRow key={index} baseUrl={baseUrl} role={role} />
-            );
+            return <PermissionRoleRow key={index} baseUrl={baseUrl} role={role} />;
           })}
         </tbody>
       </table>

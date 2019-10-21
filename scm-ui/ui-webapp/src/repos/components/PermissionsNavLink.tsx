@@ -18,12 +18,7 @@ class PermissionsNavLink extends React.Component<Props> {
       return null;
     }
     const { permissionUrl, t } = this.props;
-    return (
-      <NavLink
-        to={permissionUrl}
-        label={t("repositoryRoot.menu.permissionsNavLink")}
-      />
-    );
+    return <NavLink to={permissionUrl} label={t("repositoryRoot.menu.permissionsNavLink")} />;
   }
 }
 

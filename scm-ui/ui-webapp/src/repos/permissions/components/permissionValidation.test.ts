@@ -6,9 +6,7 @@ describe("permission validation", () => {
     const name = "PermissionName";
     const groupPermission = false;
 
-    expect(
-      validator.isPermissionValid(name, groupPermission, permissions)
-    ).toBe(true);
+    expect(validator.isPermissionValid(name, groupPermission, permissions)).toBe(true);
   });
 
   it("should return true if permission is valid and does not exists with same group permission", () => {
@@ -24,9 +22,7 @@ describe("permission validation", () => {
     const name = "PermissionName";
     const groupPermission = false;
 
-    expect(
-      validator.isPermissionValid(name, groupPermission, permissions)
-    ).toBe(true);
+    expect(validator.isPermissionValid(name, groupPermission, permissions)).toBe(true);
   });
 
   it("should return false if permission is valid but exists", () => {
@@ -42,9 +38,7 @@ describe("permission validation", () => {
     const name = "PermissionName";
     const groupPermission = false;
 
-    expect(
-      validator.isPermissionValid(name, groupPermission, permissions)
-    ).toBe(false);
+    expect(validator.isPermissionValid(name, groupPermission, permissions)).toBe(false);
   });
 
   it("should return false if permission does not exist but is invalid", () => {
@@ -52,9 +46,7 @@ describe("permission validation", () => {
     const name = "@PermissionName";
     const groupPermission = false;
 
-    expect(
-      validator.isPermissionValid(name, groupPermission, permissions)
-    ).toBe(false);
+    expect(validator.isPermissionValid(name, groupPermission, permissions)).toBe(false);
   });
 
   it("should return false if permission is not valid and does not exist", () => {
@@ -62,8 +54,6 @@ describe("permission validation", () => {
     const name = "@PermissionName";
     const groupPermission = false;
 
-    expect(
-      validator.isPermissionValid(name, groupPermission, permissions)
-    ).toBe(false);
+    expect(validator.isPermissionValid(name, groupPermission, permissions)).toBe(false);
   });
 });

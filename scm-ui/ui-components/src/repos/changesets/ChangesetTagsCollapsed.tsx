@@ -17,10 +17,7 @@ class ChangesetTagsCollapsed extends React.Component<Props> {
     const message = tags.map(tag => tag.name).join(", ");
     return (
       <Tooltip location="top" message={message}>
-        <ChangesetTagBase
-          icon="tags"
-          label={tags.length + " " + t("changeset.tags")}
-        />
+        <ChangesetTagBase icon="tags" label={tags.length + " " + t("changeset.tags")} />
       </Tooltip>
     );
   }

@@ -248,9 +248,7 @@ xdescribe("paginator rendering tests", () => {
       urlToOpen = url;
     };
 
-    const paginator = mount(
-      <Paginator collection={collection} onPageChange={callMe} />
-    );
+    const paginator = mount(<Paginator collection={collection} onPageChange={callMe} />);
     paginator.find("Button.pagination-previous").simulate("click");
 
     expect(urlToOpen).toBe("https://www.scm-manager.org");

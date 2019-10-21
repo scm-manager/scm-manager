@@ -35,8 +35,7 @@ type State = {
 
 const ListParent = styled.div`
   margin-right: 0;
-  min-width: ${props =>
-    props.pluginAction === PluginAction.INSTALL ? "5.5em" : "10em"};
+  min-width: ${props => (props.pluginAction === PluginAction.INSTALL ? "5.5em" : "10em")};
   text-align: left;
 `;
 
@@ -182,9 +181,7 @@ class PluginModal extends React.Component<Props, State> {
     } else if (restart) {
       return (
         <div className="media">
-          <Notification type="warning">
-            {t("plugins.modal.restartNotification")}
-          </Notification>
+          <Notification type="warning">{t("plugins.modal.restartNotification")}</Notification>
         </div>
       );
     }
@@ -211,58 +208,33 @@ class PluginModal extends React.Component<Props, State> {
         <div className="media">
           <div className="media-content">
             <div className="field is-horizontal">
-              <ListParent
-                className={classNames("field-label", "is-inline-flex")}
-                pluginAction={pluginAction}
-              >
+              <ListParent className={classNames("field-label", "is-inline-flex")} pluginAction={pluginAction}>
                 {t("plugins.modal.author")}:
               </ListParent>
-              <ListChild className={classNames("field-body", "is-inline-flex")}>
-                {plugin.author}
-              </ListChild>
+              <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.author}</ListChild>
             </div>
             {pluginAction === PluginAction.INSTALL && (
               <div className="field is-horizontal">
-                <ListParent
-                  className={classNames("field-label", "is-inline-flex")}
-                  pluginAction={pluginAction}
-                >
+                <ListParent className={classNames("field-label", "is-inline-flex")} pluginAction={pluginAction}>
                   {t("plugins.modal.version")}:
                 </ListParent>
-                <ListChild
-                  className={classNames("field-body", "is-inline-flex")}
-                >
-                  {plugin.version}
-                </ListChild>
+                <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.version}</ListChild>
               </div>
             )}
-            {(pluginAction === PluginAction.UPDATE ||
-              pluginAction === PluginAction.UNINSTALL) && (
+            {(pluginAction === PluginAction.UPDATE || pluginAction === PluginAction.UNINSTALL) && (
               <div className="field is-horizontal">
-                <ListParent
-                  className={classNames("field-label", "is-inline-flex")}
-                >
+                <ListParent className={classNames("field-label", "is-inline-flex")}>
                   {t("plugins.modal.currentVersion")}:
                 </ListParent>
-                <ListChild
-                  className={classNames("field-body", "is-inline-flex")}
-                >
-                  {plugin.version}
-                </ListChild>
+                <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.version}</ListChild>
               </div>
             )}
             {pluginAction === PluginAction.UPDATE && (
               <div className="field is-horizontal">
-                <ListParent
-                  className={classNames("field-label", "is-inline-flex")}
-                >
+                <ListParent className={classNames("field-label", "is-inline-flex")}>
                   {t("plugins.modal.newVersion")}:
                 </ListParent>
-                <ListChild
-                  className={classNames("field-body", "is-inline-flex")}
-                >
-                  {plugin.newVersion}
-                </ListChild>
+                <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.newVersion}</ListChild>
               </div>
             )}
             {this.renderDependencies()}

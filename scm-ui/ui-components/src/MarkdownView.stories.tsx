@@ -11,9 +11,7 @@ const Spacing = styled.div`
 `;
 
 storiesOf("MarkdownView", module)
-  .addDecorator(story => (
-    <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>
-  ))
+  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .add("Default", () => (
     <Spacing>
       <MarkdownView content={TestPage} skipHtml={false} />

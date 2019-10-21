@@ -22,14 +22,7 @@ class LinkPaginator extends React.Component<Props> {
   }
 
   renderFirstButton() {
-    return (
-      <Button
-        className="pagination-link"
-        label={"1"}
-        disabled={false}
-        link={this.addFilterToLink("1")}
-      />
-    );
+    return <Button className="pagination-link" label={"1"} disabled={false} link={this.addFilterToLink("1")} />;
   }
 
   renderPreviousButton(className: string, label?: string) {
@@ -81,13 +74,7 @@ class LinkPaginator extends React.Component<Props> {
   }
 
   currentPage(page: number) {
-    return (
-      <Button
-        className="pagination-link is-current"
-        label={"" + page}
-        disabled={true}
-      />
-    );
+    return <Button className="pagination-link is-current" label={"" + page} disabled={true} />;
   }
 
   pageLinks() {
@@ -123,10 +110,7 @@ class LinkPaginator extends React.Component<Props> {
     if (collection) {
       return (
         <nav className="pagination is-centered" aria-label="pagination">
-          {this.renderPreviousButton(
-            "pagination-previous",
-            t("paginator.previous")
-          )}
+          {this.renderPreviousButton("pagination-previous", t("paginator.previous"))}
           <ul className="pagination-list">
             {this.pageLinks().map((link, index) => {
               return <li key={index}>{link}</li>;

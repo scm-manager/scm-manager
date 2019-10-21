@@ -1,4 +1,4 @@
-import { Collection } from './hal';
+import { Collection } from "./hal";
 
 export type RepositoryType = {
   name: string;

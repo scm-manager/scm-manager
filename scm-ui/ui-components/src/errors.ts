@@ -64,10 +64,7 @@ export class ConflictError extends BackendError {
   }
 }
 
-export function createBackendError(
-  content: BackendErrorContent,
-  statusCode: number
-) {
+export function createBackendError(content: BackendErrorContent, statusCode: number) {
   switch (statusCode) {
     case 404:
       return new NotFoundError(content, statusCode);
@@ -79,8 +76,5 @@ export function createBackendError(
 }
 
 export function isBackendError(response: Response) {
-  return (
-    response.headers.get("Content-Type") ===
-    "application/vnd.scmm-error+json;v=2"
-  );
+  return response.headers.get("Content-Type") === "application/vnd.scmm-error+json;v=2";
 }

@@ -67,24 +67,19 @@ const hitchhikerPuzzle42: Repository = {
       href: "http://localhost:8081/api/v2/repositories/hitchhiker/puzzle42"
     },
     permissions: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/puzzle42/permissions/"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/puzzle42/permissions/"
     },
     tags: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/puzzle42/tags/"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/puzzle42/tags/"
     },
     branches: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/puzzle42/branches/"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/puzzle42/branches/"
     },
     changesets: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/puzzle42/changesets/"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/puzzle42/changesets/"
     },
     sources: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/puzzle42/sources/"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/puzzle42/sources/"
     }
   }
 };
@@ -107,24 +102,19 @@ const hitchhikerRestatend: Repository = {
       href: "http://localhost:8081/api/v2/repositories/hitchhiker/restatend"
     },
     permissions: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/restatend/permissions/"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/restatend/permissions/"
     },
     tags: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/restatend/tags/"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/restatend/tags/"
     },
     branches: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/restatend/branches/"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/restatend/branches/"
     },
     changesets: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/restatend/changesets/"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/restatend/changesets/"
     },
     sources: {
-      href:
-        "http://localhost:8081/api/v2/repositories/hitchhiker/restatend/sources/"
+      href: "http://localhost:8081/api/v2/repositories/hitchhiker/restatend/sources/"
     }
   }
 };
@@ -147,8 +137,7 @@ const slartiFjords: Repository = {
       href: "http://localhost:8081/api/v2/repositories/slarti/fjords"
     },
     permissions: {
-      href:
-        "http://localhost:8081/api/v2/repositories/slarti/fjords/permissions/"
+      href: "http://localhost:8081/api/v2/repositories/slarti/fjords/permissions/"
     },
     tags: {
       href: "http://localhost:8081/api/v2/repositories/slarti/fjords/tags/"
@@ -157,8 +146,7 @@ const slartiFjords: Repository = {
       href: "http://localhost:8081/api/v2/repositories/slarti/fjords/branches/"
     },
     changesets: {
-      href:
-        "http://localhost:8081/api/v2/repositories/slarti/fjords/changesets/"
+      href: "http://localhost:8081/api/v2/repositories/slarti/fjords/changesets/"
     },
     sources: {
       href: "http://localhost:8081/api/v2/repositories/slarti/fjords/sources/"
@@ -206,11 +194,7 @@ const repositoryCollectionWithNames: RepositoryCollection = {
     }
   },
   _embedded: {
-    repositories: [
-      "hitchhiker/puzzle42",
-      "hitchhiker/restatend",
-      "slarti/fjords"
-    ]
+    repositories: ["hitchhiker/puzzle42", "hitchhiker/restatend", "slarti/fjords"]
   }
 };
 
@@ -267,10 +251,7 @@ describe("repos fetch", () => {
   });
 
   it("should successfully fetch repos from link", () => {
-    fetchMock.getOnce(
-      REPOS_URL + "?" + SORT + "&page=42",
-      repositoryCollection
-    );
+    fetchMock.getOnce(REPOS_URL + "?" + SORT + "&page=42", repositoryCollection);
 
     const expectedActions = [
       {
@@ -283,20 +264,13 @@ describe("repos fetch", () => {
     ];
 
     const store = mockStore({});
-    return store
-      .dispatch(
-        fetchReposByLink("/repositories?sortBy=namespaceAndName&page=42")
-      )
-      .then(() => {
-        expect(store.getActions()).toEqual(expectedActions);
-      });
+    return store.dispatch(fetchReposByLink("/repositories?sortBy=namespaceAndName&page=42")).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
   });
 
   it("should append sortby parameter and successfully fetch repos from link", () => {
-    fetchMock.getOnce(
-      "/api/v2/repositories?one=1&sortBy=namespaceAndName",
-      repositoryCollection
-    );
+    fetchMock.getOnce("/api/v2/repositories?one=1&sortBy=namespaceAndName", repositoryCollection);
 
     const expectedActions = [
       {
@@ -372,10 +346,7 @@ describe("repos fetch", () => {
   });
 
   it("should successfully fetch repo slarti/fjords", () => {
-    fetchMock.getOnce(
-      "http://localhost:8081/api/v2/repositories/slarti/fjords",
-      slartiFjords
-    );
+    fetchMock.getOnce("http://localhost:8081/api/v2/repositories/slarti/fjords", slartiFjords);
 
     const expectedActions = [
       {
@@ -400,12 +371,9 @@ describe("repos fetch", () => {
   });
 
   it("should dispatch FETCH_REPO_FAILURE, it the request for slarti/fjords fails", () => {
-    fetchMock.getOnce(
-      "http://localhost:8081/api/v2/repositories/slarti/fjords",
-      {
-        status: 500
-      }
-    );
+    fetchMock.getOnce("http://localhost:8081/api/v2/repositories/slarti/fjords", {
+      status: 500
+    });
 
     const store = mockStore({});
     return store.dispatch(fetchRepoByLink(slartiFjords)).then(() => {
@@ -482,12 +450,9 @@ describe("repos fetch", () => {
   });
 
   it("should successfully delete repo slarti/fjords", () => {
-    fetchMock.delete(
-      "http://localhost:8081/api/v2/repositories/slarti/fjords",
-      {
-        status: 204
-      }
-    );
+    fetchMock.delete("http://localhost:8081/api/v2/repositories/slarti/fjords", {
+      status: 204
+    });
 
     const expectedActions = [
       {
@@ -509,12 +474,9 @@ describe("repos fetch", () => {
   });
 
   it("should successfully delete repo slarti/fjords and call the callback", () => {
-    fetchMock.delete(
-      "http://localhost:8081/api/v2/repositories/slarti/fjords",
-      {
-        status: 204
-      }
-    );
+    fetchMock.delete("http://localhost:8081/api/v2/repositories/slarti/fjords", {
+      status: 204
+    });
 
     let callMe = "not yet";
 
@@ -529,12 +491,9 @@ describe("repos fetch", () => {
   });
 
   it("should disapatch failure on delete, if server returns status code 500", () => {
-    fetchMock.delete(
-      "http://localhost:8081/api/v2/repositories/slarti/fjords",
-      {
-        status: 500
-      }
-    );
+    fetchMock.delete("http://localhost:8081/api/v2/repositories/slarti/fjords", {
+      status: 500
+    });
 
     const store = mockStore({});
     return store.dispatch(deleteRepo(slartiFjords)).then(() => {
@@ -550,14 +509,11 @@ describe("repos fetch", () => {
     fetchMock.putOnce(slartiFjords._links.update.href, {
       status: 204
     });
-    fetchMock.getOnce(
-      "http://localhost:8081/api/v2/repositories/slarti/fjords",
-      {
-        status: 500
-      }
-    );
+    fetchMock.getOnce("http://localhost:8081/api/v2/repositories/slarti/fjords", {
+      status: 500
+    });
 
-    let editedFjords = {
+    const editedFjords = {
       ...slartiFjords
     };
     editedFjords.description = "coast of africa";
@@ -576,14 +532,11 @@ describe("repos fetch", () => {
     fetchMock.putOnce(slartiFjords._links.update.href, {
       status: 204
     });
-    fetchMock.getOnce(
-      "http://localhost:8081/api/v2/repositories/slarti/fjords",
-      {
-        status: 500
-      }
-    );
+    fetchMock.getOnce("http://localhost:8081/api/v2/repositories/slarti/fjords", {
+      status: 500
+    });
 
-    let editedFjords = {
+    const editedFjords = {
       ...slartiFjords
     };
     editedFjords.description = "coast of africa";
@@ -609,7 +562,7 @@ describe("repos fetch", () => {
       status: 500
     });
 
-    let editedFjords = {
+    const editedFjords = {
       ...slartiFjords
     };
     editedFjords.description = "coast of africa";
@@ -737,9 +690,7 @@ describe("repos selectors", () => {
     };
 
     const link = getPermissionsLink(state, "slarti", "fjords");
-    expect(link).toEqual(
-      "http://localhost:8081/api/v2/repositories/slarti/fjords/permissions/"
-    );
+    expect(link).toEqual("http://localhost:8081/api/v2/repositories/slarti/fjords/permissions/");
   });
 
   it("should return true, when fetch repo is pending", () => {

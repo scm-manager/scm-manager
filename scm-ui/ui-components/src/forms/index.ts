@@ -1,9 +1,7 @@
 // @create-index
 
 export { default as AddEntryToTableField } from "./AddEntryToTableField";
-export {
-  default as AutocompleteAddEntryToTableField
-} from "./AutocompleteAddEntryToTableField";
+export { default as AutocompleteAddEntryToTableField } from "./AutocompleteAddEntryToTableField";
 export { default as TagGroup } from "./TagGroup";
 export { default as MemberNameTagGroup } from "./MemberNameTagGroup";
 export { default as Checkbox } from "./Checkbox";

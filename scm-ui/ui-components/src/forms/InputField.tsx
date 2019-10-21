@@ -47,22 +47,9 @@ class InputField extends React.Component<Props> {
   };
 
   render() {
-    const {
-      type,
-      placeholder,
-      value,
-      validationError,
-      errorMessage,
-      disabled,
-      label,
-      helpText
-    } = this.props;
+    const { type, placeholder, value, validationError, errorMessage, disabled, label, helpText } = this.props;
     const errorView = validationError ? "is-danger" : "";
-    const helper = validationError ? (
-      <p className="help is-danger">{errorMessage}</p>
-    ) : (
-      ""
-    );
+    const helper = validationError ? <p className="help is-danger">{errorMessage}</p> : "";
     return (
       <div className="field">
         <LabelWithHelpIcon label={label} helpText={helpText} />

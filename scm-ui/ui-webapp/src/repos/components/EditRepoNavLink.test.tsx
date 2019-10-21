@@ -11,9 +11,7 @@ describe("GeneralNavLink", () => {
       _links: {}
     };
 
-    const navLink = shallow(
-      <EditRepoNavLink repository={repository} editUrl="" />
-    );
+    const navLink = shallow(<EditRepoNavLink repository={repository} editUrl="" />);
     expect(navLink.text()).toBe("");
   });
 
@@ -26,9 +24,7 @@ describe("GeneralNavLink", () => {
       }
     };
 
-    const navLink = mount(
-      <EditRepoNavLink repository={repository} editUrl="" />
-    );
+    const navLink = mount(<EditRepoNavLink repository={repository} editUrl="" />);
     expect(navLink.text()).toBe("repositoryRoot.menu.generalNavLink");
   });
 });

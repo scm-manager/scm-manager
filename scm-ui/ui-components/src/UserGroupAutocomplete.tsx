@@ -23,9 +23,7 @@ export default class UserGroupAutocomplete extends React.Component<Props> {
       .then(response => response.json())
       .then((json: AutocompleteObject[]) => {
         return json.map(element => {
-          const label = element.displayName
-            ? `${element.displayName} (${element.id})`
-            : element.id;
+          const label = element.displayName ? `${element.displayName} (${element.id})` : element.id;
           return {
             value: element,
             label

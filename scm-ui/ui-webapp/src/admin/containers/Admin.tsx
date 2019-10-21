@@ -6,18 +6,8 @@ import { History } from "history";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { Links } from "@scm-manager/ui-types";
-import {
-  Page,
-  Navigation,
-  NavLink,
-  Section,
-  SubNavigation
-} from "@scm-manager/ui-components";
-import {
-  getLinks,
-  getAvailablePluginsLink,
-  getInstalledPluginsLink
-} from "../../modules/indexResource";
+import { Page, Navigation, NavLink, Section, SubNavigation } from "@scm-manager/ui-components";
+import { getLinks, getAvailablePluginsLink, getInstalledPluginsLink } from "../../modules/indexResource";
 import AdminDetails from "./AdminDetails";
 import PluginsOverview from "../plugins/containers/PluginsOverview";
 import GlobalConfig from "./GlobalConfig";
@@ -73,96 +63,45 @@ class Admin extends React.Component<Props> {
             <Switch>
               <Redirect exact from={url} to={`${url}/info`} />
               <Route path={`${url}/info`} exact component={AdminDetails} />
-              <Route
-                path={`${url}/settings/general`}
-                exact
-                component={GlobalConfig}
-              />
-              <Redirect
-                exact
-                from={`${url}/plugins`}
-                to={`${url}/plugins/installed/`}
-              />
+              <Route path={`${url}/settings/general`} exact component={GlobalConfig} />
+              <Redirect exact from={`${url}/plugins`} to={`${url}/plugins/installed/`} />
               <Route
                 path={`${url}/plugins/installed`}
                 exact
-                render={() => (
-                  <PluginsOverview
-                    baseUrl={`${url}/plugins/installed`}
-                    installed={true}
-                  />
-                )}
+                render={() => <PluginsOverview baseUrl={`${url}/plugins/installed`} installed={true} />}
               />
               <Route
                 path={`${url}/plugins/installed/:page`}
                 exact
-                render={() => (
-                  <PluginsOverview
-                    baseUrl={`${url}/plugins/installed`}
-                    installed={true}
-                  />
-                )}
+                render={() => <PluginsOverview baseUrl={`${url}/plugins/installed`} installed={true} />}
               />
               <Route
                 path={`${url}/plugins/available`}
                 exact
-                render={() => (
-                  <PluginsOverview
-                    baseUrl={`${url}/plugins/available`}
-                    installed={false}
-                  />
-                )}
+                render={() => <PluginsOverview baseUrl={`${url}/plugins/available`} installed={false} />}
               />
               <Route
                 path={`${url}/plugins/available/:page`}
                 exact
-                render={() => (
-                  <PluginsOverview
-                    baseUrl={`${url}/plugins/available`}
-                    installed={false}
-                  />
-                )}
+                render={() => <PluginsOverview baseUrl={`${url}/plugins/available`} installed={false} />}
               />
               <Route
                 path={`${url}/role/:role`}
-                render={() => (
-                  <SingleRepositoryRole
-                    baseUrl={`${url}/roles`}
-                    history={this.props.history}
-                  />
-                )}
+                render={() => <SingleRepositoryRole baseUrl={`${url}/roles`} history={this.props.history} />}
               />
-              <Route
-                path={`${url}/roles`}
-                exact
-                render={() => <RepositoryRoles baseUrl={`${url}/roles`} />}
-              />
+              <Route path={`${url}/roles`} exact render={() => <RepositoryRoles baseUrl={`${url}/roles`} />} />
               <Route
                 path={`${url}/roles/create`}
-                render={() => (
-                  <CreateRepositoryRole history={this.props.history} />
-                )}
+                render={() => <CreateRepositoryRole history={this.props.history} />}
               />
-              <Route
-                path={`${url}/roles/:page`}
-                exact
-                render={() => <RepositoryRoles baseUrl={`${url}/roles`} />}
-              />
-              <ExtensionPoint
-                name="admin.route"
-                props={extensionProps}
-                renderAll={true}
-              />
+              <Route path={`${url}/roles/:page`} exact render={() => <RepositoryRoles baseUrl={`${url}/roles`} />} />
+              <ExtensionPoint name="admin.route" props={extensionProps} renderAll={true} />
             </Switch>
           </div>
           <div className="column is-one-quarter">
             <Navigation>
               <Section label={t("admin.menu.navigationLabel")}>
-                <NavLink
-                  to={`${url}/info`}
-                  icon="fas fa-info-circle"
-                  label={t("admin.menu.informationNavLink")}
-                />
+                <NavLink to={`${url}/info`} icon="fas fa-info-circle" label={t("admin.menu.informationNavLink")} />
                 {(availablePluginsLink || installedPluginsLink) && (
                   <SubNavigation
                     to={`${url}/plugins/`}
@@ -170,16 +109,10 @@ class Admin extends React.Component<Props> {
                     label={t("plugins.menu.pluginsNavLink")}
                   >
                     {installedPluginsLink && (
-                      <NavLink
-                        to={`${url}/plugins/installed/`}
-                        label={t("plugins.menu.installedNavLink")}
-                      />
+                      <NavLink to={`${url}/plugins/installed/`} label={t("plugins.menu.installedNavLink")} />
                     )}
                     {availablePluginsLink && (
-                      <NavLink
-                        to={`${url}/plugins/available/`}
-                        label={t("plugins.menu.availableNavLink")}
-                      />
+                      <NavLink to={`${url}/plugins/available/`} label={t("plugins.menu.availableNavLink")} />
                     )}
                   </SubNavigation>
                 )}
@@ -190,24 +123,10 @@ class Admin extends React.Component<Props> {
                   activeWhenMatch={this.matchesRoles}
                   activeOnlyWhenExact={false}
                 />
-                <ExtensionPoint
-                  name="admin.navigation"
-                  props={extensionProps}
-                  renderAll={true}
-                />
-                <SubNavigation
-                  to={`${url}/settings/general`}
-                  label={t("admin.menu.settingsNavLink")}
-                >
-                  <NavLink
-                    to={`${url}/settings/general`}
-                    label={t("admin.menu.generalNavLink")}
-                  />
-                  <ExtensionPoint
-                    name="admin.setting"
-                    props={extensionProps}
-                    renderAll={true}
-                  />
+                <ExtensionPoint name="admin.navigation" props={extensionProps} renderAll={true} />
+                <SubNavigation to={`${url}/settings/general`} label={t("admin.menu.settingsNavLink")}>
+                  <NavLink to={`${url}/settings/general`} label={t("admin.menu.generalNavLink")} />
+                  <ExtensionPoint name="admin.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
               </Section>
             </Navigation>

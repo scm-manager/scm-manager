@@ -48,17 +48,11 @@ class SubNavigation extends React.Component<Props> {
     const { to, activeOnlyWhenExact } = this.props;
 
     // removes last part of url
-    let parents = to.split("/");
+    const parents = to.split("/");
     parents.splice(-1, 1);
-    let parent = parents.join("/");
+    const parent = parents.join("/");
 
-    return (
-      <Route
-        path={parent}
-        exact={activeOnlyWhenExact}
-        children={this.renderLink}
-      />
-    );
+    return <Route path={parent} exact={activeOnlyWhenExact} children={this.renderLink} />;
   }
 }
 

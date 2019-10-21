@@ -4,12 +4,7 @@ import { withRouter } from "react-router-dom";
 import UserForm from "../components/UserForm";
 import DeleteUser from "./DeleteUser";
 import { User } from "@scm-manager/ui-types";
-import {
-  modifyUser,
-  isModifyUserPending,
-  getModifyUserFailure,
-  modifyUserReset
-} from "../modules/users";
+import { modifyUser, isModifyUserPending, getModifyUserFailure, modifyUserReset } from "../modules/users";
 import { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
 
@@ -45,11 +40,7 @@ class EditUser extends React.Component<Props> {
     return (
       <div>
         <ErrorNotification error={error} />
-        <UserForm
-          submitForm={user => this.modifyUser(user)}
-          user={user}
-          loading={loading}
-        />
+        <UserForm submitForm={user => this.modifyUser(user)} user={user} loading={loading} />
         <hr />
         <DeleteUser user={user} />
       </div>

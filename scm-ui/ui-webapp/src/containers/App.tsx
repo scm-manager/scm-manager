@@ -3,21 +3,9 @@ import Main from "./Main";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import { withRouter } from "react-router-dom";
-import {
-  fetchMe,
-  getFetchMeFailure,
-  getMe,
-  isAuthenticated,
-  isFetchMePending
-} from "../modules/auth";
+import { fetchMe, getFetchMeFailure, getMe, isAuthenticated, isFetchMePending } from "../modules/auth";
 
-import {
-  ErrorPage,
-  Footer,
-  Header,
-  Loading,
-  PrimaryNavigation
-} from "@scm-manager/ui-components";
+import { ErrorPage, Footer, Header, Loading, PrimaryNavigation } from "@scm-manager/ui-components";
 import { Links, Me } from "@scm-manager/ui-types";
 import {
   getFetchIndexResourcesFailure,
@@ -57,13 +45,7 @@ class App extends Component<Props> {
     if (loading) {
       content = <Loading />;
     } else if (error) {
-      content = (
-        <ErrorPage
-          title={t("app.error.title")}
-          subtitle={t("app.error.subtitle")}
-          error={error}
-        />
-      );
+      content = <ErrorPage title={t("app.error.title")} subtitle={t("app.error.subtitle")} error={error} />;
     } else {
       content = <Main authenticated={authenticated} links={links} />;
     }
@@ -86,10 +68,8 @@ const mapDispatchToProps = (dispatch: any) => {
 const mapStateToProps = state => {
   const authenticated = isAuthenticated(state);
   const me = getMe(state);
-  const loading =
-    isFetchMePending(state) || isFetchIndexResourcesPending(state);
-  const error =
-    getFetchMeFailure(state) || getFetchIndexResourcesFailure(state);
+  const loading = isFetchMePending(state) || isFetchIndexResourcesPending(state);
+  const error = getFetchMeFailure(state) || getFetchIndexResourcesFailure(state);
   const links = getLinks(state);
   const meLink = getMeLink(state);
   return {

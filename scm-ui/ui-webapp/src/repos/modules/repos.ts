@@ -1,10 +1,6 @@
 import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../modules/types";
-import {
-  Action,
-  Repository,
-  RepositoryCollection
-} from "@scm-manager/ui-types";
+import { Action, Repository, RepositoryCollection } from "@scm-manager/ui-types";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 
@@ -47,9 +43,7 @@ export function fetchRepos(link: string) {
 
 export function fetchReposByPage(link: string, page: number, filter?: string) {
   if (filter) {
-    return fetchReposByLink(
-      `${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`
-    );
+    return fetchReposByLink(`${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`);
   }
   return fetchReposByLink(`${link}?page=${page - 1}`);
 }
@@ -147,11 +141,7 @@ export function fetchRepoSuccess(repository: Repository): Action {
   };
 }
 
-export function fetchRepoFailure(
-  namespace: string,
-  name: string,
-  error: Error
-): Action {
+export function fetchRepoFailure(namespace: string, name: string, error: Error): Action {
   return {
     type: FETCH_REPO_FAILURE,
     payload: {
@@ -165,11 +155,7 @@ export function fetchRepoFailure(
 
 // create repo
 
-export function createRepo(
-  link: string,
-  repository: Repository,
-  callback?: (repo: Repository) => void
-) {
+export function createRepo(link: string, repository: Repository, callback?: (repo: Repository) => void) {
   return function(dispatch: any) {
     dispatch(createRepoPending());
     return apiClient
@@ -255,10 +241,7 @@ export function modifyRepoSuccess(repository: Repository): Action {
   };
 }
 
-export function modifyRepoFailure(
-  repository: Repository,
-  error: Error
-): Action {
+export function modifyRepoFailure(repository: Repository, error: Error): Action {
   return {
     type: MODIFY_REPO_FAILURE,
     payload: {
@@ -314,10 +297,7 @@ export function deleteRepoSuccess(repository: Repository): Action {
   };
 }
 
-export function deleteRepoFailure(
-  repository: Repository,
-  error: Error
-): Action {
+export function deleteRepoFailure(repository: Repository, error: Error): Action {
   return {
     type: DELETE_REPO_FAILURE,
     payload: {
@@ -334,9 +314,7 @@ function createIdentifier(repository: Repository) {
   return repository.namespace + "/" + repository.name;
 }
 
-function normalizeByNamespaceAndName(
-  repositoryCollection: RepositoryCollection
-) {
+function normalizeByNamespaceAndName(repositoryCollection: RepositoryCollection) {
   const names = [];
   const byNames = {};
   for (const repository of repositoryCollection._embedded.repositories) {
@@ -391,7 +369,7 @@ export default function reducer(
 export function getRepositoryCollection(state: object) {
   if (state.repos && state.repos.list && state.repos.byNames) {
     const repositories = [];
-    for (let repositoryName of state.repos.list._embedded.repositories) {
+    for (const repositoryName of state.repos.list._embedded.repositories) {
       repositories.push(state.repos.byNames[repositoryName]);
     }
     return {
@@ -417,29 +395,16 @@ export function getRepository(state: object, namespace: string, name: string) {
   }
 }
 
-export function isFetchRepoPending(
-  state: object,
-  namespace: string,
-  name: string
-) {
+export function isFetchRepoPending(state: object, namespace: string, name: string) {
   return isPending(state, FETCH_REPO, namespace + "/" + name);
 }
 
-export function getFetchRepoFailure(
-  state: object,
-  namespace: string,
-  name: string
-) {
+export function getFetchRepoFailure(state: object, namespace: string, name: string) {
   return getFailure(state, FETCH_REPO, namespace + "/" + name);
 }
 
 export function isAbleToCreateRepos(state: object) {
-  return !!(
-    state.repos &&
-    state.repos.list &&
-    state.repos.list._links &&
-    state.repos.list._links.create
-  );
+  return !!(state.repos && state.repos.list && state.repos.list._links && state.repos.list._links.create);
 }
 
 export function isCreateRepoPending(state: object) {
@@ -450,43 +415,23 @@ export function getCreateRepoFailure(state: object) {
   return getFailure(state, CREATE_REPO);
 }
 
-export function isModifyRepoPending(
-  state: object,
-  namespace: string,
-  name: string
-) {
+export function isModifyRepoPending(state: object, namespace: string, name: string) {
   return isPending(state, MODIFY_REPO, namespace + "/" + name);
 }
 
-export function getModifyRepoFailure(
-  state: object,
-  namespace: string,
-  name: string
-) {
+export function getModifyRepoFailure(state: object, namespace: string, name: string) {
   return getFailure(state, MODIFY_REPO, namespace + "/" + name);
 }
 
-export function isDeleteRepoPending(
-  state: object,
-  namespace: string,
-  name: string
-) {
+export function isDeleteRepoPending(state: object, namespace: string, name: string) {
   return isPending(state, DELETE_REPO, namespace + "/" + name);
 }
 
-export function getDeleteRepoFailure(
-  state: object,
-  namespace: string,
-  name: string
-) {
+export function getDeleteRepoFailure(state: object, namespace: string, name: string) {
   return getFailure(state, DELETE_REPO, namespace + "/" + name);
 }
 
-export function getPermissionsLink(
-  state: object,
-  namespace: string,
-  name: string
-) {
+export function getPermissionsLink(state: object, namespace: string, name: string) {
   const repo = getRepository(state, namespace, name);
   return repo && repo._links ? repo._links.permissions.href : undefined;
 }

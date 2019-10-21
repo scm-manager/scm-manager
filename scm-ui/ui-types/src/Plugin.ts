@@ -1,4 +1,4 @@
-import { Collection, Links } from './hal';
+import { Collection, Links } from "./hal";
 
 export type Plugin = {
   name: string;

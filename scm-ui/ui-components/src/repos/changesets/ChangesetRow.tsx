@@ -98,18 +98,10 @@ class ChangesetRow extends React.Component<Props> {
                       </ExtensionPoint>
                     </h4>
                     <p className="is-hidden-touch">
-                      <Interpolate
-                        i18nKey="changeset.summary"
-                        id={changesetId}
-                        time={dateFromNow}
-                      />
+                      <Interpolate i18nKey="changeset.summary" id={changesetId} time={dateFromNow} />
                     </p>
                     <p className="is-hidden-desktop">
-                      <Interpolate
-                        i18nKey="changeset.shortSummary"
-                        id={changesetId}
-                        time={dateFromNow}
-                      />
+                      <Interpolate i18nKey="changeset.shortSummary" id={changesetId} time={dateFromNow} />
                     </p>
                     <AuthorWrapper className="is-size-7">
                       <ChangesetAuthor changeset={changeset} />
@@ -123,10 +115,7 @@ class ChangesetRow extends React.Component<Props> {
             </div>
           </div>
           <VCenteredChildColumn className={classNames("column", "is-flex")}>
-            <ChangesetButtonGroup
-              repository={repository}
-              changeset={changeset}
-            />
+            <ChangesetButtonGroup repository={repository} changeset={changeset} />
             <ExtensionPoint
               name="changeset.right"
               props={{

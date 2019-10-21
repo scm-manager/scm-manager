@@ -56,16 +56,7 @@ export default class CardColumnGroup extends React.Component<Props, State> {
         const fullColumnWidth = this.isFullSize(elements, index);
         const sizeClass = fullColumnWidth ? "is-full" : "is-half";
         return (
-          <div
-            className={classNames(
-              "box",
-              "box-link-shadow",
-              "column",
-              "is-clipped",
-              sizeClass
-            )}
-            key={index}
-          >
+          <div className={classNames("box", "box-link-shadow", "column", "is-clipped", sizeClass)} key={index}>
             {entry}
           </div>
         );
@@ -74,17 +65,12 @@ export default class CardColumnGroup extends React.Component<Props, State> {
     return (
       <Container>
         <h2>
-          <span
-            className={classNames("is-size-4", "has-cursor-pointer")}
-            onClick={this.toggleCollapse}
-          >
+          <span className={classNames("is-size-4", "has-cursor-pointer")} onClick={this.toggleCollapse}>
             <i className={classNames("fa", icon)} /> {name}
           </span>
         </h2>
         <hr />
-        <Wrapper className={classNames("columns", "is-multiline")}>
-          {content}
-        </Wrapper>
+        <Wrapper className={classNames("columns", "is-multiline")}>{content}</Wrapper>
         <div className="is-clearfix" />
       </Container>
     );

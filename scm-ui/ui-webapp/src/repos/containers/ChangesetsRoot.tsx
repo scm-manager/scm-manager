@@ -4,11 +4,7 @@ import { translate } from "react-i18next";
 import { Route, withRouter } from "react-router-dom";
 import Changesets from "./Changesets";
 import { connect } from "react-redux";
-import {
-  BranchSelector,
-  ErrorNotification,
-  Loading
-} from "@scm-manager/ui-components";
+import { BranchSelector, ErrorNotification, Loading } from "@scm-manager/ui-components";
 import {
   fetchBranches,
   getBranches,
@@ -46,9 +42,7 @@ class ChangesetsRoot extends React.Component<Props> {
 
   redirectToDefaultBranch = () => {
     if (this.shouldRedirectToDefaultBranch()) {
-      const defaultBranches = this.props.branches.filter(
-        b => b.defaultBranch === true
-      );
+      const defaultBranches = this.props.branches.filter(b => b.defaultBranch === true);
       if (defaultBranches.length > 0) {
         this.branchSelected(defaultBranches[0]);
       }
@@ -59,8 +53,7 @@ class ChangesetsRoot extends React.Component<Props> {
     return (
       this.props.branches &&
       this.props.branches.length > 0 &&
-      this.props.selected !==
-        this.props.branches.filter(b => b.defaultBranch === true)[0]
+      this.props.selected !== this.props.branches.filter(b => b.defaultBranch === true)[0]
     );
   };
 
@@ -74,9 +67,7 @@ class ChangesetsRoot extends React.Component<Props> {
   branchSelected = (branch?: Branch) => {
     let url;
     if (branch) {
-      url = `${this.props.baseUrlWithBranch}/${encodeURIComponent(
-        branch.name
-      )}/changesets/`;
+      url = `${this.props.baseUrlWithBranch}/${encodeURIComponent(branch.name)}/changesets/`;
     } else {
       url = `${this.props.baseUrlWithoutBranch}/`;
     }

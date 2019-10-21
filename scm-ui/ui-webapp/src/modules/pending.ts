@@ -2,15 +2,11 @@ import { Action } from "@scm-manager/ui-types";
 import * as types from "./types";
 
 const PENDING_SUFFIX = "_" + types.PENDING_SUFFIX;
-const RESET_ACTIONTYPES = [
-  types.SUCCESS_SUFFIX,
-  types.FAILURE_SUFFIX,
-  types.RESET_SUFFIX
-];
+const RESET_ACTIONTYPES = [types.SUCCESS_SUFFIX, types.FAILURE_SUFFIX, types.RESET_SUFFIX];
 
 function removeFromState(state: object, identifier: string) {
-  let newState = {};
-  for (let childType in state) {
+  const newState = {};
+  for (const childType in state) {
     if (childType !== identifier) {
       newState[childType] = state[childType];
     }
@@ -18,13 +14,9 @@ function removeFromState(state: object, identifier: string) {
   return newState;
 }
 
-function removeAllEntriesOfIdentifierFromState(
-  state: object,
-  payload: any,
-  identifier: string
-) {
+function removeAllEntriesOfIdentifierFromState(state: object, payload: any, identifier: string) {
   const newState = {};
-  for (let childType in state) {
+  for (const childType in state) {
     if (childType !== identifier && !childType.startsWith(identifier)) {
       newState[childType] = state[childType];
     }
@@ -63,12 +55,7 @@ export default function reducer(
         if (action.itemId) {
           identifier += "/" + action.itemId;
         }
-        if (action.payload)
-          return removeAllEntriesOfIdentifierFromState(
-            state,
-            action.payload,
-            identifier
-          );
+        if (action.payload) return removeAllEntriesOfIdentifierFromState(state, action.payload, identifier);
         else return removeFromState(state, identifier);
       }
     }
@@ -76,11 +63,7 @@ export default function reducer(
   return state;
 }
 
-export function isPending(
-  state: object,
-  actionType: string,
-  itemId?: string | number
-) {
+export function isPending(state: object, actionType: string, itemId?: string | number) {
   let type = actionType;
   if (itemId) {
     type += "/" + itemId;

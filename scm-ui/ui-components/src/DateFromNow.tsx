@@ -5,7 +5,7 @@ import { enUS, de, es } from "date-fns/locale";
 import styled from "styled-components";
 
 type LocaleMap = {
-  [key: string]: Locale
+  [key: string]: Locale;
 };
 
 type DateInput = Date | string;
@@ -67,7 +67,7 @@ class DateFromNow extends React.Component<Props> {
       return value as Date;
     }
     return parseISO(value);
-  }
+  };
 
   getBaseDate = () => {
     const { baseDate } = this.props;

@@ -1,12 +1,6 @@
 import React from "react";
 import { translate } from "react-i18next";
-import {
-  Subtitle,
-  InputField,
-  Select,
-  SubmitButton,
-  Textarea
-} from "@scm-manager/ui-components";
+import { Subtitle, InputField, Select, SubmitButton, Textarea } from "@scm-manager/ui-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Repository, RepositoryType } from "@scm-manager/ui-types";
 import * as validator from "./repositoryValidation";
@@ -74,8 +68,7 @@ class RepositoryForm extends React.Component<Props, State> {
       this.state.nameValidationError ||
       this.state.contactValidationError ||
       this.isFalsy(repository.name) ||
-      (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY &&
-        this.isFalsy(repository.namespace))
+      (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY && this.isFalsy(repository.namespace))
     );
   };
 
@@ -101,11 +94,7 @@ class RepositoryForm extends React.Component<Props, State> {
     const disabled = !this.isModifiable() && !this.isCreateMode();
 
     const submitButton = disabled ? null : (
-      <SubmitButton
-        disabled={!this.isValid()}
-        loading={loading}
-        label={t("repositoryForm.submit")}
-      />
+      <SubmitButton disabled={!this.isValid()} loading={loading} label={t("repositoryForm.submit")} />
     );
 
     let subtitle = null;
@@ -167,13 +156,7 @@ class RepositoryForm extends React.Component<Props, State> {
       return <InputField {...props} />;
     }
 
-    return (
-      <ExtensionPoint
-        name="repos.create.namespace"
-        props={props}
-        renderAll={false}
-      />
-    );
+    return <ExtensionPoint name="repos.create.namespace" props={props} renderAll={false} />;
   };
 
   renderCreateOnlyFields() {

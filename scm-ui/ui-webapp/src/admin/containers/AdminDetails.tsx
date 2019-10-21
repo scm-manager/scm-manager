@@ -15,8 +15,7 @@ type Props = {
 };
 
 const BoxShadowBox = styled.div`
-  box-shadow: 0 2px 3px rgba(40, 177, 232, 0.1),
-    0 0 0 2px rgba(40, 177, 232, 0.2);
+  box-shadow: 0 2px 3px rgba(40, 177, 232, 0.1), 0 0 0 2px rgba(40, 177, 232, 0.2);
 `;
 
 const ImageWrapper = styled.div`
@@ -38,22 +37,13 @@ class AdminDetails extends React.Component<Props> {
         <BoxShadowBox className="box">
           <article className="media">
             <ImageWrapper className="media-left">
-              <Image
-                src="/images/iconCommunitySupport.png"
-                alt={t("admin.info.communityIconAlt")}
-              />
+              <Image src="/images/iconCommunitySupport.png" alt={t("admin.info.communityIconAlt")} />
             </ImageWrapper>
             <div className="media-content">
               <div className="content">
-                <h3 className="has-text-weight-medium">
-                  {t("admin.info.communityTitle")}
-                </h3>
+                <h3 className="has-text-weight-medium">{t("admin.info.communityTitle")}</h3>
                 <p>{t("admin.info.communityInfo")}</p>
-                <a
-                  className="button is-info is-pulled-right"
-                  target="_blank"
-                  href="https://scm-manager.org/support/"
-                >
+                <a className="button is-info is-pulled-right" target="_blank" href="https://scm-manager.org/support/">
                   {t("admin.info.communityButton")}
                 </a>
               </div>
@@ -63,16 +53,11 @@ class AdminDetails extends React.Component<Props> {
         <BoxShadowBox className="box">
           <article className="media">
             <ImageWrapper className="media-left">
-              <Image
-                src="/images/iconEnterpriseSupport.png"
-                alt={t("admin.info.enterpriseIconAlt")}
-              />
+              <Image src="/images/iconEnterpriseSupport.png" alt={t("admin.info.enterpriseIconAlt")} />
             </ImageWrapper>
             <div className="media-content">
               <div className="content">
-                <h3 className="has-text-weight-medium">
-                  {t("admin.info.enterpriseTitle")}
-                </h3>
+                <h3 className="has-text-weight-medium">{t("admin.info.enterpriseTitle")}</h3>
                 <p>
                   {t("admin.info.enterpriseInfo")}
                   <br />

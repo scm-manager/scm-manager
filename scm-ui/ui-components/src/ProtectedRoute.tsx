@@ -28,12 +28,7 @@ class ProtectedRoute extends React.Component<Props> {
 
   render() {
     const { component, authenticated, ...routeProps } = this.props;
-    return (
-      <Route
-        {...routeProps}
-        render={this.renderRoute(component, authenticated)}
-      />
-    );
+    return <Route {...routeProps} render={this.renderRoute(component, authenticated)} />;
   }
 }
 

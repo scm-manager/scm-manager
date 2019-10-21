@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  apiClient,
-  Button,
-  ButtonGroup,
-  ErrorNotification,
-  Modal,
-  Notification
-} from "@scm-manager/ui-components";
+import { apiClient, Button, ButtonGroup, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
 import { PendingPlugins } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
 import waitForRestart from "./waitForRestart";
@@ -43,11 +36,7 @@ class ExecutePendingModal extends React.Component<Props, State> {
     } else if (success) {
       return <SuccessNotification />;
     } else {
-      return (
-        <Notification type="warning">
-          {t("plugins.modal.restartNotification")}
-        </Notification>
-      );
+      return <Notification type="warning">{t("plugins.modal.restartNotification")}</Notification>;
     }
   };
 
@@ -98,17 +87,16 @@ class ExecutePendingModal extends React.Component<Props, State> {
     const { pendingPlugins, t } = this.props;
     return (
       <>
-        {pendingPlugins._embedded &&
-          pendingPlugins._embedded.update.length > 0 && (
-            <>
-              <strong>{t("plugins.modal.updateQueue")}</strong>
-              <ul>
-                {pendingPlugins._embedded.update.map(plugin => (
-                  <li key={plugin.name}>{plugin.name}</li>
-                ))}
-              </ul>
-            </>
-          )}
+        {pendingPlugins._embedded && pendingPlugins._embedded.update.length > 0 && (
+          <>
+            <strong>{t("plugins.modal.updateQueue")}</strong>
+            <ul>
+              {pendingPlugins._embedded.update.map(plugin => (
+                <li key={plugin.name}>{plugin.name}</li>
+              ))}
+            </ul>
+          </>
+        )}
       </>
     );
   };
@@ -117,17 +105,16 @@ class ExecutePendingModal extends React.Component<Props, State> {
     const { pendingPlugins, t } = this.props;
     return (
       <>
-        {pendingPlugins._embedded &&
-          pendingPlugins._embedded.uninstall.length > 0 && (
-            <>
-              <strong>{t("plugins.modal.uninstallQueue")}</strong>
-              <ul>
-                {pendingPlugins._embedded.uninstall.map(plugin => (
-                  <li key={plugin.name}>{plugin.name}</li>
-                ))}
-              </ul>
-            </>
-          )}
+        {pendingPlugins._embedded && pendingPlugins._embedded.uninstall.length > 0 && (
+          <>
+            <strong>{t("plugins.modal.uninstallQueue")}</strong>
+            <ul>
+              {pendingPlugins._embedded.uninstall.map(plugin => (
+                <li key={plugin.name}>{plugin.name}</li>
+              ))}
+            </ul>
+          </>
+        )}
       </>
     );
   };

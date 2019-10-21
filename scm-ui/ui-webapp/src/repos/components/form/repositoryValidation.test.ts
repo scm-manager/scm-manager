@@ -13,17 +13,7 @@ describe("repository name validation", () => {
   });
 
   it("should allow same names as the backend", () => {
-    const validPaths = [
-      "scm",
-      "s",
-      "sc",
-      ".hiddenrepo",
-      "b.",
-      "...",
-      "..c",
-      "d..",
-      "a..c"
-    ];
+    const validPaths = ["scm", "s", "sc", ".hiddenrepo", "b.", "...", "..c", "d..", "a..c"];
 
     validPaths.forEach(path => expect(validator.isNameValid(path)).toBe(true));
   });
@@ -80,9 +70,7 @@ describe("repository name validation", () => {
       "scm/plugins/git-plugin"
     ];
 
-    invalidPaths.forEach(path =>
-      expect(validator.isNameValid(path)).toBe(false)
-    );
+    invalidPaths.forEach(path => expect(validator.isNameValid(path)).toBe(false));
   });
 });
 
@@ -93,9 +81,7 @@ describe("repository contact validation", () => {
 
   // we don't need rich tests, because they are in validation.test.js
   it("should allow real mail addresses", () => {
-    expect(validator.isContactValid("trici.mcmillian@hitchhiker.com")).toBe(
-      true
-    );
+    expect(validator.isContactValid("trici.mcmillian@hitchhiker.com")).toBe(true);
   });
 
   it("should fail on invalid mail addresses", () => {

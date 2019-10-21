@@ -33,11 +33,7 @@ export default class TagGroup extends React.Component<Props> {
           return (
             <div className="control" key={key}>
               <div className="tags has-addons">
-                <Tag
-                  color="info is-outlined"
-                  label={item.displayName}
-                  onRemove={() => this.removeEntry(item)}
-                />
+                <Tag color="info is-outlined" label={item.displayName} onRemove={() => this.removeEntry(item)} />
               </div>
             </div>
           );

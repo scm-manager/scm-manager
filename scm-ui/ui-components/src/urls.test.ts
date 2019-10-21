@@ -1,9 +1,4 @@
-import {
-  concat,
-  getPageFromMatch,
-  getQueryStringFromLocation,
-  withEndingSlash
-} from "./urls";
+import { concat, getPageFromMatch, getQueryStringFromLocation, withEndingSlash } from "./urls";
 
 describe("tests for withEndingSlash", () => {
   it("should append missing slash", () => {

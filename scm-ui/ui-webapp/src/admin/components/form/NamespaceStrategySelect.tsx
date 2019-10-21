@@ -37,11 +37,7 @@ class NamespaceStrategySelect extends React.Component<Props> {
 
   findSelected = () => {
     const { namespaceStrategies, value } = this.props;
-    if (
-      !namespaceStrategies ||
-      !namespaceStrategies.available ||
-      namespaceStrategies.available.indexOf(value) < 0
-    ) {
+    if (!namespaceStrategies || !namespaceStrategies.available || namespaceStrategies.available.indexOf(value) < 0) {
       return namespaceStrategies.current;
     }
     return value;

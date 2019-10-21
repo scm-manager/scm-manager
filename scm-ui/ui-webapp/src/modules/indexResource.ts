@@ -176,9 +176,7 @@ export function getLoginInfoLink(state: object) {
 }
 
 export function getUserAutoCompleteLink(state: object): string {
-  const link = getLinkCollection(state, "autocomplete").find(
-    i => i.name === "users"
-  );
+  const link = getLinkCollection(state, "autocomplete").find(i => i.name === "users");
   if (link) {
     return link.href;
   }
@@ -186,9 +184,7 @@ export function getUserAutoCompleteLink(state: object): string {
 }
 
 export function getGroupAutoCompleteLink(state: object): string {
-  const link = getLinkCollection(state, "autocomplete").find(
-    i => i.name === "groups"
-  );
+  const link = getLinkCollection(state, "autocomplete").find(i => i.name === "groups");
   if (link) {
     return link.href;
   }

@@ -18,12 +18,7 @@ class DownloadButton extends React.Component<Props> {
         because jsx a does not the custom disabled attribute
         but bulma does.
         // @ts-ignore */}
-        <a
-          className="button is-link"
-          href={url}
-          disabled={disabled}
-          onClick={onClickOrDefault}
-        >
+        <a className="button is-link" href={url} disabled={disabled} onClick={onClickOrDefault}>
           <span className="icon is-medium">
             <i className="fas fa-arrow-circle-down" />
           </span>

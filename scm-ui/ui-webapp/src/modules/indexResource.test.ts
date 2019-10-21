@@ -178,10 +178,7 @@ describe("index resource", () => {
     });
 
     it("should store the index resources on FETCH_INDEXRESOURCES_SUCCESS", () => {
-      const newState = reducer(
-        {},
-        fetchIndexResourcesSuccess(indexResourcesAuthenticated)
-      );
+      const newState = reducer({}, fetchIndexResourcesSuccess(indexResourcesAuthenticated));
       expect(newState.links).toBe(indexResourcesAuthenticated._links);
     });
   });
@@ -231,9 +228,7 @@ describe("index resource", () => {
           links: indexResourcesAuthenticated._links
         }
       };
-      expect(getUiPluginsLink(state)).toBe(
-        "http://localhost:8081/scm/api/v2/ui/plugins"
-      );
+      expect(getUiPluginsLink(state)).toBe("http://localhost:8081/scm/api/v2/ui/plugins");
     });
 
     it("should return ui plugins links when unauthenticated and has permission to see it", () => {
@@ -242,9 +237,7 @@ describe("index resource", () => {
           links: indexResourcesUnauthenticated._links
         }
       };
-      expect(getUiPluginsLink(state)).toBe(
-        "http://localhost:8081/scm/api/v2/ui/plugins"
-      );
+      expect(getUiPluginsLink(state)).toBe("http://localhost:8081/scm/api/v2/ui/plugins");
     });
 
     // me link
@@ -273,9 +266,7 @@ describe("index resource", () => {
           links: indexResourcesAuthenticated._links
         }
       };
-      expect(getLogoutLink(state)).toBe(
-        "http://localhost:8081/scm/api/v2/auth/access_token"
-      );
+      expect(getLogoutLink(state)).toBe("http://localhost:8081/scm/api/v2/auth/access_token");
     });
 
     it("should return undefined for logout link when unauthenticated or has not permission to see it", () => {
@@ -294,9 +285,7 @@ describe("index resource", () => {
           links: indexResourcesUnauthenticated._links
         }
       };
-      expect(getLoginLink(state)).toBe(
-        "http://localhost:8081/scm/api/v2/auth/access_token"
-      );
+      expect(getLoginLink(state)).toBe("http://localhost:8081/scm/api/v2/auth/access_token");
     });
 
     it("should return undefined for login link when authenticated or has not permission to see it", () => {
@@ -315,9 +304,7 @@ describe("index resource", () => {
           links: indexResourcesAuthenticated._links
         }
       };
-      expect(getUsersLink(state)).toBe(
-        "http://localhost:8081/scm/api/v2/users/"
-      );
+      expect(getUsersLink(state)).toBe("http://localhost:8081/scm/api/v2/users/");
     });
 
     it("should return undefined for users link when unauthenticated or has not permission to see it", () => {
@@ -336,9 +323,7 @@ describe("index resource", () => {
           links: indexResourcesAuthenticated._links
         }
       };
-      expect(getGroupsLink(state)).toBe(
-        "http://localhost:8081/scm/api/v2/groups/"
-      );
+      expect(getGroupsLink(state)).toBe("http://localhost:8081/scm/api/v2/groups/");
     });
 
     it("should return undefined for groups link when unauthenticated or has not permission to see it", () => {
@@ -357,9 +342,7 @@ describe("index resource", () => {
           links: indexResourcesAuthenticated._links
         }
       };
-      expect(getConfigLink(state)).toBe(
-        "http://localhost:8081/scm/api/v2/config"
-      );
+      expect(getConfigLink(state)).toBe("http://localhost:8081/scm/api/v2/config");
     });
 
     it("should return undefined for config link when unauthenticated or has not permission to see it", () => {
@@ -378,9 +361,7 @@ describe("index resource", () => {
           links: indexResourcesAuthenticated._links
         }
       };
-      expect(getRepositoriesLink(state)).toBe(
-        "http://localhost:8081/scm/api/v2/repositories/"
-      );
+      expect(getRepositoriesLink(state)).toBe("http://localhost:8081/scm/api/v2/repositories/");
     });
 
     it("should return config for repositories link when unauthenticated or has not permission to see it", () => {
@@ -399,9 +380,7 @@ describe("index resource", () => {
           links: indexResourcesAuthenticated._links
         }
       };
-      expect(getHgConfigLink(state)).toBe(
-        "http://localhost:8081/scm/api/v2/config/hg"
-      );
+      expect(getHgConfigLink(state)).toBe("http://localhost:8081/scm/api/v2/config/hg");
     });
 
     it("should return config for hgConfig link when unauthenticated or has not permission to see it", () => {
@@ -420,9 +399,7 @@ describe("index resource", () => {
           links: indexResourcesAuthenticated._links
         }
       };
-      expect(getGitConfigLink(state)).toBe(
-        "http://localhost:8081/scm/api/v2/config/git"
-      );
+      expect(getGitConfigLink(state)).toBe("http://localhost:8081/scm/api/v2/config/git");
     });
 
     it("should return config for gitConfig link when unauthenticated or has not permission to see it", () => {
@@ -441,9 +418,7 @@ describe("index resource", () => {
           links: indexResourcesAuthenticated._links
         }
       };
-      expect(getSvnConfigLink(state)).toBe(
-        "http://localhost:8081/scm/api/v2/config/svn"
-      );
+      expect(getSvnConfigLink(state)).toBe("http://localhost:8081/scm/api/v2/config/svn");
     });
 
     it("should return config for svnConfig link when unauthenticated or has not permission to see it", () => {
@@ -462,9 +437,7 @@ describe("index resource", () => {
           links: indexResourcesAuthenticated._links
         }
       };
-      expect(getLinkCollection(state, "autocomplete")).toEqual(
-        indexResourcesAuthenticated._links.autocomplete
-      );
+      expect(getLinkCollection(state, "autocomplete")).toEqual(indexResourcesAuthenticated._links.autocomplete);
     });
 
     it("should return user autocomplete link", () => {
@@ -473,9 +446,7 @@ describe("index resource", () => {
           links: indexResourcesAuthenticated._links
         }
       };
-      expect(getUserAutoCompleteLink(state)).toEqual(
-        "http://localhost:8081/scm/api/v2/autocomplete/users"
-      );
+      expect(getUserAutoCompleteLink(state)).toEqual("http://localhost:8081/scm/api/v2/autocomplete/users");
     });
 
     it("should return group autocomplete link", () => {
@@ -484,9 +455,7 @@ describe("index resource", () => {
           links: indexResourcesAuthenticated._links
         }
       };
-      expect(getGroupAutoCompleteLink(state)).toEqual(
-        "http://localhost:8081/scm/api/v2/autocomplete/groups"
-      );
+      expect(getGroupAutoCompleteLink(state)).toEqual("http://localhost:8081/scm/api/v2/autocomplete/groups");
     });
   });
 });

@@ -3,17 +3,9 @@ import RepositoryRoleForm from "./RepositoryRoleForm";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import { ErrorNotification, Subtitle, Title } from "@scm-manager/ui-components";
-import {
-  createRole,
-  getCreateRoleFailure,
-  getFetchVerbsFailure,
-  isFetchVerbsPending
-} from "../modules/roles";
+import { createRole, getCreateRoleFailure, getFetchVerbsFailure, isFetchVerbsPending } from "../modules/roles";
 import { RepositoryRole } from "@scm-manager/ui-types";
-import {
-  getRepositoryRolesLink,
-  getRepositoryVerbsLink
-} from "../../../modules/indexResource";
+import { getRepositoryRolesLink, getRepositoryVerbsLink } from "../../../modules/indexResource";
 import { History } from "history";
 
 type Props = {
@@ -35,9 +27,7 @@ class CreateRepositoryRole extends React.Component<Props> {
   };
 
   createRepositoryRole = (role: RepositoryRole) => {
-    this.props.addRole(this.props.repositoryRolesLink, role, () =>
-      this.repositoryRoleCreated(role)
-    );
+    this.props.addRole(this.props.repositoryRolesLink, role, () => this.repositoryRoleCreated(role));
   };
 
   render() {
@@ -51,9 +41,7 @@ class CreateRepositoryRole extends React.Component<Props> {
       <>
         <Title title={t("repositoryRole.title")} />
         <Subtitle subtitle={t("repositoryRole.createSubtitle")} />
-        <RepositoryRoleForm
-          submitForm={role => this.createRepositoryRole(role)}
-        />
+        <RepositoryRoleForm submitForm={role => this.createRepositoryRole(role)} />
       </>
     );
   }

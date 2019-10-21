@@ -43,30 +43,15 @@ type Props = {
 class Overview extends React.Component<Props> {
   componentDidMount() {
     const { fetchReposByPage, reposLink, page, location } = this.props;
-    fetchReposByPage(
-      reposLink,
-      page,
-      urls.getQueryStringFromLocation(location)
-    );
+    fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
   }
 
   componentDidUpdate = (prevProps: Props) => {
-    const {
-      loading,
-      collection,
-      page,
-      reposLink,
-      location,
-      fetchReposByPage
-    } = this.props;
+    const { loading, collection, page, reposLink, location, fetchReposByPage } = this.props;
     if (collection && page && !loading) {
       const statePage: number = collection.page + 1;
       if (page !== statePage || prevProps.location.search !== location.search) {
-        fetchReposByPage(
-          reposLink,
-          page,
-          urls.getQueryStringFromLocation(location)
-        );
+        fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
       }
     }
   };
@@ -74,19 +59,10 @@ class Overview extends React.Component<Props> {
   render() {
     const { error, loading, showCreateButton, t } = this.props;
     return (
-      <Page
-        title={t("overview.title")}
-        subtitle={t("overview.subtitle")}
-        loading={loading}
-        error={error}
-      >
+      <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={loading} error={error}>
         {this.renderOverview()}
         <PageActions>
-          <OverviewPageActions
-            showCreateButton={showCreateButton}
-            link="repos"
-            label={t("overview.createButton")}
-          />
+          <OverviewPageActions showCreateButton={showCreateButton} link="repos" label={t("overview.createButton")} />
         </PageActions>
       </Page>
     );
@@ -99,17 +75,11 @@ class Overview extends React.Component<Props> {
       return (
         <>
           <RepositoryList repositories={collection._embedded.repositories} />
-          <LinkPaginator
-            collection={collection}
-            page={page}
-            filter={urls.getQueryStringFromLocation(location)}
-          />
+          <LinkPaginator collection={collection} page={page} filter={urls.getQueryStringFromLocation(location)} />
         </>
       );
     }
-    return (
-      <Notification type="info">{t("overview.noRepositories")}</Notification>
-    );
+    return <Notification type="info">{t("overview.noRepositories")}</Notification>;
   }
 
   renderOverview() {
@@ -128,9 +98,7 @@ class Overview extends React.Component<Props> {
   renderCreateButton() {
     const { showCreateButton, t } = this.props;
     if (showCreateButton) {
-      return (
-        <CreateButton label={t("overview.createButton")} link="/repos/create" />
-      );
+      return <CreateButton label={t("overview.createButton")} link="/repos/create" />;
     }
     return null;
   }

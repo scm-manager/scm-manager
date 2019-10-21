@@ -15,45 +15,28 @@ class RepositoryEntry extends React.Component<Props> {
 
   renderBranchesLink = (repository: Repository, repositoryLink: string) => {
     if (repository._links["branches"]) {
-      return (
-        <RepositoryEntryLink
-          icon="code-branch"
-          to={repositoryLink + "/branches"}
-        />
-      );
+      return <RepositoryEntryLink icon="code-branch" to={repositoryLink + "/branches"} />;
     }
     return null;
   };
 
   renderChangesetsLink = (repository: Repository, repositoryLink: string) => {
     if (repository._links["changesets"]) {
-      return (
-        <RepositoryEntryLink
-          icon="exchange-alt"
-          to={repositoryLink + "/changesets"}
-        />
-      );
+      return <RepositoryEntryLink icon="exchange-alt" to={repositoryLink + "/changesets"} />;
     }
     return null;
   };
 
   renderSourcesLink = (repository: Repository, repositoryLink: string) => {
     if (repository._links["sources"]) {
-      return (
-        <RepositoryEntryLink icon="code" to={repositoryLink + "/sources"} />
-      );
+      return <RepositoryEntryLink icon="code" to={repositoryLink + "/sources"} />;
     }
     return null;
   };
 
   renderModifyLink = (repository: Repository, repositoryLink: string) => {
     if (repository._links["update"]) {
-      return (
-        <RepositoryEntryLink
-          icon="cog"
-          to={repositoryLink + "/settings/general"}
-        />
-      );
+      return <RepositoryEntryLink icon="cog" to={repositoryLink + "/settings/general"} />;
     }
     return null;
   };

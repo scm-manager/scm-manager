@@ -41,25 +41,13 @@ describe("binder tests", () => {
   });
 
   type Props = {
-    category: string
+    category: string;
   };
 
   it("should return only extensions which predicates matches", () => {
-    binder.bind(
-      "hitchhicker.trillian",
-      "heartOfGold",
-      (props: Props) => props.category === "a"
-    );
-    binder.bind(
-      "hitchhicker.trillian",
-      "earth",
-      (props: Props) => props.category === "b"
-    );
-    binder.bind(
-      "hitchhicker.trillian",
-      "earth2",
-      (props: Props) => props.category === "a"
-    );
+    binder.bind("hitchhicker.trillian", "heartOfGold", (props: Props) => props.category === "a");
+    binder.bind("hitchhicker.trillian", "earth", (props: Props) => props.category === "b");
+    binder.bind("hitchhicker.trillian", "earth2", (props: Props) => props.category === "a");
 
     const extensions = binder.getExtensions("hitchhicker.trillian", {
       category: "b"

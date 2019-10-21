@@ -38,18 +38,7 @@ class Button extends React.Component<Props> {
   };
 
   render() {
-    const {
-      label,
-      loading,
-      disabled,
-      type,
-      color,
-      className,
-      icon,
-      fullWidth,
-      reducedMobile,
-      children
-    } = this.props;
+    const { label, loading, disabled, type, color, className, icon, fullWidth, reducedMobile, children } = this.props;
     const loadingClass = loading ? "is-loading" : "";
     const fullWidthClass = fullWidth ? "is-fullwidth" : "";
     const reducedMobileClass = reducedMobile ? "is-reduced-mobile" : "";
@@ -59,14 +48,7 @@ class Button extends React.Component<Props> {
           type={type}
           disabled={disabled}
           onClick={this.onClick}
-          className={classNames(
-            "button",
-            "is-" + color,
-            loadingClass,
-            fullWidthClass,
-            reducedMobileClass,
-            className
-          )}
+          className={classNames("button", "is-" + color, loadingClass, fullWidthClass, reducedMobileClass, className)}
         >
           <span className="icon is-medium">
             <Icon name={icon} color="inherit" />
@@ -83,13 +65,7 @@ class Button extends React.Component<Props> {
         type={type}
         disabled={disabled}
         onClick={this.onClick}
-        className={classNames(
-          "button",
-          "is-" + color,
-          loadingClass,
-          fullWidthClass,
-          className
-        )}
+        className={classNames("button", "is-" + color, loadingClass, fullWidthClass, className)}
       >
         {label} {children}
       </button>

@@ -9,11 +9,7 @@ export const FETCH_SOURCES_PENDING = `${FETCH_SOURCES}_${types.PENDING_SUFFIX}`;
 export const FETCH_SOURCES_SUCCESS = `${FETCH_SOURCES}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_SOURCES_FAILURE = `${FETCH_SOURCES}_${types.FAILURE_SUFFIX}`;
 
-export function fetchSources(
-  repository: Repository,
-  revision: string,
-  path: string
-) {
+export function fetchSources(repository: Repository, revision: string, path: string) {
   return function(dispatch: any) {
     dispatch(fetchSourcesPending(repository, revision, path));
     return apiClient
@@ -39,23 +35,14 @@ function createUrl(repository: Repository, revision: string, path: string) {
   return `${base}${encodeURIComponent(revision)}/${pathDefined}`;
 }
 
-export function fetchSourcesPending(
-  repository: Repository,
-  revision: string,
-  path: string
-): Action {
+export function fetchSourcesPending(repository: Repository, revision: string, path: string): Action {
   return {
     type: FETCH_SOURCES_PENDING,
     itemId: createItemId(repository, revision, path)
   };
 }
 
-export function fetchSourcesSuccess(
-  repository: Repository,
-  revision: string,
-  path: string,
-  sources: File
-) {
+export function fetchSourcesSuccess(repository: Repository, revision: string, path: string, sources: File) {
   return {
     type: FETCH_SOURCES_SUCCESS,
     payload: sources,
@@ -63,12 +50,7 @@ export function fetchSourcesSuccess(
   };
 }
 
-export function fetchSourcesFailure(
-  repository: Repository,
-  revision: string,
-  path: string,
-  error: Error
-): Action {
+export function fetchSourcesFailure(repository: Repository, revision: string, path: string, error: Error): Action {
   return {
     type: FETCH_SOURCES_FAILURE,
     payload: error,
@@ -101,12 +83,7 @@ export default function reducer(
 
 // selectors
 
-export function isDirectory(
-  state: any,
-  repository: Repository,
-  revision: string,
-  path: string
-): boolean {
+export function isDirectory(state: any, repository: Repository, revision: string, path: string): boolean {
   const currentFile = getSources(state, repository, revision, path);
   if (currentFile && !currentFile.directory) {
     return false;
@@ -127,17 +104,8 @@ export function getSources(
   return null;
 }
 
-export function isFetchSourcesPending(
-  state: any,
-  repository: Repository,
-  revision: string,
-  path: string
-): boolean {
-  return isPending(
-    state,
-    FETCH_SOURCES,
-    createItemId(repository, revision, path)
-  );
+export function isFetchSourcesPending(state: any, repository: Repository, revision: string, path: string): boolean {
+  return isPending(state, FETCH_SOURCES, createItemId(repository, revision, path));
 }
 
 export function getFetchSourcesFailure(
@@ -146,9 +114,5 @@ export function getFetchSourcesFailure(
   revision: string,
   path: string
 ): Error | null | undefined {
-  return getFailure(
-    state,
-    FETCH_SOURCES,
-    createItemId(repository, revision, path)
-  );
+  return getFailure(state, FETCH_SOURCES, createItemId(repository, revision, path));
 }

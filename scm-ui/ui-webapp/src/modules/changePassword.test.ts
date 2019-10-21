@@ -18,10 +18,8 @@ describe("change password", () => {
       }
     });
 
-    changePassword(CHANGE_PASSWORD_URL, oldPassword, newPassword).then(
-      content => {
-        done();
-      }
-    );
+    changePassword(CHANGE_PASSWORD_URL, oldPassword, newPassword).then(content => {
+      done();
+    });
   });
 });

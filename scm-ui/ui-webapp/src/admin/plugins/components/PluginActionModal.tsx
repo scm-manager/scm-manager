@@ -1,10 +1,5 @@
 import * as React from "react";
-import {
-  Button,
-  ButtonGroup,
-  ErrorNotification,
-  Modal
-} from "@scm-manager/ui-components";
+import { Button, ButtonGroup, ErrorNotification, Modal } from "@scm-manager/ui-components";
 import { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import { translate } from "react-i18next";
 import SuccessNotification from "./SuccessNotification";
@@ -89,20 +84,18 @@ class PluginActionModal extends React.Component<Props, State> {
     const { installedPlugins, t } = this.props;
     return (
       <>
-        {installedPlugins &&
-          installedPlugins._embedded &&
-          installedPlugins._embedded.plugins && (
-            <>
-              <strong>{t("plugins.modal.updateQueue")}</strong>
-              <ul>
-                {installedPlugins._embedded.plugins
-                  .filter(plugin => plugin._links && plugin._links.update)
-                  .map(plugin => (
-                    <li key={plugin.name}>{plugin.name}</li>
-                  ))}
-              </ul>
-            </>
-          )}
+        {installedPlugins && installedPlugins._embedded && installedPlugins._embedded.plugins && (
+          <>
+            <strong>{t("plugins.modal.updateQueue")}</strong>
+            <ul>
+              {installedPlugins._embedded.plugins
+                .filter(plugin => plugin._links && plugin._links.update)
+                .map(plugin => (
+                  <li key={plugin.name}>{plugin.name}</li>
+                ))}
+            </ul>
+          </>
+        )}
       </>
     );
   };
@@ -111,18 +104,16 @@ class PluginActionModal extends React.Component<Props, State> {
     const { pendingPlugins, t } = this.props;
     return (
       <>
-        {pendingPlugins &&
-          pendingPlugins._embedded &&
-          pendingPlugins._embedded.new.length > 0 && (
-            <>
-              <strong>{t("plugins.modal.installQueue")}</strong>
-              <ul>
-                {pendingPlugins._embedded.new.map(plugin => (
-                  <li key={plugin.name}>{plugin.name}</li>
-                ))}
-              </ul>
-            </>
-          )}
+        {pendingPlugins && pendingPlugins._embedded && pendingPlugins._embedded.new.length > 0 && (
+          <>
+            <strong>{t("plugins.modal.installQueue")}</strong>
+            <ul>
+              {pendingPlugins._embedded.new.map(plugin => (
+                <li key={plugin.name}>{plugin.name}</li>
+              ))}
+            </ul>
+          </>
+        )}
       </>
     );
   };
@@ -131,18 +122,16 @@ class PluginActionModal extends React.Component<Props, State> {
     const { pendingPlugins, t } = this.props;
     return (
       <>
-        {pendingPlugins &&
-          pendingPlugins._embedded &&
-          pendingPlugins._embedded.update.length > 0 && (
-            <>
-              <strong>{t("plugins.modal.updateQueue")}</strong>
-              <ul>
-                {pendingPlugins._embedded.update.map(plugin => (
-                  <li key={plugin.name}>{plugin.name}</li>
-                ))}
-              </ul>
-            </>
-          )}
+        {pendingPlugins && pendingPlugins._embedded && pendingPlugins._embedded.update.length > 0 && (
+          <>
+            <strong>{t("plugins.modal.updateQueue")}</strong>
+            <ul>
+              {pendingPlugins._embedded.update.map(plugin => (
+                <li key={plugin.name}>{plugin.name}</li>
+              ))}
+            </ul>
+          </>
+        )}
       </>
     );
   };
@@ -151,18 +140,16 @@ class PluginActionModal extends React.Component<Props, State> {
     const { pendingPlugins, t } = this.props;
     return (
       <>
-        {pendingPlugins &&
-          pendingPlugins._embedded &&
-          pendingPlugins._embedded.uninstall.length > 0 && (
-            <>
-              <strong>{t("plugins.modal.uninstallQueue")}</strong>
-              <ul>
-                {pendingPlugins._embedded.uninstall.map(plugin => (
-                  <li key={plugin.name}>{plugin.name}</li>
-                ))}
-              </ul>
-            </>
-          )}
+        {pendingPlugins && pendingPlugins._embedded && pendingPlugins._embedded.uninstall.length > 0 && (
+          <>
+            <strong>{t("plugins.modal.uninstallQueue")}</strong>
+            <ul>
+              {pendingPlugins._embedded.uninstall.map(plugin => (
+                <li key={plugin.name}>{plugin.name}</li>
+              ))}
+            </ul>
+          </>
+        )}
       </>
     );
   };

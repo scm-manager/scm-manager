@@ -14,20 +14,11 @@ type Props = {
 
 class RoleSelector extends React.Component<Props> {
   render() {
-    const {
-      availableRoles,
-      role,
-      handleRoleChange,
-      loading,
-      label,
-      helpText
-    } = this.props;
+    const { availableRoles, role, handleRoleChange, loading, label, helpText } = this.props;
 
     if (!availableRoles) return null;
 
-    const options = role
-      ? this.createSelectOptions(availableRoles)
-      : ["", ...this.createSelectOptions(availableRoles)];
+    const options = role ? this.createSelectOptions(availableRoles) : ["", ...this.createSelectOptions(availableRoles)];
 
     return (
       <Select

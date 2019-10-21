@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  ErrorNotification,
-  Loading,
-  Subtitle
-} from "@scm-manager/ui-components";
+import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import BranchForm from "../components/BranchForm";
 import { Repository, Branch, BranchRequest } from "@scm-manager/ui-types";
@@ -56,19 +52,12 @@ class CreateBranch extends React.Component<Props> {
 
   branchCreated = (branch: Branch) => {
     const { history, repository } = this.props;
-    history.push(
-      `/repo/${repository.namespace}/${
-        repository.name
-      }/branch/${encodeURIComponent(branch.name)}/info`
-    );
+    history.push(`/repo/${repository.namespace}/${repository.name}/branch/${encodeURIComponent(branch.name)}/info`);
   };
 
   createBranch = (branch: BranchRequest) => {
-    this.props.createBranch(
-      this.props.createBranchesLink,
-      this.props.repository,
-      branch,
-      newBranch => this.branchCreated(newBranch)
+    this.props.createBranch(this.props.createBranchesLink, this.props.repository, branch, newBranch =>
+      this.branchCreated(newBranch)
     );
   };
 
@@ -78,15 +67,7 @@ class CreateBranch extends React.Component<Props> {
   };
 
   render() {
-    const {
-      t,
-      loading,
-      error,
-      repository,
-      branches,
-      createBranchesLink,
-      location
-    } = this.props;
+    const { t, loading, error, repository, branches, createBranchesLink, location } = this.props;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -133,11 +114,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = (state, ownProps) => {
   const { repository } = ownProps;
-  const loading =
-    isFetchBranchesPending(state, repository) ||
-    isCreateBranchPending(state, repository);
-  const error =
-    getFetchBranchesFailure(state, repository) || getCreateBranchFailure(state);
+  const loading = isFetchBranchesPending(state, repository) || isCreateBranchPending(state, repository);
+  const error = getFetchBranchesFailure(state, repository) || getCreateBranchFailure(state);
   const branches = getBranches(state, repository);
   const createBranchesLink = getBranchCreateLink(state, repository);
   return {

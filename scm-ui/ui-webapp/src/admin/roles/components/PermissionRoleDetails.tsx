@@ -17,13 +17,7 @@ class PermissionRoleDetails extends React.Component<Props> {
   renderEditButton() {
     const { t, url } = this.props;
     if (!!this.props.role._links.update) {
-      return (
-        <Button
-          label={t("repositoryRole.editButton")}
-          link={`${url}/edit`}
-          color="primary"
-        />
-      );
+      return <Button label={t("repositoryRole.editButton")} link={`${url}/edit`} color="primary" />;
     }
     return null;
   }

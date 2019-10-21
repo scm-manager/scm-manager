@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  RemoveEntryOfTableButton,
-  LabelWithHelpIcon
-} from "@scm-manager/ui-components";
+import { RemoveEntryOfTableButton, LabelWithHelpIcon } from "@scm-manager/ui-components";
 
 type Props = {
   items: string[];

@@ -1,10 +1,8 @@
 import { Repository, RepositoryGroup } from "@scm-manager/ui-types";
 
-export default function groupByNamespace(
-  repositories: Repository[]
-): RepositoryGroup[] {
-  let groups = {};
-  for (let repository of repositories) {
+export default function groupByNamespace(repositories: Repository[]): RepositoryGroup[] {
+  const groups = {};
+  for (const repository of repositories) {
     const groupName = repository.namespace;
 
     let group = groups[groupName];
@@ -18,8 +16,8 @@ export default function groupByNamespace(
     group.repositories.push(repository);
   }
 
-  let groupArray = [];
-  for (let groupName in groups) {
+  const groupArray = [];
+  for (const groupName in groups) {
     const group = groups[groupName];
     group.repositories.sort(sortByName);
     groupArray.push(groups[groupName]);

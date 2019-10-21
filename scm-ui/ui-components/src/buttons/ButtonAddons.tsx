@@ -28,11 +28,7 @@ class ButtonAddons extends React.Component<Props> {
       }
     });
 
-    return (
-      <Flex className={classNames("field", "has-addons", className)}>
-        {childWrapper}
-      </Flex>
-    );
+    return <Flex className={classNames("field", "has-addons", className)}>{childWrapper}</Flex>;
   }
 }
 

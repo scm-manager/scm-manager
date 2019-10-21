@@ -9,9 +9,7 @@ it("should render nothing, if the edit link is missing", () => {
     _links: {}
   };
 
-  const navLink = shallow(
-    <EditGroupNavLink group={group} editUrl="/group/edit" />
-  );
+  const navLink = shallow(<EditGroupNavLink group={group} editUrl="/group/edit" />);
   expect(navLink.text()).toBe("");
 });
 
@@ -24,8 +22,6 @@ it("should render the navLink", () => {
     }
   };
 
-  const navLink = shallow(
-    <EditGroupNavLink group={group} editUrl="/group/edit" />
-  );
+  const navLink = shallow(<EditGroupNavLink group={group} editUrl="/group/edit" />);
   expect(navLink.text()).not.toBe("");
 });

@@ -39,12 +39,7 @@ class ExecutePendingAction extends React.Component<Props, State> {
     const { showModal } = this.state;
     const { pendingPlugins } = this.props;
     if (showModal) {
-      return (
-        <ExecutePendingModal
-          pendingPlugins={pendingPlugins}
-          onClose={this.closeModal}
-        />
-      );
+      return <ExecutePendingModal pendingPlugins={pendingPlugins} onClose={this.closeModal} />;
     }
     return null;
   };
@@ -54,11 +49,7 @@ class ExecutePendingAction extends React.Component<Props, State> {
     return (
       <>
         {this.renderModal()}
-        <Button
-          color="primary"
-          label={t("plugins.executePending")}
-          action={this.openModal}
-        />
+        <Button color="primary" label={t("plugins.executePending")} action={this.openModal} />
       </>
     );
   }

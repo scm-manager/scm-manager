@@ -14,7 +14,7 @@ describe("test displayName validation", () => {
       "Zaphod Beeblebrox <zaphod.beeblebrox@hitchhiker.com>",
       "Marvin, der depressive Roboter"
     ];
-    for (let name of validNames) {
+    for (const name of validNames) {
       expect(validator.isDisplayNameValid(name)).toBe(true);
     }
   });
@@ -24,7 +24,7 @@ describe("test password validation", () => {
   it("should return false", () => {
     // invalid taken from ValidationUtilTest.java
     const invalid = ["", "abc", "aaabbbcccdddeeefffggghhhiiijjjkkk"];
-    for (let password of invalid) {
+    for (const password of invalid) {
       expect(validator.isPasswordValid(password)).toBe(false);
     }
   });
@@ -32,7 +32,7 @@ describe("test password validation", () => {
   it("should return true", () => {
     // valid taken from ValidationUtilTest.java
     const valid = ["secret123", "mySuperSecretPassword"];
-    for (let password of valid) {
+    for (const password of valid) {
       expect(validator.isPasswordValid(password)).toBe(true);
     }
   });

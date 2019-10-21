@@ -56,7 +56,7 @@ class PluginLoader extends React.Component<Props, State> {
 
     const promises = [];
     const sortedPlugins = plugins.sort(comparePluginsByName);
-    for (let plugin of sortedPlugins) {
+    for (const plugin of sortedPlugins) {
       promises.push(this.loadPlugin(plugin));
     }
     return promises.reduce((chain, current) => {
@@ -72,7 +72,7 @@ class PluginLoader extends React.Component<Props, State> {
     });
 
     const promises = [];
-    for (let bundle of plugin.bundles) {
+    for (const bundle of plugin.bundles) {
       promises.push(loadBundle(bundle));
     }
     return Promise.all(promises);

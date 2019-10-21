@@ -1,11 +1,6 @@
 import React from "react";
 import { translate } from "react-i18next";
-import {
-  Checkbox,
-  InputField,
-  Subtitle,
-  AddEntryToTableField
-} from "@scm-manager/ui-components";
+import { Checkbox, InputField, Subtitle, AddEntryToTableField } from "@scm-manager/ui-components";
 import ProxyExcludesTable from "../table/ProxyExcludesTable";
 
 type Props = {
@@ -92,9 +87,7 @@ class ProxySettings extends React.Component<Props> {
           <div className="column is-full">
             <ProxyExcludesTable
               proxyExcludes={proxyExcludes}
-              onChange={(isValid, changedValue, name) =>
-                this.props.onChange(isValid, changedValue, name)
-              }
+              onChange={(isValid, changedValue, name) => this.props.onChange(isValid, changedValue, name)}
               disabled={!enableProxy || !hasUpdatePermission}
             />
             <AddEntryToTableField
@@ -130,11 +123,7 @@ class ProxySettings extends React.Component<Props> {
     if (this.isProxyExcludeMember(proxyExcludeName)) {
       return;
     }
-    this.props.onChange(
-      true,
-      [...this.props.proxyExcludes, proxyExcludeName],
-      "proxyExcludes"
-    );
+    this.props.onChange(true, [...this.props.proxyExcludes, proxyExcludeName], "proxyExcludes");
   };
 
   isProxyExcludeMember = (proxyExcludeName: string) => {

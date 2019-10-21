@@ -1,17 +1,8 @@
 import React from "react";
 import { translate } from "react-i18next";
 import { Group } from "@scm-manager/ui-types";
-import {
-  Subtitle,
-  DeleteButton,
-  confirmAlert,
-  ErrorNotification
-} from "@scm-manager/ui-components";
-import {
-  deleteGroup,
-  getDeleteGroupFailure,
-  isDeleteGroupPending
-} from "../modules/groups";
+import { Subtitle, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { deleteGroup, getDeleteGroupFailure, isDeleteGroupPending } from "../modules/groups";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { History } from "history";
@@ -77,11 +68,7 @@ export class DeleteGroup extends React.Component<Props> {
         <ErrorNotification error={error} />
         <div className="columns">
           <div className="column">
-            <DeleteButton
-              label={t("deleteGroup.button")}
-              action={action}
-              loading={loading}
-            />
+            <DeleteButton label={t("deleteGroup.button")} action={action} loading={loading} />
           </div>
         </div>
       </>

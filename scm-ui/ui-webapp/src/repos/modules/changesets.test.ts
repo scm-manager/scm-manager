@@ -30,8 +30,7 @@ const branch = {
   revision: "123",
   _links: {
     history: {
-      href:
-        "http://scm.hitchhicker.com/api/v2/repositories/foo/bar/branches/specific/changesets"
+      href: "http://scm.hitchhicker.com/api/v2/repositories/foo/bar/branches/specific/changesets"
     }
   }
 };
@@ -48,8 +47,7 @@ const repository = {
       href: "http://scm.hitchhicker.com/api/v2/repositories/foo/bar/changesets"
     },
     branches: {
-      href:
-        "http://scm.hitchhicker.com/api/v2/repositories/foo/bar/branches/specific/branches"
+      href: "http://scm.hitchhicker.com/api/v2/repositories/foo/bar/branches/specific/branches"
     }
   }
 };
@@ -58,10 +56,8 @@ const changesets = {};
 
 describe("changesets", () => {
   describe("fetching of changesets", () => {
-    const DEFAULT_BRANCH_URL =
-      "http://scm.hitchhicker.com/api/v2/repositories/foo/bar/changesets";
-    const SPECIFIC_BRANCH_URL =
-      "http://scm.hitchhicker.com/api/v2/repositories/foo/bar/branches/specific/changesets";
+    const DEFAULT_BRANCH_URL = "http://scm.hitchhicker.com/api/v2/repositories/foo/bar/changesets";
+    const SPECIFIC_BRANCH_URL = "http://scm.hitchhicker.com/api/v2/repositories/foo/bar/branches/specific/changesets";
 
     const mockStore = configureMockStore([thunk]);
 
@@ -92,11 +88,9 @@ describe("changesets", () => {
       ];
 
       const store = mockStore({});
-      return store
-        .dispatch(fetchChangeset(repository, changesetId))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions);
-        });
+      return store.dispatch(fetchChangeset(repository, changesetId)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
     });
 
     it("should fail fetching changeset on error", () => {
@@ -110,13 +104,11 @@ describe("changesets", () => {
       ];
 
       const store = mockStore({});
-      return store
-        .dispatch(fetchChangeset(repository, changesetId))
-        .then(() => {
-          expect(store.getActions()[0]).toEqual(expectedActions[0]);
-          expect(store.getActions()[1].type).toEqual(FETCH_CHANGESET_FAILURE);
-          expect(store.getActions()[1].payload).toBeDefined();
-        });
+      return store.dispatch(fetchChangeset(repository, changesetId)).then(() => {
+        expect(store.getActions()[0]).toEqual(expectedActions[0]);
+        expect(store.getActions()[1].type).toEqual(FETCH_CHANGESET_FAILURE);
+        expect(store.getActions()[1].payload).toBeDefined();
+      });
     });
 
     it("should fetch changeset if needed", () => {
@@ -139,11 +131,9 @@ describe("changesets", () => {
       ];
 
       const store = mockStore({});
-      return store
-        .dispatch(fetchChangesetIfNeeded(repository, "id3"))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions);
-        });
+      return store.dispatch(fetchChangesetIfNeeded(repository, "id3")).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
     });
 
     it("should not fetch changeset if not needed", () => {
@@ -165,9 +155,7 @@ describe("changesets", () => {
       };
 
       const store = mockStore(state);
-      return expect(
-        store.dispatch(fetchChangesetIfNeeded(repository, "id1"))
-      ).toEqual(undefined);
+      return expect(store.dispatch(fetchChangesetIfNeeded(repository, "id1"))).toEqual(undefined);
     });
 
     it("should fetch changesets for default branch", () => {
@@ -279,11 +267,9 @@ describe("changesets", () => {
       ];
 
       const store = mockStore({});
-      return store
-        .dispatch(fetchChangesets(repository, undefined, 5))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions);
-        });
+      return store.dispatch(fetchChangesets(repository, undefined, 5)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
     });
 
     it("should fetch changesets by branch and page", () => {
@@ -344,14 +330,9 @@ describe("changesets", () => {
     };
 
     it("should set state to received changesets", () => {
-      const newState = reducer(
-        {},
-        fetchChangesetsSuccess(repository, undefined, responseBody)
-      );
+      const newState = reducer({}, fetchChangesetsSuccess(repository, undefined, responseBody));
       expect(newState).toBeDefined();
-      expect(newState["foo/bar"].byId["changeset1"].author.mail).toEqual(
-        "z@phod.com"
-      );
+      expect(newState["foo/bar"].byId["changeset1"].author.mail).toEqual("z@phod.com");
       expect(newState["foo/bar"].byId["changeset2"].description).toEqual("foo");
       expect(newState["foo/bar"].byId["changeset3"].description).toEqual("bar");
       expect(newState["foo/bar"].byBranch[""]).toEqual({
@@ -365,17 +346,10 @@ describe("changesets", () => {
     });
 
     it("should store the changeset list to branch", () => {
-      const newState = reducer(
-        {},
-        fetchChangesetsSuccess(repository, branch, responseBody)
-      );
+      const newState = reducer({}, fetchChangesetsSuccess(repository, branch, responseBody));
 
       expect(newState["foo/bar"].byId["changeset1"]).toBeDefined();
-      expect(newState["foo/bar"].byBranch["specific"].entries).toEqual([
-        "changeset1",
-        "changeset2",
-        "changeset3"
-      ]);
+      expect(newState["foo/bar"].byBranch["specific"].entries).toEqual(["changeset1", "changeset2", "changeset3"]);
     });
 
     it("should not remove existing changesets", () => {
@@ -397,18 +371,11 @@ describe("changesets", () => {
         }
       };
 
-      const newState = reducer(
-        state,
-        fetchChangesetsSuccess(repository, undefined, responseBody)
-      );
+      const newState = reducer(state, fetchChangesetsSuccess(repository, undefined, responseBody));
 
       const fooBar = newState["foo/bar"];
 
-      expect(fooBar.byBranch[""].entries).toEqual([
-        "changeset1",
-        "changeset2",
-        "changeset3"
-      ]);
+      expect(fooBar.byBranch[""].entries).toEqual(["changeset1", "changeset2", "changeset3"]);
       expect(fooBar.byId["id2"]).toEqual({
         id: "id2"
       });
@@ -459,9 +426,7 @@ describe("changesets", () => {
       );
 
       expect(newState).toBeDefined();
-      expect(newState["foo/bar"].byId["id3"].description).toEqual(
-        "added testChangeset"
-      );
+      expect(newState["foo/bar"].byId["id3"].description).toEqual("added testChangeset");
       expect(newState["foo/bar"].byId["id3"].author.mail).toEqual("z@phod.com");
       expect(newState["foo/bar"].byId["id2"]).toBeDefined();
       expect(newState["foo/bar"].byId["id3"]).toBeDefined();

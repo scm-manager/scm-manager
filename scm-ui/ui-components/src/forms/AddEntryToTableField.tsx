@@ -27,11 +27,7 @@ class AddEntryToTableField extends React.Component<Props, State> {
 
   isValid = () => {
     const { validateEntry } = this.props;
-    if (
-      !this.state.entryToAdd ||
-      this.state.entryToAdd === "" ||
-      !validateEntry
-    ) {
+    if (!this.state.entryToAdd || this.state.entryToAdd === "" || !validateEntry) {
       return true;
     } else {
       return validateEntry(this.state.entryToAdd);
@@ -39,13 +35,7 @@ class AddEntryToTableField extends React.Component<Props, State> {
   };
 
   render() {
-    const {
-      disabled,
-      buttonLabel,
-      fieldLabel,
-      errorMessage,
-      helpText
-    } = this.props;
+    const { disabled, buttonLabel, fieldLabel, errorMessage, helpText } = this.props;
     return (
       <div className="field">
         <InputField

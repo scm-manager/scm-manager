@@ -1,9 +1,5 @@
 import * as types from "../../modules/types";
-import {
-  Action,
-  RepositoryType,
-  RepositoryTypeCollection
-} from "@scm-manager/ui-types";
+import { Action, RepositoryType, RepositoryTypeCollection } from "@scm-manager/ui-types";
 import { apiClient } from "@scm-manager/ui-components";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
@@ -35,10 +31,7 @@ function fetchRepositoryTypes(dispatch: any) {
 }
 
 export function shouldFetchRepositoryTypes(state: object) {
-  if (
-    isFetchRepositoryTypesPending(state) ||
-    getFetchRepositoryTypesFailure(state)
-  ) {
+  if (isFetchRepositoryTypesPending(state) || getFetchRepositoryTypesFailure(state)) {
     return false;
   }
   return !(state.repositoryTypes && state.repositoryTypes.length > 0);
@@ -50,9 +43,7 @@ export function fetchRepositoryTypesPending(): Action {
   };
 }
 
-export function fetchRepositoryTypesSuccess(
-  repositoryTypes: RepositoryTypeCollection
-): Action {
+export function fetchRepositoryTypesSuccess(repositoryTypes: RepositoryTypeCollection): Action {
   return {
     type: FETCH_REPOSITORY_TYPES_SUCCESS,
     payload: repositoryTypes

@@ -54,11 +54,7 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
           creatable={true}
         />
 
-        <AddButton
-          label={buttonLabel}
-          action={this.addButtonClicked}
-          disabled={disabled}
-        />
+        <AddButton label={buttonLabel} action={this.addButtonClicked} disabled={disabled} />
       </div>
     );
   }

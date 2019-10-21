@@ -168,13 +168,11 @@ describe("branches", () => {
       fetchMock.getOnce(URL + "/newBranch", newBranch);
 
       const store = mockStore({});
-      return store
-        .dispatch(createBranch(URL, repository, branchRequest))
-        .then(() => {
-          const actions = store.getActions();
-          expect(actions[0].type).toEqual(CREATE_BRANCH_PENDING);
-          expect(actions[1].type).toEqual(CREATE_BRANCH_SUCCESS);
-        });
+      return store.dispatch(createBranch(URL, repository, branchRequest)).then(() => {
+        const actions = store.getActions();
+        expect(actions[0].type).toEqual(CREATE_BRANCH_PENDING);
+        expect(actions[1].type).toEqual(CREATE_BRANCH_SUCCESS);
+      });
     });
 
     it("should call the callback with the branch from the location header", () => {
@@ -197,11 +195,9 @@ describe("branches", () => {
         receivedBranch = branch;
       };
 
-      return store
-        .dispatch(createBranch(URL, repository, branchRequest, callback))
-        .then(() => {
-          expect(receivedBranch).toEqual(newBranch);
-        });
+      return store.dispatch(createBranch(URL, repository, branchRequest, callback)).then(() => {
+        expect(receivedBranch).toEqual(newBranch);
+      });
     });
 
     it("should fail creating a branch on HTTP 500", () => {
@@ -210,13 +206,11 @@ describe("branches", () => {
       });
 
       const store = mockStore({});
-      return store
-        .dispatch(createBranch(URL, repository, branchRequest))
-        .then(() => {
-          const actions = store.getActions();
-          expect(actions[0].type).toEqual(CREATE_BRANCH_PENDING);
-          expect(actions[1].type).toEqual(CREATE_BRANCH_FAILURE);
-        });
+      return store.dispatch(createBranch(URL, repository, branchRequest)).then(() => {
+        const actions = store.getActions();
+        expect(actions[0].type).toEqual(CREATE_BRANCH_PENDING);
+        expect(actions[1].type).toEqual(CREATE_BRANCH_FAILURE);
+      });
     });
   });
 

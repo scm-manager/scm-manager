@@ -1,12 +1,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import { Repository, Branch, BranchRequest } from "@scm-manager/ui-types";
-import {
-  Select,
-  InputField,
-  SubmitButton,
-  validation as validator
-} from "@scm-manager/ui-components";
+import { Select, InputField, SubmitButton, validation as validator } from "@scm-manager/ui-components";
 import { orderBranches } from "../util/orderBranches";
 
 type Props = {
@@ -41,11 +36,7 @@ class BranchForm extends React.Component<Props, State> {
 
   isValid = () => {
     const { source, name } = this.state;
-    return !(
-      this.state.nameValidationError ||
-      this.isFalsy(source) ||
-      this.isFalsy(name)
-    );
+    return !(this.state.nameValidationError || this.isFalsy(source) || this.isFalsy(name));
   };
 
   submit = (event: Event) => {

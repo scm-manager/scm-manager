@@ -25,18 +25,14 @@ class ExecutePendingActionModal extends React.Component<Props> {
         pendingPlugins={pendingPlugins}
         execute={this.executeAndRestart}
       >
-        <Notification type="warning">
-          {t("plugins.modal.restartNotification")}
-        </Notification>
+        <Notification type="warning">{t("plugins.modal.restartNotification")}</Notification>
       </PluginActionModal>
     );
   }
 
   executeAndRestart = () => {
     const { pendingPlugins } = this.props;
-    return apiClient
-      .post(pendingPlugins._links.execute.href)
-      .then(waitForRestart);
+    return apiClient.post(pendingPlugins._links.execute.href).then(waitForRestart);
   };
 }
 

@@ -3,13 +3,7 @@ import { connect } from "react-redux";
 import { translate } from "react-i18next";
 import { Redirect } from "react-router-dom";
 
-import {
-  logout,
-  isAuthenticated,
-  isLogoutPending,
-  getLogoutFailure,
-  isRedirecting
-} from "../modules/auth";
+import { logout, isAuthenticated, isLogoutPending, getLogoutFailure, isRedirecting } from "../modules/auth";
 import { Loading, ErrorPage } from "@scm-manager/ui-components";
 import { getLogoutLink } from "../modules/indexResource";
 
@@ -35,13 +29,7 @@ class Logout extends React.Component<Props> {
   render() {
     const { authenticated, redirecting, loading, error, t } = this.props;
     if (error) {
-      return (
-        <ErrorPage
-          title={t("logout.error.title")}
-          subtitle={t("logout.error.subtitle")}
-          error={error}
-        />
-      );
+      return <ErrorPage title={t("logout.error.title")} subtitle={t("logout.error.subtitle")} error={error} />;
     } else if (loading || authenticated || redirecting) {
       return <Loading />;
     } else {

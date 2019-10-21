@@ -1,11 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import {
-  Branch,
-  Changeset,
-  PagedCollection,
-  Repository
-} from "@scm-manager/ui-types";
+import { Branch, Changeset, PagedCollection, Repository } from "@scm-manager/ui-types";
 import {
   fetchChangesets,
   getChangesets,
@@ -66,9 +61,7 @@ class Changesets extends React.Component<Props> {
     if (!changesets || changesets.length === 0) {
       return (
         <div className="panel-block">
-          <Notification type="info">
-            {t("changesets.noChangesets")}
-          </Notification>
+          <Notification type="info">{t("changesets.noChangesets")}</Notification>
         </div>
       );
     }

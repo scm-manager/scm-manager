@@ -99,13 +99,7 @@ class PluginsOverview extends React.Component<Props, State> {
       <div className="columns">
         <div className="column">
           <Title title={t("plugins.title")} />
-          <Subtitle
-            subtitle={
-              installed
-                ? t("plugins.installedSubtitle")
-                : t("plugins.availableSubtitle")
-            }
-          />
+          <Subtitle subtitle={installed ? t("plugins.installedSubtitle") : t("plugins.availableSubtitle")} />
         </div>
         <PluginTopActions>{actions}</PluginTopActions>
       </div>
@@ -123,11 +117,7 @@ class PluginsOverview extends React.Component<Props, State> {
     const { pendingPlugins, collection, t } = this.props;
     const buttons = [];
 
-    if (
-      pendingPlugins &&
-      pendingPlugins._links &&
-      pendingPlugins._links.execute
-    ) {
+    if (pendingPlugins && pendingPlugins._links && pendingPlugins._links.execute) {
       buttons.push(
         <Button
           color="primary"
@@ -144,11 +134,7 @@ class PluginsOverview extends React.Component<Props, State> {
       );
     }
 
-    if (
-      pendingPlugins &&
-      pendingPlugins._links &&
-      pendingPlugins._links.cancel
-    ) {
+    if (pendingPlugins && pendingPlugins._links && pendingPlugins._links.cancel) {
       buttons.push(
         <Button
           color="primary"
@@ -190,9 +176,7 @@ class PluginsOverview extends React.Component<Props, State> {
 
   computeUpdateAllSize = () => {
     const { collection, t } = this.props;
-    const outdatedPlugins = collection._embedded.plugins.filter(
-      p => p._links.update
-    ).length;
+    const outdatedPlugins = collection._embedded.plugins.filter(p => p._links.update).length;
     return t("plugins.outdatedPlugins", {
       count: outdatedPlugins
     });
@@ -223,11 +207,7 @@ class PluginsOverview extends React.Component<Props, State> {
 
   renderModals = () => {
     const { collection, pendingPlugins } = this.props;
-    const {
-      showPendingModal,
-      showCancelModal,
-      showUpdateAllModal
-    } = this.state;
+    const { showPendingModal, showCancelModal, showUpdateAllModal } = this.state;
 
     if (showPendingModal) {
       return (
@@ -273,12 +253,7 @@ class PluginsOverview extends React.Component<Props, State> {
     const { collection, t } = this.props;
 
     if (collection._embedded && collection._embedded.plugins.length > 0) {
-      return (
-        <PluginsList
-          plugins={collection._embedded.plugins}
-          refresh={this.fetchPlugins}
-        />
-      );
+      return <PluginsList plugins={collection._embedded.plugins} refresh={this.fetchPlugins} />;
     }
     return <Notification type="info">{t("plugins.noPlugins")}</Notification>;
   }

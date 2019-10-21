@@ -14,9 +14,7 @@ type Props = RouteComponentProps & {
 };
 
 function flatten(text: string, child: any): any {
-  return typeof child === "string"
-    ? text + child
-    : React.Children.toArray(child.props.children).reduce(flatten, text);
+  return typeof child === "string" ? text + child : React.Children.toArray(child.props.children).reduce(flatten, text);
 }
 
 /**
@@ -32,11 +30,7 @@ function MarkdownHeadingRenderer(props: Props) {
   const children = React.Children.toArray(props.children);
   const heading = children.reduce(flatten, "");
   const anchorId = headingToAnchorId(heading);
-  const headingElement = React.createElement(
-    "h" + props.level,
-    {},
-    props.children
-  );
+  const headingElement = React.createElement("h" + props.level, {}, props.children);
   const href = withContextPath(props.location.pathname + "#" + anchorId);
 
   return (

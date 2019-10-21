@@ -10,7 +10,7 @@ describe("get content type", () => {
   });
 
   it("should return content", done => {
-    let headers = {
+    const headers = {
       "Content-Type": "application/text",
       "X-Programming-Language": "JAVA"
     };

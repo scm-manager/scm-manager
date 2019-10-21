@@ -66,24 +66,14 @@ export default class CardColumn extends React.Component<Props> {
   };
 
   render() {
-    const {
-      avatar,
-      title,
-      description,
-      contentRight,
-      footerLeft,
-      footerRight,
-      className
-    } = this.props;
+    const { avatar, title, description, contentRight, footerLeft, footerRight, className } = this.props;
     const link = this.createLink();
     return (
       <>
         {link}
         <NoEventWrapper className={classNames("media", className)}>
           <AvatarWrapper className="media-left">{avatar}</AvatarWrapper>
-          <FlexFullHeight
-            className={classNames("media-content", "text-box", "is-flex")}
-          >
+          <FlexFullHeight className={classNames("media-content", "text-box", "is-flex")}>
             <div className="is-flex">
               <ContentLeft className="content">
                 <p className="shorten-text is-marginless">
@@ -95,9 +85,7 @@ export default class CardColumn extends React.Component<Props> {
             </div>
             <FooterWrapper className={classNames("level", "is-flex")}>
               <div className="level-left is-hidden-mobile">{footerLeft}</div>
-              <div className="level-right is-mobile is-marginless">
-                {footerRight}
-              </div>
+              <div className="level-right is-mobile is-marginless">{footerRight}</div>
             </FooterWrapper>
           </FlexFullHeight>
         </NoEventWrapper>

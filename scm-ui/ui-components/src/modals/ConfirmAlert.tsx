@@ -37,11 +37,7 @@ class ConfirmAlert extends React.Component<Props> {
       <div className="field is-grouped">
         {buttons.map((button, i) => (
           <p className="control">
-            <a
-              className="button is-info"
-              key={i}
-              onClick={() => this.handleClickButton(button)}
-            >
+            <a className="button is-info" key={i} onClick={() => this.handleClickButton(button)}>
               {button.label}
             </a>
           </p>
@@ -49,15 +45,7 @@ class ConfirmAlert extends React.Component<Props> {
       </div>
     );
 
-    return (
-      <Modal
-        title={title}
-        closeFunction={() => this.close()}
-        body={body}
-        active={true}
-        footer={footer}
-      />
-    );
+    return <Modal title={title} closeFunction={() => this.close()} body={body} active={true} footer={footer} />;
   }
 }
 

@@ -47,9 +47,7 @@ class NavLink extends React.Component<Props> {
   render() {
     const { to, activeOnlyWhenExact } = this.props;
 
-    return (
-      <Route path={to} exact={activeOnlyWhenExact} children={this.renderLink} />
-    );
+    return <Route path={to} exact={activeOnlyWhenExact} children={this.renderLink} />;
   }
 }
 

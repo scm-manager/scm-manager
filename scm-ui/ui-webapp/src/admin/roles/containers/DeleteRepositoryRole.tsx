@@ -1,20 +1,11 @@
 import React from "react";
 import { translate } from "react-i18next";
 import { RepositoryRole } from "@scm-manager/ui-types";
-import {
-  Subtitle,
-  DeleteButton,
-  confirmAlert,
-  ErrorNotification
-} from "@scm-manager/ui-components";
+import { Subtitle, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { History } from "history";
-import {
-  deleteRole,
-  getDeleteRoleFailure,
-  isDeleteRolePending
-} from "../modules/roles";
+import { deleteRole, getDeleteRoleFailure, isDeleteRolePending } from "../modules/roles";
 
 type Props = {
   loading: boolean;
@@ -77,11 +68,7 @@ class DeleteRepositoryRole extends React.Component<Props> {
         <div className="columns">
           <div className="column">
             <ErrorNotification error={error} />
-            <DeleteButton
-              label={t("repositoryRole.delete.button")}
-              action={action}
-              loading={loading}
-            />
+            <DeleteButton label={t("repositoryRole.delete.button")} action={action} loading={loading} />
           </div>
         </div>
       </>

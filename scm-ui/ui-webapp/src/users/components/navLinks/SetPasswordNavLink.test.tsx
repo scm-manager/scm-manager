@@ -9,9 +9,7 @@ it("should render nothing, if the password link is missing", () => {
     _links: {}
   };
 
-  const navLink = shallow(
-    <ChangePasswordNavLink user={user} passwordUrl="/user/password" />
-  );
+  const navLink = shallow(<ChangePasswordNavLink user={user} passwordUrl="/user/password" />);
   expect(navLink.text()).toBe("");
 });
 
@@ -24,8 +22,6 @@ it("should render the navLink", () => {
     }
   };
 
-  const navLink = shallow(
-    <ChangePasswordNavLink user={user} passwordUrl="/user/password" />
-  );
+  const navLink = shallow(<ChangePasswordNavLink user={user} passwordUrl="/user/password" />);
   expect(navLink.text()).not.toBe("");
 });

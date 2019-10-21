@@ -16,13 +16,7 @@ class PluginList extends React.Component<Props> {
     return (
       <div className="content is-plugin-page">
         {groups.map(group => {
-          return (
-            <PluginGroupEntry
-              group={group}
-              key={group.name}
-              refresh={refresh}
-            />
-          );
+          return <PluginGroupEntry group={group} key={group.name} refresh={refresh} />;
         })}
       </div>
     );

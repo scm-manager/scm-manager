@@ -59,13 +59,7 @@ class InfoBox extends React.Component<Props> {
         <div className="box media">
           <figure className="media-left">
             <FixedSizedIconWrapper
-              className={classNames(
-                "image",
-                "box",
-                "has-text-weight-bold",
-                "has-text-white",
-                "has-background-info"
-              )}
+              className={classNames("image", "box", "has-text-weight-bold", "has-text-white", "has-background-info")}
             >
               <LightBlueIcon className="fa-2x" name={icon} color="inherit" />
               <div className="is-size-4">{t("login." + type)}</div>

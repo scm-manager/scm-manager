@@ -56,9 +56,7 @@ class ChangesetDetails extends React.Component<Props, State> {
     const { collapsed } = this.state;
 
     const description = changesets.parseDescription(changeset.description);
-    const id = (
-      <ChangesetId repository={repository} changeset={changeset} link={false} />
-    );
+    const id = <ChangesetId repository={repository} changeset={changeset} link={false} />;
     const date = <DateFromNow date={changeset.date} />;
 
     return (

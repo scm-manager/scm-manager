@@ -4,18 +4,10 @@ import { Page } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import GroupForm from "../components/GroupForm";
 import { connect } from "react-redux";
-import {
-  createGroup,
-  isCreateGroupPending,
-  getCreateGroupFailure,
-  createGroupReset
-} from "../modules/groups";
+import { createGroup, isCreateGroupPending, getCreateGroupFailure, createGroupReset } from "../modules/groups";
 import { Group } from "@scm-manager/ui-types";
 import { History } from "history";
-import {
-  getGroupsLink,
-  getUserAutoCompleteLink
-} from "../../modules/indexResource";
+import { getGroupsLink, getUserAutoCompleteLink } from "../../modules/indexResource";
 
 type Props = {
   t: (p: string) => string;
@@ -38,11 +30,7 @@ class CreateGroup extends React.Component<Props, State> {
   render() {
     const { t, loading, error } = this.props;
     return (
-      <Page
-        title={t("add-group.title")}
-        subtitle={t("add-group.subtitle")}
-        error={error}
-      >
+      <Page title={t("add-group.title")} subtitle={t("add-group.subtitle")} error={error}>
         <div>
           <GroupForm
             submitForm={group => this.createGroup(group)}
@@ -71,16 +59,13 @@ class CreateGroup extends React.Component<Props, State> {
     this.props.history.push("/group/" + group.name);
   };
   createGroup = (group: Group) => {
-    this.props.createGroup(this.props.createLink, group, () =>
-      this.groupCreated(group)
-    );
+    this.props.createGroup(this.props.createLink, group, () => this.groupCreated(group));
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    createGroup: (link: string, group: Group, callback?: () => void) =>
-      dispatch(createGroup(link, group, callback)),
+    createGroup: (link: string, group: Group, callback?: () => void) => dispatch(createGroup(link, group, callback)),
     resetForm: () => {
       dispatch(createGroupReset());
     }

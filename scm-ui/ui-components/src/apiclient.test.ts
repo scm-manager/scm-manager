@@ -4,9 +4,7 @@ import { BackendError } from "./errors";
 
 describe("create url", () => {
   it("should not change absolute urls", () => {
-    expect(createUrl("https://www.scm-manager.org")).toBe(
-      "https://www.scm-manager.org"
-    );
+    expect(createUrl("https://www.scm-manager.org")).toBe("https://www.scm-manager.org");
   });
 
   it("should add prefix for api", () => {

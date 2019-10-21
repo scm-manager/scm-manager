@@ -44,85 +44,22 @@ class Main extends React.Component<Props> {
           <Route exact path="/login" component={Login} />
           <Route path="/logout" component={Logout} />
           <Redirect exact strict from="/repos" to="/repos/" />
-          <ProtectedRoute
-            exact
-            path="/repos/"
-            component={Overview}
-            authenticated={authenticated}
-          />
-          <ProtectedRoute
-            exact
-            path="/repos/create"
-            component={Create}
-            authenticated={authenticated}
-          />
-          <ProtectedRoute
-            exact
-            path="/repos/:page"
-            component={Overview}
-            authenticated={authenticated}
-          />
-          <ProtectedRoute
-            path="/repo/:namespace/:name"
-            component={RepositoryRoot}
-            authenticated={authenticated}
-          />
+          <ProtectedRoute exact path="/repos/" component={Overview} authenticated={authenticated} />
+          <ProtectedRoute exact path="/repos/create" component={Create} authenticated={authenticated} />
+          <ProtectedRoute exact path="/repos/:page" component={Overview} authenticated={authenticated} />
+          <ProtectedRoute path="/repo/:namespace/:name" component={RepositoryRoot} authenticated={authenticated} />
           <Redirect exact strict from="/users" to="/users/" />
-          <ProtectedRoute
-            exact
-            path="/users/"
-            component={Users}
-            authenticated={authenticated}
-          />
-          <ProtectedRoute
-            authenticated={authenticated}
-            path="/users/create"
-            component={CreateUser}
-          />
-          <ProtectedRoute
-            exact
-            path="/users/:page"
-            component={Users}
-            authenticated={authenticated}
-          />
-          <ProtectedRoute
-            authenticated={authenticated}
-            path="/user/:name"
-            component={SingleUser}
-          />
+          <ProtectedRoute exact path="/users/" component={Users} authenticated={authenticated} />
+          <ProtectedRoute authenticated={authenticated} path="/users/create" component={CreateUser} />
+          <ProtectedRoute exact path="/users/:page" component={Users} authenticated={authenticated} />
+          <ProtectedRoute authenticated={authenticated} path="/user/:name" component={SingleUser} />
           <Redirect exact strict from="/groups" to="/groups/" />
-          <ProtectedRoute
-            exact
-            path="/groups/"
-            component={Groups}
-            authenticated={authenticated}
-          />
-          <ProtectedRoute
-            authenticated={authenticated}
-            path="/group/:name"
-            component={SingleGroup}
-          />
-          <ProtectedRoute
-            authenticated={authenticated}
-            path="/groups/create"
-            component={CreateGroup}
-          />
-          <ProtectedRoute
-            exact
-            path="/groups/:page"
-            component={Groups}
-            authenticated={authenticated}
-          />
-          <ProtectedRoute
-            path="/admin"
-            component={Admin}
-            authenticated={authenticated}
-          />
-          <ProtectedRoute
-            path="/me"
-            component={Profile}
-            authenticated={authenticated}
-          />
+          <ProtectedRoute exact path="/groups/" component={Groups} authenticated={authenticated} />
+          <ProtectedRoute authenticated={authenticated} path="/group/:name" component={SingleGroup} />
+          <ProtectedRoute authenticated={authenticated} path="/groups/create" component={CreateGroup} />
+          <ProtectedRoute exact path="/groups/:page" component={Groups} authenticated={authenticated} />
+          <ProtectedRoute path="/admin" component={Admin} authenticated={authenticated} />
+          <ProtectedRoute path="/me" component={Profile} authenticated={authenticated} />
           <ExtensionPoint
             name="main.route"
             renderAll={true}

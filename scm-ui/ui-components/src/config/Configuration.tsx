@@ -123,20 +123,16 @@ class Configuration extends React.Component<Props, State> {
 
     const modificationUrl = this.getModificationUrl();
     if (modificationUrl) {
-    apiClient
-      .put(
-        modificationUrl,
-        modifiedConfiguration,
-        this.getContentType()
-      )
-      .then(() =>
-        this.setState({
-          modifying: false,
-          configChanged: true,
-          valid: false
-        })
-      )
-      .catch(this.handleError);
+      apiClient
+        .put(modificationUrl, modifiedConfiguration, this.getContentType())
+        .then(() =>
+          this.setState({
+            modifying: false,
+            configChanged: true,
+            valid: false
+          })
+        )
+        .catch(this.handleError);
     } else {
       this.setState({
         error: new Error("no modification link available")
@@ -186,11 +182,7 @@ class Configuration extends React.Component<Props, State> {
           <form onSubmit={this.modifyConfiguration}>
             {this.props.render(renderProps)}
             <hr />
-            <SubmitButton
-              label={t("config.form.submit")}
-              disabled={!valid || readOnly}
-              loading={modifying}
-            />
+            <SubmitButton label={t("config.form.submit")} disabled={!valid || readOnly} loading={modifying} />
           </form>
         </>
       );

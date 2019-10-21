@@ -1,11 +1,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";
-import {
-  MailLink,
-  AvatarWrapper,
-  AvatarImage
-} from "@scm-manager/ui-components";
+import { MailLink, AvatarWrapper, AvatarImage } from "@scm-manager/ui-components";
 
 type Props = {
   me: Me;

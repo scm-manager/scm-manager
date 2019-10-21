@@ -4,12 +4,7 @@ import { Redirect, withRouter } from "react-router-dom";
 import { compose } from "redux";
 import { translate } from "react-i18next";
 import styled from "styled-components";
-import {
-  getLoginFailure,
-  isAuthenticated,
-  isLoginPending,
-  login
-} from "../modules/auth";
+import { getLoginFailure, isAuthenticated, isLoginPending, login } from "../modules/auth";
 import { getLoginInfoLink, getLoginLink } from "../modules/indexResource";
 import LoginInfo from "../components/LoginInfo";
 
@@ -86,8 +81,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    login: (loginLink: string, username: string, password: string) =>
-      dispatch(login(loginLink, username, password))
+    login: (loginLink: string, username: string, password: string) => dispatch(login(loginLink, username, password))
   };
 };
 

@@ -20,11 +20,7 @@ type Props = {
   availableRepositoryRoles: RepositoryRole[];
   availableRepositoryVerbs: string[];
   submitForm: (p: Permission) => void;
-  modifyPermission: (
-    permission: Permission,
-    namespace: string,
-    name: string
-  ) => void;
+  modifyPermission: (permission: Permission, namespace: string, name: string) => void;
   permission: Permission;
   t: (p: string) => string;
   namespace: string;
@@ -32,11 +28,7 @@ type Props = {
   match: any;
   history: History;
   loading: boolean;
-  deletePermission: (
-    permission: Permission,
-    namespace: string,
-    name: string
-  ) => void;
+  deletePermission: (permission: Permission, namespace: string, name: string) => void;
   deleteLoading: boolean;
 };
 
@@ -58,9 +50,7 @@ class SinglePermission extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const defaultPermission = props.availableRepositoryRoles
-      ? props.availableRepositoryRoles[0]
-      : {};
+    const defaultPermission = props.availableRepositoryRoles ? props.availableRepositoryRoles[0] : {};
 
     this.state = {
       permission: {
@@ -91,25 +81,13 @@ class SinglePermission extends React.Component<Props, State> {
   }
 
   deletePermission = () => {
-    this.props.deletePermission(
-      this.props.permission,
-      this.props.namespace,
-      this.props.repoName
-    );
+    this.props.deletePermission(this.props.permission, this.props.namespace, this.props.repoName);
   };
 
   render() {
-    const {
-      availableRepositoryRoles,
-      availableRepositoryVerbs,
-      loading,
-      namespace,
-      repoName,
-      t
-    } = this.props;
+    const { availableRepositoryRoles, availableRepositoryVerbs, loading, namespace, repoName, t } = this.props;
     const { permission, showAdvancedDialog } = this.state;
-    const availableRoleNames =
-      !!availableRepositoryRoles && availableRepositoryRoles.map(r => r.name);
+    const availableRoleNames = !!availableRepositoryRoles && availableRepositoryRoles.map(r => r.name);
     const readOnly = !this.mayChangePermissions();
     const roleSelector = readOnly ? (
       <td>{permission.role ? permission.role : t("permission.custom")}</td>
@@ -152,10 +130,7 @@ class SinglePermission extends React.Component<Props, State> {
         </VCenteredTd>
         {roleSelector}
         <VCenteredTd>
-          <Button
-            label={t("permission.advanced-button.label")}
-            action={this.handleDetailedPermissionsPressed}
-          />
+          <Button label={t("permission.advanced-button.label")} action={this.handleDetailedPermissionsPressed} />
         </VCenteredTd>
         <VCenteredTd className="is-darker">
           <DeletePermissionButton
@@ -222,40 +197,22 @@ class SinglePermission extends React.Component<Props, State> {
   };
 
   modifyPermissionRole = (role: string) => {
-    let permission = this.state.permission;
+    const permission = this.state.permission;
     permission.role = role;
-    this.props.modifyPermission(
-      permission,
-      this.props.namespace,
-      this.props.repoName
-    );
+    this.props.modifyPermission(permission, this.props.namespace, this.props.repoName);
   };
 
   modifyPermissionVerbs = (verbs: string[]) => {
-    let permission = this.state.permission;
+    const permission = this.state.permission;
     permission.verbs = verbs;
-    this.props.modifyPermission(
-      permission,
-      this.props.namespace,
-      this.props.repoName
-    );
+    this.props.modifyPermission(permission, this.props.namespace, this.props.repoName);
   };
 }
 
 const mapStateToProps = (state, ownProps) => {
   const permission = ownProps.permission;
-  const loading = isModifyPermissionPending(
-    state,
-    ownProps.namespace,
-    ownProps.repoName,
-    permission
-  );
-  const deleteLoading = isDeletePermissionPending(
-    state,
-    ownProps.namespace,
-    ownProps.repoName,
-    permission
-  );
+  const loading = isModifyPermissionPending(state, ownProps.namespace, ownProps.repoName, permission);
+  const deleteLoading = isDeletePermissionPending(state, ownProps.namespace, ownProps.repoName, permission);
 
   return {
     loading,
@@ -265,18 +222,10 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    modifyPermission: (
-      permission: Permission,
-      namespace: string,
-      repoName: string
-    ) => {
+    modifyPermission: (permission: Permission, namespace: string, repoName: string) => {
       dispatch(modifyPermission(permission, namespace, repoName));
     },
-    deletePermission: (
-      permission: Permission,
-      namespace: string,
-      repoName: string
-    ) => {
+    deletePermission: (permission: Permission, namespace: string, repoName: string) => {
       dispatch(deletePermission(permission, namespace, repoName));
     }
   };

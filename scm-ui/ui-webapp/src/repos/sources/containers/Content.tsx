@@ -5,12 +5,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { File, Repository } from "@scm-manager/ui-types";
-import {
-  DateFromNow,
-  ErrorNotification,
-  FileSize,
-  Icon
-} from "@scm-manager/ui-components";
+import { DateFromNow, ErrorNotification, FileSize, Icon } from "@scm-manager/ui-components";
 import { getSources } from "../modules/sources";
 import FileButtonAddons from "../components/content/FileButtonAddons";
 import SourcesView from "./SourcesView";
@@ -91,9 +86,7 @@ class Content extends React.Component<Props, State> {
       <RightMarginFileButtonAddons
         file={file}
         historyIsSelected={showHistory}
-        showHistory={(changeShowHistory: boolean) =>
-          this.setShowHistoryState(changeShowHistory)
-        }
+        showHistory={(changeShowHistory: boolean) => this.setShowHistoryState(changeShowHistory)}
       />
     ) : null;
 
@@ -189,12 +182,7 @@ class Content extends React.Component<Props, State> {
       showHistory && file._links.history ? (
         <HistoryView file={file} repository={repository} />
       ) : (
-        <SourcesView
-          revision={revision}
-          file={file}
-          repository={repository}
-          path={path}
-        />
+        <SourcesView revision={revision} file={file} repository={repository} path={path} />
       );
     const moreInformation = this.showMoreInformation();
 

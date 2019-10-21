@@ -1,4 +1,4 @@
-import { Links } from './hal';
+import { Links } from "./hal";
 
 export type Tag = {
   name: string;

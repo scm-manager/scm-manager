@@ -16,12 +16,7 @@ class ChangePermissionNavLink extends React.Component<Props> {
     if (!this.hasPermissionToSetPermission()) {
       return null;
     }
-    return (
-      <NavLink
-        to={permissionsUrl}
-        label={t("singleGroup.menu.setPermissionsNavLink")}
-      />
-    );
+    return <NavLink to={permissionsUrl} label={t("singleGroup.menu.setPermissionsNavLink")} />;
   }
 
   hasPermissionToSetPermission = () => {

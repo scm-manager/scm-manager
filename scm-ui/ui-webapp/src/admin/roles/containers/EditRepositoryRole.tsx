@@ -2,11 +2,7 @@ import React from "react";
 import RepositoryRoleForm from "./RepositoryRoleForm";
 import { connect } from "react-redux";
 import { translate } from "react-i18next";
-import {
-  getModifyRoleFailure,
-  isModifyRolePending,
-  modifyRole
-} from "../modules/roles";
+import { getModifyRoleFailure, isModifyRolePending, modifyRole } from "../modules/roles";
 import { ErrorNotification, Subtitle } from "@scm-manager/ui-components";
 import { RepositoryRole } from "@scm-manager/ui-types";
 import { History } from "history";
@@ -45,10 +41,7 @@ class EditRepositoryRole extends React.Component<Props> {
     return (
       <>
         <Subtitle subtitle={t("repositoryRole.editSubtitle")} />
-        <RepositoryRoleForm
-          role={this.props.role}
-          submitForm={role => this.updateRepositoryRole(role)}
-        />
+        <RepositoryRoleForm role={this.props.role} submitForm={role => this.updateRepositoryRole(role)} />
         <hr />
         <DeleteRepositoryRole role={this.props.role} />
       </>

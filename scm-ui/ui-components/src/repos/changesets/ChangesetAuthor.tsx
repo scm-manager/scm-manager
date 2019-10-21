@@ -27,10 +27,7 @@ class ChangesetAuthor extends React.Component<Props> {
   renderWithMail(name: string, mail: string) {
     const { t } = this.props;
     return (
-      <a
-        href={"mailto:" + mail}
-        title={t("changeset.author.mailto") + " " + mail}
-      >
+      <a href={"mailto:" + mail} title={t("changeset.author.mailto") + " " + mail}>
         {name}
       </a>
     );

@@ -16,7 +16,7 @@ export function withEndingSlash(url: string) {
 
 export function concat(base: string, ...parts: string[]) {
   let url = base;
-  for (let p of parts) {
+  for (const p of parts) {
     url = withEndingSlash(url) + p;
   }
   return url;

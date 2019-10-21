@@ -44,30 +44,15 @@ type Props = {
 class Users extends React.Component<Props> {
   componentDidMount() {
     const { fetchUsersByPage, usersLink, page, location } = this.props;
-    fetchUsersByPage(
-      usersLink,
-      page,
-      urls.getQueryStringFromLocation(location)
-    );
+    fetchUsersByPage(usersLink, page, urls.getQueryStringFromLocation(location));
   }
 
   componentDidUpdate = (prevProps: Props) => {
-    const {
-      loading,
-      list,
-      page,
-      usersLink,
-      location,
-      fetchUsersByPage
-    } = this.props;
+    const { loading, list, page, usersLink, location, fetchUsersByPage } = this.props;
     if (list && page && !loading) {
       const statePage: number = list.page + 1;
       if (page !== statePage || prevProps.location.search !== location.search) {
-        fetchUsersByPage(
-          usersLink,
-          page,
-          urls.getQueryStringFromLocation(location)
-        );
+        fetchUsersByPage(usersLink, page, urls.getQueryStringFromLocation(location));
       }
     }
   };
@@ -75,20 +60,11 @@ class Users extends React.Component<Props> {
   render() {
     const { users, loading, error, canAddUsers, t } = this.props;
     return (
-      <Page
-        title={t("users.title")}
-        subtitle={t("users.subtitle")}
-        loading={loading || !users}
-        error={error}
-      >
+      <Page title={t("users.title")} subtitle={t("users.subtitle")} loading={loading || !users} error={error}>
         {this.renderUserTable()}
         {this.renderCreateButton()}
         <PageActions>
-          <OverviewPageActions
-            showCreateButton={canAddUsers}
-            link="users"
-            label={t("users.createButton")}
-          />
+          <OverviewPageActions showCreateButton={canAddUsers} link="users" label={t("users.createButton")} />
         </PageActions>
       </Page>
     );
@@ -100,11 +76,7 @@ class Users extends React.Component<Props> {
       return (
         <>
           <UserTable users={users} />
-          <LinkPaginator
-            collection={list}
-            page={page}
-            filter={urls.getQueryStringFromLocation(location)}
-          />
+          <LinkPaginator collection={list} page={page} filter={urls.getQueryStringFromLocation(location)} />
         </>
       );
     }
@@ -114,9 +86,7 @@ class Users extends React.Component<Props> {
   renderCreateButton() {
     const { canAddUsers, t } = this.props;
     if (canAddUsers) {
-      return (
-        <CreateButton label={t("users.createButton")} link="/users/create" />
-      );
+      return <CreateButton label={t("users.createButton")} link="/users/create" />;
     }
     return null;
   }

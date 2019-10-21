@@ -53,11 +53,7 @@ it("should group the repositories by their namespace", () => {
   const expected = [
     {
       name: "hitchhiker",
-      repositories: [
-        hitchhikerHeartOfGold,
-        hitchhikerPuzzle42,
-        hitchhikerRestand
-      ]
+      repositories: [hitchhikerHeartOfGold, hitchhikerPuzzle42, hitchhikerRestand]
     },
     {
       name: "slarti",

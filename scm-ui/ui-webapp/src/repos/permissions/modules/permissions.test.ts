@@ -47,16 +47,13 @@ const hitchhiker_puzzle42Permission_user_eins: Permission = {
   groupPermission: false,
   _links: {
     self: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/user_eins"
+      href: "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/user_eins"
     },
     delete: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/user_eins"
+      href: "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/user_eins"
     },
     update: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/user_eins"
+      href: "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/user_eins"
     }
   },
   verbs: []
@@ -68,16 +65,13 @@ const hitchhiker_puzzle42Permission_user_zwei: Permission = {
   groupPermission: true,
   _links: {
     self: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/user_zwei"
+      href: "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/user_zwei"
     },
     delete: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/user_zwei"
+      href: "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/user_zwei"
     },
     update: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/user_zwei"
+      href: "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions/user_zwei"
     }
   },
   verbs: []
@@ -94,8 +88,7 @@ const hitchhiker_puzzle42RepoPermissions = {
   },
   _links: {
     create: {
-      href:
-        "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions"
+      href: "http://localhost:8081/scm/api/rest/v2/repositories/hitchhiker/puzzle42/permissions"
     }
   }
 };
@@ -111,10 +104,7 @@ describe("permission fetch", () => {
   });
 
   it("should successfully fetch permissions to repo hitchhiker/puzzle42", () => {
-    fetchMock.getOnce(
-      REPOS_URL + "/hitchhiker/puzzle42/permissions",
-      hitchhiker_puzzle42RepoPermissions
-    );
+    fetchMock.getOnce(REPOS_URL + "/hitchhiker/puzzle42/permissions", hitchhiker_puzzle42RepoPermissions);
 
     const expectedActions = [
       {
@@ -134,13 +124,7 @@ describe("permission fetch", () => {
 
     const store = mockStore({});
     return store
-      .dispatch(
-        fetchPermissions(
-          URL + "/hitchhiker/puzzle42/permissions",
-          "hitchhiker",
-          "puzzle42"
-        )
-      )
+      .dispatch(fetchPermissions(URL + "/hitchhiker/puzzle42/permissions", "hitchhiker", "puzzle42"))
       .then(() => {
         expect(store.getActions()).toEqual(expectedActions);
       });
@@ -153,13 +137,7 @@ describe("permission fetch", () => {
 
     const store = mockStore({});
     return store
-      .dispatch(
-        fetchPermissions(
-          URL + "/hitchhiker/puzzle42/permissions",
-          "hitchhiker",
-          "puzzle42"
-        )
-      )
+      .dispatch(fetchPermissions(URL + "/hitchhiker/puzzle42/permissions", "hitchhiker", "puzzle42"))
       .then(() => {
         const actions = store.getActions();
         expect(actions[0].type).toEqual(FETCH_PERMISSIONS_PENDING);
@@ -169,38 +147,30 @@ describe("permission fetch", () => {
   });
 
   it("should successfully modify user_eins permission", () => {
-    fetchMock.putOnce(
-      hitchhiker_puzzle42Permission_user_eins._links.update.href,
-      {
-        status: 204
-      }
-    );
+    fetchMock.putOnce(hitchhiker_puzzle42Permission_user_eins._links.update.href, {
+      status: 204
+    });
 
-    let editedPermission = {
+    const editedPermission = {
       ...hitchhiker_puzzle42Permission_user_eins,
       type: "OWNER"
     };
 
     const store = mockStore({});
 
-    return store
-      .dispatch(modifyPermission(editedPermission, "hitchhiker", "puzzle42"))
-      .then(() => {
-        const actions = store.getActions();
-        expect(actions[0].type).toEqual(MODIFY_PERMISSION_PENDING);
-        expect(actions[1].type).toEqual(MODIFY_PERMISSION_SUCCESS);
-      });
+    return store.dispatch(modifyPermission(editedPermission, "hitchhiker", "puzzle42")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(MODIFY_PERMISSION_PENDING);
+      expect(actions[1].type).toEqual(MODIFY_PERMISSION_SUCCESS);
+    });
   });
 
   it("should successfully modify user_eins permission and call the callback", () => {
-    fetchMock.putOnce(
-      hitchhiker_puzzle42Permission_user_eins._links.update.href,
-      {
-        status: 204
-      }
-    );
+    fetchMock.putOnce(hitchhiker_puzzle42Permission_user_eins._links.update.href, {
+      status: 204
+    });
 
-    let editedPermission = {
+    const editedPermission = {
       ...hitchhiker_puzzle42Permission_user_eins,
       type: "OWNER"
     };
@@ -212,41 +182,32 @@ describe("permission fetch", () => {
       called = true;
     };
 
-    return store
-      .dispatch(
-        modifyPermission(editedPermission, "hitchhiker", "puzzle42", callback)
-      )
-      .then(() => {
-        const actions = store.getActions();
-        expect(actions[0].type).toEqual(MODIFY_PERMISSION_PENDING);
-        expect(actions[1].type).toEqual(MODIFY_PERMISSION_SUCCESS);
-        expect(called).toBe(true);
-      });
+    return store.dispatch(modifyPermission(editedPermission, "hitchhiker", "puzzle42", callback)).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(MODIFY_PERMISSION_PENDING);
+      expect(actions[1].type).toEqual(MODIFY_PERMISSION_SUCCESS);
+      expect(called).toBe(true);
+    });
   });
 
   it("should fail modifying on HTTP 500", () => {
-    fetchMock.putOnce(
-      hitchhiker_puzzle42Permission_user_eins._links.update.href,
-      {
-        status: 500
-      }
-    );
+    fetchMock.putOnce(hitchhiker_puzzle42Permission_user_eins._links.update.href, {
+      status: 500
+    });
 
-    let editedPermission = {
+    const editedPermission = {
       ...hitchhiker_puzzle42Permission_user_eins,
       type: "OWNER"
     };
 
     const store = mockStore({});
 
-    return store
-      .dispatch(modifyPermission(editedPermission, "hitchhiker", "puzzle42"))
-      .then(() => {
-        const actions = store.getActions();
-        expect(actions[0].type).toEqual(MODIFY_PERMISSION_PENDING);
-        expect(actions[1].type).toEqual(MODIFY_PERMISSION_FAILURE);
-        expect(actions[1].payload).toBeDefined();
-      });
+    return store.dispatch(modifyPermission(editedPermission, "hitchhiker", "puzzle42")).then(() => {
+      const actions = store.getActions();
+      expect(actions[0].type).toEqual(MODIFY_PERMISSION_PENDING);
+      expect(actions[1].type).toEqual(MODIFY_PERMISSION_FAILURE);
+      expect(actions[1].payload).toBeDefined();
+    });
   });
 
   it("should add a permission successfully", () => {
@@ -338,40 +299,26 @@ describe("permission fetch", () => {
       });
   });
   it("should delete successfully permission user_eins", () => {
-    fetchMock.deleteOnce(
-      hitchhiker_puzzle42Permission_user_eins._links.delete.href,
-      {
-        status: 204
-      }
-    );
+    fetchMock.deleteOnce(hitchhiker_puzzle42Permission_user_eins._links.delete.href, {
+      status: 204
+    });
 
     const store = mockStore({});
     return store
-      .dispatch(
-        deletePermission(
-          hitchhiker_puzzle42Permission_user_eins,
-          "hitchhiker",
-          "puzzle42"
-        )
-      )
+      .dispatch(deletePermission(hitchhiker_puzzle42Permission_user_eins, "hitchhiker", "puzzle42"))
       .then(() => {
         const actions = store.getActions();
         expect(actions.length).toBe(2);
         expect(actions[0].type).toEqual(DELETE_PERMISSION_PENDING);
-        expect(actions[0].payload).toBe(
-          hitchhiker_puzzle42Permission_user_eins
-        );
+        expect(actions[0].payload).toBe(hitchhiker_puzzle42Permission_user_eins);
         expect(actions[1].type).toEqual(DELETE_PERMISSION_SUCCESS);
       });
   });
 
   it("should call the callback, after successful delete", () => {
-    fetchMock.deleteOnce(
-      hitchhiker_puzzle42Permission_user_eins._links.delete.href,
-      {
-        status: 204
-      }
-    );
+    fetchMock.deleteOnce(hitchhiker_puzzle42Permission_user_eins._links.delete.href, {
+      status: 204
+    });
 
     let called = false;
     const callMe = () => {
@@ -380,42 +327,24 @@ describe("permission fetch", () => {
 
     const store = mockStore({});
     return store
-      .dispatch(
-        deletePermission(
-          hitchhiker_puzzle42Permission_user_eins,
-          "hitchhiker",
-          "puzzle42",
-          callMe
-        )
-      )
+      .dispatch(deletePermission(hitchhiker_puzzle42Permission_user_eins, "hitchhiker", "puzzle42", callMe))
       .then(() => {
         expect(called).toBeTruthy();
       });
   });
 
   it("should fail to delete permission", () => {
-    fetchMock.deleteOnce(
-      hitchhiker_puzzle42Permission_user_eins._links.delete.href,
-      {
-        status: 500
-      }
-    );
+    fetchMock.deleteOnce(hitchhiker_puzzle42Permission_user_eins._links.delete.href, {
+      status: 500
+    });
 
     const store = mockStore({});
     return store
-      .dispatch(
-        deletePermission(
-          hitchhiker_puzzle42Permission_user_eins,
-          "hitchhiker",
-          "puzzle42"
-        )
-      )
+      .dispatch(deletePermission(hitchhiker_puzzle42Permission_user_eins, "hitchhiker", "puzzle42"))
       .then(() => {
         const actions = store.getActions();
         expect(actions[0].type).toEqual(DELETE_PERMISSION_PENDING);
-        expect(actions[0].payload).toBe(
-          hitchhiker_puzzle42Permission_user_eins
-        );
+        expect(actions[0].payload).toBe(hitchhiker_puzzle42Permission_user_eins);
         expect(actions[1].type).toEqual(DELETE_PERMISSION_FAILURE);
         expect(actions[1].payload).toBeDefined();
       });
@@ -446,18 +375,9 @@ describe("permissions reducer", () => {
   });
 
   it("should store the permissions on FETCH_PERMISSION_SUCCESS", () => {
-    const newState = reducer(
-      {},
-      fetchPermissionsSuccess(
-        hitchhiker_puzzle42RepoPermissions,
-        "hitchhiker",
-        "puzzle42"
-      )
-    );
+    const newState = reducer({}, fetchPermissionsSuccess(hitchhiker_puzzle42RepoPermissions, "hitchhiker", "puzzle42"));
 
-    expect(newState["hitchhiker/puzzle42"].entries).toBe(
-      hitchhiker_puzzle42Permissions
-    );
+    expect(newState["hitchhiker/puzzle42"].entries).toBe(hitchhiker_puzzle42Permissions);
   });
 
   it("should update permission", () => {
@@ -466,31 +386,23 @@ describe("permissions reducer", () => {
         entries: [hitchhiker_puzzle42Permission_user_eins]
       }
     };
-    let permissionEdited = {
+    const permissionEdited = {
       ...hitchhiker_puzzle42Permission_user_eins,
       type: "OWNER"
     };
-    let expectedState = {
+    const expectedState = {
       "hitchhiker/puzzle42": {
         entries: [permissionEdited]
       }
     };
-    const newState = reducer(
-      oldState,
-      modifyPermissionSuccess(permissionEdited, "hitchhiker", "puzzle42")
-    );
-    expect(newState["hitchhiker/puzzle42"]).toEqual(
-      expectedState["hitchhiker/puzzle42"]
-    );
+    const newState = reducer(oldState, modifyPermissionSuccess(permissionEdited, "hitchhiker", "puzzle42"));
+    expect(newState["hitchhiker/puzzle42"]).toEqual(expectedState["hitchhiker/puzzle42"]);
   });
 
   it("should remove permission from state when delete succeeds", () => {
     const state = {
       "hitchhiker/puzzle42": {
-        entries: [
-          hitchhiker_puzzle42Permission_user_eins,
-          hitchhiker_puzzle42Permission_user_zwei
-        ]
+        entries: [hitchhiker_puzzle42Permission_user_eins, hitchhiker_puzzle42Permission_user_zwei]
       }
     };
 
@@ -502,15 +414,9 @@ describe("permissions reducer", () => {
 
     const newState = reducer(
       state,
-      deletePermissionSuccess(
-        hitchhiker_puzzle42Permission_user_eins,
-        "hitchhiker",
-        "puzzle42"
-      )
+      deletePermissionSuccess(hitchhiker_puzzle42Permission_user_eins, "hitchhiker", "puzzle42")
     );
-    expect(newState["hitchhiker/puzzle42"]).toEqual(
-      expectedState["hitchhiker/puzzle42"]
-    );
+    expect(newState["hitchhiker/puzzle42"]).toEqual(expectedState["hitchhiker/puzzle42"]);
   });
 
   it("should add permission", () => {
@@ -520,25 +426,16 @@ describe("permissions reducer", () => {
         entries: [hitchhiker_puzzle42Permission_user_eins]
       }
     };
-    let expectedState = {
+    const expectedState = {
       "hitchhiker/puzzle42": {
-        entries: [
-          hitchhiker_puzzle42Permission_user_eins,
-          hitchhiker_puzzle42Permission_user_zwei
-        ]
+        entries: [hitchhiker_puzzle42Permission_user_eins, hitchhiker_puzzle42Permission_user_zwei]
       }
     };
     const newState = reducer(
       oldState,
-      createPermissionSuccess(
-        hitchhiker_puzzle42Permission_user_zwei,
-        "hitchhiker",
-        "puzzle42"
-      )
+      createPermissionSuccess(hitchhiker_puzzle42Permission_user_zwei, "hitchhiker", "puzzle42")
     );
-    expect(newState["hitchhiker/puzzle42"]).toEqual(
-      expectedState["hitchhiker/puzzle42"]
-    );
+    expect(newState["hitchhiker/puzzle42"]).toEqual(expectedState["hitchhiker/puzzle42"]);
   });
 });
 
@@ -554,11 +451,7 @@ describe("permissions selectors", () => {
       }
     };
 
-    const repoPermissions = getPermissionsOfRepo(
-      state,
-      "hitchhiker",
-      "puzzle42"
-    );
+    const repoPermissions = getPermissionsOfRepo(state, "hitchhiker", "puzzle42");
     expect(repoPermissions).toEqual(hitchhiker_puzzle42Permissions);
   });
 
@@ -568,15 +461,11 @@ describe("permissions selectors", () => {
         [FETCH_PERMISSIONS + "/hitchhiker/puzzle42"]: true
       }
     };
-    expect(isFetchPermissionsPending(state, "hitchhiker", "puzzle42")).toEqual(
-      true
-    );
+    expect(isFetchPermissionsPending(state, "hitchhiker", "puzzle42")).toEqual(true);
   });
 
   it("should return false, when fetch permissions is not pending", () => {
-    expect(isFetchPermissionsPending({}, "hitchiker", "puzzle42")).toEqual(
-      false
-    );
+    expect(isFetchPermissionsPending({}, "hitchiker", "puzzle42")).toEqual(false);
   });
 
   it("should return error when fetch permissions did fail", () => {
@@ -585,15 +474,11 @@ describe("permissions selectors", () => {
         [FETCH_PERMISSIONS + "/hitchhiker/puzzle42"]: error
       }
     };
-    expect(getFetchPermissionsFailure(state, "hitchhiker", "puzzle42")).toEqual(
-      error
-    );
+    expect(getFetchPermissionsFailure(state, "hitchhiker", "puzzle42")).toEqual(error);
   });
 
   it("should return undefined when fetch permissions did not fail", () => {
-    expect(getFetchPermissionsFailure({}, "hitchhiker", "puzzle42")).toBe(
-      undefined
-    );
+    expect(getFetchPermissionsFailure({}, "hitchhiker", "puzzle42")).toBe(undefined);
   });
 
   it("should return true, when modify permission is pending", () => {
@@ -602,25 +487,15 @@ describe("permissions selectors", () => {
         [MODIFY_PERMISSION + "/hitchhiker/puzzle42/user_eins"]: true
       }
     };
-    expect(
-      isModifyPermissionPending(
-        state,
-        "hitchhiker",
-        "puzzle42",
-        hitchhiker_puzzle42Permission_user_eins
-      )
-    ).toEqual(true);
+    expect(isModifyPermissionPending(state, "hitchhiker", "puzzle42", hitchhiker_puzzle42Permission_user_eins)).toEqual(
+      true
+    );
   });
 
   it("should return false, when modify permission is not pending", () => {
-    expect(
-      isModifyPermissionPending(
-        {},
-        "hitchiker",
-        "puzzle42",
-        hitchhiker_puzzle42Permission_user_eins
-      )
-    ).toEqual(false);
+    expect(isModifyPermissionPending({}, "hitchiker", "puzzle42", hitchhiker_puzzle42Permission_user_eins)).toEqual(
+      false
+    );
   });
 
   it("should return error when modify permission did fail", () => {
@@ -630,24 +505,14 @@ describe("permissions selectors", () => {
       }
     };
     expect(
-      getModifyPermissionFailure(
-        state,
-        "hitchhiker",
-        "puzzle42",
-        hitchhiker_puzzle42Permission_user_eins
-      )
+      getModifyPermissionFailure(state, "hitchhiker", "puzzle42", hitchhiker_puzzle42Permission_user_eins)
     ).toEqual(error);
   });
 
   it("should return undefined when modify permission did not fail", () => {
-    expect(
-      getModifyPermissionFailure(
-        {},
-        "hitchhiker",
-        "puzzle42",
-        hitchhiker_puzzle42Permission_user_eins
-      )
-    ).toBe(undefined);
+    expect(getModifyPermissionFailure({}, "hitchhiker", "puzzle42", hitchhiker_puzzle42Permission_user_eins)).toBe(
+      undefined
+    );
   });
 
   it("should return error when one of the modify permissions did fail", () => {
@@ -661,15 +526,11 @@ describe("permissions selectors", () => {
         [MODIFY_PERMISSION + "/hitchhiker/puzzle42/user_eins"]: error
       }
     };
-    expect(
-      getModifyPermissionsFailure(state, "hitchhiker", "puzzle42")
-    ).toEqual(error);
+    expect(getModifyPermissionsFailure(state, "hitchhiker", "puzzle42")).toEqual(error);
   });
 
   it("should return undefined when no modify permissions did not fail", () => {
-    expect(getModifyPermissionsFailure({}, "hitchhiker", "puzzle42")).toBe(
-      undefined
-    );
+    expect(getModifyPermissionsFailure({}, "hitchhiker", "puzzle42")).toBe(undefined);
   });
 
   it("should return true, when createPermission is true", () => {
@@ -700,25 +561,15 @@ describe("permissions selectors", () => {
         [DELETE_PERMISSION + "/hitchhiker/puzzle42/user_eins"]: true
       }
     };
-    expect(
-      isDeletePermissionPending(
-        state,
-        "hitchhiker",
-        "puzzle42",
-        hitchhiker_puzzle42Permission_user_eins
-      )
-    ).toEqual(true);
+    expect(isDeletePermissionPending(state, "hitchhiker", "puzzle42", hitchhiker_puzzle42Permission_user_eins)).toEqual(
+      true
+    );
   });
 
   it("should return false, when delete permission is not pending", () => {
-    expect(
-      isDeletePermissionPending(
-        {},
-        "hitchiker",
-        "puzzle42",
-        hitchhiker_puzzle42Permission_user_eins
-      )
-    ).toEqual(false);
+    expect(isDeletePermissionPending({}, "hitchiker", "puzzle42", hitchhiker_puzzle42Permission_user_eins)).toEqual(
+      false
+    );
   });
 
   it("should return error when delete permission did fail", () => {
@@ -728,24 +579,14 @@ describe("permissions selectors", () => {
       }
     };
     expect(
-      getDeletePermissionFailure(
-        state,
-        "hitchhiker",
-        "puzzle42",
-        hitchhiker_puzzle42Permission_user_eins
-      )
+      getDeletePermissionFailure(state, "hitchhiker", "puzzle42", hitchhiker_puzzle42Permission_user_eins)
     ).toEqual(error);
   });
 
   it("should return undefined when delete permission did not fail", () => {
-    expect(
-      getDeletePermissionFailure(
-        {},
-        "hitchhiker",
-        "puzzle42",
-        hitchhiker_puzzle42Permission_user_eins
-      )
-    ).toBe(undefined);
+    expect(getDeletePermissionFailure({}, "hitchhiker", "puzzle42", hitchhiker_puzzle42Permission_user_eins)).toBe(
+      undefined
+    );
   });
 
   it("should return error when one of the delete permissions did fail", () => {
@@ -759,15 +600,11 @@ describe("permissions selectors", () => {
         [DELETE_PERMISSION + "/hitchhiker/puzzle42/user_eins"]: error
       }
     };
-    expect(
-      getDeletePermissionsFailure(state, "hitchhiker", "puzzle42")
-    ).toEqual(error);
+    expect(getDeletePermissionsFailure(state, "hitchhiker", "puzzle42")).toEqual(error);
   });
 
   it("should return undefined when no delete permissions did not fail", () => {
-    expect(getDeletePermissionsFailure({}, "hitchhiker", "puzzle42")).toBe(
-      undefined
-    );
+    expect(getDeletePermissionsFailure({}, "hitchhiker", "puzzle42")).toBe(undefined);
   });
 
   it("should return true, when create permission is pending", () => {
@@ -776,15 +613,11 @@ describe("permissions selectors", () => {
         [CREATE_PERMISSION + "/hitchhiker/puzzle42"]: true
       }
     };
-    expect(isCreatePermissionPending(state, "hitchhiker", "puzzle42")).toEqual(
-      true
-    );
+    expect(isCreatePermissionPending(state, "hitchhiker", "puzzle42")).toEqual(true);
   });
 
   it("should return false, when create permissions is not pending", () => {
-    expect(isCreatePermissionPending({}, "hitchiker", "puzzle42")).toEqual(
-      false
-    );
+    expect(isCreatePermissionPending({}, "hitchiker", "puzzle42")).toEqual(false);
   });
 
   it("should return error when create permissions did fail", () => {
@@ -793,14 +626,10 @@ describe("permissions selectors", () => {
         [CREATE_PERMISSION + "/hitchhiker/puzzle42"]: error
       }
     };
-    expect(getCreatePermissionFailure(state, "hitchhiker", "puzzle42")).toEqual(
-      error
-    );
+    expect(getCreatePermissionFailure(state, "hitchhiker", "puzzle42")).toEqual(error);
   });
 
   it("should return undefined when create permissions did not fail", () => {
-    expect(getCreatePermissionFailure({}, "hitchhiker", "puzzle42")).toBe(
-      undefined
-    );
+    expect(getCreatePermissionFailure({}, "hitchhiker", "puzzle42")).toBe(undefined);
   });
 });

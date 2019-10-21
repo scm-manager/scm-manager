@@ -204,7 +204,7 @@ export default function reducer(
 export function getPluginCollection(state: object) {
   if (state.plugins && state.plugins.list && state.plugins.byNames) {
     const plugins = [];
-    for (let pluginName of state.plugins.list._embedded.plugins) {
+    for (const pluginName of state.plugins.list._embedded.plugins) {
       plugins.push(state.plugins.byNames[pluginName]);
     }
     return {

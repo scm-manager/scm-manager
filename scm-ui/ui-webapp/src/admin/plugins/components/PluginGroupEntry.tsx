@@ -12,9 +12,7 @@ class PluginGroupEntry extends React.Component<Props> {
   render() {
     const { group, refresh } = this.props;
     const entries = group.plugins.map(plugin => {
-      return (
-        <PluginEntry plugin={plugin} key={plugin.name} refresh={refresh} />
-      );
+      return <PluginEntry plugin={plugin} key={plugin.name} refresh={refresh} />;
     });
     return <CardColumnGroup name={group.name} elements={entries} />;
   }

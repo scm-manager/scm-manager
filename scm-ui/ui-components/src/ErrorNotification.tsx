@@ -18,18 +18,14 @@ class ErrorNotification extends React.Component<Props> {
       } else if (error instanceof UnauthorizedError) {
         return (
           <Notification type="danger">
-            <strong>{t("errorNotification.prefix")}:</strong>{" "}
-            {t("errorNotification.timeout")}{" "}
-            <a href="javascript:window.location.reload(true)">
-              {t("errorNotification.loginLink")}
-            </a>
+            <strong>{t("errorNotification.prefix")}:</strong> {t("errorNotification.timeout")}{" "}
+            <a href="javascript:window.location.reload(true)">{t("errorNotification.loginLink")}</a>
           </Notification>
         );
       } else if (error instanceof ForbiddenError) {
         return (
           <Notification type="danger">
-            <strong>{t("errorNotification.prefix")}:</strong>{" "}
-            {t("errorNotification.forbidden")}
+            <strong>{t("errorNotification.prefix")}:</strong> {t("errorNotification.forbidden")}
           </Notification>
         );
       } else {

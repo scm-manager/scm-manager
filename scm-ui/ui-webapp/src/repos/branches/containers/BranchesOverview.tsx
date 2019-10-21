@@ -12,13 +12,7 @@ import { Branch, Repository } from "@scm-manager/ui-types";
 import { compose } from "redux";
 import { translate } from "react-i18next";
 import { withRouter } from "react-router-dom";
-import {
-  CreateButton,
-  ErrorNotification,
-  Loading,
-  Notification,
-  Subtitle
-} from "@scm-manager/ui-components";
+import { CreateButton, ErrorNotification, Loading, Notification, Subtitle } from "@scm-manager/ui-components";
 import BranchTable from "../components/BranchTable";
 
 type Props = {
@@ -70,22 +64,13 @@ class BranchesOverview extends React.Component<Props> {
       orderBranches(branches);
       return <BranchTable baseUrl={baseUrl} branches={branches} />;
     }
-    return (
-      <Notification type="info">
-        {t("branches.overview.noBranches")}
-      </Notification>
-    );
+    return <Notification type="info">{t("branches.overview.noBranches")}</Notification>;
   }
 
   renderCreateButton() {
     const { showCreateButton, t } = this.props;
     if (showCreateButton) {
-      return (
-        <CreateButton
-          label={t("branches.overview.createButton")}
-          link="./create"
-        />
-      );
+      return <CreateButton label={t("branches.overview.createButton")} link="./create" />;
     }
     return null;
   }

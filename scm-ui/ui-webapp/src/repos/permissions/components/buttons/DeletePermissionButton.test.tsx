@@ -16,12 +16,7 @@ describe("DeletePermissionButton", () => {
       _links: {}
     };
 
-    const navLink = shallow(
-      <DeletePermissionButton
-        permission={permission}
-        deletePermission={() => {}}
-      />
-    );
+    const navLink = shallow(<DeletePermissionButton permission={permission} deletePermission={() => {}} />);
     expect(navLink.text()).toBe("");
   });
 
@@ -34,12 +29,7 @@ describe("DeletePermissionButton", () => {
       }
     };
 
-    const deleteIcon = mount(
-      <DeletePermissionButton
-        permission={permission}
-        deletePermission={() => {}}
-      />
-    );
+    const deleteIcon = mount(<DeletePermissionButton permission={permission} deletePermission={() => {}} />);
     expect(deleteIcon.html()).not.toBe("");
   });
 
@@ -52,12 +42,7 @@ describe("DeletePermissionButton", () => {
       }
     };
 
-    const button = mount(
-      <DeletePermissionButton
-        permission={permission}
-        deletePermission={() => {}}
-      />
-    );
+    const button = mount(<DeletePermissionButton permission={permission} deletePermission={() => {}} />);
     button.find(".fa-trash").simulate("click");
 
     expect(confirmAlert.mock.calls.length).toBe(1);
@@ -78,11 +63,7 @@ describe("DeletePermissionButton", () => {
     }
 
     const button = mount(
-      <DeletePermissionButton
-        permission={permission}
-        confirmDialog={false}
-        deletePermission={capture}
-      />
+      <DeletePermissionButton permission={permission} confirmDialog={false} deletePermission={capture} />
     );
     button.find(".fa-trash").simulate("click");
 

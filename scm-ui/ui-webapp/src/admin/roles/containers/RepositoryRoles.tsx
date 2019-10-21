@@ -4,15 +4,7 @@ import { withRouter } from "react-router-dom";
 import { translate } from "react-i18next";
 import { History } from "history";
 import { RepositoryRole, PagedCollection } from "@scm-manager/ui-types";
-import {
-  Title,
-  Subtitle,
-  Loading,
-  Notification,
-  LinkPaginator,
-  urls,
-  CreateButton
-} from "@scm-manager/ui-components";
+import { Title, Subtitle, Loading, Notification, LinkPaginator, urls, CreateButton } from "@scm-manager/ui-components";
 import {
   fetchRolesByPage,
   getRolesFromState,
@@ -50,14 +42,7 @@ class RepositoryRoles extends React.Component<Props> {
   }
 
   componentDidUpdate = (prevProps: Props) => {
-    const {
-      loading,
-      list,
-      page,
-      rolesLink,
-      location,
-      fetchRolesByPage
-    } = this.props;
+    const { loading, list, page, rolesLink, location, fetchRolesByPage } = this.props;
     if (list && page && !loading) {
       const statePage: number = list.page + 1;
       if (page !== statePage || prevProps.location.search !== location.search) {
@@ -93,22 +78,13 @@ class RepositoryRoles extends React.Component<Props> {
         </>
       );
     }
-    return (
-      <Notification type="info">
-        {t("repositoryRole.overview.noPermissionRoles")}
-      </Notification>
-    );
+    return <Notification type="info">{t("repositoryRole.overview.noPermissionRoles")}</Notification>;
   }
 
   renderCreateButton() {
     const { canAddRoles, baseUrl, t } = this.props;
     if (canAddRoles) {
-      return (
-        <CreateButton
-          label={t("repositoryRole.overview.createButton")}
-          link={`${baseUrl}/create`}
-        />
-      );
+      return <CreateButton label={t("repositoryRole.overview.createButton")} link={`${baseUrl}/create`} />;
     }
     return null;
   }

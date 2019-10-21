@@ -1,9 +1,4 @@
-import {
-  BackendError,
-  UnauthorizedError,
-  createBackendError,
-  NotFoundError
-} from "./errors";
+import { BackendError, UnauthorizedError, createBackendError, NotFoundError } from "./errors";
 
 describe("test createBackendError", () => {
   const earthNotFoundError = {

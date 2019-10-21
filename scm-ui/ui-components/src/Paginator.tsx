@@ -30,11 +30,7 @@ class Paginator extends React.Component<Props> {
 
   renderPreviousButton() {
     const { t } = this.props;
-    return this.renderButton(
-      "pagination-previous",
-      t("paginator.previous"),
-      "prev"
-    );
+    return this.renderButton("pagination-previous", t("paginator.previous"), "prev");
   }
 
   renderNextButton() {
@@ -67,13 +63,7 @@ class Paginator extends React.Component<Props> {
   }
 
   currentPage(page: number) {
-    return (
-      <Button
-        className="pagination-link is-current"
-        label={"" + page}
-        disabled={true}
-      />
-    );
+    return <Button className="pagination-link is-current" label={"" + page} disabled={true} />;
   }
 
   pageLinks() {

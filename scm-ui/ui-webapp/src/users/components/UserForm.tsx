@@ -67,11 +67,7 @@ class UserForm extends React.Component<Props, State> {
   createUserComponentsAreInvalid = () => {
     const user = this.state.user;
     if (!this.props.user) {
-      return (
-        this.state.nameValidationError ||
-        this.isFalsy(user.name) ||
-        !this.state.passwordValid
-      );
+      return this.state.nameValidationError || this.isFalsy(user.name) || !this.state.passwordValid;
     } else {
       return false;
     }
@@ -131,9 +127,7 @@ class UserForm extends React.Component<Props, State> {
         </div>
       );
 
-      passwordChangeField = (
-        <PasswordConfirmation passwordChanged={this.handlePasswordChange} />
-      );
+      passwordChangeField = <PasswordConfirmation passwordChanged={this.handlePasswordChange} />;
     } else {
       // edit existing user
       subtitle = <Subtitle subtitle={t("userForm.subtitle")} />;
@@ -178,11 +172,7 @@ class UserForm extends React.Component<Props, State> {
           </div>
           <div className="columns">
             <div className="column">
-              <SubmitButton
-                disabled={!this.isValid()}
-                loading={loading}
-                label={t("userForm.button")}
-              />
+              <SubmitButton disabled={!this.isValid()} loading={loading} label={t("userForm.button")} />
             </div>
           </div>
         </form>
@@ -202,9 +192,7 @@ class UserForm extends React.Component<Props, State> {
 
   handleDisplayNameChange = (displayName: string) => {
     this.setState({
-      displayNameValidationError: !userValidator.isDisplayNameValid(
-        displayName
-      ),
+      displayNameValidationError: !userValidator.isDisplayNameValid(displayName),
       user: {
         ...this.state.user,
         displayName

@@ -66,15 +66,7 @@ const role1 = {
 };
 const role2 = {
   name: "WRITE",
-  verbs: [
-    "read",
-    "pull",
-    "push",
-    "createPullRequest",
-    "readPullRequest",
-    "commentPullRequest",
-    "mergePullRequest"
-  ],
+  verbs: ["read", "pull", "push", "createPullRequest", "readPullRequest", "commentPullRequest", "mergePullRequest"],
   system: true,
   _links: {
     self: {
@@ -88,16 +80,13 @@ const responseBody = {
   pageTotal: 1,
   _links: {
     self: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositoryRoles/?page=0&pageSize=10"
+      href: "http://localhost:8081/scm/api/v2/repositoryRoles/?page=0&pageSize=10"
     },
     first: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositoryRoles/?page=0&pageSize=10"
+      href: "http://localhost:8081/scm/api/v2/repositoryRoles/?page=0&pageSize=10"
     },
     last: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositoryRoles/?page=0&pageSize=10"
+      href: "http://localhost:8081/scm/api/v2/repositoryRoles/?page=0&pageSize=10"
     },
     create: {
       href: "http://localhost:8081/scm/api/v2/repositoryRoles/"
@@ -117,8 +106,7 @@ const response = {
 
 const URL = "repositoryRoles";
 const ROLES_URL = "/api/v2/repositoryRoles";
-const ROLE1_URL =
-  "http://localhost:8081/scm/api/v2/repositoryRoles/specialrole";
+const ROLE1_URL = "http://localhost:8081/scm/api/v2/repositoryRoles/specialrole";
 
 const error = new Error("FEHLER!");
 
