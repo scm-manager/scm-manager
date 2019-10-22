@@ -7,7 +7,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilderFactory;
-import sonia.scm.security.Permission;
 import sonia.scm.security.Scope;
 
 import javax.inject.Inject;
