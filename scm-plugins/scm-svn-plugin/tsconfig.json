@@ -1,0 +1,6 @@
+{
+  "extends": "@scm-manager/tsconfig",
+  "include": [
+    "./src/main/js"
+  ]
+}

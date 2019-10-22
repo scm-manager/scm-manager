@@ -3,10 +3,11 @@
   "private": true,
   "version": "2.0.0-SNAPSHOT",
   "license": "BSD-3-Clause",
-  "main": "src/main/js/index.js",
+  "main": "./src/main/js/index.tsx",
   "scripts": {
     "build": "ui-scripts plugin",
-    "watch": "ui-scripts plugin-watch"
+    "watch": "ui-scripts plugin-watch",
+    "typecheck": "tsc"
   },
   "babel": {
     "presets": [

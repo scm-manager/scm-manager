@@ -24,7 +24,7 @@ module.exports = {
     path.join(root, "src")
   ],
   transform: {
-    "^.+\\.js$": "@scm-manager/jest-preset"
+    "^.+\\.(ts|tsx|js)$": "@scm-manager/jest-preset"
   },
   transformIgnorePatterns: [
     "node_modules/(?!(@scm-manager)/)"
@@ -39,7 +39,7 @@ module.exports = {
   setupFiles: [path.resolve(__dirname, "src", "setup.js")],
   collectCoverage: true,
   collectCoverageFrom: [
-    "src/**/*.{js,jsx}"
+    "src/**/*.{ts,tsx,js,jsx}"
   ],
   coverageDirectory: path.join(reportDirectory, "coverage-" + name),
   coveragePathIgnorePatterns: [
