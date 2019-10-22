@@ -2,6 +2,8 @@ package sonia.scm.web.lfs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
 import sonia.scm.protocolcommand.CommandInterpreter;
@@ -22,6 +24,8 @@ import static java.lang.String.format;
 @Extension
 public class LFSAuthCommand implements CommandInterpreterFactory {
 
+  private static final Logger LOG = LoggerFactory.getLogger(LFSAuthCommand.class);
+
   private static final String LFS_INFO_URL_PATTERN = "%s/repo/%s/%s.git/info/lfs/";
 
   private final LfsAccessTokenFactory tokenFactory;
@@ -41,6 +45,7 @@ public class LFSAuthCommand implements CommandInterpreterFactory {
   @Override
   public Optional<CommandInterpreter> canHandle(String command) {
     if (command.startsWith("git-lfs-authenticate")) {
+      LOG.trace("create command for input: {}", command);
       return Optional.of(new LfsAuthCommandInterpreter(command));
     } else {
       return Optional.empty();
@@ -65,6 +70,8 @@ public class LFSAuthCommand implements CommandInterpreterFactory {
     public ScmCommandProtocol getProtocolHandler() {
       return (context, repositoryContext) -> {
         ExpiringAction response = createResponseObject(repositoryContext);
+        // we buffer the response and write it with a single write,
+        // because otherwise the ssh connection is not closed
         String buffer = serializeResponse(response);
         context.getOutputStream().write(buffer.getBytes(Charsets.UTF_8));
       };

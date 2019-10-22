@@ -2,13 +2,12 @@ package sonia.scm.web.lfs;
 
 import org.eclipse.jgit.lfs.lib.AnyLongObjectId;
 import org.eclipse.jgit.lfs.server.LargeFileRepository;
-import org.eclipse.jgit.lfs.server.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Repository;
 import sonia.scm.security.AccessToken;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
-
-import java.io.IOException;
 
 /**
  * This LargeFileRepository is used for jGit-Servlet implementation. Under the jgit LFS Servlet hood, the
@@ -18,6 +17,8 @@ import java.io.IOException;
  * Created by omilke on 03.05.2017.
  */
 public class ScmBlobLfsRepository implements LargeFileRepository {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ScmBlobLfsRepository.class);
 
   private final BlobStore blobStore;
   private final LfsAccessTokenFactory tokenFactory;
@@ -54,6 +55,7 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
   @Override
   public ExpiringAction getDownloadAction(AnyLongObjectId id) {
     if (accessToken == null) {
+      LOG.trace("create access token to download lfs object {} from repository {}", id, repository.getNamespaceAndName());
       accessToken = tokenFactory.createReadAccessToken(repository);
     }
     return getAction(id, accessToken);
@@ -62,6 +64,7 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
   @Override
   public ExpiringAction getUploadAction(AnyLongObjectId id, long size) {
     if (accessToken == null) {
+      LOG.trace("create access token to upload lfs object {} to repository {}", id, repository.getNamespaceAndName());
       accessToken = tokenFactory.createWriteAccessToken(repository);
     }
     return getAction(id, accessToken);
