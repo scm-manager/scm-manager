@@ -18,19 +18,42 @@ import * as UIExtensions from "@scm-manager/ui-extensions";
 import * as UIComponents from "@scm-manager/ui-components";
 import { urls } from "@scm-manager/ui-components";
 
-// TODO add headers "Cache": "no-cache", "X-Requested-With": "XMLHttpRequest"
+type PluginModule = {
+  name: string;
+  address: string;
+};
+
+const BundleLoader = {
+  name: "bundle-loader",
+  fetch: (plugin: PluginModule) => {
+    return fetch(plugin.address, {
+      credentials: "same-origin",
+      headers: {
+        Cache: "no-cache",
+        // identify the request as ajax request
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    }).then(response => {
+      return response.text();
+    });
+  }
+};
+
+SystemJS.registry.set(BundleLoader.name, SystemJS.newModule(BundleLoader));
 
 SystemJS.config({
   baseURL: urls.withContextPath("/assets"),
   meta: {
     "/*": {
+      // @ts-ignore typing missing, but seems required
       esModule: true,
-      authorization: true
+      authorization: true,
+      loader: BundleLoader.name
     }
   }
 });
 
-const expose = (name, cmp, defaultCmp) => {
+const expose = (name: string, cmp: any, defaultCmp?: any) => {
   let mod = cmp;
   if (defaultCmp) {
     // SystemJS default export:
@@ -55,4 +78,4 @@ expose("query-string", QueryString, QueryStringDefault);
 expose("@scm-manager/ui-extensions", UIExtensions);
 expose("@scm-manager/ui-components", UIComponents);
 
-export default plugin => SystemJS.import(plugin);
+export default (plugin: string) => SystemJS.import(plugin);
