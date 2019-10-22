@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.BlobStore;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.web.lfs.LfsAccessTokenFactory;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 import sonia.scm.web.lfs.ScmBlobLfsRepository;
 
@@ -27,13 +28,15 @@ import javax.servlet.http.HttpServletRequest;
 @Singleton
 public class LfsServletFactory {
 
-  private static final Logger logger = LoggerFactory.getLogger(LfsServletFactory.class);
+  private static final Logger LOG = LoggerFactory.getLogger(LfsServletFactory.class);
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
+  private final LfsAccessTokenFactory tokenFactory;
 
   @Inject
-  public LfsServletFactory(LfsBlobStoreFactory lfsBlobStoreFactory) {
+  public LfsServletFactory(LfsBlobStoreFactory lfsBlobStoreFactory, LfsAccessTokenFactory tokenFactory) {
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
+    this.tokenFactory = tokenFactory;
   }
 
   /**
@@ -44,10 +47,11 @@ public class LfsServletFactory {
    * @return The {@link LfsProtocolServlet} to provide the LFS Batch API for a SCM Repository.
    */
   public LfsProtocolServlet createProtocolServletFor(Repository repository, HttpServletRequest request) {
+    LOG.trace("create lfs protocol servlet for repository {}", repository.getNamespaceAndName());
     BlobStore blobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
     String baseUri = buildBaseUri(repository, request);
 
-    LargeFileRepository largeFileRepository = new ScmBlobLfsRepository(blobStore, baseUri);
+    LargeFileRepository largeFileRepository = new ScmBlobLfsRepository(repository, blobStore, tokenFactory, baseUri);
     return new ScmLfsProtocolServlet(largeFileRepository);
   }
 
@@ -59,6 +63,7 @@ public class LfsServletFactory {
    * @return The {@link FileLfsServlet} to provide the LFS Upload / Download API for a SCM Repository.
    */
   public HttpServlet createFileLfsServletFor(Repository repository, HttpServletRequest request) {
+    LOG.trace("create lfs file servlet for repository {}", repository.getNamespaceAndName());
     return new ScmFileTransferServlet(lfsBlobStoreFactory.getLfsBlobStore(repository));
   }
 
