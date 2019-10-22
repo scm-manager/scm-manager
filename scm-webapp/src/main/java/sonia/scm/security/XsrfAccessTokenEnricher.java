@@ -37,6 +37,7 @@ import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.inject.OutOfScopeException;
+import com.google.inject.ProvisionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
@@ -98,8 +99,12 @@ public class XsrfAccessTokenEnricher implements AccessTokenEnricher {
       } else {
         LOG.trace("skip xsrf enrichment, because jwt session is started from a non wui client");
       }
-    } catch (OutOfScopeException ex) {
-      LOG.trace("skip xsrf enrichment, because no request scope is available");
+    } catch (ProvisionException ex) {
+      if (ex.getCause() instanceof OutOfScopeException) {
+        LOG.trace("skip xsrf enrichment, because no request scope is available");
+      } else {
+        throw ex;
+      }
     }
     return false;
   }

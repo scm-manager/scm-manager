@@ -31,6 +31,7 @@
 package sonia.scm.security;
 
 import com.google.inject.OutOfScopeException;
+import com.google.inject.ProvisionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,7 @@ import sonia.scm.util.HttpUtil;
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 /**
@@ -73,7 +75,7 @@ class XsrfAccessTokenEnricherTest {
   void testWithoutRequestScope() {
     // prepare
     Provider<HttpServletRequest> requestProvider = mock(Provider.class);
-    when(requestProvider.get()).thenThrow(new OutOfScopeException("request scope is not available"));
+    when(requestProvider.get()).thenThrow(new ProvisionException("failed to provision", new OutOfScopeException("no request scope is available")));
     configuration.setEnabledXsrfProtection(true);
     XsrfAccessTokenEnricher enricher = createEnricher(requestProvider);
 
@@ -82,6 +84,19 @@ class XsrfAccessTokenEnricherTest {
 
     // assert
     verify(builder, never()).custom(Xsrf.TOKEN_KEY, "42");
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  void testWithProvisionException() {
+    // prepare
+    Provider<HttpServletRequest> requestProvider = mock(Provider.class);
+    when(requestProvider.get()).thenThrow(new ProvisionException("failed to provision"));
+    configuration.setEnabledXsrfProtection(true);
+    XsrfAccessTokenEnricher enricher = createEnricher(requestProvider);
+
+    // execute
+    assertThrows(ProvisionException.class, () -> enricher.enrich(builder));
   }
 
   private XsrfAccessTokenEnricher createEnricher(Provider<HttpServletRequest> requestProvider) {
