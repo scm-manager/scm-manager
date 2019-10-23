@@ -27,7 +27,7 @@
     "jest": "^24.9.0",
     "query-string": "^5.0.1",
     "react": "^16.10.2",
-    "react-i18next": "^7.9.0",
+    "react-i18next": "^10.13.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.0",
