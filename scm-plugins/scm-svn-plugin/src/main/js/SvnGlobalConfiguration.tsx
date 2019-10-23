@@ -1,13 +1,10 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Title, Configuration } from "@scm-manager/ui-components";
 import SvnConfigurationForm from "./SvnConfigurationForm";
 
-type Props = {
+type Props = WithTranslation & {
   link: string;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class SvnGlobalConfiguration extends React.Component<Props> {
@@ -22,4 +19,4 @@ class SvnGlobalConfiguration extends React.Component<Props> {
   }
 }
 
-export default translate("plugins")(SvnGlobalConfiguration);
+export default withTranslation("plugins")(SvnGlobalConfiguration);

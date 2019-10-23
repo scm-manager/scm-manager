@@ -1,13 +1,10 @@
 import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Title, Configuration } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
 import HgConfigurationForm from "./HgConfigurationForm";
 
-type Props = {
+type Props = WithTranslation & {
   link: string;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class HgGlobalConfiguration extends React.Component<Props> {
@@ -22,4 +19,4 @@ class HgGlobalConfiguration extends React.Component<Props> {
   }
 }
 
-export default translate("plugins")(HgGlobalConfiguration);
+export default withTranslation("plugins")(HgGlobalConfiguration);

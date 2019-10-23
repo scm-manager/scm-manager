@@ -1,11 +1,10 @@
 import React from "react";
-import { repositories } from "@scm-manager/ui-components";
+import { withTranslation, WithTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { translate } from "react-i18next";
+import { repositories } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
-  t: (p: string) => string;
 };
 
 class ProtocolInformation extends React.Component<Props> {
@@ -26,4 +25,4 @@ class ProtocolInformation extends React.Component<Props> {
   }
 }
 
-export default translate("plugins")(ProtocolInformation);
+export default withTranslation("plugins")(ProtocolInformation);

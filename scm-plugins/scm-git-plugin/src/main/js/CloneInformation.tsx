@@ -1,13 +1,10 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 
-type Props = {
+type Props = WithTranslation & {
   url: string;
   repository: Repository;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class CloneInformation extends React.Component<Props> {
@@ -54,4 +51,4 @@ class CloneInformation extends React.Component<Props> {
   }
 }
 
-export default translate("plugins")(CloneInformation);
+export default withTranslation("plugins")(CloneInformation);

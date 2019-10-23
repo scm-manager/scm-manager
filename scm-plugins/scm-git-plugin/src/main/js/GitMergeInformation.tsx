@@ -1,12 +1,11 @@
 import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { translate } from "react-i18next";
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
   target: string;
   source: string;
-  t: (p: string) => string;
 };
 
 class GitMergeInformation extends React.Component<Props> {
@@ -47,4 +46,4 @@ class GitMergeInformation extends React.Component<Props> {
   }
 }
 
-export default translate("plugins")(GitMergeInformation);
+export default withTranslation("plugins")(GitMergeInformation);

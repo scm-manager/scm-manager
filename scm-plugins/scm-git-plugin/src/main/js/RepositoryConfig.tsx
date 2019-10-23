@@ -1,12 +1,10 @@
 import React, { FormEvent } from "react";
-
-import { apiClient, BranchSelector, ErrorPage, Loading, Subtitle, SubmitButton } from "@scm-manager/ui-components";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Branch, Repository, Link } from "@scm-manager/ui-types";
-import { translate } from "react-i18next";
+import { apiClient, BranchSelector, ErrorPage, Loading, Subtitle, SubmitButton } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
-  t: (p: string) => string;
 };
 
 type State = {
@@ -196,4 +194,4 @@ class RepositoryConfig extends React.Component<Props, State> {
   };
 }
 
-export default translate("plugins")(RepositoryConfig);
+export default withTranslation("plugins")(RepositoryConfig);
