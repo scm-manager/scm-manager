@@ -8,7 +8,11 @@ module.exports = [
   {
     context: root,
     entry: {
-      webapp: ["./ui-webapp/src/webpack-public-path.ts", "./ui-styles/src/scm.scss", "./ui-webapp/src/index.tsx"]
+      webapp: [
+        path.resolve(__dirname, "webpack-public-path.js"),
+        "./ui-styles/src/scm.scss",
+        "./ui-webapp/src/index.tsx"
+      ]
     },
     devtool: "cheap-module-eval-source-map",
     target: "web",
