@@ -58,6 +58,6 @@ public class SimpleSvnWorkDirFactory extends SimpleWorkdirFactory<File, File, Sv
       svnOperationFactory.dispose();
     }
 
-    return new ParentAndClone<>(workingCopy, workingCopy);
+    return new ParentAndClone<>(context.getDirectory(), workingCopy);
   }
 }
