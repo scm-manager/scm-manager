@@ -1,25 +1,20 @@
 // @flow
 import React from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import type { Branch, Repository } from "@scm-manager/ui-types";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
+import type {Branch, Repository} from "@scm-manager/ui-types";
 import FileTree from "../components/FileTree";
-import {
-  BranchSelector,
-  Breadcrumb,
-  ErrorNotification,
-  Loading
-} from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
+import {BranchSelector, Breadcrumb, ErrorNotification, Loading} from "@scm-manager/ui-components";
+import {translate} from "react-i18next";
 import {
   fetchBranches,
   getBranches,
   getFetchBranchesFailure,
   isFetchBranchesPending
 } from "../../branches/modules/branches";
-import { compose } from "redux";
+import {compose} from "redux";
 import Content from "./Content";
-import { fetchSources, isDirectory } from "../modules/sources";
+import {fetchSources, isDirectory} from "../modules/sources";
 
 type Props = {
   repository: Repository,
@@ -175,22 +170,20 @@ class Sources extends React.Component<Props, State> {
     const { revision, path, baseUrl, branches, repository } = this.props;
     const { selectedBranch } = this.state;
 
-    if (revision) {
-      return (
-        <Breadcrumb
-          revision={encodeURIComponent(revision)}
-          path={path}
-          baseUrl={baseUrl}
-          branch={selectedBranch}
-          defaultBranch={
-            branches && branches.filter(b => b.defaultBranch === true)[0]
-          }
-          branches={branches}
-          repository={repository}
-        />
-      );
-    }
-    return null;
+    //TODO refactor
+    return (
+      <Breadcrumb
+        revision={revision}
+        path={path}
+        baseUrl={baseUrl}
+        branch={selectedBranch}
+        defaultBranch={
+          branches && branches.filter(b => b.defaultBranch === true)[0]
+        }
+        branches={branches}
+        repository={repository}
+      />
+    );
   };
 }
 
