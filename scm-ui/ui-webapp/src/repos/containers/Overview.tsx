@@ -1,16 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
-import { History } from "history";
 import { withRouter } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { History } from "history";
 import { RepositoryCollection } from "@scm-manager/ui-types";
-import {
-  fetchReposByPage,
-  getFetchReposFailure,
-  getRepositoryCollection,
-  isAbleToCreateRepos,
-  isFetchReposPending
-} from "../modules/repos";
 import {
   Page,
   PageActions,
@@ -20,10 +13,17 @@ import {
   LinkPaginator,
   urls
 } from "@scm-manager/ui-components";
-import RepositoryList from "../components/list";
 import { getRepositoriesLink } from "../../modules/indexResource";
+import {
+  fetchReposByPage,
+  getFetchReposFailure,
+  getRepositoryCollection,
+  isAbleToCreateRepos,
+  isFetchReposPending
+} from "../modules/repos";
+import RepositoryList from "../components/list";
 
-type Props = {
+type Props = WithTranslation & {
   loading: boolean;
   error: Error;
   showCreateButton: boolean;
@@ -32,7 +32,6 @@ type Props = {
   reposLink: string;
 
   // context props
-  t: (p: string) => string;
   history: History;
   location: any;
 
@@ -132,4 +131,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("repos")(withRouter(Overview)));
+)(withTranslation("repos")(withRouter(Overview)));

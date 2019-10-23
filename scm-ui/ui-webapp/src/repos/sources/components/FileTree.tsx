@@ -2,7 +2,7 @@ import React from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import { binder } from "@scm-manager/ui-extensions";
 import { Repository, File } from "@scm-manager/ui-types";
@@ -10,7 +10,7 @@ import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-compon
 import { getFetchSourcesFailure, isFetchSourcesPending, getSources } from "../modules/sources";
 import FileTreeLeaf from "./FileTreeLeaf";
 
-type Props = {
+type Props = WithTranslation & {
   loading: boolean;
   error: Error;
   tree: File;
@@ -20,7 +20,6 @@ type Props = {
   baseUrl: string;
 
   // context props
-  t: (p: string) => string;
   match: any;
 };
 
@@ -142,4 +141,4 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 export default compose(
   withRouter,
   connect(mapStateToProps)
-)(translate("repos")(FileTree));
+)(withTranslation("repos")(FileTree));

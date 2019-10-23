@@ -1,14 +1,11 @@
 import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository, Branch } from "@scm-manager/ui-types";
 import { ButtonAddons, Button } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
   branch: Branch;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class BranchButtonGroup extends React.Component<Props> {
@@ -29,4 +26,4 @@ class BranchButtonGroup extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(BranchButtonGroup);
+export default withTranslation("repos")(BranchButtonGroup);

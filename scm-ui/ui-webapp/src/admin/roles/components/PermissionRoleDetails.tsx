@@ -1,16 +1,13 @@
 import React from "react";
-import { translate } from "react-i18next";
-import { RepositoryRole } from "@scm-manager/ui-types";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import PermissionRoleDetailsTable from "./PermissionRoleDetailsTable";
+import { RepositoryRole } from "@scm-manager/ui-types";
 import { Button } from "@scm-manager/ui-components";
+import PermissionRoleDetailsTable from "./PermissionRoleDetailsTable";
 
-type Props = {
+type Props = WithTranslation & {
   role: RepositoryRole;
   url: string;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class PermissionRoleDetails extends React.Component<Props> {
@@ -42,4 +39,4 @@ class PermissionRoleDetails extends React.Component<Props> {
   }
 }
 
-export default translate("admin")(PermissionRoleDetails);
+export default withTranslation("admin")(PermissionRoleDetails);

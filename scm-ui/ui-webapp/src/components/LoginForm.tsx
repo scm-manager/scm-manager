@@ -1,15 +1,12 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Image, ErrorNotification, InputField, SubmitButton, UnauthorizedError } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   error?: Error;
   loading: boolean;
   loginHandler: (username: string, password: string) => void;
-
-  // context props
-  t: (p: string) => string;
 };
 
 type State = {
@@ -106,4 +103,4 @@ class LoginForm extends React.Component<Props, State> {
   }
 }
 
-export default translate("commons")(LoginForm);
+export default withTranslation("commons")(LoginForm);

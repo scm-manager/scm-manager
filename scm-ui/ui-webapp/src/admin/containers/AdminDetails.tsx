@@ -1,17 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Image, Loading, Subtitle, Title } from "@scm-manager/ui-components";
 import { getAppVersion } from "../../modules/indexResource";
 
-type Props = {
+type Props = WithTranslation & {
   loading: boolean;
   error: Error;
   version: string;
-
-  // context props
-  t: (p: string) => string;
 };
 
 const BoxShadowBox = styled.div`
@@ -86,4 +83,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export default connect(mapStateToProps)(translate("admin")(AdminDetails));
+export default connect(mapStateToProps)(withTranslation("admin")(AdminDetails));

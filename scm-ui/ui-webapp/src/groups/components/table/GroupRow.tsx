@@ -1,14 +1,11 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Group } from "@scm-manager/ui-types";
 import { Icon } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   group: Group;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class GroupRow extends React.Component<Props> {
@@ -36,4 +33,4 @@ class GroupRow extends React.Component<Props> {
   }
 }
 
-export default translate("groups")(GroupRow);
+export default withTranslation("groups")(GroupRow);

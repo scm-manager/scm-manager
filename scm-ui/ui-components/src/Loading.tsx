@@ -1,10 +1,9 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import Image from "./Image";
 
-type Props = {
-  t: (p: string) => string;
+type Props = WithTranslation & {
   message?: string;
 };
 
@@ -33,4 +32,4 @@ class Loading extends React.Component<Props> {
   }
 }
 
-export default translate("commons")(Loading);
+export default withTranslation("commons")(Loading);

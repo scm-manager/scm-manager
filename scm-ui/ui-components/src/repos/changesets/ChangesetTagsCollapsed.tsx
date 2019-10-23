@@ -1,14 +1,11 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Tag } from "@scm-manager/ui-types";
 import Tooltip from "../../Tooltip";
 import ChangesetTagBase from "./ChangesetTagBase";
 
-type Props = {
+type Props = WithTranslation & {
   tags: Tag[];
-
-  // context props
-  t: (p: string) => string;
 };
 
 class ChangesetTagsCollapsed extends React.Component<Props> {
@@ -23,4 +20,4 @@ class ChangesetTagsCollapsed extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(ChangesetTagsCollapsed);
+export default withTranslation("repos")(ChangesetTagsCollapsed);

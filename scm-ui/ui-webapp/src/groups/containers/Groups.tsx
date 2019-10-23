@@ -1,16 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { Group, PagedCollection } from "@scm-manager/ui-types";
-import {
-  fetchGroupsByPage,
-  getGroupsFromState,
-  isFetchGroupsPending,
-  getFetchGroupsFailure,
-  isPermittedToCreateGroups,
-  selectListAsCollection
-} from "../modules/groups";
 import {
   Page,
   PageActions,
@@ -20,10 +12,18 @@ import {
   urls,
   CreateButton
 } from "@scm-manager/ui-components";
-import { GroupTable } from "./../components/table";
 import { getGroupsLink } from "../../modules/indexResource";
+import {
+  fetchGroupsByPage,
+  getGroupsFromState,
+  isFetchGroupsPending,
+  getFetchGroupsFailure,
+  isPermittedToCreateGroups,
+  selectListAsCollection
+} from "../modules/groups";
+import { GroupTable } from "./../components/table";
 
-type Props = {
+type Props = WithTranslation & {
   groups: Group[];
   loading: boolean;
   error: Error;
@@ -33,7 +33,6 @@ type Props = {
   groupLink: string;
 
   // context objects
-  t: (p: string) => string;
   history: History;
   location: any;
 
@@ -124,4 +123,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("groups")(Groups));
+)(withTranslation("groups")(Groups));

@@ -1,21 +1,21 @@
 import React from "react";
 import RepositoryRoleForm from "./RepositoryRoleForm";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { getModifyRoleFailure, isModifyRolePending, modifyRole } from "../modules/roles";
-import { ErrorNotification, Subtitle } from "@scm-manager/ui-components";
+import { ErrorNotification, Subtitle, Loading } from "@scm-manager/ui-components";
 import { RepositoryRole } from "@scm-manager/ui-types";
 import { History } from "history";
 import DeleteRepositoryRole from "./DeleteRepositoryRole";
 
-type Props = {
+type Props = WithTranslation & {
   disabled: boolean;
   role: RepositoryRole;
   repositoryRolesLink: string;
+  loading?: boolean;
   error?: Error;
 
   // context objects
-  t: (p: string) => string;
   history: History;
 
   //dispatch function
@@ -32,9 +32,11 @@ class EditRepositoryRole extends React.Component<Props> {
   };
 
   render() {
-    const { error, t } = this.props;
+    const { loading, error, t } = this.props;
 
-    if (error) {
+    if (loading) {
+      return <Loading />;
+    } else if (error) {
       return <ErrorNotification error={error} />;
     }
 
@@ -70,4 +72,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("admin")(EditRepositoryRole));
+)(withTranslation("admin")(EditRepositoryRole));

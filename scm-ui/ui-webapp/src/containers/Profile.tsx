@@ -1,21 +1,19 @@
 import React from "react";
-
 import { Route, withRouter } from "react-router-dom";
 import { getMe } from "../modules/auth";
 import { compose } from "redux";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";
 import { ErrorPage, Page, Navigation, SubNavigation, Section, NavLink } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
-type Props = {
+type Props = WithTranslation & {
   me: Me;
 
   // Context props
-  t: (p: string) => string;
   match: any;
 };
 type State = {};
@@ -87,7 +85,7 @@ const mapStateToProps = state => {
 };
 
 export default compose(
-  translate("commons"),
+  withTranslation("commons"),
   connect(mapStateToProps),
   withRouter
 )(Profile);

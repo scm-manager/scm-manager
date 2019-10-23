@@ -1,6 +1,9 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { connect } from "react-redux";
+import { Config, NamespaceStrategies } from "@scm-manager/ui-types";
 import { Title, Loading, ErrorNotification } from "@scm-manager/ui-components";
+import { getConfigLink } from "../../modules/indexResource";
 import {
   fetchConfig,
   getFetchConfigFailure,
@@ -12,10 +15,7 @@ import {
   getModifyConfigFailure,
   modifyConfigReset
 } from "../modules/config";
-import { connect } from "react-redux";
-import { Config, NamespaceStrategies } from "@scm-manager/ui-types";
 import ConfigForm from "../components/form/ConfigForm";
-import { getConfigLink } from "../../modules/indexResource";
 import {
   fetchNamespaceStrategiesIfNeeded,
   getFetchNamespaceStrategiesFailure,
@@ -23,7 +23,7 @@ import {
   isFetchNamespaceStrategiesPending
 } from "../modules/namespaceStrategies";
 
-type Props = {
+type Props = WithTranslation & {
   loading: boolean;
   error: Error;
   config: Config;
@@ -36,9 +36,6 @@ type Props = {
   fetchConfig: (link: string) => void;
   configReset: (p: void) => void;
   fetchNamespaceStrategiesIfNeeded: (p: void) => void;
-
-  // context objects
-  t: (p: string) => string;
 };
 
 type State = {
@@ -181,4 +178,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("config")(GlobalConfig));
+)(withTranslation("config")(GlobalConfig));

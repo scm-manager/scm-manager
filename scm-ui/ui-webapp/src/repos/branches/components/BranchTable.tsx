@@ -1,11 +1,10 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import BranchRow from "./BranchRow";
 import { Branch } from "@scm-manager/ui-types";
 
-type Props = {
+type Props = WithTranslation & {
   baseUrl: string;
-  t: (p: string) => string;
   branches: Branch[];
 };
 
@@ -36,4 +35,4 @@ class BranchTable extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(BranchTable);
+export default withTranslation("repos")(BranchTable);

@@ -1,11 +1,10 @@
 import React from "react";
-import { NavLink } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
+import { NavLink } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   permissionUrl: string;
-  t: (p: string) => string;
   repository: Repository;
 };
 
@@ -22,4 +21,4 @@ class PermissionsNavLink extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(PermissionsNavLink);
+export default withTranslation("repos")(PermissionsNavLink);

@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import Main from "./Main";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";
 import { fetchMe, getFetchMeFailure, getMe, isAuthenticated, isFetchMePending } from "../modules/auth";
-
 import { ErrorPage, Footer, Header, Loading, PrimaryNavigation } from "@scm-manager/ui-components";
 import { Links, Me } from "@scm-manager/ui-types";
 import {
@@ -14,7 +13,7 @@ import {
   isFetchIndexResourcesPending
 } from "../modules/indexResource";
 
-type Props = {
+type Props = WithTranslation & {
   me: Me;
   authenticated: boolean;
   error: Error;
@@ -24,9 +23,6 @@ type Props = {
 
   // dispatcher functions
   fetchMe: (link: string) => void;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class App extends Component<Props> {
@@ -86,5 +82,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(translate("commons")(App))
+  )(withTranslation("commons")(App))
 );

@@ -2,15 +2,12 @@ import React from "react";
 import PluginActionModal from "./PluginActionModal";
 import { PendingPlugins } from "@scm-manager/ui-types";
 import { apiClient } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 
-type Props = {
+type Props = WithTranslation & {
   onClose: () => void;
   refresh: () => void;
   pendingPlugins: PendingPlugins;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class CancelPendingActionModal extends React.Component<Props> {
@@ -37,4 +34,4 @@ class CancelPendingActionModal extends React.Component<Props> {
   };
 }
 
-export default translate("admin")(CancelPendingActionModal);
+export default withTranslation("admin")(CancelPendingActionModal);

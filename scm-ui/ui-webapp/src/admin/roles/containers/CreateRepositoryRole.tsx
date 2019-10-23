@@ -1,23 +1,20 @@
 import React from "react";
-import RepositoryRoleForm from "./RepositoryRoleForm";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { History } from "history";
+import { RepositoryRole } from "@scm-manager/ui-types";
 import { ErrorNotification, Subtitle, Title } from "@scm-manager/ui-components";
 import { createRole, getCreateRoleFailure, getFetchVerbsFailure, isFetchVerbsPending } from "../modules/roles";
-import { RepositoryRole } from "@scm-manager/ui-types";
 import { getRepositoryRolesLink, getRepositoryVerbsLink } from "../../../modules/indexResource";
-import { History } from "history";
+import RepositoryRoleForm from "./RepositoryRoleForm";
 
-type Props = {
+type Props = WithTranslation & {
   repositoryRolesLink: string;
   error?: Error;
   history: History;
 
-  //dispatch function
+  // dispatch function
   addRole: (link: string, role: RepositoryRole, callback?: () => void) => void;
-
-  // context objects
-  t: (p: string) => string;
 };
 
 class CreateRepositoryRole extends React.Component<Props> {
@@ -47,7 +44,7 @@ class CreateRepositoryRole extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   const loading = isFetchVerbsPending(state);
   const error = getFetchVerbsFailure(state) || getCreateRoleFailure(state);
   const verbsLink = getRepositoryVerbsLink(state);
@@ -72,4 +69,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("admin")(CreateRepositoryRole));
+)(withTranslation("admin")(CreateRepositoryRole));

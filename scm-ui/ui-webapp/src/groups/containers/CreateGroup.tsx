@@ -1,16 +1,14 @@
 import React from "react";
-
-import { Page } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
-import GroupForm from "../components/GroupForm";
 import { connect } from "react-redux";
-import { createGroup, isCreateGroupPending, getCreateGroupFailure, createGroupReset } from "../modules/groups";
-import { Group } from "@scm-manager/ui-types";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
+import { Group } from "@scm-manager/ui-types";
+import { Page } from "@scm-manager/ui-components";
 import { getGroupsLink, getUserAutoCompleteLink } from "../../modules/indexResource";
+import { createGroup, isCreateGroupPending, getCreateGroupFailure, createGroupReset } from "../modules/groups";
+import GroupForm from "../components/GroupForm";
 
-type Props = {
-  t: (p: string) => string;
+type Props = WithTranslation & {
   createGroup: (link: string, group: Group, callback?: () => void) => void;
   history: History;
   loading?: boolean;
@@ -20,9 +18,7 @@ type Props = {
   autocompleteLink: string;
 };
 
-type State = {};
-
-class CreateGroup extends React.Component<Props, State> {
+class CreateGroup extends React.Component<Props> {
   componentDidMount() {
     this.props.resetForm();
   }
@@ -88,4 +84,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("groups")(CreateGroup));
+)(withTranslation("groups")(CreateGroup));

@@ -1,11 +1,10 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { InputField, Subtitle, validation as validator } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   loginAttemptLimit: number;
   loginAttemptLimitTimeout: number;
-  t: (p: string) => string;
   onChange: (p1: boolean, p2: any, p3: string) => void;
   hasUpdatePermission: boolean;
 };
@@ -76,4 +75,4 @@ class LoginAttempt extends React.Component<Props, State> {
   };
 }
 
-export default translate("config")(LoginAttempt);
+export default withTranslation("config")(LoginAttempt);

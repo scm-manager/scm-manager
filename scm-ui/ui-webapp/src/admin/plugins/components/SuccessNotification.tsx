@@ -1,13 +1,8 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Notification } from "@scm-manager/ui-components";
 
-type Props = {
-  // context props
-  t: (p: string) => string;
-};
-
-class InstallSuccessNotification extends React.Component<Props> {
+class InstallSuccessNotification extends React.Component<WithTranslation> {
   render() {
     const { t } = this.props;
     return (
@@ -19,4 +14,4 @@ class InstallSuccessNotification extends React.Component<Props> {
   }
 }
 
-export default translate("admin")(InstallSuccessNotification);
+export default withTranslation("admin")(InstallSuccessNotification);

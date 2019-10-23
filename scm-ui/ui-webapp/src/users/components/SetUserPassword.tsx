@@ -1,12 +1,11 @@
 import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
 import { SubmitButton, Notification, ErrorNotification, PasswordConfirmation } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
 import { setPassword } from "./setPassword";
 
-type Props = {
+type Props = WithTranslation & {
   user: User;
-  t: (p: string) => string;
 };
 
 type State = {
@@ -128,4 +127,4 @@ class SetUserPassword extends React.Component<Props, State> {
   };
 }
 
-export default translate("users")(SetUserPassword);
+export default withTranslation("users")(SetUserPassword);

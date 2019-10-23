@@ -1,5 +1,5 @@
 import React from "react";
-import { Interpolate, translate } from "react-i18next";
+import { Trans, WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -12,12 +12,9 @@ import ChangesetAuthor from "./ChangesetAuthor";
 import ChangesetTags from "./ChangesetTags";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
   changeset: Changeset;
-
-  // context props
-  t: (p: string) => string;
 };
 
 const Wrapper = styled.div`
@@ -98,10 +95,10 @@ class ChangesetRow extends React.Component<Props> {
                       </ExtensionPoint>
                     </h4>
                     <p className="is-hidden-touch">
-                      <Interpolate i18nKey="changeset.summary" id={changesetId} time={dateFromNow} />
+                      <Trans i18nKey="changeset.summary" values={{ id: changesetId, time: dateFromNow }} />
                     </p>
                     <p className="is-hidden-desktop">
-                      <Interpolate i18nKey="changeset.shortSummary" id={changesetId} time={dateFromNow} />
+                      <Trans i18nKey="changeset.shortSummary" values={{ id: changesetId, time: dateFromNow }} />
                     </p>
                     <AuthorWrapper className="is-size-7">
                       <ChangesetAuthor changeset={changeset} />
@@ -131,4 +128,4 @@ class ChangesetRow extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(ChangesetRow);
+export default withTranslation("repos")(ChangesetRow);

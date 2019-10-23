@@ -1,16 +1,13 @@
 import React from "react";
-import PluginActionModal from "./PluginActionModal";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { PluginCollection } from "@scm-manager/ui-types";
 import { apiClient } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
+import PluginActionModal from "./PluginActionModal";
 
-type Props = {
+type Props = WithTranslation & {
   onClose: () => void;
   refresh: () => void;
   installedPlugins: PluginCollection;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class UpdateAllActionModal extends React.Component<Props> {
@@ -37,4 +34,4 @@ class UpdateAllActionModal extends React.Component<Props> {
   };
 }
 
-export default translate("admin")(UpdateAllActionModal);
+export default withTranslation("admin")(UpdateAllActionModal);

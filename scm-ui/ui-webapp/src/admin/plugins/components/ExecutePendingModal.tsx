@@ -1,16 +1,13 @@
 import React from "react";
 import { apiClient, Button, ButtonGroup, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
 import { PendingPlugins } from "@scm-manager/ui-types";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import waitForRestart from "./waitForRestart";
 import SuccessNotification from "./SuccessNotification";
 
-type Props = {
+type Props = WithTranslation & {
   onClose: () => void;
   pendingPlugins: PendingPlugins;
-
-  // context props
-  t: (p: string) => string;
 };
 
 type State = {
@@ -167,4 +164,4 @@ class ExecutePendingModal extends React.Component<Props, State> {
   }
 }
 
-export default translate("admin")(ExecutePendingModal);
+export default withTranslation("admin")(ExecutePendingModal);

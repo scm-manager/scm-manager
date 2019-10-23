@@ -1,14 +1,10 @@
-import React, { ChangeEvent } from "react";
-import { translate } from "react-i18next";
+import React, { ChangeEvent, FormEvent } from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
-import { FormEvent } from "react";
 
-type Props = {
+type Props = WithTranslation & {
   filter: (p: string) => void;
   value?: string;
-
-  // context props
-  t: (p: string) => string;
 };
 
 type State = {
@@ -59,4 +55,4 @@ class FilterInput extends React.Component<Props, State> {
   }
 }
 
-export default translate("commons")(FilterInput);
+export default withTranslation("commons")(FilterInput);

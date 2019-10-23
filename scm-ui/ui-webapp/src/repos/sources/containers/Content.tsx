@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -11,15 +11,12 @@ import FileButtonAddons from "../components/content/FileButtonAddons";
 import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
 
-type Props = {
+type Props = WithTranslation & {
   loading: boolean;
   file: File;
   repository: Repository;
   revision: string;
   path: string;
-
-  // context props
-  t: (p: string) => string;
 };
 
 type State = {
@@ -209,4 +206,4 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   };
 };
 
-export default connect(mapStateToProps)(translate("repos")(Content));
+export default connect(mapStateToProps)(withTranslation("repos")(Content));

@@ -1,19 +1,17 @@
 import React from "react";
-import { fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending } from "../modules/repos";
-
 import { connect } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { History } from "history";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Repository } from "@scm-manager/ui-types";
-
 import { ErrorPage, Loading, Navigation, NavLink, Page, Section, SubNavigation } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
+import { fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending } from "../modules/repos";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
 import BranchesOverview from "../branches/containers/BranchesOverview";
 import CreateBranch from "../branches/containers/CreateBranch";
 import Permissions from "../permissions/containers/Permissions";
-
-import { History } from "history";
 import EditRepoNavLink from "../components/EditRepoNavLink";
 import BranchRoot from "../branches/containers/BranchRoot";
 import ChangesetsRoot from "./ChangesetsRoot";
@@ -22,9 +20,8 @@ import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
 import { getLinks, getRepositoriesLink } from "../../modules/indexResource";
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
-type Props = {
+type Props = WithTranslation & {
   namespace: string;
   name: string;
   repository: Repository;
@@ -37,7 +34,6 @@ type Props = {
   fetchRepoByName: (link: string, namespace: string, name: string) => void;
 
   // context props
-  t: (p: string) => string;
   history: History;
   match: any;
 };
@@ -45,7 +41,6 @@ type Props = {
 class RepositoryRoot extends React.Component<Props> {
   componentDidMount() {
     const { fetchRepoByName, namespace, name, repoLink } = this.props;
-
     fetchRepoByName(repoLink, namespace, name);
   }
 
@@ -237,4 +232,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("repos")(RepositoryRoot));
+)(withTranslation("repos")(RepositoryRoot));

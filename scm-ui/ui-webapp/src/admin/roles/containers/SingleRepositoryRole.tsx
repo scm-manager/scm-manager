@@ -1,18 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Loading, ErrorPage, Title } from "@scm-manager/ui-components";
-import { Route } from "react-router-dom";
+import { Route, withRouter } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
-import { translate } from "react-i18next";
-import { RepositoryRole } from "@scm-manager/ui-types";
-import { getRepositoryRolesLink } from "../../../modules/indexResource";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { RepositoryRole } from "@scm-manager/ui-types";
+import { Loading, ErrorPage, Title } from "@scm-manager/ui-components";
+import { getRepositoryRolesLink } from "../../../modules/indexResource";
 import { fetchRoleByName, getFetchRoleFailure, getRoleByName, isFetchRolePending } from "../modules/roles";
-import { withRouter } from "react-router-dom";
 import PermissionRoleDetail from "../components/PermissionRoleDetails";
 import EditRepositoryRole from "./EditRepositoryRole";
 
-type Props = {
+type Props = WithTranslation & {
   roleName: string;
   role: RepositoryRole;
   loading: boolean;
@@ -24,7 +23,6 @@ type Props = {
   fetchRoleByName: (p1: string, p2: string) => void;
 
   // context objects
-  t: (p: string) => string;
   match: any;
   history: History;
 };
@@ -107,5 +105,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(translate("admin")(SingleRepositoryRole))
+  )(withTranslation("admin")(SingleRepositoryRole))
 );

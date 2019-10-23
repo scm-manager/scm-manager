@@ -1,19 +1,19 @@
 import React from "react";
-import { Branch, Repository } from "@scm-manager/ui-types";
-import { translate } from "react-i18next";
-import { Route, withRouter } from "react-router-dom";
-import Changesets from "./Changesets";
+import { compose } from "redux";
 import { connect } from "react-redux";
+import { Route, withRouter } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { Branch, Repository } from "@scm-manager/ui-types";
 import { BranchSelector, ErrorNotification, Loading } from "@scm-manager/ui-components";
+import Changesets from "./Changesets";
 import {
   fetchBranches,
   getBranches,
   getFetchBranchesFailure,
   isFetchBranchesPending
 } from "../branches/modules/branches";
-import { compose } from "redux";
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
   baseUrl: string;
   selected: string;
@@ -31,7 +31,6 @@ type Props = {
   // Context props
   history: any; // TODO flow type
   match: any;
-  t: (p: string) => string;
 };
 
 class ChangesetsRoot extends React.Component<Props> {
@@ -151,7 +150,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 
 export default compose(
   withRouter,
-  translate("repos"),
+  withTranslation("repos"),
   connect(
     mapStateToProps,
     mapDispatchToProps

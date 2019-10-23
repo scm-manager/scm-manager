@@ -1,13 +1,13 @@
 import React from "react";
-import { translate } from "react-i18next";
-import { RepositoryRole } from "@scm-manager/ui-types";
-import { Subtitle, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
+import { RepositoryRole } from "@scm-manager/ui-types";
+import { Subtitle, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 import { deleteRole, getDeleteRoleFailure, isDeleteRolePending } from "../modules/roles";
 
-type Props = {
+type Props = WithTranslation & {
   loading: boolean;
   error: Error;
   role: RepositoryRole;
@@ -16,7 +16,6 @@ type Props = {
 
   // context props
   history: History;
-  t: (p: string) => string;
 };
 
 class DeleteRepositoryRole extends React.Component<Props> {
@@ -96,4 +95,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(translate("admin")(DeleteRepositoryRole)));
+)(withRouter(withTranslation("admin")(DeleteRepositoryRole)));

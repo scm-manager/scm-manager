@@ -1,10 +1,9 @@
 import React from "react";
-import { translate, TFunction } from "react-i18next";
+import { withTranslation, WithTranslation } from "react-i18next";
 import { ErrorPage } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   error: Error;
-  t: TFunction;
 };
 
 class IndexErrorPage extends React.Component<Props> {
@@ -14,4 +13,4 @@ class IndexErrorPage extends React.Component<Props> {
   }
 }
 
-export default translate("commons")(IndexErrorPage);
+export default withTranslation("commons")(IndexErrorPage);

@@ -1,9 +1,8 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Select } from "@scm-manager/ui-components";
 
-type Props = {
-  t: (p: string) => string;
+type Props = WithTranslation & {
   availableRoles: string[];
   handleRoleChange: (p: string) => void;
   role: string;
@@ -42,4 +41,4 @@ class RoleSelector extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(RoleSelector);
+export default withTranslation("repos")(RoleSelector);

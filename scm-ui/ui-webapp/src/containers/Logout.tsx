@@ -1,13 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
 
 import { logout, isAuthenticated, isLogoutPending, getLogoutFailure, isRedirecting } from "../modules/auth";
 import { Loading, ErrorPage } from "@scm-manager/ui-components";
 import { getLogoutLink } from "../modules/indexResource";
 
-type Props = {
+type Props = WithTranslation & {
   authenticated: boolean;
   loading: boolean;
   redirecting: boolean;
@@ -16,9 +16,6 @@ type Props = {
 
   // dispatcher functions
   logout: (link: string) => void;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class Logout extends React.Component<Props> {
@@ -62,4 +59,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("commons")(Logout));
+)(withTranslation("commons")(Logout));

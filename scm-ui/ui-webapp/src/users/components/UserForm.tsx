@@ -1,5 +1,5 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
 import {
   Subtitle,
@@ -11,11 +11,10 @@ import {
 } from "@scm-manager/ui-components";
 import * as userValidator from "./userValidation";
 
-type Props = {
+type Props = WithTranslation & {
   submitForm: (p: User) => void;
   user?: User;
   loading?: boolean;
-  t: (p: string) => string;
 };
 
 type State = {
@@ -58,10 +57,7 @@ class UserForm extends React.Component<Props, State> {
   }
 
   isFalsy(value) {
-    if (!value) {
-      return true;
-    }
-    return false;
+    return !value;
   }
 
   createUserComponentsAreInvalid = () => {
@@ -230,4 +226,4 @@ class UserForm extends React.Component<Props, State> {
   };
 }
 
-export default translate("users")(UserForm);
+export default withTranslation("users")(UserForm);

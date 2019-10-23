@@ -1,13 +1,10 @@
 import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { RepositoryRole } from "@scm-manager/ui-types";
-import { translate } from "react-i18next";
 import AvailableVerbs from "./AvailableVerbs";
 
-type Props = {
+type Props = WithTranslation & {
   role: RepositoryRole;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class PermissionRoleDetailsTable extends React.Component<Props> {
@@ -34,4 +31,4 @@ class PermissionRoleDetailsTable extends React.Component<Props> {
   }
 }
 
-export default translate("admin")(PermissionRoleDetailsTable);
+export default withTranslation("admin")(PermissionRoleDetailsTable);

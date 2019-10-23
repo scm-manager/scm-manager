@@ -1,14 +1,9 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import AutocompleteProps from "./UserGroupAutocomplete";
 import UserGroupAutocomplete from "./UserGroupAutocomplete";
 
-type Props = AutocompleteProps & {
-  // Context props
-  t: (p: string) => string;
-};
-
-class GroupAutocomplete extends React.Component<Props> {
+class GroupAutocomplete extends React.Component<AutocompleteProps & WithTranslation> {
   render() {
     const { t } = this.props;
     return (
@@ -23,4 +18,4 @@ class GroupAutocomplete extends React.Component<Props> {
   }
 }
 
-export default translate("commons")(GroupAutocomplete);
+export default withTranslation("commons")(GroupAutocomplete);

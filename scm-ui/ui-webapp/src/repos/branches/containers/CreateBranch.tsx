@@ -1,8 +1,12 @@
 import React from "react";
-import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
-import BranchForm from "../components/BranchForm";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
+import queryString from "query-string";
+import { History } from "history";
 import { Repository, Branch, BranchRequest } from "@scm-manager/ui-types";
+import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
+import BranchForm from "../components/BranchForm";
 import {
   fetchBranches,
   getBranches,
@@ -14,12 +18,8 @@ import {
   isFetchBranchesPending,
   getFetchBranchesFailure
 } from "../modules/branches";
-import { History } from "history";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import queryString from "query-string";
 
-type Props = {
+type Props = WithTranslation & {
   loading?: boolean;
   error?: Error;
   repository: Repository;
@@ -38,7 +38,6 @@ type Props = {
   resetForm: (p: Repository) => void;
 
   // context objects
-  t: (p: string) => string;
   history: History;
   location: any;
 };
@@ -131,5 +130,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(translate("repos")(CreateBranch))
+  )(withTranslation("repos")(CreateBranch))
 );

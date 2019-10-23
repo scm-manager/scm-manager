@@ -1,11 +1,10 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Checkbox, InputField, Subtitle } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   baseUrl: string;
   forceBaseUrl: boolean;
-  t: (p: string) => string;
   onChange: (p1: boolean, p2: any, p3: string) => void;
   hasUpdatePermission: boolean;
 };
@@ -49,4 +48,4 @@ class BaseUrlSettings extends React.Component<Props> {
   };
 }
 
-export default translate("config")(BaseUrlSettings);
+export default withTranslation("config")(BaseUrlSettings);

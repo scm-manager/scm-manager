@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { Redirect, withRouter } from "react-router-dom";
 import { compose } from "redux";
-import { translate } from "react-i18next";
 import styled from "styled-components";
 import { getLoginFailure, isAuthenticated, isLoginPending, login } from "../modules/auth";
 import { getLoginInfoLink, getLoginLink } from "../modules/indexResource";
@@ -19,7 +18,6 @@ type Props = {
   login: (link: string, username: string, password: string) => void;
 
   // context props
-  t: (p: string) => string;
   from: any;
   location: any;
 };

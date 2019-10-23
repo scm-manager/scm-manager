@@ -1,12 +1,10 @@
 import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import { MailLink, DateFromNow } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
-  // context props
-  t: (p: string) => string;
 };
 
 class RepositoryDetailTable extends React.Component<Props> {
@@ -51,4 +49,4 @@ class RepositoryDetailTable extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(RepositoryDetailTable);
+export default withTranslation("repos")(RepositoryDetailTable);

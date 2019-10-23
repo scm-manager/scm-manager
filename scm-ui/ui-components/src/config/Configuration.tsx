@@ -1,5 +1,5 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Links, Link } from "@scm-manager/ui-types";
 import { apiClient, SubmitButton, Loading, ErrorNotification } from "../";
 import { FormEvent } from "react";
@@ -10,12 +10,9 @@ type RenderProps = {
   onConfigurationChange: (p1: ConfigurationType, p2: boolean) => void;
 };
 
-type Props = {
+type Props = WithTranslation & {
   link: string;
   render: (props: RenderProps) => any; // ???
-
-  // context props
-  t: (p: string) => string;
 };
 
 type ConfigurationType = {
@@ -190,4 +187,4 @@ class Configuration extends React.Component<Props, State> {
   }
 }
 
-export default translate("config")(Configuration);
+export default withTranslation("config")(Configuration);

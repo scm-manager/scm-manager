@@ -1,13 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import Icon from "./Icon";
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
   branch: Branch;
   defaultBranch: Branch;
@@ -15,9 +15,6 @@ type Props = {
   revision: string;
   path: string;
   baseUrl: string;
-
-  // Context props
-  t: (p: string) => string;
 };
 
 const FlexStartNav = styled.nav`
@@ -99,4 +96,4 @@ class Breadcrumb extends React.Component<Props> {
   }
 }
 
-export default translate("commons")(Breadcrumb);
+export default withTranslation("commons")(Breadcrumb);

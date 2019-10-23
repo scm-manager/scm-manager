@@ -1,13 +1,10 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";
 import { MailLink, AvatarWrapper, AvatarImage } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   me: Me;
-
-  // Context props
-  t: (p: string) => string;
 };
 
 class ProfileInfo extends React.Component<Props> {
@@ -69,4 +66,4 @@ class ProfileInfo extends React.Component<Props> {
   }
 }
 
-export default translate("commons")(ProfileInfo);
+export default withTranslation("commons")(ProfileInfo);

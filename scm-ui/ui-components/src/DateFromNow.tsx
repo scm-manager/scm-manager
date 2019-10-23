@@ -1,5 +1,5 @@
 import React from "react";
-import { translate, InjectedI18nProps } from "react-i18next";
+import { withTranslation, WithTranslation } from "react-i18next";
 import { formatDistance, format, parseISO, Locale } from "date-fns";
 import { enUS, de, es } from "date-fns/locale";
 import styled from "styled-components";
@@ -16,7 +16,7 @@ const supportedLocales: LocaleMap = {
   es
 };
 
-type Props = InjectedI18nProps & {
+type Props = WithTranslation & {
   date?: DateInput;
   timeZone?: string;
 
@@ -90,4 +90,4 @@ class DateFromNow extends React.Component<Props> {
   }
 }
 
-export default translate()(DateFromNow);
+export default withTranslation()(DateFromNow);

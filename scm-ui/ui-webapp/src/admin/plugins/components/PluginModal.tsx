@@ -1,5 +1,5 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Plugin } from "@scm-manager/ui-types";
@@ -16,14 +16,11 @@ import waitForRestart from "./waitForRestart";
 import SuccessNotification from "./SuccessNotification";
 import { PluginAction } from "./PluginEntry";
 
-type Props = {
+type Props = WithTranslation & {
   plugin: Plugin;
   pluginAction: string;
   refresh: () => void;
   onClose: () => void;
-
-  // context props
-  t: (key: string, params?: object) => string;
 };
 
 type State = {
@@ -268,4 +265,4 @@ class PluginModal extends React.Component<Props, State> {
   }
 }
 
-export default translate("admin")(PluginModal);
+export default withTranslation("admin")(PluginModal);

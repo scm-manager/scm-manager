@@ -1,7 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Changeset, Repository } from "@scm-manager/ui-types";
+import { ErrorPage, Loading } from "@scm-manager/ui-components";
 import {
   fetchChangesetIfNeeded,
   getChangeset,
@@ -9,10 +11,8 @@ import {
   isFetchChangesetPending
 } from "../modules/changesets";
 import ChangesetDetails from "../components/changesets/ChangesetDetails";
-import { translate } from "react-i18next";
-import { ErrorPage, Loading } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   id: string;
   changeset: Changeset;
   repository: Repository;
@@ -20,7 +20,6 @@ type Props = {
   error: Error;
   fetchChangesetIfNeeded: (repository: Repository, id: string) => void;
   match: any;
-  t: (p: string) => string;
 };
 
 class ChangesetView extends React.Component<Props> {
@@ -68,5 +67,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(translate("repos")(ChangesetView))
+  )(withTranslation("repos")(ChangesetView))
 );

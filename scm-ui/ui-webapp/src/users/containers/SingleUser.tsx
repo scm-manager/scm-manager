@@ -1,20 +1,20 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Page, Loading, Navigation, SubNavigation, Section, NavLink, ErrorPage } from "@scm-manager/ui-components";
 import { Route } from "react-router-dom";
+import { History } from "history";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { User } from "@scm-manager/ui-types";
+import { Page, Loading, Navigation, SubNavigation, Section, NavLink, ErrorPage } from "@scm-manager/ui-components";
 import { Details } from "./../components/table";
 import EditUser from "./EditUser";
-import { User } from "@scm-manager/ui-types";
-import { History } from "history";
 import { fetchUserByName, getUserByName, isFetchUserPending, getFetchUserFailure } from "../modules/users";
 import { EditUserNavLink, SetPasswordNavLink, SetPermissionsNavLink } from "./../components/navLinks";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { getUsersLink } from "../../modules/indexResource";
 import SetUserPassword from "../components/SetUserPassword";
 import SetPermissions from "../../permissions/components/SetPermissions";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
-type Props = {
+type Props = WithTranslation & {
   name: string;
   user: User;
   loading: boolean;
@@ -25,7 +25,6 @@ type Props = {
   fetchUserByName: (p1: string, p2: string) => void;
 
   // context objects
-  t: (p: string) => string;
   match: any;
   history: History;
 };
@@ -122,4 +121,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("users")(SingleUser));
+)(withTranslation("users")(SingleUser));

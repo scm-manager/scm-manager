@@ -1,12 +1,11 @@
 import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
 import { NavLink } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
 
-type Props = {
+type Props = WithTranslation & {
   user: User;
   editUrl: string;
-  t: (p: string) => string;
 };
 
 class EditUserNavLink extends React.Component<Props> {
@@ -24,4 +23,4 @@ class EditUserNavLink extends React.Component<Props> {
   }
 }
 
-export default translate("users")(EditUserNavLink);
+export default withTranslation("users")(EditUserNavLink);

@@ -1,10 +1,10 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Checkbox, InputField } from "@scm-manager/ui-components";
 import { NamespaceStrategies } from "@scm-manager/ui-types";
 import NamespaceStrategySelect from "./NamespaceStrategySelect";
 
-type Props = {
+type Props = WithTranslation & {
   realmDescription: string;
   loginInfoUrl: string;
   disableGroupingGrid: boolean;
@@ -17,8 +17,6 @@ type Props = {
   namespaceStrategies?: NamespaceStrategies;
   onChange: (p1: boolean, p2: any, p3: string) => void;
   hasUpdatePermission: boolean;
-  // context props
-  t: (p: string) => string;
 };
 
 class GeneralSettings extends React.Component<Props> {
@@ -122,4 +120,4 @@ class GeneralSettings extends React.Component<Props> {
   };
 }
 
-export default translate("config")(GeneralSettings);
+export default withTranslation("config")(GeneralSettings);

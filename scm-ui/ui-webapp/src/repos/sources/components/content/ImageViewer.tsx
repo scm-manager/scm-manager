@@ -1,9 +1,8 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { File } from "@scm-manager/ui-types";
 
-type Props = {
-  t: (p: string) => string;
+type Props = WithTranslation & {
   file: File;
 };
 
@@ -20,4 +19,4 @@ class ImageViewer extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(ImageViewer);
+export default withTranslation("repos")(ImageViewer);

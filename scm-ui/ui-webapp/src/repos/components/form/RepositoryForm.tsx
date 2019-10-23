@@ -1,17 +1,16 @@
 import React from "react";
-import { translate } from "react-i18next";
-import { Subtitle, InputField, Select, SubmitButton, Textarea } from "@scm-manager/ui-components";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Repository, RepositoryType } from "@scm-manager/ui-types";
+import { Subtitle, InputField, Select, SubmitButton, Textarea } from "@scm-manager/ui-components";
 import * as validator from "./repositoryValidation";
 
-type Props = {
+type Props = WithTranslation & {
   submitForm: (p: Repository) => void;
   repository?: Repository;
   repositoryTypes: RepositoryType[];
   namespaceStrategy: string;
   loading?: boolean;
-  t: (p: string) => string;
 };
 
 type State = {
@@ -54,10 +53,8 @@ class RepositoryForm extends React.Component<Props, State> {
   }
 
   isFalsy(value) {
-    if (!value) {
-      return true;
-    }
-    return false;
+    return !value;
+
   }
 
   isValid = () => {
@@ -236,4 +233,4 @@ class RepositoryForm extends React.Component<Props, State> {
   };
 }
 
-export default translate("repos")(RepositoryForm);
+export default withTranslation("repos")(RepositoryForm);

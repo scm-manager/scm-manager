@@ -1,13 +1,13 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { History } from "history";
 import { User } from "@scm-manager/ui-types";
 import { Subtitle, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 import { deleteUser, getDeleteUserFailure, isDeleteUserPending } from "../modules/users";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { History } from "history";
 
-type Props = {
+type Props = WithTranslation & {
   loading: boolean;
   error: Error;
   user: User;
@@ -16,7 +16,6 @@ type Props = {
 
   // context props
   history: History;
-  t: (p: string) => string;
 };
 
 class DeleteUser extends React.Component<Props> {
@@ -96,4 +95,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(translate("users")(DeleteUser)));
+)(withRouter(withTranslation("users")(DeleteUser)));

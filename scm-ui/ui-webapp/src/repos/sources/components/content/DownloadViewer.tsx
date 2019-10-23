@@ -1,10 +1,9 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { File } from "@scm-manager/ui-types";
 import { DownloadButton } from "@scm-manager/ui-components";
 
-type Props = {
-  t: (p: string) => string;
+type Props = WithTranslation & {
   file: File;
 };
 
@@ -19,4 +18,4 @@ class DownloadViewer extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(DownloadViewer);
+export default withTranslation("repos")(DownloadViewer);

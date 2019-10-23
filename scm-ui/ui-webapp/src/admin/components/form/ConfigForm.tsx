@@ -1,21 +1,19 @@
 import React from "react";
-import { translate } from "react-i18next";
-import { SubmitButton, Notification } from "@scm-manager/ui-components";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { NamespaceStrategies, Config } from "@scm-manager/ui-types";
+import { SubmitButton, Notification } from "@scm-manager/ui-components";
 import ProxySettings from "./ProxySettings";
 import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";
 import LoginAttempt from "./LoginAttempt";
 
-type Props = {
+type Props = WithTranslation & {
   submitForm: (p: Config) => void;
   config?: Config;
   loading?: boolean;
   configReadPermission: boolean;
   configUpdatePermission: boolean;
   namespaceStrategies?: NamespaceStrategies;
-  // context props
-  t: (p: string) => string;
 };
 
 type State = {
@@ -189,4 +187,4 @@ class ConfigForm extends React.Component<Props, State> {
   };
 }
 
-export default translate("config")(ConfigForm);
+export default withTranslation("config")(ConfigForm);

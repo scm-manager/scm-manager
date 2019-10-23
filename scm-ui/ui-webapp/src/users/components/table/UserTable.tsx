@@ -1,10 +1,9 @@
 import React from "react";
-import { translate } from "react-i18next";
-import UserRow from "./UserRow";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
+import UserRow from "./UserRow";
 
-type Props = {
-  t: (p: string) => string;
+type Props = WithTranslation & {
   users: User[];
 };
 
@@ -30,4 +29,4 @@ class UserTable extends React.Component<Props> {
   }
 }
 
-export default translate("users")(UserTable);
+export default withTranslation("users")(UserTable);

@@ -1,13 +1,13 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { History } from "history";
 import { Repository } from "@scm-manager/ui-types";
 import { Subtitle, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 import { deleteRepo, getDeleteRepoFailure, isDeleteRepoPending } from "../modules/repos";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { History } from "history";
 
-type Props = {
+type Props = WithTranslation & {
   loading: boolean;
   error: Error;
   repository: Repository;
@@ -16,7 +16,6 @@ type Props = {
 
   // context props
   history: History;
-  t: (p: string) => string;
 };
 
 class DeleteRepo extends React.Component<Props> {
@@ -98,4 +97,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(translate("repos")(DeleteRepo)));
+)(withRouter(withTranslation("repos")(DeleteRepo)));

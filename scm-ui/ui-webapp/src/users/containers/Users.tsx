@@ -1,16 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { User, PagedCollection } from "@scm-manager/ui-types";
-import {
-  fetchUsersByPage,
-  getUsersFromState,
-  selectListAsCollection,
-  isPermittedToCreateUsers,
-  isFetchUsersPending,
-  getFetchUsersFailure
-} from "../modules/users";
 import {
   Page,
   PageActions,
@@ -20,10 +12,18 @@ import {
   urls,
   CreateButton
 } from "@scm-manager/ui-components";
-import { UserTable } from "./../components/table";
 import { getUsersLink } from "../../modules/indexResource";
+import {
+  fetchUsersByPage,
+  getUsersFromState,
+  selectListAsCollection,
+  isPermittedToCreateUsers,
+  isFetchUsersPending,
+  getFetchUsersFailure
+} from "../modules/users";
+import { UserTable } from "./../components/table";
 
-type Props = {
+type Props = WithTranslation & {
   users: User[];
   loading: boolean;
   error: Error;
@@ -33,7 +33,6 @@ type Props = {
   usersLink: string;
 
   // context objects
-  t: (p: string) => string;
   history: History;
   location: any;
 
@@ -124,4 +123,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("users")(Users));
+)(withTranslation("users")(Users));
