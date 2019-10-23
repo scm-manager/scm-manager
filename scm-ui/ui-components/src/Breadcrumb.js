@@ -1,11 +1,11 @@
 //@flow
 import React from "react";
-import {Link} from "react-router-dom";
-import {translate} from "react-i18next";
+import { Link } from "react-router-dom";
+import { translate } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import {binder, ExtensionPoint} from "@scm-manager/ui-extensions";
-import type {Branch, Repository} from "@scm-manager/ui-types";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import type { Branch, Repository } from "@scm-manager/ui-types";
 import Icon from "./Icon";
 
 type Props = {
