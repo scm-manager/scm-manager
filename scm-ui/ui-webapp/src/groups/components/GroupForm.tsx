@@ -1,5 +1,6 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { Group, SelectValue } from "@scm-manager/ui-types";
 import {
   Subtitle,
   AutocompleteAddEntryToTableField,
@@ -9,12 +10,10 @@ import {
   Textarea,
   Checkbox
 } from "@scm-manager/ui-components";
-import { Group, SelectValue } from "@scm-manager/ui-types";
 
 import * as validator from "./groupValidation";
 
-type Props = {
-  t: (p: string) => string;
+type Props = WithTranslation & {
   submitForm: (p: Group) => void;
   loading?: boolean;
   group?: Group;
@@ -218,4 +217,4 @@ class GroupForm extends React.Component<Props, State> {
   };
 }
 
-export default translate("groups")(GroupForm);
+export default withTranslation("groups")(GroupForm);

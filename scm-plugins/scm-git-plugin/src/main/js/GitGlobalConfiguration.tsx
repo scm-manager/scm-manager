@@ -1,12 +1,10 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Title, Configuration } from "@scm-manager/ui-components";
 import GitConfigurationForm from "./GitConfigurationForm";
 
-type Props = {
+type Props = WithTranslation & {
   link: string;
-
-  t: (p: string) => string;
 };
 
 class GitGlobalConfiguration extends React.Component<Props> {
@@ -22,4 +20,4 @@ class GitGlobalConfiguration extends React.Component<Props> {
   }
 }
 
-export default translate("plugins")(GitGlobalConfiguration);
+export default withTranslation("plugins")(GitGlobalConfiguration);

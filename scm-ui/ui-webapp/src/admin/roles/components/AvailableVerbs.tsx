@@ -1,12 +1,9 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { RepositoryRole } from "@scm-manager/ui-types";
 
-type Props = {
+type Props = WithTranslation & {
   role: RepositoryRole;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class AvailableVerbs extends React.Component<Props> {
@@ -31,4 +28,4 @@ class AvailableVerbs extends React.Component<Props> {
   }
 }
 
-export default translate("plugins")(AvailableVerbs);
+export default withTranslation("plugins")(AvailableVerbs);

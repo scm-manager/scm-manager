@@ -1,7 +1,8 @@
 import i18n from "i18next";
+// @ts-ignore
 import Backend from "i18next-fetch-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
-import { reactI18nextModule } from "react-i18next";
+import { initReactI18next } from "react-i18next";
 import { urls } from "@scm-manager/ui-components";
 
 const loadPath = urls.withContextPath("/locales/{{lng}}/{{ns}}.json");
@@ -11,7 +12,7 @@ const loadPath = urls.withContextPath("/locales/{{lng}}/{{ns}}.json");
 i18n
   .use(Backend)
   .use(LanguageDetector)
-  .use(reactI18nextModule)
+  .use(initReactI18next)
   .init({
     fallbackLng: "en",
 
@@ -29,7 +30,8 @@ i18n
     },
 
     react: {
-      wait: true
+      wait: true,
+      useSuspense: false
     },
 
     backend: {

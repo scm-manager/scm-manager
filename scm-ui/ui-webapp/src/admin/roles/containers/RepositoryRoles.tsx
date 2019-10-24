@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { RepositoryRole, PagedCollection } from "@scm-manager/ui-types";
 import { Title, Subtitle, Loading, Notification, LinkPaginator, urls, CreateButton } from "@scm-manager/ui-components";
@@ -16,7 +16,7 @@ import {
 import PermissionRoleTable from "../components/PermissionRoleTable";
 import { getRepositoryRolesLink } from "../../../modules/indexResource";
 
-type Props = {
+type Props = WithTranslation & {
   baseUrl: string;
   roles: RepositoryRole[];
   loading: boolean;
@@ -27,7 +27,6 @@ type Props = {
   rolesLink: string;
 
   // context objects
-  t: (p: string) => string;
   history: History;
   location: any;
 
@@ -123,5 +122,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(translate("admin")(RepositoryRoles))
+  )(withTranslation("admin")(RepositoryRoles))
 );

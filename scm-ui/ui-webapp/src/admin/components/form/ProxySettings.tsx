@@ -1,16 +1,15 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Checkbox, InputField, Subtitle, AddEntryToTableField } from "@scm-manager/ui-components";
 import ProxyExcludesTable from "../table/ProxyExcludesTable";
 
-type Props = {
+type Props = WithTranslation & {
   proxyPassword: string;
   proxyPort: number;
   proxyServer: string;
   proxyUser: string;
   enableProxy: boolean;
   proxyExcludes: string[];
-  t: (p: string) => string;
   onChange: (p1: boolean, p2: any, p3: string) => void;
   hasUpdatePermission: boolean;
 };
@@ -131,4 +130,4 @@ class ProxySettings extends React.Component<Props> {
   };
 }
 
-export default translate("config")(ProxySettings);
+export default withTranslation("config")(ProxySettings);

@@ -2,7 +2,7 @@ import React from "react";
 import { binder } from "@scm-manager/ui-extensions";
 import { NavLink } from "../navigation";
 import { Route } from "react-router-dom";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository, Links, Link } from "@scm-manager/ui-types";
 
 type GlobalRouteProps = {
@@ -14,6 +14,8 @@ type RepositoryRouteProps = {
   url: string;
   repository: Repository;
 };
+
+type RepositoryNavProps = WithTranslation & { url: string };
 
 class ConfigurationBinder {
   i18nNamespace = "plugins";
@@ -34,7 +36,7 @@ class ConfigurationBinder {
     };
 
     // create NavigationLink with translated label
-    const ConfigNavLink = translate(this.i18nNamespace)(({ t }) => {
+    const ConfigNavLink = withTranslation(this.i18nNamespace)(({ t }) => {
       return this.navLink("/admin/settings" + to, labelI18nKey, t);
     });
 
@@ -64,7 +66,7 @@ class ConfigurationBinder {
     };
 
     // create NavigationLink with translated label
-    const RepoNavLink = translate(this.i18nNamespace)(({ t, url }) => {
+    const RepoNavLink = withTranslation(this.i18nNamespace)(({ t, url }: RepositoryNavProps) => {
       return this.navLink(url + to, labelI18nKey, t);
     });
 
@@ -94,7 +96,7 @@ class ConfigurationBinder {
     };
 
     // create NavigationLink with translated label
-    const RepoNavLink = translate(this.i18nNamespace)(({ t, url }) => {
+    const RepoNavLink = withTranslation(this.i18nNamespace)(({ t, url }: RepositoryNavProps) => {
       return this.navLink(url + "/settings" + to, labelI18nKey, t);
     });
 

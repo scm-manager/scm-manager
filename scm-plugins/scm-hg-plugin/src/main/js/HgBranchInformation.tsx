@@ -1,10 +1,9 @@
 import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Branch } from "@scm-manager/ui-types";
-import { translate } from "react-i18next";
 
-type Props = {
+type Props = WithTranslation & {
   branch: Branch;
-  t: (p: string) => string;
 };
 
 class HgBranchInformation extends React.Component<Props> {
@@ -26,4 +25,4 @@ class HgBranchInformation extends React.Component<Props> {
   }
 }
 
-export default translate("plugins")(HgBranchInformation);
+export default withTranslation("plugins")(HgBranchInformation);

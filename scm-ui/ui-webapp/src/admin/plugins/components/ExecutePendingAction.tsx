@@ -1,14 +1,11 @@
 import React from "react";
-import { Button } from "@scm-manager/ui-components";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { PendingPlugins } from "@scm-manager/ui-types";
-import { translate } from "react-i18next";
+import { Button } from "@scm-manager/ui-components";
 import ExecutePendingModal from "./ExecutePendingModal";
 
-type Props = {
+type Props = WithTranslation & {
   pendingPlugins: PendingPlugins;
-
-  // context props
-  t: (p: string) => string;
 };
 
 type State = {
@@ -55,4 +52,4 @@ class ExecutePendingAction extends React.Component<Props, State> {
   }
 }
 
-export default translate("admin")(ExecutePendingAction);
+export default withTranslation("admin")(ExecutePendingAction);

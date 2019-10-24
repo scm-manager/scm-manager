@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import App from "./App";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";
-
 import { Loading, ErrorBoundary } from "@scm-manager/ui-components";
 import {
   fetchIndexResources,
@@ -16,16 +15,13 @@ import { IndexResources } from "@scm-manager/ui-types";
 import ScrollToTop from "./ScrollToTop";
 import IndexErrorPage from "./IndexErrorPage";
 
-type Props = {
+type Props = WithTranslation & {
   error: Error;
   loading: boolean;
   indexResources: IndexResources;
 
   // dispatcher functions
   fetchIndexResources: () => void;
-
-  // context props
-  t: (p: string) => string;
 };
 
 type State = {
@@ -93,5 +89,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(translate("commons")(Index))
+  )(withTranslation("commons")(Index))
 );

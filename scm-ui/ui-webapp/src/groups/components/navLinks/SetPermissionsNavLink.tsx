@@ -1,10 +1,9 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Group } from "@scm-manager/ui-types";
 import { NavLink } from "@scm-manager/ui-components";
 
-type Props = {
-  t: (p: string) => string;
+type Props = WithTranslation & {
   group: Group;
   permissionsUrl: string;
 };
@@ -24,4 +23,4 @@ class ChangePermissionNavLink extends React.Component<Props> {
   };
 }
 
-export default translate("groups")(ChangePermissionNavLink);
+export default withTranslation("groups")(ChangePermissionNavLink);

@@ -1,10 +1,9 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { ButtonAddons, Button } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   className?: string;
-  t: (p: string) => string;
   historyIsSelected: boolean;
   showHistory: (p: boolean) => void;
 };
@@ -46,4 +45,4 @@ class FileButtonAddons extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(FileButtonAddons);
+export default withTranslation("repos")(FileButtonAddons);

@@ -1,21 +1,18 @@
 import React from "react";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { RepositoryRole } from "@scm-manager/ui-types";
 import { InputField, SubmitButton } from "@scm-manager/ui-components";
-import PermissionCheckbox from "../../../repos/permissions/components/PermissionCheckbox";
-import { fetchAvailableVerbs, getFetchVerbsFailure, getVerbsFromState, isFetchVerbsPending } from "../modules/roles";
 import { getRepositoryRolesLink, getRepositoryVerbsLink } from "../../../modules/indexResource";
+import { fetchAvailableVerbs, getFetchVerbsFailure, getVerbsFromState, isFetchVerbsPending } from "../modules/roles";
+import PermissionCheckbox from "../../../repos/permissions/components/PermissionCheckbox";
 
-type Props = {
+type Props = WithTranslation & {
   role?: RepositoryRole;
   loading?: boolean;
   availableVerbs: string[];
   verbsLink: string;
   submitForm: (p: RepositoryRole) => void;
-
-  // context objects
-  t: (p: string) => string;
 
   // dispatch functions
   fetchAvailableVerbs: (link: string) => void;
@@ -123,7 +120,7 @@ class RepositoryRoleForm extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   const loading = isFetchVerbsPending(state);
   const error = getFetchVerbsFailure(state);
   const verbsLink = getRepositoryVerbsLink(state);
@@ -150,4 +147,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("admin")(RepositoryRoleForm));
+)(withTranslation("admin")(RepositoryRoleForm));

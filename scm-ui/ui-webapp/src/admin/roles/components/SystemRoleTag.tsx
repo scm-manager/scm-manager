@@ -1,13 +1,10 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Tag } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   system?: boolean;
-
-  // context props
-  t: (p: string) => string;
 };
 
 const LeftMarginTag = styled(Tag)`
@@ -26,4 +23,4 @@ class SystemRoleTag extends React.Component<Props> {
   }
 }
 
-export default translate("admin")(SystemRoleTag);
+export default withTranslation("admin")(SystemRoleTag);

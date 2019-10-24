@@ -1,11 +1,10 @@
 import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import { translate } from "react-i18next";
 import { Checkbox, MailLink, DateFromNow } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   user: User;
-  t: (p: string) => string;
 };
 
 class Details extends React.Component<Props> {
@@ -56,4 +55,4 @@ class Details extends React.Component<Props> {
   }
 }
 
-export default translate("users")(Details);
+export default withTranslation("users")(Details);

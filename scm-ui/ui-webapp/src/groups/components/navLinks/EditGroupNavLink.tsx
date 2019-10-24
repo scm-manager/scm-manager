@@ -1,12 +1,11 @@
 import React from "react";
 import { Group } from "@scm-manager/ui-types";
 import { NavLink } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 
-type Props = {
+type Props = WithTranslation & {
   group: Group;
   editUrl: string;
-  t: (p: string) => string;
 };
 
 class EditGroupNavLink extends React.Component<Props> {
@@ -24,4 +23,4 @@ class EditGroupNavLink extends React.Component<Props> {
   }
 }
 
-export default translate("groups")(EditGroupNavLink);
+export default withTranslation("groups")(EditGroupNavLink);

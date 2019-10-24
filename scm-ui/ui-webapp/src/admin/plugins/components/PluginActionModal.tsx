@@ -1,10 +1,10 @@
 import * as React from "react";
-import { Button, ButtonGroup, ErrorNotification, Modal } from "@scm-manager/ui-components";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
-import { translate } from "react-i18next";
+import { Button, ButtonGroup, ErrorNotification, Modal } from "@scm-manager/ui-components";
 import SuccessNotification from "./SuccessNotification";
 
-type Props = {
+type Props = WithTranslation & {
   onClose: () => void;
   actionType: string;
   pendingPlugins?: PendingPlugins;
@@ -15,9 +15,6 @@ type Props = {
   label: string;
 
   children?: React.Node;
-
-  // context props
-  t: (p: string) => string;
 };
 
 type State = {
@@ -199,4 +196,4 @@ class PluginActionModal extends React.Component<Props, State> {
   }
 }
 
-export default translate("admin")(PluginActionModal);
+export default withTranslation("admin")(PluginActionModal);

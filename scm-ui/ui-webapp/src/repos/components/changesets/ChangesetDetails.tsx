@@ -1,5 +1,5 @@
 import React from "react";
-import { Interpolate, translate } from "react-i18next";
+import { Trans, WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -17,12 +17,9 @@ import {
   Button
 } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   changeset: Changeset;
   repository: Repository;
-
-  // context props
-  t: (p: string) => string;
 };
 
 type State = {
@@ -85,7 +82,7 @@ class ChangesetDetails extends React.Component<Props, State> {
                 <ChangesetAuthor changeset={changeset} />
               </p>
               <p>
-                <Interpolate i18nKey="changeset.summary" id={id} time={date} />
+                <Trans i18nKey="repos:changeset.summary" components={[id, date]} />
               </p>
             </div>
             <div className="media-right">{this.renderTags()}</div>
@@ -154,4 +151,4 @@ class ChangesetDetails extends React.Component<Props, State> {
   };
 }
 
-export default translate("repos")(ChangesetDetails);
+export default withTranslation("repos")(ChangesetDetails);

@@ -2,14 +2,11 @@ import React from "react";
 import { Changeset, Link } from "@scm-manager/ui-types";
 import LoadingDiff from "../LoadingDiff";
 import Notification from "../../Notification";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 
-type Props = {
+type Props = WithTranslation & {
   changeset: Changeset;
   defaultCollapse?: boolean;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class ChangesetDiff extends React.Component<Props> {
@@ -36,4 +33,4 @@ class ChangesetDiff extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(ChangesetDiff);
+export default withTranslation("repos")(ChangesetDiff);

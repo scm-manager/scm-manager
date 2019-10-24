@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import {
   createPermission,
   createPermissionReset,
@@ -35,7 +35,7 @@ import {
   getUserAutoCompleteLink
 } from "../../../modules/indexResource";
 
-type Props = {
+type Props = WithTranslation & {
   availablePermissions: boolean;
   availableRepositoryRoles: RepositoryRole[];
   availableVerbs: string[];
@@ -52,7 +52,7 @@ type Props = {
   groupAutocompleteLink: string;
   userAutocompleteLink: string;
 
-  //dispatch functions
+  // dispatch functions
   fetchAvailablePermissionsIfNeeded: (repositoryRolesLink: string, repositoryVerbsLink: string) => void;
   fetchPermissions: (link: string, namespace: string, repoName: string) => void;
   createPermission: (
@@ -65,8 +65,8 @@ type Props = {
   createPermissionReset: (p1: string, p2: string) => void;
   modifyPermissionReset: (p1: string, p2: string) => void;
   deletePermissionReset: (p1: string, p2: string) => void;
+
   // context props
-  t: (p: string) => string;
   match: any;
   history: History;
 };
@@ -248,4 +248,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("repos")(Permissions));
+)(withTranslation("repos")(Permissions));

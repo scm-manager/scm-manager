@@ -1,10 +1,9 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import ArrayConfigTable from "./ArrayConfigTable";
 
-type Props = {
+type Props = WithTranslation & {
   proxyExcludes: string[];
-  t: (p: string) => string;
   onChange: (p1: boolean, p2: any, p3: string) => void;
   disabled: boolean;
 };
@@ -31,4 +30,4 @@ class ProxyExcludesTable extends React.Component<Props, State> {
   };
 }
 
-export default translate("config")(ProxyExcludesTable);
+export default withTranslation("config")(ProxyExcludesTable);

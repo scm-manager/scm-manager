@@ -1,15 +1,12 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { PagedCollection } from "@scm-manager/ui-types";
 import { Button } from "./index";
 
-type Props = {
+type Props = WithTranslation & {
   collection: PagedCollection;
   page: number;
   updatePage: (p: number) => void;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class StatePaginator extends React.Component<Props> {
@@ -123,4 +120,4 @@ class StatePaginator extends React.Component<Props> {
     );
   }
 }
-export default translate("commons")(StatePaginator);
+export default withTranslation("commons")(StatePaginator);

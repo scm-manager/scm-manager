@@ -1,10 +1,9 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import GroupRow from "./GroupRow";
 import { Group } from "@scm-manager/ui-types";
 
-type Props = {
-  t: (p: string) => string;
+type Props = WithTranslation & {
   groups: Group[];
 };
 
@@ -29,4 +28,4 @@ class GroupTable extends React.Component<Props> {
   }
 }
 
-export default translate("groups")(GroupTable);
+export default withTranslation("groups")(GroupTable);

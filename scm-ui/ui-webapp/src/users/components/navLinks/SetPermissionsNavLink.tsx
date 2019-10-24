@@ -1,10 +1,9 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
 import { NavLink } from "@scm-manager/ui-components";
 
-type Props = {
-  t: (p: string) => string;
+type Props = WithTranslation & {
   user: User;
   permissionsUrl: string;
 };
@@ -24,4 +23,4 @@ class ChangePermissionNavLink extends React.Component<Props> {
   };
 }
 
-export default translate("users")(ChangePermissionNavLink);
+export default withTranslation("users")(ChangePermissionNavLink);

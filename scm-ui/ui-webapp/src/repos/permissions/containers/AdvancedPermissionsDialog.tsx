@@ -1,17 +1,14 @@
 import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { ButtonGroup, Button, SubmitButton, Modal } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
 import PermissionCheckbox from "../components/PermissionCheckbox";
 
-type Props = {
+type Props = WithTranslation & {
   readOnly: boolean;
   availableVerbs: string[];
   selectedVerbs: string[];
   onSubmit: (p: string[]) => void;
   onClose: () => void;
-
-  // context props
-  t: (p: string) => string;
 };
 
 type State = {
@@ -83,4 +80,4 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
   };
 }
 
-export default translate("repos")(AdvancedPermissionsDialog);
+export default withTranslation("repos")(AdvancedPermissionsDialog);

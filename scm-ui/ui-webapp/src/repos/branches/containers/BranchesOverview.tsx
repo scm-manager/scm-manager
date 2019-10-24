@@ -1,4 +1,10 @@
 import React from "react";
+import { connect } from "react-redux";
+import { compose } from "redux";
+import { withRouter } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { Branch, Repository } from "@scm-manager/ui-types";
+import { CreateButton, ErrorNotification, Loading, Notification, Subtitle } from "@scm-manager/ui-components";
 import {
   fetchBranches,
   getBranches,
@@ -7,15 +13,9 @@ import {
   isPermittedToCreateBranches
 } from "../modules/branches";
 import { orderBranches } from "../util/orderBranches";
-import { connect } from "react-redux";
-import { Branch, Repository } from "@scm-manager/ui-types";
-import { compose } from "redux";
-import { translate } from "react-i18next";
-import { withRouter } from "react-router-dom";
-import { CreateButton, ErrorNotification, Loading, Notification, Subtitle } from "@scm-manager/ui-components";
 import BranchTable from "../components/BranchTable";
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
   baseUrl: string;
   loading: boolean;
@@ -29,7 +29,6 @@ type Props = {
   // Context props
   history: any;
   match: any;
-  t: (p: string) => string;
 };
 
 class BranchesOverview extends React.Component<Props> {
@@ -101,7 +100,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default compose(
-  translate("repos"),
+  withTranslation("repos"),
   withRouter,
   connect(
     mapStateToProps,

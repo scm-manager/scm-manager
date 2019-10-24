@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { compose } from "redux";
 import { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import {
@@ -32,7 +32,7 @@ import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
 
-type Props = {
+type Props = WithTranslation & {
   loading: boolean;
   error: Error;
   collection: PluginCollection;
@@ -42,9 +42,6 @@ type Props = {
   installedPluginsLink: string;
   pendingPluginsLink: string;
   pendingPlugins: PendingPlugins;
-
-  // context objects
-  t: (key: string, params?: object) => string;
 
   // dispatched functions
   fetchPluginsByLink: (link: string) => void;
@@ -291,7 +288,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default compose(
-  translate("admin"),
+  withTranslation("admin"),
   connect(
     mapStateToProps,
     mapDispatchToProps

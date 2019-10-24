@@ -1,17 +1,16 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository, Branch, BranchRequest } from "@scm-manager/ui-types";
 import { Select, InputField, SubmitButton, validation as validator } from "@scm-manager/ui-components";
 import { orderBranches } from "../util/orderBranches";
 
-type Props = {
+type Props = WithTranslation & {
   submitForm: (p: BranchRequest) => void;
   repository: Repository;
   branches: Branch[];
   loading?: boolean;
   transmittedName?: string;
   disabled?: boolean;
-  t: (p: string) => string;
 };
 
 type State = {
@@ -112,4 +111,4 @@ class BranchForm extends React.Component<Props, State> {
   };
 }
 
-export default translate("repos")(BranchForm);
+export default withTranslation("repos")(BranchForm);

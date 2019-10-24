@@ -1,14 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
-import UserForm from "../components/UserForm";
-import { User } from "@scm-manager/ui-types";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
-import { createUser, createUserReset, isCreateUserPending, getCreateUserFailure } from "../modules/users";
+import { User } from "@scm-manager/ui-types";
 import { Page } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
 import { getUsersLink } from "../../modules/indexResource";
+import { createUser, createUserReset, isCreateUserPending, getCreateUserFailure } from "../modules/users";
+import UserForm from "../components/UserForm";
 
-type Props = {
+type Props = WithTranslation & {
   loading?: boolean;
   error?: Error;
   usersLink: string;
@@ -18,7 +18,6 @@ type Props = {
   resetForm: () => void;
 
   // context objects
-  t: (p: string) => string;
   history: History;
 };
 
@@ -72,4 +71,4 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("users")(CreateUser));
+)(withTranslation("users")(CreateUser));

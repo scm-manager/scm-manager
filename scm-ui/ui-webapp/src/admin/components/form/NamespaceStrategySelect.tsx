@@ -1,17 +1,15 @@
 import React from "react";
-import { translate, TFunction } from "react-i18next";
-import { Select } from "@scm-manager/ui-components";
+import { withTranslation, WithTranslation } from "react-i18next";
 import { NamespaceStrategies } from "@scm-manager/ui-types";
+import { Select } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   namespaceStrategies: NamespaceStrategies;
   label: string;
   value?: string;
   disabled?: boolean;
   helpText?: string;
   onChange: (value: string, name?: string) => void;
-  // context props
-  t: TFunction;
 };
 
 class NamespaceStrategySelect extends React.Component<Props> {
@@ -59,4 +57,4 @@ class NamespaceStrategySelect extends React.Component<Props> {
   }
 }
 
-export default translate("plugins")(NamespaceStrategySelect);
+export default withTranslation("plugins")(NamespaceStrategySelect);

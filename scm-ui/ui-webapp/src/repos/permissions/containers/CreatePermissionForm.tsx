@@ -1,5 +1,5 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { PermissionCollection, PermissionCreateEntry, RepositoryRole, SelectValue } from "@scm-manager/ui-types";
 import {
   Button,
@@ -15,7 +15,7 @@ import RoleSelector from "../components/RoleSelector";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
 import { findVerbsForRole } from "../modules/permissions";
 
-type Props = {
+type Props = WithTranslation & {
   availableRoles: RepositoryRole[];
   availableVerbs: string[];
   createPermission: (permission: PermissionCreateEntry) => void;
@@ -23,9 +23,6 @@ type Props = {
   currentPermissions: PermissionCollection;
   groupAutocompleteLink: string;
   userAutocompleteLink: string;
-
-  // Context props
-  t: (p: string) => string;
 };
 
 type State = {
@@ -231,4 +228,4 @@ class CreatePermissionForm extends React.Component<Props, State> {
   };
 }
 
-export default translate("repos")(CreatePermissionForm);
+export default withTranslation("repos")(CreatePermissionForm);

@@ -1,11 +1,10 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { apiClient, SyntaxHighlighter } from "@scm-manager/ui-components";
 import { File } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 
-type Props = {
-  t: (p: string) => string;
+type Props = WithTranslation & {
   file: File;
   language: string;
 };
@@ -85,4 +84,4 @@ export function getContent(url: string) {
     });
 }
 
-export default translate("repos")(SourcecodeViewer);
+export default withTranslation("repos")(SourcecodeViewer);

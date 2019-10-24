@@ -1,20 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Page, ErrorPage, Loading, Navigation, SubNavigation, Section, NavLink } from "@scm-manager/ui-components";
 import { Route } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { History } from "history";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { Group } from "@scm-manager/ui-types";
+import { Page, ErrorPage, Loading, Navigation, SubNavigation, Section, NavLink } from "@scm-manager/ui-components";
+import { getGroupsLink } from "../../modules/indexResource";
+import { fetchGroupByName, getGroupByName, isFetchGroupPending, getFetchGroupFailure } from "../modules/groups";
 import { Details } from "./../components/table";
 import { EditGroupNavLink, SetPermissionsNavLink } from "./../components/navLinks";
-import { Group } from "@scm-manager/ui-types";
-import { History } from "history";
-import { fetchGroupByName, getGroupByName, isFetchGroupPending, getFetchGroupFailure } from "../modules/groups";
-
-import { translate } from "react-i18next";
 import EditGroup from "./EditGroup";
-import { getGroupsLink } from "../../modules/indexResource";
 import SetPermissions from "../../permissions/components/SetPermissions";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
-type Props = {
+type Props = WithTranslation & {
   name: string;
   group: Group;
   loading: boolean;
@@ -25,7 +24,6 @@ type Props = {
   fetchGroupByName: (p1: string, p2: string) => void;
 
   // context objects
-  t: (p: string) => string;
   match: any;
   history: History;
 };
@@ -123,4 +121,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("groups")(SingleGroup));
+)(withTranslation("groups")(SingleGroup));

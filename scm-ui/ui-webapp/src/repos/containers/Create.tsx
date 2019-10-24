@@ -1,17 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
-import { Page } from "@scm-manager/ui-components";
-import RepositoryForm from "../components/form";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { History } from "history";
 import { Repository, RepositoryType, NamespaceStrategies } from "@scm-manager/ui-types";
+import { Page } from "@scm-manager/ui-components";
 import {
   fetchRepositoryTypesIfNeeded,
   getFetchRepositoryTypesFailure,
   getRepositoryTypes,
   isFetchRepositoryTypesPending
 } from "../modules/repositoryTypes";
+import RepositoryForm from "../components/form";
 import { createRepo, createRepoReset, getCreateRepoFailure, isCreateRepoPending } from "../modules/repos";
-import { History } from "history";
 import { getRepositoriesLink } from "../../modules/indexResource";
 import {
   fetchNamespaceStrategiesIfNeeded,
@@ -20,7 +20,7 @@ import {
   isFetchNamespaceStrategiesPending
 } from "../../admin/modules/namespaceStrategies";
 
-type Props = {
+type Props = WithTranslation & {
   repositoryTypes: RepositoryType[];
   namespaceStrategies: NamespaceStrategies;
   pageLoading: boolean;
@@ -35,7 +35,6 @@ type Props = {
   resetForm: () => void;
 
   // context props
-  t: (p: string) => string;
   history: History;
 };
 
@@ -115,4 +114,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("repos")(Create));
+)(withTranslation("repos")(Create));

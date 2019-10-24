@@ -1,11 +1,10 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { BackendError, ForbiddenError, UnauthorizedError } from "./errors";
 import Notification from "./Notification";
 import BackendErrorNotification from "./BackendErrorNotification";
 
-type Props = {
-  t: (p: string) => string;
+type Props = WithTranslation & {
   error?: Error;
 };
 
@@ -40,4 +39,4 @@ class ErrorNotification extends React.Component<Props> {
   }
 }
 
-export default translate("commons")(ErrorNotification);
+export default withTranslation("commons")(ErrorNotification);

@@ -1,12 +1,11 @@
 import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import { NavLink } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
   editUrl: string;
-  t: (p: string) => string;
 };
 
 class EditRepoNavLink extends React.Component<Props> {
@@ -24,4 +23,4 @@ class EditRepoNavLink extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(EditRepoNavLink);
+export default withTranslation("repos")(EditRepoNavLink);

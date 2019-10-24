@@ -6,13 +6,12 @@ import {
   PasswordConfirmation,
   SubmitButton
 } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";
 import { changePassword } from "../modules/changePassword";
 
-type Props = {
+type Props = WithTranslation & {
   me: Me;
-  t: (p: string) => string;
 };
 
 type State = {
@@ -150,4 +149,4 @@ class ChangeUserPassword extends React.Component<Props, State> {
   };
 }
 
-export default translate("commons")(ChangeUserPassword);
+export default withTranslation("commons")(ChangeUserPassword);

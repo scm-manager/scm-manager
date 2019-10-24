@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Link } from "@scm-manager/ui-types";
@@ -9,12 +9,9 @@ import { getLink } from "../../modules/indexResource";
 import { loadPermissionsForEntity, setPermissions } from "./handlePermissions";
 import PermissionCheckbox from "./PermissionCheckbox";
 
-type Props = {
+type Props = WithTranslation & {
   availablePermissionLink: string;
   selectedPermissionsLink: Link;
-
-  // context props
-  t: (p: string) => string;
 };
 
 type State = {
@@ -189,4 +186,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(translate("permissions")(SetPermissions));
+export default connect(mapStateToProps)(withTranslation("permissions")(SetPermissions));

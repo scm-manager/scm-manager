@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { History } from "history";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import { RepositoryRole, Permission } from "@scm-manager/ui-types";
 import { Button, Icon } from "@scm-manager/ui-components";
@@ -16,13 +16,12 @@ import DeletePermissionButton from "../components/buttons/DeletePermissionButton
 import RoleSelector from "../components/RoleSelector";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
 
-type Props = {
+type Props = WithTranslation & {
   availableRepositoryRoles: RepositoryRole[];
   availableRepositoryVerbs: string[];
   submitForm: (p: Permission) => void;
   modifyPermission: (permission: Permission, namespace: string, name: string) => void;
   permission: Permission;
-  t: (p: string) => string;
   namespace: string;
   repoName: string;
   match: any;
@@ -233,4 +232,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(translate("repos")(SinglePermission));
+)(withTranslation("repos")(SinglePermission));

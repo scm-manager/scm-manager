@@ -1,16 +1,13 @@
 import * as React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { InfoItem } from "./InfoItem";
 import { Icon } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   type: "plugin" | "feature";
   item: InfoItem;
-
-  // context props
-  t: (p: string) => string;
 };
 
 const BottomMarginA = styled.a`
@@ -73,4 +70,4 @@ class InfoBox extends React.Component<Props> {
   }
 }
 
-export default translate("commons")(InfoBox);
+export default withTranslation("commons")(InfoBox);

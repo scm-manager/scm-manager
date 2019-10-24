@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import FileTree from "../components/FileTree";
 import { BranchSelector, Breadcrumb, ErrorNotification, Loading } from "@scm-manager/ui-components";
-import { translate } from "react-i18next";
+import FileTree from "../components/FileTree";
 import {
   fetchBranches,
   getBranches,
@@ -15,7 +15,7 @@ import { compose } from "redux";
 import Content from "./Content";
 import { fetchSources, isDirectory } from "../modules/sources";
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
   loading: boolean;
   error: Error;
@@ -33,7 +33,6 @@ type Props = {
   history: any;
   match: any;
   location: any;
-  t: (p: string) => string;
 };
 
 type State = {
@@ -203,7 +202,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default compose(
-  translate("repos"),
+  withTranslation("repos"),
   withRouter,
   connect(
     mapStateToProps,

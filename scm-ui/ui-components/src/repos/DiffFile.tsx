@@ -1,5 +1,5 @@
 import React from "react";
-import { translate, InjectedTranslateProps } from "react-i18next";
+import { withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 // @ts-ignore
@@ -10,7 +10,7 @@ import Icon from "../Icon";
 import { File, Hunk as HunkType, DiffObjectProps } from "./DiffTypes";
 
 type Props = DiffObjectProps &
-  InjectedTranslateProps & {
+  WithTranslation & {
     file: File;
     defaultCollapse?: boolean;
   };
@@ -271,4 +271,4 @@ class DiffFile extends React.Component<Props, State> {
   }
 }
 
-export default translate("repos")(DiffFile);
+export default withTranslation("repos")(DiffFile);

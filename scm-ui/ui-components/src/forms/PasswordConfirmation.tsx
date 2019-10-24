@@ -1,5 +1,5 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import InputField from "./InputField";
 
 type State = {
@@ -8,11 +8,9 @@ type State = {
   passwordValid: boolean;
   passwordConfirmationFailed: boolean;
 };
-type Props = {
+type Props = WithTranslation & {
   passwordChanged: (p1: string, p2: boolean) => void;
   passwordValidator?: (p: string) => boolean;
-  // Context props
-  t: (p: string) => string;
 };
 
 class PasswordConfirmation extends React.Component<Props, State> {
@@ -106,4 +104,4 @@ class PasswordConfirmation extends React.Component<Props, State> {
   };
 }
 
-export default translate("commons")(PasswordConfirmation);
+export default withTranslation("commons")(PasswordConfirmation);

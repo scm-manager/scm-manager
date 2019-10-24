@@ -1,6 +1,6 @@
 import React from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 import { Links } from "@scm-manager/ui-types";
-import { translate } from "react-i18next";
 import { Checkbox, Select } from "@scm-manager/ui-components";
 
 type Configuration = {
@@ -9,14 +9,11 @@ type Configuration = {
   _links: Links;
 };
 
-type Props = {
+type Props = WithTranslation & {
   initialConfiguration: Configuration;
   readOnly: boolean;
 
   onConfigurationChange: (p1: Configuration, p2: boolean) => void;
-
-  // context props
-  t: (p: string) => string;
 };
 
 type State = Configuration;
@@ -84,4 +81,4 @@ class SvnConfigurationForm extends React.Component<Props, State> {
   }
 }
 
-export default translate("plugins")(SvnConfigurationForm);
+export default withTranslation("plugins")(SvnConfigurationForm);

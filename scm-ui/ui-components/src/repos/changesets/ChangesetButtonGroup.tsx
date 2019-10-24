@@ -2,14 +2,11 @@ import React from "react";
 import { Changeset, Repository } from "@scm-manager/ui-types";
 import { ButtonAddons, Button } from "../../buttons";
 import { createChangesetLink, createSourcesLink } from "./changesets";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
   changeset: Changeset;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class ChangesetButtonGroup extends React.Component<Props> {
@@ -26,4 +23,4 @@ class ChangesetButtonGroup extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(ChangesetButtonGroup);
+export default withTranslation("repos")(ChangesetButtonGroup);

@@ -1,14 +1,11 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Group } from "@scm-manager/ui-types";
 import { DateFromNow, Checkbox } from "@scm-manager/ui-components";
 import GroupMember from "./GroupMember";
 
-type Props = {
+type Props = WithTranslation & {
   group: Group;
-
-  // Context props
-  t: (p: string) => string;
 };
 
 class Details extends React.Component<Props> {
@@ -75,4 +72,4 @@ class Details extends React.Component<Props> {
   }
 }
 
-export default translate("groups")(Details);
+export default withTranslation("groups")(Details);

@@ -1,6 +1,5 @@
 import React from "react";
-import { translate } from "react-i18next";
-import classNames from "classnames";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Plugin } from "@scm-manager/ui-types";
 import { CardColumn, Icon } from "@scm-manager/ui-components";
@@ -13,12 +12,9 @@ export const PluginAction = {
   UNINSTALL: "uninstall"
 };
 
-type Props = {
+type Props = WithTranslation & {
   plugin: Plugin;
   refresh: () => void;
-
-  // context props
-  t: (p: string) => string;
 };
 
 type State = {
@@ -173,4 +169,4 @@ class PluginEntry extends React.Component<Props, State> {
   }
 }
 
-export default translate("admin")(PluginEntry);
+export default withTranslation("admin")(PluginEntry);

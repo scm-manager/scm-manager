@@ -1,14 +1,13 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Permission } from "@scm-manager/ui-types";
 import { confirmAlert } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   permission: Permission;
   namespace: string;
   repoName: string;
   confirmDialog?: boolean;
-  t: (p: string) => string;
   deletePermission: (permission: Permission, namespace: string, repoName: string) => void;
   loading: boolean;
 };
@@ -61,4 +60,4 @@ class DeletePermissionButton extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(DeletePermissionButton);
+export default withTranslation("repos")(DeletePermissionButton);

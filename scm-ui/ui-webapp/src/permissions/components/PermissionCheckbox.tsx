@@ -1,13 +1,12 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { Checkbox } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = WithTranslation & {
   permission: string;
   checked: boolean;
   onChange: (value: boolean, name: string) => void;
   disabled: boolean;
-  t: (p: string) => string;
 };
 
 class PermissionCheckbox extends React.Component<Props> {
@@ -36,4 +35,4 @@ class PermissionCheckbox extends React.Component<Props> {
   };
 }
 
-export default translate("plugins")(PermissionCheckbox);
+export default withTranslation("plugins")(PermissionCheckbox);

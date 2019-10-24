@@ -1,10 +1,10 @@
 import React from "react";
-import { translate } from "react-i18next";
-import { Redirect, Route, Switch } from "react-router-dom";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { History } from "history";
 import { connect } from "react-redux";
 import { compose } from "redux";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { Redirect, Route, Switch } from "react-router-dom";
+import { History } from "history";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Links } from "@scm-manager/ui-types";
 import { Page, Navigation, NavLink, Section, SubNavigation } from "@scm-manager/ui-components";
 import { getLinks, getAvailablePluginsLink, getInstalledPluginsLink } from "../../modules/indexResource";
@@ -15,13 +15,12 @@ import RepositoryRoles from "../roles/containers/RepositoryRoles";
 import SingleRepositoryRole from "../roles/containers/SingleRepositoryRole";
 import CreateRepositoryRole from "../roles/containers/CreateRepositoryRole";
 
-type Props = {
+type Props = WithTranslation & {
   links: Links;
   availablePluginsLink: string;
   installedPluginsLink: string;
 
   // context objects
-  t: (p: string) => string;
   match: any;
   history: History;
 };
@@ -150,5 +149,5 @@ const mapStateToProps = (state: any) => {
 
 export default compose(
   connect(mapStateToProps),
-  translate("admin")
+  withTranslation("admin")
 )(Admin);

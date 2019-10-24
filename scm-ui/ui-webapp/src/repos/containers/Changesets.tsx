@@ -1,15 +1,9 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
-import { Branch, Changeset, PagedCollection, Repository } from "@scm-manager/ui-types";
-import {
-  fetchChangesets,
-  getChangesets,
-  getFetchChangesetsFailure,
-  isFetchChangesetsPending,
-  selectListAsCollection
-} from "../modules/changesets";
-
 import { connect } from "react-redux";
+import { compose } from "redux";
+import { withRouter } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { Branch, Changeset, PagedCollection, Repository } from "@scm-manager/ui-types";
 import {
   ErrorNotification,
   getPageFromMatch,
@@ -18,10 +12,15 @@ import {
   Loading,
   Notification
 } from "@scm-manager/ui-components";
-import { compose } from "redux";
-import { translate } from "react-i18next";
+import {
+  fetchChangesets,
+  getChangesets,
+  getFetchChangesetsFailure,
+  isFetchChangesetsPending,
+  selectListAsCollection
+} from "../modules/changesets";
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
   branch: Branch;
   page: number;
@@ -37,7 +36,6 @@ type Props = {
 
   // context props
   match: any;
-  t: (p: string) => string;
 };
 
 class Changesets extends React.Component<Props> {
@@ -121,7 +119,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 };
 
 export default compose(
-  translate("repos"),
+  withTranslation("repos"),
   withRouter,
   connect(
     mapStateToProps,

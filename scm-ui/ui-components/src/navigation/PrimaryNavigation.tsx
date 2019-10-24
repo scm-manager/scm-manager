@@ -1,11 +1,10 @@
 import React, { ReactNode } from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
 import { Links } from "@scm-manager/ui-types";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
-type Props = {
-  t: (p: string) => string;
+type Props = WithTranslation & {
   links: Links;
 };
 
@@ -88,4 +87,4 @@ class PrimaryNavigation extends React.Component<Props> {
   }
 }
 
-export default translate("commons")(PrimaryNavigation);
+export default withTranslation("commons")(PrimaryNavigation);

@@ -1,13 +1,10 @@
 import React from "react";
 import { Changeset } from "@scm-manager/ui-types";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 
-type Props = {
+type Props = WithTranslation & {
   changeset: Changeset;
-
-  // context props
-  t: (p: string) => string;
 };
 
 class ChangesetAuthor extends React.Component<Props> {
@@ -50,4 +47,4 @@ class ChangesetAuthor extends React.Component<Props> {
   }
 }
 
-export default translate("repos")(ChangesetAuthor);
+export default withTranslation("repos")(ChangesetAuthor);

@@ -1,14 +1,13 @@
 import React from "react";
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import { DisplayedUser } from "@scm-manager/ui-types";
 import TagGroup from "./TagGroup";
 
-type Props = {
+type Props = WithTranslation & {
   members: string[];
   memberListChanged: (p: string[]) => void;
   label?: string;
   helpText?: string;
-  t: (p: string) => string;
 };
 
 class MemberNameTagGroup extends React.Component<Props> {
@@ -39,4 +38,4 @@ class MemberNameTagGroup extends React.Component<Props> {
   };
 }
 
-export default translate("groups")(MemberNameTagGroup);
+export default withTranslation("groups")(MemberNameTagGroup);
