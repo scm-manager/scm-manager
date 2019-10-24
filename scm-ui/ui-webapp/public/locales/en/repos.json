@@ -78,8 +78,8 @@
   },
   "changeset": {
     "description": "Description",
-    "summary": "Changeset {{id}} was committed {{time}}",
-    "shortSummary": "Committed {{id}} {{time}}",
+    "summary": "Changeset <0/> was committed <1/>",
+    "shortSummary": "Committed <0/> <1/>",
     "tags": "Tags",
     "diffNotSupported": "Diff of changesets is not supported by the type of repository",
     "author": {

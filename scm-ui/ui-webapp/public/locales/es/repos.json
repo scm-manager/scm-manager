@@ -78,8 +78,8 @@
   },
   "changeset": {
     "description": "Descripción",
-    "summary": "El changeset {{id}} fue entregado {{time}}",
-    "shortSummary": "Entregado {{id}} {{time}}",
+    "summary": "El changeset <0/> fue entregado <1/>",
+    "shortSummary": "Entregado <0/> <1/>",
     "tags": "Etiquetas",
     "diffNotSupported": "La comparación de changesets no es soportada por el tipo de repositorio",
     "author": {
