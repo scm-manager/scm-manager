@@ -78,7 +78,7 @@
   },
   "changeset": {
     "description": "Beschreibung",
-    "summary": "Changeset <0/> wurde committet <1/>",
+    "summary": "Changeset <0/> wurde <1/> committet",
     "shortSummary": "Committet <0/> <1/>",
     "tags": "Tags",
     "diffNotSupported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt",

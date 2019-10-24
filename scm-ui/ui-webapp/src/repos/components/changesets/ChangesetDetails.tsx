@@ -82,7 +82,7 @@ class ChangesetDetails extends React.Component<Props, State> {
                 <ChangesetAuthor changeset={changeset} />
               </p>
               <p>
-                <Trans i18nKey="changeset.summary" values={{ id, time: date }} />
+                <Trans i18nKey="repos:changeset.summary" components={[id, date]} />
               </p>
             </div>
             <div className="media-right">{this.renderTags()}</div>
