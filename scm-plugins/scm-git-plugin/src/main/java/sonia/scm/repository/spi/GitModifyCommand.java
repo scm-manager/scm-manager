@@ -64,10 +64,7 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       failIfNotChanged(() -> new NoChangesMadeException(repository, ModifyWorker.this.request.getBranch()));
       Optional<RevCommit> revCommit = doCommit(request.getCommitMessage(), request.getAuthor());
       push();
-      if (!revCommit.isPresent()) {
-        throw new NoChangesMadeException(repository, ModifyWorker.this.request.getBranch());
-      }
-      return ModifyWorker.this.request.getBranch();
+      return revCommit.orElseThrow(() -> new NoChangesMadeException(repository, ModifyWorker.this.request.getBranch())).name();
     }
 
     @Override

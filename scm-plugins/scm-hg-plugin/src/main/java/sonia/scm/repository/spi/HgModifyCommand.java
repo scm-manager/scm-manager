@@ -78,7 +78,7 @@ public class HgModifyCommand implements ModifyCommand {
       }
       CommitCommand.on(workingRepository).user(String.format("%s <%s>", request.getAuthor().getName(), request.getAuthor().getMail())).message(request.getCommitMessage()).execute();
       List<Changeset> execute = pullModifyChangesToCentralRepository(request, workingCopy);
-      return execute.get(0).getBranch();
+      return execute.get(0).getNode();
     } catch (ExecutionException e) {
       throwInternalRepositoryException("could not execute command on repository", e);
       return null;
