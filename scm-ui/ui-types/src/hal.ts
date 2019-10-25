@@ -1,6 +1,7 @@
 export type Link = {
   href: string;
   name?: string;
+  templated?: boolean;
 };
 
 type LinkValue = Link | Link[];
