@@ -2624,13 +2624,6 @@
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.3.tgz#856c99cdc1551d22c22b18b5402719affec9839a"
   integrity sha512-cS5owqtwzLN5kY+l+KgKdRJ/Cee8tlmQoGQuIE9tWnSmS3JMKzmxo2HIAk2wODMifGwO20d62xZQLYz+RLfXmw==
 
-"@types/i18next@*":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@types/i18next/-/i18next-13.0.0.tgz#403ef338add0104e74d9759f1b39217e7c5d4084"
-  integrity sha512-gp/SIShAuf4WOqi8ey0nuI7qfWaVpMNCcs/xLygrh/QTQIXmlDC1E0TtVejweNW+7SGDY7g0lyxyKZIJuCKIJw==
-  dependencies:
-    i18next "*"
-
 "@types/is-function@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/is-function/-/is-function-1.0.0.tgz#1b0b819b1636c7baf0d6785d030d12edf70c3e83"
@@ -2740,14 +2733,6 @@
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.9.2.tgz#90f9e6c161850be1feb31d2f448121be2a4f3b47"
   integrity sha512-hgPbBoI1aTSTvZwo8HYw35UaTldW6n2ETLvHAcfcg1FaOuBV3olmyCe5eMpx2WybWMBPv0MdU2t5GOcQhP+3zA==
   dependencies:
-    "@types/react" "*"
-
-"@types/react-i18next@^7.8.3":
-  version "7.8.3"
-  resolved "https://registry.yarnpkg.com/@types/react-i18next/-/react-i18next-7.8.3.tgz#ba1820c91923c7f2b2abf6755d4372e503821c4b"
-  integrity sha512-VPopxbHXz/1Sjl+ljXQQchf6FHXaYLaH0a6TH6KnGOQGD4LzNbUVlofK26S30OIYfYibm8r/sAb2KeTst+AwTQ==
-  dependencies:
-    "@types/i18next" "*"
     "@types/react" "*"
 
 "@types/react-native@*":
@@ -7841,13 +7826,6 @@ i18next-fetch-backend@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/i18next-fetch-backend/-/i18next-fetch-backend-2.2.0.tgz#39ff6578596e0122e80692e04d7897ee373607d6"
   integrity sha512-HodOCr4fezjMgJwWnOR/JUotdbM1onXdnB6Y+XDgDpXX58SkZXcyz6VmmUGc/8XMxFzq3162Qs2vO+SlO4TCFw==
-
-i18next@*:
-  version "17.2.0"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-17.2.0.tgz#d1ac5a817b7e2aaf4bd0374ef689a7e64f5bcef1"
-  integrity sha512-ltl4LSzCEAPBbHRJ6R8diJCnxCbVkf6cxH3k1B4CjB0YFGoISm3/Jxgw3noELe9TP+C/x8fEostuJcGVUeYwdw==
-  dependencies:
-    "@babel/runtime" "^7.3.1"
 
 i18next@^17.3.0:
   version "17.3.0"
