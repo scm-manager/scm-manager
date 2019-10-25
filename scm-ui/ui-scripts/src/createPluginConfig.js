@@ -16,7 +16,7 @@ module.exports = function(mode) {
   return {
     context: root,
     entry: {
-      [name]: packageJSON.main || "src/main/js/index.js"
+      [name]: [path.resolve(__dirname, "webpack-public-path.js"), packageJSON.main || "src/main/js/index.js"]
     },
     mode,
     devtool: "source-map",
@@ -68,6 +68,7 @@ module.exports = function(mode) {
     output: {
       path: path.join(root, "target", name + "-" + packageJSON.version, "webapp", "assets"),
       filename: "[name].bundle.js",
+      chunkFilename: name + ".[name].chunk.js",
       library: name,
       libraryTarget: "amd"
     }
