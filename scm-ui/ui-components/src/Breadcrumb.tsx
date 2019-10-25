@@ -61,13 +61,18 @@ class Breadcrumb extends React.Component<Props> {
   render() {
     const { baseUrl, branch, defaultBranch, branches, revision, path, repository, t } = this.props;
 
+    let homeUrl = baseUrl + "/";
+    if (revision) {
+      homeUrl += encodeURIComponent(revision) + "/";
+    }
+
     return (
       <>
         <div className="is-flex">
           <FlexStartNav className={classNames("breadcrumb", "sources-breadcrumb")} aria-label="breadcrumbs">
             <ul>
               <li>
-                <Link to={baseUrl + "/" + revision + "/"}>
+                <Link to={homeUrl}>
                   <HomeIcon title={t("breadcrumb.home")} name="home" color="inherit" />
                 </Link>
               </li>

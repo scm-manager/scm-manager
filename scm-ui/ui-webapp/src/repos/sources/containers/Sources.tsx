@@ -151,20 +151,19 @@ class Sources extends React.Component<Props, State> {
     const { revision, path, baseUrl, branches, repository } = this.props;
     const { selectedBranch } = this.state;
 
-    if (revision) {
-      return (
-        <Breadcrumb
-          revision={encodeURIComponent(revision)}
-          path={path}
-          baseUrl={baseUrl}
-          branch={selectedBranch}
-          defaultBranch={branches && branches.filter(b => b.defaultBranch === true)[0]}
-          branches={branches}
-          repository={repository}
-        />
-      );
-    }
-    return null;
+    return (
+      <Breadcrumb
+        revision={revision}
+        path={path}
+        baseUrl={baseUrl}
+        branch={selectedBranch}
+        defaultBranch={
+          branches && branches.filter(b => b.defaultBranch === true)[0]
+        }
+        branches={branches}
+        repository={repository}
+      />
+    );
   };
 }
 
