@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<scm-config>
+    <force-base-url>false</force-base-url>
+    <login-attempt-limit>0</login-attempt-limit>
+    <proxyPassword>Dl55tA0pSXIF_FWYY05nh0zw63ncJupsbnc4</proxyPassword>
+    <proxyPort>0</proxyPort>
+    <skip-failed-authenticators>false</skip-failed-authenticators>
+    <login-attempt-limit-timeout>0</login-attempt-limit-timeout>
+    <enableProxy>false</enableProxy>
+    <disableGroupingGrid>false</disableGroupingGrid>
+    <anonymousAccessEnabled>false</anonymousAccessEnabled>
+    <xsrf-protection>false</xsrf-protection>
+</scm-config>

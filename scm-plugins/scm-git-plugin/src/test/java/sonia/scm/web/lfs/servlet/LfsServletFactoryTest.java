@@ -11,41 +11,26 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by omilke on 18.05.2017.
- */
 public class LfsServletFactoryTest {
 
+  private static final String NAMESPACE = "space";
+  private static final String NAME = "git-lfs-demo";
+  private static final Repository REPOSITORY = new Repository("", "GIT", NAMESPACE, NAME);
+
   @Test
-  public void buildBaseUri() {
-
-    String repositoryNamespace = "space";
-    String repositoryName = "git-lfs-demo";
-
-    String result = LfsServletFactory.buildBaseUri(new Repository("", "GIT", repositoryNamespace, repositoryName), RequestWithUri(repositoryName, true));
-    assertThat(result, is(equalTo("http://localhost:8081/scm/repo/space/git-lfs-demo.git/info/lfs/objects/")));
-
-
-    //result will be with dot-git suffix, ide
-    result = LfsServletFactory.buildBaseUri(new Repository("", "GIT", repositoryNamespace, repositoryName), RequestWithUri(repositoryName, false));
+  public void shouldBuildBaseUri() {
+    String result = LfsServletFactory.buildBaseUri(REPOSITORY, requestWithUri("git-lfs-demo"));
     assertThat(result, is(equalTo("http://localhost:8081/scm/repo/space/git-lfs-demo.git/info/lfs/objects/")));
   }
 
-  private HttpServletRequest RequestWithUri(String repositoryName, boolean withDotGitSuffix) {
+  private HttpServletRequest requestWithUri(String repositoryName) {
 
     HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
 
-    final String suffix;
-    if (withDotGitSuffix) {
-      suffix = ".git";
-    } else {
-      suffix = "";
-    }
-
     //build from valid live request data
     when(mockedRequest.getRequestURL()).thenReturn(
-      new StringBuffer(String.format("http://localhost:8081/scm/repo/%s%s/info/lfs/objects/batch", repositoryName, suffix)));
-    when(mockedRequest.getRequestURI()).thenReturn(String.format("/scm/repo/%s%s/info/lfs/objects/batch", repositoryName, suffix));
+      new StringBuffer(String.format("http://localhost:8081/scm/repo/%s/info/lfs/objects/batch", repositoryName)));
+    when(mockedRequest.getRequestURI()).thenReturn(String.format("/scm/repo/%s/info/lfs/objects/batch", repositoryName));
     when(mockedRequest.getContextPath()).thenReturn("/scm");
 
     return mockedRequest;

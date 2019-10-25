@@ -1,15 +1,22 @@
 {
   "name": "@scm-manager/ui-extensions",
   "version": "2.0.0-SNAPSHOT",
-  "main": "src/index.js",
+  "main": "src/index.ts",
   "license": "BSD-3-Clause",
   "private": false,
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
   "scripts": {
+    "typecheck": "tsc",
     "test": "jest"
   },
   "dependencies": {
     "react": "^16.10.2"
+  },
+  "devDependencies": {
+    "@types/enzyme": "^3.10.3",
+    "@types/jest": "^24.0.19",
+    "@types/react": "^16.9.9",
+    "typescript": "^3.6.4"
   },
   "babel": {
     "presets": [
