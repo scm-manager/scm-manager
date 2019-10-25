@@ -154,7 +154,7 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     HgLogCommand command = createComamnd();
     String revision = "a9bacaf1b7fa0cebfca71fed4e59ed69a6319427";
     Changeset c =
-      command.getChangeset(revision);
+      command.getChangeset(revision, null);
 
     assertNotNull(c);
     assertEquals(revision, c.getId());

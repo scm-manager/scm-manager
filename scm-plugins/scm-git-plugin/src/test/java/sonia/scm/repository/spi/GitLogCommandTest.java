@@ -171,7 +171,33 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   public void testGetCommit()
   {
     GitLogCommand command = createCommand();
-    Changeset c = command.getChangeset("435df2f061add3589cb3");
+    Changeset c = command.getChangeset("435df2f061add3589cb3", null);
+
+    assertNotNull(c);
+    String revision = "435df2f061add3589cb326cc64be9b9c3897ceca";
+    assertEquals(revision, c.getId());
+    assertEquals("added a and b files", c.getDescription());
+    checkDate(c.getDate());
+    assertEquals("Douglas Adams", c.getAuthor().getName());
+    assertEquals("douglas.adams@hitchhiker.com", c.getAuthor().getMail());
+    assertEquals("added a and b files", c.getDescription());
+
+    GitModificationsCommand gitModificationsCommand = new GitModificationsCommand(createContext(), repository);
+    Modifications modifications = gitModificationsCommand.getModifications(revision);
+
+    assertNotNull(modifications);
+    assertTrue("modified list should be empty", modifications.getModified().isEmpty());
+    assertTrue("removed list should be empty", modifications.getRemoved().isEmpty());
+    assertFalse("added list should not be empty", modifications.getAdded().isEmpty());
+    assertEquals(2, modifications.getAdded().size());
+    assertThat(modifications.getAdded(), contains("a.txt", "b.txt"));
+  }
+
+  @Test
+  public void testGetCommitWithBranch()
+  {
+    GitLogCommand command = createCommand();
+    Changeset c = command.getChangeset("435df2f061add3589cb3", null);
 
     assertNotNull(c);
     String revision = "435df2f061add3589cb326cc64be9b9c3897ceca";

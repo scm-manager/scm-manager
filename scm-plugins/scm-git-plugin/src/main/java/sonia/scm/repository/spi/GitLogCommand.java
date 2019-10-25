@@ -106,7 +106,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    * @return
    */
   @Override
-  public Changeset getChangeset(String revision)
+  public Changeset getChangeset(String revision, LogCommandRequest request)
   {
     if (logger.isDebugEnabled())
     {
@@ -131,7 +131,13 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
         if (commit != null)
         {
           converter = new GitChangesetConverter(gr, revWalk);
-          changeset = converter.createChangeset(commit);
+
+          if (request != null && !Strings.isNullOrEmpty(request.getBranch())) {
+            changeset = converter.createChangeset(commit, request.getBranch());
+          } else {
+            changeset = converter.createChangeset(commit);
+
+          }
         }
         else if (logger.isWarnEnabled())
         {

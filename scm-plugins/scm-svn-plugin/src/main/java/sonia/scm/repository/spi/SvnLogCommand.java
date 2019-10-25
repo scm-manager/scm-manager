@@ -75,7 +75,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
 
   @Override
   @SuppressWarnings("unchecked")
-  public Changeset getChangeset(String revision) {
+  public Changeset getChangeset(String revision, LogCommandRequest request) {
     Changeset changeset = null;
 
     if (logger.isDebugEnabled())
