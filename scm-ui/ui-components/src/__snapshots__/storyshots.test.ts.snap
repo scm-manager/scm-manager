@@ -484,6 +484,39 @@ exports[`Storyshots Logo Default 1`] = `
 </div>
 `;
 
+exports[`Storyshots MarkdownView Code without Lang 1`] = `
+<div
+  className="sc-EHOje lbpDzp"
+>
+  <div
+    className="sc-ifAKCX frmxmY"
+  >
+    <div
+      className="content"
+    >
+      <p>
+        Here is markdown with code, but without Language.
+      </p>
+      <pre
+        style={
+          Object {
+            "background": "#FFFFFF",
+            "color": "#434f54",
+            "display": "block",
+            "overflowX": "auto",
+            "padding": "0.5em",
+          }
+        }
+      >
+        <code>
+          Code without Language!
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots MarkdownView Default 1`] = `
 <div
   className="sc-EHOje lbpDzp"
