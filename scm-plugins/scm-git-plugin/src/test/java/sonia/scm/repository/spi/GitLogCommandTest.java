@@ -35,7 +35,11 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.io.Files;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitRepositoryConfig;
@@ -51,14 +55,18 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link GitLogCommand}.
  *
  * @author Sebastian Sdorra
  */
+@RunWith(MockitoJUnitRunner.class)
 public class GitLogCommandTest extends AbstractGitCommandTestBase
 {
+  @Mock
+  LogCommandRequest request;
 
   /**
    * Tests log command with the usage of a default branch.
@@ -194,29 +202,15 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   }
 
   @Test
-  public void testGetCommitWithBranch()
+  public void commitShouldContainBranchIfLogCommandRequestHasBranch()
   {
+    when(request.getBranch()).thenReturn("master");
     GitLogCommand command = createCommand();
-    Changeset c = command.getChangeset("435df2f061add3589cb3", null);
+    Changeset c = command.getChangeset("435df2f061add3589cb3", request);
 
-    assertNotNull(c);
-    String revision = "435df2f061add3589cb326cc64be9b9c3897ceca";
-    assertEquals(revision, c.getId());
-    assertEquals("added a and b files", c.getDescription());
-    checkDate(c.getDate());
-    assertEquals("Douglas Adams", c.getAuthor().getName());
-    assertEquals("douglas.adams@hitchhiker.com", c.getAuthor().getMail());
-    assertEquals("added a and b files", c.getDescription());
-
-    GitModificationsCommand gitModificationsCommand = new GitModificationsCommand(createContext(), repository);
-    Modifications modifications = gitModificationsCommand.getModifications(revision);
-
-    assertNotNull(modifications);
-    assertTrue("modified list should be empty", modifications.getModified().isEmpty());
-    assertTrue("removed list should be empty", modifications.getRemoved().isEmpty());
-    assertFalse("added list should not be empty", modifications.getAdded().isEmpty());
-    assertEquals(2, modifications.getAdded().size());
-    assertThat(modifications.getAdded(), contains("a.txt", "b.txt"));
+    Assertions.assertThat(c.getBranches().isEmpty()).isFalse();
+    Assertions.assertThat(c.getBranches().contains("master")).isTrue();
+    Assertions.assertThat(c.getBranches().size()).isEqualTo(1);
   }
 
   @Test
