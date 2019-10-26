@@ -87,7 +87,9 @@ class Breadcrumb extends React.Component<Props> {
                   baseUrl,
                   branch: branch ? branch : defaultBranch,
                   path,
-                  isBranchUrl: branches && branches.filter(b => b.name.replace("/", "%2F") === revision).length > 0,
+                  isBranchUrl: branches
+                    ? branches.filter(b => b.name.replace("/", "%2F") === revision).length > 0
+                    : true,
                   repository
                 }}
                 renderAll={true}
