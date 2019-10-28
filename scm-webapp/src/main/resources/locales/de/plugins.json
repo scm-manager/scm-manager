@@ -174,7 +174,7 @@
     },
     "40RaYIeeR1": {
       "displayName": "Es wurden keine Änderungen durchgeführt",
-      "description": "Das Repository wurde nicht verändert. Daher konnte kein neuer Commit erzeugt werden."
+      "description": "Das Repository wurde nicht verändert. Daher konnte kein neuer Commit erzeugt werden. Womöglich werden Änderungen aufgrund einer .ignore-Datei Definition nicht berücksichtigt."
     },
     "4iRct4avG1": {
       "displayName": "Die Revisionen haben keinen gemeinsamen Ursprung",
