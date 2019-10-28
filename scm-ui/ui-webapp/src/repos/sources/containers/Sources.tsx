@@ -13,7 +13,7 @@ import {
 } from "../../branches/modules/branches";
 import { compose } from "redux";
 import Content from "./Content";
-import { fetchSources, isDirectory } from "../modules/sources";
+import {fetchSources, getSources, isDirectory} from "../modules/sources";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -24,6 +24,7 @@ type Props = WithTranslation & {
   revision: string;
   path: string;
   currentFileIsDirectory: boolean;
+  sources: File;
 
   // dispatch props
   fetchBranches: (p: Repository) => void;
@@ -148,7 +149,7 @@ class Sources extends React.Component<Props, State> {
   };
 
   renderBreadcrumb = () => {
-    const { revision, path, baseUrl, branches, repository } = this.props;
+    const { revision, path, baseUrl, branches, sources } = this.props;
     const { selectedBranch } = this.state;
 
     return (
@@ -160,8 +161,7 @@ class Sources extends React.Component<Props, State> {
         defaultBranch={
           branches && branches.filter(b => b.defaultBranch === true)[0]
         }
-        branches={branches}
-        repository={repository}
+        sources={sources}
       />
     );
   };
@@ -177,6 +177,7 @@ const mapStateToProps = (state, ownProps) => {
   const currentFileIsDirectory = decodedRevision
     ? isDirectory(state, repository, decodedRevision, path)
     : isDirectory(state, repository, revision, path);
+  const sources = getSources(state, repository, revision, path);
 
   return {
     repository,
@@ -185,7 +186,8 @@ const mapStateToProps = (state, ownProps) => {
     loading,
     error,
     branches,
-    currentFileIsDirectory
+    currentFileIsDirectory,
+    sources
   };
 };
 

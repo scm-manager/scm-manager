@@ -8,13 +8,12 @@ import { Branch, Repository } from "@scm-manager/ui-types";
 import Icon from "./Icon";
 
 type Props = WithTranslation & {
-  repository: Repository;
   branch: Branch;
   defaultBranch: Branch;
-  branches: Branch[];
   revision: string;
   path: string;
   baseUrl: string;
+  sources: File;
 };
 
 const FlexStartNav = styled.nav`
@@ -59,7 +58,7 @@ class Breadcrumb extends React.Component<Props> {
   }
 
   render() {
-    const { baseUrl, branch, defaultBranch, branches, revision, path, repository, t } = this.props;
+    const { baseUrl, branch, defaultBranch, sources, revision, path, t } = this.props;
 
     let homeUrl = baseUrl + "/";
     if (revision) {
@@ -81,16 +80,14 @@ class Breadcrumb extends React.Component<Props> {
           </FlexStartNav>
           {binder.hasExtension("repos.sources.actionbar") && (
             <ActionWrapper>
+              {console.log(sources)}
               <ExtensionPoint
                 name="repos.sources.actionbar"
                 props={{
                   baseUrl,
                   branch: branch ? branch : defaultBranch,
                   path,
-                  isBranchUrl: branches
-                    ? branches.filter(b => b.name.replace("/", "%2F") === revision).length > 0
-                    : true,
-                  repository
+                  sources
                 }}
                 renderAll={true}
               />
