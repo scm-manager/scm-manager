@@ -132,7 +132,9 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
         {
           converter = new GitChangesetConverter(gr, revWalk);
 
-          if (request != null && !Strings.isNullOrEmpty(request.getBranch())) {
+          if (request != null &&
+            !Strings.isNullOrEmpty(request.getBranch()) &&
+            revWalk.isMergedInto(commit, findTipCommitForRequestBranch(request, gr, revWalk))) {
             changeset = converter.createChangeset(commit, request.getBranch());
           } else {
             changeset = converter.createChangeset(commit);
@@ -161,6 +163,10 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     }
 
     return changeset;
+  }
+
+  private RevCommit findTipCommitForRequestBranch(LogCommandRequest request, Repository gr, RevWalk revWalk) throws IOException {
+    return revWalk.parseCommit(GitUtil.getCommit(gr, revWalk, gr.findRef(request.getBranch())));
   }
 
   /**
