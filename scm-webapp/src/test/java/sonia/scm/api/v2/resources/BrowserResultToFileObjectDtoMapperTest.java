@@ -39,7 +39,7 @@ public class BrowserResultToFileObjectDtoMapperTest {
   @Before
   public void init() {
     initMocks(this);
-    mapper = new BrowserResultToFileObjectDtoMapper(fileObjectToFileObjectDtoMapper);
+    mapper = null;//new BrowserResultToFileObjectDtoMapper(fileObjectToFileObjectDtoMapper);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
 

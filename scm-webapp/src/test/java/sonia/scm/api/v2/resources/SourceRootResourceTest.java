@@ -49,7 +49,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
 
   @Before
   public void prepareEnvironment() throws Exception {
-    browserResultToFileObjectDtoMapper = new BrowserResultToFileObjectDtoMapper(fileObjectToFileObjectDtoMapper);
+    browserResultToFileObjectDtoMapper = null;//new BrowserResultToFileObjectDtoMapper(fileObjectToFileObjectDtoMapper);
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(service.getBrowseCommand()).thenReturn(browseCommandBuilder);
 
