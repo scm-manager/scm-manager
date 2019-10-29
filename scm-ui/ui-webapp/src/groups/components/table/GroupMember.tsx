@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Member } from "@scm-manager/ui-types";
-import {Icon} from "@scm-manager/ui-components";
+import { Icon } from "@scm-manager/ui-components";
 
 type Props = {
   member: Member;
@@ -18,7 +18,11 @@ const StyledMember = styled.li`
 
 export default class GroupMember extends React.Component<Props> {
   renderLink(to: string, label: string) {
-    return <Link to={to}><Icon name="user" color="inherit" /> {label}</Link>;
+    return (
+      <Link to={to}>
+        <Icon name="user" color="inherit" /> {label}
+      </Link>
+    );
   }
 
   showName(to: any, member: Member) {
