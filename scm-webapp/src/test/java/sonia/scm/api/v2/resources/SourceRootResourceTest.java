@@ -7,6 +7,7 @@ import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -49,7 +50,9 @@ public class SourceRootResourceTest extends RepositoryTestBase {
 
   @Before
   public void prepareEnvironment() throws Exception {
-    browserResultToFileObjectDtoMapper = null;//new BrowserResultToFileObjectDtoMapper(fileObjectToFileObjectDtoMapper);
+    browserResultToFileObjectDtoMapper = Mappers.getMapper(BrowserResultToFileObjectDtoMapper.class);
+    browserResultToFileObjectDtoMapper.setChildrenMapper(fileObjectToFileObjectDtoMapper);
+    browserResultToFileObjectDtoMapper.setResourceLinks(resourceLinks);
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(service.getBrowseCommand()).thenReturn(browseCommandBuilder);
 

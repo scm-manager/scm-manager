@@ -7,6 +7,7 @@ import org.apache.shiro.util.ThreadState;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
@@ -21,7 +22,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class BrowserResultToFileObjectDtoMapperTest {
 
   private final URI baseUri = URI.create("http://example.com/base/");
-  @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @InjectMocks
@@ -39,7 +39,10 @@ public class BrowserResultToFileObjectDtoMapperTest {
   @Before
   public void init() {
     initMocks(this);
-    mapper = null;//new BrowserResultToFileObjectDtoMapper(fileObjectToFileObjectDtoMapper);
+    mapper = Mappers.getMapper(BrowserResultToFileObjectDtoMapper.class);
+    mapper.setChildrenMapper(fileObjectToFileObjectDtoMapper);
+    mapper.setResourceLinks(resourceLinks);
+
     subjectThreadState.bind();
     ThreadContext.bind(subject);
 

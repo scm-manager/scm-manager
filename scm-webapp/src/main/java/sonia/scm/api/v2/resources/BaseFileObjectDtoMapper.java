@@ -1,10 +1,10 @@
 package sonia.scm.api.v2.resources;
 
+import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import org.mapstruct.Context;
 import org.mapstruct.MapperConfig;
-import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
@@ -21,6 +21,11 @@ abstract class BaseFileObjectDtoMapper extends HalAppenderMapper implements Inst
 
   @Inject
   private ResourceLinks resourceLinks;
+
+  @VisibleForTesting
+  void setResourceLinks(ResourceLinks resourceLinks) {
+    this.resourceLinks = resourceLinks;
+  }
 
   abstract SubRepositoryDto mapSubrepository(SubRepository subRepository);
 

@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import org.mapstruct.Context;
@@ -21,6 +22,11 @@ public abstract class BrowserResultToFileObjectDtoMapper extends BaseFileObjectD
 
   @Inject
   private FileObjectToFileObjectDtoMapper childrenMapper;
+
+  @VisibleForTesting
+  void setChildrenMapper(FileObjectToFileObjectDtoMapper childrenMapper) {
+    this.childrenMapper = childrenMapper;
+  }
 
   FileObjectDto map(BrowserResult browserResult, @Context NamespaceAndName namespaceAndName) {
     FileObjectDto fileObjectDto = fileObjectToDto(browserResult.getFile(), namespaceAndName, browserResult);
