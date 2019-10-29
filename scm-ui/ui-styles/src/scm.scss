@@ -287,6 +287,17 @@ $danger-25: scale-color($danger, $lightness: 75%);
     opacity: 1;
   }
 
+  &.is-primary,
+  &.is-info,
+  &.is-link,
+  &.is-success,
+  &.is-warning,
+  &.is-danger {
+    &.is-outlined {
+      background-color: $white;
+    }
+  }
+
   &.is-primary:hover,
   &.is-primary.is-hovered {
     background-color: scale-color($primary, $lightness: -10%);
@@ -373,8 +384,6 @@ $danger-25: scale-color($danger, $lightness: 75%);
 
   &.is-reduced-mobile,
   &.reduced-mobile {
-    font-size: 0.9rem;
-
     @media screen and (max-width: 1087px) {
       > span:nth-child(2) {
         display: none;
@@ -642,6 +651,11 @@ form .field:not(.is-grouped) {
 .pagination-next {
   height: 2.8rem;
   min-width: 6.75em;
+}
+.pagination-previous[disabled],
+.pagination-next[disabled] {
+  background-color: #ededed;
+  color: #bcbcbc;
 }
 .pagination-link.is-current {
   opacity: 1;
