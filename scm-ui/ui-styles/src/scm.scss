@@ -145,6 +145,9 @@ $danger-25: scale-color($danger, $lightness: 75%);
 .has-text-warning {
   color: #ffb600 !important;
 }
+.has-text-warning-invert {
+  color: $warning-invert;
+}
 
 .has-text-blue-light {
   color: $blue-light !important;
@@ -215,9 +218,6 @@ $danger-25: scale-color($danger, $lightness: 75%);
   background-color: $danger-25;
 }
 
-.has-background-warning-invert {
-  background-color: $warning-invert;
-}
 .has-background-blue-light {
   background-color: $blue-light;
 }
@@ -800,8 +800,12 @@ form .field:not(.is-grouped) {
 
 // modal
 .modal {
-  .modal-card-foot {
-    justify-content: flex-end; // pulled-right
+  .modal-card {
+    border-radius: 6px;
+
+    .modal-card-foot {
+      justify-content: flex-end; // pulled-right
+    }
   }
 }
 
