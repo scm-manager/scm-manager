@@ -174,7 +174,7 @@
     },
     "40RaYIeeR1": {
       "displayName": "No se han efectuado modificaciones.",
-      "description": "Ningún fichero del repositorio ha sido modificado. Por lo tanto, no se confirmará ninguna modificación."
+      "description": "Ningún fichero del repositorio ha sido modificado. Por lo tanto, no se confirmará ninguna modificación. Los cambios podrían no tener debido a una definición .ignore"
     }
   },
   "namespaceStrategies": {
