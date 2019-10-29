@@ -443,8 +443,8 @@ ul.is-separated {
   }
 }
 
-// columns
-.columns.is-multiline {
+// card columns for repo and plugins overview
+.card-columns {
   .column {
     height: 120px;
 
@@ -457,35 +457,33 @@ ul.is-separated {
   .column.is-half {
     width: calc(50% - 0.75rem);
 
+    @media screen and (max-width: 768px) {
+      width: 100%;
+    }
+
     &:nth-child(odd) {
       margin-right: 1.5rem;
+
+      @media screen and (max-width: 768px) {
+        margin-right: 0;
+      }
     }
 
     .overlay-column {
       width: calc(50% - 3rem);
+
+      @media screen and (max-width: 768px) {
+        width: calc(100% - 1.5rem);
+      }
     }
   }
 
   .column.is-full .overlay-column {
     width: calc(100% - 1.5rem);
   }
-
-  @media screen and (max-width: 768px) {
-    .column.is-half {
-      width: 100%;
-
-      &:nth-child(odd) {
-        margin-right: 0;
-      }
-
-      .overlay-column {
-        width: calc(100% - 1.5rem);
-      }
-    }
-  }
 }
 .content.is-plugin-page {
-  .columns.is-multiline {
+  .card-columns {
     .column.is-half .overlay-column {
       width: calc(37.5% - 1.5rem);
     }
