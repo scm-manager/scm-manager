@@ -28,6 +28,7 @@ class DeletePermissionButton extends React.Component<Props> {
       message: t("permission.delete-permission-button.confirm-alert.message"),
       buttons: [
         {
+          className: "is-outlined",
           label: t("permission.delete-permission-button.confirm-alert.submit"),
           onClick: () => this.deletePermission()
         },

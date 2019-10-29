@@ -38,6 +38,7 @@ class DeleteRepositoryRole extends React.Component<Props> {
       message: t("repositoryRole.delete.confirmAlert.message"),
       buttons: [
         {
+          className: "is-outlined",
           label: t("repositoryRole.delete.confirmAlert.submit"),
           onClick: () => this.deleteRole()
         },

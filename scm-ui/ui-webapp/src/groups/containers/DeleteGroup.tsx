@@ -38,6 +38,7 @@ export class DeleteGroup extends React.Component<Props> {
       message: t("deleteGroup.confirmAlert.message"),
       buttons: [
         {
+          className: "is-outlined",
           label: t("deleteGroup.confirmAlert.submit"),
           onClick: () => this.deleteGroup()
         },
