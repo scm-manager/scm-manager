@@ -100,6 +100,6 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
     }
 
     FileObject file = cmd.execute();
-    return new BrowserResult(c.getNode(), file);
+    return new BrowserResult(c.getNode(), revision, file);
   }
 }
