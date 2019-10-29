@@ -231,6 +231,11 @@ $danger-25: scale-color($danger, $lightness: 75%);
     background-color: $light;
   }
 
+  +.is-delete {
+    border-color: #aaa;
+    border-width: 1px 1px 1px 0;
+  }
+
   &.is-outlined {
     background-color: $white;
   }
