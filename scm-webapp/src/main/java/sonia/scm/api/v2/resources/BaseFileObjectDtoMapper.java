@@ -22,9 +22,6 @@ abstract class BaseFileObjectDtoMapper extends HalAppenderMapper implements Inst
   @Inject
   private ResourceLinks resourceLinks;
 
-  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
-  protected abstract FileObjectDto map(FileObject fileObject, @Context NamespaceAndName namespaceAndName, @Context BrowserResult browserResult);
-
   abstract SubRepositoryDto mapSubrepository(SubRepository subRepository);
 
   @ObjectFactory
