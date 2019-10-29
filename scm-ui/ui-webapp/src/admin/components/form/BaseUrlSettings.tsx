@@ -25,8 +25,6 @@ class BaseUrlSettings extends React.Component<Props> {
               disabled={!hasUpdatePermission}
               helpText={t("help.baseUrlHelpText")}
             />
-          </div>
-          <div className="column is-half">
             <Checkbox
               checked={forceBaseUrl}
               label={t("base-url-settings.force-base-url")}
