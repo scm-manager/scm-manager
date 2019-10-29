@@ -52,7 +52,7 @@ class ChangesetsRoot extends React.Component<Props> {
     return (
       this.props.branches &&
       this.props.branches.length > 0 &&
-      this.props.selected !== this.props.branches.filter(b => b.defaultBranch === true)[0]
+      this.props.branches.filter(b => b.name === this.props.selected).length === 0
     );
   };
 
