@@ -1,5 +1,5 @@
 import React from "react";
-import { Trans } from "react-i18next";
+import { Trans, WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -12,7 +12,7 @@ import ChangesetAuthor from "./ChangesetAuthor";
 import ChangesetTags from "./ChangesetTags";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
   changeset: Changeset;
 };
@@ -128,4 +128,4 @@ class ChangesetRow extends React.Component<Props> {
   }
 }
 
-export default ChangesetRow;
+export default withTranslation("repos")(ChangesetRow);
