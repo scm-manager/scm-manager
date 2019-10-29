@@ -26,7 +26,7 @@ class Checkbox extends React.Component<Props> {
 
   render() {
     return (
-      <div className="field is-grouped">
+      <div className="field">
         <div className="control">
           {/*
             we have to ignore the next line, 
