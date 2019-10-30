@@ -12,6 +12,7 @@ type DateInput = Date | string;
 
 const supportedLocales: LocaleMap = {
   enUS,
+  en: enUS,
   de,
   es
 };
@@ -43,11 +44,15 @@ const DateElement = styled.time`
 class DateFromNow extends React.Component<Props> {
   getLocale = (): Locale => {
     const { i18n } = this.props;
-    const locale = supportedLocales[i18n.language];
-    if (!locale) {
-      return enUS;
+
+    for (const lng of i18n.languages) {
+      const locale = supportedLocales[lng];
+      if (locale) {
+        return locale;
+      }
     }
-    return locale;
+
+    return enUS;
   };
 
   createOptions = () => {
@@ -64,7 +69,7 @@ class DateFromNow extends React.Component<Props> {
 
   toDate = (value: DateInput): Date => {
     if (value instanceof Date) {
-      return value as Date;
+      return value;
     }
     return parseISO(value);
   };

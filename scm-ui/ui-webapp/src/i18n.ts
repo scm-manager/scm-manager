@@ -7,8 +7,6 @@ import { urls } from "@scm-manager/ui-components";
 
 const loadPath = urls.withContextPath("/locales/{{lng}}/{{ns}}.json");
 
-// TODO load locales for moment
-
 i18n
   .use(Backend)
   .use(LanguageDetector)
