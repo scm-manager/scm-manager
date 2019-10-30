@@ -834,8 +834,8 @@
     <legman.version>1.5.1</legman.version>
 
     <!-- webserver -->
-    <jetty.version>9.4.14.v20181114</jetty.version>
-    <jetty.maven.version>9.4.14.v20181114</jetty.maven.version>
+    <jetty.version>9.4.22.v20191022</jetty.version>
+    <jetty.maven.version>9.4.22.v20191022</jetty.maven.version>
 
     <!-- security libraries -->
     <ssp.version>1.2.0</ssp.version>
