@@ -398,6 +398,14 @@
         <version>1.1.1</version>
       </dependency>
 
+      <!-- utils -->
+
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.13</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
