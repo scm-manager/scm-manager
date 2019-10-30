@@ -839,7 +839,7 @@
 
     <!-- security libraries -->
     <ssp.version>1.2.0</ssp.version>
-    <shiro.version>1.4.0</shiro.version>
+    <shiro.version>1.4.1</shiro.version>
 
     <!-- repository libraries -->
     <jgit.version>v5.4.0.201906121030-r-scm2</jgit.version>
