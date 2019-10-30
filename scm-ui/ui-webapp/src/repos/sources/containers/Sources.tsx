@@ -149,11 +149,12 @@ class Sources extends React.Component<Props, State> {
   };
 
   renderBreadcrumb = () => {
-    const { revision, path, baseUrl, branches, sources } = this.props;
+    const { revision, path, baseUrl, branches, sources, repository } = this.props;
     const { selectedBranch } = this.state;
 
     return (
       <Breadcrumb
+        repository={repository}
         revision={revision}
         path={path}
         baseUrl={baseUrl}

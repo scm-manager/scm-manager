@@ -8,6 +8,7 @@ import { Branch, Repository } from "@scm-manager/ui-types";
 import Icon from "./Icon";
 
 type Props = WithTranslation & {
+  repository: Repository;
   branch: Branch;
   defaultBranch: Branch;
   revision: string;
@@ -58,7 +59,7 @@ class Breadcrumb extends React.Component<Props> {
   }
 
   render() {
-    const { baseUrl, branch, defaultBranch, sources, revision, path, t } = this.props;
+    const { repository, baseUrl, branch, defaultBranch, sources, revision, path, t } = this.props;
 
     let homeUrl = baseUrl + "/";
     if (revision) {
@@ -80,14 +81,15 @@ class Breadcrumb extends React.Component<Props> {
           </FlexStartNav>
           {binder.hasExtension("repos.sources.actionbar") && (
             <ActionWrapper>
-              {console.log(sources)}
               <ExtensionPoint
                 name="repos.sources.actionbar"
                 props={{
                   baseUrl,
+                  revision,
                   branch: branch ? branch : defaultBranch,
                   path,
-                  sources
+                  sources,
+                  repository
                 }}
                 renderAll={true}
               />

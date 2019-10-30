@@ -20,6 +20,7 @@ import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
 import { getLinks, getRepositoriesLink } from "../../modules/indexResource";
+import SourceExtensions from "../sources/containers/SourceExtensions";
 
 type Props = WithTranslation & {
   namespace: string;
@@ -119,6 +120,15 @@ class RepositoryRoot extends React.Component<Props> {
               <Route
                 path={`${url}/sources/:revision/:path*`}
                 render={() => <Sources repository={repository} baseUrl={`${url}/sources`} />}
+              />
+              <Route
+                path={`${url}/sourceext/:extension`}
+                exact={true}
+                render={() => <SourceExtensions repository={repository} />}
+              />
+              <Route
+                path={`${url}/sourceext/:extension/:revision/:path*`}
+                render={() => <SourceExtensions repository={repository} />}
               />
               <Route
                 path={`${url}/changesets`}

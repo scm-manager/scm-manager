@@ -1,5 +1,6 @@
 package sonia.scm.repository.spi;
 
+import org.tmatesoft.svn.core.SVNCommitInfo;
 import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
@@ -72,10 +73,9 @@ public class SvnModifyCommand implements ModifyCommand {
         }
       }
       try {
-        clientManager.getCommitClient().doCommit(new File[] {workingRepository}, false,
-          request.getCommitMessage(), null,  null, false, true, SVNDepth.INFINITY);
-        //I can't get the newest revision after commiting without creating a new working copy
-        return String.valueOf(clientManager.getStatusClient().doStatus(workingRepository, false).getCommittedRevision().getNumber() + 1);
+        SVNCommitInfo svnCommitInfo = clientManager.getCommitClient().doCommit(new File[]{workingRepository}, false,
+          request.getCommitMessage(), null, null, false, true, SVNDepth.INFINITY);
+        return String.valueOf(svnCommitInfo.getNewRevision());
       } catch (SVNException e) {
         throw new InternalRepositoryException(repository, "could not commit changes on repository");
       }

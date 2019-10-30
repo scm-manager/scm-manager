@@ -208,7 +208,6 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     GitLogCommand command = createCommand();
     Changeset c = command.getChangeset("435df2f061add3589cb3", request);
 
-    Assertions.assertThat(c.getBranches().isEmpty()).isFalse();
     Assertions.assertThat(c.getBranches().contains("master")).isTrue();
     Assertions.assertThat(c.getBranches().size()).isEqualTo(1);
   }
