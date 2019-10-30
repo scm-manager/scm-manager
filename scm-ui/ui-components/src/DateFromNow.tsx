@@ -10,7 +10,7 @@ type LocaleMap = {
 
 type DateInput = Date | string;
 
-const supportedLocales: LocaleMap = {
+export const supportedLocales: LocaleMap = {
   enUS,
   en: enUS,
   de,
@@ -41,23 +41,26 @@ const DateElement = styled.time`
   cursor: help;
 `;
 
-class DateFromNow extends React.Component<Props> {
-  getLocale = (): Locale => {
-    const { i18n } = this.props;
-
-    for (const lng of i18n.languages || []) {
-      const locale = supportedLocales[lng];
-      if (locale) {
-        return locale;
-      }
-    }
-
-    const locale = supportedLocales[i18n.language];
+export const chooseLocale = (language: string, languages?: string[]) => {
+  for (const lng of languages || []) {
+    const locale = supportedLocales[lng];
     if (locale) {
       return locale;
     }
+  }
 
-    return enUS;
+  const locale = supportedLocales[language];
+  if (locale) {
+    return locale;
+  }
+
+  return enUS;
+};
+
+class DateFromNow extends React.Component<Props> {
+  getLocale = (): Locale => {
+    const { i18n } = this.props;
+    return chooseLocale(i18n.language, i18n.languages);
   };
 
   createOptions = () => {
