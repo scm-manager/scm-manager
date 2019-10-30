@@ -1,8 +1,10 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
 import Modal from "./Modal";
+import classNames from "classnames";
 
 type Button = {
+  className?: string;
   label: string;
   onClick: () => void | null;
 };
@@ -37,7 +39,7 @@ class ConfirmAlert extends React.Component<Props> {
       <div className="field is-grouped">
         {buttons.map((button, i) => (
           <p className="control">
-            <a className="button is-info" key={i} onClick={() => this.handleClickButton(button)}>
+            <a className={classNames("button", "is-info", button.className)} key={i} onClick={() => this.handleClickButton(button)}>
               {button.label}
             </a>
           </p>

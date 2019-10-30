@@ -37,7 +37,7 @@ class AddEntryToTableField extends React.Component<Props, State> {
   render() {
     const { disabled, buttonLabel, fieldLabel, errorMessage, helpText } = this.props;
     return (
-      <div className="field">
+      <>
         <InputField
           label={fieldLabel}
           errorMessage={errorMessage}
@@ -53,7 +53,7 @@ class AddEntryToTableField extends React.Component<Props, State> {
           action={this.addButtonClicked}
           disabled={disabled || this.state.entryToAdd === "" || !this.isValid()}
         />
-      </div>
+      </>
     );
   }
 

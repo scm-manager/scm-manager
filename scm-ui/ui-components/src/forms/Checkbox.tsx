@@ -1,16 +1,18 @@
 import React, { ChangeEvent } from "react";
 import { Help } from "../index";
+import LabelWithHelpIcon from "./LabelWithHelpIcon";
 
 type Props = {
   label?: string;
-  name?: string;
-  checked: boolean;
   onChange?: (value: boolean, name?: string) => void;
+  checked: boolean;
+  name?: string;
+  title?: string;
   disabled?: boolean;
   helpText?: string;
 };
 
-class Checkbox extends React.Component<Props> {
+export default class Checkbox extends React.Component<Props> {
   onCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (this.props.onChange) {
       this.props.onChange(event.target.checked, this.props.name);
@@ -18,29 +20,38 @@ class Checkbox extends React.Component<Props> {
   };
 
   renderHelp = () => {
-    const helpText = this.props.helpText;
-    if (helpText) {
+    const { title, helpText } = this.props;
+    if (helpText && !title) {
       return <Help message={helpText} />;
     }
   };
 
+  renderLabelWithHelp = () => {
+    const { title, helpText } = this.props;
+    if (title) {
+      return <LabelWithHelpIcon label={title} helpText={helpText} />;
+    }
+  }
+
   render() {
+    const { label, checked, disabled } = this.props;
     return (
-      <div className="field is-grouped">
+      <div className="field">
+        {this.renderLabelWithHelp()}
         <div className="control">
           {/*
-            we have to ignore the next line, 
+            we have to ignore the next line,
             because jsx label does not the custom disabled attribute
             but bulma does.
             // @ts-ignore */}
-          <label className="checkbox" disabled={this.props.disabled}>
+          <label className="checkbox" disabled={disabled}>
             <input
               type="checkbox"
-              checked={this.props.checked}
+              checked={checked}
               onChange={this.onCheckboxChange}
-              disabled={this.props.disabled}
+              disabled={disabled}
             />{" "}
-            {this.props.label}
+            {label}
             {this.renderHelp()}
           </label>
         </div>
@@ -48,5 +59,3 @@ class Checkbox extends React.Component<Props> {
     );
   }
 }
-
-export default Checkbox;

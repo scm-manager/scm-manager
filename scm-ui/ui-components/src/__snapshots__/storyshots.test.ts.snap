@@ -339,7 +339,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
   className="sc-gipzik xsalO"
 >
   <div
-    className="field is-grouped"
+    className="field"
   >
     <div
       className="control"
@@ -358,7 +358,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
     </div>
   </div>
   <div
-    className="field is-grouped"
+    className="field"
   >
     <div
       className="control"
@@ -384,7 +384,7 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
   className="sc-gipzik xsalO"
 >
   <div
-    className="field is-grouped"
+    className="field"
   >
     <div
       className="control"

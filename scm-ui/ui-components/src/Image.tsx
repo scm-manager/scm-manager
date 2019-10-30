@@ -4,7 +4,7 @@ import { withContextPath } from "./urls";
 type Props = {
   src: string;
   alt: string;
-  className?: any;
+  className?: string;
 };
 
 class Image extends React.Component<Props> {

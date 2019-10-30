@@ -145,6 +145,9 @@ $danger-25: scale-color($danger, $lightness: 75%);
 .has-text-warning {
   color: #ffb600 !important;
 }
+.has-text-warning-invert {
+  color: $warning-invert;
+}
 
 .has-text-blue-light {
   color: $blue-light !important;
@@ -215,9 +218,6 @@ $danger-25: scale-color($danger, $lightness: 75%);
   background-color: $danger-25;
 }
 
-.has-background-warning-invert {
-  background-color: $warning-invert;
-}
 .has-background-blue-light {
   background-color: $blue-light;
 }
@@ -229,6 +229,11 @@ $danger-25: scale-color($danger, $lightness: 75%);
 
   &.is-delete {
     background-color: $light;
+  }
+
+  +.is-delete {
+    border-color: #aaa;
+    border-width: 1px 1px 1px 0;
   }
 
   &.is-outlined {
@@ -285,6 +290,17 @@ $danger-25: scale-color($danger, $lightness: 75%);
 
   &[disabled] {
     opacity: 1;
+  }
+
+  &.is-primary,
+  &.is-info,
+  &.is-link,
+  &.is-success,
+  &.is-warning,
+  &.is-danger {
+    &.is-outlined {
+      background-color: $white;
+    }
   }
 
   &.is-primary:hover,
@@ -373,8 +389,6 @@ $danger-25: scale-color($danger, $lightness: 75%);
 
   &.is-reduced-mobile,
   &.reduced-mobile {
-    font-size: 0.9rem;
-
     @media screen and (max-width: 1087px) {
       > span:nth-child(2) {
         display: none;
@@ -429,8 +443,8 @@ ul.is-separated {
   }
 }
 
-// columns
-.columns.is-multiline {
+// card columns for repo and plugins overview
+.card-columns {
   .column {
     height: 120px;
 
@@ -443,35 +457,33 @@ ul.is-separated {
   .column.is-half {
     width: calc(50% - 0.75rem);
 
+    @media screen and (max-width: 768px) {
+      width: 100%;
+    }
+
     &:nth-child(odd) {
       margin-right: 1.5rem;
+
+      @media screen and (max-width: 768px) {
+        margin-right: 0;
+      }
     }
 
     .overlay-column {
       width: calc(50% - 3rem);
+
+      @media screen and (max-width: 768px) {
+        width: calc(100% - 1.5rem);
+      }
     }
   }
 
   .column.is-full .overlay-column {
     width: calc(100% - 1.5rem);
   }
-
-  @media screen and (max-width: 768px) {
-    .column.is-half {
-      width: 100%;
-
-      &:nth-child(odd) {
-        margin-right: 0;
-      }
-
-      .overlay-column {
-        width: calc(100% - 1.5rem);
-      }
-    }
-  }
 }
 .content.is-plugin-page {
-  .columns.is-multiline {
+  .card-columns {
     .column.is-half .overlay-column {
       width: calc(37.5% - 1.5rem);
     }
@@ -643,6 +655,11 @@ form .field:not(.is-grouped) {
   height: 2.8rem;
   min-width: 6.75em;
 }
+.pagination-previous[disabled],
+.pagination-next[disabled] {
+  background-color: #ededed;
+  color: #bcbcbc;
+}
 .pagination-link.is-current {
   opacity: 1;
 }
@@ -783,8 +800,12 @@ form .field:not(.is-grouped) {
 
 // modal
 .modal {
-  .modal-card-foot {
-    justify-content: flex-end; // pulled-right
+  .modal-card {
+    border-radius: 6px;
+
+    .modal-card-foot {
+      justify-content: flex-end; // pulled-right
+    }
   }
 }
 

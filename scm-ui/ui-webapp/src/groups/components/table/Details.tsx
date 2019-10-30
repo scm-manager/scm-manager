@@ -1,5 +1,6 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
+import styled from "styled-components";
 import { Group } from "@scm-manager/ui-types";
 import { DateFromNow, Checkbox } from "@scm-manager/ui-components";
 import GroupMember from "./GroupMember";
@@ -7,6 +8,10 @@ import GroupMember from "./GroupMember";
 type Props = WithTranslation & {
   group: Group;
 };
+
+const StyledMemberList = styled.ul`
+  margin-left: 1em !important;
+`;
 
 class Details extends React.Component<Props> {
   render() {
@@ -59,11 +64,11 @@ class Details extends React.Component<Props> {
         <tr>
           <th>{t("group.members")}</th>
           <td className="is-paddingless">
-            <ul>
+            <StyledMemberList>
               {group._embedded.members.map((member, index) => {
                 return <GroupMember key={index} member={member} />;
               })}
-            </ul>
+            </StyledMemberList>
           </td>
         </tr>
       );

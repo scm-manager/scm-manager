@@ -70,7 +70,7 @@ export default class CardColumnGroup extends React.Component<Props, State> {
           </span>
         </h2>
         <hr />
-        <Wrapper className={classNames("columns", "is-multiline")}>{content}</Wrapper>
+        <Wrapper className={classNames("columns", "card-columns", "is-multiline")}>{content}</Wrapper>
         <div className="is-clearfix" />
       </Container>
     );

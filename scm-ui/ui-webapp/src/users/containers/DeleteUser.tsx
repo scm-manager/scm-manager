@@ -38,6 +38,7 @@ class DeleteUser extends React.Component<Props> {
       message: t("deleteUser.confirmAlert.message"),
       buttons: [
         {
+          className: "is-outlined",
           label: t("deleteUser.confirmAlert.submit"),
           onClick: () => this.deleteUser()
         },

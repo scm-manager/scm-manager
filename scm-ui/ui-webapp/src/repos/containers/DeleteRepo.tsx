@@ -38,6 +38,7 @@ class DeleteRepo extends React.Component<Props> {
       message: t("deleteRepo.confirmAlert.message"),
       buttons: [
         {
+          className: "is-outlined",
           label: t("deleteRepo.confirmAlert.submit"),
           onClick: () => this.deleteRepo()
         },

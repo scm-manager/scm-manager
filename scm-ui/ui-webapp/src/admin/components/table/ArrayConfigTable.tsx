@@ -13,11 +13,12 @@ type Props = {
 class ArrayConfigTable extends React.Component<Props> {
   render() {
     const { label, disabled, removeLabel, items, helpText } = this.props;
-    return (
-      <div>
-        <LabelWithHelpIcon label={label} helpText={helpText} />
-        <table className="table is-hoverable is-fullwidth">
-          <tbody>
+    if(items.length > 0) {
+      return (
+        <>
+          <LabelWithHelpIcon label={label} helpText={helpText}/>
+          <table className="table is-hoverable is-fullwidth">
+            <tbody>
             {items.map(item => {
               return (
                 <tr key={item}>
@@ -33,10 +34,12 @@ class ArrayConfigTable extends React.Component<Props> {
                 </tr>
               );
             })}
-          </tbody>
-        </table>
-      </div>
-    );
+            </tbody>
+          </table>
+        </>
+      );
+    }
+    return null;
   }
 
   removeEntry = (item: string) => {

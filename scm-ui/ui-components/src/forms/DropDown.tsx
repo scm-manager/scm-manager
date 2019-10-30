@@ -6,7 +6,7 @@ type Props = {
   optionValues?: string[];
   optionSelected: (p: string) => void;
   preselectedOption?: string;
-  className: any;
+  className: string;
   disabled?: boolean;
 };
 

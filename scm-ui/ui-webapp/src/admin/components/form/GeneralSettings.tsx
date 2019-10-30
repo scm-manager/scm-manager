@@ -68,9 +68,10 @@ class GeneralSettings extends React.Component<Props> {
           </div>
           <div className="column is-half">
             <Checkbox
-              checked={enabledXsrfProtection}
               label={t("general-settings.enabled-xsrf-protection")}
               onChange={this.handleEnabledXsrfProtectionChange}
+              checked={enabledXsrfProtection}
+              title={t("general-settings.enabled-xsrf-protection")}
               disabled={!hasUpdatePermission}
               helpText={t("help.enableXsrfProtectionHelpText")}
             />
@@ -88,9 +89,10 @@ class GeneralSettings extends React.Component<Props> {
           </div>
           <div className="column is-half">
             <Checkbox
-              checked={anonymousAccessEnabled}
               label={t("general-settings.anonymous-access-enabled")}
               onChange={this.handleEnableAnonymousAccess}
+              checked={anonymousAccessEnabled}
+              title={t("general-settings.anonymous-access-enabled")}
               disabled={!hasUpdatePermission}
               helpText={t("help.allowAnonymousAccessHelpText")}
             />

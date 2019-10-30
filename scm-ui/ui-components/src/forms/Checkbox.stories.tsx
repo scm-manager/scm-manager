@@ -19,3 +19,4 @@ storiesOf("Forms|Checkbox", module)
       <Checkbox label="Checked but disabled" checked={true} disabled={true} />
     </Spacing>
   ));
+
