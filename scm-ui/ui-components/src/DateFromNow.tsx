@@ -45,11 +45,16 @@ class DateFromNow extends React.Component<Props> {
   getLocale = (): Locale => {
     const { i18n } = this.props;
 
-    for (const lng of i18n.languages) {
+    for (const lng of i18n.languages || []) {
       const locale = supportedLocales[lng];
       if (locale) {
         return locale;
       }
+    }
+
+    const locale = supportedLocales[i18n.language];
+    if (locale) {
+      return locale;
     }
 
     return enUS;
