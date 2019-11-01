@@ -175,9 +175,9 @@ const mapStateToProps = (state, ownProps) => {
   const loading = isFetchBranchesPending(state, repository);
   const error = getFetchBranchesFailure(state, repository);
   const branches = getBranches(state, repository);
-  const currentFileIsDirectory = revision
+  const currentFileIsDirectory = decodedRevision
     ? isDirectory(state, repository, decodedRevision, path)
-    : isDirectory(state, repository, decodedRevision, path);
+    : isDirectory(state, repository, revision, path);
   const sources = getSources(state, repository, decodedRevision, path);
 
   return {
