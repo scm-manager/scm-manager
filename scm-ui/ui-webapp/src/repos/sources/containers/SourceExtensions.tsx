@@ -3,17 +3,13 @@ import { Repository, File } from "@scm-manager/ui-types";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
 import { ExtensionPoint, binder } from "@scm-manager/ui-extensions";
-import {
-  fetchSources,
-  getFetchSourcesFailure,
-  getSources,
-  isFetchSourcesPending
-} from "../modules/sources";
-import { connect} from "react-redux";
+import { fetchSources, getFetchSourcesFailure, getSources, isFetchSourcesPending } from "../modules/sources";
+import { connect } from "react-redux";
 import { Loading, ErrorNotification } from "@scm-manager/ui-components";
 import Notification from "@scm-manager/ui-components/src/Notification";
+import {WithTranslation, withTranslation} from "react-i18next";
 
-type Props = RouteComponentProps & {
+type Props = WithTranslation & RouteComponentProps & {
   repository: Repository;
 
   // url params
@@ -36,11 +32,11 @@ class SourceExtensions extends React.Component<Props> {
   componentDidMount() {
     const { fetchSources, repository, revision, path } = this.props;
     // TODO get typing right
-    fetchSources(repository, revision || "", path || "");
+    fetchSources(repository,revision || "", path || "");
   }
 
   render() {
-    const { loading, error, repository, extension, revision, path, sources } = this.props;
+    const { loading, error, repository, extension, revision, path, sources, t } = this.props;
     if (error) {
       return <ErrorNotification error={error} />;
     }
@@ -50,8 +46,7 @@ class SourceExtensions extends React.Component<Props> {
 
     const extprops = { extension, repository, revision, path, sources };
     if (!binder.hasExtension(extensionPointName, extprops)) {
-      // TODO i18n
-      return <Notification type="warning">No extension bound</Notification>;
+      return <Notification type="warning">{t("sources.extension.notBound")}</Notification>;
     }
 
     return <ExtensionPoint name={extensionPointName} props={extprops} />;
@@ -60,15 +55,12 @@ class SourceExtensions extends React.Component<Props> {
 
 const mapStateToProps = (state: any, ownProps: Props): Partial<Props> => {
   const { repository, match } = ownProps;
-  // TODO add query-string v6
-  // see : https://www.pluralsight.com/guides/react-router-typescript
   // @ts-ignore
   const revision: string = match.params.revision;
   // @ts-ignore
   const path: string = match.params.path;
   // @ts-ignore
   const extension: string = match.params.extension;
-  const decodedRevision = revision ? decodeURIComponent(revision) : undefined;
   const loading = isFetchSourcesPending(state, repository, revision, path);
   const error = getFetchSourcesFailure(state, repository, revision, path);
   const sources = getSources(state, repository, revision, path);
@@ -76,7 +68,7 @@ const mapStateToProps = (state: any, ownProps: Props): Partial<Props> => {
   return {
     repository,
     extension,
-    revision: decodedRevision,
+    revision,
     path,
     loading,
     error,
@@ -87,12 +79,14 @@ const mapStateToProps = (state: any, ownProps: Props): Partial<Props> => {
 const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchSources: (repository: Repository, revision: string, path: string) => {
-      dispatch(fetchSources(repository, revision, path));
+      dispatch(fetchSources(repository, decodeURIComponent(revision), path));
     }
   };
 };
 
-export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SourceExtensions));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(withTranslation("repos")(SourceExtensions))
+);

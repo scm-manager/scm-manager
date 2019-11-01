@@ -68,6 +68,12 @@ class RepositoryRoot extends React.Component<Props> {
     return route.location.pathname.match(regex);
   };
 
+  matchesSources = (route: any) => {
+    const url = this.matchedUrl();
+    const regex = new RegExp(`${url}/(sources|sourceext)/.*`);
+    return route.location.pathname.match(regex);
+  };
+
   render() {
     const { loading, error, indexLinks, repository, t } = this.props;
 
@@ -196,6 +202,7 @@ class RepositoryRoot extends React.Component<Props> {
                   to={`${url}/sources`}
                   icon="fas fa-code"
                   label={t("repositoryRoot.menu.sourcesNavLink")}
+                  activeWhenMatch={this.matchesSources}
                   activeOnlyWhenExact={false}
                 />
                 <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true} />

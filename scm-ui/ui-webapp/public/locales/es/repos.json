@@ -113,7 +113,10 @@
       "description": "Discripción",
       "size": "tamaño"
     },
-    "noSources": "No se han encontrado fuentes para esta rama."
+    "noSources": "No se han encontrado fuentes para esta rama.",
+    "extension" : {
+      "notBound": "Sin extensión conectada."
+    }
   },
   "permission": {
     "title": "Editar permisos",

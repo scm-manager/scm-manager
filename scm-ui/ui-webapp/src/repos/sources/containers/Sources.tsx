@@ -171,18 +171,18 @@ class Sources extends React.Component<Props, State> {
 const mapStateToProps = (state, ownProps) => {
   const { repository, match } = ownProps;
   const { revision, path } = match.params;
-  const decodedRevision = revision ? decodeURIComponent(revision) : undefined;
+  const decodedRevision = revision ? decodeURIComponent(revision) : revision;
   const loading = isFetchBranchesPending(state, repository);
   const error = getFetchBranchesFailure(state, repository);
   const branches = getBranches(state, repository);
-  const currentFileIsDirectory = decodedRevision
+  const currentFileIsDirectory = revision
     ? isDirectory(state, repository, decodedRevision, path)
-    : isDirectory(state, repository, revision, path);
-  const sources = getSources(state, repository, revision, path);
+    : isDirectory(state, repository, decodedRevision, path);
+  const sources = getSources(state, repository, decodedRevision, path);
 
   return {
     repository,
-    revision: decodedRevision,
+    revision,
     path,
     loading,
     error,
@@ -198,7 +198,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchBranches(repository));
     },
     fetchSources: (repository: Repository, revision: string, path: string) => {
-      dispatch(fetchSources(repository, revision, path));
+      dispatch(fetchSources(repository, decodeURIComponent(revision), path));
     }
   };
 };

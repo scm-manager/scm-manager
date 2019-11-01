@@ -1,5 +1,5 @@
 import * as types from "../../../modules/types";
-import { Repository, File, Action } from "@scm-manager/ui-types";
+import { Repository, File, Action, Link } from "@scm-manager/ui-types";
 import { apiClient } from "@scm-manager/ui-components";
 import { isPending } from "../../../modules/pending";
 import { getFailure } from "../../../modules/failure";
@@ -16,16 +16,16 @@ export function fetchSources(repository: Repository, revision: string, path: str
       .get(createUrl(repository, revision, path))
       .then(response => response.json())
       .then(sources => {
-        dispatch(fetchSourcesSuccess(repository, revision, path, sources));
+        dispatch(fetchSourcesSuccess(repository, decodeURIComponent(revision), path, sources));
       })
       .catch(err => {
-        dispatch(fetchSourcesFailure(repository, revision, path, err));
+        dispatch(fetchSourcesFailure(repository, decodeURIComponent(revision), path, err));
       });
   };
 }
 
 function createUrl(repository: Repository, revision: string, path: string) {
-  const base = repository._links.sources.href;
+  const base = (repository._links.sources as Link).href;
   if (!revision && !path) {
     return base;
   }
@@ -61,7 +61,7 @@ export function fetchSourcesFailure(repository: Repository, revision: string, pa
 function createItemId(repository: Repository, revision: string, path: string) {
   const revPart = revision ? revision : "_";
   const pathPart = path ? path : "";
-  return `${repository.namespace}/${repository.name}/${revPart}/${pathPart}`;
+  return `${repository.namespace}/${repository.name}/${decodeURIComponent(revPart)}/${pathPart}`;
 }
 
 // reducer
