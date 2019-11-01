@@ -70,7 +70,7 @@ class RepositoryRoot extends React.Component<Props> {
 
   matchesSources = (route: any) => {
     const url = this.matchedUrl();
-    const regex = new RegExp(`${url}/(sources|sourceext)/.*`);
+    const regex = new RegExp(`${url}(/sources|/sourceext)/.*`);
     return route.location.pathname.match(regex);
   };
 
