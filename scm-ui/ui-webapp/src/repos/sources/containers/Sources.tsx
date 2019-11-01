@@ -53,7 +53,7 @@ class Sources extends React.Component<Props, State> {
     const { fetchBranches, repository, revision, path, fetchSources } = this.props;
 
     fetchBranches(repository);
-    fetchSources(repository, revision, path);
+    fetchSources(repository, this.decodeRevision(revision), path);
 
     this.redirectToDefaultBranch();
   }
@@ -61,11 +61,15 @@ class Sources extends React.Component<Props, State> {
   componentDidUpdate(prevProps) {
     const { fetchSources, repository, revision, path } = this.props;
     if (prevProps.revision !== revision || prevProps.path !== path) {
-      fetchSources(repository, revision, path);
+      fetchSources(repository, this.decodeRevision(revision), path);
     }
 
     this.redirectToDefaultBranch();
   }
+
+  decodeRevision = (revision: string) => {
+    return revision ? decodeURIComponent(revision) : revision;
+  };
 
   redirectToDefaultBranch = () => {
     const { branches } = this.props;
@@ -171,7 +175,7 @@ class Sources extends React.Component<Props, State> {
 const mapStateToProps = (state, ownProps) => {
   const { repository, match } = ownProps;
   const { revision, path } = match.params;
-  const decodedRevision = revision ? decodeURIComponent(revision) : revision;
+  const decodedRevision = revision ? decodeURIComponent(revision) : undefined;
   const loading = isFetchBranchesPending(state, repository);
   const error = getFetchBranchesFailure(state, repository);
   const branches = getBranches(state, repository);
@@ -198,7 +202,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchBranches(repository));
     },
     fetchSources: (repository: Repository, revision: string, path: string) => {
-      dispatch(fetchSources(repository, decodeURIComponent(revision), path));
+      dispatch(fetchSources(repository, revision, path));
     }
   };
 };

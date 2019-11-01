@@ -16,10 +16,10 @@ export function fetchSources(repository: Repository, revision: string, path: str
       .get(createUrl(repository, revision, path))
       .then(response => response.json())
       .then(sources => {
-        dispatch(fetchSourcesSuccess(repository, decodeURIComponent(revision), path, sources));
+        dispatch(fetchSourcesSuccess(repository, revision, path, sources));
       })
       .catch(err => {
-        dispatch(fetchSourcesFailure(repository, decodeURIComponent(revision), path, err));
+        dispatch(fetchSourcesFailure(repository, revision, path, err));
       });
   };
 }
