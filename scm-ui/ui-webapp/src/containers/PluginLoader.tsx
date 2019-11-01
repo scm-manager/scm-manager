@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { ReactNode } from "react";
 import { apiClient, Loading } from "@scm-manager/ui-components";
 import { getUiPluginsLink } from "../modules/indexResource";
 import { connect } from "react-redux";
@@ -6,7 +6,7 @@ import loadBundle from "./loadBundle";
 
 type Props = {
   loaded: boolean;
-  children: React.Node;
+  children: ReactNode;
   link: string;
   callback: () => void;
 };
@@ -55,7 +55,7 @@ class PluginLoader extends React.Component<Props, State> {
     });
 
     const promises = [];
-    const sortedPlugins = plugins.sort(comparePluginsByName);
+    const sortedPlugins = [...plugins].sort(comparePluginsByName);
     for (const plugin of sortedPlugins) {
       promises.push(this.loadPlugin(plugin));
     }
@@ -96,7 +96,8 @@ const comparePluginsByName = (a: Plugin, b: Plugin) => {
   }
   return 0;
 };
-const mapStateToProps = state => {
+
+const mapStateToProps = (state: any) => {
   const link = getUiPluginsLink(state);
   return {
     link
