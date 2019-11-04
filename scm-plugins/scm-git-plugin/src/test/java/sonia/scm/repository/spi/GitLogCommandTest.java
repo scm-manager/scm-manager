@@ -208,8 +208,14 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     GitLogCommand command = createCommand();
     Changeset c = command.getChangeset("435df2f061add3589cb3", request);
 
-    Assertions.assertThat(c.getBranches().contains("master")).isTrue();
-    Assertions.assertThat(c.getBranches().size()).isEqualTo(1);
+    Assertions.assertThat(c.getBranches()).containsOnly("master");
+  }
+
+  @Test
+  public void shouldNotReturnCommitFromDifferentBranch() {
+    when(request.getBranch()).thenReturn("master");
+    Changeset changeset = createCommand().getChangeset("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", request);
+    Assertions.assertThat(changeset).isNull();
   }
 
   @Test
