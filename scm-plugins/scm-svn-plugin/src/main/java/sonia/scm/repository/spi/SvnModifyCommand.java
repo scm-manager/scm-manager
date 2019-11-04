@@ -20,7 +20,7 @@ public class SvnModifyCommand implements ModifyCommand {
   private SvnWorkDirFactory workDirFactory;
   private Repository repository;
 
-  public SvnModifyCommand(SvnContext context, Repository repository, SvnWorkDirFactory workDirFactory) {
+  SvnModifyCommand(SvnContext context, Repository repository, SvnWorkDirFactory workDirFactory) {
     this.context = context;
     this.repository = repository;
     this.workDirFactory = workDirFactory;
@@ -30,55 +30,89 @@ public class SvnModifyCommand implements ModifyCommand {
   public String execute(ModifyCommandRequest request) {
     SVNClientManager clientManager = SVNClientManager.newInstance();
     try (WorkingCopy<File, File> workingCopy = workDirFactory.createWorkingCopy(context, null)) {
-      File workingRepository = workingCopy.getWorkingRepository();
-      for (ModifyCommandRequest.PartialRequest partialRequest : request.getRequests()) {
-        try {
-          SVNWCClient wcClient = clientManager.getWCClient();
-          partialRequest.execute(new ModifyWorkerHelper() {
-            @Override
-            public void doScmDelete(String toBeDeleted){
-              try {
-                wcClient.doDelete(new File(String.format("%s/%s", workingRepository, toBeDeleted)), true, true, false);
-              } catch (SVNException e) {
-                throw new InternalRepositoryException(repository, "could not delete file from repository");
-              }
-            }
+      File workingDirectory = workingCopy.getDirectory();
+      modifyWorkingDirectory(request, clientManager, workingDirectory);
+      return commitChanges(clientManager, workingDirectory, request.getCommitMessage());
+    }
+  }
 
-            @Override
-            public void addFileToScm(String name, Path file) {
-              try {
-                wcClient.doAdd(file.toFile(), true, false, true, SVNDepth.INFINITY, false, true);
-              } catch (SVNException e) {
-                throw new InternalRepositoryException(repository, "could not add file to repository");
-              }
-            }
+  private String commitChanges(SVNClientManager clientManager, File workingDirectory, String commitMessage) {
+    try {
+      SVNCommitInfo svnCommitInfo = clientManager.getCommitClient().doCommit(
+        new File[]{workingDirectory},
+        false,
+        commitMessage,
+        null,
+        null,
+        false,
+        true,
+        SVNDepth.INFINITY
+      );
+      return String.valueOf(svnCommitInfo.getNewRevision());
+    } catch (SVNException e) {
+      throw new InternalRepositoryException(repository, "could not commit changes on repository");
+    }
+  }
 
-            @Override
-            public File getWorkDir() {
-              return workingRepository;
-            }
-
-            @Override
-            public Repository getRepository() {
-              return repository;
-            }
-
-            @Override
-            public String getBranch() {
-              return null;
-            }
-          });
-        } catch (IOException e) {
-          throw new InternalRepositoryException(repository, "could not read files from repository");
-        }
-      }
+  private void modifyWorkingDirectory(ModifyCommandRequest request, SVNClientManager clientManager, File workingDirectory) {
+    for (ModifyCommandRequest.PartialRequest partialRequest : request.getRequests()) {
       try {
-        SVNCommitInfo svnCommitInfo = clientManager.getCommitClient().doCommit(new File[]{workingRepository}, false,
-          request.getCommitMessage(), null, null, false, true, SVNDepth.INFINITY);
-        return String.valueOf(svnCommitInfo.getNewRevision());
-      } catch (SVNException e) {
-        throw new InternalRepositoryException(repository, "could not commit changes on repository");
+        SVNWCClient wcClient = clientManager.getWCClient();
+        partialRequest.execute(new ModifyWorker(wcClient, workingDirectory));
+      } catch (IOException e) {
+        throw new InternalRepositoryException(repository, "could not read files from repository");
       }
+    }
+  }
+
+  private class ModifyWorker implements ModifyWorkerHelper {
+    private final SVNWCClient wcClient;
+    private final File workingDirectory;
+
+    private ModifyWorker(SVNWCClient wcClient, File workingDirectory) {
+      this.wcClient = wcClient;
+      this.workingDirectory = workingDirectory;
+    }
+
+    @Override
+    public void doScmDelete(String toBeDeleted) {
+      try {
+        wcClient.doDelete(new File(workingDirectory, toBeDeleted), true, true, false);
+      } catch (SVNException e) {
+        throw new InternalRepositoryException(repository, "could not delete file from repository");
+      }
+    }
+
+    @Override
+    public void addFileToScm(String name, Path file) {
+      try {
+        wcClient.doAdd(
+          file.toFile(),
+          true,
+          false,
+          true,
+          SVNDepth.INFINITY,
+          false,
+          true
+        );
+      } catch (SVNException e) {
+        throw new InternalRepositoryException(repository, "could not add file to repository");
+      }
+    }
+
+    @Override
+    public File getWorkDir() {
+      return workingDirectory;
+    }
+
+    @Override
+    public Repository getRepository() {
+      return repository;
+    }
+
+    @Override
+    public String getBranch() {
+      return null;
     }
   }
 }
