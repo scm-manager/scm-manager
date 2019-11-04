@@ -66,7 +66,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
     Repository repository, SvnWorkDirFactory workdirFactory)
   {
     this.repository = repository;
-    this.context = new SvnContext(handler.getDirectory(repository.getId()));
+    this.context = new SvnContext(repository, handler.getDirectory(repository.getId()));
     this.workDirFactory = workdirFactory;
   }
 

@@ -24,19 +24,11 @@ public class SimpleSvnWorkDirFactory extends SimpleWorkdirFactory<File, File, Sv
 
   @Override
   protected Repository getScmRepository(SvnContext context) {
-    return null;
+    return context.getRepository();
   }
 
   @Override
-  protected void closeRepository(File workingCopy) {
-  }
-
-  @Override
-  protected void closeWorkdirInternal(File workdir) {
-  }
-
-  @Override
-  protected ParentAndClone<File, File> cloneRepository(SvnContext context, File workingCopy, String initialBranch) throws IOException {
+  protected ParentAndClone<File, File> cloneRepository(SvnContext context, File workingCopy, String initialBranch) {
 
     final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
 
@@ -59,5 +51,13 @@ public class SimpleSvnWorkDirFactory extends SimpleWorkdirFactory<File, File, Sv
     }
 
     return new ParentAndClone<>(context.getDirectory(), workingCopy);
+  }
+
+  @Override
+  protected void closeRepository(File workingCopy) {
+  }
+
+  @Override
+  protected void closeWorkdirInternal(File workdir) {
   }
 }

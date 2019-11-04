@@ -5,6 +5,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.tmatesoft.svn.core.SVNException;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.repository.util.WorkingCopy;
 
@@ -65,5 +66,12 @@ public class SimpleSvnWorkDirFactoryTest extends AbstractSvnCommandTestBase {
     }
     assertThat(directory).doesNotExist();
     assertThat(workingRepository).doesNotExist();
+  }
+
+  @Test
+  public void shouldReturnRepository() {
+    SimpleSvnWorkDirFactory factory = new SimpleSvnWorkDirFactory(workdirProvider);
+    Repository scmRepository = factory.getScmRepository(createContext());
+    assertThat(scmRepository).isSameAs(repository);
   }
 }
