@@ -16,6 +16,7 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
+import sonia.scm.repository.api.ScmMergeStrategy;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -61,6 +62,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     private final String toMerge;
     private final Person author;
     private final String messageTemplate;
+    private final ScmMergeStrategy scmMergeStrategy;
 
     private MergeWorker(Git clone, MergeCommandRequest request) {
       super(clone);
@@ -68,6 +70,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       this.toMerge = request.getBranchToMerge();
       this.author = request.getAuthor();
       this.messageTemplate = request.getMessageTemplate();
+      this.scmMergeStrategy = request.getScmMergeStrategy();
     }
 
     @Override
@@ -86,11 +89,18 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       MergeResult result;
       try {
         ObjectId sourceRevision = resolveRevision(toMerge);
-        result = getClone().merge()
-          .setFastForward(FastForwardMode.NO_FF)
+        org.eclipse.jgit.api.MergeCommand mergeCommand = getClone().merge();
+        mergeCommand
           .setCommit(false) // we want to set the author manually
-          .include(toMerge, sourceRevision)
-          .call();
+          .include(toMerge, sourceRevision);
+
+        if (scmMergeStrategy == ScmMergeStrategy.SQUASH) {
+          mergeCommand.setSquash(true);
+        } else {
+          mergeCommand.setFastForward(FastForwardMode.NO_FF);
+        }
+
+        result = mergeCommand.call();
       } catch (GitAPIException e) {
         throw new InternalRepositoryException(context.getRepository(), "could not merge branch " + toMerge + " into " + target, e);
       }

@@ -93,6 +93,18 @@ public class MergeCommandBuilder {
   }
 
   /**
+   * Use this to set the strategy of the merge commit manually.
+   *
+   * This is optional and for {@link #executeMerge()} only.
+   *
+   * @return This builder instance.
+   */
+  public MergeCommandBuilder setMergeStrategy(ScmMergeStrategy strategy) {
+    request.setScmMergeStrategy(strategy);
+    return this;
+  }
+
+  /**
    * Use this to set a template for the commit message. If no message is set, a default message will be used.
    *
    * You can use the placeholder <code>{0}</code> for the branch to be merged and <code>{1}</code> for the target

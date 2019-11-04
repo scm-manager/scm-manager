@@ -15,10 +15,12 @@ import org.junit.Test;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
+import sonia.scm.repository.api.ScmMergeStrategy;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.user.User;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -209,6 +211,55 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     // If the file is missing (aka not merged correctly) this will throw a MissingObjectException:
     byte[] contentOfFileB = repository.open(repository.resolve("9513e9c76e73f3e562fd8e4c909d0607113c77c6")).getBytes();
     assertThat(new String(contentOfFileB)).isEqualTo("b\ncontent from branch\n");
+  }
+
+  @Test
+  public void shouldSquashCommitsIfSquashIsEnabled() throws IOException, GitAPIException {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+    request.setBranchToMerge("squash");
+    request.setTargetBranch("master");
+    request.setMessageTemplate("this is a squash");
+    request.setScmMergeStrategy(ScmMergeStrategy.SQUASH);
+
+    MergeCommandResult mergeCommandResult = command.merge(request);
+
+    Repository repository = createContext().open();
+    assertThat(mergeCommandResult.isSuccess()).isTrue();
+
+    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+    RevCommit mergeCommit = commits.iterator().next();
+    PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+    String message = mergeCommit.getFullMessage();
+    assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
+    assertThat(message).isEqualTo("this is a squash");
+  }
+
+  @Test
+  public void shouldSquashThreeCommitsIntoOne() throws IOException, GitAPIException {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+    request.setBranchToMerge("squash");
+    request.setTargetBranch("master");
+    request.setMessageTemplate("squash three commits");
+    request.setScmMergeStrategy(ScmMergeStrategy.SQUASH);
+    Repository gitRepository = createContext().open();
+    MergeCommandResult mergeCommandResult = command.merge(request);
+
+    assertThat(mergeCommandResult.isSuccess()).isTrue();
+
+    Iterable<RevCommit> commits = new Git(gitRepository).log().add(gitRepository.resolve("master")).setMaxCount(1).call();
+    RevCommit mergeCommit = commits.iterator().next();
+    PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+    String message = mergeCommit.getFullMessage();
+    assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
+    assertThat(message).isEqualTo("squash three commits");
+
+    GitModificationsCommand modificationsCommand = new GitModificationsCommand(createContext(), repository);
+    List<String> changes = modificationsCommand.getModifications("master").getAdded();
+    assertThat(changes.size()).isEqualTo(3);
   }
 
   @Test(expected = NotFoundException.class)
