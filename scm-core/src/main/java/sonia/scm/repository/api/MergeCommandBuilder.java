@@ -56,6 +56,15 @@ public class MergeCommandBuilder {
   }
 
   /**
+   * Use this to check if merge-strategy is supported by mergeCommand
+   *
+   * @return boolean.
+   */
+  public boolean isSupported(MergeStrategy strategy) {
+    return mergeCommand.isSupported(strategy);
+  }
+
+  /**
    * Use this to set the branch that should be merged into the target branch.
    *
    * <b>This is mandatory.</b>
@@ -99,8 +108,8 @@ public class MergeCommandBuilder {
    *
    * @return This builder instance.
    */
-  public MergeCommandBuilder setMergeStrategy(ScmMergeStrategy strategy) {
-    request.setScmMergeStrategy(strategy);
+  public MergeCommandBuilder setMergeStrategy(MergeStrategy strategy) {
+    request.setMergeStrategy(strategy);
     return this;
   }
 

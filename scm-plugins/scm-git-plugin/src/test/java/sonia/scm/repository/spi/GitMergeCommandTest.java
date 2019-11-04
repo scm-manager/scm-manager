@@ -15,7 +15,7 @@ import org.junit.Test;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
-import sonia.scm.repository.api.ScmMergeStrategy;
+import sonia.scm.repository.api.MergeStrategy;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.user.User;
 
@@ -221,7 +221,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     request.setBranchToMerge("squash");
     request.setTargetBranch("master");
     request.setMessageTemplate("this is a squash");
-    request.setScmMergeStrategy(ScmMergeStrategy.SQUASH);
+    request.setMergeStrategy(MergeStrategy.SQUASH);
 
     MergeCommandResult mergeCommandResult = command.merge(request);
 
@@ -244,7 +244,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     request.setBranchToMerge("squash");
     request.setTargetBranch("master");
     request.setMessageTemplate("squash three commits");
-    request.setScmMergeStrategy(ScmMergeStrategy.SQUASH);
+    request.setMergeStrategy(MergeStrategy.SQUASH);
     Repository gitRepository = createContext().open();
     MergeCommandResult mergeCommandResult = command.merge(request);
 

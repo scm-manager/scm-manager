@@ -5,7 +5,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import sonia.scm.Validateable;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.api.ScmMergeStrategy;
+import sonia.scm.repository.api.MergeStrategy;
 import sonia.scm.repository.util.AuthorUtil.CommandWithAuthor;
 
 import java.io.Serializable;
@@ -18,7 +18,7 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
   private String targetBranch;
   private Person author;
   private String messageTemplate;
-  private ScmMergeStrategy scmMergeStrategy;
+  private MergeStrategy mergeStrategy;
 
   public String getBranchToMerge() {
     return branchToMerge;
@@ -52,12 +52,12 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
     this.messageTemplate = messageTemplate;
   }
 
-  public ScmMergeStrategy getScmMergeStrategy() {
-    return scmMergeStrategy;
+  public MergeStrategy getMergeStrategy() {
+    return mergeStrategy;
   }
 
-  public void setScmMergeStrategy(ScmMergeStrategy scmMergeStrategy) {
-    this.scmMergeStrategy = scmMergeStrategy;
+  public void setMergeStrategy(MergeStrategy mergeStrategy) {
+    this.mergeStrategy = mergeStrategy;
   }
 
   public boolean isValid() {
@@ -85,12 +85,12 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
     return Objects.equal(branchToMerge, other.branchToMerge)
       && Objects.equal(targetBranch, other.targetBranch)
       && Objects.equal(author, other.author)
-      && Objects.equal(scmMergeStrategy, other.scmMergeStrategy);
+      && Objects.equal(mergeStrategy, other.mergeStrategy);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(branchToMerge, targetBranch, author, scmMergeStrategy);
+    return Objects.hashCode(branchToMerge, targetBranch, author, mergeStrategy);
   }
 
   @Override
@@ -99,7 +99,7 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
       .add("branchToMerge", branchToMerge)
       .add("targetBranch", targetBranch)
       .add("author", author)
-      .add("mergeStrategy", scmMergeStrategy)
+      .add("mergeStrategy", mergeStrategy)
       .toString();
   }
 }

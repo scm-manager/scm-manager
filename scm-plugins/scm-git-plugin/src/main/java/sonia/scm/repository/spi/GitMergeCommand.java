@@ -1,13 +1,13 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeCommand.FastForwardMode;
 import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.merge.MergeStrategy;
 import org.eclipse.jgit.merge.ResolveMerger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +16,11 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
-import sonia.scm.repository.api.ScmMergeStrategy;
+import sonia.scm.repository.api.MergeStrategy;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Set;
 
 public class GitMergeCommand extends AbstractGitCommand implements MergeCommand {
 
@@ -31,6 +32,8 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     "Automatic merge by SCM-Manager.");
 
   private final GitWorkdirFactory workdirFactory;
+
+  private static final Set<MergeStrategy> STRATEGIES = ImmutableSet.of(MergeStrategy.SQUASH);
 
   GitMergeCommand(GitContext context, sonia.scm.repository.Repository repository, GitWorkdirFactory workdirFactory) {
     super(context, repository);
@@ -46,7 +49,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
   public MergeDryRunCommandResult dryRun(MergeCommandRequest request) {
     try {
       Repository repository = context.open();
-      ResolveMerger merger = (ResolveMerger) MergeStrategy.RECURSIVE.newMerger(repository, true);
+      ResolveMerger merger = (ResolveMerger) org.eclipse.jgit.merge.MergeStrategy.RECURSIVE.newMerger(repository, true);
       return new MergeDryRunCommandResult(
         merger.merge(
           resolveRevisionOrThrowNotFound(repository, request.getBranchToMerge()),
@@ -56,13 +59,18 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     }
   }
 
+  @Override
+  public boolean isSupported(MergeStrategy strategy) {
+    return STRATEGIES.contains(strategy);
+  }
+
   private class MergeWorker extends GitCloneWorker<MergeCommandResult> {
 
     private final String target;
     private final String toMerge;
     private final Person author;
     private final String messageTemplate;
-    private final ScmMergeStrategy scmMergeStrategy;
+    private final MergeStrategy mergeStrategy;
 
     private MergeWorker(Git clone, MergeCommandRequest request) {
       super(clone);
@@ -70,7 +78,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       this.toMerge = request.getBranchToMerge();
       this.author = request.getAuthor();
       this.messageTemplate = request.getMessageTemplate();
-      this.scmMergeStrategy = request.getScmMergeStrategy();
+      this.mergeStrategy = request.getMergeStrategy();
     }
 
     @Override
@@ -94,7 +102,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
           .setCommit(false) // we want to set the author manually
           .include(toMerge, sourceRevision);
 
-        if (scmMergeStrategy == ScmMergeStrategy.SQUASH) {
+        if (mergeStrategy == MergeStrategy.SQUASH) {
           mergeCommand.setSquash(true);
         } else {
           mergeCommand.setFastForward(FastForwardMode.NO_FF);

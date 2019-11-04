@@ -1,5 +1,5 @@
 package sonia.scm.repository.api;
 
-public enum ScmMergeStrategy {
+public enum MergeStrategy {
   SQUASH
 }
