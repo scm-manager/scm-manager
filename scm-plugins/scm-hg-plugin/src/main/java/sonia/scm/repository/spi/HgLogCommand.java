@@ -68,7 +68,7 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
   //~--- get methods ----------------------------------------------------------
 
   @Override
-  public Changeset getChangeset(String id) {
+  public Changeset getChangeset(String id, LogCommandRequest request) {
     com.aragost.javahg.Repository repository = open();
     HgLogChangesetCommand cmd = on(repository);
 

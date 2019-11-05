@@ -38,6 +38,7 @@ public class MapperModule extends AbstractModule {
     bind(TagToTagDtoMapper.class).to(Mappers.getMapper(TagToTagDtoMapper.class).getClass());
 
     bind(FileObjectToFileObjectDtoMapper.class).to(Mappers.getMapper(FileObjectToFileObjectDtoMapper.class).getClass());
+    bind(BrowserResultToFileObjectDtoMapper.class).to(Mappers.getMapper(BrowserResultToFileObjectDtoMapper.class).getClass());
     bind(ModificationsToDtoMapper.class).to(Mappers.getMapper(ModificationsToDtoMapper.class).getClass());
 
     bind(ReducedObjectModelToDtoMapper.class).to(Mappers.getMapper(ReducedObjectModelToDtoMapper.class).getClass());

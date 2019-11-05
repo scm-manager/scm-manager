@@ -72,7 +72,7 @@ public class AbstractSvnCommandTestBase extends ZippedRepositoryTestBase
   {
     if (context == null)
     {
-      context = new SvnContext(repositoryDirectory);
+      context = new SvnContext(repository, repositoryDirectory);
     }
 
     return context;

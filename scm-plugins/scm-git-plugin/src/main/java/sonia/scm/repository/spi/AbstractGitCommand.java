@@ -142,7 +142,7 @@ class AbstractGitCommand
   }
 
   <R, W extends GitCloneWorker<R>> R inClone(Function<Git, W> workerSupplier, GitWorkdirFactory workdirFactory, String initialBranch) {
-    try (WorkingCopy<Repository> workingCopy = workdirFactory.createWorkingCopy(context, initialBranch)) {
+    try (WorkingCopy<Repository, Repository> workingCopy = workdirFactory.createWorkingCopy(context, initialBranch)) {
       Repository repository = workingCopy.getWorkingRepository();
       logger.debug("cloned repository to folder {}", repository.getWorkTree());
       return workerSupplier.apply(new Git(repository)).run();

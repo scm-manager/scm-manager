@@ -18,7 +18,7 @@ import java.io.IOException;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
-public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, GitContext> implements GitWorkdirFactory {
+public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Repository, GitContext> implements GitWorkdirFactory {
 
   @Inject
   public SimpleGitWorkdirFactory(WorkdirProvider workdirProvider) {
@@ -26,7 +26,7 @@ public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Gi
   }
 
   @Override
-  public ParentAndClone<Repository> cloneRepository(GitContext context, File target, String initialBranch) {
+  public ParentAndClone<Repository, Repository> cloneRepository(GitContext context, File target, String initialBranch) {
     try {
       Repository clone = Git.cloneRepository()
         .setURI(createScmTransportProtocolUri(context.getDirectory()))
@@ -57,6 +57,13 @@ public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Gi
     // the parent in cloneRepository
     if (repository != null) {
       repository.close();
+    }
+  }
+
+  @Override
+  protected void closeWorkdirInternal(Repository workdir) throws Exception {
+    if (workdir != null) {
+      workdir.close();
     }
   }
 

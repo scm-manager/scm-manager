@@ -116,6 +116,6 @@ public class SvnUnbundleCommandTest extends AbstractSvnCommandTestBase
 
     SVNRepositoryFactory.createLocalRepository(folder, true, true);
 
-    return new SvnContext(folder);
+    return new SvnContext(repository, folder);
   }
 }

@@ -14,6 +14,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -57,7 +58,7 @@ public class SourceRootResource {
       BrowseCommandBuilder browseCommand = repositoryService.getBrowseCommand();
       browseCommand.setPath(path);
       if (revision != null && !revision.isEmpty()) {
-        browseCommand.setRevision(revision);
+        browseCommand.setRevision(URLDecoder.decode(revision, "UTF-8"));
       }
       browseCommand.setDisableCache(true);
       BrowserResult browserResult = browseCommand.getBrowserResult();

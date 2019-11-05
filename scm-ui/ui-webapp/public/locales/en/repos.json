@@ -113,7 +113,10 @@
       "description": "Description",
       "size": "Size"
     },
-    "noSources": "No sources found for this branch."
+    "noSources": "No sources found for this branch.",
+    "extension" : {
+      "notBound": "No extension bound."
+    }
   },
   "permission": {
     "title": "Edit Permissions",
