@@ -151,6 +151,32 @@ class AbstractGitCommand
     }
   }
 
+  <R, W extends GitCloneWorker<R>> R inCloneWithPostponedClose(Function<Git, W> workerSupplier, GitWorkdirFactory workdirFactory, String initialBranch, WorkingCopyCloser closer) {
+    try {
+      WorkingCopy<Repository, Repository> workingCopy = workdirFactory.createWorkingCopy(context, initialBranch);
+      closer.setWorkingCopy(workingCopy);
+      Repository repository = workingCopy.getWorkingRepository();
+      logger.debug("cloned repository to folder {}", repository.getWorkTree());
+      return workerSupplier.apply(new Git(repository)).run();
+    } catch (IOException e) {
+      throw new InternalRepositoryException(context.getRepository(), "could not clone repository", e);
+    }
+  }
+
+  static class WorkingCopyCloser {
+    private WorkingCopy<?, ?> workingCopy;
+
+    private void setWorkingCopy(WorkingCopy<?, ?> workingCopy) {
+      this.workingCopy = workingCopy;
+    }
+
+    public void close() {
+      if (workingCopy != null) {
+        workingCopy.close();
+      }
+    }
+  }
+
   ObjectId resolveRevisionOrThrowNotFound(Repository repository, String revision) throws IOException {
     ObjectId resolved = repository.resolve(revision);
     if (resolved == null) {

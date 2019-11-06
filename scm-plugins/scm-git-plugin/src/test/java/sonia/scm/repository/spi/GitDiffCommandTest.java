@@ -40,7 +40,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void diffForOneRevisionShouldCreateDiff() throws IOException {
-    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
+    GitDiffCommand gitDiffCommand = createDiffCommand();
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
     ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -50,7 +50,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void diffForOneBranchShouldCreateDiff() throws IOException {
-    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
+    GitDiffCommand gitDiffCommand = createDiffCommand();
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("test-branch");
     ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -60,7 +60,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void diffForPathShouldCreateLimitedDiff() throws IOException {
-    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
+    GitDiffCommand gitDiffCommand = createDiffCommand();
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("test-branch");
     diffCommandRequest.setPath("a.txt");
@@ -71,7 +71,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void diffBetweenTwoBranchesShouldCreateDiff() throws IOException {
-    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
+    GitDiffCommand gitDiffCommand = createDiffCommand();
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("master");
     diffCommandRequest.setAncestorChangeset("test-branch");
@@ -82,7 +82,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void diffBetweenTwoBranchesForPathShouldCreateLimitedDiff() throws IOException {
-    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
+    GitDiffCommand gitDiffCommand = createDiffCommand();
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("master");
     diffCommandRequest.setAncestorChangeset("test-branch");
@@ -90,5 +90,9 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     gitDiffCommand.getDiffResult(diffCommandRequest).accept(output);
     assertEquals(DIFF_FILE_A_MULTIPLE_REVISIONS, output.toString());
+  }
+
+  private GitDiffCommand createDiffCommand() {
+    return new GitDiffCommand(createContext(), repository, null);
   }
 }

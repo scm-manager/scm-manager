@@ -31,8 +31,14 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.common.base.Strings;
+import org.eclipse.jgit.api.MergeCommand;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.lib.ObjectId;
+import sonia.scm.repository.GitWorkdirFactory;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffCommandBuilder;
 
@@ -44,15 +50,42 @@ import java.io.IOException;
  */
 public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
 
-  GitDiffCommand(GitContext context, Repository repository) {
+  private final GitWorkdirFactory workdirFactory;
+
+  GitDiffCommand(GitContext context, Repository repository, GitWorkdirFactory workdirFactory) {
     super(context, repository);
+    this.workdirFactory = workdirFactory;
   }
 
   @Override
   public DiffCommandBuilder.OutputStreamConsumer getDiffResult(DiffCommandRequest request) throws IOException {
-    @SuppressWarnings("squid:S2095") // repository will be closed with the RepositoryService
-    org.eclipse.jgit.lib.Repository repository = open();
+    WorkingCopyCloser closer = new WorkingCopyCloser();
+    if (Strings.isNullOrEmpty(request.getMergeChangeset())) {
+      return computeDiff(request, open(), closer);
+    } else {
+      return inCloneWithPostponedClose(git -> new GitCloneWorker<DiffCommandBuilder.OutputStreamConsumer>(git) {
+        @Override
+        DiffCommandBuilder.OutputStreamConsumer run() throws IOException {
+          ObjectId sourceRevision = resolveRevision(request.getRevision());
+          try {
+            getClone().merge()
+              .setFastForward(MergeCommand.FastForwardMode.NO_FF)
+              .setCommit(false) // we want to set the author manually
+              .include(request.getRevision(), sourceRevision)
+              .call();
+          } catch (GitAPIException e) {
+            throw new InternalRepositoryException(context.getRepository(), "could not merge branch " + request.getRevision() + " into " + request.getMergeChangeset(), e);
+          }
 
+          DiffCommandRequest clone = request.clone();
+          clone.setRevision(sourceRevision.name());
+          return computeDiff(request, getClone().getRepository(), closer);
+        }
+      }, workdirFactory, request.getMergeChangeset(), closer);
+    }
+  }
+
+  private DiffCommandBuilder.OutputStreamConsumer computeDiff(DiffCommandRequest request, org.eclipse.jgit.lib.Repository repository, WorkingCopyCloser closer) throws IOException {
     Differ.Diff diff = Differ.diff(repository, request);
 
     return output -> {
@@ -66,8 +99,9 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
         }
 
         formatter.flush();
+      } finally {
+        closer.close();
       }
     };
   }
-
 }

@@ -8,6 +8,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
+import org.eclipse.jgit.treewalk.FileTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import sonia.scm.repository.GitUtil;
@@ -37,6 +38,17 @@ final class Differ implements AutoCloseable {
   private static Differ create(Repository repository, DiffCommandRequest request) throws IOException {
       RevWalk walk = new RevWalk(repository);
 
+    if (!Strings.isNullOrEmpty(request.getMergeChangeset()))
+    {
+      ObjectId otherRevision = repository.resolve(request.getMergeChangeset());
+      RevTree tree = walk.parseCommit(otherRevision).getTree();
+      TreeWalk treeWalk = new TreeWalk(repository);
+      treeWalk.addTree(tree);
+      treeWalk.addTree(new FileTreeIterator( repository ));
+      return new Differ(null, walk, treeWalk);
+    } else {
+
+
       ObjectId revision = repository.resolve(request.getRevision());
       RevCommit commit = walk.parseCommit(revision);
 
@@ -46,40 +58,32 @@ final class Differ implements AutoCloseable {
       treeWalk.reset();
       treeWalk.setRecursive(true);
 
-      if (Util.isNotEmpty(request.getPath()))
-      {
+      if (Util.isNotEmpty(request.getPath())) {
         treeWalk.setFilter(PathFilter.create(request.getPath()));
       }
 
 
-      if (!Strings.isNullOrEmpty(request.getAncestorChangeset()))
-      {
+      if (!Strings.isNullOrEmpty(request.getAncestorChangeset())) {
         ObjectId otherRevision = repository.resolve(request.getAncestorChangeset());
         ObjectId ancestorId = GitUtil.computeCommonAncestor(repository, revision, otherRevision);
         RevTree tree = walk.parseCommit(ancestorId).getTree();
         treeWalk.addTree(tree);
-      }
-      else if (commit.getParentCount() > 0)
-      {
+      } else if (commit.getParentCount() > 0) {
         RevTree tree = commit.getParent(0).getTree();
 
-        if (tree != null)
-        {
+        if (tree != null) {
           treeWalk.addTree(tree);
-        }
-        else
-        {
+        } else {
           treeWalk.addTree(new EmptyTreeIterator());
         }
-      }
-      else
-      {
+      } else {
         treeWalk.addTree(new EmptyTreeIterator());
       }
 
       treeWalk.addTree(commit.getTree());
 
-    return new Differ(commit, walk, treeWalk);
+      return new Differ(commit, walk, treeWalk);
+    }
   }
 
   private Diff diff() throws IOException {

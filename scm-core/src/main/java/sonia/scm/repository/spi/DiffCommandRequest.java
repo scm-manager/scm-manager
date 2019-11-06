@@ -90,8 +90,10 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
   @Override
   public boolean isValid()
   {
-    return !Strings.isNullOrEmpty(getPath())
-      ||!Strings.isNullOrEmpty(getRevision());
+    return (!Strings.isNullOrEmpty(getPath())
+      ||!Strings.isNullOrEmpty(getRevision()))
+      && (Strings.isNullOrEmpty(getAncestorChangeset())
+      || Strings.isNullOrEmpty(getMergeChangeset()));
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -101,7 +103,7 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
    *
    *
    * @param format format of the diff output
-   * 
+   *
    * @since 1.34
    */
   public void setFormat(DiffFormat format)
@@ -112,14 +114,19 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
   public void setAncestorChangeset(String ancestorChangeset) {
     this.ancestorChangeset = ancestorChangeset;
   }
-//~--- get methods ----------------------------------------------------------
+
+  public void setMergeChangeset(String mergeChangeset) {
+    this.mergeChangeset = mergeChangeset;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Return the output format of the diff command.
    *
    *
    * @return output format
-   * 
+   *
    * @since 1.34
    */
   public DiffFormat getFormat()
@@ -130,10 +137,17 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
   public String getAncestorChangeset() {
     return ancestorChangeset;
   }
-//~--- fields ---------------------------------------------------------------
+
+  public String getMergeChangeset() {
+    return mergeChangeset;
+  }
+
+  //~--- fields ---------------------------------------------------------------
 
   /** diff format */
   private DiffFormat format = DiffFormat.NATIVE;
 
   private String ancestorChangeset;
+
+  private String mergeChangeset;
 }

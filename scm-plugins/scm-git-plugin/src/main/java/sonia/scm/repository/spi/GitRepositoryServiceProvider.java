@@ -169,7 +169,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public DiffCommand getDiffCommand()
   {
-    return new GitDiffCommand(context, repository);
+    return new GitDiffCommand(context, repository, handler.getWorkdirFactory());
   }
 
   @Override
