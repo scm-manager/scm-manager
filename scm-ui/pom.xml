@@ -68,7 +68,7 @@
               <goal>run</goal>
             </goals>
             <configuration>
-              <script>build</script>
+              <script>${build.script}</script>
             </configuration>
           </execution>
           <execution>
@@ -118,4 +118,32 @@
 
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>default</id>
+
+      <activation>
+        <activeByDefault />
+      </activation>
+
+      <properties>
+        <build.script>build</build.script>
+      </properties>
+    </profile>
+    <profile>
+      <id>dev</id>
+
+      <activation>
+        <property>
+          <name>development</name>
+        </property>
+      </activation>
+
+      <properties>
+        <build.script>build:dev</build.script>
+      </properties>
+    </profile>
+
+  </profiles>
 </project>
