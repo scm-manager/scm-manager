@@ -13,6 +13,7 @@ import static java.util.Collections.unmodifiableCollection;
  */
 public class MergeCommandResult {
   private final Collection<String> filesWithConflict;
+  private boolean aborted = false;
 
   private MergeCommandResult(Collection<String> filesWithConflict) {
     this.filesWithConflict = filesWithConflict;
@@ -40,5 +41,13 @@ public class MergeCommandResult {
    */
   public Collection<String> getFilesWithConflict() {
     return unmodifiableCollection(filesWithConflict);
+  }
+
+  public boolean isAborted() {
+    return aborted;
+  }
+
+  public void setAborted(boolean aborted) {
+    this.aborted = aborted;
   }
 }

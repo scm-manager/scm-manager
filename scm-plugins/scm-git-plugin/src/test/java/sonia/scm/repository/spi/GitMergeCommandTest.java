@@ -262,6 +262,31 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     assertThat(changes.size()).isEqualTo(3);
   }
 
+
+  @Test
+  public void shouldMergeWithFastForward() throws IOException, GitAPIException {
+    Repository repository = createContext().open();
+
+    ObjectId featureBranchHead = new Git(repository).log().add(repository.resolve("squash")).setMaxCount(1).call().iterator().next().getId();
+
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setBranchToMerge("squash");
+    request.setTargetBranch("master");
+    request.setMergeStrategy(MergeStrategy.FAST_FORWARD_IF_POSSIBLE);
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    MergeCommandResult mergeCommandResult = command.merge(request);
+
+    assertThat(mergeCommandResult.isSuccess()).isTrue();
+
+    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+    RevCommit mergeCommit = commits.iterator().next();
+    PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+    assertThat(mergeAuthor.getName()).isEqualTo("Philip J Fry");
+    assertThat(mergeCommit.getId()).isEqualTo(featureBranchHead);
+  }
+
   @Test(expected = NotFoundException.class)
   public void shouldHandleNotExistingSourceBranchInMerge() {
     GitMergeCommand command = createCommand();

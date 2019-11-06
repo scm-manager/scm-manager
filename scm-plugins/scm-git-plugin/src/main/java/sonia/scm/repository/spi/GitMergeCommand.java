@@ -3,7 +3,6 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.MergeCommand.FastForwardMode;
 import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -20,6 +19,7 @@ import sonia.scm.repository.api.MergeStrategy;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.Set;
 
 public class GitMergeCommand extends AbstractGitCommand implements MergeCommand {
@@ -93,10 +93,17 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     @Override
     MergeCommandResult run() throws IOException {
       MergeResult result = doMergeInClone();
+
       if (result.getMergeStatus().isSuccessful()) {
-        doCommit();
+        if (mergeStrategy != MergeStrategy.FAST_FORWARD_IF_POSSIBLE) {
+          doCommit();
+        }
         push();
         return MergeCommandResult.success();
+      } else if (mergeStrategy == MergeStrategy.FAST_FORWARD_IF_POSSIBLE) {
+        MergeCommandResult failure = MergeCommandResult.failure(Collections.emptyList());
+        failure.setAborted(true);
+        return failure;
       } else {
         return analyseFailure(result);
       }
@@ -113,8 +120,10 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
         if (mergeStrategy == MergeStrategy.SQUASH) {
           mergeCommand.setSquash(true);
+        } else if (mergeStrategy == MergeStrategy.FAST_FORWARD_IF_POSSIBLE) {
+          mergeCommand.setFastForward(org.eclipse.jgit.api.MergeCommand.FastForwardMode.FF_ONLY);
         } else {
-          mergeCommand.setFastForward(FastForwardMode.NO_FF);
+          mergeCommand.setFastForward(org.eclipse.jgit.api.MergeCommand.FastForwardMode.NO_FF);
         }
 
         result = mergeCommand.call();
