@@ -106,7 +106,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    * @return
    */
   @Override
-  public Changeset getChangeset(String revision)
+  public Changeset getChangeset(String revision, LogCommandRequest request)
   {
     if (logger.isDebugEnabled())
     {
@@ -131,7 +131,18 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
         if (commit != null)
         {
           converter = new GitChangesetConverter(gr, revWalk);
-          changeset = converter.createChangeset(commit);
+
+          if (isBranchRequested(request)) {
+            String branch = request.getBranch();
+            if (isMergedIntoBranch(gr, revWalk, commit, branch)) {
+              logger.trace("returning commit {} with branch {}", commit.getId(), branch);
+              changeset = converter.createChangeset(commit, branch);
+            } else {
+              logger.debug("returning null, because commit {} was not merged into branch {}", commit.getId(), branch);
+            }
+          } else {
+            changeset = converter.createChangeset(commit);
+          }
         }
         else if (logger.isWarnEnabled())
         {
@@ -155,6 +166,18 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     }
 
     return changeset;
+  }
+
+  private boolean isMergedIntoBranch(Repository repository, RevWalk revWalk, RevCommit commit, String branchName) throws IOException {
+    return revWalk.isMergedInto(commit, findHeadCommitOfBranch(repository, revWalk, branchName));
+  }
+
+  private boolean isBranchRequested(LogCommandRequest request) {
+    return request != null && !Strings.isNullOrEmpty(request.getBranch());
+  }
+
+  private RevCommit findHeadCommitOfBranch(Repository repository, RevWalk revWalk, String branchName) throws IOException {
+    return revWalk.parseCommit(GitUtil.getCommit(repository, revWalk, repository.findRef(branchName)));
   }
 
   /**

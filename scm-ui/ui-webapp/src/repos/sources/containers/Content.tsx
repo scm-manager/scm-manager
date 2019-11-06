@@ -75,7 +75,7 @@ class Content extends React.Component<Props, State> {
   };
 
   showHeader() {
-    const { file, revision } = this.props;
+    const { repository, file, revision } = this.props;
     const { showHistory, collapsed } = this.state;
     const icon = collapsed ? "angle-right" : "angle-down";
 
@@ -99,6 +99,7 @@ class Content extends React.Component<Props, State> {
             <ExtensionPoint
               name="repos.sources.content.actionbar"
               props={{
+                repository,
                 file,
                 revision,
                 handleExtensionError: this.handleExtensionError

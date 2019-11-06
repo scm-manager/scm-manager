@@ -11,10 +11,10 @@ type Props = WithTranslation & {
   repository: Repository;
   branch: Branch;
   defaultBranch: Branch;
-  branches: Branch[];
   revision: string;
   path: string;
   baseUrl: string;
+  sources: File;
 };
 
 const FlexStartNav = styled.nav`
@@ -59,7 +59,12 @@ class Breadcrumb extends React.Component<Props> {
   }
 
   render() {
-    const { baseUrl, branch, defaultBranch, branches, revision, path, repository, t } = this.props;
+    const { repository, baseUrl, branch, defaultBranch, sources, revision, path, t } = this.props;
+
+    let homeUrl = baseUrl + "/";
+    if (revision) {
+      homeUrl += encodeURIComponent(revision) + "/";
+    }
 
     return (
       <>
@@ -67,7 +72,7 @@ class Breadcrumb extends React.Component<Props> {
           <FlexStartNav className={classNames("breadcrumb", "sources-breadcrumb")} aria-label="breadcrumbs">
             <ul>
               <li>
-                <Link to={baseUrl + "/" + revision + "/"}>
+                <Link to={homeUrl}>
                   <HomeIcon title={t("breadcrumb.home")} name="home" color="inherit" />
                 </Link>
               </li>
@@ -80,9 +85,10 @@ class Breadcrumb extends React.Component<Props> {
                 name="repos.sources.actionbar"
                 props={{
                   baseUrl,
+                  revision,
                   branch: branch ? branch : defaultBranch,
                   path,
-                  isBranchUrl: branches && branches.filter(b => b.name.replace("/", "%2F") === revision).length > 0,
+                  sources,
                   repository
                 }}
                 renderAll={true}

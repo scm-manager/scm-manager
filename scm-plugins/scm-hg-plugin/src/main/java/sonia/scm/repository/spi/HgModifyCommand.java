@@ -29,7 +29,7 @@ public class HgModifyCommand implements ModifyCommand {
   @Override
   public String execute(ModifyCommandRequest request) {
 
-    try (WorkingCopy<com.aragost.javahg.Repository> workingCopy = workdirFactory.createWorkingCopy(context, request.getBranch())) {
+    try (WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy = workdirFactory.createWorkingCopy(context, request.getBranch())) {
       Repository workingRepository = workingCopy.getWorkingRepository();
       request.getRequests().forEach(
         partialRequest -> {
@@ -85,7 +85,7 @@ public class HgModifyCommand implements ModifyCommand {
     }
   }
 
-  private List<Changeset> pullModifyChangesToCentralRepository(ModifyCommandRequest request, WorkingCopy<com.aragost.javahg.Repository> workingCopy) {
+  private List<Changeset> pullModifyChangesToCentralRepository(ModifyCommandRequest request, WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy) {
     try {
       com.aragost.javahg.commands.PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
       workdirFactory.configure(pullCommand);

@@ -113,7 +113,10 @@
       "description": "Beschreibung",
       "size": "Größe"
     },
-    "noSources": "Keine Sources in diesem Branch gefunden."
+    "noSources": "Keine Sources in diesem Branch gefunden.",
+    "extension" : {
+      "notBound": "Keine Erweiterung angebunden."
+    }
   },
   "permission": {
     "title": "Berechtigungen bearbeiten",

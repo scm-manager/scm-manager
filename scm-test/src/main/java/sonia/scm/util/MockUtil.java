@@ -212,8 +212,8 @@ public final class MockUtil
   {
     SCMContextProvider provider = mock(SCMContextProvider.class);
 
-    when(provider.getBaseDirectory()).thenReturn(directory);
-    when(provider.resolve(any(Path.class))).then(ic -> {
+    lenient().when(provider.getBaseDirectory()).thenReturn(directory);
+    lenient().when(provider.resolve(any(Path.class))).then(ic -> {
       Path p = ic.getArgument(0);
       return directory.toPath().resolve(p);
     });

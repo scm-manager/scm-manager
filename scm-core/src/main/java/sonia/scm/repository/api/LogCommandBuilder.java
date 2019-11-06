@@ -178,7 +178,7 @@ public final class LogCommandBuilder
         logger.debug("get changeset for {} with disabled cache", id);
       }
 
-      changeset = logCommand.getChangeset(id);
+      changeset = logCommand.getChangeset(id, request);
     }
     else
     {
@@ -192,7 +192,7 @@ public final class LogCommandBuilder
           logger.debug("get changeset for {}", id);
         }
 
-        changeset = logCommand.getChangeset(id);
+        changeset = logCommand.getChangeset(id, request);
 
         if (changeset != null)
         {
