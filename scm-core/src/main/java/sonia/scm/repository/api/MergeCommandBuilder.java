@@ -6,6 +6,8 @@ import sonia.scm.repository.spi.MergeCommand;
 import sonia.scm.repository.spi.MergeCommandRequest;
 import sonia.scm.repository.util.AuthorUtil;
 
+import java.util.Set;
+
 /**
  * Use this {@link MergeCommandBuilder} to merge two branches of a repository ({@link #executeMerge()}) or to check if
  * the branches could be merged without conflicts ({@link #dryRun()}). To do so, you have to specify the name of
@@ -62,6 +64,10 @@ public class MergeCommandBuilder {
    */
   public boolean isSupported(MergeStrategy strategy) {
     return mergeCommand.isSupported(strategy);
+  }
+
+  public Set<MergeStrategy> getSupportedMergeStrategies() {
+    return mergeCommand.getSupportedMergeStrategies();
   }
 
   /**

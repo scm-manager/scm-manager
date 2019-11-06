@@ -33,7 +33,11 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
   private final GitWorkdirFactory workdirFactory;
 
-  private static final Set<MergeStrategy> STRATEGIES = ImmutableSet.of(MergeStrategy.SQUASH);
+  private static final Set<MergeStrategy> STRATEGIES = ImmutableSet.of(
+    MergeStrategy.SQUASH,
+    MergeStrategy.MERGE_COMMIT,
+    MergeStrategy.FAST_FORWARD_IF_POSSIBLE
+  );
 
   GitMergeCommand(GitContext context, sonia.scm.repository.Repository repository, GitWorkdirFactory workdirFactory) {
     super(context, repository);
@@ -62,6 +66,11 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
   @Override
   public boolean isSupported(MergeStrategy strategy) {
     return STRATEGIES.contains(strategy);
+  }
+
+  @Override
+  public Set<MergeStrategy> getSupportedMergeStrategies() {
+    return STRATEGIES;
   }
 
   private class MergeWorker extends GitCloneWorker<MergeCommandResult> {
