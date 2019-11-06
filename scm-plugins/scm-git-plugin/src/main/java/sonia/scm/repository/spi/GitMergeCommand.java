@@ -34,9 +34,9 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
   private final GitWorkdirFactory workdirFactory;
 
   private static final Set<MergeStrategy> STRATEGIES = ImmutableSet.of(
-    MergeStrategy.SQUASH,
     MergeStrategy.MERGE_COMMIT,
-    MergeStrategy.FAST_FORWARD_IF_POSSIBLE
+    MergeStrategy.FAST_FORWARD_IF_POSSIBLE,
+    MergeStrategy.SQUASH
   );
 
   GitMergeCommand(GitContext context, sonia.scm.repository.Repository repository, GitWorkdirFactory workdirFactory) {
