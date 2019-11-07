@@ -11,11 +11,9 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
-import sonia.scm.repository.api.MergeStrategy;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Collections;
 
 abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeCommandResult> {
 
@@ -30,7 +28,6 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
   private final String toMerge;
   private final Person author;
   private final String messageTemplate;
-  private final MergeStrategy mergeStrategy;
 
   GitMergeStrategy(Git clone, MergeCommandRequest request, GitContext context, sonia.scm.repository.Repository repository) {
     super(clone, context, repository);
@@ -38,7 +35,6 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
     this.toMerge = request.getBranchToMerge();
     this.author = request.getAuthor();
     this.messageTemplate = request.getMessageTemplate();
-    this.mergeStrategy = request.getMergeStrategy();
   }
 
   MergeResult doMergeInClone(MergeCommand mergeCommand) throws IOException {
@@ -72,11 +68,5 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
   MergeCommandResult analyseFailure(MergeResult result) {
     logger.info("could not merged branch {} into {} due to conflict in paths {}", toMerge, target, result.getConflicts().keySet());
     return MergeCommandResult.failure(result.getConflicts().keySet());
-  }
-
-  MergeCommandResult aborted() {
-    MergeCommandResult failure = MergeCommandResult.failure(Collections.emptyList());
-    failure.setAborted(true);
-    return failure;
   }
 }

@@ -28,6 +28,8 @@ class GitFastForwardIfPossible extends GitMergeStrategy {
   private MergeCommandResult mergeWithCommit() throws IOException {
     MergeResult mergeCommitResult = mergeWithFastForwardMode(MergeCommand.FastForwardMode.NO_FF);
     if (mergeCommitResult.getMergeStatus().isSuccessful()) {
+      doCommit();
+      push();
       return MergeCommandResult.success();
     } else {
       return analyseFailure(mergeCommitResult);
