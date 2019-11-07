@@ -115,7 +115,7 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
     this.ancestorChangeset = ancestorChangeset;
   }
 
-  public void setMergeChangeset(String mergeChangeset) {
+  public void setConflictBranch(String mergeChangeset) {
     this.mergeChangeset = mergeChangeset;
   }
 

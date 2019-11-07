@@ -37,12 +37,15 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffCommandBuilder;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  *
@@ -61,7 +64,9 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
   public DiffCommandBuilder.OutputStreamConsumer getDiffResult(DiffCommandRequest request) throws IOException {
     WorkingCopyCloser closer = new WorkingCopyCloser();
     if (Strings.isNullOrEmpty(request.getMergeChangeset())) {
-      return computeDiff(request, open(), closer);
+      Differ.Diff diff = Differ.diff(open(), request);
+      List<DiffEntry> entries = diff.getEntries();
+      return computeDiff(entries, open(), closer);
     } else {
       return inCloneWithPostponedClose(git -> new GitCloneWorker<DiffCommandBuilder.OutputStreamConsumer>(git) {
         @Override
@@ -77,22 +82,34 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
             throw new InternalRepositoryException(context.getRepository(), "could not merge branch " + request.getRevision() + " into " + request.getMergeChangeset(), e);
           }
 
-          DiffCommandRequest clone = request.clone();
-          clone.setRevision(sourceRevision.name());
-          return computeDiff(request, getClone().getRepository(), closer);
+          CanonicalTreeParser treeParser = new CanonicalTreeParser();
+          ObjectId treeId = git.getRepository().resolve(request.getMergeChangeset() + "^{tree}");
+          return outputStream -> {
+            try (ObjectReader reader = git.getRepository().newObjectReader()) {
+              treeParser.reset(reader, treeId);
+              git
+                .diff()
+                .setOldTree(treeParser)
+                .setOutputStream(outputStream)
+                .call();
+              DiffCommandRequest clone = request.clone();
+              clone.setRevision(sourceRevision.name());
+            } catch (GitAPIException e) {
+              throw new InternalRepositoryException(repository, "could not calculate diff", e);
+            }
+          };
         }
       }, workdirFactory, request.getMergeChangeset(), closer);
     }
   }
 
-  private DiffCommandBuilder.OutputStreamConsumer computeDiff(DiffCommandRequest request, org.eclipse.jgit.lib.Repository repository, WorkingCopyCloser closer) throws IOException {
-    Differ.Diff diff = Differ.diff(repository, request);
+  private DiffCommandBuilder.OutputStreamConsumer computeDiff(List<DiffEntry> entries, org.eclipse.jgit.lib.Repository repository, WorkingCopyCloser closer) throws IOException {
 
     return output -> {
       try (DiffFormatter formatter = new DiffFormatter(output)) {
         formatter.setRepository(repository);
 
-        for (DiffEntry e : diff.getEntries()) {
+        for (DiffEntry e : entries) {
           if (!e.getOldId().equals(e.getNewId())) {
             formatter.format(e);
           }
