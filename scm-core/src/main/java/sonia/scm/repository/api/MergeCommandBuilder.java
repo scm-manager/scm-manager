@@ -58,7 +58,7 @@ public class MergeCommandBuilder {
   }
 
   /**
-   * Use this to check if merge-strategy is supported by mergeCommand
+   * Use this to check if merge-strategy is supported by mergeCommand.
    *
    * @return boolean.
    */
@@ -66,6 +66,11 @@ public class MergeCommandBuilder {
     return mergeCommand.isSupported(strategy);
   }
 
+  /**
+   * Use this to get a Set of all supported merge strategies by merge command.
+   *
+   * @return boolean.
+   */
   public Set<MergeStrategy> getSupportedMergeStrategies() {
     return mergeCommand.getSupportedMergeStrategies();
   }

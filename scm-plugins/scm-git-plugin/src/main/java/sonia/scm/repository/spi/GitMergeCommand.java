@@ -95,12 +95,12 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
       MergeResult result = doMergeInClone();
 
       if (result.getMergeStatus().isSuccessful()) {
-        if (mergeStrategy != MergeStrategy.FAST_FORWARD_IF_POSSIBLE) {
+        if (!isFastForward()) {
           doCommit();
         }
         push();
         return MergeCommandResult.success();
-      } else if (mergeStrategy == MergeStrategy.FAST_FORWARD_IF_POSSIBLE) {
+      } else if (isFastForward()) {
         MergeCommandResult failure = MergeCommandResult.failure(Collections.emptyList());
         failure.setAborted(true);
         return failure;
@@ -120,7 +120,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
         if (mergeStrategy == MergeStrategy.SQUASH) {
           mergeCommand.setSquash(true);
-        } else if (mergeStrategy == MergeStrategy.FAST_FORWARD_IF_POSSIBLE) {
+        } else if (isFastForward()) {
           mergeCommand.setFastForward(org.eclipse.jgit.api.MergeCommand.FastForwardMode.FF_ONLY);
         } else {
           mergeCommand.setFastForward(org.eclipse.jgit.api.MergeCommand.FastForwardMode.NO_FF);
@@ -149,6 +149,10 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     private MergeCommandResult analyseFailure(MergeResult result) {
       logger.info("could not merged branch {} into {} due to conflict in paths {}", toMerge, target, result.getConflicts().keySet());
       return MergeCommandResult.failure(result.getConflicts().keySet());
+    }
+
+    private boolean isFastForward() {
+      return mergeStrategy == MergeStrategy.FAST_FORWARD_IF_POSSIBLE;
     }
   }
 }
