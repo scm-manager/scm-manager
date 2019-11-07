@@ -152,25 +152,38 @@ class AbstractGitCommand
   }
 
   ObjectId resolveRevisionOrThrowNotFound(Repository repository, String revision) throws IOException {
+    sonia.scm.repository.Repository scmRepository = context.getRepository();
+    return resolveRevisionOrThrowNotFound(repository, revision, scmRepository);
+  }
+
+  static ObjectId resolveRevisionOrThrowNotFound(Repository repository, String revision, sonia.scm.repository.Repository scmRepository) throws IOException {
     ObjectId resolved = repository.resolve(revision);
     if (resolved == null) {
-      throw notFound(entity("Revision", revision).in(context.getRepository()));
+      throw notFound(entity("Revision", revision).in(scmRepository));
     } else {
       return resolved;
     }
   }
 
-  abstract class GitCloneWorker<R> {
+  abstract static class GitCloneWorker<R> {
     private final Git clone;
+    private final GitContext context;
+    private final sonia.scm.repository.Repository repository;
 
-    GitCloneWorker(Git clone) {
+    GitCloneWorker(Git clone, GitContext context, sonia.scm.repository.Repository repository) {
       this.clone = clone;
+      this.context = context;
+      this.repository = repository;
     }
 
     abstract R run() throws IOException;
 
     Git getClone() {
       return clone;
+    }
+
+    GitContext getContext() {
+      return context;
     }
 
     void checkOutBranch(String branchName) throws IOException {
@@ -199,7 +212,7 @@ class AbstractGitCommand
     ObjectId resolveRevision(String revision) throws IOException {
       ObjectId resolved = clone.getRepository().resolve(revision);
       if (resolved == null) {
-        return resolveRevisionOrThrowNotFound(clone.getRepository(), "origin/" + revision);
+        return resolveRevisionOrThrowNotFound(clone.getRepository(), "origin/" + revision, context.getRepository());
       } else {
         return resolved;
       }
