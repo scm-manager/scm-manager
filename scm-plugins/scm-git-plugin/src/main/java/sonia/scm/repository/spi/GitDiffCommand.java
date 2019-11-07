@@ -62,12 +62,11 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
 
   @Override
   public DiffCommandBuilder.OutputStreamConsumer getDiffResult(DiffCommandRequest request) throws IOException {
-    WorkingCopyCloser closer = new WorkingCopyCloser();
     if (Strings.isNullOrEmpty(request.getMergeChangeset())) {
       Differ.Diff diff = Differ.diff(open(), request);
-      List<DiffEntry> entries = diff.getEntries();
-      return computeDiff(entries, open(), closer);
+      return computeDiff(diff.getEntries(), open());
     } else {
+      WorkingCopyCloser closer = new WorkingCopyCloser();
       return inCloneWithPostponedClose(git -> new GitCloneWorker<DiffCommandBuilder.OutputStreamConsumer>(git) {
         @Override
         DiffCommandBuilder.OutputStreamConsumer run() throws IOException {
@@ -82,9 +81,9 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
             throw new InternalRepositoryException(context.getRepository(), "could not merge branch " + request.getRevision() + " into " + request.getMergeChangeset(), e);
           }
 
-          CanonicalTreeParser treeParser = new CanonicalTreeParser();
-          ObjectId treeId = git.getRepository().resolve(request.getMergeChangeset() + "^{tree}");
           return outputStream -> {
+            CanonicalTreeParser treeParser = new CanonicalTreeParser();
+            ObjectId treeId = git.getRepository().resolve(request.getMergeChangeset() + "^{tree}");
             try (ObjectReader reader = git.getRepository().newObjectReader()) {
               treeParser.reset(reader, treeId);
               git
@@ -96,6 +95,8 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
               clone.setRevision(sourceRevision.name());
             } catch (GitAPIException e) {
               throw new InternalRepositoryException(repository, "could not calculate diff", e);
+            } finally {
+              closer.close();
             }
           };
         }
@@ -103,7 +104,7 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
     }
   }
 
-  private DiffCommandBuilder.OutputStreamConsumer computeDiff(List<DiffEntry> entries, org.eclipse.jgit.lib.Repository repository, WorkingCopyCloser closer) throws IOException {
+  private DiffCommandBuilder.OutputStreamConsumer computeDiff(List<DiffEntry> entries, org.eclipse.jgit.lib.Repository repository) throws IOException {
 
     return output -> {
       try (DiffFormatter formatter = new DiffFormatter(output)) {
@@ -116,8 +117,6 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
         }
 
         formatter.flush();
-      } finally {
-        closer.close();
       }
     };
   }
