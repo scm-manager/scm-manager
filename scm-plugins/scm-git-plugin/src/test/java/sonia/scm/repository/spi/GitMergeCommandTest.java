@@ -289,6 +289,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
     RevCommit mergeCommit = commits.iterator().next();
+    assertThat(mergeCommit.getParentCount()).isEqualTo(1);
     PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
     assertThat(mergeAuthor.getName()).isEqualTo("Philip J Fry");
     assertThat(mergeCommit.getId()).isEqualTo(featureBranchHead);
@@ -311,6 +312,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
     RevCommit mergeCommit = commits.iterator().next();
     PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+    assertThat(mergeCommit.getParentCount()).isEqualTo(2);
     String message = mergeCommit.getFullMessage();
     assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
     assertThat(mergeAuthor.getEmailAddress()).isEqualTo("dirk@holistic.det");
