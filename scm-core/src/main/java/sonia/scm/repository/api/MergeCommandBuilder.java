@@ -120,6 +120,9 @@ public class MergeCommandBuilder {
    * @return This builder instance.
    */
   public MergeCommandBuilder setMergeStrategy(MergeStrategy strategy) {
+    if (!mergeCommand.isSupported(strategy)) {
+      throw new IllegalArgumentException("merge strategy not supported: " + strategy);
+    }
     request.setMergeStrategy(strategy);
     return this;
   }

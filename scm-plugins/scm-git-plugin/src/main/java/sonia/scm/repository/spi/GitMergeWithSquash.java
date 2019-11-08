@@ -4,6 +4,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeResult;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.MergeCommandResult;
+import org.eclipse.jgit.api.MergeCommand;
 
 import java.io.IOException;
 
@@ -15,7 +16,7 @@ class GitMergeWithSquash extends GitMergeStrategy {
 
   @Override
   MergeCommandResult run() throws IOException {
-    org.eclipse.jgit.api.MergeCommand mergeCommand = getClone().merge();
+   MergeCommand mergeCommand = getClone().merge();
     mergeCommand.setSquash(true);
     MergeResult result = doMergeInClone(mergeCommand);
 

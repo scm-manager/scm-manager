@@ -10,35 +10,27 @@ import java.io.IOException;
 
 class GitFastForwardIfPossible extends GitMergeStrategy {
 
+  private GitMergeStrategy fallbackMerge;
+
   GitFastForwardIfPossible(Git clone, MergeCommandRequest request, GitContext context, Repository repository) {
     super(clone, request, context, repository);
+    fallbackMerge = new GitMergeCommit(clone, request, context, repository);
   }
 
   @Override
   MergeCommandResult run() throws IOException {
-    MergeResult fastForwardResult = mergeWithFastForwardMode(MergeCommand.FastForwardMode.FF_ONLY);
+    MergeResult fastForwardResult = mergeWithFastForwardOnlyMode();
     if (fastForwardResult.getMergeStatus().isSuccessful()) {
       push();
       return MergeCommandResult.success();
     } else {
-      return mergeWithCommit();
+      return fallbackMerge.run();
     }
   }
 
-  private MergeCommandResult mergeWithCommit() throws IOException {
-    MergeResult mergeCommitResult = mergeWithFastForwardMode(MergeCommand.FastForwardMode.NO_FF);
-    if (mergeCommitResult.getMergeStatus().isSuccessful()) {
-      doCommit();
-      push();
-      return MergeCommandResult.success();
-    } else {
-      return analyseFailure(mergeCommitResult);
-    }
-  }
-
-  private MergeResult mergeWithFastForwardMode(MergeCommand.FastForwardMode fastForwardMode) throws IOException {
+  private MergeResult mergeWithFastForwardOnlyMode() throws IOException {
     MergeCommand mergeCommand = getClone().merge();
-    mergeCommand.setFastForward(fastForwardMode);
+    mergeCommand.setFastForward(MergeCommand.FastForwardMode.FF_ONLY);
     return doMergeInClone(mergeCommand);
   }
 }

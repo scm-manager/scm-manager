@@ -16,7 +16,7 @@ class GitMergeCommit extends GitMergeStrategy {
 
   @Override
   MergeCommandResult run() throws IOException {
-    org.eclipse.jgit.api.MergeCommand mergeCommand = getClone().merge();
+    MergeCommand mergeCommand = getClone().merge();
     mergeCommand.setFastForward(MergeCommand.FastForwardMode.NO_FF);
     MergeResult result = doMergeInClone(mergeCommand);
 

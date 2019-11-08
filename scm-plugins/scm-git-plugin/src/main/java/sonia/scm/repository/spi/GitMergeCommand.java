@@ -12,6 +12,8 @@ import sonia.scm.repository.api.MergeStrategy;
 import java.io.IOException;
 import java.util.Set;
 
+import static org.eclipse.jgit.merge.MergeStrategy.RECURSIVE;
+
 public class GitMergeCommand extends AbstractGitCommand implements MergeCommand {
 
   private final GitWorkdirFactory workdirFactory;
@@ -33,19 +35,26 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
   }
 
   private MergeCommandResult mergeWithStrategy(MergeCommandRequest request) {
-    if (request.getMergeStrategy() == MergeStrategy.SQUASH) {
-      return inClone(clone -> new GitMergeWithSquash(clone, request, context, repository), workdirFactory, request.getTargetBranch());
-    } else if (request.getMergeStrategy() == MergeStrategy.FAST_FORWARD_IF_POSSIBLE) {
-      return inClone(clone -> new GitFastForwardIfPossible(clone, request, context, repository), workdirFactory, request.getTargetBranch());
+    switch(request.getMergeStrategy()) {
+      case SQUASH:
+        return inClone(clone -> new GitMergeWithSquash(clone, request, context, repository), workdirFactory, request.getTargetBranch());
+
+      case FAST_FORWARD_IF_POSSIBLE:
+        return inClone(clone -> new GitFastForwardIfPossible(clone, request, context, repository), workdirFactory, request.getTargetBranch());
+
+      case MERGE_COMMIT:
+        return inClone(clone -> new GitMergeCommit(clone, request, context, repository), workdirFactory, request.getTargetBranch());
+
+      default:
+        throw new IllegalArgumentException("unknown merge strategy: " + request.getMergeStrategy());
     }
-    return inClone(clone -> new GitMergeCommit(clone, request, context, repository), workdirFactory, request.getTargetBranch());
   }
 
   @Override
   public MergeDryRunCommandResult dryRun(MergeCommandRequest request) {
     try {
       Repository repository = context.open();
-      ResolveMerger merger = (ResolveMerger) org.eclipse.jgit.merge.MergeStrategy.RECURSIVE.newMerger(repository, true);
+      ResolveMerger merger = (ResolveMerger) RECURSIVE.newMerger(repository, true);
       return new MergeDryRunCommandResult(
         merger.merge(
           resolveRevisionOrThrowNotFound(repository, request.getBranchToMerge()),
