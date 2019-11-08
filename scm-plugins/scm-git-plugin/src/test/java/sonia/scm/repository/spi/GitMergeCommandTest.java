@@ -64,6 +64,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeCommandRequest request = new MergeCommandRequest();
     request.setTargetBranch("master");
     request.setBranchToMerge("mergeable");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     MergeCommandResult mergeCommandResult = command.merge(request);
@@ -90,6 +91,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeCommandRequest request = new MergeCommandRequest();
     request.setTargetBranch("master");
     request.setBranchToMerge("empty_merge");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     MergeCommandResult mergeCommandResult = command.merge(request);
@@ -111,6 +113,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     request.setTargetBranch("master");
     request.setBranchToMerge("mergeable");
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
 
     MergeCommandResult mergeCommandResult = command.merge(request);
 
@@ -134,6 +137,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeCommandRequest request = new MergeCommandRequest();
     request.setTargetBranch("master");
     request.setBranchToMerge("mergeable");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
     request.setMessageTemplate("simple");
 
@@ -154,6 +158,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeCommandRequest request = new MergeCommandRequest();
     request.setBranchToMerge("test-branch");
     request.setTargetBranch("master");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
 
     MergeCommandResult mergeCommandResult = command.merge(request);
 
@@ -175,6 +180,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeCommandRequest request = new MergeCommandRequest();
     request.setTargetBranch("master");
     request.setBranchToMerge("mergeable");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
 
     MergeCommandResult mergeCommandResult = command.merge(request);
 
@@ -194,6 +200,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
     request.setTargetBranch("mergeable");
     request.setBranchToMerge("master");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
 
     MergeCommandResult mergeCommandResult = command.merge(request);
 
@@ -316,6 +323,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeCommandRequest request = new MergeCommandRequest();
     request.setTargetBranch("mergeable");
     request.setBranchToMerge("not_existing");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
 
     command.merge(request);
   }
@@ -324,6 +332,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   public void shouldHandleNotExistingTargetBranchInMerge() {
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
     request.setTargetBranch("not_existing");
     request.setBranchToMerge("master");
 
