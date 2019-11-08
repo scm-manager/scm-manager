@@ -8,6 +8,7 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
 import sonia.scm.repository.api.MergeStrategy;
+import sonia.scm.repository.api.MergeStrategyNotSupportedException;
 
 import java.io.IOException;
 import java.util.Set;
@@ -46,7 +47,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
         return inClone(clone -> new GitMergeCommit(clone, request, context, repository), workdirFactory, request.getTargetBranch());
 
       default:
-        throw new IllegalArgumentException("unknown merge strategy: " + request.getMergeStrategy());
+        throw new MergeStrategyNotSupportedException(repository, request.getMergeStrategy());
     }
   }
 
