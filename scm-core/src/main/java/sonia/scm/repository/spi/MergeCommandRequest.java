@@ -5,6 +5,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import sonia.scm.Validateable;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.api.MergeStrategy;
 import sonia.scm.repository.util.AuthorUtil.CommandWithAuthor;
 
 import java.io.Serializable;
@@ -17,6 +18,7 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
   private String targetBranch;
   private Person author;
   private String messageTemplate;
+  private MergeStrategy mergeStrategy;
 
   public String getBranchToMerge() {
     return branchToMerge;
@@ -50,6 +52,14 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
     this.messageTemplate = messageTemplate;
   }
 
+  public MergeStrategy getMergeStrategy() {
+    return mergeStrategy;
+  }
+
+  public void setMergeStrategy(MergeStrategy mergeStrategy) {
+    this.mergeStrategy = mergeStrategy;
+  }
+
   public boolean isValid() {
     return !Strings.isNullOrEmpty(getBranchToMerge())
       && !Strings.isNullOrEmpty(getTargetBranch());
@@ -74,12 +84,13 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
 
     return Objects.equal(branchToMerge, other.branchToMerge)
       && Objects.equal(targetBranch, other.targetBranch)
-      && Objects.equal(author, other.author);
+      && Objects.equal(author, other.author)
+      && Objects.equal(mergeStrategy, other.mergeStrategy);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(branchToMerge, targetBranch, author);
+    return Objects.hashCode(branchToMerge, targetBranch, author, mergeStrategy);
   }
 
   @Override
@@ -88,6 +99,7 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
       .add("branchToMerge", branchToMerge)
       .add("targetBranch", targetBranch)
       .add("author", author)
+      .add("mergeStrategy", mergeStrategy)
       .toString();
   }
 }

@@ -46,7 +46,7 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     private final ModifyCommandRequest request;
 
     ModifyWorker(Git clone, ModifyCommandRequest request) {
-      super(clone);
+      super(clone, context, repository);
       this.workDir = clone.getRepository().getWorkTree();
       this.request = request;
     }

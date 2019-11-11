@@ -6,6 +6,8 @@ import sonia.scm.repository.spi.MergeCommand;
 import sonia.scm.repository.spi.MergeCommandRequest;
 import sonia.scm.repository.util.AuthorUtil;
 
+import java.util.Set;
+
 /**
  * Use this {@link MergeCommandBuilder} to merge two branches of a repository ({@link #executeMerge()}) or to check if
  * the branches could be merged without conflicts ({@link #dryRun()}). To do so, you have to specify the name of
@@ -56,6 +58,24 @@ public class MergeCommandBuilder {
   }
 
   /**
+   * Use this to check if merge-strategy is supported by mergeCommand.
+   *
+   * @return boolean.
+   */
+  public boolean isSupported(MergeStrategy strategy) {
+    return mergeCommand.isSupported(strategy);
+  }
+
+  /**
+   * Use this to get a Set of all supported merge strategies by merge command.
+   *
+   * @return boolean.
+   */
+  public Set<MergeStrategy> getSupportedMergeStrategies() {
+    return mergeCommand.getSupportedMergeStrategies();
+  }
+
+  /**
    * Use this to set the branch that should be merged into the target branch.
    *
    * <b>This is mandatory.</b>
@@ -89,6 +109,21 @@ public class MergeCommandBuilder {
    */
   public MergeCommandBuilder setAuthor(Person author) {
     request.setAuthor(author);
+    return this;
+  }
+
+  /**
+   * Use this to set the strategy of the merge commit manually.
+   *
+   * This is optional and for {@link #executeMerge()} only.
+   *
+   * @return This builder instance.
+   */
+  public MergeCommandBuilder setMergeStrategy(MergeStrategy strategy) {
+    if (!mergeCommand.isSupported(strategy)) {
+      throw new IllegalArgumentException("merge strategy not supported: " + strategy);
+    }
+    request.setMergeStrategy(strategy);
     return this;
   }
 
