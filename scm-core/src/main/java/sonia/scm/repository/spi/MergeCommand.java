@@ -7,4 +7,6 @@ public interface MergeCommand {
   MergeCommandResult merge(MergeCommandRequest request);
 
   MergeDryRunCommandResult dryRun(MergeCommandRequest request);
+
+  MergeConflictResult computeConflicts(MergeCommandRequest request);
 }
