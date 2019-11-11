@@ -16,15 +16,15 @@ public class MergeConflictResult {
     return Collections.unmodifiableList(conflicts);
   }
 
-  void addBothModified(String path, String diff) {
+  public void addBothModified(String path, String diff) {
     conflicts.add(new SingleMergeConflict(BOTH_MODIFIED, path, diff));
   }
 
-  void addDeletedByThem(String path) {
+  public void addDeletedByThem(String path) {
     conflicts.add(new SingleMergeConflict(DELETED_BY_THEM, path, null));
   }
 
-  void addDeletedByUs(String path) {
+  public void addDeletedByUs(String path) {
     conflicts.add(new SingleMergeConflict(DELETED_BY_US, path, null));
   }
 
