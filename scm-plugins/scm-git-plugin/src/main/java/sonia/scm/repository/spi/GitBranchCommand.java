@@ -33,6 +33,7 @@
 package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.CannotDeleteCurrentBranchException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import sonia.scm.event.ScmEventBus;
@@ -94,6 +95,8 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
         .setForce(true)
         .call();
       eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
+    } catch (CannotDeleteCurrentBranchException e) {
+      throw new CannotDeleteDefaultBranchException(context.getRepository(), branchName);
     } catch (GitAPIException | IOException ex) {
       throw new InternalRepositoryException(entity(context.getRepository()), String.format("Could not delete branch: %s", branchName));
     }

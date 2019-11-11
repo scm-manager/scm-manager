@@ -8,7 +8,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Branch;
-import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.PreReceiveRepositoryHookEvent;
 import sonia.scm.repository.api.BranchRequest;
@@ -78,9 +77,9 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void shouldThrowInternalRepositoryException() {
+  public void shouldThrowExceptionWhenDeletingDefaultBranch() {
     String branchToBeDeleted = "master";
-    assertThrows(InternalRepositoryException.class, () -> createCommand().deleteOrClose(branchToBeDeleted));
+    assertThrows(CannotDeleteDefaultBranchException.class, () -> createCommand().deleteOrClose(branchToBeDeleted));
   }
 
   private GitBranchCommand createCommand() {
