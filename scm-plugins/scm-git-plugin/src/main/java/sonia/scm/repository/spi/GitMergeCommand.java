@@ -94,49 +94,35 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     private final Git git;
     private final MergeCommandRequest request;
     private final WorkingCopyCloser closer;
+    private final CanonicalTreeParser treeParser;
+    private final ObjectId treeId;
+    private final ByteArrayOutputStream diffBuffer;
 
     private ConflictWorker(Git git, MergeCommandRequest request, WorkingCopyCloser closer) {
       super(git, context, repository);
       this.git = git;
       this.request = request;
       this.closer = closer;
+
+      treeParser = new CanonicalTreeParser();
+      treeId = git.getRepository().resolve(request.getTargetBranch() + "^{tree}");
+      diffBuffer = new ByteArrayOutputStream();
     }
 
     @Override
     MergeConflictResult run() throws IOException {
-      ObjectId sourceRevision = resolveRevision(request.getBranchToMerge());
-      MergeResult mergeResult;
-      try {
-        mergeResult = getClone().merge()
-          .setFastForward(org.eclipse.jgit.api.MergeCommand.FastForwardMode.NO_FF)
-          .setCommit(false)
-          .include(request.getBranchToMerge(), sourceRevision)
-          .call();
-      } catch (GitAPIException e) {
-        throw new InternalRepositoryException(context.getRepository(), "could not merge branch " + request.getBranchToMerge() + " into " + request.getTargetBranch(), e);
-      }
-
+      MergeResult mergeResult = doTemporaryMerge();
       if (mergeResult.getConflicts() == null) {
         return new MergeConflictResult();
       }
-      Status status;
-      try {
-        status = getClone().status().call();
-      } catch (GitAPIException e) {
-        throw new InternalRepositoryException(context.getRepository(), "could not get status", e);
-      }
+
+      Status status = getStatus();
 
       MergeConflictResult result = new MergeConflictResult();
 
-      CanonicalTreeParser treeParser = new CanonicalTreeParser();
-      ObjectId treeId = git.getRepository().resolve(request.getTargetBranch() + "^{tree}");
 
-      ByteArrayOutputStream diffBuffer = new ByteArrayOutputStream();
-
-      status.getConflictingStageState().entrySet().forEach(conflictEntry -> {
-
-        String path = conflictEntry.getKey();
-        switch (conflictEntry.getValue()) {
+      status.getConflictingStageState().forEach((path, value) -> {
+        switch (value) {
           case BOTH_MODIFIED:
             diffBuffer.reset();
             try (ObjectReader reader = git.getRepository().newObjectReader()) {
@@ -161,10 +147,35 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
             result.addDeletedByUs(path);
             break;
           default:
-            throw new InternalRepositoryException(context.getRepository(), "unexpected conflict type: " + conflictEntry.getValue());
+            throw new InternalRepositoryException(context.getRepository(), "unexpected conflict type: " + value);
         }
       });
       return result;
+    }
+
+    private Status getStatus() {
+      Status status;
+      try {
+        status = getClone().status().call();
+      } catch (GitAPIException e) {
+        throw new InternalRepositoryException(context.getRepository(), "could not get status", e);
+      }
+      return status;
+    }
+
+    private MergeResult doTemporaryMerge() throws IOException {
+      ObjectId sourceRevision = resolveRevision(request.getBranchToMerge());
+      MergeResult mergeResult;
+      try {
+        mergeResult = getClone().merge()
+          .setFastForward(org.eclipse.jgit.api.MergeCommand.FastForwardMode.NO_FF)
+          .setCommit(false)
+          .include(request.getBranchToMerge(), sourceRevision)
+          .call();
+      } catch (GitAPIException e) {
+        throw new InternalRepositoryException(context.getRepository(), "could not merge branch " + request.getBranchToMerge() + " into " + request.getTargetBranch(), e);
+      }
+      return mergeResult;
     }
   }
 }
