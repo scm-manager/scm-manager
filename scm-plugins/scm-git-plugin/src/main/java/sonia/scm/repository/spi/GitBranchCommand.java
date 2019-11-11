@@ -84,7 +84,7 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
   }
 
   @Override
-  public void delete(String branchName) {
+  public void deleteOrClose(String branchName) {
     try (Git gitRepo = new Git(context.open())) {
       RepositoryHookEvent hookEvent = createBranchHookEvent(BranchHookContextProvider.deleteHookEvent(branchName));
       eventBus.post(new PreReceiveRepositoryHookEvent(hookEvent));

@@ -73,14 +73,14 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
   public void shouldDeleteBranch() throws IOException {
     GitContext context = createContext();
     String branchToBeDeleted = "squash";
-    createCommand().delete(branchToBeDeleted);
+    createCommand().deleteOrClose(branchToBeDeleted);
     assertThat(readBranches(context)).filteredOn(b -> b.getName().equals(branchToBeDeleted)).isEmpty();
   }
 
   @Test
   public void shouldThrowInternalRepositoryException() {
     String branchToBeDeleted = "master";
-    assertThrows(InternalRepositoryException.class, () -> createCommand().delete(branchToBeDeleted));
+    assertThrows(InternalRepositoryException.class, () -> createCommand().deleteOrClose(branchToBeDeleted));
   }
 
   private GitBranchCommand createCommand() {
@@ -118,7 +118,7 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
     doNothing().when(eventBus).post(captor.capture());
     when(hookContextFactory.createContext(any(), any())).thenAnswer(this::createMockedContext);
 
-    createCommand().delete("squash");
+    createCommand().deleteOrClose("squash");
 
     List<Object> events = captor.getAllValues();
     assertThat(events.get(0)).isInstanceOf(PreReceiveRepositoryHookEvent.class);

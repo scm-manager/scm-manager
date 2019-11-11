@@ -69,7 +69,7 @@ public final class BranchCommandBuilder {
   }
 
   public void delete(String branchName) {
-    command.delete(branchName);
+    command.deleteOrClose(branchName);
   }
 
   private BranchCommand command;

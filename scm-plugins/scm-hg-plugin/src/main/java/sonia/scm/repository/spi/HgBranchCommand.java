@@ -76,7 +76,7 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
   }
 
   @Override
-  public void delete(String branchName) {
+  public void deleteOrClose(String branchName) {
     try (WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy = workdirFactory.createWorkingCopy(getContext(), branchName)) {
       User currentUser = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
 
