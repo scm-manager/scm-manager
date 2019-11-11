@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.HgTestUtil;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
@@ -13,6 +14,7 @@ import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class HgBranchCommandTest extends AbstractHgCommandTestBase {
 
@@ -52,6 +54,22 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
 
     assertThat(readBranches()).filteredOn(b -> b.getName().equals("new_branch")).isNotEmpty();
     assertThat(cmdContext.open().changeset(newBranch.getRevision()).getParent1().getBranch()).isEqualTo("test-branch");
+  }
+
+  @Test
+  public void shouldCloseBranch() {
+    String branchToBeClosed = "test-branch";
+
+    new HgBranchCommand(cmdContext, repository, workdirFactory).delete(branchToBeClosed);
+    assertThat(readBranches()).filteredOn(b -> b.getName().equals("test-branch")).isEmpty();
+  }
+
+  @Test
+  public void shouldThrowInternalRepositoryException() {
+    String branchToBeClosed = "default";
+
+    new HgBranchCommand(cmdContext, repository, workdirFactory).delete(branchToBeClosed);
+    assertThrows(InternalRepositoryException.class, () -> new HgBranchCommand(cmdContext, repository, workdirFactory).delete(branchToBeClosed));
   }
 
   private List<Branch> readBranches() {
