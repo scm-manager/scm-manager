@@ -4,11 +4,14 @@ import org.assertj.core.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
 import sonia.scm.repository.Branch;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.util.WorkdirProvider;
 
 import java.io.IOException;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class GitBranchCommandTest extends AbstractGitCommandTestBase {
@@ -49,6 +52,21 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
     new GitBranchCommand(context, repository, new SimpleGitWorkdirFactory(new WorkdirProvider())).branch(branchRequest);
 
     Assertions.assertThat(readBranches(context)).filteredOn(b -> b.getName().equals("new_branch")).isNotEmpty();
+  }
+
+  @Test
+  public void shouldDeleteBranch() throws IOException {
+    GitContext context = createContext();
+    String branchToBeDeleted = "squash";
+    new GitBranchCommand(context, repository, new SimpleGitWorkdirFactory(new WorkdirProvider())).delete(branchToBeDeleted);
+    Assertions.assertThat(readBranches(context)).filteredOn(b -> b.getName().equals(branchToBeDeleted)).isEmpty();
+  }
+
+  @Test
+  public void shouldThrowInternalRepositoryException() {
+    GitContext context = createContext();
+    String branchToBeDeleted = "master";
+    assertThrows(InternalRepositoryException.class, () -> new GitBranchCommand(context, repository, new SimpleGitWorkdirFactory(new WorkdirProvider())).delete(branchToBeDeleted));
   }
 
   private List<Branch> readBranches(GitContext context) throws IOException {

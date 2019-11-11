@@ -45,7 +45,10 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.util.WorkingCopy;
 
+import java.io.IOException;
 import java.util.stream.StreamSupport;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 public class GitBranchCommand extends AbstractGitCommand implements BranchCommand {
 
@@ -70,6 +73,19 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
       return Branch.normalBranch(request.getNewBranch(), GitUtil.getId(ref.getObjectId()));
     } catch (GitAPIException ex) {
       throw new InternalRepositoryException(repository, "could not create branch " + request.getNewBranch(), ex);
+    }
+  }
+
+  @Override
+  public void delete(String branchName) {
+    try (Git gitRepo = new Git(context.open())) {
+      gitRepo
+        .branchDelete()
+        .setBranchNames(branchName)
+        .setForce(true)
+        .call();
+    } catch (GitAPIException | IOException ex) {
+      throw new InternalRepositoryException(entity(context.getRepository()), String.format("Could not delete branch: %s", branchName));
     }
   }
 
