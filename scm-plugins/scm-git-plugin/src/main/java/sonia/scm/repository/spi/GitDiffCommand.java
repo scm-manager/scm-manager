@@ -69,4 +69,5 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
       }
     };
   }
+
 }
