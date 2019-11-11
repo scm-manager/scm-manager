@@ -49,7 +49,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
   @Override
   public MergeConflictResult computeConflicts(MergeCommandRequest request) {
-    return inClone(git -> new ConflictWorker(git, request), workdirFactory, request.getTargetBranch());
+    return inClone(git -> new ConflictWorker(git, request), workdirFactory, request.getBranchToMerge());
   }
 
   private MergeCommandResult mergeWithStrategy(MergeCommandRequest request) {
@@ -93,8 +93,8 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
   }
 
   private class ConflictWorker extends GitCloneWorker<MergeConflictResult> {
-    private final String branchToMerge;
-    private final String targetBranch;
+    private final String theirs;
+    private final String ours;
     private final CanonicalTreeParser treeParser;
     private final ObjectId treeId;
     private final ByteArrayOutputStream diffBuffer;
@@ -104,15 +104,15 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
     private ConflictWorker(Git git, MergeCommandRequest request) {
       super(git, context, repository);
-      branchToMerge = request.getBranchToMerge();
-      targetBranch = request.getTargetBranch();
+      theirs = request.getTargetBranch();
+      ours = request.getBranchToMerge();
 
       treeParser = new CanonicalTreeParser();
       diffBuffer = new ByteArrayOutputStream();
       try {
-        treeId = git.getRepository().resolve(request.getTargetBranch() + "^{tree}");
+        treeId = git.getRepository().resolve(ours + "^{tree}");
       } catch (IOException e) {
-        throw notFound(entity("branch", request.getTargetBranch()).in(repository));
+        throw notFound(entity("branch", ours).in(repository));
       }
     }
 
@@ -154,15 +154,15 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     }
 
     private MergeResult doTemporaryMerge() throws IOException {
-      ObjectId sourceRevision = resolveRevision(branchToMerge);
+      ObjectId sourceRevision = resolveRevision(theirs);
       try {
         return getClone().merge()
           .setFastForward(org.eclipse.jgit.api.MergeCommand.FastForwardMode.NO_FF)
           .setCommit(false)
-          .include(branchToMerge, sourceRevision)
+          .include(theirs, sourceRevision)
           .call();
       } catch (GitAPIException e) {
-        throw new InternalRepositoryException(context.getRepository(), "could not merge branch " + branchToMerge + " into " + targetBranch, e);
+        throw new InternalRepositoryException(context.getRepository(), "could not merge branch " + theirs + " into " + ours, e);
       }
     }
 

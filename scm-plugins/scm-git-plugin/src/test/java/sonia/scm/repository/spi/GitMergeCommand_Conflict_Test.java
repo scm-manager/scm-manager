@@ -17,20 +17,18 @@ public class GitMergeCommand_Conflict_Test extends AbstractGitCommandTestBase {
   static final String DIFF_HEADER = "diff --git a/Main.java b/Main.java";
   static final String DIFF_FILE_CONFLICT = "--- a/Main.java\n" +
     "+++ b/Main.java\n" +
-    "@@ -1,6 +1,13 @@\n" +
-    "+import java.util.Arrays;\n" +
-    "+\n" +
+    "@@ -3,7 +3,11 @@\n" +
     " class Main {\n" +
     "     public static void main(String[] args) {\n" +
     "         System.out.println(\"Expect nothing more to happen.\");\n" +
     "+<<<<<<< HEAD\n" +
-    "         System.out.println(\"This is for demonstration, only.\");\n" +
+    "         System.out.println(\"Parameters:\");\n" +
+    "         Arrays.stream(args).map(arg -> \"- \" + arg).forEach(System.out::println);\n" +
     "+=======\n" +
-    "+        System.out.println(\"Parameters:\");\n" +
-    "+        Arrays.stream(args).map(arg -> \"- \" + arg).forEach(System.out::println);\n" +
-    "+>>>>>>> feature/print_args\n" +
+    "+        System.out.println(\"This is for demonstration, only.\");\n" +
+    "+>>>>>>> integration\n" +
     "     }\n" +
-    " }\n";
+    " }";
 
   @Rule
   public BindTransportProtocolRule transportProtocolRule = new BindTransportProtocolRule();
@@ -51,18 +49,18 @@ public class GitMergeCommand_Conflict_Test extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void diffBetweenTwoBranchesWithDeletedByThem() throws IOException {
+  public void diffBetweenTwoBranchesWithDeletedByUs() throws IOException {
     MergeConflictResult result = computeMergeConflictResult("feature/remove_class", "integration");
     SingleMergeConflict conflict = result.getConflicts().get(0);
-    assertThat(conflict.getType()).isEqualTo(DELETED_BY_THEM);
+    assertThat(conflict.getType()).isEqualTo(DELETED_BY_US);
     assertThat(conflict.getPath()).isEqualTo("Main.java");
   }
 
   @Test
-  public void diffBetweenTwoBranchesWithDeletedByUs() throws IOException {
+  public void diffBetweenTwoBranchesWithDeletedByThem() throws IOException {
     MergeConflictResult result = computeMergeConflictResult("integration", "feature/remove_class");
     SingleMergeConflict conflict = result.getConflicts().get(0);
-    assertThat(conflict.getType()).isEqualTo(DELETED_BY_US);
+    assertThat(conflict.getType()).isEqualTo(DELETED_BY_THEM);
     assertThat(conflict.getPath()).isEqualTo("Main.java");
   }
 
