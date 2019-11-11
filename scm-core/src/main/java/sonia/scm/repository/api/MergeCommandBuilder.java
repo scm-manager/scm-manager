@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.spi.MergeCommand;
 import sonia.scm.repository.spi.MergeCommandRequest;
+import sonia.scm.repository.spi.MergeConflictResult;
 import sonia.scm.repository.util.AuthorUtil;
 
 import java.util.Set;
@@ -168,7 +169,7 @@ public class MergeCommandBuilder {
   }
 
   /**
-   * Use this to check whether the given branches can be merged autmatically. If this is possible,
+   * Use this to check whether the given branches can be merged automatically. If this is possible,
    * {@link MergeDryRunCommandResult#isMergeable()} will return <code>true</code>.
    *
    * @return The result whether the given branches can be merged automatically.
@@ -176,5 +177,15 @@ public class MergeCommandBuilder {
   public MergeDryRunCommandResult dryRun() {
     Preconditions.checkArgument(request.isValid(), "revision to merge and target revision is required");
     return mergeCommand.dryRun(request);
+  }
+
+  /**
+   * Use this to compute concrete conflicts for a merge.
+   *
+   * @return A result containing all conflicts for the merge.
+   */
+  public MergeConflictResult conflicts() {
+    Preconditions.checkArgument(request.isValid(), "revision to merge and target revision is required");
+    return mergeCommand.computeConflicts(request);
   }
 }
