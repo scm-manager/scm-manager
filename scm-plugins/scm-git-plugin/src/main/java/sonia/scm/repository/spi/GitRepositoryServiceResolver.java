@@ -36,9 +36,11 @@ package sonia.scm.repository.spi;
 
 import com.google.inject.Inject;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 /**
@@ -51,12 +53,16 @@ public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
   private final GitRepositoryHandler handler;
   private final GitRepositoryConfigStoreProvider storeProvider;
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
+  private final HookContextFactory hookContextFactory;
+  private final ScmEventBus eventBus;
 
   @Inject
-  public GitRepositoryServiceResolver(GitRepositoryHandler handler, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory) {
+  public GitRepositoryServiceResolver(GitRepositoryHandler handler, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
     this.handler = handler;
     this.storeProvider = storeProvider;
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
+    this.hookContextFactory = hookContextFactory;
+    this.eventBus = eventBus;
   }
 
   @Override
@@ -64,7 +70,7 @@ public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
     GitRepositoryServiceProvider provider = null;
 
     if (GitRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new GitRepositoryServiceProvider(handler, repository, storeProvider, lfsBlobStoreFactory);
+      provider = new GitRepositoryServiceProvider(handler, repository, storeProvider, lfsBlobStoreFactory, hookContextFactory, eventBus);
     }
 
     return provider;
