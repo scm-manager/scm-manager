@@ -61,7 +61,7 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
     String branchToBeClosed = "test-branch";
 
     new HgBranchCommand(cmdContext, repository, workdirFactory).delete(branchToBeClosed);
-    assertThat(readBranches()).filteredOn(b -> b.getName().equals("test-branch")).isEmpty();
+    assertThat(readBranches()).filteredOn(b -> b.getName().equals(branchToBeClosed)).isEmpty();
   }
 
   @Test
