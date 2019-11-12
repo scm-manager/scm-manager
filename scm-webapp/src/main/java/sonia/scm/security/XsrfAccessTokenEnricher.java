@@ -82,8 +82,6 @@ public class XsrfAccessTokenEnricher implements AccessTokenEnricher {
     if (configuration.isEnabledXsrfProtection()) {
       if (isEnrichable()) {
         builder.custom(Xsrf.TOKEN_KEY, createToken());
-      } else {
-        LOG.trace("skip xsrf enrichment, because jwt session is started from a non wui client");
       }
     } else {
       LOG.trace("xsrf is disabled, skip xsrf enrichment");
@@ -98,15 +96,16 @@ public class XsrfAccessTokenEnricher implements AccessTokenEnricher {
         return true;
       } else {
         LOG.trace("skip xsrf enrichment, because jwt session is started from a non wui client");
+        return false;
       }
     } catch (ProvisionException ex) {
       if (ex.getCause() instanceof OutOfScopeException) {
         LOG.trace("skip xsrf enrichment, because no request scope is available");
+        return false;
       } else {
         throw ex;
       }
     }
-    return false;
   }
 
   @VisibleForTesting

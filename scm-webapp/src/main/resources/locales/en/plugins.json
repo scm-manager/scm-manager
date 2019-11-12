@@ -183,6 +183,14 @@
     "65RdZ5atX1": {
       "displayName": "Error removing plugin files",
       "description": "Some files to cancel the plugin (un)installation could not be deleted. This can lead to inconsistencies so that the SCM-Manager cannot restart properly. Please check the logs and clean up the plugin folder manually. To cancel the installation of a plugin, remove the corresponding smp file. To cancel the uninstallation, remove the file named 'uninstall' inside the directory for this plugin."
+    },
+    "6eRhF9gU41": {
+      "displayName": "Merge strategy not supported",
+      "description": "The selected merge strategy is not supported by the repository."
+    },
+    "78RhWxTIw1": {
+      "displayName": "Default branch cannot be deleted",
+      "description": "The default branch of a repository cannot be deleted. Please select another default branch first."
     }
   },
   "namespaceStrategies": {

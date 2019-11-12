@@ -131,6 +131,12 @@
       <artifactId>mapstruct-jdk8</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct-processor</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- rest documentation -->
     <dependency>
       <groupId>com.webcohesion.enunciate</groupId>
@@ -207,6 +213,12 @@
       <groupId>com.github.sdorra</groupId>
       <artifactId>shiro-unit</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>5.3.6.Final</version>
+      <scope>compile</scope>
     </dependency>
 
   </dependencies>

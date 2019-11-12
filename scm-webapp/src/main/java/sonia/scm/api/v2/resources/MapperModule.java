@@ -38,6 +38,7 @@ public class MapperModule extends AbstractModule {
     bind(TagToTagDtoMapper.class).to(Mappers.getMapper(TagToTagDtoMapper.class).getClass());
 
     bind(FileObjectToFileObjectDtoMapper.class).to(Mappers.getMapper(FileObjectToFileObjectDtoMapper.class).getClass());
+    bind(BrowserResultToFileObjectDtoMapper.class).to(Mappers.getMapper(BrowserResultToFileObjectDtoMapper.class).getClass());
     bind(ModificationsToDtoMapper.class).to(Mappers.getMapper(ModificationsToDtoMapper.class).getClass());
 
     bind(ReducedObjectModelToDtoMapper.class).to(Mappers.getMapper(ReducedObjectModelToDtoMapper.class).getClass());
@@ -45,8 +46,6 @@ public class MapperModule extends AbstractModule {
     bind(ResteasyViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapper(ResteasyViolationExceptionToErrorDtoMapper.class).getClass());
     bind(ScmViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapper(ScmViolationExceptionToErrorDtoMapper.class).getClass());
     bind(ExceptionWithContextToErrorDtoMapper.class).to(Mappers.getMapper(ExceptionWithContextToErrorDtoMapper.class).getClass());
-
-    bind(MergeResultToDtoMapper.class).to(Mappers.getMapper(MergeResultToDtoMapper.class).getClass());
 
     // no mapstruct required
     bind(MeDtoFactory.class);

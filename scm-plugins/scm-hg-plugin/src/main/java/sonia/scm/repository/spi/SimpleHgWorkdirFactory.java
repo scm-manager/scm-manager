@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class SimpleHgWorkdirFactory extends SimpleWorkdirFactory<Repository, HgCommandContext> implements HgWorkdirFactory {
+public class SimpleHgWorkdirFactory extends SimpleWorkdirFactory<Repository, Repository, HgCommandContext> implements HgWorkdirFactory {
 
   private final Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder;
 
@@ -26,7 +26,7 @@ public class SimpleHgWorkdirFactory extends SimpleWorkdirFactory<Repository, HgC
     this.hgRepositoryEnvironmentBuilder = hgRepositoryEnvironmentBuilder;
   }
   @Override
-  public ParentAndClone<Repository> cloneRepository(HgCommandContext context, File target, String initialBranch) throws IOException {
+  public ParentAndClone<Repository, Repository> cloneRepository(HgCommandContext context, File target, String initialBranch) throws IOException {
     BiConsumer<sonia.scm.repository.Repository, Map<String, String>> repositoryMapBiConsumer =
       (repository, environment) -> hgRepositoryEnvironmentBuilder.get().buildFor(repository, null, environment);
     Repository centralRepository = context.openWithSpecialEnvironment(repositoryMapBiConsumer);
@@ -44,6 +44,11 @@ public class SimpleHgWorkdirFactory extends SimpleWorkdirFactory<Repository, HgC
   @Override
   protected void closeRepository(Repository repository) {
     repository.close();
+  }
+
+  @Override
+  protected void closeWorkdirInternal(Repository workdir) throws Exception {
+    workdir.close();
   }
 
   @Override

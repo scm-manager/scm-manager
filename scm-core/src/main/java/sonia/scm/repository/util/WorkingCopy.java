@@ -8,23 +8,25 @@ import java.io.File;
 import java.io.IOException;
 import java.util.function.Consumer;
 
-public class WorkingCopy<R> implements AutoCloseable {
+public class WorkingCopy<R, W> implements AutoCloseable {
 
   private static final Logger LOG = LoggerFactory.getLogger(WorkingCopy.class);
 
   private final File directory;
-  private final R workingRepository;
+  private final W workingRepository;
   private final R centralRepository;
-  private final Consumer<R> cleanup;
+  private final Consumer<W> cleanupWorkdir;
+  private final Consumer<R> cleanupCentral;
 
-  public WorkingCopy(R workingRepository, R centralRepository, Consumer<R> cleanup, File directory) {
+  public WorkingCopy(W workingRepository, R centralRepository, Consumer<W> cleanupWorkdir, Consumer<R> cleanupCentral, File directory) {
     this.directory = directory;
     this.workingRepository = workingRepository;
     this.centralRepository = centralRepository;
-    this.cleanup = cleanup;
+    this.cleanupCentral = cleanupCentral;
+    this.cleanupWorkdir = cleanupWorkdir;
   }
 
-  public R getWorkingRepository() {
+  public W getWorkingRepository() {
     return workingRepository;
   }
 
@@ -39,8 +41,8 @@ public class WorkingCopy<R> implements AutoCloseable {
   @Override
   public void close() {
     try {
-      cleanup.accept(workingRepository);
-      cleanup.accept(centralRepository);
+      cleanupWorkdir.accept(workingRepository);
+      cleanupCentral.accept(centralRepository);
       IOUtil.delete(directory);
     } catch (IOException e) {
       LOG.warn("could not delete temporary workdir '{}'", directory, e);

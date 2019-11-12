@@ -20,6 +20,7 @@ import PermissionsNavLink from "../components/PermissionsNavLink";
 import Sources from "../sources/containers/Sources";
 import RepositoryNavLink from "../components/RepositoryNavLink";
 import { getLinks, getRepositoriesLink } from "../../modules/indexResource";
+import SourceExtensions from "../sources/containers/SourceExtensions";
 
 type Props = WithTranslation & {
   namespace: string;
@@ -64,6 +65,12 @@ class RepositoryRoot extends React.Component<Props> {
   matchesChangesets = (route: any) => {
     const url = this.matchedUrl();
     const regex = new RegExp(`${url}(/branch)?/?[^/]*/changesets?.*`);
+    return route.location.pathname.match(regex);
+  };
+
+  matchesSources = (route: any) => {
+    const url = this.matchedUrl();
+    const regex = new RegExp(`${url}(/sources|/sourceext)/.*`);
     return route.location.pathname.match(regex);
   };
 
@@ -119,6 +126,15 @@ class RepositoryRoot extends React.Component<Props> {
               <Route
                 path={`${url}/sources/:revision/:path*`}
                 render={() => <Sources repository={repository} baseUrl={`${url}/sources`} />}
+              />
+              <Route
+                path={`${url}/sourceext/:extension`}
+                exact={true}
+                render={() => <SourceExtensions repository={repository} />}
+              />
+              <Route
+                path={`${url}/sourceext/:extension/:revision/:path*`}
+                render={() => <SourceExtensions repository={repository} />}
               />
               <Route
                 path={`${url}/changesets`}
@@ -186,6 +202,7 @@ class RepositoryRoot extends React.Component<Props> {
                   to={`${url}/sources`}
                   icon="fas fa-code"
                   label={t("repositoryRoot.menu.sourcesNavLink")}
+                  activeWhenMatch={this.matchesSources}
                   activeOnlyWhenExact={false}
                 />
                 <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true} />

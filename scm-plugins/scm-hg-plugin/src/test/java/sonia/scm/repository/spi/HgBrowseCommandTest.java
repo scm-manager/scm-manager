@@ -33,6 +33,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.aragost.javahg.commands.LogCommand;
 import org.junit.Test;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
@@ -40,6 +41,7 @@ import sonia.scm.repository.FileObject;
 import java.io.IOException;
 import java.util.Collection;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -77,6 +79,19 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     assertTrue(c.isDirectory());
     assertEquals("c", c.getName());
     assertEquals("c", c.getPath());
+  }
+
+  @Test
+  public void testBrowseShouldResolveBranchForRevision() throws IOException {
+    String defaultBranchRevision = new LogCommand(cmdContext.open()).rev("default").single().getNode();
+
+    BrowseCommandRequest browseCommandRequest = new BrowseCommandRequest();
+    browseCommandRequest.setRevision("default");
+
+    BrowserResult result = new HgBrowseCommand(cmdContext,
+      repository).getBrowserResult(browseCommandRequest);
+
+    assertThat(result.getRevision()).isEqualTo(defaultBranchRevision);
   }
 
   @Test

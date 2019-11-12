@@ -35,7 +35,11 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.io.Files;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitRepositoryConfig;
@@ -51,14 +55,18 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link GitLogCommand}.
  *
  * @author Sebastian Sdorra
  */
+@RunWith(MockitoJUnitRunner.class)
 public class GitLogCommandTest extends AbstractGitCommandTestBase
 {
+  @Mock
+  LogCommandRequest request;
 
   /**
    * Tests log command with the usage of a default branch.
@@ -171,7 +179,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   public void testGetCommit()
   {
     GitLogCommand command = createCommand();
-    Changeset c = command.getChangeset("435df2f061add3589cb3");
+    Changeset c = command.getChangeset("435df2f061add3589cb3", null);
 
     assertNotNull(c);
     String revision = "435df2f061add3589cb326cc64be9b9c3897ceca";
@@ -191,6 +199,23 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertFalse("added list should not be empty", modifications.getAdded().isEmpty());
     assertEquals(2, modifications.getAdded().size());
     assertThat(modifications.getAdded(), contains("a.txt", "b.txt"));
+  }
+
+  @Test
+  public void commitShouldContainBranchIfLogCommandRequestHasBranch()
+  {
+    when(request.getBranch()).thenReturn("master");
+    GitLogCommand command = createCommand();
+    Changeset c = command.getChangeset("435df2f061add3589cb3", request);
+
+    Assertions.assertThat(c.getBranches()).containsOnly("master");
+  }
+
+  @Test
+  public void shouldNotReturnCommitFromDifferentBranch() {
+    when(request.getBranch()).thenReturn("master");
+    Changeset changeset = createCommand().getChangeset("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", request);
+    Assertions.assertThat(changeset).isNull();
   }
 
   @Test

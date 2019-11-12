@@ -49,7 +49,7 @@ import java.io.IOException;
  */
 public interface LogCommand {
 
-  Changeset getChangeset(String id) throws IOException;
+  Changeset getChangeset(String id, LogCommandRequest request) throws IOException;
 
   ChangesetPagingResult getChangesets(LogCommandRequest request) throws IOException;
 }

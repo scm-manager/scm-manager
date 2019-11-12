@@ -24,14 +24,14 @@ public class SimpleWorkdirFactoryTest {
 
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
-  private SimpleWorkdirFactory<Closeable, Context> simpleWorkdirFactory;
+  private SimpleWorkdirFactory<Closeable, Closeable, Context> simpleWorkdirFactory;
 
   private String initialBranchForLastCloneCall;
 
   @Before
   public void initFactory() throws IOException {
     WorkdirProvider workdirProvider = new WorkdirProvider(temporaryFolder.newFolder());
-    simpleWorkdirFactory = new SimpleWorkdirFactory<Closeable, Context>(workdirProvider) {
+    simpleWorkdirFactory = new SimpleWorkdirFactory<Closeable, Closeable, Context>(workdirProvider) {
       @Override
       protected Repository getScmRepository(Context context) {
         return REPOSITORY;
@@ -43,7 +43,12 @@ public class SimpleWorkdirFactoryTest {
       }
 
       @Override
-      protected ParentAndClone<Closeable> cloneRepository(Context context, File target, String initialBranch) {
+      protected void closeWorkdirInternal(Closeable workdir) throws Exception {
+        workdir.close();
+      }
+
+      @Override
+      protected ParentAndClone<Closeable, Closeable> cloneRepository(Context context, File target, String initialBranch) {
         initialBranchForLastCloneCall = initialBranch;
         return new ParentAndClone<>(parent, clone);
       }
@@ -53,7 +58,7 @@ public class SimpleWorkdirFactoryTest {
   @Test
   public void shouldCreateParentAndClone() {
     Context context = new Context();
-    try (WorkingCopy<Closeable> workingCopy = simpleWorkdirFactory.createWorkingCopy(context, null)) {
+    try (WorkingCopy<Closeable, Closeable> workingCopy = simpleWorkdirFactory.createWorkingCopy(context, null)) {
       assertThat(workingCopy.getCentralRepository()).isSameAs(parent);
       assertThat(workingCopy.getWorkingRepository()).isSameAs(clone);
     }
@@ -62,7 +67,7 @@ public class SimpleWorkdirFactoryTest {
   @Test
   public void shouldCloseParent() throws IOException {
     Context context = new Context();
-    try (WorkingCopy<Closeable> workingCopy = simpleWorkdirFactory.createWorkingCopy(context, null)) {}
+    try (WorkingCopy<Closeable, Closeable> workingCopy = simpleWorkdirFactory.createWorkingCopy(context, null)) {}
 
     verify(parent).close();
   }
@@ -70,7 +75,7 @@ public class SimpleWorkdirFactoryTest {
   @Test
   public void shouldCloseClone() throws IOException {
     Context context = new Context();
-    try (WorkingCopy<Closeable> workingCopy = simpleWorkdirFactory.createWorkingCopy(context, null)) {}
+    try (WorkingCopy<Closeable, Closeable> workingCopy = simpleWorkdirFactory.createWorkingCopy(context, null)) {}
 
     verify(clone).close();
   }
@@ -78,7 +83,7 @@ public class SimpleWorkdirFactoryTest {
   @Test
   public void shouldPropagateInitialBranch() {
     Context context = new Context();
-    try (WorkingCopy<Closeable> workingCopy = simpleWorkdirFactory.createWorkingCopy(context, "some")) {
+    try (WorkingCopy<Closeable, Closeable> workingCopy = simpleWorkdirFactory.createWorkingCopy(context, "some")) {
       assertThat(initialBranchForLastCloneCall).isEqualTo("some");
     }
   }

@@ -68,6 +68,10 @@ public final class BranchCommandBuilder {
     return command.branch(request);
   }
 
+  public void delete(String branchName) {
+    command.deleteOrClose(branchName);
+  }
+
   private BranchCommand command;
   private BranchRequest request = new BranchRequest();
 }

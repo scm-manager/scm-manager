@@ -128,7 +128,7 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
 
   @Test
   public void testGetCommit() {
-    Changeset c = createCommand().getChangeset("3");
+    Changeset c = createCommand().getChangeset("3", null);
 
     assertNotNull(c);
     assertEquals("3", c.getId());

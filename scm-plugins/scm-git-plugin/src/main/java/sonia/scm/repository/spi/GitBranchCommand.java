@@ -33,51 +33,120 @@
 package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.CannotDeleteCurrentBranchException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.transport.PushResult;
-import org.eclipse.jgit.transport.RemoteRefUpdate;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+import sonia.scm.repository.PreReceiveRepositoryHookEvent;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryHookEvent;
+import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.BranchRequest;
-import sonia.scm.repository.util.WorkingCopy;
+import sonia.scm.repository.api.HookBranchProvider;
+import sonia.scm.repository.api.HookContext;
+import sonia.scm.repository.api.HookContextFactory;
+import sonia.scm.repository.api.HookFeature;
 
-import java.util.stream.StreamSupport;
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 public class GitBranchCommand extends AbstractGitCommand implements BranchCommand {
 
-  private final GitWorkdirFactory workdirFactory;
+  private final HookContextFactory hookContextFactory;
+  private final ScmEventBus eventBus;
 
-  GitBranchCommand(GitContext context, Repository repository, GitWorkdirFactory workdirFactory) {
+  GitBranchCommand(GitContext context, Repository repository, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
     super(context, repository);
-    this.workdirFactory = workdirFactory;
+    this.hookContextFactory = hookContextFactory;
+    this.eventBus = eventBus;
   }
 
   @Override
   public Branch branch(BranchRequest request) {
-    try (WorkingCopy<org.eclipse.jgit.lib.Repository> workingCopy = workdirFactory.createWorkingCopy(context, request.getParentBranch())) {
-      Git clone = new Git(workingCopy.getWorkingRepository());
-      Ref ref = clone.branchCreate().setName(request.getNewBranch()).call();
-      Iterable<PushResult> call = clone.push().add(request.getNewBranch()).call();
-      StreamSupport.stream(call.spliterator(), false)
-        .flatMap(pushResult -> pushResult.getRemoteUpdates().stream())
-        .filter(remoteRefUpdate -> remoteRefUpdate.getStatus() != RemoteRefUpdate.Status.OK)
-        .findFirst()
-        .ifPresent(r -> this.handlePushError(r, request, context.getRepository()));
+    try (Git git = new Git(context.open())) {
+      RepositoryHookEvent hookEvent = createBranchHookEvent(BranchHookContextProvider.createHookEvent(request.getNewBranch()));
+      eventBus.post(new PreReceiveRepositoryHookEvent(hookEvent));
+      Ref ref = git.branchCreate().setStartPoint(request.getParentBranch()).setName(request.getNewBranch()).call();
+      eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
       return Branch.normalBranch(request.getNewBranch(), GitUtil.getId(ref.getObjectId()));
-    } catch (GitAPIException ex) {
+    } catch (GitAPIException | IOException ex) {
       throw new InternalRepositoryException(repository, "could not create branch " + request.getNewBranch(), ex);
     }
   }
 
-  private void handlePushError(RemoteRefUpdate remoteRefUpdate, BranchRequest request, Repository repository) {
-    if (remoteRefUpdate.getStatus() != RemoteRefUpdate.Status.OK) {
-      // TODO handle failed remote update
-      throw new IntegrateChangesFromWorkdirException(repository,
-        String.format("Could not push new branch '%s' into central repository", request.getNewBranch()));
+  @Override
+  public void deleteOrClose(String branchName) {
+    try (Git gitRepo = new Git(context.open())) {
+      RepositoryHookEvent hookEvent = createBranchHookEvent(BranchHookContextProvider.deleteHookEvent(branchName));
+      eventBus.post(new PreReceiveRepositoryHookEvent(hookEvent));
+      gitRepo
+        .branchDelete()
+        .setBranchNames(branchName)
+        .setForce(true)
+        .call();
+      eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
+    } catch (CannotDeleteCurrentBranchException e) {
+      throw new CannotDeleteDefaultBranchException(context.getRepository(), branchName);
+    } catch (GitAPIException | IOException ex) {
+      throw new InternalRepositoryException(entity(context.getRepository()), String.format("Could not delete branch: %s", branchName));
+    }
+  }
+
+  private RepositoryHookEvent createBranchHookEvent(BranchHookContextProvider hookEvent) {
+    HookContext context = hookContextFactory.createContext(hookEvent, this.context.getRepository());
+    return new RepositoryHookEvent(context, this.context.getRepository(), RepositoryHookType.PRE_RECEIVE);
+  }
+
+  private static class BranchHookContextProvider extends HookContextProvider {
+    private final List<String> newBranches;
+    private final List<String> deletedBranches;
+
+    private BranchHookContextProvider(List<String> newBranches, List<String> deletedBranches) {
+      this.newBranches = newBranches;
+      this.deletedBranches = deletedBranches;
+    }
+
+    static BranchHookContextProvider createHookEvent(String newBranch) {
+      return new BranchHookContextProvider(singletonList(newBranch), emptyList());
+    }
+
+    static BranchHookContextProvider deleteHookEvent(String deletedBranch) {
+      return new BranchHookContextProvider(emptyList(), singletonList(deletedBranch));
+    }
+
+    @Override
+    public Set<HookFeature> getSupportedFeatures() {
+      return singleton(HookFeature.BRANCH_PROVIDER);
+    }
+
+    @Override
+    public HookBranchProvider getBranchProvider() {
+      return new HookBranchProvider() {
+        @Override
+        public List<String> getCreatedOrModified() {
+          return newBranches;
+        }
+
+        @Override
+        public List<String> getDeletedOrClosed() {
+          return deletedBranches;
+        }
+      };
+    }
+
+    @Override
+    public HookChangesetProvider getChangesetProvider() {
+      return r -> new HookChangesetResponse(emptyList());
     }
   }
 }
