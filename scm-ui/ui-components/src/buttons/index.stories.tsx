@@ -3,6 +3,7 @@ import Button from "./Button";
 import { storiesOf } from "@storybook/react";
 import styled from "styled-components";
 import { MemoryRouter } from "react-router-dom";
+import IconButton from "./IconButton";
 import AddButton from "./AddButton";
 import CreateButton from "./CreateButton";
 import DeleteButton from "./DeleteButton";
@@ -48,7 +49,7 @@ const buttonStory = (name: string, storyFn: () => ReactElement) => {
     .addDecorator(SpacingDecorator)
     .add("Default", storyFn);
 };
-
+buttonStory("IconButton", () => <IconButton icon="icons" />);
 buttonStory("AddButton", () => <AddButton>Add</AddButton>);
 buttonStory("CreateButton", () => <CreateButton>Create</CreateButton>);
 buttonStory("DeleteButton", () => <DeleteButton>Delete</DeleteButton>);
