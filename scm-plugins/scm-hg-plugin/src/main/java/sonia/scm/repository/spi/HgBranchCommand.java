@@ -36,7 +36,9 @@ import com.aragost.javahg.commands.PullCommand;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ContextEntry;
 import sonia.scm.repository.Branch;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.util.WorkingCopy;
@@ -67,10 +69,33 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
       LOG.debug("Created new branch '{}' in repository {} with changeset {}",
         request.getNewBranch(), getRepository().getNamespaceAndName(), emptyChangeset.getNode());
 
-      pullNewBranchIntoCentralRepository(request, workingCopy);
+      pullChangesIntoCentralRepository(workingCopy, request.getNewBranch());
 
       return Branch.normalBranch(request.getNewBranch(), emptyChangeset.getNode());
     }
+  }
+
+  @Override
+  public void deleteOrClose(String branchName) {
+    try (WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy = workdirFactory.createWorkingCopy(getContext(), branchName)) {
+      User currentUser = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
+
+      LOG.debug("Closing branch '{}' in repository {}", branchName, getRepository().getNamespaceAndName());
+
+      com.aragost.javahg.commands.CommitCommand
+        .on(workingCopy.getWorkingRepository())
+        .user(getFormattedUser(currentUser))
+        .message(String.format("Close branch: %s", branchName))
+        .closeBranch()
+        .execute();
+      pullChangesIntoCentralRepository(workingCopy, branchName);
+    } catch (Exception ex) {
+      throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity(getContext().getScmRepository()), String.format("Could not close branch: %s", branchName));
+    }
+  }
+
+  private String getFormattedUser(User currentUser) {
+    return String.format("%s <%s>", currentUser.getDisplayName(), currentUser.getMail());
   }
 
   private Changeset createNewBranchWithEmptyCommit(BranchRequest request, com.aragost.javahg.Repository repository) {
@@ -78,12 +103,12 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
     User currentUser = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
     return CommitCommand
       .on(repository)
-      .user(String.format("%s <%s>", currentUser.getDisplayName(), currentUser.getMail()))
+      .user(getFormattedUser(currentUser))
       .message("Create new branch " + request.getNewBranch())
       .execute();
   }
 
-  private void pullNewBranchIntoCentralRepository(BranchRequest request, WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy) {
+  private void pullChangesIntoCentralRepository(WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy, String branch) {
     try {
       PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
       workdirFactory.configure(pullCommand);
@@ -91,7 +116,7 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
     } catch (Exception e) {
       // TODO handle failed update
       throw new IntegrateChangesFromWorkdirException(getRepository(),
-        String.format("Could not pull new branch '%s' into central repository", request.getNewBranch()),
+        String.format("Could not pull changes '%s' into central repository", branch),
         e);
     }
   }

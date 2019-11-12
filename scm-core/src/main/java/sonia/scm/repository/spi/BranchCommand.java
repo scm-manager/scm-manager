@@ -41,4 +41,6 @@ import sonia.scm.repository.api.BranchRequest;
  */
 public interface BranchCommand {
   Branch branch(BranchRequest name);
+
+  void deleteOrClose(String branchName);
 }
