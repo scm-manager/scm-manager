@@ -282,26 +282,6 @@ exports[`Storyshots Buttons|EditButton Default 1`] = `
 </div>
 `;
 
-exports[`Storyshots Buttons|IconButton Default 1`] = `
-<div
-  className="sc-htoDjs bIDNS"
->
-  <button
-    className="button is-default"
-    onClick={[Function]}
-    type="button"
-  >
-    <span
-      className="icon is-medium"
-    >
-      <i
-        className="fas fa-icons has-text-inherit"
-      />
-    </span>
-  </button>
-</div>
-`;
-
 exports[`Storyshots Buttons|SubmitButton Default 1`] = `
 <div
   className="sc-htoDjs bIDNS"

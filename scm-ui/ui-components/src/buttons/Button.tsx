@@ -18,6 +18,7 @@ export type ButtonProps = {
 
 type Props = ButtonProps &
   RouteComponentProps & {
+    title?: string;
     type?: "button" | "submit" | "reset";
     color?: string;
   };
@@ -38,7 +39,19 @@ class Button extends React.Component<Props> {
   };
 
   render() {
-    const { label, loading, disabled, type, color, className, icon, fullWidth, reducedMobile, children } = this.props;
+    const {
+      label,
+      title,
+      loading,
+      disabled,
+      type,
+      color,
+      className,
+      icon,
+      fullWidth,
+      reducedMobile,
+      children
+    } = this.props;
     const loadingClass = loading ? "is-loading" : "";
     const fullWidthClass = fullWidth ? "is-fullwidth" : "";
     const reducedMobileClass = reducedMobile ? "is-reduced-mobile" : "";
@@ -46,6 +59,7 @@ class Button extends React.Component<Props> {
       return (
         <button
           type={type}
+          title={title}
           disabled={disabled}
           onClick={this.onClick}
           className={classNames("button", "is-" + color, loadingClass, fullWidthClass, reducedMobileClass, className)}
@@ -63,6 +77,7 @@ class Button extends React.Component<Props> {
     return (
       <button
         type={type}
+        title={title}
         disabled={disabled}
         onClick={this.onClick}
         className={classNames("button", "is-" + color, loadingClass, fullWidthClass, className)}
