@@ -47,8 +47,6 @@ public class MapperModule extends AbstractModule {
     bind(ScmViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapper(ScmViolationExceptionToErrorDtoMapper.class).getClass());
     bind(ExceptionWithContextToErrorDtoMapper.class).to(Mappers.getMapper(ExceptionWithContextToErrorDtoMapper.class).getClass());
 
-    bind(MergeResultToDtoMapper.class).to(Mappers.getMapper(MergeResultToDtoMapper.class).getClass());
-
     // no mapstruct required
     bind(MeDtoFactory.class);
     bind(UIPluginDtoMapper.class);
