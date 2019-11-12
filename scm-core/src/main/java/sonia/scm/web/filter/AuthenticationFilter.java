@@ -127,7 +127,7 @@ public class AuthenticationFilter extends HttpFilter
       logger.trace("user is already authenticated");
       processChain(request, response, chain, subject);
     }
-    else if (isAnonymousAccessEnabled())
+    else if (isAnonymousAccessEnabled() && !HttpUtil.isWUIRequest(request))
     {
       logger.trace("anonymous access granted");
       subject.login(new AnonymousToken());

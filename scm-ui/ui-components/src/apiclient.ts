@@ -7,7 +7,8 @@ const applyFetchOptions: (p: RequestInit) => RequestInit = o => {
   o.headers = {
     Cache: "no-cache",
     // identify the request as ajax request
-    "X-Requested-With": "XMLHttpRequest"
+    "X-Requested-With": "XMLHttpRequest",
+    "X-SCM-Client": "WUI"
   };
   return o;
 };
