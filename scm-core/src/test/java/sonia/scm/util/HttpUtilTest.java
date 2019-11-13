@@ -55,6 +55,31 @@ public class HttpUtilTest
 {
 
   @Test
+  public void testGetHeader() {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getHeader("Test")).thenReturn("Value-One");
+
+    String value = HttpUtil.getHeader(request, "Test", "Fallback");
+    assertEquals("Value-One", value);
+  }
+
+  @Test
+  public void testGetHeaderWithDefaultValue() {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+
+    String value = HttpUtil.getHeader(request, "Test", "Fallback");
+    assertEquals("Fallback", value);
+  }
+
+  @Test
+  public void testGetHeaderWithNullAsDefaultValue() {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+
+    String value = HttpUtil.getHeader(request, "Test", null);
+    assertNull(value);
+  }
+
+  @Test
   public void concatenateTest() {
     assertEquals(
       "/scm/git/hitchhiker/tricia",

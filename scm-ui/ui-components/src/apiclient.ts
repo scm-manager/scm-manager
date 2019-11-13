@@ -2,12 +2,20 @@ import { contextPath } from "./urls";
 import { createBackendError, ForbiddenError, isBackendError, UnauthorizedError } from "./errors";
 import { BackendErrorContent } from "./errors";
 
+const sessionId = (
+  Date.now().toString(36) +
+  Math.random()
+    .toString(36)
+    .substr(2, 5)
+).toUpperCase();
+
 const applyFetchOptions: (p: RequestInit) => RequestInit = o => {
   o.credentials = "same-origin";
   o.headers = {
     Cache: "no-cache",
     // identify the request as ajax request
-    "X-Requested-With": "XMLHttpRequest"
+    "X-Requested-With": "XMLHttpRequest",
+    "X-SCM-Session-ID": sessionId
   };
   return o;
 };

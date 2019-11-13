@@ -35,82 +35,81 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.security.BearerToken;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.security.SessionId;
+import sonia.scm.util.HttpUtil;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import sonia.scm.util.HttpUtil;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
-public class CookieBearerWebTokenGeneratorTest
-{
+@ExtendWith(MockitoExtension.class)
+class CookieBearerWebTokenGeneratorTest {
 
-  /**
-   * Method description
-   *
-   */
+  private final CookieBearerWebTokenGenerator tokenGenerator = new CookieBearerWebTokenGenerator();
+
+  @Mock
+  private HttpServletRequest request;
+
   @Test
-  public void testCreateToken()
-  {
-    Cookie c = mock(Cookie.class);
-
-    when(c.getName()).thenReturn(HttpUtil.COOKIE_BEARER_AUTHENTICATION);
-    when(c.getValue()).thenReturn("value");
-    when(request.getCookies()).thenReturn(new Cookie[] { c });
+  void shouldCreateToken() {
+    assignBearerCookie("value");
 
     BearerToken token = tokenGenerator.createToken(request);
 
-    assertNotNull(token);
-    assertEquals("value", token.getCredentials());
+    assertThat(token).isNotNull();
+    assertThat(token.getPrincipal()).isNull();
+    assertThat(token.getCredentials()).isEqualTo("value");
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testCreateTokenWithWrongCookie()
-  {
+  void shouldCreateTokenWithSessionId() {
+    when(request.getHeader(HttpUtil.HEADER_SCM_SESSION)).thenReturn("abc123");
+
+    assignBearerCookie("authc");
+
+    BearerToken token = tokenGenerator.createToken(request);
+
+    assertThat(token).isNotNull();
+    assertThat(token.getPrincipal()).isEqualTo(SessionId.valueOf("abc123"));
+    assertThat(token.getCredentials()).isEqualTo("authc");
+  }
+
+  private void assignBearerCookie(String value) {
+    assignCookie(HttpUtil.COOKIE_BEARER_AUTHENTICATION, value);
+  }
+
+  private void assignCookie(String name, String value) {
     Cookie c = mock(Cookie.class);
 
-    when(c.getName()).thenReturn("other-cookie");
-    when(request.getCookies()).thenReturn(new Cookie[] { c });
-    assertNull(tokenGenerator.createToken(request));
+    when(c.getName()).thenReturn(name);
+    lenient().when(c.getValue()).thenReturn(value);
+    when(request.getCookies()).thenReturn(new Cookie[]{c});
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testCreateTokenWithoutCookies()
-  {
-    assertNull(tokenGenerator.createToken(request));
+  void shouldNotCreateTokenForWrongCookie() {
+    assignCookie("other-cookie", "with-some-value");
+
+    BearerToken token = tokenGenerator.createToken(request);
+    assertThat(token).isNull();
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final CookieBearerWebTokenGenerator tokenGenerator =
-    new CookieBearerWebTokenGenerator();
-
-  /** Field description */
-  @Mock
-  private HttpServletRequest request;
+  @Test
+  void shouldNotCreateTokenWithoutCookies() {
+    BearerToken token = tokenGenerator.createToken(request);
+    assertThat(token).isNull();
+  }
 }

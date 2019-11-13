@@ -116,6 +116,12 @@ public final class HttpUtil
    */
   public static final String HEADER_SCM_CLIENT = "X-SCM-Client";
 
+  /**
+   * header for identifying the scm-manager client session
+   * @since 2.0.0
+   */
+  public static final String HEADER_SCM_SESSION = "X-SCM-Session-ID";
+
   /** Field description */
   public static final String HEADER_USERAGENT = "User-Agent";
 
@@ -698,8 +704,10 @@ public final class HttpUtil
     String defaultValue)
   {
     String value = request.getHeader(header);
-
-    return MoreObjects.firstNonNull(value, defaultValue);
+    if (value == null) {
+      value = defaultValue;
+    }
+    return value;
   }
 
   /**
