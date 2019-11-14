@@ -142,6 +142,9 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
             throw new InternalRepositoryException(repository, "could not calculate diff for path " + path, e);
           }
           break;
+        case BOTH_ADDED:
+          result.addAddedByBoth(path);
+          break;
         case DELETED_BY_THEM:
           result.addDeletedByThem(path);
           break;

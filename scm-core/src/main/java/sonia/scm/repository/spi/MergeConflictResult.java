@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import static sonia.scm.repository.spi.MergeConflictResult.ConflictTypes.ADDED_BY_BOTH;
 import static sonia.scm.repository.spi.MergeConflictResult.ConflictTypes.BOTH_MODIFIED;
 import static sonia.scm.repository.spi.MergeConflictResult.ConflictTypes.DELETED_BY_THEM;
 import static sonia.scm.repository.spi.MergeConflictResult.ConflictTypes.DELETED_BY_US;
@@ -26,6 +27,10 @@ public class MergeConflictResult {
 
   public void addDeletedByUs(String path) {
     conflicts.add(new SingleMergeConflict(DELETED_BY_US, path, null));
+  }
+
+  public void addAddedByBoth(String path) {
+    conflicts.add(new SingleMergeConflict(ADDED_BY_BOTH, path, null));
   }
 
   public static class SingleMergeConflict {
@@ -53,6 +58,6 @@ public class MergeConflictResult {
   }
 
   public enum ConflictTypes {
-    BOTH_MODIFIED, DELETED_BY_THEM, DELETED_BY_US
+    BOTH_MODIFIED, DELETED_BY_THEM, DELETED_BY_US, ADDED_BY_BOTH
   }
 }
