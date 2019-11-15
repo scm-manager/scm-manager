@@ -49,7 +49,7 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
   @Override
   public MergeConflictResult computeConflicts(MergeCommandRequest request) {
-    return inClone(git -> new ConflictWorker(git, request), workdirFactory, request.getBranchToMerge());
+    return inClone(git -> new ConflictWorker(git, request), workdirFactory, request.getTargetBranch());
   }
 
   private MergeCommandResult mergeWithStrategy(MergeCommandRequest request) {
@@ -104,8 +104,8 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
     private ConflictWorker(Git git, MergeCommandRequest request) {
       super(git, context, repository);
-      theirs = request.getTargetBranch();
-      ours = request.getBranchToMerge();
+      theirs = request.getBranchToMerge();
+      ours = request.getTargetBranch();
 
       treeParser = new CanonicalTreeParser();
       diffBuffer = new ByteArrayOutputStream();
@@ -146,10 +146,10 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
           result.addAddedByBoth(path);
           break;
         case DELETED_BY_THEM:
-          result.addDeletedByThem(path);
+          result.addDeletedByUs(path);
           break;
         case DELETED_BY_US:
-          result.addDeletedByUs(path);
+          result.addDeletedByThem(path);
           break;
         default:
           throw new InternalRepositoryException(context.getRepository(), "unexpected conflict type: " + stageState);
