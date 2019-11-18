@@ -18,7 +18,7 @@ class MigrationWizardModule extends ServletModule {
     LOG.info("=   Open SCM-Manager in a browser to start the wizard.   =");
     LOG.info("=                                                        =");
     LOG.info("==========================================================");
-    serve("/images/*", "/styles/*", "/favicon.ico").with(StaticResourceServlet.class);
+    serve("/images/*", "/assets/*", "/favicon.ico").with(StaticResourceServlet.class);
     serve("/*").with(MigrationWizardServlet.class);
   }
 }
