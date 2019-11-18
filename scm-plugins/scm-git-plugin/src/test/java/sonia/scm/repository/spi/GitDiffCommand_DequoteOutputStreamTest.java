@@ -10,7 +10,7 @@ public class GitDiffCommand_DequoteOutputStreamTest {
 
   @Test
   void shouldDequoteText() throws IOException {
-    String s = "diff --git \"a/\\303\\272\\303\\274\\303\\276\\303\\253\\303\\251\\303\\245\\303\\253\\303\\245\\303\\251 \\303\\245g\\303\\260f\\303\\237\" \"b/\\303\\272\\303\\274\\303\\276\\303\\253\\303\\251\\303\\245\\303\\253\\303\\245\\303\\251 \\303\\245g\\303\\260f\\303\\237\"\n" +
+    String s = "diff --git \"a/file \\303\\272\\303\\274\\303\\276\\303\\253\\303\\251\\303\\245\\303\\253\\303\\245\\303\\251 a\" \"b/file \\303\\272\\303\\274\\303\\276\\303\\253\\303\\251\\303\\245\\303\\253\\303\\245\\303\\251 b\"\n" +
       "new file mode 100644\n" +
       "index 0000000..8cb0607\n" +
       "--- /dev/null\n" +
@@ -24,7 +24,7 @@ public class GitDiffCommand_DequoteOutputStreamTest {
     stream.write(bytes, 0, bytes.length);
     stream.flush();
 
-    Assertions.assertThat(buffer.toString()).isEqualTo("diff --git \"a/\\303\\272\\303\\274\\303\\276\\303\\253\\303\\251\\303\\245\\303\\253\\303\\245\\303\\251 \\303\\245g\\303\\260f\\303\\237\" \"b/\\303\\272\\303\\274\\303\\276\\303\\253\\303\\251\\303\\245\\303\\253\\303\\245\\303\\251 \\303\\245g\\303\\260f\\303\\237\"\n" +
+    Assertions.assertThat(buffer.toString()).isEqualTo("diff --git a/file úüþëéåëåé a b/file úüþëéåëåé b\n" +
       "new file mode 100644\n" +
       "index 0000000..8cb0607\n" +
       "--- /dev/null\n" +
