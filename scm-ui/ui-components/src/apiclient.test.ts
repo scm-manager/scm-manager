@@ -1,4 +1,4 @@
-import { apiClient, createUrl, extractXsrfToken, extractXsrfTokenFromCookie } from "./apiclient";
+import { apiClient, createUrl, extractXsrfTokenFromCookie } from "./apiclient";
 import fetchMock from "fetch-mock";
 import { BackendError } from "./errors";
 
