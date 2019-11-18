@@ -1,4 +1,4 @@
-import { apiClient, createUrl } from "./apiclient";
+import { apiClient, createUrl, extractXsrfToken, extractXsrfTokenFromCookie } from "./apiclient";
 import fetchMock from "fetch-mock";
 import { BackendError } from "./errors";
 
@@ -68,5 +68,24 @@ describe("error handling tests", () => {
       ]);
       done();
     });
+  });
+});
+
+describe("extract xsrf token", () => {
+  it("should return undefined if no cookie exists", () => {
+    const token = extractXsrfTokenFromCookie(undefined);
+    expect(token).toBeUndefined();
+  });
+
+  it("should return undefined without X-Bearer-Token exists", () => {
+    const token = extractXsrfTokenFromCookie("a=b; c=d; e=f");
+    expect(token).toBeUndefined();
+  });
+
+  it("should return xsrf token", () => {
+    const cookie =
+      "a=b; X-Bearer-Token=eyJhbGciOiJIUzI1NiJ9.eyJ4c3JmIjoiYjE0NDRmNWEtOWI5Mi00ZDA0LWFkMzMtMTAxYjY3MWQ1YTc0Iiwic3ViIjoic2NtYWRtaW4iLCJqdGkiOiI2RFJpQVphNWwxIiwiaWF0IjoxNTc0MDcyNDQ4LCJleHAiOjE1NzQwNzYwNDgsInNjbS1tYW5hZ2VyLnJlZnJlc2hFeHBpcmF0aW9uIjoxNTc0MTE1NjQ4OTU5LCJzY20tbWFuYWdlci5wYXJlbnRUb2tlbklkIjoiNkRSaUFaYTVsMSJ9.VUJtKeWUn3xtHCEbG51r7ceXZ8CF3cmN8J-eb9EDY_U; c=d";
+    const token = extractXsrfTokenFromCookie(cookie);
+    expect(token).toBe("b1444f5a-9b92-4d04-ad33-101b671d5a74");
   });
 });
