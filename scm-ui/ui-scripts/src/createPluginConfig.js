@@ -4,9 +4,7 @@ const fs = require("fs");
 const root = process.cwd();
 
 const packageJsonPath = path.join(root, "package.json");
-const packageJSON = JSON.parse(
-  fs.readFileSync(packageJsonPath, { encoding: "UTF-8" })
-);
+const packageJSON = JSON.parse(fs.readFileSync(packageJsonPath, { encoding: "UTF-8" }));
 
 let name = packageJSON.name;
 const orgaIndex = name.indexOf("/");
@@ -18,7 +16,7 @@ module.exports = function(mode) {
   return {
     context: root,
     entry: {
-      [name]: "./src/main/js/index.js"
+      [name]: [path.resolve(__dirname, "webpack-public-path.js"), packageJSON.main || "src/main/js/index.js"]
     },
     mode,
     devtool: "source-map",
@@ -45,7 +43,7 @@ module.exports = function(mode) {
     module: {
       rules: [
         {
-          test: /\.(js|jsx)$/,
+          test: /\.(js|ts|jsx|tsx)$/i,
           exclude: /node_modules/,
           use: {
             loader: "babel-loader",
@@ -64,15 +62,13 @@ module.exports = function(mode) {
         }
       ]
     },
+    resolve: {
+      extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"]
+    },
     output: {
-      path: path.join(
-        root,
-        "target",
-        name + "-" + packageJSON.version,
-        "webapp",
-        "assets"
-      ),
+      path: path.join(root, "target", name + "-" + packageJSON.version, "webapp", "assets"),
       filename: "[name].bundle.js",
+      chunkFilename: name + ".[name].chunk.js",
       library: name,
       libraryTarget: "amd"
     }

@@ -15,10 +15,12 @@ import org.junit.Test;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
+import sonia.scm.repository.api.MergeStrategy;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.user.User;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -62,6 +64,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeCommandRequest request = new MergeCommandRequest();
     request.setTargetBranch("master");
     request.setBranchToMerge("mergeable");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     MergeCommandResult mergeCommandResult = command.merge(request);
@@ -88,6 +91,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeCommandRequest request = new MergeCommandRequest();
     request.setTargetBranch("master");
     request.setBranchToMerge("empty_merge");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     MergeCommandResult mergeCommandResult = command.merge(request);
@@ -109,6 +113,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     request.setTargetBranch("master");
     request.setBranchToMerge("mergeable");
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
 
     MergeCommandResult mergeCommandResult = command.merge(request);
 
@@ -132,6 +137,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeCommandRequest request = new MergeCommandRequest();
     request.setTargetBranch("master");
     request.setBranchToMerge("mergeable");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
     request.setMessageTemplate("simple");
 
@@ -152,6 +158,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeCommandRequest request = new MergeCommandRequest();
     request.setBranchToMerge("test-branch");
     request.setTargetBranch("master");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
 
     MergeCommandResult mergeCommandResult = command.merge(request);
 
@@ -173,6 +180,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeCommandRequest request = new MergeCommandRequest();
     request.setTargetBranch("master");
     request.setBranchToMerge("mergeable");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
 
     MergeCommandResult mergeCommandResult = command.merge(request);
 
@@ -192,6 +200,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
     request.setTargetBranch("mergeable");
     request.setBranchToMerge("master");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
 
     MergeCommandResult mergeCommandResult = command.merge(request);
 
@@ -211,12 +220,112 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     assertThat(new String(contentOfFileB)).isEqualTo("b\ncontent from branch\n");
   }
 
+  @Test
+  public void shouldSquashCommitsIfSquashIsEnabled() throws IOException, GitAPIException {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+    request.setBranchToMerge("squash");
+    request.setTargetBranch("master");
+    request.setMessageTemplate("this is a squash");
+    request.setMergeStrategy(MergeStrategy.SQUASH);
+
+    MergeCommandResult mergeCommandResult = command.merge(request);
+
+    Repository repository = createContext().open();
+    assertThat(mergeCommandResult.isSuccess()).isTrue();
+
+    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+    RevCommit mergeCommit = commits.iterator().next();
+    PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+    String message = mergeCommit.getFullMessage();
+    assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
+    assertThat(message).isEqualTo("this is a squash");
+  }
+
+  @Test
+  public void shouldSquashThreeCommitsIntoOne() throws IOException, GitAPIException {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+    request.setBranchToMerge("squash");
+    request.setTargetBranch("master");
+    request.setMessageTemplate("squash three commits");
+    request.setMergeStrategy(MergeStrategy.SQUASH);
+    Repository gitRepository = createContext().open();
+    MergeCommandResult mergeCommandResult = command.merge(request);
+
+    assertThat(mergeCommandResult.isSuccess()).isTrue();
+
+    Iterable<RevCommit> commits = new Git(gitRepository).log().add(gitRepository.resolve("master")).setMaxCount(1).call();
+    RevCommit mergeCommit = commits.iterator().next();
+    PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+    String message = mergeCommit.getFullMessage();
+    assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
+    assertThat(message).isEqualTo("squash three commits");
+
+    GitModificationsCommand modificationsCommand = new GitModificationsCommand(createContext(), repository);
+    List<String> changes = modificationsCommand.getModifications("master").getAdded();
+    assertThat(changes.size()).isEqualTo(3);
+  }
+
+
+  @Test
+  public void shouldMergeWithFastForward() throws IOException, GitAPIException {
+    Repository repository = createContext().open();
+
+    ObjectId featureBranchHead = new Git(repository).log().add(repository.resolve("squash")).setMaxCount(1).call().iterator().next().getId();
+
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setBranchToMerge("squash");
+    request.setTargetBranch("master");
+    request.setMergeStrategy(MergeStrategy.FAST_FORWARD_IF_POSSIBLE);
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    MergeCommandResult mergeCommandResult = command.merge(request);
+
+    assertThat(mergeCommandResult.isSuccess()).isTrue();
+
+    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+    RevCommit mergeCommit = commits.iterator().next();
+    assertThat(mergeCommit.getParentCount()).isEqualTo(1);
+    PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+    assertThat(mergeAuthor.getName()).isEqualTo("Philip J Fry");
+    assertThat(mergeCommit.getId()).isEqualTo(featureBranchHead);
+  }
+
+  @Test
+  public void shouldDoMergeCommitIfFastForwardIsNotPossible() throws IOException, GitAPIException {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setTargetBranch("master");
+    request.setBranchToMerge("mergeable");
+    request.setMergeStrategy(MergeStrategy.FAST_FORWARD_IF_POSSIBLE);
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    MergeCommandResult mergeCommandResult = command.merge(request);
+
+    assertThat(mergeCommandResult.isSuccess()).isTrue();
+
+    Repository repository = createContext().open();
+    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+    RevCommit mergeCommit = commits.iterator().next();
+    PersonIdent mergeAuthor = mergeCommit.getAuthorIdent();
+    assertThat(mergeCommit.getParentCount()).isEqualTo(2);
+    String message = mergeCommit.getFullMessage();
+    assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
+    assertThat(mergeAuthor.getEmailAddress()).isEqualTo("dirk@holistic.det");
+    assertThat(message).contains("master", "mergeable");
+  }
+
   @Test(expected = NotFoundException.class)
   public void shouldHandleNotExistingSourceBranchInMerge() {
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
     request.setTargetBranch("mergeable");
     request.setBranchToMerge("not_existing");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
 
     command.merge(request);
   }
@@ -225,6 +334,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   public void shouldHandleNotExistingTargetBranchInMerge() {
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
     request.setTargetBranch("not_existing");
     request.setBranchToMerge("master");
 

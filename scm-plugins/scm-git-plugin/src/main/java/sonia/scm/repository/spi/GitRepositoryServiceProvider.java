@@ -35,10 +35,12 @@ package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.IOException;
@@ -64,6 +66,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     Command.DIFF_RESULT,
     Command.LOG,
     Command.TAGS,
+    Command.BRANCH,
     Command.BRANCHES, 
     Command.INCOMING,
     Command.OUTGOING,
@@ -77,10 +80,12 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   //~--- constructors ---------------------------------------------------------
 
-  public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory) {
+  public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
     this.handler = handler;
     this.repository = repository;
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
+    this.hookContextFactory = hookContextFactory;
+    this.eventBus = eventBus;
     this.context = new GitContext(handler.getDirectory(repository.getId()), repository, storeProvider);
   }
 
@@ -133,7 +138,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public BranchCommand getBranchCommand()
   {
-    return new GitBranchCommand(context, repository, handler.getWorkdirFactory());
+    return new GitBranchCommand(context, repository, hookContextFactory, eventBus);
   }
 
   /**
@@ -292,4 +297,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   private final Repository repository;
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
+
+  private final HookContextFactory hookContextFactory;
+
+  private final ScmEventBus eventBus;
 }

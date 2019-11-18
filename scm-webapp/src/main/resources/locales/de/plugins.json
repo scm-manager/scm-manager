@@ -174,7 +174,7 @@
     },
     "40RaYIeeR1": {
       "displayName": "Es wurden keine Änderungen durchgeführt",
-      "description": "Das Repository wurde nicht verändert. Daher konnte kein neuer Commit erzeugt werden."
+      "description": "Das Repository wurde nicht verändert. Daher konnte kein neuer Commit erzeugt werden. Womöglich werden Änderungen aufgrund einer .ignore-Datei Definition nicht berücksichtigt."
     },
     "4iRct4avG1": {
       "displayName": "Die Revisionen haben keinen gemeinsamen Ursprung",
@@ -183,6 +183,14 @@
     "65RdZ5atX1": {
       "displayName": "Fehler beim Löschen von Plugin-Dateien",
       "description": "Einige Dateien für die Plugin-Deinstallation konnten nicht gelöscht werden. Dieses kann zu Inkonsistenzen führen, so dass der SCM-Manager nicht mehr korrekt starten kann. Bitte prüfen Sie die Logs und bereinigen Sie das Plugin-Verzeichnis des SCM-Managers manuell. Um die Installation eines Plugins abzubrechen, löschen Sie die zugehörige smp Datei aus dem Plugin-Verzeichnis. Um ein Entfernen eines Plugins zu verhindern, entfernen Sie die Datei namens 'uninstall' aus dem entsprechenden Verzeichnis des Plugins."
+    },
+    "6eRhF9gU41": {
+      "displayName": "Nicht unterstützte Merge-Strategie",
+      "description": "Die gewählte Merge-Strategie wird von dem Repository nicht unterstützt."
+    },
+    "78RhWxTIw1": {
+      "displayName": "Der Default-Branch kann nicht gelöscht werden",
+      "description": "Der Default-Branch kann nicht gelöscht werden. Bitte wählen Sie zuerst einen neuen Default-Branch."
     }
   },
   "namespaceStrategies": {

@@ -35,6 +35,8 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.aragost.javahg.Changeset;
+import com.aragost.javahg.commands.LogCommand;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import sonia.scm.repository.BrowserResult;
@@ -72,9 +74,11 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
   public BrowserResult getBrowserResult(BrowseCommandRequest request) throws IOException {
     HgFileviewCommand cmd = HgFileviewCommand.on(open());
 
-    if (!Strings.isNullOrEmpty(request.getRevision()))
-    {
-      cmd.rev(request.getRevision());
+    String revision = MoreObjects.firstNonNull(request.getRevision(), "tip");
+    Changeset c = LogCommand.on(getContext().open()).rev(revision).limit(1).single();
+
+    if (c != null) {
+      cmd.rev(c.getNode());
     }
 
     if (!Strings.isNullOrEmpty(request.getPath()))
@@ -98,6 +102,6 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
     }
 
     FileObject file = cmd.execute();
-    return new BrowserResult(MoreObjects.firstNonNull(request.getRevision(), "tip"), file);
+    return new BrowserResult(c == null? "tip": c.getNode(), revision, file);
   }
 }

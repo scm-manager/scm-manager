@@ -8,7 +8,7 @@ module.exports = {
         }
       },
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(js|ts|jsx|tsx)$/,
         exclude: /node_modules/,
         use: [
           {
@@ -35,6 +35,11 @@ module.exports = {
         test: /\.(png|svg|jpg|gif|woff2?|eot|ttf)$/,
         use: ["file-loader"]
       }
+    ]
+  },
+  resolve: {
+    extensions: [
+      ".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"
     ]
   }
 };

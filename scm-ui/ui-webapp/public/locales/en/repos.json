@@ -78,8 +78,8 @@
   },
   "changeset": {
     "description": "Description",
-    "summary": "Changeset {{id}} was committed {{time}}",
-    "shortSummary": "Committed {{id}} {{time}}",
+    "summary": "Changeset <0/> was committed <1/>",
+    "shortSummary": "Committed <0/> <1/>",
     "tags": "Tags",
     "diffNotSupported": "Diff of changesets is not supported by the type of repository",
     "author": {
@@ -113,7 +113,10 @@
       "description": "Description",
       "size": "Size"
     },
-    "noSources": "No sources found for this branch."
+    "noSources": "No sources found for this branch.",
+    "extension" : {
+      "notBound": "No extension bound."
+    }
   },
   "permission": {
     "title": "Edit Permissions",

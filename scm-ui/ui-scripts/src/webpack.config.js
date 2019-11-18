@@ -9,9 +9,9 @@ module.exports = [
     context: root,
     entry: {
       webapp: [
-        "./ui-webapp/src/webpack-public-path.js",
+        path.resolve(__dirname, "webpack-public-path.js"),
         "./ui-styles/src/scm.scss",
-        "./ui-webapp/src/index.js"
+        "./ui-webapp/src/index.tsx"
       ]
     },
     devtool: "cheap-module-eval-source-map",
@@ -30,7 +30,7 @@ module.exports = [
           }
         },
         {
-          test: /\.(js|jsx)$/,
+          test: /\.(js|ts|jsx|tsx)$/i,
           exclude: /node_modules/,
           use: [
             {
@@ -65,6 +65,9 @@ module.exports = [
         }
       ]
     },
+    resolve: {
+      extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"]
+    },
     output: {
       path: path.join(root, "target", "assets"),
       filename: "[name].bundle.js"
@@ -79,12 +82,7 @@ module.exports = [
         app.use(createContextPathMiddleware("/scm"));
       },
       after: function(app) {
-        const templatePath = path.join(
-          root,
-          "ui-webapp",
-          "public",
-          "index.mustache"
-        );
+        const templatePath = path.join(root, "ui-webapp", "public", "index.mustache");
         const renderParams = {
           contextPath: "/scm"
         };

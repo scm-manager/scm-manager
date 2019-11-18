@@ -36,15 +36,18 @@ import com.google.inject.Inject;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
+import sonia.scm.repository.SvnWorkDirFactory;
 
 @Extension
 public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
 
   private SvnRepositoryHandler handler;
+  private SvnWorkDirFactory workdirFactory;
 
   @Inject
-  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler) {
+  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler, SvnWorkDirFactory workdirFactory) {
     this.handler = handler;
+    this.workdirFactory = workdirFactory;
   }
 
   @Override
@@ -52,7 +55,7 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
     SvnRepositoryServiceProvider provider = null;
 
     if (SvnRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new SvnRepositoryServiceProvider(handler, repository);
+      provider = new SvnRepositoryServiceProvider(handler, repository, workdirFactory);
     }
 
     return provider;

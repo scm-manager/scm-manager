@@ -22,7 +22,6 @@ public abstract class RepositoryTestBase {
   protected Provider<FileHistoryRootResource> fileHistoryRootResource;
   protected Provider<RepositoryCollectionResource> repositoryCollectionResource;
   protected Provider<IncomingRootResource> incomingRootResource;
-  protected Provider<MergeResource> mergeResource;
 
 
   RepositoryRootResource getRepositoryRootResource() {
@@ -39,8 +38,7 @@ public abstract class RepositoryTestBase {
       diffRootResource,
       modificationsRootResource,
       fileHistoryRootResource,
-      incomingRootResource,
-      mergeResource)), repositoryCollectionResource);
+      incomingRootResource)), repositoryCollectionResource);
   }
 
 

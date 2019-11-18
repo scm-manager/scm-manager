@@ -78,8 +78,8 @@
   },
   "changeset": {
     "description": "Beschreibung",
-    "summary": "Changeset {{id}} wurde committet {{time}}",
-    "shortSummary": "Committet {{id}} {{time}}",
+    "summary": "Changeset <0/> wurde <1/> committet",
+    "shortSummary": "Committet <0/> <1/>",
     "tags": "Tags",
     "diffNotSupported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt",
     "author": {
@@ -113,7 +113,10 @@
       "description": "Beschreibung",
       "size": "Größe"
     },
-    "noSources": "Keine Sources in diesem Branch gefunden."
+    "noSources": "Keine Sources in diesem Branch gefunden.",
+    "extension" : {
+      "notBound": "Keine Erweiterung angebunden."
+    }
   },
   "permission": {
     "title": "Berechtigungen bearbeiten",
