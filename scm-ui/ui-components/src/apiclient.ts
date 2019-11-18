@@ -80,7 +80,7 @@ class ApiClient {
     return fetch(createUrl(url), applyFetchOptions({})).then(handleFailure);
   }
 
-  post(url: string, payload: any, contentType = "application/json") {
+  post(url: string, payload?: any, contentType = "application/json") {
     return this.httpRequestWithJSONBody("POST", url, contentType, payload);
   }
 
@@ -115,11 +115,13 @@ class ApiClient {
     return fetch(createUrl(url), options).then(handleFailure);
   }
 
-  httpRequestWithJSONBody(method: string, url: string, contentType: string, payload: any): Promise<Response> {
+  httpRequestWithJSONBody(method: string, url: string, contentType: string, payload?: any): Promise<Response> {
     const options: RequestInit = {
-      method: method,
-      body: JSON.stringify(payload)
+      method: method
     };
+    if (payload) {
+      options.body = JSON.stringify(payload);
+    }
     return this.httpRequestWithBinaryBody(options, url, contentType);
   }
 

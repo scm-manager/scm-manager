@@ -213,8 +213,14 @@ public class GitBrowseCommand extends AbstractGitCommand
 
         if (lfsPointer.isPresent()) {
           BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
-          Blob blob = lfsBlobStore.get(lfsPointer.get().getOid().getName());
-          file.setLength(blob.getSize());
+          String oid = lfsPointer.get().getOid().getName();
+          Blob blob = lfsBlobStore.get(oid);
+          if (blob == null) {
+            logger.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository.getNamespaceAndName());
+            file.setLength(-1);
+          } else {
+            file.setLength(blob.getSize());
+          }
         } else {
           file.setLength(loader.getSize());
         }
