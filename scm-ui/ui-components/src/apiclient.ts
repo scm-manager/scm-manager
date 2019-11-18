@@ -2,13 +2,46 @@ import { contextPath } from "./urls";
 import { createBackendError, ForbiddenError, isBackendError, UnauthorizedError } from "./errors";
 import { BackendErrorContent } from "./errors";
 
+const extractXsrfTokenFromJwt = (jwt: string) => {
+  const parts = jwt.split(".");
+  if (parts.length === 3) {
+    return JSON.parse(atob(parts[1])).xsrf;
+  }
+};
+
+// @VisibleForTesting
+export const extractXsrfTokenFromCookie = (cookieString?: string) => {
+  if (cookieString) {
+    const cookies = cookieString.split(";");
+    for (const c of cookies) {
+      const parts = c.trim().split("=");
+      if (parts[0] === "X-Bearer-Token") {
+        return extractXsrfTokenFromJwt(parts[1]);
+      }
+    }
+  }
+};
+
+const extractXsrfToken = () => {
+  return extractXsrfTokenFromCookie(document.cookie);
+};
+
 const applyFetchOptions: (p: RequestInit) => RequestInit = o => {
-  o.credentials = "same-origin";
-  o.headers = {
+  const headers: { [key: string]: string } = {
     Cache: "no-cache",
     // identify the request as ajax request
-    "X-Requested-With": "XMLHttpRequest"
+    "X-Requested-With": "XMLHttpRequest",
+    // identify the web interface
+    "X-SCM-Client": "WUI"
   };
+
+  const xsrf = extractXsrfToken();
+  if (xsrf) {
+    headers["X-XSRF-Token"] = xsrf;
+  }
+
+  o.credentials = "same-origin";
+  o.headers = headers;
   return o;
 };
 
