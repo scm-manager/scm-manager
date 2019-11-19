@@ -91,7 +91,7 @@ public class XmlRepositoryV1UpdateStep implements CoreUpdateStep {
 
   @Override
   public void doUpdate() throws JAXBException {
-    if (!resolveV1File(contextProvider, V1_REPOSITORY_FILENAME).exists()) {
+    if (!resolveV1File(contextProvider, V1_REPOSITORY_FILENAME).isPresent()) {
       LOG.info("no v1 repositories database file found");
       return;
     }
@@ -105,7 +105,7 @@ public class XmlRepositoryV1UpdateStep implements CoreUpdateStep {
   }
 
   public List<V1Repository> getRepositoriesWithoutMigrationStrategies() {
-    if (!resolveV1File(contextProvider, V1_REPOSITORY_FILENAME).exists()) {
+    if (!resolveV1File(contextProvider, V1_REPOSITORY_FILENAME).isPresent()) {
       LOG.info("no v1 repositories database file found");
       return emptyList();
     }

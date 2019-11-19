@@ -19,21 +19,26 @@ import static java.util.Optional.of;
 
 class V1RepositoryHelper {
 
-  static File resolveV1File(SCMContextProvider contextProvider, String filename) {
-    return contextProvider
-      .resolve(
-        Paths.get(StoreConstants.CONFIG_DIRECTORY_NAME).resolve(filename)
-      ).toFile();
+  static Optional<File> resolveV1File(SCMContextProvider contextProvider, String filename) {
+    File v1XmlFile = contextProvider.resolve(Paths.get(StoreConstants.CONFIG_DIRECTORY_NAME).resolve(filename)).toFile();
+    if (v1XmlFile.exists()) {
+      return Optional.of(v1XmlFile);
+    }
+    return Optional.empty();
   }
 
   static Optional<V1RepositoryDatabase> readV1Database(SCMContextProvider contextProvider, String filename) throws JAXBException {
     JAXBContext jaxbContext = JAXBContext.newInstance(V1RepositoryDatabase.class);
-    Object unmarshal = jaxbContext.createUnmarshaller().unmarshal(resolveV1File(contextProvider, filename));
-    if (unmarshal instanceof V1RepositoryHelper.V1RepositoryDatabase) {
-      return of((V1RepositoryHelper.V1RepositoryDatabase) unmarshal);
-    } else {
-      return empty();
+    Optional<File> file = resolveV1File(contextProvider, filename);
+    if (file.isPresent()) {
+      Object unmarshal = jaxbContext.createUnmarshaller().unmarshal(file.get());
+      if (unmarshal instanceof V1RepositoryHelper.V1RepositoryDatabase) {
+        return of((V1RepositoryHelper.V1RepositoryDatabase) unmarshal);
+      } else {
+        return empty();
+      }
     }
+    return empty();
   }
 
   static class RepositoryList {
