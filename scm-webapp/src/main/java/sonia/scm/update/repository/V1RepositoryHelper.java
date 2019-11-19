@@ -32,8 +32,8 @@ class V1RepositoryHelper {
     Optional<File> file = resolveV1File(contextProvider, filename);
     if (file.isPresent()) {
       Object unmarshal = jaxbContext.createUnmarshaller().unmarshal(file.get());
-      if (unmarshal instanceof V1RepositoryHelper.V1RepositoryDatabase) {
-        return of((V1RepositoryHelper.V1RepositoryDatabase) unmarshal);
+      if (unmarshal instanceof V1RepositoryDatabase) {
+        return of((V1RepositoryDatabase) unmarshal);
       } else {
         return empty();
       }
