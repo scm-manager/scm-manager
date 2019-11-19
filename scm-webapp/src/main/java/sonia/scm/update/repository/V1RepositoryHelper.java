@@ -26,8 +26,9 @@ class V1RepositoryHelper {
       ).toFile();
   }
 
-  static Optional<V1RepositoryDatabase> readV1Database(JAXBContext jaxbContext, SCMContextProvider contextProvider, String filename) throws JAXBException {
-    Object unmarshal = jaxbContext.createUnmarshaller().unmarshal(resolveV1File(contextProvider,filename));
+  static Optional<V1RepositoryDatabase> readV1Database(SCMContextProvider contextProvider, String filename) throws JAXBException {
+    JAXBContext jaxbContext = JAXBContext.newInstance(V1RepositoryDatabase.class);
+    Object unmarshal = jaxbContext.createUnmarshaller().unmarshal(resolveV1File(contextProvider, filename));
     if (unmarshal instanceof V1RepositoryHelper.V1RepositoryDatabase) {
       return of((V1RepositoryHelper.V1RepositoryDatabase) unmarshal);
     } else {

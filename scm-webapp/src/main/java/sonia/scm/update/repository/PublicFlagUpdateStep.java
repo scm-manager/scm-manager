@@ -14,7 +14,6 @@ import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.version.Version;
 
 import javax.inject.Inject;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import static sonia.scm.version.Version.parse;
@@ -42,9 +41,8 @@ public class PublicFlagUpdateStep implements UpdateStep {
     createNewAnonymousUserIfNotExists();
     deleteOldAnonymousUserIfAvailable();
 
-    JAXBContext jaxbContext = JAXBContext.newInstance(V1RepositoryHelper.V1RepositoryDatabase.class);
     LOG.info("Migrating public flags of repositories as RepositoryRolePermission 'READ' for user '_anonymous'");
-    V1RepositoryHelper.readV1Database(jaxbContext, contextProvider, V1_REPOSITORY_BACKUP_FILENAME).ifPresent(
+    V1RepositoryHelper.readV1Database(contextProvider, V1_REPOSITORY_BACKUP_FILENAME).ifPresent(
       this::addRepositoryReadPermissionForAnonymousUser
     );
   }

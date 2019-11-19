@@ -83,7 +83,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   private String name;
   @XmlElement(name = "permission")
   private Set<RepositoryPermission> permissions = new HashSet<>();
-  @XmlElement(name = "public")
   private String type;
 
 

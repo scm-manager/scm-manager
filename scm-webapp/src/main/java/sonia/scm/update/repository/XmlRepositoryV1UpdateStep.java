@@ -17,7 +17,6 @@ import sonia.scm.update.V1Properties;
 import sonia.scm.version.Version;
 
 import javax.inject.Inject;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -96,8 +95,7 @@ public class XmlRepositoryV1UpdateStep implements CoreUpdateStep {
       LOG.info("no v1 repositories database file found");
       return;
     }
-    JAXBContext jaxbContext = JAXBContext.newInstance(V1RepositoryHelper.V1RepositoryDatabase.class);
-    V1RepositoryHelper.readV1Database(jaxbContext, contextProvider, V1_REPOSITORY_FILENAME).ifPresent(
+    V1RepositoryHelper.readV1Database(contextProvider, V1_REPOSITORY_FILENAME).ifPresent(
       v1Database -> {
         v1Database.repositoryList.repositories.forEach(this::readMigrationEntry);
         v1Database.repositoryList.repositories.forEach(this::update);
@@ -112,8 +110,7 @@ public class XmlRepositoryV1UpdateStep implements CoreUpdateStep {
       return emptyList();
     }
     try {
-      JAXBContext jaxbContext = JAXBContext.newInstance(V1RepositoryHelper.V1RepositoryDatabase.class);
-      return V1RepositoryHelper.readV1Database(jaxbContext, contextProvider, V1_REPOSITORY_FILENAME)
+      return V1RepositoryHelper.readV1Database(contextProvider, V1_REPOSITORY_FILENAME)
         .map(v1Database -> v1Database.repositoryList.repositories.stream())
         .orElse(Stream.empty())
         .filter(v1Repository -> !this.findMigrationStrategy(v1Repository).isPresent())
