@@ -84,7 +84,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   @XmlElement(name = "permission")
   private Set<RepositoryPermission> permissions = new HashSet<>();
   @XmlElement(name = "public")
-  private boolean publicReadable = false;
   private String type;
 
 
@@ -226,15 +225,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   }
 
   /**
-   * Returns true if the {@link Repository} is public readable.
-   *
-   * @return true if the {@link Repository} is public readable
-   */
-  public boolean isPublicReadable() {
-    return publicReadable;
-  }
-
-  /**
    * Returns true if the {@link Repository} is valid.
    * <ul>
    * <li>The namespace is valid</li>
@@ -292,10 +282,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     return this.permissions.remove(permission);
   }
 
-  public void setPublicReadable(boolean publicReadable) {
-    this.publicReadable = publicReadable;
-  }
-
   public void setType(String type) {
     this.type = type;
   }
@@ -332,7 +318,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     repository.setLastModified(lastModified);
     repository.setDescription(description);
     repository.setPermissions(permissions);
-    repository.setPublicReadable(publicReadable);
 
     // do not copy health check results
   }
@@ -360,7 +345,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
       && Objects.equal(name, other.name)
       && Objects.equal(contact, other.contact)
       && Objects.equal(description, other.description)
-      && Objects.equal(publicReadable, other.publicReadable)
       && Objects.equal(permissions, other.permissions)
       && Objects.equal(type, other.type)
       && Objects.equal(creationDate, other.creationDate)
@@ -371,7 +355,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(id, namespace, name, contact, description, publicReadable,
+    return Objects.hashCode(id, namespace, name, contact, description,
       permissions, type, creationDate, lastModified, properties,
       healthCheckFailures);
   }
@@ -384,7 +368,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
       .add("name", name)
       .add("contact", contact)
       .add("description", description)
-      .add("publicReadable", publicReadable)
       .add("permissions", permissions)
       .add("type", type)
       .add("lastModified", lastModified)

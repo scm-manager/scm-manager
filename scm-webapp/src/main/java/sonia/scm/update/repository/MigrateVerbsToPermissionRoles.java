@@ -90,7 +90,6 @@ public class MigrateVerbsToPermissionRoles implements UpdateStep {
     repository.setCreationDate(oldRepository.creationDate);
     repository.setHealthCheckFailures(oldRepository.healthCheckFailures);
     repository.setLastModified(oldRepository.lastModified);
-    repository.setPublicReadable(oldRepository.publicReadable);
     return repository;
   }
 
