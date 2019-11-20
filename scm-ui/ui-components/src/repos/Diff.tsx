@@ -20,7 +20,7 @@ class Diff extends React.Component<Props> {
     return (
       <>
         {diff.length === 0 ? (
-          <Notification type="info">{t("noDiffFound")}</Notification>
+          <Notification type="info">{t("diff.noDiffFound")}</Notification>
         ) : (
           diff.map((file, index) => <DiffFile key={index} file={file} {...fileProps} {...this.props} />)
         )}
@@ -29,4 +29,4 @@ class Diff extends React.Component<Props> {
   }
 }
 
-export default withTranslation("plugins")(Diff);
+export default withTranslation("repos")(Diff);

@@ -182,6 +182,5 @@
     "CustomNamespaceStrategy":  "Personalizar",
     "CurrentYearNamespaceStrategy":  "Año actual",
     "RepositoryTypeNamespaceStrategy": "Tipo de repositorio"
-  },
-  "noDiffFound": "No se encontraron diferencias entre las ramas seleccionadas."
+  }
 }
