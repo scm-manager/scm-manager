@@ -27,13 +27,17 @@ const extractXsrfToken = () => {
 };
 
 const applyFetchOptions: (p: RequestInit) => RequestInit = o => {
-  const headers: { [key: string]: string } = {
-    Cache: "no-cache",
-    // identify the request as ajax request
-    "X-Requested-With": "XMLHttpRequest",
-    // identify the web interface
-    "X-SCM-Client": "WUI"
-  };
+  if (!o.headers) {
+    o.headers = {};
+  }
+
+  // @ts-ignore We are sure that here we only get headers of type Record<string, string>
+  const headers: Record<string, string> = o.headers;
+  headers["Cache"] = "no-cache";
+  // identify the request as ajax request
+  headers["X-Requested-With"] = "XMLHttpRequest";
+  // identify the web interface
+  headers["X-SCM-Client"] = "WUI";
 
   const xsrf = extractXsrfToken();
   if (xsrf) {
@@ -80,23 +84,32 @@ class ApiClient {
     return fetch(createUrl(url), applyFetchOptions({})).then(handleFailure);
   }
 
-  post(url: string, payload?: any, contentType = "application/json") {
-    return this.httpRequestWithJSONBody("POST", url, contentType, payload);
+  post(url: string, payload?: any, contentType = "application/json", additionalHeaders: Record<string, string> = {}) {
+    return this.httpRequestWithJSONBody("POST", url, contentType, additionalHeaders, payload);
   }
 
-  postBinary(url: string, fileAppender: (p: FormData) => void) {
+  postText(url: string, payload: string, additionalHeaders: Record<string, string> = {}) {
+    return this.httpRequestWithTextBody("POST", url, additionalHeaders, payload);
+  }
+
+  putText(url: string, payload: string, additionalHeaders: Record<string, string> = {}) {
+    return this.httpRequestWithTextBody("PUT", url, additionalHeaders, payload);
+  }
+
+  postBinary(url: string, fileAppender: (p: FormData) => void, additionalHeaders: Record<string, string> = {}) {
     const formData = new FormData();
     fileAppender(formData);
 
     const options: RequestInit = {
       method: "POST",
-      body: formData
+      body: formData,
+      headers: additionalHeaders
     };
     return this.httpRequestWithBinaryBody(options, url);
   }
 
-  put(url: string, payload: any, contentType = "application/json") {
-    return this.httpRequestWithJSONBody("PUT", url, contentType, payload);
+  put(url: string, payload: any, contentType = "application/json", additionalHeaders: Record<string, string> = {}) {
+    return this.httpRequestWithJSONBody("PUT", url, contentType, additionalHeaders, payload);
   }
 
   head(url: string) {
@@ -115,9 +128,16 @@ class ApiClient {
     return fetch(createUrl(url), options).then(handleFailure);
   }
 
-  httpRequestWithJSONBody(method: string, url: string, contentType: string, payload?: any): Promise<Response> {
+  httpRequestWithJSONBody(
+    method: string,
+    url: string,
+    contentType: string,
+    additionalHeaders: Record<string, string>,
+    payload?: any
+  ): Promise<Response> {
     const options: RequestInit = {
-      method: method
+      method: method,
+      headers: additionalHeaders
     };
     if (payload) {
       options.body = JSON.stringify(payload);
@@ -125,13 +145,27 @@ class ApiClient {
     return this.httpRequestWithBinaryBody(options, url, contentType);
   }
 
+  httpRequestWithTextBody(
+    method: string,
+    url: string,
+    additionalHeaders: Record<string, string> = {},
+    payload: string
+  ) {
+    const options: RequestInit = {
+      method: method,
+      headers: additionalHeaders
+    };
+    options.body = payload;
+    return this.httpRequestWithBinaryBody(options, url, "text/plain");
+  }
+
   httpRequestWithBinaryBody(options: RequestInit, url: string, contentType?: string) {
     options = applyFetchOptions(options);
     if (contentType) {
       if (!options.headers) {
-        options.headers = new Headers();
+        options.headers = {};
       }
-      // @ts-ignore
+      // @ts-ignore We are sure that here we only get headers of type Record<string, string>
       options.headers["Content-Type"] = contentType;
     }
 
