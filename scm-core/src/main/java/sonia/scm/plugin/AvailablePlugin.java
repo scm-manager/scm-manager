@@ -25,7 +25,7 @@ public class AvailablePlugin implements Plugin {
     return pending;
   }
 
-  public AvailablePlugin install() {
+  AvailablePlugin install() {
     Preconditions.checkState(!pending, "installation is already pending");
     return new AvailablePlugin(pluginDescriptor, true);
   }
