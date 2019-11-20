@@ -145,7 +145,12 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
 
   private Loader loadFromLfsStore(TreeWalk treeWalk, RevWalk revWalk, LfsPointer lfsPointer) throws IOException {
     BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
-    Blob blob = lfsBlobStore.get(lfsPointer.getOid().getName());
+    String oid = lfsPointer.getOid().getName();
+    Blob blob = lfsBlobStore.get(oid);
+    if (blob == null) {
+      logger.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository.getNamespaceAndName());
+      throw notFound(entity("LFS", oid).in(repository));
+    }
     GitUtil.release(revWalk);
     GitUtil.release(treeWalk);
     return new BlobLoader(blob);

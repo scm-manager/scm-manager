@@ -85,7 +85,7 @@ public final class SingleView {
         MustacheTemplateEngine.class);
       bind(TemplateEngineFactory.class);
 
-      serve("/images/*", "/styles/*", "/favicon.ico").with(StaticResourceServlet.class);
+      serve("/images/*", "/assets/*", "/favicon.ico").with(StaticResourceServlet.class);
       serve("/*").with(SingleViewServlet.class);
     }
   }

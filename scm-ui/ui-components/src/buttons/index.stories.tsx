@@ -48,7 +48,6 @@ const buttonStory = (name: string, storyFn: () => ReactElement) => {
     .addDecorator(SpacingDecorator)
     .add("Default", storyFn);
 };
-
 buttonStory("AddButton", () => <AddButton>Add</AddButton>);
 buttonStory("CreateButton", () => <CreateButton>Create</CreateButton>);
 buttonStory("DeleteButton", () => <DeleteButton>Delete</DeleteButton>);
