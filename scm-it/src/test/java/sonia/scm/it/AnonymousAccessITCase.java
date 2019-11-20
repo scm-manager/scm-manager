@@ -53,7 +53,6 @@ class AnonymousAccessITCase {
 
   @Test
   void shouldRejectRepositoryResourceWithoutAuthentication() {
-    setAnonymousAccess(false);
     assertEquals(401, RestAssured.given()
       .when()
       .get(RestUtil.REST_BASE_URL.resolve("repositories/"))

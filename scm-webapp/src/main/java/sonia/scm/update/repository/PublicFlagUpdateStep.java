@@ -38,12 +38,13 @@ public class PublicFlagUpdateStep implements UpdateStep {
 
   @Override
   public void doUpdate() throws JAXBException {
-    createNewAnonymousUserIfNotExists();
-    deleteOldAnonymousUserIfAvailable();
-
     LOG.info("Migrating public flags of repositories as RepositoryRolePermission 'READ' for user '_anonymous'");
     V1RepositoryHelper.readV1Database(contextProvider, V1_REPOSITORY_BACKUP_FILENAME).ifPresent(
-      this::addRepositoryReadPermissionForAnonymousUser
+      v1RepositoryDatabase -> {
+        createNewAnonymousUserIfNotExists();
+        deleteOldAnonymousUserIfAvailable();
+        addRepositoryReadPermissionForAnonymousUser(v1RepositoryDatabase);
+      }
     );
   }
 
