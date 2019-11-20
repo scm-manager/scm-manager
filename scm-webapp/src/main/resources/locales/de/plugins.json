@@ -202,5 +202,6 @@
     "CustomNamespaceStrategy":  "Benutzerdefiniert",
     "CurrentYearNamespaceStrategy":  "Aktuelles Jahr",
     "RepositoryTypeNamespaceStrategy": "Repository Typ"
-  }
+  },
+  "noDiffFound": "Kein Diff zwischen den ausgewählten Branches gefunden."
 }
