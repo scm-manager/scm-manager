@@ -1,6 +1,6 @@
 package sonia.scm.api.v2.resources;
 
-import org.jboss.resteasy.core.Dispatcher;
+import org.jboss.resteasy.spi.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import sonia.scm.api.rest.AlreadyExistsExceptionMapper;
 import sonia.scm.api.rest.AuthorizationExceptionMapper;

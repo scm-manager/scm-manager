@@ -3,7 +3,7 @@ package sonia.scm.api.v2.resources;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.util.Providers;
-import org.jboss.resteasy.core.Dispatcher;
+import org.jboss.resteasy.spi.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;

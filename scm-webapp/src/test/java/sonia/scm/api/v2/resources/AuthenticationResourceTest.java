@@ -2,7 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import org.jboss.resteasy.core.Dispatcher;
+import org.jboss.resteasy.spi.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -125,10 +125,9 @@ public class AuthenticationResourceTest {
     when(accessTokenBuilderFactory.create()).thenReturn(accessTokenBuilder);
 
     HttpServletRequest servletRequest = mock(HttpServletRequest.class);
-    ResteasyProviderFactory.getContextDataMap().put(HttpServletRequest.class, servletRequest);
-
+    dispatcher.getDefaultContextObjects().put(HttpServletRequest.class, servletRequest);
     HttpServletResponse servletResponse = mock(HttpServletResponse.class);
-    ResteasyProviderFactory.getContextDataMap().put(HttpServletResponse.class, servletResponse);
+    dispatcher.getDefaultContextObjects().put(HttpServletResponse.class, servletResponse);
   }
 
   @Test

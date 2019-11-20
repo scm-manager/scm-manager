@@ -72,8 +72,13 @@ public class ResteasyAllInOneServletDispatcher extends HttpServletDispatcher {
 
     // ensure everything gets cleared, to avoid classloader leaks
     ResteasyProviderFactory.clearInstanceIfEqual(ResteasyProviderFactory.getInstance());
-    ResteasyProviderFactory.clearContextData();
     RuntimeDelegate.setInstance(null);
+
+    removeDeploymentFromServletContext();
+  }
+
+  private void removeDeploymentFromServletContext() {
+    getServletContext().removeAttribute(ResteasyDeployment.class.getName());
   }
 
   private ResteasyDeployment getDeploymentFromServletContext() {

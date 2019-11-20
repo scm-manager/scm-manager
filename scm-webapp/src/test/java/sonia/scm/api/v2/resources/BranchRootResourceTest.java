@@ -7,10 +7,9 @@ import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
-import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
+import org.jboss.resteasy.spi.Dispatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +31,7 @@ import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
 
+import javax.ws.rs.core.MediaType;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Date;
@@ -39,13 +39,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
@@ -129,7 +124,8 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertEquals(404, response.getStatus());
-    assertEquals("application/vnd.scmm-error+json;v=2", response.getOutputHeaders().getFirst("Content-Type"));
+    MediaType contentType = (MediaType) response.getOutputHeaders().getFirst("Content-Type");
+    assertEquals("application/vnd.scmm-error+json;v=2", contentType.toString());
   }
 
   @Test
