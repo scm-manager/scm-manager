@@ -27,13 +27,17 @@ const extractXsrfToken = () => {
 };
 
 const applyFetchOptions: (p: RequestInit) => RequestInit = o => {
-  const headers: { [key: string]: string } = {
-    Cache: "no-cache",
-    // identify the request as ajax request
-    "X-Requested-With": "XMLHttpRequest",
-    // identify the web interface
-    "X-SCM-Client": "WUI"
-  };
+  if (!o.headers) {
+    o.headers = {};
+  }
+
+  // @ts-ignore We are sure that here we only get headers of type Record<string, string>
+  const headers: Record<string, string> = o.headers;
+  headers["Cache"] = "no-cache";
+  // identify the request as ajax request
+  headers["X-Requested-With"] = "XMLHttpRequest";
+  // identify the web interface
+  headers["X-SCM-Client"] = "WUI";
 
   const xsrf = extractXsrfToken();
   if (xsrf) {
@@ -159,7 +163,7 @@ class ApiClient {
     options = applyFetchOptions(options);
     if (contentType) {
       if (!options.headers) {
-        options.headers = new Headers();
+        options.headers = {};
       }
       // @ts-ignore We are sure that here we only get headers of type Record<string, string>
       options.headers["Content-Type"] = contentType;
