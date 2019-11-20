@@ -8,9 +8,9 @@ import {
   InputField,
   SubmitButton,
   Textarea,
+  Level,
   Checkbox
 } from "@scm-manager/ui-components";
-
 import * as validator from "./groupValidation";
 
 type Props = WithTranslation & {
@@ -154,7 +154,7 @@ class GroupForm extends React.Component<Props, State> {
           />
           {this.renderExternalField(group)}
           {this.renderMemberfields(group)}
-          <SubmitButton disabled={!this.isValid()} label={t("groupForm.submit")} loading={loading} />
+          <Level right={<SubmitButton disabled={!this.isValid()} label={t("groupForm.submit")} loading={loading} />} />
         </form>
       </>
     );

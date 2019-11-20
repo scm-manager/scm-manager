@@ -2,7 +2,7 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Repository, RepositoryType } from "@scm-manager/ui-types";
-import { Subtitle, InputField, Select, SubmitButton, Textarea } from "@scm-manager/ui-components";
+import { Subtitle, InputField, Select, Textarea, Level, SubmitButton } from "@scm-manager/ui-components";
 import * as validator from "./repositoryValidation";
 
 type Props = WithTranslation & {
@@ -54,7 +54,6 @@ class RepositoryForm extends React.Component<Props, State> {
 
   isFalsy(value) {
     return !value;
-
   }
 
   isValid = () => {
@@ -91,7 +90,7 @@ class RepositoryForm extends React.Component<Props, State> {
     const disabled = !this.isModifiable() && !this.isCreateMode();
 
     const submitButton = disabled ? null : (
-      <SubmitButton disabled={!this.isValid()} loading={loading} label={t("repositoryForm.submit")} />
+      <Level right={<SubmitButton disabled={!this.isValid()} loading={loading} label={t("repositoryForm.submit")} />} />
     );
 
     let subtitle = null;

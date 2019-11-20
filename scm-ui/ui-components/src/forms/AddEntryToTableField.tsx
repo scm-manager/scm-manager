@@ -1,7 +1,7 @@
 import React, { MouseEvent } from "react";
-
-import { AddButton } from "../buttons";
 import InputField from "./InputField";
+import Level from "../layout/Level";
+import { AddButton } from "../buttons";
 
 type Props = {
   addEntry: (p: string) => void;
@@ -48,10 +48,14 @@ class AddEntryToTableField extends React.Component<Props, State> {
           disabled={disabled}
           helpText={helpText}
         />
-        <AddButton
-          label={buttonLabel}
-          action={this.addButtonClicked}
-          disabled={disabled || this.state.entryToAdd === "" || !this.isValid()}
+        <Level
+          right={
+            <AddButton
+              label={buttonLabel}
+              action={this.addButtonClicked}
+              disabled={disabled || this.state.entryToAdd === "" || !this.isValid()}
+            />
+          }
         />
       </>
     );

@@ -4,6 +4,7 @@ import {
   InputField,
   Notification,
   PasswordConfirmation,
+  Level,
   SubmitButton
 } from "@scm-manager/ui-components";
 import { WithTranslation, withTranslation } from "react-i18next";
@@ -124,11 +125,7 @@ class ChangeUserPassword extends React.Component<Props, State> {
           passwordChanged={this.passwordChanged}
           key={this.state.passwordChanged ? "changed" : "unchanged"}
         />
-        <div className="columns">
-          <div className="column">
-            <SubmitButton disabled={!this.isValid()} loading={loading} label={t("password.submit")} />
-          </div>
-        </div>
+        <Level right={<SubmitButton disabled={!this.isValid()} loading={loading} label={t("password.submit")} />} />
       </form>
     );
   }

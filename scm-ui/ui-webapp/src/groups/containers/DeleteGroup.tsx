@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { Group } from "@scm-manager/ui-types";
-import { Subtitle, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { Level, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 import { deleteGroup, getDeleteGroupFailure, isDeleteGroupPending } from "../modules/groups";
 
 type Props = WithTranslation & {
@@ -64,13 +64,9 @@ export class DeleteGroup extends React.Component<Props> {
 
     return (
       <>
-        <Subtitle subtitle={t("deleteGroup.subtitle")} />
+        <hr />
         <ErrorNotification error={error} />
-        <div className="columns">
-          <div className="column">
-            <DeleteButton label={t("deleteGroup.button")} action={action} loading={loading} />
-          </div>
-        </div>
+        <Level right={<DeleteButton label={t("deleteGroup.button")} action={action} loading={loading} />} />
       </>
     );
   }

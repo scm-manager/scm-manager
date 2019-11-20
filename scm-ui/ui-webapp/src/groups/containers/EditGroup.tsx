@@ -61,7 +61,6 @@ class EditGroup extends React.Component<Props> {
           loading={loading}
           loadUserSuggestions={this.loadUserAutocompletion}
         />
-        <hr />
         <DeleteGroup group={group} />
       </div>
     );

@@ -1,7 +1,7 @@
 import React, { MouseEvent } from "react";
-
-import { AutocompleteObject, SelectValue } from "@scm-manager/ui-types";
+import { SelectValue } from "@scm-manager/ui-types";
 import Autocomplete from "../Autocomplete";
+import Level from "../layout/Level";
 import AddButton from "../buttons/AddButton";
 
 type Props = {
@@ -53,8 +53,7 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
           noOptionsMessage={noOptionsMessage}
           creatable={true}
         />
-
-        <AddButton label={buttonLabel} action={this.addButtonClicked} disabled={disabled} />
+        <Level right={<AddButton label={buttonLabel} action={this.addButtonClicked} disabled={disabled} />} />
       </div>
     );
   }
