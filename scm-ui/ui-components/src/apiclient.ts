@@ -84,6 +84,14 @@ class ApiClient {
     return this.httpRequestWithJSONBody("POST", url, contentType, additionalHeaders, payload);
   }
 
+  postText(url: string, payload: string, additionalHeaders = new Headers()) {
+    return this.httpRequestWithTextBody("POST", url, additionalHeaders, payload);
+  }
+
+  putText(url: string, payload: string, additionalHeaders = new Headers()) {
+    return this.httpRequestWithTextBody("PUT", url, additionalHeaders, payload);
+  }
+
   postBinary(url: string, fileAppender: (p: FormData) => void, additionalHeaders = new Headers()) {
     const formData = new FormData();
     fileAppender(formData);
@@ -131,6 +139,15 @@ class ApiClient {
       options.body = JSON.stringify(payload);
     }
     return this.httpRequestWithBinaryBody(options, url, contentType);
+  }
+
+  httpRequestWithTextBody(method: string, url: string, additionalHeaders: Headers, payload: string) {
+    const options: RequestInit = {
+      method: method,
+      headers: additionalHeaders
+    };
+    options.body = payload;
+    return this.httpRequestWithBinaryBody(options, url, "text/plain");
   }
 
   httpRequestWithBinaryBody(options: RequestInit, url: string, contentType?: string) {
