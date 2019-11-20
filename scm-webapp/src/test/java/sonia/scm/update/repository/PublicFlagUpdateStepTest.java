@@ -61,8 +61,8 @@ class PublicFlagUpdateStepTest {
 
   @Test
   void shouldDeleteOldAnonymousUserIfExists() throws JAXBException {
-    when(userDAO.getAll()).thenReturn(Collections.singleton(new User("anonymous")));
     User anonymous = new User("anonymous");
+    when(userDAO.getAll()).thenReturn(Collections.singleton(anonymous));
     doReturn(anonymous).when(userDAO).get("anonymous");
     doReturn(SCMContext.ANONYMOUS).when(userDAO).get(SCMContext.USER_ANONYMOUS);
 
