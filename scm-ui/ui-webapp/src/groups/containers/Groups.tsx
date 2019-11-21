@@ -49,11 +49,20 @@ class Groups extends React.Component<Props> {
   componentDidUpdate = (prevProps: Props) => {
     const { loading, list, page, groupLink, location, fetchGroupsByPage } = this.props;
     if (list && page && !loading) {
-      const statePage: number = list.page + 1;
+      const statePage: number = this.resolveStatePage();
       if (page !== statePage || prevProps.location.search !== location.search) {
         fetchGroupsByPage(groupLink, page, urls.getQueryStringFromLocation(location));
       }
     }
+  };
+
+  resolveStatePage = () => {
+    const { list } = this.props;
+    if (list.page) {
+      return list.page + 1;
+    }
+    // set page to 1 if undefined, because if groups couldn't be fetched it would lead to an fetch-loop otherwise
+    return 1;
   };
 
   render() {
