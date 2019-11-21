@@ -90,7 +90,6 @@ public class MigrateVerbsToPermissionRoles implements UpdateStep {
     repository.setCreationDate(oldRepository.creationDate);
     repository.setHealthCheckFailures(oldRepository.healthCheckFailures);
     repository.setLastModified(oldRepository.lastModified);
-    repository.setPublicReadable(oldRepository.publicReadable);
     return repository;
   }
 
@@ -149,8 +148,6 @@ public class MigrateVerbsToPermissionRoles implements UpdateStep {
     private String name;
     @XmlElement(name = "permission")
     private final Set<RepositoryPermission> permissions = new HashSet<>();
-    @XmlElement(name = "public")
-    private boolean publicReadable = false;
     private boolean archived = false;
     private String type;
   }

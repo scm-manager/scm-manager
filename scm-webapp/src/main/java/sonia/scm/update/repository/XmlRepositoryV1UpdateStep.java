@@ -17,26 +17,18 @@ import sonia.scm.update.V1Properties;
 import sonia.scm.version.Version;
 
 import javax.inject.Inject;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static sonia.scm.update.V1PropertyReader.REPOSITORY_PROPERTY_READER;
+import static sonia.scm.update.repository.V1RepositoryHelper.resolveV1File;
 import static sonia.scm.version.Version.parse;
 
 /**
@@ -58,6 +50,8 @@ import static sonia.scm.version.Version.parse;
  */
 @Extension
 public class XmlRepositoryV1UpdateStep implements CoreUpdateStep {
+
+  private final String V1_REPOSITORY_FILENAME = "repositories" + StoreConstants.FILE_EXTENSION;
 
   private static Logger LOG = LoggerFactory.getLogger(XmlRepositoryV1UpdateStep.class);
 
@@ -97,12 +91,11 @@ public class XmlRepositoryV1UpdateStep implements CoreUpdateStep {
 
   @Override
   public void doUpdate() throws JAXBException {
-    if (!resolveV1File().exists()) {
+    if (!resolveV1File(contextProvider, V1_REPOSITORY_FILENAME).isPresent()) {
       LOG.info("no v1 repositories database file found");
       return;
     }
-    JAXBContext jaxbContext = JAXBContext.newInstance(V1RepositoryDatabase.class);
-    readV1Database(jaxbContext).ifPresent(
+    V1RepositoryHelper.readV1Database(contextProvider, V1_REPOSITORY_FILENAME).ifPresent(
       v1Database -> {
         v1Database.repositoryList.repositories.forEach(this::readMigrationEntry);
         v1Database.repositoryList.repositories.forEach(this::update);
@@ -112,13 +105,12 @@ public class XmlRepositoryV1UpdateStep implements CoreUpdateStep {
   }
 
   public List<V1Repository> getRepositoriesWithoutMigrationStrategies() {
-    if (!resolveV1File().exists()) {
+    if (!resolveV1File(contextProvider, V1_REPOSITORY_FILENAME).isPresent()) {
       LOG.info("no v1 repositories database file found");
       return emptyList();
     }
     try {
-      JAXBContext jaxbContext = JAXBContext.newInstance(XmlRepositoryV1UpdateStep.V1RepositoryDatabase.class);
-      return readV1Database(jaxbContext)
+      return V1RepositoryHelper.readV1Database(contextProvider, V1_REPOSITORY_FILENAME)
         .map(v1Database -> v1Database.repositoryList.repositories.stream())
         .orElse(Stream.empty())
         .filter(v1Repository -> !this.findMigrationStrategy(v1Repository).isPresent())
@@ -196,33 +188,4 @@ public class XmlRepositoryV1UpdateStep implements CoreUpdateStep {
     return new RepositoryPermission(v1Permission.getName(), v1Permission.getType(), v1Permission.isGroupPermission());
   }
 
-  private Optional<V1RepositoryDatabase> readV1Database(JAXBContext jaxbContext) throws JAXBException {
-    Object unmarshal = jaxbContext.createUnmarshaller().unmarshal(resolveV1File());
-    if (unmarshal instanceof V1RepositoryDatabase) {
-      return of((V1RepositoryDatabase) unmarshal);
-    } else {
-      return empty();
-    }
-  }
-
-  private File resolveV1File() {
-    return contextProvider
-      .resolve(
-        Paths.get(StoreConstants.CONFIG_DIRECTORY_NAME).resolve("repositories" + StoreConstants.FILE_EXTENSION)
-      ).toFile();
-  }
-
-  private static class RepositoryList {
-    @XmlElement(name = "repository")
-    private List<V1Repository> repositories;
-  }
-
-  @XmlRootElement(name = "repository-db")
-  @XmlAccessorType(XmlAccessType.FIELD)
-  private static class V1RepositoryDatabase {
-    private long creationTime;
-    private Long lastModified;
-    @XmlElement(name = "repositories")
-    private RepositoryList repositoryList;
-  }
 }
