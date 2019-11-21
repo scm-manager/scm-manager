@@ -7,6 +7,7 @@ import org.jboss.resteasy.plugins.server.servlet.ListenerBootstrap;
 import org.jboss.resteasy.spi.Registry;
 import org.jboss.resteasy.spi.ResteasyDeployment;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
+import org.jboss.resteasy.spi.statistics.StatisticsController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,6 +70,12 @@ public class ResteasyAllInOneServletDispatcher extends HttpServletDispatcher {
 
     super.destroy();
     deployment.stop();
+
+    // clear ResourceLocatorInvoker leaks
+    StatisticsController statisticsController = ResteasyProviderFactory.getInstance().getStatisticsController();
+    if (statisticsController != null) {
+      statisticsController.reset();
+    }
 
     // ensure everything gets cleared, to avoid classloader leaks
     ResteasyProviderFactory.clearInstanceIfEqual(ResteasyProviderFactory.getInstance());
