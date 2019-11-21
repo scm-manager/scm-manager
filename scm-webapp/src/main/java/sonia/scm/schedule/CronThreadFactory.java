@@ -1,5 +1,6 @@
 package sonia.scm.schedule;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.shiro.util.ThreadContext;
 
 import java.util.concurrent.ExecutionException;
@@ -19,7 +20,10 @@ class CronThreadFactory implements ThreadFactory, AutoCloseable {
 
   private static final AtomicLong FACTORY_COUNTER = new AtomicLong();
 
-  private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+  private final ExecutorService executorService = Executors.newSingleThreadExecutor(
+    new ThreadFactoryBuilder().setNameFormat("CronThreadFactory-%d").build()
+  );
+
   private final long factoryId = FACTORY_COUNTER.incrementAndGet();
   private final AtomicLong threadCounter = new AtomicLong();
 
