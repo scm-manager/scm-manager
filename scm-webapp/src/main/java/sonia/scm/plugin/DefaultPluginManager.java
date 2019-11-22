@@ -243,7 +243,13 @@ public class DefaultPluginManager implements PluginManager {
   }
 
   private void restart(String cause) {
-    eventBus.post(new RestartEvent(PluginManager.class, cause));
+    new Thread(() -> {
+      try {
+        Thread.sleep(200);
+      } catch (InterruptedException e) {
+      }
+      eventBus.post(new RestartEvent(PluginManager.class, cause));
+    }).start();
   }
 
   private void cancelPending(List<PendingPluginInstallation> pendingInstallations) {
