@@ -187,7 +187,7 @@ public class DefaultPluginManager implements PluginManager {
 
     if (!pendingInstallations.isEmpty()) {
       if (restartAfterInstallation) {
-        restart("plugin installation");
+        triggerRestart("plugin installation");
       } else {
         pendingInstallQueue.addAll(pendingInstallations);
         updateMayUninstallFlag();
@@ -205,7 +205,7 @@ public class DefaultPluginManager implements PluginManager {
     markForUninstall(installed);
 
     if (restartAfterInstallation) {
-      restart("plugin installation");
+      triggerRestart("plugin installation");
     } else {
       updateMayUninstallFlag();
     }
@@ -238,11 +238,12 @@ public class DefaultPluginManager implements PluginManager {
   public void executePendingAndRestart() {
     PluginPermissions.manage().check();
     if (!pendingInstallQueue.isEmpty() || getInstalled().stream().anyMatch(InstalledPlugin::isMarkedForUninstall)) {
-      restart("execute pending plugin changes");
+      triggerRestart("execute pending plugin changes");
     }
   }
 
-  private void restart(String cause) {
+  @VisibleForTesting
+  void triggerRestart(String cause) {
     new Thread(() -> {
       try {
         Thread.sleep(200);
