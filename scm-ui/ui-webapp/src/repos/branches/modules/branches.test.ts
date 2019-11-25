@@ -482,14 +482,14 @@ describe("branches", () => {
     it("should return error when create branch did fail", () => {
       const state = {
         failure: {
-          [CREATE_BRANCH]: error
+          [CREATE_BRANCH + `/${repository.namespace}/${repository.name}`]: error
         }
       };
-      expect(getCreateBranchFailure(state)).toEqual(error);
+      expect(getCreateBranchFailure(state, repository)).toEqual(error);
     });
 
     it("should return undefined when create branch did not fail", () => {
-      expect(getCreateBranchFailure({})).toBe(undefined);
+      expect(getCreateBranchFailure({}, repository)).toBe(undefined);
     });
   });
 });
