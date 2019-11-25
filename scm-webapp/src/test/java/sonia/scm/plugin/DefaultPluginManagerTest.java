@@ -12,13 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junitpioneer.jupiter.TempDirectory;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
 import sonia.scm.ScmConstraintViolationException;
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.lifecycle.RestartEvent;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -49,9 +46,6 @@ import static sonia.scm.plugin.PluginTestHelper.createInstalled;
 class DefaultPluginManagerTest {
 
   @Mock
-  private ScmEventBus eventBus;
-
-  @Mock
   private PluginLoader loader;
 
   @Mock
@@ -60,11 +54,12 @@ class DefaultPluginManagerTest {
   @Mock
   private PluginInstaller installer;
 
-  @InjectMocks
   private DefaultPluginManager manager;
 
   @Mock
   private Subject subject;
+
+  private boolean restartTriggered = false;
 
   @BeforeEach
   void mockInstaller() {
@@ -72,6 +67,16 @@ class DefaultPluginManagerTest {
       AvailablePlugin plugin = ic.getArgument(0);
       return new PendingPluginInstallation(plugin.install(), null);
     });
+  }
+
+  @BeforeEach
+  void createPluginManagerToTestWithCapturedRestart() {
+    manager = new DefaultPluginManager(null, loader, center, installer) { // event bus is only used in restart and this is replaced here
+      @Override
+      void triggerRestart(String cause) {
+        restartTriggered = true;
+      }
+    };
   }
 
   @Nested
@@ -180,7 +185,7 @@ class DefaultPluginManagerTest {
       manager.install("scm-git-plugin", false);
 
       verify(installer).install(git);
-      verify(eventBus, never()).post(any());
+      assertThat(restartTriggered).isFalse();
     }
 
     @Test
@@ -258,7 +263,7 @@ class DefaultPluginManagerTest {
       manager.install("scm-git-plugin", true);
 
       verify(installer).install(git);
-      verify(eventBus).post(any(RestartEvent.class));
+      assertThat(restartTriggered).isTrue();
     }
 
     @Test
@@ -267,7 +272,7 @@ class DefaultPluginManagerTest {
       when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(gitInstalled));
 
       manager.install("scm-git-plugin", true);
-      verify(eventBus, never()).post(any());
+      assertThat(restartTriggered).isFalse();
     }
 
     @Test
@@ -289,14 +294,14 @@ class DefaultPluginManagerTest {
       manager.install("scm-review-plugin", false);
       manager.executePendingAndRestart();
 
-      verify(eventBus).post(any(RestartEvent.class));
+      assertThat(restartTriggered).isTrue();
     }
 
     @Test
     void shouldNotSendRestartEventWithoutPendingPlugins() {
       manager.executePendingAndRestart();
 
-      verify(eventBus, never()).post(any());
+      assertThat(restartTriggered).isFalse();
     }
 
     @Test
@@ -447,7 +452,7 @@ class DefaultPluginManagerTest {
 
       manager.executePendingAndRestart();
 
-      verify(eventBus).post(any(RestartEvent.class));
+      assertThat(restartTriggered).isTrue();
     }
 
     @Test
