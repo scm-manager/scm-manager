@@ -3,7 +3,6 @@ package sonia.scm.api.v2.resources;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.inject.util.Providers;
-import org.jboss.resteasy.spi.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -16,10 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.PageResult;
-import sonia.scm.api.rest.JSONContextResolver;
-import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleManager;
+import sonia.scm.web.ScmTestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +34,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 @SubjectAware(
   username = "trillian",
@@ -66,7 +63,7 @@ public class RepositoryRoleRootResourceTest {
 
   private RepositoryRoleCollectionToDtoMapper collectionToDtoMapper;
 
-  private Dispatcher dispatcher;
+  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
 
   @Captor
   private ArgumentCaptor<RepositoryRole> modifyCaptor;
@@ -87,8 +84,7 @@ public class RepositoryRoleRootResourceTest {
     when(repositoryRoleManager.create(createCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
     doNothing().when(repositoryRoleManager).delete(deleteCaptor.capture());
 
-    dispatcher = createDispatcher(rootResource);
-    dispatcher.getProviderFactory().registerProviderInstance(new JSONContextResolver(new ObjectMapperProvider().get()));
+    dispatcher.addSingletonResource(rootResource);
 
     when(repositoryRoleManager.get(CUSTOM_ROLE)).thenReturn(CUSTOM_REPOSITORY_ROLE);
     when(repositoryRoleManager.get(SYSTEM_ROLE)).thenReturn(SYSTEM_REPOSITORY_ROLE);

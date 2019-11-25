@@ -7,7 +7,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
-import org.jboss.resteasy.spi.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -21,6 +20,7 @@ import sonia.scm.group.GroupCollector;
 import sonia.scm.user.InvalidPasswordException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
+import sonia.scm.web.ScmTestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +37,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 @SubjectAware(
   username = "trillian",
@@ -49,9 +48,10 @@ public class MeResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private Dispatcher dispatcher;
+  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
 
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
+
   @Mock
   private ScmPathInfo uriInfo;
   @Mock
@@ -85,7 +85,7 @@ public class MeResourceTest {
     MeResource meResource = new MeResource(meDtoFactory, userManager, passwordService);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/"));
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
-    dispatcher = createDispatcher(meResource);
+    dispatcher.addSingletonResource(meResource);
   }
 
   @Test

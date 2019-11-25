@@ -1,7 +1,6 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.util.Providers;
-import org.jboss.resteasy.spi.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -18,6 +17,7 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.api.BrowseCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.web.ScmTestDispatcher;
 
 import java.io.IOException;
 import java.net.URI;
@@ -25,13 +25,12 @@ import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class SourceRootResourceTest extends RepositoryTestBase {
 
-  private Dispatcher dispatcher;
+  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
@@ -58,7 +57,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
 
     SourceRootResource sourceRootResource = new SourceRootResource(serviceFactory, browserResultToFileObjectDtoMapper);
     super.sourceRootResource = Providers.of(sourceRootResource);
-    dispatcher = createDispatcher(getRepositoryRootResource());
+    dispatcher.addSingletonResource(getRepositoryRootResource());
   }
 
   @Test

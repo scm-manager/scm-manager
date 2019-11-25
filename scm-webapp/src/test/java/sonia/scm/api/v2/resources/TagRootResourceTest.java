@@ -7,7 +7,6 @@ import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
-import org.jboss.resteasy.spi.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.After;
@@ -17,8 +16,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.api.rest.AuthorizationExceptionMapper;
-import sonia.scm.api.v2.NotFoundExceptionMapper;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.Tag;
@@ -26,6 +23,7 @@ import sonia.scm.repository.Tags;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.TagsCommandBuilder;
+import sonia.scm.web.ScmTestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import java.net.URI;
@@ -36,7 +34,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 @Slf4j
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -44,7 +41,8 @@ public class TagRootResourceTest extends RepositoryTestBase {
 
   public static final String TAG_PATH = "space/repo/tags/";
   public static final String TAG_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + TAG_PATH;
-  private Dispatcher dispatcher ;
+
+  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -74,12 +72,10 @@ public class TagRootResourceTest extends RepositoryTestBase {
     tagCollectionToDtoMapper = new TagCollectionToDtoMapper(resourceLinks, tagToTagDtoMapper);
     tagRootResource = new TagRootResource(serviceFactory, tagCollectionToDtoMapper, tagToTagDtoMapper);
     super.tagRootResource = Providers.of(tagRootResource);
-    dispatcher = createDispatcher(getRepositoryRootResource());
+    dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
     when(repositoryService.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
-    dispatcher.getProviderFactory().registerProvider(NotFoundExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
     when(repositoryService.getTagsCommand()).thenReturn(tagsCommandBuilder);
     subjectThreadState.bind();
     ThreadContext.bind(subject);

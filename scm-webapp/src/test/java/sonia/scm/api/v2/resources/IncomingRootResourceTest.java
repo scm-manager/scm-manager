@@ -8,7 +8,6 @@ import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
-import org.jboss.resteasy.spi.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.After;
@@ -28,8 +27,11 @@ import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.util.CRLFInjectionException;
+import sonia.scm.web.ScmTestDispatcher;
 import sonia.scm.web.VndMediaType;
 
+import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
@@ -53,7 +55,7 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
   public static final String INCOMING_CHANGESETS_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + INCOMING_PATH;
   public static final String INCOMING_DIFF_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + INCOMING_PATH;
 
-  private Dispatcher dispatcher;
+  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -88,13 +90,13 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
     incomingChangesetCollectionToDtoMapper = new IncomingChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     incomingRootResource = new IncomingRootResource(serviceFactory, incomingChangesetCollectionToDtoMapper);
     super.incomingRootResource = Providers.of(incomingRootResource);
-    dispatcher = DispatcherMock.createDispatcher(getRepositoryRootResource());
+    dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
     when(repositoryService.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
     when(repositoryService.getLogCommand()).thenReturn(logCommandBuilder);
     when(repositoryService.getDiffCommand()).thenReturn(diffCommandBuilder);
-    dispatcher.getProviderFactory().registerProvider(CRLFInjectionExceptionMapper.class);
+    dispatcher.registerException(CRLFInjectionException.class, Response.Status.BAD_REQUEST);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
     when(subject.isPermitted(any(String.class))).thenReturn(true);

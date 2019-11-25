@@ -4,7 +4,6 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
 import com.google.inject.util.Providers;
-import org.jboss.resteasy.spi.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -15,12 +14,11 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
-import sonia.scm.api.rest.JSONContextResolver;
-import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
+import sonia.scm.web.ScmTestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +41,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 @SubjectAware(
   username = "trillian",
@@ -55,7 +52,7 @@ public class GroupRootResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private Dispatcher dispatcher;
+  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
 
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
 
@@ -91,8 +88,7 @@ public class GroupRootResourceTest {
     GroupResource groupResource = new GroupResource(groupManager, groupToDtoMapper, dtoToGroupMapper, groupPermissionResource);
     GroupRootResource groupRootResource = new GroupRootResource(Providers.of(groupCollectionResource), Providers.of(groupResource));
 
-    dispatcher = createDispatcher(groupRootResource);
-    dispatcher.getProviderFactory().registerProviderInstance(new JSONContextResolver(new ObjectMapperProvider().get()));
+    dispatcher.addSingletonResource(groupRootResource);
   }
 
   @Test

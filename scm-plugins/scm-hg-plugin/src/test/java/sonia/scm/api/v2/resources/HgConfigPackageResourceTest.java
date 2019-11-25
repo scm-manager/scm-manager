@@ -5,14 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import org.jboss.resteasy.spi.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
@@ -23,6 +20,7 @@ import sonia.scm.installer.HgPackageReader;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.web.ScmTestDispatcher;
 
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletResponse;
@@ -49,10 +47,7 @@ public class HgConfigPackageResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
-
-  private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
 
   private final URI baseUri = java.net.URI.create("/");
 
@@ -113,9 +108,10 @@ public class HgConfigPackageResourceTest {
   @Test
   @SubjectAware(username = "writeOnly")
   public void shouldNotGetPackagesWhenNotAuthorized() throws Exception {
-    thrown.expectMessage("Subject does not have permission [configuration:read:hg]");
+    MockHttpResponse response = get();
 
-    get();
+    assertEquals("Subject does not have permission [configuration:read:hg]", response.getContentAsString());
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
   }
 
   @Test
@@ -158,9 +154,10 @@ public class HgConfigPackageResourceTest {
   @Test
   @SubjectAware(username = "readOnly")
   public void shouldNotInstallPackageWhenNotAuthorized() throws Exception {
-    thrown.expectMessage("Subject does not have permission [configuration:write:hg]");
+    MockHttpResponse response = put("don-t-care");
 
-    put("don-t-care");
+    assertEquals("Subject does not have permission [configuration:write:hg]", response.getContentAsString());
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
   }
 
   private List<HgPackage> createPackages() {
@@ -191,7 +188,7 @@ public class HgConfigPackageResourceTest {
       new HgConfigPackageResource(hgPackageReader, advancedHttpClient, repositoryHandler, mapper);
 
     when(hgConfigPackageResourceProvider.get()).thenReturn(hgConfigPackageResource);
-    dispatcher.getRegistry().addSingletonResource(
+    dispatcher.addSingletonResource(
       new HgConfigResource(null, null, null,
                            hgConfigPackageResourceProvider, null, null));
   }

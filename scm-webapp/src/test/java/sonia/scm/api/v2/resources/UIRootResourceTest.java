@@ -3,8 +3,6 @@ package sonia.scm.api.v2.resources;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.util.Providers;
-import org.jboss.resteasy.spi.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -12,7 +10,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.plugin.*;
+import sonia.scm.plugin.InstalledPlugin;
+import sonia.scm.plugin.InstalledPluginDescriptor;
+import sonia.scm.plugin.PluginInformation;
+import sonia.scm.plugin.PluginLoader;
+import sonia.scm.plugin.PluginResources;
+import sonia.scm.web.ScmTestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,14 +27,17 @@ import java.util.HashSet;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class UIRootResourceTest {
 
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
 
   @Mock
   private PluginLoader pluginLoader;
@@ -50,7 +56,7 @@ public class UIRootResourceTest {
     UIPluginResource pluginResource = new UIPluginResource(pluginLoader, collectionMapper, mapper);
     UIRootResource rootResource = new UIRootResource(Providers.of(pluginResource));
 
-    dispatcher.getRegistry().addSingletonResource(rootResource);
+    dispatcher.addSingletonResource(rootResource);
   }
 
   @Test
