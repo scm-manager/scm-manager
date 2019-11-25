@@ -59,7 +59,7 @@ public final class SCMContext
    */
   public static final User ANONYMOUS = new User(USER_ANONYMOUS,
                                          "SCM Anonymous",
-                                         "scm-anonymous@scm-manager.com");
+                                         "scm-anonymous@scm-manager.org");
 
   /** Singleton instance of {@link SCMContextProvider} */
   private static volatile SCMContextProvider provider;

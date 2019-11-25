@@ -184,7 +184,8 @@
       "copy": "copied"
     },
     "sideBySide": "side-by-side",
-    "combined": "combined"
+    "combined": "combined",
+    "noDiffFound": "No Diff between the selected branches found."
   },
   "fileUpload": {
     "clickHere": "Click here to select your file",

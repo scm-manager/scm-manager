@@ -16,7 +16,7 @@ public class GitDiffCommand_DequoteOutputStreamTest {
       "--- /dev/null\n" +
       "+++ \"b/\\303\\272\\303\\274\\303\\276\\303\\253\\303\\251\\303\\245\\303\\253\\303\\245\\303\\251 \\303\\245g\\303\\260f\\303\\237\"\n" +
       "@@ -0,0 +1 @@\n" +
-      "+rthms";
+      "+String s = \"quotes shall be kept\";";
 
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     GitDiffCommand.DequoteOutputStream stream = new GitDiffCommand.DequoteOutputStream(buffer);
@@ -30,6 +30,6 @@ public class GitDiffCommand_DequoteOutputStreamTest {
       "--- /dev/null\n" +
       "+++ b/úüþëéåëåé ågðfß\n" +
       "@@ -0,0 +1 @@\n" +
-      "+rthms");
+      "+String s = \"quotes shall be kept\";");
   }
 }

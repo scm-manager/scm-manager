@@ -1,6 +1,7 @@
 import React from "react";
 import { SelectValue, AutocompleteObject } from "@scm-manager/ui-types";
 import Autocomplete from "./Autocomplete";
+import { apiClient } from "./apiclient";
 
 export type AutocompleteProps = {
   autocompleteLink?: string;
@@ -19,7 +20,8 @@ export default class UserGroupAutocomplete extends React.Component<Props> {
   loadSuggestions = (inputValue: string): Promise<SelectValue[]> => {
     const url = this.props.autocompleteLink;
     const link = url + "?q=";
-    return fetch(link + inputValue)
+    return apiClient
+      .get(link + inputValue)
       .then(response => response.json())
       .then((json: AutocompleteObject[]) => {
         return json.map(element => {

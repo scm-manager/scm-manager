@@ -110,6 +110,7 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
           return;
         }
         numberOfPotentialBeginning = -1;
+        inPotentialQuotedLine = false;
       }
 
       if (inPotentialQuotedLine && i == '"') {

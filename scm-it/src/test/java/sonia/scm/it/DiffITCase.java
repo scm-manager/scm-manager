@@ -1,6 +1,7 @@
 package sonia.scm.it;
 
 import org.apache.http.HttpStatus;
+import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static sonia.scm.it.utils.RestUtil.ADMIN_PASSWORD;
 import static sonia.scm.it.utils.RestUtil.ADMIN_USERNAME;
 
@@ -94,8 +96,7 @@ public class DiffITCase {
     String gitDiff = getDiff(RepositoryUtil.createAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, "a.txt", "content of a"), gitRepositoryResponse);
 
     String expected = getGitDiffWithoutIndexLine(gitDiff);
-    assertThat(svnDiff)
-      .isEqualTo(expected);
+    assertDiffsAreEqual(svnDiff, expected);
   }
 
   @Test
@@ -107,8 +108,7 @@ public class DiffITCase {
     String gitDiff = getDiff(RepositoryUtil.removeAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, "a.txt"), gitRepositoryResponse);
 
     String expected = getGitDiffWithoutIndexLine(gitDiff);
-    assertThat(svnDiff)
-      .isEqualTo(expected);
+    assertDiffsAreEqual(svnDiff, expected);
   }
 
   @Test
@@ -120,8 +120,7 @@ public class DiffITCase {
     String gitDiff = getDiff(RepositoryUtil.updateAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, "a.txt", "the updated content of a"), gitRepositoryResponse);
 
     String expected = getGitDiffWithoutIndexLine(gitDiff);
-    assertThat(svnDiff)
-      .isEqualTo(expected);
+    assertDiffsAreEqual(svnDiff, expected);
   }
 
   @Test
@@ -161,21 +160,17 @@ public class DiffITCase {
     String fileContent = getFileContent("/diff/largefile/original/SvnDiffGenerator_forTest");
     String svnDiff = getDiff(RepositoryUtil.updateAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, fileName, fileContent), svnRepositoryResponse);
     String gitDiff = getDiff(RepositoryUtil.updateAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, fileName, fileContent), gitRepositoryResponse);
-    assertThat(svnDiff)
-      .isEqualTo(getGitDiffWithoutIndexLine(gitDiff));
+    assertDiffsAreEqual(svnDiff, getGitDiffWithoutIndexLine(gitDiff));
 
     fileContent = getFileContent("/diff/largefile/modified/v1/SvnDiffGenerator_forTest");
     svnDiff = getDiff(RepositoryUtil.updateAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, fileName, fileContent), svnRepositoryResponse);
     gitDiff = getDiff(RepositoryUtil.updateAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, fileName, fileContent), gitRepositoryResponse);
-    assertThat(svnDiff)
-      .isEqualTo(getGitDiffWithoutIndexLine(gitDiff));
+    assertDiffsAreEqual(svnDiff, getGitDiffWithoutIndexLine(gitDiff));
 
     fileContent = getFileContent("/diff/largefile/modified/v2/SvnDiffGenerator_forTest");
     svnDiff = getDiff(RepositoryUtil.updateAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, fileName, fileContent), svnRepositoryResponse);
     gitDiff = getDiff(RepositoryUtil.updateAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, fileName, fileContent), gitRepositoryResponse);
-    assertThat(svnDiff)
-      .isEqualTo(getGitDiffWithoutIndexLine(gitDiff));
-
+    assertDiffsAreEqual(svnDiff, getGitDiffWithoutIndexLine(gitDiff));
   }
 
   /**
@@ -196,8 +191,7 @@ public class DiffITCase {
     Changeset commit1 = RepositoryUtil.addFileAndCommit(gitRepositoryClient, fileName, ADMIN_USERNAME, "");
     String svnDiff = getDiff(commit, svnRepositoryResponse);
     String gitDiff = getDiff(commit1, gitRepositoryResponse);
-    assertThat(svnDiff)
-      .isEqualTo(getGitDiffWithoutIndexLine(gitDiff));
+    assertDiffsAreEqual(svnDiff, getGitDiffWithoutIndexLine(gitDiff));
 
   }
 
@@ -218,8 +212,7 @@ public class DiffITCase {
     String gitDiff = getDiff(RepositoryUtil.addFileAndCommit(gitRepositoryClient, newFileName, ADMIN_USERNAME, "renamed file"), gitRepositoryResponse);
 
     String expected = getGitDiffWithoutIndexLine(gitDiff);
-    assertThat(svnDiff)
-      .isEqualTo(expected);
+    assertDiffsAreEqual(svnDiff, expected);
   }
 
   public String getFileContent(String name) throws URISyntaxException, IOException {
@@ -240,6 +233,12 @@ public class DiffITCase {
    */
   private String getGitDiffWithoutIndexLine(String gitDiff) {
     return gitDiff.replaceAll(".*(index.*\n)", "");
+  }
+
+  private void assertDiffsAreEqual(String svnDiff, String gitDiff) {
+    assertThat(svnDiff)
+      .as("diffs are different\n\nsvn:\n==================================================\n\n%s\n\ngit:\n==================================================\n\n%s)", svnDiff, gitDiff)
+      .isEqualTo(gitDiff);
   }
 
   private String getDiff(Changeset svnChangeset, ScmRequests.RepositoryResponse<ScmRequests.IndexResponse> svnRepositoryResponse) {
