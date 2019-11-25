@@ -186,8 +186,8 @@ export function isCreateBranchPending(state: object, repository: Repository) {
   return isPending(state, CREATE_BRANCH, createKey(repository));
 }
 
-export function getCreateBranchFailure(state: object) {
-  return getFailure(state, CREATE_BRANCH);
+export function getCreateBranchFailure(state: object, repository: Repository) {
+  return getFailure(state, CREATE_BRANCH, createKey(repository));
 }
 
 export function createBranchPending(repository: Repository): Action {

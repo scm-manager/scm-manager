@@ -114,7 +114,7 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = (state, ownProps) => {
   const { repository } = ownProps;
   const loading = isFetchBranchesPending(state, repository) || isCreateBranchPending(state, repository);
-  const error = getFetchBranchesFailure(state, repository) || getCreateBranchFailure(state);
+  const error = getFetchBranchesFailure(state, repository) || getCreateBranchFailure(state, repository);
   const branches = getBranches(state, repository);
   const createBranchesLink = getBranchCreateLink(state, repository);
   return {
