@@ -809,6 +809,12 @@ form .field:not(.is-grouped) {
   }
 }
 
+// radio
+//overwrite bulma's default margin
+.radio + .radio {
+  margin-left: 0;
+}
+
 // cursor
 .has-cursor-pointer {
   cursor: pointer;
