@@ -1,7 +1,8 @@
 import React, { MouseEvent } from "react";
-import InputField from "./InputField";
+import styled from "styled-components";
 import Level from "../layout/Level";
-import { AddButton } from "../buttons";
+import InputField from "./InputField";
+import AddButton from "../buttons/AddButton";
 
 type Props = {
   addEntry: (p: string) => void;
@@ -16,6 +17,22 @@ type Props = {
 type State = {
   entryToAdd: string;
 };
+
+const StyledLevel = styled(Level)`
+  align-items: stretch;
+  margin-bottom: 1rem !important; // same margin as field
+`;
+
+const StyledInputField = styled(InputField)`
+  width: 100%;
+  margin-right: 1.5rem;
+`;
+
+const StyledField = styled.div.attrs(props => ({
+  className: "field"
+}))`
+  align-self: flex-end;
+`;
 
 class AddEntryToTableField extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -37,27 +54,29 @@ class AddEntryToTableField extends React.Component<Props, State> {
   render() {
     const { disabled, buttonLabel, fieldLabel, errorMessage, helpText } = this.props;
     return (
-      <>
-        <InputField
-          label={fieldLabel}
-          errorMessage={errorMessage}
-          onChange={this.handleAddEntryChange}
-          validationError={!this.isValid()}
-          value={this.state.entryToAdd}
-          onReturnPressed={this.appendEntry}
-          disabled={disabled}
-          helpText={helpText}
-        />
-        <Level
-          right={
+      <StyledLevel
+        children={
+          <StyledInputField
+            label={fieldLabel}
+            errorMessage={errorMessage}
+            onChange={this.handleAddEntryChange}
+            validationError={!this.isValid()}
+            value={this.state.entryToAdd}
+            onReturnPressed={this.appendEntry}
+            disabled={disabled}
+            helpText={helpText}
+          />
+        }
+        right={
+          <StyledField>
             <AddButton
               label={buttonLabel}
               action={this.addButtonClicked}
               disabled={disabled || this.state.entryToAdd === "" || !this.isValid()}
             />
-          }
-        />
-      </>
+          </StyledField>
+        }
+      />
     );
   }
 

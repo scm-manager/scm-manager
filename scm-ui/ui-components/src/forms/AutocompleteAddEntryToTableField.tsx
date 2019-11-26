@@ -1,7 +1,8 @@
 import React, { MouseEvent } from "react";
+import styled from "styled-components";
 import { SelectValue } from "@scm-manager/ui-types";
-import Autocomplete from "../Autocomplete";
 import Level from "../layout/Level";
+import Autocomplete from "../Autocomplete";
 import AddButton from "../buttons/AddButton";
 
 type Props = {
@@ -19,6 +20,11 @@ type Props = {
 type State = {
   selectedValue?: SelectValue;
 };
+
+const StyledAutocomplete = styled(Autocomplete)`
+  width: 100%;
+  margin-right: 1.5rem;
+`;
 
 class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -41,20 +47,26 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
 
     const { selectedValue } = this.state;
     return (
-      <div className="field">
-        <Autocomplete
-          label={fieldLabel}
-          loadSuggestions={loadSuggestions}
-          valueSelected={this.handleAddEntryChange}
-          helpText={helpText}
-          value={selectedValue}
-          placeholder={placeholder}
-          loadingMessage={loadingMessage}
-          noOptionsMessage={noOptionsMessage}
-          creatable={true}
-        />
-        <Level right={<AddButton label={buttonLabel} action={this.addButtonClicked} disabled={disabled} />} />
-      </div>
+      <Level
+        children={
+          <StyledAutocomplete
+            label={fieldLabel}
+            loadSuggestions={loadSuggestions}
+            valueSelected={this.handleAddEntryChange}
+            helpText={helpText}
+            value={selectedValue}
+            placeholder={placeholder}
+            loadingMessage={loadingMessage}
+            noOptionsMessage={noOptionsMessage}
+            creatable={true}
+          />
+        }
+        right={
+          <div className="field">
+            <AddButton label={buttonLabel} action={this.addButtonClicked} disabled={disabled} />
+          </div>
+        }
+      />
     );
   }
 
