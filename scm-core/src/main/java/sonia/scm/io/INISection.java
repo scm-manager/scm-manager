@@ -55,7 +55,7 @@ public class INISection
   public INISection(String name)
   {
     this.name = name;
-    this.parameters = new LinkedHashMap<String, String>();
+    this.parameters = new LinkedHashMap<>();
   }
 
   /**

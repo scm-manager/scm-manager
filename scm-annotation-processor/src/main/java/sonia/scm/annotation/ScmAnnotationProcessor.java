@@ -102,7 +102,6 @@ import javax.xml.transform.stream.StreamResult;
 import static javax.lang.model.util.ElementFilter.methodsIn;
 
 /**
- *
  * @author Sebastian Sdorra
  */
 @SupportedAnnotationTypes("*")
@@ -376,11 +375,14 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
         }
 
         // add default values
-        for (ExecutableElement meth : methodsIn(am.getAnnotationType().asElement().getEnclosedElements())) {
+        for (ExecutableElement meth : methodsIn(annotationMirror.getAnnotationType().asElement().getEnclosedElements())) {
           String attribute = meth.getSimpleName().toString();
           AnnotationValue defaultValue = meth.getDefaultValue();
           if (defaultValue != null && !attributes.containsKey(attribute)) {
-            attributes.put(attribute, getValue(defaultValue));
+            String value = getValue(defaultValue);
+            if (value != null && !value.isEmpty()) {
+              attributes.put(attribute, value);
+            }
           }
         }
       }

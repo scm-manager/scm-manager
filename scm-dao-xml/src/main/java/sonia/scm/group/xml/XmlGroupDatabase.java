@@ -199,7 +199,7 @@ public class XmlGroupDatabase implements XmlDatabase<Group>
   /** Field description */
   @XmlJavaTypeAdapter(XmlGroupMapAdapter.class)
   @XmlElement(name = "groups")
-  private Map<String, Group> groupMap = new LinkedHashMap<String, Group>();
+  private Map<String, Group> groupMap = new LinkedHashMap<>();
 
   /** Field description */
   private Long lastModified;

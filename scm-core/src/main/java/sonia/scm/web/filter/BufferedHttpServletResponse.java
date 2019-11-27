@@ -470,13 +470,13 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
   private ByteArrayPrintWriter pw = null;
 
   /** Field description */
-  private Set<Cookie> cookies = new HashSet<Cookie>();
+  private Set<Cookie> cookies = new HashSet<>();
 
   /** Field description */
   private int statusCode = HttpServletResponse.SC_OK;
 
   /** Field description */
-  private Map<String, String> headers = new LinkedHashMap<String, String>();
+  private Map<String, String> headers = new LinkedHashMap<>();
 
   /** Field description */
   private String statusMessage;

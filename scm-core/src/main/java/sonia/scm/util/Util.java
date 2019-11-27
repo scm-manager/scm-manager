@@ -38,23 +38,12 @@ package sonia.scm.util;
 import com.google.common.base.Strings;
 import com.google.common.collect.Multimap;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.math.BigInteger;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -273,12 +262,12 @@ public final class Util
     Comparator<T> comparator, CollectionAppender<T> appender, int start,
     int limit)
   {
-    List<T> result = new ArrayList<T>();
-    List<T> valueList = new ArrayList<T>(values);
+    List<T> result = new ArrayList<>();
+    List<T> valueList = new ArrayList<>(values);
 
     if (comparator != null)
     {
-      Collections.sort(valueList, comparator);
+      valueList.sort(comparator);
     }
 
     int length = valueList.size();
@@ -506,12 +495,10 @@ public final class Util
   {
     StringBuilder buffer = new StringBuilder();
 
-    for (int i = 0; i < byteValue.length; i++)
-    {
-      int x = byteValue[i] & 0xff;
+    for (final byte aByteValue : byteValue) {
+      int x = aByteValue & 0xff;
 
-      if (x < 16)
-      {
+      if (x < 16) {
         buffer.append('0');
       }
 

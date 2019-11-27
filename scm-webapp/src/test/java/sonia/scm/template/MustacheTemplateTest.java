@@ -89,15 +89,8 @@ public class MustacheTemplateTest extends TemplateTestBase
   @Override
   protected void prepareEnv(Map<String, Object> env)
   {
-    env.put("test", new Function<String, String>()
-    {
-
-      @Override
-      public String apply(String input)
-      {
-        throw new UnsupportedOperationException("Not supported yet.");
-      }
-
+    env.put("test", (Function<String, String>) input -> {
+      throw new UnsupportedOperationException("Not supported yet.");
     });
   }
 

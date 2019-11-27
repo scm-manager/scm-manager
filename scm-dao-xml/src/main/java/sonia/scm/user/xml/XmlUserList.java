@@ -72,7 +72,7 @@ public class XmlUserList implements Iterable<User>
    */
   public XmlUserList(Map<String, User> userMap)
   {
-    this.users = new LinkedList<User>(userMap.values());
+    this.users = new LinkedList<>(userMap.values());
   }
 
   //~--- methods --------------------------------------------------------------
