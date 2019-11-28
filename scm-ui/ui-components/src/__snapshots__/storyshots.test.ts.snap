@@ -336,7 +336,7 @@ exports[`Storyshots DateFromNow Default 1`] = `
 
 exports[`Storyshots Forms|Checkbox Default 1`] = `
 <div
-  className="sc-gipzik xsalO"
+  className="sc-hzDkRC itNtPz"
 >
   <div
     className="field"
@@ -381,7 +381,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
 
 exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 <div
-  className="sc-gipzik xsalO"
+  className="sc-hzDkRC itNtPz"
 >
   <div
     className="field"
@@ -409,7 +409,7 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 
 exports[`Storyshots Forms|Radio Default 1`] = `
 <div
-  className="sc-csuQGl fFFkRK"
+  className="sc-jhAzac edPAWD"
 >
   <label
     className="radio"
@@ -438,7 +438,7 @@ exports[`Storyshots Forms|Radio Default 1`] = `
 
 exports[`Storyshots Forms|Radio Disabled 1`] = `
 <div
-  className="sc-csuQGl fFFkRK"
+  className="sc-jhAzac edPAWD"
 >
   <label
     className="radio"
