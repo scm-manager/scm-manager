@@ -113,7 +113,6 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
     Repository repository = new Repository();
 
     repository.setName(repositoryName);
-    repository.setPublicReadable(false);
     repository.setType(getTypeName());
 
     return repository;

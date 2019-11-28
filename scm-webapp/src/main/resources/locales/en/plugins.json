@@ -198,9 +198,9 @@
     }
   },
   "namespaceStrategies": {
-    "UsernameNamespaceStrategy":  "Username",
-    "CustomNamespaceStrategy":  "Custom",
-    "CurrentYearNamespaceStrategy":  "Current year",
+    "UsernameNamespaceStrategy": "Username",
+    "CustomNamespaceStrategy": "Custom",
+    "CurrentYearNamespaceStrategy": "Current year",
     "RepositoryTypeNamespaceStrategy": "Repository type"
   }
 }

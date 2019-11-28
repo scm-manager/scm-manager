@@ -94,7 +94,6 @@ public class RepositorySimplePermissionITCase
 
     repository.setName("test-repo");
     repository.setType("git");
-//    repository.setPublicReadable(false);
 
     ScmClient client = createAdminClient();
 

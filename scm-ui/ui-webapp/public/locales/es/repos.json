@@ -183,7 +183,8 @@
       "copy": "copiado"
     },
     "sideBySide": "dos columnas",
-    "combined": "combinado"
+    "combined": "combinado",
+    "noDiffFound": "No se encontraron diferencias entre las ramas seleccionadas."
   },
   "fileUpload": {
     "clickHere": "Haga click aquí para seleccionar su fichero",

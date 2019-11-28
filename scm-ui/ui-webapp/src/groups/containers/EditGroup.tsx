@@ -8,6 +8,7 @@ import { Group } from "@scm-manager/ui-types";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import { getUserAutoCompleteLink } from "../../modules/indexResource";
 import DeleteGroup from "./DeleteGroup";
+import { apiClient } from "@scm-manager/ui-components/src";
 
 type Props = {
   group: Group;
@@ -36,7 +37,8 @@ class EditGroup extends React.Component<Props> {
 
   loadUserAutocompletion = (inputValue: string) => {
     const url = this.props.autocompleteLink + "?q=";
-    return fetch(url + inputValue)
+    return apiClient
+      .get(url + inputValue)
       .then(response => response.json())
       .then(json => {
         return json.map(element => {

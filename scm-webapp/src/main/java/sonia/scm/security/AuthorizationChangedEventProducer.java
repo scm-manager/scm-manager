@@ -168,8 +168,7 @@ public class AuthorizationChangedEventProducer {
   }
 
   private boolean isAuthorizationDataModified(Repository repository, Repository beforeModification) {
-    return repository.isPublicReadable() != beforeModification.isPublicReadable()
-      || !(repository.getPermissions().containsAll(beforeModification.getPermissions()) && beforeModification.getPermissions().containsAll(repository.getPermissions()));
+    return !(repository.getPermissions().containsAll(beforeModification.getPermissions()) && beforeModification.getPermissions().containsAll(repository.getPermissions()));
   }
 
   private void fireEventForEveryUser() {

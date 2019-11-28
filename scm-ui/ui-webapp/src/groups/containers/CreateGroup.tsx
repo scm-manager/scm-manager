@@ -7,6 +7,7 @@ import { Page } from "@scm-manager/ui-components";
 import { getGroupsLink, getUserAutoCompleteLink } from "../../modules/indexResource";
 import { createGroup, isCreateGroupPending, getCreateGroupFailure, createGroupReset } from "../modules/groups";
 import GroupForm from "../components/GroupForm";
+import { apiClient } from "@scm-manager/ui-components/src";
 
 type Props = WithTranslation & {
   createGroup: (link: string, group: Group, callback?: () => void) => void;
@@ -40,7 +41,8 @@ class CreateGroup extends React.Component<Props> {
 
   loadUserAutocompletion = (inputValue: string) => {
     const url = this.props.autocompleteLink + "?q=";
-    return fetch(url + inputValue)
+    return apiClient
+      .get(url + inputValue)
       .then(response => response.json())
       .then(json => {
         return json.map(element => {
