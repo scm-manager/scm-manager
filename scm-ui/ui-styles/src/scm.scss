@@ -622,6 +622,10 @@ form .field:not(.is-grouped) {
   }
 }
 
+.help {
+  position: absolute;
+}
+
 // label with help-icon compensation
 .label-icon-spacing {
   margin-top: 30px;

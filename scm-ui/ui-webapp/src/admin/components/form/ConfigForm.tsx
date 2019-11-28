@@ -1,7 +1,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { NamespaceStrategies, Config } from "@scm-manager/ui-types";
-import { SubmitButton, Notification } from "@scm-manager/ui-components";
+import { Level, SubmitButton, Notification } from "@scm-manager/ui-components";
 import ProxySettings from "./ProxySettings";
 import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";
@@ -151,10 +151,14 @@ class ConfigForm extends React.Component<Props, State> {
           hasUpdatePermission={configUpdatePermission}
         />
         <hr />
-        <SubmitButton
-          loading={loading}
-          label={t("config.form.submit")}
-          disabled={!configUpdatePermission || this.hasError() || !this.state.changed}
+        <Level
+          right={
+            <SubmitButton
+              loading={loading}
+              label={t("config.form.submit")}
+              disabled={!configUpdatePermission || this.hasError() || !this.state.changed}
+            />
+          }
         />
       </form>
     );

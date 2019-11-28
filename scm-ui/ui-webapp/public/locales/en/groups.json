@@ -60,8 +60,7 @@
     }
   },
   "deleteGroup": {
-    "subtitle": "Delete Group",
-    "button": "Delete",
+    "button": "Delete Group",
     "confirmAlert": {
       "title": "Delete Group",
       "message": "Do you really want to delete the group?",

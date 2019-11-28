@@ -2,8 +2,8 @@ import React from "react";
 
 type Props = {
   displayName: string;
-  url: string;
-  disabled: boolean;
+  url?: string;
+  disabled?: boolean;
   onClick?: () => void;
 };
 

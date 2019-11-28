@@ -1,7 +1,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import { SubmitButton, Notification, ErrorNotification, PasswordConfirmation } from "@scm-manager/ui-components";
+import { Level, SubmitButton, Notification, ErrorNotification, PasswordConfirmation } from "@scm-manager/ui-components";
 import { setPassword } from "./setPassword";
 
 type Props = WithTranslation & {
@@ -98,15 +98,15 @@ class SetUserPassword extends React.Component<Props, State> {
           passwordChanged={this.passwordChanged}
           key={this.state.passwordChanged ? "changed" : "unchanged"}
         />
-        <div className="columns">
-          <div className="column">
+        <Level
+          right={
             <SubmitButton
               disabled={!this.state.passwordValid}
               loading={loading}
               label={t("singleUserPassword.button")}
             />
-          </div>
-        </div>
+          }
+        />
       </form>
     );
   }

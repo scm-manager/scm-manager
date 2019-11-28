@@ -14,6 +14,12 @@ const Switcher = styled(ButtonAddons)`
   right: 0;
 `;
 
+const SmallButton = styled(Button).attrs(props => ({
+  className: "is-small"
+}))`
+  height: inherit;
+`;
+
 type Props = {
   repository: Repository;
 };
@@ -62,9 +68,9 @@ export default class ProtocolInformation extends React.Component<Props, State> {
     }
 
     return (
-      <Button color={color} action={() => this.selectProtocol(protocol)}>
+      <SmallButton color={color} action={() => this.selectProtocol(protocol)}>
         {name.toUpperCase()}
-      </Button>
+      </SmallButton>
     );
   };
 

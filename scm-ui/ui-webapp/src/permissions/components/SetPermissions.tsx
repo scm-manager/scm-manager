@@ -1,13 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
-import classNames from "classnames";
-import styled from "styled-components";
 import { Link } from "@scm-manager/ui-types";
-import { Notification, ErrorNotification, SubmitButton } from "@scm-manager/ui-components";
+import { Notification, ErrorNotification, SubmitButton, Level } from "@scm-manager/ui-components";
 import { getLink } from "../../modules/indexResource";
 import { loadPermissionsForEntity, setPermissions } from "./handlePermissions";
-import PermissionCheckbox from "./PermissionCheckbox";
+import PermissionsWrapper from "./PermissionsWrapper";
 
 type Props = WithTranslation & {
   availablePermissionLink: string;
@@ -25,15 +23,6 @@ type State = {
   overwritePermissionsLink?: Link;
 };
 
-const PermissionsWrapper = styled.div`
-  padding-bottom: 0;
-
-  & .field .control {
-    width: 100%;
-    word-wrap: break-word;
-  }
-`;
-
 class SetPermissions extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -43,7 +32,6 @@ class SetPermissions extends React.Component<Props, State> {
       loading: true,
       permissionsChanged: false,
       permissionsSubmitted: false,
-      modifiable: false,
       overwritePermissionsLink: undefined
     };
   }
@@ -125,39 +113,23 @@ class SetPermissions extends React.Component<Props, State> {
       <form onSubmit={this.submit}>
         {message}
         {this.renderPermissions()}
-        <SubmitButton disabled={!this.state.permissionsChanged} loading={loading} label={t("setPermissions.button")} />
+        <Level
+          right={
+            <SubmitButton
+              disabled={!this.state.permissionsChanged}
+              loading={loading}
+              label={t("setPermissions.button")}
+            />
+          }
+        />
       </form>
     );
   }
 
   renderPermissions = () => {
     const { overwritePermissionsLink, permissions } = this.state;
-    const permissionArray = Object.keys(permissions);
     return (
-      <div className="columns">
-        <PermissionsWrapper className={classNames("column", "is-half")}>
-          {permissionArray.slice(0, permissionArray.length / 2 + 1).map(p => (
-            <PermissionCheckbox
-              key={p}
-              permission={p}
-              checked={permissions[p]}
-              onChange={this.valueChanged}
-              disabled={!overwritePermissionsLink}
-            />
-          ))}
-        </PermissionsWrapper>
-        <PermissionsWrapper className={classNames("column", "is-half")}>
-          {permissionArray.slice(permissionArray.length / 2 + 1, permissionArray.length).map(p => (
-            <PermissionCheckbox
-              key={p}
-              permission={p}
-              checked={permissions[p]}
-              onChange={this.valueChanged}
-              disabled={!overwritePermissionsLink}
-            />
-          ))}
-        </PermissionsWrapper>
-      </div>
+      <PermissionsWrapper permissions={permissions} onChange={this.valueChanged} disabled={!overwritePermissionsLink} />
     );
   };
 
