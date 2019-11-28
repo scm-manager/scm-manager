@@ -134,7 +134,7 @@ public final class IterableQueue<T> implements Iterable<T>
     else
     {
       logger.trace("create queue iterator");
-      iterator = new QueueIterator<T>(this);
+      iterator = new QueueIterator<>(this);
     }
 
     return iterator;

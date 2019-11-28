@@ -90,7 +90,7 @@ public class XmlSetStringAdapter extends XmlAdapter<String, Set<String>>
   @Override
   public Set<String> unmarshal(String rawString) throws Exception
   {
-    Set<String> tokens = new HashSet<String>();
+    Set<String> tokens = new HashSet<>();
 
     for (String token : rawString.split(","))
     {

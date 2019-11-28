@@ -102,7 +102,7 @@ public class XmlMapStringAdapter
   public Map<String, String> unmarshal(XmlMapStringElement[] elements)
           throws Exception
   {
-    Map<String, String> map = new HashMap<String, String>();
+    Map<String, String> map = new HashMap<>();
 
     if (elements != null)
     {

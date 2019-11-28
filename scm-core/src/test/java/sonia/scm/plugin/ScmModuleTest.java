@@ -71,8 +71,8 @@ public class ScmModuleTest
     assertThat(
       module.getExtensions(), 
       containsInAnyOrder(
-        (Class<?>) String.class, 
-        (Class<?>) Integer.class
+        String.class,
+        Integer.class
       )
     );
     assertThat(
@@ -86,8 +86,8 @@ public class ScmModuleTest
     assertThat(
       module.getEvents(), 
       containsInAnyOrder(
-        (Class<?>) String.class,
-        (Class<?>) Boolean.class
+        String.class,
+        Boolean.class
       )
     );
     assertThat(
@@ -100,15 +100,15 @@ public class ScmModuleTest
     assertThat(
       module.getRestProviders(), 
       containsInAnyOrder(
-        (Class<?>) Integer.class,
-        (Class<?>) Long.class
+        Integer.class,
+        Long.class
       )
     );
     assertThat(
       module.getRestResources(), 
       containsInAnyOrder(
-        (Class<?>) Float.class,
-        (Class<?>) Double.class
+        Float.class,
+        Double.class
       )
     );
     //J+

@@ -35,21 +35,14 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Sets;
-
 import org.junit.Test;
+
+import java.util.Set;
+import java.util.concurrent.*;
 
 import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  *
@@ -96,28 +89,22 @@ public class DefaultKeyGeneratorTest
 
     for (int i = 0; i < 10; i++)
     {
-      Future<Set<String>> future = executor.submit(new Callable<Set<String>>()
-      {
+      Future<Set<String>> future = executor.submit(() -> {
+        Set<String> keys = Sets.newHashSet();
 
-        @Override
-        public Set<String> call()
+        for (int i1 = 0; i1 < 1000; i1++)
         {
-          Set<String> keys = Sets.newHashSet();
+          String key = generator.createKey();
 
-          for (int i = 0; i < 1000; i++)
+          if (keys.contains(key))
           {
-            String key = generator.createKey();
-
-            if (keys.contains(key))
-            {
-              fail("dublicate key");
-            }
-
-            keys.add(key);
+            fail("dublicate key");
           }
 
-          return keys;
+          keys.add(key);
         }
+
+        return keys;
       });
 
       futureSet.add(future);

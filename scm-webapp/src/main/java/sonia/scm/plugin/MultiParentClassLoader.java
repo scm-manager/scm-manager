@@ -74,7 +74,7 @@ public class MultiParentClassLoader extends ClassLoader
   public MultiParentClassLoader(Collection<? extends ClassLoader> parents)
   {
     super(null);
-    this.parents = new CopyOnWriteArrayList<ClassLoader>(parents);
+    this.parents = new CopyOnWriteArrayList<>(parents);
   }
 
   //~--- get methods ----------------------------------------------------------

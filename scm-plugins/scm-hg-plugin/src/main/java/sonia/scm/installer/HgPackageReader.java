@@ -145,7 +145,7 @@ public class HgPackageReader
    */
   private void filterPackage(HgPackages packages)
   {
-    List<HgPackage> pkgList = new ArrayList<HgPackage>();
+    List<HgPackage> pkgList = new ArrayList<>();
 
     for (HgPackage pkg : packages)
     {
@@ -228,7 +228,7 @@ public class HgPackageReader
     if (packages == null)
     {
       packages = new HgPackages();
-      packages.setPackages(new ArrayList<HgPackage>());
+      packages.setPackages(new ArrayList<>());
     }
 
     return packages;
