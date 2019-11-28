@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { Repository } from "@scm-manager/ui-types";
-import { Subtitle, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { Level, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 import { deleteRepo, getDeleteRepoFailure, isDeleteRepoPending } from "../modules/repos";
 
 type Props = WithTranslation & {
@@ -65,13 +65,8 @@ class DeleteRepo extends React.Component<Props> {
     return (
       <>
         <hr />
-        <Subtitle subtitle={t("deleteRepo.subtitle")} />
         <ErrorNotification error={error} />
-        <div className="columns">
-          <div className="column">
-            <DeleteButton label={t("deleteRepo.button")} action={action} loading={loading} />
-          </div>
-        </div>
+        <Level right={<DeleteButton label={t("deleteRepo.button")} action={action} loading={loading} />} />
       </>
     );
   }
