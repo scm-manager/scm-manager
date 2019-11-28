@@ -38,7 +38,11 @@ package sonia.scm.repository;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
@@ -78,6 +82,22 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
   {
     this.total = total;
     this.changesets = changesets;
+    this.branchName = null;
+  }
+
+  /**
+   * Constructs a new changeset paging result for a specific branch.
+   *
+   *
+   * @param total total number of changesets
+   * @param changesets current list of fetched changesets
+   * @param branchName branch name this result was created for
+   */
+  public ChangesetPagingResult(int total, List<Changeset> changesets, String branchName)
+  {
+    this.total = total;
+    this.changesets = changesets;
+    this.branchName = branchName;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -152,9 +172,10 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("changesets", changesets)
-                      .add("total", total)
-                      .toString();
+                  .add("changesets", changesets)
+                  .add("total", total)
+                  .add("branch", branchName)
+                  .toString();
     //J+
   }
 
@@ -182,37 +203,35 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
     return total;
   }
 
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Sets the current list of changesets.
-   *
-   *
-   * @param changesets current list of changesets
-   */
-  public void setChangesets(List<Changeset> changesets)
+  void setChangesets(List<Changeset> changesets)
   {
     this.changesets = changesets;
   }
 
-  /**
-   * Sets the total number of changesets
-   *
-   *
-   * @param total total number of changesets
-   */
-  public void setTotal(int total)
+  void setTotal(int total)
   {
     this.total = total;
   }
 
+  void setBranchName(String branchName) {
+    this.branchName = branchName;
+  }
+
+  /**
+   * Returns the branch name this result was created for. This can either be an explicit branch ("give me all
+   * changesets for branch xyz") or an implicit one ("give me the changesets for the default").
+   */
+  public String getBranchName() {
+    return branchName;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
-  /** current list of changesets */
   @XmlElement(name = "changeset")
   @XmlElementWrapper(name = "changesets")
   private List<Changeset> changesets;
 
-  /** total number of changesets */
   private int total;
+
+  private String branchName;
 }

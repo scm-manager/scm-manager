@@ -139,8 +139,8 @@ public final class Tags implements Iterable<Tag>
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("tags", tags)
-                      .toString();
+                  .add("tags", tags)
+                  .toString();
     //J+
   }
 

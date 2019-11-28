@@ -36,8 +36,6 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
-
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.DisabledAccountException;
@@ -45,39 +43,44 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
-import org.apache.shiro.crypto.hash.DefaultHashService;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.SimplePrincipalCollection;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import sonia.scm.group.Group;
-import sonia.scm.group.GroupDAO;
-import sonia.scm.group.GroupNames;
-import sonia.scm.user.User;
-import sonia.scm.user.UserDAO;
-import sonia.scm.user.UserTestData;
-
-import static org.hamcrest.Matchers.*;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.List;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.authz.permission.WildcardPermissionResolver;
+import org.apache.shiro.crypto.hash.DefaultHashService;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.hamcrest.Matchers;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.group.GroupDAO;
+import sonia.scm.user.User;
+import sonia.scm.user.UserDAO;
+import sonia.scm.user.UserTestData;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -132,6 +135,36 @@ public class DefaultRealmTest
     assertThat(realmsAutz.getStringPermissions(), Matchers.contains("repository:*"));
   }
 
+  @Test
+  public void testGetAuthorizationInfoWithMultipleAuthorizationCollectors(){
+    SimplePrincipalCollection col = new SimplePrincipalCollection();
+    col.add(Scope.empty(), DefaultRealm.REALM);
+
+    SimpleAuthorizationInfo collectedFromDefault = new SimpleAuthorizationInfo();
+    collectedFromDefault.addStringPermission("repository:*");
+    when(collector.collect(col)).thenReturn(collectedFromDefault);
+
+    SimpleAuthorizationInfo collectedFromSecond = new SimpleAuthorizationInfo();
+    collectedFromSecond.addStringPermission("user:*");
+    collectedFromSecond.addRole("awesome");
+
+    AuthorizationCollector secondCollector = principalCollection -> collectedFromSecond;
+    authorizationCollectors.add(secondCollector);
+
+    SimpleAuthorizationInfo collectedFromThird = new SimpleAuthorizationInfo();
+    Permission permission = p -> false;
+    collectedFromThird.addObjectPermission(permission);
+    collectedFromThird.addRole("awesome");
+
+    AuthorizationCollector thirdCollector = principalCollection -> collectedFromThird;
+    authorizationCollectors.add(thirdCollector);
+
+    AuthorizationInfo realmsAuthz = realm.doGetAuthorizationInfo(col);
+    assertThat(realmsAuthz.getObjectPermissions(), contains(permission));
+    assertThat(realmsAuthz.getStringPermissions(), containsInAnyOrder("repository:*", "user:*"));
+    assertThat(realmsAuthz.getRoles(), Matchers.contains("awesome"));
+  }
+
   /**
    * Tests {@link DefaultRealm#doGetAuthorizationInfo(PrincipalCollection)} with empty scope.
    */  
@@ -177,32 +210,6 @@ public class DefaultRealmTest
    *
    */
   @Test
-  public void testGroupCollection()
-  {
-    User user = UserTestData.createTrillian();
-    //J-
-    List<Group> groups = Lists.newArrayList(
-      new Group(DefaultRealm.REALM, "scm", user.getName()),
-      new Group(DefaultRealm.REALM, "developers", "perfect")
-    );
-    //J+
-
-    when(groupDAO.getAll()).thenReturn(groups);
-
-    UsernamePasswordToken token = daoUser(user, "secret");
-    AuthenticationInfo info = realm.getAuthenticationInfo(token);
-    GroupNames groupNames = info.getPrincipals().oneByType(GroupNames.class);
-
-    assertNotNull(groupNames);
-    assertThat(groupNames.getCollection(), hasSize(2));
-    assertThat(groupNames, hasItems("scm", GroupNames.AUTHENTICATED));
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
   public void testSimpleAuthentication()
   {
     User user = UserTestData.createTrillian();
@@ -217,12 +224,6 @@ public class DefaultRealmTest
     assertThat(collection.getRealmNames(), hasSize(1));
     assertThat(collection.getRealmNames(), hasItem(DefaultRealm.REALM));
     assertEquals(user, collection.oneByType(User.class));
-
-    GroupNames groups = collection.oneByType(GroupNames.class);
-
-    assertNotNull(groups);
-    assertThat(groups.getCollection(), hasSize(1));
-    assertThat(groups.getCollection(), hasItem(GroupNames.AUTHENTICATED));
   }
 
   /**
@@ -284,7 +285,11 @@ public class DefaultRealmTest
     // use a small number of iterations for faster test execution
     hashService.setHashIterations(512);
     service.setHashService(hashService);
-    realm = new DefaultRealm(service, collector, helperFactory);
+
+    authorizationCollectors = new HashSet<>();
+    authorizationCollectors.add(collector);
+
+    realm = new DefaultRealm(service, authorizationCollectors, helperFactory);
     
     // set permission resolver
     realm.setPermissionResolver(new WildcardPermissionResolver());
@@ -357,6 +362,8 @@ public class DefaultRealmTest
   /** Field description */
   @Mock
   private DefaultAuthorizationCollector collector;
+
+  private Set<AuthorizationCollector> authorizationCollectors;
 
   @Mock
   private LoginAttemptHandler loginAttemptHandler;

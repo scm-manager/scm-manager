@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>sonia.scm</groupId>
+    <artifactId>scm</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+  </parent>
+
+  <groupId>sonia.scm</groupId>
+  <artifactId>scm-ui</artifactId>
+  <packaging>war</packaging>
+  <version>2.0.0-SNAPSHOT</version>
+  <name>scm-ui</name>
+
+  <properties>
+    <sonar.language>typescript</sonar.language>
+    <sonar.sources>ui-extensions/src,ui-components/src,ui-webapp/src</sonar.sources>
+    <sonar.test.exclusions>**/*.test.js,src/tests/**</sonar.test.exclusions>
+    <sonar.coverage.exclusions>**/*.test.js,src/tests/**</sonar.coverage.exclusions>
+    <sonar.typescript.jstest.reportsPath>target/jest-reports</sonar.typescript.jstest.reportsPath>
+    <sonar.typescript.lcov.reportPaths>target/jest-reports/coverage-ui-extensions/lcov.info,target/jest-reports/coverage-ui-components/lcov.info,target/jest-reports/coverage-ui-webapp/lcov.info</sonar.typescript.lcov.reportPaths>
+  </properties>
+
+  <build>
+    <finalName>scm-ui</finalName>
+    <plugins>
+
+      <plugin>
+        <groupId>com.github.sdorra</groupId>
+        <artifactId>buildfrontend-maven-plugin</artifactId>
+        <configuration>
+          <workingDirectory>${basedir}/..</workingDirectory>
+          <node>
+            <version>${nodejs.version}</version>
+          </node>
+          <pkgManager>
+            <type>YARN</type>
+            <version>${yarn.version}</version>
+          </pkgManager>
+          <script>run</script>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>install</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>typecheck</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <script>typecheck</script>
+            </configuration>
+          </execution>
+          <execution>
+            <id>build</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <script>build</script>
+            </configuration>
+          </execution>
+          <execution>
+            <id>test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <script>test</script>
+              <skip>${skipTests}</skip>
+            </configuration>
+          </execution>
+          <execution>
+            <id>deploy</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <script>deploy</script>
+              <args>
+                <arg>${project.version}</arg>
+              </args>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+          <webResources>
+            <resource>
+              <directory>target/assets</directory>
+              <targetPath>assets</targetPath>
+            </resource>
+            <resource>
+              <directory>ui-webapp/public</directory>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>

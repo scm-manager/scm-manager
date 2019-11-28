@@ -29,29 +29,21 @@
  *
  */
 
-
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
-import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.spi.BlameCommand;
 import sonia.scm.repository.spi.BranchesCommand;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
+
 
 /**
  * The branches command list all repository branches.<br />
@@ -86,10 +78,8 @@ public final class BranchesCommandBuilder
    * only be called from the {@link RepositoryService}.
    *
    * @param cacheManager cache manager
-   * @param blameCommand implementation of the {@link BlameCommand}
-   * @param branchesCommand
+   * @param branchesCommand implementation of the {@link BranchesCommand}
    * @param repository repository to query
-   * @param preProcessorUtil
    */
   BranchesCommandBuilder(CacheManager cacheManager,
     BranchesCommand branchesCommand, Repository repository)
@@ -108,9 +98,8 @@ public final class BranchesCommandBuilder
    * @return branches from the repository
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public Branches getBranches() throws RepositoryException, IOException
+  public Branches getBranches() throws IOException
   {
     Branches branches;
 
@@ -139,10 +128,7 @@ public final class BranchesCommandBuilder
 
         branches = getBranchesFromCommand();
 
-        if (branches != null)
-        {
-          cache.put(key, branches);
-        }
+        cache.put(key, branches);
       }
       else if (logger.isDebugEnabled())
       {
@@ -182,10 +168,9 @@ public final class BranchesCommandBuilder
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   private Branches getBranchesFromCommand()
-    throws RepositoryException, IOException
+    throws IOException
   {
     return new Branches(branchesCommand.getBranches());
   }

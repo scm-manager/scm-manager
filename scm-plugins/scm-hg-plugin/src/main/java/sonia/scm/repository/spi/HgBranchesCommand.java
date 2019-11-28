@@ -40,9 +40,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 
-import java.io.IOException;
 import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -54,6 +52,8 @@ import java.util.List;
 public class HgBranchesCommand extends AbstractCommand
   implements BranchesCommand
 {
+
+  private static final String DEFAULT_BRANCH_NAME = "default";
 
   /**
    * Constructs ...
@@ -69,33 +69,35 @@ public class HgBranchesCommand extends AbstractCommand
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public List<Branch> getBranches() throws RepositoryException, IOException
-  {
+  public List<Branch> getBranches() {
     List<com.aragost.javahg.commands.Branch> hgBranches =
       com.aragost.javahg.commands.BranchesCommand.on(open()).execute();
 
-    final Function<com.aragost.javahg.commands.Branch, Branch> branchFunction = hgBranch -> {
-      String node = null;
-      Changeset changeset = hgBranch.getBranchTip();
+    List<Branch> branches = Lists.transform(hgBranches,
+                              new Function<com.aragost.javahg.commands.Branch,
+                                Branch>()
+    {
 
-      if (changeset != null) {
-        node = changeset.getNode();
+      @Override
+      public Branch apply(com.aragost.javahg.commands.Branch hgBranch)
+      {
+        String node = null;
+        Changeset changeset = hgBranch.getBranchTip();
+
+        if (changeset != null)
+        {
+          node = changeset.getNode();
+        }
+
+        if (DEFAULT_BRANCH_NAME.equals(hgBranch.getName())) {
+          return Branch.defaultBranch(hgBranch.getName(), node);
+        } else {
+          return Branch.normalBranch(hgBranch.getName(), node);
+        }
       }
+    });
 
-      return new Branch(hgBranch.getName(), node);
-    };
-
-    return Lists.transform(hgBranches,
-                           branchFunction);
+    return branches;
   }
 }

@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,50 +24,50 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.io.DefaultFileSystem;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.schedule.Scheduler;
+import sonia.scm.store.ConfigurationStoreFactory;
 
-import static org.junit.Assert.*;
+import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-import sonia.scm.store.ConfigurationStoreFactory;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import sonia.scm.schedule.Scheduler;
-
 /**
- *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
-public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
-{
+@RunWith(MockitoJUnitRunner.Silent.class)
+public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Mock
   private Scheduler scheduler;
-  
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   */
+
+  @Mock
+  private ConfigurationStoreFactory factory;
+
+  @Mock
+  private GitWorkdirFactory gitWorkdirFactory;
+
+
   @Override
-  protected void checkDirectory(File directory)
-  {
+  protected void checkDirectory(File directory) {
     File head = new File(directory, "HEAD");
 
     assertTrue(head.exists());
@@ -84,30 +84,39 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
     assertTrue(refs.isDirectory());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param factory
-   * @param directory
-   *
-   * @return
-   */
+  @Before
+  public void initFactory() {
+    when(factory.withType(any())).thenCallRealMethod();
+  }
+
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
-          File directory)
-  {
+                                                      RepositoryLocationResolver locationResolver,
+                                                      File directory) {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-                                               new DefaultFileSystem(), scheduler);
-
+      scheduler, locationResolver, gitWorkdirFactory, null);
     repositoryHandler.init(contextProvider);
 
     GitConfig config = new GitConfig();
 
-    config.setRepositoryDirectory(directory);
     // TODO fix event bus exception
     repositoryHandler.setConfig(config);
 
     return repositoryHandler;
+  }
+
+  @Test
+  public void getDirectory() {
+    GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
+      scheduler, locationResolver, gitWorkdirFactory, null);
+    GitConfig config = new GitConfig();
+    config.setDisabled(false);
+    config.setGcExpression("gc exp");
+
+    repositoryHandler.setConfig(config);
+
+    initRepository();
+    File path = repositoryHandler.getDirectory(repository.getId());
+    assertEquals(repoPath.toString() + File.separator + RepositoryDirectoryHandler.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
   }
 }

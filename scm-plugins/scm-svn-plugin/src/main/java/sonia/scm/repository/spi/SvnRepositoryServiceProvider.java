@@ -33,19 +33,15 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
-
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
+import sonia.scm.repository.SvnWorkDirFactory;
 import sonia.scm.repository.api.Command;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.inject.Inject;
 import java.io.IOException;
-
 import java.util.Set;
 
 /**
@@ -59,24 +55,19 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   //J-
   public static final Set<Command> COMMANDS = ImmutableSet.of(
     Command.BLAME, Command.BROWSE, Command.CAT, Command.DIFF, 
-    Command.LOG, Command.BUNDLE, Command.UNBUNDLE
+    Command.LOG, Command.BUNDLE, Command.UNBUNDLE, Command.MODIFY
   );
   //J+
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   * @param repository
-   */
+  @Inject
   SvnRepositoryServiceProvider(SvnRepositoryHandler handler,
-    Repository repository)
+    Repository repository, SvnWorkDirFactory workdirFactory)
   {
     this.repository = repository;
-    this.context = new SvnContext(handler.getDirectory(repository));
+    this.context = new SvnContext(repository, handler.getDirectory(repository.getId()));
+    this.workDirFactory = workdirFactory;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -167,6 +158,14 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
     return new SvnLogCommand(context, repository);
   }
 
+  public ModificationsCommand getModificationsCommand() {
+    return new SvnModificationsCommand(context, repository);
+  }
+
+  public ModifyCommand getModifyCommand() {
+    return new SvnModifyCommand(context, repository, workDirFactory);
+  }
+
   /**
    * Method description
    *
@@ -198,4 +197,6 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   private final Repository repository;
+
+  private final SvnWorkDirFactory workDirFactory;
 }

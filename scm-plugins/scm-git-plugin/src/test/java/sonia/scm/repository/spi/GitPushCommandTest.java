@@ -37,19 +37,16 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
-
 import org.junit.Test;
-
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.api.PushResponse;
 
-import static org.junit.Assert.*;
+import java.io.IOException;
+import java.util.Iterator;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.Iterator;
 
 /**
  *
@@ -64,11 +61,10 @@ public class GitPushCommandTest extends AbstractRemoteCommandTestBase
    *
    * @throws GitAPIException
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testPush()
-    throws IOException, GitAPIException, RepositoryException
+    throws IOException, GitAPIException
   {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 
@@ -81,12 +77,12 @@ public class GitPushCommandTest extends AbstractRemoteCommandTestBase
     GitPushCommand cmd = createCommand();
     PushCommandRequest request = new PushCommandRequest();
 
-    request.setRemoteRepository(incomgingRepository);
+    request.setRemoteRepository(incomingRepository);
 
     PushResponse response = cmd.push(request);
 
     assertNotNull(response);
-    assertEquals(2L, response.getChangesetCount());
+    assertEquals(2l, response.getChangesetCount());
 
     Iterator<RevCommit> commits = incoming.log().call().iterator();
 
@@ -102,7 +98,7 @@ public class GitPushCommandTest extends AbstractRemoteCommandTestBase
    */
   private GitPushCommand createCommand()
   {
-    return new GitPushCommand(handler, new GitContext(outgoingDirectory),
+    return new GitPushCommand(handler, new GitContext(outgoingDirectory, null, null),
       outgoingRepository);
   }
 }

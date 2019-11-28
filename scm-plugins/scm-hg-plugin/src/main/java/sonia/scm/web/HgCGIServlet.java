@@ -33,55 +33,47 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Stopwatch;
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sun.jersey.core.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.*;
-import sonia.scm.security.CipherUtil;
+import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgPythonScript;
+import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryRequestListenerUtil;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.util.HttpUtil;
 import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.EnvList;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
+import java.io.IOException;
+
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
-import java.util.Enumeration;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class HgCGIServlet extends HttpServlet
+public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
 {
 
   /** Field description */
-  public static final String ENV_REPOSITORY_NAME = "REPO_NAME";
-
-  /** Field description */
-  public static final String ENV_REPOSITORY_PATH = "SCM_REPOSITORY_PATH";
-
-  /** Field description */
   public static final String ENV_SESSION_PREFIX = "SCM_";
-
-  /** Field description */
-  private static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
 
   /** Field description */
   private static final long serialVersionUID = -3492811300905099810L;
@@ -92,78 +84,29 @@ public class HgCGIServlet extends HttpServlet
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   *
-   *
-   * @param cgiExecutorFactory
-   * @param configuration
-   * @param repositoryProvider
-   * @param handler
-   * @param hookManager
-   * @param requestListenerUtil
-   */
   @Inject
   public HgCGIServlet(CGIExecutorFactory cgiExecutorFactory,
-    ScmConfiguration configuration, RepositoryProvider repositoryProvider,
-    HgRepositoryHandler handler, HgHookManager hookManager,
-    RepositoryRequestListenerUtil requestListenerUtil)
+                      ScmConfiguration configuration,
+                      HgRepositoryHandler handler,
+                      RepositoryRequestListenerUtil requestListenerUtil,
+                      HgRepositoryEnvironmentBuilder hgRepositoryEnvironmentBuilder)
   {
     this.cgiExecutorFactory = cgiExecutorFactory;
     this.configuration = configuration;
-    this.repositoryProvider = repositoryProvider;
     this.handler = handler;
-    this.hookManager = hookManager;
     this.requestListenerUtil = requestListenerUtil;
+    this.hgRepositoryEnvironmentBuilder = hgRepositoryEnvironmentBuilder;
     this.exceptionHandler = new HgCGIExceptionHandler();
     this.command = HgPythonScript.HGWEB.getFile(SCMContext.getContext());
   }
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @throws ServletException
-   */
   @Override
-  public void init() throws ServletException
+  public void service(HttpServletRequest request,
+    HttpServletResponse response, Repository repository)
   {
-
-    super.init();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
-  @Override
-  protected void service(HttpServletRequest request,
-    HttpServletResponse response)
-    throws ServletException, IOException
-  {
-    Repository repository = repositoryProvider.get();
-
-    if (repository == null)
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("no hg repository found at {}", request.getRequestURI());
-      }
-
-      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-    }
-    else if (!handler.isConfigured())
+    if (!handler.isConfigured())
     {
       exceptionHandler.sendFormattedError(request, response,
         HgCGIExceptionHandler.ERROR_NOT_CONFIGURED);
@@ -174,43 +117,14 @@ public class HgCGIServlet extends HttpServlet
       {
         handleRequest(request, response, repository);
       }
-      catch (ServletException | IOException ex)
+      catch (ServletException ex)
       {
         exceptionHandler.handleException(request, response, ex);
       }
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param env
-   * @param request
-   */
-  private void addCredentials(EnvList env, HttpServletRequest request)
-  {
-    String authorization = request.getHeader(HttpUtil.HEADER_AUTHORIZATION);
-
-    if (!Strings.isNullOrEmpty(authorization))
-    {
-      if (authorization.startsWith(HttpUtil.AUTHORIZATION_SCHEME_BASIC))
+      catch (IOException ex)
       {
-        String encodedUserInfo =
-          authorization.substring(
-            HttpUtil.AUTHORIZATION_SCHEME_BASIC.length()).trim();
-        String userInfo = Base64.base64Decode(encodedUserInfo);
-
-        env.set(SCM_CREDENTIALS, CipherUtil.getInstance().encode(userInfo));
+        exceptionHandler.handleException(request, response, ex);
       }
-      else
-      {
-        logger.warn("unknow authentication scheme used");
-      }
-    }
-    else
-    {
-      logger.trace("no authorization header found");
     }
   }
 
@@ -279,8 +193,6 @@ public class HgCGIServlet extends HttpServlet
     HttpServletResponse response, Repository repository)
     throws IOException, ServletException
   {
-    String name = repository.getName();
-    File directory = handler.getDirectory(repository);
     CGIExecutor executor = cgiExecutorFactory.createExecutor(configuration,
                              getServletContext(), request, response);
 
@@ -289,29 +201,7 @@ public class HgCGIServlet extends HttpServlet
     executor.setExceptionHandler(exceptionHandler);
     executor.setStatusCodeHandler(exceptionHandler);
     executor.setContentLengthWorkaround(true);
-    executor.getEnvironment().set(ENV_REPOSITORY_NAME, name);
-    executor.getEnvironment().set(ENV_REPOSITORY_PATH,
-      directory.getAbsolutePath());
-
-    // add hook environment
-    //J-
-    HgEnvironment.prepareEnvironment(
-      executor.getEnvironment().asMutableMap(),
-      handler,
-      hookManager, 
-      request
-    );
-    //J+
-
-    addCredentials(executor.getEnvironment(), request);
-
-    // unused ???
-    HttpSession session = request.getSession(false);
-
-    if (session != null)
-    {
-      passSessionAttributes(executor.getEnvironment(), session);
-    }
+    hgRepositoryEnvironmentBuilder.buildFor(repository, request, executor.getEnvironment().asMutableMap());
 
     String interpreter = getInterpreter();
 
@@ -365,11 +255,7 @@ public class HgCGIServlet extends HttpServlet
   private final HgRepositoryHandler handler;
 
   /** Field description */
-  private final HgHookManager hookManager;
-
-  /** Field description */
-  private final RepositoryProvider repositoryProvider;
-
-  /** Field description */
   private final RepositoryRequestListenerUtil requestListenerUtil;
+
+  private final HgRepositoryEnvironmentBuilder hgRepositoryEnvironmentBuilder;
 }

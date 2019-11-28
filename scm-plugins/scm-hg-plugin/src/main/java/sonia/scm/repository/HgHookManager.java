@@ -37,12 +37,19 @@ package sonia.scm.repository;
 
 import com.github.legman.Subscribe;
 import com.google.common.base.MoreObjects;
-import com.google.inject.*;
+import com.google.inject.Inject;
+import com.google.inject.OutOfScopeException;
+import com.google.inject.Provider;
+import com.google.inject.ProvisionException;
+import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.config.ScmConfigurationChangedEvent;
 import sonia.scm.net.ahc.AdvancedHttpClient;
+import sonia.scm.security.AccessToken;
+import sonia.scm.security.AccessTokenBuilderFactory;
+import sonia.scm.security.CipherUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
@@ -74,19 +81,20 @@ public class HgHookManager
   /**
    * Constructs ...
    *
-   *
-   * @param configuration
+   *  @param configuration
    * @param httpServletRequestProvider
    * @param httpClient
+   * @param accessTokenBuilderFactory
    */
   @Inject
   public HgHookManager(ScmConfiguration configuration,
-    Provider<HttpServletRequest> httpServletRequestProvider,
-    AdvancedHttpClient httpClient)
+                       Provider<HttpServletRequest> httpServletRequestProvider,
+                       AdvancedHttpClient httpClient, AccessTokenBuilderFactory accessTokenBuilderFactory)
   {
     this.configuration = configuration;
     this.httpServletRequestProvider = httpServletRequestProvider;
     this.httpClient = httpClient;
+    this.accessTokenBuilderFactory = accessTokenBuilderFactory;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -186,6 +194,13 @@ public class HgHookManager
   public boolean isAcceptAble(String challenge)
   {
     return this.challenge.equals(challenge);
+  }
+
+  public String getCredentials()
+  {
+    AccessToken accessToken = accessTokenBuilderFactory.create().build();
+
+    return CipherUtil.getInstance().encode(accessToken.compact());
   }
 
   //~--- methods --------------------------------------------------------------
@@ -321,7 +336,11 @@ public class HgHookManager
     {
       request = httpServletRequestProvider.get();
     }
-    catch (ProvisionException | OutOfScopeException ex)
+    catch (ProvisionException ex)
+    {
+      logger.debug("http servlet request is not available");
+    }
+    catch (OutOfScopeException ex)
     {
       logger.debug("http servlet request is not available");
     }
@@ -383,4 +402,6 @@ public class HgHookManager
 
   /** Field description */
   private Provider<HttpServletRequest> httpServletRequestProvider;
+
+  private final AccessTokenBuilderFactory accessTokenBuilderFactory;
 }

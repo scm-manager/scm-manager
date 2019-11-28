@@ -1,0 +1,104 @@
+{
+  "admin": {
+    "menu": {
+      "navigationLabel": "Administration Navigation",
+      "informationNavLink": "Information",
+      "settingsNavLink": "Settings",
+      "generalNavLink": "General"
+    },
+    "info": {
+      "currentAppVersion": "Current Application Version",
+      "communityTitle": "Community Support",
+      "communityIconAlt": "Community Support Icon",
+      "communityInfo": "Contact the SCM-Manager support team for questions about SCM-Manager, to report bugs or to request features through the official channels.",
+      "communityButton": "Contact our team",
+      "enterpriseTitle": "Enterprise Support",
+      "enterpriseIconAlt": "Enterprise Support Icon",
+      "enterpriseInfo": "You require support with the integration of SCM-Manager into your processes, with the customization of the tool or simply a service level agreement (SLA)?",
+      "enterprisePartner": "Contact our development partner Cloudogu! Their team is looking forward to discussing your individual requirements with you and will be more than happy to give you a quote.",
+      "enterpriseLink": "https://cloudogu.com/en/scm-manager-enterprise/",
+      "enterpriseButton": "Request Enterprise Support"
+    }
+  },
+  "plugins": {
+    "title": "Plugins",
+    "installedSubtitle": "Installed Plugins",
+    "availableSubtitle": "Available Plugins",
+    "menu": {
+      "pluginsNavLink": "Plugins",
+      "installedNavLink": "Installed",
+      "availableNavLink": "Available"
+    },
+    "executePending": "Execute changes",
+    "outdatedPlugins": "{{count}} outdated plugin",
+    "outdatedPlugins_plural": "{{count}} outdated plugins",
+    "updateAll": "Update all plugins",
+    "cancelPending": "Cancel changes",
+    "noPlugins": "No plugins found.",
+    "modal": {
+      "title": {
+        "install": "Install {{name}} Plugin",
+        "update": "Update {{name}} Plugin",
+        "uninstall": "Uninstall {{name}} Plugin"
+      },
+      "restart": "Restart to make plugin changes effective",
+      "install": "Install",
+      "update": "Update",
+      "uninstall": "Uninstall",
+      "installQueue": "Will be installed:",
+      "updateQueue": "Will be updated:",
+      "uninstallQueue": "Will be uninstalled:",
+      "installAndRestart": "Install and Restart",
+      "updateAndRestart": "Update and Restart",
+      "uninstallAndRestart": "Uninstall and Restart",
+      "executeAndRestart": "Execute and Restart",
+      "updateAll": "Update all plugins",
+      "abort": "Abort",
+      "author": "Author",
+      "version": "Version",
+      "currentVersion": "Installed version",
+      "newVersion": "New version",
+      "dependencyNotification": "With this plugin, the following dependencies will be installed if they are not available yet!",
+      "dependencies": "Dependencies",
+      "successNotification": "Successful installed plugin. You have to reload the page, to see ui changes:",
+      "reload": "reload now",
+      "restartNotification": "You should only restart the scm-manager context if no one else is currently working with it.",
+      "executePending": "The following plugin changes will be executed and after that the scm-manager context will be restarted.",
+      "cancelPending": "The following plugin changes will be canceled.",
+      "updateAllInfo": "The following plugin changes will be executed. You need to restart the scm-manager to make these changes effective."
+    }
+  },
+  "repositoryRole": {
+    "navLink": "Permission Roles",
+    "title": "Permission Roles",
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown Permission Role Error",
+    "createSubtitle": "Create Permission Role",
+    "editSubtitle": "Edit Permission Role",
+    "overview": {
+      "title": "Overview of all permission roles",
+      "noPermissionRoles": "No permission roles found.",
+      "createButton": "Create Permission Role"
+    },
+    "editButton": "Edit",
+    "name": "Name",
+    "type": "Type",
+    "verbs": "Permissions",
+    "system": "System",
+    "form": {
+      "name": "Name",
+      "permissions": "Permissions",
+      "submit": "Save"
+    },
+    "delete": {
+      "button": "Delete",
+      "subtitle": "Delete permission role",
+      "confirmAlert": {
+        "title": "Delete permission role",
+        "message": "Do you really want to delete this permission role? All users will lose their corresponding permissions.",
+        "submit": "Yes",
+        "cancel": "No"
+      }
+    }
+  }
+}

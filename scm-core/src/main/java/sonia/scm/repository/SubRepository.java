@@ -158,10 +158,10 @@ public class SubRepository implements Serializable
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("repositoryUrl", repositoryUrl)
-                      .add("browserUrl", browserUrl)
-                      .add("revision", revision)
-                      .toString();
+            .add("repositoryUrl", repositoryUrl)
+            .add("browserUrl", browserUrl)
+            .add("revision", revision)
+            .toString();
     //J+
   }
 

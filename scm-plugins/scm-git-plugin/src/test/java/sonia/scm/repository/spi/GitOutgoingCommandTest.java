@@ -37,18 +37,18 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
-
 import org.junit.Test;
-
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.Repository;
+import sonia.scm.store.InMemoryConfigurationStoreFactory;
+
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 /**
  * Unit tests for {@link OutgoingCommand}.
@@ -64,11 +64,10 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
    *
    * @throws GitAPIException
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetOutgoingChangesets()
-    throws IOException, GitAPIException, RepositoryException
+    throws IOException, GitAPIException
   {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 
@@ -81,7 +80,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
     GitOutgoingCommand cmd = createCommand();
     OutgoingCommandRequest request = new OutgoingCommandRequest();
 
-    request.setRemoteRepository(incomgingRepository);
+    request.setRemoteRepository(incomingRepository);
 
     ChangesetPagingResult cpr = cmd.getOutgoingChangesets(request);
 
@@ -98,22 +97,21 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
    *
    * @throws GitAPIException
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
-  public void testGetOutgoingChangesetsWithAllreadyPushedChanges()
-    throws IOException, GitAPIException, RepositoryException
+  public void testGetOutgoingChangesetsWithAlreadyPushedChanges()
+    throws IOException, GitAPIException
   {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 
     commit(outgoing, "added a");
 
     GitPushCommand push = new GitPushCommand(handler,
-                            new GitContext(outgoingDirectory),
+                            new GitContext(outgoingDirectory, null, null),
                             outgoingRepository);
     PushCommandRequest req = new PushCommandRequest();
 
-    req.setRemoteRepository(incomgingRepository);
+    req.setRemoteRepository(incomingRepository);
     push.push(req);
 
     write(outgoing, outgoingDirectory, "b.txt", "content of b.txt");
@@ -123,7 +121,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
     GitOutgoingCommand cmd = createCommand();
     OutgoingCommandRequest request = new OutgoingCommandRequest();
 
-    request.setRemoteRepository(incomgingRepository);
+    request.setRemoteRepository(incomingRepository);
 
     ChangesetPagingResult cpr = cmd.getOutgoingChangesets(request);
 
@@ -138,16 +136,15 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
    *
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetOutgoingChangesetsWithEmptyRepository()
-    throws IOException, RepositoryException
+    throws IOException
   {
     GitOutgoingCommand cmd = createCommand();
     OutgoingCommandRequest request = new OutgoingCommandRequest();
 
-    request.setRemoteRepository(incomgingRepository);
+    request.setRemoteRepository(incomingRepository);
 
     ChangesetPagingResult cpr = cmd.getOutgoingChangesets(request);
 
@@ -164,7 +161,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
    */
   private GitOutgoingCommand createCommand()
   {
-    return new GitOutgoingCommand(handler, new GitContext(outgoingDirectory),
+    return new GitOutgoingCommand(handler, new GitContext(outgoingDirectory, outgoingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())),
       outgoingRepository);
   }
 }

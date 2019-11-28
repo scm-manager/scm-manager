@@ -36,7 +36,6 @@ package sonia.scm;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
-import java.io.IOException;
 
 /**
  * The base class of all handlers.
@@ -44,42 +43,31 @@ import java.io.IOException;
  * @author Sebastian Sdorra
  *
  * @param <T> type object of the handler
- * @param <E> exception type of the handler
  */
-public interface HandlerBase<T extends TypedObject, E extends Exception>
+public interface HandlerBase<T extends TypedObject>
         extends Initable, Closeable
 {
 
   /**
    * Persists a new object.
    *
-   *
-   * @param object to store
-   *
-   * @throws E
-   * @throws IOException
+   * @return  The persisted object.
    */
-  public void create(T object) throws E, IOException;
+  T create(T object);
 
   /**
    * Removes a persistent object.
    *
    *
    * @param object to delete
-   *
-   * @throws E
-   * @throws IOException
    */
-  public void delete(T object) throws E, IOException;
+  void delete(T object);
 
   /**
    * Modifies a persistent object.
    *
    *
    * @param object to modify
-   *
-   * @throws E
-   * @throws IOException
    */
-  public void modify(T object) throws E, IOException;
+  void modify(T object);
 }

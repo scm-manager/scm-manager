@@ -33,39 +33,32 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.internal.server.dav.DAVConfig;
 import org.tmatesoft.svn.core.internal.server.dav.DAVServlet;
-
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.repository.SvnRepositoryHandler;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class SvnDAVServlet extends DAVServlet
+public class SvnDAVServlet extends DAVServlet implements ScmProviderHttpServlet
 {
 
   /** Field description */
@@ -114,28 +107,18 @@ public class SvnDAVServlet extends DAVServlet
    * @throws ServletException
    */
   @Override
-  public void service(HttpServletRequest request, HttpServletResponse response)
+  public void service(HttpServletRequest request, HttpServletResponse response, Repository repository)
     throws ServletException, IOException
   {
-    Repository repository = repositoryProvider.get();
-
-    if (repository != null)
-    {
-      if (repositoryRequestListenerUtil.callListeners(request, response,
-        repository))
-      {
-        super.service(new SvnHttpServletRequestWrapper(request,
-          repositoryProvider), response);
-      }
-      else if (logger.isDebugEnabled())
-      {
-        logger.debug("request aborted by repository request listener");
-      }
-    }
-    else
+    if (repositoryRequestListenerUtil.callListeners(request, response,
+      repository))
     {
       super.service(new SvnHttpServletRequestWrapper(request,
-        repositoryProvider), response);
+        repository), response);
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug("request aborted by repository request listener");
     }
   }
 
@@ -167,18 +150,11 @@ public class SvnDAVServlet extends DAVServlet
     extends HttpServletRequestWrapper
   {
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param request
-     * @param repositoryProvider
-     */
     public SvnHttpServletRequestWrapper(HttpServletRequest request,
-      RepositoryProvider repositoryProvider)
+      Repository repository)
     {
       super(request);
-      this.repositoryProvider = repositoryProvider;
+      this.repository = repository;
     }
 
     //~--- get methods --------------------------------------------------------
@@ -215,8 +191,6 @@ public class SvnDAVServlet extends DAVServlet
 
       AssertUtil.assertIsNotEmpty(pathInfo);
 
-      Repository repository = repositoryProvider.get();
-
       if (repository != null)
       {
         if (pathInfo.startsWith(HttpUtil.SEPARATOR_PATH))
@@ -224,7 +198,7 @@ public class SvnDAVServlet extends DAVServlet
           pathInfo = pathInfo.substring(1);
         }
 
-        pathInfo = pathInfo.substring(repository.getName().length());
+        pathInfo = pathInfo.substring(repository.getNamespace().length() + 1 + repository.getName().length());
       }
 
       return pathInfo;
@@ -240,7 +214,6 @@ public class SvnDAVServlet extends DAVServlet
     public String getServletPath()
     {
       String servletPath = super.getServletPath();
-      Repository repository = repositoryProvider.get();
 
       if (repository != null)
       {
@@ -249,7 +222,7 @@ public class SvnDAVServlet extends DAVServlet
           servletPath = servletPath.concat(HttpUtil.SEPARATOR_PATH);
         }
 
-        servletPath = servletPath.concat(repository.getName());
+        servletPath = servletPath + repository.getNamespace() + "/" + repository.getName();
       }
 
       return servletPath;
@@ -284,9 +257,8 @@ public class SvnDAVServlet extends DAVServlet
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private final RepositoryProvider repositoryProvider;
+    private final Repository repository;
   }
-
 
   //~--- fields ---------------------------------------------------------------
 

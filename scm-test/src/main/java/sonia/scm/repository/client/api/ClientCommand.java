@@ -39,5 +39,5 @@ package sonia.scm.repository.client.api;
  */
 public enum ClientCommand
 {
-  ADD, REMOVE, COMMIT, PUSH, TAG, BANCH
+  ADD, REMOVE, COMMIT, PUSH, TAG, BRANCH
 }

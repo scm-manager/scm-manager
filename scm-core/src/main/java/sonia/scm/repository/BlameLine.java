@@ -38,9 +38,9 @@ package sonia.scm.repository;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.Serializable;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Single line of a file, in a {@link  BlameResult}.
@@ -142,13 +142,13 @@ public class BlameLine implements Serializable
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("lineNumber", lineNumber)
-                      .add("revision", revision)
-                      .add("author", author)
-                      .add("when", when)
-                      .add("code", code)
-                      .add("description", description)
-                      .toString();
+            .add("lineNumber", lineNumber)
+            .add("revision", revision)
+            .add("author", author)
+            .add("when", when)
+            .add("code", code)
+            .add("description", description)
+            .toString();
     //J+
   }
 

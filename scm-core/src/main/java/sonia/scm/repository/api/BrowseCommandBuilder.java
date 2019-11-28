@@ -36,29 +36,22 @@ package sonia.scm.repository.api;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
-import sonia.scm.repository.FileObjectNameComparator;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.BrowseCommand;
 import sonia.scm.repository.spi.BrowseCommandRequest;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.io.Serializable;
 
-import java.util.Collections;
-import java.util.List;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * BrowseCommandBuilder is able to browse the files of a {@link Repository}.
@@ -100,7 +93,7 @@ public final class BrowseCommandBuilder
    * only be called from the {@link RepositoryService}.
    *
    * @param cacheManager cache manager
-   * @param logCommand implementation of the {@link LogCommand}
+   * @param browseCommand implementation of the {@link BrowseCommand}
    * @param browseCommand
    * @param repository repository to query
    * @param preProcessorUtil
@@ -140,11 +133,8 @@ public final class BrowseCommandBuilder
    * @return files for the given parameters
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public BrowserResult getBrowserResult()
-    throws IOException, RepositoryException
-  {
+  public BrowserResult getBrowserResult() throws IOException {
     BrowserResult result = null;
 
     if (disableCache)
@@ -185,15 +175,7 @@ public final class BrowseCommandBuilder
 
     if (!disablePreProcessors && (result != null))
     {
-      preProcessorUtil.prepareForReturn(repository, result, !disableEscaping);
-
-      List<FileObject> fileObjects = result.getFiles();
-
-      if (fileObjects != null)
-      {
-        fileObjects.sort(FileObjectNameComparator.instance);
-        result.setFiles(fileObjects);
-      }
+      preProcessorUtil.prepareForReturn(repository, result);
     }
 
     return result;
@@ -218,24 +200,6 @@ public final class BrowseCommandBuilder
     return this;
   }
   
-  /**
-   * Disable html escaping for the returned file objects. By default all
-   * file objects are html escaped.
-   *
-   *
-   * @param disableEscaping true to disable the html escaping
-   *
-   * @return {@code this}
-   *
-   * @since 1.35
-   */
-  public BrowseCommandBuilder setDisableEscaping(boolean disableEscaping)
-  {
-    this.disableEscaping = disableEscaping;
-
-    return this;
-  }
-
   /**
    * Disabling the last commit means that every call to
    * {@link FileObject#getDescription()} and
@@ -439,9 +403,6 @@ public final class BrowseCommandBuilder
   /** cache */
   private final Cache<CacheKey, BrowserResult> cache;
 
-  /** disable escaping */
-  private boolean disableEscaping = false;
-  
   /** disables the cache */
   private boolean disableCache = false;
 

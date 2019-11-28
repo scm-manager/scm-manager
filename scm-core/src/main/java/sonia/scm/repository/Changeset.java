@@ -33,27 +33,19 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Objects;
-
 import sonia.scm.BasicPropertiesAware;
-import sonia.scm.Validateable;
+import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
-
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Represents a changeset/commit of a repository.
@@ -62,43 +54,52 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "changeset")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Changeset extends BasicPropertiesAware
-        implements Validateable, Serializable
-{
+public class Changeset extends BasicPropertiesAware implements ModelObject {
 
-  /** Field description */
   private static final long serialVersionUID = -8373308448928993039L;
 
-  //~--- constructors ---------------------------------------------------------
+  /**
+   * The author of the changeset
+   */
+  private Person author;
 
   /**
-   * Constructs a new instance of changeset.
-   *
+   * The name of the branches on which the changeset was committed.
    */
+  private List<String> branches;
+
+  /**
+   * The date when the changeset was committed
+   */
+  private Long date;
+
+  /**
+   * The text of the changeset description
+   */
+  private String description;
+
+  /**
+   * The changeset identification string
+   */
+  private String id;
+
+  /**
+   * parent changeset ids
+   */
+  private List<String> parents;
+
+  /**
+   * The tags associated with the changeset
+   */
+  private List<String> tags;
+
   public Changeset() {}
 
-  /**
-   * Constructs a new instance of changeset.
-   *
-   *
-   * @param id id of the changeset
-   * @param date date of the changeset
-   * @param author author of the changeset
-   */
   public Changeset(String id, Long date, Person author)
   {
     this(id, date, author, null);
   }
 
-  /**
-   * Constructs a new instance of changeset.
-   *
-   *
-   * @param id id of the changeset
-   * @param date date of the changeset
-   * @param author author of the changeset
-   * @param description description of the changeset
-   */
   public Changeset(String id, Long date, Person author, String description)
   {
     this.id = id;
@@ -107,16 +108,6 @@ public class Changeset extends BasicPropertiesAware
     this.description = description;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
   @Override
   public boolean equals(Object obj)
   {
@@ -125,22 +116,20 @@ public class Changeset extends BasicPropertiesAware
       return false;
     }
 
-    if (getClass() != obj.getClass())
-    {
+    if (getClass() != obj.getClass()) {
       return false;
     }
 
     final Changeset other = (Changeset) obj;
 
     //J-
-    return Objects.equal(id, other.id) 
+    return Objects.equal(id, other.id)
            && Objects.equal(date, other.date)
            && Objects.equal(author, other.author)
            && Objects.equal(description, other.description)
            && Objects.equal(parents, other.parents)
            && Objects.equal(tags, other.tags)
            && Objects.equal(branches, other.branches)
-           && Objects.equal(modifications, other.modifications)
            && Objects.equal(properties, other.properties);
     //J+
   }
@@ -155,7 +144,7 @@ public class Changeset extends BasicPropertiesAware
   public int hashCode()
   {
     return Objects.hashCode(id, date, author, description, parents, tags,
-                            branches, modifications, properties);
+                            branches,  properties);
   }
 
   /**
@@ -187,15 +176,24 @@ public class Changeset extends BasicPropertiesAware
     out.append("branches: ").append(Util.toString(branches)).append("\n");
     out.append("tags: ").append(Util.toString(tags)).append("\n");
 
-    if (modifications != null)
-    {
-      out.append("modifications: \n").append(modifications);
-    }
-
     return out.toString();
   }
 
-  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns a timestamp of the creation date of the {@link Changeset}.
+   *
+   * @return a timestamp of the creation date of the {@link Changeset}
+   */
+  public Long getCreationDate() {
+    return getDate();
+  }
+
+  @Override
+  public void setCreationDate(Long timestamp) {
+    this.setDate(timestamp);
+  }
+
 
   /**
    * Returns the author of the changeset.
@@ -203,14 +201,13 @@ public class Changeset extends BasicPropertiesAware
    *
    * @return author of the changeset
    */
-  public Person getAuthor()
-  {
+  public Person getAuthor() {
     return author;
   }
 
   /**
-   * Returns the branches of the changeset. In the most cases a changeset is 
-   * only related to one branch, but in the case of receive hooks it is possible 
+   * Returns the branches of the changeset. In the most cases a changeset is
+   * only related to one branch, but in the case of receive hooks it is possible
    * that a changeset is related to more than a branch.
    *
    *
@@ -220,7 +217,7 @@ public class Changeset extends BasicPropertiesAware
   {
     if (branches == null)
     {
-      branches = new ArrayList<>();
+      branches = new ArrayList<String>();
     }
 
     return branches;
@@ -254,26 +251,27 @@ public class Changeset extends BasicPropertiesAware
    *
    * @return id of the changeset
    */
-  public String getId()
-  {
+  @Override
+  public String getId() {
     return id;
   }
 
-  /**
-   * Returns the file modifications, which was done with this changeset.
-   *
-   *
-   * @return file modifications
-   */
-  public Modifications getModifications()
-  {
-    if (modifications == null)
-    {
-      modifications = new Modifications();
-    }
-
-    return modifications;
+  @Override
+  public void setLastModified(Long timestamp) {
+    throw new UnsupportedOperationException("changesets are immutable");
   }
+
+  @Override
+  public Long getLastModified() {
+    return null;
+  }
+
+  @Override
+  public String getType() {
+    return "Changeset";
+  }
+
+
 
   /**
    * Return the ids of the parent changesets.
@@ -286,7 +284,7 @@ public class Changeset extends BasicPropertiesAware
   {
     if (parents == null)
     {
-      parents = new ArrayList<>();
+      parents = new ArrayList<String>();
     }
 
     return parents;
@@ -302,7 +300,7 @@ public class Changeset extends BasicPropertiesAware
   {
     if (tags == null)
     {
-      tags = new ArrayList<>();
+      tags = new ArrayList<String>();
     }
 
     return tags;
@@ -320,8 +318,6 @@ public class Changeset extends BasicPropertiesAware
     return Util.isNotEmpty(id) && ValidationUtil.isValid(author)
            && (date != null);
   }
-
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Sets the author of the changeset.
@@ -379,17 +375,6 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Sets the file modification of the changeset.
-   *
-   *
-   * @param modifications file modifications
-   */
-  public void setModifications(Modifications modifications)
-  {
-    this.modifications = modifications;
-  }
-
-  /**
    * Sets the parents of the changeset.
    *
    *
@@ -412,30 +397,4 @@ public class Changeset extends BasicPropertiesAware
     this.tags = tags;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** The author of the changeset */
-  private Person author;
-
-  /** The name of the branches on which the changeset was committed. */
-  private List<String> branches;
-
-  /** The date when the changeset was committed */
-  private Long date;
-
-  /** The text of the changeset description */
-  private String description;
-
-  /** The changeset identification string */
-  private String id;
-
-  /** List of files changed by this changeset */
-  @XmlElement(name = "modifications")
-  private Modifications modifications;
-
-  /** parent changeset ids */
-  private List<String> parents;
-
-  /** The tags associated with the changeset */
-  private List<String> tags;
 }

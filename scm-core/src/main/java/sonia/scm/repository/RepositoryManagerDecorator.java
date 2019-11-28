@@ -38,13 +38,10 @@ package sonia.scm.repository;
 import sonia.scm.ManagerDecorator;
 import sonia.scm.Type;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.Collection;
 
-import javax.servlet.http.HttpServletRequest;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Decorator for {@link RepositoryManager}.
@@ -53,7 +50,7 @@ import javax.servlet.http.HttpServletRequest;
  * @since 1.23
  */
 public class RepositoryManagerDecorator
-  extends ManagerDecorator<Repository, RepositoryException>
+  extends ManagerDecorator<Repository>
   implements RepositoryManager
 {
 
@@ -84,27 +81,16 @@ public class RepositoryManagerDecorator
    * {@inheritDoc}
    */
   @Override
-  public void importRepository(Repository repository)
-    throws IOException, RepositoryException
-  {
+  public void importRepository(Repository repository) throws IOException {
     decorated.importRepository(repository);
   }
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param type
-   * @param name
-   *
-   * @return
-   */
   @Override
-  public Repository get(String type, String name)
+  public Repository get(NamespaceAndName namespaceAndName)
   {
-    return decorated.get(type, name);
+    return decorated.get(namespaceAndName);
   }
 
   /**
@@ -114,7 +100,7 @@ public class RepositoryManagerDecorator
    * @return
    */
   @Override
-  public Collection<Type> getConfiguredTypes()
+  public Collection<RepositoryType> getConfiguredTypes()
   {
     return decorated.getConfiguredTypes();
   }
@@ -130,49 +116,6 @@ public class RepositoryManagerDecorator
   public RepositoryManager getDecorated()
   {
     return decorated;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  @Override
-  public Repository getFromRequest(HttpServletRequest request)
-  {
-    return decorated.getFromRequest(request);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param type
-   * @param uri
-   *
-   * @return
-   */
-  @Override
-  public Repository getFromTypeAndUri(String type, String uri)
-  {
-    return decorated.getFromTypeAndUri(type, uri);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param uri
-   *
-   * @return
-   */
-  @Override
-  public Repository getFromUri(String uri)
-  {
-    return decorated.getFromUri(uri);
   }
 
   /**

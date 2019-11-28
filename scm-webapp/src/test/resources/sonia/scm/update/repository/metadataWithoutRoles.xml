@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<repositories>
+    <properties/>
+    <contact>ich@du.er</contact>
+    <creationDate>1557729536519</creationDate>
+    <description/>
+    <id>B3RQKYNzo2</id>
+    <lastModified>1557825677782</lastModified>
+    <namespace>scmadmin</namespace>
+    <name>git</name>
+    <permission>
+        <groupPermission>false</groupPermission>
+        <name>user</name>
+        <verb>read</verb>
+        <verb>write</verb>
+    </permission>
+    <permission>
+        <groupPermission>true</groupPermission>
+        <name>group</name>
+        <verb>special</verb>
+    </permission>
+    <public>false</public>
+    <archived>false</archived>
+    <type>git</type>
+</repositories>

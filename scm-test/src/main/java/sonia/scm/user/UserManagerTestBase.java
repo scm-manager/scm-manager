@@ -37,46 +37,31 @@ package sonia.scm.user;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-
 import org.junit.Test;
-
+import sonia.scm.AlreadyExistsException;
 import sonia.scm.Manager;
 import sonia.scm.ManagerTestBase;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
+import sonia.scm.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public abstract class UserManagerTestBase
-  extends ManagerTestBase<User, UserException>
-{
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-  /** Field description */
+//~--- JDK imports ------------------------------------------------------------
+
+public abstract class UserManagerTestBase extends ManagerTestBase<User> {
+
   public static final int THREAD_COUNT = 10;
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws UserException
-   */
   @Test
-  public void testCreate() throws UserException, IOException
-  {
+  public void testCreate() {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -87,16 +72,8 @@ public abstract class UserManagerTestBase
     assertUserEquals(zaphod, otherUser);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws UserException
-   */
-  @Test(expected = UserAlreadyExistsException.class)
-  public void testCreateExisting() throws UserException, IOException
-  {
+  @Test(expected = AlreadyExistsException.class)
+  public void testCreateExisting() {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -107,16 +84,8 @@ public abstract class UserManagerTestBase
     manager.create(sameUser);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws UserException
-   */
   @Test
-  public void testDelete() throws UserException, IOException
-  {
+  public void testDelete() {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -125,29 +94,13 @@ public abstract class UserManagerTestBase
     assertNull(manager.get("zaphod"));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws UserException
-   */
-  @Test(expected = UserNotFoundException.class)
-  public void testDeleteNotFound() throws UserException, IOException
-  {
+  @Test(expected = NotFoundException.class)
+  public void testDeleteNotFound() {
     manager.delete(UserTestData.createDent());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws UserException
-   */
   @Test
-  public void testGet() throws UserException, IOException
-  {
+  public void testGet() {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -160,16 +113,8 @@ public abstract class UserManagerTestBase
     assertEquals("Zaphod Beeblebrox", zaphod.getDisplayName());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws UserException
-   */
   @Test
-  public void testGetAll() throws UserException, IOException
-  {
+  public void testGetAll() {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -233,16 +178,8 @@ public abstract class UserManagerTestBase
     assertEquals(reference.getDisplayName(), "Tricia McMillan");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws UserException
-   */
   @Test
-  public void testModify() throws UserException, IOException
-  {
+  public void testModify() {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -256,33 +193,15 @@ public abstract class UserManagerTestBase
     assertEquals(otherUser.getDisplayName(), "Tricia McMillan");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws UserException
-   */
-  @Test(expected = UserException.class)
-  public void testModifyNotExisting() throws UserException, IOException
-  {
+  @Test(expected = NotFoundException.class)
+  public void testModifyNotExisting() {
     manager.modify(UserTestData.createZaphod());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws InterruptedException
-   * @throws UserException
-   */
   @Test
-  public void testMultiThreaded()
-    throws UserException, IOException, InterruptedException
-  {
+  public void testMultiThreaded() throws InterruptedException {
     int initialSize = manager.getAll().size();
-    List<MultiThreadTester> testers = new ArrayList<>();
+    List<MultiThreadTester> testers = new ArrayList<MultiThreadTester>();
 
     for (int i = 0; i < THREAD_COUNT; i++)
     {
@@ -301,7 +220,7 @@ public abstract class UserManagerTestBase
 
     while (!fin)
     {
-      Thread.sleep(100L);
+      Thread.sleep(100l);
       fin = true;
 
       for (MultiThreadTester tester : testers)
@@ -316,16 +235,8 @@ public abstract class UserManagerTestBase
     assertTrue((initialSize + THREAD_COUNT) == manager.getAll().size());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws UserException
-   */
   @Test
-  public void testRefresh() throws UserException, IOException
-  {
+  public void testRefresh() {
     User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
@@ -335,26 +246,11 @@ public abstract class UserManagerTestBase
     assertEquals(zaphod.getDisplayName(), "Zaphod Beeblebrox");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws UserException
-   */
-  @Test(expected = UserNotFoundException.class)
-  public void testRefreshNotFound() throws UserException, IOException
-  {
+  @Test(expected = NotFoundException.class)
+  public void testRefreshNotFound(){
     manager.refresh(UserTestData.createDent());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   * @param otherUser
-   */
   private void assertUserEquals(User user, User otherUser)
   {
     assertEquals(user.getName(), otherUser.getName());
@@ -363,35 +259,16 @@ public abstract class UserManagerTestBase
     assertEquals(user.getPassword(), otherUser.getPassword());
   }
 
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 2010-11-23
-   * @author         Sebastian Sdorra
-   */
   private static class MultiThreadTester implements Runnable
   {
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param userManager
-     */
-    public MultiThreadTester(Manager<User, UserException> userManager)
+    public MultiThreadTester(Manager<User> userManager)
     {
       this.manager = userManager;
     }
 
     //~--- methods ------------------------------------------------------------
 
-    /**
-     * Method description
-     *
-     */
     @Override
     public void run()
     {
@@ -410,17 +287,7 @@ public abstract class UserManagerTestBase
       finished = true;
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     *
-     * @throws IOException
-     * @throws UserException
-     */
-    private User createUser() throws UserException, IOException
-    {
+    private User createUser() {
       String id = UUID.randomUUID().toString();
       User user = new User(id, id.concat(" displayName"),
                     id.concat("@mail.com"));
@@ -430,18 +297,7 @@ public abstract class UserManagerTestBase
       return user;
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @param user
-     *
-     * @throws IOException
-     * @throws UserException
-     */
-    private void modifyAndDeleteUser(User user)
-      throws UserException, IOException
-    {
+    private void modifyAndDeleteUser(User user) {
       String name = user.getName();
       String nd = name.concat(" new displayname");
 
@@ -463,6 +319,6 @@ public abstract class UserManagerTestBase
     private boolean finished = false;
 
     /** Field description */
-    private Manager<User, UserException> manager;
+    private Manager<User> manager;
   }
 }

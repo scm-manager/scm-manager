@@ -36,7 +36,6 @@ package sonia.scm.repository.client.spi;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -92,6 +91,7 @@ public final class TagRequest
   {
     this.name = null;
     this.revision = null;
+    this.username = null;
   }
 
   /**
@@ -105,9 +105,10 @@ public final class TagRequest
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("revision", revision)
-                      .add("name", name)
-                      .toString();
+                  .add("revision", revision)
+                  .add("name", name)
+      .add("username", username)
+                  .toString();
     //J+
   }
 
@@ -135,6 +136,10 @@ public final class TagRequest
     this.revision = revision;
   }
 
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -159,6 +164,10 @@ public final class TagRequest
     return revision;
   }
 
+  public String getUserName() {
+    return username;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -166,4 +175,6 @@ public final class TagRequest
 
   /** Field description */
   private String revision;
+
+  private String username;
 }

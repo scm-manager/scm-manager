@@ -33,21 +33,25 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import static org.hamcrest.Matchers.*;
+
+import static org.junit.Assert.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -66,8 +70,8 @@ public class PluginTreeTest
   public void testPluginConditionFailed() throws IOException
   {
     PluginCondition condition = new PluginCondition("999",
-                                                    new ArrayList<>(), "hit");
-    Plugin plugin = new Plugin(2, createInfo("a", "b", "1"), null, condition,
+                                  new ArrayList<String>(), "hit");
+    InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(2, createInfo("a",  "1"), null, condition,
                       false, null);
     ExplodedSmp smp = createSmp(plugin);
 
@@ -98,7 +102,7 @@ public class PluginTreeTest
     List<ExplodedSmp> smps = createSmps("a", "b", "c");
     List<String> nodes = unwrapIds(new PluginTree(smps).getRootNodes());
 
-    assertThat(nodes, containsInAnyOrder("a:a", "b:b", "c:c"));
+    assertThat(nodes, containsInAnyOrder("a", "b", "c"));
   }
 
   /**
@@ -110,7 +114,7 @@ public class PluginTreeTest
   @Test(expected = PluginException.class)
   public void testScmVersion() throws IOException
   {
-    Plugin plugin = new Plugin(1, createInfo("a", "b", "1"), null, null, false,
+    InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(1, createInfo("a", "1"), null, null, false,
                       null);
     ExplodedSmp smp = createSmp(plugin);
 
@@ -137,34 +141,32 @@ public class PluginTreeTest
     PluginTree tree = new PluginTree(smps);
     List<PluginNode> rootNodes = tree.getRootNodes();
 
-    assertThat(unwrapIds(rootNodes), containsInAnyOrder("a:a"));
+    assertThat(unwrapIds(rootNodes), containsInAnyOrder("a"));
 
     PluginNode a = rootNodes.get(0);
 
-    assertThat(unwrapIds(a.getChildren()), containsInAnyOrder("b:b", "c:c"));
+    assertThat(unwrapIds(a.getChildren()), containsInAnyOrder("b", "c"));
 
-    PluginNode b = a.getChild("b:b");
+    PluginNode b = a.getChild("b");
 
-    assertThat(unwrapIds(b.getChildren()), containsInAnyOrder("c:c"));
+    assertThat(unwrapIds(b.getChildren()), containsInAnyOrder("c"));
   }
 
   /**
    * Method description
    *
    *
-   * @param groupId
-   * @param artifactId
+   * @param name
    * @param version
    *
    * @return
    */
-  private PluginInformation createInfo(String groupId, String artifactId,
+  private PluginInformation createInfo(String name,
     String version)
   {
     PluginInformation info = new PluginInformation();
 
-    info.setGroupId(groupId);
-    info.setArtifactId(artifactId);
+    info.setName(name);
     info.setVersion(version);
 
     return info;
@@ -180,7 +182,7 @@ public class PluginTreeTest
    *
    * @throws IOException
    */
-  private ExplodedSmp createSmp(Plugin plugin) throws IOException
+  private ExplodedSmp createSmp(InstalledPluginDescriptor plugin) throws IOException
   {
     return new ExplodedSmp(tempFolder.newFile().toPath(), plugin);
   }
@@ -197,7 +199,7 @@ public class PluginTreeTest
    */
   private ExplodedSmp createSmp(String name) throws IOException
   {
-    return createSmp(new Plugin(2, createInfo(name, name, "1.0.0"), null, null,
+    return createSmp(new InstalledPluginDescriptor(2, createInfo(name, "1.0.0"), null, null,
       false, null));
   }
 
@@ -220,10 +222,10 @@ public class PluginTreeTest
 
     for (String d : dependencies)
     {
-      dependencySet.add(d.concat(":").concat(d));
+      dependencySet.add(d);
     }
 
-    Plugin plugin = new Plugin(2, createInfo(name, name, "1"), null, null,
+    InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(2, createInfo(name, "1"), null, null,
                       false, dependencySet);
 
     return createSmp(plugin);
@@ -261,7 +263,15 @@ public class PluginTreeTest
    */
   private List<String> unwrapIds(List<PluginNode> nodes)
   {
-    return Lists.transform(nodes, PluginNode::getId);
+    return Lists.transform(nodes, new Function<PluginNode, String>()
+    {
+
+      @Override
+      public String apply(PluginNode input)
+      {
+        return input.getId();
+      }
+    });
   }
 
   //~--- fields ---------------------------------------------------------------

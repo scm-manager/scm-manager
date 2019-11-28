@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>sonia.scm</groupId>
+    <artifactId>scm</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+  </parent>
+
+  <groupId>sonia.scm</groupId>
+  <artifactId>scm-it</artifactId>
+  <!-- we need type war, because the jetty plugin does not work with jar or pom -->
+  <packaging>war</packaging>
+  <version>2.0.0-SNAPSHOT</version>
+  <name>scm-it</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-core</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-test</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-git-plugin</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-git-plugin</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-hg-plugin</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-hg-plugin</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-svn-plugin</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-svn-plugin</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>3.1.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.json</artifactId>
+      <version>1.0.4</version>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <version>1.9.0</version>
+        <configuration>
+          <header>http://download.scm-manager.org/licenses/mvn-license.txt</header>
+          <includes>
+            <include>src/**</include>
+            <include>**/test/**</include>
+          </includes>
+          <excludes>
+            <exclude>target/**</exclude>
+            <exclude>.hg/**</exclude>
+          </excludes>
+          <strictCheck>true</strictCheck>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+
+    <profile>
+      <id>it</id>
+
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>2.12</version>
+            <configuration>
+              <includes>
+                <include>sonia/scm/it/*ITCase.java</include>
+              </includes>
+            </configuration>
+            <executions>
+              <execution>
+                <id>integration-test</id>
+                <goals>
+                  <goal>integration-test</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>verify</id>
+                <goals>
+                  <goal>verify</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>2.10</version>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>sonia.scm</groupId>
+                  <artifactId>scm-webapp</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                  <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                  <destFileName>scm-webapp.war</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+            <executions>
+              <execution>
+                <id>copy-war</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-maven-plugin</artifactId>
+            <version>${jetty.maven.version}</version>
+            <configuration>
+              <stopPort>8085</stopPort>
+              <stopKey>STOP</stopKey>
+              <systemProperties>
+                <systemProperty>
+                  <name>scm.home</name>
+                  <value>${scm.home}</value>
+                </systemProperty>
+                <systemProperty>
+                  <name>scm.stage</name>
+                  <value>${scm.stage}</value>
+                </systemProperty>
+                <systemProperty>
+                  <name>java.awt.headless</name>
+                  <value>true</value>
+                </systemProperty>
+              </systemProperties>
+              <webApp>
+                <contextPath>/scm</contextPath>
+              </webApp>
+              <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
+              <war>${project.build.outputDirectory}/scm-webapp.war</war>
+              <scanIntervalSeconds>0</scanIntervalSeconds>
+              <daemon>true</daemon>
+            </configuration>
+            <executions>
+              <execution>
+                <id>start-jetty</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>deploy-war</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>stop-jetty</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>stop</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+
+      <properties>
+        <scm.stage>DEVELOPMENT</scm.stage>
+        <scm.home>target/scm-it</scm.home>
+      </properties>
+
+    </profile>
+  </profiles>
+
+</project>
+

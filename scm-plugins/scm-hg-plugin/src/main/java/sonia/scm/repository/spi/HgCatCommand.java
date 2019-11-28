@@ -33,71 +33,50 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
+import com.aragost.javahg.commands.ExecutionException;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.ContextEntry;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.web.HgUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class HgCatCommand extends AbstractCommand implements CatCommand
-{
+public class HgCatCommand extends AbstractCommand implements CatCommand {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param context
-   * @param repository
-   */
-  HgCatCommand(HgCommandContext context, Repository repository)
-  {
+  private static final Logger log = LoggerFactory.getLogger(HgCatCommand.class);
+
+  HgCatCommand(HgCommandContext context, Repository repository) {
     super(context, repository);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param output
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public void getCatResult(CatCommandRequest request, OutputStream output)
-    throws IOException, RepositoryException
-  {
+  public void getCatResult(CatCommandRequest request, OutputStream output) throws IOException {
+    InputStream input = getCatResultStream(request);
+    try {
+      ByteStreams.copy(input, output);
+    } finally {
+      Closeables.close(input, true);
+    }
+  }
+
+  @Override
+  public InputStream getCatResultStream(CatCommandRequest request) throws IOException {
     com.aragost.javahg.commands.CatCommand cmd =
       com.aragost.javahg.commands.CatCommand.on(open());
 
     cmd.rev(HgUtil.getRevision(request.getRevision()));
 
-    InputStream input = null;
-
-    try
-    {
-      input = cmd.execute(request.getPath());
-      ByteStreams.copy(input, output);
-    }
-    finally
-    {
-      Closeables.close(input, true);
+    try {
+      return cmd.execute(request.getPath());
+    } catch (ExecutionException e) {
+      log.error("could not execute cat command", e);
+      throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity(getRepository()), "could not execute cat command", e);
     }
   }
 }

@@ -36,7 +36,6 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -86,10 +85,10 @@ public abstract class PagedRemoteCommandRequest extends RemoteCommandRequest
 
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("remoteURL", remoteRepository)
-                      .add("pagingStart", pagingStart)
-                      .add("pagingLimit", pagingLimit)
-                      .toString();
+                  .add("remoteURL", remoteRepository)
+                  .add("pagingStart", pagingStart)
+                  .add("pagingLimit", pagingLimit)
+                  .toString();
     //J+
   }
 

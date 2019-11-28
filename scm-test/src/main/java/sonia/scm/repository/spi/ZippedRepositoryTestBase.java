@@ -153,7 +153,12 @@ public abstract class ZippedRepositoryTestBase extends AbstractTestBase
    */
   private void extract(File folder) throws IOException
   {
-    URL url = Resources.getResource(getZippedRepositoryResource());
+    String zippedRepositoryResource = getZippedRepositoryResource();
+    extract(folder, zippedRepositoryResource);
+  }
+
+  public static void extract(File targetFolder, String zippedRepositoryResource) throws IOException {
+    URL url = Resources.getResource(zippedRepositoryResource);
     ZipInputStream zip = null;
 
     try
@@ -164,7 +169,7 @@ public abstract class ZippedRepositoryTestBase extends AbstractTestBase
 
       while (entry != null)
       {
-        File file = new File(folder, entry.getName());
+        File file = new File(targetFolder, entry.getName());
         File parent = file.getParentFile();
 
         if (!parent.exists())

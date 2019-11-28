@@ -36,18 +36,19 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
-
+import org.junit.Ignore;
 import org.junit.Test;
-
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.RepositoryException;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.Repository;
+import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.IOException;
-import org.junit.Ignore;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -63,11 +64,10 @@ public class GitIncomingCommandTest
    *
    * @throws GitAPIException
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetIncomingChangesets()
-    throws IOException, GitAPIException, RepositoryException
+    throws IOException, GitAPIException
   {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 
@@ -97,17 +97,16 @@ public class GitIncomingCommandTest
    *
    * @throws GitAPIException
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetIncomingChangesetsWithAllreadyPullChangesets()
-    throws IOException, GitAPIException, RepositoryException
+    throws IOException, GitAPIException
   {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 
     commit(outgoing, "added a");
     
-    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory), incomgingRepository);
+    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory, null, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())), incomingRepository);
     PullCommandRequest req = new PullCommandRequest();
     req.setRemoteRepository(outgoingRepository);
     pull.pull(req);
@@ -134,11 +133,10 @@ public class GitIncomingCommandTest
    *
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   public void testGetIncomingChangesetsWithEmptyRepository()
-    throws IOException, RepositoryException
+    throws IOException
   {
     GitIncomingCommand cmd = createCommand();
     IncomingCommandRequest request = new IncomingCommandRequest();
@@ -158,12 +156,11 @@ public class GitIncomingCommandTest
    *
    * @throws GitAPIException
    * @throws IOException
-   * @throws RepositoryException
    */
   @Test
   @Ignore
   public void testGetIncomingChangesetsWithUnrelatedRepository()
-    throws IOException, RepositoryException, GitAPIException
+    throws IOException, GitAPIException
   {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 
@@ -193,7 +190,7 @@ public class GitIncomingCommandTest
    */
   private GitIncomingCommand createCommand()
   {
-    return new GitIncomingCommand(handler, new GitContext(incomingDirectory),
-      incomgingRepository);
+    return new GitIncomingCommand(handler, new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())),
+      this.incomingRepository);
   }
 }

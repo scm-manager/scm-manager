@@ -206,7 +206,7 @@ public final class SmpArchive
    *
    * @throws IOException
    */
-  public Plugin getPlugin() throws IOException
+  public InstalledPluginDescriptor getPlugin() throws IOException
   {
     if (plugin == null)
     {
@@ -219,16 +219,10 @@ public final class SmpArchive
         throw new PluginException("could not find information section");
       }
 
-      if (Strings.isNullOrEmpty(info.getGroupId()))
+      if (Strings.isNullOrEmpty(info.getName()))
       {
         throw new PluginException(
-          "could not find groupId in plugin descriptor");
-      }
-
-      if (Strings.isNullOrEmpty(info.getArtifactId()))
-      {
-        throw new PluginException(
-          "could not find artifactId in plugin descriptor");
+          "could not find name in plugin descriptor");
       }
 
       if (Strings.isNullOrEmpty(info.getVersion()))
@@ -251,9 +245,9 @@ public final class SmpArchive
    *
    * @throws IOException
    */
-  private Plugin createPlugin() throws IOException
+  private InstalledPluginDescriptor createPlugin() throws IOException
   {
-    Plugin p = null;
+    InstalledPluginDescriptor p = null;
     NonClosingZipInputStream zis = null;
 
     try
@@ -418,5 +412,5 @@ public final class SmpArchive
   private final ByteSource archive;
 
   /** Field description */
-  private Plugin plugin;
+  private InstalledPluginDescriptor plugin;
 }

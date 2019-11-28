@@ -33,710 +33,280 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.github.legman.Subscribe;
-
-import com.google.common.base.Predicate;
-import com.google.common.io.Files;
-import com.google.inject.Inject;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.SCMContextProvider;
-import sonia.scm.cache.Cache;
-import sonia.scm.cache.CacheManager;
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.config.ScmConfigurationChangedEvent;
-import sonia.scm.io.ZipUnArchiver;
-import sonia.scm.util.AssertUtil;
-import sonia.scm.util.IOUtil;
-import sonia.scm.util.SystemUtil;
-import sonia.scm.util.Util;
+import sonia.scm.NotFoundException;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.version.Version;
+
+import javax.inject.Inject;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-
-import java.net.URLEncoder;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.bind.JAXB;
-
-import sonia.scm.net.ahc.AdvancedHttpClient;
-
 /**
- * TODO replace aether stuff.
- * TODO check AdvancedPluginConfiguration from 1.x
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class DefaultPluginManager implements PluginManager
-{
+public class DefaultPluginManager implements PluginManager {
 
-  /** Field description */
-  public static final String CACHE_NAME = "sonia.cache.plugins";
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultPluginManager.class);
 
-  /** Field description */
-  public static final String ENCODING = "UTF-8";
+  private final ScmEventBus eventBus;
+  private final PluginLoader loader;
+  private final PluginCenter center;
+  private final PluginInstaller installer;
+  private final Collection<PendingPluginInstallation> pendingInstallQueue = new ArrayList<>();
+  private final Collection<PendingPluginUninstallation> pendingUninstallQueue = new ArrayList<>();
+  private final PluginDependencyTracker dependencyTracker = new PluginDependencyTracker();
 
-  /** the logger for DefaultPluginManager */
-  private static final Logger logger =
-    LoggerFactory.getLogger(DefaultPluginManager.class);
-
-  /** enable or disable remote plugins */
-  private static final boolean REMOTE_PLUGINS_ENABLED = false;
-
-  /** Field description */
-  public static final Predicate<PluginInformation> FILTER_UPDATES =
-    new StatePluginPredicate(PluginState.UPDATE_AVAILABLE);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   * @param context
-   * @param configuration
-   * @param pluginLoader
-   * @param cacheManager
-   * @param httpClient
-   */
   @Inject
-  public DefaultPluginManager(SCMContextProvider context,
-    ScmConfiguration configuration, PluginLoader pluginLoader,
-    CacheManager cacheManager, AdvancedHttpClient httpClient)
-  {
-    this.context = context;
-    this.configuration = configuration;
-    this.cache = cacheManager.getCache(CACHE_NAME);
-    this.httpClient = httpClient;
-    installedPlugins = new HashMap<>();
+  public DefaultPluginManager(ScmEventBus eventBus, PluginLoader loader, PluginCenter center, PluginInstaller installer) {
+    this.eventBus = eventBus;
+    this.loader = loader;
+    this.center = center;
+    this.installer = installer;
 
-    for (PluginWrapper wrapper : pluginLoader.getInstalledPlugins())
-    {
-      Plugin plugin = wrapper.getPlugin();
-      PluginInformation info = plugin.getInformation();
-
-      if ((info != null) && info.isValid())
-      {
-        installedPlugins.put(info.getId(), plugin);
-      }
-    }
+    this.computeInstallationDependencies();
   }
 
-  //~--- methods --------------------------------------------------------------
+  @VisibleForTesting
+  synchronized void computeInstallationDependencies() {
+    loader.getInstalledPlugins()
+      .stream()
+      .map(InstalledPlugin::getDescriptor)
+      .forEach(dependencyTracker::addInstalled);
+    updateMayUninstallFlag();
+  }
 
-  /**
-   * Method description
-   *
-   */
   @Override
-  public void clearCache()
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("clear plugin cache");
-    }
-
-    cache.clear();
+  public Optional<AvailablePlugin> getAvailable(String name) {
+    PluginPermissions.read().check();
+    return center.getAvailable()
+      .stream()
+      .filter(filterByName(name))
+      .filter(this::isNotInstalledOrMoreUpToDate)
+      .map(p -> getPending(name).orElse(p))
+      .findFirst();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param config
-   */
-  @Subscribe
-  public void configChanged(ScmConfigurationChangedEvent config)
-  {
-    clearCache();
+  private Optional<AvailablePlugin> getPending(String name) {
+    return pendingInstallQueue
+      .stream()
+      .map(PendingPluginInstallation::getPlugin)
+      .filter(filterByName(name))
+      .findFirst();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
   @Override
-  public void install(String id)
-  {
-    PluginPermissions.manage().check();
-    
-    PluginCenter center = getPluginCenter();
-
-    // pluginHandler.install(id);
-
-    for (PluginInformation plugin : center.getPlugins())
-    {
-      String pluginId = plugin.getId();
-
-      if (Util.isNotEmpty(pluginId) && pluginId.equals(id))
-      {
-        plugin.setState(PluginState.INSTALLED);
-
-        // ugly workaround
-        Plugin newPlugin = new Plugin();
-
-        // TODO check
-        // newPlugin.setInformation(plugin);
-        installedPlugins.put(id, newPlugin);
-      }
-    }
+  public Optional<InstalledPlugin> getInstalled(String name) {
+    PluginPermissions.read().check();
+    return loader.getInstalledPlugins()
+      .stream()
+      .filter(filterByName(name))
+      .findFirst();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param packageStream
-   *
-   * @throws IOException
-   */
   @Override
-  public void installPackage(InputStream packageStream) throws IOException
-  {
+  public List<InstalledPlugin> getInstalled() {
+    PluginPermissions.read().check();
+    return ImmutableList.copyOf(loader.getInstalledPlugins());
+  }
+
+  @Override
+  public List<AvailablePlugin> getAvailable() {
+    PluginPermissions.read().check();
+    return center.getAvailable()
+      .stream()
+      .filter(this::isNotInstalledOrMoreUpToDate)
+      .map(p -> getPending(p.getDescriptor().getInformation().getName()).orElse(p))
+      .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<InstalledPlugin> getUpdatable() {
+    return getInstalled()
+      .stream()
+      .filter(p -> isUpdatable(p.getDescriptor().getInformation().getName()))
+      .filter(p -> !p.isMarkedForUninstall())
+      .collect(Collectors.toList());
+  }
+
+  private <T extends Plugin> Predicate<T> filterByName(String name) {
+    return plugin -> name.equals(plugin.getDescriptor().getInformation().getName());
+  }
+
+  private boolean isNotInstalledOrMoreUpToDate(AvailablePlugin availablePlugin) {
+    return getInstalled(availablePlugin.getDescriptor().getInformation().getName())
+      .map(installedPlugin -> availableIsMoreUpToDateThanInstalled(availablePlugin, installedPlugin))
+      .orElse(true);
+  }
+
+  private boolean availableIsMoreUpToDateThanInstalled(AvailablePlugin availablePlugin, InstalledPlugin installed) {
+    return Version.parse(availablePlugin.getDescriptor().getInformation().getVersion()).isNewer(installed.getDescriptor().getInformation().getVersion());
+  }
+
+  @Override
+  public void install(String name, boolean restartAfterInstallation) {
     PluginPermissions.manage().check();
 
-    File tempDirectory = Files.createTempDir();
+    getInstalled(name)
+      .map(InstalledPlugin::isCore)
+      .ifPresent(
+        core -> doThrow().violation("plugin is a core plugin and cannot be updated").when(core)
+      );
 
-    try
-    {
-      new ZipUnArchiver().extractArchive(packageStream, tempDirectory);
-
-      Plugin plugin = JAXB.unmarshal(new File(tempDirectory, "plugin.xml"),
-                        Plugin.class);
-
-      PluginCondition condition = plugin.getCondition();
-
-      if ((condition != null) &&!condition.isSupported())
-      {
-        throw new PluginConditionFailedException(condition);
+    List<AvailablePlugin> plugins = collectPluginsToInstall(name);
+    List<PendingPluginInstallation> pendingInstallations = new ArrayList<>();
+    for (AvailablePlugin plugin : plugins) {
+      try {
+        PendingPluginInstallation pending = installer.install(plugin);
+        dependencyTracker.addInstalled(plugin.getDescriptor());
+        pendingInstallations.add(pending);
+      } catch (PluginInstallException ex) {
+        cancelPending(pendingInstallations);
+        throw ex;
       }
-
-      /*
-       * AetherPluginHandler aph = new AetherPluginHandler(this, context,
-       *                           configuration);
-       * Collection<PluginRepository> repositories =
-       * Sets.newHashSet(new PluginRepository("package-repository",
-       *   "file://".concat(tempDirectory.getAbsolutePath())));
-       *
-       * aph.setPluginRepositories(repositories);
-       *
-       * aph.install(plugin.getInformation().getId());
-       */
-      plugin.getInformation().setState(PluginState.INSTALLED);
-      installedPlugins.put(plugin.getInformation().getId(), plugin);
-
     }
-    finally
-    {
-      IOUtil.delete(tempDirectory);
+
+    if (!pendingInstallations.isEmpty()) {
+      if (restartAfterInstallation) {
+        triggerRestart("plugin installation");
+      } else {
+        pendingInstallQueue.addAll(pendingInstallations);
+        updateMayUninstallFlag();
+      }
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
   @Override
-  public void uninstall(String id)
-  {
+  public void uninstall(String name, boolean restartAfterInstallation) {
     PluginPermissions.manage().check();
+    InstalledPlugin installed = getInstalled(name)
+      .orElseThrow(() -> NotFoundException.notFound(entity(InstalledPlugin.class, name)));
+    doThrow().violation("plugin is a core plugin and cannot be uninstalled").when(installed.isCore());
 
-    Plugin plugin = installedPlugins.get(id);
+    markForUninstall(installed);
 
-    if (plugin == null)
-    {
-      String pluginPrefix = getPluginIdPrefix(id);
-
-      for (String nid : installedPlugins.keySet())
-      {
-        if (nid.startsWith(pluginPrefix))
-        {
-          id = nid;
-          plugin = installedPlugins.get(nid);
-
-          break;
-        }
-      }
+    if (restartAfterInstallation) {
+      triggerRestart("plugin installation");
+    } else {
+      updateMayUninstallFlag();
     }
-
-    if (plugin == null)
-    {
-      throw new PluginNotInstalledException(id.concat(" is not install"));
-    }
-
-    /*
-     * if (pluginHandler == null)
-     * {
-     * getPluginCenter();
-     * }
-     *
-     * pluginHandler.uninstall(id);
-     */
-    installedPlugins.remove(id);
-    preparePlugins(getPluginCenter());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
+  private void updateMayUninstallFlag() {
+    loader.getInstalledPlugins()
+      .forEach(p -> p.setUninstallable(isUninstallable(p)));
+  }
+
+  private boolean isUninstallable(InstalledPlugin p) {
+    return !p.isCore()
+      && !p.isMarkedForUninstall()
+      && dependencyTracker.mayUninstall(p.getDescriptor().getInformation().getName());
+  }
+
+  private void markForUninstall(InstalledPlugin plugin) {
+    dependencyTracker.removeInstalled(plugin.getDescriptor());
+    try {
+      Path file = Files.createFile(plugin.getDirectory().resolve(InstalledPlugin.UNINSTALL_MARKER_FILENAME));
+      pendingUninstallQueue.add(new PendingPluginUninstallation(plugin, file));
+      plugin.setMarkedForUninstall(true);
+    } catch (Exception e) {
+      dependencyTracker.addInstalled(plugin.getDescriptor());
+      throw new PluginException("could not mark plugin " + plugin.getId() + " in path " + plugin.getDirectory() + "as " + InstalledPlugin.UNINSTALL_MARKER_FILENAME, e);
+    }
+  }
+
   @Override
-  public void update(String id)
-  {
+  public void executePendingAndRestart() {
     PluginPermissions.manage().check();
-
-    String[] idParts = id.split(":");
-    String groupId = idParts[0];
-    String artefactId = idParts[1];
-    PluginInformation installed = null;
-
-    for (PluginInformation info : getInstalled())
-    {
-      if (groupId.equals(info.getGroupId())
-        && artefactId.equals(info.getArtifactId()))
-      {
-        installed = info;
-
-        break;
-      }
+    if (!pendingInstallQueue.isEmpty() || getInstalled().stream().anyMatch(InstalledPlugin::isMarkedForUninstall)) {
+      triggerRestart("execute pending plugin changes");
     }
-
-    if (installed == null)
-    {
-      StringBuilder msg = new StringBuilder(groupId);
-
-      msg.append(":").append(groupId).append(" is not install");
-
-      throw new PluginNotInstalledException(msg.toString());
-    }
-
-    uninstall(installed.getId());
-    install(id);
   }
 
-  //~--- get methods ----------------------------------------------------------
+  @VisibleForTesting
+  void triggerRestart(String cause) {
+    new Thread(() -> {
+      try {
+        Thread.sleep(200);
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
+      eventBus.post(new RestartEvent(PluginManager.class, cause));
+    }).start();
+  }
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
+  private void cancelPending(List<PendingPluginInstallation> pendingInstallations) {
+    pendingInstallations.forEach(PendingPluginInstallation::cancel);
+  }
+
+  private List<AvailablePlugin> collectPluginsToInstall(String name) {
+    List<AvailablePlugin> plugins = new ArrayList<>();
+    collectPluginsToInstall(plugins, name, true);
+    return plugins;
+  }
+
+  private void collectPluginsToInstall(List<AvailablePlugin> plugins, String name, boolean isUpdate) {
+    if (!isInstalledOrPending(name) || isUpdate && isUpdatable(name)) {
+      AvailablePlugin plugin = getAvailable(name).orElseThrow(() -> NotFoundException.notFound(entity(AvailablePlugin.class, name)));
+
+      Set<String> dependencies = plugin.getDescriptor().getDependencies();
+      if (dependencies != null) {
+        for (String dependency: dependencies){
+          collectPluginsToInstall(plugins, dependency, false);
+        }
+      }
+
+      plugins.add(plugin);
+    } else {
+      LOG.info("plugin {} is already installed or installation is pending, skipping installation", name);
+    }
+  }
+
+  private boolean isInstalledOrPending(String name) {
+    return getInstalled(name).isPresent() || getPending(name).isPresent();
+  }
+
+  private boolean isUpdatable(String name) {
+    return getAvailable(name).isPresent() && !getPending(name).isPresent();
+  }
+
   @Override
-  public PluginInformation get(String id)
-  {
-    PluginPermissions.read().check();
-
-    PluginInformation result = null;
-
-    for (PluginInformation info : getPluginCenter().getPlugins())
-    {
-      if (id.equals(info.getId()))
-      {
-        result = info;
-
-        break;
-      }
-    }
-
-    return result;
+  public void cancelPending() {
+    PluginPermissions.manage().check();
+    pendingUninstallQueue.forEach(PendingPluginUninstallation::cancel);
+    pendingInstallQueue.forEach(PendingPluginInstallation::cancel);
+    pendingUninstallQueue.clear();
+    pendingInstallQueue.clear();
+    updateMayUninstallFlag();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param predicate
-   *
-   * @return
-   */
   @Override
-  public Set<PluginInformation> get(Predicate<PluginInformation> predicate)
-  {
-    AssertUtil.assertIsNotNull(predicate);
-    PluginPermissions.read().check();
-
-    Set<PluginInformation> infoSet = new HashSet<>();
-
-    filter(infoSet, getInstalled(), predicate);
-    filter(infoSet, getPluginCenter().getPlugins(), predicate);
-
-    return infoSet;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Collection<PluginInformation> getAll()
-  {
-    PluginPermissions.read().check();
-
-    Set<PluginInformation> infoSet = getInstalled();
-
-    infoSet.addAll(getPluginCenter().getPlugins());
-
-    return infoSet;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Collection<PluginInformation> getAvailable()
-  {
-    PluginPermissions.read().check();
-
-    Set<PluginInformation> availablePlugins = new HashSet<>();
-    Set<PluginInformation> centerPlugins = getPluginCenter().getPlugins();
-
-    for (PluginInformation info : centerPlugins)
-    {
-      if (!installedPlugins.containsKey(info.getId()))
-      {
-        availablePlugins.add(info);
-      }
-    }
-
-    return availablePlugins;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Set<PluginInformation> getAvailableUpdates()
-  {
-    PluginPermissions.read().check();
-
-    return get(FILTER_UPDATES);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Set<PluginInformation> getInstalled()
-  {
-    PluginPermissions.read().check();
-
-    Set<PluginInformation> infoSet = new LinkedHashSet<>();
-
-    for (Plugin plugin : installedPlugins.values())
-    {
-      infoSet.add(plugin.getInformation());
-    }
-
-    return infoSet;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param url
-   * @return
-   */
-  private String buildPluginUrl(String url)
-  {
-    String os = SystemUtil.getOS();
-    String arch = SystemUtil.getArch();
-
-    try
-    {
-      os = URLEncoder.encode(os, ENCODING);
-    }
-    catch (UnsupportedEncodingException ex)
-    {
-      logger.error(ex.getMessage(), ex);
-    }
-
-    return url.replace("{version}", context.getVersion()).replace("{os}",
-      os).replace("{arch}", arch);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param target
-   * @param source
-   * @param predicate
-   */
-  private void filter(Set<PluginInformation> target,
-    Collection<PluginInformation> source,
-    Predicate<PluginInformation> predicate)
-  {
-    for (PluginInformation info : source)
-    {
-      if (predicate.apply(info))
-      {
-        target.add(info);
+  public void updateAll() {
+    PluginPermissions.manage().check();
+    for (InstalledPlugin installedPlugin : getInstalled()) {
+      String pluginName = installedPlugin.getDescriptor().getInformation().getName();
+      if (isUpdatable(pluginName)) {
+        install(pluginName, false);
       }
     }
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @param available
-   */
-  private void preparePlugin(PluginInformation available)
-  {
-    PluginState state = PluginState.AVAILABLE;
-
-    for (PluginInformation installed : getInstalled())
-    {
-      if (isSamePlugin(available, installed))
-      {
-        if (installed.getVersion().equals(available.getVersion()))
-        {
-          state = PluginState.INSTALLED;
-        }
-        else if (isNewer(available, installed))
-        {
-          state = PluginState.UPDATE_AVAILABLE;
-        }
-        else
-        {
-          state = PluginState.NEWER_VERSION_INSTALLED;
-        }
-
-        break;
-      }
-    }
-
-    available.setState(state);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param pc
-   */
-  private void preparePlugins(PluginCenter pc)
-  {
-    Set<PluginInformation> infoSet = pc.getPlugins();
-
-    if (infoSet != null)
-    {
-      Iterator<PluginInformation> pit = infoSet.iterator();
-
-      while (pit.hasNext())
-      {
-        PluginInformation available = pit.next();
-
-        if (isCorePluging(available))
-        {
-          pit.remove();
-        }
-        else
-        {
-          preparePlugin(available);
-        }
-      }
-    }
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private PluginCenter getPluginCenter()
-  {
-    PluginCenter center = cache.get(PluginCenter.class.getName());
-
-    if (center == null)
-    {
-      synchronized (DefaultPluginManager.class)
-      {
-        String pluginUrl = configuration.getPluginUrl();
-
-        pluginUrl = buildPluginUrl(pluginUrl);
-
-        if (logger.isInfoEnabled())
-        {
-          logger.info("fetch plugin informations from {}", pluginUrl);
-        }
-
-        /**
-         * remote plugins are disabled for early 2.0.0-SNAPSHOTS
-         * TODO enable remote plugins later
-         */
-        if (REMOTE_PLUGINS_ENABLED && Util.isNotEmpty(pluginUrl))
-        {
-          try
-          {
-            center = httpClient.get(pluginUrl).request().contentFromXml(PluginCenter.class);
-            preparePlugins(center);
-            cache.put(PluginCenter.class.getName(), center);
-
-            /*
-             * if (pluginHandler == null)
-             * {
-             * pluginHandler = new AetherPluginHandler(this,
-             *   SCMContext.getContext(), configuration,
-             *   advancedPluginConfiguration);
-             * }
-             *
-             * pluginHandler.setPluginRepositories(center.getRepositories());
-             */
-          }
-          catch (IOException ex)
-          {
-            logger.error("could not load plugins from plugin center", ex);
-          }
-        }
-
-        if (center == null)
-        {
-          center = new PluginCenter();
-        }
-      }
-    }
-
-    return center;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param pluginId
-   *
-   * @return
-   */
-  private String getPluginIdPrefix(String pluginId)
-  {
-    return pluginId.substring(0, pluginId.lastIndexOf(':'));
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param available
-   *
-   * @return
-   */
-  private boolean isCorePluging(PluginInformation available)
-  {
-    boolean core = false;
-
-    for (Plugin installedPlugin : installedPlugins.values())
-    {
-      PluginInformation installed = installedPlugin.getInformation();
-
-      if (isSamePlugin(available, installed)
-        && (installed.getState() == PluginState.CORE))
-      {
-        core = true;
-
-        break;
-      }
-    }
-
-    return core;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param available
-   * @param installed
-   *
-   * @return
-   */
-  private boolean isNewer(PluginInformation available,
-    PluginInformation installed)
-  {
-    boolean result = false;
-    Version version = Version.parse(available.getVersion());
-
-    if (version != null)
-    {
-      result = version.isNewer(installed.getVersion());
-    }
-
-    return result;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param p1
-   * @param p2
-   *
-   * @return
-   */
-  private boolean isSamePlugin(PluginInformation p1, PluginInformation p2)
-  {
-    return p1.getGroupId().equals(p2.getGroupId())
-      && p1.getArtifactId().equals(p2.getArtifactId());
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final Cache<String, PluginCenter> cache;
-
-  /** Field description */
-  private final AdvancedHttpClient httpClient;
-
-  /** Field description */
-  private final ScmConfiguration configuration;
-
-  /** Field description */
-  private final SCMContextProvider context;
-
-  /** Field description */
-  private final Map<String, Plugin> installedPlugins;
 }

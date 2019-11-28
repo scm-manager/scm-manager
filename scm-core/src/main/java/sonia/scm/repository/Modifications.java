@@ -37,20 +37,17 @@ package sonia.scm.repository;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
-
-import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -70,7 +67,8 @@ public class Modifications implements Serializable
    * Constructs ...
    *
    */
-  public Modifications() {}
+  public Modifications() {
+  }
 
   /**
    * Constructs ...
@@ -221,6 +219,10 @@ public class Modifications implements Serializable
     return removed;
   }
 
+  public String getRevision() {
+    return revision;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -256,20 +258,26 @@ public class Modifications implements Serializable
     this.removed = removed;
   }
 
+  public void setRevision(String revision) {
+    this.revision = revision;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
+  private String revision;
+
   /** list of added files */
-  @XmlElement(name = "file")
+  @XmlElement(name = "added")
   @XmlElementWrapper(name = "added")
   private List<String> added;
 
   /** list of modified files */
-  @XmlElement(name = "file")
+  @XmlElement(name = "modified")
   @XmlElementWrapper(name = "modified")
   private List<String> modified;
 
   /** list of removed files */
-  @XmlElement(name = "file")
+  @XmlElement(name = "removed")
   @XmlElementWrapper(name = "removed")
   private List<String> removed;
 }

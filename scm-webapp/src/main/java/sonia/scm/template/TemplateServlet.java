@@ -38,30 +38,23 @@ package sonia.scm.template;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.resources.ResourceManager;
-import sonia.scm.resources.ResourceType;
 import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
-
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -100,15 +93,12 @@ public class TemplateServlet extends HttpServlet
    * @param context
    * @param templateEngineFactory
    * @param configuration
-   * @param resourceManager
    */
   @Inject
   public TemplateServlet(SCMContextProvider context,
-    TemplateEngineFactory templateEngineFactory,
-    ResourceManager resourceManager, ScmConfiguration configuration)
+    TemplateEngineFactory templateEngineFactory, ScmConfiguration configuration)
   {
     this.templateEngineFactory = templateEngineFactory;
-    this.resourceManager = resourceManager;
     this.configuration = configuration;
     this.version = context.getVersion();
   }
@@ -123,11 +113,9 @@ public class TemplateServlet extends HttpServlet
    * @param response
    *
    * @throws IOException
-   * @throws ServletException
    */
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
   {
     Map<String, Object> params = new HashMap<>();
     String contextPath = request.getContextPath();
@@ -135,8 +123,6 @@ public class TemplateServlet extends HttpServlet
     params.put("contextPath", contextPath);
     params.put("configuration", configuration);
     params.put("version", version);
-
-    params.put("scripts", resourceManager.getResources(ResourceType.SCRIPT));
 
     Locale l = request.getLocale();
 
@@ -241,9 +227,6 @@ public class TemplateServlet extends HttpServlet
 
   /** Field description */
   private final ScmConfiguration configuration;
-
-  /** Field description */
-  private final ResourceManager resourceManager;
 
   /** Field description */
   private final TemplateEngineFactory templateEngineFactory;

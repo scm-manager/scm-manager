@@ -1,0 +1,72 @@
+{
+  "group": {
+    "name": "Nombre",
+    "description": "Descripción",
+    "creationDate": "Fecha de creación",
+    "lastModified": "Última modificación",
+    "type": "Tipo",
+    "external": "Externo",
+    "internal": "Interno",
+    "members": "Miembros"
+  },
+  "groups": {
+    "title": "Grupos",
+    "subtitle": "Crear, leer, actualizar y borrar grupos",
+    "noGroups": "No se han encontrado grupos."
+  },
+  "singleGroup": {
+    "errorTitle": "Error",
+    "errorSubtitle": "Error de grupo desconocido",
+    "menu": {
+      "navigationLabel": "Menú de grupo",
+      "informationNavLink": "Información",
+      "settingsNavLink": "Ajustes",
+      "generalNavLink": "General",
+      "setPermissionsNavLink": "Permisos"
+    }
+  },
+  "add-group": {
+    "title": "Crear grupo",
+    "subtitle": "Crear un nuevo grupo"
+  },
+  "create-group-button": {
+    "label": "Crear grupo"
+  },
+  "edit-group-button": {
+    "label": "Editar"
+  },
+  "add-member-button": {
+    "label": "Añadir miembro"
+  },
+  "add-member-textfield": {
+    "error": "El nombre del miembro es incorrecto"
+  },
+  "add-member-autocomplete": {
+    "placeholder": "Añadir miembro",
+    "loading": "Cargando...",
+    "no-options": "No hay sugerencias disponibles"
+  },
+  "groupForm": {
+    "subtitle": "Editar grupo",
+    "externalSubtitle": "Editar grupo externo",
+    "submit": "Guardar",
+    "nameError": "El nombre del grupo es incorrecto",
+    "descriptionError": "La descripción es incorrecta",
+    "help": {
+      "nameHelpText": "Nombre único del grupo",
+      "descriptionHelpText": "Descripción breve del grupo",
+      "memberHelpText": "Nombres de usuario de los miembros del grupo",
+      "externalHelpText": "Los miembros son gestionados por un sistema externo como por ejemplo LDAP"
+    }
+  },
+  "deleteGroup": {
+    "subtitle": "Borrar grupo",
+    "button": "Borrar",
+    "confirmAlert": {
+      "title": "Borrar grupo",
+      "message": "¿Realmente desea borrar el grupo?",
+      "submit": "Sí",
+      "cancel": "No"
+    }
+  }
+}

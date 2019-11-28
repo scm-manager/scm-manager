@@ -33,8 +33,6 @@
 
 package sonia.scm.plugin;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

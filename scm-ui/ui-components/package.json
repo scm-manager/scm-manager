@@ -1,0 +1,74 @@
+{
+  "name": "@scm-manager/ui-components",
+  "version": "2.0.0-SNAPSHOT",
+  "description": "UI Components for SCM-Manager and its plugins",
+  "main": "src/index.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "repository": "https://bitbucket.org/sdorra/scm-manager",
+  "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
+  "license": "BSD-3-Clause",
+  "scripts": {
+    "test": "jest",
+    "typecheck": "tsc",
+    "storybook": "start-storybook -s ../ui-webapp/public",
+    "storyshots": "jest --testPathPattern=\"storyshots.test.ts\" --collectCoverage=false",
+    "update-storyshots": "jest --testPathPattern=\"storyshots.test.ts\" --collectCoverage=false -u"
+  },
+  "devDependencies": {
+    "@scm-manager/ui-tests": "^2.0.0-SNAPSHOT",
+    "@storybook/addon-actions": "^5.2.3",
+    "@storybook/addon-storyshots": "^5.2.3",
+    "@storybook/react": "^5.2.3",
+    "@types/classnames": "^2.2.9",
+    "@types/enzyme": "^3.10.3",
+    "@types/fetch-mock": "^7.3.1",
+    "@types/jest": "^24.0.19",
+    "@types/query-string": "5",
+    "@types/react": "^16.9.9",
+    "@types/react-dom": "^16.9.2",
+    "@types/react-router-dom": "^5.1.0",
+    "@types/react-select": "^2.0.19",
+    "@types/react-syntax-highlighter": "^11.0.1",
+    "@types/storybook__addon-storyshots": "^5.1.1",
+    "@types/styled-components": "^4.1.19",
+    "enzyme-context": "^1.1.2",
+    "enzyme-context-react-router-4": "^2.0.0",
+    "fetch-mock": "^7.5.1",
+    "flow-bin": "^0.109.0",
+    "flow-typed": "^2.5.1",
+    "raf": "^3.4.0",
+    "react-test-renderer": "^16.10.2",
+    "storybook-addon-i18next": "^1.2.1",
+    "typescript": "^3.6.4"
+  },
+  "dependencies": {
+    "@scm-manager/ui-extensions": "^2.0.0-SNAPSHOT",
+    "@scm-manager/ui-types": "^2.0.0-SNAPSHOT",
+    "classnames": "^2.2.6",
+    "date-fns": "^2.4.1",
+    "query-string": "5",
+    "react": "^16.8.6",
+    "react-diff-view": "^1.8.1",
+    "react-dom": "^16.8.6",
+    "react-i18next": "^10.13.1",
+    "react-markdown": "^4.0.6",
+    "react-router-dom": "^5.1.2",
+    "react-select": "^2.1.2",
+    "react-syntax-highlighter": "^11.0.2"
+  },
+  "babel": {
+    "presets": [
+      "@scm-manager/babel-preset"
+    ]
+  },
+  "jest": {
+    "preset": "@scm-manager/jest-preset"
+  },
+  "prettier": "@scm-manager/prettier-config",
+  "publishConfig": {
+    "access": "public"
+  }
+}

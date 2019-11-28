@@ -36,19 +36,20 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
-
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Modifications;
-import sonia.scm.repository.RepositoryException;
-
-import static org.hamcrest.Matchers.*;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+
+import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -57,16 +58,8 @@ import java.io.IOException;
 public class HgLogCommandTest extends AbstractHgCommandTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAll() throws IOException, RepositoryException
-  {
+  public void testGetAll() {
     ChangesetPagingResult result =
       createComamnd().getChangesets(new LogCommandRequest());
 
@@ -75,16 +68,8 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     assertEquals(5, result.getChangesets().size());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAllByPath() throws IOException, RepositoryException
-  {
+  public void testGetAllByPath() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setPath("a.txt");
@@ -102,16 +87,23 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
       result.getChangesets().get(2).getId());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAllWithLimit() throws IOException, RepositoryException
-  {
+  public void testGetDefaultBranchInfo() {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setPath("a.txt");
+
+    ChangesetPagingResult result = createComamnd().getChangesets(request);
+
+    assertNotNull(result);
+    assertEquals(1,
+      result.getChangesets().get(0).getBranches().size());
+    assertEquals("default",
+      result.getChangesets().get(0).getBranches().get(0));
+  }
+
+  @Test
+  public void testGetAllWithLimit() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setPagingLimit(2);
@@ -133,16 +125,8 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     assertEquals("542bf4893dd2ff58a0eb719551d75ddeb919608b", c2.getId());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAllWithPaging() throws IOException, RepositoryException
-  {
+  public void testGetAllWithPaging() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setPagingStart(1);
@@ -165,48 +149,33 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     assertEquals("79b6baf49711ae675568e0698d730b97ef13e84a", c2.getId());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetCommit() throws IOException, RepositoryException
-  {
+  public void testGetCommit() throws IOException {
     HgLogCommand command = createComamnd();
+    String revision = "a9bacaf1b7fa0cebfca71fed4e59ed69a6319427";
     Changeset c =
-      command.getChangeset("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427");
+      command.getChangeset(revision, null);
 
     assertNotNull(c);
-    assertEquals("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427", c.getId());
+    assertEquals(revision, c.getId());
     assertEquals("added a and b files", c.getDescription());
     checkDate(c.getDate());
     assertEquals("Douglas Adams", c.getAuthor().getName());
     assertEquals("douglas.adams@hitchhiker.com", c.getAuthor().getMail());
     assertEquals("added a and b files", c.getDescription());
+    ModificationsCommand modificationsCommand = new HgModificationsCommand(cmdContext, repository);
+    Modifications modifications = modificationsCommand.getModifications(revision);
 
-    Modifications mods = c.getModifications();
-
-    assertNotNull(mods);
-    assertTrue("modified list should be empty", mods.getModified().isEmpty());
-    assertTrue("removed list should be empty", mods.getRemoved().isEmpty());
-    assertFalse("added list should not be empty", mods.getAdded().isEmpty());
-    assertEquals(2, mods.getAdded().size());
-    assertThat(mods.getAdded(), contains("a.txt", "b.txt"));
+    assertNotNull(modifications);
+    assertTrue("modified list should be empty", modifications.getModified().isEmpty());
+    assertTrue("removed list should be empty", modifications.getRemoved().isEmpty());
+    assertFalse("added list should not be empty", modifications.getAdded().isEmpty());
+    assertEquals(2, modifications.getAdded().size());
+    assertThat(modifications.getAdded(), contains("a.txt", "b.txt"));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetRange() throws IOException, RepositoryException
-  {
+  public void testGetRange() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setStartChangeset("3049df33fdbb");

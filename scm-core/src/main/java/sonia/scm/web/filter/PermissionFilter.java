@@ -33,44 +33,32 @@
 
 package sonia.scm.web.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.Splitter;
-
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.ArgumentIsInvalidException;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
+import sonia.scm.repository.spi.ScmProviderHttpServletDecorator;
 import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.HttpUtil;
-import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.Iterator;
-
-import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.shiro.authz.AuthorizationException;
+import java.io.IOException;
 
 /**
  * Abstract http filter to check repository permissions.
  *
  * @author Sebastian Sdorra
  */
-public abstract class PermissionFilter extends HttpFilter
+public abstract class PermissionFilter extends ScmProviderHttpServletDecorator
 {
 
   /** the logger for PermissionFilter */
@@ -86,22 +74,13 @@ public abstract class PermissionFilter extends HttpFilter
    *
    * @since 1.21
    */
-  public PermissionFilter(ScmConfiguration configuration)
+  protected PermissionFilter(ScmConfiguration configuration, ScmProviderHttpServlet delegate)
   {
+    super(delegate);
     this.configuration = configuration;
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns the requested repository.
-   *
-   *
-   * @param request current http request
-   *
-   * @return requested repository
-   */
-  protected abstract Repository getRepository(HttpServletRequest request);
 
   /**
    * Returns true if the current request is a write request.
@@ -122,65 +101,37 @@ public abstract class PermissionFilter extends HttpFilter
    *
    * @param request http request
    * @param response http response
-   * @param chain filter chain
    *
    * @throws IOException
    * @throws ServletException
    */
   @Override
-  protected void doFilter(HttpServletRequest request,
-    HttpServletResponse response, FilterChain chain)
+  public void service(HttpServletRequest request,
+    HttpServletResponse response, Repository repository)
     throws IOException, ServletException
   {
     Subject subject = SecurityUtils.getSubject();
 
     try
     {
-      Repository repository = getRepository(request);
+      boolean writeRequest = isWriteRequest(request);
 
-      if (repository != null)
+      if (hasPermission(repository, writeRequest))
       {
-        boolean writeRequest = isWriteRequest(request);
+        logger.trace("{} access to repository {} for user {} granted",
+          getActionAsString(writeRequest), repository.getName(),
+          getUserName(subject));
 
-        if (hasPermission(repository, writeRequest))
-        {
-          logger.trace("{} access to repository {} for user {} granted",
-            getActionAsString(writeRequest), repository.getName(),
-            getUserName(subject));
-
-          chain.doFilter(request, response);
-        }
-        else
-        {
-          logger.info("{} access to repository {} for user {} denied",
-            getActionAsString(writeRequest), repository.getName(),
-            getUserName(subject));
-          
-          sendAccessDenied(request, response, subject);
-        }
+        super.service(request, response, repository);
       }
       else
       {
-        logger.debug("repository not found");
+        logger.info("{} access to repository {} for user {} denied",
+          getActionAsString(writeRequest), repository.getName(),
+          getUserName(subject));
 
-        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        sendAccessDenied(request, response, subject);
       }
-    }
-    catch (ArgumentIsInvalidException ex)
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace(
-          "wrong request at ".concat(request.getRequestURI()).concat(
-            " send redirect"), ex);
-      }
-      else if (logger.isWarnEnabled())
-      {
-        logger.warn("wrong request at {} send redirect",
-          request.getRequestURI());
-      }
-
-      response.sendRedirect(getRepositoryRootHelpUrl(request));
     }
     catch (ScmSecurityException | AuthorizationException ex)
     {
@@ -220,29 +171,6 @@ public abstract class PermissionFilter extends HttpFilter
     throws IOException
   {
     HttpUtil.sendUnauthorized(response, configuration.getRealmDescription());
-  }
-
-  /**
-   * Extracts the type of the repositroy from url.
-   *
-   *
-   * @param request http request
-   *
-   * @return type of repository
-   */
-  private String extractType(HttpServletRequest request)
-  {
-    Iterator<String> it = Splitter.on(
-                            HttpUtil.SEPARATOR_PATH).omitEmptyStrings().split(
-                            request.getRequestURI()).iterator();
-    String type = it.next();
-
-    if (Util.isNotEmpty(request.getContextPath()))
-    {
-      type = it.next();
-    }
-
-    return type;
   }
 
   /**
@@ -286,25 +214,6 @@ public abstract class PermissionFilter extends HttpFilter
   }
 
   /**
-   * Returns the repository root help url.
-   *
-   *
-   * @param request current http request
-   *
-   * @return repository root help url
-   */
-  private String getRepositoryRootHelpUrl(HttpServletRequest request)
-  {
-    String type = extractType(request);
-    String helpUrl = HttpUtil.getCompleteUrl(request,
-                       "/api/rest/help/repository-root/");
-
-    helpUrl = helpUrl.concat(type).concat(".html");
-
-    return helpUrl;
-  }
-
-  /**
    * Returns the username from the given subject or anonymous.
    *
    *
@@ -339,11 +248,11 @@ public abstract class PermissionFilter extends HttpFilter
 
     if (writeRequest)
     {
-      permitted = RepositoryPermissions.write(repository).isPermitted();
+      permitted = RepositoryPermissions.push(repository).isPermitted();
     }
     else
     {
-      permitted = RepositoryPermissions.read(repository).isPermitted();
+      permitted = RepositoryPermissions.pull(repository).isPermitted();
     }
 
     return permitted;

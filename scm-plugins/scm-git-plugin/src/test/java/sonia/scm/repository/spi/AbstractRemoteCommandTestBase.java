@@ -37,6 +37,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import com.google.inject.Provider;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -84,16 +85,16 @@ public class AbstractRemoteCommandTestBase
     outgoingDirectory = tempFolder.newFile("outgoing");
     outgoingDirectory.delete();
 
-    incomgingRepository = new Repository("1", "git", "incoming");
-    outgoingRepository = new Repository("2", "git", "outgoing");
+    incomingRepository = new Repository("1", "git", "space", "incoming");
+    outgoingRepository = new Repository("2", "git", "space", "outgoing");
 
     incoming = Git.init().setDirectory(incomingDirectory).setBare(false).call();
     outgoing = Git.init().setDirectory(outgoingDirectory).setBare(false).call();
 
     handler = mock(GitRepositoryHandler.class);
-    when(handler.getDirectory(incomgingRepository)).thenReturn(
+    when(handler.getDirectory(incomingRepository.getId())).thenReturn(
       incomingDirectory);
-    when(handler.getDirectory(outgoingRepository)).thenReturn(
+    when(handler.getDirectory(outgoingRepository.getId())).thenReturn(
       outgoingDirectory);
   }
 
@@ -118,7 +119,23 @@ public class AbstractRemoteCommandTestBase
   {
 
     // store reference to handle weak references
-    proto = new ScmTransportProtocol(() -> null, () -> null);
+    proto = new ScmTransportProtocol(new Provider<HookEventFacade>()
+    {
+
+      @Override
+      public HookEventFacade get()
+      {
+        return null;
+      }
+    }, new Provider<GitRepositoryHandler>()
+    {
+
+      @Override
+      public GitRepositoryHandler get()
+      {
+        return null;
+      }
+    });
     Transport.register(proto);
   }
 
@@ -194,7 +211,7 @@ public class AbstractRemoteCommandTestBase
   protected GitRepositoryHandler handler;
 
   /** Field description */
-  protected Repository incomgingRepository;
+  protected Repository incomingRepository;
 
   /** Field description */
   protected Git incoming;

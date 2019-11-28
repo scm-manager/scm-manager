@@ -35,13 +35,10 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.servlet.RequestScoped;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-@RequestScoped
 public class HgContext
 {
 

@@ -44,11 +44,7 @@ import java.io.IOException;
 public interface PushCommand
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  public void push() throws IOException;
+  void push() throws IOException;
+
+  void pushTags() throws IOException;
 }

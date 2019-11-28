@@ -37,21 +37,18 @@ package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Changeset;
 import com.aragost.javahg.commands.ExecutionException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.api.PushResponse;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.Collections;
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -83,21 +80,10 @@ public class HgPushCommand extends AbstractHgPushOrPullCommand
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   @SuppressWarnings("unchecked")
   public PushResponse push(PushCommandRequest request)
-    throws RepositoryException, IOException
+    throws IOException
   {
     String url = getRemoteUrl(request);
 
@@ -111,7 +97,7 @@ public class HgPushCommand extends AbstractHgPushOrPullCommand
     }
     catch (ExecutionException ex)
     {
-      throw new RepositoryException("could not execute push command", ex);
+      throw new InternalRepositoryException(getRepository(), "could not execute push command", ex);
     }
 
     return new PushResponse(result.size());

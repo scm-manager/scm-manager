@@ -39,18 +39,20 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import java.util.List;
+import sonia.scm.SCMContext;
+import sonia.scm.Stage;
 
 import javax.servlet.ServletContext;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Default implementation of the {@link UberWebResourceLoader}.
@@ -69,19 +71,21 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param servletContext
-   * @param plugins
-   */
-  public DefaultUberWebResourceLoader(ServletContext servletContext,
-    Iterable<PluginWrapper> plugins)
-  {
+  public DefaultUberWebResourceLoader(ServletContext servletContext, Iterable<InstalledPlugin> plugins) {
+    this(servletContext, plugins, SCMContext.getContext().getStage());
+  }
+
+  public DefaultUberWebResourceLoader(ServletContext servletContext, Iterable<InstalledPlugin> plugins, Stage stage) {
     this.servletContext = servletContext;
     this.plugins = plugins;
-    this.cache = CacheBuilder.newBuilder().build();
+    this.cache = createCache(stage);
+  }
+
+  private Cache<String, URL> createCache(Stage stage) {
+    if (stage == Stage.DEVELOPMENT) {
+      return CacheBuilder.newBuilder().maximumSize(0).build(); // Disable caching
+    }
+    return CacheBuilder.newBuilder().build();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -97,7 +101,7 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
   @Override
   public URL getResource(String path)
   {
-    URL resource = cache.getIfPresent(path);
+    URL resource = getFromCache(path);
 
     if (resource == null)
     {
@@ -105,7 +109,7 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
 
       if (resource != null)
       {
-        cache.put(path, resource);
+        addToCache(path, resource);
       }
     }
     else
@@ -114,6 +118,14 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
     }
 
     return resource;
+  }
+
+  private URL getFromCache(String path) {
+    return cache.getIfPresent(path);
+  }
+
+  private void addToCache(String path, URL url) {
+    cache.put(path, url);
   }
 
   /**
@@ -133,7 +145,7 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
 
     try
     {
-      URL ctxResource = servletContext.getResource(path);
+      URL ctxResource = nonDirectory(servletContext.getResource(path));
 
       if (ctxResource != null)
       {
@@ -141,9 +153,9 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
         resources.add(ctxResource);
       }
 
-      for (PluginWrapper wrapper : plugins)
+      for (InstalledPlugin wrapper : plugins)
       {
-        URL resource = wrapper.getWebResourceLoader().getResource(path);
+        URL resource = nonDirectory(wrapper.getWebResourceLoader().getResource(path));
 
         if (resource != null)
         {
@@ -185,17 +197,17 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
    */
   private URL find(String path)
   {
-    URL resource = null;
+    URL resource;
 
     try
     {
-      resource = servletContext.getResource(path);
+      resource = nonDirectory(servletContext.getResource(path));
 
       if (resource == null)
       {
-        for (PluginWrapper wrapper : plugins)
+        for (InstalledPlugin wrapper : plugins)
         {
-          resource = wrapper.getWebResourceLoader().getResource(path);
+          resource = nonDirectory(wrapper.getWebResourceLoader().getResource(path));
 
           if (resource != null)
           {
@@ -218,13 +230,36 @@ public class DefaultUberWebResourceLoader implements UberWebResourceLoader
     return resource;
   }
 
+  private URL nonDirectory(URL url) {
+    if (url == null) {
+      return null;
+    }
+
+    if (isDirectory(url)) {
+      return null;
+    }
+
+    return url;
+  }
+
+  private boolean isDirectory(URL url) {
+    if ("file".equals(url.getProtocol())) {
+      try {
+        return Files.isDirectory(Paths.get(url.toURI()));
+      } catch (URISyntaxException ex) {
+        throw Throwables.propagate(ex);
+      }
+    }
+    return false;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private final Cache<String, URL> cache;
 
   /** Field description */
-  private final Iterable<PluginWrapper> plugins;
+  private final Iterable<InstalledPlugin> plugins;
 
   /** Field description */
   private final ServletContext servletContext;

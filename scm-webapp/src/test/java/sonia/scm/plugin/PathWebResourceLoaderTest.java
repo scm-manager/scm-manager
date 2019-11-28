@@ -54,15 +54,18 @@ import java.net.URL;
 public class PathWebResourceLoaderTest extends WebResourceLoaderTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
-  public void testGetResource() throws IOException
-  {
+  public void testGetNullForDirectories() throws IOException {
+    File directory = temp.newFolder();
+    assertTrue(new File(directory, "awesome").mkdir());
+
+    WebResourceLoader resourceLoader = new PathWebResourceLoader(directory.toPath());
+    assertNull(resourceLoader.getResource("awesome"));
+  }
+
+
+  @Test
+  public void testGetResource() throws IOException {
     File directory = temp.newFolder();
     URL url = file(directory, "myresource").toURI().toURL();
 
@@ -73,8 +76,5 @@ public class PathWebResourceLoaderTest extends WebResourceLoaderTestBase
     assertEquals(url, resourceLoader.getResource("myresource"));
     assertNull(resourceLoader.getResource("other"));
   }
-
-
-  //~--- fields ---------------------------------------------------------------
 
 }

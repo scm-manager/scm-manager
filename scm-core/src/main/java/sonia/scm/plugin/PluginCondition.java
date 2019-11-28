@@ -43,7 +43,11 @@ import sonia.scm.util.SystemUtil;
 import sonia.scm.util.Util;
 import sonia.scm.version.Version;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +106,7 @@ public class PluginCondition implements Cloneable, Serializable
 
     if (Util.isNotEmpty(os))
     {
-      clone.setOs(new ArrayList<>(os));
+      clone.setOs(new ArrayList<String>(os));
     }
 
     return clone;
@@ -159,10 +163,10 @@ public class PluginCondition implements Cloneable, Serializable
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("arch", arch)
-                      .add("minVersion", minVersion)
-                      .add("os", os)
-                      .toString();
+                  .add("arch", arch)
+                  .add("minVersion", minVersion)
+                  .add("os", os)
+                  .toString();
     //J+
   }
 
@@ -309,14 +313,14 @@ public class PluginCondition implements Cloneable, Serializable
     osType = osType.toLowerCase(Locale.ENGLISH);
 
     //J-
-    return ((osType.contains("win")) && (PlatformType.WINDOWS == type))
-      || ((osType.contains("unix")) && type.isUnix())
-      || ((osType.contains("posix")) && type.isPosix())
-      || ((osType.contains("mac")) && (PlatformType.MAC == type))
-      || ((osType.contains("linux")) && (PlatformType.LINUX == type))
-      || ((osType.contains("solaris")) && (PlatformType.SOLARIS == type))
-      || ((osType.contains("openbsd")) && (PlatformType.OPENBSD == type))
-      || ((osType.contains("freebsd")) && (PlatformType.FREEBSD == type));
+    return ((osType.indexOf("win") >= 0) && (PlatformType.WINDOWS == type))
+      || ((osType.indexOf("unix") >= 0) && type.isUnix())
+      || ((osType.indexOf("posix") >= 0) && type.isPosix())
+      || ((osType.indexOf("mac") >= 0) && (PlatformType.MAC == type))
+      || ((osType.indexOf("linux") >= 0) && (PlatformType.LINUX == type))
+      || ((osType.indexOf("solaris") >= 0) && (PlatformType.SOLARIS == type)) 
+      || ((osType.indexOf("openbsd") >= 0) && (PlatformType.OPENBSD == type)) 
+      || ((osType.indexOf("freebsd") >= 0) && (PlatformType.FREEBSD == type));
     //J+
   }
 

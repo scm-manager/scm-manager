@@ -37,33 +37,28 @@ package sonia.scm.web.filter;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-
 import com.google.common.collect.ImmutableSet;
-
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.web.WebTokenGenerator;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -107,26 +102,6 @@ public class AuthenticationFilterTest
     filter.doFilter(request, response, chain);
     verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED,
       "Authorization Required");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
-  @Test
-  public void testDoFilterWithAnonymousAccess()
-    throws IOException, ServletException
-  {
-    configuration.setAnonymousAccessEnabled(true);
-
-    AuthenticationFilter filter = createAuthenticationFilter();
-
-    filter.doFilter(request, response, chain);
-    verify(chain).doFilter(any(HttpServletRequest.class),
-      any(HttpServletResponse.class));
   }
 
   /**

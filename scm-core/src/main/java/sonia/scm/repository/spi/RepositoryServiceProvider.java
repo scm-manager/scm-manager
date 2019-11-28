@@ -33,19 +33,16 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.CommandNotSupportedException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.Closeable;
 import java.io.IOException;
-
 import java.util.Collections;
 import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -110,6 +107,17 @@ public abstract class RepositoryServiceProvider implements Closeable
    *
    * @return
    */
+  public BranchCommand getBranchCommand()
+  {
+    throw new CommandNotSupportedException(Command.BRANCH);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public BrowseCommand getBrowseCommand()
   {
     throw new CommandNotSupportedException(Command.BROWSE);
@@ -150,6 +158,11 @@ public abstract class RepositoryServiceProvider implements Closeable
     throw new CommandNotSupportedException(Command.DIFF);
   }
 
+  public DiffResultCommand getDiffResultCommand()
+  {
+    throw new CommandNotSupportedException(Command.DIFF_RESULT);
+  }
+
   /**
    * Method description
    *
@@ -171,6 +184,16 @@ public abstract class RepositoryServiceProvider implements Closeable
   public LogCommand getLogCommand()
   {
     throw new CommandNotSupportedException(Command.LOG);
+  }
+
+  /**
+   * Get the corresponding {@link ModificationsCommand} implemented from the Plugins
+   *
+   * @return the corresponding {@link ModificationsCommand} implemented from the Plugins
+   * @throws CommandNotSupportedException if there is no Implementation
+   */
+  public ModificationsCommand getModificationsCommand() {
+    throw new CommandNotSupportedException(Command.MODIFICATIONS);
   }
 
   /**
@@ -243,5 +266,21 @@ public abstract class RepositoryServiceProvider implements Closeable
   public UnbundleCommand getUnbundleCommand()
   {
     throw new CommandNotSupportedException(Command.UNBUNDLE);
+  }
+
+  /**
+   * @since 2.0
+   */
+  public MergeCommand getMergeCommand()
+  {
+    throw new CommandNotSupportedException(Command.MERGE);
+  }
+
+  /**
+   * @since 2.0
+   */
+  public ModifyCommand getModifyCommand()
+  {
+    throw new CommandNotSupportedException(Command.MODIFY);
   }
 }

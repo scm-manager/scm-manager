@@ -35,16 +35,36 @@ package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * In memory configuration store factory for testing purposes.
+ *
+ * Use {@link #create()} to get a store that creates the same store on each request.
  * 
  * @author Sebastian Sdorra
  */
 public class InMemoryConfigurationStoreFactory implements ConfigurationStoreFactory {
 
+  private final Map<String, InMemoryConfigurationStore> stores = new HashMap<>();
+
+  public static InMemoryConfigurationStoreFactory create() {
+    return new InMemoryConfigurationStoreFactory();
+  }
+
   @Override
-  public <T> ConfigurationStore<T> getStore(Class<T> type, String name)
-  {
-    return new InMemoryConfigurationStore<>();
+  public ConfigurationStore getStore(TypedStoreParameters storeParameters) {
+    String name = storeParameters.getName();
+    String id = storeParameters.getRepositoryId();
+    return get(name, id);
+  }
+
+  public ConfigurationStore get(String name, String id) {
+    return stores.computeIfAbsent(buildKey(name, id), x -> new InMemoryConfigurationStore());
+  }
+
+  private String buildKey(String name, String id) {
+    return id == null? name: name + "-" + id;
   }
 }

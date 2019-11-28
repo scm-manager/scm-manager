@@ -9,6 +9,7 @@
     <version>2.0.0-SNAPSHOT</version>
   </parent>
 
+  <groupId>sonia.scm</groupId>
   <artifactId>scm-test</artifactId>
   <version>2.0.0-SNAPSHOT</version>
   <name>scm-test</name>
@@ -26,23 +27,19 @@
       <artifactId>scm-core</artifactId>
       <version>2.0.0-SNAPSHOT</version>
     </dependency>
- 
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-    </dependency>
-    
+
     <dependency>
       <groupId>com.github.sdorra</groupId>
       <artifactId>shiro-unit</artifactId>
-      <version>1.0.0</version>
+      <!-- scm-test is test scoped in other modules and they might need shiro unit for their tests. -->
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>${mokito.version}</version>
+      <artifactId>mockito-core</artifactId>
+      <scope>compile</scope>
+      <version>${mockito.version}</version>
     </dependency>
 
     <dependency>
@@ -50,7 +47,7 @@
       <artifactId>slf4j-simple</artifactId>
       <version>${slf4j.version}</version>
     </dependency>
-    
+
   </dependencies>
   
   <!-- for svnkit and jgit -->

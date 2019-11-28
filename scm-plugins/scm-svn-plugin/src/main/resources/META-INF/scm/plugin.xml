@@ -46,22 +46,18 @@
   <scm-version>2</scm-version>
 
   <information>
-    <author>Sebastian Sdorra</author>
-    <category>Subversion</category>
-    <tags>
-      <tag>subversion</tag>
-      <tag>scm</tag>
-      <tag>vcs</tag>
-      <tag>svn</tag>
-    </tags>
+    <displayName>Subversion</displayName>
+    <author>Cloudogu GmbH</author>
+    <category>Source Code Management</category>
+    <avatarUrl>/images/svn-logo.gif</avatarUrl>
   </information>
 
   <conditions>
     <min-version>${project.parent.version}</min-version>
   </conditions>
-  
+
   <resources>
-    <script>/sonia/scm/svn.config.js</script>
+    <script>assets/scm-svn-plugin.bundle.js</script>
   </resources>
 
 </plugin>

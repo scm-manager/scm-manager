@@ -32,14 +32,15 @@
 
 package sonia.scm.repository;
 
-import com.google.common.collect.Maps;
-import java.util.Map;
-import java.util.Set;
-import javax.inject.Inject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import sonia.scm.util.HttpUtil;
-import sonia.scm.util.Util;
+ import com.google.common.collect.Maps;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import sonia.scm.util.HttpUtil;
+ import sonia.scm.util.Util;
+
+ import javax.inject.Inject;
+ import java.util.Map;
+ import java.util.Set;
 
 /**
  * RepositoryMatcher is able to check if a repository matches the requested path.
@@ -83,9 +84,24 @@ public final class RepositoryMatcher {
   }
   
   private boolean isPathMatching(Repository repository, String path) {
-    return getPathMatcherForType(repository.getType()).isPathMatching(repository, path);
+
+    String namespace = extractNamespace(path);
+    String remainingPath = path.substring(namespace.length() + 1);
+
+    return getPathMatcherForType(repository.getType()).isPathMatching(repository, remainingPath);
   }
-  
+
+  private String extractNamespace(String path) {
+    if (path.startsWith(HttpUtil.SEPARATOR_PATH)) {
+      path = path.substring(1);
+    }
+    int namespaceSeparator = path.indexOf(HttpUtil.SEPARATOR_PATH);
+    if (namespaceSeparator > 0) {
+      return path.substring(0, namespaceSeparator);
+    }
+    throw new IllegalArgumentException("no namespace in path " + path);
+  }
+
   private RepositoryPathMatcher getPathMatcherForType(String type) {
     RepositoryPathMatcher pathMatcher = pathMatchers.get(type);
     if (pathMatcher == null) {

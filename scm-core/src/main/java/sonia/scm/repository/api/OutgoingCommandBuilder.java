@@ -30,18 +30,17 @@
  */
 package sonia.scm.repository.api;
 
-import java.io.IOException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.OutgoingCommand;
 import sonia.scm.repository.spi.OutgoingCommandRequest;
-import sonia.scm.security.RepositoryPermission;
+
+import java.io.IOException;
 
 /**
  * Show changesets not found in a remote repository.
@@ -62,7 +61,7 @@ public final class OutgoingCommandBuilder
    * @param repository repository to query
    * @param preProcessorUtil pre processor util
    */
-  OutgoingCommandBuilder(CacheManager cacheManger, OutgoingCommand command,
+  OutgoingCommandBuilder(CacheManager cacheManager, OutgoingCommand command,
     Repository repository, PreProcessorUtil preProcessorUtil)
   {
     this.command = command;
@@ -80,12 +79,11 @@ public final class OutgoingCommandBuilder
    * @return outgoing changesets
    */
   public ChangesetPagingResult getOutgoingChangesets(
-    Repository remoteRepository) throws IOException, RepositoryException
+    Repository remoteRepository) throws IOException
   {
     Subject subject = SecurityUtils.getSubject();
 
-    subject.checkPermission(new RepositoryPermission(remoteRepository,
-      PermissionType.READ));
+    subject.isPermitted(RepositoryPermissions.pull(remoteRepository).asShiroString());
 
     request.setRemoteRepository(remoteRepository);
 

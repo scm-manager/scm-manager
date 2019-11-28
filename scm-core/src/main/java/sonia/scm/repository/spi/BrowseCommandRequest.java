@@ -37,7 +37,6 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -129,12 +128,12 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("path", getPath())
-                      .add("revision", getRevision())
-                      .add("recursive", recursive)
-                      .add("disableLastCommit", disableLastCommit)
-                      .add("disableSubRepositoryDetection", disableSubRepositoryDetection)
-                      .toString();
+                  .add("path", getPath())
+                  .add("revision", getRevision())
+                  .add("recursive", recursive)
+                  .add("disableLastCommit", disableLastCommit)
+                  .add("disableSubRepositoryDetection", disableSubRepositoryDetection)
+                  .toString();
     //J+
   }
 

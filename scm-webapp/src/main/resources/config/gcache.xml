@@ -40,15 +40,15 @@
   />
   
   <!--
-    Authentication cache
+    External group cache
     average: 1K
   -->
     
   <cache
-    name="sonia.cache.auth"
+    name="sonia.cache.externalGroups"
     maximumSize="1000"
-    expireAfterAccess="30" 
-    expireAfterWrite="60"
+    expireAfterAccess="60"
+    expireAfterWrite="120"
   />
   
   <!--

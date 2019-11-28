@@ -70,18 +70,18 @@ public class GuavaCacheConfiguration implements Serializable
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("concurrencyLevel", concurrencyLevel)
-                      .add("copyStrategy", copyStrategy)
-                      .add("expireAfterAccess", expireAfterAccess)
-                      .add("expireAfterWrite", expireAfterWrite)
-                      .add("initialCapacity", initialCapacity)
-                      .add("maximumSize", maximumSize)
-                      .add("maximumWeight", maximumWeight)
-                      .add("recordStats", recordStats)
-                      .add("softValues", softValues)
-                      .add("weakKeys", weakKeys)
-                      .add("weakValues", weakValues)
-                      .omitNullValues().toString();
+                  .add("concurrencyLevel", concurrencyLevel)
+                  .add("copyStrategy", copyStrategy)
+                  .add("expireAfterAccess", expireAfterAccess)
+                  .add("expireAfterWrite", expireAfterWrite)
+                  .add("initialCapacity", initialCapacity)
+                  .add("maximumSize", maximumSize)
+                  .add("maximumWeight", maximumWeight)
+                  .add("recordStats", recordStats)
+                  .add("softValues", softValues)
+                  .add("weakKeys", weakKeys)
+                  .add("weakValues", weakValues)
+                  .omitNullValues().toString();
     //J+
   }
 

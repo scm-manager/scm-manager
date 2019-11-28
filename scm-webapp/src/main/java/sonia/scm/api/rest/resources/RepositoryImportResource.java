@@ -33,63 +33,40 @@
 
 package sonia.scm.api.rest.resources;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
-
-import org.apache.shiro.SecurityUtils;
-
+import com.webcohesion.enunciate.metadata.rs.ResponseCode;
+import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
+import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.NotSupportedFeatuerException;
+import sonia.scm.FeatureNotSupportedException;
+import sonia.scm.NotFoundException;
 import sonia.scm.Type;
 import sonia.scm.api.rest.RestActionUploadResult;
+import sonia.scm.api.v2.resources.RepositoryResource;
 import sonia.scm.repository.AdvancedImportHandler;
 import sonia.scm.repository.ImportHandler;
 import sonia.scm.repository.ImportResult;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryAlreadyExistsException;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.UnbundleCommandBuilder;
-import sonia.scm.security.Role;
 import sonia.scm.util.IOUtil;
-
-import static com.google.common.base.Preconditions.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.api.client.ClientResponse.Status;
-import com.sun.jersey.multipart.FormDataParam;
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.net.URI;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -102,17 +79,27 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Rest resource for importing repositories.
  *
  * @author Sebastian Sdorra
  */
-@Path("import/repositories")
+// @Path("import/repositories")
 public class RepositoryImportResource
 {
 
@@ -171,8 +158,8 @@ public class RepositoryImportResource
   @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   public Response importFromBundle(@Context UriInfo uriInfo,
-    @PathParam("type") String type, @FormDataParam("name") String name,
-    @FormDataParam("bundle") InputStream inputStream, @QueryParam("compressed")
+    @PathParam("type") String type, @FormParam("name") String name,
+    @FormParam("bundle") InputStream inputStream, @QueryParam("compressed")
   @DefaultValue("false") boolean compressed)
   {
     Repository repository = doImportFromBundle(type, name, inputStream,
@@ -212,8 +199,8 @@ public class RepositoryImportResource
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces(MediaType.TEXT_HTML)
   public Response importFromBundleUI(@PathParam("type") String type,
-    @FormDataParam("name") String name,
-    @FormDataParam("bundle") InputStream inputStream, @QueryParam("compressed")
+    @FormParam("name") String name,
+    @FormParam("bundle") InputStream inputStream, @QueryParam("compressed")
   @DefaultValue("false") boolean compressed)
   {
     Response response;
@@ -261,11 +248,11 @@ public class RepositoryImportResource
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response importFromUrl(@Context UriInfo uriInfo,
     @PathParam("type") String type, UrlImportRequest request)
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    RepositoryPermissions.create().check();
     checkNotNull(request, "request is required");
     checkArgument(!Strings.isNullOrEmpty(request.getName()),
       "request does not contain name of the repository");
@@ -286,10 +273,11 @@ public class RepositoryImportResource
       service = serviceFactory.create(repository);
       service.getPullCommand().pull(request.getUrl());
     }
-    catch (RepositoryException | IOException ex)
+    catch (IOException ex)
     {
       handleImportFailure(ex, repository);
-    } finally
+    }
+    finally
     {
       IOUtil.close(service);
     }
@@ -316,12 +304,12 @@ public class RepositoryImportResource
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(Repository[].class)
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response importRepositories(@PathParam("type") String type)
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    RepositoryPermissions.create().check();
 
-    List<Repository> repositories = new ArrayList<>();
+    List<Repository> repositories = new ArrayList<Repository>();
 
     importFromDirectory(repositories, type);
 
@@ -348,14 +336,14 @@ public class RepositoryImportResource
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(Repository[].class)
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response importRepositories()
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    RepositoryPermissions.create().check();
 
     logger.info("start directory import for all supported repository types");
 
-    List<Repository> repositories = new ArrayList<>();
+    List<Repository> repositories = new ArrayList<Repository>();
 
     for (Type t : findImportableTypes())
     {
@@ -390,11 +378,11 @@ public class RepositoryImportResource
     @ResponseCode(code = 500, condition = "internal server error")
   })
   @TypeHint(ImportResult.class)
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response importRepositoriesFromDirectory(
     @PathParam("type") String type)
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    RepositoryPermissions.create().check();
 
     Response response;
 
@@ -420,20 +408,20 @@ public class RepositoryImportResource
         {
           logger.debug("start directory import, using normal import handler");
           result = new ImportResult(importHandler.importRepositories(manager),
-            ImmutableList.of());
+            ImmutableList.<String>of());
         }
 
         response = Response.ok(result).build();
       }
-      catch (NotSupportedFeatuerException ex)
+      catch (FeatureNotSupportedException ex)
       {
         logger
           .warn(
             "import feature is not supported by repository handler for type "
               .concat(type), ex);
-        response = Response.status(Status.BAD_REQUEST).build();
+        response = Response.status(Response.Status.BAD_REQUEST).build();
       }
-      catch (IOException | RepositoryException ex)
+      catch (IOException ex)
       {
         logger.warn("exception occured durring directory import", ex);
         response = Response.serverError().build();
@@ -442,7 +430,7 @@ public class RepositoryImportResource
     else
     {
       logger.warn("could not find reposiotry handler for type {}", type);
-      response = Response.status(Status.BAD_REQUEST).build();
+      response = Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     return response;
@@ -466,10 +454,10 @@ public class RepositoryImportResource
     ),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   public Response getImportableTypes()
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    RepositoryPermissions.create().check();
 
     List<Type> types = findImportableTypes();
 
@@ -542,17 +530,11 @@ public class RepositoryImportResource
 
     try
     {
-      repository = new Repository(null, type, name);
+      // TODO #8783
+//      repository = new Repository(null, type, name);
       manager.create(repository);
     }
-    catch (RepositoryAlreadyExistsException ex)
-    {
-      logger.warn("a {} repository with the name {} already exists", type,
-        name);
-
-      throw new WebApplicationException(Response.Status.CONFLICT);
-    }
-    catch (RepositoryException | IOException ex)
+    catch (InternalRepositoryException ex)
     {
       handleGenericCreationFailure(ex, type, name);
     }
@@ -574,7 +556,7 @@ public class RepositoryImportResource
   private Repository doImportFromBundle(String type, String name,
     InputStream inputStream, boolean compressed)
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    RepositoryPermissions.create().check();
 
     checkArgument(!Strings.isNullOrEmpty(name),
       "request does not contain name of the repository");
@@ -602,10 +584,11 @@ public class RepositoryImportResource
         service = serviceFactory.create(repository);
         service.getUnbundleCommand().setCompressed(compressed).unbundle(file);
       }
-      catch (RepositoryException | IOException ex)
+      catch (InternalRepositoryException ex)
       {
         handleImportFailure(ex, repository);
-      } finally
+      }
+      finally
       {
         IOUtil.close(service);
         IOUtil.delete(file);
@@ -629,7 +612,7 @@ public class RepositoryImportResource
    */
   private List<Type> findImportableTypes()
   {
-    List<Type> types = new ArrayList<>();
+    List<Type> types = new ArrayList<Type>();
     Collection<Type> handlerTypes = manager.getTypes();
 
     for (Type t : handlerTypes)
@@ -645,7 +628,7 @@ public class RepositoryImportResource
             types.add(t);
           }
         }
-        catch (NotSupportedFeatuerException ex)
+        catch (FeatureNotSupportedException ex)
         {
           if (logger.isTraceEnabled())
           {
@@ -699,9 +682,9 @@ public class RepositoryImportResource
     {
       manager.delete(repository);
     }
-    catch (IOException | RepositoryException e)
+    catch (InternalRepositoryException | NotFoundException e)
     {
-      logger.error("can not delete repository", e);
+      logger.error("can not delete repository after import failure", e);
     }
 
     throw new WebApplicationException(ex,
@@ -732,7 +715,8 @@ public class RepositoryImportResource
         {
           for (String repositoryName : repositoryNames)
           {
-            Repository repository = manager.get(type, repositoryName);
+            // TODO #8783
+            /*Repository repository = null; //manager.get(type, repositoryName);
 
             if (repository != null)
             {
@@ -742,15 +726,19 @@ public class RepositoryImportResource
             {
               logger.warn("could not find imported repository {}",
                 repositoryName);
-            }
+            }*/
           }
         }
       }
-      catch (NotSupportedFeatuerException ex)
+      catch (FeatureNotSupportedException ex)
       {
         throw new WebApplicationException(ex, Response.Status.BAD_REQUEST);
       }
-      catch (IOException | RepositoryException ex)
+      catch (IOException ex)
+      {
+        throw new WebApplicationException(ex);
+      }
+      catch (InternalRepositoryException ex)
       {
         throw new WebApplicationException(ex);
       }
@@ -822,9 +810,9 @@ public class RepositoryImportResource
     {
       //J-
       return MoreObjects.toStringHelper(this)
-                        .add("name", name)
-                        .add("url", url)
-                        .toString();
+                    .add("name", name)
+                    .add("url", url)
+                    .toString();
       //J+
     }
 

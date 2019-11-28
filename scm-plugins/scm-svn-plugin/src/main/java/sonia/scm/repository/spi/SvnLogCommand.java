@@ -37,33 +37,26 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.ISVNLogEntryHandler;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.io.SVNRepository;
-
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 import java.util.Collection;
 import java.util.List;
 
-/**
- *
- * @author Sebastian Sdorra
- */
+import static sonia.scm.repository.SvnUtil.parseRevision;
+
+//~--- JDK imports ------------------------------------------------------------
+
 public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
 {
 
@@ -73,17 +66,6 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
   private static final Logger logger =
     LoggerFactory.getLogger(SvnLogCommand.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param context
-   * @param repository
-   * @param repositoryDirectory
-   */
   SvnLogCommand(SvnContext context, Repository repository)
   {
     super(context, repository);
@@ -91,22 +73,9 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param revision
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   @SuppressWarnings("unchecked")
-  public Changeset getChangeset(String revision)
-    throws IOException, RepositoryException
-  {
+  public Changeset getChangeset(String revision, LogCommandRequest request) {
     Changeset changeset = null;
 
     if (logger.isDebugEnabled())
@@ -116,7 +85,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
 
     try
     {
-      long revisioNumber = parseRevision(revision);
+      long revisioNumber = parseRevision(revision, repository);
       SVNRepository repo = open();
       Collection<SVNLogEntry> entries = repo.log(null, null, revisioNumber,
                                           revisioNumber, true, true);
@@ -128,28 +97,15 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     }
     catch (SVNException ex)
     {
-      throw new RepositoryException("could not open repository", ex);
+      throw new InternalRepositoryException(repository, "could not open repository", ex);
     }
 
     return changeset;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   @SuppressWarnings("unchecked")
-  public ChangesetPagingResult getChangesets(LogCommandRequest request)
-    throws IOException, RepositoryException
-  {
+  public ChangesetPagingResult getChangesets(LogCommandRequest request) {
     if (logger.isDebugEnabled())
     {
       logger.debug("fetch changesets for {}", request);
@@ -158,8 +114,8 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     ChangesetPagingResult changesets = null;
     int start = request.getPagingStart();
     int limit = request.getPagingLimit();
-    long startRevision = parseRevision(request.getStartChangeset());
-    long endRevision = parseRevision(request.getEndChangeset());
+    long startRevision = parseRevision(request.getStartChangeset(), repository);
+    long endRevision = parseRevision(request.getEndChangeset(), repository);
     String[] pathArray = null;
 
     if (!Strings.isNullOrEmpty(request.getPath()))
@@ -183,43 +139,12 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     }
     catch (SVNException ex)
     {
-      throw new RepositoryException("could not open repository", ex);
+      throw new InternalRepositoryException(repository, "could not open repository", ex);
     }
 
     return changesets;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param v
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  private long parseRevision(String v) throws RepositoryException
-  {
-    long result = -1L;
-
-    if (!Strings.isNullOrEmpty(v))
-    {
-      try
-      {
-        result = Long.parseLong(v);
-      }
-      catch (NumberFormatException ex)
-      {
-        throw new RepositoryException(
-          String.format("could not convert revision %s", v), ex);
-      }
-    }
-
-    return result;
-  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -252,7 +177,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
         new ChangesetCollector(changesets));
     }
 
-    return new ChangesetPagingResult((int) (latest + 1L), changesets);
+    return new ChangesetPagingResult((int) (latest + 1l), changesets);
   }
 
   /**
@@ -279,7 +204,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     long endRev = Math.max(endRevision, 0);
     long maxRev = repo.getLatestRevision();
 
-    if (startRevision >= 0L)
+    if (startRevision >= 0l)
     {
       startRev = startRevision;
     }

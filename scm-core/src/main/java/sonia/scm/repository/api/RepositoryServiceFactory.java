@@ -37,37 +37,39 @@ package sonia.scm.repository.api;
 
 import com.github.legman.ReferenceType;
 import com.github.legman.Subscribe;
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.HandlerEventType;
+import sonia.scm.NotFoundException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.ClearRepositoryCacheEvent;
+import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKeyPredicate;
 import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.spi.RepositoryServiceResolver;
+import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.security.ScmSecurityException;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Set;
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.ClearRepositoryCacheEvent;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The {@link RepositoryServiceFactory} is the entrypoint of the repository api.
@@ -134,18 +136,22 @@ public final class RepositoryServiceFactory
    * @param resolvers a set of {@link RepositoryServiceResolver}
    * @param preProcessorUtil helper object for pre processor handling
    *
+   * @param workdirProvider
    * @since 1.21
    */
   @Inject
   public RepositoryServiceFactory(ScmConfiguration configuration,
-    CacheManager cacheManager, RepositoryManager repositoryManager,
-    Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil)
+                                  CacheManager cacheManager, RepositoryManager repositoryManager,
+                                  Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
+                                  Set<ScmProtocolProvider> protocolProviders, WorkdirProvider workdirProvider)
   {
     this.configuration = configuration;
     this.cacheManager = cacheManager;
     this.repositoryManager = repositoryManager;
     this.resolvers = resolvers;
     this.preProcessorUtil = preProcessorUtil;
+    this.protocolProviders = protocolProviders;
+    this.workdirProvider = workdirProvider;
 
     ScmEventBus.getInstance().register(new CacheClearHook(cacheManager));
   }
@@ -161,7 +167,7 @@ public final class RepositoryServiceFactory
    * @return a implementation of RepositoryService
    *         for the given type of repository
    *
-   * @throws RepositoryNotFoundException if no repository
+   * @throws NotFoundException if no repository
    *         with the given id is available
    * @throws RepositoryServiceNotFoundException if no repository service
    *         implementation for this kind of repository is available
@@ -169,9 +175,7 @@ public final class RepositoryServiceFactory
    * @throws ScmSecurityException if current user has not read permissions
    *         for that repository
    */
-  public RepositoryService create(String repositoryId)
-    throws RepositoryNotFoundException
-  {
+  public RepositoryService create(String repositoryId) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(repositoryId),
       "a non empty repositoryId is required");
 
@@ -179,8 +183,7 @@ public final class RepositoryServiceFactory
 
     if (repository == null)
     {
-      throw new RepositoryNotFoundException(
-        "could not find a repository with id ".concat(repositoryId));
+      throw new NotFoundException(Repository.class, repositoryId);
     }
 
     return create(repository);
@@ -190,13 +193,12 @@ public final class RepositoryServiceFactory
    * Creates a new RepositoryService for the given repository.
    *
    *
-   * @param type type of the repository
-   * @param name name of the repository
+   * @param namespaceAndName namespace and name of the repository
    *
    * @return a implementation of RepositoryService
    *         for the given type of repository
    *
-   * @throws RepositoryNotFoundException if no repository
+   * @throws NotFoundException if no repository
    *         with the given id is available
    * @throws RepositoryServiceNotFoundException if no repository service
    *         implementation for this kind of repository is available
@@ -204,24 +206,16 @@ public final class RepositoryServiceFactory
    * @throws ScmSecurityException if current user has not read permissions
    *         for that repository
    */
-  public RepositoryService create(String type, String name)
-    throws RepositoryNotFoundException
+  public RepositoryService create(NamespaceAndName namespaceAndName)
   {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(type),
-      "a non empty type is required");
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(name),
-      "a non empty name is required");
+    Preconditions.checkArgument(namespaceAndName != null,
+      "a non empty namespace and name is required");
 
-    Repository repository = repositoryManager.get(type, name);
+    Repository repository = repositoryManager.get(namespaceAndName);
 
     if (repository == null)
     {
-      StringBuilder msg =
-        new StringBuilder("could not find a repository with type ");
-
-      msg.append(type).append(" and name ").append(name);
-
-      throw new RepositoryNotFoundException(msg.toString());
+      throw notFound(entity(namespaceAndName));
     }
 
     return create(repository);
@@ -253,7 +247,7 @@ public final class RepositoryServiceFactory
 
     for (RepositoryServiceResolver resolver : resolvers)
     {
-      RepositoryServiceProvider provider = resolver.reslove(repository);
+      RepositoryServiceProvider provider = resolver.resolve(repository);
 
       if (provider != null)
       {
@@ -265,7 +259,7 @@ public final class RepositoryServiceFactory
         }
 
         service = new RepositoryService(cacheManager, provider, repository,
-          preProcessorUtil);
+          preProcessorUtil, protocolProviders, workdirProvider);
 
         break;
       }
@@ -337,7 +331,6 @@ public final class RepositoryServiceFactory
     /**
      * Clear caches on repository delete event.
      *
-     * @param repository changed repository
      * @param event repository event
      */
     @Subscribe(referenceType = ReferenceType.STRONG)
@@ -381,4 +374,8 @@ public final class RepositoryServiceFactory
 
   /** service resolvers */
   private final Set<RepositoryServiceResolver> resolvers;
+
+  private Set<ScmProtocolProvider> protocolProviders;
+
+  private final WorkdirProvider workdirProvider;
 }

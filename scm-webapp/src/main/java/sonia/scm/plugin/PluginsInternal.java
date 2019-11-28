@@ -41,6 +41,7 @@ import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -86,13 +87,13 @@ public final class PluginsInternal
    *
    * @throws IOException
    */
-  public static Set<PluginWrapper> collectPlugins(ClassLoader classLoader,
-    Path directory)
+  public static Set<InstalledPlugin> collectPlugins(ClassLoaderLifeCycle classLoaderLifeCycle,
+                                                    Path directory)
     throws IOException
   {
-    PluginProcessor processor = new PluginProcessor(directory);
+    PluginProcessor processor = new PluginProcessor(classLoaderLifeCycle, directory);
 
-    return processor.collectPlugins(classLoader);
+    return processor.collectPlugins(classLoaderLifeCycle.getBootstrapClassLoader());
   }
 
   /**
@@ -104,11 +105,11 @@ public final class PluginsInternal
    *
    * @return
    */
-  public static File createPluginDirectory(File parent, Plugin plugin)
+  public static File createPluginDirectory(File parent, InstalledPluginDescriptor plugin)
   {
     PluginInformation info = plugin.getInformation();
 
-    return new File(new File(parent, info.getGroupId()), info.getArtifactId());
+    return new File(parent, info.getName());
   }
 
   /**
@@ -130,14 +131,14 @@ public final class PluginsInternal
     if (directory.exists())
     {
       logger.debug("delete directory {} for plugin extraction",
-        archive.getPlugin().getInformation().getId(false));
+        archive.getPlugin().getInformation().getName(false));
       IOUtil.delete(directory);
     }
 
     IOUtil.mkdirs(directory);
 
     logger.debug("extract plugin {}",
-      archive.getPlugin().getInformation().getId(false));
+      archive.getPlugin().getInformation().getName(false));
     archive.extract(directory);
     Files.write(checksum, checksumFile, Charsets.UTF_8);
 
@@ -158,7 +159,7 @@ public final class PluginsInternal
    *
    * @return
    */
-  public static Iterable<Plugin> unwrap(Iterable<PluginWrapper> wrapped)
+  public static Iterable<InstalledPluginDescriptor> unwrap(Iterable<InstalledPlugin> wrapped)
   {
     return Iterables.transform(wrapped, new Unwrap());
   }
@@ -187,7 +188,7 @@ public final class PluginsInternal
    * @version        Enter version here..., 14/06/05
    * @author         Enter your name here...
    */
-  private static class Unwrap implements Function<PluginWrapper, Plugin>
+  private static class Unwrap implements Function<InstalledPlugin, InstalledPluginDescriptor>
   {
 
     /**
@@ -199,9 +200,9 @@ public final class PluginsInternal
      * @return
      */
     @Override
-    public Plugin apply(PluginWrapper wrapper)
+    public InstalledPluginDescriptor apply(InstalledPlugin wrapper)
     {
-      return wrapper.getPlugin();
+      return wrapper.getDescriptor();
     }
   }
 }

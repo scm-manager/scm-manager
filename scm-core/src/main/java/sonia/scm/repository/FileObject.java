@@ -33,10 +33,9 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 import sonia.scm.LastModifiedAware;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -44,8 +43,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
+import static java.util.Collections.unmodifiableCollection;
 
 /**
  * The FileObject represents a file or a directory in a repository.
@@ -110,14 +112,14 @@ public class FileObject implements LastModifiedAware, Serializable
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("name", name)
-                      .add("path", path)
-                      .add("directory", directory)
-                      .add("description", description)
-                      .add("length", length)
-                      .add("subRepository", subRepository)
-                      .add("lastModified", lastModified)
-                      .toString();
+            .add("name", name)
+            .add("path", path)
+            .add("directory", directory)
+            .add("description", description)
+            .add("length", length)
+            .add("subRepository", subRepository)
+            .add("lastModified", lastModified)
+            .toString();
     //J+
   }
 
@@ -179,6 +181,22 @@ public class FileObject implements LastModifiedAware, Serializable
   public String getPath()
   {
     return path;
+  }
+
+  /**
+   * Returns the parent path of the file.
+   *
+   * @return parent path
+   */
+  public String getParentPath() {
+    if (Strings.isNullOrEmpty(path)) {
+      return null;
+    }
+    int index = path.lastIndexOf('/');
+    if (index > 0) {
+      return path.substring(0, index);
+    }
+    return "";
   }
 
   /**
@@ -284,6 +302,22 @@ public class FileObject implements LastModifiedAware, Serializable
     this.subRepository = subRepository;
   }
 
+  public Collection<FileObject> getChildren() {
+    return unmodifiableCollection(children);
+  }
+
+  public void setChildren(List<FileObject> children) {
+    this.children = new ArrayList<>(children);
+  }
+
+  public void addChild(FileObject child) {
+    this.children.add(child);
+  }
+
+  public boolean hasChildren() {
+    return !children.isEmpty();
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** file description */
@@ -307,4 +341,6 @@ public class FileObject implements LastModifiedAware, Serializable
   /** sub repository informations */
   @XmlElement(name = "subrepository")
   private SubRepository subRepository;
+
+  private Collection<FileObject> children = new ArrayList<>();
 }

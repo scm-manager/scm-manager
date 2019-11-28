@@ -1,0 +1,78 @@
+{
+  "config": {
+    "navigationLabel": "Menú de administración",
+    "title": "Configuración global",
+    "errorTitle": "Error",
+    "errorSubtitle": "Error de configuración desconocido",
+    "form": {
+      "submit": "Enviar",
+      "submit-success-notification": "¡Configuración cambiada correctamente!",
+      "no-read-permission-notification": "Por favor, tenga en cuenta: ¡No tiene permiso para ver la configuración!",
+      "no-write-permission-notification": "Por favor, tenga en cuenta: ¡No tiene permiso para editar la configuración!"
+    }
+  },
+  "proxy-settings": {
+    "name": "Ajustes del proxy",
+    "proxy-password": "Contraseña del proxy",
+    "proxy-port": "Puerto del proxy",
+    "proxy-server": "Servidor proxy",
+    "proxy-user": "Usuario del proxy",
+    "enable-proxy": "Habilitar proxy",
+    "proxy-excludes": "Excepciones del proxy",
+    "remove-proxy-exclude-button": "Eliminar las excepciones del proxy",
+    "add-proxy-exclude-error": "La excepción que desea añadir al proxy es incorrecta",
+    "add-proxy-exclude-textfield": "Añada aquí las excepciones que desee incluir al proxy",
+    "add-proxy-exclude-button": "Añadir excepción al proxy"
+  },
+  "base-url-settings": {
+    "name": "Ajustes de la URL base",
+    "base-url": "URL base",
+    "force-base-url": "Forzar la URL base"
+  },
+  "login-attempt": {
+    "name": "Intento de inicio de sesión",
+    "login-attempt-limit": "Límite de intentos de inicio de sesión",
+    "login-attempt-limit-timeout": "Tiempo de espera para el intento de inicio de sesión"
+  },
+  "general-settings": {
+    "realm-description": "Descripción del dominio",
+    "disable-grouping-grid": "Deshabilitar grupos",
+    "date-format": "Formato de la fecha",
+    "anonymous-access-enabled": "Acceso anónimo habilitado",
+    "skip-failed-authenticators": "Omitir autenticadores fallidos",
+    "plugin-url": "URL del almacén de complementos",
+    "enabled-xsrf-protection": "Protección XSRF habilitada",
+    "namespace-strategy": "Estrategia para el espacio de nombres",
+    "login-info-url": "URL de información de inicio de sesión"
+  },
+  "validation": {
+    "date-format-invalid": "El formato de la fecha es incorrecto",
+    "login-attempt-limit-timeout-invalid": "El valor no es un número",
+    "login-attempt-limit-invalid": "El valor no es un número",
+    "plugin-url-invalid": "La URL es incorrecta"
+  },
+  "help": {
+    "realmDescriptionHelpText": "Descripción del dominio de autenticación.",
+    "dateFormatHelpText": "Formato de la fecha. Por favor, heche un vistazo a la documentación de MomentJS.",
+    "pluginUrlHelpText": "La URL de la API del almacén de complementos. Explicación de los marcadores: version = Versión de SCM-Manager; os = Sistema operativo; arch = Arquitectura",
+    "enableForwardingHelpText": "Habilitar el redireccionamiento de puertos para mod_proxy.",
+    "disableGroupingGridHelpText": "Deshabilitar los grupos de repositorios. Se requiere una recarga completa de la página después de un cambio en este valor.",
+    "allowAnonymousAccessHelpText": "Los usuarios anónimos tienen acceso a repositorios otorgados.",
+    "skipFailedAuthenticatorsHelpText": "No detenga la cadena de autenticación si un autenticador encuentra al usuario pero no puede autenticarlo.",
+    "adminGroupsHelpText": "Nombres de los grupos con permisos de administrador.",
+    "adminUsersHelpText": "Nombres de los usuarios con permisos de administrador.",
+    "forceBaseUrlHelpText": "Redirige a la URL base si la solicitud proviene de otra URL.",
+    "baseUrlHelpText": "La URL de la aplicación (con la ruta del contexto), por ejemplo: http://localhost:8080/scm",
+    "loginAttemptLimitHelpText": "Máximo número permitido de intentos de inicio de sesión. Use -1 para deshabilitar este límite.",
+    "loginAttemptLimitTimeoutHelpText": "Tiempo de espera en segundos para los usuarios que están deshabilitados temporalmente debido a demasiado intentos fallidos de inicio de sesión.",
+    "enableProxyHelpText": "Habilitar proxy",
+    "proxyPortHelpText": "El puerto del proxy",
+    "proxyPasswordHelpText": "La contraseña para la autenticación del servidor proxy.",
+    "proxyServerHelpText": "El servidor proxy",
+    "proxyUserHelpText": "El nombre de usuario para la autenticación del servidor proxy.",
+    "proxyExcludesHelpText": "Patrones globales para hostnames que deben excluirse de la configuración del proxy.",
+    "enableXsrfProtectionHelpText": "Habilitar la protección de cookies XSRF. Nota: Esta funcionalidad todavía es experimental.",
+    "nameSpaceStrategyHelpText": "La estrategia para el espacio de nombres.",
+    "loginInfoUrlHelpText": "URL para la información en el inicio de sesión (consejos sobre complementos y funcionalidades en la página de inicio de sesión). Si esto se omite, no se mostrará información de inicio de sesión."
+  }
+}

@@ -29,7 +29,7 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     http://bitbucket.org/sdorra/scm-manager
-
+jo
 
 -->
 
@@ -42,19 +42,14 @@
 -->
 
 <plugin>
-  
+
   <scm-version>2</scm-version>
 
   <information>
-    <author>Sebastian Sdorra</author>
-    <category>Mercurial</category>
-    <tags>
-      <tag>mercurial</tag>
-      <tag>hg</tag>
-      <tag>scm</tag>
-      <tag>vcs</tag>
-      <tag>dvcs</tag>
-    </tags>
+    <displayName>Mercurial</displayName>
+    <author>Cloudogu GmbH</author>
+    <category>Source Code Management</category>
+    <avatarUrl>/images/hg-logo.png</avatarUrl>
   </information>
 
   <conditions>
@@ -62,8 +57,7 @@
   </conditions>
 
   <resources>
-    <script>/sonia/scm/hg.config.js</script>
-    <script>/sonia/scm/hg.config-wizard.js</script>
+    <script>assets/scm-hg-plugin.bundle.js</script>
   </resources>
 
 </plugin>

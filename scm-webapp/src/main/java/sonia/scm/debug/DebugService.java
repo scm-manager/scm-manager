@@ -34,9 +34,12 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Singleton;
-import java.util.Collection;
 import org.apache.shiro.SecurityUtils;
+import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.security.Role;
+
+import java.util.Collection;
 
 /**
  * The DebugService stores and returns received data from repository hook events.
@@ -47,30 +50,24 @@ import sonia.scm.security.Role;
 public final class DebugService
 {
 
-  private final Multimap<String,DebugHookData> receivedHooks = LinkedListMultimap.create();
+  private final Multimap<NamespaceAndName,DebugHookData> receivedHooks = LinkedListMultimap.create();
 
   /**
-   * Stores {@link DebugHookData} for the given repository.
-   * 
-   * @param repository repository id
-   * @param hookData received hook data
+   * Store {@link DebugHookData} for the given repository.
    */
-  void put(String repository, DebugHookData hookData)
+  void put(NamespaceAndName namespaceAndName, DebugHookData hookData)
   {
-    receivedHooks.put(repository, hookData);
+    receivedHooks.put(namespaceAndName, hookData);
   }
   
   /**
    * Returns the last received hook data for the given repository.
-   * 
-   * @param repository repository id
-   * 
-   * @return the last received hook data for the given repository
    */
-  public DebugHookData getLast(String repository){
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+  public DebugHookData getLast(NamespaceAndName namespaceAndName){
+    // debug permission does not exists, so only accounts with "*" permission can use these resource
+    SecurityUtils.getSubject().checkPermission("debug");
     DebugHookData hookData = null;
-    Collection<DebugHookData> receivedHookData = receivedHooks.get(repository);
+    Collection<DebugHookData> receivedHookData = receivedHooks.get(namespaceAndName);
     if (receivedHookData != null && ! receivedHookData.isEmpty()){
       hookData = Iterables.getLast(receivedHookData);
     }
@@ -79,14 +76,10 @@ public final class DebugService
   
   /**
    * Returns all received hook data for the given repository.
-   * 
-   * @param repository repository id
-   * 
-   * @return all received hook data for the given repository
    */
-  public Collection<DebugHookData> getAll(String repository){
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
-    return receivedHooks.get(repository);
+  public Collection<DebugHookData> getAll(NamespaceAndName namespaceAndName){
+    // debug permission does not exists, so only accounts with "*" permission can use these resource
+    SecurityUtils.getSubject().checkPermission("debug");
+    return receivedHooks.get(namespaceAndName);
   }
-  
 }

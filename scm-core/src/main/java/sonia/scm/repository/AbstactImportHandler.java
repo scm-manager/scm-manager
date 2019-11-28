@@ -35,19 +35,15 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Throwables;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.ImportResult.Builder;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
-
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Abstract base class for directory based {@link ImportHandler} and
@@ -89,9 +85,7 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
    * {@inheritDoc}
    */
   @Override
-  public List<String> importRepositories(RepositoryManager manager)
-    throws IOException, RepositoryException
-  {
+  public List<String> importRepositories(RepositoryManager manager) throws IOException {
     return doRepositoryImport(manager, true).getImportedDirectories();
   }
 
@@ -101,16 +95,7 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
   @Override
   public ImportResult importRepositoriesFromDirectory(RepositoryManager manager)
   {
-    try
-    {
-      return doRepositoryImport(manager, false);
-    }
-    catch (IOException | RepositoryException ex)
-    {
-
-      // should never happen
-      throw Throwables.propagate(ex);
-    }
+    return doRepositoryImport(manager, false);
   }
 
   /**
@@ -123,16 +108,11 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
    * @return repository
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  protected Repository createRepository(File repositoryDirectory,
-    String repositoryName)
-    throws IOException, RepositoryException
-  {
+  protected Repository createRepository(File repositoryDirectory, String repositoryName) throws IOException {
     Repository repository = new Repository();
 
     repository.setName(repositoryName);
-    repository.setPublicReadable(false);
     repository.setType(getTypeName());
 
     return repository;
@@ -148,33 +128,30 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
    * @return import result
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  private ImportResult doRepositoryImport(RepositoryManager manager,
-    boolean throwExceptions)
-    throws IOException, RepositoryException
-  {
+  private ImportResult doRepositoryImport(RepositoryManager manager, boolean throwExceptions) {
     Builder builder = ImportResult.builder();
 
     logger.trace("search for repositories to import");
 
-    try
-    {
-
-      List<String> repositoryNames =
-        RepositoryUtil.getRepositoryNames(getRepositoryHandler(),
-          getDirectoryNames());
-
-      for (String repositoryName : repositoryNames)
-      {
-        importRepository(manager, builder, throwExceptions, repositoryName);
-      }
-
-    }
-    catch (IOException ex)
-    {
-      handleException(ex, throwExceptions);
-    }
+    // TODO #8783
+//    try
+//    {
+//
+//      List<String> repositoryNames =
+//        RepositoryUtil.getRepositoryNames(getRepositoryHandler(),
+//          getDirectoryNames());
+//
+//      for (String repositoryName : repositoryNames)
+//      {
+//        importRepository(manager, builder, throwExceptions, repositoryName);
+//      }
+//
+//    }
+//    catch (IOException ex)
+//    {
+//      handleException(ex, throwExceptions);
+//    }
 
     return builder.build();
   }
@@ -208,92 +185,52 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
    * @param manager
    * @param builder
    * @param throwExceptions
-   * @param repositoryName
+   * @param directoryName
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   private void importRepository(RepositoryManager manager, Builder builder,
-    boolean throwExceptions, String repositoryName)
-    throws IOException, RepositoryException
+    boolean throwExceptions, String directoryName)
+    throws IOException
   {
-    logger.trace("check repository {} for import", repositoryName);
+    logger.trace("check repository {} for import", directoryName);
 
-    Repository repository = manager.get(getTypeName(), repositoryName);
-
-    if (repository == null)
-    {
-      try
-      {
-        importRepository(manager, repositoryName);
-        builder.addImportedDirectory(repositoryName);
-      }
-      catch (IOException ex)
-      {
-        builder.addFailedDirectory(repositoryName);
-        handleException(ex, throwExceptions);
-      }
-      catch (IllegalStateException ex)
-      {
-        builder.addFailedDirectory(repositoryName);
-        handleException(ex, throwExceptions);
-      }
-      catch (RepositoryException ex)
-      {
-        builder.addFailedDirectory(repositoryName);
-        handleException(ex, throwExceptions);
-      }
-    }
-    else if (logger.isDebugEnabled())
-    {
-      logger.debug("repository {} is allready managed", repositoryName);
-    }
+    // TODO #8783
+//
+//    Repository repository = manager.get(namespaceAndName);
+//
+//    if (repository == null)
+//    {
+//      try
+//      {
+//        importRepository(manager, repositoryName);
+//        builder.addImportedDirectory(repositoryName);
+//      }
+//      catch (IOException ex)
+//      {
+//        builder.addFailedDirectory(repositoryName);
+//        handleException(ex, throwExceptions);
+//      }
+//      catch (IllegalStateException ex)
+//      {
+//        builder.addFailedDirectory(repositoryName);
+//        handleException(ex, throwExceptions);
+//      }
+//      catch (RepositoryException ex)
+//      {
+//        builder.addFailedDirectory(repositoryName);
+//        handleException(ex, throwExceptions);
+//      }
+//    }
+//    else if (logger.isDebugEnabled())
+//    {
+//      logger.debug("repository {} is already managed", repositoryName);
+//    }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param manager
-   * @param repositoryName
-   *
-   *
-   * @return
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  private void importRepository(RepositoryManager manager,
-    String repositoryName)
-    throws IOException, RepositoryException
-  {
-    Repository repository =
-      createRepository(getRepositoryDirectory(repositoryName), repositoryName);
 
-    if (logger.isInfoEnabled())
-    {
-      logger.info("import repository {} of type {}", repositoryName,
-        getTypeName());
-    }
-
-    manager.importRepository(repository);
-  }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repositoryName
-   *
-   * @return
-   */
-  private File getRepositoryDirectory(String repositoryName)
-  {
-    return new File(
-      getRepositoryHandler().getConfig().getRepositoryDirectory(),
-      repositoryName);
-  }
 
   /**
    * Method description

@@ -126,10 +126,10 @@ public final class UserAgent
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("name", name)
-                      .add("browser", browser)
-                      .add("basicAuthenticationCharset", basicAuthenticationCharset)
-                      .toString();
+                  .add("name", name)
+                  .add("browser", browser)
+                  .add("basicAuthenticationCharset", basicAuthenticationCharset)
+                  .toString();
     //J+
   }
 

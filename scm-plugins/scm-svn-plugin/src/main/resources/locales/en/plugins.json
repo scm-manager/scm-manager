@@ -1,0 +1,52 @@
+{
+  "scm-svn-plugin": {
+    "information": {
+      "checkout": "Checkout repository"
+    },
+    "config": {
+      "link": "Subversion",
+      "title": "Subversion Configuration",
+      "compatibility": "Version Compatibility",
+      "compatibilityHelpText": "Specifies with which Subversion version repositories are compatible.",
+      "compatibility-values": {
+        "none": "No compatibility",
+        "pre14": "Pre 1.4 Compatible",
+        "pre15": "Pre 1.5 Compatible",
+        "pre16": "Pre 1.6 Compatible",
+        "pre17": "Pre 1.7 Compatible",
+        "with17": "With 1.7 Compatible"
+      },
+      "enabledGZip": "Enable GZip Compression",
+      "enabledGZipHelpText": "Enable GZip compression for SVN responses.",
+      "disabled": "Disabled",
+      "disabledHelpText": "Enable or disable the SVN plugin",
+      "required": "This configuration value is required"
+    }
+  },
+  "permissions": {
+    "configuration": {
+      "read,write": {
+        "svn": {
+          "displayName": "Modify Subversion configuration",
+          "description": "May modify the Subversion configuration"
+        }
+      }
+    },
+    "repository": {
+      "svn": {
+        "*": {
+          "displayName": "Modify repository specific Subversion configuration",
+          "description": "May change the Subversion configuration for repositories"
+        }
+      }
+    }
+  },
+  "verbs": {
+    "repository": {
+      "svn": {
+        "displayName": "configure Subversion",
+        "description": "May change the Subversion configuration for this repository"
+      }
+    }
+  }
+}

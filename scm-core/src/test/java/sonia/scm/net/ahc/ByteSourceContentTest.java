@@ -40,7 +40,7 @@ import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import static org.mockito.Mockito.*;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  *
@@ -58,7 +58,7 @@ public class ByteSourceContentTest {
     ByteSource source = ByteSource.wrap("abc".getBytes(Charsets.UTF_8));
     ByteSourceContent content = new ByteSourceContent(source);
     content.prepare(request);
-    verify(request).contentLength(3L);
+    verify(request).contentLength(3l);
   }
   
   @Test

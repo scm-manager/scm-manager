@@ -46,7 +46,12 @@ import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -119,7 +124,7 @@ public class AbstractHgHandler
   protected AbstractHgHandler(HgRepositoryHandler handler, HgContext context,
     Repository repository)
   {
-    this(handler, context, repository, handler.getDirectory(repository));
+    this(handler, context, repository, handler.getDirectory(repository.getId()));
   }
 
   /**
@@ -174,7 +179,7 @@ public class AbstractHgHandler
    */
   protected Process createHgProcess(String... args) throws IOException
   {
-    return createHgProcess(new HashMap<>(), args);
+    return createHgProcess(new HashMap<String, String>(), args);
   }
 
   /**
@@ -224,19 +229,24 @@ public class AbstractHgHandler
   {
     if (errorStream != null)
     {
-      new Thread(() -> {
-        try
+      new Thread(new Runnable()
+      {
+        @Override
+        public void run()
         {
-          String content = IOUtil.getContent(errorStream);
-
-          if (Util.isNotEmpty(content))
+          try
           {
-            logger.error(content.trim());
+            String content = IOUtil.getContent(errorStream);
+
+            if (Util.isNotEmpty(content))
+            {
+              logger.error(content.trim());
+            }
           }
-        }
-        catch (IOException ex)
-        {
-          logger.error("error during logging", ex);
+          catch (IOException ex)
+          {
+            logger.error("error during logging", ex);
+          }
         }
       }).start();
     }
@@ -244,45 +254,15 @@ public class AbstractHgHandler
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param resultType
-   * @param script
-   * @param <T>
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  protected <T> T getResultFromScript(Class<T> resultType,
-    HgPythonScript script)
-    throws IOException, RepositoryException
-  {
+  protected <T> T getResultFromScript(Class<T> resultType, HgPythonScript script) throws IOException {
     return getResultFromScript(resultType, script,
-                               new HashMap<>());
+      new HashMap<String, String>());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param resultType
-   * @param script
-   * @param extraEnv
-   * @param <T>
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @SuppressWarnings("unchecked")
   protected <T> T getResultFromScript(Class<T> resultType,
     HgPythonScript script, Map<String, String> extraEnv)
-    throws IOException, RepositoryException
+    throws IOException
   {
     Process p = createScriptProcess(script, extraEnv);
 
@@ -292,7 +272,7 @@ public class AbstractHgHandler
     } catch (JAXBException ex) {
       logger.error("could not parse result", ex);
 
-      throw new RepositoryException("could not parse result", ex);
+      throw new InternalRepositoryException(repository, "could not parse result", ex);
     }
   }
 
@@ -315,7 +295,7 @@ public class AbstractHgHandler
     throws IOException
   {
     HgConfig config = handler.getConfig();
-    List<String> cmdList = new ArrayList<>();
+    List<String> cmdList = new ArrayList<String>();
 
     cmdList.add(cmd);
 

@@ -38,9 +38,9 @@ package sonia.scm.repository.spi;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.Serializable;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -117,9 +117,9 @@ public abstract class FileBaseCommandRequest
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("path", path)
-                      .add("revision", revision)
-                      .toString();
+                  .add("path", path)
+                  .add("revision", revision)
+                  .toString();
     //J+
   }
 

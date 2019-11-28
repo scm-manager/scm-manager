@@ -79,11 +79,11 @@ public final class DebugHook
     LOG.trace("store changeset ids from repository", event.getRepository().getId());
     
     debugService.put(
-      event.getRepository().getId(), 
+      event.getRepository().getNamespaceAndName(),
       new DebugHookData(Collections2.transform(
         event.getContext().getChangesetProvider().getChangesetList(), IDEXTRACTOR)
       ));
   }
   
-  private static final Function<Changeset, String> IDEXTRACTOR = Changeset::getId;
+  private static final Function<Changeset, String> IDEXTRACTOR = (Changeset changeset) -> changeset.getId();
 }

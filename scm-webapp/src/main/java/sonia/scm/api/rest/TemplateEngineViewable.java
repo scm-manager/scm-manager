@@ -42,65 +42,50 @@ import sonia.scm.template.TemplateEngineFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.api.view.Viewable;
-import com.sun.jersey.spi.template.ViewProcessor;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.ext.MessageBodyWriter;
 
 import javax.ws.rs.ext.Provider;
+import sonia.scm.template.Viewable;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Provider
-public class TemplateEngineViewable implements ViewProcessor<String>
+public class TemplateEngineViewable implements MessageBodyWriter<Viewable>
 {
+  
+  private final TemplateEngineFactory templateEngineFactory;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param templateEngineFactory
-   */
   @Inject
   public TemplateEngineViewable(TemplateEngineFactory templateEngineFactory)
   {
     this.templateEngineFactory = templateEngineFactory;
   }
 
-  //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   */
   @Override
-  public String resolve(String name)
-  {
-    return name;
+  public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+    return type.isAssignableFrom(Viewable.class);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   * @param viewable
-   * @param out
-   *
-   * @throws IOException
-   */
   @Override
-  public void writeTo(String path, Viewable viewable, OutputStream out)
-    throws IOException
-  {
+  public long getSize(Viewable viewable, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+    return -1;
+  }
+
+  @Override
+  public void writeTo(Viewable viewable, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
+    String path = viewable.getPath();
+    
     TemplateEngine engine = templateEngineFactory.getEngineByExtension(path);
 
     if (engine == null)
@@ -115,14 +100,9 @@ public class TemplateEngineViewable implements ViewProcessor<String>
       throw new IOException("could not find template for ".concat(path));
     }
 
-    PrintWriter writer = new PrintWriter(out);
+    PrintWriter writer = new PrintWriter(entityStream);
 
-    template.execute(writer, viewable.getModel());
+    template.execute(writer, viewable.getContext());
     writer.flush();
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private TemplateEngineFactory templateEngineFactory;
 }

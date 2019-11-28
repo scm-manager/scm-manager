@@ -1,0 +1,72 @@
+{
+  "group": {
+    "name": "Name",
+    "description": "Beschreibung",
+    "creationDate": "Erstellt",
+    "lastModified": "Zuletzt bearbeitet",
+    "type": "Typ",
+    "external": "Extern",
+    "internal": "Intern",
+    "members": "Mitglieder"
+  },
+  "groups": {
+    "title": "Gruppen",
+    "subtitle": "Verwaltung der Gruppen",
+    "noGroups": "Keine Gruppen gefunden."
+  },
+  "singleGroup": {
+    "errorTitle": "Fehler",
+    "errorSubtitle": "Unbekannter Gruppen Fehler",
+    "menu": {
+      "navigationLabel": "Gruppen Navigation",
+      "informationNavLink": "Informationen",
+      "settingsNavLink": "Einstellungen",
+      "generalNavLink": "Generell",
+      "setPermissionsNavLink": "Berechtigungen"
+    }
+  },
+  "add-group": {
+    "title": "Gruppe erstellen",
+    "subtitle": "Erstellen einer neuen Gruppe"
+  },
+  "create-group-button": {
+    "label": "Gruppe erstellen"
+  },
+  "edit-group-button": {
+    "label": "Bearbeiten"
+  },
+  "add-member-button": {
+    "label": "Mitglied hinzufügen"
+  },
+  "add-member-textfield": {
+    "error": "Ungültiger Name für Mitglied"
+  },
+  "add-member-autocomplete": {
+    "placeholder": "Mitglied hinzufügen",
+    "loading": "Suche...",
+    "no-options": "Kein Vorschlag für Benutzername verfügbar"
+  },
+  "groupForm": {
+    "subtitle": "Gruppe bearbeiten",
+    "externalSubtitle": "Externe Gruppe bearbeiten",
+    "submit": "Speichern",
+    "nameError": "Name ist ungültig",
+    "descriptionError": "Beschreibung ist ungültig",
+    "help": {
+      "nameHelpText": "Eindeutiger Name der Gruppe",
+      "descriptionHelpText": "Eine kurze Beschreibung der Gruppe",
+      "memberHelpText": "Benutzername des Mitglieds der Gruppe",
+      "externalHelpText": "Mitglieder dieser Gruppe werden von einem externen System wie z.B.: einem LDAP-Server verwaltet"
+    }
+  },
+  "deleteGroup": {
+    "subtitle": "Gruppe löschen",
+    "button": "Löschen",
+    "confirmAlert": {
+      "title": "Gruppe löschen",
+      "message": "Soll die Gruppe wirklich gelöscht werden?",
+      "submit": "Ja",
+      "cancel": "Nein"
+    }
+  }
+}

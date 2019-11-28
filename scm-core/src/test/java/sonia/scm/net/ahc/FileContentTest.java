@@ -44,7 +44,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;
 
@@ -76,7 +76,7 @@ public class FileContentTest
     FileContent content = create("abc");
 
     content.prepare(request);
-    verify(request).contentLength(3L);
+    verify(request).contentLength(3l);
   }
 
   /**

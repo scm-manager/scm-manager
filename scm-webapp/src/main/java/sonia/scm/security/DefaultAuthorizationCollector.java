@@ -36,36 +36,36 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
-
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
-import sonia.scm.group.GroupNames;
+import sonia.scm.group.GroupCollector;
+import sonia.scm.group.GroupPermissions;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.user.User;
+import sonia.scm.user.UserPermissions;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -75,12 +75,6 @@ import java.util.Set;
 @Extension
 public class DefaultAuthorizationCollector implements AuthorizationCollector
 {
-
-  // TODO move to util class
-  private static final String SEPARATOR = System.getProperty("line.separator", "\n");
-  
-  /** Field description */
-  private static final String ADMIN_PERMISSION = "*";
 
   /** Field description */
   private static final String CACHE_NAME = "sonia.cache.authorizing";
@@ -92,23 +86,24 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     LoggerFactory.getLogger(DefaultAuthorizationCollector.class);
 
   //~--- constructors ---------------------------------------------------------
-  
+
   /**
    * Constructs ...
-   *
-   *
-   *
    * @param cacheManager
    * @param repositoryDAO
    * @param securitySystem
+   * @param repositoryPermissionProvider
+   * @param groupCollector
    */
   @Inject
   public DefaultAuthorizationCollector(CacheManager cacheManager,
-    RepositoryDAO repositoryDAO, SecuritySystem securitySystem)
+                                       RepositoryDAO repositoryDAO, SecuritySystem securitySystem, RepositoryPermissionProvider repositoryPermissionProvider, GroupCollector groupCollector)
   {
     this.cache = cacheManager.getCache(CACHE_NAME);
     this.repositoryDAO = repositoryDAO;
     this.securitySystem = securitySystem;
+    this.repositoryPermissionProvider = repositoryPermissionProvider;
+    this.groupCollector = groupCollector;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -119,8 +114,8 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
    *
    * @return
    */
-  @Override
-  public AuthorizationInfo collect()
+  @VisibleForTesting
+  AuthorizationInfo collect()
   {
     AuthorizationInfo authorizationInfo;
     Subject subject = SecurityUtils.getSubject();
@@ -144,6 +139,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
    *
    * @return
    */
+  @Override
   public AuthorizationInfo collect(PrincipalCollection principals)
   {
     Preconditions.checkNotNull(principals, "principals parameter is required");
@@ -152,16 +148,16 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
     Preconditions.checkNotNull(user, "no user found in principal collection");
 
-    GroupNames groupNames = principals.oneByType(GroupNames.class);
+    Set<String> groups = groupCollector.collect(user.getName());
 
-    CacheKey cacheKey = new CacheKey(user.getId(), groupNames);
+    CacheKey cacheKey = new CacheKey(user.getId(), groups);
 
     AuthorizationInfo info = cache.get(cacheKey);
 
     if (info == null)
     {
       logger.trace("collect AuthorizationInfo for user {}", user.getName());
-      info = createAuthorizationInfo(user, groupNames);
+      info = createAuthorizationInfo(user, groups);
       cache.put(cacheKey, info);
     }
     else if (logger.isTraceEnabled())
@@ -173,14 +169,14 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   }
 
   private void collectGlobalPermissions(Builder<String> builder,
-    final User user, final GroupNames groups)
+    final User user, final Set<String> groups)
   {
-    List<StoredAssignedPermission> globalPermissions =
+    Collection<AssignedPermission> globalPermissions =
       securitySystem.getPermissions((AssignedPermission input) -> isUserPermitted(user, groups, input));
 
-    for (StoredAssignedPermission gp : globalPermissions)
+    for (AssignedPermission gp : globalPermissions)
     {
-      String permission = gp.getPermission();
+      String permission = gp.getPermission().getValue();
 
       logger.trace("add permission {} for user {}", permission, user.getName());
       builder.add(permission);
@@ -188,7 +184,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   }
 
   private void collectRepositoryPermissions(Builder<String> builder, User user,
-    GroupNames groups)
+    Set<String> groups)
   {
     for (Repository repository : repositoryDAO.getAll())
     {
@@ -197,27 +193,18 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   }
 
   private void collectRepositoryPermissions(Builder<String> builder,
-    Repository repository, User user, GroupNames groups)
+    Repository repository, User user, Set<String> groups)
   {
-    List<sonia.scm.repository.Permission> repositoryPermissions
-      = repository.getPermissions();
+    Collection<RepositoryPermission> repositoryPermissions = repository.getPermissions();
 
     if (Util.isNotEmpty(repositoryPermissions))
     {
       boolean hasPermission = false;
-      for (sonia.scm.repository.Permission permission : repositoryPermissions)
+      for (RepositoryPermission permission : repositoryPermissions)
       {
-        if (isUserPermitted(user, groups, permission))
-        {
-
-          String perm = permission.getType().getPermissionPrefix().concat(repository.getId());
-          if (logger.isTraceEnabled())
-          {
-            logger.trace("add repository permission {} for user {} at repository {}", 
-              perm, user.getName(), repository.getName());
-          }
-
-          builder.add(perm);
+        hasPermission = isUserPermitted(user, groups, permission);
+        if (hasPermission) {
+          addRepositoryPermission(builder, repository, user, permission);
         }
       }
 
@@ -233,42 +220,71 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     }
   }
 
-  private AuthorizationInfo createAuthorizationInfo(User user,
-    GroupNames groups)
-  {
-    Set<String> roles;
-    Set<String> permissions;
-
-    if (user.isAdmin())
+  private void addRepositoryPermission(Builder<String> builder, Repository repository, User user, RepositoryPermission permission) {
+    Collection<String> verbs = getVerbs(permission);
+    if (!verbs.isEmpty())
     {
-      if (logger.isDebugEnabled())
+      String perm = "repository:" + String.join(",", verbs) + ":" + repository.getId();
+      if (logger.isTraceEnabled())
       {
-        logger.debug("grant admin role for user {}", user.getName());
+        logger.trace("add repository permission {} for user {} at repository {}",
+          perm, user.getName(), repository.getName());
       }
 
-      roles = ImmutableSet.of(Role.USER, Role.ADMIN);
-
-      permissions = ImmutableSet.of(ADMIN_PERMISSION);
+      builder.add(perm);
     }
-    else
-    {
-      roles = ImmutableSet.of(Role.USER);
+  }
 
-      Builder<String> builder = ImmutableSet.builder();
+  private Collection<String> getVerbs(RepositoryPermission permission) {
+    return permission.getRole() == null? permission.getVerbs(): getVerbsForRole(permission.getRole());
+  }
 
-      collectGlobalPermissions(builder, user, groups);
-      collectRepositoryPermissions(builder, user, groups);
-      permissions = builder.build();
+  private Collection<String> getVerbsForRole(String roleName) {
+    return repositoryPermissionProvider.availableRoles()
+      .stream()
+      .filter(role -> roleName.equals(role.getName()))
+      .findFirst()
+      .orElseThrow(() -> new IllegalStateException("unknown role: " + roleName))
+      .getVerbs();
+  }
+
+  private AuthorizationInfo createAuthorizationInfo(User user, Set<String> groups) {
+    Builder<String> builder = ImmutableSet.builder();
+
+    collectGlobalPermissions(builder, user, groups);
+    collectRepositoryPermissions(builder, user, groups);
+    builder.add(canReadOwnUser(user));
+    if (!Authentications.isSubjectAnonymous(user.getName())) {
+      builder.add(getUserAutocompletePermission());
+      builder.add(getGroupAutocompletePermission());
+      builder.add(getChangeOwnPasswordPermission(user));
     }
 
-    SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
-    info.addStringPermissions(permissions);
+    SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(ImmutableSet.of(Role.USER));
+    info.addStringPermissions(builder.build());
+
     return info;
+  }
+
+  private String getGroupAutocompletePermission() {
+    return GroupPermissions.autocomplete().asShiroString();
+  }
+
+  private String getChangeOwnPasswordPermission(User user) {
+    return UserPermissions.changePassword(user).asShiroString();
+  }
+
+  private String getUserAutocompletePermission() {
+    return UserPermissions.autocomplete().asShiroString();
+  }
+
+  private String canReadOwnUser(User user) {
+    return UserPermissions.read(user.getName()).asShiroString();
   }
 
   //~--- get methods ----------------------------------------------------------
 
-  private boolean isUserPermitted(User user, GroupNames groups,
+  private boolean isUserPermitted(User user, Set<String> groups,
     PermissionObject perm)
   {
     //J-
@@ -276,7 +292,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       || ((!perm.isGroupPermission()) && user.getName().equals(perm.getName()));
     //J+
   }
-  
+
   @Subscribe
   public void invalidateCache(AuthorizationChangedEvent event) {
     if (event.isEveryUserAffected()) {
@@ -285,12 +301,12 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       invalidateCache();
     }
   }
-  
+
   private void invalidateUserCache(final String username) {
     logger.info("invalidate cache for user {}, because of a received authorization event", username);
     cache.removeAll((CacheKey item) -> username.equalsIgnoreCase(item.username));
   }
-  
+
   private void invalidateCache() {
     logger.info("invalidate cache, because of a received authorization event");
     cache.clear();
@@ -303,7 +319,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
    */
   private static class CacheKey
   {
-    private CacheKey(String username, GroupNames groupnames)
+    private CacheKey(String username, Set<String> groupnames)
     {
       this.username = username;
       this.groupnames = groupnames;
@@ -345,7 +361,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     //~--- fields -------------------------------------------------------------
 
     /** group names */
-    private final GroupNames groupnames;
+    private final Set<String> groupnames;
 
     /** username */
     private final String username;
@@ -361,4 +377,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
   /** security system */
   private final SecuritySystem securitySystem;
+
+  private final RepositoryPermissionProvider repositoryPermissionProvider;
+  private final GroupCollector groupCollector;
 }

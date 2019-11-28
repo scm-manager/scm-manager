@@ -1,0 +1,25 @@
+package sonia.scm.api.v2.resources;
+
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import sonia.scm.repository.Compatibility;
+
+@NoArgsConstructor
+@Getter
+@Setter
+public class SvnConfigDto extends HalRepresentation {
+
+  private boolean disabled;
+
+  private boolean enabledGZip;
+  private Compatibility compatibility;
+
+  @Override
+  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
+  protected HalRepresentation add(Links links) {
+    return super.add(links);
+  }
+}

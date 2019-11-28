@@ -36,9 +36,9 @@ package sonia.scm.plugin;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.xml.bind.annotation.XmlElement;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -119,9 +119,9 @@ public final class ClassElement
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("clazz", clazz)
-                      .add("description", description)
-                      .toString();
+                  .add("clazz", clazz)
+                  .add("description", description)
+                  .toString();
     //J+
   }
 

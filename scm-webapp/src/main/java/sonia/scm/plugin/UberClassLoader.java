@@ -65,7 +65,7 @@ public final class UberClassLoader extends ClassLoader
    * @param parent
    * @param plugins
    */
-  public UberClassLoader(ClassLoader parent, Iterable<PluginWrapper> plugins)
+  public UberClassLoader(ClassLoader parent, Iterable<InstalledPlugin> plugins)
   {
     super(parent);
     this.plugins = plugins;
@@ -73,41 +73,37 @@ public final class UberClassLoader extends ClassLoader
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   *
-   * @throws ClassNotFoundException
-   */
   @Override
   protected Class<?> findClass(String name) throws ClassNotFoundException
   {
     Class<?> clazz = getFromCache(name);
 
-    if (clazz == null)
-    {
-      for (PluginWrapper plugin : plugins)
-      {
-        ClassLoader cl = plugin.getClassLoader();
-
-        // load class could be slow, perhaps we should call
-        // find class via reflection ???
-        clazz = cl.loadClass(name);
-
-        if (clazz != null)
-        {
-          cache.put(name, new WeakReference<>(clazz));
-
-          break;
-        }
-      }
+    if (clazz == null) {
+      clazz = findClassInPlugins(name);
+      cache.put(name, new WeakReference<>(clazz));
     }
 
     return clazz;
+  }
+
+  private Class<?> findClassInPlugins(String name) throws ClassNotFoundException {
+    for (InstalledPlugin plugin : plugins) {
+      Class<?> clazz = findClass(plugin.getClassLoader(), name);
+      if (clazz != null) {
+        return clazz;
+      }
+    }
+    throw new ClassNotFoundException("could not find class " + name + " in any of the installed plugins");
+  }
+
+  private Class<?> findClass(ClassLoader classLoader, String name) {
+    try {
+      // load class could be slow, perhaps we should call
+      // find class via reflection ???
+      return classLoader.loadClass(name);
+    } catch (ClassNotFoundException ex) {
+      return null;
+    }
   }
 
   /**
@@ -123,7 +119,7 @@ public final class UberClassLoader extends ClassLoader
   {
     URL url = null;
 
-    for (PluginWrapper plugin : plugins)
+    for (InstalledPlugin plugin : plugins)
     {
       ClassLoader cl = plugin.getClassLoader();
 
@@ -153,7 +149,7 @@ public final class UberClassLoader extends ClassLoader
   {
     List<URL> urls = Lists.newArrayList();
 
-    for (PluginWrapper plugin : plugins)
+    for (InstalledPlugin plugin : plugins)
     {
       ClassLoader cl = plugin.getClassLoader();
 
@@ -198,5 +194,5 @@ public final class UberClassLoader extends ClassLoader
     Maps.newConcurrentMap();
 
   /** Field description */
-  private final Iterable<PluginWrapper> plugins;
+  private final Iterable<InstalledPlugin> plugins;
 }

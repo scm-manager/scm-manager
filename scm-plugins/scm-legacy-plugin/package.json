@@ -1,0 +1,24 @@
+{
+  "name": "@scm-manager/scm-legacy-plugin",
+  "private": true,
+  "version": "2.0.0-SNAPSHOT",
+  "license": "BSD-3-Clause",
+  "main": "./src/main/js/index.tsx",
+  "scripts": {
+    "build": "ui-scripts plugin",
+    "watch": "ui-scripts plugin-watch",
+    "typecheck": "tsc"
+  },
+  "babel": {
+    "presets": [
+      "@scm-manager/babel-preset"
+    ]
+  },
+  "jest": {
+    "preset": "@scm-manager/jest-preset"
+  },
+  "prettier": "@scm-manager/prettier-config",
+  "dependencies": {
+    "@scm-manager/ui-plugins": "^2.0.0-SNAPSHOT"
+  }
+}

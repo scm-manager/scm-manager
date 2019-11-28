@@ -36,9 +36,11 @@ package sonia.scm.event;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.EventBus;
-
+import com.github.legman.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  *
@@ -47,8 +49,11 @@ import org.slf4j.LoggerFactory;
 public class LegmanScmEventBus extends ScmEventBus
 {
 
+  private static final AtomicLong INSTANCE_COUNTER = new AtomicLong();
+
+
   /** Field description */
-  private static final String NAME = "ScmEventBus";
+  private static final String NAME = "ScmEventBus-%s";
 
   /**
    * the logger for LegmanScmEventBus
@@ -58,13 +63,20 @@ public class LegmanScmEventBus extends ScmEventBus
 
   //~--- constructors ---------------------------------------------------------
 
+  private String name;
+
   /**
    * Constructs ...
    *
    */
-  public LegmanScmEventBus()
-  {
-    eventBus = new EventBus(NAME);
+  public LegmanScmEventBus() {
+    eventBus = create();
+  }
+
+  private EventBus create() {
+    name = String.format(NAME, INSTANCE_COUNTER.incrementAndGet());
+    logger.info("create new event bus {}", name);
+    return new EventBus(name);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -78,7 +90,7 @@ public class LegmanScmEventBus extends ScmEventBus
   @Override
   public void post(Object event)
   {
-    logger.debug("post {} to event bus", event);
+    logger.debug("post {} to event bus {}", event, name);
     eventBus.post(event);
   }
 
@@ -92,7 +104,7 @@ public class LegmanScmEventBus extends ScmEventBus
   @Override
   public void register(Object object)
   {
-    logger.trace("register {} to event bus", object);
+    logger.trace("register {} to event bus {}", object, name);
     eventBus.register(object);
 
   }
@@ -106,7 +118,7 @@ public class LegmanScmEventBus extends ScmEventBus
   @Override
   public void unregister(Object object)
   {
-    logger.trace("unregister {} from event bus", object);
+    logger.trace("unregister {} from event bus {}", object, name);
     
     try
     {
@@ -118,8 +130,15 @@ public class LegmanScmEventBus extends ScmEventBus
     }
   }
 
+  @Subscribe(async = false)
+  public void recreateEventBus(RecreateEventBusEvent recreateEventBusEvent) {
+    logger.info("shutdown event bus executor for {}", name);
+    eventBus.shutdown();
+    eventBus = create();
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** event bus */
-  private final EventBus eventBus;
+  private EventBus eventBus;
 }

@@ -54,6 +54,18 @@ import javax.servlet.http.HttpServletRequest;
 public class HttpUtilTest
 {
 
+  @Test
+  public void concatenateTest() {
+    assertEquals(
+      "/scm/git/hitchhiker/tricia",
+      HttpUtil.concatenate("/scm", "git", "hitchhiker", "tricia")
+    );
+    assertEquals(
+      "scm/git/hitchhiker/tricia",
+      HttpUtil.concatenate("scm", "git", "hitchhiker", "tricia")
+    );
+  }
+
   /**
    * Method description
    *
@@ -63,19 +75,19 @@ public class HttpUtilTest
   {
     //J-
     assertEquals(
-      "http://www.scm-manager/scm/test", 
+      "http://www.scm-manager/scm/test",
       HttpUtil.append("http://www.scm-manager/scm/", "test")
     );
     assertEquals(
-      "http://www.scm-manager/scm/test", 
+      "http://www.scm-manager/scm/test",
       HttpUtil.append("http://www.scm-manager/scm", "test")
     );
     assertEquals(
-      "http://www.scm-manager/scm/test", 
+      "http://www.scm-manager/scm/test",
       HttpUtil.append("http://www.scm-manager/scm", "/test")
     );
     assertEquals(
-      "http://www.scm-manager/scm/test", 
+      "http://www.scm-manager/scm/test",
       HttpUtil.append("http://www.scm-manager/scm/", "/test")
     );
     //J+

@@ -109,7 +109,10 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
     this.format = format;
   }
 
-  //~--- get methods ----------------------------------------------------------
+  public void setAncestorChangeset(String ancestorChangeset) {
+    this.ancestorChangeset = ancestorChangeset;
+  }
+//~--- get methods ----------------------------------------------------------
 
   /**
    * Return the output format of the diff command.
@@ -124,8 +127,13 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
     return format;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  public String getAncestorChangeset() {
+    return ancestorChangeset;
+  }
+//~--- fields ---------------------------------------------------------------
 
   /** diff format */
   private DiffFormat format = DiffFormat.NATIVE;
+
+  private String ancestorChangeset;
 }

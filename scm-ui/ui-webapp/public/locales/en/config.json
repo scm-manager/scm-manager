@@ -1,0 +1,78 @@
+{
+  "config": {
+    "navigationLabel": "Administration Navigation",
+    "title": "Global Configuration",
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown Config Error",
+    "form": {
+      "submit": "Submit",
+      "submit-success-notification": "Configuration changed successfully!",
+      "no-read-permission-notification": "Please note: You do not have the permission to see the config!",
+      "no-write-permission-notification": "Please note: You do not have the permission to edit the config!"
+    }
+  },
+  "proxy-settings": {
+    "name": "Proxy Settings",
+    "proxy-password": "Proxy Password",
+    "proxy-port": "Proxy Port",
+    "proxy-server": "Proxy Server",
+    "proxy-user": "Proxy User",
+    "enable-proxy": "Enable Proxy",
+    "proxy-excludes": "Proxy Excludes",
+    "remove-proxy-exclude-button": "Remove Proxy Exclude",
+    "add-proxy-exclude-error": "The proxy exclude you want to add is not valid",
+    "add-proxy-exclude-textfield": "Add proxy exclude you want to add to proxy excludes here",
+    "add-proxy-exclude-button": "Add Proxy Exclude"
+  },
+  "base-url-settings": {
+    "name": "Base URL Settings",
+    "base-url": "Base URL",
+    "force-base-url": "Force Base URL"
+  },
+  "login-attempt": {
+    "name": "Login Attempt",
+    "login-attempt-limit": "Login Attempt Limit",
+    "login-attempt-limit-timeout": "Login Attempt Limit Timeout"
+  },
+  "general-settings": {
+    "realm-description": "Realm Description",
+    "disable-grouping-grid": "Disable Grouping Grid",
+    "date-format": "Date Format",
+    "anonymous-access-enabled": "Anonymous Access Enabled",
+    "skip-failed-authenticators": "Skip Failed Authenticators",
+    "plugin-url": "Plugin Center URL",
+    "enabled-xsrf-protection": "Enabled XSRF Protection",
+    "namespace-strategy": "Namespace Strategy",
+    "login-info-url": "Login Info URL"
+  },
+  "validation": {
+    "date-format-invalid": "The date format is not valid",
+    "login-attempt-limit-timeout-invalid": "This is not a number",
+    "login-attempt-limit-invalid": "This is not a number",
+    "plugin-url-invalid": "This is not a valid url"
+  },
+  "help": {
+    "realmDescriptionHelpText": "Enter authentication realm description.",
+    "dateFormatHelpText": "Moments date format. Please have a look at the MomentJS documentation.",
+    "pluginUrlHelpText": "The url of the Plugin Center API. Explanation of the placeholders: version = SCM-Manager Version; os = Operation System; arch = Architecture",
+    "enableForwardingHelpText": "Enable mod_proxy port forwarding.",
+    "disableGroupingGridHelpText": "Disable repository Groups. A complete page reload is required after a change of this value.",
+    "allowAnonymousAccessHelpText": "Anonymous users have access on granted repositories.",
+    "skipFailedAuthenticatorsHelpText": "Do not stop the authentication chain, if an authenticator finds the user but fails to authenticate the user.",
+    "adminGroupsHelpText": "Names of groups with admin permissions.",
+    "adminUsersHelpText": "Names of users with admin permissions.",
+    "forceBaseUrlHelpText": "Redirects to the base url if the request comes from a other url.",
+    "baseUrlHelpText": "The url of the application (with context path), i.e. http://localhost:8080/scm",
+    "loginAttemptLimitHelpText": "Maximum allowed login attempts. Use -1 to disable the login attempt limit.",
+    "loginAttemptLimitTimeoutHelpText": "Timeout in seconds for users which are temporary disabled, because of too many failed login attempts.",
+    "enableProxyHelpText": "Enable Proxy",
+    "proxyPortHelpText": "The proxy port",
+    "proxyPasswordHelpText": "The password for the proxy server authentication.",
+    "proxyServerHelpText": "The proxy server",
+    "proxyUserHelpText": "The username for the proxy server authentication.",
+    "proxyExcludesHelpText": "Glob patterns for hostnames, which should be excluded from proxy settings.",
+    "enableXsrfProtectionHelpText": "Enable XSRF Cookie Protection. Note: This feature is still experimental.",
+    "nameSpaceStrategyHelpText": "The namespace strategy.",
+    "loginInfoUrlHelpText": "URL to login information (plugin and feature tips at login page). If this is omitted, no login information will be displayed."
+  }
+}

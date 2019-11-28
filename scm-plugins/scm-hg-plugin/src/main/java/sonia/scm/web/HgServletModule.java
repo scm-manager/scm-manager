@@ -36,12 +36,18 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.servlet.ServletModule;
-
+import org.mapstruct.factory.Mappers;
+import sonia.scm.api.v2.resources.HgConfigDtoToHgConfigMapper;
+import sonia.scm.api.v2.resources.HgConfigInstallationsToDtoMapper;
+import sonia.scm.api.v2.resources.HgConfigPackagesToDtoMapper;
+import sonia.scm.api.v2.resources.HgConfigToHgConfigDtoMapper;
 import sonia.scm.installer.HgPackageReader;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgContextProvider;
 import sonia.scm.repository.HgHookManager;
+import sonia.scm.repository.spi.HgWorkdirFactory;
+import sonia.scm.repository.spi.SimpleHgWorkdirFactory;
 
 /**
  *
@@ -70,10 +76,14 @@ public class HgServletModule extends ServletModule
     bind(HgHookManager.class);
     bind(HgPackageReader.class);
 
+    bind(HgConfigDtoToHgConfigMapper.class).to(Mappers.getMapper(HgConfigDtoToHgConfigMapper.class).getClass());
+    bind(HgConfigToHgConfigDtoMapper.class).to(Mappers.getMapper(HgConfigToHgConfigDtoMapper.class).getClass());
+    bind(HgConfigPackagesToDtoMapper.class).to(Mappers.getMapper(HgConfigPackagesToDtoMapper.class).getClass());
+    bind(HgConfigInstallationsToDtoMapper.class);
+
     // bind servlets
     serve(MAPPING_HOOK).with(HgHookCallbackServlet.class);
 
-    // register hg cgi servlet
-    serve(MAPPING_HG).with(HgCGIServlet.class);
+    bind(HgWorkdirFactory.class).to(SimpleHgWorkdirFactory.class);
   }
 }

@@ -35,7 +35,6 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
-
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
@@ -43,20 +42,17 @@ import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.SVNLogClient;
 import org.tmatesoft.svn.core.wc.SVNRevision;
-
 import sonia.scm.repository.BlameLine;
 import sonia.scm.repository.BlameResult;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.SvnBlameHandler;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
-import java.io.IOException;
-
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -65,37 +61,13 @@ import java.util.List;
 public class SvnBlameCommand extends AbstractSvnCommand implements BlameCommand
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param context
-   * @param repository
-   * @param repositoryDirectory
-   */
   public SvnBlameCommand(SvnContext context, Repository repository)
   {
     super(context, repository);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public BlameResult getBlameResult(BlameCommandRequest request)
-          throws IOException, RepositoryException
-  {
+  public BlameResult getBlameResult(BlameCommandRequest request) {
     String path = request.getPath();
     String revision = request.getRevision();
     List<BlameLine> blameLines = Lists.newArrayList();
@@ -120,13 +92,13 @@ public class SvnBlameCommand extends AbstractSvnCommand implements BlameCommand
       SVNLogClient svnLogClient = new SVNLogClient(svnManager, null);
 
       svnLogClient.doAnnotate(svnurl, SVNRevision.UNDEFINED,
-                              SVNRevision.create(1L), endRevision,
+                              SVNRevision.create(1l), endRevision,
                               new SvnBlameHandler(svnRepository, path,
                                 blameLines));
     }
     catch (SVNException ex)
     {
-      throw new RepositoryException("could not create blame result", ex);
+      throw new InternalRepositoryException(repository, "could not create blame result", ex);
     }
 
     return new BlameResult(blameLines.size(), blameLines);

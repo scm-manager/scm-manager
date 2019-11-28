@@ -29,191 +29,75 @@
  *
  */
 
-
-
 package sonia.scm.repository.client.api;
-
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.client.spi.RepositoryClientProvider;
 import sonia.scm.util.IOUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
 import java.io.File;
 
-/**
- *
- * @author Sebastian Sdorra
- * @since 1.18
- */
-public final class RepositoryClient implements Closeable
-{
+public final class RepositoryClient implements Closeable {
 
-  /**
-   * the logger for RepositoryClient
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(RepositoryClient.class);
+  private static final Logger logger = LoggerFactory.getLogger(RepositoryClient.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param directory
-   * @param clientProvider
-   */
   RepositoryClient(RepositoryClientProvider clientProvider)
   {
     this.clientProvider = clientProvider;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
   @Override
-  public void close()
-  {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("close client provider");
-    }
+  public void close() {
+    logger.trace("close client provider");
 
     IOUtil.close(clientProvider);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public AddCommandBuilder getAddCommand()
-  {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("create add command");
-    }
+  public AddCommandBuilder getAddCommand() {
+    logger.trace("create add command");
 
     return new AddCommandBuilder(clientProvider.getAddCommand());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public BranchCommandBuilder getBranchCommand()
-  {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("create branch command");
-    }
+  public BranchCommandBuilder getBranchCommand() {
+    logger.trace("create branch command");
 
     return new BranchCommandBuilder(clientProvider.getBranchCommand());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public CommitCommandBuilder getCommitCommand()
-  {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("create commit command");
-    }
+  public CommitCommandBuilder getCommitCommand() {
+    logger.trace("create commit command");
 
     return new CommitCommandBuilder(clientProvider.getCommitCommand());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public PushCommandBuilder getPushCommand()
-  {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("create push command");
-    }
+  public PushCommandBuilder getPushCommand() {
+    logger.trace("create push command");
 
     return new PushCommandBuilder(clientProvider.getPushCommand());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public RemoveCommandBuilder getRemoveCommand()
-  {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("create remove command");
-    }
+  public RemoveCommandBuilder getRemoveCommand() {
+    logger.trace("create remove command");
 
     return new RemoveCommandBuilder(clientProvider.getRemoveCommand());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public TagCommandBuilder getTagCommand()
-  {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("create tag command");
-    }
+  public TagCommandBuilder getTagCommand() {
+    logger.trace("create tag command");
 
     return new TagCommandBuilder(clientProvider.getTagCommand());
   }
 
-  /**
-   * Returns the working copy of the repository.
-   * 
-   * @return working copy
-   * @since 1.51
-   */
   public File getWorkingCopy() {
     return clientProvider.getWorkingCopy();
   }
   
-  /**
-   * Method description
-   *
-   *
-   * @param command
-   *
-   * @return
-   */
-  public boolean isCommandSupported(ClientCommand command)
-  {
+  public boolean isCommandSupported(ClientCommand command) {
     return clientProvider.getSupportedClientCommands().contains(command);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
   private final RepositoryClientProvider clientProvider;
 }

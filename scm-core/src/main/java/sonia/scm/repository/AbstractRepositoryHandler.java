@@ -38,7 +38,7 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.NotSupportedFeatuerException;
+import sonia.scm.FeatureNotSupportedException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.event.ScmEventBus;
 
@@ -56,7 +56,7 @@ import sonia.scm.store.ConfigurationStoreFactory;
  *
  * @param <C>
  */
-public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig>
+public abstract class AbstractRepositoryHandler<C extends RepositoryConfig>
   implements RepositoryHandler
 {
 
@@ -72,9 +72,11 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
    *
    * @param storeFactory
    */
-  protected AbstractRepositoryHandler(ConfigurationStoreFactory storeFactory)
-  {
-    this.store = storeFactory.getStore(getConfigClass(), getType().getName());
+  protected AbstractRepositoryHandler(ConfigurationStoreFactory storeFactory) {
+    this.store = storeFactory
+      .withType(getConfigClass())
+      .withName(getType().getName())
+      .build();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -165,13 +167,12 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
    *
    * @return
    *
-   * @throws NotSupportedFeatuerException
+   * @throws FeatureNotSupportedException
    */
   @Override
-  public ImportHandler getImportHandler() throws NotSupportedFeatuerException
+  public ImportHandler getImportHandler()
   {
-    throw new NotSupportedFeatuerException(
-      "import handler is not supported by this repository handler");
+    throw new FeatureNotSupportedException("import");
   }
 
   /**
@@ -209,7 +210,7 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
   private void fireConfigChanged()
   {
     ScmEventBus.getInstance().post(
-      new RepositoryHandlerConfigChangedEvent<>(config));
+      new RepositoryHandlerConfigChangedEvent<C>(config));
   }
 
   //~--- fields ---------------------------------------------------------------

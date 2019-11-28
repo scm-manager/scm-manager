@@ -36,34 +36,29 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
-
+import org.assertj.core.api.Assertions;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.Stage;
 
-import static org.hamcrest.Matchers.*;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.nio.file.Path;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletContext;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -102,22 +97,27 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
    * Method description
    *
    *
-   * @throws MalformedURLException
    */
   @Test
-  public void testGetResourceFromCache() throws MalformedURLException
-  {
-    when(servletContext.getResource("/myresource")).thenReturn(SCM_MANAGER);
-
+  public void testGetResourceFromCache() {
     DefaultUberWebResourceLoader resourceLoader =
       new DefaultUberWebResourceLoader(servletContext,
-                                       new ArrayList<>());
+        new ArrayList<InstalledPlugin>(), Stage.PRODUCTION);
 
     resourceLoader.getCache().put("/myresource", GITHUB);
 
     URL resource = resourceLoader.getResource("/myresource");
 
     assertSame(GITHUB, resource);
+  }
+
+  @Test
+  public void testGetResourceCacheIsDisableInStageDevelopment() throws MalformedURLException {
+    DefaultUberWebResourceLoader resourceLoader = new DefaultUberWebResourceLoader(servletContext, new ArrayList<>(), Stage.DEVELOPMENT);
+    when(servletContext.getResource("/scm")).thenAnswer(invocation -> new URL("https://scm-manager.org"));
+    URL url = resourceLoader.getResource("/scm");
+    URL secondUrl = resourceLoader.getResource("/scm");
+    assertNotSame(url, secondUrl);
   }
 
   /**
@@ -131,8 +131,8 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
   {
     File directory = temp.newFolder();
     File file = file(directory, "myresource");
-    PluginWrapper wrapper = createPluginWrapper(directory);
-    List<PluginWrapper> plugins = Lists.newArrayList(wrapper);
+    InstalledPlugin wrapper = createPluginWrapper(directory);
+    List<InstalledPlugin> plugins = Lists.newArrayList(wrapper);
     WebResourceLoader resourceLoader =
       new DefaultUberWebResourceLoader(servletContext, plugins);
 
@@ -151,8 +151,7 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
     when(servletContext.getResource("/myresource")).thenReturn(SCM_MANAGER);
 
     WebResourceLoader resourceLoader =
-      new DefaultUberWebResourceLoader(servletContext,
-                                       new ArrayList<>());
+      new DefaultUberWebResourceLoader(servletContext, new ArrayList<>());
     URL resource = resourceLoader.getResource("/myresource");
 
     assertSame(SCM_MANAGER, resource);
@@ -171,14 +170,58 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
 
     File directory = temp.newFolder();
     File file = file(directory, "myresource");
-    PluginWrapper wrapper = createPluginWrapper(directory);
-    List<PluginWrapper> plugins = Lists.newArrayList(wrapper);
+    InstalledPlugin wrapper = createPluginWrapper(directory);
+    List<InstalledPlugin> plugins = Lists.newArrayList(wrapper);
 
     UberWebResourceLoader resourceLoader =
       new DefaultUberWebResourceLoader(servletContext, plugins);
 
     assertThat(resourceLoader.getResources("/myresource"),
       containsInAnyOrder(file.toURI().toURL(), BITBUCKET));
+  }
+
+  @Test
+  public void shouldReturnNullForDirectoryFromServletContext() throws IOException {
+    URL url = temp.newFolder().toURI().toURL();
+    when(servletContext.getResource("/myresource")).thenReturn(url);
+
+    WebResourceLoader resourceLoader =
+      new DefaultUberWebResourceLoader(servletContext, new ArrayList<>());
+
+    assertNull(resourceLoader.getResource("/myresource"));
+  }
+
+  @Test
+  public void shouldReturnNullForDirectoryFromPlugin() throws IOException {
+    URL url = temp.newFolder().toURI().toURL();
+    WebResourceLoader loader = mock(WebResourceLoader.class);
+    when(loader.getResource("/myresource")).thenReturn(url);
+
+    InstalledPlugin installedPlugin = mock(InstalledPlugin.class);
+    when(installedPlugin.getWebResourceLoader()).thenReturn(loader);
+
+    WebResourceLoader resourceLoader =
+      new DefaultUberWebResourceLoader(servletContext, Lists.newArrayList(installedPlugin));
+
+    assertNull(resourceLoader.getResource("/myresource"));
+  }
+
+  @Test
+  public void shouldReturnNullForDirectories() throws IOException {
+    URL url = temp.newFolder().toURI().toURL();
+    when(servletContext.getResource("/myresource")).thenReturn(url);
+
+    WebResourceLoader loader = mock(WebResourceLoader.class);
+    when(loader.getResource("/myresource")).thenReturn(url);
+
+    InstalledPlugin installedPlugin = mock(InstalledPlugin.class);
+    when(installedPlugin.getWebResourceLoader()).thenReturn(loader);
+
+    UberWebResourceLoader resourceLoader =
+      new DefaultUberWebResourceLoader(servletContext, Lists.newArrayList(installedPlugin));
+
+    List<URL> resources = resourceLoader.getResources("/myresource");
+    Assertions.assertThat(resources).isEmpty();
   }
 
   /**
@@ -189,7 +232,7 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
    *
    * @return
    */
-  private PluginWrapper createPluginWrapper(File directory)
+  private InstalledPlugin createPluginWrapper(File directory)
   {
     return createPluginWrapper(directory.toPath());
   }
@@ -202,10 +245,10 @@ public class DefaultUberWebResourceLoaderTest extends WebResourceLoaderTestBase
    *
    * @return
    */
-  private PluginWrapper createPluginWrapper(Path directory)
+  private InstalledPlugin createPluginWrapper(Path directory)
   {
-    return new PluginWrapper(null, null, new PathWebResourceLoader(directory),
-      directory);
+    return new InstalledPlugin(null, null, new PathWebResourceLoader(directory),
+      directory, false);
   }
 
   //~--- fields ---------------------------------------------------------------

@@ -36,7 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.Handler;
-import sonia.scm.NotSupportedFeatuerException;
+import sonia.scm.FeatureNotSupportedException;
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
@@ -47,19 +47,8 @@ import sonia.scm.plugin.ExtensionPoint;
  */
 @ExtensionPoint
 public interface RepositoryHandler
-        extends Handler<Repository, RepositoryException>
+        extends Handler<Repository>
 {
-
-  /**
-   * Returns the resource path for the given {@link Repository}.
-   * The resource path is part of the {@link Repository} url.
-   *
-   *
-   *
-   * @param repository given {@link Repository}
-   * @return resource path of the {@link Repository}
-   */
-  public String createResourcePath(Repository repository);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -70,9 +59,9 @@ public interface RepositoryHandler
    * @return {@link ImportHandler} for the repository type of this handler
    * @since 1.12
    *
-   * @throws NotSupportedFeatuerException
+   * @throws FeatureNotSupportedException
    */
-  public ImportHandler getImportHandler() throws NotSupportedFeatuerException;
+  public ImportHandler getImportHandler() throws FeatureNotSupportedException;
 
   /**
    * Returns informations about the version of the RepositoryHandler.
@@ -82,4 +71,7 @@ public interface RepositoryHandler
    * @since 1.15
    */
   public String getVersionInformation();
+
+  @Override
+  RepositoryType getType();
 }

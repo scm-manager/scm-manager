@@ -37,8 +37,11 @@ http://bitbucket.org/sdorra/scm-manager
     <!-- increase header size for mercurial -->
     <Set name="requestHeaderSize">16384</Set>
     <Set name="responseHeaderSize">16384</Set>
+    <Call name="addCustomizer">
+      <Arg><New class="org.eclipse.jetty.server.ForwardedRequestCustomizer"/></Arg>
+    </Call>
   </New>
-  
+
   <Call id="httpConnector" name="addConnector">
     <Arg>
       <New class="org.eclipse.jetty.server.ServerConnector">

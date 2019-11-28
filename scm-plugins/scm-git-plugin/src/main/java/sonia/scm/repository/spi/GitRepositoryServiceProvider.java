@@ -33,19 +33,21 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.collect.ImmutableSet;
-
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.api.HookContextFactory;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.IOException;
-
+import java.util.EnumSet;
 import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -60,32 +62,31 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     Command.BLAME,
     Command.BROWSE,
     Command.CAT,
-    Command.DIFF, 
+    Command.DIFF,
+    Command.DIFF_RESULT,
     Command.LOG,
     Command.TAGS,
+    Command.BRANCH,
     Command.BRANCHES, 
     Command.INCOMING,
     Command.OUTGOING,
     Command.PUSH,
-    Command.PULL
+    Command.PULL,
+    Command.MERGE,
+    Command.MODIFY
   );
+  protected static final Set<Feature> FEATURES = EnumSet.of(Feature.INCOMING_REVISION);
   //J+
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   * @param repository
-   */
-  public GitRepositoryServiceProvider(GitRepositoryHandler handler,
-    Repository repository)
-  {
+  public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
     this.handler = handler;
     this.repository = repository;
-    context = new GitContext(handler.getDirectory(repository));
+    this.lfsBlobStoreFactory = lfsBlobStoreFactory;
+    this.hookContextFactory = hookContextFactory;
+    this.eventBus = eventBus;
+    this.context = new GitContext(handler.getDirectory(repository.getId()), repository, storeProvider);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -135,9 +136,21 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
    * @return
    */
   @Override
+  public BranchCommand getBranchCommand()
+  {
+    return new GitBranchCommand(context, repository, hookContextFactory, eventBus);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public BrowseCommand getBrowseCommand()
   {
-    return new GitBrowseCommand(context, repository);
+    return new GitBrowseCommand(context, repository, lfsBlobStoreFactory);
   }
 
   /**
@@ -149,7 +162,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public CatCommand getCatCommand()
   {
-    return new GitCatCommand(context, repository);
+    return new GitCatCommand(context, repository, lfsBlobStoreFactory);
   }
 
   /**
@@ -162,6 +175,11 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   public DiffCommand getDiffCommand()
   {
     return new GitDiffCommand(context, repository);
+  }
+
+  @Override
+  public DiffResultCommand getDiffResultCommand() {
+    return new GitDiffResultCommand(context, repository);
   }
 
   /**
@@ -186,6 +204,11 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   public LogCommand getLogCommand()
   {
     return new GitLogCommand(context, repository);
+  }
+
+  @Override
+  public ModificationsCommand getModificationsCommand() {
+    return new GitModificationsCommand(context,repository);
   }
 
   /**
@@ -248,14 +271,34 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     return new GitTagsCommand(context, repository);
   }
 
-  //~--- fields ---------------------------------------------------------------
+  @Override
+  public MergeCommand getMergeCommand() {
+    return new GitMergeCommand(context, repository, handler.getWorkdirFactory());
+  }
+
+  @Override
+  public ModifyCommand getModifyCommand() {
+    return new GitModifyCommand(context, repository, handler.getWorkdirFactory(), lfsBlobStoreFactory);
+  }
+
+  @Override
+  public Set<Feature> getSupportedFeatures() {
+    return FEATURES;
+  }
+//~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private GitContext context;
+  private final GitContext context;
 
   /** Field description */
-  private GitRepositoryHandler handler;
+  private final GitRepositoryHandler handler;
 
   /** Field description */
-  private Repository repository;
+  private final Repository repository;
+
+  private final LfsBlobStoreFactory lfsBlobStoreFactory;
+
+  private final HookContextFactory hookContextFactory;
+
+  private final ScmEventBus eventBus;
 }

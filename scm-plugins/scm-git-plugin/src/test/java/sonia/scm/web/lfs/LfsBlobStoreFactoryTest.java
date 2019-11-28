@@ -35,13 +35,17 @@ package sonia.scm.web.lfs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import static org.mockito.Matchers.matches;
 import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.BlobStoreFactory;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link LfsBlobStoreFactory}.
@@ -58,15 +62,21 @@ public class LfsBlobStoreFactoryTest {
   private LfsBlobStoreFactory lfsBlobStoreFactory;
    
   @Test
-  public void getBlobStore() throws Exception {
-    lfsBlobStoreFactory.getLfsBlobStore(new Repository("the-id", "GIT", "the-name"));
+  public void getBlobStore() {
+    when(blobStoreFactory.withName(any())).thenCallRealMethod();
+    Repository repository = new Repository("the-id", "GIT", "space", "the-name");
+    lfsBlobStoreFactory.getLfsBlobStore(repository);
 
     // just make sure the right parameter is passed, as properly validating the return value is nearly impossible with 
     // the return value (and should not be part of this test)
-    verify(blobStoreFactory).getBlobStore(matches("the-id-git-lfs"));
+    verify(blobStoreFactory).getStore(argThat(blobStoreParameters -> {
+      assertThat(blobStoreParameters.getName()).isEqualTo("the-id-git-lfs");
+      assertThat(blobStoreParameters.getRepositoryId()).isEqualTo("the-id");
+      return true;
+    }));
 
     // make sure there have been no further usages of the factory
-    verifyNoMoreInteractions(blobStoreFactory);
+    verify(blobStoreFactory, times(1)).getStore(any());
   }
   
 }

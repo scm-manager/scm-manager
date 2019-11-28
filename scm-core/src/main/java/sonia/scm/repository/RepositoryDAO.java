@@ -49,27 +49,22 @@ public interface RepositoryDAO extends GenericDAO<Repository>
 
   /**
    * Returns true if a repository with specified
-   * type and name exists in the backend.
+   * namespace and name exists in the backend.
    *
    *
-   * @param type type of the repository
-   * @param name name of the repository
+   * @param namespaceAndName namespace and name of the repository
    *
    * @return true if the repository exists
    */
-  public boolean contains(String type, String name);
+  boolean contains(NamespaceAndName namespaceAndName);
 
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns the repository with the specified type and name or null
+   * Returns the repository with the specified namespace and name or null
    * if no such repository exists in the backend.
    *
-   *
-   * @param type
-   * @param name
-   *
-   * @return repository with the specified type and name or null
+   * @return repository with the specified namespace and name or null
    */
-  public Repository get(String type, String name);
+  Repository get(NamespaceAndName namespaceAndName);
 }

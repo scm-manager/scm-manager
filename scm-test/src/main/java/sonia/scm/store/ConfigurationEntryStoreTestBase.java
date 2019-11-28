@@ -32,12 +32,13 @@
 
 package sonia.scm.store;
 
+import sonia.scm.repository.Repository;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public abstract class ConfigurationEntryStoreTestBase extends KeyValueStoreTestBase
-{
+public abstract class ConfigurationEntryStoreTestBase extends KeyValueStoreTestBase {
 
   /**
    * Method description
@@ -48,17 +49,20 @@ public abstract class ConfigurationEntryStoreTestBase extends KeyValueStoreTestB
   protected abstract ConfigurationEntryStoreFactory createConfigurationStoreFactory();
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  protected ConfigurationEntryStore<StoreObject> getDataStore()
-  {
-    return createConfigurationStoreFactory().getStore(StoreObject.class,
-      "test");
+  protected ConfigurationEntryStore getDataStore(Class type) {
+    return this.createConfigurationStoreFactory()
+      .withType(type)
+      .withName(storeName)
+      .build();
+  }
+
+ @Override
+  protected ConfigurationEntryStore getDataStore(Class type, Repository repository) {
+   return this.createConfigurationStoreFactory()
+     .withType(type)
+     .withName(repoStoreName)
+     .forRepository(repository)
+     .build();
   }
 }

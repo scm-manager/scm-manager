@@ -103,10 +103,10 @@ public final class CacheStatistics
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("name", name)
-                      .add("hitCount", hitCount)
-                      .add("missCount", missCount)
-                      .toString();
+                  .add("name", name)
+                  .add("hitCount", hitCount)
+                  .add("missCount", missCount)
+                  .toString();
     //J+
   }
 

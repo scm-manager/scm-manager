@@ -125,9 +125,9 @@ public class PluginResources
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("scriptResources", scriptResources)
-                      .add("stylesheetResources", stylesheetResources)
-                      .toString();
+                  .add("scriptResources", scriptResources)
+                  .add("stylesheetResources", stylesheetResources)
+                  .toString();
     //J+
   }
 

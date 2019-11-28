@@ -33,6 +33,8 @@
 
 package sonia.scm.plugin;
 
+//~--- non-JDK imports --------------------------------------------------------
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
@@ -66,7 +68,7 @@ public interface PluginLoader
    *
    * @return
    */
-  public Collection<PluginWrapper> getInstalledPlugins();
+  public Collection<InstalledPlugin> getInstalledPlugins();
 
   /**
    * Returns a {@link ClassLoader} which is able to load classes and resources

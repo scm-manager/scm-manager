@@ -35,7 +35,6 @@ package sonia.scm.repository.api;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 /**
  * Abstract class for bundle or unbundle command.
  *
@@ -97,8 +96,8 @@ public abstract class AbstractBundleOrUnbundleCommandResponse
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("changesetCount", changesetCount)
-                      .toString();
+                  .add("changesetCount", changesetCount)
+                  .toString();
     //J+
   }
 

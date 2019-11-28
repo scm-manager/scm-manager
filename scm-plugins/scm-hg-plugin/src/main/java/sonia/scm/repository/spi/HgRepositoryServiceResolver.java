@@ -33,10 +33,7 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.Inject;
-
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
@@ -50,56 +47,25 @@ import sonia.scm.repository.Repository;
 public class HgRepositoryServiceResolver implements RepositoryServiceResolver
 {
 
-  /** Field description */
-  private static final String TYPE = "hg";
+  private final HgRepositoryHandler handler;
+  private final HgHookManager hookManager;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param hookManager
-   * @param handler
-   */
   @Inject
   public HgRepositoryServiceResolver(HgRepositoryHandler handler,
-    HgHookManager hookManager)
+                                     HgHookManager hookManager)
   {
     this.handler = handler;
     this.hookManager = hookManager;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
   @Override
-  public HgRepositoryServiceProvider reslove(Repository repository)
-  {
+  public HgRepositoryServiceProvider resolve(Repository repository) {
     HgRepositoryServiceProvider provider = null;
 
-    if (TYPE.equalsIgnoreCase(repository.getType()))
-    {
-      provider = new HgRepositoryServiceProvider(handler, hookManager,
-        repository);
+    if (HgRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
+      provider = new HgRepositoryServiceProvider(handler, hookManager, repository);
     }
 
     return provider;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private HgRepositoryHandler handler;
-
-  /** Field description */
-  private HgHookManager hookManager;
 }

@@ -33,30 +33,34 @@ package sonia.scm.filter;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import java.io.IOException;
-import java.util.Map;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.MDC;
+import sonia.scm.AbstractTestBase;
+import sonia.scm.SCMContext;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import org.junit.Rule;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.slf4j.MDC;
-import sonia.scm.AbstractTestBase;
+import java.io.IOException;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link MDCFilter}.
  * 
  * @author Sebastian Sdorra <sebastian.sdorra@gmail.com>
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class MDCFilterTest extends AbstractTestBase {
   
   @Rule
@@ -95,9 +99,10 @@ public class MDCFilterTest extends AbstractTestBase {
     assertNotNull(chain.ctx);
     assertEquals("trillian", chain.ctx.get(MDCFilter.MDC_USERNAME));
     assertEquals("api/v1/repositories", chain.ctx.get(MDCFilter.MDC_REQUEST_URI));
-    assertEquals("127.0.0.1", chain.ctx.get(MDCFilter.MDC_CLIEN_IP));
-    assertEquals("localhost", chain.ctx.get(MDCFilter.MDC_CLIEN_HOST));
+    assertEquals("127.0.0.1", chain.ctx.get(MDCFilter.MDC_CLIENT_IP));
+    assertEquals("localhost", chain.ctx.get(MDCFilter.MDC_CLIENT_HOST));
     assertEquals("GET", chain.ctx.get(MDCFilter.MDC_REQUEST_METHOD));
+    assertNotNull(chain.ctx.get(MDCFilter.MDC_TRANSACTION_ID));
   }
   
   /**
@@ -113,7 +118,7 @@ public class MDCFilterTest extends AbstractTestBase {
     filter.doFilter(request, response, chain);
     
     assertNotNull(chain.ctx);
-    assertEquals("anonymous", chain.ctx.get(MDCFilter.MDC_USERNAME));
+    assertEquals(SCMContext.USER_ANONYMOUS, chain.ctx.get(MDCFilter.MDC_USERNAME));
   }
   
   private static class MDCCapturingFilterChain implements FilterChain {

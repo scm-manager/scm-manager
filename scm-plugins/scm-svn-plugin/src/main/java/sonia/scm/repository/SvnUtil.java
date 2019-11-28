@@ -38,10 +38,8 @@ package sonia.scm.repository;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.io.Closeables;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.SVNErrorCode;
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
@@ -51,21 +49,20 @@ import org.tmatesoft.svn.core.internal.util.SVNEncodingUtil;
 import org.tmatesoft.svn.core.internal.util.SVNXMLUtil;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
-import org.tmatesoft.svn.core.wc.admin.SVNChangeEntry;
-
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -108,30 +105,37 @@ public final class SvnUtil
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * TODO: type replaced
-   *
-   *
-   * @param modifications
-   * @param entry
-   */
-  public static void appendModification(Modifications modifications,
-    SVNLogEntryPath entry)
-  {
-    appendModification(modifications, entry.getType(), entry.getPath());
+  public static long parseRevision(String v, Repository repository) {
+    long result = -1l;
+
+    if (!Strings.isNullOrEmpty(v))
+    {
+      try
+      {
+        result = Long.parseLong(v);
+      }
+      catch (NumberFormatException ex)
+      {
+        throw notFound(entity("Revision", v).in(repository));
+      }
+    }
+
+    return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param modifications
-   * @param entry
-   */
-  public static void appendModification(Modifications modifications,
-    SVNChangeEntry entry)
-  {
-    appendModification(modifications, entry.getType(), entry.getPath());
+
+  public static Modifications createModifications(SVNLogEntry entry, String revision) {
+    Modifications modifications = new Modifications();
+    modifications.setRevision(revision);
+    Map<String, SVNLogEntryPath> changeMap = entry.getChangedPaths();
+
+    if (Util.isNotEmpty(changeMap)) {
+
+      for (SVNLogEntryPath e : changeMap.values()) {
+        appendModification(modifications, e.getType(), e.getPath());
+      }
+    }
+    return modifications;
   }
 
   /**
@@ -215,19 +219,6 @@ public final class SvnUtil
     {
       changeset.getParents().add(String.valueOf(revision - 1));
     }
-
-    Map<String, SVNLogEntryPath> changeMap = entry.getChangedPaths();
-
-    if (Util.isNotEmpty(changeMap))
-    {
-      Modifications modifications = changeset.getModifications();
-
-      for (SVNLogEntryPath e : changeMap.values())
-      {
-        appendModification(modifications, e);
-      }
-    }
-
     return changeset;
   }
 
@@ -351,21 +342,8 @@ public final class SvnUtil
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param revision
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  public static long getRevisionNumber(String revision)
-    throws RepositoryException
-  {
+  public static long getRevisionNumber(String revision, Repository repository) {
+    // REVIEW Bei SVN wird ohne Revision die -1 genommen, was zu einem Fehler führt
     long revisionNumber = -1;
 
     if (Util.isNotEmpty(revision))
@@ -376,7 +354,7 @@ public final class SvnUtil
       }
       catch (NumberFormatException ex)
       {
-        throw new RepositoryException("given revision is not a svnrevision");
+        throw notFound(entity("Revision", revision).in(repository));
       }
     }
 

@@ -1,0 +1,106 @@
+{
+  "page": 0,
+  "pageTotal": 1,
+  "_links": {
+    "self": {
+      "href": "http://localhost:8081/scm/api/v2/repositories/?page=0&pageSize=10"
+    },
+    "first": {
+      "href": "http://localhost:8081/scm/api/v2/repositories/?page=0&pageSize=10"
+    },
+    "last": {
+      "href": "http://localhost:8081/scm/api/v2/repositories/?page=0&pageSize=10"
+    },
+    "create": {
+      "href": "http://localhost:8081/scm/api/v2/repositories/"
+    }
+  },
+  "_embedded": {
+    "repositories": [
+      {
+        "creationDate": "2018-11-09T09:48:32.732Z",
+        "description": "Handling static webresources made easy",
+        "healthCheckFailures": [],
+        "lastModified": "2018-11-09T09:49:20.973Z",
+        "namespace": "scmadmin",
+        "name": "web-resources",
+        "archived": false,
+        "type": "git",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources"
+          },
+          "delete": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources"
+          },
+          "update": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources"
+          },
+          "permissions": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources/permissions/"
+          },
+          "protocol": [
+            {
+              "href": "http://localhost:8081/scm/repo/scmadmin/web-resources",
+              "name": "http"
+            }
+          ],
+          "tags": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources/tags/"
+          },
+          "branches": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources/branches/"
+          },
+          "changesets": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources/changesets/"
+          },
+          "sources": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources/sources/"
+          }
+        }
+      },
+      {
+        "creationDate": "2018-11-09T09:48:32.732Z",
+        "description": "Handling static webresources made easy",
+        "healthCheckFailures": [],
+        "lastModified": "2018-11-09T09:49:20.973Z",
+        "namespace": "scmadmin",
+        "name": "web-resources",
+        "archived": false,
+        "type": "git",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources"
+          },
+          "delete": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources"
+          },
+          "update": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources"
+          },
+          "permissions": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources/permissions/"
+          },
+          "protocol": [
+            {
+              "href": "http://localhost:8081/scm/repo/scmadmin/web-resources",
+              "name": "http"
+            }
+          ],
+          "tags": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources/tags/"
+          },
+          "branches": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources/branches/"
+          },
+          "changesets": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources/changesets/"
+          },
+          "sources": {
+            "href": "http://localhost:8081/scm/api/v2/repositories/scmadmin/web-resources/sources/"
+          }
+        }
+      }
+    ]
+  }
+}

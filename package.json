@@ -1,0 +1,34 @@
+{
+  "name": "root",
+  "private": true,
+  "workspaces": [
+    "scm-ui/*",
+    "scm-plugins/*"
+  ],
+  "scripts": {
+    "build": "webpack --mode=production --config=scm-ui/ui-scripts/src/webpack.config.js",
+    "build:dev": "webpack --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
+    "test": "lerna run --scope '@scm-manager/ui-*' test",
+    "typecheck": "lerna run --scope '@scm-manager/ui-*' typecheck",
+    "serve": "webpack-dev-server --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
+    "deploy": "ui-scripts publish"
+  },
+  "devDependencies": {
+    "babel-plugin-reflow": "^0.2.7",
+    "lerna": "^3.17.0"
+  },
+  "resolutions": {
+    "babel-core": "7.0.0-bridge.0",
+    "gitdiff-parser": "https://github.com/scm-manager/gitdiff-parser#6baa7278824ecd17a199d842ca720d0453f68982"
+  },
+  "babel": {
+    "presets": [
+      "@scm-manager/babel-preset"
+    ]
+  },
+  "jest": {
+    "preset": "@scm-manager/jest-preset"
+  },
+  "prettier": "@scm-manager/prettier-config",
+  "dependencies": {}
+}

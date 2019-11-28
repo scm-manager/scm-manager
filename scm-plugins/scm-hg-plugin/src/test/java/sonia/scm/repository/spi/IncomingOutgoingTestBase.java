@@ -41,31 +41,29 @@ import com.aragost.javahg.Repository;
 import com.aragost.javahg.RepositoryConfiguration;
 import com.aragost.javahg.commands.AddCommand;
 import com.aragost.javahg.commands.CommitCommand;
-
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
-
 import sonia.scm.AbstractTestBase;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.HgTestUtil;
+import sonia.scm.repository.RepositoryPathNotFoundException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 import sonia.scm.util.MockUtil;
 
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -81,8 +79,7 @@ public abstract class IncomingOutgoingTestBase extends AbstractTestBase
    * @throws IOException
    */
   @Before
-  public void initHgHandler() throws IOException
-  {
+  public void initHgHandler() throws IOException, RepositoryPathNotFoundException {
     HgRepositoryHandler temp = HgTestUtil.createHandler(tempFolder.newFolder());
 
     HgTestUtil.checkForSkip(temp);
@@ -90,18 +87,16 @@ public abstract class IncomingOutgoingTestBase extends AbstractTestBase
     incomingDirectory = tempFolder.newFolder("incoming");
     outgoingDirectory = tempFolder.newFolder("outgoing");
 
-    incomingRepository = new sonia.scm.repository.Repository("1", "hg",
-      "incoming");
-    outgoingRepository = new sonia.scm.repository.Repository("2", "hg",
-      "outgoing");
+    incomingRepository = new sonia.scm.repository.Repository("1", "hg", "space", "incoming");
+    outgoingRepository = new sonia.scm.repository.Repository("2", "hg", "space", "outgoing");
 
     incoming = Repository.create(createConfig(temp), incomingDirectory);
     outgoing = Repository.create(createConfig(temp), outgoingDirectory);
 
     handler = mock(HgRepositoryHandler.class);
-    when(handler.getDirectory(incomingRepository)).thenReturn(
+    when(handler.getDirectory(incomingRepository.getId())).thenReturn(
       incomingDirectory);
-    when(handler.getDirectory(outgoingRepository)).thenReturn(
+    when(handler.getDirectory(outgoingRepository.getId())).thenReturn(
       outgoingDirectory);
     when(handler.getConfig()).thenReturn(temp.getConfig());
     when(handler.getHgContext()).thenReturn(new HgContext());

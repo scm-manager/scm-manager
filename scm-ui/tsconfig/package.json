@@ -1,0 +1,15 @@
+{
+  "name": "@scm-manager/tsconfig",
+  "version": "2.0.0-SNAPSHOT",
+  "license": "BSD-3-Clause",
+  "description": "TypeScript configuration",
+  "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
+  "private": false,
+  "main": "tsconfig.json",
+  "dependencies": {
+    "typescript": "^3.6.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

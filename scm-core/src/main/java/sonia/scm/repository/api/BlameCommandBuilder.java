@@ -38,24 +38,21 @@ package sonia.scm.repository.api;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.BlameCommand;
 import sonia.scm.repository.spi.BlameCommandRequest;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.io.Serializable;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Shows changeset information by line for a given file.
@@ -138,10 +135,9 @@ public final class BlameCommandBuilder
    * @throws IllegalArgumentException if the path is null or empty
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   public BlameResult getBlameResult(String path)
-          throws IOException, RepositoryException
+          throws IOException
   {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(path),
                                 "path is required");
@@ -189,7 +185,7 @@ public final class BlameCommandBuilder
 
     if (!disablePreProcessors && (result != null))
     {
-      preProcessorUtil.prepareForReturn(repository, result, !disableEscaping);
+      preProcessorUtil.prepareForReturn(repository, result);
     }
 
     return result;
@@ -214,24 +210,6 @@ public final class BlameCommandBuilder
     return this;
   }
   
-  /**
-   * Disable html escaping for the returned blame lines. By default all
-   * blame lines are html escaped.
-   *
-   *
-   * @param disableEscaping true to disable the html escaping
-   *
-   * @return {@code this}
-   *
-   * @since 1.35
-   */
-  public BlameCommandBuilder setDisableEscaping(boolean disableEscaping)
-  {
-    this.disableEscaping = disableEscaping;
-
-    return this;
-  }
-
   /**
    * Disable the execution of pre processors.
    *
@@ -366,9 +344,6 @@ public final class BlameCommandBuilder
   /** the cache */
   private final Cache<CacheKey, BlameResult> cache;
 
-  /** disable escaping */
-  private boolean disableEscaping = false;
-  
   /** disable change */
   private boolean disableCache = false;
 

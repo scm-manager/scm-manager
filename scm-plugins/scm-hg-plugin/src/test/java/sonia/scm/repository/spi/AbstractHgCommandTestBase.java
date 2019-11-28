@@ -76,8 +76,7 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
    * @throws IOException
    */
   @Before
-  public void initHgHandler() throws IOException
-  {
+  public void initHgHandler() throws IOException {
     this.handler = HgTestUtil.createHandler(tempFolder.newFolder());
 
     HgTestUtil.checkForSkip(handler);

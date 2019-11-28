@@ -66,7 +66,7 @@ public final class Branch implements Serializable
    * This constructor should only be called from JAXB.
    *
    */
-  public Branch() {}
+  Branch() {}
 
   /**
    * Constructs a new branch.
@@ -75,10 +75,19 @@ public final class Branch implements Serializable
    * @param name name of the branch
    * @param revision latest revision of the branch
    */
-  public Branch(String name, String revision)
+  Branch(String name, String revision, boolean defaultBranch)
   {
     this.name = name;
     this.revision = revision;
+    this.defaultBranch = defaultBranch;
+  }
+
+  public static Branch normalBranch(String name, String revision) {
+    return new Branch(name, revision, false);
+  }
+
+  public static Branch defaultBranch(String name, String revision) {
+    return new Branch(name, revision, true);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -107,7 +116,8 @@ public final class Branch implements Serializable
     final Branch other = (Branch) obj;
 
     return Objects.equal(name, other.name)
-      && Objects.equal(revision, other.revision);
+      && Objects.equal(revision, other.revision)
+      && Objects.equal(defaultBranch, other.defaultBranch);
   }
 
   /**
@@ -133,9 +143,9 @@ public final class Branch implements Serializable
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("name", name)
-                      .add("revision", revision)
-                      .toString();
+                  .add("name", name)
+                  .add("revision", revision)
+                  .toString();
     //J+
   }
 
@@ -162,6 +172,10 @@ public final class Branch implements Serializable
     return revision;
   }
 
+  public boolean isDefaultBranch() {
+    return defaultBranch;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** name of the branch */
@@ -169,4 +183,6 @@ public final class Branch implements Serializable
 
   /** Field description */
   private String revision;
+
+  private boolean defaultBranch;
 }

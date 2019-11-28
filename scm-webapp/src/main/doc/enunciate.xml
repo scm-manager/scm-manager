@@ -52,17 +52,12 @@
     ]]>
   </description>
   
-  <api-classes>
-    <exclude pattern="sonia.scm.debug.DebugResource" /> 
-    <exclude pattern="sonia.scm.api.rest.resources.ConfigurationResource" /> 
-    <exclude pattern="sonia.scm.api.rest.resources.SupportResource" />
-    <exclude pattern="sonia.scm.api.rest.resources.RepositoryRootResource" />
-  </api-classes>
+  <api-classes/>
 
   <modules>
     
     <jaxrs datatype-detection="local">
-      <application path="/api/rest" />
+      <application path="/api" />
     </jaxrs>
     
     <docs disableResourceLinks="true" includeApplicationPath="true" />

@@ -33,21 +33,20 @@ package sonia.scm.net.ahc;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteSource;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-import static org.hamcrest.Matchers.instanceOf;
+import org.junit.Test;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  *

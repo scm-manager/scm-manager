@@ -35,19 +35,17 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.aragost.javahg.Changeset;
-
 import org.junit.Test;
-
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.HgTestUtil;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.InternalRepositoryException;
+
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 /**
  *
@@ -56,17 +54,8 @@ import java.io.IOException;
 public class HgOutgoingCommandTest extends IncomingOutgoingTestBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetOutgoingChangesets()
-    throws IOException, RepositoryException
-  {
+  public void testGetOutgoingChangesets() throws IOException {
     writeNewFile(outgoing, outgoingDirectory, "a.txt", "Content of file a.txt");
     writeNewFile(outgoing, outgoingDirectory, "b.txt", "Content of file b.txt");
 
@@ -90,16 +79,8 @@ public class HgOutgoingCommandTest extends IncomingOutgoingTestBase
     assertChangesetsEqual(c2, cpr.getChangesets().get(1));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetOutgoingChangesetsWithEmptyRepository()
-    throws RepositoryException
-  {
+  public void testGetOutgoingChangesetsWithEmptyRepository() {
     HgOutgoingCommand cmd = createOutgoingCommand();
     OutgoingCommandRequest request = new OutgoingCommandRequest();
 
@@ -111,17 +92,8 @@ public class HgOutgoingCommandTest extends IncomingOutgoingTestBase
     assertEquals(0, cpr.getTotal());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Test(expected = RepositoryException.class)
-  public void testGetOutgoingChangesetsWithUnrelatedRepository()
-    throws IOException, RepositoryException
-  {
+  @Test(expected = InternalRepositoryException.class)
+  public void testGetOutgoingChangesetsWithUnrelatedRepository() throws IOException {
     writeNewFile(outgoing, outgoingDirectory, "a.txt", "Content of file a.txt");
     writeNewFile(outgoing, outgoingDirectory, "b.txt", "Content of file b.txt");
 

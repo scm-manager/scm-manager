@@ -1,0 +1,206 @@
+{
+  "permissions": {
+    "*": {
+      "displayName": "Global administrator",
+      "description": "May administer the entire instance"
+    },
+    "repository": {
+      "read,pull": {
+        "*": {
+          "displayName": "Read all repositories",
+          "description": "May see and clone all repositories"
+        }
+      },
+      "read,pull,push": {
+        "*": {
+          "displayName": "Write all repositories",
+          "description": "May see, clone and push to all repositories"
+        }
+      },
+      "*": {
+        "displayName": "Own all repositories",
+        "description": "May see, clone, push to, configure and delete all repositories"
+      },
+      "create": {
+        "displayName": "Create repositories",
+        "description": "May create repositories"
+      }
+    },
+    "user": {
+      "*": {
+        "displayName": "Administer users",
+        "description": "May administer all users"
+      }
+    },
+    "group": {
+      "*": {
+        "displayName": "Administer groups",
+        "description": "May administer all groups"
+      }
+    },
+    "permission": {
+      "*": {
+        "displayName": "Administer permissions",
+        "description": "May administer permissions (additionally needs 'administer users' and/or 'administer groups')."
+      }
+    },
+    "configuration": {
+      "list": {
+        "displayName": "Basic administration",
+        "description": "Prerequisite for all other administration permissions. Without this, no configuration will be visible."
+      },
+      "read,write": {
+        "global": {
+          "displayName": "Administer core",
+          "description": "May configure core settings of SCM-Manager"
+        },
+        "*": {
+          "displayName": "Administer core and plugins",
+          "description": "May configure settings of SCM-Manager core and all plugins"
+        }
+      }
+    },
+    "repositoryRole": {
+      "read,write": {
+        "displayName": "Administer custom repository role permissions",
+        "description": "May create, modify and delete custom repository roles and their permissions"
+      }
+    },
+    "plugin": {
+      "read": {
+        "displayName": "Read all plugins",
+        "description": "May see all installed and available plugins"
+      },
+      "read,write": {
+        "displayName": "Read and manage all plugins",
+        "description": "May see and manage all installed and available plugins"
+      }
+    },
+    "unknown": "Unknown permission"
+  },
+  "verbs": {
+    "repository": {
+      "read": {
+        "displayName": "read repository",
+        "description": "May see the repository inside the SCM-Manager"
+      },
+      "modify": {
+        "displayName": "modify repository metadata",
+        "description": "May modify the basic properties of the repository"
+      },
+      "delete": {
+        "displayName": "delete repository",
+        "description": "May delete the repository"
+      },
+      "pull": {
+        "displayName": "pull/checkout repository",
+        "description": "May pull/checkout the repository"
+      },
+      "push": {
+        "displayName": "push/commit repository",
+        "description": "May change the content of the repository (push/commit)"
+      },
+      "permissionRead": {
+        "displayName": "read permissions",
+        "description": "May see the permissions of the repository"
+      },
+      "permissionWrite": {
+        "displayName": "modify permissions",
+        "description": "May modify the permissions of the repository"
+      },
+      "*": {
+        "displayName": "own repository",
+        "description": "May change everything for the repository (includes all other permissions)"
+      }
+    }
+  },
+  "errors": {
+    "context": "Context",
+    "errorCode": "Error Code",
+    "transactionId": "Transaction ID",
+    "moreInfo": "For more information, see",
+    "violations": "Violations:",
+    "AGR7UzkhA1": {
+      "displayName": "Not found",
+      "description": "The requested entity could not be found. It may have been deleted in another session."
+    },
+    "FtR7UznKU1": {
+      "displayName": "Already exists",
+      "description": "There is already an entity with the same key values."
+    },
+    "9BR7qpDAe1": {
+      "displayName": "Password change not allowed",
+      "description": "You do not have the permission to change the password."
+    },
+    "2wR7UzpPG1": {
+      "displayName": "Concurrent modifications",
+      "description": "The entity has been modified concurrently by another user or another process. Please reload the entity."
+    },
+    "9SR8G0kmU1": {
+      "displayName": "Feature not supported",
+      "description": "The version control system for this repository does not support the requested feature."
+    },
+    "CmR8GCJb31": {
+      "displayName": "Internal server error",
+      "description": "The server encountered an internal error. Please contact your administrator for further assistance."
+    },
+    "92RCCCMHO1": {
+      "displayName": "An internal URL could not be found",
+      "description": "An internal request could not be handled by the server. Please contact your administrator for further assistance."
+    },
+    "2VRCrvpL71": {
+      "displayName": "Illegal data format",
+      "description": "The data sent to the server could not be handled. Please check the values you have entered or contact your administrator for further assistance."
+    },
+    "8pRBYDURx1": {
+      "displayName": "Illegal data type",
+      "description": "The data sent to the server had an illegal data type. Please contact your administrator for further assistance."
+    },
+    "1wR7ZBe7H1": {
+      "displayName": "Illegal input",
+      "description": "The values could not be validated. Please correct your input and try again."
+    },
+    "3zR9vPNIE1": {
+      "displayName": "Illegal input",
+      "description": "The values could not be validated. Please correct your input and try again."
+    },
+    "CHRM7IQzo1": {
+      "displayName": "Change failed",
+      "description": "The change failed. Please contact your administrator for further assistance."
+    },
+    "thbsUFokjk": {
+      "displayName": "Illegal change of an identifier",
+      "description": "A identifier value has been changed in the entity. This is not allowed."
+    },
+    "40RaYIeeR1": {
+      "displayName": "No changes were made",
+      "description": "No changes were made to the files of the repository. Therefor no new commit could be created. Possibly changes cannot be applied due to an .ignore-File definition."
+    },
+    "4iRct4avG1": {
+      "displayName": "The revisions have unrelated histories",
+      "description": "The revisions have unrelated histories. Therefor there is no common commit to compare with."
+    },
+    "65RdZ5atX1": {
+      "displayName": "Error removing plugin files",
+      "description": "Some files to cancel the plugin (un)installation could not be deleted. This can lead to inconsistencies so that the SCM-Manager cannot restart properly. Please check the logs and clean up the plugin folder manually. To cancel the installation of a plugin, remove the corresponding smp file. To cancel the uninstallation, remove the file named 'uninstall' inside the directory for this plugin."
+    },
+    "6eRhF9gU41": {
+      "displayName": "Merge strategy not supported",
+      "description": "The selected merge strategy is not supported by the repository."
+    },
+    "78RhWxTIw1": {
+      "displayName": "Default branch cannot be deleted",
+      "description": "The default branch of a repository cannot be deleted. Please select another default branch first."
+    },
+    "1yRiASshD1": {
+      "displayName": "Error deleting the anonymous user",
+      "description": "The anonymous user cannot be deleted since the anonymous access is still enabled in the configuration."
+    }
+  },
+  "namespaceStrategies": {
+    "UsernameNamespaceStrategy": "Username",
+    "CustomNamespaceStrategy": "Custom",
+    "CurrentYearNamespaceStrategy": "Current year",
+    "RepositoryTypeNamespaceStrategy": "Repository type"
+  }
+}

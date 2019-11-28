@@ -33,6 +33,10 @@
 
 package sonia.scm.store;
 
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
+
 /**
  * ConfigurationStore for configuration objects. <strong>Note:</strong> the default
  * implementation use JAXB to marshall the configuration objects.
@@ -50,7 +54,17 @@ public interface ConfigurationStore<T>
    *
    * @return configuration object from store
    */
-  public T get();
+  T get();
+
+  /**
+   * Returns the configuration object from store.
+   *
+   *
+   * @return configuration object from store
+   */
+  default Optional<T> getOptional() {
+    return ofNullable(get());
+  }
 
   //~--- set methods ----------------------------------------------------------
 
@@ -58,7 +72,7 @@ public interface ConfigurationStore<T>
    * Stores the given configuration object to the store.
    *
    *
-   * @param obejct configuration object to store
+   * @param object configuration object to store
    */
-  public void set(T obejct);
+  void set(T object);
 }

@@ -33,23 +33,26 @@ package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Streams;
+import com.google.common.collect.Iterables;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import sonia.scm.io.DeepCopy;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.HookChangesetProvider;
 import sonia.scm.repository.spi.HookChangesetRequest;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import sonia.scm.repository.spi.HookChangesetResponse;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
+import java.util.List;
 
 /**
  * The {@link HookChangesetBuilder} is able to return all {@link Changeset}s
@@ -113,55 +116,45 @@ public final class HookChangesetBuilder
    */
   public Iterable<Changeset> getChangesets()
   {
-    Iterable<Changeset> changesets =
-      provider.handleRequest(request).getChangesets();
+    HookChangesetResponse hookChangesetResponse = provider.handleRequest(request);
+    Iterable<Changeset> changesets = hookChangesetResponse.getChangesets();
 
     if (!disablePreProcessors)
     {
-      final Function<Changeset, Changeset> changesetFunction = c -> {
-        Changeset copy = null;
+      changesets = Iterables.transform(changesets,
+        new Function<Changeset, Changeset>()
+      {
 
-        try {
-          copy = DeepCopy.copy(c);
-          preProcessorUtil.prepareForReturn(repository, copy,
-                                            !disableEscaping);
-        } catch (IOException ex) {
-          logger.error("could not create a copy of changeset", ex);
+        @Override
+        public Changeset apply(Changeset c)
+        {
+          Changeset copy = null;
+
+          try
+          {
+            copy = DeepCopy.copy(c);
+            preProcessorUtil.prepareForReturn(repository, copy);
+          }
+          catch (IOException ex)
+          {
+            logger.error("could not create a copy of changeset", ex);
+          }
+
+          if (copy == null)
+          {
+            copy = c;
+          }
+
+          return copy;
         }
 
-        if (copy == null) {
-          copy = c;
-        }
-
-        return copy;
-      };
-      changesets = Streams.stream(changesets)
-                          .map(changesetFunction::apply)
-                          .collect(Collectors.toList());
+      });
     }
 
     return changesets;
   }
 
   //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Disable html escaping for the returned changesets. By default all
-   * changesets are html escaped.
-   *
-   *
-   * @param disableEscaping true to disable the html escaping
-   *
-   * @return {@code this}
-   *
-   * @since 1.35
-   */
-  public HookChangesetBuilder setDisableEscaping(boolean disableEscaping)
-  {
-    this.disableEscaping = disableEscaping;
-
-    return this;
-  }
 
   /**
    * Disable the execution of pre processors.
@@ -180,9 +173,6 @@ public final class HookChangesetBuilder
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** disable escaping */
-  private boolean disableEscaping = false;
 
   /** disable pre processors marker */
   private boolean disablePreProcessors = false;

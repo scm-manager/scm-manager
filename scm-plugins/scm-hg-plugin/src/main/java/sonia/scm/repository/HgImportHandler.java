@@ -37,17 +37,15 @@ package sonia.scm.repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationReader;
-import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.util.ValidationUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -80,22 +78,10 @@ public class HgImportHandler extends AbstactImportHandler
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repositoryDirectory
-   * @param repositoryName
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
   protected Repository createRepository(File repositoryDirectory,
           String repositoryName)
-          throws IOException, RepositoryException
+          throws IOException
   {
     Repository repository = super.createRepository(repositoryDirectory,
                               repositoryName);
@@ -107,12 +93,7 @@ public class HgImportHandler extends AbstactImportHandler
       INIConfiguration c = reader.read(hgrc);
       INISection web = c.getSection("web");
 
-      if (web == null)
-      {
-        handler.appendWebSection(c);
-      }
-      else
-      {
+      if (web != null) {
         repository.setDescription(web.getParameter("description"));
 
         String contact = web.getParameter("contact");
@@ -125,16 +106,7 @@ public class HgImportHandler extends AbstactImportHandler
         {
           logger.warn("contact {} is not a valid mail address", contact);
         }
-
-        handler.setWebParameter(web);
       }
-
-      // issue-97
-      handler.registerMissingHook(c, repositoryName);
-
-      INIConfigurationWriter writer = new INIConfigurationWriter();
-
-      writer.write(c, hgrc);
     }
     else
     {

@@ -132,9 +132,9 @@ public final class ImportResult
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("importedDirectories", importedDirectories)
-                      .add("failedDirectories", failedDirectories)
-                      .toString();
+                  .add("importedDirectories", importedDirectories)
+                  .add("failedDirectories", failedDirectories)
+                  .toString();
     //J+
   }
 

@@ -41,6 +41,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
+import sonia.scm.ReducedModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
@@ -55,10 +56,15 @@ import java.security.Principal;
  *
  * @author Sebastian Sdorra
  */
-@StaticPermissions("user")
+@StaticPermissions(
+  value = "user",
+  globalPermissions = {"create", "list", "autocomplete"},
+  permissions = {"read", "modify", "delete", "changePassword"},
+  custom = true, customGlobal = true
+)
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject
+public class User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject, ReducedModelObject
 {
 
   /** Field description */
@@ -97,6 +103,24 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
     this.name = name;
     this.displayName = displayName;
     this.mail = mail;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param name
+   * @param displayName
+   * @param mail
+   */
+  public User(String name, String displayName, String mail, String password, String type, boolean active)
+  {
+    this.name = name;
+    this.displayName = displayName;
+    this.mail = mail;
+    this.password = password;
+    this.type = type;
+    this.active = active;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -150,12 +174,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   public boolean copyProperties(User user, boolean copyPassword)
   {
     boolean result = false;
-
-    if (user.isAdmin() != admin)
-    {
-      result = true;
-      user.setAdmin(admin);
-    }
 
     if (user.isActive() != active)
     {
@@ -223,7 +241,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
            && Objects.equal(displayName, other.displayName)
            && Objects.equal(mail, other.mail)
            && Objects.equal(type, other.type)
-           && Objects.equal(admin, other.admin)
            && Objects.equal(active, other.active)
            && Objects.equal(password, other.password)
            && Objects.equal(creationDate, other.creationDate)
@@ -240,7 +257,7 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(name, displayName, mail, type, admin, password,
+    return Objects.hashCode(name, displayName, mail, type, password,
                             active, creationDate, lastModified, properties);
   }
 
@@ -259,17 +276,16 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
 
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("name", name)
-                      .add("displayName",displayName)
-                      .add("mail", mail)
-                      .add("password", pwd)
-                      .add("admin", admin)
-                      .add("type", type)
-                      .add("active", active)
-                      .add("creationDate", creationDate)
-                      .add("lastModified", lastModified)
-                      .add("properties", properties)
-                      .toString();
+            .add("name", name)
+            .add("displayName",displayName)
+            .add("mail", mail)
+            .add("password", pwd)
+            .add("type", type)
+            .add("active", active)
+            .add("creationDate", creationDate)
+            .add("lastModified", lastModified)
+            .add("properties", properties)
+            .toString();
     //J+
   }
 
@@ -385,17 +401,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
    *
    * @return
    */
-  public boolean isAdmin()
-  {
-    return admin;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public boolean isValid()
   {
@@ -416,17 +421,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   public void setActive(boolean active)
   {
     this.active = active;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param admin
-   */
-  public void setAdmin(boolean admin)
-  {
-    this.admin = admin;
   }
 
   /**
@@ -511,9 +505,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
 
   /** Field description */
   private boolean active = true;
-
-  /** Field description */
-  private boolean admin = false;
 
   /** Field description */
   private Long creationDate;

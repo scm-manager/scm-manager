@@ -32,9 +32,15 @@ package sonia.scm.repository;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.inject.Provider;
+import com.google.inject.util.Providers;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.mgt.DefaultSecurityManager;
@@ -47,9 +53,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.Type;
 import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.AuthorizationCollector;
@@ -57,9 +62,15 @@ import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.user.UserTestData;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -85,7 +96,7 @@ public class DefaultRepositoryManagerPerfTest {
   private final ScmConfiguration configuration = new ScmConfiguration();
   
   private final KeyGenerator keyGenerator = new DefaultKeyGenerator();
-  
+
   @Mock
   private RepositoryHandler repositoryHandler;
   
@@ -99,17 +110,16 @@ public class DefaultRepositoryManagerPerfTest {
    */
   @Before
   public void setUpObjectUnderTest(){
-    when(repositoryHandler.getType()).thenReturn(new Type(REPOSITORY_TYPE, REPOSITORY_TYPE));
+    when(repositoryHandler.getType()).thenReturn(new RepositoryType(REPOSITORY_TYPE, REPOSITORY_TYPE, Sets.newHashSet()));
     Set<RepositoryHandler> handlerSet = ImmutableSet.of(repositoryHandler);
-    RepositoryMatcher repositoryMatcher = new RepositoryMatcher(Collections.<RepositoryPathMatcher>emptySet());
-    
+    NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
     repositoryManager = new DefaultRepositoryManager(
       configuration, 
       contextProvider, 
       keyGenerator, 
       repositoryDAO,
-      handlerSet, 
-      repositoryMatcher
+      handlerSet,
+      Providers.of(namespaceStrategy)
     );
     
     setUpTestRepositories();
@@ -119,10 +129,7 @@ public class DefaultRepositoryManagerPerfTest {
     
     ThreadContext.bind(securityManager);
   }
-  
-  /**
-   * Tear down test objects.
-   */
+
   @After
   public void tearDown(){
     ThreadContext.unbindSecurityManager();
@@ -131,7 +138,7 @@ public class DefaultRepositoryManagerPerfTest {
   /**
    * Start performance test and ensure that the timeout is not reached.
    */
-  @Test(timeout = 6000l)
+  @Test(timeout = 6000L)
   public void perfTestGetAll(){
     SecurityUtils.getSubject().login(new UsernamePasswordToken("trillian", "secret"));
     
@@ -148,7 +155,7 @@ public class DefaultRepositoryManagerPerfTest {
   }
   
 private long calculateAverage(List<Long> times) {
-  Long sum = 0l;
+  Long sum = 0L;
   if(!times.isEmpty()) {
     for (Long time : times) {
         sum += time;
@@ -175,10 +182,9 @@ private long calculateAverage(List<Long> times) {
     when(repositoryDAO.getAll()).thenReturn(repositories.values());
   }
   
-  private Repository createTestRepository(int number){
-    Repository repository = new Repository(keyGenerator.createKey(), REPOSITORY_TYPE, "repo-" + number);
-    repository.getPermissions().add(new Permission("trillian", PermissionType.READ));
-    return repository;
+  private Repository createTestRepository(int number) {
+    return new Repository(keyGenerator.createKey(), REPOSITORY_TYPE, "namespace", "repo-" + number);
+
   }
   
   static class DummyRealm extends AuthorizingRealm {
@@ -200,7 +206,7 @@ private long calculateAverage(List<Long> times) {
     
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-      return authzCollector.collect();
+      return authzCollector.collect(principals);
     }
     
   }

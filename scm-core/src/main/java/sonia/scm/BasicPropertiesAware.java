@@ -37,18 +37,15 @@ package sonia.scm;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Maps;
-
 import sonia.scm.xml.XmlMapStringAdapter;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
-
-import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.io.Serializable;
+import java.util.Map;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Default implementation of {@link PropertiesAware} interface.

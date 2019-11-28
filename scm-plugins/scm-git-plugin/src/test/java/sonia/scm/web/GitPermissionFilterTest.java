@@ -3,9 +3,9 @@ package sonia.scm.web;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.RepositoryProvider;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.util.HttpUtil;
 
 import javax.servlet.ServletOutputStream;
@@ -17,7 +17,9 @@ import java.io.IOException;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link GitPermissionFilter}.
@@ -27,12 +29,7 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class GitPermissionFilterTest {
 
-  @Mock
-  private RepositoryProvider repositoryProvider;
-  
-  private final GitPermissionFilter permissionFilter = new GitPermissionFilter(
-    new ScmConfiguration(), repositoryProvider
-  );
+  private final GitPermissionFilter permissionFilter = new GitPermissionFilter(new ScmConfiguration(), mock(ScmProviderHttpServlet.class));
   
   @Mock
   private HttpServletResponse response;
@@ -69,7 +66,6 @@ public class GitPermissionFilterTest {
 
     when(mock.getMethod()).thenReturn(method);
     when(mock.getRequestURI()).thenReturn(requestURI);
-    when(mock.getContextPath()).thenReturn("/scm");
 
     return mock;
   }

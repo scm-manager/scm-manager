@@ -1,0 +1,68 @@
+{
+  "scm-git-plugin": {
+    "information": {
+      "clone": "Clone the repository",
+      "create": "Create a new repository",
+      "replace": "Push an existing repository",
+      "fetch": "Get remote changes",
+      "checkout": "Switch branch",
+      "merge": {
+        "heading": "How to merge source branch into target branch",
+        "checkout": "1. Make sure your workspace is clean and checkout target branch",
+        "update": "2. Update workspace",
+        "merge": "3. Merge source branch",
+        "resolve": "4. Resolve merge conflicts and add corrected files to index",
+        "commit": "5. Commit",
+        "push": "6. Push your merge"
+      }
+    },
+    "config": {
+      "link": "Git",
+      "title": "Git Configuration",
+      "gcExpression": "GC Cron Expression",
+      "gcExpressionHelpText": "Use Quartz Cron Expressions (SECOND MINUTE HOUR DAYOFMONTH MONTH DAYOFWEEK) to run git gc in intervals.",
+      "nonFastForwardDisallowed": "Disallow Non Fast-Forward",
+      "nonFastForwardDisallowedHelpText": "Reject git pushes which are non fast-forward such as --force.",
+      "disabled": "Disabled",
+      "disabledHelpText": "Enable or disable the Git plugin",
+      "submit": "Submit"
+    },
+    "repo-config": {
+      "link": "Configuration",
+      "title": "Git Settings",
+      "default-branch": "Default branch",
+      "submit": "Submit",
+      "error": {
+        "title": "Error",
+        "subtitle": "Something went wrong"
+      },
+      "success": "Default branch changed!"
+    }
+  },
+  "permissions" : {
+    "configuration": {
+      "read,write": {
+        "git": {
+          "displayName": "Modify git configuration",
+          "description": "May change the git configuration"
+        }
+      }
+    },
+    "repository": {
+      "git": {
+        "*": {
+          "displayName": "Modify repository specific git configuration",
+          "description": "May change the git configuration for repositories"
+        }
+      }
+    }
+  },
+  "verbs": {
+    "repository": {
+      "git": {
+        "displayName": "configure Git",
+        "description": "May change the git configuration for this repository"
+      }
+    }
+  }
+}

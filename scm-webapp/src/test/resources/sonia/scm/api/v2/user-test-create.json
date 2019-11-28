@@ -1,0 +1,9 @@
+{
+  "active": true,
+  "admin": false,
+  "displayName": "someone",
+  "mail": "x@example.com",
+  "name": "someone",
+  "password": "pwd123",
+  "type": "xml"
+}

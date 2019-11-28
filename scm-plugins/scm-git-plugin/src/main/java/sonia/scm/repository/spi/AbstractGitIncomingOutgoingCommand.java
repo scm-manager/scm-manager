@@ -36,27 +36,24 @@ package sonia.scm.repository.spi;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.Closeables;
-
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-
 import java.util.List;
 import java.util.Map.Entry;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -117,32 +114,17 @@ public abstract class AbstractGitIncomingOutgoingCommand
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  protected ChangesetPagingResult getIncomingOrOutgoingChangesets(
-    PagedRemoteCommandRequest request)
-    throws IOException, RepositoryException
-  {
+  protected ChangesetPagingResult getIncomingOrOutgoingChangesets(PagedRemoteCommandRequest request) throws IOException {
     Repository remoteRepository = request.getRemoteRepository();
 
     Git git = Git.wrap(open());
 
-    GitUtil.fetch(git, handler.getDirectory(remoteRepository), remoteRepository);
+    GitUtil.fetch(git, handler.getDirectory(remoteRepository.getId()), remoteRepository);
 
     ObjectId localId = getDefaultBranch(git.getRepository());
     ObjectId remoteId = null;
 
-    Ref remoteBranch = getRemoteBranch(git.getRepository(), localId,
-                         remoteRepository);
+    Ref remoteBranch = getRemoteBranch(git.getRepository(), localId, remoteRepository);
 
     if (remoteBranch != null)
     {
@@ -178,7 +160,7 @@ public abstract class AbstractGitIncomingOutgoingCommand
       }
       catch (Exception ex)
       {
-        throw new RepositoryException("could not execute incoming command", ex);
+        throw new InternalRepositoryException(repository, "could not execute incoming command", ex);
       }
       finally
       {
@@ -191,23 +173,7 @@ public abstract class AbstractGitIncomingOutgoingCommand
     return new ChangesetPagingResult(changesets.size(), changesets);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param local
-   * @param remoteRepository
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  private Ref getRemoteBranch(org.eclipse.jgit.lib.Repository repository,
-    ObjectId local, Repository remoteRepository)
-    throws IOException, RepositoryException
-  {
+  private Ref getRemoteBranch(org.eclipse.jgit.lib.Repository repository, ObjectId local, Repository remoteRepository) throws IOException {
     Ref ref = null;
 
     if (local != null)
@@ -234,13 +200,7 @@ public abstract class AbstractGitIncomingOutgoingCommand
         {
           if (e.getKey().startsWith(prefix))
           {
-            if (ref != null)
-            {
-              throw new RepositoryException("could not find remote branch");
-            }
-
             ref = e.getValue();
-
             break;
           }
         }

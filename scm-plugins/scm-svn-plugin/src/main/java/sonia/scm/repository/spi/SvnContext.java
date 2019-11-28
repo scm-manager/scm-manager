@@ -42,113 +42,57 @@ import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.IOException;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SvnContext implements Closeable
-{
+public class SvnContext implements Closeable {
 
-  /**
-   * the logger for SvnContext
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(SvnContext.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SvnContext.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final Repository repository;
+  private final File directory;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param directory
-   */
-  public SvnContext(File directory)
-  {
+  private SVNRepository svnRepository;
+
+  public SvnContext(Repository repository, File directory) {
+    this.repository = repository;
     this.directory = directory;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  @Override
-  public void close() throws IOException
-  {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("close svn repository {}", directory);
-    }
-
-    SvnUtil.closeSession(repository);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws SVNException
-   */
-  public SVNURL createUrl() throws SVNException
-  {
-    return SVNURL.fromFile(directory);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws SVNException
-   */
-  public SVNRepository open() throws SVNException
-  {
-    if (repository == null)
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("open svn repository {}", directory);
-      }
-
-      repository = SVNRepositoryFactory.create(createUrl());
-    }
-
+  public Repository getRepository() {
     return repository;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public File getDirectory()
-  {
+  public File getDirectory() {
     return directory;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  public SVNURL createUrl() throws SVNException {
+    return SVNURL.fromFile(directory);
+  }
 
-  /** Field description */
-  private File directory;
+  public SVNRepository open() throws SVNException {
+    if (svnRepository == null) {
+      LOG.trace("open svn repository {}", directory);
+      svnRepository = SVNRepositoryFactory.create(createUrl());
+    }
 
-  /** Field description */
-  private SVNRepository repository;
+    return svnRepository;
+  }
+
+  @Override
+  public void close() {
+    LOG.trace("close svn repository {}", directory);
+    SvnUtil.closeSession(svnRepository);
+  }
+
 }

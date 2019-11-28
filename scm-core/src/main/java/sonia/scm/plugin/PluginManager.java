@@ -33,113 +33,81 @@
 
 package sonia.scm.plugin;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import com.google.common.base.Predicate;
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 /**
+ * The plugin manager is responsible for plugin related tasks, such as install, uninstall or updating.
  *
  * @author Sebastian Sdorra
  */
-public interface PluginManager
-{
+public interface PluginManager {
 
   /**
-   * Method description
-   *
+   * Returns the available plugin with the given name.
+   * @param name of plugin
+   * @return optional available plugin.
    */
-  public void clearCache();
+  Optional<AvailablePlugin> getAvailable(String name);
 
   /**
-   * Method description
-   *
-   *
-   * @param id
+   * Returns the installed plugin with the given name.
+   * @param name of plugin
+   * @return optional installed plugin.
    */
-  public void install(String id);
+  Optional<InstalledPlugin> getInstalled(String name);
+
 
   /**
-   * Installs a plugin package from a inputstream.
+   * Returns all installed plugins.
    *
-   *
-   * @param packageStream package input stream
-   *
-   * @throws IOException
-   * @since 1.21
+   * @return a list of installed plugins.
    */
-  public void installPackage(InputStream packageStream) throws IOException;
+  List<InstalledPlugin> getInstalled();
 
   /**
-   * Method description
+   * Returns all available plugins. The list contains the plugins which are loaded from the plugin center, but without
+   * the installed plugins.
    *
-   *
-   * @param id
+   * @return a list of available plugins.
    */
-  public void uninstall(String id);
+  List<AvailablePlugin> getAvailable();
 
   /**
-   * Method description
+   * Returns all updatable plugins.
    *
-   *
-   * @param id
+   * @return a list of updatable plugins.
    */
-  public void update(String id);
-
-  //~--- get methods ----------------------------------------------------------
+  List<InstalledPlugin> getUpdatable();
 
   /**
-   * Method description
+   * Installs the plugin with the given name from the list of available plugins.
    *
-   *
-   * @param id
-   *
-   * @return
+   * @param name plugin name
+   * @param restartAfterInstallation restart context after plugin installation
    */
-  public PluginInformation get(String id);
+  void install(String name, boolean restartAfterInstallation);
 
   /**
-   * Method description
+   * Marks the plugin with the given name for uninstall.
    *
-   *
-   * @param filter
-   *
-   * @return
+   * @param name plugin name
+   * @param restartAfterInstallation restart context after plugin has been marked to really uninstall the plugin
    */
-  public Collection<PluginInformation> get(Predicate<PluginInformation> filter);
+  void uninstall(String name, boolean restartAfterInstallation);
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * Install all pending plugins and restart the scm context.
    */
-  public Collection<PluginInformation> getAll();
+  void executePendingAndRestart();
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * Cancel all pending plugins.
    */
-  public Collection<PluginInformation> getAvailable();
+  void cancelPending();
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * Update all installed plugins.
    */
-  public Collection<PluginInformation> getAvailableUpdates();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getInstalled();
+  void updateAll();
 }

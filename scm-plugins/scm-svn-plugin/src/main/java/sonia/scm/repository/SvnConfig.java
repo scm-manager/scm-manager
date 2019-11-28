@@ -33,12 +33,11 @@
 
 package sonia.scm.repository;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -46,8 +45,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "config")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SvnConfig extends SimpleRepositoryConfig
+public class SvnConfig extends RepositoryConfig
 {
+
+  @SuppressWarnings("WeakerAccess") // This might be needed for permission checking
+  public static final String PERMISSION = "svn";
 
   /**
    * Method description
@@ -108,4 +110,11 @@ public class SvnConfig extends SimpleRepositoryConfig
 
   /** Field description */
   private Compatibility compatibility = Compatibility.NONE;
+
+  @Override
+  @XmlTransient // Only for permission checks, don't serialize to XML
+  public String getId() {
+    // Don't change this without migrating SCM permission configuration!
+    return PERMISSION;
+  }
 }

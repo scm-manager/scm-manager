@@ -38,26 +38,22 @@ package sonia.scm.repository;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
+import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-
-import sonia.scm.Type;
-import sonia.scm.io.FileSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.SCMContextProvider;
 import sonia.scm.plugin.Extension;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.spi.GitRepositoryServiceProvider;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.schedule.Scheduler;
+import sonia.scm.schedule.Task;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.SCMContextProvider;
-import sonia.scm.schedule.Scheduler;
-import sonia.scm.schedule.Task;
-import sonia.scm.store.ConfigurationStoreFactory;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -88,31 +84,30 @@ public class GitRepositoryHandler
   private static final Logger logger = LoggerFactory.getLogger(GitRepositoryHandler.class);
 
   /** Field description */
-  public static final Type TYPE = new RepositoryType(TYPE_NAME,
+  public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME,
                                     TYPE_DISPLAYNAME,
                                     GitRepositoryServiceProvider.COMMANDS);
 
   private static final Object LOCK = new Object();
-  
+
   private final Scheduler scheduler;
-  
+
+  private final GitWorkdirFactory workdirFactory;
+
   private Task task;
-  
+
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param storeFactory
-   * @param fileSystem
-   * @param scheduler
-   */
   @Inject
-  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem, Scheduler scheduler)
+  public GitRepositoryHandler(ConfigurationStoreFactory storeFactory,
+                              Scheduler scheduler,
+                              RepositoryLocationResolver repositoryLocationResolver,
+                              GitWorkdirFactory workdirFactory,
+                              PluginLoader pluginLoader)
   {
-    super(storeFactory, fileSystem);
+    super(storeFactory, repositoryLocationResolver, pluginLoader);
     this.scheduler = scheduler;
+    this.workdirFactory = workdirFactory;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -121,17 +116,17 @@ public class GitRepositoryHandler
   public void init(SCMContextProvider context)
   {
     super.init(context);
-    scheduleGc();
+    scheduleGc(getConfig().getGcExpression());
   }
 
   @Override
   public void setConfig(GitConfig config)
   {
+    scheduleGc(config.getGcExpression());
     super.setConfig(config);
-    scheduleGc();
   }
-  
-  private void scheduleGc()
+
+  private void scheduleGc(String expression)
   {
     synchronized (LOCK){
       if ( task != null ){
@@ -139,15 +134,14 @@ public class GitRepositoryHandler
         task.cancel();
         task = null;
       }
-      String exp = getConfig().getGcExpression();
-      if (!Strings.isNullOrEmpty(exp))
+      if (!Strings.isNullOrEmpty(expression))
       {
-        logger.info("schedule git gc task with expression {}", exp);
-        task = scheduler.schedule(exp, GitGcTask.class);
+        logger.info("schedule git gc task with expression {}", expression);
+        task = scheduler.schedule(expression, GitGcTask.class);
       }
     }
   }
-  
+
   /**
    * Method description
    *
@@ -167,7 +161,7 @@ public class GitRepositoryHandler
    * @return
    */
   @Override
-  public Type getType()
+  public RepositoryType getType()
   {
     return TYPE;
   }
@@ -184,27 +178,24 @@ public class GitRepositoryHandler
     return getStringFromResource(RESOURCE_VERSION, DEFAULT_VERSION_INFORMATION);
   }
 
+  public GitWorkdirFactory getWorkdirFactory() {
+    return workdirFactory;
+  }
+
+  public String getRepositoryId(StoredConfig gitConfig) {
+    return new GitConfigHelper().getRepositoryId(gitConfig);
+  }
+
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  protected void create(Repository repository, File directory)
-    throws RepositoryException, IOException
-  {
+  protected void create(Repository repository, File directory) throws IOException {
     try (org.eclipse.jgit.lib.Repository gitRepository = build(directory)) {
       gitRepository.create(true);
+      new GitConfigHelper().createScmmConfig(repository, gitRepository);
     }
   }
-  
+
   private org.eclipse.jgit.lib.Repository build(File directory) throws IOException {
     return new FileRepositoryBuilder()
       .setGitDir(directory)
@@ -237,19 +228,5 @@ public class GitRepositoryHandler
   protected Class<GitConfig> getConfigClass()
   {
     return GitConfig.class;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   */
-  @Override
-  protected boolean isRepository(File directory)
-  {
-    return new File(directory, DIRECTORY_REFS).exists();
   }
 }

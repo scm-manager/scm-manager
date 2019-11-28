@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer. 2. Redistributions in
  * binary form must reproduce the above copyright notice, this list of
@@ -11,7 +11,7 @@
  * materials provided with the distribution. 3. Neither the name of SCM-Manager;
  * nor the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -22,11 +22,9 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.annotation;
@@ -104,35 +102,28 @@ import javax.xml.transform.stream.StreamResult;
 import static javax.lang.model.util.ElementFilter.methodsIn;
 
 /**
- *
  * @author Sebastian Sdorra
  */
 @SupportedAnnotationTypes("*")
 @MetaInfServices(Processor.class)
-@SuppressWarnings({ "Since16", "Since15" })
+@SuppressWarnings({"Since16", "Since15"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public final class ScmAnnotationProcessor extends AbstractProcessor {
 
   private static final String DESCRIPTOR_MODULE = "META-INF/scm/module.xml";
   private static final String DESCRIPTOR_PLUGIN = "META-INF/scm/plugin.xml";
-
   private static final String EL_MODULE = "module";
-
   private static final String EMPTY = "";
-
   private static final String PROPERTY_VALUE = "yes";
-
-  private static final Set<String> SUBSCRIBE_ANNOTATIONS = ImmutableSet.of(Subscribe.class.getName());
-
-  private static final Set<ClassAnnotation> CLASS_ANNOTATIONS = ImmutableSet.of(
-      new ClassAnnotation("rest-resource", Path.class),
-      new ClassAnnotation("rest-provider", Provider.class)
-  );
-
-  //~--- methods --------------------------------------------------------------
+  private static final Set<String> SUBSCRIBE_ANNOTATIONS =
+    ImmutableSet.of(Subscribe.class.getName());
+  private static final Set<ClassAnnotation> CLASS_ANNOTATIONS =
+    ImmutableSet.of(new ClassAnnotation("rest-resource", Path.class),
+      new ClassAnnotation("rest-provider", Provider.class));
 
   @Override
-  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+  public boolean process(Set<? extends TypeElement> annotations,
+                         RoundEnvironment roundEnv) {
     if (!roundEnv.processingOver()) {
       Set<DescriptorElement> descriptorElements = Sets.newHashSet();
       Set<TypeElement> subscriberAnnotations = Sets.newHashSet();
@@ -150,10 +141,12 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
       }
 
       for (ClassAnnotation ca : CLASS_ANNOTATIONS) {
-        TypeElement annotation = findAnnotation(annotations, ca.annotationClass);
+        TypeElement annotation = findAnnotation(annotations,
+          ca.annotationClass);
 
         if (annotation != null) {
-          scanForClassAnnotations(descriptorElements, roundEnv, annotation, ca.elementName);
+          scanForClassAnnotations(descriptorElements, roundEnv, annotation,
+            ca.elementName);
         }
       }
 
@@ -167,6 +160,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     return false;
   }
 
+
   private void close(Closeable closeable) {
     if (closeable != null) {
       try {
@@ -177,13 +171,14 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     }
   }
 
+
   private TypeElement findAnnotation(Set<? extends TypeElement> annotations,
                                      Class<? extends Annotation> annotationClass) {
     TypeElement annotation = null;
 
-    for (TypeElement te : annotations) {
-      if (te.getQualifiedName().toString().equals(annotationClass.getName())) {
-        annotation = te;
+    for (TypeElement typeElement : annotations) {
+      if (typeElement.getQualifiedName().toString().equals(annotationClass.getName())) {
+        annotation = typeElement;
 
         break;
       }
@@ -192,17 +187,21 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     return annotation;
   }
 
+
   private File findDescriptor(Filer filer) throws IOException {
-    FileObject f = filer.getResource(StandardLocation.CLASS_OUTPUT, EMPTY, DESCRIPTOR_PLUGIN);
+    FileObject f = filer.getResource(StandardLocation.CLASS_OUTPUT, EMPTY,
+      DESCRIPTOR_PLUGIN);
     File file = new File(f.toUri());
 
     if (!file.exists()) {
-      f = filer.getResource(StandardLocation.CLASS_OUTPUT, EMPTY, DESCRIPTOR_MODULE);
+      f = filer.getResource(StandardLocation.CLASS_OUTPUT, EMPTY,
+        DESCRIPTOR_MODULE);
       file = new File(f.toUri());
     }
 
     return file;
   }
+
 
   private Document parseDocument(File file) {
     Document doc = null;
@@ -219,8 +218,8 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
         doc = builder.newDocument();
         doc.appendChild(doc.createElement(EL_MODULE));
       }
-    }
-    catch (ParserConfigurationException | SAXException | IOException | DOMException ex) {
+    } catch (ParserConfigurationException | SAXException | IOException
+      | DOMException ex) {
       printException("could not parse document", ex);
     } finally {
       close(input);
@@ -228,6 +227,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
 
     return doc;
   }
+
 
   private String prepareArrayElement(Object obj) {
     String v = obj.toString();
@@ -243,6 +243,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     return v;
   }
 
+
   private void printException(String msg, Throwable throwable) {
     processingEnv.getMessager().printMessage(Kind.ERROR, msg);
 
@@ -251,11 +252,16 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     processingEnv.getMessager().printMessage(Kind.ERROR, stack);
   }
 
-  private void scanForClassAnnotations(Set<DescriptorElement> descriptorElements,
-                                       RoundEnvironment roundEnv, TypeElement annotation, String elementName) {
+
+  private void scanForClassAnnotations(
+    Set<DescriptorElement> descriptorElements, RoundEnvironment roundEnv,
+    TypeElement annotation, String elementName) {
+
     Set<ClassWithAttributes> classes = Sets.newHashSet();
+
     for (Element e : roundEnv.getElementsAnnotatedWith(annotation)) {
-      if (e.getKind().isClass() || e.getKind().isInterface()) {
+
+      if (isClassOrInterface(e)) {
         TypeElement type = (TypeElement) e;
         String desc = processingEnv.getElementUtils().getDocComment(type);
 
@@ -265,9 +271,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
 
         classes.add(
           new ClassWithAttributes(
-            type.getQualifiedName().toString(),
-            desc,
-            getAttributesFromAnnotation(e, annotation)
+            type.getQualifiedName().toString(), desc, getAttributesFromAnnotation(e, annotation)
           )
         );
       }
@@ -276,8 +280,15 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     descriptorElements.add(new ClassSetElement(elementName, classes));
   }
 
-  private void scanForSubscriberAnnotations(Set<DescriptorElement> descriptorElements, RoundEnvironment roundEnv,
-                                            TypeElement annotation) {
+
+  private boolean isClassOrInterface(Element e) {
+    return e.getKind().isClass() || e.getKind().isInterface();
+  }
+
+
+  private void scanForSubscriberAnnotations(
+    Set<DescriptorElement> descriptorElements, RoundEnvironment roundEnv,
+    TypeElement annotation) {
     for (Element el : roundEnv.getElementsAnnotatedWith(annotation)) {
       if (el.getKind() == ElementKind.METHOD) {
         ExecutableElement ee = (ExecutableElement) el;
@@ -305,6 +316,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     }
   }
 
+
   private void write(Set<DescriptorElement> descriptorElements) {
     Filer filer = processingEnv.getFiler();
 
@@ -327,6 +339,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     }
   }
 
+
   private void writeDocument(Document doc, File file) {
     Writer writer = null;
 
@@ -346,26 +359,30 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  private Map<String, String> getAttributesFromAnnotation(Element el, TypeElement annotation) {
+  private Map<String, String> getAttributesFromAnnotation(Element el,
+                                                          TypeElement annotation) {
     Map<String, String> attributes = Maps.newHashMap();
 
-    for (AnnotationMirror am : el.getAnnotationMirrors()) {
-      String qn = am.getAnnotationType().asElement().toString();
+    for (AnnotationMirror annotationMirror : el.getAnnotationMirrors()) {
+      String qn = annotationMirror.getAnnotationType().asElement().toString();
 
       if (qn.equals(annotation.toString())) {
-        for (Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : am.getElementValues().entrySet()) {
+        for (Entry<? extends ExecutableElement,
+          ? extends AnnotationValue> entry : annotationMirror.getElementValues().entrySet()) {
           attributes.put(entry.getKey().getSimpleName().toString(),
             getValue(entry.getValue()));
         }
 
         // add default values
-        for (ExecutableElement meth : methodsIn(am.getAnnotationType().asElement().getEnclosedElements())) {
+        for (ExecutableElement meth : methodsIn(annotationMirror.getAnnotationType().asElement().getEnclosedElements())) {
           String attribute = meth.getSimpleName().toString();
           AnnotationValue defaultValue = meth.getDefaultValue();
           if (defaultValue != null && !attributes.containsKey(attribute)) {
-            attributes.put(attribute, getValue(defaultValue));
+            String value = getValue(defaultValue);
+            if (value != null && !value.isEmpty()) {
+              attributes.put(attribute, value);
+            }
           }
         }
       }
@@ -373,6 +390,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
 
     return attributes;
   }
+
 
   private String getValue(AnnotationValue v) {
     String value;
@@ -388,7 +406,6 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
         if (it.hasNext()) {
           buffer.append(",");
         }
-
       }
 
       value = buffer.toString();
@@ -399,17 +416,17 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     return value;
   }
 
-  //~--- inner classes --------------------------------------------------------
 
   private static final class ClassAnnotation {
 
-    private final String elementName;
-    private final Class<? extends Annotation> annotationClass;
+    public ClassAnnotation(String elementName,
+                           Class<? extends Annotation> annotationClass) {
 
-    ClassAnnotation(String elementName, Class<? extends Annotation> annotationClass) {
       this.elementName = elementName;
       this.annotationClass = annotationClass;
     }
 
+    private final Class<? extends Annotation> annotationClass;
+    private final String elementName;
   }
 }

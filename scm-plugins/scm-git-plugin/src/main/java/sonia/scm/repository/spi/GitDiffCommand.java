@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,147 +24,167 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
 
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevTree;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.treewalk.EmptyTreeIterator;
-import org.eclipse.jgit.treewalk.TreeWalk;
-import org.eclipse.jgit.treewalk.filter.PathFilter;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.repository.GitUtil;
+import org.eclipse.jgit.util.QuotedString;
 import sonia.scm.repository.Repository;
-import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.api.DiffCommandBuilder;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
-import java.util.List;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class GitDiffCommand extends AbstractGitCommand implements DiffCommand
-{
+public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
 
-  /**
-   * the logger for GitDiffCommand
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GitDiffCommand.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param context
-   * @param repository
-   */
-  public GitDiffCommand(GitContext context, Repository repository)
-  {
+  GitDiffCommand(GitContext context, Repository repository) {
     super(context, repository);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param output
-   */
   @Override
-  public void getDiffResult(DiffCommandRequest request, OutputStream output)
-  {
-    RevWalk walk = null;
-    TreeWalk treeWalk = null;
-    DiffFormatter formatter = null;
+  public DiffCommandBuilder.OutputStreamConsumer getDiffResult(DiffCommandRequest request) throws IOException {
+    @SuppressWarnings("squid:S2095") // repository will be closed with the RepositoryService
+      org.eclipse.jgit.lib.Repository repository = open();
 
-    try
-    {
-      org.eclipse.jgit.lib.Repository gr = open();
+    Differ.Diff diff = Differ.diff(repository, request);
 
-      walk = new RevWalk(gr);
+    return output -> {
+      try (DiffFormatter formatter = new DiffFormatter(new DequoteOutputStream(output))) {
+        formatter.setRepository(repository);
 
-      RevCommit commit = walk.parseCommit(gr.resolve(request.getRevision()));
-
-      walk.markStart(commit);
-      commit = walk.next();
-      treeWalk = new TreeWalk(gr);
-      treeWalk.reset();
-      treeWalk.setRecursive(true);
-
-      if (Util.isNotEmpty(request.getPath()))
-      {
-        treeWalk.setFilter(PathFilter.create(request.getPath()));
-      }
-
-      if (commit.getParentCount() > 0)
-      {
-        RevTree tree = commit.getParent(0).getTree();
-
-        if (tree != null)
-        {
-          treeWalk.addTree(tree);
+        for (DiffEntry e : diff.getEntries()) {
+          if (!e.getOldId().equals(e.getNewId())) {
+            formatter.format(e);
+          }
         }
-        else
-        {
-          treeWalk.addTree(new EmptyTreeIterator());
-        }
+
+        formatter.flush();
       }
-      else
-      {
-        treeWalk.addTree(new EmptyTreeIterator());
-      }
+    };
+  }
 
-      treeWalk.addTree(commit.getTree());
-      formatter = new DiffFormatter(new BufferedOutputStream(output));
-      formatter.setRepository(gr);
+  static class DequoteOutputStream extends OutputStream {
 
-      List<DiffEntry> entries = DiffEntry.scan(treeWalk);
+    private static final String[] DEQUOTE_STARTS = {
+      "--- ",
+      "+++ ",
+      "diff --git "
+    };
 
-      for (DiffEntry e : entries)
-      {
-        if (!e.getOldId().equals(e.getNewId()))
-        {
-          formatter.format(e);
-        }
-      }
+    private final OutputStream target;
 
-      formatter.flush();
+    private boolean afterNL = true;
+    private boolean writeToBuffer = false;
+    private int numberOfPotentialBeginning = -1;
+    private int potentialBeginningCharCount = 0;
+    private boolean inPotentialQuotedLine = false;
+
+    private final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+    DequoteOutputStream(OutputStream target) {
+      this.target = new BufferedOutputStream(target);
     }
-    catch (Exception ex)
-    {
 
-      // TODO throw exception
-      logger.error("could not create diff", ex);
+    @Override
+    public void write(int i) throws IOException {
+      if (i == (int) '\n') {
+        handleNewLine(i);
+        return;
+      }
+
+      if (afterNL) {
+        afterNL = false;
+        if (foundPotentialBeginning(i)) {
+          return;
+        }
+        numberOfPotentialBeginning = -1;
+        inPotentialQuotedLine = false;
+      }
+
+      if (inPotentialQuotedLine && i == '"') {
+        handleQuote();
+        return;
+      }
+
+      if (numberOfPotentialBeginning > -1 && checkForFurtherBeginning(i)) {
+        return;
+      }
+
+      if (writeToBuffer) {
+        buffer.write(i);
+      } else {
+        target.write(i);
+      }
     }
-    finally
-    {
-      GitUtil.release(walk);
-      GitUtil.release(treeWalk);
-      GitUtil.release(formatter);
+
+    private boolean checkForFurtherBeginning(int i) throws IOException {
+      if (i == DEQUOTE_STARTS[numberOfPotentialBeginning].charAt(potentialBeginningCharCount)) {
+        if (potentialBeginningCharCount + 1 < DEQUOTE_STARTS[numberOfPotentialBeginning].length()) {
+          ++potentialBeginningCharCount;
+        } else {
+          inPotentialQuotedLine = true;
+        }
+        target.write(i);
+        return true;
+      } else {
+        numberOfPotentialBeginning = -1;
+      }
+      return false;
+    }
+
+    private boolean foundPotentialBeginning(int i) throws IOException {
+      for (int n = 0; n < DEQUOTE_STARTS.length; ++n) {
+        if (i == DEQUOTE_STARTS[n].charAt(0)) {
+          numberOfPotentialBeginning = n;
+          potentialBeginningCharCount = 1;
+          target.write(i);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    private void handleQuote() throws IOException {
+      if (writeToBuffer) {
+        buffer.write('"');
+        dequoteBuffer();
+      } else {
+        writeToBuffer = true;
+        buffer.reset();
+        buffer.write('"');
+      }
+    }
+
+    private void handleNewLine(int i) throws IOException {
+      afterNL = true;
+      if (writeToBuffer) {
+        dequoteBuffer();
+      }
+      target.write(i);
+    }
+
+    private void dequoteBuffer() throws IOException {
+      byte[] bytes = buffer.toByteArray();
+      String dequote = QuotedString.GIT_PATH.dequote(bytes, 0, bytes.length);
+      target.write(dequote.getBytes(UTF_8));
+      writeToBuffer = false;
+    }
+
+    @Override
+    public void flush() throws IOException {
+      target.flush();
     }
   }
 }

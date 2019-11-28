@@ -32,157 +32,201 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
+import org.eclipse.jgit.errors.MissingObjectException;
+import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.PathNotFoundException;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.store.Blob;
+import sonia.scm.store.BlobStore;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import java.io.Closeable;
+import java.io.FilterInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Optional;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class GitCatCommand extends AbstractGitCommand implements CatCommand
-{
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
-  /**
-   * the logger for GitCatCommand
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GitCatCommand.class);
 
-  //~--- constructors ---------------------------------------------------------
+public class GitCatCommand extends AbstractGitCommand implements CatCommand {
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param context
-   * @param repository
-   */
-  public GitCatCommand(GitContext context,
-                       sonia.scm.repository.Repository repository)
-  {
+  private static final Logger logger = LoggerFactory.getLogger(GitCatCommand.class);
+
+  private final LfsBlobStoreFactory lfsBlobStoreFactory;
+
+  public GitCatCommand(GitContext context, sonia.scm.repository.Repository repository, LfsBlobStoreFactory lfsBlobStoreFactory) {
     super(context, repository);
+    this.lfsBlobStoreFactory = lfsBlobStoreFactory;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param output
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public void getCatResult(CatCommandRequest request, OutputStream output)
-          throws IOException, RepositoryException
-  {
+  public void getCatResult(CatCommandRequest request, OutputStream output) throws IOException {
     logger.debug("try to read content for {}", request);
-
-    org.eclipse.jgit.lib.Repository repo = open();
-    
-    ObjectId revId = getCommitOrDefault(repo, request.getRevision());
-    getContent(repo, revId, request.getPath(), output);
+    try (Loader closableObjectLoaderContainer = getLoader(request)) {
+      closableObjectLoaderContainer.copyTo(output);
+    }
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param repo
-   * @param revId
-   * @param path
-   * @param output
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  void getContent(org.eclipse.jgit.lib.Repository repo, ObjectId revId,
-                  String path, OutputStream output)
-          throws IOException, RepositoryException
-  {
-    TreeWalk treeWalk = null;
-    RevWalk revWalk = null;
+  @Override
+  public InputStream getCatResultStream(CatCommandRequest request) throws IOException {
+    logger.debug("try to read content for {}", request);
+    return new InputStreamWrapper(getLoader(request));
+  }
 
-    try
-    {
-      treeWalk = new TreeWalk(repo);
-      treeWalk.setRecursive(Util.nonNull(path).contains("/"));
-
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("load content for {} at {}", path, revId.name());
-      }
-
-      revWalk = new RevWalk(repo);
-
-      RevCommit entry = revWalk.parseCommit(revId);
-      RevTree revTree = entry.getTree();
-
-      if (revTree != null)
-      {
-        treeWalk.addTree(revTree);
-      }
-      else
-      {
-        logger.error("could not find tree for {}", revId.name());
-      }
-
-      treeWalk.setFilter(PathFilter.create(path));
-
-      if (treeWalk.next())
-      {
-
-        // Path exists
-        if (treeWalk.getFileMode(0).getObjectType() == Constants.OBJ_BLOB)
-        {
-          ObjectId blobId = treeWalk.getObjectId(0);
-          ObjectLoader loader = repo.open(blobId);
-
-          loader.copyTo(output);
-        }
-        else
-        {
-
-          // Not a blob, its something else (tree, gitlink)
-          throw new PathNotFoundException(path);
-        }
-      }
-      else
-      {
-        throw new PathNotFoundException(path);
-      }
+  void getContent(org.eclipse.jgit.lib.Repository repo, ObjectId revId, String path, OutputStream output) throws IOException {
+    try (Loader closableObjectLoaderContainer = getLoader(repo, revId, path)) {
+      closableObjectLoaderContainer.copyTo(output);
     }
-    finally
-    {
+  }
+
+  private Loader getLoader(CatCommandRequest request) throws IOException {
+    org.eclipse.jgit.lib.Repository repo = open();
+    ObjectId revId = getCommitOrDefault(repo, request.getRevision());
+    return getLoader(repo, revId, request.getPath());
+  }
+
+  private Loader getLoader(Repository repo, ObjectId revId, String path) throws IOException {
+    TreeWalk treeWalk = new TreeWalk(repo);
+    treeWalk.setRecursive(Util.nonNull(path).contains("/"));
+
+    logger.debug("load content for {} at {}", path, revId.name());
+
+    RevWalk revWalk = new RevWalk(repo);
+
+    RevCommit entry = null;
+    try {
+      entry = revWalk.parseCommit(revId);
+    } catch (MissingObjectException e) {
+      throw notFound(entity("Revision", revId.getName()).in(repository));
+    }
+    RevTree revTree = entry.getTree();
+
+    if (revTree != null) {
+      treeWalk.addTree(revTree);
+    } else {
+      logger.error("could not find tree for {}", revId.name());
+    }
+
+    treeWalk.setFilter(PathFilter.create(path));
+
+    if (treeWalk.next() && treeWalk.getFileMode(0).getObjectType() == Constants.OBJ_BLOB) {
+      Optional<LfsPointer> lfsPointer = GitUtil.getLfsPointer(repo, path, entry, treeWalk);
+      if (lfsPointer.isPresent()) {
+        return loadFromLfsStore(treeWalk, revWalk, lfsPointer.get());
+      } else {
+        return loadFromGit(repo, treeWalk, revWalk);
+      }
+    } else {
+      throw notFound(entity("Path", path).in("Revision", revId.getName()).in(repository));
+    }
+  }
+
+  private Loader loadFromGit(Repository repo, TreeWalk treeWalk, RevWalk revWalk) throws IOException {
+    ObjectId blobId = treeWalk.getObjectId(0);
+    ObjectLoader loader = repo.open(blobId);
+
+    return new GitObjectLoaderWrapper(loader, treeWalk, revWalk);
+  }
+
+  private Loader loadFromLfsStore(TreeWalk treeWalk, RevWalk revWalk, LfsPointer lfsPointer) throws IOException {
+    BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
+    String oid = lfsPointer.getOid().getName();
+    Blob blob = lfsBlobStore.get(oid);
+    if (blob == null) {
+      logger.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository.getNamespaceAndName());
+      throw notFound(entity("LFS", oid).in(repository));
+    }
+    GitUtil.release(revWalk);
+    GitUtil.release(treeWalk);
+    return new BlobLoader(blob);
+  }
+
+  private interface Loader extends Closeable {
+    void copyTo(OutputStream output) throws IOException;
+
+    InputStream openStream() throws IOException;
+  }
+
+  private static class BlobLoader implements Loader {
+    private final InputStream inputStream;
+
+    private BlobLoader(Blob blob) throws IOException {
+      this.inputStream = blob.getInputStream();
+    }
+
+    @Override
+    public void copyTo(OutputStream output) throws IOException {
+      IOUtil.copy(inputStream, output);
+    }
+
+    @Override
+    public InputStream openStream() {
+      return inputStream;
+    }
+
+    @Override
+    public void close() throws IOException {
+      this.inputStream.close();
+    }
+  }
+
+  private static class GitObjectLoaderWrapper implements Loader {
+    private final ObjectLoader objectLoader;
+    private final TreeWalk treeWalk;
+    private final RevWalk revWalk;
+
+    private GitObjectLoaderWrapper(ObjectLoader objectLoader, TreeWalk treeWalk, RevWalk revWalk) {
+      this.objectLoader = objectLoader;
+      this.treeWalk = treeWalk;
+      this.revWalk = revWalk;
+    }
+
+    @Override
+    public void close() {
       GitUtil.release(revWalk);
       GitUtil.release(treeWalk);
+    }
+
+    public void copyTo(OutputStream output) throws IOException {
+      this.objectLoader.copyTo(output);
+    }
+
+    public InputStream openStream() throws IOException {
+      return objectLoader.openStream();
+    }
+  }
+
+  private static class InputStreamWrapper extends FilterInputStream {
+
+    private final Loader container;
+
+    private InputStreamWrapper(Loader container) throws IOException {
+      super(container.openStream());
+      this.container = container;
+    }
+
+    @Override
+    public void close() throws IOException {
+      try {
+        super.close();
+      } finally {
+        container.close();
+      }
     }
   }
 }

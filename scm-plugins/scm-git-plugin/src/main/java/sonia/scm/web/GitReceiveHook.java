@@ -36,27 +36,23 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.transport.PostReceiveHook;
 import org.eclipse.jgit.transport.PreReceiveHook;
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.RepositoryHookType;
-import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.repository.spi.GitHookContextProvider;
 import sonia.scm.repository.spi.HookEventFacade;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
 import java.io.IOException;
-
 import java.util.Collection;
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -131,15 +127,14 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
     try
     {
       Repository repository = rpack.getRepository();
-      String repositoryName = resolveRepositoryName(repository);
+      String repositoryId = resolveRepositoryId(repository);
 
-      logger.trace("resolved repository name to {}", repositoryName);
+      logger.trace("resolved repository to {}", repositoryId);
 
       GitHookContextProvider context = new GitHookContextProvider(rpack,
                                          receiveCommands);
 
-      hookEventFacade.handle(GitRepositoryHandler.TYPE_NAME,
-        repositoryName).fireHookEvent(type, context);
+      hookEventFacade.handle(repositoryId).fireHookEvent(type, context);
 
     }
     catch (Exception ex)
@@ -191,20 +186,10 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
    *
    * @throws IOException
    */
-  private String resolveRepositoryName(Repository repository) throws IOException
+  private String resolveRepositoryId(Repository repository)
   {
-    File directory;
-
-    if (repository.isBare())
-    {
-      directory = repository.getDirectory();
-    }
-    else
-    {
-      directory = repository.getWorkTree();
-    }
-
-    return RepositoryUtil.getRepositoryName(handler, directory);
+    StoredConfig gitConfig = repository.getConfig();
+    return handler.getRepositoryId(gitConfig);
   }
 
   //~--- fields ---------------------------------------------------------------

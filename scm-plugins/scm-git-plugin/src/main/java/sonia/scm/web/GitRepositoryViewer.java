@@ -38,20 +38,21 @@ package sonia.scm.web;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Streams;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.*;
+import sonia.scm.repository.Branch;
+import sonia.scm.repository.Branches;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.Person;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.template.Template;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
-import sonia.scm.url.RepositoryUrlProvider;
-import sonia.scm.url.UrlProvider;
-import sonia.scm.url.UrlProviderFactory;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
@@ -62,7 +63,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.stream.Collectors;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -108,42 +108,23 @@ public class GitRepositoryViewer
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param request
-   * @param response
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   public void handleRequest(HttpServletRequest request,
     HttpServletResponse response, Repository repository)
-    throws RepositoryException, IOException
+    throws IOException
   {
 
     String baseUrl = HttpUtil.getCompleteUrl(request);
 
     logger.trace("render git repository quick view with base url {}", baseUrl);
 
-    UrlProvider urlProvider = UrlProviderFactory.createUrlProvider(baseUrl,
-                                UrlProviderFactory.TYPE_WUI);
-
     response.setContentType(MIMETYPE_HTML);
-
-    RepositoryUrlProvider rup = urlProvider.getRepositoryUrlProvider();
 
     TemplateEngine engine = templateEngineFactory.getDefaultEngine();
     Template template = engine.getTemplate(RESOURCE_GITINDEX);
     //J-
     ImmutableMap<String,Object> env = ImmutableMap.of(
       "repository", repository, 
-      "branches", createBranchesModel(repository),
-      "commitViewLink", rup.getChangesetUrl(repository.getId(), 0, 20),
-      "sourceViewLink", rup.getBrowseUrl(repository.getId(), null, null)
+      "branches", createBranchesModel(repository)
     );
     //J+
 
@@ -170,10 +151,9 @@ public class GitRepositoryViewer
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   private BranchesModel createBranchesModel(Repository repository)
-    throws RepositoryException, IOException
+    throws IOException
   {
     BranchesModel model = null;
     RepositoryService service = null;
@@ -297,14 +277,20 @@ public class GitRepositoryViewer
       {
         //J-
         ChangesetPagingResult cpr = service.getLogCommand()
-                                           .setDisableEscaping(true)
                                            .setBranch(name)
                                            .setPagingLimit(CHANGESET_PER_BRANCH)
                                            .getChangesets();
+        
+        Iterable<ChangesetModel> changesets = 
+          Iterables.transform(cpr, new Function<Changeset,ChangesetModel>()
+        {
 
-        Iterable<ChangesetModel> changesets = Streams.stream(cpr)
-                                                     .map(ChangesetModel::new)
-                                                     .collect(Collectors.toList());
+          @Override
+          public ChangesetModel apply(Changeset changeset)
+          {
+            return new ChangesetModel(changeset);
+          }
+        });
         //J+
 
         model = new BranchModel(name, changesets);

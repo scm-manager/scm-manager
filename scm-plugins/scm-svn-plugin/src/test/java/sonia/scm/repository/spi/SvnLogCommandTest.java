@@ -35,17 +35,16 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
-
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Modifications;
-import sonia.scm.repository.RepositoryException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 /**
  *
@@ -54,16 +53,8 @@ import java.io.IOException;
 public class SvnLogCommandTest extends AbstractSvnCommandTestBase
 {
 
-  /**
-   *   Method description
-   *
-   *
-   *   @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAll() throws IOException, RepositoryException
-  {
+  public void testGetAll() {
     ChangesetPagingResult result =
       createCommand().getChangesets(new LogCommandRequest());
 
@@ -72,16 +63,8 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals(6, result.getChangesets().size());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAllByPath() throws IOException, RepositoryException
-  {
+  public void testGetAllByPath() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setPath("a.txt");
@@ -96,16 +79,8 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals("1", result.getChangesets().get(2).getId());
   }
 
-  /**
-   *  Method description
-   *
-   *
-   *  @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAllWithLimit() throws IOException, RepositoryException
-  {
+  public void testGetAllWithLimit() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setPagingLimit(2);
@@ -127,16 +102,8 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals("4", c2.getId());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetAllWithPaging() throws IOException, RepositoryException
-  {
+  public void testGetAllWithPaging() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setPagingStart(1);
@@ -159,17 +126,9 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals("3", c2.getId());
   }
 
-  /**
-   *  Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetCommit() throws IOException, RepositoryException
-  {
-    Changeset c = createCommand().getChangeset("3");
+  public void testGetCommit() {
+    Changeset c = createCommand().getChangeset("3", null);
 
     assertNotNull(c);
     assertEquals("3", c.getId());
@@ -177,27 +136,19 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     checkDate(c.getDate());
     assertEquals("perfect", c.getAuthor().getName());
     assertNull("douglas.adams@hitchhiker.com", c.getAuthor().getMail());
+    SvnModificationsCommand modificationsCommand = new SvnModificationsCommand(createContext(), repository);
+    Modifications modifications = modificationsCommand.getModifications("3");
 
-    Modifications mods = c.getModifications();
-
-    assertNotNull(mods);
-    assertEquals(1, mods.getModified().size());
-    assertEquals(1, mods.getRemoved().size());
-    assertTrue("added list should be empty", mods.getAdded().isEmpty());
-    assertEquals("a.txt", mods.getModified().get(0));
-    assertEquals("b.txt", mods.getRemoved().get(0));
+    assertNotNull(modifications);
+    assertEquals(1, modifications.getModified().size());
+    assertEquals(1, modifications.getRemoved().size());
+    assertTrue("added list should be empty", modifications.getAdded().isEmpty());
+    assertEquals("a.txt", modifications.getModified().get(0));
+    assertEquals("b.txt", modifications.getRemoved().get(0));
   }
 
-  /**
-   *  Method description
-   *
-   *
-   *  @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testGetRange() throws IOException, RepositoryException
-  {
+  public void testGetRange() {
     LogCommandRequest request = new LogCommandRequest();
 
     request.setStartChangeset("2");

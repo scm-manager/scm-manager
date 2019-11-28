@@ -37,7 +37,6 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
-
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -46,22 +45,19 @@ import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.TagOpt;
 import org.eclipse.jgit.transport.TrackingRefUpdate;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.api.PullResponse;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
-
 import java.net.URL;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -105,11 +101,10 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @Override
   public PullResponse pull(PullCommandRequest request)
-    throws IOException, RepositoryException
+    throws IOException
   {
     PullResponse response;
     Repository sourceRepository = request.getRemoteRepository();
@@ -130,22 +125,8 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     return response;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param git
-   * @param result
-   * @param fetch
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  private PullResponse convert(Git git, FetchResult fetch)
-    throws RepositoryException
-  {
-    long counter = 0L;
+  private PullResponse convert(Git git, FetchResult fetch) {
+    long counter = 0l;
 
     for (TrackingRefUpdate tru : fetch.getTrackingRefUpdates())
     {
@@ -212,26 +193,15 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     return counter;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param sourceRepository
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   private PullResponse pullFromScmRepository(Repository sourceRepository)
-    throws IOException, RepositoryException
+    throws IOException
   {
-    File sourceDirectory = handler.getDirectory(sourceRepository);
+    File sourceDirectory = handler.getDirectory(sourceRepository.getId());
 
     Preconditions.checkArgument(sourceDirectory.exists(),
       "source repository directory does not exists");
 
-    File targetDirectory = handler.getDirectory(repository);
+    File targetDirectory = handler.getDirectory(repository.getId());
 
     Preconditions.checkArgument(sourceDirectory.exists(),
       "target repository directory does not exists");
@@ -256,19 +226,8 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     return response;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param url
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   private PullResponse pullFromUrl(URL url)
-    throws IOException, RepositoryException
+    throws IOException
   {
     logger.debug("pull changes from {} to {}", url, repository.getId());
 
@@ -289,7 +248,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     }
     catch (GitAPIException ex)
     {
-      throw new RepositoryException("error durring pull", ex);
+      throw new InternalRepositoryException(repository, "error during pull", ex);
     }
 
     return response;

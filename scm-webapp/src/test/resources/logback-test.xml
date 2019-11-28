@@ -51,7 +51,8 @@
   </appender>
   
   <logger name="sonia.scm" level="DEBUG" />
-  
+  <logger name="com.cloudogu.scm" level="DEBUG" />
+
   <!-- suppress massive gzip logging -->
   <logger name="sonia.scm.filter.GZipFilter" level="WARN" />
   <logger name="sonia.scm.filter.GZipResponseStream" level="WARN" />

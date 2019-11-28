@@ -37,9 +37,9 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Result of {@link HealthCheck}.
@@ -52,7 +52,7 @@ public final class HealthCheckResult
 
   /** healthy result */
   private static final HealthCheckResult HEALTHY =
-    new HealthCheckResult(ImmutableSet.of());
+    new HealthCheckResult(ImmutableSet.<HealthCheckFailure>of());
 
   //~--- constructors ---------------------------------------------------------
 

@@ -34,20 +34,25 @@ package sonia.scm.filter;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+
 import org.slf4j.MDC;
-import sonia.scm.Priority;
+
 import sonia.scm.SCMContext;
+import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.web.filter.HttpFilter;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import sonia.scm.Priority;
 
 /**
  *
@@ -57,26 +62,25 @@ import java.io.IOException;
 @WebElement(Filters.PATTERN_ALL)
 public class MDCFilter extends HttpFilter
 {
+  private static final DefaultKeyGenerator TRANSACTION_KEY_GENERATOR = new DefaultKeyGenerator();
 
-  /** Field description */
   @VisibleForTesting
-  static final String MDC_CLIEN_HOST = "client_host";
+  static final String MDC_CLIENT_HOST = "client_host";
 
-  /** Field description */
   @VisibleForTesting
-  static final String MDC_CLIEN_IP = "client_ip";
-  
-  /** url of the current request */
+  static final String MDC_CLIENT_IP = "client_ip";
+
   @VisibleForTesting
   static final String MDC_REQUEST_URI = "request_uri";
-  
-  /** request method */
+
   @VisibleForTesting
   static final String MDC_REQUEST_METHOD = "request_method";
 
-  /** Field description */
   @VisibleForTesting
   static final String MDC_USERNAME = "username";
+
+  @VisibleForTesting
+  static final String MDC_TRANSACTION_ID = "transaction_id";
 
   //~--- methods --------------------------------------------------------------
 
@@ -97,10 +101,11 @@ public class MDCFilter extends HttpFilter
     throws IOException, ServletException
   {
     MDC.put(MDC_USERNAME, getUsername());
-    MDC.put(MDC_CLIEN_IP, request.getRemoteAddr());
-    MDC.put(MDC_CLIEN_HOST, request.getRemoteHost());
+    MDC.put(MDC_CLIENT_IP, request.getRemoteAddr());
+    MDC.put(MDC_CLIENT_HOST, request.getRemoteHost());
     MDC.put(MDC_REQUEST_METHOD, request.getMethod());
     MDC.put(MDC_REQUEST_URI, request.getRequestURI());
+    MDC.put(MDC_TRANSACTION_ID, TRANSACTION_KEY_GENERATOR.createKey());
 
     try
     {
@@ -109,10 +114,11 @@ public class MDCFilter extends HttpFilter
     finally
     {
       MDC.remove(MDC_USERNAME);
-      MDC.remove(MDC_CLIEN_IP);
-      MDC.remove(MDC_CLIEN_HOST);
+      MDC.remove(MDC_CLIENT_IP);
+      MDC.remove(MDC_CLIENT_HOST);
       MDC.remove(MDC_REQUEST_METHOD);
       MDC.remove(MDC_REQUEST_URI);
+      MDC.remove(MDC_TRANSACTION_ID);
     }
   }
 

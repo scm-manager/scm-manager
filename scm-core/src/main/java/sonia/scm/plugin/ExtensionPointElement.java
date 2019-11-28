@@ -36,12 +36,12 @@ package sonia.scm.plugin;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -131,11 +131,11 @@ public final class ExtensionPointElement
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("class", clazz)
-                      .add("description", description)
-                      .add("multiple", multiple)
-                      .add("autoBind", autoBind)
-                      .toString();
+                  .add("class", clazz)
+                  .add("description", description)
+                  .add("multiple", multiple)
+                  .add("autoBind", autoBind)
+                  .toString();
     //J+
   }
 

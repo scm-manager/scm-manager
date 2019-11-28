@@ -37,7 +37,6 @@ package sonia.scm.repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.SVNCancelException;
 import org.tmatesoft.svn.core.SVNErrorCode;
 import org.tmatesoft.svn.core.SVNErrorMessage;
@@ -45,20 +44,18 @@ import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.internal.io.fs.FSHook;
 import org.tmatesoft.svn.core.internal.io.fs.FSHookEvent;
 import org.tmatesoft.svn.core.internal.io.fs.FSHooks;
-
 import sonia.scm.repository.spi.AbstractSvnHookChangesetProvider;
 import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.repository.spi.SvnHookContextProvider;
 import sonia.scm.repository.spi.SvnPostReceiveHookChangesetProvier;
 import sonia.scm.repository.spi.SvnPreReceiveHookChangesetProvier;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -73,16 +70,7 @@ public class SvnRepositoryHook implements FSHook
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param hookEventFacade
-   * @param handler
-   */
-  public SvnRepositoryHook(HookEventFacade hookEventFacade,
-    SvnRepositoryHandler handler)
+  public SvnRepositoryHook(HookEventFacade hookEventFacade, SvnRepositoryHandler handler)
   {
     this.hookEventFacade = hookEventFacade;
     this.handler = handler;
@@ -166,12 +154,10 @@ public class SvnRepositoryHook implements FSHook
   {
     try
     {
-      String name = getRepositoryName(directory);
-
-      name = IOUtil.trimSeperatorChars(name);
+      String repositoryId = getRepositoryId(directory);
 
       //J-
-      hookEventFacade.handle(SvnRepositoryHandler.TYPE_NAME, name)
+      hookEventFacade.handle(repositoryId)
         .fireHookEvent(
           changesetProvider.getType(),
           new SvnHookContextProvider(changesetProvider)
@@ -202,18 +188,16 @@ public class SvnRepositoryHook implements FSHook
    *
    * @throws IOException
    */
-  private String getRepositoryName(File directory) throws IOException
+  private String getRepositoryId(File directory)
   {
     AssertUtil.assertIsNotNull(directory);
-
-    return RepositoryUtil.getRepositoryName(handler, directory);
+    return handler.getRepositoryId(directory);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SvnRepositoryHandler handler;
-
-  /** Field description */
   private HookEventFacade hookEventFacade;
+
+  private final SvnRepositoryHandler handler;
 }

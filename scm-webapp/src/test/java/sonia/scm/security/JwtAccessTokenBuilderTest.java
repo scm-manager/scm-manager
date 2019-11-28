@@ -36,18 +36,26 @@ import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.Sets;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
+import org.apache.shiro.util.ThreadContext;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.when;
+import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
 
 /**
  * Unit test for {@link JwtAccessTokenBuilder}.
@@ -55,8 +63,17 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
+@SubjectAware(
+  configuration = "classpath:sonia/scm/shiro-001.ini",
+  username = "trillian",
+  password = "secret"
+)
 public class JwtAccessTokenBuilderTest {
   
+  {
+    ThreadContext.unbindSubject();
+  }
+
   @Mock
   private KeyGenerator keyGenerator;
   
@@ -85,11 +102,6 @@ public class JwtAccessTokenBuilderTest {
    * Tests {@link JwtAccessTokenBuilder#build()} with subject from shiro context.
    */
   @Test
-  @SubjectAware(
-    configuration = "classpath:sonia/scm/shiro-001.ini",
-    username = "trillian",
-    password = "secret"
-  )
   public void testBuildWithoutSubject() {
     JwtAccessToken token = factory.create().build();
     assertEquals("trillian", token.getSubject());
@@ -138,7 +150,7 @@ public class JwtAccessTokenBuilderTest {
       .getBody();
     assertClaims(new JwtAccessToken(claims, compact));
   }
-  
+
   private void assertClaims(JwtAccessToken token){
     assertThat(token.getId(), not(isEmptyOrNullString()));
     assertNotNull( token.getIssuedAt() );
@@ -150,11 +162,4 @@ public class JwtAccessTokenBuilderTest {
     assertEquals("b", token.getCustom("a").get());
     assertEquals("[\"repo:*\"]", token.getScope().toString());
   }
-  
-  private SecureKey createSecureKey() {
-    byte[] bytes = new byte[32];
-    new Random().nextBytes(bytes);
-    return new SecureKey(bytes, System.currentTimeMillis());
-  }
-
 }

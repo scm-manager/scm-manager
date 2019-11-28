@@ -33,36 +33,21 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
+import org.junit.Ignore;
 import org.junit.Test;
-
-import sonia.scm.repository.RepositoryException;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.NotFoundException;
+import sonia.scm.repository.InternalRepositoryException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class HgCatCommandTest extends AbstractHgCommandTestBase
-{
+import static org.junit.Assert.assertEquals;
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
+public class HgCatCommandTest extends AbstractHgCommandTestBase {
+
   @Test
-  public void testCat() throws IOException, RepositoryException
-  {
+  public void testCat() throws IOException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("a.txt");
@@ -70,48 +55,49 @@ public class HgCatCommandTest extends AbstractHgCommandTestBase
     assertEquals("a", execute(request));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testSimpleCat() throws IOException, RepositoryException
-  {
+  public void testSimpleCat() throws IOException {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("b.txt");
     assertEquals("b", execute(request));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  private String execute(CatCommandRequest request)
-    throws IOException, RepositoryException
-  {
-    String content = null;
+  @Test(expected = InternalRepositoryException.class)
+  public void testUnknownFile() throws IOException {
+    CatCommandRequest request = new CatCommandRequest();
+
+    request.setPath("unknown");
+    execute(request);
+  }
+
+  @Test(expected = NotFoundException.class)
+  @Ignore("detection of unknown revision in hg not yet implemented")
+  public void testUnknownRevision() throws IOException {
+    CatCommandRequest request = new CatCommandRequest();
+
+    request.setRevision("abc");
+    request.setPath("a.txt");
+    execute(request);
+  }
+
+  @Test
+  public void testSimpleStream() throws IOException {
+    CatCommandRequest request = new CatCommandRequest();
+    request.setPath("b.txt");
+
+    InputStream catResultStream = new HgCatCommand(cmdContext, repository).getCatResultStream(request);
+
+    assertEquals('b', catResultStream.read());
+    assertEquals('\n', catResultStream.read());
+    assertEquals(-1, catResultStream.read());
+
+    catResultStream.close();
+  }
+
+  private String execute(CatCommandRequest request) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-    try
-    {
-      new HgCatCommand(cmdContext, repository).getCatResult(request, baos);
-    }
-    finally
-    {
-      content = baos.toString().trim();
-    }
-
-    return content;
+    new HgCatCommand(cmdContext, repository).getCatResult(request, baos);
+    return baos.toString().trim();
   }
 }

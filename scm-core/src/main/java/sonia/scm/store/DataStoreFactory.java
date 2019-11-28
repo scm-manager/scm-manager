@@ -32,9 +32,27 @@
 
 package sonia.scm.store;
 
+import sonia.scm.repository.Repository;
+
 /**
- * The DataStoreFactory can be used to create new or get existing
- * {@link DataStore}s.
+ * The DataStoreFactory can be used to create new or get existing {@link DataStore}s.
+ * <br>
+ * You can either create a global {@link DataStore} or a {@link DataStore} for a specific repository.
+ * To create a global {@link DataStore} call:
+ * <code><pre>
+ *     dataStoreFactory
+ *       .withType(PersistedType.class)
+ *       .withName("name")
+ *       .build();
+ * </pre></code>
+ * To create a {@link DataStore} for a specific repository call:
+ * <code><pre>
+ *     dataStoreFactory
+ *       .withType(PersistedType.class)
+ *       .withName("name")
+ *       .forRepository(repository)
+ *       .build();
+ * </pre></code>
  *
  * @author Sebastian Sdorra
  * @since 1.23
@@ -45,14 +63,81 @@ package sonia.scm.store;
 public interface DataStoreFactory {
 
   /**
-   * Get an existing {@link DataStore} or create a new one.
+   * Creates a new or gets an existing {@link DataStore}. Instead of calling this method you should use the
+   * floating API from {@link #withType(Class)}.
    *
-   *
-   * @param type type of the store objects
-   * @param name name of the store
-   * @param <T> type of the store objects
-   *
-   * @return {@link DataStore} with given name and type
+   * @param storeParameters The parameters for the {@link DataStore}.
+   * @return A new or an existing {@link DataStore} for the given parameters.
    */
-  public <T> DataStore<T> getStore(Class<T> type, String name);
+  <T> DataStore<T> getStore(final TypedStoreParameters<T> storeParameters);
+
+  /**
+   * Use this to create a new or get an existing {@link DataStore} with a floating API.
+   * @param type The type for the {@link DataStore}.
+   * @return Floating API to set the name and either specify a repository or directly build a global
+   * {@link DataStore}.
+   */
+  default <T> TypedFloatingDataStoreParameters<T>.Builder withType(Class<T> type) {
+    return new TypedFloatingDataStoreParameters<T>(this).new Builder(type);
+  }
+}
+
+final class TypedFloatingDataStoreParameters<T> {
+
+  private final TypedStoreParametersImpl<T> parameters = new TypedStoreParametersImpl<>();
+  private final DataStoreFactory factory;
+
+  TypedFloatingDataStoreParameters(DataStoreFactory factory) {
+    this.factory = factory;
+  }
+
+  public class Builder {
+
+    Builder(Class<T> type) {
+      parameters.setType(type);
+    }
+
+    /**
+     * Use this to set the name for the {@link DataStore}.
+     * @param name The name for the {@link DataStore}.
+     * @return Floating API to either specify a repository or directly build a global {@link DataStore}.
+     */
+    public OptionalRepositoryBuilder withName(String name) {
+      parameters.setName(name);
+      return new OptionalRepositoryBuilder();
+    }
+  }
+
+  public class OptionalRepositoryBuilder {
+
+    /**
+     * Use this to create or get a {@link DataStore} for a specific repository. This step is optional. If you
+     * want to have a global {@link DataStore}, omit this.
+     * @param repository The optional repository for the {@link DataStore}.
+     * @return Floating API to finish the call.
+     */
+    public OptionalRepositoryBuilder forRepository(Repository repository) {
+      parameters.setRepositoryId(repository.getId());
+      return this;
+    }
+
+    /**
+     * Use this to create or get a {@link DataStore} for a specific repository. This step is optional. If you
+     * want to have a global {@link DataStore}, omit this.
+     * @param repositoryId The id of the optional repository for the {@link DataStore}.
+     * @return Floating API to finish the call.
+     */
+    public OptionalRepositoryBuilder forRepository(String repositoryId) {
+      parameters.setRepositoryId(repositoryId);
+      return this;
+    }
+
+    /**
+     * Creates or gets the {@link DataStore} with the given name and (if specified) the given repository. If no
+     * repository is given, the {@link DataStore} will be global.
+     */
+    public DataStore<T> build(){
+      return factory.getStore(parameters);
+    }
+  }
 }

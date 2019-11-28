@@ -37,6 +37,7 @@ package sonia.scm;
 
 import java.io.Closeable;
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * The main class for retrieving the home and the version of the SCM-Manager.
@@ -45,25 +46,25 @@ import java.io.File;
  *
  * @author Sebastian Sdorra
  */
-public interface SCMContextProvider extends Closeable
-{
-
-  /**
-   * Initializes the {@link SCMContextProvider}.
-   * This method is called when the SCM manager is started.
-   *
-   */
-  public void init();
-
-  //~--- get methods ----------------------------------------------------------
-
+public interface SCMContextProvider {
   /**
    * Returns the base directory of the SCM-Manager.
    *
    *
    * @return base directory of the SCM-Manager
    */
-  public File getBaseDirectory();
+  File getBaseDirectory();
+
+  /**
+   * Resolves the given path against the base directory.
+   *
+   * @param path path to resolve
+   *
+   * @return absolute resolved path
+   *
+   * @since 2.0.0
+   */
+  Path resolve(Path path);
 
   /**
    * Returns the current stage of SCM-Manager.
@@ -72,7 +73,7 @@ public interface SCMContextProvider extends Closeable
    * @return stage of SCM-Manager
    * @since 1.12
    */
-  public Stage getStage();
+  Stage getStage();
 
   /**
    * Returns a exception which is occurred on context startup.
@@ -82,7 +83,7 @@ public interface SCMContextProvider extends Closeable
    * @return startup exception of null
    * @since 1.14
    */
-  public Throwable getStartupError();
+  Throwable getStartupError();
 
   /**
    * Returns the version of the SCM-Manager.
@@ -90,5 +91,5 @@ public interface SCMContextProvider extends Closeable
    *
    * @return version of the SCM-Manager
    */
-  public String getVersion();
+  String getVersion();
 }

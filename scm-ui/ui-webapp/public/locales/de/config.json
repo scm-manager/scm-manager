@@ -1,0 +1,78 @@
+{
+  "config": {
+    "navigationLabel": "Administrations Navigation",
+    "title": "Globale Einstellungen",
+    "errorTitle": "Fehler",
+    "errorSubtitle": "Unbekannter Einstellungen Fehler",
+    "form": {
+      "submit": "Speichern",
+      "submit-success-notification": "Einstellungen wurden erfolgreich geändert!",
+      "no-read-permission-notification": "Hinweis: Es fehlen Berechtigungen zum Lesen der Einstellungen!",
+      "no-write-permission-notification": "Hinweis: Es fehlen Berechtigungen zum Bearbeiten der Einstellungen!"
+    }
+  },
+  "proxy-settings": {
+    "name": "Proxy Einstellungen",
+    "proxy-password": "Proxy Passwort",
+    "proxy-port": "Proxy Port",
+    "proxy-server": "Proxy Server",
+    "proxy-user": "Proxy Benutzer",
+    "enable-proxy": "Proxy aktivieren",
+    "proxy-excludes": "Proxy Excludes",
+    "remove-proxy-exclude-button": "Proxy Exclude löschen",
+    "add-proxy-exclude-error": "Der Proxy Exclude ist ungültig",
+    "add-proxy-exclude-textfield": "Neue Proxy Excludes hinzufügen",
+    "add-proxy-exclude-button": "Proxy Exclude hinzufügen"
+  },
+  "base-url-settings": {
+    "name": "Base URL Einstellungen",
+    "base-url": "Base URL",
+    "force-base-url": "Base URL erzwingen"
+  },
+  "login-attempt": {
+    "name": "Anmeldeversuche",
+    "login-attempt-limit": "Limit für Anmeldeversuche",
+    "login-attempt-limit-timeout": "Timeout bei fehlgeschlagenen Anmeldeversuchen"
+  },
+  "general-settings": {
+    "realm-description": "Realm Beschreibung",
+    "disable-grouping-grid": "Gruppen deaktivieren",
+    "date-format": "Datumsformat",
+    "anonymous-access-enabled": "Anonyme Zugriffe erlauben",
+    "skip-failed-authenticators": "Fehlgeschlagene Authentifizierer überspringen",
+    "plugin-url": "Plugin Center URL",
+    "enabled-xsrf-protection": "XSRF Protection aktivieren",
+    "namespace-strategy": "Namespace Strategie",
+    "login-info-url": "Login Info URL"
+  },
+  "validation": {
+    "date-format-invalid": "Das Datumsformat ist ungültig",
+    "login-attempt-limit-timeout-invalid": "Dies ist keine Zahl",
+    "login-attempt-limit-invalid": "Dies ist keine Zahl",
+    "plugin-url-invalid": "Dies ist keine gültige URL"
+  },
+  "help": {
+    "realmDescriptionHelpText": "Beschreibung des Authentication Realm.",
+    "dateFormatHelpText": "Moments Datumsformat. Zulässige Formate sind in der MomentJS Dokumentation beschrieben.",
+    "pluginUrlHelpText": "Die URL der Plugin Center API. Beschreibung der Platzhalter: version = SCM-Manager Version; os = Betriebssystem; arch = Architektur",
+    "enableForwardingHelpText": "mod_proxy Port Weiterleitung aktivieren.",
+    "disableGroupingGridHelpText": "Repository Gruppen deaktivieren. Nach einer Änderung an dieser Einstellung muss die Seite komplett neu geladen werden.",
+    "allowAnonymousAccessHelpText": "Anonyme Benutzer haben Zugriff auf freigegebene Repositories.",
+    "skipFailedAuthenticatorsHelpText": "Die Kette der Authentifikatoren wird nicht beendet, wenn ein Authentifikator einen Benutzer findet, ihn aber nicht erfolgreich authentifizieren kann.",
+    "adminGroupsHelpText": "Namen von Gruppen mit Admin-Berechtigungen.",
+    "adminUsersHelpText": "Namen von Benutzern mit Admin-Berechtigungen.",
+    "forceBaseUrlHelpText": "Zugriffe, die von einer anderen URL kommen, werden auf die Base URL weiter geleitet.",
+    "baseUrlHelpText": "Die URL der Applikation mit Kontextpfad, z.B. http://localhost:8080/scm",
+    "loginAttemptLimitHelpText": "Maximale Anzahl von Anmeldeversuchen. Durch Verwendung von -1 wird die Begrenzung der Anmeldeversuche deaktiviert.",
+    "loginAttemptLimitTimeoutHelpText": "Timeout in Sekunden für Benutzer, die vorübergehend wegen zu vieler fehlgeschlagener Anmeldeversuche, deaktiviert wurden.",
+    "enableProxyHelpText": "Proxy aktivieren",
+    "proxyPortHelpText": "Der Proxy Port",
+    "proxyPasswordHelpText": "Das Passwort für die Proxy Server Anmeldung.",
+    "proxyServerHelpText": "Der Proxy Server",
+    "proxyUserHelpText": "Der Benutzername für die Proxy Server Anmeldung.",
+    "proxyExcludesHelpText": "Glob patterns für Hostnamen, die von den Proxy-Einstellungen ausgeschlossen werden sollen.",
+    "enableXsrfProtectionHelpText": "Xsrf Cookie Protection aktivieren. Hinweis: Dieses Feature befindet sich noch im Experimentalstatus.",
+    "nameSpaceStrategyHelpText": "Strategie für Namespaces.",
+    "loginInfoUrlHelpText": "URL zu der Login Information (Plugin und Feature Tipps auf der Login Seite). Um die Login Information zu deaktivieren, kann das Feld leer gelassen werden."
+  }
+}

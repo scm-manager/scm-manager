@@ -35,9 +35,9 @@ package sonia.scm;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.function.Predicate;
 
 /**
  * Basic decorator for manager classes.
@@ -46,11 +46,8 @@ import java.util.Comparator;
  * @since 1.23
  *
  * @param <T> model type
- * @param <E> exception type
  */
-public class ManagerDecorator<T extends ModelObject, E extends Exception>
-  implements Manager<T, E>
-{
+public class ManagerDecorator<T extends ModelObject> implements Manager<T> {
 
   /**
    * Constructs a new ManagerDecorator.
@@ -58,125 +55,78 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
    *
    * @param decorated manager implementation
    */
-  public ManagerDecorator(Manager<T, E> decorated)
+  public ManagerDecorator(Manager<T> decorated)
   {
     this.decorated = decorated;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void close() throws IOException
   {
     decorated.close();
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void create(T object) throws E, IOException
-  {
-    decorated.create(object);
+  public T create(T object) {
+    return decorated.create(object);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void delete(T object) throws E, IOException
-  {
+  public void delete(T object){
     decorated.delete(object);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void init(SCMContextProvider context)
   {
     decorated.init(context);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void modify(T object) throws E, IOException
-  {
+  public void modify(T object){
     decorated.modify(object);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void refresh(T object) throws E, IOException
-  {
+  public void refresh(T object){
     decorated.refresh(object);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public T get(String id)
   {
     return decorated.get(id);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public Collection<T> getAll()
   {
     return decorated.getAll();
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public Collection<T> getAll(Comparator<T> comparator)
+  public Collection<T> getAll(Predicate<T> filter, Comparator<T> comparator)
   {
-    return decorated.getAll(comparator);
+    return decorated.getAll(filter, comparator);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public Collection<T> getAll(int start, int limit)
   {
     return decorated.getAll(start, limit);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public Collection<T> getAll(Comparator<T> comparator, int start, int limit)
   {
     return decorated.getAll(comparator, start, limit);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public Long getLastModified()
   {
     return decorated.getLastModified();
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** manager implementation */
-  private Manager<T, E> decorated;
+  private Manager<T> decorated;
 }

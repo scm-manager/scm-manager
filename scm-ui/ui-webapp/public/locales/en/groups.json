@@ -1,0 +1,72 @@
+{
+  "group": {
+    "name": "Name",
+    "description": "Description",
+    "creationDate": "Creation Date",
+    "lastModified": "Last Modified",
+    "type": "Type",
+    "external": "External",
+    "internal": "Internal",
+    "members": "Members"
+  },
+  "groups": {
+    "title": "Groups",
+    "subtitle": "Create, read, update and delete groups",
+    "noGroups": "No groups found."
+  },
+  "singleGroup": {
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown group error",
+    "menu": {
+      "navigationLabel": "Group Navigation",
+      "informationNavLink": "Information",
+      "settingsNavLink": "Settings",
+      "generalNavLink": "General",
+      "setPermissionsNavLink": "Permissions"
+    }
+  },
+  "add-group": {
+    "title": "Create Group",
+    "subtitle": "Create a new group"
+  },
+  "create-group-button": {
+    "label": "Create Group"
+  },
+  "edit-group-button": {
+    "label": "Edit"
+  },
+  "add-member-button": {
+    "label": "Add Member"
+  },
+  "add-member-textfield": {
+    "error": "Invalid member name"
+  },
+  "add-member-autocomplete": {
+    "placeholder": "Add Member",
+    "loading": "Loading...",
+    "no-options": "No suggestion available"
+  },
+  "groupForm": {
+    "subtitle": "Edit Group",
+    "externalSubtitle": "Edit external group",
+    "submit": "Submit",
+    "nameError": "Group name is invalid",
+    "descriptionError": "Description is invalid",
+    "help": {
+      "nameHelpText": "Unique name of the group",
+      "descriptionHelpText": "A short description of the group",
+      "memberHelpText": "Usernames of the group members",
+      "externalHelpText": "Members are managed by an external system such as LDAP"
+    }
+  },
+  "deleteGroup": {
+    "subtitle": "Delete Group",
+    "button": "Delete",
+    "confirmAlert": {
+      "title": "Delete Group",
+      "message": "Do you really want to delete the group?",
+      "submit": "Yes",
+      "cancel": "No"
+    }
+  }
+}

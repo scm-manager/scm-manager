@@ -154,7 +154,7 @@ public class ConfigurableLoginAttemptHandler implements LoginAttemptHandler {
   }
 
   private boolean isEnabled() {
-    return (configuration.getLoginAttemptLimit() > 0) && (configuration.getLoginAttemptLimitTimeout() > 0L);
+    return (configuration.getLoginAttemptLimit() > 0) && (configuration.getLoginAttemptLimitTimeout() > 0l);
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -162,7 +162,7 @@ public class ConfigurableLoginAttemptHandler implements LoginAttemptHandler {
   private static class LoginAttempt {
 
     private int counter = 0;
-    private long lastAttempt = -1L;
+    private long lastAttempt = -1l;
 
     synchronized void increase() {
       counter++;
@@ -170,16 +170,16 @@ public class ConfigurableLoginAttemptHandler implements LoginAttemptHandler {
     }
 
     synchronized void reset() {
-      lastAttempt = -1L;
+      lastAttempt = -1l;
       counter = 0;
     }
 
     @Override
     public String toString() {
       return MoreObjects.toStringHelper(this)
-                        .add("counter", counter)
-                        .add("lastAttempt", lastAttempt)
-                        .toString();
+                    .add("counter", counter)
+                    .add("lastAttempt", lastAttempt)
+                    .toString();
     }
     
   }

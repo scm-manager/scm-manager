@@ -36,12 +36,12 @@ package sonia.scm.plugin;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -128,10 +128,10 @@ public final class SubscriberElement
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("eventClass", eventClass)
-                      .add("subscriberClass", subscriberClass)
-                      .add("description", description)
-                      .toString();
+                  .add("eventClass", eventClass)
+                  .add("subscriberClass", subscriberClass)
+                  .add("description", description)
+                  .toString();
     //J+
   }
 

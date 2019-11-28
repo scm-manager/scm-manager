@@ -1,0 +1,822 @@
+@import "bulma/sass/utilities/initial-variables";
+@import "bulma/sass/utilities/functions";
+
+$turquoise: #00d1df;
+$blue: #33b2e8;
+$cyan: $blue;
+$green: #00c79b;
+$blue-light: #98d8f3;
+
+.is-ellipsis-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.is-word-break {
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  word-break: break-all;
+}
+
+.has-rounded-border {
+  border-radius: 0.25rem;
+}
+
+.is-full-width {
+  width: 100%;
+}
+
+.fitParent {
+  // TODO get rid of important
+  margin: 0 !important;
+  // 3.8em for line-numbers
+  padding: 0 0 0 3.8em !important;
+}
+
+.main {
+  min-height: calc(100vh - 300px);
+}
+
+// shown in top section when pageactions set
+hr.header-with-actions {
+  margin-top: -10px;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+}
+.is-mobile-action-spacing {
+  @media screen and (max-width: 768px) {
+    display: flow-root !important;
+
+    .input-field {
+      padding: 0;
+      margin: 0 0 1.25rem 0 !important;
+      width: 100%;
+    }
+    .input-button {
+      border: 2px solid #e9f7fd;
+      padding: 1em 1em;
+      margin-top: 0 !important;
+      width: 100%;
+      text-align: center !important;
+    }
+  }
+}
+
+.footer {
+  height: 50px;
+}
+
+// 6. Import the rest of Bulma
+@import "bulma/bulma";
+@import "bulma-tooltip/dist/css/bulma-tooltip.min";
+
+$dark-75: scale-color($dark, $lightness: 25%);
+$dark-50: scale-color($dark, $lightness: 50%);
+$dark-25: scale-color($dark, $lightness: 75%);
+$info-75: scale-color($info, $lightness: 25%);
+$info-50: scale-color($info, $lightness: 50%);
+$info-25: scale-color($info, $lightness: 75%);
+$link-75: scale-color($link, $lightness: 25%);
+$link-50: scale-color($link, $lightness: 50%);
+$link-25: scale-color($link, $lightness: 75%);
+$primary-75: scale-color($primary, $lightness: 25%);
+$primary-50: scale-color($primary, $lightness: 50%);
+$primary-25: scale-color($primary, $lightness: 75%);
+$success-75: scale-color($success, $lightness: 25%);
+$success-50: scale-color($success, $lightness: 50%);
+$success-25: scale-color($success, $lightness: 75%);
+$warning-75: scale-color($warning, $lightness: 25%);
+$warning-50: scale-color($warning, $lightness: 50%);
+$warning-25: scale-color($warning, $lightness: 75%);
+$danger-75: scale-color($danger, $lightness: 25%);
+$danger-50: scale-color($danger, $lightness: 50%);
+$danger-25: scale-color($danger, $lightness: 75%);
+
+/*
+// not supported by ie
+// css vars for external reuse
+:root {
+  // asc sorted initial variables
+  --black: #{$black};
+  --white: #{$white};
+
+  // asc sorted derived-variables
+  --primary: #{$primary};
+  --primary-75: #{$primary-75};
+  --primary-50: #{$primary-50};
+  --primary-25: #{$primary-25};
+  --info: #{$info};
+  --info-75: #{$info-75};
+  --info-50: #{$info-50};
+  --info-25: #{$info-25};
+  --success: #{$success};
+  --success-75: #{$success-75};
+  --success-50: #{$success-50};
+  --success-25: #{$success-25};
+  --warning: #{$warning};
+  --warning-75: #{$warning-75};
+  --warning-50: #{$warning-50};
+  --warning-25: #{$warning-25};
+  --danger: #{$danger};
+  --danger-75: #{$danger-75};
+  --danger-50: #{$danger-50};
+  --danger-25: #{$danger-25};
+  --light: #{$light};
+  --dark: #{$dark};
+  --dark-75: #{$dark-75};
+  --dark-50: #{$dark-50};
+  --dark-25: #{$dark-25};
+  --background: #{$background};
+  --border: #{$border};
+  --text: #{$text};
+  --link: #{$link};
+  --link-75: #{$link-75};
+  --link-50: #{$link-50};
+  --link-25: #{$link-25};
+}
+*/
+
+// readability issues with original color
+.has-text-warning {
+  color: #ffb600 !important;
+}
+.has-text-warning-invert {
+  color: $warning-invert;
+}
+
+.has-text-blue-light {
+  color: $blue-light !important;
+}
+
+// border and background colors
+.has-background-dark-75 {
+  background-color: $dark-75;
+}
+.has-background-dark-50 {
+  background-color: $dark-50;
+}
+.has-background-dark-25 {
+  background-color: $dark-25;
+}
+.has-background-info-75 {
+  background-color: $info-75;
+}
+.has-background-info-50 {
+  background-color: $info-50;
+}
+.has-background-info-25 {
+  background-color: $info-25;
+}
+.has-background-link-75 {
+  background-color: $link-75;
+}
+.has-background-link-50 {
+  background-color: $link-50;
+}
+.has-background-link-25 {
+  background-color: $link-25;
+}
+.has-background-primary-75 {
+  background-color: $primary-75;
+}
+.has-background-primary-50 {
+  background-color: $primary-50;
+}
+.has-background-primary-25 {
+  background-color: $primary-25;
+}
+.has-background-success-75 {
+  background-color: $success-75;
+}
+.has-background-success-50 {
+  background-color: $success-50;
+}
+.has-background-success-25 {
+  background-color: $success-25;
+}
+.has-background-warning-75 {
+  background-color: $warning-75;
+}
+.has-background-warning-50 {
+  background-color: $warning-50;
+}
+.has-background-warning-25 {
+  background-color: $warning-25;
+}
+.has-background-danger-75 {
+  background-color: $danger-75;
+}
+.has-background-danger-50 {
+  background-color: $danger-50;
+}
+.has-background-danger-25 {
+  background-color: $danger-25;
+}
+
+.has-background-blue-light {
+  background-color: $blue-light;
+}
+
+// tags
+.tag:not(body) {
+  border: 1px solid transparent;
+  background-color: $white;
+
+  &.is-delete {
+    background-color: $light;
+  }
+
+  +.is-delete {
+    border-color: #aaa;
+    border-width: 1px 1px 1px 0;
+  }
+
+  &.is-outlined {
+    background-color: $white;
+  }
+  &.is-black.is-outlined {
+    color: $black;
+    border-color: $black;
+  }
+  &.is-dark.is-outlined {
+    color: $dark;
+    border-color: $dark;
+  }
+  &.is-light.is-outlined {
+    color: $light;
+    border-color: $light;
+  }
+  &.is-white.is-outlined {
+    color: $white;
+    border-color: $white;
+  }
+  &.is-primary.is-outlined {
+    color: $primary;
+    border-color: $primary;
+  }
+  &.is-link.is-outlined {
+    color: $link;
+    border-color: $link;
+  }
+  &.is-info.is-outlined {
+    color: $info;
+    border-color: $info;
+  }
+  &.is-success.is-outlined {
+    color: $success;
+    border-color: $success;
+  }
+  &.is-warning.is-outlined {
+    color: $warning;
+    border-color: $warning;
+  }
+  &.is-danger.is-outlined {
+    color: $danger;
+    border-color: $danger;
+  }
+}
+
+// buttons
+.button {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  height: 2.5rem;
+  font-weight: $weight-semibold;
+
+  &[disabled] {
+    opacity: 1;
+  }
+
+  &.is-primary,
+  &.is-info,
+  &.is-link,
+  &.is-success,
+  &.is-warning,
+  &.is-danger {
+    &.is-outlined {
+      background-color: $white;
+    }
+  }
+
+  &.is-primary:hover,
+  &.is-primary.is-hovered {
+    background-color: scale-color($primary, $lightness: -10%);
+  }
+
+  &.is-primary:active,
+  &.is-primary.is-active {
+    background-color: scale-color($primary, $lightness: -20%);
+  }
+
+  &.is-primary[disabled] {
+    background-color: scale-color($primary, $lightness: 75%);
+  }
+
+  &.is-info:hover,
+  &.is-info.is-hovered {
+    background-color: scale-color($info, $lightness: -10%);
+  }
+
+  &.is-info:active,
+  &.is-info.is-active {
+    background-color: scale-color($info, $lightness: -20%);
+  }
+
+  &.is-info[disabled] {
+    background-color: scale-color($info, $lightness: 75%);
+  }
+
+  &.is-link:hover,
+  &.is-link.is-hovered {
+    background-color: scale-color($link, $lightness: -10%);
+  }
+
+  &.is-link:active,
+  &.is-link.is-active {
+    background-color: scale-color($link, $lightness: -20%);
+  }
+
+  &.is-link[disabled] {
+    background-color: scale-color($link, $lightness: 75%);
+  }
+
+  &.is-success:hover,
+  &.is-success.is-hovered {
+    background-color: scale-color($success, $lightness: -10%);
+  }
+
+  &.is-success:active,
+  &.is-success.is-active {
+    background-color: scale-color($success, $lightness: -20%);
+  }
+
+  &.is-success[disabled] {
+    background-color: scale-color($success, $lightness: 75%);
+  }
+
+  &.is-warning:hover,
+  &.is-warning.is-hovered {
+    background-color: scale-color($warning, $lightness: -10%);
+  }
+
+  &.is-warning:active,
+  &.is-warning.is-active {
+    background-color: scale-color($warning, $lightness: -20%);
+  }
+
+  &.is-warning[disabled] {
+    background-color: scale-color($warning, $lightness: 75%);
+  }
+
+  &.is-danger:hover,
+  &.is-danger.is-hovered {
+    background-color: scale-color($danger, $lightness: -10%);
+  }
+
+  &.is-danger:active,
+  &.is-danger.is-active {
+    background-color: scale-color($danger, $lightness: -20%);
+  }
+
+  &.is-danger[disabled] {
+    background-color: scale-color($danger, $lightness: 75%);
+  }
+
+  &.is-reduced-mobile,
+  &.reduced-mobile {
+    @media screen and (max-width: 1087px) {
+      > span:nth-child(2) {
+        display: none;
+      }
+    }
+    @media screen and (max-width: 1087px) and (min-width: 769px) {
+      // simultaneously with left margin of Bulma
+      > .icon:first-child:not(:last-child) {
+        margin: 0;
+      }
+    }
+    @media screen and (max-width: 768px) {
+      // simultaneously with left margin of Bulma
+      .icon:first-child:not(:last-child) {
+        margin-right: calc(-0.375em - 1px);
+      }
+    }
+  }
+}
+
+.box-link-shadow {
+  &:hover,
+  &:focus {
+    box-shadow: $box-link-hover-shadow;
+  }
+  &:active {
+    box-shadow: $box-link-active-shadow;
+  }
+}
+
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+
+@import "~react-diff-view/index";
+
+// NEW STYLES
+
+//typography
+.subtitle {
+  color: #666;
+}
+.has-border-white {
+  border-color: #fff !important;
+}
+ul.is-separated {
+  > li:after {
+    content: ",\2800";
+  }
+  > li:last-child:after {
+    content: "";
+  }
+}
+
+// card columns for repo and plugins overview
+.card-columns {
+  .column {
+    height: 120px;
+
+    .overlay-column {
+      position: absolute;
+      height: calc(120px - 1.5rem);
+    }
+  }
+
+  .column.is-half {
+    width: calc(50% - 0.75rem);
+
+    @media screen and (max-width: 768px) {
+      width: 100%;
+    }
+
+    &:nth-child(odd) {
+      margin-right: 1.5rem;
+
+      @media screen and (max-width: 768px) {
+        margin-right: 0;
+      }
+    }
+
+    .overlay-column {
+      width: calc(50% - 3rem);
+
+      @media screen and (max-width: 768px) {
+        width: calc(100% - 1.5rem);
+      }
+    }
+  }
+
+  .column.is-full .overlay-column {
+    width: calc(100% - 1.5rem);
+  }
+}
+.content.is-plugin-page {
+  .card-columns {
+    .column.is-half .overlay-column {
+      width: calc(37.5% - 1.5rem);
+    }
+
+    .column.is-full .overlay-column {
+      width: calc(75% - 1.5rem);
+    }
+
+    @media screen and (max-width: 768px) {
+      .column.is-half .overlay-column,
+      .column.is-full .overlay-column {
+        width: calc(100% - 1.5rem);
+      }
+    }
+  }
+}
+
+.text-box {
+  width: calc(50% - 0.75rem);
+  .shorten-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// tables
+.table {
+  width: 100%;
+  td,
+  th {
+    border-color: #eee;
+    padding: 1rem;
+  }
+}
+
+// card tables
+.card-table {
+  border-collapse: separate;
+  border-spacing: 0 5px;
+
+  tr {
+    a {
+      color: #363636;
+    }
+    &.border-is-green td:first-child {
+      border-left-color: $green;
+    }
+    &.border-is-yellow td:first-child {
+      border-left-color: $yellow;
+    }
+    &:hover {
+      td {
+        background-color: whitesmoke;
+
+        &.is-darker {
+          background-color: #e1e1e1;
+        }
+      }
+      a {
+        color: $blue;
+      }
+    }
+  }
+  td {
+    padding: 1em 1.25em;
+    background-color: #fafafa;
+    border-bottom: 1px solid whitesmoke;
+
+    &:first-child {
+      border-left: 3px solid $grey;
+    }
+    &.is-darker {
+      background-color: whitesmoke;
+    }
+  }
+  &.is-hoverable tbody tr:not(.is-selected):hover {
+    background-color: whitesmoke;
+  }
+  thead th {
+    background-color: transparent;
+    border: none;
+  }
+}
+
+// panels
+.panel {
+  border: 1px solid #dbdbdb;
+  border-radius: 0.25rem;
+
+  .panel-heading {
+    border: none;
+    border-bottom: 1px solid $border;
+    border-radius: 0.25rem 0.25rem 0 0;
+
+    > .field {
+      margin-bottom: 0; // replace selector margin
+    }
+  }
+
+  .panel-block {
+    display: block;
+    border: none;
+  }
+
+  .panel-footer {
+    background-color: whitesmoke;
+    color: #363636;
+    font-size: 1.25em;
+    font-weight: 300;
+    line-height: 1.25;
+    padding: 0.5em 0.75em;
+    border: none;
+    border-top: 1px solid $border;
+    border-radius: 0 0 0.25rem 0.25rem;
+  }
+}
+
+// forms
+form .field:not(.is-grouped) {
+  margin-bottom: 1rem;
+}
+.input,
+.textarea {
+  /*background-color: whitesmoke;*/
+  border-color: $blue-light;
+  box-shadow: none;
+}
+
+.select,
+.select:hover {
+  &:not(.is-multiple):not(.is-loading) {
+    &.disabled::after {
+      border-color: #7a7a7a;
+    }
+  }
+}
+
+// label with help-icon compensation
+.label-icon-spacing {
+  margin-top: 30px;
+
+  @media screen and (max-width: 768px) {
+    margin-top: 0;
+  }
+}
+
+// sources breadcrumb
+.sources-breadcrumb {
+  margin: 1rem 1.25rem !important;
+
+  li:last-child:after {
+    color: #b5b5b5;
+    content: "\0002f";
+  }
+}
+
+// pagination
+.pagination-next,
+.pagination-link,
+.pagination-ellipsis {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  height: 2.8rem;
+  min-width: 5rem;
+}
+.pagination-previous,
+.pagination-next {
+  height: 2.8rem;
+  min-width: 6.75em;
+}
+.pagination-previous[disabled],
+.pagination-next[disabled] {
+  background-color: #ededed;
+  color: #bcbcbc;
+}
+.pagination-link.is-current {
+  opacity: 1;
+}
+
+// hero
+.hero.is-dark {
+  background-color: #002e4b;
+  background-image: url(images/scmManagerHero.jpg);
+  background-size: cover;
+  background-position: top center;
+
+  .tabs.is-boxed li.is-active a,
+  .tabs.is-boxed li.is-active a:hover,
+  .tabs.is-toggle li.is-active a,
+  .tabs.is-toggle li.is-active a:hover {
+    background-color: #28b1e8;
+    border-color: #28b1e8;
+    color: #fff;
+  }
+}
+
+// footer
+.footer {
+  background-color: whitesmoke;
+}
+
+// aside
+.aside-background {
+  bottom: 0;
+  left: 50%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: whitesmoke;
+}
+
+// menu
+.menu {
+  div {
+    height: 100%;
+    /*border: 1px solid #eee;*/
+    margin-bottom: 1rem;
+  }
+}
+.menu-label {
+  color: #fff;
+  font-size: 1em;
+  font-weight: 600;
+  background-color: #bbb;
+  border-radius: 5px 5px 0 0;
+  padding: 0.5rem 1rem;
+  text-transform: none;
+
+  &:last-child,
+  &:not(:last-child) {
+    margin-bottom: 0;
+  }
+}
+.menu div:first-child .menu-label {
+  background-color: $blue;
+}
+.menu-list {
+  a {
+    color: #333;
+    padding: 1rem;
+
+    &.is-active {
+      color: $blue;
+      background-color: #fff;
+    }
+  }
+
+  > li {
+    ul {
+      margin: 0;
+      border-top: 1px solid #eee;
+
+      li {
+        border-right: none;
+      }
+      li:last-child {
+        border-bottom: none;
+      }
+    }
+
+    > a.is-active:before {
+      position: relative;
+      content: " ";
+      background: $blue;
+      height: 53px;
+      width: 2px;
+      display: block;
+      left: -17px;
+      float: left;
+      top: -16px;
+    }
+
+    border-radius: 0;
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+  }
+  > li:first-child {
+    border-top: none;
+  }
+  li:last-child {
+    border-bottom: 1px solid #eee;
+  }
+  div {
+    margin-bottom: 0;
+  }
+}
+
+.sub-menu li {
+  line-height: 1;
+
+  a {
+    padding: 0.75rem 1rem;
+  }
+
+  a:before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    content: "\f105";
+    padding-right: 5px;
+  }
+
+  i {
+    display: none;
+  }
+}
+
+// modal
+.modal {
+  .modal-card {
+    border-radius: 6px;
+
+    .modal-card-foot {
+      justify-content: flex-end; // pulled-right
+    }
+  }
+}
+
+// cursor
+.has-cursor-pointer {
+  cursor: pointer;
+}
+
+// until update to bulma version 0.7.5
+.has-text-weight-medium {
+  font-weight: 500 !important;
+}
+
+@import "bulma-popover/css/bulma-popover";

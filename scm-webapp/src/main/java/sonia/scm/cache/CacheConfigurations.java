@@ -35,19 +35,17 @@ package sonia.scm.cache;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Iterators;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.net.URL;
-
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
+
+import static java.util.Collections.emptyIterator;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -110,7 +108,7 @@ public final class CacheConfigurations
 
     if (it == null)
     {
-      it = Collections.emptyIterator();
+      it = emptyIterator();
     }
 
     return it;

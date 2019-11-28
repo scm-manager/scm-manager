@@ -35,52 +35,73 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
-import com.google.inject.Inject;
-
-import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.filter.Filters;
-import sonia.scm.filter.WebElement;
-import sonia.scm.repository.RepositoryProvider;
-import sonia.scm.web.filter.ProviderPermissionFilter;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.spi.ScmProviderHttpServlet;
+import sonia.scm.web.filter.PermissionFilter;
 
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.HgRepositoryHandler;
 
-import java.util.Set;
-
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Set;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Permission filter for mercurial repositories.
  * 
  * @author Sebastian Sdorra
  */
-@Priority(Filters.PRIORITY_AUTHORIZATION)
-@WebElement(value = HgServletModule.MAPPING_HG)
-public class HgPermissionFilter extends ProviderPermissionFilter
+public class HgPermissionFilter extends PermissionFilter
 {
   
   private static final Set<String> READ_METHODS = ImmutableSet.of("GET", "HEAD", "OPTIONS", "TRACE");
 
-  /**
-   * Constructs a new instance.
-   *
-   * @param configuration scm configuration
-   * @param repositoryProvider repository provider
-   */
-  @Inject
-  public HgPermissionFilter(ScmConfiguration configuration,
-    RepositoryProvider repositoryProvider)
+  private final HgRepositoryHandler repositoryHandler;
+
+  public HgPermissionFilter(ScmConfiguration configuration, ScmProviderHttpServlet delegate, HgRepositoryHandler repositoryHandler)
   {
-    super(configuration, repositoryProvider);
+    super(configuration, delegate);
+    this.repositoryHandler = repositoryHandler;
   }
 
-  //~--- get methods ----------------------------------------------------------
+  @Override
+  public void service(HttpServletRequest request, HttpServletResponse response, Repository repository) throws IOException, ServletException {
+    super.service(wrapRequestIfRequired(request), response, repository);
+  }
+
+  @VisibleForTesting
+  HttpServletRequest wrapRequestIfRequired(HttpServletRequest request) {
+    if (isHttpPostArgsEnabled()) {
+      return new HgServletRequest(request);
+    }
+    return request;
+  }
 
   @Override
-  protected boolean isWriteRequest(HttpServletRequest request)
+  public boolean isWriteRequest(HttpServletRequest request)
   {
-    return !READ_METHODS.contains(request.getMethod());
+    if (isHttpPostArgsEnabled()) {
+      return isHttpPostArgsWriteRequest(request);
+    }
+    return isDefaultWriteRequest(request);
+  }
+
+  private boolean isHttpPostArgsEnabled() {
+    return repositoryHandler.getConfig().isEnableHttpPostArgs();
+  }
+
+  private boolean isHttpPostArgsWriteRequest(HttpServletRequest request) {
+    return WireProtocol.isWriteRequest(request);
+  }
+
+  private boolean isDefaultWriteRequest(HttpServletRequest request) {
+    if (READ_METHODS.contains(request.getMethod())) {
+      return WireProtocol.isWriteRequest(request);
+    }
+    return true;
   }
 }

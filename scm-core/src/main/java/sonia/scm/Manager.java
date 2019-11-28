@@ -33,12 +33,9 @@
 
 package sonia.scm;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.function.Predicate;
 
 /**
  * Base interface for all manager classes.
@@ -46,11 +43,11 @@ import java.util.Comparator;
  * @author Sebastian Sdorra
  *
  * @param <T> type of the model object
- * @param <E> type of the exception
  */
-public interface Manager<T extends ModelObject, E extends Exception>
-        extends HandlerBase<T, E>, LastModifiedAware
+public interface Manager<T extends ModelObject>
+        extends HandlerBase<T>, LastModifiedAware
 {
+
 
   /**
    * Reloads a object from store and overwrites all changes.
@@ -58,10 +55,9 @@ public interface Manager<T extends ModelObject, E extends Exception>
    *
    * @param object to refresh
    *
-   * @throws E
-   * @throws IOException
+   * @throws NotFoundException
    */
-  public void refresh(T object) throws E, IOException;
+  void refresh(T object);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -73,7 +69,7 @@ public interface Manager<T extends ModelObject, E extends Exception>
    *
    * @return object with the given id
    */
-  public T get(String id);
+  T get(String id);
 
   /**
    * Returns a {@link java.util.Collection} of all objects in the store.
@@ -81,17 +77,18 @@ public interface Manager<T extends ModelObject, E extends Exception>
    *
    * @return all object in the store
    */
-  public Collection<T> getAll();
+  Collection<T> getAll();
 
   /**
    * Returns all object of the store sorted by the given {@link java.util.Comparator}
    *
    *
+   * @param filter to filter the returned objects
    * @param comparator to sort the returned objects
    * @since 1.4
    * @return all object of the store sorted by the given {@link java.util.Comparator}
    */
-  public Collection<T> getAll(Comparator<T> comparator);
+  Collection<T> getAll(Predicate<T> filter, Comparator<T> comparator);
 
   /**
    * Returns objects from the store which are starts at the given start
@@ -102,14 +99,14 @@ public interface Manager<T extends ModelObject, E extends Exception>
    * @param limit parameter
    *
    * @since 1.4
-   * @return objects from the store which are starts at the given 
+   * @return objects from the store which are starts at the given
    *         start parameter
    */
-  public Collection<T> getAll(int start, int limit);
+  Collection<T> getAll(int start, int limit);
 
   /**
    * Returns objects from the store which are starts at the given start
-   * parameter sorted by the given {@link java.util.Comparator}. 
+   * parameter sorted by the given {@link java.util.Comparator}.
    * The objects returned are limited by the limit parameter.
    *
    *
@@ -118,8 +115,30 @@ public interface Manager<T extends ModelObject, E extends Exception>
    * @param limit parameter
    *
    * @since 1.4
-   * @return objects from the store which are starts at the given 
+   * @return objects from the store which are starts at the given
    *         start parameter
    */
-  public Collection<T> getAll(Comparator<T> comparator, int start, int limit);
+  Collection<T> getAll(Comparator<T> comparator, int start, int limit);
+
+  /**
+   * Returns objects from the store divided into pages with the given page
+   * size for the given page number (zero based) and sorted by the given
+   * {@link java.util.Comparator}.
+   * <p>This default implementation reads all items, first, so you might want to adapt this
+   * whenever reading is expensive!</p>
+   *
+   * @param filter to filter returned objects
+   * @param comparator to sort the returned objects
+   * @param pageNumber the number of the page to be returned (zero based)
+   * @param pageSize the size of the pages
+   *
+   * @since 2.0
+   * @return {@link PageResult} with the objects from the store for the requested
+   *         page. If the requested page number exceeds the existing pages, an
+   *         empty page result is returned.
+   */
+  default PageResult<T> getPage(Predicate<T> filter, Comparator<T> comparator, int pageNumber, int pageSize) {
+    return PageResult.createPage(getAll(filter, comparator), pageNumber, pageSize);
+  }
+
 }

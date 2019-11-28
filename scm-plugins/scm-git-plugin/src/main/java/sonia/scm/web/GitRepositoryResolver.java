@@ -35,9 +35,8 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
-
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
@@ -46,19 +45,17 @@ import org.eclipse.jgit.transport.resolver.RepositoryResolver;
 import org.eclipse.jgit.transport.resolver.ServiceNotAuthorizedException;
 import org.eclipse.jgit.transport.resolver.ServiceNotEnabledException;
 import org.eclipse.jgit.util.FS;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.repository.RepositoryProvider;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -72,17 +69,11 @@ public class GitRepositoryResolver implements RepositoryResolver<HttpServletRequ
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param handler
-   */
   @Inject
-  public GitRepositoryResolver(GitRepositoryHandler handler)
+  public GitRepositoryResolver(GitRepositoryHandler handler, RepositoryProvider repositoryProvider)
   {
     this.handler = handler;
+    this.repositoryProvider = repositoryProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -101,26 +92,27 @@ public class GitRepositoryResolver implements RepositoryResolver<HttpServletRequ
    * @throws ServiceNotEnabledException
    */
   @Override
-  public Repository open(HttpServletRequest request, String repositoryName)
-          throws RepositoryNotFoundException, ServiceNotAuthorizedException,
-                 ServiceNotEnabledException
+  public Repository open(HttpServletRequest request, String repositoryName) throws RepositoryNotFoundException, ServiceNotEnabledException
   {
-    Repository repository = null;
-
     try
     {
+      sonia.scm.repository.Repository repo = repositoryProvider.get();
+
+      Preconditions.checkState(repo != null, "repository to handle not found");
+      Preconditions.checkState(GitRepositoryHandler.TYPE_NAME.equals(repo.getType()), "got a non git repository in GitRepositoryResolver of type " + repo.getType());
+
       GitConfig config = handler.getConfig();
 
       if (config.isValid())
       {
-        File gitdir = findRepository(config.getRepositoryDirectory(), repositoryName);
+        File gitdir = handler.getDirectory(repo.getId());
         if (gitdir == null) {
           throw new RepositoryNotFoundException(repositoryName);
         }
-        
+
         logger.debug("try to open git repository at {}", gitdir);
 
-        repository = RepositoryCache.open(FileKey.lenient(gitdir, FS.DETECTED), true);
+        return RepositoryCache.open(FileKey.lenient(gitdir, FS.DETECTED), true);
       }
       else
       {
@@ -132,42 +124,15 @@ public class GitRepositoryResolver implements RepositoryResolver<HttpServletRequ
         throw new ServiceNotEnabledException();
       }
     }
-    catch (RuntimeException | IOException e)
+    catch (IOException e)
     {
+      // REVIEW
       throw new RepositoryNotFoundException(repositoryName, e);
     }
-
-    return repository;
-  }
-  
-  @VisibleForTesting
-  File findRepository(File parentDirectory, String repositoryName) {
-    File repositoryDirectory = new File(parentDirectory, repositoryName);
-    if (repositoryDirectory.exists()) {
-      return repositoryDirectory;
-    }
-    
-    if (endsWithDotGit(repositoryName)) {
-      String repositoryNameWithoutDotGit = repositoryNameWithoutDotGit(repositoryName);
-      repositoryDirectory = new File(parentDirectory, repositoryNameWithoutDotGit);
-      if (repositoryDirectory.exists()) {
-        return repositoryDirectory;
-      }
-    }
-    
-    return null;
-  }
-  
-  private boolean endsWithDotGit(String repositoryName) {
-    return repositoryName.endsWith(GitRepositoryHandler.DOT_GIT);
-  }
-  
-  private String repositoryNameWithoutDotGit(String repositoryName) {
-    return repositoryName.substring(0, repositoryName.length() - GitRepositoryHandler.DOT_GIT.length());
   }
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private GitRepositoryHandler handler;
+  private final GitRepositoryHandler handler;
+  private final RepositoryProvider repositoryProvider;
 }

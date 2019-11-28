@@ -37,12 +37,11 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 import sonia.scm.repository.Repository;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.net.URL;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -103,9 +102,9 @@ public abstract class RemoteCommandRequest implements Resetable
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("remoteRepository", remoteRepository)
-                      .add("remoteUrl", remoteUrl)
-                      .toString();
+                  .add("remoteRepository", remoteRepository)
+                  .add("remoteUrl", remoteUrl)
+                  .toString();
     //J+
   }
 

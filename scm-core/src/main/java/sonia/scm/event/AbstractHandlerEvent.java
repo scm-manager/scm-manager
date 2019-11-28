@@ -35,7 +35,6 @@ package sonia.scm.event;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 import sonia.scm.HandlerEventType;
 
 /**
@@ -129,10 +128,10 @@ public class AbstractHandlerEvent<T> implements HandlerEvent<T>
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("eventType", eventType)
-                      .add("item", item)
-                      .add("oldItem", oldItem)
-                      .toString();
+                  .add("eventType", eventType)
+                  .add("item", item)
+                  .add("oldItem", oldItem)
+                  .toString();
     //J+
   }
 

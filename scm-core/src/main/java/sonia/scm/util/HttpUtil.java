@@ -50,6 +50,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,9 +82,9 @@ public final class HttpUtil
 
   /**
    * Name of bearer authentication cookie.
-   * 
+   *
    * TODO find a better place
-   * 
+   *
    * @since 2.0.0
    */
   public static final String COOKIE_BEARER_AUTHENTICATION = "X-Bearer-Token";
@@ -96,7 +97,7 @@ public final class HttpUtil
    * @since 2.0.0
    */
   public static final String HEADER_AUTHORIZATION = "Authorization";
-  
+
   /**
    * content-length header
    * @since 1.46
@@ -248,12 +249,22 @@ public final class HttpUtil
   //~--- methods --------------------------------------------------------------
 
   /**
+   * Joins all path elements together separated by {@code {@link #SEPARATOR_PATH}}.
+   *
+   * @param pathElements path elements
+   *
+   * @return concatenated path
+   * @since 2.0.0
+   */
+  public static String concatenate(String... pathElements) {
+    return Arrays.stream(pathElements).reduce(HttpUtil::append).orElse("");
+  }
+
+  /**
    * Appends the suffix to given uri.
    *
-   *
-   * @param uri uri
+   * @param uri    uri
    * @param suffix suffix
-   *
    * @return
    * @since 1.9
    */
@@ -333,8 +344,7 @@ public final class HttpUtil
         "parameter \"{}\" contains a character which could be an indicator for a crlf injection",
         parameter);
 
-      throw new IllegalArgumentException(
-        "parameter contains an illegal character");
+      throw new CRLFInjectionException("parameter contains an illegal character");
     }
   }
 

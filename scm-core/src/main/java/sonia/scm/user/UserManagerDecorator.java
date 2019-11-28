@@ -38,9 +38,9 @@ package sonia.scm.user;
 import sonia.scm.ManagerDecorator;
 import sonia.scm.search.SearchRequest;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Collection;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Decorator for {@link UserManager}.
@@ -48,7 +48,7 @@ import java.util.Collection;
  * @author Sebastian Sdorra
  * @since 1.23
  */
-public class UserManagerDecorator extends ManagerDecorator<User, UserException>
+public class UserManagerDecorator extends ManagerDecorator<User>
   implements UserManager
 {
 
@@ -121,7 +121,16 @@ public class UserManagerDecorator extends ManagerDecorator<User, UserException>
     return decorated.getDefaultType();
   }
 
-  //~--- fields ---------------------------------------------------------------
+  @Override
+  public void changePasswordForLoggedInUser(String oldPassword, String newPassword) {
+    decorated.changePasswordForLoggedInUser(oldPassword, newPassword);
+  }
+
+  @Override
+  public void overwritePassword(String userId, String newPassword) {
+    decorated.overwritePassword(userId, newPassword);
+  }
+//~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private final UserManager decorated;

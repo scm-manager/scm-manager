@@ -41,20 +41,27 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.Subject.Builder;
+
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
 import sonia.scm.SCMContextProvider;
-import sonia.scm.security.Role;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
+
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import sonia.scm.security.Role;
 
 /**
  *
@@ -90,7 +97,12 @@ public final class MockUtil
 
     when(subject.isAuthenticated()).thenReturn(Boolean.TRUE);
     when(subject.isPermitted(anyListOf(Permission.class))).then(
-      invocation -> {
+      new Answer<Boolean[]>()
+    {
+
+      @Override
+      public Boolean[] answer(InvocationOnMock invocation) throws Throwable
+      {
         List<Permission> permissions =
           (List<Permission>) invocation.getArguments()[0];
         Boolean[] returnArray = new Boolean[permissions.size()];
@@ -98,13 +110,13 @@ public final class MockUtil
         Arrays.fill(returnArray, Boolean.TRUE);
 
         return returnArray;
-      });
+      }
+    });
     when(subject.isPermitted(any(Permission.class))).thenReturn(Boolean.TRUE);
     when(subject.isPermitted(any(String.class))).thenReturn(Boolean.TRUE);
     when(subject.isPermittedAll(anyCollectionOf(Permission.class))).thenReturn(
       Boolean.TRUE);
     when(subject.isPermittedAll()).thenReturn(Boolean.TRUE);
-    when(subject.hasRole(Role.ADMIN)).thenReturn(Boolean.TRUE);
     when(subject.hasRole(Role.USER)).thenReturn(Boolean.TRUE);
 
     PrincipalCollection collection = mock(PrincipalCollection.class);
@@ -200,7 +212,11 @@ public final class MockUtil
   {
     SCMContextProvider provider = mock(SCMContextProvider.class);
 
-    when(provider.getBaseDirectory()).thenReturn(directory);
+    lenient().when(provider.getBaseDirectory()).thenReturn(directory);
+    lenient().when(provider.resolve(any(Path.class))).then(ic -> {
+      Path p = ic.getArgument(0);
+      return directory.toPath().resolve(p);
+    });
 
     return provider;
   }

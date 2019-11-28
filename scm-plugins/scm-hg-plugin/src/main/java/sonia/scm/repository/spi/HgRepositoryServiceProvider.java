@@ -33,21 +33,16 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.io.Closeables;
-
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.api.CommandNotSupportedException;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -66,12 +61,14 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
     Command.CAT,
     Command.DIFF, 
     Command.LOG,
-    Command.TAGS, 
+    Command.TAGS,
+    Command.BRANCH,
     Command.BRANCHES,
     Command.INCOMING,
     Command.OUTGOING,
     Command.PUSH,
-    Command.PULL
+    Command.PULL,
+    Command.MODIFY
   );
   //J+
 
@@ -81,22 +78,12 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   *
-   * @param hookManager
-   * @param handler
-   * @param repository
-   */
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
-    HgHookManager hookManager, Repository repository)
+                              HgHookManager hookManager, Repository repository)
   {
     this.repository = repository;
     this.handler = handler;
-    this.repositoryDirectory = handler.getDirectory(repository);
+    this.repositoryDirectory = handler.getDirectory(repository.getId());
     this.context = new HgCommandContext(hookManager, handler, repository,
       repositoryDirectory);
   }
@@ -139,6 +126,11 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   public BranchesCommand getBranchesCommand()
   {
     return new HgBranchesCommand(context, repository);
+  }
+
+  @Override
+  public BranchCommand getBranchCommand() {
+    return new HgBranchCommand(context, repository, handler.getWorkdirFactory());
   }
 
   /**
@@ -202,6 +194,17 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   }
 
   /**
+   * Get the corresponding {@link ModificationsCommand} implemented from the Plugins
+   *
+   * @return the corresponding {@link ModificationsCommand} implemented from the Plugins
+   * @throws CommandNotSupportedException if there is no Implementation
+   */
+  @Override
+  public ModificationsCommand getModificationsCommand() {
+    return new HgModificationsCommand(context,repository);
+  }
+
+  /**
    * Method description
    *
    *
@@ -235,6 +238,11 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   public PushCommand getPushCommand()
   {
     return new HgPushCommand(handler, context, repository);
+  }
+
+  @Override
+  public ModifyCommand getModifyCommand() {
+    return new HgModifyCommand(context, handler.getWorkdirFactory());
   }
 
   /**

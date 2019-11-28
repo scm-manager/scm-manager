@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,11 +24,9 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.repository;
@@ -36,454 +34,142 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.ConfigurationException;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
-import sonia.scm.io.FileSystem;
-import sonia.scm.util.IOUtil;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.plugin.PluginLoader;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.net.URL;
-import sonia.scm.store.ConfigurationStoreFactory;
+import java.nio.file.Path;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
- *
- * @author Sebastian Sdorra
- *
- *
  * @param <C>
+ * @author Sebastian Sdorra
  */
-public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepositoryConfig>
-        extends AbstractRepositoryHandler<C> implements RepositoryDirectoryHandler
-{
+public abstract class AbstractSimpleRepositoryHandler<C extends RepositoryConfig>
+  extends AbstractRepositoryHandler<C> implements RepositoryDirectoryHandler {
 
-  /** Field description */
   public static final String DEFAULT_VERSION_INFORMATION = "unknown";
 
-  /** Field description */
-  public static final String DIRECTORY_REPOSITORY = "repositories";
-
-  /** Field description */
-  public static final String DOT = ".";
-
-  /** the logger for AbstractSimpleRepositoryHandler */
+  /**
+   * the logger for AbstractSimpleRepositoryHandler
+   */
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractSimpleRepositoryHandler.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final RepositoryLocationResolver repositoryLocationResolver;
+  private final PluginLoader pluginLoader;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param storeFactory
-   * @param fileSystem
-   */
   public AbstractSimpleRepositoryHandler(ConfigurationStoreFactory storeFactory,
-          FileSystem fileSystem)
-  {
+                                         RepositoryLocationResolver repositoryLocationResolver,
+                                         PluginLoader pluginLoader) {
     super(storeFactory);
-    this.fileSystem = fileSystem;
+    this.repositoryLocationResolver = repositoryLocationResolver;
+    this.pluginLoader = pluginLoader;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public void create(Repository repository)
-          throws RepositoryException, IOException
-  {
-    File directory = getDirectory(repository);
-
-    if (directory.exists())
-    {
-      throw RepositoryAlreadyExistsException.create(repository);
+  public Repository create(Repository repository) {
+    File nativeDirectory = resolveNativeDirectory(repository.getId());
+    try {
+      create(repository, nativeDirectory);
+      postCreate(repository, nativeDirectory);
+    } catch (IOException e) {
+      throw new InternalRepositoryException(repository, "could not create native repository directory", e);
     }
-
-    checkPath(directory);
-
-    try
-    {
-      fileSystem.create(directory);
-      create(repository, directory);
-      postCreate(repository, directory);
-    }
-    catch (Exception ex)
-    {
-      if (directory.exists())
-      {
-        if (logger.isDebugEnabled())
-        {
-          logger.debug(
-              "delete repository directory {}, because of failed repository creation",
-              directory);
-        }
-
-        fileSystem.destroy(directory);
-      }
-
-      Throwables.propagateIfPossible(ex, RepositoryException.class,
-                                     IOException.class);
-    }
+    return repository;
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param repository
-   * @return
-   */
   @Override
-  public String createResourcePath(Repository repository)
-  {
-    StringBuilder path = new StringBuilder("/");
-
-    path.append(getType().getName()).append("/").append(repository.getName());
-
-    return path.toString();
+  public void delete(Repository repository) {
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public void delete(Repository repository)
-          throws RepositoryException, IOException
-  {
-    File directory = getDirectory(repository);
-
-    if (directory.exists())
-    {
-      fileSystem.destroy(directory);
-      cleanupEmptyDirectories(config.getRepositoryDirectory(),
-                              directory.getParentFile());
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("repository {} not found", repository);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Override
-  public void loadConfig()
-  {
+  public void loadConfig() {
     super.loadConfig();
 
-    if (config == null)
-    {
+    if (config == null) {
       config = createInitialConfig();
-
-      if (config != null)
-      {
-        File repositoryDirectory = config.getRepositoryDirectory();
-
-        if (repositoryDirectory == null)
-        {
-          repositoryDirectory = new File(
-              baseDirectory,
-              DIRECTORY_REPOSITORY.concat(File.separator).concat(
-                getType().getName()));
-          config.setRepositoryDirectory(repositoryDirectory);
-        }
-
-        IOUtil.mkdirs(repositoryDirectory);
-        storeConfig();
-      }
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public void modify(Repository repository)
-          throws RepositoryException, IOException
-  {
+  public void modify(Repository repository) {
 
-    // nothing todo
+    // nothing to do
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
   @Override
-  public File getDirectory(Repository repository)
-  {
-    File directory = null;
-
-    if (isConfigured())
-    {
-      File repositoryDirectory = config.getRepositoryDirectory();
-
-      directory = new File(repositoryDirectory, repository.getName());
-
-      if (!IOUtil.isChild(repositoryDirectory, directory))
-      {
-        StringBuilder msg = new StringBuilder(directory.getPath());
-
-        msg.append("is not a child of ").append(repositoryDirectory.getPath());
-
-        throw new ConfigurationException(msg.toString());
-      }
-    }
-    else
-    {
+  public File getDirectory(String repositoryId) {
+    File directory;
+    if (isConfigured()) {
+      directory = resolveNativeDirectory(repositoryId);
+    } else {
       throw new ConfigurationException("RepositoryHandler is not configured");
     }
-
     return directory;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public String getVersionInformation()
-  {
+  public String getVersionInformation() {
     return DEFAULT_VERSION_INFORMATION;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @return
-   */
   protected ExtendedCommand buildCreateCommand(Repository repository,
-          File directory)
-  {
+                                               File directory) {
     throw new UnsupportedOperationException("method is not implemented");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   protected void create(Repository repository, File directory)
-          throws RepositoryException, IOException
-  {
+    throws IOException {
     ExtendedCommand cmd = buildCreateCommand(repository, directory);
     CommandResult result = cmd.execute();
 
-    if (!result.isSuccessfull())
-    {
-      StringBuilder msg = new StringBuilder("command exit with error ");
-
-      msg.append(result.getReturnCode()).append(" and message: '");
-      msg.append(result.getOutput()).append("'");
-
-      throw new RepositoryException(msg.toString());
+    if (!result.isSuccessfull()) {
+      throw new IOException(("command exit with error " + result.getReturnCode() + " and message: '" + result.getOutput() + "'"));
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  protected C createInitialConfig()
-  {
+  protected C createInitialConfig() {
     return null;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   protected void postCreate(Repository repository, File directory)
-          throws IOException, RepositoryException {}
-
-  //~--- get methods ----------------------------------------------------------
+    throws IOException {
+  }
 
   /**
    * Returns the content of a classpath resource or the given default content.
    *
-   *
-   * @param resource path of a classpath resource
+   * @param resource       path of a classpath resource
    * @param defaultContent default content to return
-   *
    * @return content of a classpath resource or defaultContent
    */
-  protected String getStringFromResource(String resource, String defaultContent)
-  {
+  protected String getStringFromResource(String resource, String defaultContent) {
     String content = defaultContent;
 
-    try
-    {
-      URL url = Resources.getResource(resource);
+    try {
+      URL url = pluginLoader.getUberClassLoader().getResource(resource);
 
-      if (url != null)
-      {
+      if (url != null) {
         content = Resources.toString(url, Charsets.UTF_8);
       }
-    }
-    catch (IOException ex)
-    {
+    } catch (IOException ex) {
       logger.error("could not read resource", ex);
     }
 
     return content;
   }
 
-  /**
-   * Returns true if the directory is a repository.
-   *
-   *
-   * @param directory directory to check
-   *
-   * @return true if the directory is a repository
-   * @since 1.9
-   */
-  protected boolean isRepository(File directory)
-  {
-    return new File(directory, DOT.concat(getType().getName())).exists();
+  private File resolveNativeDirectory(String repositoryId) {
+    return repositoryLocationResolver.create(Path.class).getLocation(repositoryId).resolve(REPOSITORIES_NATIVE_DIRECTORY).toFile();
   }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Check path for existing repositories
-   *
-   *
-   * @param directory repository target directory
-   *
-   * @throws RepositoryAlreadyExistsException
-   */
-  private void checkPath(File directory) throws RepositoryAlreadyExistsException
-  {
-    File repositoryDirectory = config.getRepositoryDirectory();
-    File parent = directory.getParentFile();
-
-    while ((parent != null) &&!repositoryDirectory.equals(parent))
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("check {} for existing repository", parent);
-      }
-
-      if (isRepository(parent))
-      {
-        if (logger.isErrorEnabled())
-        {
-          logger.error("parent path {} is a repository", parent);
-        }
-
-        StringBuilder buffer = new StringBuilder("repository with name ");
-        buffer.append(directory.getName()).append(" already exists");
-        throw new RepositoryAlreadyExistsException(buffer.toString());
-      }
-
-      parent = parent.getParentFile();
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param baseDirectory
-   * @param directory
-   */
-  private void cleanupEmptyDirectories(File baseDirectory, File directory)
-  {
-    if (IOUtil.isChild(baseDirectory, directory))
-    {
-      if (IOUtil.isEmpty(directory))
-      {
-
-        // TODO use filesystem
-        if (directory.delete())
-        {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("successfully deleted directory {}", directory);
-          }
-
-          cleanupEmptyDirectories(baseDirectory, directory.getParentFile());
-        }
-        else if (logger.isWarnEnabled())
-        {
-          logger.warn("could not delete directory {}", directory);
-        }
-      }
-      else if (logger.isDebugEnabled())
-      {
-        logger.debug("could not remove non empty directory {}", directory);
-      }
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("directory {} is not a child of {}", directory,
-                  baseDirectory);
-    }
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private FileSystem fileSystem;
 }

@@ -34,7 +34,6 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
-
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -42,19 +41,18 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.PasswordMatcher;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-
-import sonia.scm.group.GroupNames;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.Extension;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Default authorizing realm.
@@ -85,14 +83,13 @@ public class DefaultRealm extends AuthorizingRealm
    *
    *
    * @param service
-   * @param collector
+   * @param authorizationCollectors
    * @param helperFactory
    */
   @Inject
-  public DefaultRealm(PasswordService service,
-    DefaultAuthorizationCollector collector, DAORealmHelperFactory helperFactory)
+  public DefaultRealm(PasswordService service, Set<AuthorizationCollector> authorizationCollectors, DAORealmHelperFactory helperFactory)
   {
-    this.collector = collector;
+    this.authorizationCollectors = authorizationCollectors;
     this.helper = helperFactory.create(REALM);
 
     PasswordMatcher matcher = new PasswordMatcher();
@@ -100,6 +97,9 @@ public class DefaultRealm extends AuthorizingRealm
     matcher.setPasswordService(service);
     setCredentialsMatcher(helper.wrapCredentialsMatcher(matcher));
     setAuthenticationTokenClass(UsernamePasswordToken.class);
+
+    // we cache in the AuthorizationCollector
+    setCachingEnabled(false);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -133,8 +133,7 @@ public class DefaultRealm extends AuthorizingRealm
   @Override
   protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals)
   {
-    AuthorizationInfo info = collector.collect(principals);
-    
+    AuthorizationInfo info = collectors(principals);
     Scope scope = principals.oneByType(Scope.class);
     if (scope != null && ! scope.isEmpty()) {
       LOG.trace("filter permissions by scope {}", scope);
@@ -144,19 +143,40 @@ public class DefaultRealm extends AuthorizingRealm
       }
       return filtered;
     } else if (LOG.isTraceEnabled()) {
-      LOG.trace("principal does not contain scope informations, returning all permissions");
+      LOG.trace("principal does not contain scope information, returning all permissions");
       log(principals, info, null);
     }
-    
+
     return info;
   }
-  
+
+  private AuthorizationInfo collectors(PrincipalCollection principals) {
+    SimpleAuthorizationInfo merged = new SimpleAuthorizationInfo();
+    for (AuthorizationCollector collector : authorizationCollectors) {
+      AuthorizationInfo authorizationInfo = collector.collect(principals);
+      merge(merged, authorizationInfo);
+    }
+    return merged;
+  }
+
+  private void merge(SimpleAuthorizationInfo merged, AuthorizationInfo authorizationInfo) {
+    if (authorizationInfo != null) {
+      if (authorizationInfo.getRoles() != null) {
+        merged.addRoles(authorizationInfo.getRoles());
+      }
+      if (authorizationInfo.getObjectPermissions() != null) {
+        merged.addObjectPermissions(authorizationInfo.getObjectPermissions());
+      }
+      if (authorizationInfo.getStringPermissions() != null) {
+        merged.addStringPermissions(authorizationInfo.getStringPermissions());
+      }
+    }
+  }
+
   private void log( PrincipalCollection collection, AuthorizationInfo original, AuthorizationInfo filtered ) {
     StringBuilder buffer = new StringBuilder("authorization summary: ");
     
     buffer.append(SEPARATOR).append("username   : ").append(collection.getPrimaryPrincipal());
-    buffer.append(SEPARATOR).append("groups     : ");
-    append(buffer, collection.oneByType(GroupNames.class));
     buffer.append(SEPARATOR).append("roles      : ");
     append(buffer, original.getRoles()); 
     buffer.append(SEPARATOR).append("scope      : ");
@@ -190,8 +210,8 @@ public class DefaultRealm extends AuthorizingRealm
 
   //~--- fields ---------------------------------------------------------------
 
-  /** default authorization collector */
-  private final DefaultAuthorizationCollector collector;
+  /** set of authorization collector */
+  private final Set<AuthorizationCollector> authorizationCollectors;
 
   /** realm helper */
   private final DAORealmHelper helper;

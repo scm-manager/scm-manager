@@ -162,6 +162,7 @@ public class HgPackageInstaller implements Runnable
     catch (IOException ex)
     {
       logger.error("could not downlaod file ".concat(pkg.getUrl()), ex);
+      file = null;
     }
     finally
     {

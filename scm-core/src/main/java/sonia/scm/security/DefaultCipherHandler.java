@@ -45,8 +45,6 @@ import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.core.util.Base64;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -60,6 +58,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 import java.util.Arrays;
+import java.util.Base64;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -162,10 +161,17 @@ public class DefaultCipherHandler implements CipherHandler {
    * @return decrypted value
    */
   public String decode(char[] plainKey, String value) {
-    String result = null;
-
+    Base64.Decoder decoder = Base64.getUrlDecoder();
     try {
-      byte[] encodedInput = Base64.decode(value);
+      return decode(plainKey, value, decoder);
+    } catch (IllegalArgumentException e) {
+      return decode(plainKey, value, Base64.getDecoder());
+    }
+  }
+
+  private String decode(char[] plainKey, String value, Base64.Decoder decoder) {
+    try {
+      byte[] encodedInput = decoder.decode(value);
       byte[] salt = new byte[SALT_LENGTH];
       byte[] encoded = new byte[encodedInput.length - SALT_LENGTH];
 
@@ -181,12 +187,10 @@ public class DefaultCipherHandler implements CipherHandler {
 
       byte[] decoded = cipher.doFinal(encoded);
 
-      result = new String(decoded, ENCODING);
+      return new String(decoded, ENCODING);
     } catch (IOException | GeneralSecurityException ex) {
       throw new CipherException("could not decode string", ex);
     }
-
-    return result;
   }
 
   @Override
@@ -222,7 +226,7 @@ public class DefaultCipherHandler implements CipherHandler {
       System.arraycopy(salt, 0, result, 0, SALT_LENGTH);
       System.arraycopy(encodedInput, 0, result, SALT_LENGTH,
         result.length - SALT_LENGTH);
-      res = new String(Base64.encode(result), ENCODING);
+      res = new String(Base64.getUrlEncoder().encode(result), ENCODING);
     } catch (IOException | GeneralSecurityException ex) {
       throw new CipherException("could not encode string", ex);
     }

@@ -33,11 +33,13 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import java.util.List;
-
 //~--- JDK imports ------------------------------------------------------------
+
+import java.util.List;
 
 /**
  *
@@ -94,9 +96,15 @@ public final class PluginNode
    */
   public PluginNode getChild(final String id)
   {
-    return children.stream()
-                   .filter(node -> node.getId().equals(id)).findFirst()
-                   .orElse(null);
+    return Iterables.find(children, new Predicate<PluginNode>()
+    {
+
+      @Override
+      public boolean apply(PluginNode node)
+      {
+        return node.getId().equals(id);
+      }
+    });
   }
 
   /**
@@ -118,7 +126,7 @@ public final class PluginNode
    */
   public String getId()
   {
-    return plugin.getPlugin().getInformation().getId(false);
+    return plugin.getPlugin().getInformation().getName(false);
   }
 
   /**
@@ -149,7 +157,7 @@ public final class PluginNode
    *
    * @return
    */
-  public PluginWrapper getWrapper()
+  public InstalledPlugin getWrapper()
   {
     return wrapper;
   }
@@ -162,9 +170,14 @@ public final class PluginNode
    *
    * @param wrapper
    */
-  public void setWrapper(PluginWrapper wrapper)
+  public void setWrapper(InstalledPlugin wrapper)
   {
     this.wrapper = wrapper;
+  }
+
+  @Override
+  public String toString() {
+    return plugin.getPath().toString() + " -> " + children;
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -179,5 +192,5 @@ public final class PluginNode
   private final ExplodedSmp plugin;
 
   /** Field description */
-  private PluginWrapper wrapper;
+  private InstalledPlugin wrapper;
 }

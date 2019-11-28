@@ -1,0 +1,104 @@
+{{< layout}}
+
+{{$title}}SCM-Manager Migration{{/title}}
+
+{{$content}}
+  <h2 class="subtitle">You have migrated from SCM-Manager v1 to SCM-Manager v2.</h2>
+
+  <p>
+    To migrate the existing repositories you have to specify a namespace and a name for each on them
+    as well as a migration strategy.
+  </p>
+
+  <p>
+    The strategies are the following:
+  </p>
+
+  <table class="table">
+    {{#strategies}}
+      <tr>
+        <th>{{name}}</th>
+        <td>{{description}}</td>
+      </tr>
+    {{/strategies}}
+  </table>
+
+  <hr>
+
+  {{#validationErrorsFound}}
+  <div class="notification is-danger">Please correct the invalid namespaces or names below and try again.</div>
+  <hr>
+  {{/validationErrorsFound}}
+
+  <form action="{{submitUrl}}" method="post">
+    <table class="card-table table is-hoverable is-fullwidth">
+      <tr>
+        <th>Original name</th>
+        <th>Type</th>
+        <th>New namespace
+          <span class="tooltip has-tooltip-right has-tooltip-multiline t-tooltip-0-1-38" data-tooltip="The namespace of the repository. This will be part op the url. The new namespace must consist of letters, digits, dots, dashes and underscores (it must not start with a dash or a underscore)."><i class="fa fa-question-circle has-text-info t-textinfo-0-1-10"></i></span>
+        </th>
+        <th>New name
+          <span class="tooltip has-tooltip-right has-tooltip-multiline t-tooltip-0-1-38" data-tooltip="The name of the repository. This will be part op the url. The new name must consist of letters, digits, dots, dashes and underscores (it must not start with a dash or a underscore)."><i class="fa fa-question-circle has-text-info t-textinfo-0-1-10"></i></span>
+        </th>
+        <th>Strategy
+          <span class="tooltip has-tooltip-right has-tooltip-multiline t-tooltip-0-1-38" data-tooltip="The strategy used to migrate the data directory of the repository. See above for the means of the different strategies."><i class="fa fa-question-circle has-text-info t-textinfo-0-1-10"></i></span>
+          <br>Change all:
+          <div class="field">
+            <div class="control select">
+              <select id="changeAll">
+                {{#strategies}}
+                  <option>{{name}}</option>
+                {{/strategies}}
+              </select>
+            </div>
+          </div>
+        </th>
+      </tr>
+      {{#repositories}}
+        <tr>
+          <td>
+            {{path}}
+          </td>
+          <td>
+            {{type}}
+          </td>
+          <td>
+            <input class="input {{#namespaceInvalid}}is-danger{{/namespaceInvalid}}" type="text" name="namespace-{{id}}" value="{{namespace}}">
+          </td>
+          <td>
+            <input class="input {{#nameInvalid}}is-danger{{/nameInvalid}}" type="text" name="name-{{id}}" value="{{name}}">
+          </td>
+          <td>
+            <div class="field">
+              <div class="control select">
+                <select class="strategy-select" name="strategy-{{id}}">
+                  {{#strategies}}
+                    <option{{#selected}} selected{{/selected}}>{{name}}</option>
+                  {{/strategies}}
+                </select>
+              </div>
+            </div>
+          </td>
+        </tr>
+      {{/repositories}}
+    </table>
+    <button class="button is-primary" type="submit">Submit</button>
+  </form>
+{{/content}}
+
+{{$script}}
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var changeAllSelector = document.getElementById('changeAll');
+    changeAllSelector.onchange = function () {
+      var strategySelects = document.getElementsByClassName('strategy-select');
+      for (var index in strategySelects) {
+        strategySelects[index].value = changeAllSelector.value;
+      }
+    };
+  });
+</script>
+{{/script}}
+
+{{/ layout}}

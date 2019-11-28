@@ -32,19 +32,23 @@
 package sonia.scm.repository;
 
 import com.google.common.collect.Lists;
+import org.eclipse.jgit.api.GarbageCollectCommand;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
-import org.eclipse.jgit.api.GarbageCollectCommand;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.junit.Test;
-import static org.mockito.Mockito.*;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link GitGcTask}.
@@ -103,8 +107,7 @@ public class GitGcTaskTest
     // prepare repositories for task
     Repository unhealthy = mock(Repository.class);
     when(unhealthy.getType()).thenReturn("git");
-    when(unhealthy.isHealthy()).thenReturn(Boolean.FALSE);
-    
+
     Repository invalid = mock(Repository.class);
     when(unhealthy.getType()).thenReturn("git");
     when(unhealthy.isValid()).thenReturn(Boolean.FALSE);

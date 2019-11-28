@@ -37,31 +37,27 @@ package sonia.scm.web.filter;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.AnonymousToken;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.WebTokenGenerator;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.Set;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Handles authentication, if a one of the {@link WebTokenGenerator} returns
@@ -128,12 +124,13 @@ public class AuthenticationFilter extends HttpFilter
     }
     else if (subject.isAuthenticated())
     {
-      logger.trace("user is allready authenticated");
+      logger.trace("user is already authenticated");
       processChain(request, response, chain, subject);
     }
-    else if (isAnonymousAccessEnabled())
+    else if (isAnonymousAccessEnabled() && !HttpUtil.isWUIRequest(request))
     {
       logger.trace("anonymous access granted");
+      subject.login(new AnonymousToken());
       processChain(request, response, chain, subject);
     }
     else
@@ -301,7 +298,7 @@ public class AuthenticationFilter extends HttpFilter
       }
     }
 
-    chain.doFilter(new SecurityHttpServletRequestWrapper(request, username),
+    chain.doFilter(new PropagatePrincipleServletRequestWrapper(request, username),
       response);
   }
 

@@ -32,64 +32,32 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.Inject;
-
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
+import sonia.scm.repository.SvnWorkDirFactory;
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @Extension
-public class SvnRepositoryServiceResolver implements RepositoryServiceResolver
-{
+public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
 
-  /** Field description */
-  public static final String TYPE = "svn";
+  private SvnRepositoryHandler handler;
+  private SvnWorkDirFactory workdirFactory;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   */
   @Inject
-  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler)
-  {
+  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler, SvnWorkDirFactory workdirFactory) {
     this.handler = handler;
+    this.workdirFactory = workdirFactory;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
   @Override
-  public SvnRepositoryServiceProvider reslove(Repository repository)
-  {
+  public SvnRepositoryServiceProvider resolve(Repository repository) {
     SvnRepositoryServiceProvider provider = null;
 
-    if (TYPE.equalsIgnoreCase(repository.getType()))
-    {
-      provider = new SvnRepositoryServiceProvider(handler, repository);
+    if (SvnRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
+      provider = new SvnRepositoryServiceProvider(handler, repository, workdirFactory);
     }
 
     return provider;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private SvnRepositoryHandler handler;
 }

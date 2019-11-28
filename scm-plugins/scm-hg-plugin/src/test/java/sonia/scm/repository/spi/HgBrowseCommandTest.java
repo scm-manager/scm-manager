@@ -33,40 +33,40 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
+import com.aragost.javahg.commands.LogCommand;
 import org.junit.Test;
-
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
-import sonia.scm.repository.RepositoryException;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.util.Collection;
 
-import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgBrowseCommandTest extends AbstractHgCommandTestBase
-{
+public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testBrowse() throws IOException, RepositoryException
-  {
-    List<FileObject> foList = getRootFromTip(new BrowseCommandRequest());
+  public void testBrowseWithFilePath() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setPath("a.txt");
+    FileObject file = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request).getFile();
+    assertEquals("a.txt", file.getName());
+    assertFalse(file.isDirectory());
+    assertTrue(file.getChildren().isEmpty());
+  }
+
+  @Test
+  public void testBrowse() throws IOException {
+    Collection<FileObject> foList = getRootFromTip(new BrowseCommandRequest());
     FileObject a = getFileObject(foList, "a.txt");
     FileObject c = getFileObject(foList, "c");
 
@@ -81,16 +81,21 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
     assertEquals("c", c.getPath());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testBrowseSubDirectory() throws IOException, RepositoryException
-  {
+  public void testBrowseShouldResolveBranchForRevision() throws IOException {
+    String defaultBranchRevision = new LogCommand(cmdContext.open()).rev("default").single().getNode();
+
+    BrowseCommandRequest browseCommandRequest = new BrowseCommandRequest();
+    browseCommandRequest.setRevision("default");
+
+    BrowserResult result = new HgBrowseCommand(cmdContext,
+      repository).getBrowserResult(browseCommandRequest);
+
+    assertThat(result.getRevision()).isEqualTo(defaultBranchRevision);
+  }
+
+  @Test
+  public void testBrowseSubDirectory() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setPath("c");
@@ -100,7 +105,9 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
 
     assertNotNull(result);
 
-    List<FileObject> foList = result.getFiles();
+    FileObject c = result.getFile();
+    assertEquals("c", c.getName());
+    Collection<FileObject> foList = c.getChildren();
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
@@ -137,21 +144,13 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
     checkDate(e.getLastModified());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testDisableLastCommit() throws IOException, RepositoryException
-  {
+  public void testDisableLastCommit() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setDisableLastCommit(true);
 
-    List<FileObject> foList = getRootFromTip(request);
+    Collection<FileObject> foList = getRootFromTip(request);
 
     FileObject a = getFileObject(foList, "a.txt");
 
@@ -159,16 +158,8 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
     assertNull(a.getLastModified());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testRecursive() throws IOException, RepositoryException
-  {
+  public void testRecursive() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setRecursive(true);
@@ -178,11 +169,16 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
 
     assertNotNull(result);
 
-    List<FileObject> foList = result.getFiles();
+    FileObject root = result.getFile();
+    Collection<FileObject> foList = root.getChildren();
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
-    assertEquals(5, foList.size());
+    assertEquals(4, foList.size());
+
+    FileObject c = getFileObject(foList, "c");
+    assertTrue(c.isDirectory());
+    assertEquals(2, c.getChildren().size());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -196,45 +192,22 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
    *
    * @return
    */
-  private FileObject getFileObject(List<FileObject> foList, String name)
+  private FileObject getFileObject(Collection<FileObject> foList, String name)
   {
-    FileObject a = null;
-
-    for (FileObject f : foList)
-    {
-      if (name.equals(f.getName()))
-      {
-        a = f;
-
-        break;
-      }
-    }
-
-    assertNotNull(a);
-
-    return a;
+    return foList.stream()
+      .filter(f -> name.equals(f.getName()))
+      .findFirst()
+      .orElseThrow(() -> new AssertionError("file " + name + " not found"));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  private List<FileObject> getRootFromTip(BrowseCommandRequest request)
-    throws IOException, RepositoryException
-  {
+  private Collection<FileObject> getRootFromTip(BrowseCommandRequest request) throws IOException {
     BrowserResult result = new HgBrowseCommand(cmdContext,
                              repository).getBrowserResult(request);
 
     assertNotNull(result);
 
-    List<FileObject> foList = result.getFiles();
+    FileObject root = result.getFile();
+    Collection<FileObject> foList = root.getChildren();
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());

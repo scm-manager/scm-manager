@@ -1,0 +1,206 @@
+{
+  "permissions": {
+    "*": {
+      "displayName": "Globaler Administrator",
+      "description": "Darf die komplette Instanz administrieren."
+    },
+    "repository": {
+      "read,pull": {
+        "*": {
+          "displayName": "Alle Repositories lesen",
+          "description": "Darf alle Repositories lesen und klonen."
+        }
+      },
+      "read,pull,push": {
+        "*": {
+          "displayName": "Alle Repositories schreiben",
+          "description": "Darf alle Repositories lesen, klonen und schreiben."
+        }
+      },
+      "*": {
+        "displayName": "Alle Repositories besitzen (Owner)",
+        "description": "Darf alle Repositories lesen, klonen, schreiben, konfigurieren und löschen."
+      },
+      "create": {
+        "displayName": "Repositories erstellen",
+        "description": "Darf Repositories erstellen."
+      }
+    },
+    "user": {
+      "*": {
+        "displayName": "Benutzer administrieren",
+        "description": "Darf Benutzer administrieren."
+      }
+    },
+    "group": {
+      "*": {
+        "displayName": "Gruppen administrieren",
+        "description": "Darf Gruppen administrieren."
+      }
+    },
+    "permission": {
+      "*": {
+        "displayName": "Berechtigungen verwalten",
+        "description": "Darf Berechtigungen verwalten (benötigt zusätzlich 'Benutzer administrieren' bzw. 'Gruppen administrieren')."
+      }
+    },
+    "configuration": {
+      "list": {
+        "displayName": "Basis für Administration",
+        "description": "Voraussetzung für alle anderen Administrationsberechtigungen. Ohne diese Berechtigung wird keine Administrationsansicht gezeigt."
+      },
+      "read,write": {
+        "global": {
+          "displayName": "Zentrale Konfiguration",
+          "description": "Darf die Konfiguration des SCM-Manager anpassen"
+        },
+        "*": {
+          "displayName": "Zentrale + Plugin Konfiguration",
+          "description": "Darf die Konfiguration des SCM-Manager und aller Plugins anpassen"
+        }
+      }
+    },
+    "repositoryRole": {
+      "read,write": {
+        "displayName": "Benutzerdefinierte Repository-Rollen-Berechtigungen verwalten",
+        "description": "Kann benutzerdefinierte Rollen und deren Berechtigungen erstellen, ändern und löschen"
+      }
+    },
+    "plugin": {
+      "read": {
+        "displayName": "Alle Plugins lesen",
+        "description": "Darf alle installierten und verfügbaren Plugins lesen"
+      },
+      "read,write": {
+        "displayName": "Alle Plugins lesen und verwalten",
+        "description": "Darf alle installierten und verfügbaren Plugins lesen und verwalten"
+      }
+    },
+    "unknown": "Unbekannte Berechtigung"
+  },
+  "verbs": {
+    "repository": {
+      "read": {
+        "displayName": "Repository Lesen",
+        "description": "Darf das Repository im SCM-Manager sehen."
+      },
+      "modify": {
+        "displayName": "Repository Modifizieren",
+        "description": "Darf die Eigenschaften des Repository verändern."
+      },
+      "delete": {
+        "displayName": "Repository Löschen",
+        "description": "Darf das Repository löschen."
+      },
+      "pull": {
+        "displayName": "Pull/Checkout",
+        "description": "Darf pull/checkout auf das Repository ausführen."
+      },
+      "push": {
+        "displayName": "Push/Commit",
+        "description": "Darf push/commit auf das Repository ausführen und damit den Inhalt verändern."
+      },
+      "permissionRead": {
+        "displayName": "Berechtigungen lesen",
+        "description": "Darf die Berechtigungen des Repository sehen."
+      },
+      "permissionWrite": {
+        "displayName": "Berechtigungen modifizieren",
+        "description": "Darf die Berechtigungen des Repository bearbeiten."
+      },
+      "*": {
+        "displayName": "Alle Repository Rechte",
+        "description": "Darf im Repository Kontext alles ausführen. Dies beinhaltet alle Repository Berechtigungen."
+      }
+    }
+  },
+  "errors": {
+    "context": "Kontext",
+    "errorCode": "Fehlercode",
+    "transactionId": "Transaktions-ID",
+    "moreInfo": "Für mehr Informationen, siehe",
+    "violations": "Ungültige Werte:",
+    "AGR7UzkhA1": {
+      "displayName": "Nicht gefunden",
+      "description": "Der gewünschte Datensatz konnte nicht gefunden werden. Möglicherweise wurde er in einer weiteren Session gelöscht."
+    },
+    "FtR7UznKU1": {
+      "displayName": "Existiert bereits",
+      "description": "Ein Datensatz mit den gegebenen Schlüsselwerten existiert bereits"
+    },
+    "9BR7qpDAe1": {
+      "displayName": "Passwortänderung nicht erlaubt",
+      "description": "Sie haben nicht die Berechtigung, das Passwort zu ändern"
+    },
+    "2wR7UzpPG1": {
+      "displayName": "Konkurrierende Änderungen",
+      "description": "Der Datensatz wurde konkurrierend von einem anderen Benutzer oder einem anderen Prozess modifiziert. Bitte laden sie die Daten erneut."
+    },
+    "9SR8G0kmU1": {
+      "displayName": "Feature nicht unterstützt",
+      "description": "Das Versionsverwaltungssystem dieses Repositories unterstützt das angefragte Feature nicht."
+    },
+    "CmR8GCJb31": {
+      "displayName": "Interner Serverfehler",
+      "description": "Im Server ist ein interner Fehler aufgetreten. Bitte wenden Sie sich an ihren Administrator für weitere Hinweise."
+    },
+    "92RCCCMHO1": {
+      "displayName": "Eine interne URL wurde nicht gefunden",
+      "description": "Ein interner Serveraufruf konnte nicht verarbeitet werden. Bitte wenden Sie sich an ihren Administrator für weitere Hinweise."
+    },
+    "2VRCrvpL71": {
+      "displayName": "Ungültiges Datenformat",
+      "description": "Die zum Server gesendeten Daten konnten nicht verarbeitet werden. Bitte prüfen Sie die eingegebenen Werte oder wenden Sie sich an ihren Administrator für weitere Hinweise."
+    },
+    "8pRBYDURx1": {
+      "displayName": "Ungültiger Datentyp",
+      "description": "Die zum Server gesendeten Daten hatten einen ungültigen Typen. Bitte wenden Sie sich an ihren Administrator für weitere Hinweise."
+    },
+    "1wR7ZBe7H1": {
+      "displayName": "Ungültige Eingabe",
+      "description": "Die eingegebenen Daten konnten nicht validiert werden. Bitte korrigieren Sie die Eingaben und senden Sie sie erneut."
+    },
+    "3zR9vPNIE1": {
+      "displayName": "Ungültige Eingabe",
+      "description": "Die eingegebenen Daten konnten nicht validiert werden. Bitte korrigieren Sie die Eingaben und senden Sie sie erneut."
+    },
+    "CHRM7IQzo1": {
+      "displayName": "Änderung fehlgeschlagen",
+      "description": "Die Änderung ist fehlgeschlagen. Bitte wenden Sie sich an ihren Administrator für weitere Hinweise."
+    },
+    "thbsUFokjk": {
+      "displayName": "Unerlaubte Änderung eines Schlüsselwerts",
+      "description": "Ein Schlüsselwert wurde unerlaubterweise geändert."
+    },
+    "40RaYIeeR1": {
+      "displayName": "Es wurden keine Änderungen durchgeführt",
+      "description": "Das Repository wurde nicht verändert. Daher konnte kein neuer Commit erzeugt werden. Womöglich werden Änderungen aufgrund einer .ignore-Datei Definition nicht berücksichtigt."
+    },
+    "4iRct4avG1": {
+      "displayName": "Die Revisionen haben keinen gemeinsamen Ursprung",
+      "description": "Die Historie der Revisionen hat keinen gemeinsamen Urspung und kann somit auch nicht gegen einen solchen verglichen werden."
+    },
+    "65RdZ5atX1": {
+      "displayName": "Fehler beim Löschen von Plugin-Dateien",
+      "description": "Einige Dateien für die Plugin-Deinstallation konnten nicht gelöscht werden. Dieses kann zu Inkonsistenzen führen, so dass der SCM-Manager nicht mehr korrekt starten kann. Bitte prüfen Sie die Logs und bereinigen Sie das Plugin-Verzeichnis des SCM-Managers manuell. Um die Installation eines Plugins abzubrechen, löschen Sie die zugehörige smp Datei aus dem Plugin-Verzeichnis. Um ein Entfernen eines Plugins zu verhindern, entfernen Sie die Datei namens 'uninstall' aus dem entsprechenden Verzeichnis des Plugins."
+    },
+    "6eRhF9gU41": {
+      "displayName": "Nicht unterstützte Merge-Strategie",
+      "description": "Die gewählte Merge-Strategie wird von dem Repository nicht unterstützt."
+    },
+    "78RhWxTIw1": {
+      "displayName": "Der Default-Branch kann nicht gelöscht werden",
+      "description": "Der Default-Branch kann nicht gelöscht werden. Bitte wählen Sie zuerst einen neuen Default-Branch."
+    },
+    "1yRiASshD1": {
+      "displayName": "Fehler beim Löschen des anonymen Nutzers",
+      "description": "Der anonyme Nutzer kann nicht gelöscht werden, solange der anonyme Zugriff in den Einstellungen aktiviert ist."
+    }
+  },
+  "namespaceStrategies": {
+    "UsernameNamespaceStrategy":  "Benutzername",
+    "CustomNamespaceStrategy":  "Benutzerdefiniert",
+    "CurrentYearNamespaceStrategy":  "Aktuelles Jahr",
+    "RepositoryTypeNamespaceStrategy": "Repository Typ"
+  }
+}

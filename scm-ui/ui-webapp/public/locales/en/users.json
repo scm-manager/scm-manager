@@ -1,0 +1,65 @@
+{
+  "user": {
+    "name": "Username",
+    "displayName": "Display Name",
+    "mail": "E-Mail",
+    "password": "Password",
+    "active": "Active",
+    "inactive": "Inactive",
+    "type": "Type",
+    "creationDate": "Creation Date",
+    "lastModified": "Last Modified"
+  },
+  "validation": {
+    "mail-invalid": "This email is invalid",
+    "name-invalid": "This name is invalid",
+    "displayname-invalid": "This displayname is invalid"
+  },
+  "help": {
+    "usernameHelpText": "Unique name of the user.",
+    "displayNameHelpText": "Display name of the user.",
+    "mailHelpText": "Email address of the user.",
+    "adminHelpText": "An administrator is able to create, modify and delete repositories, groups and users.",
+    "activeHelpText": "Activate or deactivate the user."
+  },
+  "users": {
+    "title": "Users",
+    "subtitle": "Create, read, update and delete users",
+    "noUsers": "No users found.",
+    "createButton": "Create User"
+  },
+  "singleUser": {
+    "errorTitle": "Error",
+    "errorSubtitle": "Unknown user error",
+    "menu": {
+      "navigationLabel": "User Navigation",
+      "informationNavLink": "Information",
+      "settingsNavLink": "Settings",
+      "generalNavLink": "General",
+      "setPasswordNavLink": "Password",
+      "setPermissionsNavLink": "Permissions"
+    }
+  },
+  "createUser": {
+    "title": "Create User",
+    "subtitle": "Create a new user"
+  },
+  "deleteUser": {
+    "subtitle": "Delete User",
+    "button": "Delete",
+    "confirmAlert": {
+      "title": "Delete user",
+      "message": "Do you really want to delete the user?",
+      "submit": "Yes",
+      "cancel": "No"
+    }
+  },
+  "singleUserPassword": {
+    "button": "Set password",
+    "setPasswordSuccessful": "Password successfully set"
+  },
+  "userForm": {
+    "subtitle": "Edit User",
+    "button": "Submit"
+  }
+}

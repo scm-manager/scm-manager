@@ -53,5 +53,11 @@ public interface ModelObject
    *
    * @return unique id
    */
-  public String getId();
+  String getId();
+
+  void setLastModified(Long timestamp);
+
+  Long getCreationDate();
+
+  void setCreationDate(Long timestamp);
 }

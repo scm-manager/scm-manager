@@ -37,7 +37,11 @@ package sonia.scm.web.proxy;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Set;
@@ -140,13 +144,13 @@ public class ProxyConfiguration
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("url", url)
-                      .add("copyRequestHeaders", copyRequestHeaders)
-                      .add("requestHeaderExcludes", requestHeaderExcludes)
-                      .add("copyResponseHeaders", copyResponseHeaders)
-                      .add("responseHeaderExcludes", responseHeaderExcludes)
-                      .add("cacheEnabled", cacheEnabled)
-                      .toString();
+                  .add("url", url)
+                  .add("copyRequestHeaders", copyRequestHeaders)
+                  .add("requestHeaderExcludes", requestHeaderExcludes)
+                  .add("copyResponseHeaders", copyResponseHeaders)
+                  .add("responseHeaderExcludes", responseHeaderExcludes)
+                  .add("cacheEnabled", cacheEnabled)
+                  .toString();
     //J+
   }
 

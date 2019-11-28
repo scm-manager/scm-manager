@@ -36,19 +36,15 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
-
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -71,42 +67,16 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public Changeset getChangeset(String id)
-    throws IOException, RepositoryException
-  {
+  public Changeset getChangeset(String id, LogCommandRequest request) {
     com.aragost.javahg.Repository repository = open();
     HgLogChangesetCommand cmd = on(repository);
 
     return cmd.rev(id).single();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  public ChangesetPagingResult getChangesets(LogCommandRequest request)
-    throws IOException, RepositoryException
-  {
+  public ChangesetPagingResult getChangesets(LogCommandRequest request) {
     ChangesetPagingResult result = null;
 
     com.aragost.javahg.Repository repository = open();
@@ -162,13 +132,17 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
         List<Changeset> changesets = on(repository).rev(start + ":"
                                        + end).execute();
 
-        result = new ChangesetPagingResult(total, changesets);
+        if (request.getBranch() == null) {
+          result = new ChangesetPagingResult(total, changesets);
+        } else {
+          result = new ChangesetPagingResult(total, changesets, request.getBranch());
+        }
       }
       else
       {
 
         // empty repository
-        result = new ChangesetPagingResult(0, new ArrayList<>());
+        result = new ChangesetPagingResult(0, new ArrayList<Changeset>());
       }
     }
 

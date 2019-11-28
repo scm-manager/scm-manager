@@ -31,18 +31,11 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -55,47 +48,27 @@ import java.nio.file.Path;
 public class PathWebResourceLoader implements WebResourceLoader
 {
 
-  /** Field description */
-  private static final String DEFAULT_SEPARATOR = "/";
+  private static final String SEPARATOR = "/";
 
   /**
    * the logger for PathWebResourceLoader
    */
-  private static final Logger logger =
+  private static final Logger LOG =
     LoggerFactory.getLogger(PathWebResourceLoader.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param directory
-   */
   public PathWebResourceLoader(Path directory)
   {
     this.directory = directory;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
   @Override
-  public URL getResource(String path)
-  {
+  public URL getResource(String path) {
     URL resource = null;
     Path file = directory.resolve(filePath(path));
 
-    if (Files.exists(file))
+    if (Files.exists(file) && ! Files.isDirectory(file))
     {
-      logger.trace("found path {} at {}", path, file);
+      LOG.trace("found path {} at {}", path, file);
 
       try
       {
@@ -103,56 +76,20 @@ public class PathWebResourceLoader implements WebResourceLoader
       }
       catch (MalformedURLException ex)
       {
-        logger.error("could not transform path to url", ex);
+        LOG.error("could not transform path to url", ex);
       }
+    } else {
+      LOG.trace("could not find file {}", file);
     }
 
     return resource;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
-  private String filePath(String path)
-  {
-
-    // TODO handle illegal path parts, such as ..
-    String filePath = filePath(DEFAULT_SEPARATOR, path);
-
-    if (!DEFAULT_SEPARATOR.equals(File.separator))
-    {
-      filePath = filePath(File.separator, path);
+  private String filePath(String path) {
+    if (path.startsWith(SEPARATOR)) {
+      return path.substring(1);
     }
-
-    return filePath;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param separator
-   * @param path
-   *
-   * @return
-   */
-  private String filePath(String separator, String path)
-  {
-    String filePath = path;
-
-    if (filePath.startsWith(separator))
-    {
-      filePath = filePath.substring(separator.length());
-    }
-
-    return filePath;
+    return path;
   }
 
   //~--- fields ---------------------------------------------------------------

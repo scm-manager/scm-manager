@@ -33,13 +33,13 @@
 
 package sonia.scm.util;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Streams;
+//~--- non-JDK imports --------------------------------------------------------
+
 import sonia.scm.Validateable;
 
-import java.util.Arrays;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -50,17 +50,17 @@ public final class ValidationUtil
 
   /** Field description */
   private static final String REGEX_MAIL =
-    "^[A-z0-9][\\w.-]*@[A-z0-9][\\w\\-\\.]*\\.[A-z0-9][A-z0-9-]+$";
+    "^[A-Za-z0-9][\\w.-]*@[A-Za-z0-9][\\w\\-\\.]*\\.[A-Za-z0-9][A-Za-z0-9-]+$";
 
   /** Field description */
-  private static final String REGEX_NAME =
-    "^[A-z0-9\\.\\-_@]|[^ ]([A-z0-9\\.\\-_@ ]*[A-z0-9\\.\\-_@]|[^ ])?$";
+  public static final String REGEX_NAME =
+    "^[A-Za-z0-9\\.\\-_][A-Za-z0-9\\.\\-_@]*$";
+
+  public static final String REGEX_REPOSITORYNAME = "(?!^\\.\\.$)(?!^\\.$)(?!.*[\\\\\\[\\]])^[A-Za-z0-9\\.][A-Za-z0-9\\.\\-_]*$";
 
   /** Field description */
-  private static final String REGEX_REPOSITORYNAME =
-    "(?!^\\.\\.$)(?!^\\.$)(?!.*[\\\\\\[\\]])^[A-z0-9\\.][A-z0-9\\.\\-_/]*$";
+  private static final Pattern PATTERN_REPOSITORYNAME = Pattern.compile(REGEX_REPOSITORYNAME);
 
-  private static final Pattern REPO_NAME_REGEX = Pattern.compile(REGEX_REPOSITORYNAME);
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -119,24 +119,37 @@ public final class ValidationUtil
    *
    * @return
    */
-  public static boolean isNotContaining(String value, String... notAllowedStrings) {
-    return !Util.isNotEmpty(value) || (notAllowedStrings != null) && Arrays.stream(notAllowedStrings)
-                                                                          .noneMatch(value::contains);
+  public static boolean isNotContaining(String value,
+    String... notAllowedStrings)
+  {
+    boolean result = Util.isNotEmpty(value);
+
+    if (result && (notAllowedStrings != null))
+    {
+      for (String nas : notAllowedStrings)
+      {
+        if (value.indexOf(nas) >= 0)
+        {
+          result = false;
+
+          break;
+        }
+      }
+    }
+
+    return result;
   }
 
   /**
-   * Method description
+   * Returns {@code true} if the repository name is valid.
    *
-   *
-   * @param name
+   * @param name repository name
    * @since 1.9
    *
-   * @return
+   * @return {@code true} if repository name is valid
    */
   public static boolean isRepositoryNameValid(String name) {
-    return Util.isNotEmpty(name) && Streams.stream(Splitter.on('/').split(name))
-                                           .map(REPO_NAME_REGEX::matcher)
-                                           .allMatch(Matcher::matches);
+    return PATTERN_REPOSITORYNAME.matcher(name).matches();
   }
 
   /**

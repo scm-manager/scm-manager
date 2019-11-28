@@ -46,11 +46,17 @@
   <scm-version>2</scm-version>
 
   <information>
-    <author>Sebastian Sdorra</author>
+    <displayName>Legacy</displayName>
+    <author>Cloudogu GmbH</author>
+    <category>Legacy Support</category>
   </information>
 
   <conditions>
     <min-version>${project.parent.version}</min-version>
   </conditions>
+
+  <resources>
+    <script>assets/scm-legacy-plugin.bundle.js</script>
+  </resources>
 
 </plugin>

@@ -37,15 +37,17 @@ package sonia.scm.search;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import sonia.scm.TransformFilter;
 import sonia.scm.util.Util;
 
+//~--- JDK imports ------------------------------------------------------------
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -90,16 +92,13 @@ public final class SearchUtil
     {
       result = true;
 
-      if (Util.isNotEmpty(other))
+      for (String o : other)
       {
-        for (String o : other)
+        if ((o == null) ||!o.matches(query))
         {
-          if ((o == null) ||!o.matches(query))
-          {
-            result = false;
+          result = false;
 
-            break;
-          }
+          break;
         }
       }
     }
@@ -125,16 +124,13 @@ public final class SearchUtil
 
     if (!value.matches(query))
     {
-      if (Util.isNotEmpty(other))
+      for (String o : other)
       {
-        for (String o : other)
+        if ((o != null) && o.matches(query))
         {
-          if ((o != null) && o.matches(query))
-          {
-            result = true;
+          result = true;
 
-            break;
-          }
+          break;
         }
       }
     }
@@ -157,24 +153,29 @@ public final class SearchUtil
    *
    * @return
    */
-  public static <T> Collection<T> search(SearchRequest searchRequest,
-    Collection<T> collection, TransformFilter<T> filter)
+  public static <T, R> Collection<R> search(SearchRequest searchRequest,
+    Collection<T> collection, TransformFilter<T, R> filter)
   {
-    List<T> items = new ArrayList<>();
+    List<R> items = new ArrayList<>();
     int index = 0;
     int counter = 0;
+    Iterator<T> it = collection.iterator();
 
-    for (final T aCollection : collection) {
-      T item = filter.accept(aCollection);
+    while (it.hasNext())
+    {
+      R item = filter.accept(it.next());
 
-      if (item != null) {
+      if (item != null)
+      {
         index++;
 
-        if (searchRequest.getStartWith() <= index) {
+        if (searchRequest.getStartWith() <= index)
+        {
           items.add(item);
           counter++;
 
-          if (searchRequest.getMaxResults() <= counter) {
+          if (searchRequest.getMaxResults() <= counter)
+          {
             break;
           }
         }

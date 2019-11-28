@@ -33,45 +33,40 @@
 
 package sonia.scm.user;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.github.sdorra.ssp.PermissionActionCheck;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ContextEntry;
+import sonia.scm.EagerSingleton;
 import sonia.scm.HandlerEventType;
+import sonia.scm.ManagerDaoAdapter;
+import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
-import sonia.scm.util.AssertUtil;
+import sonia.scm.security.Authentications;
 import sonia.scm.util.CollectionAppender;
-import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
+@Singleton @EagerSingleton
 public class DefaultUserManager extends AbstractUserManager
 {
-
-  /** Field description */
-  public static final String ADMIN_PATH = "/sonia/scm/config/admin-account.xml";
-
-  /** Field description */
-  public static final String ANONYMOUS_PATH =
-    "/sonia/scm/config/anonymous-account.xml";
 
   /** Field description */
   public static final String STORE_NAME = "users";
@@ -91,6 +86,7 @@ public class DefaultUserManager extends AbstractUserManager
   public DefaultUserManager(UserDAO userDAO)
   {
     this.userDAO = userDAO;
+    this.managerDaoAdapter = new ManagerDaoAdapter<>(userDAO);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -129,67 +125,33 @@ public class DefaultUserManager extends AbstractUserManager
    * @param user
    *
    * @throws IOException
-   * @throws UserException
    */
   @Override
-  public void create(User user) throws UserException, IOException
-  {
+  public User create(User user) {
     String type = user.getType();
-
-    if (Util.isEmpty(type))
-    {
+    if (Util.isEmpty(type)) {
       user.setType(userDAO.getType());
     }
 
-    if (logger.isInfoEnabled())
-    {
-      logger.info("create user {} of type {}", user.getName(), user.getType());
-    }
+    logger.info("create user {} of type {}", user.getName(), user.getType());
 
-    UserPermissions.create().check();
-
-    if (userDAO.contains(user.getName()))
-    {
-      throw new UserAlreadyExistsException(user.getName().concat(" user already exists"));
-    }
-
-    AssertUtil.assertIsValid(user);
-    user.setCreationDate(System.currentTimeMillis());
-    fireEvent(HandlerEventType.BEFORE_CREATE, user);
-    userDAO.add(user);
-    fireEvent(HandlerEventType.CREATE, user);
+    return managerDaoAdapter.create(
+      user,
+      UserPermissions::create,
+      newUser -> fireEvent(HandlerEventType.BEFORE_CREATE, newUser),
+      newUser -> fireEvent(HandlerEventType.CREATE, newUser)
+    );
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   *
-   * @throws IOException
-   * @throws UserException
-   */
   @Override
-  public void delete(User user) throws UserException, IOException
-  {
-    if (logger.isInfoEnabled())
-    {
-      logger.info("delete user {} of type {}", user.getName(), user.getType());
-    }
-
-    String name = user.getName();
-    UserPermissions.delete(name).check();
-
-    if (userDAO.contains(name))
-    {
-      fireEvent(HandlerEventType.BEFORE_DELETE, user);
-      userDAO.delete(user);
-      fireEvent(HandlerEventType.DELETE, user);
-    }
-    else
-    {
-      throw new UserNotFoundException("user does not exists");
-    }
+  public void delete(User user) {
+    logger.info("delete user {} of type {}", user.getName(), user.getType());
+    managerDaoAdapter.delete(
+      user,
+      () -> UserPermissions.delete(user.getName()),
+      toDelete -> fireEvent(HandlerEventType.BEFORE_DELETE, toDelete),
+      toDelete -> fireEvent(HandlerEventType.DELETE, toDelete)
+    );
   }
 
   /**
@@ -201,12 +163,6 @@ public class DefaultUserManager extends AbstractUserManager
   @Override
   public void init(SCMContextProvider context)
   {
-
-    // create default account only, if no other account is available
-    if (userDAO.getAll().isEmpty())
-    {
-      createDefaultAccounts();
-    }
   }
 
   /**
@@ -216,31 +172,15 @@ public class DefaultUserManager extends AbstractUserManager
    * @param user
    *
    * @throws IOException
-   * @throws UserException
    */
   @Override
-  public void modify(User user) throws UserException, IOException
-  {
-    String name = user.getName();
-    if (logger.isInfoEnabled())
-    {
-      logger.info("modify user {} of type {}", user.getName(), user.getType());
-    }
-    
-    UserPermissions.modify(user).check();
-    User notModified = userDAO.get(name);
-    if (notModified != null)
-    {
-      AssertUtil.assertIsValid(user);
-      fireEvent(HandlerEventType.BEFORE_MODIFY, user, notModified);
-      user.setLastModified(System.currentTimeMillis());
-      userDAO.modify(user);
-      fireEvent(HandlerEventType.MODIFY, user, notModified);
-    }
-    else
-    {
-      throw new UserNotFoundException("user does not exists");
-    }
+  public void modify(User user) {
+    logger.info("modify user {} of type {}", user.getName(), user.getType());
+    managerDaoAdapter.modify(
+      user,
+      UserPermissions::modify,
+      notModified -> fireEvent(HandlerEventType.BEFORE_MODIFY, user, notModified),
+      notModified -> fireEvent(HandlerEventType.MODIFY, user, notModified));
   }
 
   /**
@@ -250,11 +190,9 @@ public class DefaultUserManager extends AbstractUserManager
    * @param user
    *
    * @throws IOException
-   * @throws UserException
    */
   @Override
-  public void refresh(User user) throws UserException, IOException
-  {
+  public void refresh(User user) {
     if (logger.isInfoEnabled())
     {
       logger.info("refresh user {} of type {}", user.getName(), user.getType());
@@ -265,7 +203,7 @@ public class DefaultUserManager extends AbstractUserManager
 
     if (fresh == null)
     {
-      throw new UserNotFoundException("user does not exists");
+      throw new NotFoundException(User.class, user.getName());
     }
 
     fresh.copyProperties(user);
@@ -288,15 +226,19 @@ public class DefaultUserManager extends AbstractUserManager
     }
 
     final PermissionActionCheck<User> check = UserPermissions.read();
-    return SearchUtil.search(searchRequest, userDAO.getAll(), user -> {
-      User result = null;
-      if (check.isPermitted(user) && matches(searchRequest, user)) {
-        result = user.clone();
+    return SearchUtil.search(searchRequest, userDAO.getAll(), new TransformFilter<User, User>() {
+      @Override
+      public User accept(User user)
+      {
+        User result = null;
+        if (check.isPermitted(user) && matches(searchRequest, user)) {
+          result = user.clone();
+        }
+        return result;
       }
-      return result;
     });
   }
-  
+
   private boolean matches(SearchRequest searchRequest, User user) {
     return SearchUtil.matchesOne(searchRequest, user.getName(), user.getDisplayName(), user.getMail());
   }
@@ -315,7 +257,7 @@ public class DefaultUserManager extends AbstractUserManager
   public User get(String id)
   {
     UserPermissions.read().check(id);
-    
+
     User user = userDAO.get(id);
 
     if (user != null)
@@ -335,7 +277,7 @@ public class DefaultUserManager extends AbstractUserManager
   @Override
   public Collection<User> getAll()
   {
-    return getAll(null);
+    return getAll(user -> true, null);
   }
 
   /**
@@ -347,19 +289,19 @@ public class DefaultUserManager extends AbstractUserManager
    * @return
    */
   @Override
-  public Collection<User> getAll(Comparator<User> comparator)
+  public Collection<User> getAll(Predicate<User> filter, Comparator<User> comparator)
   {
     List<User> users = new ArrayList<>();
 
     PermissionActionCheck<User> check = UserPermissions.read();
     for (User user : userDAO.getAll()) {
-      if (check.isPermitted(user)) {
+      if (filter.test(user) && check.isPermitted(user)) {
         users.add(user.clone());
       }
     }
 
     if (comparator != null) {
-      users.sort(comparator);
+      Collections.sort(users, comparator);
     }
 
     return users;
@@ -379,13 +321,17 @@ public class DefaultUserManager extends AbstractUserManager
   @Override
   public Collection<User> getAll(Comparator<User> comaparator, int start, int limit) {
     final PermissionActionCheck<User> check = UserPermissions.read();
-    final CollectionAppender<User> userCollectionAppender = (collection, item) -> {
-      if (check.isPermitted(item)) {
-        collection.add(item.clone());
-      }
-    };
     return Util.createSubCollection(userDAO.getAll(), comaparator,
-                                    userCollectionAppender, start, limit);
+      new CollectionAppender<User>()
+    {
+      @Override
+      public void append(Collection<User> collection, User item)
+      {
+        if (check.isPermitted(item)) {
+          collection.add(item.clone());
+        }
+      }
+    }, start, limit);
   }
 
   /**
@@ -429,59 +375,42 @@ public class DefaultUserManager extends AbstractUserManager
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param unmarshaller
-   * @param path
-   */
-  private void createDefaultAccount(Unmarshaller unmarshaller, String path)
-  {
-    InputStream input = DefaultUserManager.class.getResourceAsStream(path);
+  @Override
+  public void changePasswordForLoggedInUser(String oldPassword, String newPassword) {
+    User user = get((String) SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal());
 
-    try
-    {
-      User user = (User) unmarshaller.unmarshal(input);
+    if (!isAnonymousUser(user) && !user.getPassword().equals(oldPassword)) {
+      throw new InvalidPasswordException(ContextEntry.ContextBuilder.entity("PasswordChange", "-").in(User.class, user.getName()));
+    }
 
-      user.setType(userDAO.getType());
-      user.setCreationDate(System.currentTimeMillis());
-      userDAO.add(user);
-    }
-    catch (Exception ex)
-    {
-      logger.error("could not create account", ex);
-    }
-    finally
-    {
-      IOUtil.close(input);
-    }
+    user.setPassword(newPassword);
+
+    managerDaoAdapter.modify(
+      user,
+      UserPermissions::changePassword,
+      notModified -> fireEvent(HandlerEventType.BEFORE_MODIFY, user, notModified),
+      notModified -> fireEvent(HandlerEventType.MODIFY, user, notModified));
   }
 
-  /**
-   * Method description
-   *
-   */
-  private void createDefaultAccounts()
-  {
-    try
-    {
-      logger.info("create default accounts");
-
-      JAXBContext context = JAXBContext.newInstance(User.class);
-      Unmarshaller unmarshaller = context.createUnmarshaller();
-
-      createDefaultAccount(unmarshaller, ADMIN_PATH);
-      createDefaultAccount(unmarshaller, ANONYMOUS_PATH);
+  @Override
+  public void overwritePassword(String userId, String newPassword) {
+    User user = get(userId);
+    if (user == null) {
+      throw new NotFoundException(User.class, userId);
     }
-    catch (JAXBException ex)
-    {
-      logger.error("could not create default accounts", ex);
+    if (!isTypeDefault(user) || isAnonymousUser(user)) {
+      throw new ChangePasswordNotAllowedException(ContextEntry.ContextBuilder.entity("PasswordChange", "-").in(User.class, user.getName()), user.getType());
     }
+    user.setPassword(newPassword);
+    this.modify(user);
+  }
+
+  private boolean isAnonymousUser(User user) {
+    return Authentications.isSubjectAnonymous(user.getName());
   }
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private final UserDAO userDAO;
+  private final ManagerDaoAdapter<User> managerDaoAdapter;
 }

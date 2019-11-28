@@ -32,98 +32,37 @@
 
 package sonia.scm.repository.client.api;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.client.spi.RemoveCommand;
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
 /**
- *
- * @author Sebastian Sdorra
  * @since 1.18
  */
-public final class RemoveCommandBuilder
-{
+public final class RemoveCommandBuilder {
 
-  /**
-   * the logger for RemoveCommandBuilder
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(RemoveCommandBuilder.class);
+  private static final Logger logger = LoggerFactory.getLogger(RemoveCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final RemoveCommand command;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param directory
-   * @param command
-   */
-  RemoveCommandBuilder(RemoveCommand command)
-  {
+  RemoveCommandBuilder(RemoveCommand command) {
     this.command = command;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   * @param pathes
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public RemoveCommandBuilder remove(String path, String... pathes)
-    throws IOException
-  {
-    remove(path);
-
-    if (Util.isNotEmpty(pathes))
-    {
-      for (String p : pathes)
-      {
-        remove(p);
-      }
+  public RemoveCommandBuilder remove(String... paths) throws IOException {
+    for (String p : paths) {
+      remove(p);
     }
-
     return this;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @throws IOException
-   */
-  private void remove(String path) throws IOException
-  {
-    if (Util.isNotEmpty(path))
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("add path {}", path);
-      }
-
+  private void remove(String path) throws IOException {
+    if (Util.isNotEmpty(path)) {
+      logger.debug("add path {}", path);
       command.remove(path);
     }
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private RemoveCommand command;
 }

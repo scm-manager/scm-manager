@@ -37,7 +37,10 @@ package sonia.scm.repository.spi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
+import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.Repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -65,10 +68,13 @@ public class GitContext implements Closeable
    *
    *
    * @param directory
+   * @param repository
    */
-  public GitContext(File directory)
+  public GitContext(File directory, Repository repository, GitRepositoryConfigStoreProvider storeProvider)
   {
     this.directory = directory;
+    this.repository = repository;
+    this.storeProvider = storeProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -82,8 +88,8 @@ public class GitContext implements Closeable
   {
     logger.trace("close git repository {}", directory);
 
-    GitUtil.close(repository);
-    repository = null;
+    GitUtil.close(gitRepository);
+    gitRepository = null;
   }
 
   /**
@@ -96,21 +102,44 @@ public class GitContext implements Closeable
    */
   public org.eclipse.jgit.lib.Repository open() throws IOException
   {
-    if (repository == null)
+    if (gitRepository == null)
     {
       logger.trace("open git repository {}", directory);
 
-      repository = GitUtil.open(directory);
+      gitRepository = GitUtil.open(directory);
     }
 
+    return gitRepository;
+  }
+
+  Repository getRepository() {
     return repository;
+  }
+
+  File getDirectory() {
+    return directory;
+  }
+
+  GitRepositoryConfig getConfig() {
+    GitRepositoryConfig config = storeProvider.get(repository).get();
+    if (config == null) {
+      return new GitRepositoryConfig();
+    } else {
+      return config;
+    }
+  }
+
+  void setConfig(GitRepositoryConfig newConfig) {
+    storeProvider.get(repository).set(newConfig);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private final File directory;
+  private final Repository repository;
+  private final GitRepositoryConfigStoreProvider storeProvider;
 
   /** Field description */
-  private org.eclipse.jgit.lib.Repository repository;
+  private org.eclipse.jgit.lib.Repository gitRepository;
 }

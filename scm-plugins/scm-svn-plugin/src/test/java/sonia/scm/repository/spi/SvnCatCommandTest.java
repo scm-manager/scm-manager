@@ -32,36 +32,28 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.junit.Rule;
 import org.junit.Test;
-
-import sonia.scm.repository.RepositoryException;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import org.junit.rules.ExpectedException;
+import sonia.scm.NotFoundException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class SvnCatCommandTest extends AbstractSvnCommandTestBase
-{
+import static org.junit.Assert.assertEquals;
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
+//~--- JDK imports ------------------------------------------------------------
+
+public class SvnCatCommandTest extends AbstractSvnCommandTestBase {
+
+  @Rule
+  public final ExpectedException expectedException = ExpectedException.none();
+
   @Test
-  public void testCat() throws IOException, RepositoryException
-  {
+  public void testCat() {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("a.txt");
@@ -69,36 +61,74 @@ public class SvnCatCommandTest extends AbstractSvnCommandTestBase
     assertEquals("a", execute(request));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Test
-  public void testSimpleCat() throws IOException, RepositoryException
-  {
+  public void testSimpleCat() {
     CatCommandRequest request = new CatCommandRequest();
 
     request.setPath("c/d.txt");
     assertEquals("d", execute(request));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  private String execute(CatCommandRequest request)
-          throws IOException, RepositoryException
-  {
+  @Test
+  public void testUnknownFile() {
+    CatCommandRequest request = new CatCommandRequest();
+
+    request.setPath("unknown");
+    request.setRevision("1");
+
+    expectedException.expect(new BaseMatcher<Object>() {
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("expected NotFoundException for path");
+      }
+
+      @Override
+      public boolean matches(Object item) {
+        return "Path".equals(((NotFoundException)item).getContext().get(0).getType());
+      }
+    });
+
+    execute(request);
+  }
+
+  @Test
+  public void testUnknownRevision() {
+    CatCommandRequest request = new CatCommandRequest();
+
+    request.setPath("a.txt");
+    request.setRevision("42");
+
+    expectedException.expect(new BaseMatcher<Object>() {
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("expected NotFoundException for revision");
+      }
+
+      @Override
+      public boolean matches(Object item) {
+        return "Revision".equals(((NotFoundException)item).getContext().get(0).getType());
+      }
+    });
+
+    execute(request);
+  }
+
+  @Test
+  public void testSimpleStream() throws IOException {
+    CatCommandRequest request = new CatCommandRequest();
+    request.setPath("a.txt");
+    request.setRevision("1");
+
+    InputStream catResultStream = new SvnCatCommand(createContext(), repository).getCatResultStream(request);
+
+    assertEquals('a', catResultStream.read());
+    assertEquals('\n', catResultStream.read());
+    assertEquals(-1, catResultStream.read());
+
+    catResultStream.close();
+  }
+
+  private String execute(CatCommandRequest request) {
     String content = null;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

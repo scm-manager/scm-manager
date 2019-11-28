@@ -39,7 +39,11 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
@@ -159,9 +163,9 @@ public class BlameResult implements Serializable, Iterable<BlameLine>
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("total", total)
-                      .add("blameLines", blameLines)
-                      .toString();
+            .add("total", total)
+            .add("blameLines", blameLines)
+            .toString();
     //J+
   }
 

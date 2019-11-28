@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<repositories>
+    <properties/>
+    <id>existing</id>
+    <namespace>space</namespace>
+    <name>existing</name>
+    <public>false</public>
+    <type>xml</type>
+</repositories>

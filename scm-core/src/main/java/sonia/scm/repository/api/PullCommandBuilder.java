@@ -36,21 +36,17 @@ package sonia.scm.repository.api;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.PullCommand;
 import sonia.scm.repository.spi.PullCommandRequest;
-import sonia.scm.security.RepositoryPermission;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.net.URL;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The pull command pull changes from a other repository.
@@ -93,18 +89,13 @@ public final class PullCommandBuilder
    * @return informations over the executed pull command
    *
    * @throws IOException
-   * @throws RepositoryException
-   * 
+   *
    * @since 1.43
    */
-  public PullResponse pull(String url)
-    throws IOException, RepositoryException
-  {
+  public PullResponse pull(String url) throws IOException {
     Subject subject = SecurityUtils.getSubject();
     //J-
-    subject.checkPermission(
-      new RepositoryPermission(localRepository, PermissionType.WRITE)
-    );
+    subject.isPermitted(RepositoryPermissions.push(localRepository).asShiroString());
     //J+
     
     URL remoteUrl = new URL(url);
@@ -125,20 +116,13 @@ public final class PullCommandBuilder
    * @return informations over the executed pull command
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public PullResponse pull(Repository remoteRepository)
-    throws IOException, RepositoryException
-  {
+  public PullResponse pull(Repository remoteRepository) throws IOException {
     Subject subject = SecurityUtils.getSubject();
 
     //J-
-    subject.checkPermission(
-      new RepositoryPermission(localRepository, PermissionType.WRITE)
-    );
-    subject.checkPermission(
-      new RepositoryPermission(remoteRepository, PermissionType.READ)
-    );
+    subject.isPermitted(RepositoryPermissions.push(localRepository).asShiroString());
+    subject.isPermitted(RepositoryPermissions.push(remoteRepository).asShiroString());
     //J+
 
     request.reset();

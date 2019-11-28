@@ -37,32 +37,34 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -76,6 +78,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    */
   private static final Logger logger =
     LoggerFactory.getLogger(GitLogCommand.class);
+  public static final String REVISION = "Revision";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -86,7 +89,6 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    *
    * @param context
    * @param repository
-   * @param repositoryDirectory
    */
   GitLogCommand(GitContext context, sonia.scm.repository.Repository repository)
   {
@@ -104,7 +106,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    * @return
    */
   @Override
-  public Changeset getChangeset(String revision)
+  public Changeset getChangeset(String revision, LogCommandRequest request)
   {
     if (logger.isDebugEnabled())
     {
@@ -129,7 +131,18 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
         if (commit != null)
         {
           converter = new GitChangesetConverter(gr, revWalk);
-          changeset = converter.createChangeset(commit);
+
+          if (isBranchRequested(request)) {
+            String branch = request.getBranch();
+            if (isMergedIntoBranch(gr, revWalk, commit, branch)) {
+              logger.trace("returning commit {} with branch {}", commit.getId(), branch);
+              changeset = converter.createChangeset(commit, branch);
+            } else {
+              logger.debug("returning null, because commit {} was not merged into branch {}", commit.getId(), branch);
+            }
+          } else {
+            changeset = converter.createChangeset(commit);
+          }
         }
         else if (logger.isWarnEnabled())
         {
@@ -141,6 +154,10 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     {
       logger.error("could not open repository", ex);
     }
+    catch (NullPointerException e)
+    {
+      throw notFound(entity(REVISION, revision).in(this.repository));
+    }
     finally
     {
       IOUtil.close(converter);
@@ -149,6 +166,18 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     }
 
     return changeset;
+  }
+
+  private boolean isMergedIntoBranch(Repository repository, RevWalk revWalk, RevCommit commit, String branchName) throws IOException {
+    return revWalk.isMergedInto(commit, findHeadCommitOfBranch(repository, revWalk, branchName));
+  }
+
+  private boolean isBranchRequested(LogCommandRequest request) {
+    return request != null && !Strings.isNullOrEmpty(request.getBranch());
+  }
+
+  private RevCommit findHeadCommitOfBranch(Repository repository, RevWalk revWalk, String branchName) throws IOException {
+    return revWalk.parseCommit(GitUtil.getCommit(repository, revWalk, repository.findRef(branchName)));
   }
 
   /**
@@ -160,15 +189,11 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
   @Override
   @SuppressWarnings("unchecked")
-  public ChangesetPagingResult getChangesets(LogCommandRequest request)
-    throws IOException, RepositoryException
-  {
-    if (logger.isDebugEnabled())
-    {
+  public ChangesetPagingResult getChangesets(LogCommandRequest request) {
+    if (logger.isDebugEnabled()) {
       logger.debug("fetch changesets for request: {}", request);
     }
 
@@ -176,19 +201,13 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     GitChangesetConverter converter = null;
     RevWalk revWalk = null;
 
-    try
-    {
-      org.eclipse.jgit.lib.Repository gr = open();
-
-      if (!gr.getAllRefs().isEmpty())
-      {
+    try (org.eclipse.jgit.lib.Repository repository = open()) {
+      if (!repository.getAllRefs().isEmpty()) {
         int counter = 0;
         int start = request.getPagingStart();
 
-        if (start < 0)
-        {
-          if (logger.isErrorEnabled())
-          {
+        if (start < 0) {
+          if (logger.isErrorEnabled()) {
             logger.error("start parameter is negative, reset to 0");
           }
 
@@ -199,43 +218,53 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
         int limit = request.getPagingLimit();
         ObjectId startId = null;
 
-        if (!Strings.isNullOrEmpty(request.getStartChangeset()))
-        {
-          startId = gr.resolve(request.getStartChangeset());
+        if (!Strings.isNullOrEmpty(request.getStartChangeset())) {
+          startId = repository.resolve(request.getStartChangeset());
         }
 
         ObjectId endId = null;
 
-        if (!Strings.isNullOrEmpty(request.getEndChangeset()))
-        {
-          endId = gr.resolve(request.getEndChangeset());
+        if (!Strings.isNullOrEmpty(request.getEndChangeset())) {
+          endId = repository.resolve(request.getEndChangeset());
         }
 
-        revWalk = new RevWalk(gr);
+        Ref branch = getBranchOrDefault(repository,request.getBranch());
 
-        converter = new GitChangesetConverter(gr, revWalk);
+        ObjectId ancestorId = null;
 
-        if (!Strings.isNullOrEmpty(request.getPath()))
-        {
+        if (!Strings.isNullOrEmpty(request.getAncestorChangeset())) {
+          ancestorId = repository.resolve(request.getAncestorChangeset());
+          if (ancestorId == null) {
+            throw notFound(entity(REVISION, request.getAncestorChangeset()).in(this.repository));
+          }
+        }
+
+        revWalk = new RevWalk(repository);
+
+        converter = new GitChangesetConverter(repository, revWalk);
+
+        if (!Strings.isNullOrEmpty(request.getPath())) {
           revWalk.setTreeFilter(
             AndTreeFilter.create(
               PathFilter.create(request.getPath()), TreeFilter.ANY_DIFF));
         }
-        
-        ObjectId head = getBranchOrDefault(gr, request.getBranch());
 
-        if (head != null)
-        {
-          if (startId != null)
-          {
+        if (branch != null) {
+          if (startId != null) {
             revWalk.markStart(revWalk.lookupCommit(startId));
-          }
-          else
-          {
-            revWalk.markStart(revWalk.lookupCommit(head));
+          } else {
+            revWalk.markStart(revWalk.lookupCommit(branch.getObjectId()));
           }
 
-          for (final RevCommit commit : revWalk) {
+          if (ancestorId != null) {
+            revWalk.markUninteresting(revWalk.lookupCommit(ancestorId));
+          }
+
+          Iterator<RevCommit> iterator = revWalk.iterator();
+
+          while (iterator.hasNext()) {
+            RevCommit commit = iterator.next();
+
             if ((counter >= start)
               && ((limit < 0) || (counter < start + limit))) {
               changesetList.add(converter.createChangeset(commit));
@@ -243,25 +272,37 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
 
             counter++;
 
-            if ((endId != null) && commit.getId().equals(endId)) {
+            if (commit.getId().equals(endId)) {
               break;
             }
           }
+        } else if (ancestorId != null) {
+          throw notFound(entity(REVISION, request.getBranch()).in(this.repository));
         }
 
-        changesets = new ChangesetPagingResult(counter, changesetList);
-      }
-      else if (logger.isWarnEnabled())
-      {
+        if (branch != null) {
+          changesets = new ChangesetPagingResult(counter, changesetList, GitUtil.getBranch(branch.getName()));
+        } else {
+          changesets = new ChangesetPagingResult(counter, changesetList);
+        }
+      } else if (logger.isWarnEnabled()) {
         logger.warn("the repository {} seems to be empty",
-          repository.getName());
+          this.repository.getName());
 
         changesets = new ChangesetPagingResult(0, Collections.EMPTY_LIST);
       }
     }
+    catch (MissingObjectException e)
+    {
+      throw notFound(entity(REVISION, e.getObjectId().getName()).in(repository));
+    }
+    catch (NotFoundException e)
+    {
+      throw e;
+    }
     catch (Exception ex)
     {
-      throw new RepositoryException("could not create change log", ex);
+      throw new InternalRepositoryException(repository, "could not create change log", ex);
     }
     finally
     {

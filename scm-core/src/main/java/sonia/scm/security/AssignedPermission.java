@@ -89,8 +89,12 @@ public class AssignedPermission implements PermissionObject, Serializable
    */
   public AssignedPermission(String name, String permission)
   {
-    this.name = name;
-    this.permission = permission;
+    this(name, new PermissionDescriptor(permission));
+  }
+
+  public AssignedPermission(String name, PermissionDescriptor permission)
+  {
+    this(name, false, permission);
   }
 
   /**
@@ -103,6 +107,12 @@ public class AssignedPermission implements PermissionObject, Serializable
    */
   public AssignedPermission(String name, boolean groupPermission,
     String permission)
+  {
+    this(name, groupPermission, new PermissionDescriptor(permission));
+  }
+
+  public AssignedPermission(String name, boolean groupPermission,
+    PermissionDescriptor permission)
   {
     this.name = name;
     this.groupPermission = groupPermission;
@@ -151,10 +161,10 @@ public class AssignedPermission implements PermissionObject, Serializable
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("name", name)
-                      .add("groupPermisison", groupPermission)
-                      .add("permission", permission)
-                      .toString();
+                  .add("name", name)
+                  .add("groupPermission", groupPermission)
+                  .add("permission", permission)
+                  .toString();
     //J+
   }
 
@@ -173,12 +183,9 @@ public class AssignedPermission implements PermissionObject, Serializable
   }
 
   /**
-   * Returns the string representation of the permission.
-   *
-   *
-   * @return string representation of the permission
+   * Returns the description of the permission.
    */
-  public String getPermission()
+  public PermissionDescriptor getPermission()
   {
     return permission;
   }
@@ -205,5 +212,5 @@ public class AssignedPermission implements PermissionObject, Serializable
   private String name;
 
   /** string representation of the permission */
-  private String permission;
+  private PermissionDescriptor permission;
 }

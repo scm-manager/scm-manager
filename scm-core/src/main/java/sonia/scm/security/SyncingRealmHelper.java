@@ -28,28 +28,18 @@
  */
 package sonia.scm.security;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
-
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.subject.SimplePrincipalCollection;
-
+import sonia.scm.AlreadyExistsException;
+import sonia.scm.NotFoundException;
 import sonia.scm.group.Group;
-import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
-import sonia.scm.group.GroupNames;
 import sonia.scm.plugin.Extension;
 import sonia.scm.user.User;
-import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.security.AdministrationContext;
-
-
-import java.io.IOException;
-
-import java.util.Collection;
 
 /**
  * Helper class for syncing realms. The class should simplify the creation of realms, which are syncing authenticated
@@ -62,14 +52,11 @@ import java.util.Collection;
 public final class SyncingRealmHelper {
 
   private final AdministrationContext ctx;
-  
+  private final UserManager userManager;
   private final GroupManager groupManager;
 
-  private final UserManager userManager;
-  
   /**
    * Constructs a new SyncingRealmHelper.
-   *
    *
    * @param ctx administration context
    * @param userManager user manager
@@ -82,39 +69,20 @@ public final class SyncingRealmHelper {
     this.groupManager = groupManager;
   }
 
-  //~--- methods --------------------------------------------------------------
   /**
    * Create {@link AuthenticationInfo} from user and groups.
    *
    *
    * @param realm name of the realm
    * @param user authenticated user
-   * @param groups groups of the authenticated user
    *
    * @return authentication info
    */
-  public AuthenticationInfo createAuthenticationInfo(String realm, User user,
-    String... groups) {
-    return createAuthenticationInfo(realm, user, ImmutableList.copyOf(groups));
-  }
-
-  /**
-   * Create {@link AuthenticationInfo} from user and groups.
-   *
-   *
-   * @param realm name of the realm
-   * @param user authenticated user
-   * @param groups groups of the authenticated user
-   *
-   * @return authentication info
-   */
-  public AuthenticationInfo createAuthenticationInfo(String realm, User user,
-    Collection<String> groups) {
+  public AuthenticationInfo createAuthenticationInfo(String realm, User user) {
     SimplePrincipalCollection collection = new SimplePrincipalCollection();
 
     collection.add(user.getId(), realm);
     collection.add(user, realm);
-    collection.add(new GroupNames(groups), realm);
 
     return new SimpleAuthenticationInfo(collection, user.getPassword());
   }
@@ -126,16 +94,18 @@ public final class SyncingRealmHelper {
    */
   public void store(final Group group) {
     ctx.runAsAdmin(() -> {
-      try {
-        if (groupManager.get(group.getId()) != null) {
+      if (groupManager.get(group.getId()) != null) {
+        try {
           groupManager.modify(group);
+        } catch (NotFoundException e) {
+          throw new IllegalStateException("got NotFoundException though group " + group.getName() + " could be loaded", e);
         }
-        else {
+      } else {
+        try {
           groupManager.create(group);
+        } catch (AlreadyExistsException e) {
+          throw new IllegalStateException("got AlreadyExistsException though group " + group.getName() + " could not be loaded", e);
         }
-      }
-      catch (GroupException | IOException ex) {
-        throw new AuthenticationException("could not store group", ex);
       }
     });
   }
@@ -147,16 +117,19 @@ public final class SyncingRealmHelper {
    */
   public void store(final User user) {
     ctx.runAsAdmin(() -> {
-      try {
-        if (userManager.contains(user.getName())) {
+      if (userManager.contains(user.getName())) {
+        try {
           userManager.modify(user);
+        } catch (NotFoundException e) {
+          throw new IllegalStateException("got NotFoundException though user " + user.getName() + " could be loaded", e);
         }
-        else {
+      } else {
+        try {
           userManager.create(user);
+        } catch (AlreadyExistsException e) {
+          throw new IllegalStateException("got AlreadyExistsException though user " + user.getName() + " could not be loaded", e);
+
         }
-      }
-      catch (UserException | IOException ex) {
-        throw new AuthenticationException("could not store user", ex);
       }
     });
   }

@@ -34,6 +34,8 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -52,17 +54,18 @@ import java.util.Set;
 public final class ExplodedSmp implements Comparable<ExplodedSmp>
 {
 
+  private static final Logger logger = LoggerFactory.getLogger(ExplodedSmp.class);
+
   /**
    * Constructs ...
    *
    *
    * @param path
-   * @param pluginId
-   * @param dependencies
    * @param plugin
    */
-  ExplodedSmp(Path path, Plugin plugin)
+  ExplodedSmp(Path path, InstalledPluginDescriptor plugin)
   {
+    logger.trace("create exploded scm for plugin {} and dependencies {}", plugin.getInformation().getName(), plugin.getDependencies());
     this.path = path;
     this.plugin = plugin;
   }
@@ -112,8 +115,8 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
     }
     else
     {
-      String id = plugin.getInformation().getId(false);
-      String oid = o.plugin.getInformation().getId(false);
+      String id = plugin.getInformation().getName(false);
+      String oid = o.plugin.getInformation().getName(false);
 
       if (depends.contains(oid) && odepends.contains(id))
       {
@@ -160,7 +163,7 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
    *
    * @return plugin descriptor
    */
-  public Plugin getPlugin()
+  public InstalledPluginDescriptor getPlugin()
   {
     return plugin;
   }
@@ -199,5 +202,5 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
   private final Path path;
 
   /** plugin object */
-  private final Plugin plugin;
+  private final InstalledPluginDescriptor plugin;
 }

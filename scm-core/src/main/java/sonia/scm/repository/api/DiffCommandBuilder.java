@@ -36,20 +36,17 @@ package sonia.scm.repository.api;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.spi.DiffCommand;
-import sonia.scm.repository.spi.DiffCommandRequest;
-import sonia.scm.util.IOUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Shows differences between revisions for a specified file or
@@ -72,7 +69,7 @@ import java.io.OutputStream;
  * @author Sebastian Sdorra
  * @since 1.17
  */
-public final class DiffCommandBuilder
+public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCommandBuilder>
 {
 
   /**
@@ -81,18 +78,21 @@ public final class DiffCommandBuilder
   private static final Logger logger =
     LoggerFactory.getLogger(DiffCommandBuilder.class);
 
+  /** implementation of the diff command */
+  private final DiffCommand diffCommand;
+
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new {@link DiffCommandBuilder}, this constructor should
    * only be called from the {@link RepositoryService}.
    *
-   * @param implementation of {@link DiffCommand}
-   *
-   * @param diffCommand
+   * @param diffCommand implementation of {@link DiffCommand}
+   * @param supportedFeatures The supported features of the provider
    */
-  DiffCommandBuilder(DiffCommand diffCommand)
+  DiffCommandBuilder(DiffCommand diffCommand, Set<Feature> supportedFeatures)
   {
+    super(supportedFeatures);
     this.diffCommand = diffCommand;
   }
 
@@ -102,19 +102,12 @@ public final class DiffCommandBuilder
    * Passes the difference of the given parameter to the outputstream.
    *
    *
-   * @param outputStream outputstream for the difference
-   *
-   * @return {@code this}
+   * @return A consumer that expects the output stream for the difference
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public DiffCommandBuilder retriveContent(OutputStream outputStream)
-    throws IOException, RepositoryException
-  {
-    getDiffResult(outputStream);
-
-    return this;
+  public OutputStreamConsumer retrieveContent() throws IOException {
+    return getDiffResult();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -125,25 +118,12 @@ public final class DiffCommandBuilder
    * @return content of the difference
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  public String getContent() throws IOException, RepositoryException
-  {
-    String content = null;
-    ByteArrayOutputStream baos = null;
-
-    try
-    {
-      baos = new ByteArrayOutputStream();
-      getDiffResult(baos);
-      content = baos.toString();
+  public String getContent() throws IOException {
+    try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+      getDiffResult();
+      return baos.toString();
     }
-    finally
-    {
-      IOUtil.close(baos);
-    }
-
-    return content;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -167,69 +147,31 @@ public final class DiffCommandBuilder
 
     return this;
   }
-
-  /**
-   * Show the difference only for the given path.
-   *
-   *
-   * @param path path for difference
-   *
-   * @return {@code this}
-   */
-  public DiffCommandBuilder setPath(String path)
-  {
-    request.setPath(path);
-
-    return this;
-  }
-
-  /**
-   * Show the difference only for the given revision.
-   *
-   *
-   * @param revision revision for difference
-   *
-   * @return {@code this}
-   */
-  public DiffCommandBuilder setRevision(String revision)
-  {
-    request.setRevision(revision);
-
-    return this;
-  }
-
   //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param outputStream
-   * @param path
-   *
    * @throws IOException
-   * @throws RepositoryException
+   * @return
    */
-  private void getDiffResult(OutputStream outputStream)
-    throws IOException, RepositoryException
-  {
-    Preconditions.checkNotNull(outputStream, "OutputStream is required");
+  private OutputStreamConsumer getDiffResult() throws IOException {
     Preconditions.checkArgument(request.isValid(),
       "path and/or revision is required");
 
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("create diff for {}", request);
-    }
+    logger.debug("create diff for {}", request);
 
-    diffCommand.getDiffResult(request, outputStream);
+    return diffCommand.getDiffResult(request);
   }
 
-  //~--- fields ---------------------------------------------------------------
+  @Override
+  DiffCommandBuilder self() {
+    return this;
+  }
 
-  /** implementation of the diff command */
-  private final DiffCommand diffCommand;
-
-  /** request for the diff command implementation */
-  private final DiffCommandRequest request = new DiffCommandRequest();
+  @FunctionalInterface
+  public interface OutputStreamConsumer {
+    void accept(OutputStream outputStream) throws IOException;
+  }
 }

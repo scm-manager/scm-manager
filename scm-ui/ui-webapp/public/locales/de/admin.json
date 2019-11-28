@@ -1,0 +1,104 @@
+{
+  "admin": {
+    "menu": {
+      "navigationLabel": "Administrations Navigation",
+      "informationNavLink": "Informationen",
+      "settingsNavLink": "Einstellungen",
+      "generalNavLink": "Generell"
+    },
+    "info":  {
+      "currentAppVersion": "Aktuelle Software-Versionsnummer",
+      "communityTitle": "Community Support",
+      "communityIconAlt": "Community Support Icon",
+      "communityInfo": "Das SCM-Manager Support-Team steht für allgemeine Fragen, die Meldung von Fehlern sowie Anfragen für Features gerne für Sie über die offiziellen Kanäle bereit.",
+      "communityButton": "Unser Team kontaktieren",
+      "enterpriseTitle": "Enterprise Support",
+      "enterpriseIconAlt": "Enterprise Support Icon",
+      "enterpriseInfo": "Sie benötigen Unterstützung bei der Integration von SCM-Manager in Ihre Prozesse, bei der Anpassung des Tools auf Ihre Anforderungen oder einfach ein Service Level Agreement (SLA)?",
+      "enterprisePartner": "Treten Sie mit unserem Entwicklungs-Partner Cloudogu in Kontakt! Das Team freut sich auf den Austausch über Ihre individuellen Anforderungen und erstellt Ihnen gerne ein maßgeschneidertes Angebot.",
+      "enterpriseLink": "https://cloudogu.com/de/scm-manager-enterprise/",
+      "enterpriseButton": "Enterprise Support anfragen"
+    }
+  },
+  "plugins": {
+    "title": "Plugins",
+    "installedSubtitle": "Installierte Plugins",
+    "availableSubtitle": "Verfügbare Plugins",
+    "menu": {
+      "pluginsNavLink": "Plugins",
+      "installedNavLink": "Installiert",
+      "availableNavLink": "Verfügbar"
+    },
+    "executePending": "Änderungen ausführen",
+    "outdatedPlugins": "{{count}} veraltetes Plugin",
+    "outdatedPlugins_plural": "{{count}} veraltete Plugins",
+    "updateAll": "Alle Plugins aktualisieren",
+    "cancelPending": "Änderungen abbrechen",
+    "noPlugins": "Keine Plugins gefunden.",
+    "modal": {
+      "title": {
+        "install": "{{name}} Plugin installieren",
+        "update": "{{name}} Plugin aktualisieren",
+        "uninstall": "{{name}} Plugin deinstallieren"
+      },
+      "restart": "Neustarten, um Plugin-Änderungen wirksam zu machen",
+      "install": "Installieren",
+      "update": "Aktualisieren",
+      "uninstall": "Deinstallieren",
+      "installQueue": "Werden installiert:",
+      "updateQueue": "Werden aktualisiert:",
+      "uninstallQueue": "Werden deinstalliert:",
+      "installAndRestart": "Installieren und Neustarten",
+      "updateAndRestart": "Aktualisieren und Neustarten",
+      "uninstallAndRestart": "Deinstallieren and Neustarten",
+      "executeAndRestart": "Ausführen und Neustarten",
+      "updateAll": "Alle Plugins aktualisieren",
+      "abort": "Abbrechen",
+      "author": "Autor",
+      "version": "Version",
+      "currentVersion": "Installierte Version",
+      "newVersion": "Neue Version",
+      "dependencyNotification": "Mit diesem Plugin werden folgende Abhängigkeiten mit installiert, wenn sie noch nicht vorhanden sind!",
+      "dependencies": "Abhängigkeiten",
+      "successNotification": "Das Plugin wurde erfolgreich installiert. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden:",
+      "reload": "jetzt neu laden",
+      "restartNotification": "Der SCM-Manager Kontext sollte nur neu gestartet werden, wenn aktuell niemand damit arbeitet.",
+      "executePending": "Die folgenden Plugin-Änderungen werden ausgeführt. Anschließend wird der SCM-Manager Kontext neu gestartet.",
+      "cancelPending": "Die folgenden Plugin-Änderungen werden abgebrochen und zurückgesetzt.",
+      "updateAllInfo": "Die folgenden Plugins werden aktualisiert. Die Änderungen werden nach dem nächsten Neustart wirksam."
+    }
+  },
+  "repositoryRole": {
+    "navLink": "Berechtigungsrollen",
+    "title": "Berechtigungsrollen",
+    "errorTitle": "Fehler",
+    "errorSubtitle": "Unbekannter Berechtigungsrollen Fehler",
+    "createSubtitle": "Berechtigungsrolle erstellen",
+    "editSubtitle": "Berechtigungsrolle bearbeiten",
+    "overview": {
+      "title": "Übersicht aller verfügbaren Berechtigungsrollen",
+      "noPermissionRoles": "Keine Berechtigungsrollen gefunden.",
+      "createButton": "Berechtigungsrolle erstellen"
+    },
+    "editButton": "Bearbeiten",
+    "name": "Name",
+    "type": "Typ",
+    "verbs": "Berechtigungen",
+    "system": "System",
+    "form": {
+      "name": "Name",
+      "permissions": "Berechtigungen",
+      "submit": "Speichern"
+    },
+    "delete": {
+      "button": "Löschen",
+      "subtitle": "Berechtigungsrolle löschen",
+      "confirmAlert": {
+        "title": "Berechtigungsrolle löschen?",
+        "message": "Wollen Sie diese Rolle wirklich löschen? Alle Benutzer mit dieser Rolle verlieren die entsprechenden Berechtigungen.",
+        "submit": "Ja",
+        "cancel": "Nein"
+      }
+    }
+  }
+}

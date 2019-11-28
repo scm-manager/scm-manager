@@ -37,7 +37,7 @@ import sonia.scm.event.Event;
  * @since 2.0.0
  */
 @Event
-public class RepositoryHandlerConfigChangedEvent<C extends SimpleRepositoryConfig>
+public class RepositoryHandlerConfigChangedEvent<C extends RepositoryConfig>
 {
   
   private final C configuration;

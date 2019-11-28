@@ -34,6 +34,7 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
@@ -43,9 +44,9 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.Iterator;
 
+import static java.util.Collections.emptyIterator;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -191,12 +192,20 @@ public class CacheConfigurationTestLoader implements CacheConfigurationLoader
 
     if (moduleConfigurations == null)
     {
-      urlIterator = Collections.emptyIterator();
+      urlIterator = emptyIterator();
     }
     else
     {
       urlIterator = Iterators.transform(moduleConfigurations,
-                                        this::getResource);
+        new Function<String, URL>()
+      {
+
+        @Override
+        public URL apply(String resource)
+        {
+          return getResource(resource);
+        }
+      });
     }
 
     return urlIterator;

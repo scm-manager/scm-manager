@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-      
+
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -10,18 +10,16 @@
   </parent>
 
   <artifactId>scm-hg-plugin</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
-  <name>scm-hg-plugin</name>
   <packaging>smp</packaging>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
   <description>Plugin for the version control system Mercurial</description>
 
   <dependencies>
-    
+
     <dependency>
       <groupId>com.aragost.javahg</groupId>
       <artifactId>javahg</artifactId>
-      <version>0.8-scm1</version>
+      <version>0.13-java7</version>
       <exclusions>
         <exclusion>
           <groupId>com.google.guava</groupId>
@@ -30,12 +28,10 @@
       </exclusions>
     </dependency>
   </dependencies>
-  
-  <!-- create test jar -->
-  
+
   <build>
     <plugins>
-      
+
       <plugin>
         <groupId>com.mycila.maven-license-plugin</groupId>
         <artifactId>maven-license-plugin</artifactId>
@@ -54,7 +50,18 @@
           <strictCheck>true</strictCheck>
         </configuration>
       </plugin>
-        
+
+      <plugin>
+        <groupId>sonia.scm.maven</groupId>
+        <artifactId>smp-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <corePlugin>true</corePlugin>
+        </configuration>
+      </plugin>
+
+      <!-- create test jar -->
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -67,31 +74,18 @@
           </execution>
         </executions>
       </plugin>
-        
+
     </plugins>
   </build>
-  
+
   <repositories>
-    
+
     <repository>
       <id>maven.scm-manager.org</id>
       <name>scm-manager release repository</name>
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
     </repository>
-    
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <id>sonatype-ossrh</id>
-      <name>Sonatype Open Source Software Repository Hosting</name>
-      <layout>default</layout>
-      <url>https://oss.sonatype.org/content/groups/public/</url>
-    </repository>
-  
+
   </repositories>
- 
+
 </project>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-      
+
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -10,13 +10,12 @@
   </parent>
 
   <artifactId>scm-git-plugin</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
-  <name>scm-git-plugin</name>
   <packaging>smp</packaging>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
   <description>Plugin for the version control system Git</description>
 
   <dependencies>
+
     <dependency>
       <groupId>sonia.jgit</groupId>
       <artifactId>org.eclipse.jgit</artifactId>
@@ -40,13 +39,29 @@
       <artifactId>commons-lang</artifactId>
       <version>2.6</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jackson2-provider</artifactId>
+      <version>${resteasy.version}</version>
+    </dependency>
+
   </dependencies>
-  
-  <!-- create test jar -->
-  
+
   <build>
     <plugins>
-        
+
+      <plugin>
+        <groupId>sonia.scm.maven</groupId>
+        <artifactId>smp-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <corePlugin>true</corePlugin>
+        </configuration>
+      </plugin>
+
+      <!-- create test jar -->
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -59,20 +74,20 @@
           </execution>
         </executions>
       </plugin>
-        
+
     </plugins>
   </build>
-  
+
   <!-- for jgit -->
-  
+
   <repositories>
-    
+
     <repository>
       <id>maven.scm-manager.org</id>
       <name>scm-manager release repository</name>
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
     </repository>
-  
+
   </repositories>
 
 </project>

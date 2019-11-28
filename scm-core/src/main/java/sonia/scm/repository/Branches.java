@@ -150,8 +150,8 @@ public final class Branches implements Iterable<Branch>
   {
     //J-
     return MoreObjects.toStringHelper(this)
-                      .add("branches", branches)
-                      .toString();
+                  .add("branches", branches)
+                  .toString();
     //J+
   }
 

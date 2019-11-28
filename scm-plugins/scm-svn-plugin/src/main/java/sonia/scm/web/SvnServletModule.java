@@ -33,48 +33,25 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.servlet.ServletModule;
-
+import org.mapstruct.factory.Mappers;
+import sonia.scm.api.v2.resources.SvnConfigDtoToSvnConfigMapper;
+import sonia.scm.api.v2.resources.SvnConfigToSvnConfigDtoMapper;
 import sonia.scm.plugin.Extension;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.HashMap;
-import java.util.Map;
+import sonia.scm.repository.SvnWorkDirFactory;
+import sonia.scm.repository.spi.SimpleSvnWorkDirFactory;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Extension
-public class SvnServletModule extends ServletModule
-{
+public class SvnServletModule extends ServletModule {
 
-  /** Field description */
-  public static final String PARAMETER_SVN_PARENTPATH = "SVNParentPath";
-
-  /** Field description */
-  public static final String PATTERN_SVN = "/svn/*";
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
   @Override
-  protected void configureServlets()
-  {
-    filter(PATTERN_SVN).through(SvnGZipFilter.class);
-    filter(PATTERN_SVN).through(SvnBasicAuthenticationFilter.class);
-    filter(PATTERN_SVN).through(SvnPermissionFilter.class);
-
-    Map<String, String> parameters = new HashMap<String, String>();
-
-    parameters.put(PARAMETER_SVN_PARENTPATH,
-      System.getProperty("java.io.tmpdir"));
-    serve(PATTERN_SVN).with(SvnDAVServlet.class, parameters);
+  protected void configureServlets() {
+    bind(SvnConfigDtoToSvnConfigMapper.class).to(Mappers.getMapper(SvnConfigDtoToSvnConfigMapper.class).getClass());
+    bind(SvnConfigToSvnConfigDtoMapper.class).to(Mappers.getMapper(SvnConfigToSvnConfigDtoMapper.class).getClass());
+    bind(SvnWorkDirFactory.class).to(SimpleSvnWorkDirFactory.class);
   }
 }

@@ -37,10 +37,8 @@ package sonia.scm.repository;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.internal.io.fs.FSHooks;
@@ -48,20 +46,20 @@ import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.util.SVNDebugLog;
-
-import sonia.scm.Type;
-import sonia.scm.io.FileSystem;
 import sonia.scm.logging.SVNKitLogger;
 import sonia.scm.plugin.Extension;
+import sonia.scm.plugin.PluginLoader;
+import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.repository.spi.SvnRepositoryServiceProvider;
+import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
-import sonia.scm.repository.spi.HookEventFacade;
-import sonia.scm.store.ConfigurationStoreFactory;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -73,43 +71,28 @@ public class SvnRepositoryHandler
   extends AbstractSimpleRepositoryHandler<SvnConfig>
 {
 
-  /** Field description */
   public static final String PROPERTY_UUID = "svn.uuid";
 
-  /** Field description */
-  public static final String RESOURCE_VERSION =
-    "sonia/scm/version/scm-svn-plugin";
+  public static final String RESOURCE_VERSION = "sonia/scm/version/scm-svn-plugin";
 
-  /** Field description */
   public static final String TYPE_DISPLAYNAME = "Subversion";
 
-  /** Field description */
   public static final String TYPE_NAME = "svn";
 
-  /** Field description */
-  public static final Type TYPE = new RepositoryType(TYPE_NAME,
+  public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME,
                                     TYPE_DISPLAYNAME,
                                     SvnRepositoryServiceProvider.COMMANDS);
 
-  /** the logger for SvnRepositoryHandler */
   private static final Logger logger =
     LoggerFactory.getLogger(SvnRepositoryHandler.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param storeFactory
-   * @param fileSystem
-   * @param repositoryManager
-   */
   @Inject
-  public SvnRepositoryHandler(ConfigurationStoreFactory storeFactory, FileSystem fileSystem,
-    HookEventFacade eventFacade)
+  public SvnRepositoryHandler(ConfigurationStoreFactory storeFactory,
+                              HookEventFacade eventFacade,
+                              RepositoryLocationResolver repositoryLocationResolver,
+                              PluginLoader pluginLoader)
   {
-    super(storeFactory, fileSystem);
+    super(storeFactory, repositoryLocationResolver, pluginLoader);
 
     // register logger
     SVNDebugLog.setDefaultLog(new SVNKitLogger());
@@ -129,60 +112,26 @@ public class SvnRepositoryHandler
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public ImportHandler getImportHandler()
   {
     return new SvnImportHandler(this);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Type getType()
+  public RepositoryType getType()
   {
     return TYPE;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public String getVersionInformation()
   {
     return getStringFromResource(RESOURCE_VERSION, DEFAULT_VERSION_INFORMATION);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
   @Override
-  protected void create(Repository repository, File directory)
-    throws RepositoryException, IOException
-  {
+  protected void create(Repository repository, File directory) throws InternalRepositoryException {
     Compatibility comp = config.getCompatibility();
 
     if (logger.isDebugEnabled())
@@ -229,7 +178,8 @@ public class SvnRepositoryHandler
     }
     catch (SVNException ex)
     {
-      throw new RepositoryException(ex);
+      logger.error("could not create svn repository", ex);
+      throw new InternalRepositoryException(entity(repository), "could not create repository", ex);
     }
     finally
     {
@@ -261,5 +211,14 @@ public class SvnRepositoryHandler
   protected Class<SvnConfig> getConfigClass()
   {
     return SvnConfig.class;
+  }
+
+  @Override
+  protected void postCreate(Repository repository, File directory) throws IOException {
+    new SvnConfigHelper().writeRepositoryId(repository, directory);
+  }
+
+  String getRepositoryId(File directory) {
+    return new SvnConfigHelper().getRepositoryId(directory);
   }
 }

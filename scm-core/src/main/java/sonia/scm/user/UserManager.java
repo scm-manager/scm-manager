@@ -38,6 +38,8 @@ package sonia.scm.user;
 import sonia.scm.Manager;
 import sonia.scm.search.Searchable;
 
+import java.util.Collection;
+
 /**
  * The central class for managing {@link User} objects.
  * This class is a singleton and is available via injection.
@@ -45,7 +47,7 @@ import sonia.scm.search.Searchable;
  * @author Sebastian Sdorra
  */
 public interface UserManager
-        extends Manager<User, UserException>, Searchable<User>
+        extends Manager<User>, Searchable<User>
 {
 
   /**
@@ -68,4 +70,22 @@ public interface UserManager
    * @since 1.14
    */
   public String getDefaultType();
+
+  default boolean isTypeDefault(User user) {
+    return getDefaultType().equals(user.getType());
+  }
+
+  /**
+   * Changes the password of the logged in user.
+   * @param oldPassword The current encrypted password of the user.
+   * @param newPassword The new encrypted password of the user.
+   */
+  void changePasswordForLoggedInUser(String oldPassword, String newPassword);
+
+  /**
+   * Overwrites the password for the given user id. This needs user write privileges.
+   * @param userId The id of the user to change the password for.
+   * @param newPassword The new encrypted password.
+   */
+  void overwritePassword(String userId, String newPassword);
 }

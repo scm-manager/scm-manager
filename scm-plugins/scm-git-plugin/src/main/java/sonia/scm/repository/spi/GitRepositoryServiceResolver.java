@@ -35,61 +35,44 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.HookContextFactory;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Extension
-public class GitRepositoryServiceResolver implements RepositoryServiceResolver
-{
+public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
 
-  /** Field description */
-  public static final String TYPE = "git";
+  private final GitRepositoryHandler handler;
+  private final GitRepositoryConfigStoreProvider storeProvider;
+  private final LfsBlobStoreFactory lfsBlobStoreFactory;
+  private final HookContextFactory hookContextFactory;
+  private final ScmEventBus eventBus;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   */
   @Inject
-  public GitRepositoryServiceResolver(GitRepositoryHandler handler)
-  {
+  public GitRepositoryServiceResolver(GitRepositoryHandler handler, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
     this.handler = handler;
+    this.storeProvider = storeProvider;
+    this.lfsBlobStoreFactory = lfsBlobStoreFactory;
+    this.hookContextFactory = hookContextFactory;
+    this.eventBus = eventBus;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
   @Override
-  public GitRepositoryServiceProvider reslove(Repository repository)
-  {
+  public GitRepositoryServiceProvider resolve(Repository repository) {
     GitRepositoryServiceProvider provider = null;
 
-    if (TYPE.equalsIgnoreCase(repository.getType()))
-    {
-      provider = new GitRepositoryServiceProvider(handler, repository);
+    if (GitRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
+      provider = new GitRepositoryServiceProvider(handler, repository, storeProvider, lfsBlobStoreFactory, hookContextFactory, eventBus);
     }
 
     return provider;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private GitRepositoryHandler handler;
 }

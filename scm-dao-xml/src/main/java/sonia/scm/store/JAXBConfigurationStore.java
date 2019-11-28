@@ -61,7 +61,7 @@ public class JAXBConfigurationStore<T> extends AbstractStore<T> {
   
   private JAXBContext context;
  
-  JAXBConfigurationStore(Class<T> type, File configFile) {
+  public JAXBConfigurationStore(Class<T> type, File configFile) {
     this.type = type;
 
     try {

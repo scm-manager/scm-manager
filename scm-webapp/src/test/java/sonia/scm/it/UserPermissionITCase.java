@@ -35,11 +35,21 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.sun.jersey.api.client.ClientResponse;
+import de.otto.edison.hal.HalRepresentation;
+import org.junit.Assume;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-
+import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
+import sonia.scm.web.VndMediaType;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -55,7 +65,7 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
    *
    * @param credentials
    */
-  public UserPermissionITCase(Credentials credentials)
+  public UserPermissionITCase(Credentials credentials, String ignore_testCaseName)
   {
     super(credentials);
   }
@@ -123,7 +133,6 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
                          "scm-admin@scm-manager.org");
 
     user.setPassword("hallo123");
-    user.setAdmin(true);
     user.setType("xml");
 
     return user;
@@ -139,5 +148,33 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
   protected String getModifyPath()
   {
     return "users/scmadmin";
+  }
+
+  @Override
+  protected String getMediaType() {
+    return VndMediaType.USER;
+  }
+
+  @Override
+  protected void checkGetAllResponse(ClientResponse response)
+  {
+    Assume.assumeTrue(credentials.getUsername() == null);
+    if (!credentials.isAnonymous())
+    {
+      assertNotNull(response);
+      assertEquals(200, response.getStatus());
+
+      HalRepresentation repositories =
+        null;
+      try {
+        repositories = new ObjectMapperProvider().get().readValue(response.getEntity(String.class), HalRepresentation.class);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+
+      assertNotNull(repositories);
+      assertTrue(repositories.getEmbedded().getItemsBy("users").isEmpty());
+      response.close();
+    }
   }
 }

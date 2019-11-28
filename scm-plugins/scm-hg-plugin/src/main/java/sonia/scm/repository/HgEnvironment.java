@@ -35,22 +35,15 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Strings;
-
-import org.apache.shiro.codec.Base64;
-
+import com.google.inject.ProvisionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.security.CipherUtil;
-import sonia.scm.util.HttpUtil;
 import sonia.scm.web.HgUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -58,6 +51,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public final class HgEnvironment
 {
+
+  private static final Logger LOG = LoggerFactory.getLogger(HgEnvironment.class);
 
   /** Field description */
   public static final String ENV_PYTHON_PATH = "PYTHONPATH";
@@ -68,14 +63,7 @@ public final class HgEnvironment
   /** Field description */
   private static final String ENV_URL = "SCM_URL";
 
-  /** Field description */
-  private static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
-
-  /**
-   *   the logger for HgEnvironment
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(HgEnvironment.class);
+  private static final String SCM_BEARER_TOKEN = "SCM_BEARER_TOKEN";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -86,6 +74,20 @@ public final class HgEnvironment
   private HgEnvironment() {}
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param environment
+   * @param handler
+   * @param hookManager
+   */
+  public static void prepareEnvironment(Map<String, String> environment,
+                                        HgRepositoryHandler handler, HgHookManager hookManager)
+  {
+    prepareEnvironment(environment, handler, hookManager, null);
+  }
 
   /**
    * Method description
@@ -105,65 +107,20 @@ public final class HgEnvironment
     if (request != null)
     {
       hookUrl = hookManager.createUrl(request);
-      environment.put(SCM_CREDENTIALS, getCredentials(request));
     }
     else
     {
       hookUrl = hookManager.createUrl();
     }
 
+    try {
+      String credentials = hookManager.getCredentials();
+      environment.put(SCM_BEARER_TOKEN, credentials);
+    } catch (ProvisionException e) {
+      LOG.debug("could not create bearer token; looks like currently we are not in a request; probably you can ignore the following exception:", e);
+    }
     environment.put(ENV_PYTHON_PATH, HgUtil.getPythonPath(handler.getConfig()));
     environment.put(ENV_URL, hookUrl);
     environment.put(ENV_CHALLENGE, hookManager.getChallenge());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param environment
-   * @param handler
-   * @param hookManager
-   */
-  public static void prepareEnvironment(Map<String, String> environment,
-    HgRepositoryHandler handler, HgHookManager hookManager)
-  {
-    prepareEnvironment(environment, handler, hookManager, null);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private static String getCredentials(HttpServletRequest request)
-  {
-    String credentials = null;
-    String header = request.getHeader(HttpUtil.HEADER_AUTHORIZATION);
-
-    if (!Strings.isNullOrEmpty(header))
-    {
-      String[] parts = header.split("\\s+");
-
-      if (parts.length > 0)
-      {
-        CipherUtil cu = CipherUtil.getInstance();
-
-        credentials = cu.encode(Base64.decodeToString(parts[1]));
-      }
-      else
-      {
-        logger.warn("invalid basic authentication header");
-      }
-    }
-    else
-    {
-      logger.warn("could not find authentication header on request");
-    }
-
-    return Strings.nullToEmpty(credentials);
   }
 }
