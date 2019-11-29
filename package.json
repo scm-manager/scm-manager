@@ -11,7 +11,8 @@
     "test": "lerna run --scope '@scm-manager/ui-*' test",
     "typecheck": "lerna run --scope '@scm-manager/ui-*' typecheck",
     "serve": "webpack-dev-server --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
-    "deploy": "ui-scripts publish"
+    "deploy": "ui-scripts publish",
+    "version": "ui-scripts version"
   },
   "devDependencies": {
     "babel-plugin-reflow": "^0.2.7",
