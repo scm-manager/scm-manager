@@ -1,5 +1,5 @@
-import React, { FC } from "react";
-import {ColumnProps} from "./types";
+import React, {FC} from "react";
+import {ColumnProps, SortTypes} from "./types";
 
 type Props = ColumnProps & {
   dataKey: string;
@@ -20,7 +20,8 @@ TextColumn.defaultProps = {
         return 0;
       }
     };
-  }
+  },
+  sortType: SortTypes.Text
 };
 
 export default TextColumn;

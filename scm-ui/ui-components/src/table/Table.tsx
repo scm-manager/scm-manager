@@ -1,4 +1,15 @@
 import React, { FC, useState } from "react";
+import styled from "styled-components";
+import { SortTypes } from "./types";
+import Icon from "../Icon";
+
+const StyledTable = styled.table.attrs(() => ({
+  className: "table content is-hoverable"
+}))``;
+
+const IconWithMarginLeft = styled(Icon)`
+  margin-left: 0.25em;
+`;
 
 type SortableTableProps = {
   data: any[];
@@ -7,11 +18,14 @@ type SortableTableProps = {
 // @ts-ignore
 const Table: FC<SortableTableProps> = ({ data, children }) => {
   const [tableData, setTableData] = useState(data);
-  const [ascending, setAscending] = useState(true);
+  const [ascending, setAscending] = useState(false);
   const [lastSortBy, setlastSortBy] = useState(0);
 
   // @ts-ignore
-  const sortFunctions = React.Children.map(children, child => child.props.createComparator(child.props));
+  const sortFunctions = React.Children.map(children, child =>
+    // @ts-ignore
+    child.props.createComparator ? child.props.createComparator(child.props) : undefined
+  );
 
   const mapDataToColumns = (row: any) => {
     return (
@@ -46,19 +60,34 @@ const Table: FC<SortableTableProps> = ({ data, children }) => {
 
   return (
     tableData.length > 0 && (
-      <table className="text-left">
+      <StyledTable>
         <thead>
           <tr>
             {React.Children.map(children, (child, index) => (
               // @ts-ignore
-              <th onClick={() => tableSort(index)}>{child.props.header}</th>
+              <th
+                className={child.props.createComparator && "has-cursor-pointer"}
+                onClick={child.props.createComparator ? () => tableSort(index) : undefined}
+              >
+                {child.props.header}
+
+                {child.props.createComparator && renderSortIcon(child.props.sortType, ascending)}
+              </th>
             ))}
           </tr>
         </thead>
         <tbody>{tableData.map(mapDataToColumns)}</tbody>
-      </table>
+      </StyledTable>
     )
   );
+};
+
+const renderSortIcon = (contentType: string, ascending: boolean) => {
+  if (contentType === SortTypes.Text) {
+    return <IconWithMarginLeft name={ascending ? "sort-alpha-down-alt" : "sort-alpha-down"} />;
+  } else {
+    return <IconWithMarginLeft name={ascending ? "sort-amount-down-alt" : "sort-amount-down"} />;
+  }
 };
 
 export default Table;
