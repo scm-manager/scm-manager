@@ -17,7 +17,7 @@ const Table: FC<Props> = ({ data, sortable, children }) => {
   const [tableData, setTableData] = useState(data);
   const [ascending, setAscending] = useState(false);
   const [lastSortBy, setlastSortBy] = useState<number | undefined>();
-  const [hoveredIndex, setHoveredIndex] = useState<number | undefined>();
+  const [hoveredColumnIndex, setHoveredColumnIndex] = useState<number | undefined>();
 
   const isSortable = (child: any) => {
     return sortable && child.props.createComparator;
@@ -75,11 +75,11 @@ const Table: FC<Props> = ({ data, sortable, children }) => {
               <th
                 className={isSortable(child) && "has-cursor-pointer"}
                 onClick={isSortable(child) ? () => tableSort(index) : undefined}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(undefined)}
+                onMouseEnter={() => setHoveredColumnIndex(index)}
+                onMouseLeave={() => setHoveredColumnIndex(undefined)}
               >
                 {child.props.header}
-                {isSortable(child) && renderSortIcon(child, ascending, index === lastSortBy || index === hoveredIndex)}
+                {isSortable(child) && renderSortIcon(child, ascending, index === lastSortBy || index === hoveredColumnIndex)}
               </th>
             ))}
           </tr>
@@ -96,9 +96,9 @@ Table.defaultProps = {
 
 const renderSortIcon = (child: any, ascending: boolean, showIcon: boolean) => {
   if (child.props.ascendingIcon && child.props.descendingIcon) {
-    return <SortIcon name={ascending ? child.props.ascendingIcon : child.props.descendingIcon} isHidden={!showIcon} />;
+    return <SortIcon name={ascending ? child.props.ascendingIcon : child.props.descendingIcon} isVisible={showIcon} />;
   } else {
-    return <SortIcon name={ascending ? "sort-amount-down-alt" : "sort-amount-down"} isHidden={!showIcon} />;
+    return <SortIcon name={ascending ? "sort-amount-down-alt" : "sort-amount-down"} isVisible={showIcon} />;
   }
 };
 
