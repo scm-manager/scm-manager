@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import styled from "styled-components";
-import { Comparator } from "./types";
+import { Comparator } from "./table";
 import SortIcon from "./SortIcon";
 
 const StyledTable = styled.table.attrs(() => ({

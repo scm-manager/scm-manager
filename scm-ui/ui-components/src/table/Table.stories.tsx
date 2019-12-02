@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import Table from "./Table";
 import Column from "./Column";
 import TextColumn from "./TextColumn";
-import { ColumnProps } from "./types";
+import { ColumnProps } from "./table";
 
 storiesOf("Table|Table", module)
   .add("Default", () => (
