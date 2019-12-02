@@ -1,38 +1,44 @@
 import React, { FC, useState } from "react";
 import styled from "styled-components";
-import { SortTypes } from "./types";
-import Icon from "../Icon";
+import { Comparator } from "./types";
+import SortIcon from "./SortIcon";
 
 const StyledTable = styled.table.attrs(() => ({
   className: "table content is-hoverable"
 }))``;
 
-const IconWithMarginLeft = styled(Icon)`
-  margin-left: 0.25em;
-`;
-
-type SortableTableProps = {
+type Props = {
   data: any[];
+  sortable?: boolean;
 };
 
 // @ts-ignore
-const Table: FC<SortableTableProps> = ({ data, children }) => {
+const Table: FC<Props> = ({ data, sortable, children }) => {
   const [tableData, setTableData] = useState(data);
   const [ascending, setAscending] = useState(false);
-  const [lastSortBy, setlastSortBy] = useState(0);
+  const [lastSortBy, setlastSortBy] = useState<number | undefined>();
+  const [hoveredIndex, setHoveredIndex] = useState<number | undefined>();
 
-  // @ts-ignore
-  const sortFunctions = React.Children.map(children, child =>
-    // @ts-ignore
-    child.props.createComparator ? child.props.createComparator(child.props) : undefined
-  );
+  const isSortable = (child: any) => {
+    return sortable && child.props.createComparator;
+  };
+
+  const sortFunctions: Comparator | undefined[] = [];
+  React.Children.forEach(children, (child, index) => {
+    if (isSortable(child)) {
+      // @ts-ignore
+      sortFunctions.push(child.props.createComparator(child.props, index));
+    } else {
+      sortFunctions.push(undefined);
+    }
+  });
 
   const mapDataToColumns = (row: any) => {
     return (
       <tr>
-        {React.Children.map(children, child => {
+        {React.Children.map(children, (child, columnIndex) => {
           // @ts-ignore
-          return <td>{React.cloneElement(child, { ...child.props, row })}</td>;
+          return <td>{React.cloneElement(child, { ...child.props, columnIndex, row })}</td>;
         })}
       </tr>
     );
@@ -51,6 +57,7 @@ const Table: FC<SortableTableProps> = ({ data, children }) => {
       setAscending(true);
       sortOrder = true;
     }
+    // @ts-ignore
     const sortFunction = sortOrder ? sortFunctions[index] : sortDescending(sortFunctions[index]);
     sortableData.sort(sortFunction);
     setTableData(sortableData);
@@ -58,20 +65,21 @@ const Table: FC<SortableTableProps> = ({ data, children }) => {
     setlastSortBy(index);
   };
 
+  // @ts-ignore
   return (
     tableData.length > 0 && (
       <StyledTable>
         <thead>
           <tr>
             {React.Children.map(children, (child, index) => (
-              // @ts-ignore
               <th
-                className={child.props.createComparator && "has-cursor-pointer"}
-                onClick={child.props.createComparator ? () => tableSort(index) : undefined}
+                className={isSortable(child) && "has-cursor-pointer"}
+                onClick={isSortable(child) ? () => tableSort(index) : undefined}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(undefined)}
               >
                 {child.props.header}
-
-                {child.props.createComparator && renderSortIcon(child.props.sortType, ascending)}
+                {isSortable(child) && renderSortIcon(child, ascending, index === lastSortBy || index === hoveredIndex)}
               </th>
             ))}
           </tr>
@@ -82,11 +90,15 @@ const Table: FC<SortableTableProps> = ({ data, children }) => {
   );
 };
 
-const renderSortIcon = (contentType: string, ascending: boolean) => {
-  if (contentType === SortTypes.Text) {
-    return <IconWithMarginLeft name={ascending ? "sort-alpha-down-alt" : "sort-alpha-down"} />;
+Table.defaultProps = {
+  sortable: true
+};
+
+const renderSortIcon = (child: any, ascending: boolean, showIcon: boolean) => {
+  if (child.props.ascendingIcon && child.props.descendingIcon) {
+    return <SortIcon name={ascending ? child.props.ascendingIcon : child.props.descendingIcon} isHidden={!showIcon} />;
   } else {
-    return <IconWithMarginLeft name={ascending ? "sort-amount-down-alt" : "sort-amount-down"} />;
+    return <SortIcon name={ascending ? "sort-amount-down-alt" : "sort-amount-down"} isHidden={!showIcon} />;
   }
 };
 

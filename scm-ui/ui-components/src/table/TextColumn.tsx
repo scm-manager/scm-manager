@@ -1,5 +1,5 @@
-import React, {FC} from "react";
-import {ColumnProps, SortTypes} from "./types";
+import React, { FC } from "react";
+import { ColumnProps } from "./types";
 
 type Props = ColumnProps & {
   dataKey: string;
@@ -10,7 +10,7 @@ const TextColumn: FC<Props> = ({ row, dataKey }) => {
 };
 
 TextColumn.defaultProps = {
-  createComparator: (props: Props) => {
+  createComparator: (props: Props, columnIndex) => {
     return (a: any, b: any) => {
       if (a[props.dataKey] < b[props.dataKey]) {
         return -1;
@@ -21,7 +21,8 @@ TextColumn.defaultProps = {
       }
     };
   },
-  sortType: SortTypes.Text
+  ascendingIcon: "sort-alpha-down-alt",
+  descendingIcon: "sort-alpha-down"
 };
 
 export default TextColumn;

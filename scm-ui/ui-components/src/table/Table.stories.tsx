@@ -3,12 +3,28 @@ import { storiesOf } from "@storybook/react";
 import Table from "./Table";
 import Column from "./Column";
 import TextColumn from "./TextColumn";
+import { ColumnProps } from "./types";
 
 storiesOf("Table|Table", module)
   .add("Default", () => (
-    <Table data={[{ first: "a", second: "b" }, { first: "d", second: "y" }]}>
+    <Table data={[{ first: "dddd", second: "xyz" }, { first: "abc", second: "bbbb" }]}>
       <Column header={"FIRST"}>{(row: any) => <h1>{row.first}</h1>}</Column>
-      <Column header={"SECOND"}>{(row: any) => <h2 style={{ color: "red" }}>{row.second}</h2>}</Column>
+      <Column
+        header={"SECOND"}
+        createComparator={(props: ColumnProps, columnIndex: number) => {
+          return (a: any, b: any) => {
+            if (a.second > b.second) {
+              return -1;
+            } else if (a.second < b.second) {
+              return 1;
+            } else {
+              return 0;
+            }
+          };
+        }}
+      >
+        {(row: any) => <h2 style={{ color: "red" }}>{row.second}</h2>}
+      </Column>
     </Table>
   ))
   .add("TextColumn", () => (

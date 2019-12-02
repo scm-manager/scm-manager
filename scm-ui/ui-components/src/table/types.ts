@@ -5,11 +5,8 @@ export type Comparator = (a: any, b: any) => number;
 export type ColumnProps = {
   header: ReactNode;
   row?: any;
-  createComparator?: (props: any) => Comparator;
-  sortType: SortTypes;
+  columnIndex?: number;
+  createComparator?: (props: any, columnIndex: number) => Comparator;
+  ascendingIcon?: string;
+  descendingIcon?: string;
 };
-
-export enum SortTypes {
-  Text = "text",
-  Other = "other"
-}
