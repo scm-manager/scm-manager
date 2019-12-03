@@ -2322,7 +2322,7 @@ exports[`Storyshots Table|Table Default 1`] = `
         onMouseEnter={[Function]}
         onMouseLeave={[Function]}
       >
-        FIRST
+        First Name
       </th>
       <th
         className="has-cursor-pointer"
@@ -2330,48 +2330,64 @@ exports[`Storyshots Table|Table Default 1`] = `
         onMouseEnter={[Function]}
         onMouseLeave={[Function]}
       >
-        SECOND
+        Last Name
         <i
           className="fas fa-sort-amount-down has-text-grey-light sc-hzDkRC escBde"
         />
+      </th>
+      <th
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
+        E-Mail
       </th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>
-        <h1>
-          dddd
-        </h1>
+        <h4>
+          Tricia
+        </h4>
       </td>
       <td>
-        <h2
+        <b
           style={
             Object {
               "color": "red",
             }
           }
         >
-          xyz
-        </h2>
+          McMillan
+        </b>
+      </td>
+      <td>
+        <a>
+          tricia@hitchhiker.com
+        </a>
       </td>
     </tr>
     <tr>
       <td>
-        <h1>
-          abc
-        </h1>
+        <h4>
+          Arthur
+        </h4>
       </td>
       <td>
-        <h2
+        <b
           style={
             Object {
               "color": "red",
             }
           }
         >
-          bbbb
-        </h2>
+          Dent
+        </b>
+      </td>
+      <td>
+        <a>
+          arthur@hitchhiker.com
+        </a>
       </td>
     </tr>
   </tbody>
@@ -2390,7 +2406,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
         onMouseEnter={[Function]}
         onMouseLeave={[Function]}
       >
-        FIRST
+        Id
         <i
           className="fas fa-sort-alpha-down has-text-grey-light sc-hzDkRC escBde"
         />
@@ -2401,7 +2417,18 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
         onMouseEnter={[Function]}
         onMouseLeave={[Function]}
       >
-        SECOND
+        Name
+        <i
+          className="fas fa-sort-alpha-down has-text-grey-light sc-hzDkRC escBde"
+        />
+      </th>
+      <th
+        className="has-cursor-pointer"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
+        Description
         <i
           className="fas fa-sort-alpha-down has-text-grey-light sc-hzDkRC escBde"
         />
@@ -2411,26 +2438,35 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
   <tbody>
     <tr>
       <td>
-        d
+        21
       </td>
       <td>
-        y
-      </td>
-    </tr>
-    <tr>
-      <td>
-        a
+        Pommes
       </td>
       <td>
-        b
+        Fried potato sticks
       </td>
     </tr>
     <tr>
       <td>
-        z
+        42
       </td>
       <td>
-        a
+        Quarter-Pounder
+      </td>
+      <td>
+        Big burger
+      </td>
+    </tr>
+    <tr>
+      <td>
+        -84
+      </td>
+      <td>
+        Icecream
+      </td>
+      <td>
+        Cold dessert
       </td>
     </tr>
   </tbody>
