@@ -65,8 +65,6 @@ const Table: FC<Props> = ({ data, sortable, children }) => {
     setlastSortBy(index);
   };
 
-  // @ts-ignore
-  const { header } = child.props;
   return (
     tableData.length > 0 && (
       <StyledTable>
@@ -79,7 +77,10 @@ const Table: FC<Props> = ({ data, sortable, children }) => {
                 onMouseEnter={() => setHoveredColumnIndex(index)}
                 onMouseLeave={() => setHoveredColumnIndex(undefined)}
               >
-                {header}
+                {
+                  // @ts-ignore
+                  child.props.header
+                }
                 {isSortable(child) &&
                   renderSortIcon(child, ascending, index === lastSortBy || index === hoveredColumnIndex)}
               </th>
