@@ -336,7 +336,7 @@ exports[`Storyshots DateFromNow Default 1`] = `
 
 exports[`Storyshots Forms|Checkbox Default 1`] = `
 <div
-  className="sc-hzDkRC itNtPz"
+  className="sc-fBuWsC ldmpJA"
 >
   <div
     className="field"
@@ -381,7 +381,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
 
 exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 <div
-  className="sc-hzDkRC itNtPz"
+  className="sc-fBuWsC ldmpJA"
 >
   <div
     className="field"
@@ -409,7 +409,7 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 
 exports[`Storyshots Forms|Radio Default 1`] = `
 <div
-  className="sc-jhAzac edPAWD"
+  className="sc-fMiknA keSQNk"
 >
   <label
     className="radio"
@@ -438,7 +438,7 @@ exports[`Storyshots Forms|Radio Default 1`] = `
 
 exports[`Storyshots Forms|Radio Disabled 1`] = `
 <div
-  className="sc-jhAzac edPAWD"
+  className="sc-fMiknA keSQNk"
 >
   <label
     className="radio"
@@ -2310,4 +2310,129 @@ PORT_NUMBER =
     </code>
   </pre>
 </div>
+`;
+
+exports[`Storyshots Table|Table Default 1`] = `
+<table
+  className="sc-jhAzac hmXDXQ table content is-hoverable"
+>
+  <thead>
+    <tr>
+      <th
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
+        FIRST
+      </th>
+      <th
+        className="has-cursor-pointer"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
+        SECOND
+        <i
+          className="fas fa-sort-amount-down has-text-grey-light sc-hzDkRC escBde"
+        />
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <h1>
+          dddd
+        </h1>
+      </td>
+      <td>
+        <h2
+          style={
+            Object {
+              "color": "red",
+            }
+          }
+        >
+          xyz
+        </h2>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h1>
+          abc
+        </h1>
+      </td>
+      <td>
+        <h2
+          style={
+            Object {
+              "color": "red",
+            }
+          }
+        >
+          bbbb
+        </h2>
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;
+
+exports[`Storyshots Table|Table TextColumn 1`] = `
+<table
+  className="sc-jhAzac hmXDXQ table content is-hoverable"
+>
+  <thead>
+    <tr>
+      <th
+        className="has-cursor-pointer"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
+        FIRST
+        <i
+          className="fas fa-sort-alpha-down has-text-grey-light sc-hzDkRC escBde"
+        />
+      </th>
+      <th
+        className="has-cursor-pointer"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
+        SECOND
+        <i
+          className="fas fa-sort-alpha-down has-text-grey-light sc-hzDkRC escBde"
+        />
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        d
+      </td>
+      <td>
+        y
+      </td>
+    </tr>
+    <tr>
+      <td>
+        a
+      </td>
+      <td>
+        b
+      </td>
+    </tr>
+    <tr>
+      <td>
+        z
+      </td>
+      <td>
+        a
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
