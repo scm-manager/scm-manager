@@ -2394,6 +2394,15 @@ exports[`Storyshots Table|Table Default 1`] = `
 </table>
 `;
 
+exports[`Storyshots Table|Table Empty 1`] = `
+<div
+  className="notification is-info"
+>
+  
+  No data found.
+</div>
+`;
+
 exports[`Storyshots Table|Table TextColumn 1`] = `
 <table
   className="sc-jhAzac hmXDXQ table content is-hoverable"
