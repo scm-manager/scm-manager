@@ -1,7 +1,8 @@
-import React, { FC, useState } from "react";
+import React, { FC, ReactElement, useState } from "react";
 import styled from "styled-components";
 import { Comparator } from "./table";
 import SortIcon from "./SortIcon";
+import Notification from "../Notification";
 
 const StyledTable = styled.table.attrs(() => ({
   className: "table content is-hoverable"
@@ -10,23 +11,23 @@ const StyledTable = styled.table.attrs(() => ({
 type Props = {
   data: any[];
   sortable?: boolean;
+  emptyMessage?: string;
+  children: Array<ReactElement>;
 };
 
-// @ts-ignore
-const Table: FC<Props> = ({ data, sortable, children }) => {
+const Table: FC<Props> = ({ data, sortable, children, emptyMessage }) => {
   const [tableData, setTableData] = useState(data);
   const [ascending, setAscending] = useState(false);
   const [lastSortBy, setlastSortBy] = useState<number | undefined>();
   const [hoveredColumnIndex, setHoveredColumnIndex] = useState<number | undefined>();
 
-  const isSortable = (child: any) => {
+  const isSortable = (child: ReactElement) => {
     return sortable && child.props.createComparator;
   };
 
   const sortFunctions: Comparator | undefined[] = [];
   React.Children.forEach(children, (child, index) => {
-    if (isSortable(child)) {
-      // @ts-ignore
+    if (child && isSortable(child)) {
       sortFunctions.push(child.props.createComparator(child.props, index));
     } else {
       sortFunctions.push(undefined);
@@ -37,7 +38,6 @@ const Table: FC<Props> = ({ data, sortable, children }) => {
     return (
       <tr>
         {React.Children.map(children, (child, columnIndex) => {
-          // @ts-ignore
           return <td>{React.cloneElement(child, { ...child.props, columnIndex, row })}</td>;
         })}
       </tr>
@@ -51,14 +51,17 @@ const Table: FC<Props> = ({ data, sortable, children }) => {
   };
 
   const tableSort = (index: number) => {
+    const sortFn = sortFunctions[index];
+    if (!sortFn) {
+      throw new Error(`column with index ${index} is not sortable`);
+    }
     const sortableData = [...tableData];
     let sortOrder = ascending;
     if (lastSortBy !== index) {
       setAscending(true);
       sortOrder = true;
     }
-    // @ts-ignore
-    const sortFunction = sortOrder ? sortFunctions[index] : sortDescending(sortFunctions[index]);
+    const sortFunction = sortOrder ? sortFn : sortDescending(sortFn);
     sortableData.sort(sortFunction);
     setTableData(sortableData);
     setAscending(!sortOrder);
@@ -69,30 +72,33 @@ const Table: FC<Props> = ({ data, sortable, children }) => {
     return index === lastSortBy || index === hoveredColumnIndex;
   };
 
+  if (!tableData || tableData.length <= 0) {
+    if (emptyMessage) {
+      return <Notification type="info">{emptyMessage}</Notification>;
+    } else {
+      return null;
+    }
+  }
+
   return (
-    tableData.length > 0 && (
-      <StyledTable>
-        <thead>
-          <tr>
-            {React.Children.map(children, (child, index) => (
-              <th
-                className={isSortable(child) && "has-cursor-pointer"}
-                onClick={isSortable(child) ? () => tableSort(index) : undefined}
-                onMouseEnter={() => setHoveredColumnIndex(index)}
-                onMouseLeave={() => setHoveredColumnIndex(undefined)}
-              >
-                {
-                  // @ts-ignore
-                  child.props.header
-                }
-                {isSortable(child) && renderSortIcon(child, ascending, shouldShowIcon(index))}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>{tableData.map(mapDataToColumns)}</tbody>
-      </StyledTable>
-    )
+    <StyledTable>
+      <thead>
+        <tr>
+          {React.Children.map(children, (child, index) => (
+            <th
+              className={isSortable(child) && "has-cursor-pointer"}
+              onClick={isSortable(child) ? () => tableSort(index) : undefined}
+              onMouseEnter={() => setHoveredColumnIndex(index)}
+              onMouseLeave={() => setHoveredColumnIndex(undefined)}
+            >
+              {child.props.header}
+              {isSortable(child) && renderSortIcon(child, ascending, shouldShowIcon(index))}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>{tableData.map(mapDataToColumns)}</tbody>
+    </StyledTable>
   );
 };
 
@@ -100,7 +106,7 @@ Table.defaultProps = {
   sortable: true
 };
 
-const renderSortIcon = (child: any, ascending: boolean, showIcon: boolean) => {
+const renderSortIcon = (child: ReactElement, ascending: boolean, showIcon: boolean) => {
   if (child.props.ascendingIcon && child.props.descendingIcon) {
     return <SortIcon name={ascending ? child.props.ascendingIcon : child.props.descendingIcon} isVisible={showIcon} />;
   } else {

@@ -10,7 +10,7 @@ const TextColumn: FC<Props> = ({ row, dataKey }) => {
 };
 
 TextColumn.defaultProps = {
-  createComparator: (props: Props, columnIndex) => {
+  createComparator: (props: Props) => {
     return (a: any, b: any) => {
       if (a[props.dataKey] < b[props.dataKey]) {
         return -1;
