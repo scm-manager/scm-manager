@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useState } from "react";
+import React, { FC, ReactElement, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Comparator } from "./table";
 import SortIcon from "./SortIcon";
@@ -17,6 +17,9 @@ type Props = {
 
 const Table: FC<Props> = ({ data, sortable, children, emptyMessage }) => {
   const [tableData, setTableData] = useState(data);
+  useEffect(() => {
+    setTableData(data);
+  }, [data]);
   const [ascending, setAscending] = useState(false);
   const [lastSortBy, setlastSortBy] = useState<number | undefined>();
   const [hoveredColumnIndex, setHoveredColumnIndex] = useState<number | undefined>();
