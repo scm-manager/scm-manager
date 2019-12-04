@@ -317,48 +317,47 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
   {
     logger.debug("store configuration to {}", file);
 
-    try (IndentXMLStreamWriter writer = XmlStreams.createWriter(file))
-    {
-      writer.writeStartDocument();
+    CopyOnWrite.withTemporaryFile(
+      temp -> {
+        try (IndentXMLStreamWriter writer = XmlStreams.createWriter(temp)) {
+          writer.writeStartDocument();
 
-      // configuration start
-      writer.writeStartElement(TAG_CONFIGURATION);
+          // configuration start
+          writer.writeStartElement(TAG_CONFIGURATION);
 
-      Marshaller m = context.createMarshaller();
+          Marshaller m = context.createMarshaller();
 
-      m.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+          m.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
 
-      for (Entry<String, V> e : entries.entrySet())
-      {
+          for (Entry<String, V> e : entries.entrySet()) {
 
-        // entry start
-        writer.writeStartElement(TAG_ENTRY);
+            // entry start
+            writer.writeStartElement(TAG_ENTRY);
 
-        // key start
-        writer.writeStartElement(TAG_KEY);
-        writer.writeCharacters(e.getKey());
+            // key start
+            writer.writeStartElement(TAG_KEY);
+            writer.writeCharacters(e.getKey());
 
-        // key end
-        writer.writeEndElement();
+            // key end
+            writer.writeEndElement();
 
-        // value
-        JAXBElement<V> je = new JAXBElement<V>(QName.valueOf(TAG_VALUE), type,
-                              e.getValue());
+            // value
+            JAXBElement<V> je = new JAXBElement<>(QName.valueOf(TAG_VALUE), type,
+              e.getValue());
 
-        m.marshal(je, writer);
+            m.marshal(je, writer);
 
-        // entry end
-        writer.writeEndElement();
-      }
+            // entry end
+            writer.writeEndElement();
+          }
 
-      // configuration end
-      writer.writeEndElement();
-      writer.writeEndDocument();
-    }
-    catch (Exception ex)
-    {
-      throw new StoreException("could not store configuration", ex);
-    }
+          // configuration end
+          writer.writeEndElement();
+          writer.writeEndDocument();
+        }
+      },
+      file.toPath()
+    );
   }
 
   //~--- fields ---------------------------------------------------------------
