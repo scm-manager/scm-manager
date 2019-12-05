@@ -63,7 +63,7 @@ class CopyOnWriteTest {
     new FileOutputStream(unchangedOriginalFile.toFile()).write("this should be kept".getBytes());
 
     assertThrows(
-      IOException.class,
+      StoreException.class,
       () -> withTemporaryFile(
         file -> {
           throw new IOException("test");
@@ -79,7 +79,7 @@ class CopyOnWriteTest {
     new FileOutputStream(backedUpFile.toFile()).write("this should be kept".getBytes());
 
     assertThrows(
-      IOException.class,
+      StoreException.class,
       () -> withTemporaryFile(
         Files::delete,
         backedUpFile));
