@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
+import sonia.scm.store.CopyOnWrite;
 import sonia.scm.store.StoreConstants;
 import sonia.scm.update.UpdateStepRepositoryMetadataAccess;
 
@@ -43,7 +44,10 @@ public class MetadataStore implements UpdateStepRepositoryMetadataAccess<Path> {
     try {
       Marshaller marshaller = jaxbContext.createMarshaller();
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-      marshaller.marshal(repository, resolveDataPath(path).toFile());
+      CopyOnWrite.withTemporaryFile(
+        temp -> marshaller.marshal(repository, temp.toFile()),
+        resolveDataPath(path)
+      );
     } catch (JAXBException ex) {
       throw new InternalRepositoryException(repository, "failed write repository metadata", ex);
     }
