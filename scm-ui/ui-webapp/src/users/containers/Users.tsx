@@ -49,11 +49,20 @@ class Users extends React.Component<Props> {
   componentDidUpdate = (prevProps: Props) => {
     const { loading, list, page, usersLink, location, fetchUsersByPage } = this.props;
     if (list && page && !loading) {
-      const statePage: number = list.page + 1;
+      const statePage: number = this.resolveStatePage();
       if (page !== statePage || prevProps.location.search !== location.search) {
         fetchUsersByPage(usersLink, page, urls.getQueryStringFromLocation(location));
       }
     }
+  };
+
+  resolveStatePage = (props = this.props) => {
+    const { list } = props;
+    if (list.page) {
+      return list.page + 1;
+    }
+    // set page to 1 if undefined, because if users couldn't be fetched it would lead to a fetch-loop otherwise
+    return 1;
   };
 
   render() {

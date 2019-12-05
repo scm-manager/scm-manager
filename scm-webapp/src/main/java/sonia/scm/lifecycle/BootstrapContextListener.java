@@ -88,14 +88,16 @@ public class BootstrapContextListener extends GuiceServletContextListener {
   protected Injector getInjector() {
     Throwable startupError = SCMContext.getContext().getStartupError();
     if (startupError != null) {
+      LOG.error("received unrecoverable error during startup", startupError);
       return createStageOneInjector(SingleView.error(startupError));
     } else if (Versions.isTooOld()) {
-      LOG.error("Existing version is too old and cannot be migrated to new version. Please update to version {} first", Versions.MIN_VERSION);
+      LOG.error("existing version is too old and cannot be migrated to new version. Please update to version {} first", Versions.MIN_VERSION);
       return createStageOneInjector(SingleView.view("/templates/too-old.mustache", HttpServletResponse.SC_CONFLICT));
     } else {
       try {
         return createStageTwoInjector();
       } catch (Exception ex) {
+        LOG.error("failed to create stage two injector", ex);
         return createStageOneInjector(SingleView.error(ex));
       }
     }

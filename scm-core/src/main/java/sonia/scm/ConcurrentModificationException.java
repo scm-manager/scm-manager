@@ -17,7 +17,7 @@ public class ConcurrentModificationException extends ExceptionWithContext {
     this(Collections.singletonList(new ContextEntry(type, id)));
   }
 
-  private ConcurrentModificationException(List<ContextEntry> context) {
+  public ConcurrentModificationException(List<ContextEntry> context) {
     super(context, createMessage(context));
   }
 
@@ -32,3 +32,4 @@ public class ConcurrentModificationException extends ExceptionWithContext {
       .collect(joining(" in ", "", " has been modified concurrently"));
   }
 }
+                                                                                        

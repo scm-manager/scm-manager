@@ -114,7 +114,7 @@
       "size": "tamaño"
     },
     "noSources": "No se han encontrado fuentes para esta rama.",
-    "extension" : {
+    "extension": {
       "notBound": "Sin extensión conectada."
     }
   },
@@ -166,8 +166,7 @@
     }
   },
   "deleteRepo": {
-    "subtitle": "Borrar repositorio",
-    "button": "Borrar",
+    "button": "Borrar repositorio",
     "confirmAlert": {
       "title": "Borrar repositorio",
       "message": "¿Realmente desea borrar el repositorio?",
@@ -178,13 +177,14 @@
   "diff": {
     "changes": {
       "add": "añadido",
-      "delete":  "borrado",
+      "delete": "borrado",
       "modify": "modificado",
       "rename": "renombrado",
       "copy": "copiado"
     },
     "sideBySide": "dos columnas",
-    "combined": "combinado"
+    "combined": "combinado",
+    "noDiffFound": "No se encontraron diferencias entre las ramas seleccionadas."
   },
   "fileUpload": {
     "clickHere": "Haga click aquí para seleccionar su fichero",

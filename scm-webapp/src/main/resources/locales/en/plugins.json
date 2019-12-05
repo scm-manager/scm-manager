@@ -191,12 +191,16 @@
     "78RhWxTIw1": {
       "displayName": "Default branch cannot be deleted",
       "description": "The default branch of a repository cannot be deleted. Please select another default branch first."
+    },
+    "1yRiASshD1": {
+      "displayName": "Error deleting the anonymous user",
+      "description": "The anonymous user cannot be deleted since the anonymous access is still enabled in the configuration."
     }
   },
   "namespaceStrategies": {
-    "UsernameNamespaceStrategy":  "Username",
-    "CustomNamespaceStrategy":  "Custom",
-    "CurrentYearNamespaceStrategy":  "Current year",
+    "UsernameNamespaceStrategy": "Username",
+    "CustomNamespaceStrategy": "Custom",
+    "CurrentYearNamespaceStrategy": "Current year",
     "RepositoryTypeNamespaceStrategy": "Repository type"
   }
 }

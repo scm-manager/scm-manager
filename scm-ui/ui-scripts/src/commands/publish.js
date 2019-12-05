@@ -4,7 +4,7 @@ const versions = require("../versions");
 const args = process.argv.slice(2);
 
 if (args.length < 1) {
-  console.log("usage ui-scripts publish version");
+  console.log("usage ui-scripts publish <version>");
   process.exit(1);
 }
 

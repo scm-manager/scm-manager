@@ -1,6 +1,8 @@
 const path = require("path");
 const createIndexMiddleware = require("./middleware/IndexMiddleware");
 const createContextPathMiddleware = require("./middleware/ContextPathMiddleware");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 const root = path.resolve(process.cwd(), "scm-ui");
 
@@ -8,11 +10,7 @@ module.exports = [
   {
     context: root,
     entry: {
-      webapp: [
-        path.resolve(__dirname, "webpack-public-path.js"),
-        "./ui-styles/src/scm.scss",
-        "./ui-webapp/src/index.tsx"
-      ]
+      webapp: [path.resolve(__dirname, "webpack-public-path.js"), "./ui-webapp/src/index.tsx"]
     },
     devtool: "cheap-module-eval-source-map",
     target: "web",
@@ -107,6 +105,41 @@ module.exports = [
           }
         }
       }
+    }
+  },
+  {
+    context: root,
+    entry: "./ui-styles/src/scm.scss",
+    module: {
+      rules: [
+        {
+          test: /\.(css|scss|sass)$/i,
+          use: [
+            {
+              loader: MiniCssExtractPlugin.loader
+            },
+            "css-loader",
+            "sass-loader"
+          ]
+        },
+        {
+          test: /\.(png|svg|jpg|gif|woff2?|eot|ttf)$/,
+          use: ["file-loader"]
+        }
+      ]
+    },
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: "ui-styles.css",
+        ignoreOrder: false
+      })
+    ],
+    optimization: {
+      minimizer: [new OptimizeCSSAssetsPlugin({})]
+    },
+    output: {
+      path: path.join(root, "target", "assets"),
+      filename: "ui-styles.bundle.js"
     }
   },
   {

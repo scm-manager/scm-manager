@@ -70,7 +70,19 @@ class SetupContextListenerTest {
   }
 
   @Test
-  void shouldCreateAdminAccountAndAssignPermissions() {
+  void shouldCreateAdminAccountIfNoUserExistsAndAssignPermissions() {
+    when(passwordService.encryptPassword("scmadmin")).thenReturn("secret");
+
+    setupContextListener.contextInitialized(null);
+
+    verifyAdminCreated();
+    verifyAdminPermissionsAssigned();
+  }
+
+  @Test
+  void shouldCreateAdminAccountIfOnlyAnonymousUserExistsAndAssignPermissions() {
+    when(userManager.getAll()).thenReturn(Lists.newArrayList(SCMContext.ANONYMOUS));
+    when(userManager.contains(SCMContext.USER_ANONYMOUS)).thenReturn(true);
     when(passwordService.encryptPassword("scmadmin")).thenReturn("secret");
 
     setupContextListener.contextInitialized(null);

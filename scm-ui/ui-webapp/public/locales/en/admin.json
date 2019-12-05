@@ -11,7 +11,7 @@
       "communityTitle": "Community Support",
       "communityIconAlt": "Community Support Icon",
       "communityInfo": "Contact the SCM-Manager support team for questions about SCM-Manager, to report bugs or to request features through the official channels.",
-      "communityButton": "Contact our team",
+      "communityButton": "Contact our Team",
       "enterpriseTitle": "Enterprise Support",
       "enterpriseIconAlt": "Enterprise Support Icon",
       "enterpriseInfo": "You require support with the integration of SCM-Manager into your processes, with the customization of the tool or simply a service level agreement (SLA)?",
@@ -76,8 +76,8 @@
     "createSubtitle": "Create Permission Role",
     "editSubtitle": "Edit Permission Role",
     "overview": {
-      "title": "Overview of all permission roles",
-      "noPermissionRoles": "No permission roles found.",
+      "title": "Overview of all Permission Roles",
+      "noPermissionRoles": "No Permission Roles found.",
       "createButton": "Create Permission Role"
     },
     "editButton": "Edit",
@@ -91,10 +91,9 @@
       "submit": "Save"
     },
     "delete": {
-      "button": "Delete",
-      "subtitle": "Delete permission role",
+      "button": "Delete Permission Role",
       "confirmAlert": {
-        "title": "Delete permission role",
+        "title": "Delete Permission Role",
         "message": "Do you really want to delete this permission role? All users will lose their corresponding permissions.",
         "submit": "Yes",
         "cancel": "No"

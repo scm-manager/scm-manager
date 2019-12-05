@@ -7,24 +7,25 @@ import { fetchSources, getFetchSourcesFailure, getSources, isFetchSourcesPending
 import { connect } from "react-redux";
 import { Loading, ErrorNotification } from "@scm-manager/ui-components";
 import Notification from "@scm-manager/ui-components/src/Notification";
-import {WithTranslation, withTranslation} from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 
-type Props = WithTranslation & RouteComponentProps & {
-  repository: Repository;
+type Props = WithTranslation &
+  RouteComponentProps & {
+    repository: Repository;
 
-  // url params
-  extension: string;
-  revision?: string;
-  path?: string;
+    // url params
+    extension: string;
+    revision?: string;
+    path?: string;
 
-  // redux state
-  loading: boolean;
-  error?: Error | null;
-  sources?: File | null;
+    // redux state
+    loading: boolean;
+    error?: Error | null;
+    sources?: File | null;
 
-  // dispatch props
-  fetchSources: (repository: Repository, revision: string, path: string) => void;
-};
+    // dispatch props
+    fetchSources: (repository: Repository, revision: string, path: string) => void;
+  };
 
 const extensionPointName = "repos.sources.extensions";
 
@@ -32,7 +33,7 @@ class SourceExtensions extends React.Component<Props> {
   componentDidMount() {
     const { fetchSources, repository, revision, path } = this.props;
     // TODO get typing right
-    fetchSources(repository,revision || "", path || "");
+    fetchSources(repository, revision || "", path || "");
   }
 
   render() {

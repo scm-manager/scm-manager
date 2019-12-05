@@ -77,7 +77,9 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
     String revision = MoreObjects.firstNonNull(request.getRevision(), "tip");
     Changeset c = LogCommand.on(getContext().open()).rev(revision).limit(1).single();
 
-    cmd.rev(c.getNode());
+    if (c != null) {
+      cmd.rev(c.getNode());
+    }
 
     if (!Strings.isNullOrEmpty(request.getPath()))
     {
@@ -100,6 +102,6 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
     }
 
     FileObject file = cmd.execute();
-    return new BrowserResult(c.getNode(), revision, file);
+    return new BrowserResult(c == null? "tip": c.getNode(), revision, file);
   }
 }

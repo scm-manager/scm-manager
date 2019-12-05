@@ -17,9 +17,9 @@ class GroupRow extends React.Component<Props> {
     const { group, t } = this.props;
     const to = `/group/${group.name}`;
     const iconType = group.external ? (
-      <Icon title={t("group.external")} name="sign-out-alt fa-rotate-270" />
+      <Icon title={t("group.external")} name="globe-americas" />
     ) : (
-      <Icon title={t("group.internal")} name="sign-in-alt fa-rotate-90" />
+      <Icon title={t("group.internal")} name="home" />
     );
 
     return (

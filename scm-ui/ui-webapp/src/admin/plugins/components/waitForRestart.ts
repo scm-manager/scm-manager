@@ -1,7 +1,7 @@
 import { apiClient } from "@scm-manager/ui-components";
 
 const waitForRestart = () => {
-  const endTime = Number(new Date()) + 10000;
+  const endTime = Number(new Date()) + 60000;
   let started = false;
 
   const executor = (resolve, reject) => {

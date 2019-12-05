@@ -15,6 +15,7 @@ type Props = {
   errorMessage?: string;
   disabled?: boolean;
   helpText?: string;
+  className?: string;
 };
 
 class InputField extends React.Component<Props> {
@@ -47,11 +48,21 @@ class InputField extends React.Component<Props> {
   };
 
   render() {
-    const { type, placeholder, value, validationError, errorMessage, disabled, label, helpText } = this.props;
+    const {
+      type,
+      placeholder,
+      value,
+      validationError,
+      errorMessage,
+      disabled,
+      label,
+      helpText,
+      className
+    } = this.props;
     const errorView = validationError ? "is-danger" : "";
     const helper = validationError ? <p className="help is-danger">{errorMessage}</p> : "";
     return (
-      <div className="field">
+      <div className={classNames("field", className)}>
         <LabelWithHelpIcon label={label} helpText={helpText} />
         <div className="control">
           <input
