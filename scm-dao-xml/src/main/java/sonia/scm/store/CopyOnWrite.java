@@ -56,14 +56,12 @@ public final class CopyOnWrite {
     Path backupFile = backupOriginalFile(targetFile);
     try {
       Files.move(temporaryFile, targetFile);
-      if (backupFile != null) {
-        Files.delete(backupFile);
-      }
     } catch (IOException e) {
       LOG.error("Error renaming temporary file {} to target file {}", temporaryFile, targetFile);
       restoreBackup(targetFile, backupFile);
       throw new StoreException("could rename temporary file to target file", e);
     }
+    deleteBackupFile(backupFile);
   }
 
   private static Path backupOriginalFile(Path targetFile) {
@@ -79,6 +77,17 @@ public final class CopyOnWrite {
       return backupFile;
     } else {
       return null;
+    }
+  }
+
+  private static void deleteBackupFile(Path backupFile) {
+    if (backupFile != null) {
+      try {
+        Files.delete(backupFile);
+      } catch (IOException e) {
+        LOG.warn("Could not delete backup file {}", backupFile);
+        throw new StoreException("could not delete backup file", e);
+      }
     }
   }
 
