@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { ColumnProps } from "./table";
+import { ColumnProps } from "./types";
 
 type Props = ColumnProps & {
   dataKey: string;
