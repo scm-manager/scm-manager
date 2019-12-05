@@ -21,6 +21,7 @@ public final class CopyOnWrite {
     replaceOriginalFile(targetFile, temporaryFile);
   }
 
+  @SuppressWarnings("squid:S3725") // performance of Files#isDirectory
   private static void validateInput(Path targetFile) {
     if (Files.isDirectory(targetFile)) {
       throw new IllegalArgumentException("target file has to be a regular file, not a directory");
@@ -36,7 +37,7 @@ public final class CopyOnWrite {
       Files.createFile(temporaryFile);
     } catch (IOException ex) {
       LOG.error("Error creating temporary file {} to replace file {}", temporaryFile, targetFile);
-      throw new StoreException("could create temporary file", ex);
+      throw new StoreException("could not create temporary file", ex);
     }
     return temporaryFile;
   }
@@ -64,6 +65,7 @@ public final class CopyOnWrite {
     deleteBackupFile(backupFile);
   }
 
+  @SuppressWarnings("squid:S3725") // performance of Files#exists
   private static Path backupOriginalFile(Path targetFile) {
     Path directory = targetFile.getParent();
     if (Files.exists(targetFile)) {
