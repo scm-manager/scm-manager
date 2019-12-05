@@ -74,6 +74,19 @@ class CopyOnWriteTest {
   }
 
   @Test
+  void shouldNotWrapRuntimeExceptions(@TempDirectory.TempDir Path tempDir) throws IOException {
+    Path someFile = tempDir.resolve("something.txt");
+
+    assertThrows(
+      NullPointerException.class,
+      () -> withTemporaryFile(
+        file -> {
+          throw new NullPointerException("test");
+        },
+        someFile));
+  }
+
+  @Test
   void shouldKeepBackupIfTemporaryFileIsMissing(@TempDirectory.TempDir Path tempDir) throws IOException {
     Path backedUpFile = tempDir.resolve("notToBeDeleted.txt");
     new FileOutputStream(backedUpFile.toFile()).write("this should be kept".getBytes());

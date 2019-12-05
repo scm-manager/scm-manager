@@ -1,5 +1,8 @@
 package sonia.scm.store;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -7,20 +10,15 @@ import java.util.UUID;
 
 public final class CopyOnWrite {
 
+  private static final Logger LOG = LoggerFactory.getLogger(CopyOnWrite.class);
+
   private CopyOnWrite() {}
 
-  public static void withTemporaryFile(FileWriter creator, Path targetFile) {
+  public static void withTemporaryFile(FileWriter writer, Path targetFile) {
     validateInput(targetFile);
-
-    try {
-      Path temporaryFile = Files.createFile(targetFile.getParent().resolve(UUID.randomUUID().toString()));
-
-      creator.write(temporaryFile);
-
-      replaceOriginalFile(targetFile, temporaryFile);
-    } catch (Exception ex) {
-      throw new StoreException("could not write file", ex);
-    }
+    Path temporaryFile = createTemporaryFile(targetFile);
+    executeCallback(writer, targetFile, temporaryFile);
+    replaceOriginalFile(targetFile, temporaryFile);
   }
 
   private static void validateInput(Path targetFile) {
@@ -32,38 +30,72 @@ public final class CopyOnWrite {
     }
   }
 
-  private static void replaceOriginalFile(Path targetFile, Path temporaryFile) throws IOException {
+  private static Path createTemporaryFile(Path targetFile) {
+    Path temporaryFile = targetFile.getParent().resolve(UUID.randomUUID().toString());
+    try {
+      Files.createFile(temporaryFile);
+    } catch (IOException ex) {
+      LOG.error("Error creating temporary file {} to replace file {}", temporaryFile, targetFile);
+      throw new StoreException("could create temporary file", ex);
+    }
+    return temporaryFile;
+  }
+
+  private static void executeCallback(FileWriter writer, Path targetFile, Path temporaryFile) {
+    try {
+      writer.write(temporaryFile);
+    } catch (RuntimeException e) {
+      throw e;
+    } catch (Exception ex) {
+      LOG.error("Error writing to temporary file {}. Target file {} has not been modified", temporaryFile, targetFile);
+      throw new StoreException("could not write temporary file", ex);
+    }
+  }
+
+  private static void replaceOriginalFile(Path targetFile, Path temporaryFile) {
     Path backupFile = backupOriginalFile(targetFile);
     try {
       Files.move(temporaryFile, targetFile);
       if (backupFile != null) {
         Files.delete(backupFile);
       }
-    } catch (RuntimeException | IOException e) {
+    } catch (IOException e) {
+      LOG.error("Error renaming temporary file {} to target file {}", temporaryFile, targetFile);
       restoreBackup(targetFile, backupFile);
-      throw e;
+      throw new StoreException("could rename temporary file to target file", e);
     }
   }
 
-  private static Path backupOriginalFile(Path targetFile) throws IOException {
+  private static Path backupOriginalFile(Path targetFile) {
     Path directory = targetFile.getParent();
     if (Files.exists(targetFile)) {
       Path backupFile = directory.resolve(UUID.randomUUID().toString());
-      Files.move(targetFile, backupFile);
+      try {
+        Files.move(targetFile, backupFile);
+      } catch (IOException e) {
+        LOG.error("Could not backup original file {}. Aborting here so that original file will not be overwritten.", targetFile);
+        throw new StoreException("could not create backup of file", e);
+      }
       return backupFile;
     } else {
       return null;
     }
   }
 
-  private static void restoreBackup(Path targetFile, Path backupFile) throws IOException {
+  private static void restoreBackup(Path targetFile, Path backupFile) {
     if (backupFile != null) {
-      Files.move(backupFile, targetFile);
+      try {
+        Files.move(backupFile, targetFile);
+        LOG.info("Recovered original file {} from backup", targetFile);
+      } catch (IOException e) {
+        LOG.error("Could not replace original file {} with backup file {} after failure", targetFile, backupFile);
+      }
     }
   }
 
   @FunctionalInterface
   public interface FileWriter {
+    @SuppressWarnings("squid:S00112") // We do not want to limit exceptions here
     void write(Path t) throws Exception;
   }
 }
