@@ -41,7 +41,6 @@ class EditUser extends React.Component<Props> {
       <div>
         <ErrorNotification error={error} />
         <UserForm submitForm={user => this.modifyUser(user)} user={user} loading={loading} />
-        <hr />
         <DeleteUser user={user} />
       </div>
     );

@@ -66,7 +66,7 @@ public class EnvList
    */
   public EnvList()
   {
-    envMap = new HashMap<String, String>();
+    envMap = new HashMap<>();
   }
 
   /**
@@ -77,7 +77,7 @@ public class EnvList
    */
   public EnvList(EnvList l)
   {
-    envMap = new HashMap<String, String>(l.envMap);
+    envMap = new HashMap<>(l.envMap);
   }
 
   //~--- methods --------------------------------------------------------------

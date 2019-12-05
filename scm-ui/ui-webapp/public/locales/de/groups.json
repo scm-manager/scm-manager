@@ -60,8 +60,7 @@
     }
   },
   "deleteGroup": {
-    "subtitle": "Gruppe löschen",
-    "button": "Löschen",
+    "button": "Gruppe löschen",
     "confirmAlert": {
       "title": "Gruppe löschen",
       "message": "Soll die Gruppe wirklich gelöscht werden?",

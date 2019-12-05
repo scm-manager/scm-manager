@@ -81,7 +81,7 @@ public class XmlUserMapAdapter
   @Override
   public Map<String, User> unmarshal(XmlUserList users) throws Exception
   {
-    Map<String, User> userMap = new LinkedHashMap<String, User>();
+    Map<String, User> userMap = new LinkedHashMap<>();
 
     for (User user : users)
     {

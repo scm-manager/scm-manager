@@ -45,17 +45,16 @@
     "subtitle": "Create a new user"
   },
   "deleteUser": {
-    "subtitle": "Delete User",
-    "button": "Delete",
+    "button": "Delete User",
     "confirmAlert": {
-      "title": "Delete user",
+      "title": "Delete User",
       "message": "Do you really want to delete the user?",
       "submit": "Yes",
       "cancel": "No"
     }
   },
   "singleUserPassword": {
-    "button": "Set password",
+    "button": "Set Password",
     "setPasswordSuccessful": "Password successfully set"
   },
   "userForm": {

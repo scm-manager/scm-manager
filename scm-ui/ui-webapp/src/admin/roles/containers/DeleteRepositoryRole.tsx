@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { RepositoryRole } from "@scm-manager/ui-types";
-import { Subtitle, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { Level, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 import { deleteRole, getDeleteRoleFailure, isDeleteRolePending } from "../modules/roles";
 
 type Props = WithTranslation & {
@@ -64,13 +64,9 @@ class DeleteRepositoryRole extends React.Component<Props> {
 
     return (
       <>
-        <Subtitle subtitle={t("repositoryRole.delete.subtitle")} />
-        <div className="columns">
-          <div className="column">
-            <ErrorNotification error={error} />
-            <DeleteButton label={t("repositoryRole.delete.button")} action={action} loading={loading} />
-          </div>
-        </div>
+        <hr />
+        <ErrorNotification error={error} />
+        <Level right={<DeleteButton label={t("repositoryRole.delete.button")} action={action} loading={loading} />} />
       </>
     );
   }

@@ -81,15 +81,7 @@ public class MapCacheManager
   @Override
   public synchronized <K, V> MapCache<K, V> getCache(String name)
   {
-    MapCache<K, V> cache = cacheMap.get(name);
-
-    if (cache == null)
-    {
-      cache = new MapCache<K, V>();
-      cacheMap.put(name, cache);
-    }
-
-    return cache;
+    return (MapCache<K, V>) cacheMap.computeIfAbsent(name, k -> new MapCache<K, V>());
   }
 
   //~--- fields ---------------------------------------------------------------

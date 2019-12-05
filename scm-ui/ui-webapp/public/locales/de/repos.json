@@ -114,7 +114,7 @@
       "size": "Größe"
     },
     "noSources": "Keine Sources in diesem Branch gefunden.",
-    "extension" : {
+    "extension": {
       "notBound": "Keine Erweiterung angebunden."
     }
   },
@@ -166,8 +166,7 @@
     }
   },
   "deleteRepo": {
-    "subtitle": "Repository löschen",
-    "button": "Löschen",
+    "button": "Repository löschen",
     "confirmAlert": {
       "title": "Repository löschen",
       "message": "Soll das Repository wirklich gelöscht werden?",

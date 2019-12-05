@@ -1,8 +1,7 @@
-import React from "react";
+import React, { FormEvent } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Links, Link } from "@scm-manager/ui-types";
-import { apiClient, SubmitButton, Loading, ErrorNotification } from "../";
-import { FormEvent } from "react";
+import { apiClient, Level, SubmitButton, Loading, ErrorNotification } from "../";
 
 type RenderProps = {
   readOnly: boolean;
@@ -179,7 +178,9 @@ class Configuration extends React.Component<Props, State> {
           <form onSubmit={this.modifyConfiguration}>
             {this.props.render(renderProps)}
             <hr />
-            <SubmitButton label={t("config.form.submit")} disabled={!valid || readOnly} loading={modifying} />
+            <Level
+              right={<SubmitButton label={t("config.form.submit")} disabled={!valid || readOnly} loading={modifying} />}
+            />
           </form>
         </>
       );

@@ -2,10 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { RepositoryRole } from "@scm-manager/ui-types";
-import { InputField, SubmitButton } from "@scm-manager/ui-components";
+import { InputField, Level, SubmitButton } from "@scm-manager/ui-components";
 import { getRepositoryRolesLink, getRepositoryVerbsLink } from "../../../modules/indexResource";
 import { fetchAvailableVerbs, getFetchVerbsFailure, getVerbsFromState, isFetchVerbsPending } from "../modules/roles";
-import PermissionCheckbox from "../../../repos/permissions/components/PermissionCheckbox";
+import PermissionsWrapper from "../../../permissions/components/PermissionsWrapper";
 
 type Props = WithTranslation & {
   role?: RepositoryRole;
@@ -89,16 +89,9 @@ class RepositoryRoleForm extends React.Component<Props, State> {
     const { loading, availableVerbs, t } = this.props;
     const { role } = this.state;
 
-    const verbSelectBoxes = !availableVerbs
-      ? null
-      : availableVerbs.map(verb => (
-          <PermissionCheckbox
-            key={verb}
-            name={verb}
-            checked={role.verbs.includes(verb)}
-            onChange={this.handleVerbChange}
-          />
-        ));
+    const selectedVerbs = availableVerbs
+      ? availableVerbs.reduce((obj, verb) => ({ ...obj, [verb]: role.verbs.includes(verb) }), {})
+      : {};
 
     return (
       <form onSubmit={this.submit}>
@@ -111,16 +104,23 @@ class RepositoryRoleForm extends React.Component<Props, State> {
         />
         <div className="field">
           <label className="label">{t("repositoryRole.form.permissions")}</label>
-          {verbSelectBoxes}
+          <PermissionsWrapper
+            permissions={selectedVerbs}
+            onChange={this.handleVerbChange}
+            disabled={false}
+            role={true}
+          />
         </div>
         <hr />
-        <SubmitButton loading={loading} label={t("repositoryRole.form.submit")} disabled={!this.isValid()} />
+        <Level
+          right={<SubmitButton loading={loading} label={t("repositoryRole.form.submit")} disabled={!this.isValid()} />}
+        />
       </form>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const loading = isFetchVerbsPending(state);
   const error = getFetchVerbsFailure(state);
   const verbsLink = getRepositoryVerbsLink(state);
