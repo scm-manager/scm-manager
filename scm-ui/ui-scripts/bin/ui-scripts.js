@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const { spawnSync } = require("child_process");
 
-const commands = ["plugin", "plugin-watch", "publish"];
+const commands = ["plugin", "plugin-watch", "publish", "version"];
 
 const args = process.argv.slice(2);
 

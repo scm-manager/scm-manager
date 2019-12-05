@@ -86,8 +86,7 @@
       "submit": "Guardar"
     },
     "delete": {
-      "button": "Borrar",
-      "subtitle": "Eliminar el rol",
+      "button": "Eliminar el rol",
       "confirmAlert": {
         "title": "Eliminar el rol",
         "message": "¿Realmente desea borrar el rol? Todos los usuarios de este rol perderń sus permisos.",

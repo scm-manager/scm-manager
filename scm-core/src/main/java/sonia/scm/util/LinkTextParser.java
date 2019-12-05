@@ -79,7 +79,7 @@ public final class LinkTextParser
   public static String parseText(String content)
   {
     Matcher m = REGEX_URL.matcher(content);
-    List<Token> tokens = new ArrayList<Token>();
+    List<Token> tokens = new ArrayList<>();
     int position = 0;
     String tokenContent = null;
 

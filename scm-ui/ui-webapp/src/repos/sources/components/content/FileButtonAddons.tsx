@@ -18,7 +18,7 @@ class FileButtonAddons extends React.Component<Props> {
   };
 
   color = (selected: boolean) => {
-    return selected ? "link is-selected" : null;
+    return selected ? "link is-selected" : "";
   };
 
   render() {
@@ -27,14 +27,14 @@ class FileButtonAddons extends React.Component<Props> {
     return (
       <ButtonAddons className={className}>
         <div title={t("sources.content.sourcesButton")}>
-          <Button action={this.showSources} className="reduced" color={this.color(!historyIsSelected)}>
+          <Button action={this.showSources} color={this.color(!historyIsSelected)}>
             <span className="icon">
               <i className="fas fa-code" />
             </span>
           </Button>
         </div>
         <div title={t("sources.content.historyButton")}>
-          <Button action={this.showHistory} className="reduced" color={this.color(historyIsSelected)}>
+          <Button action={this.showHistory} color={this.color(historyIsSelected)}>
             <span className="icon">
               <i className="fas fa-history" />
             </span>

@@ -248,6 +248,7 @@ public class DefaultPluginManager implements PluginManager {
       try {
         Thread.sleep(200);
       } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
       }
       eventBus.post(new RestartEvent(PluginManager.class, cause));
     }).start();

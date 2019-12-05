@@ -63,7 +63,7 @@ public class GuavaConfigurationReaderTest
     GuavaCacheConfiguration cfg =
       readConfiguration("gcache.001.xml").getDefaultCache();
 
-    assertCacheValues(cfg, 200l, 1200l, 2400l);
+    assertCacheValues(cfg, 200L, 1200L, 2400L);
   }
 
   /**
@@ -82,10 +82,10 @@ public class GuavaConfigurationReaderTest
     //J+    
 
     // cache sonia.test.cache.001 override by cache.004.xml
-    assertCacheValues(getCache(gcm, "sonia.test.cache.001"), 6l, 2l, 8l);
-    assertCacheValues(getCache(gcm, "sonia.test.cache.002"), 1000l, 120l, 60l);
-    assertCacheValues(getCache(gcm, "sonia.test.cache.003"), 3000l, 120l,
-      2400l);
+    assertCacheValues(getCache(gcm, "sonia.test.cache.001"), 6L, 2L, 8L);
+    assertCacheValues(getCache(gcm, "sonia.test.cache.002"), 1000L, 120L, 60L);
+    assertCacheValues(getCache(gcm, "sonia.test.cache.003"), 3000L, 120L,
+                      2400L);
   }
 
   /**
@@ -100,8 +100,8 @@ public class GuavaConfigurationReaderTest
 
     // check default
 
-    assertCacheValues(getCache(gcm, "sonia.test.cache.001"), 1000l, 60l, 30l);
-    assertCacheValues(getCache(gcm, "sonia.test.cache.002"), 1000l, 120l, 60l);
+    assertCacheValues(getCache(gcm, "sonia.test.cache.001"), 1000L, 60L, 30L);
+    assertCacheValues(getCache(gcm, "sonia.test.cache.002"), 1000L, 120L, 60L);
   }
 
   /**
@@ -115,10 +115,10 @@ public class GuavaConfigurationReaderTest
                                            Iterators.forArray("gcache.002.xml",
                                              "gcache.003.xml"));
 
-    assertCacheValues(getCache(gcm, "sonia.test.cache.001"), 1000l, 60l, 30l);
-    assertCacheValues(getCache(gcm, "sonia.test.cache.002"), 1000l, 120l, 60l);
-    assertCacheValues(getCache(gcm, "sonia.test.cache.003"), 3000l, 120l,
-      2400l);
+    assertCacheValues(getCache(gcm, "sonia.test.cache.001"), 1000L, 60L, 30L);
+    assertCacheValues(getCache(gcm, "sonia.test.cache.002"), 1000L, 120L, 60L);
+    assertCacheValues(getCache(gcm, "sonia.test.cache.003"), 3000L, 120L,
+                      2400L);
   }
 
   /**
@@ -131,7 +131,7 @@ public class GuavaConfigurationReaderTest
     GuavaCacheConfiguration cfg =
       readConfiguration("gcache.001.xml").getCaches().get(0);
 
-    assertCacheValues(cfg, 1000l, 60l, 30l);
+    assertCacheValues(cfg, 1000L, 60L, 30L);
   }
 
   /**
@@ -144,7 +144,7 @@ public class GuavaConfigurationReaderTest
     GuavaCacheConfiguration cfg =
       readConfiguration("gcache.002.xml").getCaches().get(0);
 
-    assertCacheValues(cfg, 1000l, 120l, 60l);
+    assertCacheValues(cfg, 1000L, 120L, 60L);
   }
 
   /**

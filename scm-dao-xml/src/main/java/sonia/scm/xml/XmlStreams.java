@@ -52,7 +52,9 @@ public final class XmlStreams {
   }
 
   private static XMLStreamReader createReader(Reader reader) throws XMLStreamException {
-    return XMLInputFactory.newInstance().createXMLStreamReader(reader);
+    XMLInputFactory factory = XMLInputFactory.newInstance();
+    factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
+    return factory.createXMLStreamReader(reader);
   }
 
 

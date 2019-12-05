@@ -13,15 +13,13 @@ class AvailableVerbs extends React.Component<Props> {
     let verbs = null;
     if (role.verbs.length > 0) {
       verbs = (
-        <tr>
-          <td className="is-paddingless">
-            <ul>
-              {role.verbs.map(verb => {
-                return <li>{t("verbs.repository." + verb + ".displayName")}</li>;
-              })}
-            </ul>
-          </td>
-        </tr>
+        <td className="is-paddingless">
+          <ul>
+            {role.verbs.map((verb, key) => {
+              return <li key={key}>{t("verbs.repository." + verb + ".displayName")}</li>;
+            })}
+          </ul>
+        </td>
       );
     }
     return verbs;

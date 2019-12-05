@@ -72,7 +72,7 @@ public class XmlGroupList implements Iterable<Group>
    */
   public XmlGroupList(Map<String, Group> groupMap)
   {
-    this.groups = new LinkedList<Group>(groupMap.values());
+    this.groups = new LinkedList<>(groupMap.values());
   }
 
   //~--- methods --------------------------------------------------------------

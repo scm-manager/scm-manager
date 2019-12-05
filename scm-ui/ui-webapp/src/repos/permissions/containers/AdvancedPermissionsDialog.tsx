@@ -1,7 +1,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { ButtonGroup, Button, SubmitButton, Modal } from "@scm-manager/ui-components";
-import PermissionCheckbox from "../components/PermissionCheckbox";
+import PermissionCheckbox from "../../../permissions/components/PermissionCheckbox";
 
 type Props = WithTranslation & {
   readOnly: boolean;
@@ -33,7 +33,14 @@ class AdvancedPermissionsDialog extends React.Component<Props, State> {
     const { verbs } = this.state;
 
     const verbSelectBoxes = Object.entries(verbs).map(e => (
-      <PermissionCheckbox key={e[0]} disabled={readOnly} name={e[0]} checked={e[1]} onChange={this.handleChange} />
+      <PermissionCheckbox
+        key={e[0]}
+        name={e[0]}
+        checked={e[1]}
+        onChange={this.handleChange}
+        disabled={readOnly}
+        role={true}
+      />
     ));
 
     const submitButton = !readOnly ? <SubmitButton label={t("permission.advanced.dialog.submit")} /> : null;

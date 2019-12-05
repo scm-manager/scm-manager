@@ -38,39 +38,27 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Multimap;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
-
 import org.apache.shiro.codec.Base64;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.net.Proxies;
 import sonia.scm.net.TrustAllHostnameVerifier;
 import sonia.scm.net.TrustAllTrustManager;
 import sonia.scm.util.HttpUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-import java.io.OutputStream;
-
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.ProtocolException;
-import java.net.Proxy;
-import java.net.SocketAddress;
-import java.net.URL;
-
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-
-import java.util.Set;
 import javax.inject.Provider;
-
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.*;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Default implementation of the {@link AdvancedHttpClient}. The default
@@ -324,11 +312,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
         sc.init(null, trustAllCerts, new java.security.SecureRandom());
         connection.setSSLSocketFactory(sc.getSocketFactory());
       }
-      catch (KeyManagementException ex)
-      {
-        logger.error("could not disable certificate validation", ex);
-      }
-      catch (NoSuchAlgorithmException ex)
+      catch (KeyManagementException | NoSuchAlgorithmException ex)
       {
         logger.error("could not disable certificate validation", ex);
       }

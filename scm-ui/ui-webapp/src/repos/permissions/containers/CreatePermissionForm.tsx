@@ -6,6 +6,7 @@ import {
   GroupAutocomplete,
   LabelWithHelpIcon,
   Radio,
+  Level,
   SubmitButton,
   Subtitle,
   UserAutocomplete
@@ -141,8 +142,8 @@ class CreatePermissionForm extends React.Component<Props, State> {
             </div>
           </div>
           <div className="columns">
-            <div className="column is-three-fifths">{this.renderAutocompletionField()}</div>
-            <div className="column is-two-fifths">
+            <div className="column is-half">{this.renderAutocompletionField()}</div>
+            <div className="column is-half">
               <div className="columns">
                 <div className="column is-narrow">
                   <RoleSelector
@@ -163,15 +164,15 @@ class CreatePermissionForm extends React.Component<Props, State> {
               </div>
             </div>
           </div>
-          <div className="columns">
-            <div className="column">
+          <Level
+            right={
               <SubmitButton
                 label={t("permission.add-permission.submit-button")}
                 loading={loading}
                 disabled={!this.state.valid || this.state.name === ""}
               />
-            </div>
-          </div>
+            }
+          />
         </form>
       </>
     );

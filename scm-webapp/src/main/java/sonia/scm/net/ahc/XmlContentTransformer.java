@@ -34,20 +34,17 @@ package sonia.scm.net.ahc;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.ByteSource;
-
 import sonia.scm.plugin.Extension;
 import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.ws.rs.core.MediaType;
+import javax.xml.bind.DataBindingException;
+import javax.xml.bind.JAXB;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.ws.rs.core.MediaType;
-
-import javax.xml.bind.DataBindingException;
-import javax.xml.bind.JAXB;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * {@link ContentTransformer} for xml. The {@link XmlContentTransformer} uses 
@@ -96,15 +93,10 @@ public class XmlContentTransformer implements ContentTransformer
       stream = content.openBufferedStream();
       object = JAXB.unmarshal(stream, type);
     }
-    catch (IOException ex)
+    catch (IOException | DataBindingException ex)
     {
       throw new ContentTransformerException("could not unmarshall content", ex);
-    }
-    catch (DataBindingException ex)
-    {
-      throw new ContentTransformerException("could not unmarshall content", ex);
-    }
-    finally
+    } finally
     {
       IOUtil.close(stream);
     }

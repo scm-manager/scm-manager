@@ -6,6 +6,7 @@ import {
   Checkbox,
   InputField,
   PasswordConfirmation,
+  Level,
   SubmitButton,
   validation as validator
 } from "@scm-manager/ui-components";
@@ -166,11 +167,7 @@ class UserForm extends React.Component<Props, State> {
               />
             </div>
           </div>
-          <div className="columns">
-            <div className="column">
-              <SubmitButton disabled={!this.isValid()} loading={loading} label={t("userForm.button")} />
-            </div>
-          </div>
+          <Level right={<SubmitButton disabled={!this.isValid()} loading={loading} label={t("userForm.button")} />} />
         </form>
       </>
     );

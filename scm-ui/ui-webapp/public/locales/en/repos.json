@@ -114,7 +114,7 @@
       "size": "Size"
     },
     "noSources": "No sources found for this branch.",
-    "extension" : {
+    "extension": {
       "notBound": "No extension bound."
     }
   },
@@ -166,8 +166,7 @@
     }
   },
   "deleteRepo": {
-    "subtitle": "Delete Repository",
-    "button": "Delete",
+    "button": "Delete Repository",
     "confirmAlert": {
       "title": "Delete repository",
       "message": "Do you really want to delete the repository?",
@@ -178,7 +177,7 @@
   "diff": {
     "changes": {
       "add": "added",
-      "delete":  "deleted",
+      "delete": "deleted",
       "modify": "modified",
       "rename": "renamed",
       "copy": "copied"
