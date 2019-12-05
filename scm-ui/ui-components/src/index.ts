@@ -52,6 +52,8 @@ export { default as OverviewPageActions } from "./OverviewPageActions";
 export { default as CardColumnGroup } from "./CardColumnGroup";
 export { default as CardColumn } from "./CardColumn";
 
+export { default as comparators } from "./comparators";
+
 export { apiClient } from "./apiclient";
 export * from "./errors";
 

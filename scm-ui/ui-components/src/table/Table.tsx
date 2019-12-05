@@ -1,6 +1,6 @@
 import React, { FC, ReactElement, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Comparator } from "./table";
+import { Comparator } from "./types";
 import SortIcon from "./SortIcon";
 import Notification from "../Notification";
 

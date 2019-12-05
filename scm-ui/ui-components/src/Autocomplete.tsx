@@ -8,7 +8,7 @@ import { ActionMeta, ValueType } from "react-select/lib/types";
 type Props = {
   loadSuggestions: (p: string) => Promise<SelectValue[]>;
   valueSelected: (p: SelectValue) => void;
-  label: string;
+  label?: string;
   helpText?: string;
   value?: SelectValue;
   placeholder: string;

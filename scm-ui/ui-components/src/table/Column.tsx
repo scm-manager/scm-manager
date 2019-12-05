@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from "react";
-import { ColumnProps } from "./table";
+import { ColumnProps } from "./types";
 
 type Props = ColumnProps & {
   children: (row: any, columnIndex: number) => ReactNode;

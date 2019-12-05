@@ -1,5 +1,6 @@
 import React, { FC } from "react";
-import { ColumnProps } from "./table";
+import { ColumnProps } from "./types";
+import comparators from "../comparators";
 
 type Props = ColumnProps & {
   dataKey: string;
@@ -11,15 +12,7 @@ const TextColumn: FC<Props> = ({ row, dataKey }) => {
 
 TextColumn.defaultProps = {
   createComparator: (props: Props) => {
-    return (a: any, b: any) => {
-      if (a[props.dataKey] < b[props.dataKey]) {
-        return -1;
-      } else if (a[props.dataKey] > b[props.dataKey]) {
-        return 1;
-      } else {
-        return 0;
-      }
-    };
+    return comparators.byKey(props.dataKey);
   },
   ascendingIcon: "sort-alpha-down-alt",
   descendingIcon: "sort-alpha-down"
