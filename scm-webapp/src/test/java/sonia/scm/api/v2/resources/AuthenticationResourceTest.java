@@ -16,7 +16,7 @@ import sonia.scm.security.AccessTokenBuilder;
 import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.DefaultAccessTokenCookieIssuer;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +43,7 @@ public class AuthenticationResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   @Mock
   private AccessTokenBuilderFactory accessTokenBuilderFactory;

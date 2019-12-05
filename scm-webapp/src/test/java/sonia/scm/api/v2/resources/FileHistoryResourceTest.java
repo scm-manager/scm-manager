@@ -27,7 +27,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import java.net.URI;
@@ -70,7 +70,7 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
 
   private FileHistoryRootResource fileHistoryRootResource;
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);

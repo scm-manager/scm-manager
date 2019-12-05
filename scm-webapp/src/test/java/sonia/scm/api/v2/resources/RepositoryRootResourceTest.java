@@ -22,7 +22,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.user.User;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
@@ -61,7 +61,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   private static final String REALM = "AdminRealm";
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   @Rule
   public ShiroRule shiro = new ShiroRule();

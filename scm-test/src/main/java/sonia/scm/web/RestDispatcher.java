@@ -23,14 +23,14 @@ import javax.ws.rs.ext.Provider;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ScmTestDispatcher {
+public class RestDispatcher {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ScmTestDispatcher.class);
+  private static final Logger LOG = LoggerFactory.getLogger(RestDispatcher.class);
 
   private final Dispatcher dispatcher;
   private final EnhanceableExceptionMapper exceptionMapper;
 
-  public ScmTestDispatcher() {
+  public RestDispatcher() {
     dispatcher = MockDispatcherFactory.createDispatcher();
     exceptionMapper = new EnhanceableExceptionMapper();
     dispatcher.getProviderFactory().register(exceptionMapper);

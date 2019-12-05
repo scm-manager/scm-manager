@@ -20,7 +20,7 @@ import sonia.scm.installer.HgPackageReader;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletResponse;
@@ -47,7 +47,7 @@ public class HgConfigPackageResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = java.net.URI.create("/");
 

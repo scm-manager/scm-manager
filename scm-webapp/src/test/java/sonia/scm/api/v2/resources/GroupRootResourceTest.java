@@ -18,7 +18,7 @@ import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
@@ -52,7 +52,7 @@ public class GroupRootResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
 

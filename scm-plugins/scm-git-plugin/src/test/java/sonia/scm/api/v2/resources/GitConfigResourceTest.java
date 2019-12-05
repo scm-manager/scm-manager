@@ -24,7 +24,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.web.GitVndMediaType;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
@@ -50,7 +50,7 @@ public class GitConfigResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
 

@@ -17,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Provider;
@@ -39,7 +39,7 @@ import static sonia.scm.plugin.PluginTestHelper.createInstalled;
 @ExtendWith(MockitoExtension.class)
 class InstalledPluginResourceTest {
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   @Mock
   Provider<InstalledPluginResource> installedPluginResourceProvider;

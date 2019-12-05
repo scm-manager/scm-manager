@@ -17,7 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgVndMediaType;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +41,7 @@ public class HgConfigResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
 

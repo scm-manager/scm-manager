@@ -25,7 +25,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import java.net.URI;
@@ -48,7 +48,7 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
   public static final String CHANGESET_PATH = "space/repo/changesets/";
   public static final String CHANGESET_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + CHANGESET_PATH;
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);

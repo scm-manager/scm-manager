@@ -29,7 +29,7 @@ import sonia.scm.repository.api.BranchesCommandBuilder;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.ws.rs.core.MediaType;
@@ -56,7 +56,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
   public static final String BRANCH_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + BRANCH_PATH;
   public static final String REVISION = "revision";
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);

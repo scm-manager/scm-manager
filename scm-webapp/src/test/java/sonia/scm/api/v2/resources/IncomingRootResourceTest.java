@@ -28,7 +28,7 @@ import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.CRLFInjectionException;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.ws.rs.core.Response;
@@ -55,7 +55,7 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
   public static final String INCOMING_CHANGESETS_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + INCOMING_PATH;
   public static final String INCOMING_DIFF_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + INCOMING_PATH;
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);

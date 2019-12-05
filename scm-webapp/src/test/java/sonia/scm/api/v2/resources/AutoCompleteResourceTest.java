@@ -22,7 +22,7 @@ import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.user.DefaultUserDisplayManager;
 import sonia.scm.user.User;
 import sonia.scm.user.xml.XmlUserDAO;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 import sonia.scm.xml.XmlDatabase;
 
@@ -50,7 +50,7 @@ public class AutoCompleteResourceTest {
   public static final String URL = "/" + AutoCompleteResource.PATH;
   private final Integer defaultLimit = DisplayManager.DEFAULT_LIMIT;
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private XmlUserDAO userDao;
   private XmlGroupDAO groupDao;

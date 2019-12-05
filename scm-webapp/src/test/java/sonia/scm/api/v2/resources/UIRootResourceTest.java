@@ -15,7 +15,7 @@ import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginResources;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class UIRootResourceTest {
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   @Mock
   private PluginLoader pluginLoader;

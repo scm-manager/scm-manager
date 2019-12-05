@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +39,7 @@ public class ConfigResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
   @SuppressWarnings("unused") // Is injected

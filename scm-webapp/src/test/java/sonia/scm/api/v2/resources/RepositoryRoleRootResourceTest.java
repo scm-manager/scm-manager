@@ -17,7 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.PageResult;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleManager;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
@@ -63,7 +63,7 @@ public class RepositoryRoleRootResourceTest {
 
   private RepositoryRoleCollectionToDtoMapper collectionToDtoMapper;
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   @Captor
   private ArgumentCaptor<RepositoryRole> modifyCaptor;

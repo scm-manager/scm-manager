@@ -23,7 +23,7 @@ import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.CRLFInjectionException;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.ws.rs.core.Response;
@@ -46,7 +46,7 @@ public class DiffResourceTest extends RepositoryTestBase {
   public static final String DIFF_PATH = "space/repo/diff/";
   public static final String DIFF_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + DIFF_PATH;
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   @Mock
   private RepositoryServiceFactory serviceFactory;

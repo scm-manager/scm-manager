@@ -29,7 +29,7 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.ws.rs.HttpMethod;
@@ -104,7 +104,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     .content(PERMISSION_TEST_PAYLOAD)
     .path(PATH_OF_ONE_PERMISSION);
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   @Mock
   private RepositoryManager repositoryManager;

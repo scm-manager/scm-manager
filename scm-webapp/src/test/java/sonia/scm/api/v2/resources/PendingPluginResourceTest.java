@@ -20,7 +20,7 @@ import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PendingPluginResourceTest {
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   ResourceLinks resourceLinks = ResourceLinksMock.createMock(create("/"));
 

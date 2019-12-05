@@ -21,7 +21,7 @@ import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginCondition;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Provider;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class AvailablePluginResourceTest {
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   @Mock
   Provider<AvailablePluginResource> availablePluginResourceProvider;

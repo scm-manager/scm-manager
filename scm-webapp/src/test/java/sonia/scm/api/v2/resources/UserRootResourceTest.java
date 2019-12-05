@@ -22,7 +22,7 @@ import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.user.ChangePasswordNotAllowedException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
-import sonia.scm.web.ScmTestDispatcher;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
@@ -56,7 +56,7 @@ public class UserRootResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private ScmTestDispatcher dispatcher = new ScmTestDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
 
