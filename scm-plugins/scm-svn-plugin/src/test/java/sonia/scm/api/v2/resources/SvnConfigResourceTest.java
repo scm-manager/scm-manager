@@ -4,14 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import org.jboss.resteasy.spi.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
@@ -19,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.SvnConfig;
 import sonia.scm.repository.SvnRepositoryHandler;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.SvnVndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
@@ -42,10 +40,7 @@ public class SvnConfigResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
-
-  private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
 
@@ -66,7 +61,7 @@ public class SvnConfigResourceTest {
     SvnConfig gitConfig = createConfiguration();
     when(repositoryHandler.getConfig()).thenReturn(gitConfig);
     SvnConfigResource gitConfigResource = new SvnConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler);
-    dispatcher.getRegistry().addSingletonResource(gitConfigResource);
+    dispatcher.addSingletonResource(gitConfigResource);
     when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
   }
 
@@ -108,10 +103,11 @@ public class SvnConfigResourceTest {
 
   @Test
   @SubjectAware(username = "writeOnly")
-  public void shouldNotGetConfigWhenNotAuthorized() throws URISyntaxException {
-    thrown.expectMessage("Subject does not have permission [configuration:read:svn]");
+  public void shouldNotGetConfigWhenNotAuthorized() throws URISyntaxException, UnsupportedEncodingException {
+    MockHttpResponse response = get();
 
-    get();
+    assertEquals("Subject does not have permission [configuration:read:svn]", response.getContentAsString());
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
   }
 
   @Test
@@ -123,10 +119,11 @@ public class SvnConfigResourceTest {
 
   @Test
   @SubjectAware(username = "readOnly")
-  public void shouldNotUpdateConfigWhenNotAuthorized() throws URISyntaxException {
-    thrown.expectMessage("Subject does not have permission [configuration:write:svn]");
+  public void shouldNotUpdateConfigWhenNotAuthorized() throws URISyntaxException, UnsupportedEncodingException {
+    MockHttpResponse response = put();
 
-    put();
+    assertEquals("Subject does not have permission [configuration:write:svn]", response.getContentAsString());
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
   }
 
   private MockHttpResponse get() throws URISyntaxException {

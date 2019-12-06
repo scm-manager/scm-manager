@@ -2,19 +2,17 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import org.jboss.resteasy.spi.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.web.RestDispatcher;
 
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletResponse;
@@ -35,10 +33,7 @@ public class HgConfigInstallationsResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
-
-  private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
 
@@ -57,7 +52,7 @@ public class HgConfigInstallationsResourceTest {
     HgConfigInstallationsResource resource = new HgConfigInstallationsResource(mapper);
 
     when(resourceProvider.get()).thenReturn(resource);
-    dispatcher.getRegistry().addSingletonResource(
+    dispatcher.addSingletonResource(
       new HgConfigResource(null, null, null, null,
                            null, resourceProvider));
 
@@ -82,9 +77,10 @@ public class HgConfigInstallationsResourceTest {
   @Test
   @SubjectAware(username = "writeOnly")
   public void shouldNotGetHgInstallationsWhenNotAuthorized() throws Exception {
-    thrown.expectMessage("Subject does not have permission [configuration:read:hg]");
+    MockHttpResponse response = get("hg");
 
-    get("hg");
+    assertEquals("Subject does not have permission [configuration:read:hg]", response.getContentAsString());
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
   }
 
   @Test
@@ -104,9 +100,10 @@ public class HgConfigInstallationsResourceTest {
   @Test
   @SubjectAware(username = "writeOnly")
   public void shouldNotGetPythonInstallationsWhenNotAuthorized() throws Exception {
-    thrown.expectMessage("Subject does not have permission [configuration:read:hg]");
+    MockHttpResponse response = get("python");
 
-    get("python");
+    assertEquals("Subject does not have permission [configuration:read:hg]", response.getContentAsString());
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
   }
 
   private MockHttpResponse get(String path) throws URISyntaxException {

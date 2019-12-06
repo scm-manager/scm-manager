@@ -6,10 +6,10 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
+import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
-import org.jboss.resteasy.spi.Dispatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +29,7 @@ import sonia.scm.repository.api.BranchesCommandBuilder;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.ws.rs.core.MediaType;
@@ -39,8 +40,13 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
@@ -49,7 +55,8 @@ public class BranchRootResourceTest extends RepositoryTestBase {
   public static final String BRANCH_PATH = "space/repo/branches/master";
   public static final String BRANCH_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + BRANCH_PATH;
   public static final String REVISION = "revision";
-  private Dispatcher dispatcher;
+
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -96,7 +103,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     BranchCollectionToDtoMapper branchCollectionToDtoMapper = new BranchCollectionToDtoMapper(branchToDtoMapper, resourceLinks);
     branchRootResource = new BranchRootResource(serviceFactory, branchToDtoMapper, branchCollectionToDtoMapper, changesetCollectionToDtoMapper, resourceLinks);
     super.branchRootResource = Providers.of(branchRootResource);
-    dispatcher = DispatcherMock.createDispatcher(getRepositoryRootResource());
+    dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
@@ -125,7 +132,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
 
     assertEquals(404, response.getStatus());
     MediaType contentType = (MediaType) response.getOutputHeaders().getFirst("Content-Type");
-    assertEquals("application/vnd.scmm-error+json;v=2", contentType.toString());
+    Assertions.assertThat(response.getContentAsString()).contains("branch", "master", "space/repo");
   }
 
   @Test

@@ -7,7 +7,6 @@ import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
-import org.jboss.resteasy.spi.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.After;
@@ -28,6 +27,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import java.net.URI;
@@ -70,7 +70,7 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
 
   private FileHistoryRootResource fileHistoryRootResource;
 
-  private Dispatcher dispatcher;
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
@@ -80,7 +80,7 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
     fileHistoryCollectionToDtoMapper = new FileHistoryCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     fileHistoryRootResource = new FileHistoryRootResource(serviceFactory, fileHistoryCollectionToDtoMapper);
     super.fileHistoryRootResource = Providers.of(fileHistoryRootResource);
-    dispatcher = DispatcherMock.createDispatcher(getRepositoryRootResource());
+    dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));

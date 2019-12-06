@@ -1,14 +1,11 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
-import org.apache.shiro.ShiroException;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
-import org.jboss.resteasy.spi.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
-import org.jboss.resteasy.spi.UnhandledException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -24,6 +21,7 @@ import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginCondition;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Provider;
@@ -34,7 +32,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -46,7 +44,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class AvailablePluginResourceTest {
 
-  private Dispatcher dispatcher;
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   @Mock
   Provider<AvailablePluginResource> availablePluginResourceProvider;
@@ -71,10 +69,9 @@ class AvailablePluginResourceTest {
 
   @BeforeEach
   void prepareEnvironment() {
-    dispatcher = MockDispatcherFactory.createDispatcher();
     pluginRootResource = new PluginRootResource(null, availablePluginResourceProvider, null);
     when(availablePluginResourceProvider.get()).thenReturn(availablePluginResource);
-    dispatcher.getRegistry().addSingletonResource(pluginRootResource);
+    dispatcher.addSingletonResource(pluginRootResource);
   }
 
   @Nested
@@ -195,20 +192,23 @@ class AvailablePluginResourceTest {
     @BeforeEach
     void bindSubject() {
       ThreadContext.bind(subject);
-      doThrow(new ShiroException()).when(subject).checkPermission(any(String.class));
+      doThrow(new UnauthorizedException()).when(subject).checkPermission(any(String.class));
     }
 
     @AfterEach
     public void unbindSubject() {
       ThreadContext.unbindSubject();
     }
+
     @Test
     void shouldNotGetAvailablePluginsIfMissingPermission() throws URISyntaxException {
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available");
       request.accept(VndMediaType.PLUGIN_COLLECTION);
       MockHttpResponse response = new MockHttpResponse();
 
-      assertThrows(UnhandledException.class, () -> dispatcher.invoke(request, response));
+      dispatcher.invoke(request, response);
+
+      assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
       verify(subject).checkPermission(any(String.class));
     }
 
@@ -218,7 +218,9 @@ class AvailablePluginResourceTest {
       request.accept(VndMediaType.PLUGIN);
       MockHttpResponse response = new MockHttpResponse();
 
-      assertThrows(UnhandledException.class, () -> dispatcher.invoke(request, response));
+      dispatcher.invoke(request, response);
+
+      assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
       verify(subject).checkPermission(any(String.class));
     }
 
@@ -228,7 +230,9 @@ class AvailablePluginResourceTest {
       request.accept(VndMediaType.PLUGIN);
       MockHttpResponse response = new MockHttpResponse();
 
-      assertThrows(UnhandledException.class, () -> dispatcher.invoke(request, response));
+      dispatcher.invoke(request, response);
+
+      assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
       verify(subject).checkPermission(any(String.class));
     }
   }

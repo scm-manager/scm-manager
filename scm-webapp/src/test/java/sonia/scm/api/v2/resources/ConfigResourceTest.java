@@ -4,18 +4,16 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
 import org.apache.shiro.util.ThreadContext;
-import org.jboss.resteasy.spi.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
@@ -41,10 +39,7 @@ public class ConfigResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
-
-  private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
   @SuppressWarnings("unused") // Is injected
@@ -71,7 +66,7 @@ public class ConfigResourceTest {
 
     ConfigResource configResource = new ConfigResource(dtoToConfigMapper, configToDtoMapper, createConfiguration(), namespaceStrategyValidator);
 
-    dispatcher.getRegistry().addSingletonResource(configResource);
+    dispatcher.addSingletonResource(configResource);
   }
 
   @Test
@@ -88,13 +83,14 @@ public class ConfigResourceTest {
 
   @Test
   @SubjectAware(username = "writeOnly")
-  public void shouldNotGetConfigWhenNotAuthorized() throws URISyntaxException {
+  public void shouldNotGetConfigWhenNotAuthorized() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpRequest request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
 
-    thrown.expectMessage("Subject does not have permission [configuration:read:global]");
-
     dispatcher.invoke(request, response);
+
+    assertEquals("Subject does not have permission [configuration:read:global]", response.getContentAsString());
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
   }
 
   @Test
@@ -120,9 +116,10 @@ public class ConfigResourceTest {
     MockHttpRequest request = post("sonia/scm/api/v2/config-test-update.json");
     MockHttpResponse response = new MockHttpResponse();
 
-    thrown.expectMessage("Subject does not have permission [configuration:write:global]");
-
     dispatcher.invoke(request, response);
+
+    assertEquals("Subject does not have permission [configuration:write:global]", response.getContentAsString());
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
   }
 
 
