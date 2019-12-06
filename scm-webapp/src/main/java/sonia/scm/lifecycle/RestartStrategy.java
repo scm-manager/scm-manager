@@ -13,7 +13,6 @@ public interface RestartStrategy {
      * Initialize the injection context.
      */
     void initialize();
-
     /**
      * Destroys the injection context.
      */
@@ -31,8 +30,8 @@ public interface RestartStrategy {
    *
    * @return configured strategy
    */
-  static RestartStrategy get() {
-    return new InjectionContextRestartStrategy();
+  static RestartStrategy get(ClassLoader webAppClassLoader) {
+    return new InjectionContextRestartStrategy(webAppClassLoader);
   }
 
 }

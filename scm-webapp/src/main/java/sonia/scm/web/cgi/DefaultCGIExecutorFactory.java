@@ -52,7 +52,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  */
-public class DefaultCGIExecutorFactory implements CGIExecutorFactory
+public class DefaultCGIExecutorFactory implements CGIExecutorFactory, AutoCloseable
 {
 
   /**
@@ -91,6 +91,11 @@ public class DefaultCGIExecutorFactory implements CGIExecutorFactory
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  @Override
+  public void close() {
+    executor.shutdown();
+  }
 
   /** Field description */
   private final ExecutorService executor;

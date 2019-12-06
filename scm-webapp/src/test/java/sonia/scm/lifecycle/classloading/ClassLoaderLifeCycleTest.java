@@ -70,7 +70,12 @@ class ClassLoaderLifeCycleTest {
     URLClassLoader webappClassLoader = spy(new URLClassLoader(new URL[0], Thread.currentThread().getContextClassLoader()));
 
     ClassLoaderLifeCycle lifeCycle = createMockedLifeCycle(webappClassLoader);
-    lifeCycle.setClassLoaderAppendListener(c -> spy(c));
+    lifeCycle.setClassLoaderAppendListener(new ClassLoaderLifeCycle.ClassLoaderAppendListener() {
+      @Override
+      public <C extends ClassLoader> C apply(C classLoader) {
+        return spy(classLoader);
+      }
+    });
     lifeCycle.initialize();
 
     ClassLoader pluginA = lifeCycle.createChildFirstPluginClassLoader(new URL[0], null, "a");
