@@ -13,6 +13,7 @@ import sonia.scm.AlreadyExistsException;
 import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NotFoundException;
+import sonia.scm.ScmConstraintViolationException;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
@@ -64,6 +65,7 @@ public class RestDispatcher {
       registerException(UnauthorizedException.class, Status.FORBIDDEN);
       registerException(AuthorizationException.class, Status.FORBIDDEN);
       registerException(BadRequestException.class, Status.BAD_REQUEST);
+      registerException(ScmConstraintViolationException.class, Status.BAD_REQUEST);
     }
 
     private void registerException(Class<? extends RuntimeException> exceptionClass, Status status) {
