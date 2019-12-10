@@ -11,6 +11,7 @@ type Props = {
   helpText?: string;
   disabled?: boolean;
   onSubmit?: () => void;
+  onCancel?: () => void;
 };
 
 class Textarea extends React.Component<Props> {
@@ -33,6 +34,13 @@ class Textarea extends React.Component<Props> {
     }
   };
 
+  onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    const { onCancel } = this.props;
+    if (onCancel && event.key === "Escape") {
+      onCancel();
+    }
+  };
+
   render() {
     const { placeholder, value, label, helpText, disabled } = this.props;
 
@@ -50,6 +58,7 @@ class Textarea extends React.Component<Props> {
             value={value}
             disabled={!!disabled}
             onKeyPress={this.onKeyPress}
+            onKeyDown={this.onKeyDown}
           />
         </div>
       </div>
