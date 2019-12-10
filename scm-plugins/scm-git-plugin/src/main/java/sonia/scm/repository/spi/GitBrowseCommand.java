@@ -56,6 +56,7 @@ import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.GitSubModuleParser;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SubRepository;
 import sonia.scm.store.Blob;
@@ -71,9 +72,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static java.util.Optional.empty;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -99,7 +98,6 @@ public class GitBrowseCommand extends AbstractGitCommand
     LoggerFactory.getLogger(GitBrowseCommand.class);
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
-  private boolean fetchCommits = true;
   private ExecutorService executorService;
 
   //~--- constructors ---------------------------------------------------------
@@ -130,13 +128,25 @@ public class GitBrowseCommand extends AbstractGitCommand
       ObjectId revId = computeRevIdToBrowse(request, repo);
 
       if (revId != null) {
-        return new BrowserResult(revId.getName(), request.getRevision(), getEntry(repo, request, revId));
+        BrowserResult browserResult = new BrowserResult(revId.getName(), request.getRevision(), getEntry(repo, request, revId));
+        executorService.execute(() -> {
+          request.updateCache(browserResult);
+          logger.info("updated browser result for repository {}", repository.getNamespaceAndName());
+        });
+        return browserResult;
       } else {
         logger.warn("could not find head of repository {}, empty?", repository.getNamespaceAndName());
         return new BrowserResult(Constants.HEAD, request.getRevision(), createEmtpyRoot());
       }
     } finally {
       executorService.shutdown();
+      try {
+        if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
+          logger.info("lookup of all commits took too long in repo {}", repository.getNamespaceAndName());
+        }
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
     }
   }
 
@@ -209,46 +219,39 @@ public class GitBrowseCommand extends AbstractGitCommand
       // don't show message and date for directories to improve performance
       if (!file.isDirectory() &&!request.isDisableLastCommit())
       {
-        RevCommit commit = null;
-        if (fetchCommits) {
+        executorService.execute(() -> {
           logger.trace("fetch last commit for {} at {}", path, revId.getName());
-          Future<RevCommit> f = executorService.submit(() -> getLatestCommit(repo, revId, path));
+          RevCommit commit = getLatestCommit(repo, revId, path);
+
+          Optional<LfsPointer> lfsPointer;
           try {
-            commit = f.get(100, TimeUnit.MILLISECONDS);
-          } catch (TimeoutException e) {
-            logger.info("lookup of latest commit took too much time for {} at {}; disabling lookup on {}", path, revId.name(), repository.getNamespaceAndName());
-            fetchCommits = false;
-          } catch (Exception e) {
-            logger.warn("got exception while computing last commit for {} on {}", path, revId.name(), e);
+            lfsPointer = commit == null ? empty() : GitUtil.getLfsPointer(repo, path, commit, treeWalk);
+          } catch (IOException e) {
+            throw new InternalRepositoryException(repository, "could not read lfs pointer", e);
           }
-        }
 
-        Optional<LfsPointer> lfsPointer = commit == null? empty(): GitUtil.getLfsPointer(repo, path, commit, treeWalk);
-
-        if (lfsPointer.isPresent()) {
-          BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
-          String oid = lfsPointer.get().getOid().getName();
-          Blob blob = lfsBlobStore.get(oid);
-          if (blob == null) {
-            logger.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository.getNamespaceAndName());
-            file.setLength(-1);
+          if (lfsPointer.isPresent()) {
+            BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
+            String oid = lfsPointer.get().getOid().getName();
+            Blob blob = lfsBlobStore.get(oid);
+            if (blob == null) {
+              logger.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository.getNamespaceAndName());
+              file.setLength(-1);
+            } else {
+              file.setLength(blob.getSize());
+            }
           } else {
-            file.setLength(blob.getSize());
+            file.setLength(loader.getSize());
           }
-        } else {
-          file.setLength(loader.getSize());
-        }
 
-        if (commit != null)
-        {
-          file.setLastModified(GitUtil.getCommitTime(commit));
-          file.setDescription(commit.getShortMessage());
-        }
-        else if (fetchCommits)
-        {
-          logger.warn("could not find latest commit for {} on {}", path,
-            revId);
-        }
+          if (commit != null) {
+            file.setLastModified(GitUtil.getCommitTime(commit));
+            file.setDescription(commit.getShortMessage());
+          } else {
+            logger.warn("could not find latest commit for {} on {}", path,
+              revId);
+          }
+        });
       }
     }
     return file;

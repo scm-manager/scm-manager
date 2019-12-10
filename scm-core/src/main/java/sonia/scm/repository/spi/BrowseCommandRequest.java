@@ -37,6 +37,10 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import sonia.scm.repository.BrowserResult;
+
+import java.util.function.Consumer;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -47,6 +51,14 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
 
   /** Field description */
   private static final long serialVersionUID = 7956624623516803183L;
+
+  public BrowseCommandRequest() {
+    this(null);
+  }
+
+  public BrowseCommandRequest(Consumer<BrowserResult> updater) {
+    this.updater = updater;
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -220,6 +232,12 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
     return recursive;
   }
 
+  public void updateCache(BrowserResult update) {
+    if (updater != null) {
+      updater.accept(update);
+    }
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** disable last commit */
@@ -230,4 +248,6 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
 
   /** browse file objects recursive */
   private boolean recursive = false;
+
+  private final Consumer<BrowserResult> updater;
 }

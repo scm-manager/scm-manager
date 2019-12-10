@@ -142,7 +142,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void testRecusive() throws IOException {
+  public void testRecursive() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setRecursive(true);
