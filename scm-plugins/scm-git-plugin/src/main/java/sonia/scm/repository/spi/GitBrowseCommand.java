@@ -141,8 +141,8 @@ public class GitBrowseCommand extends AbstractGitCommand
     } finally {
       executorService.shutdown();
       try {
-        if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
-          logger.info("lookup of all commits took too long in repo {}", repository.getNamespaceAndName());
+        if (!executorService.awaitTermination(request.getComputationTimeoutMilliSeconds(), TimeUnit.MILLISECONDS)) {
+          logger.info("lookup of all commits aborted after {}ms in repo {}", request.getComputationTimeoutMilliSeconds(), repository.getNamespaceAndName());
         }
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
@@ -258,8 +258,6 @@ public class GitBrowseCommand extends AbstractGitCommand
   }
 
   //~--- get methods ----------------------------------------------------------
-
-private    RevWalk commitWalk = null;
 
   /**
    * Method description

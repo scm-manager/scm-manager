@@ -147,6 +147,10 @@ public abstract class FileBaseCommandRequest
     this.revision = revision;
   }
 
+  public void setComputationTimeoutMilliSeconds(long computationTimeoutMilliSeconds) {
+    this.computationTimeoutMilliSeconds = computationTimeoutMilliSeconds;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -171,7 +175,14 @@ public abstract class FileBaseCommandRequest
     return revision;
   }
 
-  //~--- methods --------------------------------------------------------------
+  public boolean isDisableCommitValues() {
+    return disableCommitValues;
+  }
+
+  public long getComputationTimeoutMilliSeconds() {
+    return computationTimeoutMilliSeconds;
+  }
+//~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -208,4 +219,8 @@ public abstract class FileBaseCommandRequest
 
   /** Field description */
   private String revision;
+
+  private boolean disableCommitValues = false;
+
+  private long computationTimeoutMilliSeconds = 1000;
 }
