@@ -69,6 +69,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static java.util.Optional.empty;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -94,6 +99,9 @@ public class GitBrowseCommand extends AbstractGitCommand
     LoggerFactory.getLogger(GitBrowseCommand.class);
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
+  private boolean fetchCommits = true;
+  private ExecutorService executorService;
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -114,42 +122,36 @@ public class GitBrowseCommand extends AbstractGitCommand
   @SuppressWarnings("unchecked")
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
     throws IOException {
-    logger.debug("try to create browse result for {}", request);
+    executorService = Executors.newSingleThreadExecutor();
+    try {
+      logger.debug("try to create browse result for {}", request);
 
-    BrowserResult result;
+      org.eclipse.jgit.lib.Repository repo = open();
+      ObjectId revId = computeRevIdToBrowse(request, repo);
 
-    org.eclipse.jgit.lib.Repository repo = open();
-    ObjectId revId;
-
-    if (Util.isEmpty(request.getRevision()))
-    {
-      revId = getDefaultBranch(repo);
+      if (revId != null) {
+        return new BrowserResult(revId.getName(), request.getRevision(), getEntry(repo, request, revId));
+      } else {
+        logger.warn("could not find head of repository {}, empty?", repository.getNamespaceAndName());
+        return new BrowserResult(Constants.HEAD, request.getRevision(), createEmtpyRoot());
+      }
+    } finally {
+      executorService.shutdown();
     }
-    else
-    {
-      revId = GitUtil.getRevisionId(repo, request.getRevision());
-    }
+  }
 
-    if (revId != null)
-    {
-      result = new BrowserResult(revId.getName(), request.getRevision(), getEntry(repo, request, revId));
-    }
-    else
-    {
-      if (Util.isNotEmpty(request.getRevision()))
-      {
+  private ObjectId computeRevIdToBrowse(BrowseCommandRequest request, org.eclipse.jgit.lib.Repository repo) throws IOException {
+
+    if (Util.isEmpty(request.getRevision())) {
+      return getDefaultBranch(repo);
+    } else {
+      ObjectId revId = GitUtil.getRevisionId(repo, request.getRevision());
+      if (revId == null) {
         logger.error("could not find revision {}", request.getRevision());
         throw notFound(entity("Revision", request.getRevision()).in(this.repository));
       }
-      else if (logger.isWarnEnabled())
-      {
-        logger.warn("could not find head of repository, empty?");
-      }
-
-      result = new BrowserResult(Constants.HEAD, request.getRevision(), createEmtpyRoot());
+      return revId;
     }
-
-    return result;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -207,8 +209,19 @@ public class GitBrowseCommand extends AbstractGitCommand
       // don't show message and date for directories to improve performance
       if (!file.isDirectory() &&!request.isDisableLastCommit())
       {
-        logger.trace("fetch last commit for {} at {}", path, revId.getName());
-        RevCommit commit = getLatestCommit(repo, revId, path);
+        RevCommit commit = null;
+        if (fetchCommits) {
+          logger.trace("fetch last commit for {} at {}", path, revId.getName());
+          Future<RevCommit> f = executorService.submit(() -> getLatestCommit(repo, revId, path));
+          try {
+            commit = f.get(100, TimeUnit.MILLISECONDS);
+          } catch (TimeoutException e) {
+            logger.info("lookup of latest commit took too much time for {} at {}; disabling lookup on {}", path, revId.name(), repository.getNamespaceAndName());
+            fetchCommits = false;
+          } catch (Exception e) {
+            logger.warn("got exception while computing last commit for {} on {}", path, revId.name(), e);
+          }
+        }
 
         Optional<LfsPointer> lfsPointer = commit == null? empty(): GitUtil.getLfsPointer(repo, path, commit, treeWalk);
 
@@ -231,7 +244,7 @@ public class GitBrowseCommand extends AbstractGitCommand
           file.setLastModified(GitUtil.getCommitTime(commit));
           file.setDescription(commit.getShortMessage());
         }
-        else if (logger.isWarnEnabled())
+        else if (fetchCommits)
         {
           logger.warn("could not find latest commit for {} on {}", path,
             revId);
@@ -242,6 +255,8 @@ public class GitBrowseCommand extends AbstractGitCommand
   }
 
   //~--- get methods ----------------------------------------------------------
+
+private    RevWalk commitWalk = null;
 
   /**
    * Method description
@@ -263,8 +278,12 @@ public class GitBrowseCommand extends AbstractGitCommand
     try
     {
       walk = new RevWalk(repo);
-      walk.setTreeFilter(AndTreeFilter.create(PathFilter.create(path),
-        TreeFilter.ANY_DIFF));
+      walk.setTreeFilter(AndTreeFilter.create(
+        TreeFilter.ANY_DIFF
+        ,
+        PathFilter.create(path)
+        )
+      );
 
       RevCommit commit = walk.parseCommit(revId);
 
@@ -404,8 +423,8 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
     catch (NotFoundException ex)
     {
-      logger.trace("could not find .gitmodules", ex);
-      subRepositories = Collections.EMPTY_MAP;
+      logger.trace("could not find .gitmodules: {}", ex.getMessage());
+      subRepositories = Collections.emptyMap();
     }
 
     return subRepositories;
