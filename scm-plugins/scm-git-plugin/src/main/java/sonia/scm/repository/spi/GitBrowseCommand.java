@@ -210,6 +210,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       // don't show message and date for directories to improve performance
       if (!file.isDirectory() &&!request.isDisableLastCommit())
       {
+        file.setPartialResult(true);
         executor.execute(executionType -> {
           logger.trace("fetch last commit for {} at {}", path, revId.getName());
           RevCommit commit = getLatestCommit(repo, revId, path);
@@ -235,6 +236,7 @@ public class GitBrowseCommand extends AbstractGitCommand
             file.setLength(loader.getSize());
           }
 
+          file.setPartialResult(false);
           if (commit != null) {
             file.setLastModified(GitUtil.getCommitTime(commit));
             file.setDescription(commit.getShortMessage());

@@ -222,6 +222,10 @@ public class FileObject implements LastModifiedAware, Serializable
     return directory;
   }
 
+  public boolean isPartialResult() {
+    return partialResult;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -302,6 +306,10 @@ public class FileObject implements LastModifiedAware, Serializable
     this.subRepository = subRepository;
   }
 
+  public void setPartialResult(boolean partialResult) {
+    this.partialResult = partialResult;
+  }
+
   public Collection<FileObject> getChildren() {
     return unmodifiableCollection(children);
   }
@@ -337,6 +345,8 @@ public class FileObject implements LastModifiedAware, Serializable
 
   /** file path */
   private String path;
+
+  private boolean partialResult = false;
 
   /** sub repository informations */
   @XmlElement(name = "subrepository")
