@@ -20,10 +20,6 @@ public class DefaultSyncAsyncExecutor implements SyncAsyncExecutor {
     this.switchToAsyncTime = switchToAsyncTime;
   }
 
-  public ExecutionType execute(Runnable runnable) {
-    return execute(ignored -> runnable.run());
-  }
-
   public ExecutionType execute(Consumer<ExecutionType> runnable) {
     if (Instant.now().isAfter(switchToAsyncTime)) {
       executor.execute(() -> runnable.accept(ASYNCHRONOUS));

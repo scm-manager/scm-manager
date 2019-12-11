@@ -4,7 +4,9 @@ import java.util.function.Consumer;
 
 public interface SyncAsyncExecutor {
 
-  ExecutionType execute(Runnable runnable);
+  default ExecutionType execute(Runnable runnable) {
+    return execute(ignored -> runnable.run());
+  }
 
   ExecutionType execute(Consumer<ExecutionType> runnable);
 
