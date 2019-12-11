@@ -10,13 +10,27 @@ export const FETCH_SOURCES_SUCCESS = `${FETCH_SOURCES}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_SOURCES_FAILURE = `${FETCH_SOURCES}_${types.FAILURE_SUFFIX}`;
 
 export function fetchSources(repository: Repository, revision: string, path: string) {
+  return fetchSourcesWithoutOptionalLoadingState(repository, revision, path, true);
+}
+
+export function fetchSourcesWithoutOptionalLoadingState(
+  repository: Repository,
+  revision: string,
+  path: string,
+  dispatchLoading: boolean
+) {
   return function(dispatch: any) {
-    dispatch(fetchSourcesPending(repository, revision, path));
+    if (dispatchLoading) {
+      dispatch(fetchSourcesPending(repository, revision, path));
+    }
     return apiClient
       .get(createUrl(repository, revision, path))
       .then(response => response.json())
-      .then(sources => {
+      .then((sources: File) => {
         dispatch(fetchSourcesSuccess(repository, revision, path, sources));
+        if (sources._embedded.children && sources._embedded.children.find(c => c.partialResult)) {
+          setTimeout(() => dispatch(fetchSourcesWithoutOptionalLoadingState(repository, revision, path, false)), 1000);
+        }
       })
       .catch(err => {
         dispatch(fetchSourcesFailure(repository, revision, path, err));

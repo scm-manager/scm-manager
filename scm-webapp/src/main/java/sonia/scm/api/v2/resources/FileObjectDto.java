@@ -27,6 +27,7 @@ public class FileObjectDto extends HalRepresentation {
   private SubRepositoryDto subRepository;
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String revision;
+  private boolean partialResult;
 
   public FileObjectDto(Links links, Embedded embedded) {
     super(links, embedded);
