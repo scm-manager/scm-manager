@@ -35,6 +35,7 @@ import org.junit.Test;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.GitRepositoryConfig;
+import sonia.scm.repository.spi.SyncAsyncExecutors.AsyncExecutorStepper;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -43,7 +44,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static sonia.scm.repository.spi.SyncAsyncExecutors.stepperAsynchronousExecutor;
 import static sonia.scm.repository.spi.SyncAsyncExecutors.synchronousExecutor;
 
 /**
@@ -110,6 +113,28 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     assertTrue(c.isDirectory());
     assertEquals("c", c.getName());
     assertEquals("c", c.getPath());
+  }
+
+  @Test
+  public void testAsynchronousBrowse() throws IOException {
+    try (AsyncExecutorStepper executor = stepperAsynchronousExecutor()) {
+      GitBrowseCommand command = new GitBrowseCommand(createContext(), repository, null, executor);
+      FileObject root = command.getBrowserResult(new BrowseCommandRequest()).getFile();
+      assertNotNull(root);
+
+      Collection<FileObject> foList = root.getChildren();
+
+      FileObject a = findFile(foList, "a.txt");
+
+      assertFalse(a.isDirectory());
+      assertNull("expected empty name before commit could have been read", a.getDescription());
+      assertNull("expected empty date before commit could have been read", a.getLastModified());
+
+      executor.next();
+
+      assertNotNull("expected correct name after commit could have been read", a.getDescription());
+      assertNotNull("expected correct date after commit could have been read", a.getLastModified());
+    }
   }
 
   @Test
