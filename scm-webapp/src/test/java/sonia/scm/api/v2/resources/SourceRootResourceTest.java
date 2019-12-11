@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mapstruct.factory.Mappers;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.NotFoundException;
@@ -41,16 +40,12 @@ public class SourceRootResourceTest extends RepositoryTestBase {
   @Mock
   private BrowseCommandBuilder browseCommandBuilder;
 
-  @InjectMocks
-  private FileObjectToFileObjectDtoMapperImpl fileObjectToFileObjectDtoMapper;
-
   private BrowserResultToFileObjectDtoMapper browserResultToFileObjectDtoMapper;
 
 
   @Before
-  public void prepareEnvironment() throws Exception {
+  public void prepareEnvironment() {
     browserResultToFileObjectDtoMapper = Mappers.getMapper(BrowserResultToFileObjectDtoMapper.class);
-    browserResultToFileObjectDtoMapper.setChildrenMapper(fileObjectToFileObjectDtoMapper);
     browserResultToFileObjectDtoMapper.setResourceLinks(resourceLinks);
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(service.getBrowseCommand()).thenReturn(browseCommandBuilder);

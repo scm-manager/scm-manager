@@ -1,6 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import org.mapstruct.Context;
@@ -20,14 +19,6 @@ import java.lang.annotation.Target;
 @Mapper
 public abstract class BrowserResultToFileObjectDtoMapper extends BaseFileObjectDtoMapper {
 
-  @Inject
-  private FileObjectToFileObjectDtoMapper childrenMapper;
-
-  @VisibleForTesting
-  void setChildrenMapper(FileObjectToFileObjectDtoMapper childrenMapper) {
-    this.childrenMapper = childrenMapper;
-  }
-
   FileObjectDto map(BrowserResult browserResult, @Context NamespaceAndName namespaceAndName) {
     FileObjectDto fileObjectDto = fileObjectToDto(browserResult.getFile(), namespaceAndName, browserResult);
     fileObjectDto.setRevision(browserResult.getRevision());
@@ -36,12 +27,8 @@ public abstract class BrowserResultToFileObjectDtoMapper extends BaseFileObjectD
 
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   @Mapping(target = "children", qualifiedBy = Children.class)
-  protected abstract FileObjectDto fileObjectToDto(FileObject fileObject, @Context NamespaceAndName namespaceAndName, @Context BrowserResult browserResult);
-
   @Children
-  protected FileObjectDto childrenToDto(FileObject fileObject, @Context NamespaceAndName namespaceAndName, @Context BrowserResult browserResult) {
-    return childrenMapper.map(fileObject, namespaceAndName, browserResult);
-  }
+  protected abstract FileObjectDto fileObjectToDto(FileObject fileObject, @Context NamespaceAndName namespaceAndName, @Context BrowserResult browserResult);
 
   @Override
   void applyEnrichers(Links.Builder links, Embedded.Builder embeddedBuilder, NamespaceAndName namespaceAndName, BrowserResult browserResult, FileObject fileObject) {

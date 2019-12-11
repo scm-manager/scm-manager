@@ -8,7 +8,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
-import org.mockito.InjectMocks;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.NamespaceAndName;
@@ -24,9 +23,6 @@ public class BrowserResultToFileObjectDtoMapperTest {
   private final URI baseUri = URI.create("http://example.com/base/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
-  @InjectMocks
-  private FileObjectToFileObjectDtoMapperImpl fileObjectToFileObjectDtoMapper;
-
   private BrowserResultToFileObjectDtoMapper mapper;
 
   private final Subject subject = mock(Subject.class);
@@ -40,7 +36,6 @@ public class BrowserResultToFileObjectDtoMapperTest {
   public void init() {
     initMocks(this);
     mapper = Mappers.getMapper(BrowserResultToFileObjectDtoMapper.class);
-    mapper.setChildrenMapper(fileObjectToFileObjectDtoMapper);
     mapper.setResourceLinks(resourceLinks);
 
     subjectThreadState.bind();
