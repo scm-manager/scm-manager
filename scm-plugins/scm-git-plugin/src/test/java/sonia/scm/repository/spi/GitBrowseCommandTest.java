@@ -44,6 +44,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static sonia.scm.repository.spi.SyncAsyncExecutors.synchronousExecutor;
 
 /**
  * Unit tests for {@link GitBrowseCommand}.
@@ -171,6 +172,6 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitBrowseCommand createCommand() {
-    return new GitBrowseCommand(createContext(), repository, null);
+    return new GitBrowseCommand(createContext(), repository, null, synchronousExecutor());
   }
 }

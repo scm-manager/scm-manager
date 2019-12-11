@@ -70,9 +70,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static java.util.Optional.empty;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -98,55 +95,46 @@ public class GitBrowseCommand extends AbstractGitCommand
     LoggerFactory.getLogger(GitBrowseCommand.class);
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
-  private ExecutorService executorService;
+  private final SyncAsyncExecutor executor;
 
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
-   *  @param context
+   * @param context
    * @param repository
    * @param lfsBlobStoreFactory
+   * @param executor
    */
-  public GitBrowseCommand(GitContext context, Repository repository, LfsBlobStoreFactory lfsBlobStoreFactory)
+  public GitBrowseCommand(GitContext context, Repository repository, LfsBlobStoreFactory lfsBlobStoreFactory, SyncAsyncExecutor executor)
   {
     super(context, repository);
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
+    this.executor = executor;
   }
 
   //~--- get methods ----------------------------------------------------------
 
   @Override
-  @SuppressWarnings("unchecked")
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
     throws IOException {
-    executorService = Executors.newSingleThreadExecutor();
-    try {
-      logger.debug("try to create browse result for {}", request);
+    logger.debug("try to create browse result for {}", request);
 
-      org.eclipse.jgit.lib.Repository repo = open();
-      ObjectId revId = computeRevIdToBrowse(request, repo);
+    org.eclipse.jgit.lib.Repository repo = open();
+    ObjectId revId = computeRevIdToBrowse(request, repo);
 
-      if (revId != null) {
-        BrowserResult browserResult = new BrowserResult(revId.getName(), request.getRevision(), getEntry(repo, request, revId));
-        executorService.execute(() -> {
+    if (revId != null) {
+      BrowserResult browserResult = new BrowserResult(revId.getName(), request.getRevision(), getEntry(repo, request, revId));
+      executor.execute(executionType -> {
+        if (executionType == SyncAsyncExecutor.ExecutionType.ASYNCHRONOUS) {
           request.updateCache(browserResult);
           logger.info("updated browser result for repository {}", repository.getNamespaceAndName());
-        });
-        return browserResult;
-      } else {
-        logger.warn("could not find head of repository {}, empty?", repository.getNamespaceAndName());
-        return new BrowserResult(Constants.HEAD, request.getRevision(), createEmtpyRoot());
-      }
-    } finally {
-      executorService.shutdown();
-      try {
-        if (!executorService.awaitTermination(request.getComputationTimeoutMilliSeconds(), TimeUnit.MILLISECONDS)) {
-          logger.info("lookup of all commits aborted after {}ms in repo {}", request.getComputationTimeoutMilliSeconds(), repository.getNamespaceAndName());
         }
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-      }
+      });
+      return browserResult;
+    } else {
+      logger.warn("could not find head of repository {}, empty?", repository.getNamespaceAndName());
+      return new BrowserResult(Constants.HEAD, request.getRevision(), createEmtpyRoot());
     }
   }
 
@@ -219,7 +207,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       // don't show message and date for directories to improve performance
       if (!file.isDirectory() &&!request.isDisableLastCommit())
       {
-        executorService.execute(() -> {
+        executor.execute(() -> {
           logger.trace("fetch last commit for {} at {}", path, revId.getName());
           RevCommit commit = getLatestCommit(repo, revId, path);
 
