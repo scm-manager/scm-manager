@@ -39,6 +39,8 @@ import sonia.scm.repository.spi.SyncAsyncExecutors.AsyncExecutorStepper;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -119,21 +121,34 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   public void testAsynchronousBrowse() throws IOException {
     try (AsyncExecutorStepper executor = stepperAsynchronousExecutor()) {
       GitBrowseCommand command = new GitBrowseCommand(createContext(), repository, null, executor);
-      FileObject root = command.getBrowserResult(new BrowseCommandRequest()).getFile();
+      List<BrowserResult> updatedResults = new LinkedList<>();
+      BrowseCommandRequest request = new BrowseCommandRequest(updatedResults::add);
+      FileObject root = command.getBrowserResult(request).getFile();
       assertNotNull(root);
 
       Collection<FileObject> foList = root.getChildren();
 
       FileObject a = findFile(foList, "a.txt");
+      FileObject b = findFile(foList, "b.txt");
 
-      assertFalse(a.isDirectory());
       assertNull("expected empty name before commit could have been read", a.getDescription());
       assertNull("expected empty date before commit could have been read", a.getLastModified());
+      assertNull("expected empty name before commit could have been read", b.getDescription());
+      assertNull("expected empty date before commit could have been read", b.getLastModified());
 
       executor.next();
 
+      assertEquals(1, updatedResults.size());
       assertNotNull("expected correct name after commit could have been read", a.getDescription());
       assertNotNull("expected correct date after commit could have been read", a.getLastModified());
+      assertNull("expected empty name before commit could have been read", b.getDescription());
+      assertNull("expected empty date before commit could have been read", b.getLastModified());
+
+      executor.next();
+
+      assertEquals(2, updatedResults.size());
+      assertNotNull("expected correct name after commit could have been read", b.getDescription());
+      assertNotNull("expected correct date after commit could have been read", b.getLastModified());
     }
   }
 

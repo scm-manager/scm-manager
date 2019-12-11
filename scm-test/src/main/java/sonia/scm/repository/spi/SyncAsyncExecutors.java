@@ -53,8 +53,8 @@ public final class SyncAsyncExecutors {
     return new AsyncExecutorStepper() {
       @Override
       public void close() {
-        enterSemaphore.release(Integer.MAX_VALUE);
-        exitSemaphore.release(Integer.MAX_VALUE);
+        enterSemaphore.release(Integer.MAX_VALUE/2);
+        exitSemaphore.release(Integer.MAX_VALUE/2);
       }
 
       @Override

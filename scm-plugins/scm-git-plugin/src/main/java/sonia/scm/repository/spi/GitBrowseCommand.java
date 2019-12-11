@@ -74,6 +74,7 @@ import java.util.Optional;
 import static java.util.Optional.empty;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
+import static sonia.scm.repository.spi.SyncAsyncExecutor.ExecutionType.ASYNCHRONOUS;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -96,6 +97,8 @@ public class GitBrowseCommand extends AbstractGitCommand
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
   private final SyncAsyncExecutor executor;
+
+  private BrowserResult browserResult;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -124,9 +127,9 @@ public class GitBrowseCommand extends AbstractGitCommand
     ObjectId revId = computeRevIdToBrowse(request, repo);
 
     if (revId != null) {
-      BrowserResult browserResult = new BrowserResult(revId.getName(), request.getRevision(), getEntry(repo, request, revId));
+      browserResult = new BrowserResult(revId.getName(), request.getRevision(), getEntry(repo, request, revId));
       executor.execute(executionType -> {
-        if (executionType == SyncAsyncExecutor.ExecutionType.ASYNCHRONOUS) {
+        if (executionType == ASYNCHRONOUS) {
           request.updateCache(browserResult);
           logger.info("updated browser result for repository {}", repository.getNamespaceAndName());
         }
@@ -207,7 +210,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       // don't show message and date for directories to improve performance
       if (!file.isDirectory() &&!request.isDisableLastCommit())
       {
-        executor.execute(() -> {
+        executor.execute(executionType -> {
           logger.trace("fetch last commit for {} at {}", path, revId.getName());
           RevCommit commit = getLatestCommit(repo, revId, path);
 
@@ -235,6 +238,10 @@ public class GitBrowseCommand extends AbstractGitCommand
           if (commit != null) {
             file.setLastModified(GitUtil.getCommitTime(commit));
             file.setDescription(commit.getShortMessage());
+            if (executionType == ASYNCHRONOUS && browserResult != null) {
+              request.updateCache(browserResult);
+              logger.info("updated browser result for repository {}", repository.getNamespaceAndName());
+            }
           } else {
             logger.warn("could not find latest commit for {} on {}", path,
               revId);
