@@ -27,17 +27,16 @@ class Textarea extends React.Component<Props> {
     this.props.onChange(event.target.value, this.props.name);
   };
 
-  onKeyPress = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    const { onSubmit } = this.props;
-    if (onSubmit && event.key === "Enter" && event.ctrlKey) {
-      onSubmit();
-    }
-  };
-
   onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     const { onCancel } = this.props;
     if (onCancel && event.key === "Escape") {
       onCancel();
+      return;
+    }
+
+    const { onSubmit } = this.props;
+    if (onSubmit && event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+      onSubmit();
     }
   };
 
@@ -57,7 +56,6 @@ class Textarea extends React.Component<Props> {
             onChange={this.handleInput}
             value={value}
             disabled={!!disabled}
-            onKeyPress={this.onKeyPress}
             onKeyDown={this.onKeyDown}
           />
         </div>
