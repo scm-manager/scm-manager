@@ -60,7 +60,6 @@ public class SourceRootResource {
       if (revision != null && !revision.isEmpty()) {
         browseCommand.setRevision(URLDecoder.decode(revision, "UTF-8"));
       }
-      browseCommand.setDisableCache(true);
       BrowserResult browserResult = browseCommand.getBrowserResult();
 
       if (browserResult != null) {

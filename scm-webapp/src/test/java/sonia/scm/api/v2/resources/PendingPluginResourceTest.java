@@ -4,8 +4,6 @@ import com.google.inject.util.Providers;
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
-import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -22,10 +20,10 @@ import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
+import sonia.scm.web.RestDispatcher;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 
@@ -42,7 +40,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PendingPluginResourceTest {
 
-  Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   ResourceLinks resourceLinks = ResourceLinksMock.createMock(create("/"));
 
@@ -61,10 +59,9 @@ class PendingPluginResourceTest {
 
   @BeforeEach
   void prepareEnvironment() {
-    dispatcher = MockDispatcherFactory.createDispatcher();
-    dispatcher.getProviderFactory().register(new PermissionExceptionMapper());
+    dispatcher.registerException(ShiroException.class, Response.Status.UNAUTHORIZED);
     PluginRootResource pluginRootResource = new PluginRootResource(null, null, Providers.of(pendingPluginResource));
-    dispatcher.getRegistry().addSingletonResource(pluginRootResource);
+    dispatcher.addSingletonResource(pluginRootResource);
   }
 
   @BeforeEach
@@ -204,14 +201,6 @@ class PendingPluginResourceTest {
       assertThat(response.getContentAsString()).contains("\"new\":[{\"name\":\"pending-available-plugin\"");
       assertThat(response.getContentAsString()).doesNotContain("\"execute\":{\"href\":\"/v2/plugins/pending/execute\"}");
       assertThat(response.getContentAsString()).doesNotContain("\"cancel\":{\"href\":\"/v2/plugins/pending/cancel\"}");
-    }
-  }
-
-  static class PermissionExceptionMapper implements ExceptionMapper<ShiroException> {
-
-    @Override
-    public Response toResponse(ShiroException exception) {
-      return Response.status(401).entity(exception.getMessage()).build();
     }
   }
 

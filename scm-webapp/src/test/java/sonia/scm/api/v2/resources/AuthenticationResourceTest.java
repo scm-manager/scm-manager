@@ -2,11 +2,8 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
-import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,18 +16,17 @@ import sonia.scm.security.AccessTokenBuilder;
 import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.DefaultAccessTokenCookieIssuer;
+import sonia.scm.web.RestDispatcher;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.Optional;
 
 import static java.net.URI.create;
-import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -47,7 +43,7 @@ public class AuthenticationResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   @Mock
   private AccessTokenBuilderFactory accessTokenBuilderFactory;
@@ -116,7 +112,7 @@ public class AuthenticationResourceTest {
   @Before
   public void prepareEnvironment() {
     authenticationResource = new AuthenticationResource(accessTokenBuilderFactory, cookieIssuer);
-    dispatcher.getRegistry().addSingletonResource(authenticationResource);
+    dispatcher.addSingletonResource(authenticationResource);
 
     AccessToken accessToken = mock(AccessToken.class);
     when(accessToken.getExpiration()).thenReturn(new Date(Long.MAX_VALUE));
@@ -125,10 +121,9 @@ public class AuthenticationResourceTest {
     when(accessTokenBuilderFactory.create()).thenReturn(accessTokenBuilder);
 
     HttpServletRequest servletRequest = mock(HttpServletRequest.class);
-    ResteasyProviderFactory.getContextDataMap().put(HttpServletRequest.class, servletRequest);
-
+    dispatcher.putDefaultContextObject(HttpServletRequest.class, servletRequest);
     HttpServletResponse servletResponse = mock(HttpServletResponse.class);
-    ResteasyProviderFactory.getContextDataMap().put(HttpServletResponse.class, servletResponse);
+    dispatcher.putDefaultContextObject(HttpServletResponse.class, servletResponse);
   }
 
   @Test

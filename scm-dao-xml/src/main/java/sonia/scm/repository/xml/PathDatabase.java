@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.store.CopyOnWrite;
 import sonia.scm.xml.IndentXMLStreamWriter;
 import sonia.scm.xml.XmlStreams;
 
@@ -40,23 +41,28 @@ class PathDatabase {
     ensureParentDirectoryExists();
     LOG.trace("write repository path database to {}", storePath);
 
-    try (IndentXMLStreamWriter writer = XmlStreams.createWriter(storePath)) {
-      writer.writeStartDocument(ENCODING, VERSION);
+    CopyOnWrite.withTemporaryFile(
+      temp -> {
+        try (IndentXMLStreamWriter writer = XmlStreams.createWriter(temp)) {
+          writer.writeStartDocument(ENCODING, VERSION);
 
-      writeRepositoriesStart(writer, creationTime, lastModified);
-      for (Map.Entry<String, Path> e : pathDatabase.entrySet()) {
-        writeRepository(writer, e.getKey(), e.getValue());
-      }
-      writer.writeEndElement();
+          writeRepositoriesStart(writer, creationTime, lastModified);
+          for (Map.Entry<String, Path> e : pathDatabase.entrySet()) {
+            writeRepository(writer, e.getKey(), e.getValue());
+          }
+          writer.writeEndElement();
 
-      writer.writeEndDocument();
-    } catch (XMLStreamException | IOException ex) {
-      throw new InternalRepositoryException(
-        ContextEntry.ContextBuilder.entity(Path.class, storePath.toString()).build(),
-        "failed to write repository path database",
-        ex
-      );
-    }
+          writer.writeEndDocument();
+        } catch (XMLStreamException | IOException ex) {
+          throw new InternalRepositoryException(
+            ContextEntry.ContextBuilder.entity(Path.class, storePath.toString()).build(),
+            "failed to write repository path database",
+            ex
+          );
+        }
+      },
+      storePath
+    );
   }
 
   private void ensureParentDirectoryExists() {

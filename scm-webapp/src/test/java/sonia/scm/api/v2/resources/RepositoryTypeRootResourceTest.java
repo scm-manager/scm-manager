@@ -3,8 +3,6 @@ package sonia.scm.api.v2.resources;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.util.Providers;
-import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -15,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryType;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import java.net.URI;
@@ -32,7 +31,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class RepositoryTypeRootResourceTest {
 
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   @Mock
   private RepositoryManager repositoryManager;
@@ -56,7 +55,7 @@ public class RepositoryTypeRootResourceTest {
     RepositoryTypeCollectionResource collectionResource = new RepositoryTypeCollectionResource(repositoryManager, collectionMapper);
     RepositoryTypeResource resource = new RepositoryTypeResource(repositoryManager, mapper);
     RepositoryTypeRootResource rootResource = new RepositoryTypeRootResource(Providers.of(collectionResource), Providers.of(resource));
-    dispatcher.getRegistry().addSingletonResource(rootResource);
+    dispatcher.addSingletonResource(rootResource);
   }
 
   @Test

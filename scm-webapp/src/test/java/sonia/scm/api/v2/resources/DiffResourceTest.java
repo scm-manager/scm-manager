@@ -7,8 +7,6 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
-import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.After;
@@ -18,16 +16,17 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.NotFoundException;
-import sonia.scm.api.rest.AuthorizationExceptionMapper;
-import sonia.scm.api.v2.NotFoundExceptionMapper;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.util.CRLFInjectionException;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
+import javax.ws.rs.core.Response;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 
@@ -46,7 +45,8 @@ public class DiffResourceTest extends RepositoryTestBase {
 
   public static final String DIFF_PATH = "space/repo/diff/";
   public static final String DIFF_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + DIFF_PATH;
-  private final Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   @Mock
   private RepositoryServiceFactory serviceFactory;
@@ -68,14 +68,12 @@ public class DiffResourceTest extends RepositoryTestBase {
   public void prepareEnvironment() {
     diffRootResource = new DiffRootResource(serviceFactory);
     super.diffRootResource = Providers.of(diffRootResource);
-    dispatcher.getRegistry().addSingletonResource(getRepositoryRootResource());
+    dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
     ExceptionWithContextToErrorDtoMapperImpl mapper = new ExceptionWithContextToErrorDtoMapperImpl();
-    dispatcher.getProviderFactory().register(new NotFoundExceptionMapper(mapper));
-    dispatcher.getProviderFactory().registerProvider(AuthorizationExceptionMapper.class);
-    dispatcher.getProviderFactory().registerProvider(CRLFInjectionExceptionMapper.class);
+    dispatcher.registerException(CRLFInjectionException.class, Response.Status.BAD_REQUEST);
     when(service.getDiffCommand()).thenReturn(diffCommandBuilder);
     subjectThreadState.bind();
     ThreadContext.bind(subject);

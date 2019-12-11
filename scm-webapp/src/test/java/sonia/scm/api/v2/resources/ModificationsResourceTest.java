@@ -7,7 +7,6 @@ import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
-import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.After;
@@ -24,6 +23,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ModificationsCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import java.net.URI;
@@ -45,7 +45,7 @@ public class ModificationsResourceTest extends RepositoryTestBase {
   public static final String MODIFICATIONS_PATH = "space/repo/modifications/";
   public static final String MODIFICATIONS_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + MODIFICATIONS_PATH;
 
-  private Dispatcher dispatcher;
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -73,7 +73,7 @@ public class ModificationsResourceTest extends RepositoryTestBase {
   public void prepareEnvironment() {
     modificationsRootResource = new ModificationsRootResource(serviceFactory, modificationsToDtoMapper);
     super.modificationsRootResource = Providers.of(modificationsRootResource);
-    dispatcher = DispatcherMock.createDispatcher(getRepositoryRootResource());
+    dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
     when(repositoryService.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));

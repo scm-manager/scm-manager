@@ -18,11 +18,13 @@ class InjectionContextRestartStrategyTest {
   @Mock
   private RestartStrategy.InjectionContext context;
 
-  private InjectionContextRestartStrategy strategy = new InjectionContextRestartStrategy();
+  private InjectionContextRestartStrategy strategy = new InjectionContextRestartStrategy(Thread.currentThread().getContextClassLoader());
 
   @BeforeEach
   void setWaitToZero() {
     strategy.setWaitInMs(0L);
+    // disable gc during tests
+    strategy.setGcEnabled(false);
   }
 
   @Test
@@ -47,7 +49,6 @@ class InjectionContextRestartStrategyTest {
   @Test
   void shouldRegisterContextAfterRestart() throws InterruptedException {
     TestingInjectionContext ctx = new TestingInjectionContext();
-
     strategy.restart(ctx);
 
     Thread.sleep(50L);

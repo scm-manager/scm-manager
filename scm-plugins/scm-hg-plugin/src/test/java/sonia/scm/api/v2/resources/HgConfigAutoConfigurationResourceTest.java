@@ -2,14 +2,11 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -18,12 +15,15 @@ import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgVndMediaType;
+import sonia.scm.web.RestDispatcher;
 
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URISyntaxException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,10 +37,7 @@ public class HgConfigAutoConfigurationResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
-
-  private Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   @InjectMocks
   private HgConfigDtoToHgConfigMapperImpl dtoToConfigMapper;
@@ -57,7 +54,7 @@ public class HgConfigAutoConfigurationResourceTest {
       new HgConfigAutoConfigurationResource(dtoToConfigMapper, repositoryHandler);
 
     when(resourceProvider.get()).thenReturn(resource);
-    dispatcher.getRegistry().addSingletonResource(
+    dispatcher.addSingletonResource(
       new HgConfigResource(null, null, null, null,
                            resourceProvider, null));
   }
@@ -76,9 +73,10 @@ public class HgConfigAutoConfigurationResourceTest {
   @Test
   @SubjectAware(username = "readOnly")
   public void shouldNotSetDefaultConfigAndInstallHgWhenNotAuthorized() throws Exception {
-    thrown.expectMessage("Subject does not have permission [configuration:write:hg]");
+    MockHttpResponse response = put(null);
 
-    put(null);
+    assertEquals("Subject does not have permission [configuration:write:hg]", response.getContentAsString());
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
   }
 
   @Test
@@ -95,9 +93,10 @@ public class HgConfigAutoConfigurationResourceTest {
   @Test
   @SubjectAware(username = "readOnly")
   public void shouldNotUpdateConfigAndInstallHgWhenNotAuthorized() throws Exception {
-    thrown.expectMessage("Subject does not have permission [configuration:write:hg]");
+    MockHttpResponse response = put("{\"disabled\":true}");
 
-    put("{\"disabled\":true}");
+    assertEquals("Subject does not have permission [configuration:write:hg]", response.getContentAsString());
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
   }
 
   private MockHttpResponse put(String content) throws URISyntaxException {

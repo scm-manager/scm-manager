@@ -17,15 +17,17 @@ public class CronScheduler implements Scheduler {
 
   private final ScheduledExecutorService executorService;
   private final CronTaskFactory taskFactory;
+  private final CronThreadFactory threadFactory;
 
   @Inject
   public CronScheduler(CronTaskFactory taskFactory) {
     this.taskFactory = taskFactory;
+    this.threadFactory = new CronThreadFactory();
     this.executorService = createExecutor();
   }
 
   private ScheduledExecutorService createExecutor() {
-    return Executors.newScheduledThreadPool(2, new CronThreadFactory());
+    return Executors.newScheduledThreadPool(2, threadFactory);
   }
 
   @Override
@@ -52,6 +54,7 @@ public class CronScheduler implements Scheduler {
   @Override
   public void close() {
     LOG.debug("shutdown underlying executor service");
+    threadFactory.close();
     executorService.shutdown();
   }
 }
