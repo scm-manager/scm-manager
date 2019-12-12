@@ -88,7 +88,7 @@ class FileTreeLeaf extends React.Component<Props> {
       <tr>
         <td>{this.createFileIcon(file)}</td>
         <MinWidthTd className="is-word-break">{this.createFileName(file)}</MinWidthTd>
-        <td className="is-hidden-mobile">{fileSize}</td>
+        <td className="is-hidden-mobile">{this.contentIfPresent(file, fileSize)}</td>
         <td className="is-hidden-mobile">{this.contentIfPresent(file, <DateFromNow date={file.lastModified} />)}</td>
         <MinWidthTd className={classNames("is-word-break", "is-hidden-mobile")}>
           {this.contentIfPresent(file, file.description)}
