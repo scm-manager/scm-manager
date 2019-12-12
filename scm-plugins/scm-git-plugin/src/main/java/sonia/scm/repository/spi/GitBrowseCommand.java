@@ -133,7 +133,7 @@ public class GitBrowseCommand extends AbstractGitCommand
           request.updateCache(browserResult);
           logger.info("updated browser result for repository {}", repository.getNamespaceAndName());
         }
-      });
+      }, () -> {});
       return browserResult;
     } else {
       logger.warn("could not find head of repository {}, empty?", repository.getNamespaceAndName());
@@ -248,6 +248,11 @@ public class GitBrowseCommand extends AbstractGitCommand
             logger.warn("could not find latest commit for {} on {}", path,
               revId);
           }
+        }, () -> {
+          file.setPartialResult(false);
+          file.setComputationAborted(true);
+          request.updateCache(browserResult);
+          logger.info("updated browser result for repository {}", repository.getNamespaceAndName());
         });
       }
     }

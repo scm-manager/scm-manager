@@ -13,26 +13,40 @@ import static sonia.scm.repository.spi.SyncAsyncExecutor.ExecutionType.SYNCHRONO
 class DefaultSyncAsyncExecutorTest {
 
   ExecutionType calledWithType = null;
+  boolean aborted = false;
 
   @Test
   void shouldExecuteSynchronouslyBeforeTimeout() {
     DefaultSyncAsyncExecutor executor = new DefaultSyncAsyncExecutor(Runnable::run, Instant.MAX);
 
-    ExecutionType result = executor.execute(type -> calledWithType = type);
+    ExecutionType result = executor.execute(type -> calledWithType = type, () -> aborted = true);
 
     assertThat(result).isEqualTo(SYNCHRONOUS);
     assertThat(calledWithType).isEqualTo(SYNCHRONOUS);
     assertThat(executor.hasExecutedAllSynchronously()).isTrue();
+    assertThat(aborted).isFalse();
   }
 
   @Test
   void shouldExecuteAsynchronouslyAfterTimeout() {
     DefaultSyncAsyncExecutor executor = new DefaultSyncAsyncExecutor(Runnable::run, Instant.now().minus(1, MILLIS));
 
-    ExecutionType result = executor.execute(type -> calledWithType = type);
+    ExecutionType result = executor.execute(type -> calledWithType = type, () -> aborted = true);
 
     assertThat(result).isEqualTo(ASYNCHRONOUS);
     assertThat(calledWithType).isEqualTo(ASYNCHRONOUS);
     assertThat(executor.hasExecutedAllSynchronously()).isFalse();
+    assertThat(aborted).isFalse();
+  }
+
+  @Test
+  void shouldCallFallbackAfterAbortion() {
+    DefaultSyncAsyncExecutor executor = new DefaultSyncAsyncExecutor(Runnable::run, Instant.now().minus(1, MILLIS), 0L);
+
+    ExecutionType result = executor.execute(type -> calledWithType = type, () -> aborted = true);
+
+    assertThat(result).isEqualTo(ASYNCHRONOUS);
+    assertThat(calledWithType).isNull();
+    assertThat(aborted).isTrue();
   }
 }

@@ -101,7 +101,9 @@
       "length": "Größe",
       "lastModified": "Zuletzt bearbeitet",
       "description": "Beschreibung",
-      "branch": "Branch"
+      "branch": "Branch",
+      "notYetComputed": "Noch nicht berechnet; Der Wert wird in Kürze aktualisiert",
+      "computationAborted": "Die Berechnung dauert zu lange und wurde abgebrochen"
     },
     "content": {
       "historyButton": "History",

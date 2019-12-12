@@ -5,10 +5,14 @@ import java.util.function.Consumer;
 public interface SyncAsyncExecutor {
 
   default ExecutionType execute(Runnable runnable) {
-    return execute(ignored -> runnable.run());
+    return execute(ignored -> runnable.run(), () -> {});
   }
 
-  ExecutionType execute(Consumer<ExecutionType> runnable);
+  default ExecutionType execute(Runnable runnable, Runnable abortionFallback) {
+    return execute(ignored -> runnable.run(), abortionFallback);
+  }
+
+  ExecutionType execute(Consumer<ExecutionType> runnable, Runnable abortionFallback);
 
   boolean hasExecutedAllSynchronously();
 

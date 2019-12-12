@@ -4,10 +4,12 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { File } from "@scm-manager/ui-types";
-import { DateFromNow, FileSize } from "@scm-manager/ui-components";
+import { DateFromNow, FileSize, Tooltip } from "@scm-manager/ui-components";
 import FileIcon from "./FileIcon";
+import { Icon } from "@scm-manager/ui-components/src";
+import { WithTranslation, withTranslation } from "react-i18next";
 
-type Props = {
+type Props = WithTranslation & {
   file: File;
   baseUrl: string;
 };
@@ -31,7 +33,7 @@ export function createLink(base: string, file: File) {
   return link;
 }
 
-export default class FileTreeLeaf extends React.Component<Props> {
+class FileTreeLeaf extends React.Component<Props> {
   createLink = (file: File) => {
     return createLink(this.props.baseUrl, file);
   };
@@ -58,6 +60,25 @@ export default class FileTreeLeaf extends React.Component<Props> {
     return <Link to={this.createLink(file)}>{file.name}</Link>;
   };
 
+  contentIfPresent = (file: File, content: any) => {
+    const { t } = this.props;
+    if (file.computationAborted) {
+      return (
+        <Tooltip location="top" message={t("sources.file-tree.computationAborted")}>
+          <Icon name={"question-circle"} />
+        </Tooltip>
+      );
+    } else if (file.partialResult) {
+      return (
+        <Tooltip location="top" message={t("sources.file-tree.notYetComputed")}>
+          <Icon name={"hourglass"} />
+        </Tooltip>
+      );
+    } else {
+      return content;
+    }
+  };
+
   render() {
     const { file } = this.props;
 
@@ -68,10 +89,10 @@ export default class FileTreeLeaf extends React.Component<Props> {
         <td>{this.createFileIcon(file)}</td>
         <MinWidthTd className="is-word-break">{this.createFileName(file)}</MinWidthTd>
         <td className="is-hidden-mobile">{fileSize}</td>
-        <td className="is-hidden-mobile">
-          <DateFromNow date={file.lastModified} />
-        </td>
-        <MinWidthTd className={classNames("is-word-break", "is-hidden-mobile")}>{file.description}</MinWidthTd>
+        <td className="is-hidden-mobile">{this.contentIfPresent(file, <DateFromNow date={file.lastModified} />)}</td>
+        <MinWidthTd className={classNames("is-word-break", "is-hidden-mobile")}>
+          {this.contentIfPresent(file, file.description)}
+        </MinWidthTd>
         {binder.hasExtension("repos.sources.tree.row.right") && (
           <td className="is-hidden-mobile">
             {!file.directory && (
@@ -89,3 +110,5 @@ export default class FileTreeLeaf extends React.Component<Props> {
     );
   }
 }
+
+export default withTranslation("repos")(FileTreeLeaf);

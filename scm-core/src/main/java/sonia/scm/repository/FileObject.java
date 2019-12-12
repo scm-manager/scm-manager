@@ -226,6 +226,10 @@ public class FileObject implements LastModifiedAware, Serializable
     return partialResult;
   }
 
+  public boolean isComputationAborted() {
+    return computationAborted;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -310,6 +314,10 @@ public class FileObject implements LastModifiedAware, Serializable
     this.partialResult = partialResult;
   }
 
+  public void setComputationAborted(boolean computationAborted) {
+    this.computationAborted = computationAborted;
+  }
+
   public Collection<FileObject> getChildren() {
     return unmodifiableCollection(children);
   }
@@ -347,6 +355,8 @@ public class FileObject implements LastModifiedAware, Serializable
   private String path;
 
   private boolean partialResult = false;
+
+  private boolean computationAborted = false;
 
   /** sub repository informations */
   @XmlElement(name = "subrepository")

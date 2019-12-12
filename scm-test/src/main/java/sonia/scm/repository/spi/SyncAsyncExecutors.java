@@ -14,7 +14,7 @@ public final class SyncAsyncExecutors {
   public static SyncAsyncExecutor synchronousExecutor() {
     return new SyncAsyncExecutor() {
       @Override
-      public ExecutionType execute(Consumer<ExecutionType> runnable) {
+      public ExecutionType execute(Consumer<ExecutionType> runnable, Runnable abortionFallback) {
         runnable.accept(SYNCHRONOUS);
         return SYNCHRONOUS;
       }
@@ -32,7 +32,7 @@ public final class SyncAsyncExecutors {
 
     return new SyncAsyncExecutor() {
       @Override
-      public ExecutionType execute(Consumer<ExecutionType> runnable) {
+      public ExecutionType execute(Consumer<ExecutionType> runnable, Runnable abortionFallback) {
         executor.execute(() -> runnable.accept(ASYNCHRONOUS));
         return ASYNCHRONOUS;
       }
@@ -45,12 +45,13 @@ public final class SyncAsyncExecutors {
   }
 
   public static AsyncExecutorStepper stepperAsynchronousExecutor() {
-
-    Executor executor = Executors.newSingleThreadExecutor();
-    Semaphore enterSemaphore = new Semaphore(0);
-    Semaphore exitSemaphore = new Semaphore(0);
-
     return new AsyncExecutorStepper() {
+
+      Executor executor = Executors.newSingleThreadExecutor();
+      Semaphore enterSemaphore = new Semaphore(0);
+      Semaphore exitSemaphore = new Semaphore(0);
+      boolean timedOut = false;
+
       @Override
       public void close() {
         enterSemaphore.release(Integer.MAX_VALUE/2);
@@ -58,15 +59,19 @@ public final class SyncAsyncExecutors {
       }
 
       @Override
-      public ExecutionType execute(Consumer<ExecutionType> runnable) {
+      public ExecutionType execute(Consumer<ExecutionType> runnable, Runnable abortionFallback) {
         executor.execute(() -> {
           try {
             enterSemaphore.acquire();
           } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
           }
-          runnable.accept(ASYNCHRONOUS);
-          exitSemaphore.release();
+          if (timedOut) {
+            abortionFallback.run();
+          } else {
+            runnable.accept(ASYNCHRONOUS);
+            exitSemaphore.release();
+          }
         });
         return ASYNCHRONOUS;
       }
@@ -82,6 +87,12 @@ public final class SyncAsyncExecutors {
       }
 
       @Override
+      public void timeout() {
+        timedOut = true;
+        close();
+      }
+
+      @Override
       public boolean hasExecutedAllSynchronously() {
         return true;
       }
@@ -90,5 +101,7 @@ public final class SyncAsyncExecutors {
 
   public interface AsyncExecutorStepper extends SyncAsyncExecutor, Closeable {
     void next();
+
+    void timeout();
   }
 }

@@ -17,6 +17,7 @@ export type File = {
   lastModified?: string;
   subRepository?: SubRepository; // TODO
   partialResult: boolean;
+  computationAborted: boolean;
   _links: Links;
   _embedded: {
     children: File[] | null | undefined;

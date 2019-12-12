@@ -29,7 +29,7 @@ export function fetchSourcesWithoutOptionalLoadingState(
       .then((sources: File) => {
         dispatch(fetchSourcesSuccess(repository, revision, path, sources));
         if (sources._embedded.children && sources._embedded.children.find(c => c.partialResult)) {
-          setTimeout(() => dispatch(fetchSourcesWithoutOptionalLoadingState(repository, revision, path, false)), 1000);
+          setTimeout(() => dispatch(fetchSourcesWithoutOptionalLoadingState(repository, revision, path, false)), 3000);
         }
       })
       .catch(err => {
