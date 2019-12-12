@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, KeyboardEvent } from "react";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
 
 type Props = {
@@ -10,6 +10,8 @@ type Props = {
   onChange: (value: string, name?: string) => void;
   helpText?: string;
   disabled?: boolean;
+  onSubmit?: () => void;
+  onCancel?: () => void;
 };
 
 class Textarea extends React.Component<Props> {
@@ -23,6 +25,19 @@ class Textarea extends React.Component<Props> {
 
   handleInput = (event: ChangeEvent<HTMLTextAreaElement>) => {
     this.props.onChange(event.target.value, this.props.name);
+  };
+
+  onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    const { onCancel } = this.props;
+    if (onCancel && event.key === "Escape") {
+      onCancel();
+      return;
+    }
+
+    const { onSubmit } = this.props;
+    if (onSubmit && event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+      onSubmit();
+    }
   };
 
   render() {
@@ -41,6 +56,7 @@ class Textarea extends React.Component<Props> {
             onChange={this.handleInput}
             value={value}
             disabled={!!disabled}
+            onKeyDown={this.onKeyDown}
           />
         </div>
       </div>
