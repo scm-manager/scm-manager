@@ -18,6 +18,7 @@
 
   <properties>
     <build.script>build</build.script>
+    <skipTests>false</skipTests>
     <sonar.language>typescript</sonar.language>
     <sonar.sources>ui-extensions/src,ui-components/src,ui-webapp/src</sonar.sources>
     <sonar.test.exclusions>**/*.test.js,src/tests/**</sonar.test.exclusions>
