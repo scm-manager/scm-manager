@@ -1,7 +1,7 @@
 import React, { FormEvent } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Branch, Repository, Link } from "@scm-manager/ui-types";
-import { apiClient, BranchSelector, ErrorPage, Loading, Subtitle, SubmitButton } from "@scm-manager/ui-components";
+import { apiClient, BranchSelector, ErrorPage, Loading, Subtitle, Level, SubmitButton } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -143,10 +143,14 @@ class RepositoryConfig extends React.Component<Props, State> {
     }
 
     const submitButton = disabled ? null : (
-      <SubmitButton
-        label={t("scm-git-plugin.repo-config.submit")}
-        loading={submitPending}
-        disabled={!this.state.selectedBranchName}
+      <Level
+        right={
+          <SubmitButton
+            label={t("scm-git-plugin.repo-config.submit")}
+            loading={submitPending}
+            disabled={!this.state.selectedBranchName}
+          />
+        }
       />
     );
 

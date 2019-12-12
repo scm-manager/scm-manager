@@ -16,6 +16,10 @@ const MinWidthTd = styled.td`
   min-width: 10em;
 `;
 
+const NoWrapTd = styled.td`
+  white-space: nowrap;
+`;
+
 export function createLink(base: string, file: File) {
   let link = base;
   if (file.path) {
@@ -67,11 +71,11 @@ export default class FileTreeLeaf extends React.Component<Props> {
       <tr>
         <td>{this.createFileIcon(file)}</td>
         <MinWidthTd className="is-word-break">{this.createFileName(file)}</MinWidthTd>
-        <td className="is-hidden-mobile">{fileSize}</td>
+        <NoWrapTd className="is-hidden-mobile">{fileSize}</NoWrapTd>
         <td className="is-hidden-mobile">
           <DateFromNow date={file.lastModified} />
         </td>
-        <MinWidthTd className={classNames("is-word-break", "is-hidden-mobile")}>{file.description}</MinWidthTd>
+        <MinWidthTd className={classNames("is-word-break", "is-hidden-touch")}>{file.description}</MinWidthTd>
         {binder.hasExtension("repos.sources.tree.row.right") && (
           <td className="is-hidden-mobile">
             {!file.directory && (
