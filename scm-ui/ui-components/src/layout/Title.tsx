@@ -1,12 +1,14 @@
 import React, { FC, useEffect } from "react";
+import classNames from "classnames";
 
 type Props = {
   title?: string;
   customPageTitle?: string;
   preventRefreshingPageTitle?: boolean;
+  className?: string;
 };
 
-const Title: FC<Props> = ({ title, preventRefreshingPageTitle, customPageTitle }) => {
+const Title: FC<Props> = ({ title, preventRefreshingPageTitle, customPageTitle, className }) => {
   useEffect(() => {
     if (!preventRefreshingPageTitle) {
       if (customPageTitle) {
@@ -18,7 +20,7 @@ const Title: FC<Props> = ({ title, preventRefreshingPageTitle, customPageTitle }
   });
 
   if (title) {
-    return <h1 className="title">{title}</h1>;
+    return <h1 className={classNames("title", className)}>{title}</h1>;
   }
   return null;
 };
