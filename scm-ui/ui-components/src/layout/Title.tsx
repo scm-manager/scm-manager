@@ -1,17 +1,30 @@
-import React from "react";
+import React, { FC, useEffect } from "react";
 
 type Props = {
   title?: string;
+  customPageTitle?: string;
+  preventRefreshingPageTitle?: boolean;
 };
 
-class Title extends React.Component<Props> {
-  render() {
-    const { title } = this.props;
-    if (title) {
-      return <h1 className="title">{title}</h1>;
+const Title: FC<Props> = ({ title, preventRefreshingPageTitle, customPageTitle }) => {
+  useEffect(() => {
+    if (!preventRefreshingPageTitle) {
+      if (customPageTitle) {
+        document.title = customPageTitle;
+      } else if (title) {
+        document.title = title;
+      }
     }
-    return null;
+  });
+
+  if (title) {
+    return <h1 className="title">{title}</h1>;
   }
-}
+  return null;
+};
+
+Title.defaultProps = {
+  preventRefreshingPageTitle: false
+};
 
 export default Title;
