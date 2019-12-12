@@ -66,7 +66,7 @@ public class BootstrapContextListener extends GuiceServletContextListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(BootstrapContextListener.class);
 
-  private final ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
+  private ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
 
   private ServletContext context;
   private InjectionLifeCycle injectionLifeCycle;
@@ -112,6 +112,8 @@ public class BootstrapContextListener extends GuiceServletContextListener {
     injectionLifeCycle.shutdown();
     injectionLifeCycle = null;
     classLoaderLifeCycle.shutdown();
+
+    super.contextDestroyed(sce);
   }
 
   private Injector createStageTwoInjector() {

@@ -456,6 +456,83 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
 </div>
 `;
 
+exports[`Storyshots Forms|Textarea OnCancel 1`] = `
+<div
+  className="sc-dVhcbM ituOZx"
+>
+  <div
+    className="field"
+  >
+    
+    <div
+      className="control"
+    >
+      <textarea
+        className="textarea"
+        disabled={false}
+        onChange={[Function]}
+        onKeyDown={[Function]}
+        value="Use the escape key to clear the textarea"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Forms|Textarea OnChange 1`] = `
+<div
+  className="sc-dVhcbM ituOZx"
+>
+  <div
+    className="field"
+  >
+    
+    <div
+      className="control"
+    >
+      <textarea
+        className="textarea"
+        disabled={false}
+        onChange={[Function]}
+        onKeyDown={[Function]}
+        value="Start typing"
+      />
+    </div>
+  </div>
+  <hr />
+  <p>
+    Start typing
+  </p>
+</div>
+`;
+
+exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
+<div
+  className="sc-dVhcbM ituOZx"
+>
+  <div
+    className="field"
+  >
+    
+    <div
+      className="control"
+    >
+      <textarea
+        className="textarea"
+        disabled={false}
+        onChange={[Function]}
+        onKeyDown={[Function]}
+        value="Use the ctrl/command + Enter to submit the textarea"
+      />
+    </div>
+  </div>
+  <hr />
+  <p>
+    
+  </p>
+</div>
+`;
+
 exports[`Storyshots Loading Default 1`] = `
 <div>
   <div

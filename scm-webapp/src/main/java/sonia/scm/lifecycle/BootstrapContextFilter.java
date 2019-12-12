@@ -58,13 +58,16 @@ public class BootstrapContextFilter extends GuiceFilter {
 
   private final BootstrapContextListener listener = new BootstrapContextListener();
 
+  private ClassLoader webAppClassLoader;
+
   /** Field description */
   private FilterConfig filterConfig;
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
     this.filterConfig = filterConfig;
-
+    // store webapp classloader for delayed restarts
+    webAppClassLoader = Thread.currentThread().getContextClassLoader();
     initializeContext();
   }
 
@@ -97,7 +100,7 @@ public class BootstrapContextFilter extends GuiceFilter {
     if (filterConfig == null) {
       LOG.error("filter config is null, scm-manager is not initialized");
     } else {
-      RestartStrategy restartStrategy = RestartStrategy.get();
+      RestartStrategy restartStrategy = RestartStrategy.get(webAppClassLoader);
       restartStrategy.restart(new GuiceInjectionContext());
     }
   }
