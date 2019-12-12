@@ -78,6 +78,7 @@
                     <systemProperties>
                       <arg>java.awt.headless=true</arg>
                       <arg>logback.configurationFile=logging.xml</arg>
+                      <arg>ClassLoaderLeakPreventor.threadWaitMs=100</arg>
                     </systemProperties>
                   </jvmSettings>
 
