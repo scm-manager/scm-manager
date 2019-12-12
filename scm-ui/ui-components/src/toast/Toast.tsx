@@ -2,13 +2,12 @@ import React, { FC } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
 import { getTheme, Themeable, ToastThemeContext, Type } from "./themes";
+import usePortalRootElement from "../usePortalRootElement";
 
 type Props = {
   type: Type;
   title: string;
 };
-
-const rootElement = document.getElementById("toastRoot");
 
 const Container = styled.div<Themeable>`
   z-index: 99999;
@@ -43,8 +42,10 @@ const Title = styled.h1<Themeable>`
 `;
 
 const Toast: FC<Props> = ({ children, title, type }) => {
+  const rootElement = usePortalRootElement("toastRoot");
   if (!rootElement) {
-    throw new Error("could not find toast container #toastRoot");
+    // portal not yet ready
+    return null;
   }
 
   const theme = getTheme(type);
