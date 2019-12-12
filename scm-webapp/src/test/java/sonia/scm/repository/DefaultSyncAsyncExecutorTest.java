@@ -5,6 +5,8 @@ import sonia.scm.repository.spi.SyncAsyncExecutor.ExecutionType;
 
 import java.time.Instant;
 
+import static java.lang.Integer.MAX_VALUE;
+import static java.time.Instant.MAX;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static sonia.scm.repository.spi.SyncAsyncExecutor.ExecutionType.ASYNCHRONOUS;
@@ -17,7 +19,7 @@ class DefaultSyncAsyncExecutorTest {
 
   @Test
   void shouldExecuteSynchronouslyBeforeTimeout() {
-    DefaultSyncAsyncExecutor executor = new DefaultSyncAsyncExecutor(Runnable::run, Instant.MAX);
+    DefaultSyncAsyncExecutor executor = new DefaultSyncAsyncExecutor(Runnable::run, MAX, MAX_VALUE);
 
     ExecutionType result = executor.execute(type -> calledWithType = type, () -> aborted = true);
 
@@ -29,7 +31,7 @@ class DefaultSyncAsyncExecutorTest {
 
   @Test
   void shouldExecuteAsynchronouslyAfterTimeout() {
-    DefaultSyncAsyncExecutor executor = new DefaultSyncAsyncExecutor(Runnable::run, Instant.now().minus(1, MILLIS));
+    DefaultSyncAsyncExecutor executor = new DefaultSyncAsyncExecutor(Runnable::run, Instant.now().minus(1, MILLIS), MAX_VALUE);
 
     ExecutionType result = executor.execute(type -> calledWithType = type, () -> aborted = true);
 
@@ -41,7 +43,7 @@ class DefaultSyncAsyncExecutorTest {
 
   @Test
   void shouldCallFallbackAfterAbortion() {
-    DefaultSyncAsyncExecutor executor = new DefaultSyncAsyncExecutor(Runnable::run, Instant.now().minus(1, MILLIS), 0L);
+    DefaultSyncAsyncExecutor executor = new DefaultSyncAsyncExecutor(Runnable::run, Instant.now().minus(1, MILLIS), 0);
 
     ExecutionType result = executor.execute(type -> calledWithType = type, () -> aborted = true);
 

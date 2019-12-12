@@ -12,31 +12,25 @@ import static sonia.scm.repository.spi.SyncAsyncExecutor.ExecutionType.SYNCHRONO
 
 public class DefaultSyncAsyncExecutor implements SyncAsyncExecutor {
 
-  public static final long DEFAULT_MAX_ASYNC_RUNTIME = 60 * 1000L;
-
   private final Executor executor;
   private final Instant switchToAsyncTime;
-  private final long maxAsyncRuntime;
-  private AtomicLong asyncRuntime = new AtomicLong(0L);
+  private final long maxAsyncAbortMilliseconds;
+  private AtomicLong accumulatedAsyncRuntime = new AtomicLong(0L);
   private boolean executedAllSynchronously = true;
 
-  DefaultSyncAsyncExecutor(Executor executor, Instant switchToAsyncTime) {
-    this(executor, switchToAsyncTime, DEFAULT_MAX_ASYNC_RUNTIME);
-  }
-
-  DefaultSyncAsyncExecutor(Executor executor, Instant switchToAsyncTime, long maxAsyncRuntime) {
+  DefaultSyncAsyncExecutor(Executor executor, Instant switchToAsyncTime, int maxAsyncAbortSeconds) {
     this.executor = executor;
     this.switchToAsyncTime = switchToAsyncTime;
-    this.maxAsyncRuntime = maxAsyncRuntime;
+    this.maxAsyncAbortMilliseconds = maxAsyncAbortSeconds * 1000L;
   }
 
-  public ExecutionType execute(Consumer<ExecutionType> runnable, Runnable abortionFallback) {
-    if (Instant.now().isAfter(switchToAsyncTime)) {
+  public ExecutionType execute(Consumer<ExecutionType> task, Runnable abortionFallback) {
+    if (switchToAsyncTime.isBefore(Instant.now())) {
       executor.execute(() -> {
-        if (asyncRuntime.get() < maxAsyncRuntime) {
+        if (accumulatedAsyncRuntime.get() < maxAsyncAbortMilliseconds) {
           long chunkStartTime = System.currentTimeMillis();
-          runnable.accept(ASYNCHRONOUS);
-          asyncRuntime.addAndGet(System.currentTimeMillis() - chunkStartTime);
+          task.accept(ASYNCHRONOUS);
+          accumulatedAsyncRuntime.addAndGet(System.currentTimeMillis() - chunkStartTime);
         } else {
           abortionFallback.run();
         }
@@ -44,7 +38,7 @@ public class DefaultSyncAsyncExecutor implements SyncAsyncExecutor {
       executedAllSynchronously = false;
       return ASYNCHRONOUS;
     } else {
-      runnable.accept(SYNCHRONOUS);
+      task.accept(SYNCHRONOUS);
       return SYNCHRONOUS;
     }
   }
