@@ -70,6 +70,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static java.util.Optional.empty;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -211,49 +212,10 @@ public class GitBrowseCommand extends AbstractGitCommand
       if (!file.isDirectory() &&!request.isDisableLastCommit())
       {
         file.setPartialResult(true);
-        executor.execute(executionType -> {
-          logger.trace("fetch last commit for {} at {}", path, revId.getName());
-          RevCommit commit = getLatestCommit(repo, revId, path);
-
-          Optional<LfsPointer> lfsPointer;
-          try {
-            lfsPointer = commit == null ? empty() : GitUtil.getLfsPointer(repo, path, commit, treeWalk);
-          } catch (IOException e) {
-            throw new InternalRepositoryException(repository, "could not read lfs pointer", e);
-          }
-
-          if (lfsPointer.isPresent()) {
-            BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
-            String oid = lfsPointer.get().getOid().getName();
-            Blob blob = lfsBlobStore.get(oid);
-            if (blob == null) {
-              logger.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository.getNamespaceAndName());
-              file.setLength(-1);
-            } else {
-              file.setLength(blob.getSize());
-            }
-          } else {
-            file.setLength(loader.getSize());
-          }
-
-          file.setPartialResult(false);
-          if (commit != null) {
-            file.setLastModified(GitUtil.getCommitTime(commit));
-            file.setDescription(commit.getShortMessage());
-            if (executionType == ASYNCHRONOUS && browserResult != null) {
-              request.updateCache(browserResult);
-              logger.info("updated browser result for repository {}", repository.getNamespaceAndName());
-            }
-          } else {
-            logger.warn("could not find latest commit for {} on {}", path,
-              revId);
-          }
-        }, () -> {
-          file.setPartialResult(false);
-          file.setComputationAborted(true);
-          request.updateCache(browserResult);
-          logger.info("updated browser result for repository {}", repository.getNamespaceAndName());
-        });
+        executor.execute(
+          new CompleteFileInformation(path, revId, repo, treeWalk, file, loader, request),
+          new AbortFileInformation(file, request)
+        );
       }
     }
     return file;
@@ -458,4 +420,94 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   /** sub repository cache */
   private final Map<ObjectId, Map<String, SubRepository>> subrepositoryCache = Maps.newHashMap();
+
+  private class CompleteFileInformation implements Consumer<SyncAsyncExecutor.ExecutionType> {
+    private final String path;
+    private final ObjectId revId;
+    private final org.eclipse.jgit.lib.Repository repo;
+    private final TreeWalk treeWalk;
+    private final FileObject file;
+    private final ObjectLoader loader;
+    private final BrowseCommandRequest request;
+
+    public CompleteFileInformation(String path, ObjectId revId, org.eclipse.jgit.lib.Repository repo, TreeWalk treeWalk, FileObject file, ObjectLoader loader, BrowseCommandRequest request) {
+      this.path = path;
+      this.revId = revId;
+      this.repo = repo;
+      this.treeWalk = treeWalk;
+      this.file = file;
+      this.loader = loader;
+      this.request = request;
+    }
+
+    @Override
+    public void accept(SyncAsyncExecutor.ExecutionType executionType) {
+      logger.trace("fetch last commit for {} at {}", path, revId.getName());
+      RevCommit commit = GitBrowseCommand.this.getLatestCommit(repo, revId, path);
+
+      Optional<LfsPointer> lfsPointer = getLfsPointer(commit);
+
+      if (lfsPointer.isPresent()) {
+        setFileLengthFromLfsBlob(lfsPointer.get());
+      } else {
+        file.setLength(loader.getSize());
+      }
+
+      file.setPartialResult(false);
+      if (commit != null) {
+        applyValuesFromCommit(executionType, commit);
+      } else {
+        logger.warn("could not find latest commit for {} on {}", path, revId);
+      }
+    }
+
+    private void setFileLengthFromLfsBlob(LfsPointer lfsPointer) {
+      BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
+      String oid = lfsPointer.getOid().getName();
+      Blob blob = lfsBlobStore.get(oid);
+      if (blob == null) {
+        logger.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository.getNamespaceAndName());
+        file.setLength(-1);
+      } else {
+        file.setLength(blob.getSize());
+      }
+    }
+
+    private void applyValuesFromCommit(SyncAsyncExecutor.ExecutionType executionType, RevCommit commit) {
+      file.setLastModified(GitUtil.getCommitTime(commit));
+      file.setDescription(commit.getShortMessage());
+      if (executionType == ASYNCHRONOUS && browserResult != null) {
+        request.updateCache(browserResult);
+        logger.info("updated browser result for repository {}", repository.getNamespaceAndName());
+      }
+    }
+
+    private Optional<LfsPointer> getLfsPointer(RevCommit commit) {
+      Optional<LfsPointer> lfsPointer;
+      try {
+        lfsPointer = commit == null ? empty() : GitUtil.getLfsPointer(repo, path, commit, treeWalk);
+      } catch (IOException e) {
+        throw new InternalRepositoryException(repository, "could not read lfs pointer", e);
+      }
+      return lfsPointer;
+    }
+  }
+
+  private class AbortFileInformation implements Runnable {
+    private final FileObject file;
+    private final BrowseCommandRequest request;
+
+    public AbortFileInformation(FileObject file, BrowseCommandRequest request) {
+      this.file = file;
+      this.request = request;
+    }
+
+    @Override
+    public void run() {
+      file.setPartialResult(false);
+      file.setComputationAborted(true);
+      request.updateCache(browserResult);
+      logger.info("updated browser result for repository {}", repository.getNamespaceAndName());
+    }
+  }
 }
