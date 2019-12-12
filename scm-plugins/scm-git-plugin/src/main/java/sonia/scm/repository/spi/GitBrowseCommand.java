@@ -96,6 +96,8 @@ public class GitBrowseCommand extends AbstractGitCommand
    */
   private static final Logger logger =
     LoggerFactory.getLogger(GitBrowseCommand.class);
+  private static final Object asyncMonitor = new Object();
+
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
   private final SyncAsyncExecutor executor;
@@ -118,11 +120,6 @@ public class GitBrowseCommand extends AbstractGitCommand
 
     if (revId != null) {
       browserResult = new BrowserResult(revId.getName(), request.getRevision(), getEntry(repo, request, revId));
-      executor.execute(executionType -> {
-        if (executionType == ASYNCHRONOUS) {
-          updateCache(request);
-        }
-      }, () -> {});
       return browserResult;
     } else {
       logger.warn("could not find head of repository {}, empty?", repository.getNamespaceAndName());
@@ -364,17 +361,19 @@ public class GitBrowseCommand extends AbstractGitCommand
 
       Optional<LfsPointer> lfsPointer = commit.flatMap(this::getLfsPointer);
 
-      if (lfsPointer.isPresent()) {
-        setFileLengthFromLfsBlob(lfsPointer.get());
-      } else {
-        file.setLength(loader.getSize());
-      }
+      synchronized (asyncMonitor) {
+        if (lfsPointer.isPresent()) {
+          setFileLengthFromLfsBlob(lfsPointer.get());
+        } else {
+          file.setLength(loader.getSize());
+        }
 
-      file.setPartialResult(false);
-      if (commit.isPresent()) {
-        applyValuesFromCommit(executionType, commit.get());
-      } else {
-        logger.warn("could not find latest commit for {} on {}", path, revId);
+        file.setPartialResult(false);
+        if (commit.isPresent()) {
+          applyValuesFromCommit(executionType, commit.get());
+        } else {
+          logger.warn("could not find latest commit for {} on {}", path, revId);
+        }
       }
     }
 
@@ -433,9 +432,17 @@ public class GitBrowseCommand extends AbstractGitCommand
 
     @Override
     public void run() {
-      file.setPartialResult(false);
-      file.setComputationAborted(true);
-      updateCache(request);
+      synchronized (asyncMonitor) {
+        if (browserResult.getFile().getChildren().stream().anyMatch(FileObject::isPartialResult)) {
+          browserResult.getFile().getChildren().stream().filter(FileObject::isPartialResult).forEach(
+            f -> {
+              f.setPartialResult(false);
+              f.setComputationAborted(true);
+            }
+          );
+          updateCache(request);
+        }
+      }
     }
   }
 }
