@@ -3,12 +3,15 @@ package sonia.scm.repository;
 import sonia.scm.repository.spi.SyncAsyncExecutor;
 import sonia.scm.repository.spi.SyncAsyncExecutorProvider;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.Closeable;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Singleton
 public class DefaultSyncAsyncExecutorProvider implements SyncAsyncExecutorProvider, Closeable {
 
   public static final int DEFAULT_MAX_ASYNC_ABORT_SECONDS = 60;
@@ -20,6 +23,7 @@ public class DefaultSyncAsyncExecutorProvider implements SyncAsyncExecutorProvid
   private final ExecutorService executor;
   private final int defaultMaxAsyncAbortSeconds;
 
+  @Inject
   public DefaultSyncAsyncExecutorProvider() {
     this(Executors.newFixedThreadPool(getProperty(NUMBER_OF_THREADS_PROPERTY, DEFAULT_NUMBER_OF_THREADS)));
   }
@@ -30,7 +34,7 @@ public class DefaultSyncAsyncExecutorProvider implements SyncAsyncExecutorProvid
   }
 
   public SyncAsyncExecutor createExecutorWithSecondsToTimeout(int switchToAsyncInSeconds) {
-    return createExecutorWithSecondsToTimeout(switchToAsyncInSeconds, DEFAULT_MAX_ASYNC_ABORT_SECONDS);
+    return createExecutorWithSecondsToTimeout(switchToAsyncInSeconds, defaultMaxAsyncAbortSeconds);
   }
 
   public SyncAsyncExecutor createExecutorWithSecondsToTimeout(int switchToAsyncInSeconds, int maxAsyncAbortSeconds) {
