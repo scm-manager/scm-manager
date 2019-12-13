@@ -27,9 +27,6 @@ class DAORealmHelperTest {
   @Mock
   private UserDAO userDAO;
 
-  @Mock
-  private GroupDAO groupDAO;
-
   private DAORealmHelper helper;
 
   @BeforeEach
@@ -85,6 +82,21 @@ class DAORealmHelperTest {
 
     PrincipalCollection principals = authenticationInfo.getPrincipals();
     assertThat(principals.oneByType(Scope.class)).isSameAs(scope);
+  }
+
+  @Test
+  void shouldReturnAuthenticationInfoWithSessionId() {
+    User user = new User("trillian");
+    when(userDAO.get("trillian")).thenReturn(user);
+
+    SessionId session = SessionId.valueOf("abc123");
+
+    AuthenticationInfo authenticationInfo = helper.authenticationInfoBuilder("trillian")
+      .withSessionId(session)
+      .build();
+
+    PrincipalCollection principals = authenticationInfo.getPrincipals();
+    assertThat(principals.oneByType(SessionId.class)).isSameAs(session);
   }
 
   @Test

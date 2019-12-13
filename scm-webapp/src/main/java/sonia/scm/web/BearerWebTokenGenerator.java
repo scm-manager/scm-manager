@@ -44,7 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Creates a {@link BearerToken} from an authorization header with
  * bearer authorization.
- * 
+ *
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
@@ -53,7 +53,7 @@ public class BearerWebTokenGenerator extends SchemeBasedWebTokenGenerator
 {
 
   /**
-   * Creates a {@link BearerToken} from an authorization header 
+   * Creates a {@link BearerToken} from an authorization header
    * with bearer authorization.
    *
    * @param request http servlet request
@@ -70,7 +70,8 @@ public class BearerWebTokenGenerator extends SchemeBasedWebTokenGenerator
 
     if (HttpUtil.AUTHORIZATION_SCHEME_BEARER.equalsIgnoreCase(scheme))
     {
-      token = BearerToken.valueOf(authorization);
+      String sessionId = request.getHeader(HttpUtil.HEADER_SCM_SESSION);
+      token = BearerToken.create(sessionId, authorization);
     }
 
     return token;

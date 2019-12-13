@@ -37,6 +37,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.apache.shiro.authc.AuthenticationToken;
 
+import javax.annotation.Nullable;
+
 /**
  * Token used for authentication with bearer tokens.
  *
@@ -45,20 +47,23 @@ import org.apache.shiro.authc.AuthenticationToken;
  */
 public final class BearerToken implements AuthenticationToken {
 
+  private final SessionId sessionId;
   private final String raw;
 
   /**
    * Constructs a new instance.
-   * 
+   *
+   * @param sessionId session id of the client
    * @param raw raw bearer token
    */
-  private BearerToken(String raw) {
+  private BearerToken(SessionId sessionId, String raw) {
+    this.sessionId = sessionId;
     this.raw = raw;
   }
-  
+
   /**
    * Returns the wrapped raw format of the token.
-   * 
+   *
    * @return raw format
    */
   @Override
@@ -67,24 +72,41 @@ public final class BearerToken implements AuthenticationToken {
   }
 
   /**
-   * Returns always {@code null}.
-   * 
-   * @return {@code null}
+   * Returns the session id or {@code null}.
+   *
+   * @return session id or {@code null}
    */
   @Override
-  public Object getPrincipal() {
-    return null;
+  public SessionId getPrincipal() {
+    return sessionId;
   }
-  
+
   /**
    * Creates a new {@link BearerToken} from raw string representation.
-   * 
+   *
    * @param raw string representation
-   * 
+   *
    * @return new bearer token
    */
   public static BearerToken valueOf(String raw){
     Preconditions.checkArgument(!Strings.isNullOrEmpty(raw), "raw token is required");
-    return new BearerToken(raw);
+    return new BearerToken(null, raw);
+  }
+
+  /**
+   * Creates a new {@link BearerToken} from raw string representation for the given ui session id.
+   *
+   * @param sessionId session id of the client
+   * @param rawToken bearer token string representation
+   *
+   * @return new bearer token
+   */
+  public static BearerToken create(@Nullable String sessionId, String rawToken) {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(rawToken), "raw token is required");
+    SessionId session = null;
+    if (!Strings.isNullOrEmpty(sessionId)) {
+      session = SessionId.valueOf(sessionId);
+    }
+    return new BearerToken(session, rawToken);
   }
 }

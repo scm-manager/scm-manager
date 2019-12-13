@@ -1,6 +1,43 @@
 import { contextPath } from "./urls";
-import { createBackendError, ForbiddenError, isBackendError, UnauthorizedError } from "./errors";
-import { BackendErrorContent } from "./errors";
+// @ts-ignore we have not types for event-source-polyfill
+import { EventSourcePolyfill } from "event-source-polyfill";
+import { createBackendError, ForbiddenError, isBackendError, UnauthorizedError, BackendErrorContent } from "./errors";
+
+type SubscriptionEvent = {
+  type: string;
+};
+
+type OpenEvent = SubscriptionEvent;
+
+type ErrorEvent = SubscriptionEvent & {
+  error: Error;
+};
+
+type MessageEvent = SubscriptionEvent & {
+  data: string;
+  lastEventId?: string;
+};
+
+type MessageListeners = {
+  [eventType: string]: (event: MessageEvent) => void;
+};
+
+type SubscriptionContext = {
+  onOpen?: OpenEvent;
+  onMessage: MessageListeners;
+  onError?: ErrorEvent;
+};
+
+type SubscriptionArgument = MessageListeners | SubscriptionContext;
+
+type Cancel = () => void;
+
+const sessionId = (
+  Date.now().toString(36) +
+  Math.random()
+    .toString(36)
+    .substr(2, 5)
+).toUpperCase();
 
 const extractXsrfTokenFromJwt = (jwt: string) => {
   const parts = jwt.split(".");
@@ -26,26 +63,34 @@ const extractXsrfToken = () => {
   return extractXsrfTokenFromCookie(document.cookie);
 };
 
-const applyFetchOptions: (p: RequestInit) => RequestInit = o => {
-  if (!o.headers) {
-    o.headers = {};
-  }
-
-  // @ts-ignore We are sure that here we only get headers of type Record<string, string>
-  const headers: Record<string, string> = o.headers;
-  headers["Cache"] = "no-cache";
-  // identify the request as ajax request
-  headers["X-Requested-With"] = "XMLHttpRequest";
-  // identify the web interface
-  headers["X-SCM-Client"] = "WUI";
+const createRequestHeaders = () => {
+  const headers: { [key: string]: string } = {
+    // disable caching for now
+    Cache: "no-cache",
+    // identify the request as ajax request
+    "X-Requested-With": "XMLHttpRequest",
+    // identify the web interface
+    "X-SCM-Client": "WUI",
+    // identify the window session
+    "X-SCM-Session-ID": sessionId
+  };
 
   const xsrf = extractXsrfToken();
   if (xsrf) {
     headers["X-XSRF-Token"] = xsrf;
   }
+  return headers;
+};
 
+const applyFetchOptions: (p: RequestInit) => RequestInit = o => {
+  if (o.headers) {
+    o.headers = {
+      ...createRequestHeaders()
+    };
+  } else {
+    o.headers = createRequestHeaders();
+  }
   o.credentials = "same-origin";
-  o.headers = headers;
   return o;
 };
 
@@ -165,11 +210,38 @@ class ApiClient {
       if (!options.headers) {
         options.headers = {};
       }
-      // @ts-ignore We are sure that here we only get headers of type Record<string, string>
+      // @ts-ignore We are sure that here we only get headers of type {[name:string]: string}
       options.headers["Content-Type"] = contentType;
     }
 
     return fetch(createUrl(url), options).then(handleFailure);
+  }
+
+  subscribe(url: string, argument: SubscriptionArgument): Cancel {
+    const es = new EventSourcePolyfill(createUrl(url), {
+      withCredentials: true,
+      headers: createRequestHeaders()
+    });
+
+    let listeners: MessageListeners;
+    // type guard, to identify that argument is of type SubscriptionContext
+    if ("onMessage" in argument) {
+      listeners = (argument as SubscriptionContext).onMessage;
+      if (argument.onError) {
+        es.onerror = argument.onError;
+      }
+      if (argument.onOpen) {
+        es.onopen = argument.onOpen;
+      }
+    } else {
+      listeners = argument;
+    }
+
+    for (const type in listeners) {
+      es.addEventListener(type, listeners[type]);
+    }
+
+    return es.close;
   }
 }
 

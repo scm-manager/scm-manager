@@ -336,7 +336,7 @@ exports[`Storyshots DateFromNow Default 1`] = `
 
 exports[`Storyshots Forms|Checkbox Default 1`] = `
 <div
-  className="sc-fBuWsC ldmpJA"
+  className="sc-caSCKo brLbbv"
 >
   <div
     className="field"
@@ -381,7 +381,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
 
 exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 <div
-  className="sc-fBuWsC ldmpJA"
+  className="sc-caSCKo brLbbv"
 >
   <div
     className="field"
@@ -409,7 +409,7 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 
 exports[`Storyshots Forms|Radio Default 1`] = `
 <div
-  className="sc-fMiknA keSQNk"
+  className="sc-gisBJw jHakbY"
 >
   <label
     className="radio"
@@ -438,7 +438,7 @@ exports[`Storyshots Forms|Radio Default 1`] = `
 
 exports[`Storyshots Forms|Radio Disabled 1`] = `
 <div
-  className="sc-fMiknA keSQNk"
+  className="sc-gisBJw jHakbY"
 >
   <label
     className="radio"
@@ -2558,3 +2558,31 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
   </tbody>
 </table>
 `;
+
+exports[`Storyshots Toast Danger 1`] = `null`;
+
+exports[`Storyshots Toast Info 1`] = `null`;
+
+exports[`Storyshots Toast Open/Close 1`] = `
+<div
+  style={
+    Object {
+      "padding": "2rem",
+    }
+  }
+>
+  <button
+    className="button is-primary"
+    onClick={[Function]}
+  >
+    Open
+     Toast
+  </button>
+</div>
+`;
+
+exports[`Storyshots Toast Primary 1`] = `null`;
+
+exports[`Storyshots Toast Success 1`] = `null`;
+
+exports[`Storyshots Toast Warning 1`] = `null`;
