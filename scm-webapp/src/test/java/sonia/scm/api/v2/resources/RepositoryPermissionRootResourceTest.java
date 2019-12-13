@@ -13,7 +13,6 @@ import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
 import org.assertj.core.util.Lists;
-import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.jboss.resteasy.spi.HttpRequest;
@@ -30,6 +29,7 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.ws.rs.HttpMethod;
@@ -58,7 +58,6 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 import static sonia.scm.api.v2.resources.RepositoryPermissionDto.GROUP_PREFIX;
 
 @Slf4j
@@ -105,7 +104,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     .content(PERMISSION_TEST_PAYLOAD)
     .path(PATH_OF_ONE_PERMISSION);
 
-  private Dispatcher dispatcher;
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   @Mock
   private RepositoryManager repositoryManager;
@@ -133,7 +132,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
     repositoryPermissionCollectionToDtoMapper = new RepositoryPermissionCollectionToDtoMapper(permissionToPermissionDtoMapper, resourceLinks);
     repositoryPermissionRootResource = new RepositoryPermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, repositoryPermissionCollectionToDtoMapper, resourceLinks, repositoryManager);
     super.permissionRootResource = Providers.of(repositoryPermissionRootResource);
-    dispatcher = createDispatcher(getRepositoryRootResource());
+    dispatcher.addSingletonResource(getRepositoryRootResource());
     subjectThreadState.bind();
     ThreadContext.bind(subject);
   }
@@ -178,19 +177,6 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
       requestGETAllPermissions.expectedResponseStatus(403),
       requestDELETEPermission.expectedResponseStatus(403),
       requestPUTPermission.expectedResponseStatus(403));
-  }
-
-  @TestFactory
-  @DisplayName("test endpoints on missing permissions and is _anonymous")
-  Stream<DynamicTest> missedPermissionAnonymousUnauthorizedTestFactory() {
-    when(subject.getPrincipal()).thenReturn("_anonymous");
-    doThrow(AuthorizationException.class).when(repositoryManager).get(any(NamespaceAndName.class));
-    return createDynamicTestsToAssertResponses(
-      requestGETPermission.expectedResponseStatus(401),
-      requestPOSTPermission.expectedResponseStatus(401),
-      requestGETAllPermissions.expectedResponseStatus(401),
-      requestDELETEPermission.expectedResponseStatus(401),
-      requestPUTPermission.expectedResponseStatus(401));
   }
 
   @Test

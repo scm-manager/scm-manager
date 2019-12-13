@@ -99,8 +99,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import static javax.lang.model.util.ElementFilter.methodsIn;
+
 /**
- *
  * @author Sebastian Sdorra
  */
 @SupportedAnnotationTypes("*")
@@ -371,6 +372,18 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
           ? extends AnnotationValue> entry : annotationMirror.getElementValues().entrySet()) {
           attributes.put(entry.getKey().getSimpleName().toString(),
             getValue(entry.getValue()));
+        }
+
+        // add default values
+        for (ExecutableElement meth : methodsIn(annotationMirror.getAnnotationType().asElement().getEnclosedElements())) {
+          String attribute = meth.getSimpleName().toString();
+          AnnotationValue defaultValue = meth.getDefaultValue();
+          if (defaultValue != null && !attributes.containsKey(attribute)) {
+            String value = getValue(defaultValue);
+            if (value != null && !value.isEmpty()) {
+              attributes.put(attribute, value);
+            }
+          }
         }
       }
     }

@@ -4,6 +4,7 @@ import sonia.scm.update.V1Properties;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class V1Repository {
   private String description;
   private String id;
   private String name;
+  @XmlElement(name="public")
   private boolean isPublic;
   private boolean archived;
   private String type;

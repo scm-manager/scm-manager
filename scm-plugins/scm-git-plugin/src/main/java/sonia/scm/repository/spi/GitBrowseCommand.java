@@ -70,6 +70,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Optional.empty;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
@@ -209,7 +210,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         logger.trace("fetch last commit for {} at {}", path, revId.getName());
         RevCommit commit = getLatestCommit(repo, revId, path);
 
-        Optional<LfsPointer> lfsPointer = GitUtil.getLfsPointer(repo, path, commit, treeWalk);
+        Optional<LfsPointer> lfsPointer = commit == null? empty(): GitUtil.getLfsPointer(repo, path, commit, treeWalk);
 
         if (lfsPointer.isPresent()) {
           BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);

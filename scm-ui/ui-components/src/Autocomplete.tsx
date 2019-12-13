@@ -1,4 +1,5 @@
 import React from "react";
+import classNames from "classnames";
 import { Async, AsyncCreatable } from "react-select";
 import { SelectValue } from "@scm-manager/ui-types";
 import LabelWithHelpIcon from "./forms/LabelWithHelpIcon";
@@ -7,13 +8,14 @@ import { ActionMeta, ValueType } from "react-select/lib/types";
 type Props = {
   loadSuggestions: (p: string) => Promise<SelectValue[]>;
   valueSelected: (p: SelectValue) => void;
-  label: string;
+  label?: string;
   helpText?: string;
   value?: SelectValue;
   placeholder: string;
   loadingMessage: string;
   noOptionsMessage: string;
   creatable?: boolean;
+  className?: string;
 };
 
 type State = {};
@@ -53,10 +55,11 @@ class Autocomplete extends React.Component<Props, State> {
       loadingMessage,
       noOptionsMessage,
       loadSuggestions,
-      creatable
+      creatable,
+      className
     } = this.props;
     return (
-      <div className="field">
+      <div className={classNames("field", className)}>
         <LabelWithHelpIcon label={label} helpText={helpText} />
         <div className="control">
           {creatable ? (

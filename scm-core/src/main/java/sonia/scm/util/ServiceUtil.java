@@ -119,7 +119,7 @@ public final class ServiceUtil
    */
   public static <T> List<T> getServices(Class<T> type)
   {
-    List<T> result = new ArrayList<T>();
+    List<T> result = new ArrayList<>();
 
     try
     {

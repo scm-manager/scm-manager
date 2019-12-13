@@ -60,8 +60,7 @@
     }
   },
   "deleteGroup": {
-    "subtitle": "Borrar grupo",
-    "button": "Borrar",
+    "button": "Borrar grupo",
     "confirmAlert": {
       "title": "Borrar grupo",
       "message": "¿Realmente desea borrar el grupo?",

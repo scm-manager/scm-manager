@@ -53,7 +53,7 @@ public final class PluginCenterDto implements Serializable {
     private String category;
     private String author;
     private String avatarUrl;
-    private String sha256;
+    private String sha256sum;
 
     @XmlElement(name = "conditions")
     private Condition conditions;

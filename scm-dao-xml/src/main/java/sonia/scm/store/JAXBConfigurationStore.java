@@ -113,7 +113,10 @@ public class JAXBConfigurationStore<T> extends AbstractStore<T> {
       Marshaller marshaller = context.createMarshaller();
 
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-      marshaller.marshal(object, configFile);
+      CopyOnWrite.withTemporaryFile(
+        temp -> marshaller.marshal(object, temp.toFile()),
+        configFile.toPath()
+      );
     }
     catch (JAXBException ex) {
       throw new StoreException("failed to marshall object", ex);

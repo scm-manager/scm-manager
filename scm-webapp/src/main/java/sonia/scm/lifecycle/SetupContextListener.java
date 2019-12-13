@@ -61,7 +61,7 @@ public class SetupContextListener implements ServletContextListener {
 
     @Override
     public void run() {
-      if (isFirstStart()) {
+      if (shouldCreateAdminAccount()) {
         createAdminAccount();
       }
       if (anonymousUserRequiredButNotExists()) {
@@ -73,8 +73,12 @@ public class SetupContextListener implements ServletContextListener {
       return scmConfiguration.isAnonymousAccessEnabled() && !userManager.contains(SCMContext.USER_ANONYMOUS);
     }
 
-    private boolean isFirstStart() {
-      return userManager.getAll().isEmpty();
+    private boolean shouldCreateAdminAccount() {
+      return userManager.getAll().isEmpty() || onlyAnonymousUserExists();
+    }
+
+    private boolean onlyAnonymousUserExists() {
+      return userManager.getAll().size() == 1 && userManager.contains(SCMContext.USER_ANONYMOUS);
     }
 
     private void createAdminAccount() {

@@ -5,7 +5,6 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import org.apache.shiro.util.ThreadContext;
 import org.assertj.core.util.Lists;
-import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.After;
@@ -23,6 +22,7 @@ import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.user.DefaultUserDisplayManager;
 import sonia.scm.user.User;
 import sonia.scm.user.xml.XmlUserDAO;
+import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 import sonia.scm.xml.XmlDatabase;
 
@@ -39,7 +39,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static sonia.scm.api.v2.resources.DispatcherMock.createDispatcher;
 
 @SubjectAware(configuration = "classpath:sonia/scm/shiro-002.ini")
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -50,7 +49,8 @@ public class AutoCompleteResourceTest {
 
   public static final String URL = "/" + AutoCompleteResource.PATH;
   private final Integer defaultLimit = DisplayManager.DEFAULT_LIMIT;
-  private Dispatcher dispatcher;
+
+  private RestDispatcher dispatcher = new RestDispatcher();
 
   private XmlUserDAO userDao;
   private XmlGroupDAO groupDao;
@@ -74,7 +74,7 @@ public class AutoCompleteResourceTest {
     DefaultUserDisplayManager userManager = new DefaultUserDisplayManager(this.userDao);
     DefaultGroupDisplayManager groupManager = new DefaultGroupDisplayManager(groupDao);
     AutoCompleteResource autoCompleteResource = new AutoCompleteResource(mapper, userManager, groupManager);
-    dispatcher = createDispatcher(autoCompleteResource);
+    dispatcher.addSingletonResource(autoCompleteResource);
   }
 
   @After

@@ -90,8 +90,12 @@ public class LegmanScmEventBus extends ScmEventBus
   @Override
   public void post(Object event)
   {
-    logger.debug("post {} to event bus {}", event, name);
-    eventBus.post(event);
+    if (eventBus != null) {
+      logger.debug("post {} to event bus {}", event, name);
+      eventBus.post(event);
+    } else {
+      logger.error("failed to post event {}, because event bus is shutdown", event);
+    }
   }
 
   /**
@@ -104,9 +108,12 @@ public class LegmanScmEventBus extends ScmEventBus
   @Override
   public void register(Object object)
   {
-    logger.trace("register {} to event bus {}", object, name);
-    eventBus.register(object);
-
+    if (eventBus != null) {
+      logger.trace("register {} to event bus {}", object, name);
+      eventBus.register(object);
+    } else {
+      logger.error("failed to register {}, because eventbus is shutdown", object);
+    }
   }
 
   /**
@@ -118,22 +125,37 @@ public class LegmanScmEventBus extends ScmEventBus
   @Override
   public void unregister(Object object)
   {
-    logger.trace("unregister {} from event bus {}", object, name);
-    
-    try
-    {
-      eventBus.unregister(object);
+    if (eventBus != null) {
+      logger.trace("unregister {} from event bus {}", object, name);
+
+      try {
+        eventBus.unregister(object);
+      } catch (IllegalArgumentException ex) {
+        logger.trace("object {} was not registered", object);
+      }
+    } else {
+      logger.error("failed to unregister object {}, because event bus is shutdown", object);
     }
-    catch (IllegalArgumentException ex)
-    {
-      logger.trace("object {} was not registered", object);
+  }
+
+  @Subscribe(async = false)
+  public void shutdownEventBus(ShutdownEventBusEvent shutdownEventBusEvent) {
+    if (eventBus != null) {
+      logger.info("shutdown event bus executor for {}, because of received ShutdownEventBusEvent", name);
+      eventBus.shutdown();
+      eventBus = null;
+    } else {
+      logger.warn("event bus was already shutdown");
     }
   }
 
   @Subscribe(async = false)
   public void recreateEventBus(RecreateEventBusEvent recreateEventBusEvent) {
-    logger.info("shutdown event bus executor for {}", name);
-    eventBus.shutdown();
+    if (eventBus != null) {
+      logger.info("shutdown event bus executor for {}, because of received RecreateEventBusEvent", name);
+      eventBus.shutdown();
+    }
+    logger.info("recreate event bus because of received RecreateEventBusEvent");
     eventBus = create();
   }
 

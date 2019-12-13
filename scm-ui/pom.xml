@@ -17,6 +17,8 @@
   <name>scm-ui</name>
 
   <properties>
+    <build.script>build</build.script>
+    <skipTests>false</skipTests>
     <sonar.language>typescript</sonar.language>
     <sonar.sources>ui-extensions/src,ui-components/src,ui-webapp/src</sonar.sources>
     <sonar.test.exclusions>**/*.test.js,src/tests/**</sonar.test.exclusions>
@@ -68,7 +70,7 @@
               <goal>run</goal>
             </goals>
             <configuration>
-              <script>build</script>
+              <script>${build.script}</script>
             </configuration>
           </execution>
           <execution>
@@ -118,4 +120,21 @@
 
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>dev</id>
+
+      <activation>
+        <property>
+          <name>development</name>
+        </property>
+      </activation>
+
+      <properties>
+        <build.script>build:dev</build.script>
+      </properties>
+    </profile>
+
+  </profiles>
 </project>

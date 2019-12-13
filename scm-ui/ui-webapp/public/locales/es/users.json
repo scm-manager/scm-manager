@@ -45,8 +45,7 @@
     "subtitle": "Crear un nuevo usuario"
   },
   "deleteUser": {
-    "subtitle": "Borrar usuario",
-    "button": "Borrar",
+    "button": "Borrar usuario",
     "confirmAlert": {
       "title": "Borrar usuario",
       "message": "¿Realmente desea borrar el usuario?",

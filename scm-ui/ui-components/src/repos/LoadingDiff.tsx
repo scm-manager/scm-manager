@@ -43,6 +43,7 @@ class LoadingDiff extends React.Component<Props, State> {
 
   fetchDiff = () => {
     const { url } = this.props;
+    this.setState({loading: true});
     apiClient
       .get(url)
       .then(response => response.text())

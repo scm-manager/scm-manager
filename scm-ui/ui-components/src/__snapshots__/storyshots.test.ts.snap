@@ -336,7 +336,7 @@ exports[`Storyshots DateFromNow Default 1`] = `
 
 exports[`Storyshots Forms|Checkbox Default 1`] = `
 <div
-  className="sc-gipzik xsalO"
+  className="sc-fBuWsC ldmpJA"
 >
   <div
     className="field"
@@ -381,7 +381,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
 
 exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 <div
-  className="sc-gipzik xsalO"
+  className="sc-fBuWsC ldmpJA"
 >
   <div
     className="field"
@@ -409,7 +409,7 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 
 exports[`Storyshots Forms|Radio Default 1`] = `
 <div
-  className="sc-csuQGl fFFkRK"
+  className="sc-fMiknA keSQNk"
 >
   <label
     className="radio"
@@ -438,7 +438,7 @@ exports[`Storyshots Forms|Radio Default 1`] = `
 
 exports[`Storyshots Forms|Radio Disabled 1`] = `
 <div
-  className="sc-csuQGl fFFkRK"
+  className="sc-fMiknA keSQNk"
 >
   <label
     className="radio"
@@ -453,6 +453,83 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
      
     Checked but disabled
   </label>
+</div>
+`;
+
+exports[`Storyshots Forms|Textarea OnCancel 1`] = `
+<div
+  className="sc-dVhcbM ituOZx"
+>
+  <div
+    className="field"
+  >
+    
+    <div
+      className="control"
+    >
+      <textarea
+        className="textarea"
+        disabled={false}
+        onChange={[Function]}
+        onKeyDown={[Function]}
+        value="Use the escape key to clear the textarea"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Forms|Textarea OnChange 1`] = `
+<div
+  className="sc-dVhcbM ituOZx"
+>
+  <div
+    className="field"
+  >
+    
+    <div
+      className="control"
+    >
+      <textarea
+        className="textarea"
+        disabled={false}
+        onChange={[Function]}
+        onKeyDown={[Function]}
+        value="Start typing"
+      />
+    </div>
+  </div>
+  <hr />
+  <p>
+    Start typing
+  </p>
+</div>
+`;
+
+exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
+<div
+  className="sc-dVhcbM ituOZx"
+>
+  <div
+    className="field"
+  >
+    
+    <div
+      className="control"
+    >
+      <textarea
+        className="textarea"
+        disabled={false}
+        onChange={[Function]}
+        onKeyDown={[Function]}
+        value="Use the ctrl/command + Enter to submit the textarea"
+      />
+    </div>
+  </div>
+  <hr />
+  <p>
+    
+  </p>
 </div>
 `;
 
@@ -2310,4 +2387,174 @@ PORT_NUMBER =
     </code>
   </pre>
 </div>
+`;
+
+exports[`Storyshots Table|Table Default 1`] = `
+<table
+  className="sc-jhAzac hmXDXQ table content is-hoverable"
+>
+  <thead>
+    <tr>
+      <th
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
+        First Name
+      </th>
+      <th
+        className="has-cursor-pointer"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
+        Last Name
+        <i
+          className="fas fa-sort-amount-down has-text-grey-light sc-hzDkRC escBde"
+        />
+      </th>
+      <th
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
+        E-Mail
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <h4>
+          Tricia
+        </h4>
+      </td>
+      <td>
+        <b
+          style={
+            Object {
+              "color": "red",
+            }
+          }
+        >
+          McMillan
+        </b>
+      </td>
+      <td>
+        <a>
+          tricia@hitchhiker.com
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h4>
+          Arthur
+        </h4>
+      </td>
+      <td>
+        <b
+          style={
+            Object {
+              "color": "red",
+            }
+          }
+        >
+          Dent
+        </b>
+      </td>
+      <td>
+        <a>
+          arthur@hitchhiker.com
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;
+
+exports[`Storyshots Table|Table Empty 1`] = `
+<div
+  className="notification is-info"
+>
+  
+  No data found.
+</div>
+`;
+
+exports[`Storyshots Table|Table TextColumn 1`] = `
+<table
+  className="sc-jhAzac hmXDXQ table content is-hoverable"
+>
+  <thead>
+    <tr>
+      <th
+        className="has-cursor-pointer"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
+        Id
+        <i
+          className="fas fa-sort-alpha-down has-text-grey-light sc-hzDkRC escBde"
+        />
+      </th>
+      <th
+        className="has-cursor-pointer"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
+        Name
+        <i
+          className="fas fa-sort-alpha-down has-text-grey-light sc-hzDkRC escBde"
+        />
+      </th>
+      <th
+        className="has-cursor-pointer"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
+        Description
+        <i
+          className="fas fa-sort-alpha-down has-text-grey-light sc-hzDkRC escBde"
+        />
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        21
+      </td>
+      <td>
+        Pommes
+      </td>
+      <td>
+        Fried potato sticks
+      </td>
+    </tr>
+    <tr>
+      <td>
+        42
+      </td>
+      <td>
+        Quarter-Pounder
+      </td>
+      <td>
+        Big burger
+      </td>
+    </tr>
+    <tr>
+      <td>
+        -84
+      </td>
+      <td>
+        Icecream
+      </td>
+      <td>
+        Cold dessert
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;
