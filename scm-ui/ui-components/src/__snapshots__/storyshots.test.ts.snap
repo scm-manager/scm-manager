@@ -458,7 +458,7 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
 
 exports[`Storyshots Forms|Textarea OnCancel 1`] = `
 <div
-  className="sc-dVhcbM ituOZx"
+  className="sc-kjoXOD hVPZau"
 >
   <div
     className="field"
@@ -481,7 +481,7 @@ exports[`Storyshots Forms|Textarea OnCancel 1`] = `
 
 exports[`Storyshots Forms|Textarea OnChange 1`] = `
 <div
-  className="sc-dVhcbM ituOZx"
+  className="sc-kjoXOD hVPZau"
 >
   <div
     className="field"
@@ -508,7 +508,7 @@ exports[`Storyshots Forms|Textarea OnChange 1`] = `
 
 exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
 <div
-  className="sc-dVhcbM ituOZx"
+  className="sc-kjoXOD hVPZau"
 >
   <div
     className="field"
