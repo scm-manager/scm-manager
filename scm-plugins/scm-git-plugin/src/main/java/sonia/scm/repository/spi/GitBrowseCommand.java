@@ -35,6 +35,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -94,9 +95,12 @@ public class GitBrowseCommand extends AbstractGitCommand
   /**
    * the logger for GitBrowseCommand
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GitBrowseCommand.class);
-  private static final Object asyncMonitor = new Object();
+  private static final Logger logger = LoggerFactory.getLogger(GitBrowseCommand.class);
+
+  /** sub repository cache */
+  private final Map<ObjectId, Map<String, SubRepository>> subrepositoryCache = Maps.newHashMap();
+
+  private final Object asyncMonitor = new Object();
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
@@ -123,12 +127,11 @@ public class GitBrowseCommand extends AbstractGitCommand
       return browserResult;
     } else {
       logger.warn("could not find head of repository {}, empty?", repository.getNamespaceAndName());
-      return new BrowserResult(Constants.HEAD, request.getRevision(), createEmtpyRoot());
+      return new BrowserResult(Constants.HEAD, request.getRevision(), createEmptyRoot());
     }
   }
 
   private ObjectId computeRevIdToBrowse(BrowseCommandRequest request, org.eclipse.jgit.lib.Repository repo) throws IOException {
-
     if (Util.isEmpty(request.getRevision())) {
       return getDefaultBranch(repo);
     } else {
@@ -141,7 +144,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
   }
 
-  private FileObject createEmtpyRoot() {
+  private FileObject createEmptyRoot() {
     FileObject fileObject = new FileObject();
     fileObject.setName("");
     fileObject.setPath("");
@@ -198,7 +201,6 @@ public class GitBrowseCommand extends AbstractGitCommand
   }
 
   private FileObject getEntry(org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId) throws IOException {
-
     try (RevWalk revWalk = new RevWalk(repo); TreeWalk treeWalk = new TreeWalk(repo)) {
       logger.debug("load repository browser for revision {}", revId.name());
 
@@ -215,7 +217,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       }
 
       if (isRootRequest(request)) {
-        FileObject result = createEmtpyRoot();
+        FileObject result = createEmptyRoot();
         findChildren(result, repo, request, revId, treeWalk);
         return result;
       } else {
@@ -283,57 +285,35 @@ public class GitBrowseCommand extends AbstractGitCommand
     throw notFound(entity("File", request.getPath()).in("Revision", revId.getName()).in(this.repository));
   }
 
-  private Map<String,
-    SubRepository> getSubRepositories(org.eclipse.jgit.lib.Repository repo,
-                                      ObjectId revision)
+  private Map<String, SubRepository> getSubRepositories(org.eclipse.jgit.lib.Repository repo, ObjectId revision)
     throws IOException {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("read submodules of {} at {}", repository.getName(),
-        revision);
-    }
 
-    Map<String, SubRepository> subRepositories;
-    try ( ByteArrayOutputStream baos = new ByteArrayOutputStream() )
-    {
+    logger.debug("read submodules of {} at {}", repository.getName(), revision);
+
+    try ( ByteArrayOutputStream baos = new ByteArrayOutputStream() ) {
       new GitCatCommand(context, repository, lfsBlobStoreFactory).getContent(repo, revision,
         PATH_MODULES, baos);
-      subRepositories = GitSubModuleParser.parse(baos.toString());
-    }
-    catch (NotFoundException ex)
-    {
+      return GitSubModuleParser.parse(baos.toString());
+    } catch (NotFoundException ex) {
       logger.trace("could not find .gitmodules: {}", ex.getMessage());
-      subRepositories = Collections.emptyMap();
+      return Collections.emptyMap();
     }
-
-    return subRepositories;
   }
 
-  private SubRepository getSubRepository(org.eclipse.jgit.lib.Repository repo,
-                                         ObjectId revId, String path)
+  private SubRepository getSubRepository(org.eclipse.jgit.lib.Repository repo, ObjectId revId, String path)
     throws IOException {
     Map<String, SubRepository> subRepositories = subrepositoryCache.get(revId);
 
-    if (subRepositories == null)
-    {
+    if (subRepositories == null) {
       subRepositories = getSubRepositories(repo, revId);
       subrepositoryCache.put(revId, subRepositories);
     }
 
-    SubRepository sub = null;
-
-    if (subRepositories != null)
-    {
-      sub = subRepositories.get(path);
+    if (subRepositories != null) {
+      return subRepositories.get(path);
     }
-
-    return sub;
+    return null;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** sub repository cache */
-  private final Map<ObjectId, Map<String, SubRepository>> subrepositoryCache = Maps.newHashMap();
 
   private class CompleteFileInformation implements Consumer<SyncAsyncExecutor.ExecutionType> {
     private final String path;
@@ -357,6 +337,9 @@ public class GitBrowseCommand extends AbstractGitCommand
     @Override
     public void accept(SyncAsyncExecutor.ExecutionType executionType) {
       logger.trace("fetch last commit for {} at {}", path, revId.getName());
+
+      Stopwatch sw = Stopwatch.createStarted();
+
       Optional<RevCommit> commit = getLatestCommit(repo, revId, path);
 
       Optional<LfsPointer> lfsPointer = commit.flatMap(this::getLfsPointer);
@@ -375,6 +358,8 @@ public class GitBrowseCommand extends AbstractGitCommand
           logger.warn("could not find latest commit for {} on {}", path, revId);
         }
       }
+
+      logger.trace("finished loading of last commit {} of {} in {}", revId.getName(), path, sw.stop());
     }
 
     private Optional<RevCommit> getLatestCommit(org.eclipse.jgit.lib.Repository repo,
