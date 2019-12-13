@@ -39,6 +39,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.eclipse.jgit.attributes.Attributes;
 import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
@@ -50,6 +51,7 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
+import org.eclipse.jgit.util.LfsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
@@ -186,8 +188,20 @@ public class GitBrowseCommand extends AbstractGitCommand
       if (!file.isDirectory() &&!request.isDisableLastCommit())
       {
         file.setPartialResult(true);
+        RevCommit commit;
+        try (RevWalk walk = new RevWalk(repo)) {
+          commit = walk.parseCommit(revId);
+        }
+        Optional<LfsPointer> lfsPointer = getLfsPointer(repo, path, commit, treeWalk);
+
+        if (lfsPointer.isPresent()) {
+          setFileLengthFromLfsBlob(lfsPointer.get(), file);
+        } else {
+          file.setLength(loader.getSize());
+        }
+
         executor.execute(
-          new CompleteFileInformation(path, revId, repo, treeWalk, file, loader, request),
+          new CompleteFileInformation(path, revId, repo, file, request),
           new AbortFileInformation(request)
         );
       }
@@ -315,22 +329,40 @@ public class GitBrowseCommand extends AbstractGitCommand
     return null;
   }
 
+  private Optional<LfsPointer> getLfsPointer(org.eclipse.jgit.lib.Repository repo, String path, RevCommit commit, TreeWalk treeWalk) {
+    try {
+      Attributes attributes = LfsFactory.getAttributesForPath(repo, path, commit);
+
+      return GitUtil.getLfsPointer(repo, treeWalk, attributes);
+    } catch (IOException e) {
+      throw new InternalRepositoryException(repository, "could not read lfs pointer", e);
+    }
+  }
+
+  private void setFileLengthFromLfsBlob(LfsPointer lfsPointer, FileObject file) {
+    BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
+    String oid = lfsPointer.getOid().getName();
+    Blob blob = lfsBlobStore.get(oid);
+    if (blob == null) {
+      logger.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository.getNamespaceAndName());
+      file.setLength(-1);
+    } else {
+      file.setLength(blob.getSize());
+    }
+  }
+
   private class CompleteFileInformation implements Consumer<SyncAsyncExecutor.ExecutionType> {
     private final String path;
     private final ObjectId revId;
     private final org.eclipse.jgit.lib.Repository repo;
-    private final TreeWalk treeWalk;
     private final FileObject file;
-    private final ObjectLoader loader;
     private final BrowseCommandRequest request;
 
-    public CompleteFileInformation(String path, ObjectId revId, org.eclipse.jgit.lib.Repository repo, TreeWalk treeWalk, FileObject file, ObjectLoader loader, BrowseCommandRequest request) {
+    public CompleteFileInformation(String path, ObjectId revId, org.eclipse.jgit.lib.Repository repo, FileObject file, BrowseCommandRequest request) {
       this.path = path;
       this.revId = revId;
       this.repo = repo;
-      this.treeWalk = treeWalk;
       this.file = file;
-      this.loader = loader;
       this.request = request;
     }
 
@@ -342,15 +374,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
       Optional<RevCommit> commit = getLatestCommit(repo, revId, path);
 
-      Optional<LfsPointer> lfsPointer = commit.flatMap(this::getLfsPointer);
-
       synchronized (asyncMonitor) {
-        if (lfsPointer.isPresent()) {
-          setFileLengthFromLfsBlob(lfsPointer.get());
-        } else {
-          file.setLength(loader.getSize());
-        }
-
         file.setPartialResult(false);
         if (commit.isPresent()) {
           applyValuesFromCommit(executionType, commit.get());
@@ -377,31 +401,11 @@ public class GitBrowseCommand extends AbstractGitCommand
       }
     }
 
-    private void setFileLengthFromLfsBlob(LfsPointer lfsPointer) {
-      BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
-      String oid = lfsPointer.getOid().getName();
-      Blob blob = lfsBlobStore.get(oid);
-      if (blob == null) {
-        logger.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository.getNamespaceAndName());
-        file.setLength(-1);
-      } else {
-        file.setLength(blob.getSize());
-      }
-    }
-
     private void applyValuesFromCommit(SyncAsyncExecutor.ExecutionType executionType, RevCommit commit) {
       file.setLastModified(GitUtil.getCommitTime(commit));
       file.setDescription(commit.getShortMessage());
       if (executionType == ASYNCHRONOUS && browserResult != null) {
         updateCache(request);
-      }
-    }
-
-    private Optional<LfsPointer> getLfsPointer(RevCommit commit) {
-      try {
-        return GitUtil.getLfsPointer(repo, path, commit, treeWalk);
-      } catch (IOException e) {
-        throw new InternalRepositoryException(repository, "could not read lfs pointer", e);
       }
     }
   }
