@@ -11,6 +11,14 @@ type Props = WithTranslation & {
   version: string;
 };
 
+const NoBottomMarginSubtitle = styled(Subtitle)`
+  margin-bottom: 0.25rem !important;
+`;
+
+const BottomMarginDiv = styled.div`
+  margin-bottom: 1.5rem;
+`;
+
 const BoxShadowBox = styled.div`
   box-shadow: 0 2px 3px rgba(40, 177, 232, 0.1), 0 0 0 2px rgba(40, 177, 232, 0.2);
 `;
@@ -29,8 +37,9 @@ class AdminDetails extends React.Component<Props> {
 
     return (
       <>
-        <Title title={t("admin.info.currentAppVersion")} />
-        <Subtitle subtitle={this.props.version} />
+        <Title title={t("admin.info.title")} />
+        <NoBottomMarginSubtitle subtitle={t("admin.info.currentAppVersion")} />
+        <BottomMarginDiv>{this.props.version}</BottomMarginDiv>
         <BoxShadowBox className="box">
           <article className="media">
             <ImageWrapper className="media-left">
