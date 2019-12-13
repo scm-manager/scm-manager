@@ -185,7 +185,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         file.setPartialResult(true);
         executor.execute(
           new CompleteFileInformation(path, revId, repo, treeWalk, file, loader, request),
-          new AbortFileInformation(file, request)
+          new AbortFileInformation(request)
         );
       }
     }
@@ -422,27 +422,32 @@ public class GitBrowseCommand extends AbstractGitCommand
   }
 
   private class AbortFileInformation implements Runnable {
-    private final FileObject file;
     private final BrowseCommandRequest request;
 
-    public AbortFileInformation(FileObject file, BrowseCommandRequest request) {
-      this.file = file;
+    public AbortFileInformation(BrowseCommandRequest request) {
       this.request = request;
     }
 
     @Override
     public void run() {
       synchronized (asyncMonitor) {
-        if (browserResult.getFile().getChildren().stream().anyMatch(FileObject::isPartialResult)) {
-          browserResult.getFile().getChildren().stream().filter(FileObject::isPartialResult).forEach(
-            f -> {
-              f.setPartialResult(false);
-              f.setComputationAborted(true);
-            }
-          );
+        if (markPartialAsAborted(browserResult.getFile())) {
           updateCache(request);
         }
       }
+    }
+
+    private boolean markPartialAsAborted(FileObject file) {
+      boolean changed = false;
+      if (file.isPartialResult()) {
+        file.setPartialResult(false);
+        file.setComputationAborted(true);
+        changed = true;
+      }
+      for (FileObject child : file.getChildren()) {
+        changed |= markPartialAsAborted(child);
+      }
+      return changed;
     }
   }
 }
