@@ -26,7 +26,31 @@ const Animator = () => {
   );
 };
 
+const Closeable = () => {
+  const [show, setShow] = useState(true);
+
+  const hide = () => {
+    setShow(false);
+  };
+
+  if (!show) {
+    return null;
+  }
+
+  return (
+    <Toast type="success" title="Awesome feature">
+      <p>Close the message with a click</p>
+      <ToastButtons>
+        <ToastButton icon="times" onClick={hide}>
+          Click to close
+        </ToastButton>
+      </ToastButtons>
+    </Toast>
+  );
+};
+
 toastStories.add("Open/Close", () => <Animator />);
+toastStories.add("Click to close", () => <Closeable />);
 
 types.forEach(type => {
   toastStories.add(type.charAt(0).toUpperCase() + type.slice(1), () => (
