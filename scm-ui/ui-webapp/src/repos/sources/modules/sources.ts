@@ -9,7 +9,7 @@ export const FETCH_SOURCES_PENDING = `${FETCH_SOURCES}_${types.PENDING_SUFFIX}`;
 export const FETCH_SOURCES_SUCCESS = `${FETCH_SOURCES}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_SOURCES_FAILURE = `${FETCH_SOURCES}_${types.FAILURE_SUFFIX}`;
 
-`export function fetchSources(repository: Repository, revision: string, path: string, initialLoad = true) {
+export function fetchSources(repository: Repository, revision: string, path: string, initialLoad = true) {
   return function(dispatch: any, getState: () => any) {
     const state = getState();
     if (
