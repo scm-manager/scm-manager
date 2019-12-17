@@ -52,7 +52,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link BearerRealm}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 @ExtendWith(MockitoExtension.class)
@@ -84,10 +84,8 @@ class BearerRealmTest {
 
   @Test
   void shouldDoGetAuthentication() {
-    BearerToken bearerToken = BearerToken.valueOf("__bearer__");
+    BearerToken bearerToken = BearerToken.create("__session__", "__bearer__");
     AccessToken accessToken = mock(AccessToken.class);
-
-    Set<String> groups = ImmutableSet.of("HeartOfGold", "Puzzle42");
 
     when(accessToken.getSubject()).thenReturn("trillian");
     when(accessToken.getClaims()).thenReturn(new HashMap<>());
@@ -96,6 +94,7 @@ class BearerRealmTest {
     when(realmHelper.authenticationInfoBuilder("trillian")).thenReturn(builder);
     when(builder.withCredentials("__bearer__")).thenReturn(builder);
     when(builder.withScope(any(Scope.class))).thenReturn(builder);
+    when(builder.withSessionId(any(SessionId.class))).thenReturn(builder);
     when(builder.build()).thenReturn(authenticationInfo);
 
     AuthenticationInfo result = realm.doGetAuthenticationInfo(bearerToken);

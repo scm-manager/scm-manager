@@ -66,6 +66,7 @@ export * from "./modals";
 export * from "./navigation";
 export * from "./repos";
 export * from "./table";
+export * from "./toast";
 
 export {
   File,

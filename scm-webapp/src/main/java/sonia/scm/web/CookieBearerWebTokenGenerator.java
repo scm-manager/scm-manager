@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import sonia.scm.util.HttpUtil;
 
 /**
- * Creates an {@link BearerToken} from the {@link #COOKIE_NAME} 
+ * Creates an {@link BearerToken} from the {@link HttpUtil#COOKIE_BEARER_AUTHENTICATION}
  * cookie.
  *
  * @author Sebastian Sdorra
@@ -54,7 +54,7 @@ public class CookieBearerWebTokenGenerator implements WebTokenGenerator
 {
 
   /**
-   * Creates an {@link BearerToken} from the {@link #COOKIE_NAME} 
+   * Creates an {@link BearerToken} from the {@link HttpUtil#COOKIE_BEARER_AUTHENTICATION}
    * cookie.
    *
    * @param request http servlet request
@@ -73,7 +73,8 @@ public class CookieBearerWebTokenGenerator implements WebTokenGenerator
       {
         if (HttpUtil.COOKIE_BEARER_AUTHENTICATION.equals(cookie.getName()))
         {
-          token = BearerToken.valueOf(cookie.getValue());
+          String sessionId = HttpUtil.getHeader(request, HttpUtil.HEADER_SCM_SESSION, null);
+          token = BearerToken.create(sessionId, cookie.getValue());
 
           break;
         }
