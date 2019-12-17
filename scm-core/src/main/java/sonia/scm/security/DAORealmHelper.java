@@ -67,13 +67,13 @@ public final class DAORealmHelper {
   private static final Logger LOG = LoggerFactory.getLogger(DAORealmHelper.class);
 
   private final LoginAttemptHandler loginAttemptHandler;
-  
+
   private final UserDAO userDAO;
-  
+
   private final String realm;
-  
+
   //~--- constructors ---------------------------------------------------------
-  
+
   /**
    * Constructs a new instance. Consider to use {@link DAORealmHelperFactory} which
    * handles dependency injection.
@@ -92,9 +92,9 @@ public final class DAORealmHelper {
 
   /**
    * Wraps credentials matcher and applies login attempt policies.
-   * 
+   *
    * @param credentialsMatcher credentials matcher to wrap
-   * 
+   *
    * @return wrapped credentials matcher
    */
   public CredentialsMatcher wrapCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
@@ -115,7 +115,7 @@ public final class DAORealmHelper {
     UsernamePasswordToken upt = (UsernamePasswordToken) token;
     String principal = upt.getUsername();
 
-    return getAuthenticationInfo(principal, null, null);
+    return getAuthenticationInfo(principal, null, null, null);
   }
 
   /**
@@ -129,8 +129,9 @@ public final class DAORealmHelper {
     return new AuthenticationInfoBuilder(principal);
   }
 
-
-  private AuthenticationInfo getAuthenticationInfo(String principal, String credentials, Scope scope) {
+  private SimpleAuthenticationInfo getAuthenticationInfo(
+    String principal, String credentials, Scope scope, SessionId sessionId
+  ) {
     checkArgument(!Strings.isNullOrEmpty(principal), "username is required");
 
     LOG.debug("try to authenticate {}", principal);
@@ -149,6 +150,10 @@ public final class DAORealmHelper {
     collection.add(principal, realm);
     collection.add(user, realm);
     collection.add(MoreObjects.firstNonNull(scope, Scope.empty()), realm);
+
+    if (sessionId != null) {
+      collection.add(sessionId, realm);
+    }
 
     String creds = credentials;
 
@@ -170,7 +175,7 @@ public final class DAORealmHelper {
 
     private String credentials;
     private Scope scope;
-    private Iterable<String> groups = Collections.emptySet();
+    private SessionId sessionId;
 
     private AuthenticationInfoBuilder(String principal) {
       this.principal = principal;
@@ -201,17 +206,17 @@ public final class DAORealmHelper {
       return this;
     }
 
-//    /**
-//     * With groups adds extra groups, besides those which come from the {@link GroupDAO}, to the authentication info.
-//     *
-//     * @param groups extra groups
-//     *
-//     * @return {@code this}
-//     */
-//    public AuthenticationInfoBuilder withGroups(Iterable<String> groups) {
-//      this.groups = groups;
-//      return this;
-//    }
+    /**
+     * With the session id.
+     *
+     * @param sessionId session id
+     *
+     * @return {@code this}
+     */
+    public AuthenticationInfoBuilder withSessionId(SessionId sessionId) {
+      this.sessionId = sessionId;
+      return this;
+    }
 
     /**
      * Build creates the authentication info from the given information.
@@ -219,7 +224,7 @@ public final class DAORealmHelper {
      * @return authentication info
      */
     public AuthenticationInfo build() {
-      return getAuthenticationInfo(principal, credentials, scope);
+      return getAuthenticationInfo(principal, credentials, scope, sessionId);
     }
 
   }
@@ -233,7 +238,7 @@ public final class DAORealmHelper {
       this.loginAttemptHandler = loginAttemptHandler;
       this.credentialsMatcher = credentialsMatcher;
     }
-    
+
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
       loginAttemptHandler.beforeAuthentication(token);
@@ -245,7 +250,7 @@ public final class DAORealmHelper {
       }
       return result;
     }
-    
+
   }
-  
+
 }

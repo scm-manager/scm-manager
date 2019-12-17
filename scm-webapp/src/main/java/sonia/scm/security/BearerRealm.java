@@ -56,7 +56,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Extension
 public class BearerRealm extends AuthenticatingRealm
 {
-  
+
   /** realm name */
   @VisibleForTesting
   static final String REALM = "BearerRealm";
@@ -104,6 +104,7 @@ public class BearerRealm extends AuthenticatingRealm
     return helper.authenticationInfoBuilder(accessToken.getSubject())
       .withCredentials(bt.getCredentials())
       .withScope(Scopes.fromClaims(accessToken.getClaims()))
+      .withSessionId(bt.getPrincipal())
       .build();
   }
 

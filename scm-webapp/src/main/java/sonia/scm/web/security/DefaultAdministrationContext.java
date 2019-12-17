@@ -177,45 +177,26 @@ public class DefaultAdministrationContext implements AdministrationContext
     //J+
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param action
-   */
-  private void doRunAsInNonWebSessionContext(PrivilegedAction action)
-  {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("bind shiro security manager to current thread");
-    }
+  private void doRunAsInNonWebSessionContext(PrivilegedAction action) {
+    logger.trace("bind shiro security manager to current thread");
 
-    try
-    {
+    try {
       SecurityUtils.setSecurityManager(securityManager);
 
       Subject subject = createAdminSubject();
       ThreadState state = new SubjectThreadState(subject);
 
       state.bind();
-
       try
       {
-        if (logger.isInfoEnabled())
-        {
-          logger.info("execute action {} in administration context",
-            action.getClass().getName());
-        }
+        logger.info("execute action {} in administration context", action.getClass().getName());
 
         action.run();
+      } finally {
+        logger.trace("restore current thread state");
+        state.restore();
       }
-      finally
-      {
-        state.clear();
-      }
-    }
-    finally
-    {
+    } finally {
       SecurityUtils.setSecurityManager(null);
     }
   }

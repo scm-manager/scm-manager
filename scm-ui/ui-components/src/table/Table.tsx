@@ -37,9 +37,9 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage }) => {
     }
   });
 
-  const mapDataToColumns = (row: any) => {
+  const mapDataToColumns = (row: any, rowIndex: number) => {
     return (
-      <tr>
+      <tr key={rowIndex}>
         {React.Children.map(children, (child, columnIndex) => {
           return <td>{React.cloneElement(child, { ...child.props, columnIndex, row })}</td>;
         })}
@@ -93,6 +93,7 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage }) => {
               onClick={isSortable(child) ? () => tableSort(index) : undefined}
               onMouseEnter={() => setHoveredColumnIndex(index)}
               onMouseLeave={() => setHoveredColumnIndex(undefined)}
+              key={index}
             >
               {child.props.header}
               {isSortable(child) && renderSortIcon(child, ascending, shouldShowIcon(index))}
