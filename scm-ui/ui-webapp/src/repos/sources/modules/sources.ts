@@ -9,28 +9,29 @@ export const FETCH_SOURCES_PENDING = `${FETCH_SOURCES}_${types.PENDING_SUFFIX}`;
 export const FETCH_SOURCES_SUCCESS = `${FETCH_SOURCES}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_SOURCES_FAILURE = `${FETCH_SOURCES}_${types.FAILURE_SUFFIX}`;
 
-export function fetchSources(repository: Repository, revision: string, path: string) {
-  return fetchSourcesWithoutOptionalLoadingState(repository, revision, path, true);
-}
-
-export function fetchSourcesWithoutOptionalLoadingState(
+export function fetchSources(
   repository: Repository,
   revision: string,
   path: string,
-  dispatchLoading: boolean
+  initialLoad = true
 ) {
-  return function(dispatch: any) {
-    if (dispatchLoading) {
+  return function(dispatch: any, getState: () => any) {
+    const state = getState();
+    if (isFetchSourcesPending(state, repository, revision, path)
+        || isUpdateSourcePending(state, repository, revision, path)) {
+      return;
+    }
+
+    if (initialLoad) {
       dispatch(fetchSourcesPending(repository, revision, path));
+    } else {
+      dispatch(updateSourcesPending(repository, revision, path))
     }
     return apiClient
       .get(createUrl(repository, revision, path))
       .then(response => response.json())
       .then((sources: File) => {
         dispatch(fetchSourcesSuccess(repository, revision, path, sources));
-        if (sources._embedded && sources._embedded.children && sources._embedded.children.find(c => c.partialResult)) {
-          setTimeout(() => dispatch(fetchSourcesWithoutOptionalLoadingState(repository, revision, path, false)), 3000);
-        }
       })
       .catch(err => {
         dispatch(fetchSourcesFailure(repository, revision, path, err));
@@ -56,10 +57,17 @@ export function fetchSourcesPending(repository: Repository, revision: string, pa
   };
 }
 
+export function updateSourcesPending(repository: Repository, revision: string, path: string): Action {
+  return {
+    type: "UPDATE_PENDING",
+    itemId: createItemId(repository, revision, path)
+  };
+}
+
 export function fetchSourcesSuccess(repository: Repository, revision: string, path: string, sources: File) {
   return {
     type: FETCH_SOURCES_SUCCESS,
-    payload: sources,
+    payload: { updatePending: false, sources },
     itemId: createItemId(repository, revision, path)
   };
 }
@@ -91,6 +99,11 @@ export default function reducer(
       ...state,
       [action.itemId]: action.payload
     };
+  } else if (action.itemId && action.type === "UPDATE_PENDING") {
+    return {
+      ...state,
+      [action.itemId]: { updatePending: true }}
+    ;
   }
   return state;
 }
@@ -113,13 +126,17 @@ export function getSources(
   path: string
 ): File | null | undefined {
   if (state.sources) {
-    return state.sources[createItemId(repository, revision, path)];
+    return state.sources[createItemId(repository, revision, path)]?.sources;
   }
   return null;
 }
 
 export function isFetchSourcesPending(state: any, repository: Repository, revision: string, path: string): boolean {
-  return isPending(state, FETCH_SOURCES, createItemId(repository, revision, path));
+  return state && isPending(state, FETCH_SOURCES, createItemId(repository, revision, path));
+}
+
+function isUpdateSourcePending(state: any, repository: Repository, revision: string, path: string): boolean {
+  return state?.sources[createItemId(repository, revision, path)]?.updatePending;
 }
 
 export function getFetchSourcesFailure(

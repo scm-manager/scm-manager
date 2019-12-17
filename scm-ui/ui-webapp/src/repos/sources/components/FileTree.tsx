@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { binder } from "@scm-manager/ui-extensions";
 import { Repository, File } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
-import { getFetchSourcesFailure, isFetchSourcesPending, getSources } from "../modules/sources";
+import { getFetchSourcesFailure, isFetchSourcesPending, getSources, fetchSources } from "../modules/sources";
 import FileTreeLeaf from "./FileTreeLeaf";
 
 type Props = WithTranslation & {
@@ -18,6 +18,8 @@ type Props = WithTranslation & {
   revision: string;
   path: string;
   baseUrl: string;
+
+  updateSources: () => void;
 
   // context props
   match: any;
@@ -40,6 +42,13 @@ export function findParent(path: string) {
 }
 
 class FileTree extends React.Component<Props> {
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<{}>, snapshot?: any): void {
+    const { tree, updateSources } = this.props;
+    if (tree?._embedded?.children && tree._embedded.children.find(c => c.partialResult)) {
+      setTimeout(updateSources, 3000);
+    }
+  }
+
   render() {
     const { error, loading, tree } = this.props;
 
@@ -123,6 +132,14 @@ class FileTree extends React.Component<Props> {
   }
 }
 
+const mapDispatchToProps = (dispatch: any, ownProps: Props) => {
+  const { repository, revision, path } = ownProps;
+
+  const updateSources = () => dispatch(fetchSources(repository, revision, path, false));
+
+  return { updateSources };
+};
+
 const mapStateToProps = (state: any, ownProps: Props) => {
   const { repository, revision, path } = ownProps;
 
@@ -141,5 +158,5 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps)
+  connect(mapStateToProps, mapDispatchToProps)
 )(withTranslation("repos")(FileTree));
