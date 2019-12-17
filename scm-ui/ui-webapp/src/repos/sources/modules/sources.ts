@@ -25,7 +25,7 @@ export function fetchSources(
     if (initialLoad) {
       dispatch(fetchSourcesPending(repository, revision, path));
     } else {
-      dispatch(updateSourcesPending(repository, revision, path))
+      dispatch(updateSourcesPending(repository, revision, path, getSources(state, repository, revision, path)));
     }
     return apiClient
       .get(createUrl(repository, revision, path))
@@ -57,9 +57,10 @@ export function fetchSourcesPending(repository: Repository, revision: string, pa
   };
 }
 
-export function updateSourcesPending(repository: Repository, revision: string, path: string): Action {
+export function updateSourcesPending(repository: Repository, revision: string, path: string, currentSources: any): Action {
   return {
     type: "UPDATE_PENDING",
+    payload: { updatePending: true, sources: currentSources},
     itemId: createItemId(repository, revision, path)
   };
 }
@@ -94,16 +95,11 @@ export default function reducer(
     type: "UNKNOWN"
   }
 ): any {
-  if (action.itemId && action.type === FETCH_SOURCES_SUCCESS) {
+  if (action.itemId && (action.type === FETCH_SOURCES_SUCCESS || action.type === "UPDATE_PENDING")) {
     return {
       ...state,
       [action.itemId]: action.payload
     };
-  } else if (action.itemId && action.type === "UPDATE_PENDING") {
-    return {
-      ...state,
-      [action.itemId]: { updatePending: true }}
-    ;
   }
   return state;
 }
