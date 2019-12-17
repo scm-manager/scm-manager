@@ -25,6 +25,10 @@ type Props = WithTranslation & {
   match: any;
 };
 
+type State = {
+  stoppableUpdateHandler?: number;
+}
+
 const FixedWidthTh = styled.th`
   width: 16px;
 `;
@@ -41,11 +45,26 @@ export function findParent(path: string) {
   return "";
 }
 
-class FileTree extends React.Component<Props> {
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<{}>, snapshot?: any): void {
-    const { tree, updateSources } = this.props;
-    if (tree?._embedded?.children && tree._embedded.children.find(c => c.partialResult)) {
-      setTimeout(updateSources, 3000);
+class FileTree extends React.Component<Props, State> {
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>): void {
+    if (prevState.stoppableUpdateHandler === this.state.stoppableUpdateHandler) {
+      const {tree, updateSources} = this.props;
+      if (tree?._embedded?.children && tree._embedded.children.find(c => c.partialResult)) {
+        const stoppableUpdateHandler = setTimeout(updateSources, 3000);
+        this.setState({stoppableUpdateHandler: stoppableUpdateHandler});
+      }
+    }
+  }
+
+  componentWillUnmount(): void {
+    if (this.state.stoppableUpdateHandler) {
+      clearTimeout(this.state.stoppableUpdateHandler);
     }
   }
 
