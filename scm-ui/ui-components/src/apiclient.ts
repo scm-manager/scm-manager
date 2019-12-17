@@ -241,7 +241,7 @@ class ApiClient {
       es.addEventListener(type, listeners[type]);
     }
 
-    return es.close;
+    return () => es.close();
   }
 }
 
