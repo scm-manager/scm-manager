@@ -127,7 +127,7 @@ describe("sources fetch", () => {
       {
         type: FETCH_SOURCES_SUCCESS,
         itemId: "scm/core/_/",
-        payload: collection
+        payload: { updatePending: false, sources: collection }
       }
     ];
 
@@ -148,7 +148,7 @@ describe("sources fetch", () => {
       {
         type: FETCH_SOURCES_SUCCESS,
         itemId: "scm/core/abc/src",
-        payload: collection
+        payload: { updatePending: false, sources: collection }
       }
     ];
 
@@ -182,14 +182,14 @@ describe("reducer tests", () => {
 
   it("should store the collection, without revision and path", () => {
     const expectedState = {
-      "scm/core/_/": collection
+      "scm/core/_/": { updatePending: false, sources: collection }
     };
     expect(reducer({}, fetchSourcesSuccess(repository, "", "", collection))).toEqual(expectedState);
   });
 
   it("should store the collection, with revision and path", () => {
     const expectedState = {
-      "scm/core/abc/src/main": collection
+      "scm/core/abc/src/main": { updatePending: false, sources: collection }
     };
     expect(reducer({}, fetchSourcesSuccess(repository, "abc", "src/main", collection))).toEqual(expectedState);
   });
@@ -200,7 +200,7 @@ describe("selector tests", () => {
     const state = {
       sources: {
         "scm/core/abc/src/main/package.json": {
-          noDirectory
+          sources: {noDirectory}
         }
       }
     };
@@ -223,7 +223,9 @@ describe("selector tests", () => {
   it("should return the source collection without revision and path", () => {
     const state = {
       sources: {
-        "scm/core/_/": collection
+        "scm/core/_/": {
+          sources: collection
+        }
       }
     };
     expect(getSources(state, repository, "", "")).toBe(collection);
@@ -232,7 +234,9 @@ describe("selector tests", () => {
   it("should return the source collection with revision and path", () => {
     const state = {
       sources: {
-        "scm/core/abc/src/main": collection
+        "scm/core/abc/src/main": {
+          sources: collection
+        }
       }
     };
     expect(getSources(state, repository, "abc", "src/main")).toBe(collection);

@@ -134,7 +134,7 @@ export function isFetchSourcesPending(state: any, repository: Repository, revisi
 }
 
 function isUpdateSourcePending(state: any, repository: Repository, revision: string, path: string): boolean {
-  return state?.sources[createItemId(repository, revision, path)]?.updatePending;
+  return state?.sources && state.sources[createItemId(repository, revision, path)]?.updatePending;
 }
 
 export function getFetchSourcesFailure(
