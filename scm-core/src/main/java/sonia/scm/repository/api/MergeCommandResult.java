@@ -1,9 +1,7 @@
 package sonia.scm.repository.api;
 
 import java.util.Collection;
-import java.util.HashSet;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableCollection;
 
 /**
@@ -13,19 +11,15 @@ import static java.util.Collections.unmodifiableCollection;
  */
 public class MergeCommandResult {
   private final Collection<String> filesWithConflict;
-  private static String mergeCommitRevision;
+  private String newHeadRevision;
 
-  public MergeCommandResult(Collection<String> filesWithConflict, String mergeCommitRevision) {
+  public MergeCommandResult(Collection<String> filesWithConflict) {
     this.filesWithConflict = filesWithConflict;
-    this.mergeCommitRevision = mergeCommitRevision;
   }
 
-  public static MergeCommandResult success() {
-    return new MergeCommandResult(emptyList(), mergeCommitRevision);
-  }
-
-  public static MergeCommandResult failure(Collection<String> filesWithConflict) {
-    return new MergeCommandResult(new HashSet<>(filesWithConflict), "");
+  public MergeCommandResult(Collection<String> filesWithConflict, String newHeadRevision) {
+    this.filesWithConflict = filesWithConflict;
+    this.newHeadRevision = newHeadRevision;
   }
 
   /**
@@ -33,7 +27,7 @@ public class MergeCommandResult {
    * merge conflicts. In this case you can use {@link #getFilesWithConflict()} to check what files could not be merged.
    */
   public boolean isSuccess() {
-    return filesWithConflict.isEmpty();
+    return filesWithConflict.isEmpty() && newHeadRevision != null;
   }
 
   /**
@@ -44,7 +38,7 @@ public class MergeCommandResult {
     return unmodifiableCollection(filesWithConflict);
   }
 
-  public String getMergeCommitRevision() {
-    return mergeCommitRevision;
+  public String getNewHeadRevision() {
+    return newHeadRevision;
   }
 }
