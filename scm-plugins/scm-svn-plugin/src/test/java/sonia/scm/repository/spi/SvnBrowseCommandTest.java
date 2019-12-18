@@ -60,7 +60,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
     FileObject file = createCommand().getBrowserResult(request).getFile();
     assertEquals("a.txt", file.getName());
     assertFalse(file.isDirectory());
-    assertTrue(file.getChildren().isEmpty());
+    assertTrue(file.getChildren() == null || file.getChildren().isEmpty());
   }
 
   @Test
@@ -73,9 +73,9 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
     assertFalse(a.isDirectory());
     assertEquals("a.txt", a.getName());
     assertEquals("a.txt", a.getPath());
-    assertEquals("added line for blame test", a.getDescription());
-    assertTrue(a.getLength() > 0);
-    checkDate(a.getLastModified());
+    assertEquals("added line for blame test", a.getDescription().get());
+    assertTrue(a.getLength().getAsLong() > 0);
+    checkDate(a.getCommitDate().getAsLong());
     assertTrue(c.isDirectory());
     assertEquals("c", c.getName());
     assertEquals("c", c.getPath());
@@ -122,16 +122,16 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
     assertFalse(d.isDirectory());
     assertEquals("d.txt", d.getName());
     assertEquals("c/d.txt", d.getPath());
-    assertEquals("added d and e in folder c", d.getDescription());
-    assertTrue(d.getLength() > 0);
-    checkDate(d.getLastModified());
+    assertEquals("added d and e in folder c", d.getDescription().get());
+    assertTrue(d.getLength().getAsLong() > 0);
+    checkDate(d.getCommitDate().getAsLong());
     assertNotNull(e);
     assertFalse(e.isDirectory());
     assertEquals("e.txt", e.getName());
     assertEquals("c/e.txt", e.getPath());
-    assertEquals("added d and e in folder c", e.getDescription());
-    assertTrue(e.getLength() > 0);
-    checkDate(e.getLastModified());
+    assertEquals("added d and e in folder c", e.getDescription().get());
+    assertTrue(e.getLength().getAsLong() > 0);
+    checkDate(e.getCommitDate().getAsLong());
   }
 
   @Test
@@ -144,8 +144,8 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     FileObject a = getFileObject(foList, "a.txt");
 
-    assertNull(a.getDescription());
-    assertNull(a.getLastModified());
+    assertFalse(a.getDescription().isPresent());
+    assertFalse(a.getCommitDate().isPresent());
   }
   
   @Test

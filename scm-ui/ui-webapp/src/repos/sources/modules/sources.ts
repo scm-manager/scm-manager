@@ -9,13 +9,25 @@ export const FETCH_SOURCES_PENDING = `${FETCH_SOURCES}_${types.PENDING_SUFFIX}`;
 export const FETCH_SOURCES_SUCCESS = `${FETCH_SOURCES}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_SOURCES_FAILURE = `${FETCH_SOURCES}_${types.FAILURE_SUFFIX}`;
 
-export function fetchSources(repository: Repository, revision: string, path: string) {
-  return function(dispatch: any) {
-    dispatch(fetchSourcesPending(repository, revision, path));
+export function fetchSources(repository: Repository, revision: string, path: string, initialLoad = true) {
+  return function(dispatch: any, getState: () => any) {
+    const state = getState();
+    if (
+      isFetchSourcesPending(state, repository, revision, path) ||
+      isUpdateSourcePending(state, repository, revision, path)
+    ) {
+      return;
+    }
+
+    if (initialLoad) {
+      dispatch(fetchSourcesPending(repository, revision, path));
+    } else {
+      dispatch(updateSourcesPending(repository, revision, path, getSources(state, repository, revision, path)));
+    }
     return apiClient
       .get(createUrl(repository, revision, path))
       .then(response => response.json())
-      .then(sources => {
+      .then((sources: File) => {
         dispatch(fetchSourcesSuccess(repository, revision, path, sources));
       })
       .catch(err => {
@@ -42,10 +54,23 @@ export function fetchSourcesPending(repository: Repository, revision: string, pa
   };
 }
 
+export function updateSourcesPending(
+  repository: Repository,
+  revision: string,
+  path: string,
+  currentSources: any
+): Action {
+  return {
+    type: "UPDATE_PENDING",
+    payload: { updatePending: true, sources: currentSources },
+    itemId: createItemId(repository, revision, path)
+  };
+}
+
 export function fetchSourcesSuccess(repository: Repository, revision: string, path: string, sources: File) {
   return {
     type: FETCH_SOURCES_SUCCESS,
-    payload: sources,
+    payload: { updatePending: false, sources },
     itemId: createItemId(repository, revision, path)
   };
 }
@@ -72,7 +97,7 @@ export default function reducer(
     type: "UNKNOWN"
   }
 ): any {
-  if (action.itemId && action.type === FETCH_SOURCES_SUCCESS) {
+  if (action.itemId && (action.type === FETCH_SOURCES_SUCCESS || action.type === "UPDATE_PENDING")) {
     return {
       ...state,
       [action.itemId]: action.payload
@@ -99,13 +124,17 @@ export function getSources(
   path: string
 ): File | null | undefined {
   if (state.sources) {
-    return state.sources[createItemId(repository, revision, path)];
+    return state.sources[createItemId(repository, revision, path)]?.sources;
   }
   return null;
 }
 
 export function isFetchSourcesPending(state: any, repository: Repository, revision: string, path: string): boolean {
-  return isPending(state, FETCH_SOURCES, createItemId(repository, revision, path));
+  return state && isPending(state, FETCH_SOURCES, createItemId(repository, revision, path));
+}
+
+function isUpdateSourcePending(state: any, repository: Repository, revision: string, path: string): boolean {
+  return state?.sources && state.sources[createItemId(repository, revision, path)]?.updatePending;
 }
 
 export function getFetchSourcesFailure(

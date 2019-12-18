@@ -1,6 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import org.mapstruct.Context;
@@ -16,17 +15,12 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.time.Instant;
+import java.util.Optional;
+import java.util.OptionalLong;
 
 @Mapper
 public abstract class BrowserResultToFileObjectDtoMapper extends BaseFileObjectDtoMapper {
-
-  @Inject
-  private FileObjectToFileObjectDtoMapper childrenMapper;
-
-  @VisibleForTesting
-  void setChildrenMapper(FileObjectToFileObjectDtoMapper childrenMapper) {
-    this.childrenMapper = childrenMapper;
-  }
 
   FileObjectDto map(BrowserResult browserResult, @Context NamespaceAndName namespaceAndName) {
     FileObjectDto fileObjectDto = fileObjectToDto(browserResult.getFile(), namespaceAndName, browserResult);
@@ -36,12 +30,8 @@ public abstract class BrowserResultToFileObjectDtoMapper extends BaseFileObjectD
 
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   @Mapping(target = "children", qualifiedBy = Children.class)
-  protected abstract FileObjectDto fileObjectToDto(FileObject fileObject, @Context NamespaceAndName namespaceAndName, @Context BrowserResult browserResult);
-
   @Children
-  protected FileObjectDto childrenToDto(FileObject fileObject, @Context NamespaceAndName namespaceAndName, @Context BrowserResult browserResult) {
-    return childrenMapper.map(fileObject, namespaceAndName, browserResult);
-  }
+  protected abstract FileObjectDto fileObjectToDto(FileObject fileObject, @Context NamespaceAndName namespaceAndName, @Context BrowserResult browserResult);
 
   @Override
   void applyEnrichers(Links.Builder links, Embedded.Builder embeddedBuilder, NamespaceAndName namespaceAndName, BrowserResult browserResult, FileObject fileObject) {
@@ -50,6 +40,14 @@ public abstract class BrowserResultToFileObjectDtoMapper extends BaseFileObjectD
     applyEnrichers(appender, browserResult, namespaceAndName);
     // we call enrichers, which are responsible for all file object top level browse result and its children
     applyEnrichers(appender, fileObject, namespaceAndName, browserResult, browserResult.getRevision());
+  }
+
+  Optional<Instant> mapOptionalInstant(OptionalLong optionalLong) {
+    if (optionalLong.isPresent()) {
+      return Optional.of(Instant.ofEpochMilli(optionalLong.getAsLong()));
+    } else {
+      return Optional.empty();
+    }
   }
 
   @Qualifier

@@ -80,12 +80,13 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   //~--- constructors ---------------------------------------------------------
 
-  public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
+  public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory, HookContextFactory hookContextFactory, ScmEventBus eventBus, SyncAsyncExecutorProvider executorProvider) {
     this.handler = handler;
     this.repository = repository;
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
+    this.executorProvider = executorProvider;
     this.context = new GitContext(handler.getDirectory(repository.getId()), repository, storeProvider);
   }
 
@@ -150,7 +151,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public BrowseCommand getBrowseCommand()
   {
-    return new GitBrowseCommand(context, repository, lfsBlobStoreFactory);
+    return new GitBrowseCommand(context, repository, lfsBlobStoreFactory, executorProvider.createExecutorWithDefaultTimeout());
   }
 
   /**
@@ -301,4 +302,6 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   private final HookContextFactory hookContextFactory;
 
   private final ScmEventBus eventBus;
+
+  private final SyncAsyncExecutorProvider executorProvider;
 }

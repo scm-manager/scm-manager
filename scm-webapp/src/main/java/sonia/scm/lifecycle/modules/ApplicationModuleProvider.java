@@ -12,6 +12,7 @@ import sonia.scm.debug.DebugModule;
 import sonia.scm.filter.WebElementModule;
 import sonia.scm.plugin.ExtensionProcessor;
 import sonia.scm.plugin.PluginLoader;
+import sonia.scm.repository.ExecutorModule;
 
 import javax.servlet.ServletContext;
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ public class ApplicationModuleProvider implements ModuleProvider {
       moduleList.add(new DebugModule());
     }
     moduleList.add(new MapperModule());
+    moduleList.add(new ExecutorModule());
 
     return moduleList;
   }
