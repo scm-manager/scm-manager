@@ -171,10 +171,6 @@ public abstract class FileBaseCommandRequest
     return revision;
   }
 
-  public boolean isDisableCommitValues() {
-    return disableCommitValues;
-  }
-
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -212,6 +208,4 @@ public abstract class FileBaseCommandRequest
 
   /** Field description */
   private String revision;
-
-  private boolean disableCommitValues = false;
 }
