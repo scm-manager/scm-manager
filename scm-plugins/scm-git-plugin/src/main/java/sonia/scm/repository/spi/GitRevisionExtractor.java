@@ -4,9 +4,9 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.Optional;
 
-public class GitMerger {
+public class GitRevisionExtractor {
 
-  static String evaluateRevisionFromMergeCommit(Optional<RevCommit> revCommit) {
+  static String extractRevisionFromRevCommit(Optional<RevCommit> revCommit) {
     if (revCommit.isPresent()) {
       return revCommit.get().toString().split(" ")[1];
     }
