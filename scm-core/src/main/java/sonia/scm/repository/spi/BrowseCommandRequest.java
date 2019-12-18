@@ -249,5 +249,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
   /** browse file objects recursive */
   private boolean recursive = false;
 
-  private final Consumer<BrowserResult> updater;
+  // WARNING / TODO: This field creates a reverse channel from the implementation to the API. This will break
+  // whenever the API runs in a different process than the SPI (for example to run explicit hosts for git repositories).
+  private final transient Consumer<BrowserResult> updater;
 }
