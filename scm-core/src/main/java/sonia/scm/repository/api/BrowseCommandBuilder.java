@@ -300,10 +300,6 @@ public final class BrowseCommandBuilder
     return this;
   }
 
-  public void setComputationTimeoutMilliSeconds(long computationTimeoutMilliSeconds) {
-    request.setComputationTimeoutMilliSeconds(computationTimeoutMilliSeconds);
-  }
-
   private void updateCache(BrowserResult updatedResult) {
     if (!disableCache) {
       CacheKey key = new CacheKey(repository, request);
