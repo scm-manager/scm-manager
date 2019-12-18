@@ -7,6 +7,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.MergeCommandResult;
 
 import java.io.IOException;
+import java.util.Collections;
 
 class GitFastForwardIfPossible extends GitMergeStrategy {
 
@@ -22,7 +23,7 @@ class GitFastForwardIfPossible extends GitMergeStrategy {
     MergeResult fastForwardResult = mergeWithFastForwardOnlyMode();
     if (fastForwardResult.getMergeStatus().isSuccessful()) {
       push();
-      return MergeCommandResult.success();
+      return new MergeCommandResult(Collections.emptyList(), "");
     } else {
       return fallbackMerge.run();
     }

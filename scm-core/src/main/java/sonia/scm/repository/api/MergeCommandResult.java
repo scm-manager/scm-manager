@@ -13,17 +13,19 @@ import static java.util.Collections.unmodifiableCollection;
  */
 public class MergeCommandResult {
   private final Collection<String> filesWithConflict;
+  private static String mergeCommitRevision;
 
-  private MergeCommandResult(Collection<String> filesWithConflict) {
+  public MergeCommandResult(Collection<String> filesWithConflict, String mergeCommitRevision) {
     this.filesWithConflict = filesWithConflict;
+    this.mergeCommitRevision = mergeCommitRevision;
   }
 
   public static MergeCommandResult success() {
-    return new MergeCommandResult(emptyList());
+    return new MergeCommandResult(emptyList(), mergeCommitRevision);
   }
 
   public static MergeCommandResult failure(Collection<String> filesWithConflict) {
-    return new MergeCommandResult(new HashSet<>(filesWithConflict));
+    return new MergeCommandResult(new HashSet<>(filesWithConflict), "");
   }
 
   /**
@@ -40,5 +42,9 @@ public class MergeCommandResult {
    */
   public Collection<String> getFilesWithConflict() {
     return unmodifiableCollection(filesWithConflict);
+  }
+
+  public String getMergeCommitRevision() {
+    return mergeCommitRevision;
   }
 }

@@ -2,11 +2,16 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeResult;
+import org.eclipse.jgit.revwalk.RevCommit;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.MergeCommandResult;
 import org.eclipse.jgit.api.MergeCommand;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Optional;
+
+import static sonia.scm.repository.spi.GitMerger.evaluateRevisionFromMergeCommit;
 
 class GitMergeWithSquash extends GitMergeStrategy {
 
@@ -21,9 +26,9 @@ class GitMergeWithSquash extends GitMergeStrategy {
     MergeResult result = doMergeInClone(mergeCommand);
 
     if (result.getMergeStatus().isSuccessful()) {
-      doCommit();
+      Optional<RevCommit> revCommit = doCommit();
       push();
-      return MergeCommandResult.success();
+      return new MergeCommandResult(Collections.emptyList(), evaluateRevisionFromMergeCommit(revCommit));
     } else {
       return analyseFailure(result);
     }

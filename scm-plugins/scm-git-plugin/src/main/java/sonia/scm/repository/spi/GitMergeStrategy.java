@@ -6,6 +6,7 @@ import org.eclipse.jgit.api.MergeCommand;
 import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.InternalRepositoryException;
@@ -14,6 +15,7 @@ import sonia.scm.repository.api.MergeCommandResult;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Optional;
 
 abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeCommandResult> {
 
@@ -52,9 +54,9 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
     return result;
   }
 
-  void doCommit() {
+  Optional<RevCommit> doCommit() {
     logger.debug("merged branch {} into {}", toMerge, target);
-    doCommit(MessageFormat.format(determineMessageTemplate(), toMerge, target), author);
+    return doCommit(MessageFormat.format(determineMessageTemplate(), toMerge, target), author);
   }
 
   private String determineMessageTemplate() {

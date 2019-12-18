@@ -2,6 +2,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -10,6 +11,8 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
+import sonia.scm.ContextEntry;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.util.Util;
 
@@ -35,49 +38,48 @@ final class Differ implements AutoCloseable {
   }
 
   private static Differ create(Repository repository, DiffCommandRequest request) throws IOException {
-      RevWalk walk = new RevWalk(repository);
+    RevWalk walk = new RevWalk(repository);
 
-      ObjectId revision = repository.resolve(request.getRevision());
-      RevCommit commit = walk.parseCommit(revision);
+    ObjectId revision = repository.resolve(request.getRevision());
+    if (revision == null) {
+      throw NotFoundException.notFound(ContextEntry.ContextBuilder.entity("revision not found", request.getRevision()));
+    }
+    RevCommit commit;
+    try {
+      commit = walk.parseCommit(revision);
+    } catch (MissingObjectException ex) {
+      throw NotFoundException.notFound(ContextEntry.ContextBuilder.entity("revision not found", request.getRevision()));
+    }
 
-      walk.markStart(commit);
-      commit = walk.next();
-      TreeWalk treeWalk = new TreeWalk(repository);
-      treeWalk.reset();
-      treeWalk.setRecursive(true);
+    walk.markStart(commit);
+    commit = walk.next();
+    TreeWalk treeWalk = new TreeWalk(repository);
+    treeWalk.reset();
+    treeWalk.setRecursive(true);
 
-      if (Util.isNotEmpty(request.getPath()))
-      {
-        treeWalk.setFilter(PathFilter.create(request.getPath()));
-      }
+    if (Util.isNotEmpty(request.getPath())) {
+      treeWalk.setFilter(PathFilter.create(request.getPath()));
+    }
 
 
-      if (!Strings.isNullOrEmpty(request.getAncestorChangeset()))
-      {
-        ObjectId otherRevision = repository.resolve(request.getAncestorChangeset());
-        ObjectId ancestorId = GitUtil.computeCommonAncestor(repository, revision, otherRevision);
-        RevTree tree = walk.parseCommit(ancestorId).getTree();
+    if (!Strings.isNullOrEmpty(request.getAncestorChangeset())) {
+      ObjectId otherRevision = repository.resolve(request.getAncestorChangeset());
+      ObjectId ancestorId = GitUtil.computeCommonAncestor(repository, revision, otherRevision);
+      RevTree tree = walk.parseCommit(ancestorId).getTree();
+      treeWalk.addTree(tree);
+    } else if (commit.getParentCount() > 0) {
+      RevTree tree = commit.getParent(0).getTree();
+
+      if (tree != null) {
         treeWalk.addTree(tree);
-      }
-      else if (commit.getParentCount() > 0)
-      {
-        RevTree tree = commit.getParent(0).getTree();
-
-        if (tree != null)
-        {
-          treeWalk.addTree(tree);
-        }
-        else
-        {
-          treeWalk.addTree(new EmptyTreeIterator());
-        }
-      }
-      else
-      {
+      } else {
         treeWalk.addTree(new EmptyTreeIterator());
       }
+    } else {
+      treeWalk.addTree(new EmptyTreeIterator());
+    }
 
-      treeWalk.addTree(commit.getTree());
+    treeWalk.addTree(commit.getTree());
 
     return new Differ(commit, walk, treeWalk);
   }
