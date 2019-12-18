@@ -49,10 +49,8 @@ const collection = {
         name: "src",
         path: "src",
         directory: true,
-        description: "",
         length: 176,
         revision: "76aae4bb4ceacf0e88938eb5b6832738b7d537b4",
-        lastModified: "",
         subRepository: undefined,
         _links: {
           self: {
@@ -71,7 +69,7 @@ const collection = {
         description: "bump version",
         length: 780,
         revision: "76aae4bb4ceacf0e88938eb5b6832738b7d537b4",
-        lastModified: "2017-07-31T11:17:19Z",
+        commitDate: "2017-07-31T11:17:19Z",
         subRepository: undefined,
         _links: {
           self: {

@@ -108,9 +108,9 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     assertFalse(a.isDirectory());
     assertEquals("a.txt", a.getName());
     assertEquals("a.txt", a.getPath());
-    assertEquals("added new line for blame", a.getDescription());
-    assertTrue(a.getLength() > 0);
-    checkDate(a.getLastModified());
+    assertEquals("added new line for blame", a.getDescription().get());
+    assertTrue(a.getLength().getAsLong() > 0);
+    checkDate(a.getCommitDate().getAsLong());
 
     assertTrue(c.isDirectory());
     assertEquals("c", c.getName());
@@ -132,28 +132,28 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
       FileObject b = findFile(foList, "b.txt");
 
       assertTrue(a.isPartialResult());
-      assertNull("expected empty name before commit could have been read", a.getDescription());
-      assertNull("expected empty date before commit could have been read", a.getLastModified());
+      assertFalse("expected empty name before commit could have been read", a.getDescription().isPresent());
+      assertFalse("expected empty date before commit could have been read", a.getCommitDate().isPresent());
       assertTrue(b.isPartialResult());
-      assertNull("expected empty name before commit could have been read", b.getDescription());
-      assertNull("expected empty date before commit could have been read", b.getLastModified());
+      assertFalse("expected empty name before commit could have been read", b.getDescription().isPresent());
+      assertFalse("expected empty date before commit could have been read", b.getCommitDate().isPresent());
 
       executor.next();
 
       assertEquals(1, updatedResults.size());
       assertFalse(a.isPartialResult());
       assertNotNull("expected correct name after commit could have been read", a.getDescription());
-      assertNotNull("expected correct date after commit could have been read", a.getLastModified());
+      assertTrue("expected correct date after commit could have been read", a.getCommitDate().isPresent());
       assertTrue(b.isPartialResult());
-      assertNull("expected empty name before commit could have been read", b.getDescription());
-      assertNull("expected empty date before commit could have been read", b.getLastModified());
+      assertFalse("expected empty name before commit could have been read", b.getDescription().isPresent());
+      assertFalse("expected empty date before commit could have been read", b.getCommitDate().isPresent());
 
       executor.next();
 
       assertEquals(2, updatedResults.size());
       assertFalse(b.isPartialResult());
       assertNotNull("expected correct name after commit could have been read", b.getDescription());
-      assertNotNull("expected correct date after commit could have been read", b.getLastModified());
+      assertTrue("expected correct date after commit could have been read", b.getCommitDate().isPresent());
     }
   }
 
@@ -175,16 +175,16 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     assertFalse(d.isDirectory());
     assertEquals("d.txt", d.getName());
     assertEquals("c/d.txt", d.getPath());
-    assertEquals("added file d and e in folder c", d.getDescription());
-    assertTrue(d.getLength() > 0);
-    checkDate(d.getLastModified());
+    assertEquals("added file d and e in folder c", d.getDescription().get());
+    assertTrue(d.getLength().getAsLong() > 0);
+    checkDate(d.getCommitDate().getAsLong());
 
     assertFalse(e.isDirectory());
     assertEquals("e.txt", e.getName());
     assertEquals("c/e.txt", e.getPath());
-    assertEquals("added file d and e in folder c", e.getDescription());
-    assertTrue(e.getLength() > 0);
-    checkDate(e.getLastModified());
+    assertEquals("added file d and e in folder c", e.getDescription().get());
+    assertTrue(e.getLength().getAsLong() > 0);
+    checkDate(e.getCommitDate().getAsLong());
   }
 
   @Test

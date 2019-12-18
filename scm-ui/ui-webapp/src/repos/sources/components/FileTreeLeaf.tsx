@@ -64,9 +64,11 @@ class FileTreeLeaf extends React.Component<Props> {
     return <Link to={this.createLink(file)}>{file.name}</Link>;
   };
 
-  contentIfPresent = (file: File, content: any) => {
+  contentIfPresent = (file: File, attribute: string, content: (file: File) => any) => {
     const { t } = this.props;
-    if (file.computationAborted) {
+    if (file.hasOwnProperty(attribute)) {
+      return content(file);
+    } else if (file.computationAborted) {
       return (
         <Tooltip location="top" message={t("sources.file-tree.computationAborted")}>
           <Icon name={"question-circle"} />
@@ -79,23 +81,24 @@ class FileTreeLeaf extends React.Component<Props> {
         </Tooltip>
       );
     } else {
-      return content;
+      return content(file);
     }
   };
 
   render() {
     const { file } = this.props;
 
-    const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
+    const renderFileSize = (file: File) => <FileSize bytes={file.length} />;
+    const renderCommitDate = (file: File) => <DateFromNow date={file.commitDate} />;
 
     return (
       <tr>
         <td>{this.createFileIcon(file)}</td>
         <MinWidthTd className="is-word-break">{this.createFileName(file)}</MinWidthTd>
-        <NoWrapTd className="is-hidden-mobile">{fileSize}</NoWrapTd>
-        <td className="is-hidden-mobile">{this.contentIfPresent(file, <DateFromNow date={file.lastModified} />)}</td>
+        <NoWrapTd className="is-hidden-mobile">{file.directory ? "" : this.contentIfPresent(file, "length", renderFileSize)}</NoWrapTd>
+        <td className="is-hidden-mobile">{this.contentIfPresent(file, "commitDate", renderCommitDate)}</td>
         <MinWidthTd className={classNames("is-word-break", "is-hidden-touch")}>
-          {this.contentIfPresent(file, file.description)}
+          {this.contentIfPresent(file, "description", file => file.description)}
         </MinWidthTd>
         {binder.hasExtension("repos.sources.tree.row.right") && (
           <td className="is-hidden-mobile">

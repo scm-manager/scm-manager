@@ -15,6 +15,9 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.time.Instant;
+import java.util.Optional;
+import java.util.OptionalLong;
 
 @Mapper
 public abstract class BrowserResultToFileObjectDtoMapper extends BaseFileObjectDtoMapper {
@@ -37,6 +40,14 @@ public abstract class BrowserResultToFileObjectDtoMapper extends BaseFileObjectD
     applyEnrichers(appender, browserResult, namespaceAndName);
     // we call enrichers, which are responsible for all file object top level browse result and its children
     applyEnrichers(appender, fileObject, namespaceAndName, browserResult, browserResult.getRevision());
+  }
+
+  Optional<Instant> mapOptionalInstant(OptionalLong optionalLong) {
+    if (optionalLong.isPresent()) {
+      return Optional.of(Instant.ofEpochMilli(optionalLong.getAsLong()));
+    } else {
+      return Optional.empty();
+    }
   }
 
   @Qualifier

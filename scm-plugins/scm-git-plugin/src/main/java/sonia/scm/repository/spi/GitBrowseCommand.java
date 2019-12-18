@@ -345,7 +345,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     Blob blob = lfsBlobStore.get(oid);
     if (blob == null) {
       logger.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository.getNamespaceAndName());
-      file.setLength(-1);
+      file.setLength(null);
     } else {
       file.setLength(blob.getSize());
     }
@@ -402,7 +402,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
 
     private void applyValuesFromCommit(SyncAsyncExecutor.ExecutionType executionType, RevCommit commit) {
-      file.setLastModified(GitUtil.getCommitTime(commit));
+      file.setCommitDate(GitUtil.getCommitTime(commit));
       file.setDescription(commit.getShortMessage());
       if (executionType == ASYNCHRONOUS && browserResult != null) {
         updateCache(request);

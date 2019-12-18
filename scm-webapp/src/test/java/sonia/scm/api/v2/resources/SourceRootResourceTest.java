@@ -122,7 +122,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
     fileObject1.setDescription("File object 1");
     fileObject1.setPath("/foo/bar/fo1");
     fileObject1.setLength(1024L);
-    fileObject1.setLastModified(0L);
+    fileObject1.setCommitDate(0L);
     parent.addChild(fileObject1);
 
     FileObject fileObject2 = new FileObject();
@@ -131,7 +131,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
     fileObject2.setDescription("File object 2");
     fileObject2.setPath("/foo/bar/fo2");
     fileObject2.setLength(4096L);
-    fileObject2.setLastModified(1234L);
+    fileObject2.setCommitDate(1234L);
     parent.addChild(fileObject2);
 
     return parent;

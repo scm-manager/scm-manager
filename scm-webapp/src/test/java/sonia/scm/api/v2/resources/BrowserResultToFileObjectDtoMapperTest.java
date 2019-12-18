@@ -30,6 +30,7 @@ public class BrowserResultToFileObjectDtoMapperTest {
 
   private FileObject fileObject1 = new FileObject();
   private FileObject fileObject2 = new FileObject();
+  private FileObject partialFileObject = new FileObject();
 
 
   @Before
@@ -42,15 +43,15 @@ public class BrowserResultToFileObjectDtoMapperTest {
     ThreadContext.bind(subject);
 
     fileObject1.setName("FO 1");
-    fileObject1.setLength(100);
-    fileObject1.setLastModified(0L);
+    fileObject1.setLength(100L);
+    fileObject1.setCommitDate(0L);
     fileObject1.setPath("/path/object/1");
     fileObject1.setDescription("description of file object 1");
     fileObject1.setDirectory(false);
 
     fileObject2.setName("FO 2");
-    fileObject2.setLength(100);
-    fileObject2.setLastModified(101L);
+    fileObject2.setLength(100L);
+    fileObject2.setCommitDate(101L);
     fileObject2.setPath("/path/object/2");
     fileObject2.setDescription("description of file object 2");
     fileObject2.setDirectory(true);
