@@ -13,9 +13,11 @@ export type File = {
   directory: boolean;
   description?: string;
   revision: string;
-  length: number;
-  lastModified?: string;
+  length?: number;
+  commitDate?: string;
   subRepository?: SubRepository; // TODO
+  partialResult: boolean;
+  computationAborted: boolean;
   _links: Links;
   _embedded: {
     children: File[] | null | undefined;

@@ -55,14 +55,16 @@ public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
   private final HookContextFactory hookContextFactory;
   private final ScmEventBus eventBus;
+  private final SyncAsyncExecutorProvider executorProvider;
 
   @Inject
-  public GitRepositoryServiceResolver(GitRepositoryHandler handler, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
+  public GitRepositoryServiceResolver(GitRepositoryHandler handler, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory, HookContextFactory hookContextFactory, ScmEventBus eventBus, SyncAsyncExecutorProvider executorProvider) {
     this.handler = handler;
     this.storeProvider = storeProvider;
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
+    this.executorProvider = executorProvider;
   }
 
   @Override
@@ -70,7 +72,7 @@ public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
     GitRepositoryServiceProvider provider = null;
 
     if (GitRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new GitRepositoryServiceProvider(handler, repository, storeProvider, lfsBlobStoreFactory, hookContextFactory, eventBus);
+      provider = new GitRepositoryServiceProvider(handler, repository, storeProvider, lfsBlobStoreFactory, hookContextFactory, eventBus, executorProvider);
     }
 
     return provider;

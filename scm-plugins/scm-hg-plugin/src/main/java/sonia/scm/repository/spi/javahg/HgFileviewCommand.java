@@ -231,13 +231,13 @@ public class HgFileviewCommand extends AbstractCommand
     file.setName(getNameFromPath(path));
     file.setPath(path);
     file.setDirectory(false);
-    file.setLength(stream.decimalIntUpTo(' '));
+    file.setLength((long) stream.decimalIntUpTo(' '));
 
     DateTime timestamp = stream.dateTimeUpTo(' ');
     String description = stream.textUpTo('\0');
 
     if (!disableLastCommit) {
-      file.setLastModified(timestamp.getDate().getTime());
+      file.setCommitDate(timestamp.getDate().getTime());
       file.setDescription(description);
     }
 

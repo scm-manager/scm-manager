@@ -8,7 +8,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
-import org.mockito.InjectMocks;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.NamespaceAndName;
@@ -24,9 +23,6 @@ public class BrowserResultToFileObjectDtoMapperTest {
   private final URI baseUri = URI.create("http://example.com/base/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
-  @InjectMocks
-  private FileObjectToFileObjectDtoMapperImpl fileObjectToFileObjectDtoMapper;
-
   private BrowserResultToFileObjectDtoMapper mapper;
 
   private final Subject subject = mock(Subject.class);
@@ -34,28 +30,28 @@ public class BrowserResultToFileObjectDtoMapperTest {
 
   private FileObject fileObject1 = new FileObject();
   private FileObject fileObject2 = new FileObject();
+  private FileObject partialFileObject = new FileObject();
 
 
   @Before
   public void init() {
     initMocks(this);
     mapper = Mappers.getMapper(BrowserResultToFileObjectDtoMapper.class);
-    mapper.setChildrenMapper(fileObjectToFileObjectDtoMapper);
     mapper.setResourceLinks(resourceLinks);
 
     subjectThreadState.bind();
     ThreadContext.bind(subject);
 
     fileObject1.setName("FO 1");
-    fileObject1.setLength(100);
-    fileObject1.setLastModified(0L);
+    fileObject1.setLength(100L);
+    fileObject1.setCommitDate(0L);
     fileObject1.setPath("/path/object/1");
     fileObject1.setDescription("description of file object 1");
     fileObject1.setDirectory(false);
 
     fileObject2.setName("FO 2");
-    fileObject2.setLength(100);
-    fileObject2.setLastModified(101L);
+    fileObject2.setLength(100L);
+    fileObject2.setCommitDate(101L);
     fileObject2.setPath("/path/object/2");
     fileObject2.setDescription("description of file object 2");
     fileObject2.setDirectory(true);
