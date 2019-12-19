@@ -12,18 +12,25 @@ import static java.util.Collections.unmodifiableCollection;
  * case you can use {@link #getFilesWithConflict()} to get a list of files with merge conflicts.
  */
 public class MergeCommandResult {
+
   private final Collection<String> filesWithConflict;
+  private final String newHeadRevision;
+  private final String targetRevision;
+  private final String revisionToMerge;
 
-  private MergeCommandResult(Collection<String> filesWithConflict) {
+  private MergeCommandResult(Collection<String> filesWithConflict, String targetRevision, String revisionToMerge, String newHeadRevision) {
     this.filesWithConflict = filesWithConflict;
+    this.targetRevision = targetRevision;
+    this.revisionToMerge = revisionToMerge;
+    this.newHeadRevision = newHeadRevision;
   }
 
-  public static MergeCommandResult success() {
-    return new MergeCommandResult(emptyList());
+ public static MergeCommandResult success(String targetRevision, String revisionToMerge, String newHeadRevision) {
+    return new MergeCommandResult(emptyList(), targetRevision, revisionToMerge, newHeadRevision);
   }
 
-  public static MergeCommandResult failure(Collection<String> filesWithConflict) {
-    return new MergeCommandResult(new HashSet<>(filesWithConflict));
+  public static MergeCommandResult failure(String targetRevision, String revisionToMerge, Collection<String> filesWithConflict) {
+    return new MergeCommandResult(new HashSet<>(filesWithConflict), targetRevision, revisionToMerge, null);
   }
 
   /**
@@ -31,7 +38,7 @@ public class MergeCommandResult {
    * merge conflicts. In this case you can use {@link #getFilesWithConflict()} to check what files could not be merged.
    */
   public boolean isSuccess() {
-    return filesWithConflict.isEmpty();
+    return filesWithConflict.isEmpty() && newHeadRevision != null;
   }
 
   /**
@@ -40,5 +47,27 @@ public class MergeCommandResult {
    */
   public Collection<String> getFilesWithConflict() {
     return unmodifiableCollection(filesWithConflict);
+  }
+
+  /**
+   * Returns the revision of the new head of the target branch, if the merge was successful ({@link #isSuccess()})
+   */
+  public String getNewHeadRevision() {
+    return newHeadRevision;
+  }
+
+  /**
+   * Returns the revision of the target branch prior to the merge.
+   */
+  public String getTargetRevision() {
+    return targetRevision;
+  }
+
+  /**
+   * Returns the revision of the branch that was merged into the target (or in case of a conflict of the revision that
+   * should have been merged).
+   */
+  public String getRevisionToMerge() {
+    return revisionToMerge;
   }
 }

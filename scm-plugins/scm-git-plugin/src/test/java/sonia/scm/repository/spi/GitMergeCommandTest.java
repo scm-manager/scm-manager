@@ -12,6 +12,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Rule;
 import org.junit.Test;
+import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
@@ -70,6 +71,8 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeCommandResult mergeCommandResult = command.merge(request);
 
     assertThat(mergeCommandResult.isSuccess()).isTrue();
+    assertThat(mergeCommandResult.getRevisionToMerge()).isEqualTo("91b99de908fcd04772798a31c308a64aea1a5523");
+    assertThat(mergeCommandResult.getTargetRevision()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
 
     Repository repository = createContext().open();
     Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
@@ -106,7 +109,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     assertThat(mergeCommit.getParent(1).name()).isEqualTo("d81ad6c63d7e2162308d69637b339dedd1d9201c");
   }
 
-  @Test
+  @Test(expected = NoChangesMadeException.class)
   public void shouldNotMergeTwice() throws IOException, GitAPIException {
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
@@ -120,15 +123,9 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     assertThat(mergeCommandResult.isSuccess()).isTrue();
 
     Repository repository = createContext().open();
-    ObjectId firstMergeCommit = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call().iterator().next().getId();
+    new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call().iterator().next().getId();
 
-    MergeCommandResult secondMergeCommandResult = command.merge(request);
-
-    assertThat(secondMergeCommandResult.isSuccess()).isTrue();
-
-    ObjectId secondMergeCommit = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call().iterator().next().getId();
-
-    assertThat(secondMergeCommit).isEqualTo(firstMergeCommit);
+    command.merge(request);
   }
 
   @Test
@@ -234,6 +231,8 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     Repository repository = createContext().open();
     assertThat(mergeCommandResult.isSuccess()).isTrue();
+    assertThat(mergeCommandResult.getRevisionToMerge()).isEqualTo(mergeCommandResult.getNewHeadRevision());
+    assertThat(mergeCommandResult.getTargetRevision()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
 
     Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
     RevCommit mergeCommit = commits.iterator().next();
@@ -284,6 +283,9 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     MergeCommandResult mergeCommandResult = command.merge(request);
+    assertThat(mergeCommandResult.getNewHeadRevision()).isEqualTo("35597e9e98fe53167266583848bfef985c2adb27");
+    assertThat(mergeCommandResult.getRevisionToMerge()).isEqualTo("35597e9e98fe53167266583848bfef985c2adb27");
+    assertThat(mergeCommandResult.getTargetRevision()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
 
     assertThat(mergeCommandResult.isSuccess()).isTrue();
 
