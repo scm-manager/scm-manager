@@ -8,6 +8,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
+/**
+ * CopyOnWrite creates a copy of the target file, before it is modified. This should prevent empty or incomplete files
+ * on errors such as full disk.
+ *
+ * javasecurity:S2083: SonarQube thinks that the path (targetFile) is generated from an http header (HttpUtil), but
+ * this is not true. It looks like a false-positive, so we suppress the warning for now.
+ */
+@SuppressWarnings("javasecurity:S2083")
 public final class CopyOnWrite {
 
   private static final Logger LOG = LoggerFactory.getLogger(CopyOnWrite.class);
