@@ -26,37 +26,57 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
     "",
     "Automatic merge by SCM-Manager.");
 
-  private final String target;
-  private final String toMerge;
+  private final String targetBranch;
+  private final ObjectId targetRevision;
+  private final String branchToMerge;
+  private final ObjectId revisionToMerge;
   private final Person author;
   private final String messageTemplate;
 
   GitMergeStrategy(Git clone, MergeCommandRequest request, GitContext context, sonia.scm.repository.Repository repository) {
     super(clone, context, repository);
-    this.target = request.getTargetBranch();
-    this.toMerge = request.getBranchToMerge();
+    this.targetBranch = request.getTargetBranch();
+    this.branchToMerge = request.getBranchToMerge();
     this.author = request.getAuthor();
     this.messageTemplate = request.getMessageTemplate();
+    try {
+      this.targetRevision = resolveRevision(request.getTargetBranch());
+      this.revisionToMerge = resolveRevision(request.getBranchToMerge());
+    } catch (IOException e) {
+      throw new InternalRepositoryException(repository, "Could not resolve revisions of target branch or branch to merge", e);
+    }
   }
 
   MergeResult doMergeInClone(MergeCommand mergeCommand) throws IOException {
     MergeResult result;
     try {
-      ObjectId sourceRevision = resolveRevision(toMerge);
+      ObjectId sourceRevision = resolveRevision(branchToMerge);
       mergeCommand
         .setCommit(false) // we want to set the author manually
-        .include(toMerge, sourceRevision);
+        .include(branchToMerge, sourceRevision);
 
       result = mergeCommand.call();
     } catch (GitAPIException e) {
-      throw new InternalRepositoryException(getContext().getRepository(), "could not merge branch " + toMerge + " into " + target, e);
+      throw new InternalRepositoryException(getContext().getRepository(), "could not merge branch " + branchToMerge + " into " + targetBranch, e);
     }
     return result;
   }
 
   Optional<RevCommit> doCommit() {
-    logger.debug("merged branch {} into {}", toMerge, target);
-    return doCommit(MessageFormat.format(determineMessageTemplate(), toMerge, target), author);
+    logger.debug("merged branch {} into {}", branchToMerge, targetBranch);
+    return doCommit(MessageFormat.format(determineMessageTemplate(), branchToMerge, targetBranch), author);
+  }
+
+  MergeCommandResult createSuccessResult(String newRevision) {
+    return MergeCommandResult.success(targetRevision.name(), revisionToMerge.name(), newRevision);
+  }
+
+  ObjectId getTargetRevision() {
+    return targetRevision;
+  }
+
+  ObjectId getRevisionToMerge() {
+    return revisionToMerge;
   }
 
   private String determineMessageTemplate() {
@@ -68,7 +88,7 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
   }
 
   MergeCommandResult analyseFailure(MergeResult result) {
-    logger.info("could not merge branch {} into {} due to conflict in paths {}", toMerge, target, result.getConflicts().keySet());
-    return MergeCommandResult.failure(result.getConflicts().keySet());
+    logger.info("could not merge branch {} into {} due to conflict in paths {}", branchToMerge, targetBranch, result.getConflicts().keySet());
+    return MergeCommandResult.failure(targetRevision.name(), revisionToMerge.name(), result.getConflicts().keySet());
   }
 }

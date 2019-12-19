@@ -9,8 +9,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.MergeCommandResult;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Optional;
 
 import static sonia.scm.repository.spi.GitRevisionExtractor.extractRevisionFromRevCommit;
 
@@ -29,7 +27,7 @@ class GitMergeWithSquash extends GitMergeStrategy {
     if (result.getMergeStatus().isSuccessful()) {
       RevCommit revCommit = doCommit().orElseThrow(() -> new NoChangesMadeException(getRepository()));
       push();
-      return MergeCommandResult.success(extractRevisionFromRevCommit(revCommit));
+      return MergeCommandResult.success(getTargetRevision().name(), revCommit.name(), extractRevisionFromRevCommit(revCommit));
     } else {
       return analyseFailure(result);
     }

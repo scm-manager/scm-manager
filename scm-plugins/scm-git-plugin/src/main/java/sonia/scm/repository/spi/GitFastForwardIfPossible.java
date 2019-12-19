@@ -23,7 +23,7 @@ class GitFastForwardIfPossible extends GitMergeStrategy {
     MergeResult fastForwardResult = mergeWithFastForwardOnlyMode();
     if (fastForwardResult.getMergeStatus().isSuccessful()) {
       push();
-      return MergeCommandResult.success(fastForwardResult.getNewHead().toString());
+      return createSuccessResult(fastForwardResult.getNewHead().name());
     } else {
       return fallbackMerge.run();
     }

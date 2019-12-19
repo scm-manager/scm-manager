@@ -71,6 +71,8 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeCommandResult mergeCommandResult = command.merge(request);
 
     assertThat(mergeCommandResult.isSuccess()).isTrue();
+    assertThat(mergeCommandResult.getRevisionToMerge()).isEqualTo("91b99de908fcd04772798a31c308a64aea1a5523");
+    assertThat(mergeCommandResult.getTargetRevision()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
 
     Repository repository = createContext().open();
     Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
@@ -229,6 +231,8 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
     Repository repository = createContext().open();
     assertThat(mergeCommandResult.isSuccess()).isTrue();
+    assertThat(mergeCommandResult.getRevisionToMerge()).isEqualTo(mergeCommandResult.getNewHeadRevision());
+    assertThat(mergeCommandResult.getTargetRevision()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
 
     Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
     RevCommit mergeCommit = commits.iterator().next();
@@ -279,6 +283,9 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     MergeCommandResult mergeCommandResult = command.merge(request);
+    assertThat(mergeCommandResult.getNewHeadRevision()).isEqualTo("35597e9e98fe53167266583848bfef985c2adb27");
+    assertThat(mergeCommandResult.getRevisionToMerge()).isEqualTo("35597e9e98fe53167266583848bfef985c2adb27");
+    assertThat(mergeCommandResult.getTargetRevision()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
 
     assertThat(mergeCommandResult.isSuccess()).isTrue();
 

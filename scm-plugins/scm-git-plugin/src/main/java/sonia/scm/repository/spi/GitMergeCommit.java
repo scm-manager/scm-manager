@@ -29,7 +29,7 @@ class GitMergeCommit extends GitMergeStrategy {
     if (result.getMergeStatus().isSuccessful()) {
       RevCommit revCommit = doCommit().orElseThrow(() -> new NoChangesMadeException(getRepository()));
       push();
-      return MergeCommandResult.success(extractRevisionFromRevCommit(revCommit));
+      return createSuccessResult(extractRevisionFromRevCommit(revCommit));
     } else {
       return analyseFailure(result);
     }

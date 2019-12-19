@@ -15,18 +15,22 @@ public class MergeCommandResult {
 
   private final Collection<String> filesWithConflict;
   private final String newHeadRevision;
+  private final String targetRevision;
+  private final String revisionToMerge;
 
-  private MergeCommandResult(Collection<String> filesWithConflict, String newHeadRevision) {
+  private MergeCommandResult(Collection<String> filesWithConflict, String targetRevision, String revisionToMerge, String newHeadRevision) {
     this.filesWithConflict = filesWithConflict;
+    this.targetRevision = targetRevision;
+    this.revisionToMerge = revisionToMerge;
     this.newHeadRevision = newHeadRevision;
   }
 
- public static MergeCommandResult success(String newHeadRevision) {
-    return new MergeCommandResult(emptyList(), newHeadRevision);
+ public static MergeCommandResult success(String targetRevision, String revisionToMerge, String newHeadRevision) {
+    return new MergeCommandResult(emptyList(), targetRevision, revisionToMerge, newHeadRevision);
   }
 
-  public static MergeCommandResult failure(Collection<String> filesWithConflict) {
-    return new MergeCommandResult(new HashSet<>(filesWithConflict), null);
+  public static MergeCommandResult failure(String targetRevision, String revisionToMerge, Collection<String> filesWithConflict) {
+    return new MergeCommandResult(new HashSet<>(filesWithConflict), targetRevision, revisionToMerge, null);
   }
 
   /**
@@ -45,7 +49,25 @@ public class MergeCommandResult {
     return unmodifiableCollection(filesWithConflict);
   }
 
+  /**
+   * Returns the revision of the new head of the target branch, if the merge was successful ({@link #isSuccess()})
+   */
   public String getNewHeadRevision() {
     return newHeadRevision;
+  }
+
+  /**
+   * Returns the revision of the target branch prior to the merge.
+   */
+  public String getTargetRevision() {
+    return targetRevision;
+  }
+
+  /**
+   * Returns the revision of the branch that was merged into the target (or in case of a conflict of the revision that
+   * should have been merged).
+   */
+  public String getRevisionToMerge() {
+    return revisionToMerge;
   }
 }
