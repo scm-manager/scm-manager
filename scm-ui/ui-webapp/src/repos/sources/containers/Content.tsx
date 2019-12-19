@@ -147,7 +147,7 @@ class Content extends React.Component<Props, State> {
                 <td>{fileSize}</td>
               </tr>
               <tr>
-                <td>{t("sources.content.lastModified")}</td>
+                <td>{t("sources.content.commitDate")}</td>
                 <td>{date}</td>
               </tr>
               <tr>

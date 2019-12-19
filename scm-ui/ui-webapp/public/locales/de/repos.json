@@ -99,7 +99,7 @@
     "file-tree": {
       "name": "Name",
       "length": "Größe",
-      "lastModified": "Zuletzt bearbeitet",
+      "commitDate": "Commitdatum",
       "description": "Beschreibung",
       "branch": "Branch",
       "notYetComputed": "Noch nicht berechnet; Der Wert wird in Kürze aktualisiert",
@@ -111,7 +111,7 @@
       "downloadButton": "Download",
       "path": "Pfad",
       "branch": "Branch",
-      "lastModified": "Zuletzt bearbeitet",
+      "commitDate": "Commitdatum",
       "description": "Beschreibung",
       "size": "Größe"
     },
