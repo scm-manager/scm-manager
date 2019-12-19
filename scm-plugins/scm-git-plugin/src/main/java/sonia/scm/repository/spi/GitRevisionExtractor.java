@@ -6,10 +6,7 @@ import java.util.Optional;
 
 public class GitRevisionExtractor {
 
-  static String extractRevisionFromRevCommit(Optional<RevCommit> revCommit) {
-    if (revCommit.isPresent()) {
-      return revCommit.get().toString().split(" ")[1];
-    }
-    return "";
+  static String extractRevisionFromRevCommit(RevCommit revCommit) {
+    return revCommit.toString().split(" ")[1];
   }
 }

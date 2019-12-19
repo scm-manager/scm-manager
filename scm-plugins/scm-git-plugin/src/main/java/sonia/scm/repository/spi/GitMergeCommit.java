@@ -4,6 +4,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeCommand;
 import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.revwalk.RevCommit;
+import sonia.scm.NoChangesMadeException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.MergeCommandResult;
 
@@ -26,7 +27,7 @@ class GitMergeCommit extends GitMergeStrategy {
     MergeResult result = doMergeInClone(mergeCommand);
 
     if (result.getMergeStatus().isSuccessful()) {
-      Optional<RevCommit> revCommit = doCommit();
+      RevCommit revCommit = doCommit().orElseThrow(() -> new NoChangesMadeException(getRepository()));
       push();
       return MergeCommandResult.success(extractRevisionFromRevCommit(revCommit));
     } else {

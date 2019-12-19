@@ -12,6 +12,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Rule;
 import org.junit.Test;
+import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
@@ -106,7 +107,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     assertThat(mergeCommit.getParent(1).name()).isEqualTo("d81ad6c63d7e2162308d69637b339dedd1d9201c");
   }
 
-  @Test
+  @Test(expected = NoChangesMadeException.class)
   public void shouldNotMergeTwice() throws IOException, GitAPIException {
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
@@ -120,15 +121,9 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     assertThat(mergeCommandResult.isSuccess()).isTrue();
 
     Repository repository = createContext().open();
-    ObjectId firstMergeCommit = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call().iterator().next().getId();
+    new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call().iterator().next().getId();
 
-    MergeCommandResult secondMergeCommandResult = command.merge(request);
-
-    assertThat(secondMergeCommandResult.isSuccess()).isTrue();
-
-    ObjectId secondMergeCommit = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call().iterator().next().getId();
-
-    assertThat(secondMergeCommit).isEqualTo(firstMergeCommit);
+    command.merge(request);
   }
 
   @Test

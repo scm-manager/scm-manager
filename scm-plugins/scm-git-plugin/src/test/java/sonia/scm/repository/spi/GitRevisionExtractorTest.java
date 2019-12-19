@@ -14,17 +14,8 @@ public class GitRevisionExtractorTest {
   @Test
   void shouldReturnRevisionFromRevCommit() {
     RevCommit revCommit = mock(RevCommit.class);
-    Optional<RevCommit> optionalRevCommit = Optional.of(revCommit);
     when(revCommit.toString()).thenReturn("commit 123456abcdef -t 4561");
-    String revision = GitRevisionExtractor.extractRevisionFromRevCommit(optionalRevCommit);
+    String revision = GitRevisionExtractor.extractRevisionFromRevCommit(revCommit);
     assertThat(revision).isEqualTo("123456abcdef");
   }
-
-  @Test
-  void shouldReturnEmptyStringIfRevCommitNotAvailable() {
-    Optional<RevCommit> optionalRevCommit = Optional.empty();
-    String revision = GitRevisionExtractor.extractRevisionFromRevCommit(optionalRevCommit);
-    assertThat(revision).isEqualTo("");
-  }
-
 }
