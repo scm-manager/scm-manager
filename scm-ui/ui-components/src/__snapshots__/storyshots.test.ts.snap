@@ -336,7 +336,7 @@ exports[`Storyshots DateFromNow Default 1`] = `
 
 exports[`Storyshots Forms|Checkbox Default 1`] = `
 <div
-  className="sc-caSCKo brLbbv"
+  className="sc-gisBJw jHakbY"
 >
   <div
     className="field"
@@ -381,7 +381,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
 
 exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 <div
-  className="sc-caSCKo brLbbv"
+  className="sc-gisBJw jHakbY"
 >
   <div
     className="field"
@@ -409,10 +409,10 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 
 exports[`Storyshots Forms|Radio Default 1`] = `
 <div
-  className="sc-gisBJw jHakbY"
+  className="sc-kjoXOD hVPZau"
 >
   <label
-    className="radio"
+    className="sc-cMljjf kOqpHe radio"
   >
     <input
       checked={false}
@@ -423,7 +423,7 @@ exports[`Storyshots Forms|Radio Default 1`] = `
     Not checked
   </label>
   <label
-    className="radio"
+    className="sc-cMljjf kOqpHe radio"
   >
     <input
       checked={true}
@@ -438,10 +438,10 @@ exports[`Storyshots Forms|Radio Default 1`] = `
 
 exports[`Storyshots Forms|Radio Disabled 1`] = `
 <div
-  className="sc-gisBJw jHakbY"
+  className="sc-kjoXOD hVPZau"
 >
   <label
-    className="radio"
+    className="sc-cMljjf kOqpHe radio"
     disabled={true}
   >
     <input
@@ -458,7 +458,7 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
 
 exports[`Storyshots Forms|Textarea OnCancel 1`] = `
 <div
-  className="sc-kjoXOD hVPZau"
+  className="sc-cHGsZl klfJMr"
 >
   <div
     className="field"
@@ -481,7 +481,7 @@ exports[`Storyshots Forms|Textarea OnCancel 1`] = `
 
 exports[`Storyshots Forms|Textarea OnChange 1`] = `
 <div
-  className="sc-kjoXOD hVPZau"
+  className="sc-cHGsZl klfJMr"
 >
   <div
     className="field"
@@ -508,7 +508,7 @@ exports[`Storyshots Forms|Textarea OnChange 1`] = `
 
 exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
 <div
-  className="sc-kjoXOD hVPZau"
+  className="sc-cHGsZl klfJMr"
 >
   <div
     className="field"
@@ -2391,7 +2391,7 @@ PORT_NUMBER =
 
 exports[`Storyshots Table|Table Default 1`] = `
 <table
-  className="sc-jhAzac hmXDXQ table content is-hoverable"
+  className="sc-fBuWsC eeihxG table content is-hoverable"
 >
   <thead>
     <tr>
@@ -2409,7 +2409,7 @@ exports[`Storyshots Table|Table Default 1`] = `
       >
         Last Name
         <i
-          className="fas fa-sort-amount-down has-text-grey-light sc-hzDkRC escBde"
+          className="fas fa-sort-amount-down has-text-grey-light sc-jhAzac gDbcZp"
         />
       </th>
       <th
@@ -2482,7 +2482,7 @@ exports[`Storyshots Table|Table Empty 1`] = `
 
 exports[`Storyshots Table|Table TextColumn 1`] = `
 <table
-  className="sc-jhAzac hmXDXQ table content is-hoverable"
+  className="sc-fBuWsC eeihxG table content is-hoverable"
 >
   <thead>
     <tr>
@@ -2494,7 +2494,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Id
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light sc-hzDkRC escBde"
+          className="fas fa-sort-alpha-down has-text-grey-light sc-jhAzac gDbcZp"
         />
       </th>
       <th
@@ -2505,7 +2505,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Name
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light sc-hzDkRC escBde"
+          className="fas fa-sort-alpha-down has-text-grey-light sc-jhAzac gDbcZp"
         />
       </th>
       <th
@@ -2516,7 +2516,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Description
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light sc-hzDkRC escBde"
+          className="fas fa-sort-alpha-down has-text-grey-light sc-jhAzac gDbcZp"
         />
       </th>
     </tr>
