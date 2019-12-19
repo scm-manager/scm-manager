@@ -101,7 +101,9 @@
       "length": "Length",
       "lastModified": "Last modified",
       "description": "Description",
-      "branch": "Branch"
+      "branch": "Branch",
+      "notYetComputed": "Not yet computed, will be updated in a short while",
+      "computationAborted": "The computation took too long and was aborted"
     },
     "content": {
       "historyButton": "History",

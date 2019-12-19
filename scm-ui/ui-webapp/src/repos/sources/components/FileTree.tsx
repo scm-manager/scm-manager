@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { binder } from "@scm-manager/ui-extensions";
 import { Repository, File } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
-import { getFetchSourcesFailure, isFetchSourcesPending, getSources } from "../modules/sources";
+import { getFetchSourcesFailure, isFetchSourcesPending, getSources, fetchSources } from "../modules/sources";
 import FileTreeLeaf from "./FileTreeLeaf";
 
 type Props = WithTranslation & {
@@ -19,8 +19,14 @@ type Props = WithTranslation & {
   path: string;
   baseUrl: string;
 
+  updateSources: () => void;
+
   // context props
   match: any;
+};
+
+type State = {
+  stoppableUpdateHandler?: number;
 };
 
 const FixedWidthTh = styled.th`
@@ -39,7 +45,28 @@ export function findParent(path: string) {
   return "";
 }
 
-class FileTree extends React.Component<Props> {
+class FileTree extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>): void {
+    if (prevState.stoppableUpdateHandler === this.state.stoppableUpdateHandler) {
+      const { tree, updateSources } = this.props;
+      if (tree?._embedded?.children && tree._embedded.children.find(c => c.partialResult)) {
+        const stoppableUpdateHandler = setTimeout(updateSources, 3000);
+        this.setState({ stoppableUpdateHandler: stoppableUpdateHandler });
+      }
+    }
+  }
+
+  componentWillUnmount(): void {
+    if (this.state.stoppableUpdateHandler) {
+      clearTimeout(this.state.stoppableUpdateHandler);
+    }
+  }
+
   render() {
     const { error, loading, tree } = this.props;
 
@@ -106,7 +133,7 @@ class FileTree extends React.Component<Props> {
               <FixedWidthTh />
               <th>{t("sources.file-tree.name")}</th>
               <th className="is-hidden-mobile">{t("sources.file-tree.length")}</th>
-              <th className="is-hidden-mobile">{t("sources.file-tree.lastModified")}</th>
+              <th className="is-hidden-mobile">{t("sources.file-tree.commitDate")}</th>
               <th className="is-hidden-touch">{t("sources.file-tree.description")}</th>
               {binder.hasExtension("repos.sources.tree.row.right") && <th className="is-hidden-mobile" />}
             </tr>
@@ -122,6 +149,14 @@ class FileTree extends React.Component<Props> {
     return <Notification type="info">{t("sources.noSources")}</Notification>;
   }
 }
+
+const mapDispatchToProps = (dispatch: any, ownProps: Props) => {
+  const { repository, revision, path } = ownProps;
+
+  const updateSources = () => dispatch(fetchSources(repository, revision, path, false));
+
+  return { updateSources };
+};
 
 const mapStateToProps = (state: any, ownProps: Props) => {
   const { repository, revision, path } = ownProps;
@@ -141,5 +176,8 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
 )(withTranslation("repos")(FileTree));

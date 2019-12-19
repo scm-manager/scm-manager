@@ -1,12 +1,13 @@
-import React, { FC, useContext } from "react";
+import React, { FC, useContext, MouseEvent } from "react";
 import { ToastThemeContext, Themeable } from "./themes";
 import styled from "styled-components";
 
 type Props = {
   icon?: string;
+  onClick?: () => void;
 };
 
-const ThemedButton = styled.div.attrs(props => ({
+const ThemedButton = styled.button.attrs(props => ({
   className: "button"
 }))<Themeable>`
   color: ${props => props.theme.primary};
@@ -25,10 +26,18 @@ const ToastButtonIcon = styled.i`
   margin-right: 0.25rem;
 `;
 
-const ToastButton: FC<Props> = ({ icon, children }) => {
+const ToastButton: FC<Props> = ({ icon, onClick, children }) => {
   const theme = useContext(ToastThemeContext);
+
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    if (onClick) {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
-    <ThemedButton theme={theme}>
+    <ThemedButton theme={theme} onClick={handleClick}>
       {icon && <ToastButtonIcon className={`fas fa-fw fa-${icon}`} />} {children}
     </ThemedButton>
   );

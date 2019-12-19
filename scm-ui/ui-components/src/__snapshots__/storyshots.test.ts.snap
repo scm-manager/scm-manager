@@ -2559,6 +2559,8 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
 </table>
 `;
 
+exports[`Storyshots Toast Click to close 1`] = `null`;
+
 exports[`Storyshots Toast Danger 1`] = `null`;
 
 exports[`Storyshots Toast Info 1`] = `null`;

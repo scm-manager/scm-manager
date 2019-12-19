@@ -35,9 +35,11 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.eclipse.jgit.attributes.Attributes;
 import org.eclipse.jgit.lfs.LfsPointer;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
@@ -49,6 +51,7 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
+import org.eclipse.jgit.util.LfsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
@@ -56,6 +59,7 @@ import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.GitSubModuleParser;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SubRepository;
 import sonia.scm.store.Blob;
@@ -69,10 +73,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
+import static sonia.scm.repository.spi.SyncAsyncExecutor.ExecutionType.ASYNCHRONOUS;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -90,71 +97,56 @@ public class GitBrowseCommand extends AbstractGitCommand
   /**
    * the logger for GitBrowseCommand
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GitBrowseCommand.class);
+  private static final Logger logger = LoggerFactory.getLogger(GitBrowseCommand.class);
+
+  /** sub repository cache */
+  private final Map<ObjectId, Map<String, SubRepository>> subrepositoryCache = Maps.newHashMap();
+
+  private final Object asyncMonitor = new Object();
+
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
-  //~--- constructors ---------------------------------------------------------
+  private final SyncAsyncExecutor executor;
 
-  /**
-   * Constructs ...
-   *  @param context
-   * @param repository
-   * @param lfsBlobStoreFactory
-   */
-  public GitBrowseCommand(GitContext context, Repository repository, LfsBlobStoreFactory lfsBlobStoreFactory)
-  {
+  private BrowserResult browserResult;
+
+  public GitBrowseCommand(GitContext context, Repository repository, LfsBlobStoreFactory lfsBlobStoreFactory, SyncAsyncExecutor executor) {
     super(context, repository);
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
+    this.executor = executor;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   @Override
-  @SuppressWarnings("unchecked")
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
     throws IOException {
     logger.debug("try to create browse result for {}", request);
 
-    BrowserResult result;
-
     org.eclipse.jgit.lib.Repository repo = open();
-    ObjectId revId;
+    ObjectId revId = computeRevIdToBrowse(request, repo);
 
-    if (Util.isEmpty(request.getRevision()))
-    {
-      revId = getDefaultBranch(repo);
+    if (revId != null) {
+      browserResult = new BrowserResult(revId.getName(), request.getRevision(), getEntry(repo, request, revId));
+      return browserResult;
+    } else {
+      logger.warn("could not find head of repository {}, empty?", repository.getNamespaceAndName());
+      return new BrowserResult(Constants.HEAD, request.getRevision(), createEmptyRoot());
     }
-    else
-    {
-      revId = GitUtil.getRevisionId(repo, request.getRevision());
-    }
+  }
 
-    if (revId != null)
-    {
-      result = new BrowserResult(revId.getName(), request.getRevision(), getEntry(repo, request, revId));
-    }
-    else
-    {
-      if (Util.isNotEmpty(request.getRevision()))
-      {
+  private ObjectId computeRevIdToBrowse(BrowseCommandRequest request, org.eclipse.jgit.lib.Repository repo) throws IOException {
+    if (Util.isEmpty(request.getRevision())) {
+      return getDefaultBranch(repo);
+    } else {
+      ObjectId revId = GitUtil.getRevisionId(repo, request.getRevision());
+      if (revId == null) {
         logger.error("could not find revision {}", request.getRevision());
         throw notFound(entity("Revision", request.getRevision()).in(this.repository));
       }
-      else if (logger.isWarnEnabled())
-      {
-        logger.warn("could not find head of repository, empty?");
-      }
-
-      result = new BrowserResult(Constants.HEAD, request.getRevision(), createEmtpyRoot());
+      return revId;
     }
-
-    return result;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  private FileObject createEmtpyRoot() {
+  private FileObject createEmptyRoot() {
     FileObject fileObject = new FileObject();
     fileObject.setName("");
     fileObject.setPath("");
@@ -162,18 +154,6 @@ public class GitBrowseCommand extends AbstractGitCommand
     return fileObject;
   }
 
-  /**
-   * Method description
-   *
-   * @param repo
-   * @param request
-   * @param revId
-   * @param treeWalk
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
                                       BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk)
     throws IOException {
@@ -207,127 +187,62 @@ public class GitBrowseCommand extends AbstractGitCommand
       // don't show message and date for directories to improve performance
       if (!file.isDirectory() &&!request.isDisableLastCommit())
       {
-        logger.trace("fetch last commit for {} at {}", path, revId.getName());
-        RevCommit commit = getLatestCommit(repo, revId, path);
-
-        Optional<LfsPointer> lfsPointer = commit == null? empty(): GitUtil.getLfsPointer(repo, path, commit, treeWalk);
+        file.setPartialResult(true);
+        RevCommit commit;
+        try (RevWalk walk = new RevWalk(repo)) {
+          commit = walk.parseCommit(revId);
+        }
+        Optional<LfsPointer> lfsPointer = getLfsPointer(repo, path, commit, treeWalk);
 
         if (lfsPointer.isPresent()) {
-          BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
-          String oid = lfsPointer.get().getOid().getName();
-          Blob blob = lfsBlobStore.get(oid);
-          if (blob == null) {
-            logger.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository.getNamespaceAndName());
-            file.setLength(-1);
-          } else {
-            file.setLength(blob.getSize());
-          }
+          setFileLengthFromLfsBlob(lfsPointer.get(), file);
         } else {
           file.setLength(loader.getSize());
         }
 
-        if (commit != null)
-        {
-          file.setLastModified(GitUtil.getCommitTime(commit));
-          file.setDescription(commit.getShortMessage());
-        }
-        else if (logger.isWarnEnabled())
-        {
-          logger.warn("could not find latest commit for {} on {}", path,
-            revId);
-        }
+        executor.execute(
+          new CompleteFileInformation(path, revId, repo, file, request),
+          new AbortFileInformation(request)
+        );
       }
     }
     return file;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param repo
-   * @param revId
-   * @param path
-   *
-   * @return
-   */
-  private RevCommit getLatestCommit(org.eclipse.jgit.lib.Repository repo,
-                                    ObjectId revId, String path)
-  {
-    RevCommit result = null;
-    RevWalk walk = null;
-
-    try
-    {
-      walk = new RevWalk(repo);
-      walk.setTreeFilter(AndTreeFilter.create(PathFilter.create(path),
-        TreeFilter.ANY_DIFF));
-
-      RevCommit commit = walk.parseCommit(revId);
-
-      walk.markStart(commit);
-      result = Util.getFirst(walk);
-    }
-    catch (IOException ex)
-    {
-      logger.error("could not parse commit for file", ex);
-    }
-    finally
-    {
-      GitUtil.release(walk);
-    }
-
-    return result;
+  private void updateCache(BrowseCommandRequest request) {
+    request.updateCache(browserResult);
+    logger.info("updated browser result for repository {}", repository.getNamespaceAndName());
   }
 
   private FileObject getEntry(org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId) throws IOException {
-    RevWalk revWalk = null;
-    TreeWalk treeWalk = null;
-
-    FileObject result;
-
-    try {
+    try (RevWalk revWalk = new RevWalk(repo); TreeWalk treeWalk = new TreeWalk(repo)) {
       logger.debug("load repository browser for revision {}", revId.name());
 
-      treeWalk = new TreeWalk(repo);
       if (!isRootRequest(request)) {
         treeWalk.setFilter(PathFilter.create(request.getPath()));
       }
-      revWalk = new RevWalk(repo);
 
       RevTree tree = revWalk.parseTree(revId);
 
-      if (tree != null)
-      {
+      if (tree != null) {
         treeWalk.addTree(tree);
-      }
-      else
-      {
+      } else {
         throw new IllegalStateException("could not find tree for " + revId.name());
       }
 
       if (isRootRequest(request)) {
-        result = createEmtpyRoot();
+        FileObject result = createEmptyRoot();
         findChildren(result, repo, request, revId, treeWalk);
+        return result;
       } else {
-        result = findFirstMatch(repo, request, revId, treeWalk);
+        FileObject result = findFirstMatch(repo, request, revId, treeWalk);
         if ( result.isDirectory() ) {
           treeWalk.enterSubtree();
           findChildren(result, repo, request, revId, treeWalk);
         }
+        return result;
       }
-
     }
-    finally
-    {
-      GitUtil.release(revWalk);
-      GitUtil.release(treeWalk);
-    }
-
-    return result;
   }
 
   private boolean isRootRequest(BrowseCommandRequest request) {
@@ -384,56 +299,144 @@ public class GitBrowseCommand extends AbstractGitCommand
     throw notFound(entity("File", request.getPath()).in("Revision", revId.getName()).in(this.repository));
   }
 
-  @SuppressWarnings("unchecked")
-  private Map<String,
-    SubRepository> getSubRepositories(org.eclipse.jgit.lib.Repository repo,
-                                      ObjectId revision)
+  private Map<String, SubRepository> getSubRepositories(org.eclipse.jgit.lib.Repository repo, ObjectId revision)
     throws IOException {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("read submodules of {} at {}", repository.getName(),
-        revision);
-    }
 
-    Map<String, SubRepository> subRepositories;
-    try ( ByteArrayOutputStream baos = new ByteArrayOutputStream() )
-    {
+    logger.debug("read submodules of {} at {}", repository.getName(), revision);
+
+    try ( ByteArrayOutputStream baos = new ByteArrayOutputStream() ) {
       new GitCatCommand(context, repository, lfsBlobStoreFactory).getContent(repo, revision,
         PATH_MODULES, baos);
-      subRepositories = GitSubModuleParser.parse(baos.toString());
+      return GitSubModuleParser.parse(baos.toString());
+    } catch (NotFoundException ex) {
+      logger.trace("could not find .gitmodules: {}", ex.getMessage());
+      return Collections.emptyMap();
     }
-    catch (NotFoundException ex)
-    {
-      logger.trace("could not find .gitmodules", ex);
-      subRepositories = Collections.EMPTY_MAP;
-    }
-
-    return subRepositories;
   }
 
-  private SubRepository getSubRepository(org.eclipse.jgit.lib.Repository repo,
-                                         ObjectId revId, String path)
+  private SubRepository getSubRepository(org.eclipse.jgit.lib.Repository repo, ObjectId revId, String path)
     throws IOException {
     Map<String, SubRepository> subRepositories = subrepositoryCache.get(revId);
 
-    if (subRepositories == null)
-    {
+    if (subRepositories == null) {
       subRepositories = getSubRepositories(repo, revId);
       subrepositoryCache.put(revId, subRepositories);
     }
 
-    SubRepository sub = null;
-
-    if (subRepositories != null)
-    {
-      sub = subRepositories.get(path);
+    if (subRepositories != null) {
+      return subRepositories.get(path);
     }
-
-    return sub;
+    return null;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  private Optional<LfsPointer> getLfsPointer(org.eclipse.jgit.lib.Repository repo, String path, RevCommit commit, TreeWalk treeWalk) {
+    try {
+      Attributes attributes = LfsFactory.getAttributesForPath(repo, path, commit);
 
-  /** sub repository cache */
-  private final Map<ObjectId, Map<String, SubRepository>> subrepositoryCache = Maps.newHashMap();
+      return GitUtil.getLfsPointer(repo, treeWalk, attributes);
+    } catch (IOException e) {
+      throw new InternalRepositoryException(repository, "could not read lfs pointer", e);
+    }
+  }
+
+  private void setFileLengthFromLfsBlob(LfsPointer lfsPointer, FileObject file) {
+    BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
+    String oid = lfsPointer.getOid().getName();
+    Blob blob = lfsBlobStore.get(oid);
+    if (blob == null) {
+      logger.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository.getNamespaceAndName());
+      file.setLength(null);
+    } else {
+      file.setLength(blob.getSize());
+    }
+  }
+
+  private class CompleteFileInformation implements Consumer<SyncAsyncExecutor.ExecutionType> {
+    private final String path;
+    private final ObjectId revId;
+    private final org.eclipse.jgit.lib.Repository repo;
+    private final FileObject file;
+    private final BrowseCommandRequest request;
+
+    public CompleteFileInformation(String path, ObjectId revId, org.eclipse.jgit.lib.Repository repo, FileObject file, BrowseCommandRequest request) {
+      this.path = path;
+      this.revId = revId;
+      this.repo = repo;
+      this.file = file;
+      this.request = request;
+    }
+
+    @Override
+    public void accept(SyncAsyncExecutor.ExecutionType executionType) {
+      logger.trace("fetch last commit for {} at {}", path, revId.getName());
+
+      Stopwatch sw = Stopwatch.createStarted();
+
+      Optional<RevCommit> commit = getLatestCommit(repo, revId, path);
+
+      synchronized (asyncMonitor) {
+        file.setPartialResult(false);
+        if (commit.isPresent()) {
+          applyValuesFromCommit(executionType, commit.get());
+        } else {
+          logger.warn("could not find latest commit for {} on {}", path, revId);
+        }
+      }
+
+      logger.trace("finished loading of last commit {} of {} in {}", revId.getName(), path, sw.stop());
+    }
+
+    private Optional<RevCommit> getLatestCommit(org.eclipse.jgit.lib.Repository repo,
+                                      ObjectId revId, String path) {
+      try (RevWalk walk = new RevWalk(repo)) {
+        walk.setTreeFilter(AndTreeFilter.create(TreeFilter.ANY_DIFF, PathFilter.create(path)));
+
+        RevCommit commit = walk.parseCommit(revId);
+
+        walk.markStart(commit);
+        return of(Util.getFirst(walk));
+      } catch (IOException ex) {
+        logger.error("could not parse commit for file", ex);
+        return empty();
+      }
+    }
+
+    private void applyValuesFromCommit(SyncAsyncExecutor.ExecutionType executionType, RevCommit commit) {
+      file.setCommitDate(GitUtil.getCommitTime(commit));
+      file.setDescription(commit.getShortMessage());
+      if (executionType == ASYNCHRONOUS && browserResult != null) {
+        updateCache(request);
+      }
+    }
+  }
+
+  private class AbortFileInformation implements Runnable {
+    private final BrowseCommandRequest request;
+
+    public AbortFileInformation(BrowseCommandRequest request) {
+      this.request = request;
+    }
+
+    @Override
+    public void run() {
+      synchronized (asyncMonitor) {
+        if (markPartialAsAborted(browserResult.getFile())) {
+          updateCache(request);
+        }
+      }
+    }
+
+    private boolean markPartialAsAborted(FileObject file) {
+      boolean changed = false;
+      if (file.isPartialResult()) {
+        file.setPartialResult(false);
+        file.setComputationAborted(true);
+        changed = true;
+      }
+      for (FileObject child : file.getChildren()) {
+        changed |= markPartialAsAborted(child);
+      }
+      return changed;
+    }
+  }
 }

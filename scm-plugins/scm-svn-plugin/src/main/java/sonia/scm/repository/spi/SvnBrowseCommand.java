@@ -173,7 +173,7 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     {
       if (entry.getDate() != null)
       {
-        fileObject.setLastModified(entry.getDate().getTime());
+        fileObject.setCommitDate(entry.getDate().getTime());
       }
 
       fileObject.setDescription(entry.getCommitMessage());

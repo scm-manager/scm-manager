@@ -199,7 +199,7 @@ public final class BrowseCommandBuilder
 
     return this;
   }
-  
+
   /**
    * Disabling the last commit means that every call to
    * {@link FileObject#getDescription()} and
@@ -298,6 +298,13 @@ public final class BrowseCommandBuilder
     request.setRevision(revision);
 
     return this;
+  }
+
+  private void updateCache(BrowserResult updatedResult) {
+    if (!disableCache) {
+      CacheKey key = new CacheKey(repository, request);
+      cache.put(key, updatedResult);
+    }
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -416,5 +423,5 @@ public final class BrowseCommandBuilder
   private final Repository repository;
 
   /** request for the command */
-  private final BrowseCommandRequest request = new BrowseCommandRequest();
+  private final BrowseCommandRequest request = new BrowseCommandRequest(this::updateCache);
 }
