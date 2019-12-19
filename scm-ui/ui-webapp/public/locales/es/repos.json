@@ -72,7 +72,7 @@
   "changesets": {
     "errorTitle": "Error",
     "errorSubtitle": "No se han podido recuperar los changesets",
-    "noChangesets": "No se han encontrado changesets para esta rama branch.",
+    "noChangesets": "No se han encontrado changesets para esta rama branch. Los commits podrían haber sido eliminados.",
     "branchSelectorLabel": "Ramas",
     "collapseDiffs": "Colapso"
   },
