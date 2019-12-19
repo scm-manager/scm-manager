@@ -1,7 +1,9 @@
 package sonia.scm.repository.api;
 
 import java.util.Collection;
+import java.util.HashSet;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableCollection;
 
 /**
@@ -10,16 +12,21 @@ import static java.util.Collections.unmodifiableCollection;
  * case you can use {@link #getFilesWithConflict()} to get a list of files with merge conflicts.
  */
 public class MergeCommandResult {
+
   private final Collection<String> filesWithConflict;
-  private String newHeadRevision;
+  private final String newHeadRevision;
 
-  public MergeCommandResult(Collection<String> filesWithConflict) {
-    this.filesWithConflict = filesWithConflict;
-  }
-
-  public MergeCommandResult(Collection<String> filesWithConflict, String newHeadRevision) {
+  private MergeCommandResult(Collection<String> filesWithConflict, String newHeadRevision) {
     this.filesWithConflict = filesWithConflict;
     this.newHeadRevision = newHeadRevision;
+  }
+
+ public static MergeCommandResult success(String newHeadRevision) {
+    return new MergeCommandResult(emptyList(), newHeadRevision);
+  }
+
+  public static MergeCommandResult failure(Collection<String> filesWithConflict) {
+    return new MergeCommandResult(new HashSet<>(filesWithConflict), null);
   }
 
   /**
