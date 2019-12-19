@@ -20,7 +20,7 @@ type Collapsible = {
 };
 
 type State = Collapsible & {
-  sideBySide: boolean;
+  sideBySide?: boolean;
 };
 
 const DiffFilePanel = styled.div`
@@ -87,7 +87,7 @@ class DiffFile extends React.Component<Props, State> {
     super(props);
     this.state = {
       collapsed: !!this.props.defaultCollapse,
-      sideBySide: false
+      sideBySide: props.sideBySide
     };
   }
 
