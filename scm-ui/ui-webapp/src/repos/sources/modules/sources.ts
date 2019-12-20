@@ -6,6 +6,7 @@ import { getFailure } from "../../../modules/failure";
 
 export const FETCH_SOURCES = "scm/repos/FETCH_SOURCES";
 export const FETCH_SOURCES_PENDING = `${FETCH_SOURCES}_${types.PENDING_SUFFIX}`;
+export const FETCH_UPDATES_PENDING = `${FETCH_SOURCES}_UPDATE_PENDING`;
 export const FETCH_SOURCES_SUCCESS = `${FETCH_SOURCES}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_SOURCES_FAILURE = `${FETCH_SOURCES}_${types.FAILURE_SUFFIX}`;
 
@@ -61,7 +62,7 @@ export function updateSourcesPending(
   currentSources: any
 ): Action {
   return {
-    type: "UPDATE_PENDING",
+    type: FETCH_UPDATES_PENDING,
     payload: { updatePending: true, sources: currentSources },
     itemId: createItemId(repository, revision, path)
   };
@@ -97,7 +98,7 @@ export default function reducer(
     type: "UNKNOWN"
   }
 ): any {
-  if (action.itemId && (action.type === FETCH_SOURCES_SUCCESS || action.type === "UPDATE_PENDING")) {
+  if (action.itemId && (action.type === FETCH_SOURCES_SUCCESS || action.type === FETCH_UPDATES_PENDING)) {
     return {
       ...state,
       [action.itemId]: action.payload
