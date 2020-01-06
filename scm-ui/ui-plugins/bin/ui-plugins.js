@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 const { spawnSync } = require("child_process");
 
-const commands = ["plugin", "plugin-watch", "publish", "version"];
+const commands = ["postinstall"];
 
 const args = process.argv.slice(2);
 
@@ -38,5 +38,5 @@ if (commands.includes(command)) {
   process.exit(result.status);
 } else {
   console.log(`Unknown script "${command}".`);
-  console.log("Perhaps you need to update ui-scripts?");
+  console.log("Perhaps you need to update ui-plugins?");
 }
