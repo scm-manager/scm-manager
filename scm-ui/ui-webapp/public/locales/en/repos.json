@@ -72,7 +72,7 @@
   "changesets": {
     "errorTitle": "Error",
     "errorSubtitle": "Could not fetch changesets",
-    "noChangesets": "No changesets found for this branch.",
+    "noChangesets": "No changesets found for this branch. The commits could have been removed.",
     "branchSelectorLabel": "Branches",
     "collapseDiffs": "Collapse"
   },
@@ -99,7 +99,7 @@
     "file-tree": {
       "name": "Name",
       "length": "Length",
-      "lastModified": "Last modified",
+      "commitDate": "Commit date",
       "description": "Description",
       "branch": "Branch",
       "notYetComputed": "Not yet computed, will be updated in a short while",
@@ -111,7 +111,7 @@
       "downloadButton": "Download",
       "path": "Path",
       "branch": "Branch",
-      "lastModified": "Last modified",
+      "commitDate": "Commit date",
       "description": "Description",
       "size": "Size"
     },

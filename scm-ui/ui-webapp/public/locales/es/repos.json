@@ -72,7 +72,7 @@
   "changesets": {
     "errorTitle": "Error",
     "errorSubtitle": "No se han podido recuperar los changesets",
-    "noChangesets": "No se han encontrado changesets para esta rama branch.",
+    "noChangesets": "No se han encontrado changesets para esta rama branch. Los commits podrían haber sido eliminados.",
     "branchSelectorLabel": "Ramas",
     "collapseDiffs": "Colapso"
   },
@@ -99,9 +99,11 @@
     "file-tree": {
       "name": "Nombre",
       "length": "Longitud",
-      "lastModified": "Última modificación",
+      "commitDate": "Fecha de cometer",
       "description": "Descripción",
-      "branch": "Rama"
+      "branch": "Rama",
+      "notYetComputed": "Aún no calculado, se actualizará en poco tiempo",
+      "computationAborted": "El cálculo tomó demasiado tiempo y fue abortado"
     },
     "content": {
       "historyButton": "Historia",
@@ -109,7 +111,7 @@
       "downloadButton": "Descargar",
       "path": "Ruta",
       "branch": "Rama",
-      "lastModified": "Última modificación",
+      "commitDate": "Fecha de cometer",
       "description": "Discripción",
       "size": "tamaño"
     },

@@ -72,7 +72,7 @@
   "changesets": {
     "errorTitle": "Fehler",
     "errorSubtitle": "Changesets konnten nicht abgerufen werden",
-    "noChangesets": "Keine Changesets in diesem Branch gefunden.",
+    "noChangesets": "Keine Changesets in diesem Branch gefunden. Die Commits könnten gelöscht worden sein.",
     "branchSelectorLabel": "Branches",
     "collapseDiffs": "Auf-/Zuklappen"
   },
@@ -99,7 +99,7 @@
     "file-tree": {
       "name": "Name",
       "length": "Größe",
-      "lastModified": "Zuletzt bearbeitet",
+      "commitDate": "Commitdatum",
       "description": "Beschreibung",
       "branch": "Branch",
       "notYetComputed": "Noch nicht berechnet; Der Wert wird in Kürze aktualisiert",
@@ -111,7 +111,7 @@
       "downloadButton": "Download",
       "path": "Pfad",
       "branch": "Branch",
-      "lastModified": "Zuletzt bearbeitet",
+      "commitDate": "Commitdatum",
       "description": "Beschreibung",
       "size": "Größe"
     },
