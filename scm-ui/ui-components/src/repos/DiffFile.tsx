@@ -3,11 +3,13 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 // @ts-ignore
-import { Change, Diff as DiffComponent, getChangeKey, Hunk } from "react-diff-view";
+import { Diff as DiffComponent, getChangeKey, Hunk } from "react-diff-view";
 import { Button, ButtonGroup } from "../buttons";
 import Tag from "../Tag";
 import Icon from "../Icon";
-import { File, Hunk as HunkType, DiffObjectProps } from "./DiffTypes";
+import { ChangeEvent, Change, File, Hunk as HunkType, DiffObjectProps } from "./DiffTypes";
+
+const EMPTY_ANNOTATION_FACTORY = {};
 
 type Props = DiffObjectProps &
   WithTranslation & {
@@ -56,6 +58,10 @@ const ChangeTypeTag = styled(Tag)`
 `;
 
 const ModifiedDiffComponent = styled(DiffComponent)`
+  /* align line numbers */
+  & .diff-gutter {
+    text-align: right;
+  }
   /* column sizing */
   > colgroup .diff-gutter-col {
     width: 3.25rem;
@@ -136,6 +142,8 @@ class DiffFile extends React.Component<Props, State> {
         hunk,
         file
       });
+    } else {
+      return EMPTY_ANNOTATION_FACTORY;
     }
   };
 
@@ -152,14 +160,12 @@ class DiffFile extends React.Component<Props, State> {
     }
   };
 
-  createCustomEvents = (hunk: HunkType) => {
+  createGutterEvents = (hunk: HunkType) => {
     const { onClick } = this.props;
     if (onClick) {
       return {
-        gutter: {
-          onClick: (change: Change) => {
-            this.handleClickEvent(change, hunk);
-          }
+        onClick: (event: ChangeEvent) => {
+          this.handleClickEvent(event.change, hunk);
         }
       };
     }
@@ -172,7 +178,7 @@ class DiffFile extends React.Component<Props, State> {
         hunk={hunk}
         header={this.createHunkHeader(hunk, i)}
         widgets={this.collectHunkAnnotations(hunk)}
-        customEvents={this.createCustomEvents(hunk)}
+        gutterEvents={this.createGutterEvents(hunk)}
       />
     );
   };
@@ -228,8 +234,8 @@ class DiffFile extends React.Component<Props, State> {
       body = (
         <div className="panel-block is-paddingless">
           {fileAnnotations}
-          <ModifiedDiffComponent className={viewType} viewType={viewType}>
-            {file.hunks.map(this.renderHunk)}
+          <ModifiedDiffComponent className={viewType} viewType={viewType} hunks={file.hunks} diffType={file.type}>
+            {(hunks: HunkType[]) => hunks.map(this.renderHunk)}
           </ModifiedDiffComponent>
         </div>
       );

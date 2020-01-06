@@ -9,12 +9,13 @@ import Diff from "./Diff";
 import { DiffObjectProps, File } from "./DiffTypes";
 import { NotFoundError } from "../errors";
 import { Notification } from "../index";
-import {withTranslation, WithTranslation} from "react-i18next";
+import { withTranslation, WithTranslation } from "react-i18next";
 
-type Props = WithTranslation & DiffObjectProps & {
-  url: string;
-  defaultCollapse?: boolean;
-};
+type Props = WithTranslation &
+  DiffObjectProps & {
+    url: string;
+    defaultCollapse?: boolean;
+  };
 
 type State = {
   diff?: File[];

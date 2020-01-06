@@ -40,6 +40,10 @@ export type Change = {
   type: ChangeType;
 };
 
+export type ChangeEvent = {
+  change: Change;
+};
+
 export type BaseContext = {
   hunk: Hunk;
   file: File;
