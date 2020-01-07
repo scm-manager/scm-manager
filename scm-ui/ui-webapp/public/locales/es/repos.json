@@ -30,8 +30,7 @@
       "navigationLabel": "Menú de repositorio",
       "informationNavLink": "Información",
       "branchesNavLink": "Ramas",
-      "historyNavLink": "Commits",
-      "sourcesNavLink": "Fuentes",
+      "sourcesNavLink": "Código",
       "settingsNavLink": "Ajustes",
       "generalNavLink": "General",
       "permissionsNavLink": "Permisos"
@@ -68,6 +67,11 @@
     "commits": "Commits",
     "sources": "Fuentes",
     "defaultTag": "Por defecto"
+  },
+  "code": {
+    "sources": "Sources",
+    "commits": "Commits",
+    "branchSelector": "Branches"
   },
   "changesets": {
     "errorTitle": "Error",

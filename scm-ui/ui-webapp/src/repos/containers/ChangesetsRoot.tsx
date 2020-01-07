@@ -15,10 +15,8 @@ import {
 
 type Props = WithTranslation & {
   repository: Repository;
-  baseUrl: string;
   selected: string;
-  baseUrlWithBranch: string;
-  baseUrlWithoutBranch: string;
+  baseUrl: string;
 
   // State props
   branches: Branch[];
@@ -66,9 +64,9 @@ class ChangesetsRoot extends React.Component<Props> {
   branchSelected = (branch?: Branch) => {
     let url;
     if (branch) {
-      url = `${this.props.baseUrlWithBranch}/${encodeURIComponent(branch.name)}/changesets/`;
+      url = `${this.props.baseUrl}/${encodeURIComponent(branch.name)}`;
     } else {
-      url = `${this.props.baseUrlWithoutBranch}/`;
+      url = `${this.props.baseUrl}/`;
     }
     this.props.history.push(url);
   };
@@ -99,7 +97,6 @@ class ChangesetsRoot extends React.Component<Props> {
 
     return (
       <div className="panel">
-        {this.renderBranchSelector()}
         <Route path={`${url}/:page?`} component={() => changesets} />
       </div>
     );
@@ -125,7 +122,7 @@ class ChangesetsRoot extends React.Component<Props> {
   };
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchBranches: (repo: Repository) => {
       dispatch(fetchBranches(repo));
@@ -151,8 +148,5 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 export default compose(
   withRouter,
   withTranslation("repos"),
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
+  connect(mapStateToProps, mapDispatchToProps)
 )(ChangesetsRoot);

@@ -93,7 +93,7 @@ class Changesets extends React.Component<Props> {
   };
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchChangesets: (repo: Repository, branch: Branch, page: number) => {
       dispatch(fetchChangesets(repo, branch, page));
@@ -118,11 +118,4 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   };
 };
 
-export default compose(
-  withTranslation("repos"),
-  withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(Changesets);
+export default compose(withTranslation("repos"), withRouter, connect(mapStateToProps, mapDispatchToProps))(Changesets);

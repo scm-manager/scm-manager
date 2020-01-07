@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-plugins",
-  "version": "2.0.0-11",
+  "version": "2.0.0-SNAPSHOT",
   "license": "BSD-3-Clause",
   "bin": {
     "ui-plugins": "./bin/ui-plugins.js"

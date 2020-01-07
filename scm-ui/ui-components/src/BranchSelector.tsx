@@ -6,7 +6,7 @@ import DropDown from "./forms/DropDown";
 
 type Props = {
   branches: Branch[];
-  selected: (branch?: Branch) => void;
+  selected: (branch: Branch) => void;
   selectedBranch?: string;
   label: string;
   disabled?: boolean;

@@ -13,7 +13,7 @@ import {
 } from "../../branches/modules/branches";
 import { compose } from "redux";
 import Content from "./Content";
-import {fetchSources, getSources, isDirectory} from "../modules/sources";
+import { fetchSources, getSources, isDirectory } from "../modules/sources";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -63,8 +63,6 @@ class Sources extends React.Component<Props, State> {
     if (prevProps.revision !== revision || prevProps.path !== path) {
       fetchSources(repository, this.decodeRevision(revision), path);
     }
-
-    this.redirectToDefaultBranch();
   }
 
   decodeRevision = (revision: string) => {
@@ -122,7 +120,6 @@ class Sources extends React.Component<Props, State> {
     if (currentFileIsDirectory) {
       return (
         <div className="panel">
-          {this.renderBranchSelector()}
           {this.renderBreadcrumb()}
           <FileTree repository={repository} revision={revision} path={path} baseUrl={baseUrl} />
         </div>
@@ -131,26 +128,6 @@ class Sources extends React.Component<Props, State> {
       return <Content repository={repository} revision={revision} path={path} />;
     }
   }
-
-  renderBranchSelector = () => {
-    const { branches, revision, t } = this.props;
-
-    if (branches) {
-      return (
-        <div className="panel-heading">
-          <BranchSelector
-            branches={branches}
-            selectedBranch={revision}
-            label={t("changesets.branchSelectorLabel")}
-            selected={(b: Branch) => {
-              this.branchSelected(b);
-            }}
-          />
-        </div>
-      );
-    }
-    return null;
-  };
 
   renderBreadcrumb = () => {
     const { revision, path, baseUrl, branches, sources, repository } = this.props;
@@ -163,9 +140,7 @@ class Sources extends React.Component<Props, State> {
         path={path}
         baseUrl={baseUrl}
         branch={selectedBranch}
-        defaultBranch={
-          branches && branches.filter(b => b.defaultBranch === true)[0]
-        }
+        defaultBranch={branches && branches.filter(b => b.defaultBranch === true)[0]}
         sources={sources}
       />
     );
@@ -207,11 +182,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default compose(
-  withTranslation("repos"),
-  withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(Sources);
+export default compose(withTranslation("repos"), withRouter, connect(mapStateToProps, mapDispatchToProps))(Sources);
