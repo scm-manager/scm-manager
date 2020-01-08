@@ -136,8 +136,8 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   const loading = isFetchBranchesPending(state, repository);
   const branches = getBranches(state, repository);
   const selectedView = decodeURIComponent(location.pathname.split("/")[5]);
-  const selectedBranch = decodeURIComponent(location.pathname.split("/")[6]);
-
+  const branchFromURL = decodeURIComponent(location.pathname.split("/")[6]);
+  const selectedBranch = branchFromURL && branchFromURL !== "undefined" ? branchFromURL : "";
   return {
     error,
     loading,

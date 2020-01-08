@@ -3,6 +3,7 @@ import { Route, withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import Changesets from "./Changesets";
+import { compose } from "redux";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -42,4 +43,4 @@ class ChangesetsRoot extends React.Component<Props> {
   }
 }
 
-export default withRouter(withTranslation("repos")(ChangesetsRoot));
+export default compose(withRouter, withTranslation("repos"))(ChangesetsRoot);

@@ -1,11 +1,11 @@
 import React from "react";
-import { Repository, File } from "@scm-manager/ui-types";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { File, Repository } from "@scm-manager/ui-types";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
-import { ExtensionPoint, binder } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { fetchSources, getFetchSourcesFailure, getSources, isFetchSourcesPending } from "../modules/sources";
 import { connect } from "react-redux";
-import { Loading, ErrorNotification } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import Notification from "@scm-manager/ui-components/src/Notification";
 import { WithTranslation, withTranslation } from "react-i18next";
 
