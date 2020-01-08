@@ -28,13 +28,13 @@ const CodeViewSwitcher: FC<Props> = ({ url }) => {
       <SmallButton
         label={t("code.commits")}
         icon="fa fa-exchange-alt"
-        color={url.includes("/code/changesets/") ? "link is-selected" : undefined}
+        color={url.includes("/code/changesets") ? "link is-selected" : undefined}
         link={createDestinationUrl("changesets")}
       />
       <SmallButton
         label={t("code.sources")}
         icon="fa fa-code"
-        color={url.includes("/code/sources/") ? "link is-selected" : undefined}
+        color={url.includes("/code/sources") ? "link is-selected" : undefined}
         link={createDestinationUrl("sources")}
       />
     </ButtonAddons>

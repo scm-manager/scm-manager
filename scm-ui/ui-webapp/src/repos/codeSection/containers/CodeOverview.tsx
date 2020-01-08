@@ -74,7 +74,7 @@ class CodeOverview extends React.Component<Props> {
     const { repository, baseUrl, branches, error, loading, t } = this.props;
     const url = baseUrl;
 
-    if (!branches || loading) {
+    if (loading) {
       return <Loading />;
     }
 

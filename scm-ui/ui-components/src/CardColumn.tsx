@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 type Props = {
   title: string;
-  description: string;
+  description?: string;
   avatar: ReactNode;
   contentRight?: ReactNode;
   footerLeft: ReactNode;

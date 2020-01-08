@@ -10,7 +10,7 @@ export function createChangesetLink(repository: Repository, changeset: Changeset
 }
 
 export function createSourcesLink(repository: Repository, changeset: Changeset) {
-  return `/repo/${repository.namespace}/${repository.name}/sources/${changeset.id}`;
+  return `/repo/${repository.namespace}/${repository.name}/code/sources/${changeset.id}`;
 }
 
 export function parseDescription(description?: string): Description {

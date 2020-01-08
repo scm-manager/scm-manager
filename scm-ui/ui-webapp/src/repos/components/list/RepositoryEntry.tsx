@@ -22,14 +22,14 @@ class RepositoryEntry extends React.Component<Props> {
 
   renderChangesetsLink = (repository: Repository, repositoryLink: string) => {
     if (repository._links["changesets"]) {
-      return <RepositoryEntryLink icon="exchange-alt" to={repositoryLink + "/changesets"} />;
+      return <RepositoryEntryLink icon="exchange-alt" to={repositoryLink + "/code/changesets"} />;
     }
     return null;
   };
 
   renderSourcesLink = (repository: Repository, repositoryLink: string) => {
     if (repository._links["sources"]) {
-      return <RepositoryEntryLink icon="code" to={repositoryLink + "/sources"} />;
+      return <RepositoryEntryLink icon="code" to={repositoryLink + "/code/sources"} />;
     }
     return null;
   };
