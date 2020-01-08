@@ -81,19 +81,19 @@ public class GitGcTask implements Runnable {
     {
       if (repository.isValid() && repository.isHealthy())
       {
-        logger.info("start git gc for repository {}", repository.getName());
+        logger.info("start git gc for repository {}", repository.getNamespaceAndName());
         Stopwatch sw = Stopwatch.createStarted();
         gc(repository);
-        logger.debug("gc of repository {} has finished after {}", repository.getName(), sw.stop());
+        logger.debug("gc of repository {} has finished after {}", repository.getNamespaceAndName(), sw.stop());
       } 
       else 
       {
-        logger.debug("skip non valid/healthy repository {}", repository.getName());
+        logger.debug("skip non valid/healthy repository {}", repository.getNamespaceAndName());
       }
     } 
     else 
     {
-      logger.trace("skip non git repository {}", repository.getName());
+      logger.trace("skip non git repository {}", repository.getNamespaceAndName());
     }
   }
 
