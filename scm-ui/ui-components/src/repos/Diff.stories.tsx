@@ -33,7 +33,7 @@ storiesOf("Diff", module)
     />
   ))
   .add("OnClick", () => {
-    const OnClickDemo = ({}) => {
+    const OnClickDemo = () => {
       const [changeId, setChangeId] = useState();
       useEffect(() => {
         const interval = setInterval(() => setChangeId(undefined), 2000);
