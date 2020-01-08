@@ -13,7 +13,7 @@
     "bulma": "^0.7.5",
     "bulma-popover": "^1.0.0",
     "bulma-tooltip": "^3.0.0",
-    "react-diff-view": "^1.8.1"
+    "react-diff-view": "^2.4.1"
   },
   "devDependencies": {
     "css-loader": "^3.2.0",
