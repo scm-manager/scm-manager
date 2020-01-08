@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <module>
-  
+
   <!-- subscribers -->
   <subscriber>
     <class>java.lang.Long</class>
@@ -47,28 +47,32 @@
 
   <extension>
     <class>java.lang.String</class>
+    <requires>scm-mail-plugin</requires>
+    <requires>scm-review-plugin</requires>
+    <description>ext01</description>
   </extension>
 
   <extension>
     <class>java.lang.Integer</class>
+    <description>ext02</description>
   </extension>
-  
+
   <!-- rest providers -->
-  
+
   <rest-provider>
     <class>java.lang.Integer</class>
   </rest-provider>
-  
+
   <rest-provider>
     <class>java.lang.Long</class>
   </rest-provider>
-  
+
   <!-- jax-rs resources -->
-  
+
   <rest-resource>
     <class>java.lang.Float</class>
   </rest-resource>
-  
+
   <rest-resource>
     <class>java.lang.Double</class>
   </rest-resource>
