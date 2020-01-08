@@ -145,4 +145,27 @@ index 889cc49..d5a4811 100644
    }
  
    @Test
+diff --git a/Main.java b/Main.java
+index e77e6da..f183b7c 100644
+--- a/Main.java
++++ b/Main.java
+@@ -1,9 +1,18 @@
++import java.io.PrintStream;
+ import java.util.Arrays;
+ 
+ class Main {
++    private static final PrintStream OUT = System.out;
++
+     public static void main(String[] args) {
++<<<<<<< HEAD
+         System.out.println("Expect nothing more to happen.");
+         System.out.println("The command line parameters are:");
+         Arrays.stream(args).map(arg -> "- " + arg).forEach(System.out::println);
++=======
++        OUT.println("Expect nothing more to happen.");
++        OUT.println("Parameters:");
++        Arrays.stream(args).map(arg -> "- " + arg).forEach(OUT::println);
++>>>>>>> feature/use_constant
+     }
+ }
 `;
