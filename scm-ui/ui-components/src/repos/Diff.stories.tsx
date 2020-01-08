@@ -4,6 +4,7 @@ import Diff from "./Diff";
 // @ts-ignore
 import parser from "gitdiff-parser";
 import simpleDiff from "../__resources__/Diff.simple";
+import hunksDiff from "../__resources__/Diff.hunks";
 import Button from "../buttons/Button";
 import { DiffEventContext } from "./DiffTypes";
 import Toast from "../toast/Toast";
@@ -47,4 +48,8 @@ storiesOf("Diff", module)
       );
     };
     return <OnClickDemo />;
+  })
+  .add("Hunks", () => {
+    const hunkDiffFiles = parser.parse(hunksDiff);
+    return <Diff diff={hunkDiffFiles} />;
   });

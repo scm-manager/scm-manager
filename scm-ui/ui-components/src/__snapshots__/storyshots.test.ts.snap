@@ -717,6 +717,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -1283,6 +1295,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -1456,6 +1480,20 @@ Array [
               onMouseLeave={[Function]}
             >
                 url: string;
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
             </td>
           </tr>
         </tbody>
@@ -2112,6 +2150,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -2551,6 +2601,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -2989,6 +3051,18 @@ Array [
           />
           <col />
         </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -3484,6 +3558,20 @@ Array [
           </tr>
         </tbody>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -3680,6 +3768,20 @@ Array [
               onMouseLeave={[Function]}
             >
                   });
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
             </td>
           </tr>
         </tbody>
@@ -4016,6 +4118,18 @@ Array [
           />
           <col />
         </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -4587,6 +4701,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -4760,6 +4886,20 @@ Array [
               onMouseLeave={[Function]}
             >
                 url: string;
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
             </td>
           </tr>
         </tbody>
@@ -5420,6 +5560,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -5862,6 +6014,18 @@ Array [
           />
           <col />
         </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -6306,6 +6470,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -6800,6 +6976,20 @@ Array [
           </tr>
         </tbody>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -6996,6 +7186,20 @@ Array [
               onMouseLeave={[Function]}
             >
                   });
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
             </td>
           </tr>
         </tbody>
@@ -7341,6 +7545,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -7919,6 +8135,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -8092,6 +8320,20 @@ Array [
               onMouseLeave={[Function]}
             >
                 url: string;
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
             </td>
           </tr>
         </tbody>
@@ -8760,6 +9002,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -9211,6 +9465,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -9661,6 +9927,18 @@ Array [
           />
           <col />
         </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -10156,6 +10434,20 @@ Array [
           </tr>
         </tbody>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -10352,6 +10644,20 @@ Array [
               onMouseLeave={[Function]}
             >
                   });
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
             </td>
           </tr>
         </tbody>
@@ -10607,6 +10913,842 @@ Array [
 ]
 `;
 
+exports[`Storyshots Diff Hunks 1`] = `
+<div
+  className="sc-iwsKbI czQDxz panel is-size-6"
+>
+  <div
+    className="panel-heading"
+  >
+    <div
+      className="sc-gZMcBi hiXlnL level"
+    >
+      <div
+        className="sc-gqjmRU jMyrLy level-left is-flex has-cursor-pointer"
+        onClick={[Function]}
+        title="src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java"
+      >
+        <i
+          className="fas fa-angle-down has-text-inherit"
+        />
+        <span
+          className="sc-VigVT kUVxiT is-ellipsis-overflow is-size-6"
+        >
+          src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java
+        </span>
+        <span
+          className="tag is-info is-outlined sc-jzJRlG fdoJSr is-rounded has-text-weight-normal"
+        >
+          modify
+        </span>
+      </div>
+      <div
+        className="sc-jTzLTM ljPywG level-right is-flex"
+      >
+        <div
+          className="field is-grouped"
+        >
+          <div
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-columns has-text-inherit"
+                />
+              </span>
+              <span>
+                diff.sideBySide
+                 
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="panel-block is-paddingless"
+  >
+    <table
+      className="diff diff-unified sc-cSHVUG cHkPoJ unified"
+      onMouseDown={[Function]}
+    >
+      <colgroup>
+        <col
+          className="diff-gutter-col"
+        />
+        <col
+          className="diff-gutter-col"
+        />
+        <col />
+      </colgroup>
+      <tbody
+        className="diff-decoration"
+      >
+        <tr>
+          <td
+            className="diff-decoration-content"
+            colSpan={3}
+          >
+            <span />
+          </td>
+        </tr>
+      </tbody>
+      <tbody
+        className="diff-hunk"
+      >
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            25
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            25
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            import java.util.Set;
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            26
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            26
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            import java.util.stream.Collectors;
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            27
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            27
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+             
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          />
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            28
+          </td>
+          <td
+            className="diff-code diff-code-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            import static com.cloudogu.scm.review.pullrequest.service.PullRequestApprovalEvent.ApprovalCause.APPROVAL_REMOVED;
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          />
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            29
+          </td>
+          <td
+            className="diff-code diff-code-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            import static com.cloudogu.scm.review.pullrequest.service.PullRequestApprovalEvent.ApprovalCause.APPROVED;
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            28
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            30
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            import static com.cloudogu.scm.review.pullrequest.service.PullRequestStatus.MERGED;
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            29
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            31
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            import static com.cloudogu.scm.review.pullrequest.service.PullRequestStatus.OPEN;
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            30
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            32
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            import static com.cloudogu.scm.review.pullrequest.service.PullRequestStatus.REJECTED;
+          </td>
+        </tr>
+      </tbody>
+      <tbody
+        className="diff-decoration"
+      >
+        <tr>
+          <td
+            className="diff-decoration-content"
+            colSpan={3}
+          >
+            <hr
+              className="sc-fjdhpX fvFGko"
+            />
+          </td>
+        </tr>
+      </tbody>
+      <tbody
+        className="diff-hunk"
+      >
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            200
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            202
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+                PullRequest pullRequest = getPullRequestFromStore(repository, pullRequestId);
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            201
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            203
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+                pullRequest.addApprover(user.getId());
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            202
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            204
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+                getStore(repository).update(pullRequest);
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          />
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            205
+          </td>
+          <td
+            className="diff-code diff-code-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+                eventBus.post(new PullRequestApprovalEvent(repository, pullRequest, APPROVED));
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            203
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            206
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+              }
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            204
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            207
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+             
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            205
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            208
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+              @Override
+          </td>
+        </tr>
+      </tbody>
+      <tbody
+        className="diff-decoration"
+      >
+        <tr>
+          <td
+            className="diff-decoration-content"
+            colSpan={3}
+          >
+            <hr
+              className="sc-fjdhpX fvFGko"
+            />
+          </td>
+        </tr>
+      </tbody>
+      <tbody
+        className="diff-hunk"
+      >
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            211
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            214
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+                approver.stream()
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            212
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            215
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+                  .filter(recipient -&gt; user.getId().equals(recipient))
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            213
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            216
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+                  .findFirst()
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-delete"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            214
+          </td>
+          <td
+            className="diff-gutter diff-gutter-delete"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          />
+          <td
+            className="diff-code diff-code-delete"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+                  .ifPresent(pullRequest::removeApprover);
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-delete"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            215
+          </td>
+          <td
+            className="diff-gutter diff-gutter-delete"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          />
+          <td
+            className="diff-code diff-code-delete"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+                getStore(repository).update(pullRequest);
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          />
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            217
+          </td>
+          <td
+            className="diff-code diff-code-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+                  .ifPresent(
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          />
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            218
+          </td>
+          <td
+            className="diff-code diff-code-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+                    approval -&gt; {
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          />
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            219
+          </td>
+          <td
+            className="diff-code diff-code-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+                      pullRequest.removeApprover(approval);
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          />
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            220
+          </td>
+          <td
+            className="diff-code diff-code-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+                      getStore(repository).update(pullRequest);
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          />
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            221
+          </td>
+          <td
+            className="diff-code diff-code-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+                      eventBus.post(new PullRequestApprovalEvent(repository, pullRequest, APPROVAL_REMOVED));
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          />
+          <td
+            className="diff-gutter diff-gutter-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            222
+          </td>
+          <td
+            className="diff-code diff-code-insert"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+                    });
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            216
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            223
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+              }
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            217
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            224
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+             
+          </td>
+        </tr>
+        <tr
+          className="diff-line"
+        >
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            218
+          </td>
+          <td
+            className="diff-gutter diff-gutter-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+            225
+          </td>
+          <td
+            className="diff-code diff-code-normal"
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+          >
+              @Override
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
 exports[`Storyshots Diff Line Annotation 1`] = `
 Array [
   <div
@@ -10684,6 +11826,18 @@ Array [
           />
           <col />
         </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -11263,6 +12417,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -11448,6 +12614,20 @@ Array [
               onMouseLeave={[Function]}
             >
                 url: string;
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
             </td>
           </tr>
         </tbody>
@@ -12104,6 +13284,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -12543,6 +13735,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -12981,6 +14185,18 @@ Array [
           />
           <col />
         </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -13476,6 +14692,20 @@ Array [
           </tr>
         </tbody>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -13672,6 +14902,20 @@ Array [
               onMouseLeave={[Function]}
             >
                   });
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
             </td>
           </tr>
         </tbody>
@@ -14005,6 +15249,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -14611,6 +15867,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -14798,6 +16066,20 @@ Array [
               onMouseLeave={[Function]}
             >
                 url: string;
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
             </td>
           </tr>
         </tbody>
@@ -15502,6 +16784,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -15971,6 +17265,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -16439,6 +17745,18 @@ Array [
           />
           <col />
         </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -16974,6 +18292,20 @@ Array [
           </tr>
         </tbody>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -17186,6 +18518,20 @@ Array [
               onMouseLeave={[Function]}
             >
                   });
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
             </td>
           </tr>
         </tbody>
@@ -17540,6 +18886,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={4}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -18199,6 +19557,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={4}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -18415,6 +19785,20 @@ Array [
               onMouseLeave={[Function]}
             >
                 url: string;
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={4}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
             </td>
           </tr>
         </tbody>
@@ -19118,6 +20502,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={4}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -19609,6 +21005,18 @@ Array [
           <col />
         </colgroup>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={4}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -20099,6 +21507,18 @@ Array [
           />
           <col />
         </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={4}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -20704,6 +22124,20 @@ Array [
           </tr>
         </tbody>
         <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={4}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
           className="diff-hunk"
         >
           <tr
@@ -20928,6 +22362,20 @@ Array [
               onMouseLeave={[Function]}
             >
                   });
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={4}
+            >
+              <hr
+                className="sc-fjdhpX fvFGko"
+              />
             </td>
           </tr>
         </tbody>
