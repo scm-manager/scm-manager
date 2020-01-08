@@ -75,4 +75,5 @@ export type DiffObjectProps = {
   fileControlFactory?: FileControlFactory;
   fileAnnotationFactory?: FileAnnotationFactory;
   annotationFactory?: AnnotationFactory;
+  markConflicts?: boolean;
 };

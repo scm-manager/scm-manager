@@ -86,7 +86,8 @@ const ModifiedDiffComponent = styled(DiffComponent)`
 
 class DiffFile extends React.Component<Props, State> {
   static defaultProps: Partial<Props> = {
-    defaultCollapse: false
+    defaultCollapse: false,
+    markConflicts: true
   };
 
   constructor(props: Props) {
@@ -173,17 +174,8 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   renderHunk = (hunk: HunkType, i: number) => {
-    let inConflict = false;
-    for (i = 0; i < hunk.changes.length; ++i) {
-      if (hunk.changes[i].content === "<<<<<<< HEAD") {
-        inConflict = true;
-      }
-      if (inConflict) {
-        hunk.changes[i].type = "conflict";
-      }
-      if (hunk.changes[i].content.startsWith(">>>>>>>")) {
-        inConflict = false;
-      }
+    if (this.props.markConflicts) {
+      this.markConflicts(hunk);
     }
     return [
       <Decoration key={"decoration-" + hunk.content}>{this.createHunkHeader(hunk, i)}</Decoration>,
@@ -194,6 +186,21 @@ class DiffFile extends React.Component<Props, State> {
         gutterEvents={this.createGutterEvents(hunk)}
       />
     ];
+  };
+
+  markConflicts = (hunk: HunkType) => {
+    let inConflict = false;
+    for (let i = 0; i < hunk.changes.length; ++i) {
+      if (hunk.changes[i].content === "<<<<<<< HEAD") {
+        inConflict = true;
+      }
+      if (inConflict) {
+        hunk.changes[i].type = "conflict";
+      }
+      if (hunk.changes[i].content.startsWith(">>>>>>>")) {
+        inConflict = false;
+      }
+    }
   };
 
   renderFileTitle = (file: File) => {
