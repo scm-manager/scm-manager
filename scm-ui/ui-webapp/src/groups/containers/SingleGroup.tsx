@@ -94,7 +94,7 @@ class SingleGroup extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const name = ownProps.match.params.name;
   const group = getGroupByName(state, name);
   const loading = isFetchGroupPending(state, name);
@@ -110,7 +110,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchGroupByName: (link: string, name: string) => {
       dispatch(fetchGroupByName(link, name));
@@ -118,7 +118,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("groups")(SingleGroup));
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("groups")(SingleGroup));

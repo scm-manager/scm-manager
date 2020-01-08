@@ -208,7 +208,7 @@ class SinglePermission extends React.Component<Props, State> {
   };
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const permission = ownProps.permission;
   const loading = isModifyPermissionPending(state, ownProps.namespace, ownProps.repoName, permission);
   const deleteLoading = isDeletePermissionPending(state, ownProps.namespace, ownProps.repoName, permission);
@@ -219,7 +219,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     modifyPermission: (permission: Permission, namespace: string, repoName: string) => {
       dispatch(modifyPermission(permission, namespace, repoName));
@@ -229,7 +229,4 @@ const mapDispatchToProps = dispatch => {
     }
   };
 };
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("repos")(SinglePermission));
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("repos")(SinglePermission));

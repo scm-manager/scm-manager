@@ -78,14 +78,10 @@ class Profile extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     me: getMe(state)
   };
 };
 
-export default compose(
-  withTranslation("commons"),
-  connect(mapStateToProps),
-  withRouter
-)(Profile);
+export default compose(withTranslation("commons"), connect(mapStateToProps), withRouter)(Profile);

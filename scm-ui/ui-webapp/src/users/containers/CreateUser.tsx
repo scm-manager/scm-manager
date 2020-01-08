@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { User } from "@scm-manager/ui-types";
@@ -46,7 +47,7 @@ class CreateUser extends React.Component<Props> {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     addUser: (link: string, user: User, callback?: () => void) => {
       dispatch(createUser(link, user, callback));
@@ -57,7 +58,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any) => {
   const loading = isCreateUserPending(state);
   const error = getCreateUserFailure(state);
   const usersLink = getUsersLink(state);
@@ -68,7 +69,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("users")(CreateUser));
+export default compose(connect(mapStateToProps, mapDispatchToProps), withTranslation("users"))(CreateUser);

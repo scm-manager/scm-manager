@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Main from "./Main";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";
 import { fetchMe, getFetchMeFailure, getMe, isAuthenticated, isFetchMePending } from "../modules/auth";
@@ -61,7 +62,7 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const authenticated = isAuthenticated(state);
   const me = getMe(state);
   const loading = isFetchMePending(state) || isFetchIndexResourcesPending(state);
@@ -78,9 +79,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(withTranslation("commons")(App))
-);
+export default compose(withRouter, connect(mapStateToProps, mapDispatchToProps), withTranslation("commons"))(App);

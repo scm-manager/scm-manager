@@ -8,8 +8,8 @@ import * as validator from "./repositoryValidation";
 type Props = WithTranslation & {
   submitForm: (p: Repository) => void;
   repository?: Repository;
-  repositoryTypes: RepositoryType[];
-  namespaceStrategy: string;
+  repositoryTypes?: RepositoryType[];
+  namespaceStrategy?: string;
   loading?: boolean;
 };
 
@@ -127,13 +127,16 @@ class RepositoryForm extends React.Component<Props, State> {
     );
   }
 
-  createSelectOptions(repositoryTypes: RepositoryType[]) {
-    return repositoryTypes.map(repositoryType => {
-      return {
-        label: repositoryType.displayName,
-        value: repositoryType.name
-      };
-    });
+  createSelectOptions(repositoryTypes?: RepositoryType[]) {
+    if (repositoryTypes) {
+      return repositoryTypes.map(repositoryType => {
+        return {
+          label: repositoryType.displayName,
+          value: repositoryType.name
+        };
+      });
+    }
+    return [];
   }
 
   renderNamespaceField = () => {

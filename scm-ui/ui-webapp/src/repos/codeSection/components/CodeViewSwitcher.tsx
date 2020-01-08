@@ -20,7 +20,7 @@ const CodeViewSwitcher: FC<Props> = ({ url }) => {
   const createDestinationUrl = (destination: string) => {
     let splittedUrl = url.split("/");
     splittedUrl[5] = destination;
-    return splittedUrl.join("/")
+    return splittedUrl.join("/");
   };
 
   return (

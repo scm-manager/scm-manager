@@ -15,7 +15,7 @@ class DropDown extends React.Component<Props> {
     const { options, optionValues, preselectedOption, className, disabled } = this.props;
 
     if (preselectedOption && !options.includes(preselectedOption)) {
-      options.unshift(preselectedOption)
+      options.unshift(preselectedOption);
     }
 
     return (

@@ -7,6 +7,7 @@ import { User } from "@scm-manager/ui-types";
 import { modifyUser, isModifyUserPending, getModifyUserFailure, modifyUserReset } from "../modules/users";
 import { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
+import { compose } from "redux";
 
 type Props = {
   loading: boolean;
@@ -47,7 +48,7 @@ class EditUser extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const loading = isModifyUserPending(state, ownProps.user.name);
   const error = getModifyUserFailure(state, ownProps.user.name);
   return {
@@ -56,7 +57,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     modifyUser: (user: User, callback?: () => void) => {
       dispatch(modifyUser(user, callback));
@@ -67,7 +68,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(EditUser));
+export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter)(EditUser);

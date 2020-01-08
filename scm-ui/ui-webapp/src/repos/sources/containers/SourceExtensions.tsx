@@ -85,9 +85,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(withTranslation("repos")(SourceExtensions))
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withTranslation("repos")(SourceExtensions)));

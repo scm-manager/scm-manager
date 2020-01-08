@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { RepositoryRole, PagedCollection } from "@scm-manager/ui-types";
@@ -16,23 +16,24 @@ import {
 import PermissionRoleTable from "../components/PermissionRoleTable";
 import { getRepositoryRolesLink } from "../../../modules/indexResource";
 
-type Props = WithTranslation & {
-  baseUrl: string;
-  roles: RepositoryRole[];
-  loading: boolean;
-  error: Error;
-  canAddRoles: boolean;
-  list: PagedCollection;
-  page: number;
-  rolesLink: string;
+type Props = RouteComponentProps &
+  WithTranslation & {
+    baseUrl: string;
+    roles: RepositoryRole[];
+    loading: boolean;
+    error: Error;
+    canAddRoles: boolean;
+    list: PagedCollection;
+    page: number;
+    rolesLink: string;
 
-  // context objects
-  history: History;
-  location: any;
+    // context objects
+    history: History;
+    location: any;
 
-  // dispatch functions
-  fetchRolesByPage: (link: string, page: number) => void;
-};
+    // dispatch functions
+    fetchRolesByPage: (link: string, page: number) => void;
+  };
 
 class RepositoryRoles extends React.Component<Props> {
   componentDidMount() {
@@ -89,7 +90,7 @@ class RepositoryRoles extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const { match } = ownProps;
   const roles = getRolesFromState(state);
   const loading = isFetchRolesPending(state);
@@ -110,7 +111,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchRolesByPage: (link: string, page: number) => {
       dispatch(fetchRolesByPage(link, page));
@@ -118,9 +119,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(withTranslation("admin")(RepositoryRoles))
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withTranslation("admin")(RepositoryRoles)));

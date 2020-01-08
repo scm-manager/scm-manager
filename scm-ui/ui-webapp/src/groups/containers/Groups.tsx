@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
+import { RouteComponentProps } from "react-router-dom";
 import { History } from "history";
 import { Group, PagedCollection } from "@scm-manager/ui-types";
 import {
@@ -23,22 +24,23 @@ import {
 } from "../modules/groups";
 import { GroupTable } from "./../components/table";
 
-type Props = WithTranslation & {
-  groups: Group[];
-  loading: boolean;
-  error: Error;
-  canAddGroups: boolean;
-  list: PagedCollection;
-  page: number;
-  groupLink: string;
+type Props = RouteComponentProps &
+  WithTranslation & {
+    groups: Group[];
+    loading: boolean;
+    error: Error;
+    canAddGroups: boolean;
+    list: PagedCollection;
+    page: number;
+    groupLink: string;
 
-  // context objects
-  history: History;
-  location: any;
+    // context objects
+    history: History;
+    location: any;
 
-  // dispatch functions
-  fetchGroupsByPage: (link: string, page: number, filter?: string) => void;
-};
+    // dispatch functions
+    fetchGroupsByPage: (link: string, page: number, filter?: string) => void;
+  };
 
 class Groups extends React.Component<Props> {
   componentDidMount() {
@@ -100,7 +102,7 @@ class Groups extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const { match } = ownProps;
   const groups = getGroupsFromState(state);
   const loading = isFetchGroupsPending(state);
@@ -121,7 +123,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchGroupsByPage: (link: string, page: number, filter?: string) => {
       dispatch(fetchGroupsByPage(link, page, filter));
@@ -129,7 +131,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("groups")(Groups));
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("groups")(Groups));

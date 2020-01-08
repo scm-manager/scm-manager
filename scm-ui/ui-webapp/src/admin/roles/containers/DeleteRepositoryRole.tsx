@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
@@ -72,7 +73,7 @@ class DeleteRepositoryRole extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const loading = isDeleteRolePending(state, ownProps.role.name);
   const error = getDeleteRoleFailure(state, ownProps.role.name);
   return {
@@ -81,7 +82,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     deleteRole: (role: RepositoryRole, callback?: () => void) => {
       dispatch(deleteRole(role, callback));
@@ -89,7 +90,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(withTranslation("admin")(DeleteRepositoryRole)));
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withRouter,
+  withTranslation("admin")
+)(DeleteRepositoryRole);

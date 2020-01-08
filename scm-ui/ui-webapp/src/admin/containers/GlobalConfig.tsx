@@ -22,6 +22,7 @@ import {
   getNamespaceStrategies,
   isFetchNamespaceStrategiesPending
 } from "../modules/namespaceStrategies";
+import { compose } from "redux";
 
 type Props = WithTranslation & {
   loading: boolean;
@@ -137,7 +138,7 @@ class GlobalConfig extends React.Component<Props, State> {
   };
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchConfig: (link: string) => {
       dispatch(fetchConfig(link));
@@ -154,7 +155,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const loading =
     isFetchConfigPending(state) || isModifyConfigPending(state) || isFetchNamespaceStrategiesPending(state);
   const error =
@@ -175,7 +176,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("config")(GlobalConfig));
+export default compose(connect(mapStateToProps, mapDispatchToProps), withTranslation("config"))(GlobalConfig);

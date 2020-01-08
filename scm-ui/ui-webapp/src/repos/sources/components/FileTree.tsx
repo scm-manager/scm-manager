@@ -174,10 +174,4 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   };
 };
 
-export default compose(
-  withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(withTranslation("repos")(FileTree));
+export default compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(withTranslation("repos")(FileTree));

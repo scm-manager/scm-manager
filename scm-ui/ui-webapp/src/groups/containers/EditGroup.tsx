@@ -4,11 +4,12 @@ import GroupForm from "../components/GroupForm";
 import { modifyGroup, getModifyGroupFailure, isModifyGroupPending, modifyGroupReset } from "../modules/groups";
 import { History } from "history";
 import { withRouter } from "react-router-dom";
-import { Group } from "@scm-manager/ui-types";
+import { Group, DisplayedUser } from "@scm-manager/ui-types";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import { getUserAutoCompleteLink } from "../../modules/indexResource";
 import DeleteGroup from "./DeleteGroup";
 import { apiClient } from "@scm-manager/ui-components/src";
+import { compose } from "redux";
 
 type Props = {
   group: Group;
@@ -41,7 +42,7 @@ class EditGroup extends React.Component<Props> {
       .get(url + inputValue)
       .then(response => response.json())
       .then(json => {
-        return json.map(element => {
+        return json.map((element: DisplayedUser) => {
           return {
             value: element,
             label: `${element.displayName} (${element.id})`
@@ -69,7 +70,7 @@ class EditGroup extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const loading = isModifyGroupPending(state, ownProps.group.name);
   const error = getModifyGroupFailure(state, ownProps.group.name);
   const autocompleteLink = getUserAutoCompleteLink(state);
@@ -80,7 +81,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     modifyGroup: (group: Group, callback?: () => void) => {
       dispatch(modifyGroup(group, callback));
@@ -91,7 +92,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(EditGroup));
+export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter)(EditGroup);

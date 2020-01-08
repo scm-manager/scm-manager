@@ -35,7 +35,7 @@ class Logout extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const authenticated = isAuthenticated(state);
   const loading = isLogoutPending(state);
   const redirecting = isRedirecting(state);
@@ -50,13 +50,10 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     logout: (link: string) => dispatch(logout(link))
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("commons")(Logout));
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("commons")(Logout));

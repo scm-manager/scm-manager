@@ -151,7 +151,7 @@ class SetPermissions extends React.Component<Props, State> {
   };
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const availablePermissionLink = getLink(state, "permissions");
   return {
     availablePermissionLink

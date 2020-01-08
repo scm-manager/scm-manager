@@ -147,7 +147,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export default compose(
-  connect(mapStateToProps),
-  withTranslation("admin")
-)(Admin);
+export default compose(connect(mapStateToProps), withTranslation("admin"))(Admin);

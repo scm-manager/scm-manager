@@ -62,7 +62,7 @@ class Login extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const authenticated = isAuthenticated(state);
   const loading = isLoginPending(state);
   const error = getLoginFailure(state);
@@ -77,16 +77,10 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     login: (loginLink: string, username: string, password: string) => dispatch(login(loginLink, username, password))
   };
 };
 
-export default compose(
-  withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(Login);
+export default compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(Login);

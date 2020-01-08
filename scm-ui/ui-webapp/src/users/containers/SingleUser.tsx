@@ -95,7 +95,7 @@ class SingleUser extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const name = ownProps.match.params.name;
   const user = getUserByName(state, name);
   const loading = isFetchUserPending(state, name);
@@ -110,7 +110,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchUserByName: (link: string, name: string) => {
       dispatch(fetchUserByName(link, name));
@@ -118,7 +118,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("users")(SingleUser));
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("users")(SingleUser));

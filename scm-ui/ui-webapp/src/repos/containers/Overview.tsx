@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { RepositoryCollection } from "@scm-manager/ui-types";
@@ -23,7 +23,7 @@ import {
 } from "../modules/repos";
 import RepositoryList from "../components/list";
 
-type Props = WithTranslation & {
+type Props = WithTranslation & RouteComponentProps & {
   loading: boolean;
   error: Error;
   showCreateButton: boolean;
@@ -103,7 +103,7 @@ class Overview extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const { match } = ownProps;
   const collection = getRepositoryCollection(state);
   const loading = isFetchReposPending(state);
@@ -121,14 +121,11 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchReposByPage: (link: string, page: number, filter?: string) => {
       dispatch(fetchReposByPage(link, page, filter));
     }
   };
 };
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("repos")(withRouter(Overview)));
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("repos")(withRouter(Overview)));

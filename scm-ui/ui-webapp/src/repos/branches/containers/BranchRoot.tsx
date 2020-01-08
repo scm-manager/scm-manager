@@ -1,6 +1,7 @@
 import React from "react";
 import BranchView from "../components/BranchView";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { Redirect, Route, Switch, withRouter } from "react-router-dom";
 import { Repository, Branch } from "@scm-manager/ui-types";
 import { fetchBranch, getBranch, getFetchBranchFailure, isFetchBranchPending } from "../modules/branches";
@@ -28,7 +29,6 @@ type Props = {
 class BranchRoot extends React.Component<Props> {
   componentDidMount() {
     const { fetchBranch, repository, branchName } = this.props;
-
     fetchBranch(repository, branchName);
   }
 
@@ -96,9 +96,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(BranchRoot)
-);
+export default compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(BranchRoot);

@@ -88,14 +88,16 @@ class FileTreeLeaf extends React.Component<Props> {
   render() {
     const { file } = this.props;
 
-    const renderFileSize = (file: File) => <FileSize bytes={file.length} />;
+    const renderFileSize = (file: File) => <FileSize bytes={file?.length ? file.length : 0} />;
     const renderCommitDate = (file: File) => <DateFromNow date={file.commitDate} />;
 
     return (
       <tr>
         <td>{this.createFileIcon(file)}</td>
         <MinWidthTd className="is-word-break">{this.createFileName(file)}</MinWidthTd>
-        <NoWrapTd className="is-hidden-mobile">{file.directory ? "" : this.contentIfPresent(file, "length", renderFileSize)}</NoWrapTd>
+        <NoWrapTd className="is-hidden-mobile">
+          {file.directory ? "" : this.contentIfPresent(file, "length", renderFileSize)}
+        </NoWrapTd>
         <td className="is-hidden-mobile">{this.contentIfPresent(file, "commitDate", renderCommitDate)}</td>
         <MinWidthTd className={classNames("is-word-break", "is-hidden-touch")}>
           {this.contentIfPresent(file, "description", file => file.description)}

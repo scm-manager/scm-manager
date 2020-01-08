@@ -76,7 +76,7 @@ class Create extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const repositoryTypes = getRepositoryTypes(state);
   const namespaceStrategies = getNamespaceStrategies(state);
   const pageLoading = isFetchRepositoryTypesPending(state) || isFetchNamespaceStrategiesPending(state);
@@ -94,7 +94,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchRepositoryTypesIfNeeded: () => {
       dispatch(fetchRepositoryTypesIfNeeded());
@@ -111,7 +111,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("repos")(Create));
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("repos")(Create));
