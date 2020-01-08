@@ -4,7 +4,7 @@ import { Route, RouteComponentProps, withRouter } from "react-router-dom";
 import Sources from "../../sources/containers/Sources";
 import ChangesetsRoot from "../../containers/ChangesetsRoot";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { BranchSelector, Level } from "@scm-manager/ui-components";
+import { BranchSelector, ErrorPage, Level, Loading } from "@scm-manager/ui-components";
 import CodeViewSwitcher from "../components/CodeViewSwitcher";
 import { compose } from "redux";
 import { WithTranslation, withTranslation } from "react-i18next";
@@ -23,8 +23,8 @@ type Props = RouteComponentProps &
 
     // State props
     branches: Branch[];
-    loading: boolean;
     error: Error;
+    loading: boolean;
     selectedView: string;
     selectedBranch: string;
 
@@ -50,7 +50,7 @@ class CodeOverview extends React.Component<Props> {
     new Promise(() => {
       this.props.fetchBranches(repository);
     }).then(() => {
-      if (branches?.length > 0) {
+      if (this.props.branches?.length > 0) {
         const defaultBranch = branches.filter((branch: Branch) => branch.defaultBranch === true)[0];
         this.branchSelected(defaultBranch);
       }
@@ -71,8 +71,18 @@ class CodeOverview extends React.Component<Props> {
   };
 
   render() {
-    const { repository, baseUrl, branches, t } = this.props;
+    const { repository, baseUrl, branches, error, loading, t } = this.props;
     const url = baseUrl;
+
+    if (!branches || loading) {
+      return <Loading />;
+    }
+
+    if (error) {
+      return (
+        <ErrorPage title={t("repositoryRoot.errorTitle")} subtitle={t("repositoryRoot.errorSubtitle")} error={error} />
+      );
+    }
 
     return (
       <div>
@@ -92,11 +102,11 @@ class CodeOverview extends React.Component<Props> {
         <Route
           path={`${url}/sources`}
           exact={true}
-          render={() => <Sources repository={repository} baseUrl={`${url}/sources`} />}
+          render={() => <Sources repository={repository} baseUrl={`${url}/sources`} branches={branches} />}
         />
         <Route
           path={`${url}/sources/:revision/:path*`}
-          render={() => <Sources repository={repository} baseUrl={`${url}/sources`} />}
+          render={() => <Sources repository={repository} baseUrl={`${url}/sources`} branches={branches} />}
         />
         <Route
           path={`${url}/changesets`}
@@ -122,15 +132,15 @@ const mapDispatchToProps = (dispatch: any) => {
 
 const mapStateToProps = (state: any, ownProps: Props) => {
   const { repository, location } = ownProps;
-  const loading = isFetchBranchesPending(state, repository);
   const error = getFetchBranchesFailure(state, repository);
+  const loading = isFetchBranchesPending(state, repository);
   const branches = getBranches(state, repository);
   const selectedView = decodeURIComponent(location.pathname.split("/")[5]);
   const selectedBranch = decodeURIComponent(location.pathname.split("/")[6]);
 
   return {
-    loading,
     error,
+    loading,
     branches,
     selectedView,
     selectedBranch
