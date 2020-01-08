@@ -6,7 +6,7 @@ import { History } from "history";
 import { User } from "@scm-manager/ui-types";
 import { Page } from "@scm-manager/ui-components";
 import { getUsersLink } from "../../modules/indexResource";
-import { createUser, createUserReset, isCreateUserPending, getCreateUserFailure } from "../modules/users";
+import { createUser, createUserReset, getCreateUserFailure, isCreateUserPending } from "../modules/users";
 import UserForm from "../components/UserForm";
 
 type Props = WithTranslation & {

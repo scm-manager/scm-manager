@@ -1,16 +1,11 @@
 import React from "react";
-import { connect, Dispatch, DispatchProp, MapDispatchToProps } from "react-redux";
+import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import { Breadcrumb, ErrorNotification, Loading } from "@scm-manager/ui-components";
 import FileTree from "../components/FileTree";
-import {
-  fetchBranches,
-  getBranches,
-  getFetchBranchesFailure,
-  isFetchBranchesPending
-} from "../../branches/modules/branches";
+import { getFetchBranchesFailure, isFetchBranchesPending } from "../../branches/modules/branches";
 import { compose } from "redux";
 import Content from "./Content";
 import { fetchSources, getSources, isDirectory } from "../modules/sources";

@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { User } from "@scm-manager/ui-types";
-import { Level, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { confirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { deleteUser, getDeleteUserFailure, isDeleteUserPending } from "../modules/users";
 
 type Props = WithTranslation & {

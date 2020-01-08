@@ -3,11 +3,10 @@ import BranchView from "../components/BranchView";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { Redirect, Route, Switch, withRouter } from "react-router-dom";
-import { Repository, Branch } from "@scm-manager/ui-types";
+import { Branch, Repository } from "@scm-manager/ui-types";
 import { fetchBranch, getBranch, getFetchBranchFailure, isFetchBranchPending } from "../modules/branches";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading, NotFoundError } from "@scm-manager/ui-components";
 import { History } from "history";
-import { NotFoundError } from "@scm-manager/ui-components";
 import queryString from "query-string";
 
 type Props = {

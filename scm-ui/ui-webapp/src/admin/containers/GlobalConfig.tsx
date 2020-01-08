@@ -2,17 +2,17 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { Config, NamespaceStrategies } from "@scm-manager/ui-types";
-import { Title, Loading, ErrorNotification } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading, Title } from "@scm-manager/ui-components";
 import { getConfigLink } from "../../modules/indexResource";
 import {
   fetchConfig,
-  getFetchConfigFailure,
-  isFetchConfigPending,
   getConfig,
-  modifyConfig,
-  isModifyConfigPending,
   getConfigUpdatePermission,
+  getFetchConfigFailure,
   getModifyConfigFailure,
+  isFetchConfigPending,
+  isModifyConfigPending,
+  modifyConfig,
   modifyConfigReset
 } from "../modules/config";
 import ConfigForm from "../components/form/ConfigForm";

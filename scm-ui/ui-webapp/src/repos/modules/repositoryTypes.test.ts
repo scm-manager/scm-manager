@@ -1,7 +1,7 @@
 import fetchMock from "fetch-mock";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-import {
+import reducer, {
   FETCH_REPOSITORY_TYPES,
   FETCH_REPOSITORY_TYPES_FAILURE,
   FETCH_REPOSITORY_TYPES_PENDING,
@@ -13,7 +13,6 @@ import {
   isFetchRepositoryTypesPending,
   shouldFetchRepositoryTypes
 } from "./repositoryTypes";
-import reducer from "./repositoryTypes";
 
 const git = {
   name: "git",

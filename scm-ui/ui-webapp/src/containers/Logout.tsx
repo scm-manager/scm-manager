@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
 
-import { logout, isAuthenticated, isLogoutPending, getLogoutFailure, isRedirecting } from "../modules/auth";
-import { Loading, ErrorPage } from "@scm-manager/ui-components";
+import { getLogoutFailure, isAuthenticated, isLogoutPending, isRedirecting, logout } from "../modules/auth";
+import { ErrorPage, Loading } from "@scm-manager/ui-components";
 import { getLogoutLink } from "../modules/indexResource";
 
 type Props = WithTranslation & {

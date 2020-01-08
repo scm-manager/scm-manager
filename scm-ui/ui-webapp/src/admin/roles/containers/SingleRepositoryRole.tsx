@@ -5,7 +5,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { RepositoryRole } from "@scm-manager/ui-types";
-import { Loading, ErrorPage, Title } from "@scm-manager/ui-components";
+import { ErrorPage, Loading, Title } from "@scm-manager/ui-components";
 import { getRepositoryRolesLink } from "../../../modules/indexResource";
 import { fetchRoleByName, getFetchRoleFailure, getRoleByName, isFetchRolePending } from "../modules/roles";
 import PermissionRoleDetail from "../components/PermissionRoleDetails";

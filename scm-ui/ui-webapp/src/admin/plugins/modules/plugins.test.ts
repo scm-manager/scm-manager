@@ -2,25 +2,25 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 import reducer, {
-  FETCH_PLUGINS,
-  FETCH_PLUGINS_PENDING,
-  FETCH_PLUGINS_SUCCESS,
-  FETCH_PLUGINS_FAILURE,
   FETCH_PLUGIN,
+  FETCH_PLUGIN_FAILURE,
   FETCH_PLUGIN_PENDING,
   FETCH_PLUGIN_SUCCESS,
-  FETCH_PLUGIN_FAILURE,
-  fetchPluginsByLink,
-  fetchPluginsSuccess,
-  getPluginCollection,
-  isFetchPluginsPending,
-  getFetchPluginsFailure,
+  FETCH_PLUGINS,
+  FETCH_PLUGINS_FAILURE,
+  FETCH_PLUGINS_PENDING,
+  FETCH_PLUGINS_SUCCESS,
   fetchPluginByLink,
   fetchPluginByName,
+  fetchPluginsByLink,
+  fetchPluginsSuccess,
   fetchPluginSuccess,
+  getFetchPluginFailure,
+  getFetchPluginsFailure,
   getPlugin,
+  getPluginCollection,
   isFetchPluginPending,
-  getFetchPluginFailure
+  isFetchPluginsPending
 } from "./plugins";
 import { Plugin, PluginCollection } from "@scm-manager/ui-types";
 

@@ -3,14 +3,14 @@ import { connect } from "react-redux";
 import { History } from "history";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
-import { RepositoryRole, Permission } from "@scm-manager/ui-types";
+import { Permission, RepositoryRole } from "@scm-manager/ui-types";
 import { Button, Icon } from "@scm-manager/ui-components";
 import {
-  modifyPermission,
-  isModifyPermissionPending,
   deletePermission,
+  findVerbsForRole,
   isDeletePermissionPending,
-  findVerbsForRole
+  isModifyPermissionPending,
+  modifyPermission
 } from "../modules/permissions";
 import DeletePermissionButton from "../components/buttons/DeletePermissionButton";
 import RoleSelector from "../components/RoleSelector";

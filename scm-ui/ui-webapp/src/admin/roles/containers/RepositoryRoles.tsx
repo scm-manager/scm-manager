@@ -1,17 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
-import { RepositoryRole, PagedCollection } from "@scm-manager/ui-types";
-import { Title, Subtitle, Loading, Notification, LinkPaginator, urls, CreateButton } from "@scm-manager/ui-components";
+import { PagedCollection, RepositoryRole } from "@scm-manager/ui-types";
+import { CreateButton, LinkPaginator, Loading, Notification, Subtitle, Title, urls } from "@scm-manager/ui-components";
 import {
   fetchRolesByPage,
+  getFetchRolesFailure,
   getRolesFromState,
-  selectListAsCollection,
-  isPermittedToCreateRoles,
   isFetchRolesPending,
-  getFetchRolesFailure
+  isPermittedToCreateRoles,
+  selectListAsCollection
 } from "../modules/roles";
 import PermissionRoleTable from "../components/PermissionRoleTable";
 import { getRepositoryRolesLink } from "../../../modules/indexResource";

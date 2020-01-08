@@ -5,20 +5,20 @@ import { RouteComponentProps } from "react-router-dom";
 import { History } from "history";
 import { Group, PagedCollection } from "@scm-manager/ui-types";
 import {
+  CreateButton,
+  LinkPaginator,
+  Notification,
+  OverviewPageActions,
   Page,
   PageActions,
-  OverviewPageActions,
-  Notification,
-  LinkPaginator,
-  urls,
-  CreateButton
+  urls
 } from "@scm-manager/ui-components";
 import { getGroupsLink } from "../../modules/indexResource";
 import {
   fetchGroupsByPage,
+  getFetchGroupsFailure,
   getGroupsFromState,
   isFetchGroupsPending,
-  getFetchGroupsFailure,
   isPermittedToCreateGroups,
   selectListAsCollection
 } from "../modules/groups";

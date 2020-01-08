@@ -3,7 +3,7 @@ import RepositoryRoleForm from "./RepositoryRoleForm";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { getModifyRoleFailure, isModifyRolePending, modifyRole } from "../modules/roles";
-import { ErrorNotification, Subtitle, Loading } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
 import { RepositoryRole } from "@scm-manager/ui-types";
 import { History } from "history";
 import DeleteRepositoryRole from "./DeleteRepositoryRole";

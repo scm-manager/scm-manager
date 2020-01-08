@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import RepositoryForm from "../components/form";
 import DeleteRepo from "./DeleteRepo";
 import { Repository } from "@scm-manager/ui-types";
-import { modifyRepo, isModifyRepoPending, getModifyRepoFailure, modifyRepoReset } from "../modules/repos";
+import { getModifyRepoFailure, isModifyRepoPending, modifyRepo, modifyRepoReset } from "../modules/repos";
 import { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";

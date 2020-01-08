@@ -1,16 +1,16 @@
 import React from "react";
 import { connect } from "react-redux";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { RepositoryCollection } from "@scm-manager/ui-types";
 import {
+  CreateButton,
+  LinkPaginator,
+  Notification,
+  OverviewPageActions,
   Page,
   PageActions,
-  OverviewPageActions,
-  CreateButton,
-  Notification,
-  LinkPaginator,
   urls
 } from "@scm-manager/ui-components";
 import { getRepositoriesLink } from "../../modules/indexResource";
@@ -23,21 +23,22 @@ import {
 } from "../modules/repos";
 import RepositoryList from "../components/list";
 
-type Props = WithTranslation & RouteComponentProps & {
-  loading: boolean;
-  error: Error;
-  showCreateButton: boolean;
-  collection: RepositoryCollection;
-  page: number;
-  reposLink: string;
+type Props = WithTranslation &
+  RouteComponentProps & {
+    loading: boolean;
+    error: Error;
+    showCreateButton: boolean;
+    collection: RepositoryCollection;
+    page: number;
+    reposLink: string;
 
-  // context props
-  history: History;
-  location: any;
+    // context props
+    history: History;
+    location: any;
 
-  // dispatched functions
-  fetchReposByPage: (link: string, page: number, filter?: string) => void;
-};
+    // dispatched functions
+    fetchReposByPage: (link: string, page: number, filter?: string) => void;
+  };
 
 class Overview extends React.Component<Props> {
   componentDidMount() {

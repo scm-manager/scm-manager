@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import GroupForm from "../components/GroupForm";
-import { modifyGroup, getModifyGroupFailure, isModifyGroupPending, modifyGroupReset } from "../modules/groups";
+import { getModifyGroupFailure, isModifyGroupPending, modifyGroup, modifyGroupReset } from "../modules/groups";
 import { History } from "history";
 import { withRouter } from "react-router-dom";
-import { Group, DisplayedUser } from "@scm-manager/ui-types";
+import { DisplayedUser, Group } from "@scm-manager/ui-types";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import { getUserAutoCompleteLink } from "../../modules/indexResource";
 import DeleteGroup from "./DeleteGroup";

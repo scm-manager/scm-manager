@@ -2,17 +2,17 @@ import fetchMock from "fetch-mock";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import {
+  default as reducer,
   FETCH_NAMESPACESTRATEGIES_TYPES,
   FETCH_NAMESPACESTRATEGIES_TYPES_FAILURE,
   FETCH_NAMESPACESTRATEGIES_TYPES_PENDING,
   FETCH_NAMESPACESTRATEGIES_TYPES_SUCCESS,
   fetchNamespaceStrategiesIfNeeded,
   fetchNamespaceStrategiesSuccess,
-  shouldFetchNamespaceStrategies,
-  default as reducer,
+  getFetchNamespaceStrategiesFailure,
   getNamespaceStrategies,
   isFetchNamespaceStrategiesPending,
-  getFetchNamespaceStrategiesFailure
+  shouldFetchNamespaceStrategies
 } from "./namespaceStrategies";
 import { MODIFY_CONFIG_SUCCESS } from "./config";
 

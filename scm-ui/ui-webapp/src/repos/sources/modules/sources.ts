@@ -1,5 +1,5 @@
 import * as types from "../../../modules/types";
-import { Repository, File, Action, Link } from "@scm-manager/ui-types";
+import { Action, File, Link, Repository } from "@scm-manager/ui-types";
 import { apiClient } from "@scm-manager/ui-components";
 import { isPending } from "../../../modules/pending";
 import { getFailure } from "../../../modules/failure";

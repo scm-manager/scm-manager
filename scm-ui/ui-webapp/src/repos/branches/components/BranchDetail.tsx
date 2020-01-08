@@ -1,5 +1,5 @@
 import React from "react";
-import { Repository, Branch } from "@scm-manager/ui-types";
+import { Branch, Repository } from "@scm-manager/ui-types";
 import { WithTranslation, withTranslation } from "react-i18next";
 import BranchButtonGroup from "./BranchButtonGroup";
 import DefaultBranchTag from "./DefaultBranchTag";

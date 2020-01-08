@@ -3,24 +3,24 @@ import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { RouteComponentProps } from "react-router-dom";
 import { History } from "history";
-import { User, PagedCollection } from "@scm-manager/ui-types";
+import { PagedCollection, User } from "@scm-manager/ui-types";
 import {
+  CreateButton,
+  LinkPaginator,
+  Notification,
+  OverviewPageActions,
   Page,
   PageActions,
-  OverviewPageActions,
-  Notification,
-  LinkPaginator,
-  urls,
-  CreateButton
+  urls
 } from "@scm-manager/ui-components";
 import { getUsersLink } from "../../modules/indexResource";
 import {
   fetchUsersByPage,
+  getFetchUsersFailure,
   getUsersFromState,
-  selectListAsCollection,
-  isPermittedToCreateUsers,
   isFetchUsersPending,
-  getFetchUsersFailure
+  isPermittedToCreateUsers,
+  selectListAsCollection
 } from "../modules/users";
 import { UserTable } from "./../components/table";
 

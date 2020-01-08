@@ -5,10 +5,10 @@ import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Branch, Changeset, PagedCollection, Repository } from "@scm-manager/ui-types";
 import {
+  ChangesetList,
   ErrorNotification,
   getPageFromMatch,
   LinkPaginator,
-  ChangesetList,
   Loading,
   Notification
 } from "@scm-manager/ui-components";

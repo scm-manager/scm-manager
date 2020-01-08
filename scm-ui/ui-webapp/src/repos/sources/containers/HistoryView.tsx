@@ -1,6 +1,6 @@
 import React from "react";
-import { File, Changeset, Repository, PagedCollection } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, StatePaginator, ChangesetList } from "@scm-manager/ui-components";
+import { Changeset, File, PagedCollection, Repository } from "@scm-manager/ui-types";
+import { ChangesetList, ErrorNotification, Loading, StatePaginator } from "@scm-manager/ui-components";
 import { getHistory } from "./history";
 
 type Props = {

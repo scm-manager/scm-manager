@@ -2,7 +2,7 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Group } from "@scm-manager/ui-types";
-import { DateFromNow, Checkbox } from "@scm-manager/ui-components";
+import { Checkbox, DateFromNow } from "@scm-manager/ui-components";
 import GroupMember from "./GroupMember";
 
 type Props = WithTranslation & {

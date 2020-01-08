@@ -1,7 +1,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
-import { Image, ErrorNotification, InputField, SubmitButton, UnauthorizedError } from "@scm-manager/ui-components";
+import { ErrorNotification, Image, InputField, SubmitButton, UnauthorizedError } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   error?: Error;

@@ -4,13 +4,13 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { compose } from "redux";
 import { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import {
+  Button,
   ButtonGroup,
   ErrorNotification,
   Loading,
   Notification,
   Subtitle,
-  Title,
-  Button
+  Title
 } from "@scm-manager/ui-components";
 import {
   fetchPendingPlugins,
@@ -31,7 +31,7 @@ import PluginBottomActions from "../components/PluginBottomActions";
 import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
-import {Plugin} from "@scm-manager/ui-types/src";
+import { Plugin } from "@scm-manager/ui-types/src";
 
 type Props = WithTranslation & {
   loading: boolean;

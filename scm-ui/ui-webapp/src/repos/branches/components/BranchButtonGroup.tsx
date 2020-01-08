@@ -1,7 +1,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { Repository, Branch } from "@scm-manager/ui-types";
-import { ButtonAddons, Button } from "@scm-manager/ui-components";
+import { Branch, Repository } from "@scm-manager/ui-types";
+import { Button, ButtonAddons } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   repository: Repository;

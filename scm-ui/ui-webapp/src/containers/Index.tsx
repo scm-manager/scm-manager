@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";
-import { Loading, ErrorBoundary } from "@scm-manager/ui-components";
+import { ErrorBoundary, Loading } from "@scm-manager/ui-components";
 import {
   fetchIndexResources,
   getFetchIndexResourcesFailure,

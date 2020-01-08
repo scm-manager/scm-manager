@@ -1,8 +1,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { apiClient, SyntaxHighlighter } from "@scm-manager/ui-components";
+import { apiClient, ErrorNotification, Loading, SyntaxHighlighter } from "@scm-manager/ui-components";
 import { File } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   file: File;

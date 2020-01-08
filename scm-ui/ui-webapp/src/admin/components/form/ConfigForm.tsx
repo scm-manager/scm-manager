@@ -1,7 +1,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { NamespaceStrategies, Config } from "@scm-manager/ui-types";
-import { Level, SubmitButton, Notification } from "@scm-manager/ui-components";
+import { Config, NamespaceStrategies } from "@scm-manager/ui-types";
+import { Level, Notification, SubmitButton } from "@scm-manager/ui-components";
 import ProxySettings from "./ProxySettings";
 import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";

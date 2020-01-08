@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
-import { Group, DisplayedUser } from "@scm-manager/ui-types";
+import { DisplayedUser, Group } from "@scm-manager/ui-types";
 import { Page } from "@scm-manager/ui-components";
 import { getGroupsLink, getUserAutoCompleteLink } from "../../modules/indexResource";
-import { createGroup, isCreateGroupPending, getCreateGroupFailure, createGroupReset } from "../modules/groups";
+import { createGroup, createGroupReset, getCreateGroupFailure, isCreateGroupPending } from "../modules/groups";
 import GroupForm from "../components/GroupForm";
 import { apiClient } from "@scm-manager/ui-components/src";
 

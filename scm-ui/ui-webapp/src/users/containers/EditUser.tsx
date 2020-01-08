@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import UserForm from "../components/UserForm";
 import DeleteUser from "./DeleteUser";
 import { User } from "@scm-manager/ui-types";
-import { modifyUser, isModifyUserPending, getModifyUserFailure, modifyUserReset } from "../modules/users";
+import { getModifyUserFailure, isModifyUserPending, modifyUser, modifyUserReset } from "../modules/users";
 import { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import { compose } from "redux";

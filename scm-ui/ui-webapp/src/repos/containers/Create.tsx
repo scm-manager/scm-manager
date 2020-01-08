@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
-import { Repository, RepositoryType, NamespaceStrategies } from "@scm-manager/ui-types";
+import { NamespaceStrategies, Repository, RepositoryType } from "@scm-manager/ui-types";
 import { Page } from "@scm-manager/ui-components";
 import {
   fetchRepositoryTypesIfNeeded,

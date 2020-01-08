@@ -1,6 +1,6 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { Checkbox, InputField, Subtitle, AddEntryToTableField } from "@scm-manager/ui-components";
+import { AddEntryToTableField, Checkbox, InputField, Subtitle } from "@scm-manager/ui-components";
 import ProxyExcludesTable from "../table/ProxyExcludesTable";
 
 type Props = WithTranslation & {
