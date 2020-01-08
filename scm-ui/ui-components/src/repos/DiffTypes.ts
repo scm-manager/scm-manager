@@ -40,6 +40,10 @@ export type Change = {
   type: ChangeType;
 };
 
+export type ChangeEvent = {
+  change: Change;
+};
+
 export type BaseContext = {
   hunk: Hunk;
   file: File;
@@ -66,7 +70,7 @@ export type DiffEventHandler = (context: DiffEventContext) => void;
 export type FileControlFactory = (file: File, setCollapseState: (p: boolean) => void) => ReactNode | null | undefined;
 
 export type DiffObjectProps = {
-  sideBySide: boolean;
+  sideBySide?: boolean;
   onClick?: DiffEventHandler;
   fileControlFactory?: FileControlFactory;
   fileAnnotationFactory?: FileAnnotationFactory;

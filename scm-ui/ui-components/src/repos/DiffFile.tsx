@@ -3,11 +3,13 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 // @ts-ignore
-import { Change, Diff as DiffComponent, getChangeKey, Hunk } from "react-diff-view";
+import { Diff as DiffComponent, getChangeKey, Hunk, Decoration } from "react-diff-view";
 import { Button, ButtonGroup } from "../buttons";
 import Tag from "../Tag";
 import Icon from "../Icon";
-import { File, Hunk as HunkType, DiffObjectProps } from "./DiffTypes";
+import { ChangeEvent, Change, File, Hunk as HunkType, DiffObjectProps } from "./DiffTypes";
+
+const EMPTY_ANNOTATION_FACTORY = {};
 
 type Props = DiffObjectProps &
   WithTranslation & {
@@ -20,7 +22,7 @@ type Collapsible = {
 };
 
 type State = Collapsible & {
-  sideBySide: boolean;
+  sideBySide?: boolean;
 };
 
 const DiffFilePanel = styled.div`
@@ -56,6 +58,10 @@ const ChangeTypeTag = styled(Tag)`
 `;
 
 const ModifiedDiffComponent = styled(DiffComponent)`
+  /* align line numbers */
+  & .diff-gutter {
+    text-align: right;
+  }
   /* column sizing */
   > colgroup .diff-gutter-col {
     width: 3.25rem;
@@ -87,7 +93,7 @@ class DiffFile extends React.Component<Props, State> {
     super(props);
     this.state = {
       collapsed: !!this.props.defaultCollapse,
-      sideBySide: false
+      sideBySide: props.sideBySide
     };
   }
 
@@ -126,7 +132,8 @@ class DiffFile extends React.Component<Props, State> {
     if (i > 0) {
       return <HunkDivider />;
     }
-    return null;
+    // hunk header must be defined
+    return <span />;
   };
 
   collectHunkAnnotations = (hunk: HunkType) => {
@@ -136,6 +143,8 @@ class DiffFile extends React.Component<Props, State> {
         hunk,
         file
       });
+    } else {
+      return EMPTY_ANNOTATION_FACTORY;
     }
   };
 
@@ -152,29 +161,27 @@ class DiffFile extends React.Component<Props, State> {
     }
   };
 
-  createCustomEvents = (hunk: HunkType) => {
+  createGutterEvents = (hunk: HunkType) => {
     const { onClick } = this.props;
     if (onClick) {
       return {
-        gutter: {
-          onClick: (change: Change) => {
-            this.handleClickEvent(change, hunk);
-          }
+        onClick: (event: ChangeEvent) => {
+          this.handleClickEvent(event.change, hunk);
         }
       };
     }
   };
 
   renderHunk = (hunk: HunkType, i: number) => {
-    return (
+    return [
+      <Decoration key={"decoration-" + hunk.content}>{this.createHunkHeader(hunk, i)}</Decoration>,
       <Hunk
-        key={hunk.content}
+        key={"hunk-" + hunk.content}
         hunk={hunk}
-        header={this.createHunkHeader(hunk, i)}
         widgets={this.collectHunkAnnotations(hunk)}
-        customEvents={this.createCustomEvents(hunk)}
+        gutterEvents={this.createGutterEvents(hunk)}
       />
-    );
+    ];
   };
 
   renderFileTitle = (file: File) => {
@@ -228,8 +235,8 @@ class DiffFile extends React.Component<Props, State> {
       body = (
         <div className="panel-block is-paddingless">
           {fileAnnotations}
-          <ModifiedDiffComponent className={viewType} viewType={viewType}>
-            {file.hunks.map(this.renderHunk)}
+          <ModifiedDiffComponent className={viewType} viewType={viewType} hunks={file.hunks} diffType={file.type}>
+            {(hunks: HunkType[]) => hunks.map(this.renderHunk).reduce((a, b) => a.concat(b))}
           </ModifiedDiffComponent>
         </div>
       );

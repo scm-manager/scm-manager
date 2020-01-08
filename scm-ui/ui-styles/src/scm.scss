@@ -423,7 +423,7 @@ $danger-25: scale-color($danger, $lightness: 75%);
 $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 @import "~@fortawesome/fontawesome-free/scss/solid";
 
-@import "~react-diff-view/index";
+@import "~react-diff-view/style/index";
 
 // NEW STYLES
 

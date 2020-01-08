@@ -4,6 +4,8 @@ import { addDecorator, configure } from "@storybook/react";
 import { withI18next } from "storybook-addon-i18next";
 
 import "!style-loader!css-loader!sass-loader!../../ui-styles/src/scm.scss";
+import React, { ReactNode } from "react";
+import { MemoryRouter } from "react-router-dom";
 
 i18n.use(initReactI18next).init({
   whitelist: ["en", "de", "es"],
@@ -27,5 +29,8 @@ addDecorator(
     }
   })
 );
+
+const RoutingDecorator = (story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
+addDecorator(RoutingDecorator);
 
 configure(require.context("../src", true, /\.stories\.tsx?$/), module);

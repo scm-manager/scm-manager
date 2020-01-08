@@ -50,13 +50,14 @@
     "event-source-polyfill": "^1.0.9",
     "query-string": "5",
     "react": "^16.8.6",
-    "react-diff-view": "^1.8.1",
+    "react-diff-view": "^2.4.1",
     "react-dom": "^16.8.6",
     "react-i18next": "^10.13.1",
     "react-markdown": "^4.0.6",
     "react-router-dom": "^5.1.2",
     "react-select": "^2.1.2",
-    "react-syntax-highlighter": "^11.0.2"
+    "react-syntax-highlighter": "^11.0.2",
+    "gitdiff-parser": "^0.1.2"
   },
   "babel": {
     "presets": [
