@@ -186,6 +186,10 @@ class AbstractGitCommand
       return context;
     }
 
+    sonia.scm.repository.Repository getRepository() {
+      return repository;
+    }
+
     void checkOutBranch(String branchName) throws IOException {
       try {
         clone.checkout().setName(branchName).call();

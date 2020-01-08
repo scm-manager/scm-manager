@@ -10,6 +10,8 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalLong;
 
 @Getter
 @Setter
@@ -19,14 +21,16 @@ public class FileObjectDto extends HalRepresentation {
   private String path;
   private boolean directory;
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
-  private String description;
-  private long length;
+  private Optional<String> description;
+  private OptionalLong length;
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
-  private Instant lastModified;
+  private Optional<Instant> commitDate;
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private SubRepositoryDto subRepository;
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String revision;
+  private boolean partialResult;
+  private boolean computationAborted;
 
   public FileObjectDto(Links links, Embedded embedded) {
     super(links, embedded);

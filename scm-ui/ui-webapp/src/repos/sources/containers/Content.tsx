@@ -115,7 +115,7 @@ class Content extends React.Component<Props, State> {
   showMoreInformation() {
     const collapsed = this.state.collapsed;
     const { file, revision, t, repository } = this.props;
-    const date = <DateFromNow date={file.lastModified} />;
+    const date = <DateFromNow date={file.commitDate} />;
     const description = file.description ? (
       <p>
         {file.description.split("\n").map((item, key) => {
@@ -147,7 +147,7 @@ class Content extends React.Component<Props, State> {
                 <td>{fileSize}</td>
               </tr>
               <tr>
-                <td>{t("sources.content.lastModified")}</td>
+                <td>{t("sources.content.commitDate")}</td>
                 <td>{date}</td>
               </tr>
               <tr>

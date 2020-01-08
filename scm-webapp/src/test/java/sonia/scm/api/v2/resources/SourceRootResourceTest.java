@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mapstruct.factory.Mappers;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.NotFoundException;
@@ -41,16 +40,12 @@ public class SourceRootResourceTest extends RepositoryTestBase {
   @Mock
   private BrowseCommandBuilder browseCommandBuilder;
 
-  @InjectMocks
-  private FileObjectToFileObjectDtoMapperImpl fileObjectToFileObjectDtoMapper;
-
   private BrowserResultToFileObjectDtoMapper browserResultToFileObjectDtoMapper;
 
 
   @Before
-  public void prepareEnvironment() throws Exception {
+  public void prepareEnvironment() {
     browserResultToFileObjectDtoMapper = Mappers.getMapper(BrowserResultToFileObjectDtoMapper.class);
-    browserResultToFileObjectDtoMapper.setChildrenMapper(fileObjectToFileObjectDtoMapper);
     browserResultToFileObjectDtoMapper.setResourceLinks(resourceLinks);
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(service.getBrowseCommand()).thenReturn(browseCommandBuilder);
@@ -127,7 +122,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
     fileObject1.setDescription("File object 1");
     fileObject1.setPath("/foo/bar/fo1");
     fileObject1.setLength(1024L);
-    fileObject1.setLastModified(0L);
+    fileObject1.setCommitDate(0L);
     parent.addChild(fileObject1);
 
     FileObject fileObject2 = new FileObject();
@@ -136,7 +131,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
     fileObject2.setDescription("File object 2");
     fileObject2.setPath("/foo/bar/fo2");
     fileObject2.setLength(4096L);
-    fileObject2.setLastModified(1234L);
+    fileObject2.setCommitDate(1234L);
     parent.addChild(fileObject2);
 
     return parent;

@@ -7,8 +7,11 @@ import parser from "gitdiff-parser";
 import Loading from "../Loading";
 import Diff from "./Diff";
 import { DiffObjectProps, File } from "./DiffTypes";
+import { NotFoundError } from "../errors";
+import { Notification } from "../index";
+import {withTranslation, WithTranslation} from "react-i18next";
 
-type Props = DiffObjectProps & {
+type Props = WithTranslation & DiffObjectProps & {
   url: string;
   defaultCollapse?: boolean;
 };
@@ -43,7 +46,7 @@ class LoadingDiff extends React.Component<Props, State> {
 
   fetchDiff = () => {
     const { url } = this.props;
-    this.setState({loading: true});
+    this.setState({ loading: true });
     apiClient
       .get(url)
       .then(response => response.text())
@@ -66,6 +69,9 @@ class LoadingDiff extends React.Component<Props, State> {
   render() {
     const { diff, loading, error } = this.state;
     if (error) {
+      if (error instanceof NotFoundError) {
+        return <Notification type="info">{this.props.t("changesets.noChangesets")}</Notification>;
+      }
       return <ErrorNotification error={error} />;
     } else if (loading) {
       return <Loading />;
@@ -77,4 +83,4 @@ class LoadingDiff extends React.Component<Props, State> {
   }
 }
 
-export default LoadingDiff;
+export default withTranslation("repos")(LoadingDiff);

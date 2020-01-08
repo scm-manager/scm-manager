@@ -35,15 +35,21 @@ import org.junit.Test;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.GitRepositoryConfig;
+import sonia.scm.repository.spi.SyncAsyncExecutors.AsyncExecutorStepper;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static sonia.scm.repository.spi.SyncAsyncExecutors.stepperAsynchronousExecutor;
+import static sonia.scm.repository.spi.SyncAsyncExecutors.synchronousExecutor;
 
 /**
  * Unit tests for {@link GitBrowseCommand}.
@@ -102,13 +108,53 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     assertFalse(a.isDirectory());
     assertEquals("a.txt", a.getName());
     assertEquals("a.txt", a.getPath());
-    assertEquals("added new line for blame", a.getDescription());
-    assertTrue(a.getLength() > 0);
-    checkDate(a.getLastModified());
+    assertEquals("added new line for blame", a.getDescription().get());
+    assertTrue(a.getLength().getAsLong() > 0);
+    checkDate(a.getCommitDate().getAsLong());
 
     assertTrue(c.isDirectory());
     assertEquals("c", c.getName());
     assertEquals("c", c.getPath());
+  }
+
+  @Test
+  public void testAsynchronousBrowse() throws IOException {
+    try (AsyncExecutorStepper executor = stepperAsynchronousExecutor()) {
+      GitBrowseCommand command = new GitBrowseCommand(createContext(), repository, null, executor);
+      List<BrowserResult> updatedResults = new LinkedList<>();
+      BrowseCommandRequest request = new BrowseCommandRequest(updatedResults::add);
+      FileObject root = command.getBrowserResult(request).getFile();
+      assertNotNull(root);
+
+      Collection<FileObject> foList = root.getChildren();
+
+      FileObject a = findFile(foList, "a.txt");
+      FileObject b = findFile(foList, "b.txt");
+
+      assertTrue(a.isPartialResult());
+      assertFalse("expected empty name before commit could have been read", a.getDescription().isPresent());
+      assertFalse("expected empty date before commit could have been read", a.getCommitDate().isPresent());
+      assertTrue(b.isPartialResult());
+      assertFalse("expected empty name before commit could have been read", b.getDescription().isPresent());
+      assertFalse("expected empty date before commit could have been read", b.getCommitDate().isPresent());
+
+      executor.next();
+
+      assertEquals(1, updatedResults.size());
+      assertFalse(a.isPartialResult());
+      assertNotNull("expected correct name after commit could have been read", a.getDescription());
+      assertTrue("expected correct date after commit could have been read", a.getCommitDate().isPresent());
+      assertTrue(b.isPartialResult());
+      assertFalse("expected empty name before commit could have been read", b.getDescription().isPresent());
+      assertFalse("expected empty date before commit could have been read", b.getCommitDate().isPresent());
+
+      executor.next();
+
+      assertEquals(2, updatedResults.size());
+      assertFalse(b.isPartialResult());
+      assertNotNull("expected correct name after commit could have been read", b.getDescription());
+      assertTrue("expected correct date after commit could have been read", b.getCommitDate().isPresent());
+    }
   }
 
   @Test
@@ -129,20 +175,20 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     assertFalse(d.isDirectory());
     assertEquals("d.txt", d.getName());
     assertEquals("c/d.txt", d.getPath());
-    assertEquals("added file d and e in folder c", d.getDescription());
-    assertTrue(d.getLength() > 0);
-    checkDate(d.getLastModified());
+    assertEquals("added file d and e in folder c", d.getDescription().get());
+    assertTrue(d.getLength().getAsLong() > 0);
+    checkDate(d.getCommitDate().getAsLong());
 
     assertFalse(e.isDirectory());
     assertEquals("e.txt", e.getName());
     assertEquals("c/e.txt", e.getPath());
-    assertEquals("added file d and e in folder c", e.getDescription());
-    assertTrue(e.getLength() > 0);
-    checkDate(e.getLastModified());
+    assertEquals("added file d and e in folder c", e.getDescription().get());
+    assertTrue(e.getLength().getAsLong() > 0);
+    checkDate(e.getCommitDate().getAsLong());
   }
 
   @Test
-  public void testRecusive() throws IOException {
+  public void testRecursive() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
     request.setRecursive(true);
@@ -171,6 +217,6 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitBrowseCommand createCommand() {
-    return new GitBrowseCommand(createContext(), repository, null);
+    return new GitBrowseCommand(createContext(), repository, null, synchronousExecutor());
   }
 }

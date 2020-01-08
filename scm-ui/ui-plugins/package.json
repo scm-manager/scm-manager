@@ -2,14 +2,27 @@
   "name": "@scm-manager/ui-plugins",
   "version": "2.0.0-SNAPSHOT",
   "license": "BSD-3-Clause",
+  "bin": {
+    "ui-plugins": "./bin/ui-plugins.js"
+  },
   "dependencies": {
+    "@scm-manager/ui-components": "^2.0.0-SNAPSHOT",
+    "@scm-manager/ui-extensions": "^2.0.0-SNAPSHOT",
+    "classnames": "^2.2.6",
+    "query-string": "^5.0.1",
+    "react": "^16.10.2",
+    "react-i18next": "^10.13.1",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^5.1.2",
+    "redux": "^4.0.0",
+    "styled-components": "^4.4.0"
+  },
+  "devDependencies": {
     "@scm-manager/babel-preset": "^2.0.0-SNAPSHOT",
     "@scm-manager/eslint-config": "^2.0.0-SNAPSHOT",
     "@scm-manager/jest-preset": "^2.0.0-SNAPSHOT",
     "@scm-manager/prettier-config": "^2.0.0-SNAPSHOT",
     "@scm-manager/tsconfig": "^2.0.0-SNAPSHOT",
-    "@scm-manager/ui-components": "^2.0.0-SNAPSHOT",
-    "@scm-manager/ui-extensions": "^2.0.0-SNAPSHOT",
     "@scm-manager/ui-scripts": "^2.0.0-SNAPSHOT",
     "@scm-manager/ui-tests": "^2.0.0-SNAPSHOT",
     "@scm-manager/ui-types": "^2.0.0-SNAPSHOT",
@@ -23,15 +36,7 @@
     "@types/react-redux": "5.0.7",
     "@types/react-router-dom": "^5.1.0",
     "@types/styled-components": "^4.1.19",
-    "classnames": "^2.2.6",
-    "jest": "^24.9.0",
-    "query-string": "^5.0.1",
-    "react": "^16.10.2",
-    "react-i18next": "^10.13.1",
-    "react-redux": "^5.0.7",
-    "react-router-dom": "^5.1.2",
-    "redux": "^4.0.0",
-    "styled-components": "^4.4.0"
+    "jest": "^24.9.0"
   },
   "publishConfig": {
     "access": "public"

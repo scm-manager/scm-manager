@@ -46,8 +46,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalLong;
 
 import static java.util.Collections.unmodifiableCollection;
+import static java.util.Optional.ofNullable;
 
 /**
  * The FileObject represents a file or a directory in a repository.
@@ -90,7 +93,9 @@ public class FileObject implements LastModifiedAware, Serializable
            && Objects.equal(description, other.description)
            && Objects.equal(length, other.length)
            && Objects.equal(subRepository, other.subRepository)
-           && Objects.equal(lastModified, other.lastModified);
+           && Objects.equal(commitDate, other.commitDate)
+           && Objects.equal(partialResult, other.partialResult)
+           && Objects.equal(computationAborted, other.computationAborted);
     //J+
   }
 
@@ -100,8 +105,16 @@ public class FileObject implements LastModifiedAware, Serializable
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(name, path, directory, description, length,
-                            subRepository, lastModified);
+    return Objects.hashCode(
+      name,
+      path,
+      directory,
+      description,
+      length,
+      subRepository,
+      commitDate,
+      partialResult,
+      computationAborted);
   }
 
   /**
@@ -118,7 +131,9 @@ public class FileObject implements LastModifiedAware, Serializable
             .add("description", description)
             .add("length", length)
             .add("subRepository", subRepository)
-            .add("lastModified", lastModified)
+            .add("commitDate", commitDate)
+            .add("partialResult", partialResult)
+            .add("computationAborted", computationAborted)
             .toString();
     //J+
   }
@@ -130,35 +145,44 @@ public class FileObject implements LastModifiedAware, Serializable
    * if the repository provider is not able to get the last commit for the path.
    *
    *
-   * @return last commit message
+   * @return Last commit message or <code>null</code>, when this value has not been computed
+   * (see {@link #isPartialResult()}).
    */
-  public String getDescription()
+  public Optional<String> getDescription()
   {
-    return description;
+    return ofNullable(description);
   }
 
   /**
    * Returns the last commit date for this. The method will return null,
-   * if the repository provider is not able to get the last commit for the path.
+   * if the repository provider is not able to get the last commit for the path
+   * or it has not been computed.
    *
    *
    * @return last commit date
    */
   @Override
-  public Long getLastModified()
-  {
-    return lastModified;
+  public Long getLastModified() {
+    return this.isPartialResult()? null: this.commitDate;
   }
 
   /**
-   * Returns the length of the file.
-   *
-   *
-   * @return length of file
+   * Returns the last commit date for this. The method will return {@link OptionalLong#empty()},
+   * if the repository provider is not able to get the last commit for the path or if this value has not been computed
+   * (see {@link #isPartialResult()} and {@link #isComputationAborted()}).
    */
-  public long getLength()
+  public OptionalLong getCommitDate()
   {
-    return length;
+    return commitDate == null? OptionalLong.empty(): OptionalLong.of(commitDate);
+  }
+
+  /**
+   * Returns the length of the file or {@link OptionalLong#empty()}, when this value has not been computed
+   * (see {@link #isPartialResult()} and {@link #isComputationAborted()}).
+   */
+  public OptionalLong getLength()
+  {
+    return length == null? OptionalLong.empty(): OptionalLong.of(length);
   }
 
   /**
@@ -200,7 +224,7 @@ public class FileObject implements LastModifiedAware, Serializable
   }
 
   /**
-   * Return sub repository informations or null if the file is not 
+   * Return sub repository information or null if the file is not
    * sub repository.
    *
    * @since 1.10
@@ -220,6 +244,42 @@ public class FileObject implements LastModifiedAware, Serializable
   public boolean isDirectory()
   {
     return directory;
+  }
+
+  /**
+   * Returns the children of this file.
+   *
+   * @return The children of this file if it is a directory.
+   */
+  public Collection<FileObject> getChildren() {
+    return children == null? null: unmodifiableCollection(children);
+  }
+
+  /**
+   * If this is <code>true</code>, some values for this object have not been computed, yet. These values (like
+   * {@link #getLength()}, {@link #getDescription()} or {@link #getCommitDate()})
+   * will return {@link Optional#empty()} (or {@link OptionalLong#empty()} respectively), unless they are computed.
+   * There may be an asynchronous task running, that will set these values in the future.
+   *
+   * @since 2.0.0
+   *
+   * @return <code>true</code>, whenever some values of this object have not been computed, yet.
+   */
+  public boolean isPartialResult() {
+    return partialResult;
+  }
+
+  /**
+   * If this is <code>true</code>, some values for this object have not been computed and will not be computed. These
+   * values (like {@link #getLength()}, {@link #getDescription()} or {@link #getCommitDate()})
+   * will return {@link Optional#empty()} (or {@link OptionalLong#empty()} respectively), unless they are computed.
+   *
+   * @since 2.0.0
+   *
+   * @return <code>true</code>, whenever some values of this object finally are not computed.
+   */
+  public boolean isComputationAborted() {
+    return computationAborted;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -247,14 +307,14 @@ public class FileObject implements LastModifiedAware, Serializable
   }
 
   /**
-   * Sets the last modified date of the file.
+   * Sets the commit date of the file.
    *
    *
-   * @param lastModified last modified date
+   * @param commitDate commit date
    */
-  public void setLastModified(Long lastModified)
+  public void setCommitDate(Long commitDate)
   {
-    this.lastModified = lastModified;
+    this.commitDate = commitDate;
   }
 
   /**
@@ -263,7 +323,7 @@ public class FileObject implements LastModifiedAware, Serializable
    *
    * @param length file length
    */
-  public void setLength(long length)
+  public void setLength(Long length)
   {
     this.length = length;
   }
@@ -302,20 +362,45 @@ public class FileObject implements LastModifiedAware, Serializable
     this.subRepository = subRepository;
   }
 
-  public Collection<FileObject> getChildren() {
-    return unmodifiableCollection(children);
+  /**
+   * Set marker, that some values for this object are not computed, yet.
+   *
+   * @since 2.0.0
+   *
+   * @param partialResult Set this to <code>true</code>, whenever some values of this object are not computed, yet.
+   */
+  public void setPartialResult(boolean partialResult) {
+    this.partialResult = partialResult;
   }
 
+  /**
+   * Set marker, that computation of some values for this object has been aborted.
+   *
+   * @since 2.0.0
+   *
+   * @param computationAborted Set this to <code>true</code>, whenever some values of this object are not computed and
+   *                           will not be computed in the future.
+   */
+  public void setComputationAborted(boolean computationAborted) {
+    this.computationAborted = computationAborted;
+  }
+
+  /**
+   * Set the children for this file.
+   *
+   * @param children The new childre.
+   */
   public void setChildren(List<FileObject> children) {
     this.children = new ArrayList<>(children);
   }
 
+  /**
+   * Adds a child to the list of children .
+   *
+   * @param child The additional child.
+   */
   public void addChild(FileObject child) {
     this.children.add(child);
-  }
-
-  public boolean hasChildren() {
-    return !children.isEmpty();
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -326,11 +411,11 @@ public class FileObject implements LastModifiedAware, Serializable
   /** directory indicator */
   private boolean directory;
 
-  /** last modified date */
-  private Long lastModified;
+  /** commit date */
+  private Long commitDate;
 
   /** file length */
-  private long length;
+  private Long length;
 
   /** filename */
   private String name;
@@ -338,9 +423,16 @@ public class FileObject implements LastModifiedAware, Serializable
   /** file path */
   private String path;
 
+  /** Marker for partial result. */
+  private boolean partialResult = false;
+
+  /** Marker for aborted computation. */
+  private boolean computationAborted = false;
+
   /** sub repository informations */
   @XmlElement(name = "subrepository")
   private SubRepository subRepository;
 
+  /** Children of this file (aka directory). */
   private Collection<FileObject> children = new ArrayList<>();
 }

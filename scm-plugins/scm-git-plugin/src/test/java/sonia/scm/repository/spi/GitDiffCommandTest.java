@@ -37,6 +37,20 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
     "+++ b/f.txt\n" +
     "@@ -0,0 +1 @@\n" +
     "+f\n";
+  public static final String DIFF_FILE_PARTIAL_MERGE = "diff --git a/a.txt b/a.txt\n" +
+    "index 7898192..8cd63ec 100644\n" +
+    "--- a/a.txt\n" +
+    "+++ b/a.txt\n" +
+    "@@ -1 +1,2 @@\n" +
+    " a\n" +
+    "+change\n" +
+    "diff --git a/b.txt b/b.txt\n" +
+    "index 6178079..09ccdf0 100644\n" +
+    "--- a/b.txt\n" +
+    "+++ b/b.txt\n" +
+    "@@ -1 +1,2 @@\n" +
+    " b\n" +
+    "+change\n";
 
   @Test
   public void diffForOneRevisionShouldCreateDiff() throws IOException {
@@ -90,5 +104,16 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     gitDiffCommand.getDiffResult(diffCommandRequest).accept(output);
     assertEquals(DIFF_FILE_A_MULTIPLE_REVISIONS, output.toString());
+  }
+
+  @Test
+  public void diffBetweenTwoBranchesWithMergedIntegrationBranchShouldCreateDiffOfAllIncomingChanges() throws IOException {
+    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
+    DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
+    diffCommandRequest.setRevision("partially_merged");
+    diffCommandRequest.setAncestorChangeset("master");
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    gitDiffCommand.getDiffResult(diffCommandRequest).accept(output);
+    assertEquals(DIFF_FILE_PARTIAL_MERGE, output.toString());
   }
 }

@@ -1,5 +1,11 @@
 import React, { ChangeEvent } from "react";
 import { Help } from "../index";
+import styled from "styled-components";
+
+
+const StyledRadio = styled.label`
+  margin-right: 0.5em;
+`;
 
 type Props = {
   label?: string;
@@ -33,7 +39,7 @@ class Radio extends React.Component<Props> {
         because jsx label does not the custom disabled attribute
         but bulma does.
         // @ts-ignore */}
-        <label className="radio" disabled={this.props.disabled}>
+        <StyledRadio className="radio" disabled={this.props.disabled}>
           <input
             type="radio"
             name={this.props.name}
@@ -44,7 +50,7 @@ class Radio extends React.Component<Props> {
           />{" "}
           {this.props.label}
           {this.renderHelp()}
-        </label>
+        </StyledRadio>
       </>
     );
   }

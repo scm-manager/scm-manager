@@ -17,16 +17,18 @@ public class GitMergeCommand_Conflict_Test extends AbstractGitCommandTestBase {
   static final String DIFF_HEADER = "diff --git a/Main.java b/Main.java";
   static final String DIFF_FILE_CONFLICT = "--- a/Main.java\n" +
     "+++ b/Main.java\n" +
-    "@@ -3,7 +3,11 @@\n" +
+    "@@ -1,6 +1,13 @@\n" +
+    "+import java.util.Arrays;\n" +
+    "+\n" +
     " class Main {\n" +
     "     public static void main(String[] args) {\n" +
     "         System.out.println(\"Expect nothing more to happen.\");\n" +
     "+<<<<<<< HEAD\n" +
-    "         System.out.println(\"Parameters:\");\n" +
-    "         Arrays.stream(args).map(arg -> \"- \" + arg).forEach(System.out::println);\n" +
+    "         System.out.println(\"This is for demonstration, only.\");\n" +
     "+=======\n" +
-    "+        System.out.println(\"This is for demonstration, only.\");\n" +
-    "+>>>>>>> integration\n" +
+    "+        System.out.println(\"Parameters:\");\n" +
+    "+        Arrays.stream(args).map(arg -> \"- \" + arg).forEach(System.out::println);\n" +
+    "+>>>>>>> feature/print_args\n" +
     "     }\n" +
     " }";
 
