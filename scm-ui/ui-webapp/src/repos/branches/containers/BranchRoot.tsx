@@ -73,7 +73,7 @@ class BranchRoot extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const { repository } = ownProps;
   const branchName = decodeURIComponent(ownProps.match.params.branch);
   const branch = getBranch(state, repository, branchName);
@@ -88,7 +88,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchBranch: (repository: Repository, branchName: string) => {
       dispatch(fetchBranch(repository, branchName));

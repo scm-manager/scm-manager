@@ -24,7 +24,7 @@ type Props = WithTranslation &
     sources?: File | null;
 
     // dispatch props
-    fetchSources: (repository: Repository, revision: string, path: string) => void;
+    fetchSources: (repository: Repository, revision: string | undefined, path: string | undefined) => void;
   };
 
 const extensionPointName = "repos.sources.extensions";
@@ -33,7 +33,7 @@ class SourceExtensions extends React.Component<Props> {
   componentDidMount() {
     const { fetchSources, repository, revision, path } = this.props;
     // TODO get typing right
-    fetchSources(repository, revision || "", path || "");
+    fetchSources(repository, revision, path);
   }
 
   render() {

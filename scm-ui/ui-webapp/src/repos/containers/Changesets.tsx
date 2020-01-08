@@ -41,7 +41,6 @@ type Props = WithTranslation & {
 class Changesets extends React.Component<Props> {
   componentDidMount() {
     const { fetchChangesets, repository, branch, page } = this.props;
-
     fetchChangesets(repository, branch, page);
   }
 

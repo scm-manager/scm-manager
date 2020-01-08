@@ -84,7 +84,7 @@ export function fetchSourcesFailure(repository: Repository, revision: string, pa
   };
 }
 
-function createItemId(repository: Repository, revision: string, path: string) {
+function createItemId(repository: Repository, revision: string | undefined, path: string) {
   const revPart = revision ? revision : "_";
   const pathPart = path ? path : "";
   return `${repository.namespace}/${repository.name}/${decodeURIComponent(revPart)}/${pathPart}`;
@@ -121,7 +121,7 @@ export function isDirectory(state: any, repository: Repository, revision: string
 export function getSources(
   state: any,
   repository: Repository,
-  revision: string,
+  revision: string | undefined,
   path: string
 ): File | null | undefined {
   if (state.sources) {

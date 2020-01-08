@@ -17,19 +17,25 @@ type Props = {
 const CodeViewSwitcher: FC<Props> = ({ url }) => {
   const [t] = useTranslation("repos");
 
+  const createDestinationUrl = (destination: string) => {
+    let splittedUrl = url.split("/");
+    splittedUrl[5] = destination;
+    return splittedUrl.join("/")
+  };
+
   return (
     <ButtonAddons>
       <SmallButton
         label={t("code.commits")}
         icon="fa fa-exchange-alt"
-        color={url.includes("/code/changeset") ? "link is-selected" : undefined}
-        link={url.replace("/code/sources", "/code/changesets")}
+        color={url.includes("/code/changesets/") ? "link is-selected" : undefined}
+        link={createDestinationUrl("changesets")}
       />
       <SmallButton
         label={t("code.sources")}
         icon="fa fa-code"
-        color={url.includes("/code/sources") ? "link is-selected" : undefined}
-        link={url.replace("/code/changesets", "/code/sources")}
+        color={url.includes("/code/sources/") ? "link is-selected" : undefined}
+        link={createDestinationUrl("sources")}
       />
     </ButtonAddons>
   );

@@ -1,11 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import { Route, withRouter, RouteComponentProps } from "react-router-dom";
-import ChangesetView from "../../containers/ChangesetView";
+import { Route, RouteComponentProps, withRouter } from "react-router-dom";
 import Sources from "../../sources/containers/Sources";
-import SourceExtensions from "../../sources/containers/SourceExtensions";
 import ChangesetsRoot from "../../containers/ChangesetsRoot";
-import { Repository, Branch } from "@scm-manager/ui-types";
+import { Branch, Repository } from "@scm-manager/ui-types";
 import { BranchSelector, Level } from "@scm-manager/ui-components";
 import CodeViewSwitcher from "../components/CodeViewSwitcher";
 import { compose } from "redux";
@@ -34,7 +32,7 @@ type Props = RouteComponentProps &
     fetchBranches: (p: Repository) => void;
   };
 
-const CodeSectionActionBar = styled.div.attrs(() => ({}))`
+const CodeActionBar = styled.div.attrs(() => ({}))`
   background-color: whitesmoke;
   border: 1px solid #dbdbdb;
   border-radius: 4px;
@@ -46,10 +44,17 @@ const CodeSectionActionBar = styled.div.attrs(() => ({}))`
   margin-bottom: 1em;
 `;
 
-class CodeSectionOverview extends React.Component<Props> {
+class CodeOverview extends React.Component<Props> {
   componentDidMount() {
-    const { repository } = this.props;
-    this.props.fetchBranches(repository);
+    const { repository, branches } = this.props;
+    new Promise(() => {
+      this.props.fetchBranches(repository);
+    }).then(() => {
+      if (branches?.length > 0) {
+        const defaultBranch = branches.filter((branch: Branch) => branch.defaultBranch === true)[0];
+        this.branchSelected(defaultBranch);
+      }
+    });
   }
 
   findSelectedBranch = () => {
@@ -58,13 +63,11 @@ class CodeSectionOverview extends React.Component<Props> {
   };
 
   branchSelected = (branch?: Branch) => {
-    let url;
+    let splittedUrl = this.props.location.pathname.split("/");
     if (branch) {
-      url = `${this.props.baseUrl}/${this.props.selectedView}/${encodeURIComponent(branch.name)}`;
-    } else {
-      url = `${this.props.baseUrl}/${this.props.selectedView}/`;
+      splittedUrl[6] = encodeURIComponent(branch.name);
     }
-    this.props.history.push(url);
+    this.props.history.push(splittedUrl.join("/"));
   };
 
   render() {
@@ -73,24 +76,19 @@ class CodeSectionOverview extends React.Component<Props> {
 
     return (
       <div>
-        <CodeSectionActionBar>
+        <CodeActionBar>
           <Level
             left={
-              branches?.length > 0 && (
-                <BranchSelector
-                  label={t("code.branchSelector")}
-                  branches={branches}
-                  selectedBranch={this.props.selectedBranch}
-                  selected={(b: Branch) => {
-                    this.branchSelected(b);
-                  }}
-                />
-              )
+              <BranchSelector
+                label={t("code.branchSelector")}
+                branches={branches}
+                selectedBranch={this.props.selectedBranch}
+                onSelectBranch={this.branchSelected}
+              />
             }
             right={<CodeViewSwitcher url={this.props.location.pathname} />}
           />
-        </CodeSectionActionBar>
-        <Route exact path={`${url}/changeset/:id`} render={() => <ChangesetView repository={repository} />} />
+        </CodeActionBar>
         <Route
           path={`${url}/sources`}
           exact={true}
@@ -99,15 +97,6 @@ class CodeSectionOverview extends React.Component<Props> {
         <Route
           path={`${url}/sources/:revision/:path*`}
           render={() => <Sources repository={repository} baseUrl={`${url}/sources`} />}
-        />
-        <Route
-          path={`${url}/sourceext/:extension`}
-          exact={true}
-          render={() => <SourceExtensions repository={repository} />}
-        />
-        <Route
-          path={`${url}/sourceext/:extension/:revision/:path*`}
-          render={() => <SourceExtensions repository={repository} />}
         />
         <Route
           path={`${url}/changesets`}
@@ -123,7 +112,7 @@ class CodeSectionOverview extends React.Component<Props> {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchBranches: (repo: Repository) => {
       dispatch(fetchBranches(repo));
@@ -152,4 +141,4 @@ export default compose(
   withRouter,
   withTranslation("repos"),
   connect(mapStateToProps, mapDispatchToProps)
-)(CodeSectionOverview);
+)(CodeOverview);

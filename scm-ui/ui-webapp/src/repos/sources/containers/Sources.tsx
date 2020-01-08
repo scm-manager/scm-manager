@@ -1,9 +1,9 @@
 import React from "react";
-import { connect } from "react-redux";
+import { connect, Dispatch, DispatchProp, MapDispatchToProps } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { BranchSelector, Breadcrumb, ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { Breadcrumb, ErrorNotification, Loading } from "@scm-manager/ui-components";
 import FileTree from "../components/FileTree";
 import {
   fetchBranches,
@@ -58,7 +58,7 @@ class Sources extends React.Component<Props, State> {
     this.redirectToDefaultBranch();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     const { fetchSources, repository, revision, path } = this.props;
     if (prevProps.revision !== revision || prevProps.path !== path) {
       fetchSources(repository, this.decodeRevision(revision), path);
@@ -147,7 +147,7 @@ class Sources extends React.Component<Props, State> {
   };
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const { repository, match } = ownProps;
   const { revision, path } = match.params;
   const decodedRevision = revision ? decodeURIComponent(revision) : undefined;
@@ -171,7 +171,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchBranches: (repository: Repository) => {
       dispatch(fetchBranches(repository));

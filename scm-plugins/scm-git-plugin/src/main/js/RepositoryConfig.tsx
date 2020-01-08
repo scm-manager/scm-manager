@@ -1,7 +1,15 @@
 import React, { FormEvent } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Branch, Repository, Link } from "@scm-manager/ui-types";
-import { apiClient, BranchSelector, ErrorPage, Loading, Subtitle, Level, SubmitButton } from "@scm-manager/ui-components";
+import {
+  apiClient,
+  BranchSelector,
+  ErrorPage,
+  Loading,
+  Subtitle,
+  Level,
+  SubmitButton
+} from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -13,7 +21,7 @@ type State = {
   submitPending: boolean;
   error?: Error;
   branches: Branch[];
-  selectedBranchName?: string;
+  selectedBranchName: string;
   defaultBranchChanged: boolean;
   disabled: boolean;
 };
@@ -29,6 +37,7 @@ class RepositoryConfig extends React.Component<Props, State> {
       loadingDefaultBranch: true,
       submitPending: false,
       branches: [],
+      selectedBranchName: "",
       defaultBranchChanged: false,
       disabled: true
     };
@@ -87,16 +96,16 @@ class RepositoryConfig extends React.Component<Props, State> {
     if (!branch) {
       this.setState({
         ...this.state,
-        selectedBranchName: undefined,
+        selectedBranchName: "",
         defaultBranchChanged: false
       });
-      return;
+    } else {
+      this.setState({
+        ...this.state,
+        selectedBranchName: branch.name,
+        defaultBranchChanged: false
+      });
     }
-    this.setState({
-      ...this.state,
-      selectedBranchName: branch.name,
-      defaultBranchChanged: false
-    });
   };
 
   submit = (event: FormEvent) => {
@@ -164,7 +173,7 @@ class RepositoryConfig extends React.Component<Props, State> {
             <BranchSelector
               label={t("scm-git-plugin.repo-config.default-branch")}
               branches={this.state.branches}
-              selected={this.branchSelected}
+              onSelectBranch={this.branchSelected}
               selectedBranch={this.state.selectedBranchName}
               disabled={disabled}
             />

@@ -6,7 +6,7 @@ export type Description = {
 };
 
 export function createChangesetLink(repository: Repository, changeset: Changeset) {
-  return `/repo/${repository.namespace}/${repository.name}/changeset/${changeset.id}`;
+  return `/repo/${repository.namespace}/${repository.name}/code/changeset/${changeset.id}`;
 }
 
 export function createSourcesLink(repository: Repository, changeset: Changeset) {

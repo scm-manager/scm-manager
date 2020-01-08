@@ -17,7 +17,9 @@ import BranchRoot from "../branches/containers/BranchRoot";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import RepositoryNavLink from "../components/RepositoryNavLink";
 import { getLinks, getRepositoriesLink } from "../../modules/indexResource";
-import CodeSectionOverview from "../codeSection/containers/CodeSectionOverview";
+import CodeOverview from "../codeSection/containers/CodeOverview";
+import ChangesetView from "./ChangesetView";
+import SourceExtensions from "../sources/containers/SourceExtensions";
 
 type Props = WithTranslation & {
   namespace: string;
@@ -129,8 +131,22 @@ class RepositoryRoot extends React.Component<Props> {
                 )}
               />
               <Route
+                exact
+                path={`${url}/code/changeset/:id`}
+                render={() => <ChangesetView repository={repository} />}
+              />
+              <Route
+                path={`${url}/code/sourceext/:extension`}
+                exact={true}
+                render={() => <SourceExtensions repository={repository} />}
+              />
+              <Route
+                path={`${url}/code/sourceext/:extension/:revision/:path*`}
+                render={() => <SourceExtensions repository={repository} />}
+              />
+              <Route
                 path={`${url}/code`}
-                render={() => <CodeSectionOverview baseUrl={`${url}/code`} repository={repository} />}
+                render={() => <CodeOverview baseUrl={`${url}/code`} repository={repository} />}
               />
               <Route
                 path={`${url}/branch/:branch`}
@@ -187,7 +203,7 @@ class RepositoryRoot extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const { namespace, name } = ownProps.match.params;
   const repository = getRepository(state, namespace, name);
   const loading = isFetchRepoPending(state, namespace, name);
@@ -205,7 +221,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchRepoByName: (link: string, namespace: string, name: string) => {
       dispatch(fetchRepoByName(link, namespace, name));
