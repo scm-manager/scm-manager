@@ -27,7 +27,7 @@ export type Hunk = {
   content: string;
 };
 
-export type ChangeType = "insert" | "delete" | "normal";
+export type ChangeType = "insert" | "delete" | "normal" | "conflict";
 
 export type Change = {
   content: string;

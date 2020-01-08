@@ -173,6 +173,18 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   renderHunk = (hunk: HunkType, i: number) => {
+    let inConflict = false;
+    for (i = 0; i < hunk.changes.length; ++i) {
+      if (hunk.changes[i].content === "<<<<<<< HEAD") {
+        inConflict = true;
+      }
+      if (inConflict) {
+        hunk.changes[i].type = "conflict";
+      }
+      if (hunk.changes[i].content.startsWith(">>>>>>>")) {
+        inConflict = false;
+      }
+    }
     return [
       <Decoration key={"decoration-" + hunk.content}>{this.createHunkHeader(hunk, i)}</Decoration>,
       <Hunk

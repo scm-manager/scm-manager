@@ -829,4 +829,12 @@ form .field:not(.is-grouped) {
   font-weight: 500 !important;
 }
 
+.diff-gutter-conflict {
+  background: $warning-50;
+}
+
+.diff-code-conflict {
+  background: $warning-25;
+}
+
 @import "bulma-popover/css/bulma-popover";
