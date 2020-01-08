@@ -174,7 +174,7 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   renderHunk = (hunk: HunkType, i: number) => {
-    if (this.props.markConflicts) {
+    if (this.props.markConflicts && hunk.changes) {
       this.markConflicts(hunk);
     }
     return [
@@ -241,6 +241,14 @@ class DiffFile extends React.Component<Props, State> {
     return <ChangeTypeTag className={classNames("is-rounded", "has-text-weight-normal")} color={color} label={value} />;
   };
 
+  concat = (array: object[][]) => {
+    if (array.length > 0) {
+      return array.reduce((a, b) => a.concat(b));
+    } else {
+      return [];
+    }
+  };
+
   render() {
     const { file, fileControlFactory, fileAnnotationFactory, t } = this.props;
     const { collapsed, sideBySide } = this.state;
@@ -255,7 +263,7 @@ class DiffFile extends React.Component<Props, State> {
         <div className="panel-block is-paddingless">
           {fileAnnotations}
           <ModifiedDiffComponent className={viewType} viewType={viewType} hunks={file.hunks} diffType={file.type}>
-            {(hunks: HunkType[]) => hunks.map(this.renderHunk).reduce((a, b) => a.concat(b))}
+            {(hunks: HunkType[]) => this.concat(hunks.map(this.renderHunk))}
           </ModifiedDiffComponent>
         </div>
       );
