@@ -88,7 +88,10 @@
 <!-- generated entries -->
 
 <!--- extension -->
-<!ELEMENT extension (description|class)*>
+<!ELEMENT extension (description|class|requires)*>
+
+<!--- requires value -->
+<!ELEMENT requires (#PCDATA)>
 
 <!--- class value -->
 <!ELEMENT class (#PCDATA)>
