@@ -55,63 +55,37 @@ import sonia.scm.util.Util;
 public final class ExtensionBinder
 {
 
-  /** Field description */
   private static final String TYPE_LOOSE_EXT = "loose extension";
-
-  /** Field description */
   private static final String TYPE_REST_RESOURCE = "rest resource";
+  private static final String AS_EAGER_SINGLETON = " as eager singleton";
 
   /**
    * the logger for ExtensionBinder
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(ExtensionBinder.class);
+  private static final Logger logger = LoggerFactory.getLogger(ExtensionBinder.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param binder
-   */
   public ExtensionBinder(Binder binder)
   {
     this.binder = binder;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param collector
-   */
   public void bind(ExtensionCollector collector)
   {
-    logger.info("bind extensions to extension points");
+    logger.debug("bind extensions to extension points");
 
     for (ExtensionPointElement epe : collector.getExtensionPointElements())
     {
       bindExtensionPoint(collector, epe);
     }
 
-    logger.info("bind loose extensions");
+    logger.debug("bind loose extensions");
     bindLooseExtensions(collector.getLooseExtensions());
-    logger.info("bind rest providers");
+    logger.debug("bind rest providers");
     bindRestProviders(collector.getRestProviders());
-    logger.info("bind rest resources");
+    logger.debug("bind rest resources");
     bindRestResource(collector.getRestResources());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param collector
-   * @param epe
-   */
   private void bindExtensionPoint(ExtensionCollector collector,
     ExtensionPointElement epe)
   {
@@ -142,12 +116,6 @@ public final class ExtensionBinder
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param extensions
-   */
   private void bindLooseExtensions(Iterable<Class> extensions)
   {
     for (Class extension : extensions)
@@ -156,46 +124,27 @@ public final class ExtensionBinder
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param found
-   *
-   * @param extensionPoint
-   *
-   * @param boundClasses
-   * @param extensionPointClass
-   * @param extensions
-   */
-  private void bindMultiExtensionPoint(ExtensionPointElement extensionPoint,
-    Iterable<Class> extensions)
+  private void bindMultiExtensionPoint(ExtensionPointElement extensionPoint, Iterable<Class> extensions)
   {
     Class extensionPointClass = extensionPoint.getClazz();
 
-    if (logger.isInfoEnabled())
-    {
-      logger.info("create multibinder for {}", extensionPointClass.getName());
-    }
+    logger.debug("create multibinder for {}", extensionPointClass.getName());
 
-    Multibinder multibinder = Multibinder.newSetBinder(binder,
-                                extensionPointClass);
-
+    Multibinder multibinder = Multibinder.newSetBinder(binder, extensionPointClass);
     for (Class extensionClass : extensions)
     {
       boolean eagerSingleton = isEagerSingleton(extensionClass);
 
-      if (logger.isInfoEnabled())
+      if (logger.isDebugEnabled())
       {
         String as = Util.EMPTY_STRING;
 
         if (eagerSingleton)
         {
-          as = " as eager singleton";
+          as = AS_EAGER_SINGLETON;
         }
 
-        logger.info("bind {} to multibinder of {}{}", extensionClass.getName(),
+        logger.debug("bind {} to multibinder of {}{}", extensionClass.getName(),
           extensionPointClass.getName(), as);
       }
 
@@ -208,27 +157,15 @@ public final class ExtensionBinder
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param restProviders
-   */
   private void bindRestProviders(Iterable<Class> restProviders)
   {
     for (Class restProvider : restProviders)
     {
-      logger.info("bind rest provider {}", restProvider);
+      logger.debug("bind rest provider {}", restProvider);
       binder.bind(restProvider).in(Singleton.class);
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param restResources
-   */
   private void bindRestResource(Iterable<Class> restResources)
   {
     for (Class restResource : restResources)
@@ -237,31 +174,22 @@ public final class ExtensionBinder
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param extensionPointClass
-   *
-   * @param extensionPoint
-   * @param extensionClass
-   */
   private void bindSingleInstance(ExtensionPointElement extensionPoint,
     Class extensionClass)
   {
     Class extensionPointClass = extensionPoint.getClazz();
     boolean eagerSingleton = isEagerSingleton(extensionClass);
 
-    if (logger.isInfoEnabled())
+    if (logger.isDebugEnabled())
     {
       String as = Util.EMPTY_STRING;
 
       if (eagerSingleton)
       {
-        as = " as eager singleton";
+        as = AS_EAGER_SINGLETON;
       }
 
-      logger.info("bind {} to {}{}", extensionClass.getName(),
+      logger.debug("bind {} to {}{}", extensionClass.getName(),
         extensionPointClass.getName(), as);
     }
 
@@ -274,13 +202,6 @@ public final class ExtensionBinder
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param extension
-   */
   private void singleBind(String type, Class extension)
   {
     StringBuilder log = new StringBuilder();
@@ -291,30 +212,19 @@ public final class ExtensionBinder
 
     if (isEagerSingleton(extension))
     {
-      log.append(" as eager singleton");
+      log.append(AS_EAGER_SINGLETON);
       abb.asEagerSingleton();
     }
 
-    logger.info(log.toString());
+    if (logger.isDebugEnabled()) {
+      logger.debug(log.toString());
+    }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param extensionClass
-   *
-   * @return
-   */
   private boolean isEagerSingleton(Class extensionClass)
   {
     return extensionClass.isAnnotationPresent(EagerSingleton.class);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
   private final Binder binder;
 }

@@ -39,6 +39,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -47,6 +49,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -56,23 +59,33 @@ import java.util.Set;
 public final class ExtensionCollector
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param modules
-   */
-  ExtensionCollector(Iterable<ScmModule> modules)
-  {
-    for (ScmModule module : modules)
-    {
+  private static final Logger LOG = LoggerFactory.getLogger(ExtensionCollector.class);
+
+  private final Set<String> pluginIndex;
+
+  public ExtensionCollector(ClassLoader moduleClassLoader, Set<ScmModule> modules, Set<InstalledPlugin> installedPlugins) {
+    this.pluginIndex = createPluginIndex(installedPlugins);
+
+    for (ScmModule module : modules) {
       collectRootElements(module);
     }
-
-    for (ScmModule module : modules)
-    {
-      collectExtensions(module);
+    for (ScmModule plugin : PluginsInternal.unwrap(installedPlugins)) {
+      collectRootElements(plugin);
     }
+
+    for (ScmModule module : modules) {
+      collectExtensions(moduleClassLoader, module);
+    }
+
+    for (InstalledPlugin plugin : installedPlugins) {
+      collectExtensions(plugin.getClassLoader(), plugin.getDescriptor());
+    }
+  }
+
+  private Set<String> createPluginIndex(Set<InstalledPlugin> installedPlugins) {
+    return installedPlugins.stream()
+      .map(p -> p.getDescriptor().getInformation().getName())
+      .collect(Collectors.toSet());
   }
 
   //~--- methods --------------------------------------------------------------
@@ -245,18 +258,33 @@ public final class ExtensionCollector
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param module
-   */
-  private void collectExtensions(ScmModule module)
-  {
-    for (Class extension : module.getExtensions())
-    {
-      appendExtension(extension);
+  private void collectExtensions(ClassLoader defaultClassLoader, ScmModule module) {
+    for (ExtensionElement extension : module.getExtensions()) {
+      if (isRequirementFulfilled(extension)) {
+        Class<?> extensionClass = loadExtension(defaultClassLoader, extension);
+        appendExtension(extensionClass);
+      }
     }
+  }
+
+  private Class<?> loadExtension(ClassLoader classLoader, ExtensionElement extension) {
+    try {
+      return classLoader.loadClass(extension.getClazz());
+    } catch (ClassNotFoundException ex) {
+      throw new PluginLoadException("failed to load clazz", ex);
+    }
+  }
+
+  private boolean isRequirementFulfilled(ExtensionElement extension) {
+    if (extension.getRequires() != null) {
+      for (String requiredPlugin : extension.getRequires()) {
+        if (!pluginIndex.contains(requiredPlugin)) {
+          LOG.debug("skip loading of extension {}, because the required plugin {} is not installed", extension.getClazz(), requiredPlugin);
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   /**

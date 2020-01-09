@@ -134,7 +134,7 @@ public class ExplodedSmpTest
     info.setVersion(version);
 
     InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(2, info, null, null, false,
-                      Sets.newSet(dependencies));
+                      Sets.newSet(dependencies), null);
 
     return new ExplodedSmp(null, plugin);
   }

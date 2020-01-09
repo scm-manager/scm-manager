@@ -34,6 +34,7 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
 import org.junit.Rule;
@@ -72,7 +73,7 @@ public class PluginTreeTest
     PluginCondition condition = new PluginCondition("999",
                                   new ArrayList<String>(), "hit");
     InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(2, createInfo("a",  "1"), null, condition,
-                      false, null);
+                      false, null, null);
     ExplodedSmp smp = createSmp(plugin);
 
     new PluginTree(smp).getRootNodes();
@@ -115,7 +116,7 @@ public class PluginTreeTest
   public void testScmVersion() throws IOException
   {
     InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(1, createInfo("a", "1"), null, null, false,
-                      null);
+                      null, null);
     ExplodedSmp smp = createSmp(plugin);
 
     new PluginTree(smp).getRootNodes();
@@ -131,10 +132,10 @@ public class PluginTreeTest
   public void testSimpleDependencies() throws IOException
   {
     //J-
-    ExplodedSmp[] smps = new ExplodedSmp[] { 
+    ExplodedSmp[] smps = new ExplodedSmp[] {
       createSmpWithDependency("a"),
       createSmpWithDependency("b", "a"),
-      createSmpWithDependency("c", "a", "b") 
+      createSmpWithDependency("c", "a", "b")
     };
     //J+
 
@@ -150,6 +151,61 @@ public class PluginTreeTest
     PluginNode b = a.getChild("b");
 
     assertThat(unwrapIds(b.getChildren()), containsInAnyOrder("c"));
+  }
+
+  @Test
+  public void testWithOptionalDependency() throws IOException {
+    ExplodedSmp[] smps = new ExplodedSmp[] {
+      createSmpWithDependency("a"),
+      createSmpWithDependency("b", null, ImmutableSet.of("a")),
+      createSmpWithDependency("c", null, ImmutableSet.of("a", "b"))
+    };
+
+    PluginTree tree = new PluginTree(smps);
+    List<PluginNode> rootNodes = tree.getRootNodes();
+
+    assertThat(unwrapIds(rootNodes), containsInAnyOrder("a"));
+
+    PluginNode a = rootNodes.get(0);
+    assertThat(unwrapIds(a.getChildren()), containsInAnyOrder("b", "c"));
+
+    PluginNode b = a.getChild("b");
+    assertThat(unwrapIds(b.getChildren()), containsInAnyOrder("c"));
+  }
+
+  @Test
+  public void testWithDeepOptionalDependency() throws IOException {
+    ExplodedSmp[] smps = new ExplodedSmp[] {
+      createSmpWithDependency("a"),
+      createSmpWithDependency("b", "a"),
+      createSmpWithDependency("c", null, ImmutableSet.of("b"))
+    };
+
+    PluginTree tree = new PluginTree(smps);
+
+    System.out.println(tree);
+
+    List<PluginNode> rootNodes = tree.getRootNodes();
+
+    assertThat(unwrapIds(rootNodes), containsInAnyOrder("a"));
+
+    PluginNode a = rootNodes.get(0);
+    assertThat(unwrapIds(a.getChildren()), containsInAnyOrder("b"));
+
+    PluginNode b = a.getChild("b");
+    assertThat(unwrapIds(b.getChildren()), containsInAnyOrder("c"));
+  }
+
+  @Test
+  public void testWithNonExistentOptionalDependency() throws IOException {
+    ExplodedSmp[] smps = new ExplodedSmp[] {
+      createSmpWithDependency("a", null, ImmutableSet.of("b"))
+    };
+
+    PluginTree tree = new PluginTree(smps);
+    List<PluginNode> rootNodes = tree.getRootNodes();
+
+    assertThat(unwrapIds(rootNodes), containsInAnyOrder("a"));
   }
 
   /**
@@ -200,7 +256,7 @@ public class PluginTreeTest
   private ExplodedSmp createSmp(String name) throws IOException
   {
     return createSmp(new InstalledPluginDescriptor(2, createInfo(name, "1.0.0"), null, null,
-      false, null));
+      false, null, null));
   }
 
   /**
@@ -224,10 +280,19 @@ public class PluginTreeTest
     {
       dependencySet.add(d);
     }
+    return createSmpWithDependency(name, dependencySet, null);
+  }
 
-    InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(2, createInfo(name, "1"), null, null,
-                      false, dependencySet);
-
+  private ExplodedSmp createSmpWithDependency(String name, Set<String> dependencies, Set<String> optionalDependencies) throws IOException {
+    InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(
+      2,
+      createInfo(name, "1"),
+      null,
+      null,
+      false,
+      dependencies,
+      optionalDependencies
+    );
     return createSmp(plugin);
   }
 

@@ -99,7 +99,7 @@ public class DefaultPluginLoader implements PluginLoader
 
       modules = getInstalled(parent, context, PATH_MODULECONFIG);
 
-      collector = new ExtensionCollector(Iterables.concat(modules, unwrap()));
+      collector = new ExtensionCollector(parent, modules, installedPlugins);
       extensionProcessor = new DefaultExtensionProcessor(collector);
     }
     catch (IOException | JAXBException ex)
@@ -168,19 +168,6 @@ public class DefaultPluginLoader implements PluginLoader
   public UberWebResourceLoader getUberWebResourceLoader()
   {
     return uberWebResourceLoader;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private Iterable<InstalledPluginDescriptor> unwrap()
-  {
-    return PluginsInternal.unwrap(installedPlugins);
   }
 
   //~--- get methods ----------------------------------------------------------
