@@ -32,10 +32,6 @@ type Props = WithTranslation &
     page: number;
     reposLink: string;
 
-    // context props
-    history: History;
-    location: any;
-
     // dispatched functions
     fetchReposByPage: (link: string, page: number, filter?: string) => void;
   };

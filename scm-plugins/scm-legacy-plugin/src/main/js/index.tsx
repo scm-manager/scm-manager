@@ -8,9 +8,6 @@ import { Links, Link } from "@scm-manager/ui-types";
 type Props = RouteComponentProps & {
   authenticated?: boolean;
   links: Links;
-
-  //context objects
-  history: History;
 };
 
 type State = {

@@ -27,10 +27,6 @@ type Props = RouteComponentProps &
     page: number;
     rolesLink: string;
 
-    // context objects
-    history: History;
-    location: any;
-
     // dispatch functions
     fetchRolesByPage: (link: string, page: number) => void;
   };

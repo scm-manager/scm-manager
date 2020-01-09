@@ -34,10 +34,6 @@ type Props = RouteComponentProps &
     page: number;
     groupLink: string;
 
-    // context objects
-    history: History;
-    location: any;
-
     // dispatch functions
     fetchGroupsByPage: (link: string, page: number, filter?: string) => void;
   };

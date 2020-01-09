@@ -9,10 +9,6 @@ type Props = RouteComponentProps & {
   showCreateButton: boolean;
   link: string;
   label?: string;
-
-  // context props
-  history: History;
-  location: any;
 };
 
 class OverviewPageActions extends React.Component<Props> {
