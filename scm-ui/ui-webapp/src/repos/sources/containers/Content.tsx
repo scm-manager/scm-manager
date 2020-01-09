@@ -17,6 +17,7 @@ type Props = WithTranslation & {
   repository: Repository;
   revision: string;
   path: string;
+  breadcrumb: React.ReactNode;
 };
 
 type State = {
@@ -172,7 +173,7 @@ class Content extends React.Component<Props, State> {
   }
 
   render() {
-    const { file, revision, repository, path } = this.props;
+    const { file, revision, repository, path, breadcrumb } = this.props;
     const { showHistory, errorFromExtension } = this.state;
 
     const header = this.showHeader();
@@ -189,6 +190,7 @@ class Content extends React.Component<Props, State> {
         <div className="panel">
           <div className="panel-heading">{header}</div>
           {moreInformation}
+          {breadcrumb}
           {content}
         </div>
         {errorFromExtension && <ErrorNotification error={errorFromExtension} />}

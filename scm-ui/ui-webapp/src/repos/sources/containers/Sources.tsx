@@ -118,7 +118,7 @@ class Sources extends React.Component<Props, State> {
         </div>
       );
     } else {
-      return <Content repository={repository} revision={revision} path={path} />;
+      return <Content repository={repository} revision={revision} path={path} breadcrumb={this.renderBreadcrumb()} />;
     }
   }
 
