@@ -147,7 +147,7 @@ class RepositoryRoot extends React.Component<Props> {
               />
               <Route
                 path={`${url}/code/sourceext/:extension/:revision/:path*`}
-                render={() => <SourceExtensions repository={repository} />}
+                render={() => <SourceExtensions repository={repository} baseUrl={`${url}/code/sources`} />}
               />
               <Route
                 path={`${url}/code`}

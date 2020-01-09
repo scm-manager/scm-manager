@@ -5,13 +5,13 @@ import { RouteComponentProps, withRouter } from "react-router-dom";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { fetchSources, getFetchSourcesFailure, getSources, isFetchSourcesPending } from "../modules/sources";
 import { connect } from "react-redux";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
-import Notification from "@scm-manager/ui-components/src/Notification";
+import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
 import { WithTranslation, withTranslation } from "react-i18next";
 
 type Props = WithTranslation &
   RouteComponentProps & {
     repository: Repository;
+    baseUrl: string;
 
     // url params
     extension: string;
@@ -37,7 +37,7 @@ class SourceExtensions extends React.Component<Props> {
   }
 
   render() {
-    const { loading, error, repository, extension, revision, path, sources, t } = this.props;
+    const { loading, error, repository, extension, revision, path, sources, baseUrl, t } = this.props;
     if (error) {
       return <ErrorNotification error={error} />;
     }
@@ -45,7 +45,7 @@ class SourceExtensions extends React.Component<Props> {
       return <Loading />;
     }
 
-    const extprops = { extension, repository, revision, path, sources };
+    const extprops = { extension, repository, revision, path, sources, baseUrl };
     if (!binder.hasExtension(extensionPointName, extprops)) {
       return <Notification type="warning">{t("sources.extension.notBound")}</Notification>;
     }
