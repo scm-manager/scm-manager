@@ -271,7 +271,7 @@ public final class ExtensionCollector
     try {
       return classLoader.loadClass(extension.getClazz());
     } catch (ClassNotFoundException ex) {
-      throw new RuntimeException("failed to load clazz", ex);
+      throw new PluginLoadException("failed to load clazz", ex);
     }
   }
 
