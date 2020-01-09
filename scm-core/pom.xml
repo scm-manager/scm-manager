@@ -173,6 +173,13 @@
       <artifactId>activation</artifactId>
     </dependency>
 
+    <!-- validation -->
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
+
     <!-- util -->
 
     <dependency>
@@ -213,12 +220,6 @@
       <groupId>com.github.sdorra</groupId>
       <artifactId>shiro-unit</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>5.3.6.Final</version>
-      <scope>compile</scope>
     </dependency>
 
   </dependencies>
