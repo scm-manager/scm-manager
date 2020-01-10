@@ -37,7 +37,7 @@ const CodeViewSwitcher: FC<Props> = ({ url, branches }) => {
       <SmallButton
         label={t("code.commits")}
         icon="fa fa-exchange-alt"
-        color={url.includes("/code/branch/") || url.includes("/code/changesets/") ? "link is-selected" : undefined}
+        color={url.includes("/code/branch") || url.includes("/code/changesets") ? "link is-selected" : undefined}
         link={branches ? createDestinationUrl("branch", "changesets/") : createDestinationUrl("changesets")}
       />
       <SmallButton
