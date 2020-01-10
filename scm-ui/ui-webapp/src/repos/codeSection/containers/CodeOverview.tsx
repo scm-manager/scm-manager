@@ -25,7 +25,6 @@ type Props = RouteComponentProps &
     branches: Branch[];
     error: Error;
     loading: boolean;
-    selectedView: string;
     selectedBranch: string;
 
     // Dispatch props
@@ -64,10 +63,22 @@ class CodeOverview extends React.Component<Props> {
 
   branchSelected = (branch?: Branch) => {
     let splittedUrl = this.props.location.pathname.split("/");
-    if (branch) {
-      splittedUrl[6] = encodeURIComponent(branch.name);
+    if (
+      this.props.location.pathname.includes("/code/sources/") ||
+      this.props.location.pathname.includes("/code/branch/")
+    ) {
+      if (branch) {
+        splittedUrl[6] = encodeURIComponent(branch.name);
+      }
+      this.props.history.push(splittedUrl.join("/"));
     }
-    this.props.history.push(splittedUrl.join("/"));
+    if (this.props.location.pathname.includes("/code/changesets/")) {
+      this.props.history.push(
+        `${splittedUrl[0]}/${splittedUrl[1]}/${splittedUrl[2]}/${splittedUrl[3]}/${
+          splittedUrl[4]
+        }/branch/${encodeURIComponent(branch.name)}/${splittedUrl[5]}/`
+      );
+    }
   };
 
   render() {
@@ -96,7 +107,7 @@ class CodeOverview extends React.Component<Props> {
                 onSelectBranch={this.branchSelected}
               />
             }
-            right={<CodeViewSwitcher url={this.props.location.pathname} />}
+            right={<CodeViewSwitcher url={this.props.location.pathname} branches={branches} />}
           />
         </CodeActionBar>
         <Route
@@ -110,11 +121,10 @@ class CodeOverview extends React.Component<Props> {
         />
         <Route
           path={`${url}/changesets`}
-          exact={true}
           render={() => <ChangesetsRoot repository={repository} baseUrl={`${url}/changesets`} />}
         />
         <Route
-          path={`${url}/changesets/:branch/`}
+          path={`${url}/branch/:branch/changesets/`}
           render={() => <ChangesetsRoot repository={repository} baseUrl={`${url}/changesets`} />}
         />
       </div>
@@ -135,14 +145,13 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   const error = getFetchBranchesFailure(state, repository);
   const loading = isFetchBranchesPending(state, repository);
   const branches = getBranches(state, repository);
-  const selectedView = decodeURIComponent(location.pathname.split("/")[5]);
-  const branchFromURL = decodeURIComponent(location.pathname.split("/")[6]);
+  const branchFromURL =
+    !location.pathname.includes("/code/changesets/") && decodeURIComponent(location.pathname.split("/")[6]);
   const selectedBranch = branchFromURL && branchFromURL !== "undefined" ? branchFromURL : "";
   return {
     error,
     loading,
     branches,
-    selectedView,
     selectedBranch
   };
 };

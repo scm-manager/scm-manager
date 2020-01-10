@@ -126,7 +126,7 @@ class RepositoryRoot extends React.Component<Props> {
               <Redirect exact from={`${url}/sources`} to={`${url}/code/sources`} />
               <Redirect from={`${url}/sources/:revision/:path*`} to={`${url}/code/sources/:revision/:path*`} />
               <Redirect exact from={`${url}/changesets`} to={`${url}/code/changesets`} />
-              <Redirect from={`${url}/branch/:branch/changesets`} to={`${url}/code/changesets/:branch`} />
+              <Redirect from={`${url}/branch/:branch/changesets`} to={`${url}/code/branch/:branch/changesets/`} />
               <Route path={`${url}/info`} exact component={() => <RepositoryDetails repository={repository} />} />
               <Route path={`${url}/settings/general`} component={() => <EditRepo repository={repository} />} />
               <Route
