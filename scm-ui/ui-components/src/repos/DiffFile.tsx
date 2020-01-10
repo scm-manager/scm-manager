@@ -110,7 +110,7 @@ class DiffFile extends React.Component<Props, State> {
 
   toggleCollapse = () => {
     const { file } = this.props;
-    if (file && !file.isBinary) {
+    if (this.hasContent(file)) {
       this.setState(state => ({
         collapsed: !state.collapsed
       }));
@@ -249,6 +249,8 @@ class DiffFile extends React.Component<Props, State> {
     }
   };
 
+  hasContent = (file: File) => file && !file.isBinary && file.hunks && file.hunks.length > 0;
+
   render() {
     const { file, fileControlFactory, fileAnnotationFactory, t } = this.props;
     const { collapsed, sideBySide } = this.state;
@@ -268,7 +270,7 @@ class DiffFile extends React.Component<Props, State> {
         </div>
       );
     }
-    const collapseIcon = file && !file.isBinary ? <Icon name={icon} color="inherit" /> : null;
+    const collapseIcon = this.hasContent(file) ? <Icon name={icon} color="inherit" /> : null;
 
     const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
     return (
