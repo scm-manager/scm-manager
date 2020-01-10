@@ -89,9 +89,9 @@ public class ScmModule
    *
    * @return
    */
-  public Iterable<Class<?>> getExtensions()
+  public Iterable<ExtensionElement> getExtensions()
   {
-    return unwrap(extensions);
+    return nonNull(extensions);
   }
 
   /**
@@ -223,7 +223,7 @@ public class ScmModule
 
   /** Field description */
   @XmlElement(name = "extension")
-  private Set<ClassElement> extensions;
+  private Set<ExtensionElement> extensions;
 
   /** Field description */
   @XmlElement(name = "rest-provider")

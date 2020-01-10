@@ -20,7 +20,7 @@
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0",
-    "gitdiff-parser": "https://github.com/scm-manager/gitdiff-parser#6baa7278824ecd17a199d842ca720d0453f68982"
+    "gitdiff-parser": "https://github.com/scm-manager/gitdiff-parser#ed3fe7de73dbb0a06c3e6adbbdf22dbae6e66351"
   },
   "babel": {
     "presets": [

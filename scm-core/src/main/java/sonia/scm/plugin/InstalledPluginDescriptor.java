@@ -38,6 +38,7 @@ package sonia.scm.plugin;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -76,7 +77,7 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
    */
   public InstalledPluginDescriptor(int scmVersion, PluginInformation information,
                                    PluginResources resources, PluginCondition condition,
-                                   boolean childFirstClassLoader, Set<String> dependencies)
+                                   boolean childFirstClassLoader, Set<String> dependencies, Set<String> optionalDependencies)
   {
     this.scmVersion = scmVersion;
     this.information = information;
@@ -84,6 +85,7 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
     this.condition = condition;
     this.childFirstClassLoader = childFirstClassLoader;
     this.dependencies = dependencies;
+    this.optionalDependencies = optionalDependencies;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -116,7 +118,8 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
       && Objects.equal(information, other.information)
       && Objects.equal(resources, other.resources)
       && Objects.equal(childFirstClassLoader, other.childFirstClassLoader)
-      && Objects.equal(dependencies, other.dependencies);
+      && Objects.equal(dependencies, other.dependencies)
+      && Objects.equal(optionalDependencies, other.optionalDependencies);
   }
 
   /**
@@ -129,7 +132,7 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
   public int hashCode()
   {
     return Objects.hashCode(scmVersion, condition, information, resources,
-      childFirstClassLoader, dependencies);
+      childFirstClassLoader, dependencies, optionalDependencies);
   }
 
   /**
@@ -149,6 +152,7 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
                   .add("resources", resources)
                   .add("childFirstClassLoader", childFirstClassLoader)
                   .add("dependencies", dependencies)
+                  .add("optionalDependencies", optionalDependencies)
                   .toString();
     //J+
   }
@@ -184,6 +188,27 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
     }
 
     return dependencies;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @since 2.0.0
+   */
+  public Set<String> getOptionalDependencies() {
+    if (optionalDependencies == null)
+    {
+      optionalDependencies = ImmutableSet.of();
+    }
+
+    return optionalDependencies;
+  }
+
+  public Set<String> getDependenciesInclusiveOptionals() {
+    return ImmutableSet.copyOf(Iterables.concat(getDependencies(), getOptionalDependencies()));
   }
 
   /**
@@ -245,6 +270,11 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
   @XmlElement(name = "dependency")
   @XmlElementWrapper(name = "dependencies")
   private Set<String> dependencies;
+
+  /** Field description */
+  @XmlElement(name = "dependency")
+  @XmlElementWrapper(name = "optional-dependencies")
+  private Set<String> optionalDependencies;
 
   /** Field description */
   @XmlElement(name = "information")

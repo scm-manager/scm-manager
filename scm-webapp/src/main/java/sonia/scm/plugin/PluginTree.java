@@ -35,15 +35,13 @@ package sonia.scm.plugin;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -104,9 +102,7 @@ public final class PluginTree
 
       if ((condition == null) || condition.isSupported())
       {
-        Set<String> dependencies = plugin.getDependencies();
-
-        if ((dependencies == null) || dependencies.isEmpty())
+        if (plugin.getDependencies().isEmpty() && plugin.getOptionalDependencies().isEmpty())
         {
           rootNodes.add(new PluginNode(smp));
         }
@@ -170,6 +166,20 @@ public final class PluginTree
         //J+
       }
     }
+
+    boolean rootNode = smp.getPlugin().getDependencies().isEmpty();
+    for (String dependency : smp.getPlugin().getOptionalDependencies()) {
+      if (appendNode(rootNodes, child, dependency)) {
+        rootNode = false;
+      } else {
+        logger.info("optional dependency {} of {} is not installed", dependency, child.getId());
+      }
+    }
+
+    if (rootNode) {
+      logger.info("could not find optional dependencies of {}, append it as root node", child.getId());
+      rootNodes.add(new PluginNode(smp));
+    }
   }
 
   /**
@@ -212,7 +222,18 @@ public final class PluginTree
 
   @Override
   public String toString() {
-    return "plugin tree: " + rootNodes.toString();
+    StringBuilder buffer = new StringBuilder();
+    for (PluginNode node : rootNodes) {
+      append(buffer, "", node);
+    }
+    return buffer.toString();
+  }
+
+  private void append(StringBuilder buffer, String indent, PluginNode node) {
+    buffer.append(indent).append("+- ").append(node.getId()).append("\n");
+    for (PluginNode child : node.getChildren()) {
+      append(buffer, indent + "   ", child);
+    }
   }
 //~--- fields ---------------------------------------------------------------
 

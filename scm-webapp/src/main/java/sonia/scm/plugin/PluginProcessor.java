@@ -189,7 +189,7 @@ public final class PluginProcessor
 
     PluginTree pluginTree = new PluginTree(smps);
 
-    logger.trace("build plugin tree: {}", pluginTree);
+    logger.info("install plugin tree:\n{}", pluginTree);
 
     List<PluginNode> rootNodes = pluginTree.getRootNodes();
 
