@@ -64,15 +64,15 @@ class CodeOverview extends React.Component<Props> {
   branchSelected = (branch?: Branch) => {
     let splittedUrl = this.props.location.pathname.split("/");
     if (
-      this.props.location.pathname.includes("/code/sources/") ||
-      this.props.location.pathname.includes("/code/branch/")
+      this.props.location.pathname.includes("/code/sources") ||
+      this.props.location.pathname.includes("/code/branch")
     ) {
       if (branch) {
         splittedUrl[6] = encodeURIComponent(branch.name);
       }
       this.props.history.push(splittedUrl.join("/"));
     }
-    if (this.props.location.pathname.includes("/code/changesets/")) {
+    if (this.props.location.pathname.includes("/code/changesets")) {
       this.props.history.push(
         `${splittedUrl[0]}/${splittedUrl[1]}/${splittedUrl[2]}/${splittedUrl[3]}/${
           splittedUrl[4]
