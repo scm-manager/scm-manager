@@ -27,7 +27,7 @@ export type Hunk = {
   content: string;
 };
 
-export type ChangeType = "insert" | "delete" | "normal";
+export type ChangeType = "insert" | "delete" | "normal" | "conflict";
 
 export type Change = {
   content: string;
@@ -75,4 +75,5 @@ export type DiffObjectProps = {
   fileControlFactory?: FileControlFactory;
   fileAnnotationFactory?: FileAnnotationFactory;
   annotationFactory?: AnnotationFactory;
+  markConflicts?: boolean;
 };

@@ -1,8 +1,17 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.MergeResult;
+import org.eclipse.jgit.api.Status;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.IndexDiff;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.merge.ResolveMerger;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.treewalk.filter.PathFilter;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.MergeCommandResult;
@@ -10,10 +19,13 @@ import sonia.scm.repository.api.MergeDryRunCommandResult;
 import sonia.scm.repository.api.MergeStrategy;
 import sonia.scm.repository.api.MergeStrategyNotSupportedException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Set;
 
 import static org.eclipse.jgit.merge.MergeStrategy.RECURSIVE;
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 public class GitMergeCommand extends AbstractGitCommand implements MergeCommand {
 
@@ -33,6 +45,11 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
   @Override
   public MergeCommandResult merge(MergeCommandRequest request) {
     return mergeWithStrategy(request);
+  }
+
+  @Override
+  public MergeConflictResult computeConflicts(MergeCommandRequest request) {
+    return inClone(git -> new ConflictWorker(git, request), workdirFactory, request.getTargetBranch());
   }
 
   private MergeCommandResult mergeWithStrategy(MergeCommandRequest request) {
@@ -75,4 +92,91 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     return STRATEGIES;
   }
 
+  private class ConflictWorker extends GitCloneWorker<MergeConflictResult> {
+    private final String theirs;
+    private final String ours;
+    private final CanonicalTreeParser treeParser;
+    private final ObjectId treeId;
+    private final ByteArrayOutputStream diffBuffer;
+
+    private final MergeConflictResult result = new MergeConflictResult();
+
+
+    private ConflictWorker(Git git, MergeCommandRequest request) {
+      super(git, context, repository);
+      theirs = request.getBranchToMerge();
+      ours = request.getTargetBranch();
+
+      treeParser = new CanonicalTreeParser();
+      diffBuffer = new ByteArrayOutputStream();
+      try {
+        treeId = git.getRepository().resolve(ours + "^{tree}");
+      } catch (IOException e) {
+        throw notFound(entity("branch", ours).in(repository));
+      }
+    }
+
+    @Override
+    MergeConflictResult run() throws IOException {
+      MergeResult mergeResult = doTemporaryMerge();
+      if (mergeResult.getConflicts() != null) {
+        getStatus().getConflictingStageState().forEach(this::computeConflict);
+      }
+      return result;
+    }
+
+    private void computeConflict(String path, IndexDiff.StageState stageState) {
+      switch (stageState) {
+        case BOTH_MODIFIED:
+          diffBuffer.reset();
+          try (ObjectReader reader = getClone().getRepository().newObjectReader()) {
+            treeParser.reset(reader, treeId);
+            getClone()
+              .diff()
+              .setOldTree(treeParser)
+              .setPathFilter(PathFilter.create(path))
+              .setOutputStream(diffBuffer)
+              .call();
+            result.addBothModified(path, diffBuffer.toString());
+          } catch (GitAPIException | IOException e) {
+            throw new InternalRepositoryException(repository, "could not calculate diff for path " + path, e);
+          }
+          break;
+        case BOTH_ADDED:
+          result.addAddedByBoth(path);
+          break;
+        case DELETED_BY_THEM:
+          result.addDeletedByUs(path);
+          break;
+        case DELETED_BY_US:
+          result.addDeletedByThem(path);
+          break;
+        default:
+          throw new InternalRepositoryException(context.getRepository(), "unexpected conflict type: " + stageState);
+      }
+    }
+
+    private MergeResult doTemporaryMerge() throws IOException {
+      ObjectId sourceRevision = resolveRevision(theirs);
+      try {
+        return getClone().merge()
+          .setFastForward(org.eclipse.jgit.api.MergeCommand.FastForwardMode.NO_FF)
+          .setCommit(false)
+          .include(theirs, sourceRevision)
+          .call();
+      } catch (GitAPIException e) {
+        throw new InternalRepositoryException(context.getRepository(), "could not merge branch " + theirs + " into " + ours, e);
+      }
+    }
+
+    private Status getStatus() {
+      Status status;
+      try {
+        status = getClone().status().call();
+      } catch (GitAPIException e) {
+        throw new InternalRepositoryException(context.getRepository(), "could not get status", e);
+      }
+      return status;
+    }
+  }
 }

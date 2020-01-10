@@ -935,6 +935,66 @@ Array [
       </div>
     </div>
   </div>,
+  <div
+    className="sc-iwsKbI bGoZkF panel is-size-6"
+  >
+    <div
+      className="panel-heading"
+    >
+      <div
+        className="sc-gZMcBi hiXlnL level"
+      >
+        <div
+          className="sc-gqjmRU jMyrLy level-left is-flex has-cursor-pointer"
+          onClick={[Function]}
+          title="Main.java"
+        >
+          <i
+            className="fas fa-angle-right has-text-inherit"
+          />
+          <span
+            className="sc-VigVT kUVxiT is-ellipsis-overflow is-size-6"
+          >
+            Main.java
+          </span>
+          <span
+            className="tag is-info is-outlined sc-jzJRlG fdoJSr is-rounded has-text-weight-normal"
+          >
+            modify
+          </span>
+        </div>
+        <div
+          className="sc-jTzLTM ljPywG level-right is-flex"
+        >
+          <div
+            className="field is-grouped"
+          >
+            <div
+              className="control"
+            >
+              <button
+                className="button is-default is-reduced-mobile"
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  className="icon is-medium"
+                >
+                  <i
+                    className="fas fa-columns has-text-inherit"
+                  />
+                </span>
+                <span>
+                  diff.sideBySide
+                   
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>,
 ]
 `;
 
@@ -4327,6 +4387,532 @@ Array [
               onMouseLeave={[Function]}
             >
                 @Test
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>,
+  <div
+    className="sc-iwsKbI czQDxz panel is-size-6"
+  >
+    <div
+      className="panel-heading"
+    >
+      <div
+        className="sc-gZMcBi hiXlnL level"
+      >
+        <div
+          className="sc-gqjmRU jMyrLy level-left is-flex has-cursor-pointer"
+          onClick={[Function]}
+          title="Main.java"
+        >
+          <i
+            className="fas fa-angle-down has-text-inherit"
+          />
+          <span
+            className="sc-VigVT kUVxiT is-ellipsis-overflow is-size-6"
+          >
+            Main.java
+          </span>
+          <span
+            className="tag is-info is-outlined sc-jzJRlG fdoJSr is-rounded has-text-weight-normal"
+          >
+            modify
+          </span>
+        </div>
+        <div
+          className="sc-jTzLTM ljPywG level-right is-flex"
+        >
+          <div
+            className="field is-grouped"
+          >
+            <div
+              className="control"
+            >
+              <button
+                className="button is-default is-reduced-mobile"
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  className="icon is-medium"
+                >
+                  <i
+                    className="fas fa-columns has-text-inherit"
+                  />
+                </span>
+                <span>
+                  diff.sideBySide
+                   
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="panel-block is-paddingless"
+    >
+      <table
+        className="diff diff-unified sc-cSHVUG cHkPoJ unified"
+        onMouseDown={[Function]}
+      >
+        <colgroup>
+          <col
+            className="diff-gutter-col"
+          />
+          <col
+            className="diff-gutter-col"
+          />
+          <col />
+        </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-hunk"
+        >
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              1
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import java.io.PrintStream;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              1
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              2
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import java.util.Arrays;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              2
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              3
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              3
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              4
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              class Main {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              5
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  private static final PrintStream OUT = System.out;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              6
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              4
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              7
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  public static void main(String[] args) {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              8
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              5
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              9
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      System.out.println("Expect nothing more to happen.");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              6
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              10
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      System.out.println("The command line parameters are:");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              7
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              11
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      Arrays.stream(args).map(arg -&gt; "- " + arg).forEach(System.out::println);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              12
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              =======
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              13
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      OUT.println("Expect nothing more to happen.");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              14
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      OUT.println("Parameters:");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              15
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      Arrays.stream(args).map(arg -&gt; "- " + arg).forEach(OUT::println);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              16
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              &gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/use_constant
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              8
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              17
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  }
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              9
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              18
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              }
             </td>
           </tr>
         </tbody>
@@ -7745,6 +8331,536 @@ Array [
               onMouseLeave={[Function]}
             >
                 @Test
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>,
+  <div
+    className="sc-iwsKbI czQDxz panel is-size-6"
+  >
+    <div
+      className="panel-heading"
+    >
+      <div
+        className="sc-gZMcBi hiXlnL level"
+      >
+        <div
+          className="sc-gqjmRU jMyrLy level-left is-flex has-cursor-pointer"
+          onClick={[Function]}
+          title="Main.java"
+        >
+          <i
+            className="fas fa-angle-down has-text-inherit"
+          />
+          <span
+            className="sc-VigVT kUVxiT is-ellipsis-overflow is-size-6"
+          >
+            Main.java
+          </span>
+          <span
+            className="tag is-info is-outlined sc-jzJRlG fdoJSr is-rounded has-text-weight-normal"
+          >
+            modify
+          </span>
+        </div>
+        <div
+          className="sc-jTzLTM ljPywG level-right is-flex"
+        >
+          <div
+            className="field is-grouped"
+          >
+            <div
+              className="control"
+            >
+              <button
+                className="button is-default is-reduced-mobile"
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  className="icon is-medium"
+                >
+                  <i
+                    className="fas fa-columns has-text-inherit"
+                  />
+                </span>
+                <span>
+                  diff.sideBySide
+                   
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="panel-block is-paddingless"
+    >
+      <p>
+        Custom File annotation for 
+        Main.java
+      </p>
+      <table
+        className="diff diff-unified sc-cSHVUG cHkPoJ unified"
+        onMouseDown={[Function]}
+      >
+        <colgroup>
+          <col
+            className="diff-gutter-col"
+          />
+          <col
+            className="diff-gutter-col"
+          />
+          <col />
+        </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-hunk"
+        >
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              1
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import java.io.PrintStream;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              1
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              2
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import java.util.Arrays;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              2
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              3
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              3
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              4
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              class Main {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              5
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  private static final PrintStream OUT = System.out;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              6
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              4
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              7
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  public static void main(String[] args) {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              8
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              5
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              9
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      System.out.println("Expect nothing more to happen.");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              6
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              10
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      System.out.println("The command line parameters are:");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              7
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              11
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      Arrays.stream(args).map(arg -&gt; "- " + arg).forEach(System.out::println);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              12
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              =======
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              13
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      OUT.println("Expect nothing more to happen.");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              14
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      OUT.println("Parameters:");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              15
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      Arrays.stream(args).map(arg -&gt; "- " + arg).forEach(OUT::println);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              16
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              &gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/use_constant
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              8
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              17
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  }
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              9
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              18
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              }
             </td>
           </tr>
         </tbody>
@@ -11203,6 +12319,544 @@ Array [
               onMouseLeave={[Function]}
             >
                 @Test
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>,
+  <div
+    className="sc-iwsKbI czQDxz panel is-size-6"
+  >
+    <div
+      className="panel-heading"
+    >
+      <div
+        className="sc-gZMcBi hiXlnL level"
+      >
+        <div
+          className="sc-gqjmRU jMyrLy level-left is-flex has-cursor-pointer"
+          onClick={[Function]}
+          title="Main.java"
+        >
+          <i
+            className="fas fa-angle-down has-text-inherit"
+          />
+          <span
+            className="sc-VigVT kUVxiT is-ellipsis-overflow is-size-6"
+          >
+            Main.java
+          </span>
+          <span
+            className="tag is-info is-outlined sc-jzJRlG fdoJSr is-rounded has-text-weight-normal"
+          >
+            modify
+          </span>
+        </div>
+        <div
+          className="sc-jTzLTM ljPywG level-right is-flex"
+        >
+          <div
+            className="field is-grouped"
+          >
+            <div
+              className="control"
+            >
+              <button
+                className="button is-default is-reduced-mobile"
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  className="icon is-medium"
+                >
+                  <i
+                    className="fas fa-columns has-text-inherit"
+                  />
+                </span>
+                <span>
+                  diff.sideBySide
+                   
+                </span>
+              </button>
+            </div>
+            <div
+              className="control"
+            >
+              <button
+                className="button is-default"
+                onClick={[Function]}
+                type="button"
+              >
+                 
+                Custom Control
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="panel-block is-paddingless"
+    >
+      <table
+        className="diff diff-unified sc-cSHVUG cHkPoJ unified"
+        onMouseDown={[Function]}
+      >
+        <colgroup>
+          <col
+            className="diff-gutter-col"
+          />
+          <col
+            className="diff-gutter-col"
+          />
+          <col />
+        </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-hunk"
+        >
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              1
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import java.io.PrintStream;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              1
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              2
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import java.util.Arrays;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              2
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              3
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              3
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              4
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              class Main {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              5
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  private static final PrintStream OUT = System.out;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              6
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              4
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              7
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  public static void main(String[] args) {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              8
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              5
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              9
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      System.out.println("Expect nothing more to happen.");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              6
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              10
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      System.out.println("The command line parameters are:");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              7
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              11
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      Arrays.stream(args).map(arg -&gt; "- " + arg).forEach(System.out::println);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              12
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              =======
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              13
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      OUT.println("Expect nothing more to happen.");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              14
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      OUT.println("Parameters:");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              15
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      Arrays.stream(args).map(arg -&gt; "- " + arg).forEach(OUT::println);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              16
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              &gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/use_constant
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              8
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              17
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  }
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              9
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              18
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              }
             </td>
           </tr>
         </tbody>
@@ -15467,6 +17121,544 @@ Array [
       </table>
     </div>
   </div>,
+  <div
+    className="sc-iwsKbI czQDxz panel is-size-6"
+  >
+    <div
+      className="panel-heading"
+    >
+      <div
+        className="sc-gZMcBi hiXlnL level"
+      >
+        <div
+          className="sc-gqjmRU jMyrLy level-left is-flex has-cursor-pointer"
+          onClick={[Function]}
+          title="Main.java"
+        >
+          <i
+            className="fas fa-angle-down has-text-inherit"
+          />
+          <span
+            className="sc-VigVT kUVxiT is-ellipsis-overflow is-size-6"
+          >
+            Main.java
+          </span>
+          <span
+            className="tag is-info is-outlined sc-jzJRlG fdoJSr is-rounded has-text-weight-normal"
+          >
+            modify
+          </span>
+        </div>
+        <div
+          className="sc-jTzLTM ljPywG level-right is-flex"
+        >
+          <div
+            className="field is-grouped"
+          >
+            <div
+              className="control"
+            >
+              <button
+                className="button is-default is-reduced-mobile"
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  className="icon is-medium"
+                >
+                  <i
+                    className="fas fa-columns has-text-inherit"
+                  />
+                </span>
+                <span>
+                  diff.sideBySide
+                   
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="panel-block is-paddingless"
+    >
+      <table
+        className="diff diff-unified sc-cSHVUG cHkPoJ unified"
+        onMouseDown={[Function]}
+      >
+        <colgroup>
+          <col
+            className="diff-gutter-col"
+          />
+          <col
+            className="diff-gutter-col"
+          />
+          <col />
+        </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-hunk"
+        >
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              1
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import java.io.PrintStream;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              1
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              2
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import java.util.Arrays;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              2
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              3
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-widget"
+          >
+            <td
+              className="diff-widget-content"
+              colSpan={3}
+            >
+              <p>
+                Line Annotation
+              </p>
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              3
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              4
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              class Main {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              5
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  private static final PrintStream OUT = System.out;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              6
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              4
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              7
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  public static void main(String[] args) {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              8
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              5
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              9
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      System.out.println("Expect nothing more to happen.");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              6
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              10
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      System.out.println("The command line parameters are:");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              7
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              11
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      Arrays.stream(args).map(arg -&gt; "- " + arg).forEach(System.out::println);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              12
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              =======
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              13
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      OUT.println("Expect nothing more to happen.");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              14
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      OUT.println("Parameters:");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              15
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      Arrays.stream(args).map(arg -&gt; "- " + arg).forEach(OUT::println);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              16
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              &gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/use_constant
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              8
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              17
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  }
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              9
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              18
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              }
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>,
 ]
 `;
 
@@ -19097,6 +21289,568 @@ Array [
               onMouseLeave={[Function]}
             >
                 @Test
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>,
+  <div
+    className="sc-iwsKbI czQDxz panel is-size-6"
+  >
+    <div
+      className="panel-heading"
+    >
+      <div
+        className="sc-gZMcBi hiXlnL level"
+      >
+        <div
+          className="sc-gqjmRU jMyrLy level-left is-flex has-cursor-pointer"
+          onClick={[Function]}
+          title="Main.java"
+        >
+          <i
+            className="fas fa-angle-down has-text-inherit"
+          />
+          <span
+            className="sc-VigVT kUVxiT is-ellipsis-overflow is-size-6"
+          >
+            Main.java
+          </span>
+          <span
+            className="tag is-info is-outlined sc-jzJRlG fdoJSr is-rounded has-text-weight-normal"
+          >
+            modify
+          </span>
+        </div>
+        <div
+          className="sc-jTzLTM ljPywG level-right is-flex"
+        >
+          <div
+            className="field is-grouped"
+          >
+            <div
+              className="control"
+            >
+              <button
+                className="button is-default is-reduced-mobile"
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  className="icon is-medium"
+                >
+                  <i
+                    className="fas fa-columns has-text-inherit"
+                  />
+                </span>
+                <span>
+                  diff.sideBySide
+                   
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="panel-block is-paddingless"
+    >
+      <table
+        className="diff diff-unified sc-cSHVUG cHkPoJ unified"
+        onMouseDown={[Function]}
+      >
+        <colgroup>
+          <col
+            className="diff-gutter-col"
+          />
+          <col
+            className="diff-gutter-col"
+          />
+          <col />
+        </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-hunk"
+        >
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              1
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import java.io.PrintStream;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              1
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              2
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import java.util.Arrays;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              2
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              3
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              3
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              4
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              class Main {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              5
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  private static final PrintStream OUT = System.out;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              6
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              4
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              7
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  public static void main(String[] args) {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              8
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              5
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              9
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      System.out.println("Expect nothing more to happen.");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              6
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              10
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      System.out.println("The command line parameters are:");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              7
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              11
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      Arrays.stream(args).map(arg -&gt; "- " + arg).forEach(System.out::println);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              12
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              =======
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              13
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      OUT.println("Expect nothing more to happen.");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              14
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      OUT.println("Parameters:");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              15
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      Arrays.stream(args).map(arg -&gt; "- " + arg).forEach(OUT::println);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              16
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              &gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/use_constant
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              8
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              17
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  }
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              9
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onClick={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              18
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              }
             </td>
           </tr>
         </tbody>
@@ -22951,6 +25705,605 @@ Array [
               onMouseLeave={[Function]}
             >
                 @Test
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>,
+  <div
+    className="sc-iwsKbI czQDxz panel is-size-6"
+  >
+    <div
+      className="panel-heading"
+    >
+      <div
+        className="sc-gZMcBi hiXlnL level"
+      >
+        <div
+          className="sc-gqjmRU jMyrLy level-left is-flex has-cursor-pointer"
+          onClick={[Function]}
+          title="Main.java"
+        >
+          <i
+            className="fas fa-angle-down has-text-inherit"
+          />
+          <span
+            className="sc-VigVT kUVxiT is-ellipsis-overflow is-size-6"
+          >
+            Main.java
+          </span>
+          <span
+            className="tag is-info is-outlined sc-jzJRlG fdoJSr is-rounded has-text-weight-normal"
+          >
+            modify
+          </span>
+        </div>
+        <div
+          className="sc-jTzLTM ljPywG level-right is-flex"
+        >
+          <div
+            className="field is-grouped"
+          >
+            <div
+              className="control"
+            >
+              <button
+                className="button is-default is-reduced-mobile"
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  className="icon is-medium"
+                >
+                  <i
+                    className="fas fa-align-left has-text-inherit"
+                  />
+                </span>
+                <span>
+                  diff.combined
+                   
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="panel-block is-paddingless"
+    >
+      <table
+        className="diff diff-split sc-cSHVUG cHkPoJ split"
+        onMouseDown={[Function]}
+      >
+        <colgroup>
+          <col
+            className="diff-gutter-col"
+          />
+          <col />
+          <col
+            className="diff-gutter-col"
+          />
+          <col />
+        </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={4}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-hunk"
+        >
+          <tr
+            className="diff-line diff-line-new-only"
+          >
+            <td
+              className="diff-gutter diff-gutter-omit"
+            />
+            <td
+              className="diff-code diff-code-omit"
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              1
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import java.io.PrintStream;
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-normal"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              1
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import java.util.Arrays;
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              2
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import java.util.Arrays;
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-normal"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              2
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              3
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-normal"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              3
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              class Main {
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              4
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              class Main {
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-new-only"
+          >
+            <td
+              className="diff-gutter diff-gutter-omit"
+            />
+            <td
+              className="diff-code diff-code-omit"
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              5
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  private static final PrintStream OUT = System.out;
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-new-only"
+          >
+            <td
+              className="diff-gutter diff-gutter-omit"
+            />
+            <td
+              className="diff-code diff-code-omit"
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              6
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-normal"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              4
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  public static void main(String[] args) {
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              7
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  public static void main(String[] args) {
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-new-only"
+          >
+            <td
+              className="diff-gutter diff-gutter-omit"
+            />
+            <td
+              className="diff-code diff-code-omit"
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              8
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-normal"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              5
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      System.out.println("Expect nothing more to happen.");
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              9
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      System.out.println("Expect nothing more to happen.");
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-normal"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              6
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      System.out.println("The command line parameters are:");
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              10
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      System.out.println("The command line parameters are:");
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-normal"
+          >
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              7
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      Arrays.stream(args).map(arg -&gt; "- " + arg).forEach(System.out::println);
+            </td>
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              11
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      Arrays.stream(args).map(arg -&gt; "- " + arg).forEach(System.out::println);
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-new-only"
+          >
+            <td
+              className="diff-gutter diff-gutter-omit"
+            />
+            <td
+              className="diff-code diff-code-omit"
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              12
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              =======
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-new-only"
+          >
+            <td
+              className="diff-gutter diff-gutter-omit"
+            />
+            <td
+              className="diff-code diff-code-omit"
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              13
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      OUT.println("Expect nothing more to happen.");
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-new-only"
+          >
+            <td
+              className="diff-gutter diff-gutter-omit"
+            />
+            <td
+              className="diff-code diff-code-omit"
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              14
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      OUT.println("Parameters:");
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-new-only"
+          >
+            <td
+              className="diff-gutter diff-gutter-omit"
+            />
+            <td
+              className="diff-code diff-code-omit"
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              15
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      Arrays.stream(args).map(arg -&gt; "- " + arg).forEach(OUT::println);
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-new-only"
+          >
+            <td
+              className="diff-gutter diff-gutter-omit"
+            />
+            <td
+              className="diff-code diff-code-omit"
+            />
+            <td
+              className="diff-gutter diff-gutter-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              16
+            </td>
+            <td
+              className="diff-code diff-code-conflict"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              &gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/use_constant
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-normal"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              8
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  }
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              17
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  }
+            </td>
+          </tr>
+          <tr
+            className="diff-line diff-line-normal"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              9
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              }
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              18
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              }
             </td>
           </tr>
         </tbody>

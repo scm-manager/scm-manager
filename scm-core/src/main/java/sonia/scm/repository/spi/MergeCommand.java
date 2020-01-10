@@ -17,6 +17,8 @@ public interface MergeCommand {
 
   MergeDryRunCommandResult dryRun(MergeCommandRequest request);
 
+  MergeConflictResult computeConflicts(MergeCommandRequest request);
+
   boolean isSupported(MergeStrategy strategy);
 
   Set<MergeStrategy> getSupportedMergeStrategies();

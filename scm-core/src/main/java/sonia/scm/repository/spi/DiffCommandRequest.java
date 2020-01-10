@@ -101,7 +101,7 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
    *
    *
    * @param format format of the diff output
-   * 
+   *
    * @since 1.34
    */
   public void setFormat(DiffFormat format)
@@ -119,7 +119,7 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
    *
    *
    * @return output format
-   * 
+   *
    * @since 1.34
    */
   public DiffFormat getFormat()
