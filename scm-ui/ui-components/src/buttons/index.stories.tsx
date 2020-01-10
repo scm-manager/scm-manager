@@ -34,6 +34,15 @@ storiesOf("Buttons|Button", module)
         Loading Button
       </Button>
     </Spacing>
+  ))
+  .add("Disabled", () => (
+    <div>
+      {colors.map(color => (
+        <Spacing key={color}>
+          <Button color={color} label={color} disabled={true} />
+        </Spacing>
+      ))}
+    </div>
   ));
 
 const buttonStory = (name: string, storyFn: () => ReactElement) => {
