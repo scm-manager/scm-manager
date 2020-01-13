@@ -30,14 +30,23 @@ const CodeViewSwitcher: FC<Props> = ({ baseUrl, currentUrl, branches, selectedBr
     }
     let splittedUrl = currentUrl.split("/");
     splittedUrl[5] = destination;
+    splittedUrl.splice(6, splittedUrl.length);
     if (branch) {
       splittedUrl[6] = branch;
     }
-    splittedUrl.splice(7, splittedUrl.length);
     if (suffix) {
       splittedUrl.push(suffix);
     }
     return splittedUrl.join("/");
+  };
+
+  const evaluateDestinationBranch = () => {
+    return (
+      branches &&
+      (branches.filter(branch => branch.name === selectedBranch).length === 0
+        ? branches.filter(branch => branch.defaultBranch === true)[0].name
+        : branches.filter(branch => branch.name === selectedBranch)[0].name)
+    );
   };
 
   return (
@@ -52,13 +61,7 @@ const CodeViewSwitcher: FC<Props> = ({ baseUrl, currentUrl, branches, selectedBr
         }
         link={
           branches
-            ? branches.filter(branch => branch.name === selectedBranch).length === 0
-              ? createDestinationUrl(
-                  "branch",
-                  branches.filter(branch => branch.defaultBranch === true)[0].name,
-                  "changesets/"
-                )
-              : createDestinationUrl("branch", selectedBranch, "changesets/")
+            ? createDestinationUrl("branch", evaluateDestinationBranch(), "changesets/")
             : createDestinationUrl("changesets")
         }
       />
@@ -66,7 +69,7 @@ const CodeViewSwitcher: FC<Props> = ({ baseUrl, currentUrl, branches, selectedBr
         label={t("code.sources")}
         icon="fa fa-code"
         color={currentUrl.includes("/code/sources") ? "link is-selected" : undefined}
-        link={createDestinationUrl("sources")}
+        link={createDestinationUrl("sources", evaluateDestinationBranch())}
       />
     </ButtonAddonsMarginRight>
   );
