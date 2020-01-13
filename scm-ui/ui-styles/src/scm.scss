@@ -423,7 +423,7 @@ $danger-25: scale-color($danger, $lightness: 75%);
 $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 @import "~@fortawesome/fontawesome-free/scss/solid";
 
-@import "~react-diff-view/index";
+@import "~react-diff-view/style/index";
 
 // NEW STYLES
 
@@ -827,6 +827,14 @@ form .field:not(.is-grouped) {
 // until update to bulma version 0.7.5
 .has-text-weight-medium {
   font-weight: 500 !important;
+}
+
+.diff-gutter-conflict {
+  background: $warning-50;
+}
+
+.diff-code-conflict {
+  background: $warning-25;
 }
 
 @import "bulma-popover/css/bulma-popover";

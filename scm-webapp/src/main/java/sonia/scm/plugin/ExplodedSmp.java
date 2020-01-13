@@ -98,8 +98,8 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
   {
     int result;
 
-    Set<String> depends = plugin.getDependencies();
-    Set<String> odepends = o.plugin.getDependencies();
+    Set<String> depends = plugin.getDependenciesInclusiveOptionals();
+    Set<String> odepends = o.plugin.getDependenciesInclusiveOptionals();
 
     if (depends.isEmpty() && odepends.isEmpty())
     {

@@ -33,6 +33,7 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Iterables;
 import com.google.common.io.Resources;
 
 import org.junit.Test;
@@ -69,43 +70,43 @@ public class ScmModuleTest
 
     //J-
     assertThat(
-      module.getExtensions(), 
+      Iterables.transform(module.getExtensions(), ExtensionElement::getClazz),
       containsInAnyOrder(
-        String.class,
-        Integer.class
+        String.class.getName(),
+        Integer.class.getName()
       )
     );
     assertThat(
-      module.getExtensionPoints(), 
+      module.getExtensionPoints(),
       containsInAnyOrder(
-        new ExtensionPointElement(String.class, "ext01", true, true), 
-        new ExtensionPointElement(Long.class, "ext02", true, true), 
+        new ExtensionPointElement(String.class, "ext01", true, true),
+        new ExtensionPointElement(Long.class, "ext02", true, true),
         new ExtensionPointElement(Integer.class, "ext03", false, true)
       )
     );
     assertThat(
-      module.getEvents(), 
+      module.getEvents(),
       containsInAnyOrder(
         String.class,
         Boolean.class
       )
     );
     assertThat(
-      module.getSubscribers(), 
+      module.getSubscribers(),
       containsInAnyOrder(
-        new SubscriberElement(Long.class, Integer.class, "sub01"), 
+        new SubscriberElement(Long.class, Integer.class, "sub01"),
         new SubscriberElement(Double.class, Float.class, "sub02")
       )
     );
     assertThat(
-      module.getRestProviders(), 
+      module.getRestProviders(),
       containsInAnyOrder(
         Integer.class,
         Long.class
       )
     );
     assertThat(
-      module.getRestResources(), 
+      module.getRestResources(),
       containsInAnyOrder(
         Float.class,
         Double.class

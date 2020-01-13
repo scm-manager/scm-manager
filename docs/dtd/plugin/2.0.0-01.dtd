@@ -23,7 +23,7 @@
 -->
 
 <!--- root element of the plugin descriptor -->
-<!ELEMENT plugin (scm-version|information|child-first-classloader|conditions|resources|dependencies|extension|extension-point|rest-resource|subscriber)*>
+<!ELEMENT plugin (scm-version|information|child-first-classloader|conditions|resources|dependencies|optional-dependencies|extension|extension-point|rest-resource|subscriber)*>
 
 <!--- major scm-manager version -->
 <!ELEMENT scm-version (#PCDATA)>
@@ -79,13 +79,19 @@
 <!--- contains plugin dependencies -->
 <!ELEMENT dependencies (dependency)*>
 
-<!--- sing plugin dependency -->
+<!--- contains optional plugin dependencies -->
+<!ELEMENT optional-dependencies (dependency)*>
+
+<!--- single plugin dependency -->
 <!ELEMENT dependency (#PCDATA)>
 
 <!-- generated entries -->
 
 <!--- extension -->
-<!ELEMENT extension (description|class)*>
+<!ELEMENT extension (description|class|requires)*>
+
+<!--- requires value -->
+<!ELEMENT requires (#PCDATA)>
 
 <!--- class value -->
 <!ELEMENT class (#PCDATA)>

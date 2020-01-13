@@ -27,7 +27,7 @@ export type Hunk = {
   content: string;
 };
 
-export type ChangeType = "insert" | "delete" | "normal";
+export type ChangeType = "insert" | "delete" | "normal" | "conflict";
 
 export type Change = {
   content: string;
@@ -38,6 +38,10 @@ export type Change = {
   newLineNumber?: number;
   oldLineNumber?: number;
   type: ChangeType;
+};
+
+export type ChangeEvent = {
+  change: Change;
 };
 
 export type BaseContext = {
@@ -66,9 +70,10 @@ export type DiffEventHandler = (context: DiffEventContext) => void;
 export type FileControlFactory = (file: File, setCollapseState: (p: boolean) => void) => ReactNode | null | undefined;
 
 export type DiffObjectProps = {
-  sideBySide: boolean;
+  sideBySide?: boolean;
   onClick?: DiffEventHandler;
   fileControlFactory?: FileControlFactory;
   fileAnnotationFactory?: FileAnnotationFactory;
   annotationFactory?: AnnotationFactory;
+  markConflicts?: boolean;
 };
