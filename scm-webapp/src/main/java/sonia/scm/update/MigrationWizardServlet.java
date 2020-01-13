@@ -5,6 +5,9 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.event.ScmEventBus;
@@ -115,6 +118,8 @@ class MigrationWizardServlet extends HttpServlet {
     Map<String, Object> model = Collections.singletonMap("contextPath", req.getContextPath());
 
     respondWithTemplate(resp, model, "templates/repository-migration-restart.mustache");
+
+    ThreadContext.bind(new Subject.Builder(new DefaultSecurityManager()).authenticated(false).buildSubject());
 
     ScmEventBus.getInstance().post(new RestartEvent(MigrationWizardServlet.class, "wrote migration data"));
   }
