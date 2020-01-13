@@ -41,11 +41,13 @@ const CodeViewSwitcher: FC<Props> = ({ baseUrl, currentUrl, branches, selectedBr
   };
 
   const evaluateDestinationBranch = () => {
-    return encodeURIComponent(
+    return (
       branches &&
-      (branches.filter(branch => branch.name === selectedBranch).length === 0
-        ? branches.filter(branch => branch.defaultBranch === true)[0].name
-        : branches.filter(branch => branch.name === selectedBranch)[0].name)
+      encodeURIComponent(
+        branches.filter(branch => branch.name === selectedBranch).length === 0
+          ? branches.filter(branch => branch.defaultBranch === true)[0].name
+          : branches.filter(branch => branch.name === selectedBranch)[0].name
+      )
     );
   };
 
