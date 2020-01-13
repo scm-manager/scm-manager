@@ -41,7 +41,7 @@ const CodeViewSwitcher: FC<Props> = ({ baseUrl, currentUrl, branches, selectedBr
   };
 
   const evaluateDestinationBranch = () => {
-    return (
+    return encodeURIComponent(
       branches &&
       (branches.filter(branch => branch.name === selectedBranch).length === 0
         ? branches.filter(branch => branch.defaultBranch === true)[0].name
