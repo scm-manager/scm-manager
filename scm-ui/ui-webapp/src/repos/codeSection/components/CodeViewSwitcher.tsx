@@ -15,16 +15,24 @@ const ButtonAddonsMarginRight = styled(ButtonAddons)`
 `;
 
 type Props = {
-  url: string;
+  baseUrl: string;
+  currentUrl: string;
   branches: Branch[];
+  selectedBranch: string;
 };
 
-const CodeViewSwitcher: FC<Props> = ({ url, branches }) => {
+const CodeViewSwitcher: FC<Props> = ({ baseUrl, currentUrl, branches, selectedBranch }) => {
   const [t] = useTranslation("repos");
 
-  const createDestinationUrl = (destination: string, suffix?: string) => {
-    let splittedUrl = url.split("/");
+  const createDestinationUrl = (destination: string, branch?: string, suffix?: string) => {
+    if (!branches) {
+      return baseUrl + "/" + destination + "/";
+    }
+    let splittedUrl = currentUrl.split("/");
     splittedUrl[5] = destination;
+    if (branch) {
+      splittedUrl[6] = branch;
+    }
     splittedUrl.splice(7, splittedUrl.length);
     if (suffix) {
       splittedUrl.push(suffix);
@@ -37,13 +45,27 @@ const CodeViewSwitcher: FC<Props> = ({ url, branches }) => {
       <SmallButton
         label={t("code.commits")}
         icon="fa fa-exchange-alt"
-        color={url.includes("/code/branch") || url.includes("/code/changesets") ? "link is-selected" : undefined}
-        link={branches ? createDestinationUrl("branch", "changesets/") : createDestinationUrl("changesets")}
+        color={
+          currentUrl.includes("/code/branch") || currentUrl.includes("/code/changesets")
+            ? "link is-selected"
+            : undefined
+        }
+        link={
+          branches
+            ? branches.filter(branch => branch.name === selectedBranch).length === 0
+              ? createDestinationUrl(
+                  "branch",
+                  branches.filter(branch => branch.defaultBranch === true)[0].name,
+                  "changesets/"
+                )
+              : createDestinationUrl("branch", selectedBranch, "changesets/")
+            : createDestinationUrl("changesets")
+        }
       />
       <SmallButton
         label={t("code.sources")}
         icon="fa fa-code"
-        color={url.includes("/code/sources") ? "link is-selected" : undefined}
+        color={currentUrl.includes("/code/sources") ? "link is-selected" : undefined}
         link={createDestinationUrl("sources")}
       />
     </ButtonAddonsMarginRight>

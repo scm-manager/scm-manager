@@ -82,7 +82,7 @@ class CodeOverview extends React.Component<Props> {
   };
 
   render() {
-    const { repository, baseUrl, branches, error, loading, t } = this.props;
+    const { repository, baseUrl, branches, selectedBranch, error, loading, t } = this.props;
     const url = baseUrl;
 
     if (loading) {
@@ -103,11 +103,11 @@ class CodeOverview extends React.Component<Props> {
               <BranchSelector
                 label={t("code.branchSelector")}
                 branches={branches}
-                selectedBranch={this.props.selectedBranch}
+                selectedBranch={selectedBranch}
                 onSelectBranch={this.branchSelected}
               />
             }
-            right={<CodeViewSwitcher url={this.props.location.pathname} branches={branches} />}
+            right={<CodeViewSwitcher baseUrl={url} currentUrl={this.props.location.pathname} branches={branches} selectedBranch={selectedBranch}/>}
           />
         </CodeActionBar>
         <Route
@@ -125,7 +125,13 @@ class CodeOverview extends React.Component<Props> {
         />
         <Route
           path={`${url}/branch/:branch/changesets/`}
-          render={() => <ChangesetsRoot repository={repository} baseUrl={`${url}/changesets`} />}
+          render={() => (
+            <ChangesetsRoot
+              repository={repository}
+              baseUrl={`${url}/changesets`}
+              selectedBranch={branches && branches.filter(b => b.name === this.props.selectedBranch)[0]}
+            />
+          )}
         />
       </div>
     );
