@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import { Breadcrumb, ErrorNotification, Loading } from "@scm-manager/ui-components";
@@ -9,46 +9,33 @@ import { getFetchBranchesFailure, isFetchBranchesPending } from "../../branches/
 import { compose } from "redux";
 import Content from "./Content";
 import { fetchSources, getSources, isDirectory } from "../modules/sources";
+import CodeActionBar from "../../codeSection/components/CodeActionBar";
 
-type Props = WithTranslation & {
-  repository: Repository;
-  loading: boolean;
-  error: Error;
-  baseUrl: string;
-  branches: Branch[];
-  revision: string;
-  path: string;
-  currentFileIsDirectory: boolean;
-  sources: File;
+type Props = WithTranslation &
+  RouteComponentProps & {
+    repository: Repository;
+    loading: boolean;
+    error: Error;
+    baseUrl: string;
+    branches: Branch[];
+    revision: string;
+    path: string;
+    currentFileIsDirectory: boolean;
+    sources: File;
+    selectedBranch: string;
 
-  // dispatch props
-  fetchSources: (p1: Repository, p2: string, p3: string) => void;
+    // dispatch props
+    fetchSources: (p1: Repository, p2: string, p3: string) => void;
+  };
 
-  // Context props
-  history: any;
-  match: any;
-  location: any;
-};
-
-type State = {
-  selectedBranch: any;
-};
-
-class Sources extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      selectedBranch: null
-    };
-  }
-
+class Sources extends React.Component<Props> {
   componentDidMount() {
-    const { repository, revision, path, fetchSources } = this.props;
-
+    const { repository, branches, selectedBranch, baseUrl, revision, path, fetchSources } = this.props;
     fetchSources(repository, this.decodeRevision(revision), path);
-
-    this.redirectToDefaultBranch();
+    if (branches?.length > 0 && !selectedBranch) {
+      const defaultBranch = branches?.filter(b => b.defaultBranch === true)[0];
+      this.props.history.push(`${baseUrl}/sources/${encodeURIComponent(defaultBranch.name)}/`);
+    }
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -62,45 +49,42 @@ class Sources extends React.Component<Props, State> {
     return revision ? decodeURIComponent(revision) : revision;
   };
 
-  redirectToDefaultBranch = () => {
-    const { branches } = this.props;
-    if (this.shouldRedirectToDefaultBranch()) {
-      const defaultBranches = branches.filter(b => b.defaultBranch);
-
-      if (defaultBranches.length > 0) {
-        this.branchSelected(defaultBranches[0]);
-      }
-    }
-  };
-
-  shouldRedirectToDefaultBranch = () => {
-    const { branches, revision } = this.props;
-    return branches && !revision;
-  };
-
-  branchSelected = (branch?: Branch) => {
+  onSelectBranch = (branch?: Branch) => {
     const { baseUrl, history, path } = this.props;
     let url;
     if (branch) {
-      this.setState({
-        selectedBranch: branch
-      });
       if (path) {
-        url = `${baseUrl}/${encodeURIComponent(branch.name)}/${path}`;
+        url = `${baseUrl}/sources/${encodeURIComponent(branch.name)}/${path}`;
+        url = !url.endsWith("/") ? url + "/" : url;
       } else {
-        url = `${baseUrl}/${encodeURIComponent(branch.name)}/`;
+        url = `${baseUrl}/sources/${encodeURIComponent(branch.name)}/`;
       }
     } else {
-      this.setState({
-        selectedBranch: null
-      });
-      url = `${baseUrl}/`;
+      return;
     }
     history.push(url);
   };
 
+  evaluateSwitchViewLink = () => {
+    const { baseUrl, selectedBranch } = this.props;
+    if (selectedBranch) {
+      return `${baseUrl}/branch/${encodeURIComponent(selectedBranch)}/changesets/`;
+    }
+    return `${baseUrl}/changesets/`;
+  };
+
   render() {
-    const { repository, baseUrl, loading, error, revision, path, currentFileIsDirectory } = this.props;
+    const {
+      repository,
+      baseUrl,
+      branches,
+      selectedBranch,
+      loading,
+      error,
+      revision,
+      path,
+      currentFileIsDirectory
+    } = this.props;
 
     if (error) {
       return <ErrorNotification error={error} />;
@@ -112,28 +96,45 @@ class Sources extends React.Component<Props, State> {
 
     if (currentFileIsDirectory) {
       return (
-        <div className="panel">
-          {this.renderBreadcrumb()}
-          <FileTree repository={repository} revision={revision} path={path} baseUrl={baseUrl} />
-        </div>
+        <>
+          <CodeActionBar
+            selectedBranch={selectedBranch}
+            branches={branches}
+            onSelectBranch={this.onSelectBranch}
+            switchViewLink={this.evaluateSwitchViewLink()}
+          />
+          <div className="panel">
+            {this.renderBreadcrumb()}
+            <FileTree repository={repository} revision={revision} path={path} baseUrl={baseUrl + "/sources"} />
+          </div>
+        </>
       );
     } else {
-      return <Content repository={repository} revision={revision} path={path} breadcrumb={this.renderBreadcrumb()} />;
+      return (
+        <>
+          <CodeActionBar
+            selectedBranch={selectedBranch}
+            branches={branches}
+            onSelectBranch={this.onSelectBranch}
+            switchViewLink={this.evaluateSwitchViewLink()}
+          />
+          <Content repository={repository} revision={revision} path={path} breadcrumb={this.renderBreadcrumb()} />
+        </>
+      );
     }
   }
 
   renderBreadcrumb = () => {
-    const { revision, path, baseUrl, branches, sources, repository } = this.props;
-    const { selectedBranch } = this.state;
+    const { revision, selectedBranch, path, baseUrl, branches, sources, repository } = this.props;
 
     return (
       <Breadcrumb
         repository={repository}
         revision={revision}
         path={path}
-        baseUrl={baseUrl}
-        branch={selectedBranch}
-        defaultBranch={branches && branches.filter(b => b.defaultBranch === true)[0]}
+        baseUrl={baseUrl + "/sources"}
+        branch={branches?.filter(b => b.name === selectedBranch)[0]}
+        defaultBranch={branches?.filter(b => b.defaultBranch === true)[0]}
         sources={sources}
       />
     );

@@ -15,40 +15,29 @@ const ButtonAddonsMarginRight = styled(ButtonAddons)`
 `;
 
 type Props = {
-  baseUrl: string;
   currentUrl: string;
-  branches: Branch[];
-  selectedBranch: string;
+  switchViewLink: string;
 };
 
-const CodeViewSwitcher: FC<Props> = ({ baseUrl, currentUrl, branches, selectedBranch }) => {
+const CodeViewSwitcher: FC<Props> = ({ currentUrl, switchViewLink }) => {
   const [t] = useTranslation("repos");
 
-  const createDestinationUrl = (destination: string, branch?: string, suffix?: string) => {
-    if (!branches) {
-      return baseUrl + "/" + destination + "/";
+  const resolveLocation = () => {
+    if (currentUrl.includes("/code/branch") || currentUrl.includes("/code/changesets")) {
+      return "changesets";
     }
-    let splittedUrl = currentUrl.split("/");
-    splittedUrl[5] = destination;
-    splittedUrl.splice(6, splittedUrl.length);
-    if (branch) {
-      splittedUrl[6] = branch;
+    if (currentUrl.includes("/code/sources")) {
+      return "sources";
     }
-    if (suffix) {
-      splittedUrl.push(suffix);
-    }
-    return splittedUrl.join("/");
+    return "";
   };
 
-  const evaluateDestinationBranch = () => {
-    return (
-      branches &&
-      encodeURIComponent(
-        branches.filter(branch => branch.name === selectedBranch).length === 0
-          ? branches.filter(branch => branch.defaultBranch === true)[0].name
-          : branches.filter(branch => branch.name === selectedBranch)[0].name
-      )
-    );
+  const isSourcesTab = () => {
+    return resolveLocation() === "sources";
+  };
+
+  const isChangesetsTab = () => {
+    return resolveLocation() === "changesets";
   };
 
   return (
@@ -56,22 +45,14 @@ const CodeViewSwitcher: FC<Props> = ({ baseUrl, currentUrl, branches, selectedBr
       <SmallButton
         label={t("code.commits")}
         icon="fa fa-exchange-alt"
-        color={
-          currentUrl.includes("/code/branch") || currentUrl.includes("/code/changesets")
-            ? "link is-selected"
-            : undefined
-        }
-        link={
-          branches
-            ? createDestinationUrl("branch", evaluateDestinationBranch(), "changesets/")
-            : createDestinationUrl("changesets")
-        }
+        color={isChangesetsTab() ? "link is-selected" : undefined}
+        link={isSourcesTab() ? switchViewLink : undefined}
       />
       <SmallButton
         label={t("code.sources")}
         icon="fa fa-code"
-        color={currentUrl.includes("/code/sources") ? "link is-selected" : undefined}
-        link={createDestinationUrl("sources", evaluateDestinationBranch())}
+        color={isSourcesTab() ? "link is-selected" : undefined}
+        link={isChangesetsTab() ? switchViewLink: undefined}
       />
     </ButtonAddonsMarginRight>
   );
