@@ -3,11 +3,15 @@ const createIndexMiddleware = require("./middleware/IndexMiddleware");
 const createContextPathMiddleware = require("./middleware/ContextPathMiddleware");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+
+const isDevelopment = process.env.NODE_ENV !== "production";
 
 const root = path.resolve(process.cwd(), "scm-ui");
 
 module.exports = [
   {
+    mode: isDevelopment ? "development" : "production",
     context: root,
     entry: {
       webapp: [path.resolve(__dirname, "webpack-public-path.js"), "./ui-webapp/src/index.tsx"]
@@ -41,7 +45,8 @@ module.exports = [
               loader: "babel-loader",
               options: {
                 cacheDirectory: true,
-                presets: ["@scm-manager/babel-preset"]
+                presets: ["@scm-manager/babel-preset"],
+                plugins: [isDevelopment && require.resolve("react-refresh/babel")].filter(Boolean)
               }
             }
           ]
@@ -105,7 +110,8 @@ module.exports = [
           }
         }
       }
-    }
+    },
+    plugins: [isDevelopment && new ReactRefreshWebpackPlugin()].filter(Boolean)
   },
   {
     context: root,
