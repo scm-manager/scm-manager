@@ -45,6 +45,8 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.PushResult;
+import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitUtil;
@@ -55,6 +57,8 @@ import sonia.scm.repository.util.WorkingCopy;
 import sonia.scm.user.User;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -72,7 +76,7 @@ import static sonia.scm.NotFoundException.notFound;
  */
 class AbstractGitCommand
 {
-  
+
   /**
    * the logger for AbstractGitCommand
    */
@@ -106,7 +110,7 @@ class AbstractGitCommand
   {
     return context.open();
   }
-  
+
   ObjectId getCommitOrDefault(Repository gitRepository, String requestedCommit) throws IOException {
     ObjectId commit;
     if ( Strings.isNullOrEmpty(requestedCommit) ) {
@@ -255,10 +259,24 @@ class AbstractGitCommand
 
     void push() {
       try {
-        clone.push().call();
+        Iterable<PushResult> pushResult = clone.push().call();
+        Iterator<PushResult> pushResultIterator = pushResult.iterator();
+        if (!pushResultIterator.hasNext()) {
+          throw new InternalRepositoryException(repository, "got no result from push");
+        }
+        Collection<RemoteRefUpdate> remoteUpdates = pushResultIterator.next().getRemoteUpdates();
+        if (remoteUpdates.isEmpty()) {
+          throw new InternalRepositoryException(repository, "push created no update");
+        }
+        remoteUpdates
+          .stream()
+          .filter(remoteRefUpdate -> remoteRefUpdate.getStatus() != RemoteRefUpdate.Status.OK)
+          .findAny()
+          .ifPresent(remoteRefUpdate -> {
+            throw new IntegrateChangesFromWorkdirException(repository, "could not push changes into central repository: " + remoteRefUpdate.getStatus());
+          });
       } catch (GitAPIException e) {
-        throw new IntegrateChangesFromWorkdirException(repository,
-          "could not push changes into central repository", e);
+        throw new InternalRepositoryException(repository, "could not push changes into central repository", e);
       }
       logger.debug("pushed changes");
     }

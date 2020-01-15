@@ -165,8 +165,8 @@
       "description": "The values could not be validated. Please correct your input and try again."
     },
     "CHRM7IQzo1": {
-      "displayName": "Change failed",
-      "description": "The change failed. Please contact your administrator for further assistance."
+      "displayName": "Could not modify repository",
+      "description": "The requested modification to the repository was rejected. Most probably this was due to plugins with repository hooks or native hooks."
     },
     "thbsUFokjk": {
       "displayName": "Illegal change of an identifier",
@@ -195,6 +195,10 @@
     "1yRiASshD1": {
       "displayName": "Error deleting the anonymous user",
       "description": "The anonymous user cannot be deleted since the anonymous access is still enabled in the configuration."
+    },
+    "8LRncum0S1": {
+      "displayName": "Internal repository error",
+      "description": "There was an error or an unexpected condition while handling the native repository. Please consult the logs for further information."
     }
   },
   "namespaceStrategies": {

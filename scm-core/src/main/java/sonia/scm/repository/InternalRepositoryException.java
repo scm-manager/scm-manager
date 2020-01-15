@@ -7,6 +7,8 @@ import java.util.List;
 
 public class InternalRepositoryException extends ExceptionWithContext {
 
+  public static final String CODE = "8LRncum0S1";
+
   public InternalRepositoryException(ContextEntry.ContextBuilder context, String message) {
     this(context, message, null);
   }
@@ -29,6 +31,6 @@ public class InternalRepositoryException extends ExceptionWithContext {
 
   @Override
   public String getCode() {
-    return null;
+    return CODE;
   }
 }
