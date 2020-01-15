@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { WithTranslation, withTranslation } from "react-i18next";
 import SourcecodeViewer from "../components/content/SourcecodeViewer";
 import ImageViewer from "../components/content/ImageViewer";
@@ -7,8 +8,12 @@ import DownloadViewer from "../components/content/DownloadViewer";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { getContentType } from "./contentType";
 import { File, Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, Button, Level } from "@scm-manager/ui-components";
-import { Icon } from "@scm-manager/ui-components/src";
+import { Button, ErrorNotification, Level, Loading } from "@scm-manager/ui-components";
+
+const ToggleButton = styled(Button)`
+  max-width: 2em;
+  margin-right: 0.25em;
+`;
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -71,13 +76,13 @@ class SourcesView extends React.Component<Props, State> {
         <>
           <Level
             right={
-              <Button
+              <ToggleButton
                 color={renderMarkdown ? "" : "primary"}
                 action={this.toggleMarkdown}
                 title={renderMarkdown ? "render sources" : "render markdown"}
-                icon="markdown"
               >
-              </Button>
+                <i className="fab fa-markdown"></i>
+              </ToggleButton>
             }
           />
           {renderMarkdown ? <MarkdownViewer file={file} /> : <SourcecodeViewer file={file} language={language} />}
