@@ -40,6 +40,8 @@ class ChangesetsRoot extends React.Component<Props> {
     if (branch) {
       let url = `${baseUrl}/branch/${encodeURIComponent(branch.name)}/changesets/`;
       history.push(url);
+    } else {
+      history.push(`${baseUrl}/changesets/`)
     }
   };
 
