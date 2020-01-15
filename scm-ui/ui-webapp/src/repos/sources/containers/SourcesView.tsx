@@ -67,7 +67,7 @@ class SourcesView extends React.Component<Props, State> {
   };
 
   showSources() {
-    const { file, revision } = this.props;
+    const { file, revision, t } = this.props;
     const { contentType, language, renderMarkdown } = this.state;
     if (contentType.startsWith("image/")) {
       return <ImageViewer file={file} />;
@@ -77,9 +77,9 @@ class SourcesView extends React.Component<Props, State> {
           <Level
             right={
               <ToggleButton
-                color={renderMarkdown ? "" : "primary"}
+                color={renderMarkdown ? "" : "link"}
                 action={this.toggleMarkdown}
-                title={renderMarkdown ? "render sources" : "render markdown"}
+                title={renderMarkdown ? t("sources.content.toggleButton.showSources") : t("sources.content.toggleButton.showMarkdown")}
               >
                 <i className="fab fa-markdown"></i>
               </ToggleButton>
