@@ -1,14 +1,16 @@
 import React from "react";
-
+import { WithTranslation, withTranslation } from "react-i18next";
 import SourcecodeViewer from "../components/content/SourcecodeViewer";
 import ImageViewer from "../components/content/ImageViewer";
+import MarkdownViewer from "../components/content/MarkdownViewer";
 import DownloadViewer from "../components/content/DownloadViewer";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { getContentType } from "./contentType";
 import { File, Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading, Button, Level } from "@scm-manager/ui-components";
+import { Icon } from "@scm-manager/ui-components/src";
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
   file: File;
   revision: string;
@@ -18,6 +20,7 @@ type Props = {
 type State = {
   contentType: string;
   language: string;
+  renderMarkdown: boolean;
   loaded: boolean;
   error?: Error;
 };
@@ -29,7 +32,8 @@ class SourcesView extends React.Component<Props, State> {
     this.state = {
       contentType: "",
       language: "",
-      loaded: false
+      loaded: false,
+      renderMarkdown: true
     };
   }
 
@@ -53,11 +57,32 @@ class SourcesView extends React.Component<Props, State> {
       });
   }
 
+  toggleMarkdown = () => {
+    this.setState({ renderMarkdown: !this.state.renderMarkdown });
+  };
+
   showSources() {
     const { file, revision } = this.props;
-    const { contentType, language } = this.state;
+    const { contentType, language, renderMarkdown } = this.state;
     if (contentType.startsWith("image/")) {
       return <ImageViewer file={file} />;
+    } else if (contentType.includes("markdown")) {
+      return (
+        <>
+          <Level
+            right={
+              <Button
+                color={renderMarkdown ? "" : "primary"}
+                action={this.toggleMarkdown}
+                title={renderMarkdown ? "render sources" : "render markdown"}
+                icon="markdown"
+              >
+              </Button>
+            }
+          />
+          {renderMarkdown ? <MarkdownViewer file={file} /> : <SourcecodeViewer file={file} language={language} />}
+        </>
+      );
     } else if (language) {
       return <SourcecodeViewer file={file} language={language} />;
     } else if (contentType.startsWith("text/")) {
@@ -95,4 +120,4 @@ class SourcesView extends React.Component<Props, State> {
   }
 }
 
-export default SourcesView;
+export default withTranslation("repos")(SourcesView);
