@@ -1,7 +1,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { apiClient, ErrorNotification, Loading, SyntaxHighlighter } from "@scm-manager/ui-components";
-import { File } from "@scm-manager/ui-types";
+import { File, Link } from "@scm-manager/ui-types";
 
 type Props = WithTranslation & {
   file: File;
@@ -27,14 +27,14 @@ class SourcecodeViewer extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const { file } = this.props;
-    const { currentFileRevision } = this.state;
-    if (file.revision !== currentFileRevision) {
-      this.fetchContent();
-    }
+    this.fetchContentIfChanged();
   }
 
   componentDidUpdate() {
+    this.fetchContentIfChanged();
+  }
+
+  private fetchContentIfChanged() {
     const { file } = this.props;
     const { currentFileRevision } = this.state;
     if (file.revision !== currentFileRevision) {
@@ -44,7 +44,7 @@ class SourcecodeViewer extends React.Component<Props, State> {
 
   fetchContent = () => {
     const { file } = this.props;
-    getContent(file._links.self.href)
+    getContent((file._links.self as Link).href)
       .then(content => {
         this.setState({
           content,

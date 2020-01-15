@@ -50,7 +50,7 @@ class CodeOverview extends React.Component<Props> {
     }
 
     return (
-      <div>
+      <>
         <Route
           path={`${url}/sources`}
           exact={true}
@@ -77,7 +77,7 @@ class CodeOverview extends React.Component<Props> {
             />
           )}
         />
-      </div>
+      </>
     );
   }
 }

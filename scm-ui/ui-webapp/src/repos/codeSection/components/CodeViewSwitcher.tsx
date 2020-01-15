@@ -2,9 +2,8 @@ import React, { FC } from "react";
 import styled from "styled-components";
 import { Button, ButtonAddons } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import { Branch } from "@scm-manager/ui-types";
 
-const SmallButton = styled(Button).attrs(() => ({}))`
+const SmallButton = styled(Button)`
   border-radius: 4px;
   font-size: 1rem;
   font-weight: 600;
@@ -20,7 +19,7 @@ type Props = {
 };
 
 const CodeViewSwitcher: FC<Props> = ({ currentUrl, switchViewLink }) => {
-  const [t] = useTranslation("repos");
+  const { t } = useTranslation("repos");
 
   const resolveLocation = () => {
     if (currentUrl.includes("/code/branch") || currentUrl.includes("/code/changesets")) {
@@ -52,7 +51,7 @@ const CodeViewSwitcher: FC<Props> = ({ currentUrl, switchViewLink }) => {
         label={t("code.sources")}
         icon="fa fa-code"
         color={isSourcesTab() ? "link is-selected" : undefined}
-        link={isChangesetsTab() ? switchViewLink: undefined}
+        link={isChangesetsTab() ? switchViewLink : undefined}
       />
     </ButtonAddonsMarginRight>
   );

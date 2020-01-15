@@ -24,7 +24,7 @@ type Props = WithTranslation &
     sources?: File | null;
 
     // dispatch props
-    fetchSources: (repository: Repository, revision: string | undefined, path: string | undefined) => void;
+    fetchSources: (repository: Repository, revision?: string, path?: string) => void;
   };
 
 const extensionPointName = "repos.sources.extensions";

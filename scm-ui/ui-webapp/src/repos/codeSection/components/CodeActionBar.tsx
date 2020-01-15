@@ -1,12 +1,12 @@
 import React, { FC } from "react";
 import styled from "styled-components";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Level, BranchSelector } from "@scm-manager/ui-components";
 import CodeViewSwitcher from "./CodeViewSwitcher";
 import { useTranslation } from "react-i18next";
 import { Branch } from "@scm-manager/ui-types";
 
-const ActionBar = styled.div.attrs(() => ({}))`
+const ActionBar = styled.div`
   background-color: whitesmoke;
   border: 1px solid #dbdbdb;
   border-radius: 4px;
@@ -18,15 +18,16 @@ const ActionBar = styled.div.attrs(() => ({}))`
   margin-bottom: 1em;
 `;
 
-type Props = RouteComponentProps & {
+type Props = {
   selectedBranch?: string;
   branches: Branch[];
   onSelectBranch: () => void;
   switchViewLink: string;
 };
 
-const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, switchViewLink, location }) => {
+const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, switchViewLink }) => {
   const { t } = useTranslation("repos");
+  const location = useLocation();
 
   return (
     <ActionBar>
@@ -47,4 +48,4 @@ const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, sw
   );
 };
 
-export default withRouter(CodeActionBar);
+export default CodeActionBar;

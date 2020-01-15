@@ -1,5 +1,5 @@
 import React from "react";
-import { Changeset, File, PagedCollection, Repository } from "@scm-manager/ui-types";
+import { Changeset, File, PagedCollection, Repository, Link } from "@scm-manager/ui-types";
 import { ChangesetList, ErrorNotification, Loading, StatePaginator } from "@scm-manager/ui-components";
 import { getHistory } from "./history";
 
@@ -31,14 +31,16 @@ class HistoryView extends React.Component<Props, State> {
 
   componentDidMount() {
     const { file } = this.props;
-    file && this.updateHistory(file._links.history.href);
+    if (file) {
+      this.updateHistory((file._links.history as Link).href);
+    }
   }
 
   componentDidUpdate() {
     const { file } = this.props;
     const { currentRevision } = this.state;
     if (file?.revision !== currentRevision) {
-      this.updateHistory(file._links.history.href);
+      this.updateHistory((file._links.history as Link).href);
     }
   }
 
@@ -67,7 +69,7 @@ class HistoryView extends React.Component<Props, State> {
   updatePage(page: number) {
     const { file } = this.props;
     const internalPage = page - 1;
-    this.updateHistory(file._links.history.href + "?page=" + internalPage.toString());
+    this.updateHistory((file._links.history as Link).href + "?page=" + internalPage.toString());
   }
 
   showHistory() {

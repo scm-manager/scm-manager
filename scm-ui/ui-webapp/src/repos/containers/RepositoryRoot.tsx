@@ -122,11 +122,14 @@ class RepositoryRoot extends React.Component<Props> {
           <div className="column is-three-quarters">
             <Switch>
               <Redirect exact from={this.props.match.url} to={redirectedUrl} />
+
+              {/* redirect pre 2.0.0-rc2 links */}
               <Redirect from={`${url}/changeset/:id`} to={`${url}/code/changeset/:id`} />
               <Redirect exact from={`${url}/sources`} to={`${url}/code/sources`} />
               <Redirect from={`${url}/sources/:revision/:path*`} to={`${url}/code/sources/:revision/:path*`} />
               <Redirect exact from={`${url}/changesets`} to={`${url}/code/changesets`} />
               <Redirect from={`${url}/branch/:branch/changesets`} to={`${url}/code/branch/:branch/changesets/`} />
+
               <Route path={`${url}/info`} exact component={() => <RepositoryDetails repository={repository} />} />
               <Route path={`${url}/settings/general`} component={() => <EditRepo repository={repository} />} />
               <Route

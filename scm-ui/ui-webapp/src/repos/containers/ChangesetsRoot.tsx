@@ -22,7 +22,7 @@ class ChangesetsRoot extends React.Component<Props> {
     return url;
   };
 
-  isSelectedBranchNotABranch = () => {
+  isBranchAvailable = () => {
     const { branches, selectedBranch } = this.props;
     return branches?.filter(b => b.name === selectedBranch).length === 0;
   };
@@ -38,10 +38,10 @@ class ChangesetsRoot extends React.Component<Props> {
   onSelectBranch = (branch?: Branch) => {
     const { baseUrl, history } = this.props;
     if (branch) {
-      let url = `${baseUrl}/branch/${encodeURIComponent(branch.name)}/changesets/`;
+      const url = `${baseUrl}/branch/${encodeURIComponent(branch.name)}/changesets/`;
       history.push(url);
     } else {
-      history.push(`${baseUrl}/changesets/`)
+      history.push(`${baseUrl}/changesets/`);
     }
   };
 
@@ -58,7 +58,7 @@ class ChangesetsRoot extends React.Component<Props> {
       <>
         <CodeActionBar
           branches={branches}
-          selectedBranch={!this.isSelectedBranchNotABranch() ? selectedBranch : undefined}
+          selectedBranch={!this.isBranchAvailable() ? selectedBranch : undefined}
           onSelectBranch={this.onSelectBranch}
           switchViewLink={this.evaluateSwitchViewLink()}
         />

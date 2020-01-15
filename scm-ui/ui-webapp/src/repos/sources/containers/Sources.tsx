@@ -25,7 +25,7 @@ type Props = WithTranslation &
     selectedBranch: string;
 
     // dispatch props
-    fetchSources: (p1: Repository, p2: string, p3: string) => void;
+    fetchSources: (repository: Repository, revision: string, path: string) => void;
   };
 
 class Sources extends React.Component<Props> {
