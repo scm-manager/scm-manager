@@ -166,7 +166,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
   {
     long latest = repo.getLatestRevision();
     long startRev = latest - start;
-    long endRev = Math.max(startRev - (limit - 1), 0);
+    long endRev = Math.max(startRev - (limit - 1), 1);
 
     final List<Changeset> changesets = Lists.newArrayList();
 
@@ -177,7 +177,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
         new ChangesetCollector(changesets));
     }
 
-    return new ChangesetPagingResult((int) (latest + 1l), changesets);
+    return new ChangesetPagingResult((int) latest, changesets);
   }
 
   /**

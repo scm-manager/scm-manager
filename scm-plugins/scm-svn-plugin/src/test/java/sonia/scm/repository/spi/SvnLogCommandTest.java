@@ -34,6 +34,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Iterables;
 import org.junit.Test;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -59,8 +60,15 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
       createCommand().getChangesets(new LogCommandRequest());
 
     assertNotNull(result);
-    assertEquals(6, result.getTotal());
-    assertEquals(6, result.getChangesets().size());
+    assertEquals(5, result.getTotal());
+    assertEquals(5, result.getChangesets().size());
+  }
+
+  @Test
+  public void testShouldStartWithRevisionOne() {
+    ChangesetPagingResult result = createCommand().getChangesets(new LogCommandRequest());
+    Changeset first = Iterables.getLast(result);
+    assertEquals(first.getId(), "1");
   }
 
   @Test
@@ -88,7 +96,7 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
-    assertEquals(6, result.getTotal());
+    assertEquals(5, result.getTotal());
     assertEquals(2, result.getChangesets().size());
 
     Changeset c1 = result.getChangesets().get(0);
@@ -112,7 +120,7 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
-    assertEquals(6, result.getTotal());
+    assertEquals(5, result.getTotal());
     assertEquals(2, result.getChangesets().size());
 
     Changeset c1 = result.getChangesets().get(0);
