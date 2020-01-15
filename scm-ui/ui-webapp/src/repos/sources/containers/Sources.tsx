@@ -49,7 +49,7 @@ class Sources extends React.Component<Props> {
     return revision ? decodeURIComponent(revision) : revision;
   };
 
-  onSelectBranch = (branch?: Branch, replaceHistory?: boolean) => {
+  onSelectBranch = (branch?: Branch) => {
     const { baseUrl, history, path } = this.props;
     let url;
     if (branch) {
@@ -66,8 +66,8 @@ class Sources extends React.Component<Props> {
   };
 
   evaluateSwitchViewLink = () => {
-    const { baseUrl, selectedBranch } = this.props;
-    if (selectedBranch) {
+    const { baseUrl, selectedBranch, branches } = this.props;
+    if (selectedBranch && branches?.filter(b => b.name === selectedBranch).length !== 0) {
       return `${baseUrl}/branch/${encodeURIComponent(selectedBranch)}/changesets/`;
     }
     return `${baseUrl}/changesets/`;

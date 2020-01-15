@@ -14,6 +14,7 @@ type State = {
   page: number;
   pageCollection?: PagedCollection;
   error?: Error;
+  currentRevision: string;
 };
 
 class HistoryView extends React.Component<Props, State> {
@@ -23,35 +24,44 @@ class HistoryView extends React.Component<Props, State> {
     this.state = {
       loaded: false,
       page: 1,
-      changesets: []
+      changesets: [],
+      currentRevision: ""
     };
   }
 
   componentDidMount() {
     const { file } = this.props;
-    this.updateHistory(file._links.history.href);
+    file && this.updateHistory(file._links.history.href);
+  }
+
+  componentDidUpdate() {
+    const { file } = this.props;
+    const { currentRevision } = this.state;
+    if (file?.revision !== currentRevision) {
+      this.updateHistory(file._links.history.href);
+    }
   }
 
   updateHistory(link: string) {
+    const { file } = this.props;
     getHistory(link)
       .then(result => {
-        if (result.error) {
-          this.setState({
-            ...this.state,
-            error: result.error,
-            loaded: true
-          });
-        } else {
-          this.setState({
-            ...this.state,
-            loaded: true,
-            changesets: result.changesets,
-            pageCollection: result.pageCollection,
-            page: result.pageCollection.page
-          });
-        }
+        this.setState({
+          ...this.state,
+          loaded: true,
+          changesets: result.changesets,
+          pageCollection: result.pageCollection,
+          page: result.pageCollection.page,
+          currentRevision: file.revision
+        });
       })
-      .catch(err => {});
+      .catch(error =>
+        this.setState({
+          ...this.state,
+          error,
+          loaded: true
+        })
+      );
   }
 
   updatePage(page: number) {
