@@ -37,22 +37,20 @@ class SourcesView extends React.Component<Props, State> {
     const { file } = this.props;
     getContentType(file._links.self.href)
       .then(result => {
-        if (result.error) {
-          this.setState({
-            ...this.state,
-            error: result.error,
-            loaded: true
-          });
-        } else {
-          this.setState({
-            ...this.state,
-            contentType: result.type,
-            language: result.language,
-            loaded: true
-          });
-        }
+        this.setState({
+          ...this.state,
+          contentType: result.type,
+          language: result.language,
+          loaded: true
+        });
       })
-      .catch(err => {});
+      .catch(error => {
+        this.setState({
+          ...this.state,
+          error,
+          loaded: true
+        });
+      });
   }
 
   showSources() {
