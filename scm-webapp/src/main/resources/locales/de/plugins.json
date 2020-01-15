@@ -165,8 +165,8 @@
       "description": "Die eingegebenen Daten konnten nicht validiert werden. Bitte korrigieren Sie die Eingaben und senden Sie sie erneut."
     },
     "CHRM7IQzo1": {
-      "displayName": "Änderung fehlgeschlagen",
-      "description": "Die Änderung ist fehlgeschlagen. Bitte wenden Sie sich an ihren Administrator für weitere Hinweise."
+      "displayName": "Änderung des Repositories nicht möglich",
+      "description": "Die gewünschte Änderung am Repository konnte nicht durchgeführt werden. Höchst wahrscheinlich liegt dieses an installierten Plugins mit Hooks oder nativen Hooks."
     },
     "thbsUFokjk": {
       "displayName": "Unerlaubte Änderung eines Schlüsselwerts",
@@ -195,6 +195,10 @@
     "1yRiASshD1": {
       "displayName": "Fehler beim Löschen des anonymen Nutzers",
       "description": "Der anonyme Nutzer kann nicht gelöscht werden, solange der anonyme Zugriff in den Einstellungen aktiviert ist."
+    },
+    "8LRncum0S1": {
+      "displayName": "Interner Fehler im Repository",
+      "description": "Bei der Bearbeitung des internen Repositories ist ein Fehler oder ein unerwarteter Zustand aufgetreten. Bitte prüfen Sie die Logs für weitere Informationen."
     }
   },
   "namespaceStrategies": {
