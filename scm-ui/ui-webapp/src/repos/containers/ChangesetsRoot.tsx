@@ -17,7 +17,7 @@ type Props = WithTranslation &
 class ChangesetsRoot extends React.Component<Props> {
   componentDidMount() {
     const { branches, baseUrl } = this.props;
-    if (branches?.length > 0 && this.isSelectedBranchIsNotABranch()) {
+    if (branches?.length > 0 && this.isSelectedBranchNotABranch()) {
       const defaultBranch = branches?.filter(b => b.defaultBranch === true)[0];
       this.props.history.push(`${baseUrl}/branch/${encodeURIComponent(defaultBranch.name)}/changesets/`);
     }
@@ -30,7 +30,7 @@ class ChangesetsRoot extends React.Component<Props> {
     return url;
   };
 
-  isSelectedBranchIsNotABranch = () => {
+  isSelectedBranchNotABranch = () => {
     const { branches, selectedBranch } = this.props;
     return branches?.filter(b => b.name === selectedBranch).length === 0;
   };
@@ -64,7 +64,7 @@ class ChangesetsRoot extends React.Component<Props> {
       <>
         <CodeActionBar
           branches={branches}
-          selectedBranch={!this.isSelectedBranchIsNotABranch() ? selectedBranch : undefined}
+          selectedBranch={!this.isSelectedBranchNotABranch() ? selectedBranch : undefined}
           onSelectBranch={this.onSelectBranch}
           switchViewLink={this.evaluateSwitchViewLink()}
         />
