@@ -17,6 +17,7 @@ type Props = WithTranslation & {
   repository: Repository;
   revision: string;
   path: string;
+  breadcrumb: React.ReactNode;
 };
 
 type State = {
@@ -24,6 +25,14 @@ type State = {
   showHistory: boolean;
   errorFromExtension?: Error;
 };
+
+const Header = styled.div`
+  border-bottom: solid 1px #dbdbdb;
+  font-size: 1.25em;
+  font-weight: 300;
+  line-height: 1.25;
+  padding: 0.5em 0.75em;
+`;
 
 const VCenteredChild = styled.div`
   align-items: center;
@@ -35,6 +44,10 @@ const RightMarginIcon = styled(Icon)`
 
 const RightMarginFileButtonAddons = styled(FileButtonAddons)`
   margin-right: 0.5em;
+`;
+
+const BorderBottom = styled.div`
+  border-bottom: solid 1px #dbdbdb;
 `;
 
 const LighterGreyBackgroundPanelBlock = styled.div`
@@ -128,51 +141,54 @@ class Content extends React.Component<Props, State> {
         })}
       </p>
     ) : null;
-    const fileSize = file.directory ? "" : <FileSize bytes={file.length} />;
+    const fileSize = file.directory ? "" : <FileSize bytes={file?.length ? file.length : 0} />;
     if (!collapsed) {
       return (
-        <LighterGreyBackgroundPanelBlock className="panel-block">
-          <LighterGreyBackgroundTable className="table">
-            <tbody>
-              <tr>
-                <td>{t("sources.content.path")}</td>
-                <td className="is-word-break">{file.path}</td>
-              </tr>
-              <tr>
-                <td>{t("sources.content.branch")}</td>
-                <td className="is-word-break">{revision}</td>
-              </tr>
-              <tr>
-                <td>{t("sources.content.size")}</td>
-                <td>{fileSize}</td>
-              </tr>
-              <tr>
-                <td>{t("sources.content.commitDate")}</td>
-                <td>{date}</td>
-              </tr>
-              <tr>
-                <td>{t("sources.content.description")}</td>
-                <td className="is-word-break">{description}</td>
-              </tr>
-              <ExtensionPoint
-                name="repos.content.metadata"
-                renderAll={true}
-                props={{
-                  file,
-                  repository,
-                  revision
-                }}
-              />
-            </tbody>
-          </LighterGreyBackgroundTable>
-        </LighterGreyBackgroundPanelBlock>
+        <>
+          <LighterGreyBackgroundPanelBlock className="panel-block">
+            <LighterGreyBackgroundTable className="table">
+              <tbody>
+                <tr>
+                  <td>{t("sources.content.path")}</td>
+                  <td className="is-word-break">{file.path}</td>
+                </tr>
+                <tr>
+                  <td>{t("sources.content.branch")}</td>
+                  <td className="is-word-break">{revision}</td>
+                </tr>
+                <tr>
+                  <td>{t("sources.content.size")}</td>
+                  <td>{fileSize}</td>
+                </tr>
+                <tr>
+                  <td>{t("sources.content.commitDate")}</td>
+                  <td>{date}</td>
+                </tr>
+                <tr>
+                  <td>{t("sources.content.description")}</td>
+                  <td className="is-word-break">{description}</td>
+                </tr>
+                <ExtensionPoint
+                  name="repos.content.metadata"
+                  renderAll={true}
+                  props={{
+                    file,
+                    repository,
+                    revision
+                  }}
+                />
+              </tbody>
+            </LighterGreyBackgroundTable>
+          </LighterGreyBackgroundPanelBlock>
+          <BorderBottom />
+        </>
       );
     }
     return null;
   }
 
   render() {
-    const { file, revision, repository, path } = this.props;
+    const { file, revision, repository, path, breadcrumb } = this.props;
     const { showHistory, errorFromExtension } = this.state;
 
     const header = this.showHeader();
@@ -187,7 +203,8 @@ class Content extends React.Component<Props, State> {
     return (
       <div>
         <div className="panel">
-          <div className="panel-heading">{header}</div>
+          {breadcrumb}
+          <Header>{header}</Header>
           {moreInformation}
           {content}
         </div>

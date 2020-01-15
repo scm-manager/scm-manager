@@ -1,11 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
-import { Group } from "@scm-manager/ui-types";
+import { DisplayedUser, Group } from "@scm-manager/ui-types";
 import { Page } from "@scm-manager/ui-components";
 import { getGroupsLink, getUserAutoCompleteLink } from "../../modules/indexResource";
-import { createGroup, isCreateGroupPending, getCreateGroupFailure, createGroupReset } from "../modules/groups";
+import { createGroup, createGroupReset, getCreateGroupFailure, isCreateGroupPending } from "../modules/groups";
 import GroupForm from "../components/GroupForm";
 import { apiClient } from "@scm-manager/ui-components/src";
 
@@ -45,7 +46,7 @@ class CreateGroup extends React.Component<Props> {
       .get(url + inputValue)
       .then(response => response.json())
       .then(json => {
-        return json.map(element => {
+        return json.map((element: DisplayedUser) => {
           return {
             value: element,
             label: `${element.displayName} (${element.id})`
@@ -61,7 +62,7 @@ class CreateGroup extends React.Component<Props> {
   };
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     createGroup: (link: string, group: Group, callback?: () => void) => dispatch(createGroup(link, group, callback)),
     resetForm: () => {
@@ -70,7 +71,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const loading = isCreateGroupPending(state);
   const error = getCreateGroupFailure(state);
   const createLink = getGroupsLink(state);
@@ -83,7 +84,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("groups")(CreateGroup));
+export default compose(connect(mapStateToProps, mapDispatchToProps), withTranslation("groups"))(CreateGroup);

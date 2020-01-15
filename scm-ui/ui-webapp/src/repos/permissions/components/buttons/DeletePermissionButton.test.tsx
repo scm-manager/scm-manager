@@ -1,10 +1,11 @@
 import React from "react";
-import { shallow, mount } from "@scm-manager/ui-tests/enzyme-router";
+import { mount, shallow } from "@scm-manager/ui-tests/enzyme-router";
 import "@scm-manager/ui-tests/enzyme";
 import "@scm-manager/ui-tests/i18n";
 import DeletePermissionButton from "./DeletePermissionButton";
 
 import { confirmAlert } from "@scm-manager/ui-components";
+
 jest.mock("@scm-manager/ui-components", () => ({
   confirmAlert: jest.fn(),
   DeleteButton: require.requireActual("@scm-manager/ui-components").DeleteButton

@@ -4,10 +4,11 @@ import { withRouter } from "react-router-dom";
 import RepositoryForm from "../components/form";
 import DeleteRepo from "./DeleteRepo";
 import { Repository } from "@scm-manager/ui-types";
-import { modifyRepo, isModifyRepoPending, getModifyRepoFailure, modifyRepoReset } from "../modules/repos";
+import { getModifyRepoFailure, isModifyRepoPending, modifyRepo, modifyRepoReset } from "../modules/repos";
 import { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { compose } from "redux";
 
 type Props = {
   loading: boolean;
@@ -71,7 +72,7 @@ class EditRepo extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const { namespace, name } = ownProps.repository;
   const loading = isModifyRepoPending(state, namespace, name);
   const error = getModifyRepoFailure(state, namespace, name);
@@ -81,7 +82,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     modifyRepo: (repo: Repository, callback: () => void) => {
       dispatch(modifyRepo(repo, callback));
@@ -92,7 +93,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(EditRepo));
+export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter)(EditRepo);

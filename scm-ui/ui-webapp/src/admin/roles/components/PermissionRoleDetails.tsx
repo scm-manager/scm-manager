@@ -2,7 +2,7 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { RepositoryRole } from "@scm-manager/ui-types";
-import { Level, Button } from "@scm-manager/ui-components";
+import { Button, Level } from "@scm-manager/ui-components";
 import PermissionRoleDetailsTable from "./PermissionRoleDetailsTable";
 
 type Props = WithTranslation & {

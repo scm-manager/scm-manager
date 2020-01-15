@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Link } from "@scm-manager/ui-types";
-import { Notification, ErrorNotification, SubmitButton, Level } from "@scm-manager/ui-components";
+import { ErrorNotification, Level, Notification, SubmitButton } from "@scm-manager/ui-components";
 import { getLink } from "../../modules/indexResource";
 import { loadPermissionsForEntity, setPermissions } from "./handlePermissions";
 import PermissionsWrapper from "./PermissionsWrapper";
@@ -151,7 +151,7 @@ class SetPermissions extends React.Component<Props, State> {
   };
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const availablePermissionLink = getLink(state, "permissions");
   return {
     availablePermissionLink

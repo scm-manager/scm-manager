@@ -175,7 +175,7 @@ class Permissions extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const namespace = ownProps.namespace;
   const repoName = ownProps.repoName;
   const error =
@@ -216,7 +216,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchPermissions: (link: string, namespace: string, repoName: string) => {
       dispatch(fetchPermissions(link, namespace, repoName));
@@ -245,7 +245,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("repos")(Permissions));
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("repos")(Permissions));

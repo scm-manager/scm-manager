@@ -5,8 +5,8 @@ import {
   Button,
   GroupAutocomplete,
   LabelWithHelpIcon,
-  Radio,
   Level,
+  Radio,
   SubmitButton,
   Subtitle,
   UserAutocomplete

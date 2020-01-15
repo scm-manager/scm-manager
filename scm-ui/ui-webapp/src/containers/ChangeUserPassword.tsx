@@ -2,9 +2,9 @@ import React from "react";
 import {
   ErrorNotification,
   InputField,
+  Level,
   Notification,
   PasswordConfirmation,
-  Level,
   SubmitButton
 } from "@scm-manager/ui-components";
 import { WithTranslation, withTranslation } from "react-i18next";

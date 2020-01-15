@@ -2,14 +2,14 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Group, SelectValue } from "@scm-manager/ui-types";
 import {
-  Subtitle,
   AutocompleteAddEntryToTableField,
-  MemberNameTagGroup,
+  Checkbox,
   InputField,
-  SubmitButton,
-  Textarea,
   Level,
-  Checkbox
+  MemberNameTagGroup,
+  SubmitButton,
+  Subtitle,
+  Textarea
 } from "@scm-manager/ui-components";
 import * as validator from "./groupValidation";
 

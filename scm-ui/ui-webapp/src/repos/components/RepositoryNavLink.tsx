@@ -9,6 +9,7 @@ type Props = {
   linkName: string;
   activeWhenMatch?: (route: any) => boolean;
   activeOnlyWhenExact: boolean;
+  icon?: string;
 };
 
 /**

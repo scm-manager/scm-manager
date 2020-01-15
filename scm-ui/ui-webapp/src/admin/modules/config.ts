@@ -1,10 +1,9 @@
 import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../modules/types";
-import { Action } from "@scm-manager/ui-types";
+import { Action, Config } from "@scm-manager/ui-types";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import { Dispatch } from "redux";
-import { Config } from "@scm-manager/ui-types";
 
 export const FETCH_CONFIG = "scm/config/FETCH_CONFIG";
 export const FETCH_CONFIG_PENDING = `${FETCH_CONFIG}_${types.PENDING_SUFFIX}`;

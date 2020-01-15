@@ -1,44 +1,42 @@
 import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
+import { RouteComponentProps } from "react-router-dom";
 import { History } from "history";
-import { User, PagedCollection } from "@scm-manager/ui-types";
+import { PagedCollection, User } from "@scm-manager/ui-types";
 import {
+  CreateButton,
+  LinkPaginator,
+  Notification,
+  OverviewPageActions,
   Page,
   PageActions,
-  OverviewPageActions,
-  Notification,
-  LinkPaginator,
-  urls,
-  CreateButton
+  urls
 } from "@scm-manager/ui-components";
 import { getUsersLink } from "../../modules/indexResource";
 import {
   fetchUsersByPage,
+  getFetchUsersFailure,
   getUsersFromState,
-  selectListAsCollection,
-  isPermittedToCreateUsers,
   isFetchUsersPending,
-  getFetchUsersFailure
+  isPermittedToCreateUsers,
+  selectListAsCollection
 } from "../modules/users";
 import { UserTable } from "./../components/table";
 
-type Props = WithTranslation & {
-  users: User[];
-  loading: boolean;
-  error: Error;
-  canAddUsers: boolean;
-  list: PagedCollection;
-  page: number;
-  usersLink: string;
+type Props = RouteComponentProps &
+  WithTranslation & {
+    users: User[];
+    loading: boolean;
+    error: Error;
+    canAddUsers: boolean;
+    list: PagedCollection;
+    page: number;
+    usersLink: string;
 
-  // context objects
-  history: History;
-  location: any;
-
-  // dispatch functions
-  fetchUsersByPage: (link: string, page: number, filter?: string) => void;
-};
+    // dispatch functions
+    fetchUsersByPage: (link: string, page: number, filter?: string) => void;
+  };
 
 class Users extends React.Component<Props> {
   componentDidMount() {
@@ -100,7 +98,7 @@ class Users extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const { match } = ownProps;
   const users = getUsersFromState(state);
   const loading = isFetchUsersPending(state);
@@ -121,7 +119,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchUsersByPage: (link: string, page: number, filter?: string) => {
       dispatch(fetchUsersByPage(link, page, filter));
@@ -129,7 +127,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("users")(Users));
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("users")(Users));

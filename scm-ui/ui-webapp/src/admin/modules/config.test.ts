@@ -4,22 +4,22 @@ import fetchMock from "fetch-mock";
 
 import reducer, {
   FETCH_CONFIG,
+  FETCH_CONFIG_FAILURE,
   FETCH_CONFIG_PENDING,
   FETCH_CONFIG_SUCCESS,
-  FETCH_CONFIG_FAILURE,
-  MODIFY_CONFIG,
-  MODIFY_CONFIG_PENDING,
-  MODIFY_CONFIG_SUCCESS,
-  MODIFY_CONFIG_FAILURE,
   fetchConfig,
   fetchConfigSuccess,
-  getFetchConfigFailure,
-  isFetchConfigPending,
-  modifyConfig,
-  isModifyConfigPending,
-  getModifyConfigFailure,
   getConfig,
-  getConfigUpdatePermission
+  getConfigUpdatePermission,
+  getFetchConfigFailure,
+  getModifyConfigFailure,
+  isFetchConfigPending,
+  isModifyConfigPending,
+  MODIFY_CONFIG,
+  MODIFY_CONFIG_FAILURE,
+  MODIFY_CONFIG_PENDING,
+  MODIFY_CONFIG_SUCCESS,
+  modifyConfig
 } from "./config";
 
 const CONFIG_URL = "/config";

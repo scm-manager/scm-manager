@@ -5,7 +5,7 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";
-import { ErrorPage, Page, Navigation, SubNavigation, Section, NavLink } from "@scm-manager/ui-components";
+import { ErrorPage, Navigation, NavLink, Page, Section, SubNavigation } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -78,14 +78,10 @@ class Profile extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     me: getMe(state)
   };
 };
 
-export default compose(
-  withTranslation("commons"),
-  connect(mapStateToProps),
-  withRouter
-)(Profile);
+export default compose(withTranslation("commons"), connect(mapStateToProps), withRouter)(Profile);

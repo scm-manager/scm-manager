@@ -4,13 +4,13 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { compose } from "redux";
 import { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import {
+  Button,
   ButtonGroup,
   ErrorNotification,
   Loading,
   Notification,
   Subtitle,
-  Title,
-  Button
+  Title
 } from "@scm-manager/ui-components";
 import {
   fetchPendingPlugins,
@@ -31,6 +31,7 @@ import PluginBottomActions from "../components/PluginBottomActions";
 import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
+import { Plugin } from "@scm-manager/ui-types/src";
 
 type Props = WithTranslation & {
   loading: boolean;
@@ -68,7 +69,7 @@ class PluginsOverview extends React.Component<Props, State> {
     this.fetchPlugins();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     const { installed } = this.props;
     if (prevProps.installed !== installed) {
       this.fetchPlugins();
@@ -90,7 +91,7 @@ class PluginsOverview extends React.Component<Props, State> {
     }
   };
 
-  renderHeader = (actions: React.Node) => {
+  renderHeader = (actions: React.ReactNode) => {
     const { installed, t } = this.props;
     return (
       <div className="columns">
@@ -103,7 +104,7 @@ class PluginsOverview extends React.Component<Props, State> {
     );
   };
 
-  renderFooter = (actions: React.Node) => {
+  renderFooter = (actions: React.ReactNode) => {
     if (actions) {
       return <PluginBottomActions>{actions}</PluginBottomActions>;
     }
@@ -173,7 +174,7 @@ class PluginsOverview extends React.Component<Props, State> {
 
   computeUpdateAllSize = () => {
     const { collection, t } = this.props;
-    const outdatedPlugins = collection._embedded.plugins.filter(p => p._links.update).length;
+    const outdatedPlugins = collection._embedded.plugins.filter((p: Plugin) => p._links.update).length;
     return t("plugins.outdatedPlugins", {
       count: outdatedPlugins
     });
@@ -256,7 +257,7 @@ class PluginsOverview extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const collection = getPluginCollection(state);
   const loading = isFetchPluginsPending(state);
   const error = getFetchPluginsFailure(state);
@@ -276,7 +277,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchPluginsByLink: (link: string) => {
       dispatch(fetchPluginsByLink(link));
@@ -287,10 +288,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default compose(
-  withTranslation("admin"),
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(PluginsOverview);
+export default compose(withTranslation("admin"), connect(mapStateToProps, mapDispatchToProps))(PluginsOverview);

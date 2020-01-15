@@ -5,9 +5,9 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Group } from "@scm-manager/ui-types";
-import { Page, ErrorPage, Loading, Navigation, SubNavigation, Section, NavLink } from "@scm-manager/ui-components";
+import { ErrorPage, Loading, Navigation, NavLink, Page, Section, SubNavigation } from "@scm-manager/ui-components";
 import { getGroupsLink } from "../../modules/indexResource";
-import { fetchGroupByName, getGroupByName, isFetchGroupPending, getFetchGroupFailure } from "../modules/groups";
+import { fetchGroupByName, getFetchGroupFailure, getGroupByName, isFetchGroupPending } from "../modules/groups";
 import { Details } from "./../components/table";
 import { EditGroupNavLink, SetPermissionsNavLink } from "./../components/navLinks";
 import EditGroup from "./EditGroup";
@@ -94,7 +94,7 @@ class SingleGroup extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const name = ownProps.match.params.name;
   const group = getGroupByName(state, name);
   const loading = isFetchGroupPending(state, name);
@@ -110,7 +110,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchGroupByName: (link: string, name: string) => {
       dispatch(fetchGroupByName(link, name));
@@ -118,7 +118,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("groups")(SingleGroup));
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("groups")(SingleGroup));

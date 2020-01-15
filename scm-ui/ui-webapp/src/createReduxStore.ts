@@ -1,6 +1,6 @@
 import thunk from "redux-thunk";
 import logger from "redux-logger";
-import { createStore, compose, applyMiddleware, combineReducers } from "redux";
+import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import users from "./users/modules/users";
 import repos from "./repos/modules/repos";
 import repositoryTypes from "./repos/modules/repositoryTypes";

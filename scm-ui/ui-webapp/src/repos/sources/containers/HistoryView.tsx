@@ -1,6 +1,6 @@
 import React from "react";
-import { File, Changeset, Repository, PagedCollection } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, StatePaginator, ChangesetList } from "@scm-manager/ui-components";
+import { Changeset, File, PagedCollection, Repository, Link } from "@scm-manager/ui-types";
+import { ChangesetList, ErrorNotification, Loading, StatePaginator } from "@scm-manager/ui-components";
 import { getHistory } from "./history";
 
 type Props = {
@@ -14,6 +14,7 @@ type State = {
   page: number;
   pageCollection?: PagedCollection;
   error?: Error;
+  currentRevision: string;
 };
 
 class HistoryView extends React.Component<Props, State> {
@@ -23,41 +24,52 @@ class HistoryView extends React.Component<Props, State> {
     this.state = {
       loaded: false,
       page: 1,
-      changesets: []
+      changesets: [],
+      currentRevision: ""
     };
   }
 
   componentDidMount() {
     const { file } = this.props;
-    this.updateHistory(file._links.history.href);
+    if (file) {
+      this.updateHistory((file._links.history as Link).href);
+    }
+  }
+
+  componentDidUpdate() {
+    const { file } = this.props;
+    const { currentRevision } = this.state;
+    if (file?.revision !== currentRevision) {
+      this.updateHistory((file._links.history as Link).href);
+    }
   }
 
   updateHistory(link: string) {
+    const { file } = this.props;
     getHistory(link)
       .then(result => {
-        if (result.error) {
-          this.setState({
-            ...this.state,
-            error: result.error,
-            loaded: true
-          });
-        } else {
-          this.setState({
-            ...this.state,
-            loaded: true,
-            changesets: result.changesets,
-            pageCollection: result.pageCollection,
-            page: result.pageCollection.page
-          });
-        }
+        this.setState({
+          ...this.state,
+          loaded: true,
+          changesets: result.changesets,
+          pageCollection: result.pageCollection,
+          page: result.pageCollection.page,
+          currentRevision: file.revision
+        });
       })
-      .catch(err => {});
+      .catch(error =>
+        this.setState({
+          ...this.state,
+          error,
+          loaded: true
+        })
+      );
   }
 
   updatePage(page: number) {
     const { file } = this.props;
     const internalPage = page - 1;
-    this.updateHistory(file._links.history.href + "?page=" + internalPage.toString());
+    this.updateHistory((file._links.history as Link).href + "?page=" + internalPage.toString());
   }
 
   showHistory() {

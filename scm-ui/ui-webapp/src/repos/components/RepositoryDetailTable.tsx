@@ -1,7 +1,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { MailLink, DateFromNow } from "@scm-manager/ui-components";
+import { DateFromNow, MailLink } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   repository: Repository;

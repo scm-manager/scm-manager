@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
 
-import { logout, isAuthenticated, isLogoutPending, getLogoutFailure, isRedirecting } from "../modules/auth";
-import { Loading, ErrorPage } from "@scm-manager/ui-components";
+import { getLogoutFailure, isAuthenticated, isLogoutPending, isRedirecting, logout } from "../modules/auth";
+import { ErrorPage, Loading } from "@scm-manager/ui-components";
 import { getLogoutLink } from "../modules/indexResource";
 
 type Props = WithTranslation & {
@@ -35,7 +35,7 @@ class Logout extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const authenticated = isAuthenticated(state);
   const loading = isLogoutPending(state);
   const redirecting = isRedirecting(state);
@@ -50,13 +50,10 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     logout: (link: string) => dispatch(logout(link))
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("commons")(Logout));
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("commons")(Logout));

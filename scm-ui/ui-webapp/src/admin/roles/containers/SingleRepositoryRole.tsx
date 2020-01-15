@@ -5,11 +5,12 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { RepositoryRole } from "@scm-manager/ui-types";
-import { Loading, ErrorPage, Title } from "@scm-manager/ui-components";
+import { ErrorPage, Loading, Title } from "@scm-manager/ui-components";
 import { getRepositoryRolesLink } from "../../../modules/indexResource";
 import { fetchRoleByName, getFetchRoleFailure, getRoleByName, isFetchRolePending } from "../modules/roles";
 import PermissionRoleDetail from "../components/PermissionRoleDetails";
 import EditRepositoryRole from "./EditRepositoryRole";
+import { compose } from "redux";
 
 type Props = WithTranslation & {
   roleName: string;
@@ -78,7 +79,7 @@ class SingleRepositoryRole extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const roleName = ownProps.match.params.role;
   const role = getRoleByName(state, roleName);
   const loading = isFetchRolePending(state, roleName);
@@ -93,7 +94,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchRoleByName: (link: string, name: string) => {
       dispatch(fetchRoleByName(link, name));
@@ -101,9 +102,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(withTranslation("admin")(SingleRepositoryRole))
-);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+  withTranslation("admin")
+)(SingleRepositoryRole);

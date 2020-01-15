@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { RepositoryRole } from "@scm-manager/ui-types";
@@ -38,13 +39,13 @@ class CreateRepositoryRole extends React.Component<Props> {
       <>
         <Title title={t("repositoryRole.title")} />
         <Subtitle subtitle={t("repositoryRole.createSubtitle")} />
-        <RepositoryRoleForm submitForm={role => this.createRepositoryRole(role)} />
+        <RepositoryRoleForm submitForm={(role: RepositoryRole) => this.createRepositoryRole(role)} />
       </>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: any) => {
   const loading = isFetchVerbsPending(state);
   const error = getFetchVerbsFailure(state) || getCreateRoleFailure(state);
   const verbsLink = getRepositoryVerbsLink(state);
@@ -58,7 +59,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     addRole: (link: string, role: RepositoryRole, callback?: () => void) => {
       dispatch(createRole(link, role, callback));
@@ -66,7 +67,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("admin")(CreateRepositoryRole));
+export default compose(connect(mapStateToProps, mapDispatchToProps), withTranslation("admin"))(CreateRepositoryRole);

@@ -4,20 +4,21 @@ import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import queryString from "query-string";
 import { History } from "history";
-import { Repository, Branch, BranchRequest } from "@scm-manager/ui-types";
+import { Branch, BranchRequest, Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
 import BranchForm from "../components/BranchForm";
 import {
-  fetchBranches,
-  getBranches,
-  getBranchCreateLink,
   createBranch,
   createBranchReset,
-  isCreateBranchPending,
+  fetchBranches,
+  getBranchCreateLink,
+  getBranches,
   getCreateBranchFailure,
-  isFetchBranchesPending,
-  getFetchBranchesFailure
+  getFetchBranchesFailure,
+  isCreateBranchPending,
+  isFetchBranchesPending
 } from "../modules/branches";
+import { compose } from "redux";
 
 type Props = WithTranslation & {
   loading?: boolean;
@@ -92,7 +93,7 @@ class CreateBranch extends React.Component<Props> {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchBranches: (repository: Repository) => {
       dispatch(fetchBranches(repository));
@@ -111,7 +112,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const { repository } = ownProps;
   const loading = isFetchBranchesPending(state, repository) || isCreateBranchPending(state, repository);
   const error = getFetchBranchesFailure(state, repository) || getCreateBranchFailure(state, repository);
@@ -126,9 +127,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(withTranslation("repos")(CreateBranch))
-);
+export default compose(
+  withTranslation("repos"),
+  connect(mapStateToProps, mapDispatchToProps),
+  withRouter
+)(CreateBranch);

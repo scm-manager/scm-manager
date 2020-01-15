@@ -6,6 +6,7 @@ import { InputField, Level, SubmitButton } from "@scm-manager/ui-components";
 import { getRepositoryRolesLink, getRepositoryVerbsLink } from "../../../modules/indexResource";
 import { fetchAvailableVerbs, getFetchVerbsFailure, getVerbsFromState, isFetchVerbsPending } from "../modules/roles";
 import PermissionsWrapper from "../../../permissions/components/PermissionsWrapper";
+import { compose } from "redux";
 
 type Props = WithTranslation & {
   role?: RepositoryRole;
@@ -120,7 +121,7 @@ class RepositoryRoleForm extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const loading = isFetchVerbsPending(state);
   const error = getFetchVerbsFailure(state);
   const verbsLink = getRepositoryVerbsLink(state);
@@ -136,7 +137,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchAvailableVerbs: (link: string) => {
       dispatch(fetchAvailableVerbs(link));
@@ -144,7 +145,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("admin")(RepositoryRoleForm));
+export default compose(connect(mapStateToProps, mapDispatchToProps), withTranslation("admin"))(RepositoryRoleForm);

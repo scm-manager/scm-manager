@@ -4,10 +4,10 @@ import { Route } from "react-router-dom";
 import { History } from "history";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { User } from "@scm-manager/ui-types";
-import { Page, Loading, Navigation, SubNavigation, Section, NavLink, ErrorPage } from "@scm-manager/ui-components";
+import { ErrorPage, Loading, Navigation, NavLink, Page, Section, SubNavigation } from "@scm-manager/ui-components";
 import { Details } from "./../components/table";
 import EditUser from "./EditUser";
-import { fetchUserByName, getUserByName, isFetchUserPending, getFetchUserFailure } from "../modules/users";
+import { fetchUserByName, getFetchUserFailure, getUserByName, isFetchUserPending } from "../modules/users";
 import { EditUserNavLink, SetPasswordNavLink, SetPermissionsNavLink } from "./../components/navLinks";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { getUsersLink } from "../../modules/indexResource";
@@ -95,7 +95,7 @@ class SingleUser extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const name = ownProps.match.params.name;
   const user = getUserByName(state, name);
   const loading = isFetchUserPending(state, name);
@@ -110,7 +110,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchUserByName: (link: string, name: string) => {
       dispatch(fetchUserByName(link, name));
@@ -118,7 +118,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation("users")(SingleUser));
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("users")(SingleUser));

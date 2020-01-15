@@ -2,29 +2,29 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 import reducer, {
+  FETCH_INDEXRESOURCES,
+  FETCH_INDEXRESOURCES_FAILURE,
   FETCH_INDEXRESOURCES_PENDING,
   FETCH_INDEXRESOURCES_SUCCESS,
-  FETCH_INDEXRESOURCES_FAILURE,
   fetchIndexResources,
   fetchIndexResourcesSuccess,
-  FETCH_INDEXRESOURCES,
-  isFetchIndexResourcesPending,
-  getFetchIndexResourcesFailure,
-  getUiPluginsLink,
-  getMeLink,
-  getLogoutLink,
-  getLoginLink,
-  getUsersLink,
   getConfigLink,
-  getRepositoriesLink,
-  getHgConfigLink,
+  getFetchIndexResourcesFailure,
   getGitConfigLink,
-  getSvnConfigLink,
-  getLinks,
+  getGroupAutoCompleteLink,
   getGroupsLink,
+  getHgConfigLink,
   getLinkCollection,
+  getLinks,
+  getLoginLink,
+  getLogoutLink,
+  getMeLink,
+  getRepositoriesLink,
+  getSvnConfigLink,
+  getUiPluginsLink,
   getUserAutoCompleteLink,
-  getGroupAutoCompleteLink
+  getUsersLink,
+  isFetchIndexResourcesPending
 } from "./indexResource";
 
 const indexResourcesUnauthenticated = {

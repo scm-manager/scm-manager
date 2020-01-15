@@ -1,7 +1,6 @@
-import { Action } from "@scm-manager/ui-components";
-import { apiClient } from "@scm-manager/ui-components";
+import { Action, apiClient } from "@scm-manager/ui-components";
 import * as types from "../../../modules/types";
-import { RepositoryRole, Permission, PermissionCollection, PermissionCreateEntry } from "@scm-manager/ui-types";
+import { Permission, PermissionCollection, PermissionCreateEntry, RepositoryRole } from "@scm-manager/ui-types";
 import { isPending } from "../../../modules/pending";
 import { getFailure } from "../../../modules/failure";
 import { Dispatch } from "redux";

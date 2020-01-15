@@ -5,10 +5,10 @@ import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Branch, Changeset, PagedCollection, Repository } from "@scm-manager/ui-types";
 import {
+  ChangesetList,
   ErrorNotification,
   getPageFromMatch,
   LinkPaginator,
-  ChangesetList,
   Loading,
   Notification
 } from "@scm-manager/ui-components";
@@ -41,7 +41,6 @@ type Props = WithTranslation & {
 class Changesets extends React.Component<Props> {
   componentDidMount() {
     const { fetchChangesets, repository, branch, page } = this.props;
-
     fetchChangesets(repository, branch, page);
   }
 
@@ -93,7 +92,7 @@ class Changesets extends React.Component<Props> {
   };
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchChangesets: (repo: Repository, branch: Branch, page: number) => {
       dispatch(fetchChangesets(repo, branch, page));
@@ -118,11 +117,4 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   };
 };
 
-export default compose(
-  withTranslation("repos"),
-  withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(Changesets);
+export default compose(withTranslation("repos"), withRouter, connect(mapStateToProps, mapDispatchToProps))(Changesets);

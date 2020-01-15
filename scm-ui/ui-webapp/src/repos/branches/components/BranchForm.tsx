@@ -1,7 +1,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { Repository, Branch, BranchRequest } from "@scm-manager/ui-types";
-import { Select, InputField, Level, SubmitButton, validation as validator } from "@scm-manager/ui-components";
+import { Branch, BranchRequest, Repository } from "@scm-manager/ui-types";
+import { InputField, Level, Select, SubmitButton, validation as validator } from "@scm-manager/ui-components";
 import { orderBranches } from "../util/orderBranches";
 
 type Props = WithTranslation & {

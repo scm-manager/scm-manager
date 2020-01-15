@@ -5,16 +5,16 @@ import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Changeset, Repository, Tag } from "@scm-manager/ui-types";
 import {
-  DateFromNow,
-  ChangesetId,
-  ChangesetTag,
+  AvatarImage,
+  AvatarWrapper,
+  Button,
   ChangesetAuthor,
   ChangesetDiff,
-  AvatarWrapper,
-  AvatarImage,
+  ChangesetId,
   changesets,
-  Level,
-  Button
+  ChangesetTag,
+  DateFromNow,
+  Level
 } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {

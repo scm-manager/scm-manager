@@ -75,7 +75,7 @@ class BranchesOverview extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const { repository } = ownProps;
   const loading = isFetchBranchesPending(state, repository);
   const error = getFetchBranchesFailure(state, repository);
@@ -91,7 +91,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchBranches: (repository: Repository) => {
       dispatch(fetchBranches(repository));
@@ -102,8 +102,5 @@ const mapDispatchToProps = dispatch => {
 export default compose(
   withTranslation("repos"),
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
+  connect(mapStateToProps, mapDispatchToProps)
 )(BranchesOverview);

@@ -13,10 +13,15 @@ type Props = {
 class DropDown extends React.Component<Props> {
   render() {
     const { options, optionValues, preselectedOption, className, disabled } = this.props;
+
+    if (preselectedOption && !options.includes(preselectedOption)) {
+      options.unshift(preselectedOption);
+    }
+
     return (
       <div className={classNames(className, "select", disabled ? "disabled" : "")}>
         <select value={preselectedOption ? preselectedOption : ""} onChange={this.change} disabled={disabled}>
-          <option key="" />
+          <option key={preselectedOption} />
           {options.map((option, index) => {
             return (
               <option key={option} value={optionValues && optionValues[index] ? optionValues[index] : option}>

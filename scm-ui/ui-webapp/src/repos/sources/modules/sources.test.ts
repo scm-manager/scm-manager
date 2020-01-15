@@ -1,19 +1,19 @@
-import { Repository, File } from "@scm-manager/ui-types";
+import { File, Repository } from "@scm-manager/ui-types";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 import {
+  default as reducer,
   FETCH_SOURCES,
   FETCH_SOURCES_FAILURE,
   FETCH_SOURCES_PENDING,
   FETCH_SOURCES_SUCCESS,
   fetchSources,
-  getFetchSourcesFailure,
-  isFetchSourcesPending,
-  default as reducer,
-  getSources,
   fetchSourcesSuccess,
-  isDirectory
+  getFetchSourcesFailure,
+  getSources,
+  isDirectory,
+  isFetchSourcesPending
 } from "./sources";
 
 const sourcesUrl = "http://localhost:8081/scm/rest/api/v2/repositories/scm/core/sources/";
@@ -198,7 +198,7 @@ describe("selector tests", () => {
     const state = {
       sources: {
         "scm/core/abc/src/main/package.json": {
-          sources: {noDirectory}
+          sources: { noDirectory }
         }
       }
     };

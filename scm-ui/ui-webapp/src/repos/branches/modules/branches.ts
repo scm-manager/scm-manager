@@ -1,4 +1,4 @@
-import { FAILURE_SUFFIX, PENDING_SUFFIX, SUCCESS_SUFFIX, RESET_SUFFIX } from "../../../modules/types";
+import { FAILURE_SUFFIX, PENDING_SUFFIX, RESET_SUFFIX, SUCCESS_SUFFIX } from "../../../modules/types";
 import { apiClient } from "@scm-manager/ui-components";
 import { Action, Branch, BranchRequest, Repository } from "@scm-manager/ui-types";
 import { isPending } from "../../../modules/pending";

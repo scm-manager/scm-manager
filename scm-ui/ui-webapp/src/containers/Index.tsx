@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import App from "./App";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";
-import { Loading, ErrorBoundary } from "@scm-manager/ui-components";
+import { ErrorBoundary, Loading } from "@scm-manager/ui-components";
 import {
   fetchIndexResources,
   getFetchIndexResourcesFailure,
@@ -74,7 +75,7 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   const loading = isFetchIndexResourcesPending(state);
   const error = getFetchIndexResourcesFailure(state);
   const indexResources = getLinks(state);
@@ -85,9 +86,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(withTranslation("commons")(Index))
-);
+export default compose(withRouter, connect(mapStateToProps, mapDispatchToProps), withTranslation("commons"))(Index);

@@ -1,6 +1,6 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { ButtonGroup, Button, SubmitButton, Modal } from "@scm-manager/ui-components";
+import { Button, ButtonGroup, Modal, SubmitButton } from "@scm-manager/ui-components";
 import PermissionCheckbox from "../../../permissions/components/PermissionCheckbox";
 
 type Props = WithTranslation & {

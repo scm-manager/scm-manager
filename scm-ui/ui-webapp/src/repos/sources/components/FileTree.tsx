@@ -5,9 +5,9 @@ import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import { binder } from "@scm-manager/ui-extensions";
-import { Repository, File } from "@scm-manager/ui-types";
+import { File, Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
-import { getFetchSourcesFailure, isFetchSourcesPending, getSources, fetchSources } from "../modules/sources";
+import { fetchSources, getFetchSourcesFailure, getSources, isFetchSourcesPending } from "../modules/sources";
 import FileTreeLeaf from "./FileTreeLeaf";
 
 type Props = WithTranslation & {
@@ -174,10 +174,4 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   };
 };
 
-export default compose(
-  withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(withTranslation("repos")(FileTree));
+export default compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(withTranslation("repos")(FileTree));

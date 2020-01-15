@@ -3,7 +3,7 @@ import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import * as types from "../../modules/types";
 import { combineReducers, Dispatch } from "redux";
-import { Action, PagedCollection, Group } from "@scm-manager/ui-types";
+import { Action, Group, PagedCollection } from "@scm-manager/ui-types";
 
 export const FETCH_GROUPS = "scm/groups/FETCH_GROUPS";
 export const FETCH_GROUPS_PENDING = `${FETCH_GROUPS}_${types.PENDING_SUFFIX}`;

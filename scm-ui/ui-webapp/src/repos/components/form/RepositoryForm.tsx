@@ -2,14 +2,14 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Repository, RepositoryType } from "@scm-manager/ui-types";
-import { Subtitle, InputField, Select, Textarea, Level, SubmitButton } from "@scm-manager/ui-components";
+import { InputField, Level, Select, SubmitButton, Subtitle, Textarea } from "@scm-manager/ui-components";
 import * as validator from "./repositoryValidation";
 
 type Props = WithTranslation & {
   submitForm: (p: Repository) => void;
   repository?: Repository;
-  repositoryTypes: RepositoryType[];
-  namespaceStrategy: string;
+  repositoryTypes?: RepositoryType[];
+  namespaceStrategy?: string;
   loading?: boolean;
 };
 
@@ -127,13 +127,16 @@ class RepositoryForm extends React.Component<Props, State> {
     );
   }
 
-  createSelectOptions(repositoryTypes: RepositoryType[]) {
-    return repositoryTypes.map(repositoryType => {
-      return {
-        label: repositoryType.displayName,
-        value: repositoryType.name
-      };
-    });
+  createSelectOptions(repositoryTypes?: RepositoryType[]) {
+    if (repositoryTypes) {
+      return repositoryTypes.map(repositoryType => {
+        return {
+          label: repositoryType.displayName,
+          value: repositoryType.name
+        };
+      });
+    }
+    return [];
   }
 
   renderNamespaceField = () => {

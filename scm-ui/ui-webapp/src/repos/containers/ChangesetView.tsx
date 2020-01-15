@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Changeset, Repository } from "@scm-manager/ui-types";
@@ -42,7 +43,7 @@ class ChangesetView extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps: Props) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const repository = ownProps.repository;
   const id = ownProps.match.params.id;
   const changeset = getChangeset(state, repository, id);
@@ -55,7 +56,7 @@ const mapStateToProps = (state, ownProps: Props) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchChangesetIfNeeded: (repository: Repository, id: string) => {
       dispatch(fetchChangesetIfNeeded(repository, id));
@@ -63,9 +64,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(withTranslation("repos")(ChangesetView))
-);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+  withTranslation("repos")
+)(ChangesetView);

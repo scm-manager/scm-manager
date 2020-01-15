@@ -1,7 +1,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import { Level, SubmitButton, Notification, ErrorNotification, PasswordConfirmation } from "@scm-manager/ui-components";
+import { ErrorNotification, Level, Notification, PasswordConfirmation, SubmitButton } from "@scm-manager/ui-components";
 import { setPassword } from "./setPassword";
 
 type Props = WithTranslation & {

@@ -1,10 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { Repository } from "@scm-manager/ui-types";
-import { Level, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { confirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { deleteRepo, getDeleteRepoFailure, isDeleteRepoPending } from "../modules/repos";
 
 type Props = WithTranslation & {
@@ -72,7 +73,7 @@ class DeleteRepo extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const { namespace, name } = ownProps.repository;
   const loading = isDeleteRepoPending(state, namespace, name);
   const error = getDeleteRepoFailure(state, namespace, name);
@@ -82,7 +83,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     deleteRepo: (repo: Repository, callback: () => void) => {
       dispatch(deleteRepo(repo, callback));
@@ -90,7 +91,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(withTranslation("repos")(DeleteRepo)));
+export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter, withTranslation("repos"))(DeleteRepo);

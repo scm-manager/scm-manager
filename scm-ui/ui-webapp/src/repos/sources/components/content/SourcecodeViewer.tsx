@@ -1,8 +1,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { apiClient, SyntaxHighlighter } from "@scm-manager/ui-components";
-import { File } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { apiClient, ErrorNotification, Loading, SyntaxHighlighter } from "@scm-manager/ui-components";
+import { File, Link } from "@scm-manager/ui-types";
 
 type Props = WithTranslation & {
   file: File;
@@ -13,6 +12,7 @@ type State = {
   content: string;
   error?: Error;
   loaded: boolean;
+  currentFileRevision: string;
 };
 
 class SourcecodeViewer extends React.Component<Props, State> {
@@ -21,30 +21,44 @@ class SourcecodeViewer extends React.Component<Props, State> {
 
     this.state = {
       content: "",
-      loaded: false
+      loaded: false,
+      currentFileRevision: ""
     };
   }
 
   componentDidMount() {
-    const { file } = this.props;
-    getContent(file._links.self.href)
-      .then(result => {
-        if (result.error) {
-          this.setState({
-            ...this.state,
-            error: result.error,
-            loaded: true
-          });
-        } else {
-          this.setState({
-            ...this.state,
-            content: result,
-            loaded: true
-          });
-        }
-      })
-      .catch(err => {});
+    this.fetchContentIfChanged();
   }
+
+  componentDidUpdate() {
+    this.fetchContentIfChanged();
+  }
+
+  private fetchContentIfChanged() {
+    const { file } = this.props;
+    const { currentFileRevision } = this.state;
+    if (file.revision !== currentFileRevision) {
+      this.fetchContent();
+    }
+  }
+
+  fetchContent = () => {
+    const { file } = this.props;
+    getContent((file._links.self as Link).href)
+      .then(content => {
+        this.setState({
+          content,
+          loaded: true,
+          currentFileRevision: file.revision
+        });
+      })
+      .catch(error => {
+        this.setState({
+          error,
+          loaded: true
+        });
+      });
+  };
 
   render() {
     const { content, error, loaded } = this.state;
@@ -71,17 +85,7 @@ export function getLanguage(language: string) {
 }
 
 export function getContent(url: string) {
-  return apiClient
-    .get(url)
-    .then(response => response.text())
-    .then(response => {
-      return response;
-    })
-    .catch(err => {
-      return {
-        error: err
-      };
-    });
+  return apiClient.get(url).then(response => response.text());
 }
 
 export default withTranslation("repos")(SourcecodeViewer);

@@ -1,10 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { User } from "@scm-manager/ui-types";
-import { Level, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { confirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { deleteUser, getDeleteUserFailure, isDeleteUserPending } from "../modules/users";
 
 type Props = WithTranslation & {
@@ -72,7 +73,7 @@ class DeleteUser extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const loading = isDeleteUserPending(state, ownProps.user.name);
   const error = getDeleteUserFailure(state, ownProps.user.name);
   return {
@@ -81,7 +82,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     deleteUser: (user: User, callback?: () => void) => {
       dispatch(deleteUser(user, callback));
@@ -89,7 +90,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(withTranslation("users")(DeleteUser)));
+export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter, withTranslation("users"))(DeleteUser);

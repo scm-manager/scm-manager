@@ -1,10 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { Group } from "@scm-manager/ui-types";
-import { Level, DeleteButton, confirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { confirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { deleteGroup, getDeleteGroupFailure, isDeleteGroupPending } from "../modules/groups";
 
 type Props = WithTranslation & {
@@ -72,7 +73,7 @@ export class DeleteGroup extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: any, ownProps: Props) => {
   const loading = isDeleteGroupPending(state, ownProps.group.name);
   const error = getDeleteGroupFailure(state, ownProps.group.name);
   return {
@@ -81,7 +82,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     deleteGroup: (group: Group, callback?: () => void) => {
       dispatch(deleteGroup(group, callback));
@@ -89,7 +90,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(withTranslation("groups")(DeleteGroup)));
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withRouter,
+  withTranslation("groups")
+)(DeleteGroup);

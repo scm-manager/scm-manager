@@ -1,6 +1,6 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { ButtonAddons, Button } from "@scm-manager/ui-components";
+import { Button, ButtonAddons } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   className?: string;
