@@ -1,4 +1,5 @@
 module.exports = api => {
+  api.cache.using(() => process.env.NODE_ENV || "production");
   return {
     presets: [
       require("@babel/preset-env"),

@@ -5,8 +5,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
-const isDevelopment = process.env.NODE_ENV !== "production";
-
+const isDevelopment = process.env.NODE_ENV === "development";
 const root = path.resolve(process.cwd(), "scm-ui");
 
 module.exports = [
