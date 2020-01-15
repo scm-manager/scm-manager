@@ -19,7 +19,7 @@ class ChangesetsRoot extends React.Component<Props> {
     const { branches, baseUrl } = this.props;
     if (branches?.length > 0 && this.isSelectedBranchNotABranch()) {
       const defaultBranch = branches?.filter(b => b.defaultBranch === true)[0];
-      this.props.history.push(`${baseUrl}/branch/${encodeURIComponent(defaultBranch.name)}/changesets/`);
+      this.props.history.replace(`${baseUrl}/branch/${encodeURIComponent(defaultBranch.name)}/changesets/`);
     }
   }
 

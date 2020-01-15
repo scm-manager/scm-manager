@@ -34,7 +34,7 @@ class Sources extends React.Component<Props> {
     fetchSources(repository, this.decodeRevision(revision), path);
     if (branches?.length > 0 && !selectedBranch) {
       const defaultBranch = branches?.filter(b => b.defaultBranch === true)[0];
-      this.props.history.push(`${baseUrl}/sources/${encodeURIComponent(defaultBranch.name)}/`);
+      this.props.history.replace(`${baseUrl}/sources/${encodeURIComponent(defaultBranch.name)}/`);
     }
   }
 
@@ -49,7 +49,7 @@ class Sources extends React.Component<Props> {
     return revision ? decodeURIComponent(revision) : revision;
   };
 
-  onSelectBranch = (branch?: Branch) => {
+  onSelectBranch = (branch?: Branch, replaceHistory?: boolean) => {
     const { baseUrl, history, path } = this.props;
     let url;
     if (branch) {
