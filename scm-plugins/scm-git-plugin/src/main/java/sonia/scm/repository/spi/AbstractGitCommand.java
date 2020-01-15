@@ -259,12 +259,13 @@ class AbstractGitCommand
 
     void push() {
       try {
-        Iterable<PushResult> pushResult = clone.push().call();
-        Iterator<PushResult> pushResultIterator = pushResult.iterator();
+        Iterable<PushResult> pushResults = clone.push().call();
+        Iterator<PushResult> pushResultIterator = pushResults.iterator();
         if (!pushResultIterator.hasNext()) {
           throw new InternalRepositoryException(repository, "got no result from push");
         }
-        Collection<RemoteRefUpdate> remoteUpdates = pushResultIterator.next().getRemoteUpdates();
+        PushResult pushResult = pushResultIterator.next();
+        Collection<RemoteRefUpdate> remoteUpdates = pushResult.getRemoteUpdates();
         if (remoteUpdates.isEmpty()) {
           throw new InternalRepositoryException(repository, "push created no update");
         }
@@ -273,6 +274,7 @@ class AbstractGitCommand
           .filter(remoteRefUpdate -> remoteRefUpdate.getStatus() != RemoteRefUpdate.Status.OK)
           .findAny()
           .ifPresent(remoteRefUpdate -> {
+            logger.info("message for failed push: {}", pushResult.getMessages());
             throw new IntegrateChangesFromWorkdirException(repository, "could not push changes into central repository: " + remoteRefUpdate.getStatus());
           });
       } catch (GitAPIException e) {
