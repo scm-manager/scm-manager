@@ -67,7 +67,7 @@ class Sources extends React.Component<Props> {
 
   evaluateSwitchViewLink = () => {
     const { baseUrl, selectedBranch, branches } = this.props;
-    if (selectedBranch && branches?.filter(b => b.name === selectedBranch).length !== 0) {
+    if (branches && selectedBranch && branches?.filter(b => b.name === selectedBranch).length !== 0) {
       return `${baseUrl}/branch/${encodeURIComponent(selectedBranch)}/changesets/`;
     }
     return `${baseUrl}/changesets/`;
