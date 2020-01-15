@@ -33,7 +33,7 @@ node('docker') {
       }
 
       stage('Unit Test') {
-        mvn 'test -Dsonia.scm.test.skip.hg=true -Dmaven.test.failure.ignore=true'
+        mvn 'test -Pcoverage -Dsonia.scm.test.skip.hg=true -Dmaven.test.failure.ignore=true'
       }
 
       stage('Integration Test') {

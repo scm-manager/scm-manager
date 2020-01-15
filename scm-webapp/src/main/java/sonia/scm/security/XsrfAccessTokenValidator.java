@@ -30,12 +30,15 @@
  */
 package sonia.scm.security;
 
+import com.google.common.collect.ImmutableSet;
 import sonia.scm.plugin.Extension;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Validates xsrf protected access tokens. The validator check if the current request contains an xsrf key which is
@@ -47,7 +50,11 @@ import java.util.Optional;
  */
 @Extension
 public class XsrfAccessTokenValidator implements AccessTokenValidator {
-  
+
+  private static final Set<String> ALLOWED_METHOD = ImmutableSet.of(
+    "GET", "HEAD", "OPTIONS"
+  );
+
   private final Provider<HttpServletRequest> requestProvider;
 
   
@@ -65,8 +72,10 @@ public class XsrfAccessTokenValidator implements AccessTokenValidator {
   public boolean validate(AccessToken accessToken) {
     Optional<String> xsrfClaim = accessToken.getCustom(Xsrf.TOKEN_KEY);
     if (xsrfClaim.isPresent()) {
-      String xsrfHeaderValue = requestProvider.get().getHeader(Xsrf.HEADER_KEY);
-      return xsrfClaim.get().equals(xsrfHeaderValue);
+      HttpServletRequest request = requestProvider.get();
+      String xsrfHeaderValue = request.getHeader(Xsrf.HEADER_KEY);
+      return ALLOWED_METHOD.contains(request.getMethod().toUpperCase(Locale.ENGLISH))
+        || xsrfClaim.get().equals(xsrfHeaderValue);
     }
     return true;
   }

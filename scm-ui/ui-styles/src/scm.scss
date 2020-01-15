@@ -303,6 +303,10 @@ $danger-25: scale-color($danger, $lightness: 75%);
     }
   }
 
+  &.is-warning {
+    color: #88550D;
+  }
+
   &.is-primary:hover,
   &.is-primary.is-hovered {
     background-color: scale-color($primary, $lightness: -10%);
@@ -371,6 +375,7 @@ $danger-25: scale-color($danger, $lightness: 75%);
 
   &.is-warning[disabled] {
     background-color: scale-color($warning, $lightness: 75%);
+    color: #e1d4c2;
   }
 
   &.is-danger:hover,
