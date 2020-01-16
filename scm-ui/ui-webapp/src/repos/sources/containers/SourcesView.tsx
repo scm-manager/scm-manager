@@ -1,5 +1,4 @@
 import React from "react";
-
 import SourcecodeViewer from "../components/content/SourcecodeViewer";
 import ImageViewer from "../components/content/ImageViewer";
 import DownloadViewer from "../components/content/DownloadViewer";
@@ -7,6 +6,7 @@ import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { getContentType } from "./contentType";
 import { File, Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import SwitchableMarkdownViewer from "../components/content/SwitchableMarkdownViewer";
 
 type Props = {
   repository: Repository;
@@ -58,6 +58,8 @@ class SourcesView extends React.Component<Props, State> {
     const { contentType, language } = this.state;
     if (contentType.startsWith("image/")) {
       return <ImageViewer file={file} />;
+    } else if (contentType.includes("markdown")) {
+      return <SwitchableMarkdownViewer file={file} />;
     } else if (language) {
       return <SourcecodeViewer file={file} language={language} />;
     } else if (contentType.startsWith("text/")) {

@@ -113,6 +113,10 @@
       "historyButton": "History",
       "sourcesButton": "Sources",
       "downloadButton": "Download",
+      "toggleButton": {
+        "showMarkdown": "Render markdown",
+        "showSources": "Show sources"
+      },
       "path": "Path",
       "branch": "Branch",
       "commitDate": "Commit date",

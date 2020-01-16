@@ -113,6 +113,10 @@
       "historyButton": "Historia",
       "sourcesButton": "Fuentes",
       "downloadButton": "Descargar",
+      "toggleButton": {
+        "showMarkdown": "Render markdown",
+        "showSources": "Show sources"
+      },
       "path": "Ruta",
       "branch": "Rama",
       "commitDate": "Fecha de cometer",
