@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Copy on write
 
 ### Changed
-- Stop fetching commits when this takes too long
+- Stop fetching commits when it takes too long
 - Unification of source and commits become "code"
 
 ### Fixed
@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Failing git push does not lead to an GitAPIException
 - Subversion revision 0 leads to error
 - Create mock subject to satisfy legman
-- Mutliple versions of hibernate-validator caused problems when starting from plugins
+- Multiple versions of hibernate-validator caused problems when starting from plugins
 
 ## 2.0.0-rc1 - 2019-12-02
 ### Added
@@ -30,10 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Repository branch overview, detailed view and create branch functionality
 - Search and filter for repos, users and groups
 - Repository Permissions roles
-- Migration step framework and wizzard
+- Migration step framework and wizard
 - Plugin center integration
 - Plugins can be installed (even without restart), updated and uninstalled using the new plugins overview
 - Git-LFS support (with SSH authentication)
 - Anonymous access via git-clone and API access with anonymous user
 - Cache and x-requested-with header to bundle requests
-- Public flag migration
+- remove public flag from repository and migrate permissions to anonymous user
