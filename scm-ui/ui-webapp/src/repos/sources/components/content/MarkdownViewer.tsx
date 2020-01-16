@@ -1,16 +1,21 @@
 import React, { FC, useEffect, useState } from "react";
 import { getContent } from "./SourcecodeViewer";
 import { Link, File } from "@scm-manager/ui-types";
-import { Loading, ErrorNotification, MarkdownView, Button, Level } from "@scm-manager/ui-components";
+import { Loading, ErrorNotification, MarkdownView } from "@scm-manager/ui-components";
+import styled from "styled-components";
 
 type Props = {
   file: File;
 };
 
+const MarkdownContent = styled.div`
+  padding: 0.5rem;
+`;
+
 const MarkdownViewer: FC<Props> = ({ file }) => {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | undefined>(undefined);
-  const [content, setContent] = useState<string>("");
+  const [content, setContent] = useState("");
 
   useEffect(() => {
     getContent((file._links.self as Link).href)
@@ -32,7 +37,11 @@ const MarkdownViewer: FC<Props> = ({ file }) => {
     return <ErrorNotification error={error} />;
   }
 
-  return <MarkdownView content={content} />;
+  return (
+    <MarkdownContent>
+      <MarkdownView content={content} />
+    </MarkdownContent>
+  );
 };
 
 export default MarkdownViewer;

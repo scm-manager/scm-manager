@@ -1,21 +1,14 @@
 import React from "react";
-import styled from "styled-components";
-import { WithTranslation, withTranslation } from "react-i18next";
 import SourcecodeViewer from "../components/content/SourcecodeViewer";
 import ImageViewer from "../components/content/ImageViewer";
-import MarkdownViewer from "../components/content/MarkdownViewer";
 import DownloadViewer from "../components/content/DownloadViewer";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { getContentType } from "./contentType";
 import { File, Repository } from "@scm-manager/ui-types";
-import { Button, ErrorNotification, Level, Loading } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import SwitchableMarkdownViewer from "../components/content/SwitchableMarkdownViewer";
 
-const ToggleButton = styled(Button)`
-  max-width: 2em;
-  margin-right: 0.25em;
-`;
-
-type Props = WithTranslation & {
+type Props = {
   repository: Repository;
   file: File;
   revision: string;
@@ -25,7 +18,6 @@ type Props = WithTranslation & {
 type State = {
   contentType: string;
   language: string;
-  renderMarkdown: boolean;
   loaded: boolean;
   error?: Error;
 };
@@ -37,8 +29,7 @@ class SourcesView extends React.Component<Props, State> {
     this.state = {
       contentType: "",
       language: "",
-      loaded: false,
-      renderMarkdown: true
+      loaded: false
     };
   }
 
@@ -62,32 +53,13 @@ class SourcesView extends React.Component<Props, State> {
       });
   }
 
-  toggleMarkdown = () => {
-    this.setState({ renderMarkdown: !this.state.renderMarkdown });
-  };
-
   showSources() {
-    const { file, revision, t } = this.props;
-    const { contentType, language, renderMarkdown } = this.state;
+    const { file, revision } = this.props;
+    const { contentType, language } = this.state;
     if (contentType.startsWith("image/")) {
       return <ImageViewer file={file} />;
     } else if (contentType.includes("markdown")) {
-      return (
-        <>
-          <Level
-            right={
-              <ToggleButton
-                color={renderMarkdown ? "" : "link"}
-                action={this.toggleMarkdown}
-                title={renderMarkdown ? t("sources.content.toggleButton.showSources") : t("sources.content.toggleButton.showMarkdown")}
-              >
-                <i className="fab fa-markdown"></i>
-              </ToggleButton>
-            }
-          />
-          {renderMarkdown ? <MarkdownViewer file={file} /> : <SourcecodeViewer file={file} language={language} />}
-        </>
-      );
+      return <SwitchableMarkdownViewer file={file} />;
     } else if (language) {
       return <SourcecodeViewer file={file} language={language} />;
     } else if (contentType.startsWith("text/")) {
@@ -125,4 +97,4 @@ class SourcesView extends React.Component<Props, State> {
   }
 }
 
-export default withTranslation("repos")(SourcesView);
+export default SourcesView;
