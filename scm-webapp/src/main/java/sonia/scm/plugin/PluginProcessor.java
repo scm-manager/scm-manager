@@ -191,11 +191,11 @@ public final class PluginProcessor
 
     logger.info("install plugin tree:\n{}", pluginTree);
 
-    List<PluginNode> rootNodes = pluginTree.getRootNodes();
+    List<PluginNode> leafLastNodes = pluginTree.getLeafLastNodes();
 
     logger.trace("create plugin wrappers and build classloaders");
 
-    Set<InstalledPlugin> wrappers = createPluginWrappers(classLoader, rootNodes);
+    Set<InstalledPlugin> wrappers = createPluginWrappers(classLoader, leafLastNodes);
 
     logger.debug("collected {} plugins", wrappers.size());
 
@@ -256,33 +256,6 @@ public final class PluginProcessor
     {
       node.setWrapper(plugin);
       plugins.add(plugin);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param plugins
-   * @param classLoader
-   * @param nodes
-   *
-   * @throws IOException
-   */
-  private void appendPluginWrappers(Set<InstalledPlugin> plugins,
-    ClassLoader classLoader, List<PluginNode> nodes)
-    throws IOException
-  {
-
-    // TODO fix plugin loading order
-    for (PluginNode node : nodes)
-    {
-      appendPluginWrapper(plugins, classLoader, node);
-    }
-
-    for (PluginNode node : nodes)
-    {
-      appendPluginWrappers(plugins, classLoader, node.getChildren());
     }
   }
 
@@ -484,19 +457,22 @@ public final class PluginProcessor
    *
    *
    * @param classLoader
-   * @param rootNodes
+   * @param nodes
    *
    * @return
    *
    * @throws IOException
    */
   private Set<InstalledPlugin> createPluginWrappers(ClassLoader classLoader,
-                                                    List<PluginNode> rootNodes)
+                                                    List<PluginNode> nodes)
     throws IOException
   {
     Set<InstalledPlugin> plugins = Sets.newHashSet();
 
-    appendPluginWrappers(plugins, classLoader, rootNodes);
+    for (PluginNode node : nodes)
+    {
+      appendPluginWrapper(plugins, classLoader, node);
+    }
 
     return plugins;
   }

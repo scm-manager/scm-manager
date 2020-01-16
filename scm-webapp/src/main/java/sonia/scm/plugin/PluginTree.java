@@ -39,6 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -134,13 +136,26 @@ public final class PluginTree
    *
    * @return
    */
-  public List<PluginNode> getRootNodes()
+  public List<PluginNode> getLeafLastNodes()
   {
-    return rootNodes;
+    LinkedHashSet<PluginNodeHashWrapper> leafFirst = new LinkedHashSet<>();
+
+    rootNodes.forEach(node -> appendLeafFirst(leafFirst, node));
+
+    LinkedList<PluginNode> leafLast = new LinkedList<>();
+
+    leafFirst.stream().map(PluginNodeHashWrapper::getPluginNode).forEach(leafLast::addFirst);
+
+    return leafLast;
   }
 
-  //~--- methods --------------------------------------------------------------
+  private void appendLeafFirst(LinkedHashSet<PluginNodeHashWrapper> leafFirst, PluginNode node) {
+    node.getChildren().forEach(child -> appendLeafFirst(leafFirst, child));
+    leafFirst.add(new PluginNodeHashWrapper(node));
+  }
 
+
+  //~--- methods --------------------------------------------------------------
   /**
    * Method description
    *
@@ -235,8 +250,32 @@ public final class PluginTree
       append(buffer, indent + "   ", child);
     }
   }
-//~--- fields ---------------------------------------------------------------
+
+  //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private final List<PluginNode> rootNodes = Lists.newArrayList();
+
+  private static class PluginNodeHashWrapper {
+    private final PluginNode pluginNode;
+
+    private PluginNodeHashWrapper(PluginNode pluginNode) {
+      this.pluginNode = pluginNode;
+    }
+
+    public PluginNode getPluginNode() {
+      return pluginNode;
+    }
+
+    @Override
+    public int hashCode() {
+      return pluginNode.getId().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      return obj instanceof PluginNodeHashWrapper
+        && ((PluginNodeHashWrapper) obj).pluginNode.getId().equals(this.pluginNode.getId());
+    }
+  }
 }
