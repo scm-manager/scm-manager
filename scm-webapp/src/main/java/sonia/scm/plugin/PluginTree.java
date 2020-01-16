@@ -138,20 +138,20 @@ public final class PluginTree
    */
   public List<PluginNode> getLeafLastNodes()
   {
-    LinkedHashSet<PluginNodeHashWrapper> leafFirst = new LinkedHashSet<>();
+    LinkedHashSet<PluginNode> leafFirst = new LinkedHashSet<>();
 
     rootNodes.forEach(node -> appendLeafFirst(leafFirst, node));
 
     LinkedList<PluginNode> leafLast = new LinkedList<>();
 
-    leafFirst.stream().map(PluginNodeHashWrapper::getPluginNode).forEach(leafLast::addFirst);
+    leafFirst.forEach(leafLast::addFirst);
 
     return leafLast;
   }
 
-  private void appendLeafFirst(LinkedHashSet<PluginNodeHashWrapper> leafFirst, PluginNode node) {
+  private void appendLeafFirst(LinkedHashSet<PluginNode> leafFirst, PluginNode node) {
     node.getChildren().forEach(child -> appendLeafFirst(leafFirst, child));
-    leafFirst.add(new PluginNodeHashWrapper(node));
+    leafFirst.add(node);
   }
 
 
@@ -255,27 +255,4 @@ public final class PluginTree
 
   /** Field description */
   private final List<PluginNode> rootNodes = Lists.newArrayList();
-
-  private static class PluginNodeHashWrapper {
-    private final PluginNode pluginNode;
-
-    private PluginNodeHashWrapper(PluginNode pluginNode) {
-      this.pluginNode = pluginNode;
-    }
-
-    public PluginNode getPluginNode() {
-      return pluginNode;
-    }
-
-    @Override
-    public int hashCode() {
-      return pluginNode.getId().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      return obj instanceof PluginNodeHashWrapper
-        && ((PluginNodeHashWrapper) obj).pluginNode.getId().equals(this.pluginNode.getId());
-    }
-  }
 }
