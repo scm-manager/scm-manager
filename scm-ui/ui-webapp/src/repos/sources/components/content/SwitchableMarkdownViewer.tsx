@@ -11,7 +11,7 @@ const ToggleButton = styled(Button)`
   position: absolute;
   top: 0;
   right: 0.25rem;
-  z-index: 999;
+  z-index: 30;
 `;
 
 const Container = styled.div`
