@@ -728,35 +728,6 @@ Array [
             add
           </span>
         </div>
-        <div
-          className="sc-jTzLTM ljPywG level-right is-flex"
-        >
-          <div
-            className="field is-grouped"
-          >
-            <div
-              className="control"
-            >
-              <button
-                className="button is-default is-reduced-mobile"
-                onClick={[Function]}
-                type="button"
-              >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
     <div

@@ -271,8 +271,22 @@ class DiffFile extends React.Component<Props, State> {
       );
     }
     const collapseIcon = this.hasContent(file) ? <Icon name={icon} color="inherit" /> : null;
-
     const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
+    const sideBySideToggle =
+      file.hunks && file.hunks.length > 0 ? (
+        <ButtonWrapper className={classNames("level-right", "is-flex")}>
+          <ButtonGroup>
+            <Button
+              action={this.toggleSideBySide}
+              icon={sideBySide ? "align-left" : "columns"}
+              label={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
+              reducedMobile={true}
+            />
+            {fileControls}
+          </ButtonGroup>
+        </ButtonWrapper>
+      ) : null;
+
     return (
       <DiffFilePanel className={classNames("panel", "is-size-6")} collapsed={(file && file.isBinary) || collapsed}>
         <div className="panel-heading">
@@ -288,17 +302,7 @@ class DiffFile extends React.Component<Props, State> {
               </TitleWrapper>
               {this.renderChangeTag(file)}
             </FullWidthTitleHeader>
-            <ButtonWrapper className={classNames("level-right", "is-flex")}>
-              <ButtonGroup>
-                <Button
-                  action={this.toggleSideBySide}
-                  icon={sideBySide ? "align-left" : "columns"}
-                  label={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
-                  reducedMobile={true}
-                />
-                {fileControls}
-              </ButtonGroup>
-            </ButtonWrapper>
+            {sideBySideToggle}
           </FlexWrapLevel>
         </div>
         {body}
