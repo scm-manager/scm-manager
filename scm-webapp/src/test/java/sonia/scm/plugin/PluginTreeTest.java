@@ -76,7 +76,7 @@ public class PluginTreeTest
                       false, null, null);
     ExplodedSmp smp = createSmp(plugin);
 
-    new PluginTree(smp).getRootNodes();
+    new PluginTree(smp).getLeafLastNodes();
   }
 
   /**
@@ -88,7 +88,7 @@ public class PluginTreeTest
   @Test(expected = PluginNotInstalledException.class)
   public void testPluginNotInstalled() throws IOException
   {
-    new PluginTree(createSmpWithDependency("b", "a")).getRootNodes();
+    new PluginTree(createSmpWithDependency("b", "a")).getLeafLastNodes();
   }
 
   /**
@@ -98,10 +98,10 @@ public class PluginTreeTest
    * @throws IOException
    */
   @Test
-  public void testRootNotes() throws IOException
+  public void testNodes() throws IOException
   {
     List<ExplodedSmp> smps = createSmps("a", "b", "c");
-    List<String> nodes = unwrapIds(new PluginTree(smps).getRootNodes());
+    List<String> nodes = unwrapIds(new PluginTree(smps).getLeafLastNodes());
 
     assertThat(nodes, containsInAnyOrder("a", "b", "c"));
   }
@@ -119,7 +119,7 @@ public class PluginTreeTest
                       null, null);
     ExplodedSmp smp = createSmp(plugin);
 
-    new PluginTree(smp).getRootNodes();
+    new PluginTree(smp).getLeafLastNodes();
   }
 
   /**
@@ -140,17 +140,31 @@ public class PluginTreeTest
     //J+
 
     PluginTree tree = new PluginTree(smps);
-    List<PluginNode> rootNodes = tree.getRootNodes();
+    List<PluginNode> nodes = tree.getLeafLastNodes();
 
-    assertThat(unwrapIds(rootNodes), containsInAnyOrder("a"));
+    System.out.println(tree);
 
-    PluginNode a = rootNodes.get(0);
+    assertThat(unwrapIds(nodes), contains("a", "b", "c"));
+  }
 
-    assertThat(unwrapIds(a.getChildren()), containsInAnyOrder("b", "c"));
+  @Test
+  public void testComplexDependencies() throws IOException
+  {
+    //J-
+    ExplodedSmp[] smps = new ExplodedSmp[]{
+      createSmpWithDependency("a", "b", "c", "d"),
+      createSmpWithDependency("b", "c"),
+      createSmpWithDependency("c"),
+      createSmpWithDependency("d")
+    };
+    //J+
 
-    PluginNode b = a.getChild("b");
+    PluginTree tree = new PluginTree(smps);
+    List<PluginNode> nodes = tree.getLeafLastNodes();
 
-    assertThat(unwrapIds(b.getChildren()), containsInAnyOrder("c"));
+    System.out.println(tree);
+
+    assertThat(unwrapIds(nodes), contains("d", "c", "b", "a"));
   }
 
   @Test
@@ -162,15 +176,11 @@ public class PluginTreeTest
     };
 
     PluginTree tree = new PluginTree(smps);
-    List<PluginNode> rootNodes = tree.getRootNodes();
+    List<PluginNode> nodes = tree.getLeafLastNodes();
 
-    assertThat(unwrapIds(rootNodes), containsInAnyOrder("a"));
+    System.out.println(tree);
 
-    PluginNode a = rootNodes.get(0);
-    assertThat(unwrapIds(a.getChildren()), containsInAnyOrder("b", "c"));
-
-    PluginNode b = a.getChild("b");
-    assertThat(unwrapIds(b.getChildren()), containsInAnyOrder("c"));
+    assertThat(unwrapIds(nodes), contains("a", "b", "c"));
   }
 
   @Test
@@ -185,15 +195,9 @@ public class PluginTreeTest
 
     System.out.println(tree);
 
-    List<PluginNode> rootNodes = tree.getRootNodes();
+    List<PluginNode> nodes = tree.getLeafLastNodes();
 
-    assertThat(unwrapIds(rootNodes), containsInAnyOrder("a"));
-
-    PluginNode a = rootNodes.get(0);
-    assertThat(unwrapIds(a.getChildren()), containsInAnyOrder("b"));
-
-    PluginNode b = a.getChild("b");
-    assertThat(unwrapIds(b.getChildren()), containsInAnyOrder("c"));
+    assertThat(unwrapIds(nodes), contains("a", "b", "c"));
   }
 
   @Test
@@ -203,9 +207,9 @@ public class PluginTreeTest
     };
 
     PluginTree tree = new PluginTree(smps);
-    List<PluginNode> rootNodes = tree.getRootNodes();
+    List<PluginNode> nodes = tree.getLeafLastNodes();
 
-    assertThat(unwrapIds(rootNodes), containsInAnyOrder("a"));
+    assertThat(unwrapIds(nodes), containsInAnyOrder("a"));
   }
 
   /**

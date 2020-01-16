@@ -39,6 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -134,13 +136,26 @@ public final class PluginTree
    *
    * @return
    */
-  public List<PluginNode> getRootNodes()
+  public List<PluginNode> getLeafLastNodes()
   {
-    return rootNodes;
+    LinkedHashSet<PluginNode> leafFirst = new LinkedHashSet<>();
+
+    rootNodes.forEach(node -> appendLeafFirst(leafFirst, node));
+
+    LinkedList<PluginNode> leafLast = new LinkedList<>();
+
+    leafFirst.forEach(leafLast::addFirst);
+
+    return leafLast;
   }
 
-  //~--- methods --------------------------------------------------------------
+  private void appendLeafFirst(LinkedHashSet<PluginNode> leafFirst, PluginNode node) {
+    node.getChildren().forEach(child -> appendLeafFirst(leafFirst, child));
+    leafFirst.add(node);
+  }
 
+
+  //~--- methods --------------------------------------------------------------
   /**
    * Method description
    *
@@ -235,7 +250,8 @@ public final class PluginTree
       append(buffer, indent + "   ", child);
     }
   }
-//~--- fields ---------------------------------------------------------------
+
+  //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private final List<PluginNode> rootNodes = Lists.newArrayList();

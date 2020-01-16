@@ -176,6 +176,17 @@ public final class PluginNode
   }
 
   @Override
+  public int hashCode() {
+    return getId().hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return obj instanceof PluginNode
+      && ((PluginNode) obj).getId().equals(this.getId());
+  }
+
+  @Override
   public String toString() {
     return plugin.getPath().toString() + " -> " + children;
   }

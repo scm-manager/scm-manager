@@ -2,9 +2,10 @@ type Context = {
   type: string;
   id: string;
 }[];
-type Violation = {
-  path: string;
+export type Violation = {
+  path?: string;
   message: string;
+  key?: string;
 };
 
 export type BackendErrorContent = {

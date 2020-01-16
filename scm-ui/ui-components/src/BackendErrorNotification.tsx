@@ -56,7 +56,8 @@ class BackendErrorNotification extends React.Component<Props> {
             {error.violations.map((violation, index) => {
               return (
                 <li key={index}>
-                  <strong>{violation.path}:</strong> {violation.message}
+                  {violation.path && <strong>{violation.path}:</strong>} {violation.message}{" "}
+                  {violation.key && t(violation.key)}
                 </li>
               );
             })}
