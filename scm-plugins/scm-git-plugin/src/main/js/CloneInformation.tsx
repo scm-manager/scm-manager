@@ -29,7 +29,7 @@ class CloneInformation extends React.Component<Props> {
             <br />
             git add README.md
             <br />
-            git commit -m "added readme"
+            git commit -m "Add readme"
             <br />
             git remote add origin {url}
             <br />
