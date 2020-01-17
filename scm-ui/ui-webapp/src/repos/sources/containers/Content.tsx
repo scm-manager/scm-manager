@@ -154,7 +154,7 @@ class Content extends React.Component<Props, State> {
                 </tr>
                 <tr>
                   <td>{t("sources.content.branch")}</td>
-                  <td className="is-word-break">{revision}</td>
+                  <td className="is-word-break">{decodeURIComponent(revision)}</td>
                 </tr>
                 <tr>
                   <td>{t("sources.content.size")}</td>
