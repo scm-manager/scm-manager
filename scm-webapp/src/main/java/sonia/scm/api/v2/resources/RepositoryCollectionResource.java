@@ -7,6 +7,7 @@ import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryInitializer;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.search.SearchRequest;
@@ -24,7 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -38,13 +39,15 @@ public class RepositoryCollectionResource {
   private final RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper;
   private final RepositoryDtoToRepositoryMapper dtoToRepositoryMapper;
   private final ResourceLinks resourceLinks;
+  private final RepositoryInitializer repositoryInitializer;
 
   @Inject
-  public RepositoryCollectionResource(RepositoryManager manager, RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper, RepositoryDtoToRepositoryMapper dtoToRepositoryMapper, ResourceLinks resourceLinks) {
+  public RepositoryCollectionResource(RepositoryManager manager, RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper, RepositoryDtoToRepositoryMapper dtoToRepositoryMapper, ResourceLinks resourceLinks, RepositoryInitializer repositoryInitializer) {
     this.adapter = new CollectionResourceManagerAdapter<>(manager, Repository.class);
     this.repositoryCollectionToDtoMapper = repositoryCollectionToDtoMapper;
     this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.resourceLinks = resourceLinks;
+    this.repositoryInitializer = repositoryInitializer;
   }
 
   /**
@@ -68,10 +71,10 @@ public class RepositoryCollectionResource {
     @ResponseCode(code = 500, condition = "internal server error")
   })
   public Response getAll(@DefaultValue("0") @QueryParam("page") int page,
-    @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
-    @QueryParam("sortBy") String sortBy,
-    @DefaultValue("false") @QueryParam("desc") boolean desc,
-    @DefaultValue("") @QueryParam("q") String search
+                         @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
+                         @QueryParam("sortBy") String sortBy,
+                         @DefaultValue("false") @QueryParam("desc") boolean desc,
+                         @DefaultValue("") @QueryParam("q") String search
   ) {
     return adapter.getAll(page, pageSize, createSearchPredicate(search), sortBy, desc,
       pageResult -> repositoryCollectionToDtoMapper.map(page, pageSize, pageResult));
@@ -81,7 +84,7 @@ public class RepositoryCollectionResource {
    * Creates a new repository.
    *
    * <strong>Note:</strong> This method requires "repository" privilege. The namespace of the given repository will
-   *   be ignored and set by the configured namespace strategy.
+   * be ignored and set by the configured namespace strategy.
    *
    * @param repository The repository to be created.
    * @return A response with the link to the new repository (if created successfully).
@@ -98,10 +101,18 @@ public class RepositoryCollectionResource {
   })
   @TypeHint(TypeHint.NO_CONTENT.class)
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created repository"))
-  public Response create(@Valid RepositoryDto repository) {
-    return adapter.create(repository,
+  public Response create(@Valid RepositoryDto repository, @QueryParam("initialize") boolean initialize) {
+    AtomicReference<Repository> reference = new AtomicReference<>();
+    Response response = adapter.create(repository,
       () -> createModelObjectFromDto(repository),
-      r -> resourceLinks.repository().self(r.getNamespace(), r.getName()));
+      r -> {
+        reference.set(r);
+        return resourceLinks.repository().self(r.getNamespace(), r.getName());
+      });
+    if (initialize) {
+      repositoryInitializer.initialize(reference.get());
+    }
+    return response;
   }
 
   private Repository createModelObjectFromDto(@Valid RepositoryDto repositoryDto) {

@@ -158,7 +158,7 @@ export function fetchRepoFailure(namespace: string, name: string, error: Error):
 export function createRepo(link: string, repository: Repository, initRepository: boolean, callback?: (repo: Repository) => void) {
   return function(dispatch: any) {
     dispatch(createRepoPending());
-    const repoLink = initRepository ? link + "?initRepository=true" : link;
+    const repoLink = initRepository ? link + "?initialize=true" : link;
     return apiClient
       .post(repoLink, repository, CONTENT_TYPE)
       .then(response => {
