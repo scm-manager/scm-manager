@@ -21,7 +21,8 @@
     "nameHelpText": "Der Name des Repository. Dieser wird Teil der URL des Repository sein.",
     "typeHelpText": "Der Typ des Repository (Mercurial, Git oder Subversion).",
     "contactHelpText": "E-Mail Adresse der Person, die für das Repository verantwortlich ist.",
-    "descriptionHelpText": "Eine kurze Beschreibung des Repository."
+    "descriptionHelpText": "Eine kurze Beschreibung des Repository.",
+    "initializeRepository": "Erstellt einen ersten Branch und committet eine README.md."
   },
   "repositoryRoot": {
     "errorTitle": "Fehler",
@@ -97,7 +98,8 @@
   },
   "repositoryForm": {
     "subtitle": "Repository bearbeiten",
-    "submit": "Speichern"
+    "submit": "Speichern",
+    "initializeRepository": "Repository initiieren"
   },
   "sources": {
     "file-tree": {

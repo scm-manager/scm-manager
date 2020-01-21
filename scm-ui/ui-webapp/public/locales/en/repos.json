@@ -21,7 +21,8 @@
     "nameHelpText": "The name of the repository. This name will be part of the repository url.",
     "typeHelpText": "The type of the repository (e.g. Mercurial, Git or Subversion).",
     "contactHelpText": "Email address of the person who is responsible for this repository.",
-    "descriptionHelpText": "A short description of the repository."
+    "descriptionHelpText": "A short description of the repository.",
+    "initializeRepository": "Creates a initial branch and commit a basic README.md."
   },
   "repositoryRoot": {
     "errorTitle": "Error",
@@ -97,7 +98,8 @@
   },
   "repositoryForm": {
     "subtitle": "Edit Repository",
-    "submit": "Save"
+    "submit": "Save",
+    "initializeRepository": "Initialize repository"
   },
   "sources": {
     "file-tree": {

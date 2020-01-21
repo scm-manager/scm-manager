@@ -430,7 +430,7 @@ describe("repos fetch", () => {
     };
 
     const store = mockStore({});
-    return store.dispatch(createRepo(URL, slartiFjords, callback)).then(() => {
+    return store.dispatch(createRepo(URL, slartiFjords, false, callback)).then(() => {
       expect(callMe).toBe("yeah");
     });
   });
@@ -441,7 +441,7 @@ describe("repos fetch", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(createRepo(URL, slartiFjords)).then(() => {
+    return store.dispatch(createRepo(URL, slartiFjords, false)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(CREATE_REPO_PENDING);
       expect(actions[1].type).toEqual(CREATE_REPO_FAILURE);

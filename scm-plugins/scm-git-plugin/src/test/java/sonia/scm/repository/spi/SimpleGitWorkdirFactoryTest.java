@@ -71,6 +71,18 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldCheckoutDefaultBranch() {
+    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(workdirProvider);
+
+    try (WorkingCopy<Repository, Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
+      assertThat(new File(workingCopy.getWorkingRepository().getWorkTree(), "a.txt"))
+        .exists()
+        .isFile()
+        .hasContent("a\nline for blame");
+    }
+  }
+
+  @Test
   public void cloneFromPoolShouldNotBeReused() {
     SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(workdirProvider);
 

@@ -102,7 +102,7 @@ public class ModifyCommandBuilder {
   public String execute() {
     AuthorUtil.setAuthorIfNotAvailable(request);
     try {
-      Preconditions.checkArgument(request.isValid(), "commit message, branch and at least one request are required");
+      Preconditions.checkArgument(request.isValid(), "commit message and at least one request are required");
       return command.execute(request);
     } finally {
       try {

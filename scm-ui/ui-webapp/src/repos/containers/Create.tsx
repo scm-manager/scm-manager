@@ -31,7 +31,7 @@ type Props = WithTranslation & {
   // dispatch functions
   fetchNamespaceStrategiesIfNeeded: () => void;
   fetchRepositoryTypesIfNeeded: () => void;
-  createRepo: (link: string, p2: Repository, callback: (repo: Repository) => void) => void;
+  createRepo: (link: string, repository: Repository, initRepository: boolean, callback: (repo: Repository) => void) => void;
   resetForm: () => void;
 
   // context props
@@ -67,8 +67,8 @@ class Create extends React.Component<Props> {
           repositoryTypes={repositoryTypes}
           loading={createLoading}
           namespaceStrategy={namespaceStrategies.current}
-          submitForm={repo => {
-            createRepo(repoLink, repo, (repo: Repository) => this.repoCreated(repo));
+          submitForm={(repo, initRepository) => {
+            createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
           }}
         />
       </Page>
@@ -102,8 +102,8 @@ const mapDispatchToProps = (dispatch: any) => {
     fetchNamespaceStrategiesIfNeeded: () => {
       dispatch(fetchNamespaceStrategiesIfNeeded());
     },
-    createRepo: (link: string, repository: Repository, callback: () => void) => {
-      dispatch(createRepo(link, repository, callback));
+    createRepo: (link: string, repository: Repository, initRepository: boolean, callback: () => void) => {
+      dispatch(createRepo(link, repository, initRepository, callback));
     },
     resetForm: () => {
       dispatch(createRepoReset());

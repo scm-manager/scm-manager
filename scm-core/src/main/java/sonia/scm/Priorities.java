@@ -71,11 +71,24 @@ public final class Priorities
    *
    * @return sorted class list
    */
-  public static <T> List<Class<? extends T>> sort(
-    Iterable<Class<? extends T>> unordered)
+  public static <T> List<Class<? extends T>> sort(Iterable<Class<? extends T>> unordered)
   {
     return new PriorityOrdering<T>().sortedCopy(unordered);
   }
+
+  /**
+   * Returns a list of instances sorted by priority.
+   *
+   * @param <T> type of class
+   * @param unordered unordered instances
+   *
+   * @return sorted instance list
+   */
+  public static <T> List<T> sortInstances(Iterable<T> unordered)
+  {
+    return new PriorityInstanceOrdering<T>().sortedCopy(unordered);
+  }
+
 
   //~--- get methods ----------------------------------------------------------
 
@@ -123,6 +136,30 @@ public final class Priorities
     public int compare(Class<? extends T> left, Class<? extends T> right)
     {
       return Ints.compare(getPriority(left), getPriority(right));
+    }
+  }
+
+  /**
+   * {@link Ordering} which orders instances by priority.
+   *
+   * @param <T> type of instance
+   */
+  public static class PriorityInstanceOrdering<T> extends Ordering<T>
+  {
+
+    /**
+     * Compares the left instance with the right instance.
+     *
+     *
+     * @param left left instance
+     * @param right right instance
+     *
+     * @return compare value
+     */
+    @Override
+    public int compare(T left, T right)
+    {
+      return Ints.compare(getPriority(left.getClass()), getPriority(right.getClass()));
     }
   }
 }

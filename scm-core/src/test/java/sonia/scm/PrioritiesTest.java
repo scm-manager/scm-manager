@@ -98,6 +98,21 @@ public class PrioritiesTest
     assertThat(cls, contains(B.class, C.class, A.class, D.class));
   }
 
+  @Test
+  @SuppressWarnings("unchecked")
+  public void shouldSortInstances()
+  {
+    A a = new A();
+    B b = new B();
+    C c = new C();
+    D d = new D();
+
+    List<?> instances = ImmutableList.of(a, b, c, d);
+
+    instances = Priorities.sortInstances(instances);
+    assertThat(instances, contains(b, c, a, d));
+  }
+
   //~--- inner classes --------------------------------------------------------
 
   /**

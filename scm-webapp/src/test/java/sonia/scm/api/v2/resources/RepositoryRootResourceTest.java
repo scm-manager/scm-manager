@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryInitializer;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -76,6 +77,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   private ScmPathInfoStore scmPathInfoStore;
   @Mock
   private ScmPathInfo uriInfo;
+  @Mock
+  private RepositoryInitializer repositoryInitializer;
 
   @Captor
   private ArgumentCaptor<Predicate<Repository>> filterCaptor;
@@ -95,7 +98,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     super.dtoToRepositoryMapper = dtoToRepositoryMapper;
     super.manager = repositoryManager;
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
-    super.repositoryCollectionResource = Providers.of(new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks));
+    super.repositoryCollectionResource = Providers.of(new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer));
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
@@ -288,6 +291,32 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
     assertEquals("/v2/repositories/otherspace/repo", response.getOutputHeaders().get("Location").get(0).toString());
     verify(repositoryManager).create(any(Repository.class));
+    verify(repositoryInitializer, never()).initialize(any(Repository.class));
+  }
+
+  @Test
+  public void shouldCreateNewRepositoryAndInitialize() throws Exception {
+    when(repositoryManager.create(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+    URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
+    byte[] repositoryJson = Resources.toByteArray(url);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "?initialize=true")
+      .contentType(VndMediaType.REPOSITORY)
+      .content(repositoryJson);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
+
+    ArgumentCaptor<Repository> captor = ArgumentCaptor.forClass(Repository.class);
+    verify(repositoryInitializer).initialize(captor.capture());
+
+    Repository repository = captor.getValue();
+    assertEquals("space", repository.getNamespace());
+    assertEquals("repo", repository.getName());
   }
 
   @Test

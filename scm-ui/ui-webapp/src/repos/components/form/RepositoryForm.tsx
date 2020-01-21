@@ -1,12 +1,27 @@
 import React from "react";
+import styled from "styled-components";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Repository, RepositoryType } from "@scm-manager/ui-types";
-import { InputField, Level, Select, SubmitButton, Subtitle, Textarea } from "@scm-manager/ui-components";
+import { Checkbox, Level, InputField, Select, SubmitButton, Subtitle, Textarea } from "@scm-manager/ui-components";
 import * as validator from "./repositoryValidation";
 
+const CheckboxWrapper = styled.div`
+  margin-top: 2em;
+  flex: 1;
+`;
+
+const SelectWrapper = styled.div`
+  flex: 1;
+`;
+
+const SpaceBetween = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 type Props = WithTranslation & {
-  submitForm: (p: Repository) => void;
+  submitForm: (repo: Repository, shouldInit: boolean) => void;
   repository?: Repository;
   repositoryTypes?: RepositoryType[];
   namespaceStrategy?: string;
@@ -15,6 +30,7 @@ type Props = WithTranslation & {
 
 type State = {
   repository: Repository;
+  initRepository: boolean;
   namespaceValidationError: boolean;
   nameValidationError: boolean;
   contactValidationError: boolean;
@@ -35,6 +51,7 @@ class RepositoryForm extends React.Component<Props, State> {
         description: "",
         _links: {}
       },
+      initRepository: false,
       namespaceValidationError: false,
       nameValidationError: false,
       contactValidationError: false
@@ -71,7 +88,7 @@ class RepositoryForm extends React.Component<Props, State> {
   submit = (event: Event) => {
     event.preventDefault();
     if (this.isValid()) {
-      this.props.submitForm(this.state.repository);
+      this.props.submitForm(this.state.repository, this.state.initRepository);
     }
   };
 
@@ -81,6 +98,12 @@ class RepositoryForm extends React.Component<Props, State> {
 
   isModifiable = () => {
     return !!this.props.repository && !!this.props.repository._links.update;
+  };
+
+  toggleInitCheckbox = () => {
+    this.setState({
+      initRepository: !this.state.initRepository
+    });
   };
 
   render() {
@@ -175,13 +198,25 @@ class RepositoryForm extends React.Component<Props, State> {
           errorMessage={t("validation.name-invalid")}
           helpText={t("help.nameHelpText")}
         />
-        <Select
-          label={t("repository.type")}
-          onChange={this.handleTypeChange}
-          value={repository ? repository.type : ""}
-          options={this.createSelectOptions(repositoryTypes)}
-          helpText={t("help.typeHelpText")}
-        />
+        <SpaceBetween>
+          <SelectWrapper>
+            <Select
+              label={t("repository.type")}
+              onChange={this.handleTypeChange}
+              value={repository ? repository.type : ""}
+              options={this.createSelectOptions(repositoryTypes)}
+              helpText={t("help.typeHelpText")}
+            />
+          </SelectWrapper>
+          <CheckboxWrapper>
+            <Checkbox
+              label={t("repositoryForm.initializeRepository")}
+              checked={this.state.initRepository}
+              onChange={this.toggleInitCheckbox}
+              helpText={t("help.initializeRepository")}
+            />
+          </CheckboxWrapper>
+        </SpaceBetween>
       </>
     );
   }
