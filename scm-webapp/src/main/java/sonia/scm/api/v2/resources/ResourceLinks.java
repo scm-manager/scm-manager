@@ -362,6 +362,10 @@ class ResourceLinks {
       return diffLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("diff").parameters().method("get").parameters(id).href();
     }
 
+    String parsed(String namespace, String name, String id) {
+      return diffLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("diff").parameters().method("getParsed").parameters(id).href();
+    }
+
     String all(String namespace, String name) {
       return diffLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("diff").parameters().method("getAll").parameters().href();
     }

@@ -50,10 +50,15 @@ class LoadingDiff extends React.Component<Props, State> {
     this.setState({ loading: true });
     apiClient
       .get(url)
-      .then(response => response.text())
-      .then(parser.parse)
-      // $FlowFixMe
-      .then((diff: any) => {
+      .then(response => {
+        const contentType = response.headers.get("Content-Type");
+        if (contentType && contentType.toLowerCase() === "application/vnd.scmm-diffparsed+json;v=2") {
+          return response.json().then(data => data.files);
+        } else {
+          return response.text().then(parser.parse);
+        }
+      })
+      .then((diff: File[]) => {
         this.setState({
           loading: false,
           diff: diff

@@ -46,10 +46,17 @@ type Props = {
   className?: string;
 };
 
+const determineLanguage = (file: File) => {
+  if (file.language) {
+    return file.language.toLowerCase();
+  }
+  return "text";
+};
+
 const TokenizedDiffView: FC<Props> = ({ file, viewType, className, children }) => {
   const { tokens } = useTokenizeWorker(tokenize, {
     hunks: file.hunks,
-    language: file.language || "text"
+    language: determineLanguage(file)
   });
 
   return (

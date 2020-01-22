@@ -11,13 +11,14 @@ type Props = WithTranslation & {
 
 class ChangesetDiff extends React.Component<Props> {
   isDiffSupported(changeset: Changeset) {
-    return !!changeset._links.diff;
+    return changeset._links.diff || !!changeset._links.diffParsed;
   }
 
   createUrl(changeset: Changeset) {
-    if (changeset._links.diff) {
-      const link = changeset._links.diff as Link;
-      return link.href + "?format=GIT";
+    if (changeset._links.diffParsed) {
+      return (changeset._links.diffParsed as Link).href;
+    } else if (changeset._links.diff) {
+      return (changeset._links.diff as Link).href + "?format=GIT";
     }
     throw new Error("diff link is missing");
   }

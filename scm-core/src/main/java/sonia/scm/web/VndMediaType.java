@@ -29,6 +29,7 @@ public class VndMediaType {
   public static final String BRANCH = PREFIX + "branch" + SUFFIX;
   public static final String BRANCH_REQUEST = PREFIX + "branchRequest" + SUFFIX;
   public static final String DIFF = PLAIN_TEXT_PREFIX + "diff" + PLAIN_TEXT_SUFFIX;
+  public static final String DIFF_PARSED = PREFIX + "diffParsed" + SUFFIX;;
   public static final String USER_COLLECTION = PREFIX + "userCollection" + SUFFIX;
   public static final String GROUP_COLLECTION = PREFIX + "groupCollection" + SUFFIX;
   public static final String REPOSITORY_COLLECTION = PREFIX + "repositoryCollection" + SUFFIX;
