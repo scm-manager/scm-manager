@@ -31,6 +31,10 @@ module.exports = [
           }
         },
         {
+          test: /\.worker\.(j|t)s$/,
+          use: { loader: "worker-loader" }
+        },
+        {
           test: /\.(js|ts|jsx|tsx)$/i,
           exclude: /node_modules/,
           use: [
