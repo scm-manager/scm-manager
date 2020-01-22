@@ -1,10 +1,12 @@
 package sonia.scm.repository.spi;
 
+import org.apache.shiro.SecurityUtils;
 import org.tmatesoft.svn.core.SVNCommitInfo;
 import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNWCClient;
+import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnWorkDirFactory;
@@ -38,6 +40,7 @@ public class SvnModifyCommand implements ModifyCommand {
 
   private String commitChanges(SVNClientManager clientManager, File workingDirectory, String commitMessage) {
     try {
+      clientManager.setAuthenticationManager(SVNWCUtil.createDefaultAuthenticationManager(getCurrentUserName(), new char[0]));
       SVNCommitInfo svnCommitInfo = clientManager.getCommitClient().doCommit(
         new File[]{workingDirectory},
         false,
@@ -51,6 +54,14 @@ public class SvnModifyCommand implements ModifyCommand {
       return String.valueOf(svnCommitInfo.getNewRevision());
     } catch (SVNException e) {
       throw new InternalRepositoryException(repository, "could not commit changes on repository");
+    }
+  }
+
+  private String getCurrentUserName() {
+    if (SecurityUtils.getSubject() != null && SecurityUtils.getSubject().getPrincipal() != null) {
+      return SecurityUtils.getSubject().getPrincipal().toString();
+    } else {
+      return "SCM-Manager";
     }
   }
 
