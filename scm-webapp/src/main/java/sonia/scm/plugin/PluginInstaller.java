@@ -43,7 +43,7 @@ class PluginInstaller {
           pluginDescriptor.getCondition(),
           String.format(
             "could not load plugin %s, the plugin condition does not match",
-            pluginDescriptor.getInformation().getId()
+            plugin.getDescriptor().getInformation().getName()
           )
         );
       }
