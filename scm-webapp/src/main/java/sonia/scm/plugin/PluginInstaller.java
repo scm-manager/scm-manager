@@ -19,11 +19,13 @@ class PluginInstaller {
 
   private final SCMContextProvider context;
   private final AdvancedHttpClient client;
+  private final SmpDDescriptorExtractor smpDDescriptorExtractor;
 
   @Inject
-  public PluginInstaller(SCMContextProvider context, AdvancedHttpClient client) {
+  public PluginInstaller(SCMContextProvider context, AdvancedHttpClient client, SmpDDescriptorExtractor smpDDescriptorExtractor) {
     this.context = context;
     this.client = client;
+    this.smpDDescriptorExtractor = smpDDescriptorExtractor;
   }
 
   @SuppressWarnings("squid:S4790") // hashing should be safe
@@ -34,6 +36,17 @@ class PluginInstaller {
       Files.copy(input, file);
 
       verifyChecksum(plugin, input.hash(), file);
+      InstalledPluginDescriptor pluginDescriptor = smpDDescriptorExtractor.extractPluginDescriptor(file);
+      if (!pluginDescriptor.getCondition().isSupported()) {
+        cleanup(file);
+        throw new PluginConditionFailedException(
+          pluginDescriptor.getCondition(),
+          String.format(
+            "could not load plugin %s, the plugin condition does not match",
+            pluginDescriptor.getInformation().getId()
+          )
+        );
+      }
       return new PendingPluginInstallation(plugin.install(), file);
     } catch (IOException ex) {
       cleanup(file);
