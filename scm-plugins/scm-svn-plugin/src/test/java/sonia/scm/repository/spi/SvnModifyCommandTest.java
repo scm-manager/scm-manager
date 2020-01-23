@@ -1,5 +1,8 @@
 package sonia.scm.repository.spi;
 
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,6 +17,8 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
 
@@ -29,6 +34,18 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
     context = createContext();
     workDirFactory = new SimpleSvnWorkDirFactory(new WorkdirProvider(context.getDirectory()));
     svnModifyCommand = new SvnModifyCommand(context, createRepository(), workDirFactory);
+  }
+
+  @Before
+  public void initSecurityManager() {
+    Subject subject = mock(Subject.class);
+    when(subject.getPrincipal()).thenReturn("alThor");
+    ThreadContext.bind(subject);
+  }
+
+  @After
+  public void cleanUpSecurityManager() {
+    ThreadContext.unbindSubject();
   }
 
   @Test
