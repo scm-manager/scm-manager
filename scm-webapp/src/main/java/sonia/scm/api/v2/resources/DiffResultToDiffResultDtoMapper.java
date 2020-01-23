@@ -65,7 +65,7 @@ final class DiffResultToDiffResultDtoMapper {
 
 
     Optional<Language> language = ContentTypes.detect(path).getLanguage();
-    language.ifPresent(value -> dto.setLanguage(value.getName()));
+    language.ifPresent(value -> dto.setLanguage(ProgrammingLanguages.getValue(value)));
 
     List<DiffResultDto.HunkDto> hunks = new ArrayList<>();
     for (Hunk hunk : file) {

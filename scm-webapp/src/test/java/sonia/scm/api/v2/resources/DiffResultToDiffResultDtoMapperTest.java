@@ -23,7 +23,7 @@ class DiffResultToDiffResultDtoMapperTest {
   void shouldMapDiffResult() {
     DiffResult result = result(
       addedFile("A.java", "abc"),
-      modifiedFile("B.tsx", "def", "abc",
+      modifiedFile("B.ts", "def", "abc",
         hunk("@@ -3,4 1,2 @@", 1, 2, 3, 4,
           insertedLine("a", 1),
           modifiedLine("b", 2),
@@ -36,9 +36,9 @@ class DiffResultToDiffResultDtoMapperTest {
     DiffResultDto dto = DiffResultToDiffResultDtoMapper.INSTANCE.map(result);
 
     List<DiffResultDto.FileDto> files = dto.getFiles();
-    assertAddedFile(files.get(0), "A.java", "abc", "Java");
-    assertModifiedFile(files.get(1), "B.tsx", "abc", "def", "TypeScript");
-    assertDeletedFile(files.get(2), "C.go", "ghi", "Go");
+    assertAddedFile(files.get(0), "A.java", "abc", "java");
+    assertModifiedFile(files.get(1), "B.ts", "abc", "def", "typescript");
+    assertDeletedFile(files.get(2), "C.go", "ghi", "golang");
 
     DiffResultDto.HunkDto hunk = files.get(1).getHunks().get(0);
     assertHunk(hunk, "@@ -3,4 1,2 @@", 1, 2, 3, 4);
