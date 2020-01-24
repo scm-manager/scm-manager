@@ -33,7 +33,7 @@ class PluginInstallerTest {
   private AdvancedHttpClient client;
 
   @Mock
-  private SmpDDescriptorExtractor extractor;
+  private SmpDescriptorExtractor extractor;
 
   @InjectMocks
   private PluginInstaller installer;

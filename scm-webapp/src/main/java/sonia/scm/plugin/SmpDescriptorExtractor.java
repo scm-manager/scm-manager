@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-class SmpDDescriptorExtractor {
+class SmpDescriptorExtractor {
 
   InstalledPluginDescriptor extractPluginDescriptor(Path file) throws IOException {
     try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(file), StandardCharsets.UTF_8))    {

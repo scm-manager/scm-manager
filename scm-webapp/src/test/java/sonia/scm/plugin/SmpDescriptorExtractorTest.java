@@ -15,7 +15,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(TempDirectory.class)
-class SmpDDescriptorExtractorTest {
+class SmpDescriptorExtractorTest {
 
   private static final String PLUGIN_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
     "<plugin>\n" +
@@ -45,7 +45,7 @@ class SmpDDescriptorExtractorTest {
   void shouldExtractPluginXml(@TempDirectory.TempDir Path tempDir) throws IOException {
     Path pluginFile = createZipFile(tempDir, "META-INF/scm/plugin.xml", PLUGIN_XML);
 
-    InstalledPluginDescriptor installedPluginDescriptor = new SmpDDescriptorExtractor().extractPluginDescriptor(pluginFile);
+    InstalledPluginDescriptor installedPluginDescriptor = new SmpDescriptorExtractor().extractPluginDescriptor(pluginFile);
 
     Assertions.assertThat(installedPluginDescriptor.getInformation().getName()).isEqualTo("scm-test-plugin");
   }
@@ -54,14 +54,14 @@ class SmpDDescriptorExtractorTest {
   void shouldFailWithoutPluginXml(@TempDirectory.TempDir Path tempDir) throws IOException {
     Path pluginFile = createZipFile(tempDir, "META-INF/wrong/plugin.xml", PLUGIN_XML);
 
-    assertThrows(IOException.class, () -> new SmpDDescriptorExtractor().extractPluginDescriptor(pluginFile));
+    assertThrows(IOException.class, () -> new SmpDescriptorExtractor().extractPluginDescriptor(pluginFile));
   }
 
   @Test
   void shouldFailWithIllegalPluginXml(@TempDirectory.TempDir Path tempDir) throws IOException {
     Path pluginFile = createZipFile(tempDir, "META-INF/scm/plugin.xml", "<not><parsable>content</parsable></not>");
 
-    assertThrows(IOException.class, () -> new SmpDDescriptorExtractor().extractPluginDescriptor(pluginFile));
+    assertThrows(IOException.class, () -> new SmpDescriptorExtractor().extractPluginDescriptor(pluginFile));
   }
 
   Path createZipFile(Path tempDir, String internalFileName, String content) throws IOException {
