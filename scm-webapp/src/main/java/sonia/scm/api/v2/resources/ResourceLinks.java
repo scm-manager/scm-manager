@@ -416,7 +416,10 @@ class ResourceLinks {
 
     public String diff(String namespace, String name) {
       return toTemplateParams(incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingDiff").parameters("source", "target").href());
+    }
 
+    public String diffParsed(String namespace, String name) {
+      return toTemplateParams(incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingDiffParsed").parameters("source", "target").href());
     }
 
     public String toTemplateParams(String href) {
