@@ -3,12 +3,17 @@ package sonia.scm.api.v2.resources;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
 public class DiffResultDto extends HalRepresentation {
+
+  public DiffResultDto(Links links) {
+    super(links);
+  }
 
   private List<FileDto> files;
 

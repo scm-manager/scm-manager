@@ -2,6 +2,7 @@ package sonia.scm.api.v2.resources;
 
 
 import com.google.inject.util.Providers;
+import de.otto.edison.hal.Links;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -24,6 +25,8 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffCommandBuilder;
+import sonia.scm.repository.api.DiffResult;
+import sonia.scm.repository.api.DiffResultCommandBuilder;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -45,6 +48,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static sonia.scm.repository.api.DiffFormat.NATIVE;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
@@ -54,6 +58,7 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
   public static final String INCOMING_PATH = "space/repo/incoming/";
   public static final String INCOMING_CHANGESETS_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + INCOMING_PATH;
   public static final String INCOMING_DIFF_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + INCOMING_PATH;
+  public static final Repository REPOSITORY = new Repository("repoId", "git", "space", "repo");
 
   private RestDispatcher dispatcher = new RestDispatcher();
 
@@ -71,7 +76,11 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
 
   @Mock
   private DiffCommandBuilder diffCommandBuilder;
+  @Mock
+  private DiffResultCommandBuilder diffResultCommandBuilder;
 
+  @Mock
+  private DiffResultToDiffResultDtoMapper diffResultToDiffResultDtoMapper;
 
   private IncomingChangesetCollectionToDtoMapper incomingChangesetCollectionToDtoMapper;
 
@@ -88,14 +97,15 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
   @Before
   public void prepareEnvironment() {
     incomingChangesetCollectionToDtoMapper = new IncomingChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
-    incomingRootResource = new IncomingRootResource(serviceFactory, incomingChangesetCollectionToDtoMapper);
+    incomingRootResource = new IncomingRootResource(serviceFactory, incomingChangesetCollectionToDtoMapper, diffResultToDiffResultDtoMapper);
     super.incomingRootResource = Providers.of(incomingRootResource);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
-    when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);
-    when(repositoryService.getRepository()).thenReturn(new Repository("repoId", "git", "space", "repo"));
+    when(serviceFactory.create(REPOSITORY)).thenReturn(repositoryService);
+    when(repositoryService.getRepository()).thenReturn(REPOSITORY);
     when(repositoryService.getLogCommand()).thenReturn(logCommandBuilder);
     when(repositoryService.getDiffCommand()).thenReturn(diffCommandBuilder);
+    when(repositoryService.getDiffResultCommand()).thenReturn(diffResultCommandBuilder);
     dispatcher.registerException(CRLFInjectionException.class, Response.Status.BAD_REQUEST);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
@@ -170,9 +180,9 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldGetDiffs() throws Exception {
-    when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.setAncestorChangeset(anyString())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.setRevision("src_changeset_id")).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.setAncestorChangeset("target_changeset_id")).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.setFormat(NATIVE)).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.retrieveContent()).thenReturn(output -> {});
     MockHttpRequest request = MockHttpRequest
       .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff")
@@ -188,6 +198,28 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
     assertThat(response.getOutputHeaders().containsKey(expectedHeader)).isTrue();
     assertThat((String) response.getOutputHeaders().get("Content-Disposition").get(0))
       .contains(expectedValue);
+  }
+
+  @Test
+  public void shouldGetParsedDiffs() throws Exception {
+    when(diffResultCommandBuilder.setRevision("src_changeset_id")).thenReturn(diffResultCommandBuilder);
+    when(diffResultCommandBuilder.setAncestorChangeset("target_changeset_id")).thenReturn(diffResultCommandBuilder);
+    DiffResult diffResult = mock(DiffResult.class);
+    when(diffResultCommandBuilder.getDiffResult()).thenReturn(diffResult);
+    when(diffResultToDiffResultDtoMapper.mapForIncoming(REPOSITORY, diffResult, "src_changeset_id", "target_changeset_id"))
+    .thenReturn(new DiffResultDto(Links.linkingTo().self("http://self").build()));
+
+    MockHttpRequest request = MockHttpRequest
+      .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff/parsed")
+      .accept(VndMediaType.DIFF_PARSED);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus())
+      .isEqualTo(200);
+    assertThat(response.getContentAsString())
+      .contains("\"self\":{\"href\":\"http://self\"}");
   }
 
   @Test

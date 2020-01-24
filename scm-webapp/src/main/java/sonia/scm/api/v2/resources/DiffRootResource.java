@@ -31,10 +31,12 @@ public class DiffRootResource {
   static final String DIFF_FORMAT_VALUES_REGEX = "NATIVE|GIT|UNIFIED";
 
   private final RepositoryServiceFactory serviceFactory;
+  private final DiffResultToDiffResultDtoMapper parsedDiffMapper;
 
   @Inject
-  public DiffRootResource(RepositoryServiceFactory serviceFactory) {
+  public DiffRootResource(RepositoryServiceFactory serviceFactory, DiffResultToDiffResultDtoMapper parsedDiffMapper) {
     this.serviceFactory = serviceFactory;
+    this.parsedDiffMapper = parsedDiffMapper;
   }
 
 
@@ -83,11 +85,11 @@ public class DiffRootResource {
     @ResponseCode(code = 404, condition = "not found, no revision with the specified param for the repository available or repository not found"),
     @ResponseCode(code = 500, condition = "internal server error")
   })
-  public Response getParsed(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) throws IOException {
+  public DiffResultDto getParsed(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) throws IOException {
     HttpUtil.checkForCRLFInjection(revision);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       DiffResult diffResult = repositoryService.getDiffResultCommand().setRevision(revision).getDiffResult();
-      return Response.ok(DiffResultToDiffResultDtoMapper.INSTANCE.map(diffResult)).build();
+      return parsedDiffMapper.mapForRevision(repositoryService.getRepository(), diffResult, revision);
     }
   }
 }
