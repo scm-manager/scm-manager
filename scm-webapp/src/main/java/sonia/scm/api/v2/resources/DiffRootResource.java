@@ -73,7 +73,7 @@ public class DiffRootResource {
   }
 
   @GET
-  @Path("{revision}.json")
+  @Path("{revision}/parsed")
   @Produces(VndMediaType.DIFF_PARSED)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),

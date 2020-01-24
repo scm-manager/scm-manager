@@ -153,7 +153,7 @@ public class IncomingRootResource {
   }
 
   @GET
-  @Path("{source}/{target}/diff.json")
+  @Path("{source}/{target}/diff/parsed")
   @Produces(VndMediaType.DIFF_PARSED)
   @StatusCodes({
     @ResponseCode(code = 200, condition = "success"),
