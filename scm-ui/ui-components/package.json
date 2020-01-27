@@ -42,7 +42,7 @@
     "react-test-renderer": "^16.10.2",
     "storybook-addon-i18next": "^1.2.1",
     "typescript": "^3.7.2",
-    "worker-loader": "^2.0.0"
+    "worker-plugin": "^3.2.0"
   },
   "dependencies": {
     "@scm-manager/ui-extensions": "^2.0.0-SNAPSHOT",

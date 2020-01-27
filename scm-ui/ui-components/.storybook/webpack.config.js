@@ -1,3 +1,5 @@
+const WorkerPlugin = require("worker-plugin");
+
 module.exports = {
   module: {
     rules: [
@@ -21,10 +23,6 @@ module.exports = {
         ]
       },
       {
-        test: /\.worker\.(j|t)s$/,
-        use: { loader: "worker-loader" }
-      },
-      {
         test: /\.(css|scss|sass)$/i,
         use: [
           // Creates `style` nodes from JS strings
@@ -43,5 +41,8 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"]
-  }
+  },
+  plugins: [
+    new WorkerPlugin()
+  ]
 };
