@@ -2,8 +2,6 @@ import React, { FC } from "react";
 import styled from "styled-components";
 // @ts-ignore we have no typings for react-diff-view
 import { Diff, useTokenizeWorker } from "react-diff-view";
-// @ts-ignore we use webpack worker-loader to load the web worker
-import TokenizeWorker from "./Tokenize.worker";
 import { File } from "./DiffTypes";
 
 // styling for the diff tokens
@@ -38,7 +36,7 @@ const DiffView = styled(Diff)`
 `;
 
 // WebWorker which creates tokens for syntax highlighting
-const tokenize = new TokenizeWorker();
+const tokenize = new Worker("./Tokenize.worker.ts", { name: "tokenizer", type: "module" });
 
 type Props = {
   file: File;

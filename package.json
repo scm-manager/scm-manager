@@ -20,7 +20,8 @@
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0",
-    "gitdiff-parser": "https://github.com/scm-manager/gitdiff-parser#ed3fe7de73dbb0a06c3e6adbbdf22dbae6e66351"
+    "gitdiff-parser": "https://github.com/scm-manager/gitdiff-parser#ed3fe7de73dbb0a06c3e6adbbdf22dbae6e66351",
+    "lowlight": "1.13.1"
   },
   "babel": {
     "presets": [

@@ -25,8 +25,7 @@ module.exports = {
   transformIgnorePatterns: ["node_modules/(?!(@scm-manager)/)"],
   moduleNameMapper: {
     "\\.(png|svg|jpg|gif|woff2?|eot|ttf)$": path.join(mockDirectory, "fileMock.js"),
-    "\\.(css|scss|sass)$": path.join(mockDirectory, "styleMock.js"),
-    "\\.worker$": path.join(mockDirectory, "workerMock.js")
+    "\\.(css|scss|sass)$": path.join(mockDirectory, "styleMock.js")
   },
   setupFiles: [path.resolve(__dirname, "src", "setup.js")],
   collectCoverage: true,
