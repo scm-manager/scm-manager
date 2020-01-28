@@ -3,11 +3,12 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 // @ts-ignore
-import { Diff as DiffComponent, getChangeKey, Hunk, Decoration } from "react-diff-view";
+import { getChangeKey, Hunk, Decoration } from "react-diff-view";
 import { Button, ButtonGroup } from "../buttons";
 import Tag from "../Tag";
 import Icon from "../Icon";
 import { ChangeEvent, Change, File, Hunk as HunkType, DiffObjectProps } from "./DiffTypes";
+import TokenizedDiffView from "./TokenizedDiffView";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
@@ -55,33 +56,6 @@ const HunkDivider = styled.hr`
 
 const ChangeTypeTag = styled(Tag)`
   margin-left: 0.75rem;
-`;
-
-const ModifiedDiffComponent = styled(DiffComponent)`
-  /* align line numbers */
-  & .diff-gutter {
-    text-align: right;
-  }
-  /* column sizing */
-  > colgroup .diff-gutter-col {
-    width: 3.25rem;
-  }
-  /* prevent following content from moving down */
-  > .diff-gutter:empty:hover::after {
-    font-size: 0.7rem;
-  }
-  /* smaller font size for code */
-  & .diff-line {
-    font-size: 0.75rem;
-  }
-  /* comment padding for sidebyside view */
-  &.split .diff-widget-content .is-indented-line {
-    padding-left: 3.25rem;
-  }
-  /* comment padding for combined view */
-  &.unified .diff-widget-content .is-indented-line {
-    padding-left: 6.5rem;
-  }
 `;
 
 class DiffFile extends React.Component<Props, State> {
@@ -264,9 +238,9 @@ class DiffFile extends React.Component<Props, State> {
       body = (
         <div className="panel-block is-paddingless">
           {fileAnnotations}
-          <ModifiedDiffComponent className={viewType} viewType={viewType} hunks={file.hunks} diffType={file.type}>
+          <TokenizedDiffView className={viewType} viewType={viewType} file={file}>
             {(hunks: HunkType[]) => this.concat(hunks.map(this.renderHunk))}
-          </ModifiedDiffComponent>
+          </TokenizedDiffView>
         </div>
       );
     }

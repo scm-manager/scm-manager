@@ -18,6 +18,7 @@ export type File = {
   oldPath: string;
   oldRevision?: string;
   type: FileChangeType;
+  language?: string;
   // TODO does this property exists?
   isBinary?: boolean;
 };

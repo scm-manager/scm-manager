@@ -53,6 +53,12 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();
 
+    Links.Builder linksBuilder = linkingTo()
+      .self(resourceLinks.changeset().self(repository.getNamespace(), repository.getName(), source.getId()))
+      .single(link("diff", resourceLinks.diff().self(namespace, name, source.getId())))
+      .single(link("sources", resourceLinks.source().self(namespace, name, source.getId())))
+      .single(link("modifications", resourceLinks.modifications().self(namespace, name, source.getId())));
+
     try (RepositoryService repositoryService = serviceFactory.create(repository)) {
       if (repositoryService.isSupported(Command.TAGS)) {
         embeddedBuilder.with("tags", tagCollectionToDtoMapper.getTagDtoList(namespace, name,
@@ -62,15 +68,12 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
         embeddedBuilder.with("branches", branchCollectionToDtoMapper.getBranchDtoList(namespace, name,
           getListOfObjects(source.getBranches(), branchName -> Branch.normalBranch(branchName, source.getId()))));
       }
+
+      if (repositoryService.isSupported(Command.DIFF_RESULT)) {
+        linksBuilder.single(link("diffParsed", resourceLinks.diff().parsed(namespace, name, source.getId())));
+      }
     }
     embeddedBuilder.with("parents", getListOfObjects(source.getParents(), parent -> changesetToParentDtoMapper.map(new Changeset(parent, 0L, null), repository)));
-
-    Links.Builder linksBuilder = linkingTo()
-      .self(resourceLinks.changeset().self(repository.getNamespace(), repository.getName(), source.getId()))
-      .single(link("diff", resourceLinks.diff().self(namespace, name, source.getId())))
-      .single(link("sources", resourceLinks.source().self(namespace, name, source.getId())))
-      .single(link("modifications", resourceLinks.modifications().self(namespace, name, source.getId())));
-
 
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), source, repository);
 

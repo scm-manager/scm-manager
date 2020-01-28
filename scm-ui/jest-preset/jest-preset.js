@@ -17,35 +17,21 @@ const reportDirectory = path.join(target, "jest-reports");
 
 module.exports = {
   rootDir: root,
-  roots: [
-    root
-  ],
-  testPathDirs: [
-    path.join(root, "src")
-  ],
+  roots: [root],
+  testPathDirs: [path.join(root, "src")],
   transform: {
     "^.+\\.(ts|tsx|js)$": "@scm-manager/jest-preset"
   },
-  transformIgnorePatterns: [
-    "node_modules/(?!(@scm-manager)/)"
-  ],
+  transformIgnorePatterns: ["node_modules/(?!(@scm-manager)/)"],
   moduleNameMapper: {
-    "\\.(png|svg|jpg|gif|woff2?|eot|ttf)$": path.join(
-      mockDirectory,
-      "fileMock.js"
-    ),
+    "\\.(png|svg|jpg|gif|woff2?|eot|ttf)$": path.join(mockDirectory, "fileMock.js"),
     "\\.(css|scss|sass)$": path.join(mockDirectory, "styleMock.js")
   },
   setupFiles: [path.resolve(__dirname, "src", "setup.js")],
   collectCoverage: true,
-  collectCoverageFrom: [
-    "src/**/*.{ts,tsx,js,jsx}"
-  ],
+  collectCoverageFrom: ["src/**/*.{ts,tsx,js,jsx}"],
   coverageDirectory: path.join(reportDirectory, "coverage-" + name),
-  coveragePathIgnorePatterns: [
-    "src/tests/.*",
-    "src/testing/.*"
-  ],
+  coveragePathIgnorePatterns: ["src/tests/.*", "src/testing/.*"],
   reporters: [
     "default",
     [

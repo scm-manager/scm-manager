@@ -7,8 +7,9 @@ import simpleDiff from "../__resources__/Diff.simple";
 import hunksDiff from "../__resources__/Diff.hunks";
 import binaryDiff from "../__resources__/Diff.binary";
 import Button from "../buttons/Button";
-import { DiffEventContext } from "./DiffTypes";
+import { DiffEventContext, File } from "./DiffTypes";
 import Toast from "../toast/Toast";
+import { getPath } from "./diffs";
 
 const diffFiles = parser.parse(simpleDiff);
 
@@ -57,4 +58,16 @@ storiesOf("Diff", module)
   .add("Binaries", () => {
     const binaryDiffFiles = parser.parse(binaryDiff);
     return <Diff diff={binaryDiffFiles} />;
+  })
+  .add("SyntaxHighlighting", () => {
+    const filesWithLanguage = diffFiles.map((file: File) => {
+      const ext = getPath(file).split(".")[1];
+      if (ext === "tsx") {
+        file.language = "typescript";
+      } else {
+        file.language = ext;
+      }
+      return file;
+    });
+    return <Diff diff={filesWithLanguage} />;
   });

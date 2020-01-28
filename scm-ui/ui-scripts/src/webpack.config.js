@@ -3,14 +3,28 @@ const createIndexMiddleware = require("./middleware/IndexMiddleware");
 const createContextPathMiddleware = require("./middleware/ContextPathMiddleware");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const WorkerPlugin = require("worker-plugin");
 
 const isDevelopment = process.env.NODE_ENV === "development";
 const root = path.resolve(process.cwd(), "scm-ui");
 
+const babelPlugins = [];
+const webpackPlugins = [new WorkerPlugin()];
+
+let mode = "production";
+
+if (isDevelopment) {
+  mode = "development";
+  babelPlugins.push(require.resolve("react-refresh/babel"));
+  const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+  webpackPlugins.push(new ReactRefreshWebpackPlugin());
+}
+
+console.log(`build ${mode} bundles`);
+
 module.exports = [
   {
-    mode: isDevelopment ? "development" : "production",
+    mode,
     context: root,
     entry: {
       webapp: [path.resolve(__dirname, "webpack-public-path.js"), "./ui-webapp/src/index.tsx"]
@@ -35,17 +49,11 @@ module.exports = [
           exclude: /node_modules/,
           use: [
             {
-              loader: "cache-loader"
-            },
-            {
-              loader: "thread-loader"
-            },
-            {
               loader: "babel-loader",
               options: {
                 cacheDirectory: true,
                 presets: ["@scm-manager/babel-preset"],
-                plugins: [isDevelopment && require.resolve("react-refresh/babel")].filter(Boolean)
+                plugins: babelPlugins
               }
             }
           ]
@@ -72,7 +80,8 @@ module.exports = [
     },
     output: {
       path: path.join(root, "target", "assets"),
-      filename: "[name].bundle.js"
+      filename: "[name].bundle.js",
+      chunkFilename: "[name].bundle.js"
     },
     devServer: {
       contentBase: path.join(root, "ui-webapp", "public"),
@@ -94,6 +103,7 @@ module.exports = [
     },
     optimization: {
       runtimeChunk: "single",
+      namedChunks: true,
       splitChunks: {
         chunks: "all",
         cacheGroups: {
@@ -110,7 +120,7 @@ module.exports = [
         }
       }
     },
-    plugins: [isDevelopment && new ReactRefreshWebpackPlugin()].filter(Boolean)
+    plugins: webpackPlugins
   },
   {
     context: root,

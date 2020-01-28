@@ -9,7 +9,6 @@ const createNodeMock = (element: any) => {
       querySelector: (selector: string) => {}
     };
   }
-  return null;
 };
 
 initStoryshots({
@@ -17,6 +16,7 @@ initStoryshots({
   // fix snapshot tests with react-diff-view which uses a ref on tr
   // @see https://github.com/storybookjs/storybook/pull/1090
   test: snapshotWithOptions({
+    // @ts-ignore types seems not to match
     createNodeMock
   })
 });

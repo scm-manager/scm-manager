@@ -6,6 +6,7 @@ import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
+import sonia.scm.repository.api.DiffResult;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.HttpUtil;
@@ -30,10 +31,12 @@ public class DiffRootResource {
   static final String DIFF_FORMAT_VALUES_REGEX = "NATIVE|GIT|UNIFIED";
 
   private final RepositoryServiceFactory serviceFactory;
+  private final DiffResultToDiffResultDtoMapper parsedDiffMapper;
 
   @Inject
-  public DiffRootResource(RepositoryServiceFactory serviceFactory) {
+  public DiffRootResource(RepositoryServiceFactory serviceFactory, DiffResultToDiffResultDtoMapper parsedDiffMapper) {
     this.serviceFactory = serviceFactory;
+    this.parsedDiffMapper = parsedDiffMapper;
   }
 
 
@@ -68,6 +71,25 @@ public class DiffRootResource {
       return Response.ok((StreamingOutput) outputStreamConsumer::accept)
         .header(HEADER_CONTENT_DISPOSITION, HttpUtil.createContentDispositionAttachmentHeader(String.format("%s-%s.diff", name, revision)))
         .build();
+    }
+  }
+
+  @GET
+  @Path("{revision}/parsed")
+  @Produces(VndMediaType.DIFF_PARSED)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "Bad Request"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the diff"),
+    @ResponseCode(code = 404, condition = "not found, no revision with the specified param for the repository available or repository not found"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  public DiffResultDto getParsed(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) throws IOException {
+    HttpUtil.checkForCRLFInjection(revision);
+    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      DiffResult diffResult = repositoryService.getDiffResultCommand().setRevision(revision).getDiffResult();
+      return parsedDiffMapper.mapForRevision(repositoryService.getRepository(), diffResult, revision);
     }
   }
 }

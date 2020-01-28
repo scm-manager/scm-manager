@@ -12,6 +12,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
+import sonia.scm.repository.api.DiffResult;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.HttpUtil;
@@ -33,16 +34,16 @@ import static sonia.scm.api.v2.resources.DiffRootResource.HEADER_CONTENT_DISPOSI
 
 public class IncomingRootResource {
 
-
   private final RepositoryServiceFactory serviceFactory;
 
-  private final IncomingChangesetCollectionToDtoMapper mapper;
-
+  private final IncomingChangesetCollectionToDtoMapper changesetMapper;
+  private final DiffResultToDiffResultDtoMapper parsedDiffMapper;
 
   @Inject
-  public IncomingRootResource(RepositoryServiceFactory serviceFactory, IncomingChangesetCollectionToDtoMapper incomingChangesetCollectionToDtoMapper) {
+  public IncomingRootResource(RepositoryServiceFactory serviceFactory, IncomingChangesetCollectionToDtoMapper incomingChangesetCollectionToDtoMapper, DiffResultToDiffResultDtoMapper parsedDiffMapper) {
     this.serviceFactory = serviceFactory;
-    this.mapper = incomingChangesetCollectionToDtoMapper;
+    this.changesetMapper = incomingChangesetCollectionToDtoMapper;
+    this.parsedDiffMapper = parsedDiffMapper;
   }
 
   /**
@@ -109,7 +110,7 @@ public class IncomingRootResource {
         .getChangesets();
       if (changesets != null && changesets.getChangesets() != null) {
         PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());
-        return Response.ok(mapper.map(page, pageSize, pageResult, repository, source, target)).build();
+        return Response.ok(changesetMapper.map(page, pageSize, pageResult, repository, source, target)).build();
       } else {
         return Response.ok().build();
       }
@@ -148,6 +149,32 @@ public class IncomingRootResource {
       return Response.ok((StreamingOutput) outputStreamConsumer::accept)
         .header(HEADER_CONTENT_DISPOSITION, HttpUtil.createContentDispositionAttachmentHeader(String.format("%s-%s.diff", name, source)))
         .build();
+    }
+  }
+
+  @GET
+  @Path("{source}/{target}/diff/parsed")
+  @Produces(VndMediaType.DIFF_PARSED)
+  @StatusCodes({
+    @ResponseCode(code = 200, condition = "success"),
+    @ResponseCode(code = 400, condition = "Bad Request"),
+    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
+    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the diff"),
+    @ResponseCode(code = 404, condition = "not found, source or target branch for the repository not available or repository not found"),
+    @ResponseCode(code = 500, condition = "internal server error")
+  })
+  public Response incomingDiffParsed(@PathParam("namespace") String namespace,
+                            @PathParam("name") String name,
+                            @PathParam("source") String source,
+                            @PathParam("target") String target) throws IOException {
+    HttpUtil.checkForCRLFInjection(source);
+    HttpUtil.checkForCRLFInjection(target);
+    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      DiffResult diffResult = repositoryService.getDiffResultCommand()
+        .setRevision(source)
+        .setAncestorChangeset(target)
+        .getDiffResult();
+      return Response.ok(parsedDiffMapper.mapForIncoming(repositoryService.getRepository(), diffResult, source, target)).build();
     }
   }
 }
