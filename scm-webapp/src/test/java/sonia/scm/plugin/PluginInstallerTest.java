@@ -32,18 +32,23 @@ class PluginInstallerTest {
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private AdvancedHttpClient client;
 
+  @Mock
+  private SmpDescriptorExtractor extractor;
+
   @InjectMocks
   private PluginInstaller installer;
 
   private Path directory;
 
   @BeforeEach
-  void setUpContext(@TempDirectory.TempDir Path directory) {
+  void setUpContext(@TempDirectory.TempDir Path directory) throws IOException {
     this.directory = directory;
     lenient().when(context.resolve(any())).then(ic -> {
       Path arg = ic.getArgument(0);
       return directory.resolve(arg);
     });
+    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor(true);
+    lenient().when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
   }
 
   @Test
@@ -105,6 +110,15 @@ class PluginInstallerTest {
     assertThat(directory.resolve("plugins").resolve("scm-git-plugin.smp")).doesNotExist();
   }
 
+  @Test
+  void shouldFailForUnsupportedPlugin() throws IOException {
+    mockContent("42");
+    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor(false);
+    when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
+
+    assertThrows(PluginConditionFailedException.class, () -> installer.install(createGitPlugin()));
+    assertThat(directory.resolve("plugins").resolve("scm-git-plugin.smp")).doesNotExist();
+  }
 
   private AvailablePlugin createPlugin(String name, String url, String checksum) {
     PluginInformation information = new PluginInformation();
@@ -113,5 +127,12 @@ class PluginInstallerTest {
       information, null, Collections.emptySet(), url, checksum
     );
     return new AvailablePlugin(descriptor);
+  }
+
+  private InstalledPluginDescriptor createPluginDescriptor(boolean supported) {
+    InstalledPluginDescriptor installedPluginDescriptor = mock(InstalledPluginDescriptor.class, RETURNS_DEEP_STUBS);
+    lenient().when(installedPluginDescriptor.getCondition().isSupported()).thenReturn(supported);
+    lenient().when(installedPluginDescriptor.getInformation().getId()).thenReturn("scm-git-plugin");
+    return installedPluginDescriptor;
   }
 }

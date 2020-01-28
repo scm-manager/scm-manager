@@ -28,6 +28,13 @@ const PageActionContainer = styled.div`
 `;
 
 export default class Page extends React.Component<Props> {
+  componentDidUpdate() {
+    const { title } = this.props;
+    if (title && title !== document.title) {
+      document.title = title;
+    }
+  }
+
   render() {
     const { error } = this.props;
     return (
