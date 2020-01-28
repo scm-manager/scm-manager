@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Copy on write
 - A new repository can be initialized with a branch (for git and mercurial) and custom files (README.md on default)
 - Plugins are validated directly after download
+- Code highlighting in diffs
 
 ### Changed
 - Stop fetching commits when it takes too long
