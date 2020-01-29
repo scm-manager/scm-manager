@@ -50,6 +50,11 @@ import java.util.Arrays;
 public class PluginConditionTest
 {
 
+  @Test
+  public void testEmptyShouldBeSupported() {
+    assertTrue(new PluginCondition().isSupported());
+  }
+
   /**
    * Method description
    *

@@ -58,6 +58,8 @@ import java.util.Set;
 public final class InstalledPluginDescriptor extends ScmModule implements PluginDescriptor
 {
 
+  private static final PluginCondition EMPTY_CONDITION = new PluginCondition();
+
   /**
    * Constructs ...
    *
@@ -168,7 +170,7 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
   @Override
   public PluginCondition getCondition()
   {
-    return condition;
+    return MoreObjects.firstNonNull(condition, EMPTY_CONDITION);
   }
 
   /**
