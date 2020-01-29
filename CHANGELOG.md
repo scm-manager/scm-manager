@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A new repository can be initialized with a branch (for git and mercurial) and custom files (README.md on default)
 - Plugins are validated directly after download
 - Code highlighting in diffs
+- Switch between rendered version and source view for Markdown files 
+
 
 ### Changed
 - Stop fetching commits when it takes too long
@@ -23,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create mock subject to satisfy legman
 - Multiple versions of hibernate-validator caused problems when starting from plugins
 - Page title is now set correctly
+- Restart after migration
 
 ## 2.0.0-rc1 - 2019-12-02
 ### Added
