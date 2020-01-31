@@ -22,7 +22,7 @@
     "typeHelpText": "El tipo del repositorio (Mercurial, Git or Subversion).",
     "contactHelpText": "Dirección del correo electrónico de la persona responsable del repositorio.",
     "descriptionHelpText": "Breve descripción del repositorio.",
-    "initializeRepository": "Creates a initial branch and commit a basic README.md."
+    "initializeRepository": "Creates an initial branch and commits a basic README.md."
   },
   "repositoryRoot": {
     "errorTitle": "Error",
