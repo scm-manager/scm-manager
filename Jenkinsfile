@@ -18,7 +18,7 @@ node('docker') {
     ])
   ])
 
-  timeout(activity: true, time: 30, unit: 'MINUTES') {
+  timeout(activity: true, time: 40, unit: 'MINUTES') {
 
     catchError {
 
