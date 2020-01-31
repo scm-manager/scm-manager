@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-extensions",
-  "version": "2.0.0-SNAPSHOT",
+  "version": "2.0.0-rc3",
   "main": "src/index.ts",
   "license": "BSD-3-Clause",
   "private": false,
