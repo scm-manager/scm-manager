@@ -60,6 +60,17 @@ public class SmpNodeBuilderTest {
     new SmpNodeBuilder().buildNodeTree(smps);
   }
 
+  @Test(expected = PluginCircularDependencyException.class)
+  public void shouldFailForCircularDependency() throws IOException {
+    ExplodedSmp[] smps = new ExplodedSmp[]{
+      createSmpWithDependency("scm-pathwp-plugin", "scm-editor-plugin"),
+      createSmpWithDependency("scm-editor-plugin", "scm-review-plugin"),
+      createSmpWithDependency("scm-review-plugin", "scm-pathwp-plugin")
+    };
+
+    new SmpNodeBuilder().buildNodeTree(smps);
+  }
+
   private PluginNode findNode(List<PluginNode> nodes, String id) {
     return nodes.stream().filter(node -> node.getId().equals(id)).findAny().orElseThrow(() -> new AssumptionViolatedException("node not found"));
   }

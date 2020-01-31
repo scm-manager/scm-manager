@@ -51,7 +51,7 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
-public final class ExplodedSmp implements Comparable<ExplodedSmp>
+public final class ExplodedSmp
 {
 
   private static final Logger logger = LoggerFactory.getLogger(ExplodedSmp.class);
@@ -88,60 +88,6 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
     Path desc = directory.resolve(PluginConstants.FILE_DESCRIPTOR);
 
     return new ExplodedSmp(directory, Plugins.parsePluginDescriptor(desc));
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public int compareTo(ExplodedSmp o)
-  {
-    int result;
-
-    Set<String> depends = plugin.getDependenciesInclusiveOptionals();
-    Set<String> odepends = o.plugin.getDependenciesInclusiveOptionals();
-
-    if (depends.isEmpty() && odepends.isEmpty())
-    {
-      result = 0;
-    }
-    else if (depends.isEmpty() &&!odepends.isEmpty())
-    {
-      result = -1;
-    }
-    else if (!depends.isEmpty() && odepends.isEmpty())
-    {
-      result = 1;
-    }
-    else
-    {
-      String id = plugin.getInformation().getName(false);
-      String oid = o.plugin.getInformation().getName(false);
-
-      if (depends.contains(oid) && odepends.contains(id))
-      {
-        StringBuilder b = new StringBuilder("circular dependency detected: ");
-
-        b.append(id).append(" depends on ").append(oid).append(" and ");
-        b.append(oid).append(" depends on ").append(id);
-
-        throw new PluginCircularDependencyException(b.toString());
-      }
-      else if (depends.contains(oid))
-      {
-        result = 999;
-      }
-      else if (odepends.contains(id))
-      {
-        result = -999;
-      }
-      else
-      {
-        result = 0;
-      }
-    }
-
-    return result;
   }
 
   //~--- get methods ----------------------------------------------------------

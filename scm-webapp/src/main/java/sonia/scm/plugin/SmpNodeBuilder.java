@@ -29,6 +29,8 @@ class SmpNodeBuilder {
           otherNode.addChild(node);
         }
       });
+
+      nodes.forEach(this::checkForCircle);
     });
 
     return nodes;
@@ -46,5 +48,19 @@ class SmpNodeBuilder {
         );
       }
     });
+  }
+
+  private void checkForCircle(PluginNode pluginNode) {
+    pluginNode.getChildren().forEach(child -> assertDoesNotContainsDependency(pluginNode, child));
+  }
+
+  private void assertDoesNotContainsDependency(PluginNode pluginNode, PluginNode childNode) {
+    if (childNode == pluginNode) {
+      throw new PluginCircularDependencyException("circular dependency detected: " +
+        childNode.getId() + " depends on " + pluginNode.getId() + " and " +
+        pluginNode.getId() + " depends on " + childNode.getId()
+      );
+    }
+    childNode.getChildren().forEach(child -> assertDoesNotContainsDependency(pluginNode, child));
   }
 }
