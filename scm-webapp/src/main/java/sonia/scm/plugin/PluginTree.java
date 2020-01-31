@@ -33,8 +33,6 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Ordering;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,9 +80,17 @@ public final class PluginTree
    */
   public PluginTree(List<ExplodedSmp> smps)
   {
-    Iterable<ExplodedSmp> smpOrdered = Ordering.natural().sortedCopy(smps);
 
-    for (ExplodedSmp smp : smpOrdered)
+    smps.forEach(s -> {
+      InstalledPluginDescriptor plugin = s.getPlugin();
+      logger.trace("plugin: {}", plugin.getInformation().getName());
+      logger.trace("dependencies: {}", plugin.getDependencies());
+      logger.trace("optional dependencies: {}", plugin.getOptionalDependencies());
+    });
+
+    rootNodes = new SmpNodeBuilder().buildNodeTree(smps);
+
+    for (ExplodedSmp smp : smps)
     {
       InstalledPluginDescriptor plugin = smp.getPlugin();
 
@@ -102,18 +108,7 @@ public final class PluginTree
 
       PluginCondition condition = plugin.getCondition();
 
-      if ((condition == null) || condition.isSupported())
-      {
-        if (plugin.getDependencies().isEmpty() && plugin.getOptionalDependencies().isEmpty())
-        {
-          rootNodes.add(new PluginNode(smp));
-        }
-        else
-        {
-          appendNode(smp);
-        }
-      }
-      else
+      if (!condition.isSupported())
       {
         //J-
         throw new PluginConditionFailedException(
@@ -156,84 +151,6 @@ public final class PluginTree
 
 
   //~--- methods --------------------------------------------------------------
-  /**
-   * Method description
-   *
-   *
-   * @param smp
-   */
-  private void appendNode(ExplodedSmp smp)
-  {
-    PluginNode child = new PluginNode(smp);
-
-    for (String dependency : smp.getPlugin().getDependencies())
-    {
-      if (!appendNode(rootNodes, child, dependency))
-      {
-        //J-
-        throw new PluginNotInstalledException(
-          String.format(
-            "dependency %s of %s is not installed",
-            dependency,
-            child.getId()
-          )
-        );
-        //J+
-      }
-    }
-
-    boolean rootNode = smp.getPlugin().getDependencies().isEmpty();
-    for (String dependency : smp.getPlugin().getOptionalDependencies()) {
-      if (appendNode(rootNodes, child, dependency)) {
-        rootNode = false;
-      } else {
-        logger.info("optional dependency {} of {} is not installed", dependency, child.getId());
-      }
-    }
-
-    if (rootNode) {
-      logger.info("could not find optional dependencies of {}, append it as root node", child.getId());
-      rootNodes.add(new PluginNode(smp));
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param nodes
-   * @param child
-   * @param dependency
-   *
-   * @return
-   */
-  private boolean appendNode(List<PluginNode> nodes, PluginNode child,
-    String dependency)
-  {
-    logger.debug("check for {} as dependency of {}", dependency, child.getId());
-
-    boolean found = false;
-
-    for (PluginNode node : nodes)
-    {
-      if (node.getId().equals(dependency))
-      {
-        logger.debug("add plugin {} as child of {}", child.getId(), node.getId());
-        node.addChild(child);
-        found = true;
-
-        break;
-      }
-      else if (appendNode(node.getChildren(), child, dependency))
-      {
-        found = true;
-
-        break;
-      }
-    }
-
-    return found;
-  }
 
   @Override
   public String toString() {
@@ -254,5 +171,5 @@ public final class PluginTree
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final List<PluginNode> rootNodes = Lists.newArrayList();
+  private final List<PluginNode> rootNodes;
 }

@@ -34,13 +34,13 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Function;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import static com.google.common.collect.ImmutableSet.of;
 import static org.hamcrest.Matchers.*;
 
 import static org.junit.Assert.*;
@@ -50,9 +50,11 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -171,8 +173,8 @@ public class PluginTreeTest
   public void testWithOptionalDependency() throws IOException {
     ExplodedSmp[] smps = new ExplodedSmp[] {
       createSmpWithDependency("a"),
-      createSmpWithDependency("b", null, ImmutableSet.of("a")),
-      createSmpWithDependency("c", null, ImmutableSet.of("a", "b"))
+      createSmpWithDependency("b", null, of("a")),
+      createSmpWithDependency("c", null, of("a", "b"))
     };
 
     PluginTree tree = new PluginTree(smps);
@@ -184,11 +186,73 @@ public class PluginTreeTest
   }
 
   @Test
+  public void testRealWorldDependencies() throws IOException {
+    //J-
+    ExplodedSmp[] smps = new ExplodedSmp[]{
+      createSmpWithDependency("scm-editor-plugin"),
+      createSmpWithDependency("scm-ci-plugin"),
+      createSmpWithDependency("scm-jenkins-plugin"),
+      createSmpWithDependency("scm-issuetracker-plugin"),
+      createSmpWithDependency("scm-hg-plugin"),
+      createSmpWithDependency("scm-git-plugin"),
+      createSmpWithDependency("scm-directfilelink-plugin"),
+      createSmpWithDependency("scm-ssh-plugin"),
+      createSmpWithDependency("scm-pushlog-plugin"),
+      createSmpWithDependency("scm-cas-plugin"),
+      createSmpWithDependency("scm-tagprotection-plugin"),
+      createSmpWithDependency("scm-groupmanager-plugin"),
+      createSmpWithDependency("scm-webhook-plugin"),
+      createSmpWithDependency("scm-svn-plugin"),
+      createSmpWithDependency("scm-support-plugin"),
+      createSmpWithDependency("scm-statistic-plugin"),
+      createSmpWithDependency("scm-rest-legacy-plugin"),
+      createSmpWithDependency("scm-gravatar-plugin"),
+      createSmpWithDependency("scm-legacy-plugin"),
+      createSmpWithDependency("scm-authormapping-plugin"),
+      createSmpWithDependency("scm-readme-plugin"),
+      createSmpWithDependency("scm-script-plugin"),
+      createSmpWithDependency("scm-activity-plugin"),
+      createSmpWithDependency("scm-mail-plugin"),
+      createSmpWithDependency("scm-branchwp-plugin", of(), of("scm-editor-plugin", "scm-review-plugin", "scm-mail-plugin" )),
+      createSmpWithDependency("scm-notify-plugin", "scm-mail-plugin"),
+      createSmpWithDependency("scm-redmine-plugin", "scm-issuetracker-plugin"),
+      createSmpWithDependency("scm-jira-plugin", "scm-mail-plugin", "scm-issuetracker-plugin"),
+      createSmpWithDependency("scm-review-plugin", of("scm-mail-plugin"), of("scm-editor-plugin")),
+      createSmpWithDependency("scm-pathwp-plugin", of(), of("scm-editor-plugin")),
+      createSmpWithDependency("scm-cockpit-legacy-plugin", "scm-statistic-plugin", "scm-rest-legacy-plugin", "scm-activity-plugin")
+    };
+    //J+
+
+    Arrays.stream(smps)
+      .forEach(smp -> System.out.println(smp.getPlugin()));
+
+
+    PluginTree tree = new PluginTree(smps);
+    List<PluginNode> nodes = tree.getLeafLastNodes();
+
+    System.out.println(tree);
+
+    assertEachParentHasChild(nodes, "scm-review-plugin", "scm-branchwp-plugin");
+  }
+
+  private void assertEachParentHasChild(List<PluginNode> nodes, String parentName, String childName) {
+    nodes.forEach(node -> assertEachParentHasChild(node, parentName, childName));
+  }
+
+  private void assertEachParentHasChild(PluginNode pluginNode, String parentName, String childName) {
+    if (pluginNode.getId().equals(parentName)) {
+      assertThat(pluginNode.getChildren().stream().map(PluginNode::getId).collect(Collectors.toList()), contains(childName));
+    }
+    assertEachParentHasChild(pluginNode.getChildren(), parentName, childName);
+  }
+
+
+  @Test
   public void testWithDeepOptionalDependency() throws IOException {
     ExplodedSmp[] smps = new ExplodedSmp[] {
       createSmpWithDependency("a"),
       createSmpWithDependency("b", "a"),
-      createSmpWithDependency("c", null, ImmutableSet.of("b"))
+      createSmpWithDependency("c", null, of("b"))
     };
 
     PluginTree tree = new PluginTree(smps);
@@ -203,7 +267,7 @@ public class PluginTreeTest
   @Test
   public void testWithNonExistentOptionalDependency() throws IOException {
     ExplodedSmp[] smps = new ExplodedSmp[] {
-      createSmpWithDependency("a", null, ImmutableSet.of("b"))
+      createSmpWithDependency("a", null, of("b"))
     };
 
     PluginTree tree = new PluginTree(smps);
