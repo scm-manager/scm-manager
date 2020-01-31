@@ -13,27 +13,37 @@ class SmpNodeBuilder {
   }
 
   List<PluginNode> buildNodeTree(Collection<ExplodedSmp> smps) {
-
-    Set<String> availablePlugins = smps.stream().map(smp -> smp.getPlugin().getInformation().getName()).collect(Collectors.toSet());
-
+    Set<String> availablePlugins = getAvailablePluginNames(smps);
     smps.forEach(smp -> this.assertDependenciesFulfilled(availablePlugins, smp));
 
-    List<PluginNode> nodes = smps.stream().map(PluginNode::new).collect(Collectors.toList());
+    List<PluginNode> nodes = createNodes(smps);
 
-    nodes.forEach(node -> {
-      ExplodedSmp smp = node.getPlugin();
-      nodes.forEach(otherNode -> {
+    nodes.forEach(node ->
+      nodes.forEach(otherNode -> appendIfDependsOnOtherNode(node, otherNode))
+    );
 
-        if (smp.getPlugin().getDependenciesInclusiveOptionals().contains(otherNode.getId())
-          && !otherNode.getChildren().contains(node)) {
-          otherNode.addChild(node);
-        }
-      });
-
-      nodes.forEach(this::checkForCircle);
-    });
+    nodes.forEach(this::checkForCircle);
 
     return nodes;
+  }
+
+  private Set<String> getAvailablePluginNames(Collection<ExplodedSmp> smps) {
+    return smps.stream()
+      .map(ExplodedSmp::getPlugin)
+      .map(InstalledPluginDescriptor::getInformation)
+      .map(PluginInformation::getName)
+      .collect(Collectors.toSet());
+  }
+
+  private void appendIfDependsOnOtherNode(PluginNode node, PluginNode otherNode) {
+    if (node.getPlugin().getPlugin().getDependenciesInclusiveOptionals().contains(otherNode.getId())
+      && !otherNode.getChildren().contains(node)) {
+      otherNode.addChild(node);
+    }
+  }
+
+  private List<PluginNode> createNodes(Collection<ExplodedSmp> smps) {
+    return smps.stream().map(PluginNode::new).collect(Collectors.toList());
   }
 
   private void assertDependenciesFulfilled(Set<String> availablePlugins, ExplodedSmp smp) {
