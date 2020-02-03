@@ -863,7 +863,7 @@
     <hibernate-validator.version>6.1.0.Final</hibernate-validator.version>
 
     <!-- event bus -->
-    <legman.version>1.6.1</legman.version>
+    <legman.version>1.6.2</legman.version>
 
     <!-- webserver -->
     <jetty.version>9.4.22.v20191022</jetty.version>
