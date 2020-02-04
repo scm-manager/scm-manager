@@ -2,7 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 import sonia.scm.ReducedModelObject;
 import sonia.scm.group.GroupDisplayManager;
 import sonia.scm.user.UserDisplayManager;
