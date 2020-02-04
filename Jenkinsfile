@@ -108,7 +108,7 @@ String mainBranch
 
 Maven setupMavenBuild() {
   // Keep this version number in sync with .mvn/maven-wrapper.properties
-  Maven mvn = new MavenInDocker(this, '3.5.2-jdk-8')
+  Maven mvn = new MavenInDocker(this, '3.6.3-jdk-11')
 
   if (isMainBranch()) {
     // Release starts javadoc, which takes very long, so do only for certain branches
