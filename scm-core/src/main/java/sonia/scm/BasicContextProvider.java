@@ -36,6 +36,7 @@ package sonia.scm;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -57,7 +58,13 @@ public class BasicContextProvider implements SCMContextProvider
 {
 
   /** Default version {@link String} */
-  public static final String DEFAULT_VERSION = "unknown";
+  public static final String VERSION_DEFAULT = "unknown";
+
+  /**
+   * System property to override scm-manager version.
+   * <b>Note</b>: This should only be used for testing and never in production.
+   **/
+  public static final String VERSION_PROPERTY = "sonia.scm.version.override";
 
   /** Default name of the SCM-Manager base directory */
   public static final String DIRECTORY_DEFAULT = ".scm";
@@ -95,7 +102,7 @@ public class BasicContextProvider implements SCMContextProvider
     try
     {
       baseDirectory = findBaseDirectory();
-      version = loadVersion();
+      version = determineVersion();
       stage = loadProjectStage();
     }
     catch (Exception ex)
@@ -157,7 +164,7 @@ public class BasicContextProvider implements SCMContextProvider
 
   /**
    * Returns the version of the SCM-Manager. If the version is not set, the
-   * {@link #DEFAULT_VERSION} is returned.
+   * {@link #VERSION_DEFAULT} is returned.
    *
    *
    * @return the version of the SCM-Manager
@@ -257,6 +264,14 @@ public class BasicContextProvider implements SCMContextProvider
     return s;
   }
 
+  private String determineVersion() {
+    String version = System.getProperty(VERSION_PROPERTY);
+    if (Strings.isNullOrEmpty(version)) {
+      version = loadVersion();
+    }
+    return version;
+  }
+
   /**
    * Loads the version of the SCM-Manager from maven properties file.
    *
@@ -295,7 +310,7 @@ public class BasicContextProvider implements SCMContextProvider
       }
     }
 
-    return properties.getProperty(MAVEN_PROPERTY_VERSION, DEFAULT_VERSION);
+    return properties.getProperty(MAVEN_PROPERTY_VERSION, VERSION_DEFAULT);
   }
 
   //~--- get methods ----------------------------------------------------------
