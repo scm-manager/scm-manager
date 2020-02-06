@@ -37,7 +37,7 @@ node('docker') {
       }
 
       stage('Integration Test') {
-        mvn 'verify -Pit -pl :scm-webapp,:scm-it -Dmaven.test.failure.ignore=true -DClassLoaderLeakPreventor.threadWaitMs=10'
+        mvn 'verify -Pit -pl :scm-webapp,:scm-it -Dmaven.test.failure.ignore=true'
       }
 
       stage('SonarQube') {
