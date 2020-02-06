@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-      
+
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -15,7 +15,7 @@
   <name>scm-core</name>
 
   <dependencies>
-    
+
     <!-- servlet api -->
 
     <dependency>
@@ -55,13 +55,13 @@
     </dependency>
 
     <!-- security -->
-    
+
     <dependency>
       <groupId>org.apache.shiro</groupId>
       <artifactId>shiro-core</artifactId>
       <version>${shiro.version}</version>
     </dependency>
-    
+
     <!-- injection -->
 
     <dependency>
@@ -230,12 +230,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.0.0</version>
         <configuration>
           <useStandardDocletOptions>true</useStandardDocletOptions>
           <charset>${project.build.sourceEncoding}</charset>
           <encoding>${project.build.sourceEncoding}</encoding>
           <docencoding>${project.build.sourceEncoding}</docencoding>
+          <source>${project.build.javaLevel}</source>
           <breakiterator>true</breakiterator>
           <version>true</version>
           <author>true</author>
@@ -253,20 +253,6 @@
             <link>http://www.slf4j.org/api/</link>
             <link>http://shiro.apache.org/static/${shiro.version}/apidocs/</link>
           </links>
-          <doclet>org.jboss.apiviz.APIviz</doclet>
-          <docletArtifact>
-            <groupId>org.jboss.apiviz</groupId>
-            <artifactId>apiviz</artifactId>
-            <version>1.3.2.GA</version>
-          </docletArtifact>
-          <additionalOptions>
-            <additionalOption>
-              -sourceclasspath ${project.build.outputDirectory}
-            </additionalOption>
-            <additionalOption>
-              -nopackagediagram
-            </additionalOption>
-          </additionalOptions>
         </configuration>
       </plugin>
 

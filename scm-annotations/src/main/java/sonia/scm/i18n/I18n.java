@@ -40,7 +40,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The I18n annotation is used by the {@link I18nMessages} class to define the 
+ * The I18n annotation is used by the I18nMessages class to define the
  * resource bundle key.
  *
  * @author Sebastian Sdorra
@@ -53,7 +53,7 @@ public @interface I18n
 {
   /**
    * Returns the key for the resource bundle.
-   * 
+   *
    * @return resource bundle key
    */
   String value();
