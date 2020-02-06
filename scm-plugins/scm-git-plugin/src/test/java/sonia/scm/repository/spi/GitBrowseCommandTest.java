@@ -36,18 +36,23 @@ import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.spi.SyncAsyncExecutors.AsyncExecutorStepper;
+import sonia.scm.store.Blob;
+import sonia.scm.store.BlobStore;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import static java.util.OptionalLong.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static sonia.scm.repository.spi.SyncAsyncExecutors.stepperAsynchronousExecutor;
 import static sonia.scm.repository.spi.SyncAsyncExecutors.synchronousExecutor;
 
@@ -57,6 +62,8 @@ import static sonia.scm.repository.spi.SyncAsyncExecutors.synchronousExecutor;
  * @author Sebastian Sdorra
  */
 public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
+
+  private final LfsBlobStoreFactory lfsBlobStoreFactory = mock(LfsBlobStoreFactory.class);
 
   @Test
   public void testDefaultBranch() throws IOException {
@@ -209,6 +216,26 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
       .containsExactly("d.txt", "e.txt");
   }
 
+  @Test
+  public void testLfsSupport() throws IOException {
+    BlobStore blobStore = mock(BlobStore.class);
+    Blob blob = mock(Blob.class);
+    when(lfsBlobStoreFactory.getLfsBlobStore(repository)).thenReturn(blobStore);
+    when(blobStore.get("d2252bd9fde1bb2ae7531b432c48262c3cbe4df4376008986980de40a7c9cf8b")).thenReturn(blob);
+    when(blob.getSize()).thenReturn(42L);
+
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setRevision("lfs-test");
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+    assertNotNull(root);
+
+    Collection<FileObject> foList = root.getChildren();
+    assertThat(foList)
+      .filteredOn(f -> "lfs-image.png".equals(f.getName()))
+      .extracting("length")
+      .containsExactly(of(42L));
+  }
+
   private FileObject findFile(Collection<FileObject> foList, String name) {
     return foList.stream()
       .filter(f -> name.equals(f.getName()))
@@ -217,6 +244,6 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitBrowseCommand createCommand() {
-    return new GitBrowseCommand(createContext(), repository, null, synchronousExecutor());
+    return new GitBrowseCommand(createContext(), repository, lfsBlobStoreFactory, synchronousExecutor());
   }
 }
