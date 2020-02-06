@@ -91,6 +91,7 @@ public final class RepositoryService implements Closeable {
   private final PreProcessorUtil preProcessorUtil;
   private final RepositoryServiceProvider provider;
   private final Repository repository;
+  @SuppressWarnings("rawtypes")
   private final Set<ScmProtocolProvider> protocolProviders;
   private final WorkdirProvider workdirProvider;
 
@@ -104,7 +105,10 @@ public final class RepositoryService implements Closeable {
    */
   RepositoryService(CacheManager cacheManager,
                     RepositoryServiceProvider provider, Repository repository,
-                    PreProcessorUtil preProcessorUtil, Set<ScmProtocolProvider> protocolProviders, WorkdirProvider workdirProvider) {
+                    PreProcessorUtil preProcessorUtil,
+                    @SuppressWarnings("rawtypes") Set<ScmProtocolProvider> protocolProviders,
+                    WorkdirProvider workdirProvider
+  ) {
     this.cacheManager = cacheManager;
     this.provider = provider;
     this.repository = repository;
@@ -445,19 +449,23 @@ public final class RepositoryService implements Closeable {
     return provider.getSupportedFeatures().contains(feature);
   }
 
-  public <T extends ScmProtocol> Stream<T> getSupportedProtocols() {
+  public Stream<ScmProtocol> getSupportedProtocols() {
     return protocolProviders.stream()
       .filter(protocolProvider -> protocolProvider.getType().equals(getRepository().getType()))
-      .map(this::<T>createProviderInstanceForRepository);
+      .map(this::createProviderInstanceForRepository);
   }
 
-  private <T extends ScmProtocol> T createProviderInstanceForRepository(ScmProtocolProvider<T> protocolProvider) {
+  @SuppressWarnings("rawtypes")
+  private ScmProtocol createProviderInstanceForRepository(ScmProtocolProvider protocolProvider) {
     return protocolProvider.get(repository);
   }
 
+  @SuppressWarnings("unchecked")
   public <T extends ScmProtocol> T getProtocol(Class<T> clazz) {
-    return this.<T>getSupportedProtocols()
+    return this.getSupportedProtocols()
       .filter(scmProtocol -> clazz.isAssignableFrom(scmProtocol.getClass()))
+      // no idea how to fix this, without cast
+      .map(p -> (T) p)
       .findFirst()
       .orElseThrow(() -> new IllegalArgumentException(String.format("no implementation for %s and repository type %s", clazz.getName(),getRepository().getType())));
   }

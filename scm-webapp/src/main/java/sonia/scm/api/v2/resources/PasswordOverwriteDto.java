@@ -3,7 +3,7 @@ package sonia.scm.api.v2.resources;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
