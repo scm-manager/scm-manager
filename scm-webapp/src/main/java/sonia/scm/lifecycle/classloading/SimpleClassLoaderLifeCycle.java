@@ -9,7 +9,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 /**
- * Creates and shutdown SCM-Manager ClassLoaders with ClassLoader leak detection.
+ * Creates and shutdown SCM-Manager ClassLoaders without ClassLoader leak detection.
  */
 class SimpleClassLoaderLifeCycle extends ClassLoaderLifeCycle {
 
