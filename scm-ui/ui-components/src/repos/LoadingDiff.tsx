@@ -10,7 +10,7 @@ import { DiffObjectProps, File } from "./DiffTypes";
 import { NotFoundError } from "../errors";
 import { Notification } from "../index";
 import { withTranslation, WithTranslation } from "react-i18next";
-import { DefaultCollapsed } from "./DefaultCollapsed";
+import { DefaultCollapsed } from "./defaultCollapsed";
 
 type Props = WithTranslation &
   DiffObjectProps & {

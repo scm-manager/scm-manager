@@ -3,7 +3,7 @@ import DiffFile from "./DiffFile";
 import { DiffObjectProps, File } from "./DiffTypes";
 import Notification from "../Notification";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { DefaultCollapsed } from "./DefaultCollapsed";
+import { DefaultCollapsed } from "./defaultCollapsed";
 
 type Props = WithTranslation &
   DiffObjectProps & {

@@ -9,7 +9,7 @@ import Tag from "../Tag";
 import Icon from "../Icon";
 import { Change, ChangeEvent, DiffObjectProps, File, Hunk as HunkType } from "./DiffTypes";
 import TokenizedDiffView from "./TokenizedDiffView";
-import { DefaultCollapsed } from "./DefaultCollapsed";
+import { DefaultCollapsed } from "./defaultCollapsed";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
