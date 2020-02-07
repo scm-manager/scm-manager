@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Support for Java versions > 8
 - Simple ClassLoaderLifeCycle to fix integration tests on Java > 8
+- Option to use a function for default collapse state in diffs
 
 ### Changed
 - Upgrade [Legman](https://github.com/sdorra/legman) to v1.6.2 in order to fix execution on Java versions > 8
