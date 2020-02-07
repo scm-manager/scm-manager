@@ -70,4 +70,7 @@ storiesOf("Diff", module)
       return file;
     });
     return <Diff diff={filesWithLanguage} />;
-  });
+  })
+  .add("CollapsingWithFunction", () => (
+    <Diff diff={diffFiles} defaultCollapse={(oldPath, newPath) => oldPath.endsWith(".java")} />
+  ));

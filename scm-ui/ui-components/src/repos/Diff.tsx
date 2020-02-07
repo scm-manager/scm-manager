@@ -3,11 +3,12 @@ import DiffFile from "./DiffFile";
 import { DiffObjectProps, File } from "./DiffTypes";
 import Notification from "../Notification";
 import { WithTranslation, withTranslation } from "react-i18next";
+import { DefaultCollapsed } from "./DefaultCollapsed";
 
 type Props = WithTranslation &
   DiffObjectProps & {
     diff: File[];
-    defaultCollapse?: boolean;
+    defaultCollapse?: DefaultCollapsed;
   };
 
 class Diff extends React.Component<Props> {

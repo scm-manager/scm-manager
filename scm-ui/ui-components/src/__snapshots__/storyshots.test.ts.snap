@@ -1117,6 +1117,1948 @@ Array [
 ]
 `;
 
+exports[`Storyshots Diff CollapsingWithFunction 1`] = `
+Array [
+  <div
+    className="sc-gZMcBi ckdmuY panel is-size-6"
+  >
+    <div
+      className="panel-heading"
+    >
+      <div
+        className="sc-gqjmRU kjsEoG level"
+      >
+        <div
+          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          onClick={[Function]}
+          title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
+        >
+          <i
+            className="fas fa-angle-right has-text-inherit"
+          />
+          <span
+            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+          >
+            src/main/java/com/cloudogu/scm/review/events/EventListener.java
+          </span>
+          <span
+            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+          >
+            modify
+          </span>
+        </div>
+        <div
+          className="sc-fjdhpX fibrmN level-right is-flex"
+        >
+          <div
+            className="field is-grouped"
+          >
+            <div
+              className="control"
+            >
+              <button
+                className="button is-default is-reduced-mobile"
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  className="icon is-medium"
+                >
+                  <i
+                    className="fas fa-columns has-text-inherit"
+                  />
+                </span>
+                <span>
+                  diff.sideBySide
+                   
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>,
+  <div
+    className="sc-gZMcBi iABzaT panel is-size-6"
+  >
+    <div
+      className="panel-heading"
+    >
+      <div
+        className="sc-gqjmRU kjsEoG level"
+      >
+        <div
+          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          onClick={[Function]}
+          title="src/main/js/ChangeNotification.tsx"
+        >
+          <i
+            className="fas fa-angle-down has-text-inherit"
+          />
+          <span
+            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+          >
+            src/main/js/ChangeNotification.tsx
+          </span>
+          <span
+            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+          >
+            modify
+          </span>
+        </div>
+        <div
+          className="sc-fjdhpX fibrmN level-right is-flex"
+        >
+          <div
+            className="field is-grouped"
+          >
+            <div
+              className="control"
+            >
+              <button
+                className="button is-default is-reduced-mobile"
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  className="icon is-medium"
+                >
+                  <i
+                    className="fas fa-columns has-text-inherit"
+                  />
+                </span>
+                <span>
+                  diff.sideBySide
+                   
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="panel-block is-paddingless"
+    >
+      <table
+        className="diff diff-unified sc-iwsKbI hSacfN unified"
+        onMouseDown={[Function]}
+      >
+        <colgroup>
+          <col
+            className="diff-gutter-col"
+          />
+          <col
+            className="diff-gutter-col"
+          />
+          <col />
+        </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-hunk"
+        >
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              2
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              2
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import { Link } from "@scm-manager/ui-types";
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              3
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              3
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import { apiClient, Toast, ToastButtons, ToastButton } from "@scm-manager/ui-components";
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              4
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              4
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import { PullRequest } from "./types/PullRequest";
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              5
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import { useTranslation } from "react-i18next";
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              5
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              6
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              6
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              7
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              type HandlerProps = {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              7
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              8
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                url: string;
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-jzJRlG etTijH"
+              />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-hunk"
+        >
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              15
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              16
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    pullRequest: setEvent
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              16
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              17
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  });
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              17
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              18
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                }, [url]);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              19
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                const { t } = useTranslation("plugins");
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              18
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              20
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                if (event) {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              19
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              21
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  return (
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              20
+            </td>
+            <td
+              className="diff-gutter diff-gutter-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-code diff-code-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    &lt;Toast type="warning" title="New Changes"&gt;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              21
+            </td>
+            <td
+              className="diff-gutter diff-gutter-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-code diff-code-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      &lt;p&gt;The underlying Pull-Request has changed. Press reload to see the changes.&lt;/p&gt;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              22
+            </td>
+            <td
+              className="diff-gutter diff-gutter-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-code diff-code-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      &lt;p&gt;Warning: Non saved modification will be lost.&lt;/p&gt;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              22
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    &lt;Toast type="warning" title={t("scm-review-plugin.changeNotification.title")}&gt;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              23
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      &lt;p&gt;{t("scm-review-plugin.changeNotification.description")}&lt;/p&gt;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              24
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      &lt;p&gt;{t("scm-review-plugin.changeNotification.modificationWarning")}&lt;/p&gt;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              23
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              25
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      &lt;ToastButtons&gt;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              24
+            </td>
+            <td
+              className="diff-gutter diff-gutter-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-code diff-code-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                        &lt;ToastButton icon="redo" onClick={reload}&gt;Reload&lt;/ToastButton&gt;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              25
+            </td>
+            <td
+              className="diff-gutter diff-gutter-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-code diff-code-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                        &lt;ToastButton icon="times" onClick={() =&gt; setEvent(undefined)}&gt;Ignore&lt;/ToastButton&gt;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              26
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                        &lt;ToastButton icon="redo" onClick={reload}&gt;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              27
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                          {t("scm-review-plugin.changeNotification.buttons.reload")}
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              28
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                        &lt;/ToastButton&gt;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              29
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                        &lt;ToastButton icon="times" onClick={() =&gt; setEvent(undefined)}&gt;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              30
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                          {t("scm-review-plugin.changeNotification.buttons.ignore")}
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              31
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                        &lt;/ToastButton&gt;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              26
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              32
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      &lt;/ToastButtons&gt;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              27
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              33
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    &lt;/Toast&gt;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              28
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              34
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  );
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>,
+  <div
+    className="sc-gZMcBi iABzaT panel is-size-6"
+  >
+    <div
+      className="panel-heading"
+    >
+      <div
+        className="sc-gqjmRU kjsEoG level"
+      >
+        <div
+          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          onClick={[Function]}
+          title="src/main/resources/locales/de/plugins.json"
+        >
+          <i
+            className="fas fa-angle-down has-text-inherit"
+          />
+          <span
+            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+          >
+            src/main/resources/locales/de/plugins.json
+          </span>
+          <span
+            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+          >
+            modify
+          </span>
+        </div>
+        <div
+          className="sc-fjdhpX fibrmN level-right is-flex"
+        >
+          <div
+            className="field is-grouped"
+          >
+            <div
+              className="control"
+            >
+              <button
+                className="button is-default is-reduced-mobile"
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  className="icon is-medium"
+                >
+                  <i
+                    className="fas fa-columns has-text-inherit"
+                  />
+                </span>
+                <span>
+                  diff.sideBySide
+                   
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="panel-block is-paddingless"
+    >
+      <table
+        className="diff diff-unified sc-iwsKbI hSacfN unified"
+        onMouseDown={[Function]}
+      >
+        <colgroup>
+          <col
+            className="diff-gutter-col"
+          />
+          <col
+            className="diff-gutter-col"
+          />
+          <col />
+        </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-hunk"
+        >
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              181
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              181
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                        "titleClickable": "Der Kommentar bezieht sich auf eine ältere Version des Source- oder Target-Branches. Klicken Sie hier, um den ursprünglichen Kontext zu sehen."
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              182
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              182
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      }
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              183
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              183
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    }
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              184
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  },
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              185
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  "changeNotification": {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              186
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    "title": "Neue Änderungen",
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              187
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    "description": "An diesem Pull Request wurden Änderungen vorgenommen. Laden Sie die Seite neu um diese anzuzeigen.",
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              188
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    "modificationWarning": "Warnung: Nicht gespeicherte Eingaben gehen verloren.",
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              189
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    "buttons": {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              190
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      "reload": "Neu laden",
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              191
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      "ignore": "Ignorieren"
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              192
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    }
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              184
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              193
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  }
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              185
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              194
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                },
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              186
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              195
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                "permissions": {
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>,
+  <div
+    className="sc-gZMcBi iABzaT panel is-size-6"
+  >
+    <div
+      className="panel-heading"
+    >
+      <div
+        className="sc-gqjmRU kjsEoG level"
+      >
+        <div
+          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          onClick={[Function]}
+          title="src/main/resources/locales/en/plugins.json"
+        >
+          <i
+            className="fas fa-angle-down has-text-inherit"
+          />
+          <span
+            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+          >
+            src/main/resources/locales/en/plugins.json
+          </span>
+          <span
+            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+          >
+            modify
+          </span>
+        </div>
+        <div
+          className="sc-fjdhpX fibrmN level-right is-flex"
+        >
+          <div
+            className="field is-grouped"
+          >
+            <div
+              className="control"
+            >
+              <button
+                className="button is-default is-reduced-mobile"
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  className="icon is-medium"
+                >
+                  <i
+                    className="fas fa-columns has-text-inherit"
+                  />
+                </span>
+                <span>
+                  diff.sideBySide
+                   
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="panel-block is-paddingless"
+    >
+      <table
+        className="diff diff-unified sc-iwsKbI hSacfN unified"
+        onMouseDown={[Function]}
+      >
+        <colgroup>
+          <col
+            className="diff-gutter-col"
+          />
+          <col
+            className="diff-gutter-col"
+          />
+          <col />
+        </colgroup>
+        <tbody
+          className="diff-decoration"
+        >
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-hunk"
+        >
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              181
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              181
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                        "titleClickable": "The comment is related to an older of the source or target branch. Click here to see the original context."
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              182
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              182
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      }
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              183
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              183
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    }
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              184
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  },
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              185
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  "changeNotification": {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              186
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    "title": "New Changes",
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              187
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    "description": "The underlying Pull-Request has changed. Press reload to see the changes.",
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              188
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    "modificationWarning": "Warning: Non saved modification will be lost.",
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              189
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    "buttons": {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              190
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      "reload": "Reload",
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              191
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      "ignore": "Ignore"
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              192
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    }
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              184
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              193
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  }
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              185
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              194
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                },
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              186
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              195
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                "permissions": {
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>,
+  <div
+    className="sc-gZMcBi ckdmuY panel is-size-6"
+  >
+    <div
+      className="panel-heading"
+    >
+      <div
+        className="sc-gqjmRU kjsEoG level"
+      >
+        <div
+          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          onClick={[Function]}
+          title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
+        >
+          <i
+            className="fas fa-angle-right has-text-inherit"
+          />
+          <span
+            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+          >
+            src/test/java/com/cloudogu/scm/review/events/ClientTest.java
+          </span>
+          <span
+            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+          >
+            modify
+          </span>
+        </div>
+        <div
+          className="sc-fjdhpX fibrmN level-right is-flex"
+        >
+          <div
+            className="field is-grouped"
+          >
+            <div
+              className="control"
+            >
+              <button
+                className="button is-default is-reduced-mobile"
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  className="icon is-medium"
+                >
+                  <i
+                    className="fas fa-columns has-text-inherit"
+                  />
+                </span>
+                <span>
+                  diff.sideBySide
+                   
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>,
+  <div
+    className="sc-gZMcBi ckdmuY panel is-size-6"
+  >
+    <div
+      className="panel-heading"
+    >
+      <div
+        className="sc-gqjmRU kjsEoG level"
+      >
+        <div
+          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          onClick={[Function]}
+          title="Main.java"
+        >
+          <i
+            className="fas fa-angle-right has-text-inherit"
+          />
+          <span
+            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+          >
+            Main.java
+          </span>
+          <span
+            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+          >
+            modify
+          </span>
+        </div>
+        <div
+          className="sc-fjdhpX fibrmN level-right is-flex"
+        >
+          <div
+            className="field is-grouped"
+          >
+            <div
+              className="control"
+            >
+              <button
+                className="button is-default is-reduced-mobile"
+                onClick={[Function]}
+                type="button"
+              >
+                <span
+                  className="icon is-medium"
+                >
+                  <i
+                    className="fas fa-columns has-text-inherit"
+                  />
+                </span>
+                <span>
+                  diff.sideBySide
+                   
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>,
+]
+`;
+
 exports[`Storyshots Diff Default 1`] = `
 Array [
   <div
