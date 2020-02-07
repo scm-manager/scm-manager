@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { DefaultCollapsed } from "./defaultCollapsed";
 
 // We place the types here and not in @scm-manager/ui-types,
 // because they represent not a real scm-manager related type.
@@ -77,4 +78,5 @@ export type DiffObjectProps = {
   fileAnnotationFactory?: FileAnnotationFactory;
   annotationFactory?: AnnotationFactory;
   markConflicts?: boolean;
+  defaultCollapse?: DefaultCollapsed;
 };
