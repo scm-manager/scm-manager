@@ -3,11 +3,11 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 // @ts-ignore
-import { getChangeKey, Hunk, Decoration } from "react-diff-view";
+import { Decoration, getChangeKey, Hunk } from "react-diff-view";
 import { Button, ButtonGroup } from "../buttons";
 import Tag from "../Tag";
 import Icon from "../Icon";
-import { ChangeEvent, Change, File, Hunk as HunkType, DiffObjectProps } from "./DiffTypes";
+import { Change, ChangeEvent, DiffObjectProps, File, Hunk as HunkType } from "./DiffTypes";
 import TokenizedDiffView from "./TokenizedDiffView";
 
 const EMPTY_ANNOTATION_FACTORY = {};
@@ -15,7 +15,6 @@ const EMPTY_ANNOTATION_FACTORY = {};
 type Props = DiffObjectProps &
   WithTranslation & {
     file: File;
-    defaultCollapse?: boolean;
   };
 
 type Collapsible = {
@@ -67,20 +66,21 @@ class DiffFile extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      collapsed: !!this.props.defaultCollapse,
+      collapsed: this.defaultCollapse(),
       sideBySide: props.sideBySide
     };
   }
 
-  // collapse diff by clicking collapseDiffs button
-  componentDidUpdate(prevProps: Props) {
-    const { defaultCollapse } = this.props;
-    if (prevProps.defaultCollapse !== defaultCollapse) {
-      this.setState({
-        collapsed: defaultCollapse
-      });
+  defaultCollapse: () => boolean = () => {
+    const { defaultCollapse, file } = this.props;
+    if (typeof defaultCollapse === "boolean") {
+      return defaultCollapse;
+    } else if (typeof defaultCollapse === "function") {
+      return defaultCollapse(file.oldPath, file.newPath);
+    } else {
+      return false;
     }
-  }
+  };
 
   toggleCollapse = () => {
     const { file } = this.props;

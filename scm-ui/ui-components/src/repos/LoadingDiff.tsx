@@ -14,7 +14,6 @@ import { withTranslation, WithTranslation } from "react-i18next";
 type Props = WithTranslation &
   DiffObjectProps & {
     url: string;
-    defaultCollapse?: boolean;
   };
 
 type State = {

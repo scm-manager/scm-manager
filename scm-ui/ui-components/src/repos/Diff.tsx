@@ -7,7 +7,6 @@ import { WithTranslation, withTranslation } from "react-i18next";
 type Props = WithTranslation &
   DiffObjectProps & {
     diff: File[];
-    defaultCollapse?: boolean;
   };
 
 class Diff extends React.Component<Props> {
