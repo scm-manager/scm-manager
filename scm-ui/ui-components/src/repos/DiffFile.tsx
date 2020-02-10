@@ -9,6 +9,7 @@ import Tag from "../Tag";
 import Icon from "../Icon";
 import { Change, ChangeEvent, DiffObjectProps, File, Hunk as HunkType } from "./DiffTypes";
 import TokenizedDiffView from "./TokenizedDiffView";
+import DiffButton from "./DiffButton";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
@@ -250,11 +251,10 @@ class DiffFile extends React.Component<Props, State> {
       file.hunks && file.hunks.length > 0 ? (
         <ButtonWrapper className={classNames("level-right", "is-flex")}>
           <ButtonGroup>
-            <Button
-              action={this.toggleSideBySide}
+            <DiffButton
               icon={sideBySide ? "align-left" : "columns"}
-              label={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
-              reducedMobile={true}
+              title={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
+              onClick={this.toggleSideBySide}
             />
             {fileControls}
           </ButtonGroup>

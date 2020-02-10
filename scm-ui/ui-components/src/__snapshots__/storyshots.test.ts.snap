@@ -485,16 +485,16 @@ exports[`Storyshots DateFromNow Default 1`] = `
 exports[`Storyshots Diff Binaries 1`] = `
 Array [
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -502,18 +502,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -521,23 +521,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -704,26 +696,26 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-gqjmRU hdhFdH panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="conflict.png"
         >
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             conflict.png
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             add
           </span>
@@ -755,16 +747,16 @@ Array [
 exports[`Storyshots Diff Collapsed 1`] = `
 Array [
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-gqjmRU hdhFdH panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -772,18 +764,18 @@ Array [
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -791,23 +783,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -815,16 +799,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-gqjmRU hdhFdH panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -832,18 +816,18 @@ Array [
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -851,23 +835,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -875,16 +851,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-gqjmRU hdhFdH panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -892,18 +868,18 @@ Array [
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -911,23 +887,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -935,16 +903,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-gqjmRU hdhFdH panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -952,18 +920,18 @@ Array [
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -971,23 +939,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -995,16 +955,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-gqjmRU hdhFdH panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -1012,18 +972,18 @@ Array [
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -1031,23 +991,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -1055,16 +1007,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-gqjmRU hdhFdH panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -1072,18 +1024,18 @@ Array [
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -1091,23 +1043,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -1120,16 +1064,16 @@ Array [
 exports[`Storyshots Diff CollapsingWithFunction 1`] = `
 Array [
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-gqjmRU hdhFdH panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -1137,18 +1081,18 @@ Array [
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -1156,23 +1100,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -1180,16 +1116,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -1197,18 +1133,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -1216,23 +1152,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -1452,7 +1380,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -2035,16 +1963,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -2052,18 +1980,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -2071,23 +1999,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -2486,16 +2406,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -2503,18 +2423,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -2522,23 +2442,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -2937,16 +2849,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-gqjmRU hdhFdH panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -2954,18 +2866,18 @@ Array [
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -2973,23 +2885,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -2997,16 +2901,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-gqjmRU hdhFdH panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -3014,18 +2918,18 @@ Array [
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -3033,23 +2937,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -3062,16 +2958,16 @@ Array [
 exports[`Storyshots Diff Default 1`] = `
 Array [
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -3079,18 +2975,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -3098,23 +2994,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -3640,16 +3528,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -3657,18 +3545,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -3676,23 +3564,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -3912,7 +3792,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -4495,16 +4375,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -4512,18 +4392,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -4531,23 +4411,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -4946,16 +4818,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -4963,18 +4835,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -4982,23 +4854,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -5397,16 +5261,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -5414,18 +5278,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -5433,23 +5297,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -5986,7 +5842,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -6200,7 +6056,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -6455,16 +6311,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -6472,18 +6328,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -6491,23 +6347,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -6986,16 +6834,16 @@ Array [
 exports[`Storyshots Diff File Annotation 1`] = `
 Array [
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -7003,18 +6851,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -7022,23 +6870,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -7568,16 +7408,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -7585,18 +7425,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -7604,23 +7444,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -7844,7 +7676,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -8427,16 +8259,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -8444,18 +8276,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -8463,23 +8295,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -8882,16 +8706,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -8899,18 +8723,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -8918,23 +8742,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -9337,16 +9153,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -9354,18 +9170,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -9373,23 +9189,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -9930,7 +9738,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -10144,7 +9952,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -10399,16 +10207,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -10416,18 +10224,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -10435,23 +10243,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -10934,16 +10734,16 @@ Array [
 exports[`Storyshots Diff File Controls 1`] = `
 Array [
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -10951,18 +10751,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -10970,35 +10770,28 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
             <div
               className="control"
             >
-              <button
-                className="button is-default"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="Die!"
               >
-                 
-                Custom Control
-              </button>
+                <i
+                  className="fas fa-skull-crossbones"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -11524,16 +11317,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -11541,18 +11334,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -11560,35 +11353,28 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
             <div
               className="control"
             >
-              <button
-                className="button is-default"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="Die!"
               >
-                 
-                Custom Control
-              </button>
+                <i
+                  className="fas fa-skull-crossbones"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -11808,7 +11594,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -12391,16 +12177,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -12408,18 +12194,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -12427,35 +12213,28 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
             <div
               className="control"
             >
-              <button
-                className="button is-default"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="Die!"
               >
-                 
-                Custom Control
-              </button>
+                <i
+                  className="fas fa-skull-crossbones"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -12854,16 +12633,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -12871,18 +12650,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -12890,35 +12669,28 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
             <div
               className="control"
             >
-              <button
-                className="button is-default"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="Die!"
               >
-                 
-                Custom Control
-              </button>
+                <i
+                  className="fas fa-skull-crossbones"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -13317,16 +13089,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -13334,18 +13106,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -13353,35 +13125,28 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
             <div
               className="control"
             >
-              <button
-                className="button is-default"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="Die!"
               >
-                 
-                Custom Control
-              </button>
+                <i
+                  className="fas fa-skull-crossbones"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -13918,7 +13683,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -14132,7 +13897,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -14387,16 +14152,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -14404,18 +14169,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -14423,35 +14188,28 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
             <div
               className="control"
             >
-              <button
-                className="button is-default"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="Die!"
               >
-                 
-                Custom Control
-              </button>
+                <i
+                  className="fas fa-skull-crossbones"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -14929,16 +14687,16 @@ Array [
 
 exports[`Storyshots Diff Hunks 1`] = `
 <div
-  className="sc-gZMcBi iABzaT panel is-size-6"
+  className="sc-gqjmRU cXbxOb panel is-size-6"
 >
   <div
     className="panel-heading"
   >
     <div
-      className="sc-gqjmRU kjsEoG level"
+      className="sc-VigVT cmndpN level"
     >
       <div
-        className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+        className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
         onClick={[Function]}
         title="src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java"
       >
@@ -14946,18 +14704,18 @@ exports[`Storyshots Diff Hunks 1`] = `
           className="fas fa-angle-down has-text-inherit"
         />
         <span
-          className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+          className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
         >
           src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java
         </span>
         <span
-          className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+          className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
         >
           modify
         </span>
       </div>
       <div
-        className="sc-fjdhpX fibrmN level-right is-flex"
+        className="sc-jzJRlG ijurnE level-right is-flex"
       >
         <div
           className="field is-grouped"
@@ -14965,23 +14723,15 @@ exports[`Storyshots Diff Hunks 1`] = `
           <div
             className="control"
           >
-            <button
-              className="button is-default is-reduced-mobile"
+            <a
+              className="sc-gZMcBi dPTTFE button"
               onClick={[Function]}
-              type="button"
+              title="diff.sideBySide"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-columns has-text-inherit"
-                />
-              </span>
-              <span>
-                diff.sideBySide
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-columns"
+              />
+            </a>
           </div>
         </div>
       </div>
@@ -15224,7 +14974,7 @@ exports[`Storyshots Diff Hunks 1`] = `
             colSpan={3}
           >
             <hr
-              className="sc-jzJRlG etTijH"
+              className="sc-cSHVUG ezfUNd"
             />
           </td>
         </tr>
@@ -15415,7 +15165,7 @@ exports[`Storyshots Diff Hunks 1`] = `
             colSpan={3}
           >
             <hr
-              className="sc-jzJRlG etTijH"
+              className="sc-cSHVUG ezfUNd"
             />
           </td>
         </tr>
@@ -15766,16 +15516,16 @@ exports[`Storyshots Diff Hunks 1`] = `
 exports[`Storyshots Diff Line Annotation 1`] = `
 Array [
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -15783,18 +15533,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -15802,23 +15552,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -16356,16 +16098,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -16373,18 +16115,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -16392,23 +16134,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -16640,7 +16374,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -17223,16 +16957,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -17240,18 +16974,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -17259,23 +16993,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -17674,16 +17400,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -17691,18 +17417,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -17710,23 +17436,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -18125,16 +17843,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -18142,18 +17860,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -18161,23 +17879,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -18714,7 +18424,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -18928,7 +18638,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -19183,16 +18893,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -19200,18 +18910,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -19219,23 +18929,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -19726,16 +19428,16 @@ Array [
 exports[`Storyshots Diff OnClick 1`] = `
 Array [
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -19743,18 +19445,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -19762,23 +19464,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -20344,16 +20038,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -20361,18 +20055,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -20380,23 +20074,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -20630,7 +20316,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -21261,16 +20947,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -21278,18 +20964,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -21297,23 +20983,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -21742,16 +21420,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -21759,18 +21437,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -21778,23 +21456,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -22223,16 +21893,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -22240,18 +21910,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -22259,23 +21929,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -22852,7 +22514,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -23082,7 +22744,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -23357,16 +23019,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -23374,18 +23036,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -23393,23 +23055,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -23924,16 +23578,16 @@ Array [
 exports[`Storyshots Diff Side-By-Side 1`] = `
 Array [
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -23941,18 +23595,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -23960,23 +23614,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.combined"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-align-left has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.combined
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-align-left"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -24595,16 +24241,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -24612,18 +24258,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -24631,23 +24277,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.combined"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-align-left has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.combined
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-align-left"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -24911,7 +24549,7 @@ Array [
               colSpan={4}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -25540,16 +25178,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -25557,18 +25195,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -25576,23 +25214,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.combined"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-align-left has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.combined
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-align-left"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -26043,16 +25673,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -26060,18 +25690,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -26079,23 +25709,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.combined"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-align-left has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.combined
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-align-left"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -26546,16 +26168,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -26563,18 +26185,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -26582,23 +26204,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.combined"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-align-left has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.combined
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-align-left"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -27246,7 +26860,7 @@ Array [
               colSpan={4}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -27488,7 +27102,7 @@ Array [
               colSpan={4}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -27773,16 +27387,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -27790,18 +27404,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -27809,23 +27423,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.combined"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-align-left has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.combined
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-align-left"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -28377,16 +27983,16 @@ Array [
 exports[`Storyshots Diff SyntaxHighlighting 1`] = `
 Array [
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -28394,18 +28000,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -28413,23 +28019,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -28955,16 +28553,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -28972,18 +28570,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -28991,23 +28589,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -29227,7 +28817,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -29810,16 +29400,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -29827,18 +29417,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -29846,23 +29436,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -30261,16 +29843,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -30278,18 +29860,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -30297,23 +29879,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -30712,16 +30286,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -30729,18 +30303,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -30748,23 +30322,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -31301,7 +30867,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -31515,7 +31081,7 @@ Array [
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-cSHVUG ezfUNd"
               />
             </td>
           </tr>
@@ -31770,16 +31336,16 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -31787,18 +31353,18 @@ Array [
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -31806,23 +31372,15 @@ Array [
             <div
               className="control"
             >
-              <button
-                className="button is-default is-reduced-mobile"
+              <a
+                className="sc-gZMcBi dPTTFE button"
                 onClick={[Function]}
-                type="button"
+                title="diff.sideBySide"
               >
-                <span
-                  className="icon is-medium"
-                >
-                  <i
-                    className="fas fa-columns has-text-inherit"
-                  />
-                </span>
-                <span>
-                  diff.sideBySide
-                   
-                </span>
-              </button>
+                <i
+                  className="fas fa-columns"
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -32300,7 +31858,7 @@ Array [
 
 exports[`Storyshots Forms|Checkbox Default 1`] = `
 <div
-  className="sc-gisBJw jHakbY"
+  className="sc-kjoXOD hVPZau"
 >
   <div
     className="field"
@@ -32345,7 +31903,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
 
 exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 <div
-  className="sc-gisBJw jHakbY"
+  className="sc-kjoXOD hVPZau"
 >
   <div
     className="field"
@@ -32373,10 +31931,10 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 
 exports[`Storyshots Forms|Radio Default 1`] = `
 <div
-  className="sc-kjoXOD hVPZau"
+  className="sc-cHGsZl klfJMr"
 >
   <label
-    className="sc-cMljjf kOqpHe radio"
+    className="sc-jAaTju cHcmSg radio"
   >
     <input
       checked={false}
@@ -32387,7 +31945,7 @@ exports[`Storyshots Forms|Radio Default 1`] = `
     Not checked
   </label>
   <label
-    className="sc-cMljjf kOqpHe radio"
+    className="sc-jAaTju cHcmSg radio"
   >
     <input
       checked={true}
@@ -32402,10 +31960,10 @@ exports[`Storyshots Forms|Radio Default 1`] = `
 
 exports[`Storyshots Forms|Radio Disabled 1`] = `
 <div
-  className="sc-kjoXOD hVPZau"
+  className="sc-cHGsZl klfJMr"
 >
   <label
-    className="sc-cMljjf kOqpHe radio"
+    className="sc-jAaTju cHcmSg radio"
     disabled={true}
   >
     <input
@@ -32422,7 +31980,7 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
 
 exports[`Storyshots Forms|Textarea OnCancel 1`] = `
 <div
-  className="sc-cHGsZl klfJMr"
+  className="sc-TOsTZ dHMHJE"
 >
   <div
     className="field"
@@ -32445,7 +32003,7 @@ exports[`Storyshots Forms|Textarea OnCancel 1`] = `
 
 exports[`Storyshots Forms|Textarea OnChange 1`] = `
 <div
-  className="sc-cHGsZl klfJMr"
+  className="sc-TOsTZ dHMHJE"
 >
   <div
     className="field"
@@ -32472,7 +32030,7 @@ exports[`Storyshots Forms|Textarea OnChange 1`] = `
 
 exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
 <div
-  className="sc-cHGsZl klfJMr"
+  className="sc-TOsTZ dHMHJE"
 >
   <div
     className="field"
@@ -34355,7 +33913,7 @@ PORT_NUMBER =
 
 exports[`Storyshots Table|Table Default 1`] = `
 <table
-  className="sc-fBuWsC eeihxG table content is-hoverable"
+  className="sc-fMiknA bxZCMx table content is-hoverable"
 >
   <thead>
     <tr>
@@ -34373,7 +33931,7 @@ exports[`Storyshots Table|Table Default 1`] = `
       >
         Last Name
         <i
-          className="fas fa-sort-amount-down has-text-grey-light sc-jhAzac gDbcZp"
+          className="fas fa-sort-amount-down has-text-grey-light sc-fBuWsC cJimFd"
         />
       </th>
       <th
@@ -34446,7 +34004,7 @@ exports[`Storyshots Table|Table Empty 1`] = `
 
 exports[`Storyshots Table|Table TextColumn 1`] = `
 <table
-  className="sc-fBuWsC eeihxG table content is-hoverable"
+  className="sc-fMiknA bxZCMx table content is-hoverable"
 >
   <thead>
     <tr>
@@ -34458,7 +34016,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Id
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light sc-jhAzac gDbcZp"
+          className="fas fa-sort-alpha-down has-text-grey-light sc-fBuWsC cJimFd"
         />
       </th>
       <th
@@ -34469,7 +34027,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Name
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light sc-jhAzac gDbcZp"
+          className="fas fa-sort-alpha-down has-text-grey-light sc-fBuWsC cJimFd"
         />
       </th>
       <th
@@ -34480,7 +34038,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Description
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light sc-jhAzac gDbcZp"
+          className="fas fa-sort-alpha-down has-text-grey-light sc-fBuWsC cJimFd"
         />
       </th>
     </tr>

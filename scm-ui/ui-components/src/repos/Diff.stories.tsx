@@ -6,10 +6,10 @@ import parser from "gitdiff-parser";
 import simpleDiff from "../__resources__/Diff.simple";
 import hunksDiff from "../__resources__/Diff.hunks";
 import binaryDiff from "../__resources__/Diff.binary";
-import Button from "../buttons/Button";
 import { DiffEventContext, File } from "./DiffTypes";
 import Toast from "../toast/Toast";
 import { getPath } from "./diffs";
+import DiffButton from "./DiffButton";
 
 const diffFiles = parser.parse(simpleDiff);
 
@@ -17,7 +17,14 @@ storiesOf("Diff", module)
   .add("Default", () => <Diff diff={diffFiles} />)
   .add("Side-By-Side", () => <Diff diff={diffFiles} sideBySide={true} />)
   .add("Collapsed", () => <Diff diff={diffFiles} defaultCollapse={true} />)
-  .add("File Controls", () => <Diff diff={diffFiles} fileControlFactory={() => <Button>Custom Control</Button>} />)
+  .add("File Controls", () => (
+    <Diff
+      diff={diffFiles}
+      fileControlFactory={() => (
+        <DiffButton title="Die!" icon="skull-crossbones" onClick={() => alert("Arrrgggghhhh ...")} />
+      )}
+    />
+  ))
   .add("File Annotation", () => (
     <Diff
       diff={diffFiles}
