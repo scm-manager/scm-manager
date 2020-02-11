@@ -187,8 +187,8 @@
     }
   },
   "diff": {
-    "sideBySide": "Zweispaltig",
-    "combined": "Kombiniert",
+    "sideBySide": "Zur zweispaltigen Ansicht wechseln",
+    "combined": "Zur kombinierten Ansicht wechseln",
     "noDiffFound": "Kein Diff zwischen den ausgewählten Branches gefunden."
   },
   "fileUpload": {
