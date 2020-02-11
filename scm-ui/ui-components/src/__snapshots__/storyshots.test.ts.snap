@@ -483,7 +483,9 @@ exports[`Storyshots DateFromNow Default 1`] = `
 `;
 
 exports[`Storyshots Diff Binaries 1`] = `
-Array [
+<div
+  className="sc-kgAjT bdLeiW"
+>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -521,15 +523,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -694,7 +701,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU hdhFdH panel is-size-6"
   >
@@ -740,12 +747,14 @@ Array [
         </colgroup>
       </table>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Storyshots Diff Collapsed 1`] = `
-Array [
+<div
+  className="sc-kgAjT bdLeiW"
+>
   <div
     className="sc-gqjmRU hdhFdH panel is-size-6"
   >
@@ -783,21 +792,26 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU hdhFdH panel is-size-6"
   >
@@ -835,21 +849,26 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU hdhFdH panel is-size-6"
   >
@@ -887,21 +906,26 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU hdhFdH panel is-size-6"
   >
@@ -939,21 +963,26 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU hdhFdH panel is-size-6"
   >
@@ -991,21 +1020,26 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU hdhFdH panel is-size-6"
   >
@@ -1043,26 +1077,33 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Storyshots Diff CollapsingWithFunction 1`] = `
-Array [
+<div
+  className="sc-kgAjT bdLeiW"
+>
   <div
     className="sc-gqjmRU hdhFdH panel is-size-6"
   >
@@ -1100,21 +1141,26 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -1152,15 +1198,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -1961,7 +2012,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -1999,15 +2050,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -2404,7 +2460,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -2442,15 +2498,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -2847,7 +2908,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU hdhFdH panel is-size-6"
   >
@@ -2885,21 +2946,26 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU hdhFdH panel is-size-6"
   >
@@ -2937,26 +3003,33 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Storyshots Diff Default 1`] = `
-Array [
+<div
+  className="sc-kgAjT bdLeiW"
+>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -2994,15 +3067,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -3526,7 +3604,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -3564,15 +3642,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -4373,7 +4456,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -4411,15 +4494,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -4816,7 +4904,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -4854,15 +4942,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -5259,7 +5352,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -5297,15 +5390,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -6309,7 +6407,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -6347,15 +6445,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -6827,12 +6930,14 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Storyshots Diff File Annotation 1`] = `
-Array [
+<div
+  className="sc-kgAjT bdLeiW"
+>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -6870,15 +6975,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -7406,7 +7516,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -7444,15 +7554,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -8257,7 +8372,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -8295,15 +8410,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -8704,7 +8824,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -8742,15 +8862,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -9151,7 +9276,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -9189,15 +9314,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -10205,7 +10335,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -10243,15 +10373,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -10727,12 +10862,14 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Storyshots Diff File Controls 1`] = `
-Array [
+<div
+  className="sc-kgAjT bdLeiW"
+>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -10770,28 +10907,38 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="Die!"
+              <span
+                className="tooltip has-tooltip-top has-tooltip-multiline"
+                data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
-                <i
-                  className="fas fa-skull-crossbones"
-                />
-              </a>
+                <a
+                  aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-skull-crossbones"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -11315,7 +11462,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -11353,28 +11500,38 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="Die!"
+              <span
+                className="tooltip has-tooltip-top has-tooltip-multiline"
+                data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
-                <i
-                  className="fas fa-skull-crossbones"
-                />
-              </a>
+                <a
+                  aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-skull-crossbones"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -12175,7 +12332,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -12213,28 +12370,38 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="Die!"
+              <span
+                className="tooltip has-tooltip-top has-tooltip-multiline"
+                data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
-                <i
-                  className="fas fa-skull-crossbones"
-                />
-              </a>
+                <a
+                  aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-skull-crossbones"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -12631,7 +12798,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -12669,28 +12836,38 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="Die!"
+              <span
+                className="tooltip has-tooltip-top has-tooltip-multiline"
+                data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
-                <i
-                  className="fas fa-skull-crossbones"
-                />
-              </a>
+                <a
+                  aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-skull-crossbones"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -13087,7 +13264,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -13125,28 +13302,38 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="Die!"
+              <span
+                className="tooltip has-tooltip-top has-tooltip-multiline"
+                data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
-                <i
-                  className="fas fa-skull-crossbones"
-                />
-              </a>
+                <a
+                  aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-skull-crossbones"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -14150,7 +14337,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -14188,28 +14375,38 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="Die!"
+              <span
+                className="tooltip has-tooltip-top has-tooltip-multiline"
+                data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
-                <i
-                  className="fas fa-skull-crossbones"
-                />
-              </a>
+                <a
+                  aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-skull-crossbones"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -14681,840 +14878,851 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Storyshots Diff Hunks 1`] = `
 <div
-  className="sc-gqjmRU cXbxOb panel is-size-6"
+  className="sc-kgAjT bdLeiW"
 >
   <div
-    className="panel-heading"
+    className="sc-gqjmRU cXbxOb panel is-size-6"
   >
     <div
-      className="sc-VigVT cmndpN level"
+      className="panel-heading"
     >
       <div
-        className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
-        onClick={[Function]}
-        title="src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java"
-      >
-        <i
-          className="fas fa-angle-down has-text-inherit"
-        />
-        <span
-          className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
-        >
-          src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java
-        </span>
-        <span
-          className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
-        >
-          modify
-        </span>
-      </div>
-      <div
-        className="sc-jzJRlG ijurnE level-right is-flex"
+        className="sc-VigVT cmndpN level"
       >
         <div
-          className="field is-grouped"
+          className="sc-jTzLTM gNNZYU level-left is-flex has-cursor-pointer"
+          onClick={[Function]}
+          title="src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java"
+        >
+          <i
+            className="fas fa-angle-down has-text-inherit"
+          />
+          <span
+            className="sc-fjdhpX htTXTu is-ellipsis-overflow is-size-6"
+          >
+            src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java
+          </span>
+          <span
+            className="tag is-info is-outlined sc-kAzzGY bHOxta is-rounded has-text-weight-normal"
+          >
+            modify
+          </span>
+        </div>
+        <div
+          className="sc-jzJRlG ijurnE level-right is-flex"
         >
           <div
-            className="control"
+            className="field is-grouped"
           >
-            <a
-              className="sc-gZMcBi dPTTFE button"
-              onClick={[Function]}
-              title="diff.sideBySide"
+            <div
+              className="control"
             >
-              <i
-                className="fas fa-columns"
-              />
-            </a>
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
+              >
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div
-    className="panel-block is-paddingless"
-  >
-    <table
-      className="diff diff-unified sc-iwsKbI hSacfN unified"
-      onMouseDown={[Function]}
+    <div
+      className="panel-block is-paddingless"
     >
-      <colgroup>
-        <col
-          className="diff-gutter-col"
-        />
-        <col
-          className="diff-gutter-col"
-        />
-        <col />
-      </colgroup>
-      <tbody
-        className="diff-decoration"
+      <table
+        className="diff diff-unified sc-iwsKbI hSacfN unified"
+        onMouseDown={[Function]}
       >
-        <tr>
-          <td
-            className="diff-decoration-content"
-            colSpan={3}
-          >
-            <span />
-          </td>
-        </tr>
-      </tbody>
-      <tbody
-        className="diff-hunk"
-      >
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            25
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            25
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            import java.util.Set;
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            26
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            26
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            import java.util.stream.Collectors;
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            27
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            27
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-             
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+        <colgroup>
+          <col
+            className="diff-gutter-col"
           />
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            28
-          </td>
-          <td
-            className="diff-code diff-code-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            import static com.cloudogu.scm.review.pullrequest.service.PullRequestApprovalEvent.ApprovalCause.APPROVAL_REMOVED;
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+          <col
+            className="diff-gutter-col"
           />
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            29
-          </td>
-          <td
-            className="diff-code diff-code-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            import static com.cloudogu.scm.review.pullrequest.service.PullRequestApprovalEvent.ApprovalCause.APPROVED;
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
+          <col />
+        </colgroup>
+        <tbody
+          className="diff-decoration"
         >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            28
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            30
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            import static com.cloudogu.scm.review.pullrequest.service.PullRequestStatus.MERGED;
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <span />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-hunk"
         >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+          <tr
+            className="diff-line"
           >
-            29
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              25
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              25
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import java.util.Set;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-            31
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              26
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              26
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import java.util.stream.Collectors;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-            import static com.cloudogu.scm.review.pullrequest.service.PullRequestStatus.OPEN;
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              27
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              27
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-            30
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            32
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            import static com.cloudogu.scm.review.pullrequest.service.PullRequestStatus.REJECTED;
-          </td>
-        </tr>
-      </tbody>
-      <tbody
-        className="diff-decoration"
-      >
-        <tr>
-          <td
-            className="diff-decoration-content"
-            colSpan={3}
-          >
-            <hr
-              className="sc-cSHVUG ezfUNd"
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
             />
-          </td>
-        </tr>
-      </tbody>
-      <tbody
-        className="diff-hunk"
-      >
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              28
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import static com.cloudogu.scm.review.pullrequest.service.PullRequestApprovalEvent.ApprovalCause.APPROVAL_REMOVED;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-            200
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            202
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-                PullRequest pullRequest = getPullRequestFromStore(repository, pullRequestId);
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            201
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            203
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-                pullRequest.addApprover(user.getId());
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            202
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            204
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-                getStore(repository).update(pullRequest);
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          />
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            205
-          </td>
-          <td
-            className="diff-code diff-code-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-                eventBus.post(new PullRequestApprovalEvent(repository, pullRequest, APPROVED));
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            203
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            206
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-              }
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            204
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            207
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-             
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            205
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            208
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-              @Override
-          </td>
-        </tr>
-      </tbody>
-      <tbody
-        className="diff-decoration"
-      >
-        <tr>
-          <td
-            className="diff-decoration-content"
-            colSpan={3}
-          >
-            <hr
-              className="sc-cSHVUG ezfUNd"
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
             />
-          </td>
-        </tr>
-      </tbody>
-      <tbody
-        className="diff-hunk"
-      >
-        <tr
-          className="diff-line"
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              29
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import static com.cloudogu.scm.review.pullrequest.service.PullRequestApprovalEvent.ApprovalCause.APPROVED;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              28
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              30
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import static com.cloudogu.scm.review.pullrequest.service.PullRequestStatus.MERGED;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              29
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              31
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import static com.cloudogu.scm.review.pullrequest.service.PullRequestStatus.OPEN;
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              30
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              32
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              import static com.cloudogu.scm.review.pullrequest.service.PullRequestStatus.REJECTED;
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-decoration"
         >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            211
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            214
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-                approver.stream()
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-cSHVUG ezfUNd"
+              />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-hunk"
         >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+          <tr
+            className="diff-line"
           >
-            212
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              200
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              202
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  PullRequest pullRequest = getPullRequestFromStore(repository, pullRequestId);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-            215
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              201
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              203
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  pullRequest.addApprover(user.getId());
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-                  .filter(recipient -&gt; user.getId().equals(recipient))
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              202
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              204
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  getStore(repository).update(pullRequest);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              205
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  eventBus.post(new PullRequestApprovalEvent(repository, pullRequest, APPROVED));
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              203
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              206
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                }
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              204
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              207
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
+          >
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              205
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              208
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                @Override
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-decoration"
         >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            213
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            216
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-                  .findFirst()
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
+          <tr>
+            <td
+              className="diff-decoration-content"
+              colSpan={3}
+            >
+              <hr
+                className="sc-cSHVUG ezfUNd"
+              />
+            </td>
+          </tr>
+        </tbody>
+        <tbody
+          className="diff-hunk"
         >
-          <td
-            className="diff-gutter diff-gutter-delete"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+          <tr
+            className="diff-line"
           >
-            214
-          </td>
-          <td
-            className="diff-gutter diff-gutter-delete"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          />
-          <td
-            className="diff-code diff-code-delete"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              211
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              214
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  approver.stream()
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-                  .ifPresent(pullRequest::removeApprover);
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-delete"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              212
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              215
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    .filter(recipient -&gt; user.getId().equals(recipient))
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-            215
-          </td>
-          <td
-            className="diff-gutter diff-gutter-delete"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          />
-          <td
-            className="diff-code diff-code-delete"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              213
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              216
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    .findFirst()
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-                getStore(repository).update(pullRequest);
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          />
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              214
+            </td>
+            <td
+              className="diff-gutter diff-gutter-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-code diff-code-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    .ifPresent(pullRequest::removeApprover);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-            217
-          </td>
-          <td
-            className="diff-code diff-code-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              215
+            </td>
+            <td
+              className="diff-gutter diff-gutter-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-code diff-code-delete"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                  getStore(repository).update(pullRequest);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-                  .ifPresent(
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          />
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              217
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                    .ifPresent(
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-            218
-          </td>
-          <td
-            className="diff-code diff-code-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              218
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      approval -&gt; {
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-                    approval -&gt; {
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          />
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              219
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                        pullRequest.removeApprover(approval);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-            219
-          </td>
-          <td
-            className="diff-code diff-code-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              220
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                        getStore(repository).update(pullRequest);
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-                      pullRequest.removeApprover(approval);
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          />
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              221
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                        eventBus.post(new PullRequestApprovalEvent(repository, pullRequest, APPROVAL_REMOVED));
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-            220
-          </td>
-          <td
-            className="diff-code diff-code-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            />
+            <td
+              className="diff-gutter diff-gutter-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              222
+            </td>
+            <td
+              className="diff-code diff-code-insert"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                      });
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-                      getStore(repository).update(pullRequest);
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          />
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              216
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              223
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                }
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-            221
-          </td>
-          <td
-            className="diff-code diff-code-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              217
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              224
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+               
+            </td>
+          </tr>
+          <tr
+            className="diff-line"
           >
-                      eventBus.post(new PullRequestApprovalEvent(repository, pullRequest, APPROVAL_REMOVED));
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          />
-          <td
-            className="diff-gutter diff-gutter-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            222
-          </td>
-          <td
-            className="diff-code diff-code-insert"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-                    });
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            216
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            223
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-              }
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            217
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            224
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-             
-          </td>
-        </tr>
-        <tr
-          className="diff-line"
-        >
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            218
-          </td>
-          <td
-            className="diff-gutter diff-gutter-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-            225
-          </td>
-          <td
-            className="diff-code diff-code-normal"
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-          >
-              @Override
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              218
+            </td>
+            <td
+              className="diff-gutter diff-gutter-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              225
+            </td>
+            <td
+              className="diff-code diff-code-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+                @Override
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 `;
 
 exports[`Storyshots Diff Line Annotation 1`] = `
-Array [
+<div
+  className="sc-kgAjT bdLeiW"
+>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -15552,15 +15760,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -16096,7 +16309,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -16134,15 +16347,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -16955,7 +17173,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -16993,15 +17211,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -17398,7 +17621,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -17436,15 +17659,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -17841,7 +18069,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -17879,15 +18107,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -18891,7 +19124,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -18929,15 +19162,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -19421,12 +19659,14 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Storyshots Diff OnClick 1`] = `
-Array [
+<div
+  className="sc-kgAjT bdLeiW"
+>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -19464,15 +19704,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -20036,7 +20281,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -20074,15 +20319,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -20945,7 +21195,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -20983,15 +21233,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -21418,7 +21673,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -21456,15 +21711,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -21891,7 +22151,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -21929,15 +22189,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -23017,7 +23282,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -23055,15 +23320,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -23571,12 +23841,14 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Storyshots Diff Side-By-Side 1`] = `
-Array [
+<div
+  className="sc-kgAjT bdLeiW"
+>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -23614,15 +23886,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.combined"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.combined"
               >
-                <i
-                  className="fas fa-align-left"
-                />
-              </a>
+                <a
+                  aria-label="diff.combined"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-align-left"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -24239,7 +24516,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -24277,15 +24554,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.combined"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.combined"
               >
-                <i
-                  className="fas fa-align-left"
-                />
-              </a>
+                <a
+                  aria-label="diff.combined"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-align-left"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -25176,7 +25458,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -25214,15 +25496,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.combined"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.combined"
               >
-                <i
-                  className="fas fa-align-left"
-                />
-              </a>
+                <a
+                  aria-label="diff.combined"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-align-left"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -25671,7 +25958,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -25709,15 +25996,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.combined"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.combined"
               >
-                <i
-                  className="fas fa-align-left"
-                />
-              </a>
+                <a
+                  aria-label="diff.combined"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-align-left"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -26166,7 +26458,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -26204,15 +26496,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.combined"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.combined"
               >
-                <i
-                  className="fas fa-align-left"
-                />
-              </a>
+                <a
+                  aria-label="diff.combined"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-align-left"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -27385,7 +27682,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -27423,15 +27720,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.combined"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.combined"
               >
-                <i
-                  className="fas fa-align-left"
-                />
-              </a>
+                <a
+                  aria-label="diff.combined"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-align-left"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -27976,12 +28278,14 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Storyshots Diff SyntaxHighlighting 1`] = `
-Array [
+<div
+  className="sc-kgAjT bdLeiW"
+>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -28019,15 +28323,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -28551,7 +28860,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -28589,15 +28898,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -29398,7 +29712,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -29436,15 +29750,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -29841,7 +30160,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -29879,15 +30198,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -30284,7 +30608,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -30322,15 +30646,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -31334,7 +31663,7 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
+  </div>
   <div
     className="sc-gqjmRU cXbxOb panel is-size-6"
   >
@@ -31372,15 +31701,20 @@ Array [
             <div
               className="control"
             >
-              <a
-                className="sc-gZMcBi dPTTFE button"
-                onClick={[Function]}
-                title="diff.sideBySide"
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="diff.sideBySide"
               >
-                <i
-                  className="fas fa-columns"
-                />
-              </a>
+                <a
+                  aria-label="diff.sideBySide"
+                  className="sc-gZMcBi dPTTFE button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </a>
+              </span>
             </div>
           </div>
         </div>
@@ -31852,8 +32186,8 @@ Array [
         </tbody>
       </table>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Storyshots Forms|Checkbox Default 1`] = `

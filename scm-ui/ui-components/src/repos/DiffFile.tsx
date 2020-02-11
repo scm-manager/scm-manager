@@ -253,7 +253,7 @@ class DiffFile extends React.Component<Props, State> {
           <ButtonGroup>
             <DiffButton
               icon={sideBySide ? "align-left" : "columns"}
-              title={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
+              tooltip={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
               onClick={this.toggleSideBySide}
             />
             {fileControls}

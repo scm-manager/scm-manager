@@ -10,10 +10,16 @@ import { DiffEventContext, File } from "./DiffTypes";
 import Toast from "../toast/Toast";
 import { getPath } from "./diffs";
 import DiffButton from "./DiffButton";
+import styled from "styled-components";
 
 const diffFiles = parser.parse(simpleDiff);
 
+const Container = styled.div`
+  padding: 2rem 6rem;
+`;
+
 storiesOf("Diff", module)
+  .addDecorator(storyFn => <Container>{storyFn()}</Container>)
   .add("Default", () => <Diff diff={diffFiles} />)
   .add("Side-By-Side", () => <Diff diff={diffFiles} sideBySide={true} />)
   .add("Collapsed", () => <Diff diff={diffFiles} defaultCollapse={true} />)
@@ -21,7 +27,11 @@ storiesOf("Diff", module)
     <Diff
       diff={diffFiles}
       fileControlFactory={() => (
-        <DiffButton title="Die!" icon="skull-crossbones" onClick={() => alert("Arrrgggghhhh ...")} />
+        <DiffButton
+          tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
+          icon="skull-crossbones"
+          onClick={() => alert("Arrrgggghhhh ...")}
+        />
       )}
     />
   ))
