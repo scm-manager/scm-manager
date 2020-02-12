@@ -26,6 +26,8 @@ import static se.jiderhamn.classloader.leak.prevention.cleanup.ShutdownHookClean
  */
 final class ClassLoaderLifeCycleWithLeakPrevention extends ClassLoaderLifeCycle {
 
+  public static final String NAME = "with-leak-prevention";
+
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderLifeCycleWithLeakPrevention.class);
 
   private Deque<ClassLoaderAndPreventor> classLoaders = new ArrayDeque<>();

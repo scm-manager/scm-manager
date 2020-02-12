@@ -734,10 +734,6 @@
                   <name>scm.stage</name>
                   <value>${scm.stage}</value>
                 </systemProperty>
-                <systemProperty>
-                  <name>sonia.scm.classloading.lifecycle</name>
-                  <value>simple</value>
-                </systemProperty>
               </systemProperties>
               <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
               <scanIntervalSeconds>0</scanIntervalSeconds>
@@ -822,10 +818,6 @@
                 <systemProperty>
                   <name>scm.home</name>
                   <value>target/scm-it</value>
-                </systemProperty>
-                <systemProperty>
-                  <name>sonia.scm.classloading.lifecycle</name>
-                  <value>simple</value>
                 </systemProperty>
               </systemProperties>
               <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>

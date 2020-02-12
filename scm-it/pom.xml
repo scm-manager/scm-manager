@@ -200,10 +200,6 @@
                   <name>java.awt.headless</name>
                   <value>true</value>
                 </systemProperty>
-                <systemProperty>
-                  <name>sonia.scm.classloading.lifecycle</name>
-                  <value>simple</value>
-                </systemProperty>
               </systemProperties>
               <webApp>
                 <contextPath>/scm</contextPath>

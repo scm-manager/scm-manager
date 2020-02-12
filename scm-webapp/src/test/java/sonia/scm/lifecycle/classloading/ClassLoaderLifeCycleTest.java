@@ -18,8 +18,19 @@ class ClassLoaderLifeCycleTest {
   }
 
   @Test
+  void shouldCreateWithLeakPreventionClassLoader() {
+    System.setProperty(ClassLoaderLifeCycle.PROPERTY, ClassLoaderLifeCycleWithLeakPrevention.NAME);
+    try {
+      ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
+      assertThat(classLoaderLifeCycle).isInstanceOf(ClassLoaderLifeCycleWithLeakPrevention.class);
+    } finally {
+      System.clearProperty(ClassLoaderLifeCycle.PROPERTY);
+    }
+  }
+
+  @Test
   void shouldCreateDefaultClassLoader() {
     ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
-    assertThat(classLoaderLifeCycle).isInstanceOf(ClassLoaderLifeCycleWithLeakPrevention.class);
+    assertThat(classLoaderLifeCycle).isInstanceOf(SimpleClassLoaderLifeCycle.class);
   }
 }

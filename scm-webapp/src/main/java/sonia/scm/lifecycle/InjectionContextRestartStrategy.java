@@ -11,6 +11,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Restart strategy which tries to free, every resource used by the context, starts gc and re initializes the context.
+ * <strong>Warning: </strong> This strategy should only be used with an classloader lifecycle which protects the
+ * created plugin classloader from classloader leaks.
  */
 class InjectionContextRestartStrategy implements RestartStrategy {
 
