@@ -1,0 +1,66 @@
+package sonia.scm.lifecycle;
+
+import com.google.common.base.Strings;
+import sonia.scm.PlatformType;
+import sonia.scm.util.SystemUtil;
+
+final class RestartStrategyFactory {
+
+  /**
+   * System property to load a specific restart strategy.
+   */
+  static final String PROPERTY_STRATEGY = "sonia.scm.lifecycle.restart-strategy";
+
+  /**
+   * No restart supported.
+   */
+  static final  String STRATEGY_NONE = "none";
+
+  private RestartStrategyFactory() {
+  }
+
+  /**
+   * Returns the configured strategy or {@code null} if restart is not supported.
+   *
+   * @param webAppClassLoader root webapp classloader
+   * @return configured strategy or {@code null}
+   */
+  static RestartStrategy create(ClassLoader webAppClassLoader) {
+    String property = System.getProperty(PROPERTY_STRATEGY);
+    if (Strings.isNullOrEmpty(property)) {
+      return forPlatform();
+    }
+    return fromProperty(webAppClassLoader, property);
+  }
+
+  private static RestartStrategy fromProperty(ClassLoader webAppClassLoader, String property) {
+    if (STRATEGY_NONE.equalsIgnoreCase(property)) {
+      return null;
+    } else if (ExitRestartStrategy.NAME.equalsIgnoreCase(property)) {
+      return new ExitRestartStrategy();
+    } else if (InjectionContextRestartStrategy.NAME.equalsIgnoreCase(property)) {
+      return new InjectionContextRestartStrategy(webAppClassLoader);
+    } else {
+      return fromClassName(property);
+    }
+  }
+
+  private static RestartStrategy fromClassName(String property) {
+    try {
+      Class<? extends RestartStrategy> rsClass = Class.forName(property).asSubclass(RestartStrategy.class);
+      return rsClass.getConstructor().newInstance();
+    } catch (Exception e) {
+      throw new RestartNotSupportedException("failed to create restart strategy from property", e);
+    }
+  }
+
+  private static RestartStrategy forPlatform() {
+    // we do not use SystemUtil here, to allow testing
+    String osName = System.getProperty(SystemUtil.PROPERTY_OSNAME);
+    PlatformType platform = PlatformType.createPlatformType(osName);
+    if (platform.isPosix()) {
+      return new PosixRestartStrategy();
+    }
+    return null;
+  }
+}

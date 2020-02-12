@@ -1,5 +1,7 @@
 package sonia.scm.lifecycle;
 
+import java.util.Optional;
+
 /**
  * Strategy for restarting SCM-Manager.
  */
@@ -13,6 +15,7 @@ public interface RestartStrategy {
      * Initialize the injection context.
      */
     void initialize();
+
     /**
      * Destroys the injection context.
      */
@@ -21,17 +24,19 @@ public interface RestartStrategy {
 
   /**
    * Restart SCM-Manager.
+   *
    * @param context injection context
    */
   void restart(InjectionContext context);
 
   /**
-   * Returns the configured strategy.
+   * Returns the configured strategy or empty if restart is not supported by the underlying platform.
    *
-   * @return configured strategy
+   * @param webAppClassLoader root webapp classloader
+   * @return configured strategy or empty optional
    */
-  static RestartStrategy get(ClassLoader webAppClassLoader) {
-    return new InjectionContextRestartStrategy(webAppClassLoader);
+  static Optional<RestartStrategy> get(ClassLoader webAppClassLoader) {
+    return Optional.ofNullable(RestartStrategyFactory.create(webAppClassLoader));
   }
 
 }

@@ -10,9 +10,11 @@ import sonia.scm.event.ShutdownEventBusEvent;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Restart strategy implementation which destroy the injection context and re initialize it.
+ * Restart strategy which tries to free, every resource used by the context, starts gc and re initializes the context.
  */
-public class InjectionContextRestartStrategy implements RestartStrategy {
+class InjectionContextRestartStrategy implements RestartStrategy {
+
+  static final String NAME = "context";
 
   private static final String DISABLE_RESTART_PROPERTY = "sonia.scm.restart.disable";
   private static final String WAIT_PROPERTY = "sonia.scm.restart.wait";

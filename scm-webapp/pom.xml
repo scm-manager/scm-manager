@@ -295,6 +295,20 @@
       <version>2.7.0</version>
     </dependency>
 
+    <!-- unix restart -->
+
+    <dependency>
+      <groupId>org.kohsuke</groupId>
+      <artifactId>akuma</artifactId>
+      <version>1.10</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna</artifactId>
+      <version>5.5.0</version>
+    </dependency>
+
     <!-- test scope -->
 
     <dependency>
