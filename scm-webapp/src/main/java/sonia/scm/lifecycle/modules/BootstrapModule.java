@@ -9,6 +9,8 @@ import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
+import sonia.scm.lifecycle.DefaultRestarter;
+import sonia.scm.lifecycle.Restarter;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.xml.MetadataStore;
@@ -60,6 +62,8 @@ public class BootstrapModule extends AbstractModule {
     bind(RepositoryLocationResolver.class).to(PathBasedRepositoryLocationResolver.class);
 
     bind(FileSystem.class, DefaultFileSystem.class);
+
+    bind(Restarter.class, DefaultRestarter.class);
 
     // note CipherUtil uses an other generator
     bind(CipherHandler.class).toInstance(CipherUtil.getInstance().getCipherHandler());
