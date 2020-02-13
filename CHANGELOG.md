@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade [Mockito](https://site.mockito.org/) to version 2.28.2 in order to fix tests on Java versions > 8  
 - Upgrade smp-maven-plugin to version 1.0.0-rc3
 
+### Fixed
+- Modification for mercurial repositories with enabled XSRF protection
+
 ## 2.0.0-rc3 - 2020-01-31
 ### Fixed
 - Broken plugin order fixed
