@@ -1,4 +1,4 @@
-FROM openjdk:8u171-alpine3.8
+FROM openjdk:8u212-alpine3.9
 
 ENV SCM_HOME=/var/lib/scm
 
