@@ -200,7 +200,7 @@ public class HgHookManager
   {
     AccessToken accessToken = accessTokenBuilderFactory.create().build();
 
-    return CipherUtil.getInstance().encode(accessToken.compact());
+    return accessToken.compact();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -279,7 +279,7 @@ public class HgHookManager
     //J-
     return HttpUtil.getUriWithoutEndSeperator(
       MoreObjects.firstNonNull(
-        configuration.getBaseUrl(), 
+        configuration.getBaseUrl(),
         "http://localhost:8080/scm"
       )
     ).concat("/hook/hg/");

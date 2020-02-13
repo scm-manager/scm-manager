@@ -36,8 +36,11 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.ProvisionException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.security.CipherUtil;
 import sonia.scm.web.HgUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,6 +67,8 @@ public final class HgEnvironment
   private static final String ENV_URL = "SCM_URL";
 
   private static final String SCM_BEARER_TOKEN = "SCM_BEARER_TOKEN";
+
+  private static final String SCM_XSRF = "SCM_XSRF";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -115,12 +120,25 @@ public final class HgEnvironment
 
     try {
       String credentials = hookManager.getCredentials();
-      environment.put(SCM_BEARER_TOKEN, credentials);
+      environment.put(SCM_BEARER_TOKEN, CipherUtil.getInstance().encode(credentials));
+      extractXsrfKey(environment, credentials);
     } catch (ProvisionException e) {
       LOG.debug("could not create bearer token; looks like currently we are not in a request; probably you can ignore the following exception:", e);
     }
     environment.put(ENV_PYTHON_PATH, HgUtil.getPythonPath(handler.getConfig()));
     environment.put(ENV_URL, hookUrl);
     environment.put(ENV_CHALLENGE, hookManager.getChallenge());
+  }
+
+  private static void extractXsrfKey(Map<String, String> environment, String credentials) {
+    // we need to remove the signature, because we cannot access the key and otherwise the parser would fail
+    String[] tokenParts = credentials.split("\\.");
+    String tokenWithoutSignature = tokenParts[0] + "." + tokenParts[1] + ".";
+    Claims claims = (Claims) Jwts.parser().parse(tokenWithoutSignature).getBody();
+
+    Object xsrf = claims.get("xsrf");
+    if (xsrf != null) {
+      environment.put(SCM_XSRF, xsrf.toString());
+    }
   }
 }
