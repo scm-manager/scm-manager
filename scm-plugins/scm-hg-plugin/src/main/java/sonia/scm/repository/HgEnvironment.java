@@ -139,6 +139,8 @@ public final class HgEnvironment
     Object xsrf = claims.get("xsrf");
     if (xsrf != null) {
       environment.put(SCM_XSRF, xsrf.toString());
+    } else {
+      environment.put(SCM_XSRF, "-");
     }
   }
 }
