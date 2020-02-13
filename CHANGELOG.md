@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.0.0-rc3 - 2020-01-31
 ### Fixed
 - Broken plugin order fixed
+- MarkdownViewer in code section renders markdown properly
 
 ## 2.0.0-rc2 - 2020-01-29
 ### Added

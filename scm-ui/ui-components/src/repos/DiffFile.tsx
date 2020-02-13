@@ -4,7 +4,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 // @ts-ignore
 import { Decoration, getChangeKey, Hunk } from "react-diff-view";
-import { Button, ButtonGroup } from "../buttons";
+import { ButtonGroup } from "../buttons";
 import Tag from "../Tag";
 import Icon from "../Icon";
 import { Change, ChangeEvent, DiffObjectProps, File, Hunk as HunkType } from "./DiffTypes";
@@ -70,6 +70,14 @@ class DiffFile extends React.Component<Props, State> {
       collapsed: this.defaultCollapse(),
       sideBySide: props.sideBySide
     };
+  }
+
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any): void {
+    if (this.props.defaultCollapse !== prevProps.defaultCollapse) {
+      this.setState({
+        collapsed: this.defaultCollapse()
+      });
+    }
   }
 
   defaultCollapse: () => boolean = () => {
