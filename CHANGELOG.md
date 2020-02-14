@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.0.0-rc4 - 2020-02-14
 ### Added
 - Support for Java versions > 8
 - Simple ClassLoaderLifeCycle to fix integration tests on Java > 8
@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade [Lombok](https://projectlombok.org/) to version 1.18.10 in order to fix build on Java versions > 8
 - Upgrade [Mockito](https://site.mockito.org/) to version 2.28.2 in order to fix tests on Java versions > 8  
 - Upgrade smp-maven-plugin to version 1.0.0-rc3
+
+### Fixed
+- Committer of new Git commits set to "SCM-Manager <noreply@scm-manager.org>"
 
 ## 2.0.0-rc3 - 2020-01-31
 ### Fixed
