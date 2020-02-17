@@ -481,7 +481,6 @@
       <plugin>
         <groupId>io.openapitools.swagger</groupId>
         <artifactId>swagger-maven-plugin</artifactId>
-        <version>2.1.2</version>
         <configuration>
           <resourcePackages>
             <resourcePackage>sonia.scm.api.v2.resources</resourcePackage>
