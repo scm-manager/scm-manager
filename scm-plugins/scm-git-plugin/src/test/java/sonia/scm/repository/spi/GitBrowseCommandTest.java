@@ -236,6 +236,19 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
       .containsExactly(of(42L));
   }
 
+  @Test
+  public void testBrowseLimit() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(2);
+    FileObject root = createCommand()
+      .getBrowserResult(request).getFile();
+    assertNotNull(root);
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList).hasSize(2);
+  }
+
   private FileObject findFile(Collection<FileObject> foList, String name) {
     return foList.stream()
       .filter(f -> name.equals(f.getName()))

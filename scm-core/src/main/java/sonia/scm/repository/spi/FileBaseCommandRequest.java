@@ -147,6 +147,10 @@ public abstract class FileBaseCommandRequest
     this.revision = revision;
   }
 
+  public void setLimit(int limit) {
+    this.limit = limit;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -169,6 +173,10 @@ public abstract class FileBaseCommandRequest
   public String getRevision()
   {
     return revision;
+  }
+
+  public int getLimit() {
+    return limit;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -208,4 +216,6 @@ public abstract class FileBaseCommandRequest
 
   /** Field description */
   private String revision;
+
+  private int limit;
 }

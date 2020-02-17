@@ -300,6 +300,18 @@ public final class BrowseCommandBuilder
     return this;
   }
 
+  /**
+   * Limit the number of result files to <code>limit</code> entries.
+   *
+   * @param limit The maximal number of files this request shall return.
+   *
+   * @since 2.0.0
+   */
+  public BrowseCommandBuilder setLimit(int limit) {
+    request.setLimit(limit);
+    return this;
+  }
+
   private void updateCache(BrowserResult updatedResult) {
     if (!disableCache) {
       CacheKey key = new CacheKey(repository, request);

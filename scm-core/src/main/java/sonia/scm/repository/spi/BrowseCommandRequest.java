@@ -191,6 +191,17 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
     this.recursive = recursive;
   }
 
+  /**
+   * Limit the number of result files to <code>limit</code> entries.
+   *
+   * @param limit The maximal number of files this request shall return.
+   *
+   * @since 2.0.0
+   */
+  public void setLimit(int limit) {
+    this.limit = limit;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -232,6 +243,15 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
     return recursive;
   }
 
+  /**
+   * Returns the limit for the number of result files.
+   *
+   * @since 2.0.0
+   */
+  public int getLimit() {
+    return limit;
+  }
+
   public void updateCache(BrowserResult update) {
     if (updater != null) {
       updater.accept(update);
@@ -248,6 +268,10 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
 
   /** browse file objects recursive */
   private boolean recursive = false;
+
+
+  /** Limit the number of result files to <code>limit</code> entries. */
+  private int limit = 1000;
 
   // WARNING / TODO: This field creates a reverse channel from the implementation to the API. This will break
   // whenever the API runs in a different process than the SPI (for example to run explicit hosts for git repositories).
