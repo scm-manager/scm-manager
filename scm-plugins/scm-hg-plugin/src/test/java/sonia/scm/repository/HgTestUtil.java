@@ -38,6 +38,7 @@ package sonia.scm.repository;
 import org.junit.Assume;
 import sonia.scm.SCMContext;
 import sonia.scm.TempDirRepositoryLocationResolver;
+import sonia.scm.security.AccessToken;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -107,7 +108,6 @@ public final class HgTestUtil
     RepositoryLocationResolver repositoryLocationResolver = new TempDirRepositoryLocationResolver(directory);
     HgRepositoryHandler handler =
       new HgRepositoryHandler(new InMemoryConfigurationStoreFactory(), new HgContextProvider(), repositoryLocationResolver, null, null);
-    Path repoDir = directory.toPath();
     handler.init(context);
 
     return handler;
@@ -128,7 +128,9 @@ public final class HgTestUtil
       "http://localhost:8081/scm/hook/hg/");
     when(hookManager.createUrl(any(HttpServletRequest.class))).thenReturn(
       "http://localhost:8081/scm/hook/hg/");
-    when(hookManager.getCredentials()).thenReturn("");
+    AccessToken accessToken = mock(AccessToken.class);
+    when(accessToken.compact()).thenReturn("");
+    when(hookManager.getAccessToken()).thenReturn(accessToken);
 
     return hookManager;
   }

@@ -36,11 +36,11 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.ProvisionException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.security.AccessToken;
 import sonia.scm.security.CipherUtil;
+import sonia.scm.security.Xsrf;
 import sonia.scm.web.HgUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -119,9 +119,9 @@ public final class HgEnvironment
     }
 
     try {
-      String credentials = hookManager.getCredentials();
-      environment.put(SCM_BEARER_TOKEN, CipherUtil.getInstance().encode(credentials));
-      extractXsrfKey(environment, credentials);
+      AccessToken accessToken = hookManager.getAccessToken();
+      environment.put(SCM_BEARER_TOKEN, CipherUtil.getInstance().encode(accessToken.compact()));
+      extractXsrfKey(environment, accessToken);
     } catch (ProvisionException e) {
       LOG.debug("could not create bearer token; looks like currently we are not in a request; probably you can ignore the following exception:", e);
     }
@@ -130,17 +130,7 @@ public final class HgEnvironment
     environment.put(ENV_CHALLENGE, hookManager.getChallenge());
   }
 
-  private static void extractXsrfKey(Map<String, String> environment, String credentials) {
-    // we need to remove the signature, because we cannot access the key and otherwise the parser would fail
-    String[] tokenParts = credentials.split("\\.");
-    String tokenWithoutSignature = tokenParts[0] + "." + tokenParts[1] + ".";
-    Claims claims = (Claims) Jwts.parser().parse(tokenWithoutSignature).getBody();
-
-    Object xsrf = claims.get("xsrf");
-    if (xsrf != null) {
-      environment.put(SCM_XSRF, xsrf.toString());
-    } else {
-      environment.put(SCM_XSRF, "-");
-    }
+  private static void extractXsrfKey(Map<String, String> environment, AccessToken accessToken) {
+    environment.put(SCM_XSRF, accessToken.<String>getCustom(Xsrf.TOKEN_KEY).orElse("-"));
   }
 }
