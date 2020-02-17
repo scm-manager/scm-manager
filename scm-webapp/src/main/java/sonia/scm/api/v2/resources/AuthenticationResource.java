@@ -3,6 +3,10 @@ package sonia.scm.api.v2.resources;
 import com.google.inject.Inject;
 import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.security.SecuritySchemes;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
@@ -19,6 +23,22 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Optional;
 
+@SecuritySchemes({
+  @SecurityScheme(
+    name = "Basic Authentication",
+    description = "HTTP Basic authentication with username and password",
+    scheme = "Basic",
+    type = SecuritySchemeType.HTTP
+  ),
+  @SecurityScheme(
+    name = "Bearer Token Authentication",
+    in = SecuritySchemeIn.HEADER,
+    paramName = "Authorization",
+    scheme = "Bearer",
+    bearerFormat = "JWT",
+    type = SecuritySchemeType.APIKEY
+  )
+})
 @Path(AuthenticationResource.PATH)
 @AllowAnonymousAccess
 public class AuthenticationResource {

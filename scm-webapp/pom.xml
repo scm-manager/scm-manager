@@ -426,6 +426,13 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-annotations</artifactId>
+      <version>2.1.1</version>
+      <scope>provided</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -472,6 +479,50 @@
       </plugin>
 
       <plugin>
+        <groupId>io.openapitools.swagger</groupId>
+        <artifactId>swagger-maven-plugin</artifactId>
+        <version>2.1.2</version>
+        <configuration>
+          <resourcePackages>
+            <resourcePackage>sonia.scm.api.v2.resources</resourcePackage>
+          </resourcePackages>
+          <outputDirectory>${basedir}/target/openapi/META-INF/scm</outputDirectory>
+          <outputFilename>openapi</outputFilename>
+          <outputFormats>JSON,YAML</outputFormats>
+          <prettyPrint>true</prettyPrint>
+          <swaggerConfig>
+            <servers>
+              <server>
+                <url>http://localhost:8081/scm/api</url>
+                <description>local endpoint url</description>
+              </server>
+            </servers>
+            <info>
+              <title>SCM-Manager REST-API</title>
+              <version>${project.version}</version>
+              <contact>
+                <email>scmmanager@googlegroups.com</email>
+                <name>SCM-Manager</name>
+                <url>https://scm-manager.org</url>
+              </contact>
+              <license>
+                <url>http://www.opensource.org/licenses/bsd-license.php</url>
+                <name>BSD</name>
+              </license>
+            </info>
+            <descriptionFile>src/main/doc/openapi.md</descriptionFile>
+          </swaggerConfig>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>sonia.scm.maven</groupId>
         <artifactId>smp-maven-plugin</artifactId>
         <configuration>
@@ -511,9 +562,15 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
-        <version>2.2</version>
+        <version>3.1.0</version>
         <configuration>
           <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+          <webResources>
+            <resource>
+              <directory>target/openapi</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+            </resource>
+          </webResources>
         </configuration>
       </plugin>
 
