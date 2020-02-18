@@ -199,6 +199,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
     Collection<FileObject> foList = result.getFile().getChildren();
 
     assertThat(foList).extracting("name").containsExactlyInAnyOrder("a.txt");
+    assertThat(result.getFile().isTruncated()).isTrue();
   }
 
   @Test

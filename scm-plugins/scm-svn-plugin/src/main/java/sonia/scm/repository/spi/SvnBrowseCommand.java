@@ -143,6 +143,9 @@ public class SvnBrowseCommand extends AbstractSvnCommand
         traverse(svnRepository, revisionNumber, request, child, createBasePath(child.getPath()));
       }
     }
+    if (resultCount >= request.getLimit() + request.getProceedFrom()) {
+      parent.setTruncated(true);
+    }
   }
 
   private String createBasePath(String path)
