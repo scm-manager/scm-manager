@@ -191,6 +191,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     Collection<FileObject> foList = root.getChildren();
 
     assertThat(foList).extracting("name").containsExactlyInAnyOrder("a.txt", "b.txt");
+    assertThat(root.isTruncated()).isTrue();
   }
 
   @Test
@@ -205,6 +206,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     Collection<FileObject> foList = root.getChildren();
 
     assertThat(foList).extracting("name").containsExactlyInAnyOrder("c", "f.txt");
+    assertThat(root.isTruncated()).isFalse();
   }
 
   //~--- get methods ----------------------------------------------------------

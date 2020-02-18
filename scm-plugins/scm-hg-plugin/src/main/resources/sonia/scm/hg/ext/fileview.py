@@ -249,6 +249,15 @@ class File_Printer:
     self.result_count += 1
     return self.result_count == 0 or self.proceedFrom < self.result_count <= self.limit + self.proceedFrom
 
+  def isTruncated(self):
+    return self.result_count > self.limit + self.proceedFrom
+
+  def finish(self):
+    if self.isTruncated():
+      if self.transport:
+        self.ui.write( "t")
+      else:
+        self.ui.write("truncated")
 
 class File_Viewer:
   def __init__(self, revCtx, visitor):
@@ -297,3 +306,4 @@ def fileview(ui, repo, **opts):
   viewer.recursive = opts["recursive"]
   viewer.sub_repositories = subrepos
   viewer.view(opts["path"])
+  printer.finish()

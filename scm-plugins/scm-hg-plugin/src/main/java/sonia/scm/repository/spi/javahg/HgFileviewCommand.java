@@ -60,6 +60,7 @@ import java.util.LinkedList;
 public class HgFileviewCommand extends AbstractCommand
 {
 
+  public static final char TRUNCATED_MARK = 't';
   private boolean disableLastCommit = false;
 
   private HgFileviewCommand(Repository repository)
@@ -186,7 +187,7 @@ public class HgFileviewCommand extends AbstractCommand
     HgInputStream stream = launchStream();
 
     FileObject last = null;
-    while (stream.peek() != -1) {
+    while (stream.peek() != -1 && stream.peek() != TRUNCATED_MARK) {
       FileObject file = read(stream);
 
       while (!stack.isEmpty()) {
@@ -210,6 +211,9 @@ public class HgFileviewCommand extends AbstractCommand
       return last;
     } else {
       // if the stack is not empty, the requested path is a directory
+      if (stream.read() == TRUNCATED_MARK) {
+        stack.getLast().setTruncated(true);
+      }
       return stack.getLast();
     }
   }
