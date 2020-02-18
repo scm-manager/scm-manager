@@ -49,7 +49,8 @@ import java.util.function.Consumer;
 public final class BrowseCommandRequest extends FileBaseCommandRequest
 {
 
-  /** Field description */
+  public static final int DEFAULT_REQUEST_LIMIT = 1000;
+
   private static final long serialVersionUID = 7956624623516803183L;
 
   public BrowseCommandRequest() {
@@ -271,7 +272,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
 
 
   /** Limit the number of result files to <code>limit</code> entries. */
-  private int limit = 1000;
+  private int limit = DEFAULT_REQUEST_LIMIT;
 
   // WARNING / TODO: This field creates a reverse channel from the implementation to the API. This will break
   // whenever the API runs in a different process than the SPI (for example to run explicit hosts for git repositories).

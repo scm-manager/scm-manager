@@ -301,7 +301,10 @@ public final class BrowseCommandBuilder
   }
 
   /**
-   * Limit the number of result files to <code>limit</code> entries.
+   * Limit the number of result files to <code>limit</code> entries. By default this is set to
+   * {@value BrowseCommandRequest#DEFAULT_REQUEST_LIMIT}. Be aware that this parameter can have
+   * severe performance implications. Reading a repository with thousands of files in one folder
+   * can generate a huge load for a longer time.
    *
    * @param limit The maximal number of files this request shall return.
    *
