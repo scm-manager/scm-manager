@@ -249,6 +249,20 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     assertThat(foList).hasSize(2);
   }
 
+  @Test
+  public void testBrowseProceedFrom() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(2);
+    request.setProceedFrom(2);
+    FileObject root = createCommand()
+      .getBrowserResult(request).getFile();
+    assertNotNull(root);
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList).extracting("name").contains("c", "f.txt");
+  }
+
   private FileObject findFile(Collection<FileObject> foList, String name) {
     return foList.stream()
       .filter(f -> name.equals(f.getName()))

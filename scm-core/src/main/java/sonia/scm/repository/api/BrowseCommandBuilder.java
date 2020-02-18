@@ -315,6 +315,18 @@ public final class BrowseCommandBuilder
     return this;
   }
 
+  /**
+   * Proceed the list from the given number on (zero based).
+   *
+   * @param proceedFrom The number of the entry, the result should start with (zero based).
+   *                    All preceding entries will be omitted.
+   * @since 2.0.0
+   */
+  public BrowseCommandBuilder setProceedFrom(int proceedFrom) {
+    request.setProceedFrom(proceedFrom);
+    return this;
+  }
+
   private void updateCache(BrowserResult updatedResult) {
     if (!disableCache) {
       CacheKey key = new CacheKey(repository, request);

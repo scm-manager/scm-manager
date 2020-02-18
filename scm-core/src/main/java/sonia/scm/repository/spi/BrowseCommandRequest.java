@@ -52,6 +52,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
   public static final int DEFAULT_REQUEST_LIMIT = 1000;
 
   private static final long serialVersionUID = 7956624623516803183L;
+  private int proceedFrom;
 
   public BrowseCommandRequest() {
     this(null);
@@ -203,6 +204,17 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
     this.limit = limit;
   }
 
+  /**
+   * Proceed the list from the given number on (zero based).
+   *
+   * @param proceedFrom The number of the entry, the result should start with (zero based).
+   *                    All preceding entries will be omitted.
+   * @since 2.0.0
+   */
+  public void setProceedFrom(int proceedFrom) {
+    this.proceedFrom = proceedFrom;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -251,6 +263,15 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
    */
   public int getLimit() {
     return limit;
+  }
+
+  /**
+   * The number of the entry, the result start with. All preceding entries will be omitted.
+   *
+   * @since 2.0.0
+   */
+  public int getProceedFrom() {
+    return proceedFrom;
   }
 
   public void updateCache(BrowserResult update) {
