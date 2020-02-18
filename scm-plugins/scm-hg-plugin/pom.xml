@@ -28,18 +28,6 @@
       </exclusions>
     </dependency>
 
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-impl</artifactId>
-      <version>0.10.5</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-jackson</artifactId>
-      <version>0.10.5</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <build>
