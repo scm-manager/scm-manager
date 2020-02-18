@@ -72,6 +72,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     BrowserResult result = createCommand().getBrowserResult(request);
     FileObject fileObject = result.getFile();
     assertEquals("a.txt", fileObject.getName());
+    assertFalse(fileObject.isTruncated());
   }
 
   @Test
@@ -247,6 +248,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     Collection<FileObject> foList = root.getChildren();
 
     assertThat(foList).hasSize(2);
+    assertTrue(root.isTruncated());
   }
 
   @Test
@@ -261,6 +263,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     Collection<FileObject> foList = root.getChildren();
 
     assertThat(foList).extracting("name").contains("c", "f.txt");
+    assertFalse(root.isTruncated());
   }
 
   private FileObject findFile(Collection<FileObject> foList, String name) {

@@ -87,7 +87,7 @@ public class FileObject implements LastModifiedAware, Serializable
     final FileObject other = (FileObject) obj;
 
     //J-
-    return Objects.equal(name, other.name) 
+    return Objects.equal(name, other.name)
            && Objects.equal(path, other.path)
            && Objects.equal(directory, other.directory)
            && Objects.equal(description, other.description)
@@ -282,6 +282,10 @@ public class FileObject implements LastModifiedAware, Serializable
     return computationAborted;
   }
 
+  public boolean isTruncated() {
+    return truncated;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -403,6 +407,10 @@ public class FileObject implements LastModifiedAware, Serializable
     this.children.add(child);
   }
 
+  public void setTruncated(boolean truncated) {
+    this.truncated = truncated;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** file description */
@@ -435,4 +443,6 @@ public class FileObject implements LastModifiedAware, Serializable
 
   /** Children of this file (aka directory). */
   private Collection<FileObject> children = new ArrayList<>();
+
+  private boolean truncated;
 }
