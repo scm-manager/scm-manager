@@ -40,10 +40,10 @@ import sonia.scm.repository.FileObject;
 import java.io.IOException;
 import java.util.Collection;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -65,7 +65,17 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
   @Test
   public void testBrowse() {
-    Collection<FileObject> foList = getRootFromTip(new BrowseCommandRequest());
+    BrowserResult result = createCommand().getBrowserResult(new BrowseCommandRequest());
+
+    assertNotNull(result);
+
+    Collection<FileObject> foList1 = result.getFile().getChildren();
+
+    assertNotNull(foList1);
+    assertFalse(foList1.isEmpty());
+    assertEquals(2, foList1.size());
+
+    Collection<FileObject> foList = foList1;
 
     FileObject a = getFileObject(foList, "a.txt");
     FileObject c = getFileObject(foList, "c");
@@ -140,14 +150,24 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     request.setDisableLastCommit(true);
 
-    Collection<FileObject> foList = getRootFromTip(request);
+    BrowserResult result = createCommand().getBrowserResult(request);
+
+    assertNotNull(result);
+
+    Collection<FileObject> foList1 = result.getFile().getChildren();
+
+    assertNotNull(foList1);
+    assertFalse(foList1.isEmpty());
+    assertEquals(2, foList1.size());
+
+    Collection<FileObject> foList = foList1;
 
     FileObject a = getFileObject(foList, "a.txt");
 
     assertFalse(a.getDescription().isPresent());
     assertFalse(a.getCommitDate().isPresent());
   }
-  
+
   @Test
   public void testRecursive() {
     BrowseCommandRequest request = new BrowseCommandRequest();
@@ -166,6 +186,32 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
     assertEquals("c", c.getName());
     assertTrue(c.isDirectory());
     assertEquals(2, c.getChildren().size());
+  }
+
+  @Test
+  public void testLimit() {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(1);
+    BrowserResult result = createCommand().getBrowserResult(request);
+
+    assertNotNull(result);
+
+    Collection<FileObject> foList = result.getFile().getChildren();
+
+    assertThat(foList).extracting("name").containsExactlyInAnyOrder("a.txt");
+  }
+
+  @Test
+  public void testProceedFrom() {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setProceedFrom(1);
+    BrowserResult result = createCommand().getBrowserResult(request);
+
+    assertNotNull(result);
+
+    Collection<FileObject> foList = result.getFile().getChildren();
+
+    assertThat(foList).extracting("name").containsExactlyInAnyOrder("c");
   }
 
   /**
@@ -198,17 +244,4 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
       .orElseThrow(() -> new AssertionError("file " + name + " not found"));
   }
 
-  private Collection<FileObject> getRootFromTip(BrowseCommandRequest request) {
-    BrowserResult result = createCommand().getBrowserResult(request);
-
-    assertNotNull(result);
-
-    Collection<FileObject> foList = result.getFile().getChildren();
-
-    assertNotNull(foList);
-    assertFalse(foList.isEmpty());
-    assertEquals(2, foList.size());
-
-    return foList;
-  }
 }

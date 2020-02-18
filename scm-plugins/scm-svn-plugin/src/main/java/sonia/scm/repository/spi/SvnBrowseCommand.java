@@ -52,6 +52,7 @@ import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.Util;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import static org.tmatesoft.svn.core.SVNErrorCode.FS_NO_SUCH_REVISION;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -72,6 +73,8 @@ public class SvnBrowseCommand extends AbstractSvnCommand
    */
   private static final Logger logger =
     LoggerFactory.getLogger(SvnBrowseCommand.class);
+
+  private int resultCount = 0;
 
   SvnBrowseCommand(SvnContext context, Repository repository)
   {
@@ -128,11 +131,13 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     throws SVNException
   {
     Collection<SVNDirEntry> entries = svnRepository.getDir(parent.getPath(), revisionNumber, null, (Collection) null);
-    for (SVNDirEntry entry : entries)
-    {
+    for (Iterator<SVNDirEntry> iterator = entries.iterator(); resultCount < request.getLimit() + request.getProceedFrom() && iterator.hasNext(); ++resultCount) {
+      SVNDirEntry entry = iterator.next();
       FileObject child = createFileObject(request, svnRepository, revisionNumber, entry, basePath);
 
-      parent.addChild(child);
+      if (resultCount >= request.getProceedFrom()) {
+        parent.addChild(child);
+      }
 
       if (child.isDirectory() && request.isRecursive()) {
         traverse(svnRepository, revisionNumber, request, child, createBasePath(child.getPath()));
