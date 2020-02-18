@@ -197,37 +197,43 @@ def collect_sub_repositories(revCtx):
 
 class File_Printer:
 
-  def __init__(self, ui, repo, revCtx, disableLastCommit, transport):
+  def __init__(self, ui, repo, revCtx, disableLastCommit, transport, limit, proceedFrom):
     self.ui = ui
     self.repo = repo
     self.revCtx = revCtx
     self.disableLastCommit = disableLastCommit
     self.transport = transport
+    self.result_count = -1
+    self.limit = limit
+    self.proceedFrom = proceedFrom
 
   def print_directory(self, path):
-    format = '%s/\n'
-    if self.transport:
-        format = 'd%s/\0'
-    self.ui.write( format % path)
+    if self.shouldPrintResult():
+      format = '%s/\n'
+      if self.transport:
+          format = 'd%s/\0'
+      self.ui.write( format % path)
 
   def print_file(self, path):
-    file = self.revCtx[path]
-    date = '0 0'
-    description = 'n/a'
-    if not self.disableLastCommit:
-      linkrev = self.repo[file.linkrev()]
-      date = '%d %d' % _parsedate(linkrev.date())
-      description = linkrev.description()
-    format = '%s %i %s %s\n'
-    if self.transport:
-      format = 'f%s\n%i %s %s\0'
-    self.ui.write( format % (file.path(), file.size(), date, description) )
+    if self.shouldPrintResult():
+      file = self.revCtx[path]
+      date = '0 0'
+      description = 'n/a'
+      if not self.disableLastCommit:
+        linkrev = self.repo[file.linkrev()]
+        date = '%d %d' % _parsedate(linkrev.date())
+        description = linkrev.description()
+      format = '%s %i %s %s\n'
+      if self.transport:
+        format = 'f%s\n%i %s %s\0'
+      self.ui.write( format % (file.path(), file.size(), date, description) )
 
   def print_sub_repository(self, path, subrepo):
-    format = '%s/ %s %s\n'
-    if self.transport:
-      format = 's%s/\n%s %s\0'
-    self.ui.write( format % (path, subrepo.revision, subrepo.url))
+    if self.shouldPrintResult():
+      format = '%s/ %s %s\n'
+      if self.transport:
+        format = 's%s/\n%s %s\0'
+      self.ui.write( format % (path, subrepo.revision, subrepo.url))
 
   def visit(self, file):
     if file.sub_repository:
@@ -236,6 +242,13 @@ class File_Printer:
       self.print_directory(file.path)
     else:
       self.print_file(file.path)
+
+  def shouldPrintResult(self):
+    # The first result is the selected path (or root if not specified). This
+    # always has to be printed. Therefore we start counting with -1.
+    self.result_count += 1
+    return self.result_count == 0 or self.proceedFrom < self.result_count <= self.limit + self.proceedFrom
+
 
 class File_Viewer:
   def __init__(self, revCtx, visitor):
@@ -271,13 +284,15 @@ class File_Viewer:
     ('d', 'disableLastCommit', False, 'disables last commit description and date'),
     ('s', 'disableSubRepositoryDetection', False, 'disables detection of sub repositories'),
     ('t', 'transport', False, 'format the output for command server'),
+    ('l', 'limit', 1000, 'limit the number of results'),
+    ('f', 'proceedFrom', 0, 'proceed from the given result number (zero based)'),
   ])
 def fileview(ui, repo, **opts):
   revCtx = scmutil.revsingle(repo, opts["revision"])
   subrepos = {}
   if not opts["disableSubRepositoryDetection"]:
     subrepos = collect_sub_repositories(revCtx)
-  printer = File_Printer(ui, repo, revCtx, opts["disableLastCommit"], opts["transport"])
+  printer = File_Printer(ui, repo, revCtx, opts["disableLastCommit"], opts["transport"], opts["limit"], opts["proceedFrom"])
   viewer = File_Viewer(revCtx, printer)
   viewer.recursive = opts["recursive"]
   viewer.sub_repositories = subrepos

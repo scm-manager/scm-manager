@@ -45,7 +45,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -179,6 +178,33 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     FileObject c = getFileObject(foList, "c");
     assertTrue(c.isDirectory());
     assertEquals(2, c.getChildren().size());
+  }
+
+  @Test
+  public void testLimit() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(2);
+
+    BrowserResult result = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request);
+    FileObject root = result.getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList).extracting("name").containsExactlyInAnyOrder("a.txt", "b.txt");
+  }
+
+  @Test
+  public void testProceedFrom() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(2);
+    request.setProceedFrom(2);
+
+    BrowserResult result = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request);
+    FileObject root = result.getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList).extracting("name").containsExactlyInAnyOrder("c", "f.txt");
   }
 
   //~--- get methods ----------------------------------------------------------

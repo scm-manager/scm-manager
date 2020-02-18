@@ -142,6 +142,35 @@ public class HgFileviewCommand extends AbstractCommand
   }
 
   /**
+   * Limit the number of result files to <code>limit</code> entries.
+   *
+   * @param limit The maximal number of files this request shall return.
+   *
+   * @return {@code this}
+   * @since 2.0.0
+   */
+  public HgFileviewCommand setLimit(int limit) {
+    cmdAppend("-l", limit);
+
+    return this;
+  }
+
+  /**
+   * Proceed the list from the given number on (zero based).
+   *
+   * @param proceedFrom The number of the entry, the result should start with (zero based).
+   *                    All preceding entries will be omitted.
+   *
+   * @return {@code this}
+   * @since 2.0.0
+   */
+  public HgFileviewCommand setProceedFrom(int proceedFrom) {
+    cmdAppend("-f", proceedFrom);
+
+    return this;
+  }
+
+  /**
    * Executes the mercurial command and parses the output.
    *
    * @return file object
@@ -294,5 +323,4 @@ public class HgFileviewCommand extends AbstractCommand
   {
     return HgFileviewExtension.NAME;
   }
-
 }
