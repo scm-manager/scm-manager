@@ -9,6 +9,7 @@ import { File, Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
 import { fetchSources, getFetchSourcesFailure, getSources, isFetchSourcesPending } from "../modules/sources";
 import FileTreeLeaf from "./FileTreeLeaf";
+import queryString from "query-string";
 
 type Props = WithTranslation & {
   loading: boolean;
@@ -18,6 +19,7 @@ type Props = WithTranslation & {
   revision: string;
   path: string;
   baseUrl: string;
+  location: any;
 
   updateSources: () => void;
 
@@ -85,7 +87,7 @@ class FileTree extends React.Component<Props, State> {
   }
 
   renderSourcesTable() {
-    const { tree, revision, path, baseUrl, t } = this.props;
+    const { tree, revision, path, baseUrl, t, location } = this.props;
 
     const files = [];
 
@@ -119,6 +121,7 @@ class FileTree extends React.Component<Props, State> {
     }
 
     if (files && files.length > 0) {
+
       let baseUrlWithRevision = baseUrl;
       if (revision) {
         baseUrlWithRevision += "/" + encodeURIComponent(revision);
@@ -126,24 +129,32 @@ class FileTree extends React.Component<Props, State> {
         baseUrlWithRevision += "/" + encodeURIComponent(tree.revision);
       }
 
+      const proceedFrom = queryString.parse(location.search).proceedFrom;
+      if (proceedFrom) {
+        baseUrlWithRevision += "?proceedFrom=" + proceedFrom;
+      }
+
       return (
-        <table className="table table-hover table-sm is-fullwidth">
-          <thead>
-            <tr>
-              <FixedWidthTh />
-              <th>{t("sources.file-tree.name")}</th>
-              <th className="is-hidden-mobile">{t("sources.file-tree.length")}</th>
-              <th className="is-hidden-mobile">{t("sources.file-tree.commitDate")}</th>
-              <th className="is-hidden-touch">{t("sources.file-tree.description")}</th>
-              {binder.hasExtension("repos.sources.tree.row.right") && <th className="is-hidden-mobile" />}
-            </tr>
-          </thead>
-          <tbody>
-            {files.map(file => (
-              <FileTreeLeaf key={file.name} file={file} baseUrl={baseUrlWithRevision} />
-            ))}
-          </tbody>
-        </table>
+        <>
+          <table className="table table-hover table-sm is-fullwidth">
+            <thead>
+              <tr>
+                <FixedWidthTh />
+                <th>{t("sources.file-tree.name")}</th>
+                <th className="is-hidden-mobile">{t("sources.file-tree.length")}</th>
+                <th className="is-hidden-mobile">{t("sources.file-tree.commitDate")}</th>
+                <th className="is-hidden-touch">{t("sources.file-tree.description")}</th>
+                {binder.hasExtension("repos.sources.tree.row.right") && <th className="is-hidden-mobile" />}
+              </tr>
+            </thead>
+            <tbody>
+              {files.map((file: any) => (
+                <FileTreeLeaf key={file.name} file={file} baseUrl={baseUrlWithRevision} />
+              ))}
+            </tbody>
+          </table>
+          {tree.truncated && <h1>TRUNCATED</h1>}
+        </>
       );
     }
     return <Notification type="info">{t("sources.noSources")}</Notification>;

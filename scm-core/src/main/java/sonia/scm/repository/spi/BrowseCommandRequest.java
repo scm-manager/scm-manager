@@ -49,7 +49,7 @@ import java.util.function.Consumer;
 public final class BrowseCommandRequest extends FileBaseCommandRequest
 {
 
-  public static final int DEFAULT_REQUEST_LIMIT = 1000;
+  public static final int DEFAULT_REQUEST_LIMIT = 100;
 
   private static final long serialVersionUID = 7956624623516803183L;
   private int proceedFrom;

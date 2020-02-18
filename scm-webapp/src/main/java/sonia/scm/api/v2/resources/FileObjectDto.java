@@ -15,7 +15,6 @@ import java.util.OptionalLong;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class FileObjectDto extends HalRepresentation {
   private String name;
   private String path;
@@ -31,6 +30,7 @@ public class FileObjectDto extends HalRepresentation {
   private String revision;
   private boolean partialResult;
   private boolean computationAborted;
+  private boolean truncated;
 
   public FileObjectDto(Links links, Embedded embedded) {
     super(links, embedded);
