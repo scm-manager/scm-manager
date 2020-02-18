@@ -1,13 +1,15 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import de.otto.edison.hal.HalRepresentation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.installer.HgInstallerFactory;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.web.HgVndMediaType;
+import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -31,13 +33,24 @@ public class HgConfigInstallationsResource {
   @GET
   @Path(PATH_HG)
   @Produces(HgVndMediaType.INSTALLATIONS)
-  @TypeHint(HalRepresentation.class)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"configuration:read:hg\" privilege"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(summary = "Hg installations", description = "Returns the mercurial installations.", tags = "Mercurial")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = HgVndMediaType.INSTALLATIONS,
+      schema = @Schema(implementation = HgConfigInstallationsDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"configuration:read:hg\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public HalRepresentation getHgInstallations() {
 
     ConfigurationPermissions.read(HgConfig.PERMISSION).check();
@@ -52,13 +65,24 @@ public class HgConfigInstallationsResource {
   @GET
   @Path(PATH_PYTHON)
   @Produces(HgVndMediaType.INSTALLATIONS)
-  @TypeHint(HalRepresentation.class)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"configuration:read:hg\" privilege"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(summary = "Python installations", description = "Returns the python installations.", tags = "Mercurial")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = HgVndMediaType.INSTALLATIONS,
+      schema = @Schema(implementation = HgConfigInstallationsDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"configuration:read:hg\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public HalRepresentation getPythonInstallations() {
 
     ConfigurationPermissions.read(HgConfig.PERMISSION).check();

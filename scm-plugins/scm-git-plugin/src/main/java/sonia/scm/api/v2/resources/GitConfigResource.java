@@ -1,8 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -94,12 +91,6 @@ public class GitConfigResource {
   @PUT
   @Path("")
   @Consumes(GitVndMediaType.GIT_CONFIG)
-  @StatusCodes({
-    @ResponseCode(code = 204, condition = "update success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"configuration:write:git\" privilege"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
   @Operation(summary = "Modify git configuration", description = "Modifies the global git configuration.", tags = "Git")
   @ApiResponse(
     responseCode = "204",
