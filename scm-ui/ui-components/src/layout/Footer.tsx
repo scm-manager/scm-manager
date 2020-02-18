@@ -10,12 +10,6 @@ type Props = {
   links: Links;
 };
 
-const RestDocLink = () => {
-  return <a href="">Rest Documentation</a>;
-};
-
-binder.bind("footer.links", RestDocLink);
-
 class Footer extends React.Component<Props> {
   render() {
     const { me, version, links } = this.props;
@@ -56,7 +50,7 @@ class Footer extends React.Component<Props> {
             <a target="_blank" href="https://cloudogu.com/">
               Cloudogu GmbH
             </a>{" "}
-            | Learn more at{" "}
+            | Learn more about{" "}
             <a href="https://www.scm-manager.org/" target="_blank">
               SCM-Manager
             </a>
