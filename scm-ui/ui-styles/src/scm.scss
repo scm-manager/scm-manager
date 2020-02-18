@@ -67,8 +67,10 @@ hr.header-with-actions {
   }
 }
 
-.footer {
-  height: 50px;
+footer.footer {
+  //height: 100px;
+  background-color: whitesmoke;
+  padding: 2rem 1.5rem 1rem;
 }
 
 // 6. Import the rest of Bulma
@@ -689,11 +691,6 @@ form .field:not(.is-grouped) {
     border-color: #28b1e8;
     color: #fff;
   }
-}
-
-// footer
-.footer {
-  background-color: whitesmoke;
 }
 
 // aside
