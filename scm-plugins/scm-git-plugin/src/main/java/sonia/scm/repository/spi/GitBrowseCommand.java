@@ -110,6 +110,8 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   private BrowserResult browserResult;
 
+  private int resultCount = 0;
+
   public GitBrowseCommand(GitContext context, Repository repository, LfsBlobStoreFactory lfsBlobStoreFactory, SyncAsyncExecutor executor) {
     super(context, repository);
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
@@ -251,7 +253,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   private FileObject findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException {
     List<FileObject> files = Lists.newArrayList();
-    while (treeWalk.next())
+    while (treeWalk.next() && resultCount < request.getLimit())
     {
 
       FileObject fileObject = createFileObject(repo, request, revId, treeWalk);
@@ -261,6 +263,8 @@ public class GitBrowseCommand extends AbstractGitCommand
       }
 
       files.add(fileObject);
+
+      ++resultCount;
 
       if (request.isRecursive() && fileObject.isDirectory()) {
         treeWalk.enterSubtree();
