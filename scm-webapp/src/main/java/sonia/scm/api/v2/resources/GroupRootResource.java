@@ -1,7 +1,7 @@
 package sonia.scm.api.v2.resources;
 
-import io.swagger.v3.oas.annotations.Hidden;
-import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -10,6 +10,9 @@ import javax.ws.rs.Path;
 /**
  * RESTful Web Service Resource to manage groups and their members.
  */
+@OpenAPIDefinition(tags = {
+  @Tag(name = "Group", description = "Group related endpoints")
+})
 @Path(GroupRootResource.GROUPS_PATH_V2)
 public class GroupRootResource {
 
@@ -20,7 +23,7 @@ public class GroupRootResource {
 
   @Inject
   public GroupRootResource(Provider<GroupCollectionResource> groupCollectionResource,
-    Provider<GroupResource> groupResource) {
+                           Provider<GroupResource> groupResource) {
     this.groupCollectionResource = groupCollectionResource;
     this.groupResource = groupResource;
   }

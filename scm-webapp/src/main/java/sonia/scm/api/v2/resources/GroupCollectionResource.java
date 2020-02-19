@@ -1,16 +1,11 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.search.SearchRequest;
@@ -31,11 +26,8 @@ import java.util.function.Predicate;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-@OpenAPIDefinition(tags = {
-  @Tag(name = "Group", description = "Group related endpoints")
-})
 public class GroupCollectionResource {
-  
+
   private static final int DEFAULT_PAGE_SIZE = 10;
   private final GroupDtoToGroupMapper dtoToGroupMapper;
   private final GroupCollectionToDtoMapper groupCollectionToDtoMapper;
@@ -85,18 +77,19 @@ public class GroupCollectionResource {
     )
   )
   public Response getAll(@DefaultValue("0") @QueryParam("page") int page,
-    @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
-    @QueryParam("sortBy") String sortBy,
-    @DefaultValue("false")
-    @QueryParam("desc") boolean desc,
-    @DefaultValue("") @QueryParam("q") String search
+                         @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
+                         @QueryParam("sortBy") String sortBy,
+                         @DefaultValue("false")
+                         @QueryParam("desc") boolean desc,
+                         @DefaultValue("") @QueryParam("q") String search
   ) {
     return adapter.getAll(page, pageSize, createSearchPredicate(search), sortBy, desc,
-                          pageResult -> groupCollectionToDtoMapper.map(page, pageSize, pageResult));
+      pageResult -> groupCollectionToDtoMapper.map(page, pageSize, pageResult));
   }
 
   /**
    * Creates a new group.
+   *
    * @param group The group to be created.
    * @return A response with the link to the new group (if created successfully).
    */
@@ -119,8 +112,8 @@ public class GroupCollectionResource {
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created group"))
   public Response create(@Valid GroupDto group) {
     return adapter.create(group,
-                          () -> dtoToGroupMapper.map(group),
-                          g -> resourceLinks.group().self(g.getName()));
+      () -> dtoToGroupMapper.map(group),
+      g -> resourceLinks.group().self(g.getName()));
   }
 
   private Predicate<Group> createSearchPredicate(String search) {
