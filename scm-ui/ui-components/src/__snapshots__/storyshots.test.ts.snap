@@ -32389,6 +32389,272 @@ exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
 </div>
 `;
 
+exports[`Storyshots Layout|Footer Default 1`] = `
+<footer
+  className="footer"
+>
+  <div
+    className="container is-centered has-text-centered "
+  >
+    <p
+      className="is-size-6 columns is-centered"
+    >
+      <a
+        href="/me"
+        onClick={[Function]}
+      >
+        Trillian McMillian
+      </a>
+    </p>
+    <hr
+      className="has-background-grey-lighter"
+    />
+    <p>
+      <a
+        href="https://www.scm-manager.org/"
+        target="_blank"
+      >
+        SCM-Manager 
+        2.0.0
+      </a>
+    </p>
+    <br />
+    <p>
+      Powered by
+       
+      <a
+        href="https://cloudogu.com/"
+        target="_blank"
+      >
+        Cloudogu GmbH
+      </a>
+       
+      | Learn more about
+       
+      <a
+        href="https://www.scm-manager.org/"
+        target="_blank"
+      >
+        SCM-Manager
+      </a>
+    </p>
+  </div>
+</footer>
+`;
+
+exports[`Storyshots Layout|Footer Full 1`] = `
+<footer
+  className="footer"
+>
+  <div
+    className="container is-centered has-text-centered "
+  >
+    <p
+      className="is-size-6 columns is-centered"
+    >
+      <figure
+        className="media-left"
+      >
+        <p
+          className="image is-24x24 is-rounded"
+        >
+          <img
+            alt="trillian"
+            className="is-rounded"
+            src="test-file-stub"
+          />
+        </p>
+      </figure>
+      <a
+        href="/me"
+        onClick={[Function]}
+      >
+        Trillian McMillian
+      </a>
+    </p>
+    <hr
+      className="has-background-grey-lighter"
+    />
+    <p>
+      <a
+        href="https://www.scm-manager.org/"
+        target="_blank"
+      >
+        SCM-Manager 
+        2.0.0
+      </a>
+       
+      | 
+      <a
+        href="#"
+      >
+        REST API
+      </a>
+       
+      | 
+      <a
+        href="#"
+      >
+        CLI
+      </a>
+    </p>
+    <br />
+    <p>
+      Powered by
+       
+      <a
+        href="https://cloudogu.com/"
+        target="_blank"
+      >
+        Cloudogu GmbH
+      </a>
+       
+      | Learn more about
+       
+      <a
+        href="https://www.scm-manager.org/"
+        target="_blank"
+      >
+        SCM-Manager
+      </a>
+    </p>
+  </div>
+</footer>
+`;
+
+exports[`Storyshots Layout|Footer With Avatar 1`] = `
+<footer
+  className="footer"
+>
+  <div
+    className="container is-centered has-text-centered "
+  >
+    <p
+      className="is-size-6 columns is-centered"
+    >
+      <figure
+        className="media-left"
+      >
+        <p
+          className="image is-24x24 is-rounded"
+        >
+          <img
+            alt="trillian"
+            className="is-rounded"
+            src="test-file-stub"
+          />
+        </p>
+      </figure>
+      <a
+        href="/me"
+        onClick={[Function]}
+      >
+        Trillian McMillian
+      </a>
+    </p>
+    <hr
+      className="has-background-grey-lighter"
+    />
+    <p>
+      <a
+        href="https://www.scm-manager.org/"
+        target="_blank"
+      >
+        SCM-Manager 
+        2.0.0
+      </a>
+    </p>
+    <br />
+    <p>
+      Powered by
+       
+      <a
+        href="https://cloudogu.com/"
+        target="_blank"
+      >
+        Cloudogu GmbH
+      </a>
+       
+      | Learn more about
+       
+      <a
+        href="https://www.scm-manager.org/"
+        target="_blank"
+      >
+        SCM-Manager
+      </a>
+    </p>
+  </div>
+</footer>
+`;
+
+exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
+<footer
+  className="footer"
+>
+  <div
+    className="container is-centered has-text-centered "
+  >
+    <p
+      className="is-size-6 columns is-centered"
+    >
+      <a
+        href="/me"
+        onClick={[Function]}
+      >
+        Trillian McMillian
+      </a>
+    </p>
+    <hr
+      className="has-background-grey-lighter"
+    />
+    <p>
+      <a
+        href="https://www.scm-manager.org/"
+        target="_blank"
+      >
+        SCM-Manager 
+        2.0.0
+      </a>
+       
+      | 
+      <a
+        href="#"
+      >
+        REST API
+      </a>
+       
+      | 
+      <a
+        href="#"
+      >
+        CLI
+      </a>
+    </p>
+    <br />
+    <p>
+      Powered by
+       
+      <a
+        href="https://cloudogu.com/"
+        target="_blank"
+      >
+        Cloudogu GmbH
+      </a>
+       
+      | Learn more about
+       
+      <a
+        href="https://www.scm-manager.org/"
+        target="_blank"
+      >
+        SCM-Manager
+      </a>
+    </p>
+  </div>
+</footer>
+`;
+
 exports[`Storyshots Loading Default 1`] = `
 <div>
   <div
