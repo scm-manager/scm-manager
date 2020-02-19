@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Update svnkit to version 1.10.1-scm1
+
 ### Fixed
 - Modification for mercurial repositories with enabled XSRF protection
 
