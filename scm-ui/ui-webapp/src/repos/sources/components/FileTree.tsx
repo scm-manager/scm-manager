@@ -7,28 +7,40 @@ import styled from "styled-components";
 import { binder } from "@scm-manager/ui-extensions";
 import { File, Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
-import { fetchSources, getFetchSourcesFailure, getSources, isFetchSourcesPending } from "../modules/sources";
+import {
+  fetchSources,
+  getFetchSourcesFailure,
+  getHunkCount,
+  getSources,
+  isFetchSourcesPending, isUpdateSourcePending
+} from "../modules/sources";
 import FileTreeLeaf from "./FileTreeLeaf";
-import queryString from "query-string";
+import Button from "@scm-manager/ui-components/src/buttons/Button";
 
-type Props = WithTranslation & {
+type Hunk = {
+  tree: File;
   loading: boolean;
   error: Error;
-  tree: File;
+  updateSources: (hunk: number) => void;
+};
+
+type Props = WithTranslation & {
   repository: Repository;
   revision: string;
   path: string;
   baseUrl: string;
   location: any;
+  hunks: Hunk[];
 
-  updateSources: () => void;
+  // dispatch props
+  fetchSources: (repository: Repository, revision: string, path: string, hunk: number) => void;
 
   // context props
   match: any;
 };
 
 type State = {
-  stoppableUpdateHandler?: number;
+  stoppableUpdateHandler: number[];
 };
 
 const FixedWidthTh = styled.th`
@@ -50,44 +62,57 @@ export function findParent(path: string) {
 class FileTree extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = {};
+    this.state = { stoppableUpdateHandler: [] };
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>): void {
     if (prevState.stoppableUpdateHandler === this.state.stoppableUpdateHandler) {
-      const { tree, updateSources } = this.props;
-      if (tree?._embedded?.children && tree._embedded.children.find(c => c.partialResult)) {
-        const stoppableUpdateHandler = setTimeout(updateSources, 3000);
-        this.setState({ stoppableUpdateHandler: stoppableUpdateHandler });
-      }
+      const { hunks } = this.props;
+      hunks?.forEach((hunk, index) => {
+        if (hunk.tree?._embedded?.children && hunk.tree._embedded.children.find(c => c.partialResult)) {
+          const stoppableUpdateHandler = setTimeout(hunk.updateSources, 3000);
+          this.setState(prevState => {
+            return {
+              stoppableUpdateHandler: [...prevState.stoppableUpdateHandler, stoppableUpdateHandler]
+            };
+          });
+        }
+      });
     }
   }
 
   componentWillUnmount(): void {
-    if (this.state.stoppableUpdateHandler) {
-      clearTimeout(this.state.stoppableUpdateHandler);
-    }
+    this.state.stoppableUpdateHandler.forEach(handler => clearTimeout(handler));
   }
 
+  loadMore = () => {
+    // console.log("smth");
+  };
+
   render() {
-    const { error, loading, tree } = this.props;
+    const { hunks, t } = this.props;
 
-    if (error) {
-      return <ErrorNotification error={error} />;
-    }
-
-    if (loading) {
-      return <Loading />;
-    }
-    if (!tree) {
+    if (!hunks || hunks.length === 0) {
       return null;
     }
 
-    return <div className="panel-block">{this.renderSourcesTable()}</div>;
+    if (hunks.some(hunk => hunk.error)) {
+      return <ErrorNotification error={hunks.map(hunk => hunk.error)[0]} />;
+    }
+
+    const lastHunk = hunks[hunks.length - 1];
+
+    return (
+      <div className="panel-block">
+        {this.renderSourcesTable()}
+        {lastHunk.loading && <Loading />}
+        {lastHunk.tree?.truncated && <Button label={t("sources.loadMore")} action={this.loadMore} />}
+      </div>
+    );
   }
 
   renderSourcesTable() {
-    const { tree, revision, path, baseUrl, t, location } = this.props;
+    const { hunks, revision, path, baseUrl, t } = this.props;
 
     const files = [];
 
@@ -115,46 +140,41 @@ class FileTree extends React.Component<Props, State> {
       }
     };
 
-    if (tree._embedded && tree._embedded.children) {
-      const children = [...tree._embedded.children].sort(compareFiles);
-      files.push(...children);
-    }
+    hunks
+      .filter(hunk => !hunk.loading)
+      .forEach(hunk => {
+        if (hunk.tree?._embedded && hunk.tree._embedded.children) {
+          const children = [...hunk.tree._embedded.children];
+          files.push(...children);
+        }
+      });
 
     if (files && files.length > 0) {
-
       let baseUrlWithRevision = baseUrl;
       if (revision) {
         baseUrlWithRevision += "/" + encodeURIComponent(revision);
       } else {
-        baseUrlWithRevision += "/" + encodeURIComponent(tree.revision);
-      }
-
-      const offset = queryString.parse(location.search).offset;
-      if (offset) {
-        baseUrlWithRevision += "?offset=" + offset;
+        baseUrlWithRevision += "/" + encodeURIComponent(hunks[0].tree.revision);
       }
 
       return (
-        <>
-          <table className="table table-hover table-sm is-fullwidth">
-            <thead>
-              <tr>
-                <FixedWidthTh />
-                <th>{t("sources.file-tree.name")}</th>
-                <th className="is-hidden-mobile">{t("sources.file-tree.length")}</th>
-                <th className="is-hidden-mobile">{t("sources.file-tree.commitDate")}</th>
-                <th className="is-hidden-touch">{t("sources.file-tree.description")}</th>
-                {binder.hasExtension("repos.sources.tree.row.right") && <th className="is-hidden-mobile" />}
-              </tr>
-            </thead>
-            <tbody>
-              {files.map((file: any) => (
-                <FileTreeLeaf key={file.name} file={file} baseUrl={baseUrlWithRevision} />
-              ))}
-            </tbody>
-          </table>
-          {tree.truncated && <h1>TRUNCATED</h1>}
-        </>
+        <table className="table table-hover table-sm is-fullwidth">
+          <thead>
+            <tr>
+              <FixedWidthTh />
+              <th>{t("sources.file-tree.name")}</th>
+              <th className="is-hidden-mobile">{t("sources.file-tree.length")}</th>
+              <th className="is-hidden-mobile">{t("sources.file-tree.commitDate")}</th>
+              <th className="is-hidden-touch">{t("sources.file-tree.description")}</th>
+              {binder.hasExtension("repos.sources.tree.row.right") && <th className="is-hidden-mobile" />}
+            </tr>
+          </thead>
+          <tbody>
+            {files.map((file: any) => (
+              <FileTreeLeaf key={file.name} file={file} baseUrl={baseUrlWithRevision} />
+            ))}
+          </tbody>
+        </table>
       );
     }
     return <Notification type="info">{t("sources.noSources")}</Notification>;
@@ -164,24 +184,37 @@ class FileTree extends React.Component<Props, State> {
 const mapDispatchToProps = (dispatch: any, ownProps: Props) => {
   const { repository, revision, path } = ownProps;
 
-  const updateSources = () => dispatch(fetchSources(repository, revision, path, false));
-
-  return { updateSources };
+  return {
+    updateSources: (hunk: number) => dispatch(fetchSources(repository, revision, path, false, hunk)),
+    fetchSources: (repository: Repository, revision: string, path: string, hunk: number) => {
+      dispatch(fetchSources(repository, revision, path, true, hunk));
+    }
+  };
 };
 
 const mapStateToProps = (state: any, ownProps: Props) => {
   const { repository, revision, path } = ownProps;
 
-  const loading = isFetchSourcesPending(state, repository, revision, path);
-  const error = getFetchSourcesFailure(state, repository, revision, path);
-  const tree = getSources(state, repository, revision, path);
+  const loading = isFetchSourcesPending(state, repository, revision, path, 0);
+  const error = getFetchSourcesFailure(state, repository, revision, path, 0);
+  const hunkCount = getHunkCount(state, repository, revision, path);
+  const hunks = [];
+  for (let i = 0; i < hunkCount; ++i) {
+    console.log(`getting data for hunk ${i}`);
+    const tree = getSources(state, repository, revision, path, i);
+    const loading = isFetchSourcesPending(state, repository, revision, path, i);
+    hunks.push({
+      tree,
+      loading
+    });
+  }
 
   return {
     revision,
     path,
     loading,
     error,
-    tree
+    hunks
   };
 };
 
