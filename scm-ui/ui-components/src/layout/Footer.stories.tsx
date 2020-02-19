@@ -6,6 +6,7 @@ import { Me } from "@scm-manager/ui-types";
 import { EXTENSION_POINT } from "../avatar/Avatar";
 // @ts-ignore ignore unknown png
 import avatar from "../__resources__/avatar.png";
+import NavLink from "../navigation/NavLink";
 
 const trillian: Me = {
   name: "trillian",
@@ -24,6 +25,7 @@ const bindAvatar = (binder: Binder) => {
 const bindLinks = (binder: Binder) => {
   binder.bind("footer.links", () => <a href="#">REST API</a>);
   binder.bind("footer.links", () => <a href="#">CLI</a>);
+  binder.bind("profile.setting", () => <NavLink label="Authorized Keys" to="#" />);
 };
 
 const withBinder = (binder: Binder) => {
