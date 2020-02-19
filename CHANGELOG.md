@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Update jgit to version 5.4.3.201909031940-r-scm1
+
 ### Fixed
 - Modification for mercurial repositories with enabled XSRF protection
 
