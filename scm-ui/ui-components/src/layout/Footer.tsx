@@ -17,7 +17,8 @@ class Footer extends React.Component<Props> {
       return "";
     }
 
-    const extensions = binder.getExtensions("footer.links", { me, links });
+    const extensionProps = { me, links };
+    const extensions = binder.getExtensions("footer.links", extensionProps);
 
     return (
       <footer className="footer">
@@ -40,7 +41,7 @@ class Footer extends React.Component<Props> {
             {extensions.map(Ext => (
               <>
                 {" "}
-                | <Ext />
+                | <Ext {...extensionProps} />
               </>
             ))}
           </p>
