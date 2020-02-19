@@ -1,5 +1,8 @@
 package sonia.scm.api.v2.resources;
 
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.ws.rs.Path;

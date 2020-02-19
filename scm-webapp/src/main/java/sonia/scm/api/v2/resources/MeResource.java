@@ -1,8 +1,5 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,7 +27,7 @@ import javax.ws.rs.core.UriInfo;
  * RESTful Web Service Resource to get currently logged in users.
  */
 @OpenAPIDefinition(tags = {
-  @Tag(name = "Me", description = "Me related endpoints")
+  @Tag(name = "Current user", description = "Current user related endpoints")
 })
 @Path(MeResource.ME_PATH_V2)
 public class MeResource {
@@ -53,7 +50,7 @@ public class MeResource {
   @GET
   @Path("")
   @Produces(VndMediaType.ME)
-  @Operation(summary = "Current user", description = "Returns the currently logged in user or a 401 if user is not logged in.", tags = "Me")
+  @Operation(summary = "Current user", description = "Returns the currently logged in user or a 401 if user is not logged in.", tags = "Current user")
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -80,7 +77,7 @@ public class MeResource {
   @PUT
   @Path("password")
   @Consumes(VndMediaType.PASSWORD_CHANGE)
-  @Operation(summary = "Change password", description = "Change password of the current user.", tags = "Me")
+  @Operation(summary = "Change password", description = "Change password of the current user.", tags = "Current user")
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(

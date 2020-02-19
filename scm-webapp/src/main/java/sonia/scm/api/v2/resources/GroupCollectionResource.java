@@ -5,6 +5,12 @@ import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.search.SearchRequest;
@@ -25,7 +31,9 @@ import java.util.function.Predicate;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-
+@OpenAPIDefinition(tags = {
+  @Tag(name = "Group", description = "Group related endpoints")
+})
 public class GroupCollectionResource {
   
   private static final int DEFAULT_PAGE_SIZE = 10;
@@ -56,14 +64,26 @@ public class GroupCollectionResource {
   @GET
   @Path("")
   @Produces(VndMediaType.GROUP_COLLECTION)
-  @TypeHint(CollectionDto.class)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 400, condition = "\"sortBy\" field unknown"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"group\" privilege"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(summary = "List of groups", description = "Returns all groups for a given page number", tags = "Group")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.GROUP_COLLECTION,
+      schema = @Schema(implementation = CollectionDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "400", description = "\"sortBy\" field unknown")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"group\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response getAll(@DefaultValue("0") @QueryParam("page") int page,
     @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
     @QueryParam("sortBy") String sortBy,
@@ -83,14 +103,19 @@ public class GroupCollectionResource {
   @POST
   @Path("")
   @Consumes(VndMediaType.GROUP)
-  @StatusCodes({
-    @ResponseCode(code = 201, condition = "create success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"group\" privilege"),
-    @ResponseCode(code = 409, condition = "conflict, a group with this name already exists"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
+  @Operation(summary = "Create group", description = "Creates a new group", tags = "Group")
+  @ApiResponse(responseCode = "201", description = "create success")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"group\" privilege")
+  @ApiResponse(responseCode = "409", description = "conflict, a group with this name already exists")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created group"))
   public Response create(@Valid GroupDto group) {
     return adapter.create(group,
