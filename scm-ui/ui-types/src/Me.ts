@@ -4,6 +4,6 @@ export type Me = {
   name: string;
   displayName: string;
   mail: string;
-  groups: [];
+  groups: string[];
   _links: Links;
 };
