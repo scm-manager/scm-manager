@@ -1,12 +1,10 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginManager;
@@ -28,9 +26,6 @@ import java.util.stream.Collectors;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
-@OpenAPIDefinition(tags = {
-  @Tag(name = "Available plugin", description = "Available plugin related endpoints")
-})
 public class AvailablePluginResource {
 
   private final PluginDtoCollectionMapper collectionMapper;
@@ -51,13 +46,17 @@ public class AvailablePluginResource {
    */
   @GET
   @Path("")
-  @Operation(summary = "Find all available plugins", description = "Returns a collection of available plugins.", tags = "Available plugin")
+  @Operation(
+    summary = "Find all available plugins",
+    description = "Returns a collection of available plugins.",
+    tags = "Plugin Management"
+  )
   @ApiResponse(
     responseCode = "200",
     description = "success",
     content = @Content(
       mediaType = VndMediaType.PLUGIN_COLLECTION,
-      schema = @Schema(implementation = HalRepresentation.class)
+      schema = @Schema(implementation = CollectionDto.class)
     )
   )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
@@ -89,7 +88,12 @@ public class AvailablePluginResource {
    */
   @GET
   @Path("/{name}")
-  @Operation(summary = "Find single available plugin", description = "Returns an available plugins.", tags = "Available plugin")
+  @Produces(VndMediaType.PLUGIN)
+  @Operation(
+    summary = "Find single available plugin",
+    description = "Returns an available plugins.",
+    tags = "Plugin Management"
+  )
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -109,7 +113,6 @@ public class AvailablePluginResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  @Produces(VndMediaType.PLUGIN)
   public Response getAvailablePlugin(@PathParam("name") String name) {
     PluginPermissions.read().check();
     Optional<AvailablePlugin> plugin = pluginManager.getAvailable(name);
@@ -128,7 +131,11 @@ public class AvailablePluginResource {
    */
   @POST
   @Path("/{name}/install")
-  @Operation(summary = "Triggers plugin installation", description = "Put single plugin in installation queue. Plugin will be installed after restart.", tags = "Available plugin")
+  @Operation(
+    summary = "Triggers plugin installation",
+    description = "Put single plugin in installation queue. Plugin will be installed after restart.",
+    tags = "Plugin Management"
+  )
   @ApiResponse(responseCode = "200", description = "success")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"plugin:manage\" privilege")
