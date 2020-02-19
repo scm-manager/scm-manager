@@ -131,11 +131,11 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     throws SVNException
   {
     Collection<SVNDirEntry> entries = svnRepository.getDir(parent.getPath(), revisionNumber, null, (Collection) null);
-    for (Iterator<SVNDirEntry> iterator = entries.iterator(); resultCount < request.getLimit() + request.getProceedFrom() && iterator.hasNext(); ++resultCount) {
+    for (Iterator<SVNDirEntry> iterator = entries.iterator(); resultCount < request.getLimit() + request.getOffset() && iterator.hasNext(); ++resultCount) {
       SVNDirEntry entry = iterator.next();
       FileObject child = createFileObject(request, svnRepository, revisionNumber, entry, basePath);
 
-      if (resultCount >= request.getProceedFrom()) {
+      if (resultCount >= request.getOffset()) {
         parent.addChild(child);
       }
 
@@ -143,7 +143,7 @@ public class SvnBrowseCommand extends AbstractSvnCommand
         traverse(svnRepository, revisionNumber, request, child, createBasePath(child.getPath()));
       }
     }
-    if (resultCount >= request.getLimit() + request.getProceedFrom()) {
+    if (resultCount >= request.getLimit() + request.getOffset()) {
       parent.setTruncated(true);
     }
   }

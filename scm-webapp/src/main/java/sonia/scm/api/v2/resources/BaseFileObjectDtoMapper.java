@@ -31,7 +31,7 @@ abstract class BaseFileObjectDtoMapper extends HalAppenderMapper implements Inst
   abstract SubRepositoryDto mapSubrepository(SubRepository subRepository);
 
   @ObjectFactory
-  FileObjectDto createDto(@Context NamespaceAndName namespaceAndName, @Context BrowserResult browserResult, @Context Integer proceedFrom, FileObject fileObject) {
+  FileObjectDto createDto(@Context NamespaceAndName namespaceAndName, @Context BrowserResult browserResult, @Context Integer offset, FileObject fileObject) {
     String path = removeFirstSlash(fileObject.getPath());
     Links.Builder links = Links.linkingTo();
     if (fileObject.isDirectory()) {
@@ -41,7 +41,7 @@ abstract class BaseFileObjectDtoMapper extends HalAppenderMapper implements Inst
       links.single(link("history", resourceLinks.fileHistory().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path)));
     }
     if (fileObject.isTruncated()) {
-      links.single(link("proceed", resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path) + "?proceedFrom=" + (proceedFrom + BrowseCommandRequest.DEFAULT_REQUEST_LIMIT)));
+      links.single(link("proceed", resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path) + "?offset=" + (offset + BrowseCommandRequest.DEFAULT_REQUEST_LIMIT)));
     }
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();

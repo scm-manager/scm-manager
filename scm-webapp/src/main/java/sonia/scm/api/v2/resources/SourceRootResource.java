@@ -35,37 +35,37 @@ public class SourceRootResource {
   @GET
   @Produces(VndMediaType.SOURCE)
   @Path("")
-  public FileObjectDto getAllWithoutRevision(@PathParam("namespace") String namespace, @PathParam("name") String name, @DefaultValue("0") @QueryParam("proceedFrom") int proceedFrom) throws IOException {
-    return getSource(namespace, name, "/", null, proceedFrom);
+  public FileObjectDto getAllWithoutRevision(@PathParam("namespace") String namespace, @PathParam("name") String name, @DefaultValue("0") @QueryParam("offset") int offset) throws IOException {
+    return getSource(namespace, name, "/", null, offset);
   }
 
   @GET
   @Produces(VndMediaType.SOURCE)
   @Path("{revision}")
-  public FileObjectDto getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @DefaultValue("0") @QueryParam("proceedFrom") int proceedFrom) throws IOException {
-    return getSource(namespace, name, "/", revision, proceedFrom);
+  public FileObjectDto getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @DefaultValue("0") @QueryParam("offset") int offset) throws IOException {
+    return getSource(namespace, name, "/", revision, offset);
   }
 
   @GET
   @Produces(VndMediaType.SOURCE)
   @Path("{revision}/{path: .*}")
-  public FileObjectDto get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path, @DefaultValue("0") @QueryParam("proceedFrom") int proceedFrom) throws IOException {
-    return getSource(namespace, name, path, revision, proceedFrom);
+  public FileObjectDto get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path, @DefaultValue("0") @QueryParam("offset") int offset) throws IOException {
+    return getSource(namespace, name, path, revision, offset);
   }
 
-  private FileObjectDto getSource(String namespace, String repoName, String path, String revision, int proceedFrom) throws IOException {
+  private FileObjectDto getSource(String namespace, String repoName, String path, String revision, int offset) throws IOException {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, repoName);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       BrowseCommandBuilder browseCommand = repositoryService.getBrowseCommand();
       browseCommand.setPath(path);
-      browseCommand.setProceedFrom(proceedFrom);
+      browseCommand.setOffset(offset);
       if (revision != null && !revision.isEmpty()) {
         browseCommand.setRevision(URLDecoder.decode(revision, "UTF-8"));
       }
       BrowserResult browserResult = browseCommand.getBrowserResult();
 
       if (browserResult != null) {
-        return browserResultToFileObjectDtoMapper.map(browserResult, namespaceAndName, proceedFrom);
+        return browserResultToFileObjectDtoMapper.map(browserResult, namespaceAndName, offset);
       } else {
         throw notFound(entity("Source", path).in("Revision", revision).in(namespaceAndName));
       }

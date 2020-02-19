@@ -129,9 +129,9 @@ class FileTree extends React.Component<Props, State> {
         baseUrlWithRevision += "/" + encodeURIComponent(tree.revision);
       }
 
-      const proceedFrom = queryString.parse(location.search).proceedFrom;
-      if (proceedFrom) {
-        baseUrlWithRevision += "?proceedFrom=" + proceedFrom;
+      const offset = queryString.parse(location.search).offset;
+      if (offset) {
+        baseUrlWithRevision += "?offset=" + offset;
       }
 
       return (

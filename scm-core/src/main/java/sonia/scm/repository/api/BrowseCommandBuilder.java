@@ -318,12 +318,12 @@ public final class BrowseCommandBuilder
   /**
    * Proceed the list from the given number on (zero based).
    *
-   * @param proceedFrom The number of the entry, the result should start with (zero based).
-   *                    All preceding entries will be omitted.
+   * @param offset The number of the entry, the result should start with (zero based).
+   *               All preceding entries will be omitted.
    * @since 2.0.0
    */
-  public BrowseCommandBuilder setProceedFrom(int proceedFrom) {
-    request.setProceedFrom(proceedFrom);
+  public BrowseCommandBuilder setOffset(int offset) {
+    request.setOffset(offset);
     return this;
   }
 

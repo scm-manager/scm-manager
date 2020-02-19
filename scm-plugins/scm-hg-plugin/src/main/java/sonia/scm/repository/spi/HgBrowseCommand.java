@@ -102,7 +102,7 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
     }
 
     cmd.setLimit(request.getLimit());
-    cmd.setProceedFrom(request.getProceedFrom());
+    cmd.setOffset(request.getOffset());
 
     FileObject file = cmd.execute();
     return new BrowserResult(c == null? "tip": c.getNode(), revision, file);

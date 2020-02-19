@@ -203,9 +203,9 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
   }
 
   @Test
-  public void testProceedFrom() {
+  public void testOffset() {
     BrowseCommandRequest request = new BrowseCommandRequest();
-    request.setProceedFrom(1);
+    request.setOffset(1);
     BrowserResult result = createCommand().getBrowserResult(request);
 
     assertNotNull(result);

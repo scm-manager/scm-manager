@@ -254,7 +254,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   private FileObject findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException {
     List<FileObject> files = Lists.newArrayList();
-    while (treeWalk.next() && ++resultCount <= request.getLimit() + request.getProceedFrom())
+    while (treeWalk.next() && ++resultCount <= request.getLimit() + request.getOffset())
     {
 
       FileObject fileObject = createFileObject(repo, request, revId, treeWalk);
@@ -263,7 +263,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         return fileObject;
       }
 
-      if (resultCount > request.getProceedFrom()) {
+      if (resultCount > request.getOffset()) {
         files.add(fileObject);
       }
 
@@ -278,7 +278,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
     parent.setChildren(files);
 
-    if (resultCount > request.getLimit() + request.getProceedFrom()) {
+    if (resultCount > request.getLimit() + request.getOffset()) {
       parent.setTruncated(true);
     }
 

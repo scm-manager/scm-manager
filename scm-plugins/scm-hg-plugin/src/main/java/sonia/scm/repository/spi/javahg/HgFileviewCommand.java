@@ -159,14 +159,14 @@ public class HgFileviewCommand extends AbstractCommand
   /**
    * Proceed the list from the given number on (zero based).
    *
-   * @param proceedFrom The number of the entry, the result should start with (zero based).
-   *                    All preceding entries will be omitted.
+   * @param offset The number of the entry, the result should start with (zero based).
+   *               All preceding entries will be omitted.
    *
    * @return {@code this}
    * @since 2.0.0
    */
-  public HgFileviewCommand setProceedFrom(int proceedFrom) {
-    cmdAppend("-f", proceedFrom);
+  public HgFileviewCommand setOffset(int offset) {
+    cmdAppend("-o", offset);
 
     return this;
   }

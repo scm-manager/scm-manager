@@ -195,10 +195,10 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
   }
 
   @Test
-  public void testProceedFrom() throws IOException {
+  public void testOffset() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
     request.setLimit(2);
-    request.setProceedFrom(2);
+    request.setOffset(2);
 
     BrowserResult result = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request);
     FileObject root = result.getFile();

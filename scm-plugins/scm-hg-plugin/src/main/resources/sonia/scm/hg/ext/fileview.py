@@ -197,7 +197,7 @@ def collect_sub_repositories(revCtx):
 
 class File_Printer:
 
-  def __init__(self, ui, repo, revCtx, disableLastCommit, transport, limit, proceedFrom):
+  def __init__(self, ui, repo, revCtx, disableLastCommit, transport, limit, offset):
     self.ui = ui
     self.repo = repo
     self.revCtx = revCtx
@@ -205,7 +205,7 @@ class File_Printer:
     self.transport = transport
     self.result_count = -1
     self.limit = limit
-    self.proceedFrom = proceedFrom
+    self.offset = offset
 
   def print_directory(self, path):
     if self.shouldPrintResult():
@@ -247,10 +247,10 @@ class File_Printer:
     # The first result is the selected path (or root if not specified). This
     # always has to be printed. Therefore we start counting with -1.
     self.result_count += 1
-    return self.result_count == 0 or self.proceedFrom < self.result_count <= self.limit + self.proceedFrom
+    return self.result_count == 0 or self.offset < self.result_count <= self.limit + self.offset
 
   def isTruncated(self):
-    return self.result_count > self.limit + self.proceedFrom
+    return self.result_count > self.limit + self.offset
 
   def finish(self):
     if self.isTruncated():
@@ -294,14 +294,14 @@ class File_Viewer:
     ('s', 'disableSubRepositoryDetection', False, 'disables detection of sub repositories'),
     ('t', 'transport', False, 'format the output for command server'),
     ('l', 'limit', 1000, 'limit the number of results'),
-    ('f', 'proceedFrom', 0, 'proceed from the given result number (zero based)'),
+    ('o', 'offset', 0, 'proceed from the given result number (zero based)'),
   ])
 def fileview(ui, repo, **opts):
   revCtx = scmutil.revsingle(repo, opts["revision"])
   subrepos = {}
   if not opts["disableSubRepositoryDetection"]:
     subrepos = collect_sub_repositories(revCtx)
-  printer = File_Printer(ui, repo, revCtx, opts["disableLastCommit"], opts["transport"], opts["limit"], opts["proceedFrom"])
+  printer = File_Printer(ui, repo, revCtx, opts["disableLastCommit"], opts["transport"], opts["limit"], opts["offset"])
   viewer = File_Viewer(revCtx, printer)
   viewer.recursive = opts["recursive"]
   viewer.sub_repositories = subrepos

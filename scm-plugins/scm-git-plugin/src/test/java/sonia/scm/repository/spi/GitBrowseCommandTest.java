@@ -252,10 +252,10 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void testBrowseProceedFrom() throws IOException {
+  public void testBrowseOffset() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
     request.setLimit(2);
-    request.setProceedFrom(2);
+    request.setOffset(2);
     FileObject root = createCommand()
       .getBrowserResult(request).getFile();
     assertNotNull(root);
