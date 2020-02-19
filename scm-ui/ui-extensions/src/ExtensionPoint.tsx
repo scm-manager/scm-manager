@@ -1,53 +1,51 @@
 import * as React from "react";
-import binder from "./binder";
+import { Binder } from "./binder";
+import { FC, ReactNode } from "react";
+import useBinder from "./useBinder";
 
 type Props = {
   name: string;
   renderAll?: boolean;
   props?: object;
-  children?: React.ReactNode;
+};
+
+const renderAllExtensions = (binder: Binder, name: string, props?: object) => {
+  const extensions = binder.getExtensions(name, props);
+  return (
+    <>
+      {extensions.map((Component, index) => {
+        return <Component key={index} {...props} />;
+      })}
+    </>
+  );
+};
+
+const renderSingleExtension = (binder: Binder, name: string, props?: object) => {
+  const Component = binder.getExtension(name, props);
+  if (!Component) {
+    return null;
+  }
+  return <Component {...props} />;
+};
+
+const renderDefault = (children: ReactNode) => {
+  if (children) {
+    return <>{children}</>;
+  }
+  return null;
 };
 
 /**
  * ExtensionPoint renders components which are bound to an extension point.
  */
-class ExtensionPoint extends React.Component<Props> {
-  renderAll(name: string, props?: object) {
-    const extensions = binder.getExtensions(name, props);
-    return (
-      <>
-        {extensions.map((Component, index) => {
-          return <Component key={index} {...props} />;
-        })}
-      </>
-    );
+const ExtensionPoint: FC<Props> = ({ name, renderAll, props, children }) => {
+  const binder = useBinder();
+  if (!binder.hasExtension(name, props)) {
+    return renderDefault(children);
+  } else if (renderAll) {
+    return renderAllExtensions(binder, name, props);
   }
-
-  renderSingle(name: string, props?: object) {
-    const Component = binder.getExtension(name, props);
-    if (!Component) {
-      return null;
-    }
-    return <Component {...props} />;
-  }
-
-  renderDefault() {
-    const { children } = this.props;
-    if (children) {
-      return <>{children}</>;
-    }
-    return null;
-  }
-
-  render() {
-    const { name, renderAll, props } = this.props;
-    if (!binder.hasExtension(name, props)) {
-      return this.renderDefault();
-    } else if (renderAll) {
-      return this.renderAll(name, props);
-    }
-    return this.renderSingle(name, props);
-  }
-}
+  return renderSingleExtension(binder, name, props);
+};
 
 export default ExtensionPoint;
