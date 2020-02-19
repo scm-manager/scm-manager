@@ -78,7 +78,7 @@ public class GroupResource {
    */
   @DELETE
   @Path("")
-  @Operation(summary = "Delete group", description = "Deletes a group.", tags = "Group")
+  @Operation(summary = "Delete group", description = "Deletes the group with the given id.", tags = "Group")
   @ApiResponse(responseCode = "204", description = "delete success or nothing to delete")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the group")

@@ -1,10 +1,11 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleManager;
 import sonia.scm.web.VndMediaType;
@@ -51,14 +52,25 @@ public class RepositoryRoleCollectionResource {
   @GET
   @Path("")
   @Produces(VndMediaType.REPOSITORY_ROLE_COLLECTION)
-  @TypeHint(CollectionDto.class)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 400, condition = "\"sortBy\" field unknown"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current repositoryRole does not have the \"repositoryRole\" privilege"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(summary = "List of repository roles", description = "Returns all repository roles for a given page number with a given page size.", tags = "Repository role")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.REPOSITORY_ROLE_COLLECTION,
+      schema = @Schema(implementation = CollectionDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "400", description = "\"sortBy\" field unknown")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current repositoryRole does not have the \"repositoryRole\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public Response getAll(@DefaultValue("0") @QueryParam("page") int page,
     @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
     @QueryParam("sortBy") String sortBy,
@@ -79,14 +91,18 @@ public class RepositoryRoleCollectionResource {
   @POST
   @Path("")
   @Consumes(VndMediaType.REPOSITORY_ROLE)
-  @StatusCodes({
-    @ResponseCode(code = 201, condition = "create success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"repositoryRole\" privilege"),
-    @ResponseCode(code = 409, condition = "conflict, a repository role with this name already exists"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
+  @Operation(summary = "Create repository role", description = "Creates a new repository role.", tags = "Repository role")
+  @ApiResponse(responseCode = "201", description = "create success")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"repositoryRole\" privilege")
+  @ApiResponse(responseCode = "409", description = "conflict, a repository role with this name already exists")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created repositoryRole"))
   public Response create(@Valid RepositoryRoleDto repositoryRole) {
     return adapter.create(repositoryRole, () -> dtoToRepositoryRoleMapper.map(repositoryRole), u -> resourceLinks.repositoryRole().self(u.getName()));

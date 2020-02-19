@@ -1,8 +1,9 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -39,17 +40,27 @@ public class TagRootResource {
     this.tagToTagDtoMapper = tagToTagDtoMapper;
   }
 
-
   @GET
   @Path("")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the tags"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
   @Produces(VndMediaType.TAG_COLLECTION)
-  @TypeHint(CollectionDto.class)
+  @Operation(summary = "List of tags", description = "Returns the tags for the given namespace and name.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.TAG_COLLECTION,
+      schema = @Schema(implementation = CollectionDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the tags")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Tags tags = getTags(repositoryService);
@@ -65,16 +76,33 @@ public class TagRootResource {
 
 
   @GET
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the tags"),
-    @ResponseCode(code = 404, condition = "not found, no tag available in the repository"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @Produces(VndMediaType.TAG)
-  @TypeHint(TagDto.class)
   @Path("{tagName}")
+  @Produces(VndMediaType.TAG)
+  @Operation(summary = "Get tag", description = "Returns the tag for the given name.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.TAG,
+      schema = @Schema(implementation = TagDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the tags")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no tag with the specified name available in the repository",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("tagName") String tagName) throws IOException {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {

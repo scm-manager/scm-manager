@@ -1,11 +1,9 @@
 package sonia.scm.api.v2.resources;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.PageResult;
 import sonia.scm.repository.Changeset;
@@ -46,57 +44,9 @@ public class ChangesetRootResource {
   }
 
   @GET
-  @Path("{id}")
-  @Produces(VndMediaType.CHANGESET)
-  @Operation(summary = "Collection of changesets", description = "Returns a collection of changesets.", tags = "Repository")
-  @ApiResponse(
-    responseCode = "200",
-    description = "success",
-    content = @Content(
-      mediaType = VndMediaType.CHANGESET,
-      schema = @Schema(implementation = ChangesetDto.class)
-    )
-  )
-  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
-  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the changeset")
-  @ApiResponse(
-    responseCode = "404",
-    description = "not found, no changeset with the specified id is available in the repository",
-    content = @Content(
-      mediaType = VndMediaType.ERROR_TYPE,
-      schema = @Schema(implementation = ErrorDto.class)
-    ))
-  @ApiResponse(
-    responseCode = "500",
-    description = "internal server error",
-    content = @Content(
-      mediaType = VndMediaType.ERROR_TYPE,
-      schema = @Schema(implementation = ErrorDto.class)
-    ))
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("id") String id) throws IOException {
-    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      Repository repository = repositoryService.getRepository();
-      RepositoryPermissions.read(repository).check();
-      ChangesetPagingResult changesets = repositoryService.getLogCommand()
-        .setStartChangeset(id)
-        .setEndChangeset(id)
-        .getChangesets();
-      if (changesets != null && changesets.getChangesets() != null && !changesets.getChangesets().isEmpty()) {
-        Optional<Changeset> changeset = changesets.getChangesets().stream().filter(ch -> ch.getId().equals(id)).findFirst();
-        if (!changeset.isPresent()) {
-          return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(changesetToChangesetDtoMapper.map(changeset.get(), repository)).build();
-      } else {
-        return Response.status(Response.Status.NOT_FOUND).build();
-      }
-    }
-  }
-
-  @GET
   @Path("")
   @Produces(VndMediaType.CHANGESET_COLLECTION)
-  @Operation(summary = "Specific changeset", description = "Returns a specific changeset.", tags = "Repository")
+  @Operation(summary = "Collection of changesets", description = "Returns a collection of changesets.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -140,6 +90,54 @@ public class ChangesetRootResource {
         }
       } else {
         return Response.ok().build();
+      }
+    }
+  }
+
+  @GET
+  @Path("{id}")
+  @Produces(VndMediaType.CHANGESET)
+  @Operation(summary = "Specific changeset", description = "Returns a specific changeset.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.CHANGESET,
+      schema = @Schema(implementation = ChangesetDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the changeset")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no changeset with the specified id is available in the repository",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("id") String id) throws IOException {
+    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      Repository repository = repositoryService.getRepository();
+      RepositoryPermissions.read(repository).check();
+      ChangesetPagingResult changesets = repositoryService.getLogCommand()
+        .setStartChangeset(id)
+        .setEndChangeset(id)
+        .getChangesets();
+      if (changesets != null && changesets.getChangesets() != null && !changesets.getChangesets().isEmpty()) {
+        Optional<Changeset> changeset = changesets.getChangesets().stream().filter(ch -> ch.getId().equals(id)).findFirst();
+        if (!changeset.isPresent()) {
+          return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(changesetToChangesetDtoMapper.map(changeset.get(), repository)).build();
+      } else {
+        return Response.status(Response.Status.NOT_FOUND).build();
       }
     }
   }

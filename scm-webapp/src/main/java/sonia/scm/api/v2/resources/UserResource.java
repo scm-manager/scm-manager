@@ -54,7 +54,7 @@ public class UserResource {
   @GET
   @Path("")
   @Produces(VndMediaType.USER)
-  @Operation(summary = "Returns a single user", description = "Returns the user for the given id.", tags = "User")
+  @Operation(summary = "Get single user", description = "Returns the user for the given id.", tags = "User")
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -92,7 +92,7 @@ public class UserResource {
    */
   @DELETE
   @Path("")
-  @Operation(summary = "Deletes a user", description = "Deletes the user for the given id.", tags = "User")
+  @Operation(summary = "Delete user", description = "Deletes the user with the given id.", tags = "User")
   @ApiResponse(responseCode = "204", description = "delete success or nothing to delete")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"user\" privilege")
@@ -113,7 +113,7 @@ public class UserResource {
   @PUT
   @Path("")
   @Consumes(VndMediaType.USER)
-  @Operation(summary = "Modifies a user", description = "Modifies the user for the given id.", tags = "User")
+  @Operation(summary = "Update user", description = "Modifies the user for the given id.", tags = "User")
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "400", description = "invalid body, e.g. illegal change of id/user name")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
