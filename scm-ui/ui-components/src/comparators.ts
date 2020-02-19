@@ -15,7 +15,7 @@ export const byKey = (key: string) => {
     }
 
     if (isUndefined(b, key)) {
-      return 0;
+      return -1;
     }
 
     if (a[key] < b[key]) {
@@ -35,7 +35,7 @@ export const byValueLength = (key: string) => {
     }
 
     if (isUndefined(b, key)) {
-      return 0;
+      return -1;
     }
 
     if (a[key].length < b[key].length) {
@@ -55,7 +55,7 @@ export const byNestedKeys = (key: string, nestedKey: string) => {
     }
 
     if (isUndefined(b, key, nestedKey)) {
-      return 0;
+      return -1;
     }
 
     if (a[key][nestedKey] < b[key][nestedKey]) {
