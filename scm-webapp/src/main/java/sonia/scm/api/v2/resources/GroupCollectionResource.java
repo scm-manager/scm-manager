@@ -56,7 +56,7 @@ public class GroupCollectionResource {
   @GET
   @Path("")
   @Produces(VndMediaType.GROUP_COLLECTION)
-  @Operation(summary = "List of groups", description = "Returns all groups for a given page number", tags = "Group")
+  @Operation(summary = "List of groups", description = "Returns all groups for a given page number with a given page size.", tags = "Group")
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -96,7 +96,7 @@ public class GroupCollectionResource {
   @POST
   @Path("")
   @Consumes(VndMediaType.GROUP)
-  @Operation(summary = "Create group", description = "Creates a new group", tags = "Group")
+  @Operation(summary = "Create group", description = "Creates a new group.", tags = "Group")
   @ApiResponse(responseCode = "201", description = "create success")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"group\" privilege")

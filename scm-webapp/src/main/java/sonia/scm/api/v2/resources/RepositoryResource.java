@@ -164,7 +164,7 @@ public class RepositoryResource {
   @Consumes(VndMediaType.REPOSITORY)
   @StatusCodes({
     @ResponseCode(code = 204, condition = "update success"),
-    @ResponseCode(code = 400, condition = "Invalid body, e.g. illegal change of namespace or name"),
+    @ResponseCode(code = 400, condition = "invalid body, e.g. illegal change of namespace or name"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
     @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"repository\" privilege"),
     @ResponseCode(code = 404, condition = "not found, no repository with the specified namespace and name available"),

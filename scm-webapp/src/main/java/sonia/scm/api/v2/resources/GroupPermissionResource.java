@@ -76,7 +76,7 @@ public class GroupPermissionResource {
   @Consumes(VndMediaType.PERMISSION_COLLECTION)
   @Operation(summary = "Update Group permissions", description = "Sets permissions for a group. Overwrites all existing permissions.", tags = {"Group", "Permissions"})
   @ApiResponse(responseCode = "204", description = "update success")
-  @ApiResponse(responseCode = "400", description = "Invalid body")
+  @ApiResponse(responseCode = "400", description = "invalid body")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current group does not have the correct privilege")
   @ApiResponse(responseCode = "404", description = "not found, no group with the specified id/name available")

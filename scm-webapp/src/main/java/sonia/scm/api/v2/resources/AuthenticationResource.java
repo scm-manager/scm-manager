@@ -81,7 +81,7 @@ public class AuthenticationResource {
   @POST
   @Path("access_token")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-  @Operation(summary = "Login via Form", description = "Form-based authentication", tags = "Authentication")
+  @Operation(summary = "Login via Form", description = "Form-based authentication.", tags = "Authentication")
   @ApiResponse(responseCode = "200", description = "success")
   @ApiResponse(responseCode = "400", description = "bad request, required parameter is missing")
   @ApiResponse(responseCode = "401", description = "unauthorized, the specified username or password is wrong")
@@ -104,7 +104,7 @@ public class AuthenticationResource {
   @POST
   @Path("access_token")
   @Consumes(MediaType.APPLICATION_JSON)
-  @Operation(summary = "Login via JSON", description = "JSON-based authentication", tags = "Authentication")
+  @Operation(summary = "Login via JSON", description = "JSON-based authentication.", tags = "Authentication")
   @ApiResponse(responseCode = "200", description = "success")
   @ApiResponse(responseCode = "400", description = "bad request, required parameter is missing")
   @ApiResponse(responseCode = "401", description = "unauthorized, the specified username or password is wrong")

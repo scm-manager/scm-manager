@@ -31,7 +31,7 @@ public class GlobalPermissionResource {
 
   @GET
   @Produces(VndMediaType.PERMISSION_COLLECTION)
-  @Operation(summary = "List of permissions", description = "Returns all available permissions", tags = "Permissions")
+  @Operation(summary = "List of permissions", description = "Returns all available permissions.", tags = "Permissions")
   @ApiResponse(
     responseCode = "200",
     description = "success",

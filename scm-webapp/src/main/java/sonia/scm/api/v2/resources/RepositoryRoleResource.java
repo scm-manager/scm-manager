@@ -90,7 +90,7 @@ public class RepositoryRoleResource {
   @Consumes(VndMediaType.REPOSITORY_ROLE)
   @StatusCodes({
     @ResponseCode(code = 204, condition = "update success"),
-    @ResponseCode(code = 400, condition = "Invalid body, e.g. illegal change of repository role name"),
+    @ResponseCode(code = 400, condition = "invalid body, e.g. illegal change of repository role name"),
     @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
     @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"repositoryRole\" privilege"),
     @ResponseCode(code = 404, condition = "not found, no repository role with the specified name available"),

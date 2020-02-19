@@ -107,7 +107,7 @@ public class GroupResource {
   @Consumes(VndMediaType.GROUP)
   @Operation(summary = "Update group", description = "Modifies a group.", tags = "Group")
   @ApiResponse(responseCode = "204", description = "update success")
-  @ApiResponse(responseCode = "400", description = "Invalid body, e.g. illegal change of id/group name")
+  @ApiResponse(responseCode = "400", description = "invalid body, e.g. illegal change of id/group name")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"group\" privilege")
   @ApiResponse(responseCode = "404", description = "not found, no group with the specified id/name available")
