@@ -85,7 +85,7 @@ public class IncomingRootResource {
   @GET
   @Path("{source}/{target}/changesets")
   @Produces(VndMediaType.CHANGESET_COLLECTION)
-  @Operation(summary = "Incoming changesets", description = "Get the incoming changesets from source to target", tags = "Repository")
+  @Operation(summary = "Incoming changesets", description = "Get the incoming changesets from source to target.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -138,7 +138,7 @@ public class IncomingRootResource {
   @GET
   @Path("{source}/{target}/diff")
   @Produces(VndMediaType.DIFF)
-  @Operation(summary = "Incoming diff", description = "Get the incoming diff from source to target", tags = "Repository")
+  @Operation(summary = "Incoming diff", description = "Get the incoming diff from source to target.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -189,7 +189,7 @@ public class IncomingRootResource {
   @GET
   @Path("{source}/{target}/diff/parsed")
   @Produces(VndMediaType.DIFF_PARSED)
-  @Operation(summary = "Incoming parsed diff", description = "Get the incoming parsed diff from source to target", tags = "Repository")
+  @Operation(summary = "Incoming parsed diff", description = "Get the incoming parsed diff from source to target.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
     description = "success",

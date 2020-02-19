@@ -57,7 +57,6 @@ public class IndexResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  @TypeHint(IndexDto.class)
   public IndexDto getIndex() {
     return indexDtoGenerator.generate();
   }

@@ -65,8 +65,6 @@ public class RepositoryCollectionResource {
   @Path("")
   @Produces(VndMediaType.REPOSITORY_COLLECTION)
   @Operation(summary = "List of repositories", description = "Returns all repositories for a given page number with a given page size.", tags = "Repository")
-
-
   @ApiResponse(
     responseCode = "200",
     description = "success",
