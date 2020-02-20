@@ -43,16 +43,15 @@ import java.util.Optional;
   @SecurityScheme(
     name = "Basic Authentication",
     description = "HTTP Basic authentication with username and password",
-    scheme = "Basic",
+    scheme = "basic",
     type = SecuritySchemeType.HTTP
   ),
   @SecurityScheme(
     name = "Bearer Token Authentication",
-    in = SecuritySchemeIn.HEADER,
-    paramName = "Authorization",
-    scheme = "Bearer",
+    description = "Authentication with a jwt bearer token",
+    scheme = "bearer",
     bearerFormat = "JWT",
-    type = SecuritySchemeType.APIKEY
+    type = SecuritySchemeType.HTTP
   )
 })
 @OpenAPIDefinition(tags = {
