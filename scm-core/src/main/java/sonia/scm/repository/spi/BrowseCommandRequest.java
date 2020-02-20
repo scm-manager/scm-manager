@@ -112,10 +112,11 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
 
     final BrowseCommandRequest other = (BrowseCommandRequest) obj;
 
-    return super.equals(obj) && Objects.equal(recursive, other.recursive)
+    return super.equals(obj)
+      && Objects.equal(recursive, other.recursive)
       && Objects.equal(disableLastCommit, other.disableLastCommit)
-      && Objects.equal(disableSubRepositoryDetection,
-        other.disableSubRepositoryDetection);
+      && Objects.equal(disableSubRepositoryDetection, other.disableSubRepositoryDetection)
+      && Objects.equal(offset, other.offset);
   }
 
   /**
@@ -128,7 +129,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
   public int hashCode()
   {
     return Objects.hashCode(super.hashCode(), recursive, disableLastCommit,
-      disableSubRepositoryDetection);
+      disableSubRepositoryDetection, offset);
   }
 
   /**
@@ -147,6 +148,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
                   .add("recursive", recursive)
                   .add("disableLastCommit", disableLastCommit)
                   .add("disableSubRepositoryDetection", disableSubRepositoryDetection)
+                  .add("offset", offset)
                   .toString();
     //J+
   }

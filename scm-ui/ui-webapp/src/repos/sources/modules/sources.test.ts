@@ -37,6 +37,9 @@ const collection = {
   length: 176,
   revision: "76aae4bb4ceacf0e88938eb5b6832738b7d537b4",
   subRepository: undefined,
+  truncated: true,
+  partialResult: false,
+  computationAborted: false,
   _links: {
     self: {
       href:
@@ -120,12 +123,23 @@ describe("sources fetch", () => {
     const expectedActions = [
       {
         type: FETCH_SOURCES_PENDING,
-        itemId: "scm/core/_/"
+        itemId: "scm/core/_//",
+        payload: {
+          hunk: 0,
+          updatePending: false,
+          pending: true,
+          sources: {}
+        }
       },
       {
         type: FETCH_SOURCES_SUCCESS,
-        itemId: "scm/core/_/",
-        payload: { updatePending: false, sources: collection }
+        itemId: "scm/core/_//",
+        payload: {
+          hunk: 0,
+          updatePending: false,
+          pending: false,
+          sources: collection
+        }
       }
     ];
 
@@ -136,17 +150,28 @@ describe("sources fetch", () => {
   });
 
   it("should fetch the sources of the repository with the given revision and path", () => {
-    fetchMock.getOnce(sourcesUrl + "abc/src", collection);
+    fetchMock.getOnce(sourcesUrl + "abc/src?offset=0", collection);
 
     const expectedActions = [
       {
         type: FETCH_SOURCES_PENDING,
-        itemId: "scm/core/abc/src"
+        itemId: "scm/core/abc/src/",
+        payload: {
+          hunk: 0,
+          updatePending: false,
+          pending: true,
+          sources: {}
+        }
       },
       {
         type: FETCH_SOURCES_SUCCESS,
-        itemId: "scm/core/abc/src",
-        payload: { updatePending: false, sources: collection }
+        itemId: "scm/core/abc/src/",
+        payload: {
+          hunk: 0,
+          updatePending: false,
+          pending: false,
+          sources: collection
+        }
       }
     ];
 
@@ -166,7 +191,7 @@ describe("sources fetch", () => {
       const actions = store.getActions();
       expect(actions[0].type).toBe(FETCH_SOURCES_PENDING);
       expect(actions[1].type).toBe(FETCH_SOURCES_FAILURE);
-      expect(actions[1].itemId).toBe("scm/core/_/");
+      expect(actions[1].itemId).toBe("scm/core/_//");
       expect(actions[1].payload).toBeDefined();
     });
   });
@@ -180,16 +205,18 @@ describe("reducer tests", () => {
 
   it("should store the collection, without revision and path", () => {
     const expectedState = {
-      "scm/core/_/": { updatePending: false, sources: collection }
+      "scm/core/_//0": { pending: false, updatePending: false, sources: collection },
+      "scm/core/_//hunkCount": 1
     };
-    expect(reducer({}, fetchSourcesSuccess(repository, "", "", collection))).toEqual(expectedState);
+    expect(reducer({}, fetchSourcesSuccess(repository, "", "", 0, collection))).toEqual(expectedState);
   });
 
   it("should store the collection, with revision and path", () => {
     const expectedState = {
-      "scm/core/abc/src/main": { updatePending: false, sources: collection }
+      "scm/core/abc/src/main/0": { pending: false, updatePending: false, sources: collection },
+      "scm/core/abc/src/main/hunkCount": 1
     };
-    expect(reducer({}, fetchSourcesSuccess(repository, "abc", "src/main", collection))).toEqual(expectedState);
+    expect(reducer({}, fetchSourcesSuccess(repository, "abc", "src/main", 0, collection))).toEqual(expectedState);
   });
 });
 
@@ -197,7 +224,7 @@ describe("selector tests", () => {
   it("should return false if it is no directory", () => {
     const state = {
       sources: {
-        "scm/core/abc/src/main/package.json": {
+        "scm/core/abc/src/main/package.json/0": {
           sources: { noDirectory }
         }
       }
@@ -208,7 +235,7 @@ describe("selector tests", () => {
   it("should return true if it is directory", () => {
     const state = {
       sources: {
-        "scm/core/abc/src": noDirectory
+        "scm/core/abc/src/0": noDirectory
       }
     };
     expect(isDirectory(state, repository, "abc", "src")).toBe(true);
@@ -221,7 +248,7 @@ describe("selector tests", () => {
   it("should return the source collection without revision and path", () => {
     const state = {
       sources: {
-        "scm/core/_/": {
+        "scm/core/_//0": {
           sources: collection
         }
       }
@@ -232,7 +259,7 @@ describe("selector tests", () => {
   it("should return the source collection with revision and path", () => {
     const state = {
       sources: {
-        "scm/core/abc/src/main": {
+        "scm/core/abc/src/main/0": {
           sources: collection
         }
       }
@@ -242,15 +269,26 @@ describe("selector tests", () => {
 
   it("should return true, when fetch sources is pending", () => {
     const state = {
-      pending: {
-        [FETCH_SOURCES + "/scm/core/_/"]: true
+      sources: {
+        "scm/core/_//0": {
+          pending: true,
+          sources: {}
+        }
       }
     };
-    expect(isFetchSourcesPending(state, repository, "", "")).toEqual(true);
+    expect(isFetchSourcesPending(state, repository, "", "", 0)).toEqual(true);
   });
 
   it("should return false, when fetch sources is not pending", () => {
-    expect(isFetchSourcesPending({}, repository, "", "")).toEqual(false);
+    const state = {
+      sources: {
+        "scm/core/_//0": {
+          pending: false,
+          sources: {}
+        }
+      }
+    };
+    expect(isFetchSourcesPending(state, repository, "", "", 0)).toEqual(false);
   });
 
   const error = new Error("incredible error from hell");
@@ -258,13 +296,13 @@ describe("selector tests", () => {
   it("should return error when fetch sources did fail", () => {
     const state = {
       failure: {
-        [FETCH_SOURCES + "/scm/core/_/"]: error
+        [FETCH_SOURCES + "/scm/core/_//"]: error
       }
     };
-    expect(getFetchSourcesFailure(state, repository, "", "")).toEqual(error);
+    expect(getFetchSourcesFailure(state, repository, "", "", 0)).toEqual(error);
   });
 
   it("should return undefined when fetch sources did not fail", () => {
-    expect(getFetchSourcesFailure({}, repository, "", "")).toBe(undefined);
+    expect(getFetchSourcesFailure({}, repository, "", "", 0)).toBe(undefined);
   });
 });

@@ -1,7 +1,6 @@
 import * as types from "../../../modules/types";
 import { Action, File, Link, Repository } from "@scm-manager/ui-types";
 import { apiClient } from "@scm-manager/ui-components";
-import { isPending } from "../../../modules/pending";
 import { getFailure } from "../../../modules/failure";
 
 export const FETCH_SOURCES = "scm/repos/FETCH_SOURCES";
@@ -27,8 +26,18 @@ export function fetchSources(repository: Repository, revision: string, path: str
         updateSourcesPending(repository, revision, path, hunk, getSources(state, repository, revision, path, hunk))
       );
     }
+
+    let offset = 0;
+    const hunkCount = getHunkCount(state, repository, revision, path);
+    for (let i = 0; i < hunkCount; ++i) {
+      const sources = getSources(state, repository, revision, path, i);
+      if (sources?._embedded.children) {
+        offset += sources._embedded.children.length;
+      }
+    }
+
     return apiClient
-      .get(createUrl(repository, revision, path, hunk))
+      .get(createUrl(repository, revision, path, offset))
       .then(response => response.json())
       .then((sources: File) => {
         dispatch(fetchSourcesSuccess(repository, revision, path, hunk, sources));
@@ -39,7 +48,7 @@ export function fetchSources(repository: Repository, revision: string, path: str
   };
 }
 
-function createUrl(repository: Repository, revision: string, path: string, hunk: number) {
+function createUrl(repository: Repository, revision: string, path: string, offset: number) {
   const base = (repository._links.sources as Link).href;
   if (!revision && !path) {
     return base;
@@ -47,14 +56,14 @@ function createUrl(repository: Repository, revision: string, path: string, hunk:
 
   // TODO handle trailing slash
   const pathDefined = path ? path : "";
-  return `${base}${encodeURIComponent(revision)}/${pathDefined}?hunk=${hunk}`;
+  return `${base}${encodeURIComponent(revision)}/${pathDefined}?offset=${offset}`;
 }
 
 export function fetchSourcesPending(repository: Repository, revision: string, path: string, hunk: number): Action {
   return {
     type: FETCH_SOURCES_PENDING,
-    itemId: createItemId(repository, revision, path),
-    payload: { hunk, pending: true, sources: {} }
+    itemId: createItemId(repository, revision, path, ""),
+    payload: { hunk, pending: true, updatePending: false, sources: {} }
   };
 }
 
@@ -63,12 +72,12 @@ export function updateSourcesPending(
   revision: string,
   path: string,
   hunk: number,
-  currentSources: any
+  currentSources: File
 ): Action {
   return {
     type: FETCH_UPDATES_PENDING,
-    payload: { hunk, updatePending: true, sources: currentSources },
-    itemId: createItemId(repository, revision, path)
+    payload: { hunk, pending: false, updatePending: true, sources: currentSources },
+    itemId: createItemId(repository, revision, path, "")
   };
 }
 
@@ -82,7 +91,7 @@ export function fetchSourcesSuccess(
   return {
     type: FETCH_SOURCES_SUCCESS,
     payload: { hunk, pending: false, updatePending: false, sources },
-    itemId: createItemId(repository, revision, path)
+    itemId: createItemId(repository, revision, path, "")
   };
 }
 
@@ -96,14 +105,14 @@ export function fetchSourcesFailure(
   return {
     type: FETCH_SOURCES_FAILURE,
     payload: error,
-    itemId: createItemId(repository, revision, path)
+    itemId: createItemId(repository, revision, path, "")
   };
 }
 
-function createItemId(repository: Repository, revision: string | undefined, path: string) {
+function createItemId(repository: Repository, revision: string | undefined, path: string, hunk: number | string) {
   const revPart = revision ? revision : "_";
   const pathPart = path ? path : "";
-  return `${repository.namespace}/${repository.name}/${decodeURIComponent(revPart)}/${pathPart}`;
+  return `${repository.namespace}/${repository.name}/${decodeURIComponent(revPart)}/${pathPart}/${hunk}`;
 }
 
 // reducer
@@ -114,18 +123,38 @@ export default function reducer(
     type: "UNKNOWN"
   }
 ): any {
-  if (action.itemId && (action.type === FETCH_SOURCES_SUCCESS || action.type === FETCH_UPDATES_PENDING)) {
-    console.log("adding payload to " + action.itemId + "/" + action.payload.hunk);
+  if (action.itemId && action.type === FETCH_SOURCES_SUCCESS) {
     return {
       ...state,
-      [action.itemId + "/hunkCount"]: action.payload.hunk + 1,
-      [action.itemId + "/" + action.payload.hunk]: {
+      [action.itemId + "hunkCount"]: action.payload.hunk + 1,
+      [action.itemId + action.payload.hunk]: {
         sources: action.payload.sources,
-        loading: false
+        updatePending: false,
+        pending: false
       }
     };
+  } else if (action.itemId && action.type === FETCH_UPDATES_PENDING) {
+    return {
+      ...state,
+      [action.itemId + "hunkCount"]: action.payload.hunk + 1,
+      [action.itemId + action.payload.hunk]: {
+        sources: action.payload.sources,
+        updatePending: true,
+        pending: false
+      }
+    };
+  } else if (action.itemId && action.type === FETCH_SOURCES_PENDING) {
+    return {
+      ...state,
+      [action.itemId + "hunkCount"]: action.payload.hunk + 1,
+      [action.itemId + action.payload.hunk]: {
+        updatePending: false,
+        pending: true
+      }
+    };
+  } else {
+    return state;
   }
-  return state;
 }
 
 // selectors
@@ -141,7 +170,7 @@ export function isDirectory(state: any, repository: Repository, revision: string
 
 export function getHunkCount(state: any, repository: Repository, revision: string | undefined, path: string): number {
   if (state.sources) {
-    const count = state.sources[createItemId(repository, revision, path) + "/hunkCount"];
+    const count = state.sources[createItemId(repository, revision, path, "hunkCount")];
     return count ? count : 0;
   }
   return 0;
@@ -152,10 +181,10 @@ export function getSources(
   repository: Repository,
   revision: string | undefined,
   path: string,
-  hunk: number
+  hunk = 0
 ): File | null | undefined {
   if (state.sources) {
-    return state.sources[createItemId(repository, revision, path) + "/" + hunk]?.sources;
+    return state.sources[createItemId(repository, revision, path, hunk)]?.sources;
   }
   return null;
 }
@@ -165,9 +194,12 @@ export function isFetchSourcesPending(
   repository: Repository,
   revision: string,
   path: string,
-  hunk: number
+  hunk = 0
 ): boolean {
-  return state && isPending(state, FETCH_SOURCES, createItemId(repository, revision, path));
+  if (state.sources) {
+    return state.sources[createItemId(repository, revision, path, hunk)]?.pending;
+  }
+  return false;
 }
 
 export function isUpdateSourcePending(
@@ -177,7 +209,10 @@ export function isUpdateSourcePending(
   path: string,
   hunk: number
 ): boolean {
-  return state?.sources && state.sources[createItemId(repository, revision, path) + "/" + hunk]?.updatePending;
+  if (state.sources) {
+    return state.sources[createItemId(repository, revision, path, hunk)]?.updatePending;
+  }
+  return false;
 }
 
 export function getFetchSourcesFailure(
@@ -185,7 +220,7 @@ export function getFetchSourcesFailure(
   repository: Repository,
   revision: string,
   path: string,
-  hunk: number
+  hunk = 0
 ): Error | null | undefined {
-  return getFailure(state, FETCH_SOURCES, createItemId(repository, revision, path));
+  return getFailure(state, FETCH_SOURCES, createItemId(repository, revision, path, ""));
 }

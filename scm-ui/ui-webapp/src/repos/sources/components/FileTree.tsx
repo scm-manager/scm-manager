@@ -12,7 +12,7 @@ import {
   getFetchSourcesFailure,
   getHunkCount,
   getSources,
-  isFetchSourcesPending, isUpdateSourcePending
+  isFetchSourcesPending
 } from "../modules/sources";
 import FileTreeLeaf from "./FileTreeLeaf";
 import Button from "@scm-manager/ui-components/src/buttons/Button";
@@ -86,7 +86,7 @@ class FileTree extends React.Component<Props, State> {
   }
 
   loadMore = () => {
-    // console.log("smth");
+    this.props.fetchSources(this.props.repository, this.props.revision, this.props.path, this.props.hunks.length);
   };
 
   render() {
@@ -124,22 +124,6 @@ class FileTree extends React.Component<Props, State> {
       });
     }
 
-    const compareFiles = function(f1: File, f2: File): number {
-      if (f1.directory) {
-        if (f2.directory) {
-          return f1.name.localeCompare(f2.name);
-        } else {
-          return -1;
-        }
-      } else {
-        if (f2.directory) {
-          return 1;
-        } else {
-          return f1.name.localeCompare(f2.name);
-        }
-      }
-    };
-
     hunks
       .filter(hunk => !hunk.loading)
       .forEach(hunk => {
@@ -149,7 +133,9 @@ class FileTree extends React.Component<Props, State> {
         }
       });
 
-    if (files && files.length > 0) {
+    const loading = hunks.filter(hunk => hunk.loading).length > 0;
+
+    if (loading || (files && files.length > 0)) {
       let baseUrlWithRevision = baseUrl;
       if (revision) {
         baseUrlWithRevision += "/" + encodeURIComponent(revision);
@@ -195,7 +181,6 @@ const mapDispatchToProps = (dispatch: any, ownProps: Props) => {
 const mapStateToProps = (state: any, ownProps: Props) => {
   const { repository, revision, path } = ownProps;
 
-  const loading = isFetchSourcesPending(state, repository, revision, path, 0);
   const error = getFetchSourcesFailure(state, repository, revision, path, 0);
   const hunkCount = getHunkCount(state, repository, revision, path);
   const hunks = [];
@@ -212,7 +197,6 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   return {
     revision,
     path,
-    loading,
     error,
     hunks
   };
