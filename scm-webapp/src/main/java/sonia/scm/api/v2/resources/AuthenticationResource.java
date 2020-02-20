@@ -3,10 +3,11 @@ package sonia.scm.api.v2.resources;
 import com.google.inject.Inject;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.security.SecuritySchemes;
@@ -79,9 +80,16 @@ public class AuthenticationResource {
 
   @POST
   @Path("access_token")
+  @Produces(MediaType.TEXT_PLAIN)
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-  @Operation(summary = "Login via Form", description = "Form-based authentication.", tags = "Authentication")
+  @Operation(
+    summary = "Login via Form",
+    description = "Form-based authentication.",
+    tags = "Authentication",
+    hidden = true
+  )
   @ApiResponse(responseCode = "200", description = "success")
+  @ApiResponse(responseCode = "204", description = "success without content")
   @ApiResponse(responseCode = "400", description = "bad request, required parameter is missing")
   @ApiResponse(responseCode = "401", description = "unauthorized, the specified username or password is wrong")
   @ApiResponse(
@@ -102,9 +110,26 @@ public class AuthenticationResource {
 
   @POST
   @Path("access_token")
+  @Produces(MediaType.TEXT_PLAIN)
   @Consumes(MediaType.APPLICATION_JSON)
-  @Operation(summary = "Login via JSON", description = "JSON-based authentication.", tags = "Authentication")
+  @Operation(
+    summary = "Login via JSON",
+    description = "JSON-based authentication.",
+    tags = "Authentication",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = MediaType.APPLICATION_JSON,
+        schema = @Schema(implementation = AuthenticationRequestDto.class),
+        examples = @ExampleObject(
+          name = "Simple login",
+          value = "{\n  \"username\":\"scmadmin\",\n  \"password\":\"scmadmin\",\n  \"cookie\":false,\n  \"grant_type\":\"password\"\n}",
+          summary = "Authenticate with username and password"
+        )
+      )
+    )
+  )
   @ApiResponse(responseCode = "200", description = "success")
+  @ApiResponse(responseCode = "204", description = "success without content")
   @ApiResponse(responseCode = "400", description = "bad request, required parameter is missing")
   @ApiResponse(responseCode = "401", description = "unauthorized, the specified username or password is wrong")
   @ApiResponse(
