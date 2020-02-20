@@ -69,8 +69,12 @@ hr.header-with-actions {
 
 footer.footer {
   //height: 100px;
-  background-color: whitesmoke;
+  background-color: $white-ter;
   padding: inherit;
+
+  a {
+    color: darken($blue, 15%);
+  }
 }
 
 // 6. Import the rest of Bulma

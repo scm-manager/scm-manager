@@ -5,8 +5,11 @@ import { Binder, BinderContext } from "@scm-manager/ui-extensions";
 import { Me } from "@scm-manager/ui-types";
 import { EXTENSION_POINT } from "../avatar/Avatar";
 // @ts-ignore ignore unknown png
-import avatar from "../__resources__/avatar.png";
+import hitchhiker from "../__resources__/hitchhiker.png";
+// @ts-ignore ignore unknown jpg
+import marvin from "../__resources__/marvin.jpg";
 import NavLink from "../navigation/NavLink";
+import ExternalLink from "../navigation/ExternalLink";
 
 const trillian: Me = {
   name: "trillian",
@@ -16,15 +19,16 @@ const trillian: Me = {
   _links: {}
 };
 
-const bindAvatar = (binder: Binder) => {
+const bindAvatar = (binder: Binder, avatar: string) => {
   binder.bind(EXTENSION_POINT, () => {
     return avatar;
   });
 };
 
 const bindLinks = (binder: Binder) => {
-  binder.bind("footer.links", () => <a href="#">REST API</a>);
-  binder.bind("footer.links", () => <a href="#">CLI</a>);
+  binder.bind("footer.information", () => <ExternalLink to="#" label="REST API" />);
+  binder.bind("footer.information", () => <ExternalLink to="#" label="CLI" />);
+  binder.bind("footer.support", () => <ExternalLink to="#" label="FAQ" />);
   binder.bind("profile.setting", () => <NavLink label="Authorized Keys" to="#" />);
 };
 
@@ -42,7 +46,7 @@ storiesOf("Layout|Footer", module)
   })
   .add("With Avatar", () => {
     const binder = new Binder("avatar-story");
-    bindAvatar(binder);
+    bindAvatar(binder, hitchhiker);
     return withBinder(binder);
   })
   .add("With Plugin Links", () => {
@@ -52,7 +56,7 @@ storiesOf("Layout|Footer", module)
   })
   .add("Full", () => {
     const binder = new Binder("link-story");
-    bindAvatar(binder);
+    bindAvatar(binder, marvin);
     bindLinks(binder);
     return withBinder(binder);
   });

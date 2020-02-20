@@ -18,11 +18,7 @@ const FooterSection: FC<Props> = ({ title, children }) => {
   return (
     <section className="column is-one-third">
       <Title>{title}</Title>
-      <Menu>
-        {React.Children.map(children, (child, index) => (
-          <li key={index}>{child}</li>
-        ))}
-      </Menu>
+      <Menu>{children}</Menu>
     </section>
   );
 };

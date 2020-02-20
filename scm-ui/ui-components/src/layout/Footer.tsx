@@ -6,6 +6,8 @@ import NavLink from "../navigation/NavLink";
 import FooterSection from "./FooterSection";
 import styled from "styled-components";
 import { EXTENSION_POINT } from "../avatar/Avatar";
+import ExternalLink from "../navigation/ExternalLink";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   me?: Me;
@@ -50,10 +52,12 @@ const TitleWithAvatar: FC<TitleWithAvatarProps> = ({ me }) => (
 );
 
 const Footer: FC<Props> = ({ me, version, links }) => {
+  const [t] = useTranslation("commons");
   const binder = useBinder();
   if (!me) {
     return null;
   }
+
   const extensionProps = { me, url: "/me", links };
   let meSectionTile;
   if (binder.hasExtension(EXTENSION_POINT)) {
@@ -67,24 +71,18 @@ const Footer: FC<Props> = ({ me, version, links }) => {
       <section className="section container">
         <div className="columns is-size-7">
           <FooterSection title={meSectionTile}>
-            <NavLink to="#" label="Profile" />
-            <NavLink to="#" label="Change Password" />
+            <NavLink to="/me" label={t("footer.user.profile")} />
+            <NavLink to="/me/settings/password" label={t("profile.changePasswordNavLink")} />
             <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
           </FooterSection>
-          <FooterSection title={<TitleWithIcon title="Information" icon="info-circle" />}>
-            <a href="https://www.scm-manager.org/" target="_blank">
-              SCM-Manager {version}
-            </a>
-            <ExtensionPoint name="footer.links" props={extensionProps} renderAll={true} />
+          <FooterSection title={<TitleWithIcon title={t("footer.information.title")} icon="info-circle" />}>
+            <ExternalLink to="https://www.scm-manager.org/" label={`SCM-Manager ${version}`} />
+            <ExtensionPoint name="footer.information" props={extensionProps} renderAll={true} />
           </FooterSection>
-          <FooterSection title={<TitleWithIcon title="About" icon="external-link-alt" />}>
-            <a href="https://www.scm-manager.org/" target="_blank">
-              Learn more
-            </a>
-            <a target="_blank" href="https://cloudogu.com/">
-              Powered by Cloudogu
-            </a>
-            <ExtensionPoint name="footer.links" props={extensionProps} renderAll={true} />
+          <FooterSection title={<TitleWithIcon title={t("footer.support.title")} icon="life-ring" />}>
+            <ExternalLink to="https://www.scm-manager.org/support/" label={t("footer.support.community")} />
+            <ExternalLink to="https://cloudogu.com/en/scm-manager-enterprise/" label={t("footer.support.enterprise")} />
+            <ExtensionPoint name="footer.support" props={extensionProps} renderAll={true} />
           </FooterSection>
         </div>
       </section>
