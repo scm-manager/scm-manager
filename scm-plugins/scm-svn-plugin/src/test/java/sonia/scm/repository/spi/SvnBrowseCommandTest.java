@@ -39,6 +39,7 @@ import sonia.scm.repository.FileObject;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -77,8 +78,9 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     Collection<FileObject> foList = foList1;
 
-    FileObject a = getFileObject(foList, "a.txt");
-    FileObject c = getFileObject(foList, "c");
+    Iterator<FileObject> iterator = foList.iterator();
+    FileObject a = iterator.next();
+    FileObject c = iterator.next();
 
     assertFalse(a.isDirectory());
     assertEquals("a.txt", a.getName());
@@ -113,20 +115,9 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
     assertFalse(foList.isEmpty());
     assertEquals(2, foList.size());
 
-    FileObject d = null;
-    FileObject e = null;
-
-    for (FileObject f : foList)
-    {
-      if ("d.txt".equals(f.getName()))
-      {
-        d = f;
-      }
-      else if ("e.txt".equals(f.getName()))
-      {
-        e = f;
-      }
-    }
+    Iterator<FileObject> iterator = foList.iterator();
+    FileObject d = iterator.next();
+    FileObject e = iterator.next();
 
     assertNotNull(d);
     assertFalse(d.isDirectory());
@@ -198,7 +189,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     Collection<FileObject> foList = result.getFile().getChildren();
 
-    assertThat(foList).extracting("name").containsExactlyInAnyOrder("a.txt");
+    assertThat(foList).extracting("name").containsExactly("a.txt");
     assertThat(result.getFile().isTruncated()).isTrue();
   }
 
@@ -212,7 +203,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     Collection<FileObject> foList = result.getFile().getChildren();
 
-    assertThat(foList).extracting("name").containsExactlyInAnyOrder("c");
+    assertThat(foList).extracting("name").containsExactly("c");
   }
 
   /**

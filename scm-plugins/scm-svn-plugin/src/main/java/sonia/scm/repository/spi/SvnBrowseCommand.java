@@ -51,9 +51,12 @@ import sonia.scm.repository.SubRepository;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.Util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
+import static java.util.Comparator.comparing;
 import static org.tmatesoft.svn.core.SVNErrorCode.FS_NO_SUCH_REVISION;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -130,7 +133,8 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     FileObject parent, String basePath)
     throws SVNException
   {
-    Collection<SVNDirEntry> entries = svnRepository.getDir(parent.getPath(), revisionNumber, null, (Collection) null);
+    List<SVNDirEntry> entries = new ArrayList<>(svnRepository.getDir(parent.getPath(), revisionNumber, null, (Collection) null));
+    entries.sort(comparing(SVNDirEntry::getName));
     for (Iterator<SVNDirEntry> iterator = entries.iterator(); resultCount < request.getLimit() + request.getOffset() && iterator.hasNext(); ++resultCount) {
       SVNDirEntry entry = iterator.next();
       FileObject child = createFileObject(request, svnRepository, revisionNumber, entry, basePath);
