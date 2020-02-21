@@ -89,8 +89,27 @@ class FileTree extends React.Component<Props, State> {
     this.props.fetchSources(this.props.repository, this.props.revision, this.props.path, this.props.hunks.length);
   };
 
-  render() {
+  renderTruncatedInfo = () => {
     const { hunks, t } = this.props;
+    const lastHunk = hunks[hunks.length - 1];
+    const entryCount = hunks
+      .filter(hunk => hunk?.tree?._embedded?.children)
+      .map(hunk => hunk.tree._embedded.children.length)
+      .reduce((a, b) => a + b, 0);
+    if (lastHunk.tree?.truncated) {
+      return (
+        <Notification type={"info"}>
+          <div className={"columns is-centered"}>
+            <div className={"column"}>{t("sources.moreEntriesAvailable", { count: entryCount })}</div>
+            <Button label={t("sources.loadMore")} action={this.loadMore} />
+          </div>
+        </Notification>
+      );
+    }
+  };
+
+  render() {
+    const { hunks } = this.props;
 
     if (!hunks || hunks.length === 0) {
       return null;
@@ -100,12 +119,10 @@ class FileTree extends React.Component<Props, State> {
       return <ErrorNotification error={hunks.map(hunk => hunk.error)[0]} />;
     }
 
-    const lastHunk = hunks[hunks.length - 1];
-
     return (
       <div className="panel-block">
         {this.renderSourcesTable()}
-        {lastHunk.tree?.truncated && <Button label={t("sources.loadMore")} action={this.loadMore} />}
+        {this.renderTruncatedInfo()}
       </div>
     );
   }

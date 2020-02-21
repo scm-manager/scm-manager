@@ -128,7 +128,9 @@
     "noSources": "Keine Sources in diesem Branch gefunden.",
     "extension": {
       "notBound": "Keine Erweiterung angebunden."
-    }
+    },
+    "loadMore": "Laden",
+    "moreEntriesAvailable": "Es werden nur die ersten {{count}} Einträge angezeigt. Es sind weitere Einträge vorhanden."
   },
   "permission": {
     "title": "Berechtigungen bearbeiten",
