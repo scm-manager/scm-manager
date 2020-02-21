@@ -79,8 +79,8 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
     Collection<FileObject> foList = foList1;
 
     Iterator<FileObject> iterator = foList.iterator();
-    FileObject a = iterator.next();
     FileObject c = iterator.next();
+    FileObject a = iterator.next();
 
     assertFalse(a.isDirectory());
     assertEquals("a.txt", a.getName());
@@ -189,7 +189,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     Collection<FileObject> foList = result.getFile().getChildren();
 
-    assertThat(foList).extracting("name").containsExactly("a.txt");
+    assertThat(foList).extracting("name").containsExactly("c");
     assertThat(result.getFile().isTruncated()).isTrue();
   }
 
@@ -203,7 +203,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     Collection<FileObject> foList = result.getFile().getChildren();
 
-    assertThat(foList).extracting("name").containsExactly("c");
+    assertThat(foList).extracting("name").containsExactly("a.txt");
   }
 
   /**

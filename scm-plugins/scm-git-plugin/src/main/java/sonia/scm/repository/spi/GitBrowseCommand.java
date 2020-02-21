@@ -69,7 +69,9 @@ import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -158,14 +160,14 @@ public class GitBrowseCommand extends AbstractGitCommand
   }
 
   private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
-                                      BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk)
+                                      BrowseCommandRequest request, ObjectId revId, TreeEntry treeEntry)
     throws IOException {
 
     FileObject file = new FileObject();
 
-    String path = treeWalk.getPathString();
+    String path = treeEntry.getPathString();
 
-    file.setName(treeWalk.getNameString());
+    file.setName(treeEntry.getNameString());
     file.setPath(path);
 
     SubRepository sub = null;
@@ -183,7 +185,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
     else
     {
-      ObjectLoader loader = repo.open(treeWalk.getObjectId(0));
+      ObjectLoader loader = repo.open(treeEntry.getObjectId());
 
       file.setDirectory(loader.getType() == Constants.OBJ_TREE);
 
@@ -195,7 +197,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         try (RevWalk walk = new RevWalk(repo)) {
           commit = walk.parseCommit(revId);
         }
-        Optional<LfsPointer> lfsPointer = getLfsPointer(repo, path, commit, treeWalk);
+        Optional<LfsPointer> lfsPointer = getLfsPointer(repo, path, commit, treeEntry);
 
         if (lfsPointer.isPresent()) {
           setFileLengthFromLfsBlob(lfsPointer.get(), file);
@@ -253,11 +255,18 @@ public class GitBrowseCommand extends AbstractGitCommand
   }
 
   private FileObject findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException {
-    List<FileObject> files = Lists.newArrayList();
-    while (treeWalk.next() && ++resultCount <= request.getLimit() + request.getOffset())
-    {
+    List<TreeEntry> entries = new ArrayList<>();
+    while (treeWalk.next() && ++resultCount <= request.getLimit() + request.getOffset()) {
+      entries.add(new TreeEntry(repo, treeWalk));
+    }
+    sort(entries, TreeEntry::isDirectory, TreeEntry::getNameString);
 
-      FileObject fileObject = createFileObject(repo, request, revId, treeWalk);
+    List<FileObject> files = Lists.newArrayList();
+    Iterator<TreeEntry> entryIterator = entries.iterator();
+    while (entryIterator.hasNext() && ++resultCount <= request.getLimit() + request.getOffset())
+    {
+      TreeEntry entry = entryIterator.next();
+      FileObject fileObject = createFileObject(repo, request, revId, entry);
       if (!fileObject.getPath().startsWith(parent.getPath())) {
         parent.setChildren(files);
         return fileObject;
@@ -298,7 +307,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         currentDepth++;
 
         if (currentDepth >= limit) {
-          return createFileObject(repo, request, revId, treeWalk);
+          return createFileObject(repo, request, revId, new TreeEntry(repo, treeWalk));
         } else {
           treeWalk.enterSubtree();
         }
@@ -338,11 +347,11 @@ public class GitBrowseCommand extends AbstractGitCommand
     return null;
   }
 
-  private Optional<LfsPointer> getLfsPointer(org.eclipse.jgit.lib.Repository repo, String path, RevCommit commit, TreeWalk treeWalk) {
+  private Optional<LfsPointer> getLfsPointer(org.eclipse.jgit.lib.Repository repo, String path, RevCommit commit, TreeEntry treeWalk) {
     try {
       Attributes attributes = LfsFactory.getAttributesForPath(repo, path, commit);
 
-      return GitUtil.getLfsPointer(repo, treeWalk, attributes);
+      return GitUtil.getLfsPointer(repo, treeWalk.getObjectId(), attributes);
     } catch (IOException e) {
       throw new InternalRepositoryException(repository, "could not read lfs pointer", e);
     }
@@ -446,6 +455,39 @@ public class GitBrowseCommand extends AbstractGitCommand
         changed |= markPartialAsAborted(child);
       }
       return changed;
+    }
+  }
+
+  private static class TreeEntry {
+
+    private final String pathString;
+    private final String nameString;
+    private final ObjectId objectId;
+    private final boolean directory;
+
+    public TreeEntry(org.eclipse.jgit.lib.Repository repo, TreeWalk treeWalk) throws IOException {
+      this.pathString = treeWalk.getPathString();
+      this.nameString = treeWalk.getNameString();
+      this.objectId = treeWalk.getObjectId(0);
+      ObjectLoader loader = repo.open(objectId);
+
+      this.directory = loader.getType() == Constants.OBJ_TREE;
+    }
+
+    public String getPathString() {
+      return pathString;
+    }
+
+    public String getNameString() {
+      return nameString;
+    }
+
+    public ObjectId getObjectId() {
+      return objectId;
+    }
+
+    public boolean isDirectory() {
+      return directory;
     }
   }
 }

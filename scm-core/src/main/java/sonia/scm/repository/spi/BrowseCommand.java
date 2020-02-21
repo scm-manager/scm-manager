@@ -38,6 +38,9 @@ package sonia.scm.repository.spi;
 import sonia.scm.repository.BrowserResult;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+import java.util.function.Function;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -60,4 +63,16 @@ public interface BrowseCommand
    * @throws IOException
    */
   BrowserResult getBrowserResult(BrowseCommandRequest request) throws IOException;
+
+  default <T> void sort(List<T> entries, Function<T, Boolean> isDirectory, Function<T, String> nameOf) {
+    entries.sort((e1, e2) -> {
+      if (isDirectory.apply(e1).equals(isDirectory.apply(e2))) {
+        return nameOf.apply(e1).toLowerCase(Locale.ENGLISH).compareTo(nameOf.apply(e2).toLowerCase(Locale.ENGLISH));
+      } else if (isDirectory.apply(e1)) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+  }
 }

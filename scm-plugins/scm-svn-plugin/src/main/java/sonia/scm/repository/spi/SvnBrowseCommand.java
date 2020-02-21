@@ -134,7 +134,7 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     throws SVNException
   {
     List<SVNDirEntry> entries = new ArrayList<>(svnRepository.getDir(parent.getPath(), revisionNumber, null, (Collection) null));
-    entries.sort(comparing(SVNDirEntry::getName));
+    sort(entries, entry -> entry.getKind() == SVNNodeKind.DIR, SVNDirEntry::getName);
     for (Iterator<SVNDirEntry> iterator = entries.iterator(); resultCount < request.getLimit() + request.getOffset() && iterator.hasNext(); ++resultCount) {
       SVNDirEntry entry = iterator.next();
       FileObject child = createFileObject(request, svnRepository, revisionNumber, entry, basePath);
