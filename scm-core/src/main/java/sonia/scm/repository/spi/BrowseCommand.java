@@ -67,7 +67,7 @@ public interface BrowseCommand
   default <T> void sort(List<T> entries, Function<T, Boolean> isDirectory, Function<T, String> nameOf) {
     entries.sort((e1, e2) -> {
       if (isDirectory.apply(e1).equals(isDirectory.apply(e2))) {
-        return nameOf.apply(e1).toLowerCase(Locale.ENGLISH).compareTo(nameOf.apply(e2).toLowerCase(Locale.ENGLISH));
+        return nameOf.apply(e1).compareTo(nameOf.apply(e2));
       } else if (isDirectory.apply(e1)) {
         return -1;
       } else {
