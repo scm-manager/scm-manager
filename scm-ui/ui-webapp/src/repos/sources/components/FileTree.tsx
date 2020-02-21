@@ -105,7 +105,6 @@ class FileTree extends React.Component<Props, State> {
     return (
       <div className="panel-block">
         {this.renderSourcesTable()}
-        {lastHunk.loading && <Loading />}
         {lastHunk.tree?.truncated && <Button label={t("sources.loadMore")} action={this.loadMore} />}
       </div>
     );
@@ -122,6 +121,10 @@ class FileTree extends React.Component<Props, State> {
         path: findParent(path),
         directory: true
       });
+    }
+
+    if (hunks.every(hunk => hunk.loading)) {
+      return <Loading />;
     }
 
     hunks
@@ -144,23 +147,26 @@ class FileTree extends React.Component<Props, State> {
       }
 
       return (
-        <table className="table table-hover table-sm is-fullwidth">
-          <thead>
-            <tr>
-              <FixedWidthTh />
-              <th>{t("sources.file-tree.name")}</th>
-              <th className="is-hidden-mobile">{t("sources.file-tree.length")}</th>
-              <th className="is-hidden-mobile">{t("sources.file-tree.commitDate")}</th>
-              <th className="is-hidden-touch">{t("sources.file-tree.description")}</th>
-              {binder.hasExtension("repos.sources.tree.row.right") && <th className="is-hidden-mobile" />}
-            </tr>
-          </thead>
-          <tbody>
-            {files.map((file: any) => (
-              <FileTreeLeaf key={file.name} file={file} baseUrl={baseUrlWithRevision} />
-            ))}
-          </tbody>
-        </table>
+        <>
+          <table className="table table-hover table-sm is-fullwidth">
+            <thead>
+              <tr>
+                <FixedWidthTh />
+                <th>{t("sources.file-tree.name")}</th>
+                <th className="is-hidden-mobile">{t("sources.file-tree.length")}</th>
+                <th className="is-hidden-mobile">{t("sources.file-tree.commitDate")}</th>
+                <th className="is-hidden-touch">{t("sources.file-tree.description")}</th>
+                {binder.hasExtension("repos.sources.tree.row.right") && <th className="is-hidden-mobile" />}
+              </tr>
+            </thead>
+            <tbody>
+              {files.map((file: any) => (
+                <FileTreeLeaf key={file.name} file={file} baseUrl={baseUrlWithRevision} />
+              ))}
+            </tbody>
+          </table>
+          {hunks[hunks.length - 1].loading && <Loading />}
+        </>
       );
     }
     return <Notification type="info">{t("sources.noSources")}</Notification>;
@@ -185,7 +191,6 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   const hunkCount = getHunkCount(state, repository, revision, path);
   const hunks = [];
   for (let i = 0; i < hunkCount; ++i) {
-    console.log(`getting data for hunk ${i}`);
     const tree = getSources(state, repository, revision, path, i);
     const loading = isFetchSourcesPending(state, repository, revision, path, i);
     hunks.push({
