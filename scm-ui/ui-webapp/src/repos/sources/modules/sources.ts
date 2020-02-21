@@ -28,8 +28,7 @@ export function fetchSources(repository: Repository, revision: string, path: str
     }
 
     let offset = 0;
-    const hunkCount = getHunkCount(state, repository, revision, path);
-    for (let i = 0; i < hunkCount; ++i) {
+    for (let i = 0; i < hunk; ++i) {
       const sources = getSources(state, repository, revision, path, i);
       if (sources?._embedded.children) {
         offset += sources._embedded.children.length;
@@ -136,7 +135,6 @@ export default function reducer(
   } else if (action.itemId && action.type === FETCH_UPDATES_PENDING) {
     return {
       ...state,
-      [action.itemId + "hunkCount"]: action.payload.hunk + 1,
       [action.itemId + action.payload.hunk]: {
         sources: action.payload.sources,
         updatePending: true,

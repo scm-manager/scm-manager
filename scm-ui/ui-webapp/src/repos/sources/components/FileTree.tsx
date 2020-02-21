@@ -21,7 +21,6 @@ type Hunk = {
   tree: File;
   loading: boolean;
   error: Error;
-  updateSources: (hunk: number) => void;
 };
 
 type Props = WithTranslation & {
@@ -34,6 +33,7 @@ type Props = WithTranslation & {
 
   // dispatch props
   fetchSources: (repository: Repository, revision: string, path: string, hunk: number) => void;
+  updateSources: (hunk: number) => () => void;
 
   // context props
   match: any;
@@ -67,10 +67,10 @@ class FileTree extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>): void {
     if (prevState.stoppableUpdateHandler === this.state.stoppableUpdateHandler) {
-      const { hunks } = this.props;
+      const { hunks, updateSources } = this.props;
       hunks?.forEach((hunk, index) => {
         if (hunk.tree?._embedded?.children && hunk.tree._embedded.children.find(c => c.partialResult)) {
-          const stoppableUpdateHandler = setTimeout(hunk.updateSources, 3000);
+          const stoppableUpdateHandler = setTimeout(updateSources(index), 3000);
           this.setState(prevState => {
             return {
               stoppableUpdateHandler: [...prevState.stoppableUpdateHandler, stoppableUpdateHandler]
@@ -177,7 +177,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: Props) => {
   const { repository, revision, path } = ownProps;
 
   return {
-    updateSources: (hunk: number) => dispatch(fetchSources(repository, revision, path, false, hunk)),
+    updateSources: (hunk: number) => () => dispatch(fetchSources(repository, revision, path, false, hunk)),
     fetchSources: (repository: Repository, revision: string, path: string, hunk: number) => {
       dispatch(fetchSources(repository, revision, path, true, hunk));
     }
