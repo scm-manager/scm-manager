@@ -50,7 +50,7 @@ export function fetchSources(repository: Repository, revision: string, path: str
 function createUrl(repository: Repository, revision: string, path: string, offset: number) {
   const base = (repository._links.sources as Link).href;
   if (!revision && !path) {
-    return base;
+    return `${base}?offset=${offset}`;
   }
 
   // TODO handle trailing slash
