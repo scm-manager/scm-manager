@@ -75,7 +75,7 @@ export class Binder {
   }
 
   /**
-   * Sort extensions in ascending order.
+   * Sort extensions in ascending order, starting with entries with specified extensionName.
    */
   sortExtensions = (a: ExtensionRegistration, b: ExtensionRegistration) => {
     const regA = a.extensionName ? a.extensionName.toUpperCase() : "";
