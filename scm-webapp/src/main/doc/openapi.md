@@ -1,3 +1,17 @@
-# openapi docs from code
+# OpenAPI REST documentation
 
-describe hateoas
+The following REST documentation describes all public endpoints of your SCM-Manager instance. 
+You can try the endpoints with or without authentication right on the swagger surface provided by the OpenAPI-Plugin.
+
+For authenticated requests please use the "Authorize" button and insert your preferred authentication method. 
+For basic authentication simply use your SCM-Manager credentials. If you want to use the bearer token authentication, you can generate an 
+valid token using the authentication endpoint and copy the response body.
+
+SCM-Manager defines a modern ["Level 3"-REST API](https://martinfowler.com/articles/richardsonMaturityModel.html). 
+Using the HATEOAS architecture for REST allows us to provide discoverable and self explanatory endpoint definitions. 
+The responses are build using the [HAL format](http://stateless.co/hal_specification.html) as JSON or XML. 
+HAL makes the API human-friendly and simplifies the communication between the frontend and the server using links and embedded resources.
+
+We highly suggest using the HAL links when creating new functions for the SCM-Manager since they are consistent and can be
+permission checked before being append to the response. The links and embedded resources can also be used by plugins, which can
+define new resources or enrich existing ones.
