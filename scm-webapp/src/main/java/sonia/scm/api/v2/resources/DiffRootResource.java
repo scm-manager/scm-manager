@@ -59,7 +59,13 @@ public class DiffRootResource {
   @ApiResponse(responseCode = "400", description = "bad request")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the diff")
-  @ApiResponse(responseCode = "404", description = "not found, no revision with the specified param for the repository available or repository not found")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no revision with the specified param for the repository available or repository found",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   @ApiResponse(
     responseCode = "500",
     description = "internal server error",
@@ -97,7 +103,13 @@ public class DiffRootResource {
   @ApiResponse(responseCode = "400", description = "bad request")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the diff")
-  @ApiResponse(responseCode = "404", description = "not found, no revision with the specified param for the repository available or repository not found")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no revision with the specified param for the repository available or repository not found",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   @ApiResponse(
     responseCode = "500",
     description = "internal server error",

@@ -50,7 +50,13 @@ public class GroupPermissionResource {
     ))
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the group")
-  @ApiResponse(responseCode = "404", description = "not found, no group with the specified id/name available")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no group with the specified id/name available",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   @ApiResponse(
     responseCode = "500",
     description = "internal server error",
@@ -79,7 +85,13 @@ public class GroupPermissionResource {
   @ApiResponse(responseCode = "400", description = "invalid body")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current group does not have the correct privilege")
-  @ApiResponse(responseCode = "404", description = "not found, no group with the specified id/name available")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no group with the specified id/name available",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   @ApiResponse(
     responseCode = "500",
     description = "internal server error",

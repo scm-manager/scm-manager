@@ -82,7 +82,13 @@ public class BranchRootResource {
   @ApiResponse(responseCode = "400", description = "branches not supported for given repository")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the branch")
-  @ApiResponse(responseCode = "404", description = "not found, no branch with the specified name for the repository available or repository not found")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no branch with the specified name for the repository available or repository found",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   @ApiResponse(
     responseCode = "500",
     description = "internal server error",
@@ -122,7 +128,13 @@ public class BranchRootResource {
   )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the changeset")
-  @ApiResponse(responseCode = "404", description = "not found, no changesets available in the repository")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no changesets available in the repository",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   @ApiResponse(
     responseCode = "500",
     description = "internal server error",
@@ -137,7 +149,7 @@ public class BranchRootResource {
                           @DefaultValue("0") @QueryParam("page") int page,
                           @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      if (!branchExists(branchName, repositoryService)){
+      if (!branchExists(branchName, repositoryService)) {
         throw notFound(entity(Branch.class, branchName).in(Repository.class, namespace + "/" + name));
       }
       Repository repository = repositoryService.getRepository();

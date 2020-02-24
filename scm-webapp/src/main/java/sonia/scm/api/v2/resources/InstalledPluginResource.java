@@ -126,7 +126,13 @@ public class InstalledPluginResource {
   )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"plugin:read\" privilege")
-  @ApiResponse(responseCode = "404", description = "not found, plugin by given id could not be found")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, plugin by given id could not be found",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   @ApiResponse(
     responseCode = "500",
     description = "internal server error",

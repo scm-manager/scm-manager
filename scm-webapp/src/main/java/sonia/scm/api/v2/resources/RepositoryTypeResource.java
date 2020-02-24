@@ -45,7 +45,13 @@ public class RepositoryTypeResource {
       schema = @Schema(implementation = RepositoryTypeDto.class)
     )
   )
-  @ApiResponse(responseCode = "404", description = "not found, no repository type with the specified name available")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no repository type with the specified name available",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   @ApiResponse(
     responseCode = "500",
     description = "internal server error",
