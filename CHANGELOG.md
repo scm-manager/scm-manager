@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Extension point entries with supplied extensionName are sorted ascending
+
 ### Fixed
 - Modification for mercurial repositories with enabled XSRF protection
 
