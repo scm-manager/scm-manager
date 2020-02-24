@@ -1,8 +1,7 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
-import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -80,13 +79,13 @@ public class UserCollectionResource {
       schema = @Schema(implementation = ErrorDto.class)
     ))
   public Response getAll(@DefaultValue("0") @QueryParam("page") int page,
-    @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
-    @QueryParam("sortBy") String sortBy,
-    @DefaultValue("false") @QueryParam("desc") boolean desc,
-    @DefaultValue("") @QueryParam("q") String search
+                         @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
+                         @QueryParam("sortBy") String sortBy,
+                         @DefaultValue("false") @QueryParam("desc") boolean desc,
+                         @DefaultValue("") @QueryParam("q") String search
   ) {
     return adapter.getAll(page, pageSize, createSearchPredicate(search), sortBy, desc,
-                          pageResult -> userCollectionToDtoMapper.map(page, pageSize, pageResult));
+      pageResult -> userCollectionToDtoMapper.map(page, pageSize, pageResult));
   }
 
   /**
@@ -101,7 +100,14 @@ public class UserCollectionResource {
   @Path("")
   @Consumes(VndMediaType.USER)
   @Operation(summary = "Create user", description = "Creates a new user.", tags = "User")
-  @ApiResponse(responseCode = "201", description = "create success")
+  @ApiResponse(
+    responseCode = "201",
+    description = "create success",
+    headers = @Header(
+      name = "Location",
+      description = "uri to the created user"
+    )
+  )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"user\" privilege")
   @ApiResponse(responseCode = "409", description = "conflict, a user with this name already exists")
@@ -112,7 +118,6 @@ public class UserCollectionResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created user"))
   public Response create(@Valid UserDto user) {
     return adapter.create(user, () -> dtoToUserMapper.map(user, passwordService.encryptPassword(user.getPassword())), u -> resourceLinks.user().self(u.getName()));
   }

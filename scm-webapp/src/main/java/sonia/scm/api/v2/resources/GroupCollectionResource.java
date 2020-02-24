@@ -1,8 +1,7 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
-import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -97,7 +96,14 @@ public class GroupCollectionResource {
   @Path("")
   @Consumes(VndMediaType.GROUP)
   @Operation(summary = "Create group", description = "Creates a new group.", tags = "Group")
-  @ApiResponse(responseCode = "201", description = "create success")
+  @ApiResponse(
+    responseCode = "201",
+    description = "create success",
+    headers = @Header(
+      name = "Location",
+      description = "uri to the created group"
+    )
+  )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"group\" privilege")
   @ApiResponse(responseCode = "409", description = "conflict, a group with this name already exists")
@@ -109,7 +115,6 @@ public class GroupCollectionResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created group"))
   public Response create(@Valid GroupDto group) {
     return adapter.create(group,
       () -> dtoToGroupMapper.map(group),

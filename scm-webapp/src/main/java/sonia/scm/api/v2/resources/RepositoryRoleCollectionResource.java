@@ -1,8 +1,7 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
-import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -72,12 +71,12 @@ public class RepositoryRoleCollectionResource {
       schema = @Schema(implementation = ErrorDto.class)
     ))
   public Response getAll(@DefaultValue("0") @QueryParam("page") int page,
-    @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
-    @QueryParam("sortBy") String sortBy,
-    @DefaultValue("false") @QueryParam("desc") boolean desc
+                         @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
+                         @QueryParam("sortBy") String sortBy,
+                         @DefaultValue("false") @QueryParam("desc") boolean desc
   ) {
     return adapter.getAll(page, pageSize, x -> true, sortBy, desc,
-                          pageResult -> repositoryRoleCollectionToDtoMapper.map(page, pageSize, pageResult));
+      pageResult -> repositoryRoleCollectionToDtoMapper.map(page, pageSize, pageResult));
   }
 
   /**
@@ -92,7 +91,14 @@ public class RepositoryRoleCollectionResource {
   @Path("")
   @Consumes(VndMediaType.REPOSITORY_ROLE)
   @Operation(summary = "Create repository role", description = "Creates a new repository role.", tags = "Repository role")
-  @ApiResponse(responseCode = "201", description = "create success")
+  @ApiResponse(
+    responseCode = "201",
+    description = "create success",
+    headers = @Header(
+      name = "Location",
+      description = "uri to the created repository role"
+    )
+  )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"repositoryRole\" privilege")
   @ApiResponse(responseCode = "409", description = "conflict, a repository role with this name already exists")
@@ -103,7 +109,6 @@ public class RepositoryRoleCollectionResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created repositoryRole"))
   public Response create(@Valid RepositoryRoleDto repositoryRole) {
     return adapter.create(repositoryRole, () -> dtoToRepositoryRoleMapper.map(repositoryRole), u -> resourceLinks.repositoryRole().self(u.getName()));
   }
