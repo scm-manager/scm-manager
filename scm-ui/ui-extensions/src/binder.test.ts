@@ -4,7 +4,7 @@ describe("binder tests", () => {
   let binder: Binder;
 
   beforeEach(() => {
-    binder = new Binder();
+    binder = new Binder("testing");
   });
 
   it("should return an empty array for non existing extension points", () => {

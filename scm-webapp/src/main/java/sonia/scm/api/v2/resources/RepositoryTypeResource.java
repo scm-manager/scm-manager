@@ -1,8 +1,9 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.web.VndMediaType;
@@ -35,12 +36,30 @@ public class RepositoryTypeResource {
   @GET
   @Path("")
   @Produces(VndMediaType.REPOSITORY_TYPE)
-  @TypeHint(RepositoryTypeDto.class)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 404, condition = "not found, no repository type with the specified name available"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(summary = "Get single repository type", description = "Returns the specified repository type for the given name.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.REPOSITORY_TYPE,
+      schema = @Schema(implementation = RepositoryTypeDto.class)
+    )
+  )
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no repository type with the specified name available",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response get(@PathParam("name") String name) {
     for (RepositoryType type : repositoryManager.getConfiguredTypes()) {
       if (name.equalsIgnoreCase(type.getName())) {

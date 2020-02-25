@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,11 +24,9 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.api.rest.resources;
@@ -38,10 +36,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.FeatureNotSupportedException;
@@ -100,8 +94,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Sebastian Sdorra
  */
 // @Path("import/repositories")
-public class RepositoryImportResource
-{
+public class RepositoryImportResource {
 
   /**
    * the logger for RepositoryImportResource
@@ -114,13 +107,12 @@ public class RepositoryImportResource
   /**
    * Constructs a new repository import resource.
    *
-   * @param manager repository manager
+   * @param manager        repository manager
    * @param serviceFactory
    */
   @Inject
   public RepositoryImportResource(RepositoryManager manager,
-    RepositoryServiceFactory serviceFactory)
-  {
+                                  RepositoryServiceFactory serviceFactory) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
   }
@@ -133,37 +125,23 @@ public class RepositoryImportResource
    * bundle file is passed to the {@link UnbundleCommandBuilder}. <strong>Note:</strong> This method
    * requires admin privileges.
    *
-   * @param uriInfo uri info
-   * @param type repository type
-   * @param name name of the repository
+   * @param uriInfo     uri info
+   * @param type        repository type
+   * @param name        name of the repository
    * @param inputStream input bundle
-   * @param compressed true if the bundle is gzip compressed
-   *
+   * @param compressed  true if the bundle is gzip compressed
    * @return empty response with location header which points to the imported repository
    * @since 1.43
    */
   @POST
   @Path("{type}/bundle")
-  @StatusCodes({
-    @ResponseCode(code = 201, condition = "created", additionalHeaders = {
-      @ResponseHeader(name = "Location", description = "uri to the imported repository")
-    }),
-    @ResponseCode(
-      code = 400, 
-      condition = "bad request, the import bundle feature is not supported by this type of repositories or the parameters are not valid"
-    ),
-    @ResponseCode(code = 409, condition = "conflict, a repository with the name already exists"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   public Response importFromBundle(@Context UriInfo uriInfo,
-    @PathParam("type") String type, @FormParam("name") String name,
-    @FormParam("bundle") InputStream inputStream, @QueryParam("compressed")
-  @DefaultValue("false") boolean compressed)
-  {
+                                   @PathParam("type") String type, @FormParam("name") String name,
+                                   @FormParam("bundle") InputStream inputStream, @QueryParam("compressed")
+                                   @DefaultValue("false") boolean compressed) {
     Repository repository = doImportFromBundle(type, name, inputStream,
-                              compressed);
+      compressed);
 
     return buildResponse(uriInfo, repository);
   }
@@ -175,43 +153,28 @@ public class RepositoryImportResource
    * workaround of the javascript ui extjs. <strong>Note:</strong> This method requires admin
    * privileges.
    *
-   * @param type repository type
-   * @param name name of the repository
+   * @param type        repository type
+   * @param name        name of the repository
    * @param inputStream input bundle
-   * @param compressed true if the bundle is gzip compressed
-   *
+   * @param compressed  true if the bundle is gzip compressed
    * @return empty response with location header which points to the imported
-   *  repository
+   * repository
    * @since 1.43
    */
   @POST
   @Path("{type}/bundle.html")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(
-      code = 400, 
-      condition = "bad request, the import bundle feature is not supported by this type of repositories or the parameters are not valid"
-    ),
-    @ResponseCode(code = 409, condition = "conflict, a repository with the name already exists"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(RestActionUploadResult.class)
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces(MediaType.TEXT_HTML)
   public Response importFromBundleUI(@PathParam("type") String type,
-    @FormParam("name") String name,
-    @FormParam("bundle") InputStream inputStream, @QueryParam("compressed")
-  @DefaultValue("false") boolean compressed)
-  {
+                                     @FormParam("name") String name,
+                                     @FormParam("bundle") InputStream inputStream, @QueryParam("compressed")
+                                     @DefaultValue("false") boolean compressed) {
     Response response;
 
-    try
-    {
+    try {
       doImportFromBundle(type, name, inputStream, compressed);
       response = Response.ok(new RestActionUploadResult(true)).build();
-    }
-    catch (WebApplicationException ex)
-    {
+    } catch (WebApplicationException ex) {
       logger.warn("error durring bundle import", ex);
       response = Response.fromResponse(ex.getResponse()).entity(
         new RestActionUploadResult(false)).build();
@@ -227,31 +190,17 @@ public class RepositoryImportResource
    * repository. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param uriInfo uri info
-   * @param type repository type
+   * @param type    repository type
    * @param request request object
-   *
    * @return empty response with location header which points to the imported
-   *  repository
+   * repository
    * @since 1.43
    */
   @POST
   @Path("{type}/url")
-  @StatusCodes({
-    @ResponseCode(code = 201, condition = "created", additionalHeaders = {
-      @ResponseHeader(name = "Location", description = "uri to the imported repository")
-    }),
-    @ResponseCode(
-      code = 400, 
-      condition = "bad request, the import feature is not supported by this type of repositories or the parameters are not valid"
-    ),
-    @ResponseCode(code = 409, condition = "conflict, a repository with the name already exists"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
-  @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Response importFromUrl(@Context UriInfo uriInfo,
-    @PathParam("type") String type, UrlImportRequest request)
-  {
+                                @PathParam("type") String type, UrlImportRequest request) {
     RepositoryPermissions.create().check();
     checkNotNull(request, "request is required");
     checkArgument(!Strings.isNullOrEmpty(request.getName()),
@@ -268,17 +217,12 @@ public class RepositoryImportResource
     Repository repository = create(type, request.getName());
     RepositoryService service = null;
 
-    try
-    {
+    try {
       service = serviceFactory.create(repository);
       service.getPullCommand().pull(request.getUrl());
-    }
-    catch (IOException ex)
-    {
+    } catch (IOException ex) {
       handleImportFailure(ex, repository);
-    }
-    finally
-    {
+    } finally {
       IOUtil.close(service);
     }
 
@@ -290,23 +234,12 @@ public class RepositoryImportResource
    * directory. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param type repository type
-   *
    * @return imported repositories
    */
   @POST
   @Path("{type}")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(
-      code = 400, 
-      condition = "bad request, the import feature is not supported by this type of repositories"
-    ),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(Repository[].class)
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-  public Response importRepositories(@PathParam("type") String type)
-  {
+  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+  public Response importRepositories(@PathParam("type") String type) {
     RepositoryPermissions.create().check();
 
     List<Repository> repositories = new ArrayList<Repository>();
@@ -315,7 +248,8 @@ public class RepositoryImportResource
 
     //J-
     return Response.ok(
-      new GenericEntity<List<Repository>>(repositories) {}
+      new GenericEntity<List<Repository>>(repositories) {
+      }
     ).build();
     //J+
   }
@@ -327,32 +261,22 @@ public class RepositoryImportResource
    * @return imported repositories
    */
   @POST
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(
-      code = 400, 
-      condition = "bad request, the import feature is not supported by this type of repositories"
-    ),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(Repository[].class)
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-  public Response importRepositories()
-  {
+  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+  public Response importRepositories() {
     RepositoryPermissions.create().check();
 
     logger.info("start directory import for all supported repository types");
 
     List<Repository> repositories = new ArrayList<Repository>();
 
-    for (Type t : findImportableTypes())
-    {
+    for (Type t : findImportableTypes()) {
       importFromDirectory(repositories, t.getName());
     }
 
     //J-
     return Response.ok(
-      new GenericEntity<List<Repository>>(repositories) {}
+      new GenericEntity<List<Repository>>(repositories) {
+      }
     ).build();
     //J+
   }
@@ -363,72 +287,50 @@ public class RepositoryImportResource
    * of failed directories. <strong>Note:</strong> This method requires admin privileges.
    *
    * @param type repository type
-   *
    * @return imported repositories
    * @since 1.43
    */
   @POST
   @Path("{type}/directory")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(
-      code = 400, 
-      condition = "bad request, the import feature is not supported by this type of repositories"
-    ),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(ImportResult.class)
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   public Response importRepositoriesFromDirectory(
-    @PathParam("type") String type)
-  {
+    @PathParam("type") String type) {
     RepositoryPermissions.create().check();
 
     Response response;
 
     RepositoryHandler handler = manager.getHandler(type);
 
-    if (handler != null)
-    {
+    if (handler != null) {
       logger.info("start directory import for repository type {}", type);
 
-      try
-      {
+      try {
         ImportResult result;
         ImportHandler importHandler = handler.getImportHandler();
 
-        if (importHandler instanceof AdvancedImportHandler)
-        {
+        if (importHandler instanceof AdvancedImportHandler) {
           logger.debug("start directory import, using advanced import handler");
           result =
             ((AdvancedImportHandler) importHandler)
               .importRepositoriesFromDirectory(manager);
-        }
-        else
-        {
+        } else {
           logger.debug("start directory import, using normal import handler");
           result = new ImportResult(importHandler.importRepositories(manager),
             ImmutableList.<String>of());
         }
 
         response = Response.ok(result).build();
-      }
-      catch (FeatureNotSupportedException ex)
-      {
+      } catch (FeatureNotSupportedException ex) {
         logger
           .warn(
             "import feature is not supported by repository handler for type "
               .concat(type), ex);
         response = Response.status(Response.Status.BAD_REQUEST).build();
-      }
-      catch (IOException ex)
-      {
+      } catch (IOException ex) {
         logger.warn("exception occured durring directory import", ex);
         response = Response.serverError().build();
       }
-    }
-    else
-    {
+    } else {
       logger.warn("could not find reposiotry handler for type {}", type);
       response = Response.status(Response.Status.BAD_REQUEST).build();
     }
@@ -445,25 +347,16 @@ public class RepositoryImportResource
    * @return list of repository types
    */
   @GET
-  @TypeHint(Type[].class)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(
-      code = 400, 
-      condition = "bad request, the import feature is not supported by this type of repositories"
-    ),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-  public Response getImportableTypes()
-  {
+  @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+  public Response getImportableTypes() {
     RepositoryPermissions.create().check();
 
     List<Type> types = findImportableTypes();
 
     //J-
     return Response.ok(
-      new GenericEntity<List<Type>>(types) {}
+      new GenericEntity<List<Type>>(types) {
+      }
     ).build();
     //J+
   }
@@ -473,16 +366,13 @@ public class RepositoryImportResource
   /**
    * Build rest response for repository.
    *
-   *
-   * @param uriInfo uri info
+   * @param uriInfo    uri info
    * @param repository imported repository
-   *
    * @return rest response
    */
-  private Response buildResponse(UriInfo uriInfo, Repository repository)
-  {
+  private Response buildResponse(UriInfo uriInfo, Repository repository) {
     URI location = uriInfo.getBaseUriBuilder().path(
-                     RepositoryResource.class).path(repository.getId()).build();
+      RepositoryResource.class).path(repository.getId()).build();
 
     return Response.created(location).build();
   }
@@ -490,15 +380,12 @@ public class RepositoryImportResource
   /**
    * Check repository type for support for the given command.
    *
-   *
-   * @param type repository type
-   * @param cmd command
+   * @param type    repository type
+   * @param cmd     command
    * @param request request object
    */
-  private void checkSupport(Type type, Command cmd, Object request)
-  {
-    if (!(type instanceof RepositoryType))
-    {
+  private void checkSupport(Type type, Command cmd, Object request) {
+    if (!(type instanceof RepositoryType)) {
       logger.warn("type {} is not a repository type", type.getName());
 
       throw new WebApplicationException(Response.Status.BAD_REQUEST);
@@ -506,8 +393,7 @@ public class RepositoryImportResource
 
     Set<Command> cmds = ((RepositoryType) type).getSupportedCommands();
 
-    if (!cmds.contains(cmd))
-    {
+    if (!cmds.contains(cmd)) {
       logger.warn("type {} does not support this type of import: {}",
         type.getName(), request);
 
@@ -518,24 +404,18 @@ public class RepositoryImportResource
   /**
    * Creates a new repository with the given name and type.
    *
-   *
    * @param type repository type
    * @param name repository name
-   *
    * @return newly created repository
    */
-  private Repository create(String type, String name)
-  {
+  private Repository create(String type, String name) {
     Repository repository = null;
 
-    try
-    {
+    try {
       // TODO #8783
 //      repository = new Repository(null, type, name);
       manager.create(repository);
-    }
-    catch (InternalRepositoryException ex)
-    {
+    } catch (InternalRepositoryException ex) {
       handleGenericCreationFailure(ex, type, name);
     }
 
@@ -545,17 +425,14 @@ public class RepositoryImportResource
   /**
    * Start bundle import.
    *
-   *
-   * @param type repository type
-   * @param name name of the repository
+   * @param type        repository type
+   * @param name        name of the repository
    * @param inputStream bundle stream
-   * @param compressed true if the bundle is gzip compressed
-   *
+   * @param compressed  true if the bundle is gzip compressed
    * @return imported repository
    */
   private Repository doImportFromBundle(String type, String name,
-    InputStream inputStream, boolean compressed)
-  {
+                                        InputStream inputStream, boolean compressed) {
     RepositoryPermissions.create().check();
 
     checkArgument(!Strings.isNullOrEmpty(name),
@@ -564,8 +441,7 @@ public class RepositoryImportResource
 
     Repository repository;
 
-    try
-    {
+    try {
       Type t = type(type);
 
       checkSupport(t, Command.UNBUNDLE, "bundle");
@@ -576,26 +452,19 @@ public class RepositoryImportResource
 
       File file = File.createTempFile("scm-import-", ".bundle");
 
-      try
-      {
+      try {
         long length = Files.asByteSink(file).writeFrom(inputStream);
 
         logger.info("copied {} bytes to temp, start bundle import", length);
         service = serviceFactory.create(repository);
         service.getUnbundleCommand().setCompressed(compressed).unbundle(file);
-      }
-      catch (InternalRepositoryException ex)
-      {
+      } catch (InternalRepositoryException ex) {
         handleImportFailure(ex, repository);
-      }
-      finally
-      {
+      } finally {
         IOUtil.close(service);
         IOUtil.delete(file);
       }
-    }
-    catch (IOException ex)
-    {
+    } catch (IOException ex) {
       logger.warn("could not create temporary file", ex);
 
       throw new WebApplicationException(ex);
@@ -607,42 +476,29 @@ public class RepositoryImportResource
   /**
    * Method description
    *
-   *
    * @return
    */
-  private List<Type> findImportableTypes()
-  {
+  private List<Type> findImportableTypes() {
     List<Type> types = new ArrayList<Type>();
     Collection<Type> handlerTypes = manager.getTypes();
 
-    for (Type t : handlerTypes)
-    {
+    for (Type t : handlerTypes) {
       RepositoryHandler handler = manager.getHandler(t.getName());
 
-      if (handler != null)
-      {
-        try
-        {
-          if (handler.getImportHandler() != null)
-          {
+      if (handler != null) {
+        try {
+          if (handler.getImportHandler() != null) {
             types.add(t);
           }
-        }
-        catch (FeatureNotSupportedException ex)
-        {
-          if (logger.isTraceEnabled())
-          {
+        } catch (FeatureNotSupportedException ex) {
+          if (logger.isTraceEnabled()) {
             logger.trace("import handler is not supported", ex);
-          }
-          else if (logger.isInfoEnabled())
-          {
+          } else if (logger.isInfoEnabled()) {
             logger.info("{} handler does not support import of repositories",
               t.getName());
           }
         }
-      }
-      else if (logger.isWarnEnabled())
-      {
+      } else if (logger.isWarnEnabled()) {
         logger.warn("could not find handler for type {}", t.getName());
       }
     }
@@ -653,14 +509,12 @@ public class RepositoryImportResource
   /**
    * Handle creation failures.
    *
-   *
-   * @param ex exception
+   * @param ex   exception
    * @param type repository type
    * @param name name of the repository
    */
   private void handleGenericCreationFailure(Exception ex, String type,
-    String name)
-  {
+                                            String name) {
     logger.error(String.format("could not create repository %s with type %s",
       type, name), ex);
 
@@ -670,20 +524,15 @@ public class RepositoryImportResource
   /**
    * Handle import failures.
    *
-   *
-   * @param ex exception
+   * @param ex         exception
    * @param repository repository
    */
-  private void handleImportFailure(Exception ex, Repository repository)
-  {
+  private void handleImportFailure(Exception ex, Repository repository) {
     logger.error("import for repository failed, delete repository", ex);
 
-    try
-    {
+    try {
       manager.delete(repository);
-    }
-    catch (InternalRepositoryException | NotFoundException e)
-    {
+    } catch (InternalRepositoryException | NotFoundException e) {
       logger.error("can not delete repository after import failure", e);
     }
 
@@ -694,27 +543,21 @@ public class RepositoryImportResource
   /**
    * Import repositories from a specific type.
    *
-   *
    * @param repositories repository list
-   * @param type type of repository
+   * @param type         type of repository
    */
-  private void importFromDirectory(List<Repository> repositories, String type)
-  {
+  private void importFromDirectory(List<Repository> repositories, String type) {
     RepositoryHandler handler = manager.getHandler(type);
 
-    if (handler != null)
-    {
+    if (handler != null) {
       logger.info("start directory import for repository type {}", type);
 
-      try
-      {
+      try {
         List<String> repositoryNames =
           handler.getImportHandler().importRepositories(manager);
 
-        if (repositoryNames != null)
-        {
-          for (String repositoryName : repositoryNames)
-          {
+        if (repositoryNames != null) {
+          for (String repositoryName : repositoryNames) {
             // TODO #8783
             /*Repository repository = null; //manager.get(type, repositoryName);
 
@@ -729,22 +572,14 @@ public class RepositoryImportResource
             }*/
           }
         }
-      }
-      catch (FeatureNotSupportedException ex)
-      {
+      } catch (FeatureNotSupportedException ex) {
         throw new WebApplicationException(ex, Response.Status.BAD_REQUEST);
-      }
-      catch (IOException ex)
-      {
+      } catch (IOException ex) {
+        throw new WebApplicationException(ex);
+      } catch (InternalRepositoryException ex) {
         throw new WebApplicationException(ex);
       }
-      catch (InternalRepositoryException ex)
-      {
-        throw new WebApplicationException(ex);
-      }
-    }
-    else
-    {
+    } else {
       throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
   }
@@ -752,17 +587,13 @@ public class RepositoryImportResource
   /**
    * Method description
    *
-   *
    * @param type
-   *
    * @return
    */
-  private Type type(String type)
-  {
+  private Type type(String type) {
     RepositoryHandler handler = manager.getHandler(type);
 
-    if (handler == null)
-    {
+    if (handler == null) {
       logger.warn("no handler for type {} found", type);
 
       throw new WebApplicationException(Response.Status.NOT_FOUND);
@@ -778,24 +609,21 @@ public class RepositoryImportResource
    */
   @XmlRootElement(name = "import")
   @XmlAccessorType(XmlAccessType.FIELD)
-  public static class UrlImportRequest
-  {
+  public static class UrlImportRequest {
 
     /**
      * Constructs ...
-     *
      */
-    public UrlImportRequest() {}
+    public UrlImportRequest() {
+    }
 
     /**
      * Constructs a new {@link UrlImportRequest}
      *
-     *
      * @param name name of the repository
-     * @param url external url of the repository
+     * @param url  external url of the repository
      */
-    public UrlImportRequest(String name, String url)
-    {
+    public UrlImportRequest(String name, String url) {
       this.name = name;
       this.url = url;
     }
@@ -806,13 +634,12 @@ public class RepositoryImportResource
      * {@inheritDoc}
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
       //J-
       return MoreObjects.toStringHelper(this)
-                    .add("name", name)
-                    .add("url", url)
-                    .toString();
+        .add("name", name)
+        .add("url", url)
+        .toString();
       //J+
     }
 
@@ -821,40 +648,44 @@ public class RepositoryImportResource
     /**
      * Returns name of the repository.
      *
-     *
      * @return name of the repository
      */
-    public String getName()
-    {
+    public String getName() {
       return name;
     }
 
     /**
      * Returns external url of the repository.
      *
-     *
      * @return external url of the repository
      */
-    public String getUrl()
-    {
+    public String getUrl() {
       return url;
     }
 
     //~--- fields -------------------------------------------------------------
 
-    /** name of the repository */
+    /**
+     * name of the repository
+     */
     private String name;
 
-    /** external url of the repository */
+    /**
+     * external url of the repository
+     */
     private String url;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
-  /** repository manager */
+  /**
+   * repository manager
+   */
   private final RepositoryManager manager;
 
-  /** repository service factory */
+  /**
+   * repository service factory
+   */
   private final RepositoryServiceFactory serviceFactory;
 }

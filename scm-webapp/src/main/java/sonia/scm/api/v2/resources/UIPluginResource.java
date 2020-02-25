@@ -1,8 +1,9 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.security.AllowAnonymousAccess;
@@ -39,12 +40,23 @@ public class UIPluginResource {
    */
   @GET
   @Path("")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(CollectionDto.class)
   @Produces(VndMediaType.UI_PLUGIN_COLLECTION)
+  @Operation(summary = "Collection of ui plugin bundles", description = "Returns a collection of installed plugins and their ui bundles.", hidden = true)
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.UI_PLUGIN_COLLECTION,
+      schema = @Schema(implementation = CollectionDto.class)
+    )
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public Response getInstalledPlugins() {
     List<InstalledPlugin> plugins = pluginLoader.getInstalledPlugins()
       .stream()
@@ -63,13 +75,30 @@ public class UIPluginResource {
    */
   @GET
   @Path("{id}")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 404, condition = "not found"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(UIPluginDto.class)
   @Produces(VndMediaType.UI_PLUGIN)
+  @Operation(summary = "Get single ui plugin bundle", description = "Returns the installed plugin with the given id.", hidden = true)
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.UI_PLUGIN,
+      schema = @Schema(implementation = UIPluginDto.class)
+    )
+  )
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public Response getInstalledPlugin(@PathParam("id") String id) {
     Optional<UIPluginDto> uiPluginDto = pluginLoader.getInstalledPlugins()
       .stream()

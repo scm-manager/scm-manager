@@ -8,6 +8,7 @@ import { fetchMe, getFetchMeFailure, getMe, isAuthenticated, isFetchMePending } 
 import { ErrorPage, Footer, Header, Loading, PrimaryNavigation } from "@scm-manager/ui-components";
 import { Links, Me } from "@scm-manager/ui-types";
 import {
+  getAppVersion,
   getFetchIndexResourcesFailure,
   getLinks,
   getMeLink,
@@ -21,6 +22,7 @@ type Props = WithTranslation & {
   loading: boolean;
   links: Links;
   meLink: string;
+  version: string;
 
   // dispatcher functions
   fetchMe: (link: string) => void;
@@ -34,7 +36,7 @@ class App extends Component<Props> {
   }
 
   render() {
-    const { me, loading, error, authenticated, links, t } = this.props;
+    const { me, loading, error, authenticated, links, version, t } = this.props;
 
     let content;
     const navigation = authenticated ? <PrimaryNavigation links={links} /> : "";
@@ -50,7 +52,7 @@ class App extends Component<Props> {
       <div className="App">
         <Header>{navigation}</Header>
         {content}
-        {authenticated && <Footer me={me} />}
+        {authenticated && <Footer me={me} version={version} links={links} />}
       </div>
     );
   }
@@ -69,13 +71,15 @@ const mapStateToProps = (state: any) => {
   const error = getFetchMeFailure(state) || getFetchIndexResourcesFailure(state);
   const links = getLinks(state);
   const meLink = getMeLink(state);
+  const version = getAppVersion(state);
   return {
     authenticated,
     me,
     loading,
     error,
     links,
-    meLink
+    meLink,
+    version
   };
 };
 
