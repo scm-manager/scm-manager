@@ -7,9 +7,9 @@ valid token using the authentication endpoint and copy the response body.
 
 SCM-Manager defines a modern ["Level 3"-REST API](https://martinfowler.com/articles/richardsonMaturityModel.html). 
 Using the HATEOAS architecture for REST allows us to provide discoverable and self explanatory endpoint definitions. 
-The responses are build using the [HAL format](http://stateless.co/hal_specification.html) as JSON or XML. 
+The responses are build using the [HAL JSON format](http://stateless.co/hal_specification.html). 
 HAL makes the API human-friendly and simplifies the communication between the frontend and the server using links and embedded resources.
 
-We highly suggest using the HAL links when creating new functions for the SCM-Manager since they are consistent and can be
+We highly suggest using HAL links when creating new functions for SCM-Manager since they are consistent and can be
 permission checked before being append to the response. The links and embedded resources can also be used by plugins, which can
 define new resources or enrich existing ones.
