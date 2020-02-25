@@ -137,12 +137,6 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- rest documentation -->
-    <dependency>
-      <groupId>com.webcohesion.enunciate</groupId>
-      <artifactId>enunciate-core-annotations</artifactId>
-    </dependency>
-
     <!-- event bus -->
 
     <dependency>

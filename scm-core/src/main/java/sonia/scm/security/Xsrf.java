@@ -32,15 +32,15 @@ package sonia.scm.security;
 
 /**
  * Shared constants for Xsrf related classes.
- * 
+ *
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class Xsrf {
-  
-  static final String HEADER_KEY = "X-XSRF-Token";
-  
-  static final String TOKEN_KEY = "xsrf";
+
+  public static final String HEADER_KEY = "X-XSRF-Token";
+
+  public static final String TOKEN_KEY = "xsrf";
 
   private Xsrf() {
   }

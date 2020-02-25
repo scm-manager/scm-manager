@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+- Added footer extension points for links and avatar
+- Create OpenAPI specification during build
+- Extension point entries with supplied extensionName are sorted ascending
+
+### Changed
+- New footer design
+
+### Fixed
+- Modification for mercurial repositories with enabled XSRF protection
+
+### Removed
+- Enunciate rest documentation
+
 ## 2.0.0-rc4 - 2020-02-14
 ### Added
 - Support for Java versions > 8

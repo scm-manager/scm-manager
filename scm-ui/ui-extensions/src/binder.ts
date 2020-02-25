@@ -3,6 +3,7 @@ type Predicate = (props: any) => boolean;
 type ExtensionRegistration = {
   predicate: Predicate;
   extension: any;
+  extensionName: string;
 };
 
 /**
@@ -10,11 +11,13 @@ type ExtensionRegistration = {
  * The Binder class is mainly exported for testing, plugins should only use the default export.
  */
 export class Binder {
+  name: string;
   extensionPoints: {
     [key: string]: Array<ExtensionRegistration>;
   };
 
-  constructor() {
+  constructor(name: string) {
+    this.name = name;
     this.extensionPoints = {};
   }
 
@@ -25,13 +28,14 @@ export class Binder {
    * @param extension provided extension
    * @param predicate to decide if the extension gets rendered for the given props
    */
-  bind(extensionPoint: string, extension: any, predicate?: Predicate) {
+  bind(extensionPoint: string, extension: any, predicate?: Predicate, extensionName?: string) {
     if (!this.extensionPoints[extensionPoint]) {
       this.extensionPoints[extensionPoint] = [];
     }
     const registration = {
       predicate: predicate ? predicate : () => true,
-      extension
+      extension,
+      extensionName: extensionName ? extensionName : ""
     };
     this.extensionPoints[extensionPoint].push(registration);
   }
@@ -61,6 +65,7 @@ export class Binder {
     if (props) {
       registrations = registrations.filter(reg => reg.predicate(props || {}));
     }
+    registrations.sort(this.sortExtensions);
     return registrations.map(reg => reg.extension);
   }
 
@@ -70,9 +75,28 @@ export class Binder {
   hasExtension(extensionPoint: string, props?: object): boolean {
     return this.getExtensions(extensionPoint, props).length > 0;
   }
+
+  /**
+   * Sort extensions in ascending order, starting with entries with specified extensionName.
+   */
+  sortExtensions = (a: ExtensionRegistration, b: ExtensionRegistration) => {
+    const regA = a.extensionName ? a.extensionName.toUpperCase() : "";
+    const regB = b.extensionName ? b.extensionName.toUpperCase() : "";
+
+    if (regA === "" && regB !== "") {
+      return 1;
+    } else if (regA !== "" && regB === "") {
+      return -1;
+    } else if (regA > regB) {
+      return 1;
+    } else if (regA < regB) {
+      return -1;
+    }
+    return 0;
+  };
 }
 
 // singleton binder
-const binder = new Binder();
+const binder = new Binder("default");
 
 export default binder;

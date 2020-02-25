@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import io.swagger.v3.oas.annotations.Operation;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.api.BrowseCommandBuilder;
@@ -33,22 +34,25 @@ public class SourceRootResource {
   }
 
   @GET
-  @Produces(VndMediaType.SOURCE)
   @Path("")
+  @Produces(VndMediaType.SOURCE)
+  @Operation(summary = "List of sources", description = "Returns all sources for repository head.", tags = "Repository")
   public FileObjectDto getAllWithoutRevision(@PathParam("namespace") String namespace, @PathParam("name") String name, @DefaultValue("0") @QueryParam("offset") int offset) throws IOException {
     return getSource(namespace, name, "/", null, offset);
   }
 
   @GET
-  @Produces(VndMediaType.SOURCE)
   @Path("{revision}")
+  @Produces(VndMediaType.SOURCE)
+  @Operation(summary = "List of sources by revision", description = "Returns all sources for the given revision.", tags = "Repository")
   public FileObjectDto getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @DefaultValue("0") @QueryParam("offset") int offset) throws IOException {
     return getSource(namespace, name, "/", revision, offset);
   }
 
   @GET
-  @Produces(VndMediaType.SOURCE)
   @Path("{revision}/{path: .*}")
+  @Produces(VndMediaType.SOURCE)
+  @Operation(summary = "List of sources by revision in path", description = "Returns all sources for the given revision in a specific path.", tags = "Repository")
   public FileObjectDto get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path, @DefaultValue("0") @QueryParam("offset") int offset) throws IOException {
     return getSource(namespace, name, path, revision, offset);
   }

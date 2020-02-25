@@ -1,9 +1,15 @@
 package sonia.scm.api.v2.resources;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.ws.rs.Path;
 
+@OpenAPIDefinition(tags = {
+  @Tag(name = "Plugin Management", description = "Plugin management related endpoints")
+})
 @Path("v2/plugins")
 public class PluginRootResource {
 

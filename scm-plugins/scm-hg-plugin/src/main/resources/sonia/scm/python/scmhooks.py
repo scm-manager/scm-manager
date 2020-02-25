@@ -41,6 +41,7 @@ import os, urllib, urllib2
 baseUrl = os.environ['SCM_URL']
 challenge = os.environ['SCM_CHALLENGE']
 token = os.environ['SCM_BEARER_TOKEN']
+xsrf = os.environ['SCM_XSRF']
 repositoryId = os.environ['SCM_REPOSITORY_ID']
 
 def printMessages(ui, msgs):
@@ -59,6 +60,7 @@ def callHookUrl(ui, repo, hooktype, node):
     proxy_handler = urllib2.ProxyHandler({})
     opener = urllib2.build_opener(proxy_handler)
     req = urllib2.Request(url, data)
+    req.add_header("X-XSRF-Token", xsrf)
     conn = opener.open(req)
     if 200 <= conn.code < 300:
       ui.debug( "scm-hook " + hooktype + " success with status code " + str(conn.code) + "\n" )
@@ -101,7 +103,7 @@ def preHook(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs):
   # older mercurial versions
   if pending != None:
     pending()
-  
+
   # newer mercurial version
   # we have to make in-memory changes visible to external process
   # this does not happen automatically, because mercurial treat our hooks as internal hooks

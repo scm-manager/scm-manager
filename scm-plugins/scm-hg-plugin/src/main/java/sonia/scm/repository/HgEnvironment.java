@@ -38,6 +38,9 @@ package sonia.scm.repository;
 import com.google.inject.ProvisionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.security.AccessToken;
+import sonia.scm.security.CipherUtil;
+import sonia.scm.security.Xsrf;
 import sonia.scm.web.HgUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,6 +67,8 @@ public final class HgEnvironment
   private static final String ENV_URL = "SCM_URL";
 
   private static final String SCM_BEARER_TOKEN = "SCM_BEARER_TOKEN";
+
+  private static final String SCM_XSRF = "SCM_XSRF";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -114,13 +119,18 @@ public final class HgEnvironment
     }
 
     try {
-      String credentials = hookManager.getCredentials();
-      environment.put(SCM_BEARER_TOKEN, credentials);
+      AccessToken accessToken = hookManager.getAccessToken();
+      environment.put(SCM_BEARER_TOKEN, CipherUtil.getInstance().encode(accessToken.compact()));
+      extractXsrfKey(environment, accessToken);
     } catch (ProvisionException e) {
       LOG.debug("could not create bearer token; looks like currently we are not in a request; probably you can ignore the following exception:", e);
     }
     environment.put(ENV_PYTHON_PATH, HgUtil.getPythonPath(handler.getConfig()));
     environment.put(ENV_URL, hookUrl);
     environment.put(ENV_CHALLENGE, hookManager.getChallenge());
+  }
+
+  private static void extractXsrfKey(Map<String, String> environment, AccessToken accessToken) {
+    environment.put(SCM_XSRF, accessToken.<String>getCustom(Xsrf.TOKEN_KEY).orElse("-"));
   }
 }

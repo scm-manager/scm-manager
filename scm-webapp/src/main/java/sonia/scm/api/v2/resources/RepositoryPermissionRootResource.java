@@ -1,9 +1,10 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.NotFoundException;
@@ -64,17 +65,30 @@ public class RepositoryPermissionRootResource {
    * @return a web response with the status code 201 and the url to GET the added permission
    */
   @POST
-  @StatusCodes({
-    @ResponseCode(code = 201, condition = "creates", additionalHeaders = {
-      @ResponseHeader(name = "Location", description = "uri of the  created permission")
-    }),
-    @ResponseCode(code = 500, condition = "internal server error"),
-    @ResponseCode(code = 404, condition = "not found"),
-    @ResponseCode(code = 409, condition = "conflict")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
-  @Consumes(VndMediaType.REPOSITORY_PERMISSION)
   @Path("")
+  @Consumes(VndMediaType.REPOSITORY_PERMISSION)
+  @Operation(summary = "Create repository-specific permission", description = "Adds a new permission to the user or group managed by the repository.", tags = {"Repository", "Permissions"})
+  @ApiResponse(
+    responseCode = "201",
+    description = "creates",
+    headers = @Header(name = "Location", description = "uri of the created permission")
+  )
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(responseCode = "409", description = "conflict")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response create(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryPermissionDto permission) {
     log.info("try to add new permission: {}", permission);
     Repository repository = load(namespace, name);
@@ -95,14 +109,32 @@ public class RepositoryPermissionRootResource {
    * @throws NotFoundException if the repository does not exists
    */
   @GET
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "ok"),
-    @ResponseCode(code = 404, condition = "not found"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @Produces(VndMediaType.REPOSITORY_PERMISSION)
-  @TypeHint(RepositoryPermissionDto.class)
   @Path("{permission-name}")
+  @Produces(VndMediaType.REPOSITORY_PERMISSION)
+  @Operation(summary = "Get single repository-specific permission", description = "Get the searched permission with permission name related to a repository.", tags = {"Repository", "Permissions"})
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.REPOSITORY_PERMISSION,
+      schema = @Schema(implementation = RepositoryPermissionDto.class)
+    )
+  )
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("permission-name") String permissionName) {
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionRead(repository).check();
@@ -125,14 +157,32 @@ public class RepositoryPermissionRootResource {
    * @throws NotFoundException if the repository does not exists
    */
   @GET
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "ok"),
-    @ResponseCode(code = 404, condition = "not found"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @Produces(VndMediaType.REPOSITORY_PERMISSION)
-  @TypeHint(RepositoryPermissionDto.class)
   @Path("")
+  @Produces(VndMediaType.REPOSITORY_PERMISSION)
+  @Operation(summary = "List of repository-specific permissions", description = "Get all permissions related to a repository.", tags = {"Repository", "Permissions"})
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.REPOSITORY_PERMISSION,
+      schema = @Schema(implementation = RepositoryPermissionDto.class)
+    )
+  )
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     Repository repository = load(namespace, name);
     RepositoryPermissions.permissionRead(repository).check();
@@ -148,14 +198,19 @@ public class RepositoryPermissionRootResource {
    * @return a web response with the status code 204
    */
   @PUT
-  @StatusCodes({
-    @ResponseCode(code = 204, condition = "update success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
-  @Consumes(VndMediaType.REPOSITORY_PERMISSION)
   @Path("{permission-name}")
+  @Consumes(VndMediaType.REPOSITORY_PERMISSION)
+  @Operation(summary = "Update repository-specific permission", description = "Update a permission to the user or group managed by the repository.", tags = {"Repository", "Permissions"})
+  @ApiResponse(responseCode = "204", description = "update success")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response update(@PathParam("namespace") String namespace,
                          @PathParam("name") String name,
                          @PathParam("permission-name") String permissionName,
@@ -194,14 +249,19 @@ public class RepositoryPermissionRootResource {
    * @return a web response with the status code 204
    */
   @DELETE
-  @StatusCodes({
-    @ResponseCode(code = 204, condition = "delete success or nothing to delete"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
   @Path("{permission-name}")
+  @Operation(summary = "Delete repository-specific permission", description = "Delete a permission with the given name.", tags = {"Repository", "Permissions"})
+  @ApiResponse(responseCode = "204", description = "delete success or nothing to delete")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response delete(@PathParam("namespace") String namespace,
                          @PathParam("name") String name,
                          @PathParam("permission-name") String permissionName) {

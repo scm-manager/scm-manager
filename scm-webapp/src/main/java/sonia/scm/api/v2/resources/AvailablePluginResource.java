@@ -1,8 +1,10 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import de.otto.edison.hal.HalRepresentation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginManager;
@@ -44,11 +46,29 @@ public class AvailablePluginResource {
    */
   @GET
   @Path("")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(CollectionDto.class)
+  @Operation(
+    summary = "Find all available plugins",
+    description = "Returns a collection of available plugins.",
+    tags = "Plugin Management"
+  )
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.PLUGIN_COLLECTION,
+      schema = @Schema(implementation = CollectionDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"plugin:read\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   @Produces(VndMediaType.PLUGIN_COLLECTION)
   public Response getAvailablePlugins() {
     PluginPermissions.read().check();
@@ -68,13 +88,37 @@ public class AvailablePluginResource {
    */
   @GET
   @Path("/{name}")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 404, condition = "not found"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(PluginDto.class)
   @Produces(VndMediaType.PLUGIN)
+  @Operation(
+    summary = "Find single available plugin",
+    description = "Returns an available plugins.",
+    tags = "Plugin Management"
+  )
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.PLUGIN,
+      schema = @Schema(implementation = PluginDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"plugin:read\" privilege")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no plugin with the specified name found",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response getAvailablePlugin(@PathParam("name") String name) {
     PluginPermissions.read().check();
     Optional<AvailablePlugin> plugin = pluginManager.getAvailable(name);
@@ -87,15 +131,28 @@ public class AvailablePluginResource {
 
   /**
    * Triggers plugin installation.
+   *
    * @param name plugin name
    * @return HTTP Status.
    */
   @POST
   @Path("/{name}/install")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(
+    summary = "Triggers plugin installation",
+    description = "Put single plugin in installation queue. Plugin will be installed after restart.",
+    tags = "Plugin Management"
+  )
+  @ApiResponse(responseCode = "200", description = "success")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"plugin:manage\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response installPlugin(@PathParam("name") String name, @QueryParam("restart") boolean restartAfterInstallation) {
     PluginPermissions.manage().check();
     pluginManager.install(name, restartAfterInstallation);
