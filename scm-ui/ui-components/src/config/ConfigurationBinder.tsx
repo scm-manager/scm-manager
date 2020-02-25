@@ -41,7 +41,7 @@ class ConfigurationBinder {
     });
 
     // bind navigation link to extension point
-    binder.bind("admin.setting", ConfigNavLink, configPredicate);
+    binder.bind("admin.setting", ConfigNavLink, configPredicate, labelI18nKey);
 
     // route for global configuration, passes the link from the index resource to component
     const ConfigRoute = ({ url, links, ...additionalProps }: GlobalRouteProps) => {

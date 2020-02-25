@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added footer extension points for links and avatar
 - Create OpenAPI specification during build
+- Extension point entries with supplied extensionName are sorted ascending
 
 ### Changed
 - New footer design
