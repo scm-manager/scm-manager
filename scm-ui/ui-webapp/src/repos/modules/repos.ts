@@ -442,11 +442,11 @@ export function getPermissionsLink(state: object, namespace: string, name: strin
   return repo && repo._links ? repo._links.permissions.href : undefined;
 }
 
-const REPOSITORY_NAVIGATION_COLLAPSED = "repository-menu-collapsed";
+const REPOSITORY_MENU_COLLAPSED = "repository-menu-collapsed";
 
 export function isRepositoryMenuCollapsed() {
-  return localStorage.getItem(REPOSITORY_NAVIGATION_COLLAPSED) === "true";
+  return localStorage.getItem(REPOSITORY_MENU_COLLAPSED) === "true";
 }
-export function switchRepositoryMenuCollapsed(newStatus: boolean) {
-  localStorage.setItem(REPOSITORY_NAVIGATION_COLLAPSED, String(newStatus));
+export function switchRepositoryMenuCollapsed(status: boolean) {
+  localStorage.setItem(REPOSITORY_MENU_COLLAPSED, String(status));
 }

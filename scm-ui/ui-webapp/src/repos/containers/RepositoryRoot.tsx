@@ -209,6 +209,7 @@ class RepositoryRoot extends React.Component<Props, State> {
                   to={`${url}/info`}
                   icon="fas fa-info-circle"
                   label={t("repositoryRoot.menu.informationNavLink")}
+                  title={t("repositoryRoot.menu.informationNavLink")}
                 />
                 <RepositoryNavLink
                   repository={repository}
@@ -218,6 +219,7 @@ class RepositoryRoot extends React.Component<Props, State> {
                   label={t("repositoryRoot.menu.branchesNavLink")}
                   activeWhenMatch={this.matchesBranches}
                   activeOnlyWhenExact={false}
+                  title={t("repositoryRoot.menu.branchesNavLink")}
                 />
                 <RepositoryNavLink
                   repository={repository}
@@ -227,12 +229,14 @@ class RepositoryRoot extends React.Component<Props, State> {
                   label={t("repositoryRoot.menu.sourcesNavLink")}
                   activeWhenMatch={this.matchesCode}
                   activeOnlyWhenExact={false}
+                  title={t("repositoryRoot.menu.sourcesNavLink")}
                 />
                 <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true} />
                 <SubNavigation
                   to={`${url}/settings/general`}
                   label={t("repositoryRoot.menu.settingsNavLink")}
                   onCollapsed={() => this.onCollapse(false)}
+                  title={t("repositoryRoot.menu.settingsNavLink")}
                 >
                   <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
                   <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
