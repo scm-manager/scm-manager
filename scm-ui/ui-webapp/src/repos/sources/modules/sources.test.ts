@@ -118,7 +118,7 @@ describe("sources fetch", () => {
   });
 
   it("should fetch the sources of the repository", () => {
-    fetchMock.getOnce(sourcesUrl, collection);
+    fetchMock.getOnce(sourcesUrl + "?offset=0", collection);
 
     const expectedActions = [
       {
@@ -182,7 +182,7 @@ describe("sources fetch", () => {
   });
 
   it("should dispatch FETCH_SOURCES_FAILURE on server error", () => {
-    fetchMock.getOnce(sourcesUrl, {
+    fetchMock.getOnce(sourcesUrl + "?offset=0", {
       status: 500
     });
 

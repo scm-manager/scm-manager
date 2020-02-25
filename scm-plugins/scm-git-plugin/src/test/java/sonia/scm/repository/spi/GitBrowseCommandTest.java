@@ -87,7 +87,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(foList)
       .extracting("name")
-      .containsExactly("a.txt", "b.txt", "c", "f.txt");
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
   }
 
   @Test
@@ -100,7 +100,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     Collection<FileObject> foList = root.getChildren();
     assertThat(foList)
       .extracting("name")
-      .containsExactly("a.txt", "c");
+      .containsExactly("c", "a.txt");
   }
 
   @Test
@@ -207,7 +207,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(foList)
       .extracting("name")
-      .containsExactly("a.txt", "b.txt", "c", "f.txt");
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
 
     FileObject c = findFile(foList, "c");
 
@@ -262,7 +262,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
 
     Collection<FileObject> foList = root.getChildren();
 
-    assertThat(foList).extracting("name").contains("c", "f.txt");
+    assertThat(foList).extracting("name").contains("b.txt", "f.txt");
     assertFalse(root.isTruncated());
   }
 
