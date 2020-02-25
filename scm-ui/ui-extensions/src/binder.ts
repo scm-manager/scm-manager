@@ -81,11 +81,9 @@ export class Binder {
     const regA = a.extensionName ? a.extensionName.toUpperCase() : "";
     const regB = b.extensionName ? b.extensionName.toUpperCase() : "";
 
-    if (regA === "" && regB === "") {
-      return 0;
-    } else if (regA === "") {
+    if (regA === "" && regB !== "") {
       return 1;
-    } else if (regB === "") {
+    } else if (regA !== "" && regB === "") {
       return -1;
     } else if (regA > regB) {
       return 1;
