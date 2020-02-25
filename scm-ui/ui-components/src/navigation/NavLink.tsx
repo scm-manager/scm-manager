@@ -10,6 +10,7 @@ type Props = {
   label: string;
   activeOnlyWhenExact?: boolean;
   activeWhenMatch?: (route: any) => boolean;
+  collapsed: boolean;
 };
 
 class NavLink extends React.Component<Props> {
@@ -23,7 +24,7 @@ class NavLink extends React.Component<Props> {
   }
 
   renderLink = (route: any) => {
-    const { to, icon, label } = this.props;
+    const { to, icon, label, collapsed } = this.props;
 
     let showIcon = null;
     if (icon) {
@@ -36,9 +37,12 @@ class NavLink extends React.Component<Props> {
 
     return (
       <li>
-        <Link className={this.isActive(route) ? "is-active" : ""} to={to}>
+        <Link
+          className={classNames(this.isActive(route) ? "is-active" : "", collapsed ? "has-text-centered" : "")}
+          to={to}
+        >
           {showIcon}
-          {label}
+          {collapsed ? null : label}
         </Link>
       </li>
     );

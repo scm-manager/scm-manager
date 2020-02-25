@@ -9,6 +9,8 @@ type Props = {
   activeOnlyWhenExact?: boolean;
   activeWhenMatch?: (route: any) => boolean;
   children?: ReactNode;
+  collapsed?: boolean;
+  onCollapsed?: (newStatus: boolean) => void;
 };
 
 class SubNavigation extends React.Component<Props> {
@@ -22,7 +24,7 @@ class SubNavigation extends React.Component<Props> {
   }
 
   renderLink = (route: any) => {
-    const { to, icon, label } = this.props;
+    const { to, icon, label, collapsed } = this.props;
 
     let defaultIcon = "fas fa-cog";
     if (icon) {
@@ -36,8 +38,11 @@ class SubNavigation extends React.Component<Props> {
 
     return (
       <li>
-        <Link className={this.isActive(route) ? "is-active" : ""} to={to}>
-          <i className={classNames(defaultIcon, "fa-fw")} /> {label}
+        <Link
+          className={classNames(this.isActive(route) ? "is-active" : "", collapsed ? "has-text-centered" : "")}
+          to={to}
+        >
+          <i className={classNames(defaultIcon, "fa-fw")} /> {collapsed ? "" : label}
         </Link>
         {children}
       </li>

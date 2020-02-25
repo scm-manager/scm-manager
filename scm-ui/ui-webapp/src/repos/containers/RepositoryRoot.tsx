@@ -1,12 +1,18 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch, RouteComponentProps } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Repository } from "@scm-manager/ui-types";
 import { ErrorPage, Loading, Navigation, NavLink, Page, Section, SubNavigation } from "@scm-manager/ui-components";
-import { fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending } from "../modules/repos";
+import {
+  fetchRepoByName,
+  getFetchRepoFailure,
+  getRepository,
+  isFetchRepoPending,
+  isRepositoryMenuCollapsed,
+  switchRepositoryMenuCollapsed
+} from "../modules/repos";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
 import BranchesOverview from "../branches/containers/BranchesOverview";
@@ -21,28 +27,45 @@ import CodeOverview from "../codeSection/containers/CodeOverview";
 import ChangesetView from "./ChangesetView";
 import SourceExtensions from "../sources/containers/SourceExtensions";
 
-type Props = WithTranslation & {
-  namespace: string;
-  name: string;
-  repository: Repository;
-  loading: boolean;
-  error: Error;
-  repoLink: string;
-  indexLinks: object;
+type Props = RouteComponentProps &
+  WithTranslation & {
+    namespace: string;
+    name: string;
+    repository: Repository;
+    loading: boolean;
+    error: Error;
+    repoLink: string;
+    indexLinks: object;
 
-  // dispatch functions
-  fetchRepoByName: (link: string, namespace: string, name: string) => void;
+    // dispatch functions
+    fetchRepoByName: (link: string, namespace: string, name: string) => void;
+  };
 
-  // context props
-  history: History;
-  match: any;
+type State = {
+  collapsedMenu: boolean;
 };
 
-class RepositoryRoot extends React.Component<Props> {
+class RepositoryRoot extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      collapsedMenu: isRepositoryMenuCollapsed()
+    };
+  }
   componentDidMount() {
     const { fetchRepoByName, namespace, name, repoLink } = this.props;
     fetchRepoByName(repoLink, namespace, name);
   }
+
+  componentDidUpdate() {
+    if (this.state.collapsedMenu && this.isCollapseForbidden()) {
+      this.onCollapse(false);
+    }
+  }
+
+  isCollapseForbidden= () => {
+    return this.props.location.pathname.includes("/settings/");
+  };
 
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {
@@ -87,8 +110,13 @@ class RepositoryRoot extends React.Component<Props> {
     return `${url}/changesets`;
   };
 
+  onCollapse = (newStatus: boolean) => {
+    this.setState({ collapsedMenu: newStatus }, () => switchRepositoryMenuCollapsed(newStatus));
+  };
+
   render() {
     const { loading, error, indexLinks, repository, t } = this.props;
+    const { collapsedMenu } = this.state;
 
     if (error) {
       return (
@@ -119,7 +147,7 @@ class RepositoryRoot extends React.Component<Props> {
     return (
       <Page title={repository.namespace + "/" + repository.name}>
         <div className="columns">
-          <div className="column is-three-quarters">
+          <div className="column">
             <Switch>
               <Redirect exact from={this.props.match.url} to={redirectedUrl} />
 
@@ -169,9 +197,13 @@ class RepositoryRoot extends React.Component<Props> {
               <ExtensionPoint name="repository.route" props={extensionProps} renderAll={true} />
             </Switch>
           </div>
-          <div className="column">
+          <div className={collapsedMenu ? "column is-1" : "column is-3"}>
             <Navigation>
-              <Section label={t("repositoryRoot.menu.navigationLabel")}>
+              <Section
+                label={t("repositoryRoot.menu.navigationLabel")}
+                onCollapse={!this.isCollapseForbidden() ? () => this.onCollapse(!collapsedMenu) : undefined}
+                collapsed={collapsedMenu}
+              >
                 <ExtensionPoint name="repository.navigation.topLevel" props={extensionProps} renderAll={true} />
                 <NavLink
                   to={`${url}/info`}
@@ -197,7 +229,11 @@ class RepositoryRoot extends React.Component<Props> {
                   activeOnlyWhenExact={false}
                 />
                 <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true} />
-                <SubNavigation to={`${url}/settings/general`} label={t("repositoryRoot.menu.settingsNavLink")}>
+                <SubNavigation
+                  to={`${url}/settings/general`}
+                  label={t("repositoryRoot.menu.settingsNavLink")}
+                  onCollapsed={() => this.onCollapse(false)}
+                >
                   <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
                   <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
                   <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true} />

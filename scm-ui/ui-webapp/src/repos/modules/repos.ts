@@ -155,7 +155,12 @@ export function fetchRepoFailure(namespace: string, name: string, error: Error):
 
 // create repo
 
-export function createRepo(link: string, repository: Repository, initRepository: boolean, callback?: (repo: Repository) => void) {
+export function createRepo(
+  link: string,
+  repository: Repository,
+  initRepository: boolean,
+  callback?: (repo: Repository) => void
+) {
   return function(dispatch: any) {
     dispatch(createRepoPending());
     const repoLink = initRepository ? link + "?initialize=true" : link;
@@ -435,4 +440,13 @@ export function getDeleteRepoFailure(state: object, namespace: string, name: str
 export function getPermissionsLink(state: object, namespace: string, name: string) {
   const repo = getRepository(state, namespace, name);
   return repo && repo._links ? repo._links.permissions.href : undefined;
+}
+
+const REPOSITORY_NAVIGATION_COLLAPSED = "repository-menu-collapsed";
+
+export function isRepositoryMenuCollapsed() {
+  return localStorage.getItem(REPOSITORY_NAVIGATION_COLLAPSED) === "true";
+}
+export function switchRepositoryMenuCollapsed(newStatus: boolean) {
+  localStorage.setItem(REPOSITORY_NAVIGATION_COLLAPSED, String(newStatus));
 }
