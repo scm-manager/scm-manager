@@ -1,5 +1,3 @@
-# OpenAPI REST documentation
-
 The following REST documentation describes all public endpoints of your SCM-Manager instance. 
 You can try the endpoints with or without authentication right on the swagger surface provided by the OpenAPI-Plugin.
 
