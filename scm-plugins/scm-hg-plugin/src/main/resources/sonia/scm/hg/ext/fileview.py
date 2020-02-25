@@ -153,7 +153,8 @@ class File_Walker:
     return path
 
   def walk(self, structure, parent = ""):
-    for key, value in structure.iteritems():
+    sortedItems = sorted(structure.iteritems(), key = lambda item: item[1])
+    for key, value in sortedItems:
       if key == FILE_MARKER:
         if value:
           for v in value:
