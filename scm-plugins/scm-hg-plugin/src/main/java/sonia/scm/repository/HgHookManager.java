@@ -49,7 +49,6 @@ import sonia.scm.config.ScmConfigurationChangedEvent;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilderFactory;
-import sonia.scm.security.CipherUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
@@ -196,11 +195,9 @@ public class HgHookManager
     return this.challenge.equals(challenge);
   }
 
-  public String getCredentials()
+  public AccessToken getAccessToken()
   {
-    AccessToken accessToken = accessTokenBuilderFactory.create().build();
-
-    return CipherUtil.getInstance().encode(accessToken.compact());
+    return accessTokenBuilderFactory.create().build();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -279,7 +276,7 @@ public class HgHookManager
     //J-
     return HttpUtil.getUriWithoutEndSeperator(
       MoreObjects.firstNonNull(
-        configuration.getBaseUrl(), 
+        configuration.getBaseUrl(),
         "http://localhost:8080/scm"
       )
     ).concat("/hook/hg/");

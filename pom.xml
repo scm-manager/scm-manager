@@ -450,7 +450,7 @@
         <plugin>
           <groupId>sonia.scm.maven</groupId>
           <artifactId>smp-maven-plugin</artifactId>
-          <version>1.0.0-rc3</version>
+          <version>1.0.0-rc4</version>
         </plugin>
 
         <plugin>
@@ -855,8 +855,8 @@
     <guava.version>26.0-jre</guava.version>
 
     <!-- frontend -->
-    <nodejs.version>10.16.0</nodejs.version>
-    <yarn.version>1.16.0</yarn.version>
+    <nodejs.version>12.16.1</nodejs.version>
+    <yarn.version>1.22.0</yarn.version>
 
     <!-- build properties -->
     <project.build.javaLevel>8</project.build.javaLevel>
