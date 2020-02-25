@@ -10,11 +10,13 @@ type ExtensionRegistration = {
  * The Binder class is mainly exported for testing, plugins should only use the default export.
  */
 export class Binder {
+  name: string;
   extensionPoints: {
     [key: string]: Array<ExtensionRegistration>;
   };
 
-  constructor() {
+  constructor(name: string) {
+    this.name = name;
     this.extensionPoints = {};
   }
 
@@ -73,6 +75,6 @@ export class Binder {
 }
 
 // singleton binder
-const binder = new Binder();
+const binder = new Binder("default");
 
 export default binder;

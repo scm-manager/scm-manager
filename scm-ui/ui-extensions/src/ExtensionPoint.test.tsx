@@ -33,12 +33,6 @@ describe("ExtensionPoint test", () => {
     expect(rendered.text()).toBe("Extension One");
   });
 
-  // We use this wrapper since Enzyme cannot handle React Fragments (see https://github.com/airbnb/enzyme/issues/1213)
-  class ExtensionPointEnzymeFix extends ExtensionPoint {
-    render() {
-      return <div>{super.render()}</div>;
-    }
-  }
   it("should render the given components", () => {
     const labelOne = () => {
       return <label>Extension One</label>;
@@ -50,7 +44,7 @@ describe("ExtensionPoint test", () => {
     mockedBinder.hasExtension.mockReturnValue(true);
     mockedBinder.getExtensions.mockReturnValue([labelOne, labelTwo]);
 
-    const rendered = mount(<ExtensionPointEnzymeFix name="something.special" renderAll={true} />);
+    const rendered = mount(<ExtensionPoint name="something.special" renderAll={true} />);
     const text = rendered.text();
     expect(text).toContain("Extension One");
     expect(text).toContain("Extension Two");
@@ -142,5 +136,13 @@ describe("ExtensionPoint test", () => {
     const rendered = mount(<App />);
     const text = rendered.text();
     expect(text).toBe("Hello Trillian");
+  });
+
+  it("should not render nothing without extension and without default", () => {
+    mockedBinder.hasExtension.mockReturnValue(false);
+
+    const rendered = mount(<ExtensionPoint name="something.special" />);
+    const text = rendered.text();
+    expect(text).toBe("");
   });
 });

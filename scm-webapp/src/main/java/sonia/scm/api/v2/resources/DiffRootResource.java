@@ -1,7 +1,9 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.api.DiffCommandBuilder;
@@ -44,23 +46,35 @@ public class DiffRootResource {
    * Get the repository diff of a revision
    *
    * @param namespace repository namespace
-   * @param name repository name
-   * @param revision the revision
+   * @param name      repository name
+   * @param revision  the revision
    * @return the dif of the revision
    * @throws NotFoundException if the repository is not found
    */
   @GET
   @Path("{revision}")
   @Produces(VndMediaType.DIFF)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 400, condition = "Bad Request"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the diff"),
-    @ResponseCode(code = 404, condition = "not found, no revision with the specified param for the repository available or repository not found"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision , @Pattern(regexp = DIFF_FORMAT_VALUES_REGEX) @DefaultValue("NATIVE") @QueryParam("format") String format ) throws IOException {
+  @Operation(summary = "Diff by revision", description = "Get the repository diff of a revision.", tags = "Repository")
+  @ApiResponse(responseCode = "200", description = "success")
+  @ApiResponse(responseCode = "400", description = "bad request")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the diff")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no revision with the specified param for the repository available or repository found",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @Pattern(regexp = DIFF_FORMAT_VALUES_REGEX) @DefaultValue("NATIVE") @QueryParam("format") String format) throws IOException {
     HttpUtil.checkForCRLFInjection(revision);
     DiffFormat diffFormat = DiffFormat.valueOf(format);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
@@ -77,14 +91,33 @@ public class DiffRootResource {
   @GET
   @Path("{revision}/parsed")
   @Produces(VndMediaType.DIFF_PARSED)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 400, condition = "Bad Request"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the diff"),
-    @ResponseCode(code = 404, condition = "not found, no revision with the specified param for the repository available or repository not found"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(summary = "Parsed diff by revision", description = "Get the parsed repository diff of a revision.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.DIFF_PARSED,
+      schema = @Schema(implementation = DiffResultDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "400", description = "bad request")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the diff")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no revision with the specified param for the repository available or repository not found",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public DiffResultDto getParsed(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) throws IOException {
     HttpUtil.checkForCRLFInjection(revision);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {

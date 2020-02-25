@@ -1,26 +1,30 @@
-import React from "react";
-import { binder } from "@scm-manager/ui-extensions";
+import React, { FC } from "react";
 import { Image } from "..";
 import { Person } from "./Avatar";
 import { EXTENSION_POINT } from "./Avatar";
+import { useBinder } from "@scm-manager/ui-extensions";
 
 type Props = {
   person: Person;
+  representation?: "rounded" | "rounded-border";
+  className?: string;
 };
 
-class AvatarImage extends React.Component<Props> {
-  render() {
-    const { person } = this.props;
+const AvatarImage: FC<Props> = ({ person, representation = "rounded-border", className }) => {
+  const binder = useBinder();
+  const avatarFactory = binder.getExtension(EXTENSION_POINT);
+  if (avatarFactory) {
+    const avatar = avatarFactory(person);
 
-    const avatarFactory = binder.getExtension(EXTENSION_POINT);
-    if (avatarFactory) {
-      const avatar = avatarFactory(person);
-
-      return <Image className="has-rounded-border" src={avatar} alt={person.name} />;
+    let classes = representation === "rounded" ? "is-rounded" : "has-rounded-border";
+    if (className) {
+      classes += " " + className;
     }
 
-    return null;
+    return <Image className={classes} src={avatar} alt={person.name} />;
   }
-}
+
+  return null;
+};
 
 export default AvatarImage;

@@ -1,12 +1,16 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.web.GitVndMediaType;
+import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -14,13 +18,15 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 /**
  * RESTful Web Service Resource to manage the configuration of the git plugin.
  */
+@OpenAPIDefinition(tags = {
+  @Tag(name = "Git", description = "Configuration for the git repository type")
+})
 @Path(GitConfigResource.GIT_CONFIG_PATH_V2)
 public class GitConfigResource {
 
@@ -45,13 +51,24 @@ public class GitConfigResource {
   @GET
   @Path("")
   @Produces(GitVndMediaType.GIT_CONFIG)
-  @TypeHint(GitConfigDto.class)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"configuration:read:git\" privilege"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(summary = "Git configuration", description = "Returns the global git configuration.", tags = "Git")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = GitVndMediaType.GIT_CONFIG,
+      schema = @Schema(implementation = GitConfigDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"configuration:read:git\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public Response get() {
 
     GitConfig config = repositoryHandler.getConfig();
@@ -74,13 +91,20 @@ public class GitConfigResource {
   @PUT
   @Path("")
   @Consumes(GitVndMediaType.GIT_CONFIG)
-  @StatusCodes({
-    @ResponseCode(code = 204, condition = "update success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"configuration:write:git\" privilege"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
+  @Operation(summary = "Modify git configuration", description = "Modifies the global git configuration.", tags = "Git")
+  @ApiResponse(
+    responseCode = "204",
+    description = "update success"
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"configuration:write:git\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public Response update(GitConfigDto configDto) {
 
     GitConfig config = dtoToConfigMapper.map(configDto);
@@ -94,7 +118,7 @@ public class GitConfigResource {
   }
 
   @Path("{namespace}/{name}")
-  public GitRepositoryConfigResource getRepositoryConfig(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+  public GitRepositoryConfigResource getRepositoryConfig() {
     return gitRepositoryConfigResource.get();
   }
 }
