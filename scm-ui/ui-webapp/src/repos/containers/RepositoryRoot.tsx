@@ -11,7 +11,8 @@ import {
   getRepository,
   isFetchRepoPending,
   isRepositoryMenuCollapsed,
-  switchRepositoryMenuCollapsed
+  switchRepositoryMenuCollapsed,
+  RepositoryContext
 } from "../modules/repos";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
@@ -42,14 +43,14 @@ type Props = RouteComponentProps &
   };
 
 type State = {
-  collapsedMenu: boolean;
+  collapsedRepositoryMenu: boolean;
 };
 
 class RepositoryRoot extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      collapsedMenu: isRepositoryMenuCollapsed()
+      collapsedRepositoryMenu: isRepositoryMenuCollapsed()
     };
   }
   componentDidMount() {
@@ -58,12 +59,12 @@ class RepositoryRoot extends React.Component<Props, State> {
   }
 
   componentDidUpdate() {
-    if (this.state.collapsedMenu && this.isCollapseForbidden()) {
-      this.onCollapse(false);
+    if (this.state.collapsedRepositoryMenu && this.isCollapseForbidden()) {
+      this.onCollapseRepositoryMenu(false);
     }
   }
 
-  isCollapseForbidden= () => {
+  isCollapseForbidden = () => {
     return this.props.location.pathname.includes("/settings/");
   };
 
@@ -110,13 +111,13 @@ class RepositoryRoot extends React.Component<Props, State> {
     return `${url}/changesets`;
   };
 
-  onCollapse = (newStatus: boolean) => {
-    this.setState({ collapsedMenu: newStatus }, () => switchRepositoryMenuCollapsed(newStatus));
+  onCollapseRepositoryMenu = (status: boolean) => {
+    this.setState({ collapsedRepositoryMenu: status }, () => switchRepositoryMenuCollapsed(status));
   };
 
   render() {
     const { loading, error, indexLinks, repository, t } = this.props;
-    const { collapsedMenu } = this.state;
+    const { collapsedRepositoryMenu } = this.state;
 
     if (error) {
       return (
@@ -133,7 +134,8 @@ class RepositoryRoot extends React.Component<Props, State> {
     const extensionProps = {
       repository,
       url,
-      indexLinks
+      indexLinks,
+      collapsedRepositoryMenu
     };
 
     const redirectUrlFactory = binder.getExtension("repository.redirect", this.props);
@@ -145,108 +147,118 @@ class RepositoryRoot extends React.Component<Props, State> {
     }
 
     return (
-      <Page title={repository.namespace + "/" + repository.name}>
-        <div className="columns">
-          <div className="column">
-            <Switch>
-              <Redirect exact from={this.props.match.url} to={redirectedUrl} />
+      <RepositoryContext.Provider
+        value={{
+          menuCollapsed: this.state.collapsedRepositoryMenu,
+          toggleMenuCollapsed: () => this.setState({ collapsedRepositoryMenu: !this.state.collapsedRepositoryMenu })
+        }}
+      >
+        <Page title={repository.namespace + "/" + repository.name}>
+          <div className="columns">
+            <div className="column">
+              <Switch>
+                <Redirect exact from={this.props.match.url} to={redirectedUrl} />
 
-              {/* redirect pre 2.0.0-rc2 links */}
-              <Redirect from={`${url}/changeset/:id`} to={`${url}/code/changeset/:id`} />
-              <Redirect exact from={`${url}/sources`} to={`${url}/code/sources`} />
-              <Redirect from={`${url}/sources/:revision/:path*`} to={`${url}/code/sources/:revision/:path*`} />
-              <Redirect exact from={`${url}/changesets`} to={`${url}/code/changesets`} />
-              <Redirect from={`${url}/branch/:branch/changesets`} to={`${url}/code/branch/:branch/changesets/`} />
+                {/* redirect pre 2.0.0-rc2 links */}
+                <Redirect from={`${url}/changeset/:id`} to={`${url}/code/changeset/:id`} />
+                <Redirect exact from={`${url}/sources`} to={`${url}/code/sources`} />
+                <Redirect from={`${url}/sources/:revision/:path*`} to={`${url}/code/sources/:revision/:path*`} />
+                <Redirect exact from={`${url}/changesets`} to={`${url}/code/changesets`} />
+                <Redirect from={`${url}/branch/:branch/changesets`} to={`${url}/code/branch/:branch/changesets/`} />
 
-              <Route path={`${url}/info`} exact component={() => <RepositoryDetails repository={repository} />} />
-              <Route path={`${url}/settings/general`} component={() => <EditRepo repository={repository} />} />
-              <Route
-                path={`${url}/settings/permissions`}
-                render={() => (
-                  <Permissions namespace={this.props.repository.namespace} repoName={this.props.repository.name} />
-                )}
-              />
-              <Route
-                exact
-                path={`${url}/code/changeset/:id`}
-                render={() => <ChangesetView repository={repository} />}
-              />
-              <Route
-                path={`${url}/code/sourceext/:extension`}
-                exact={true}
-                render={() => <SourceExtensions repository={repository} />}
-              />
-              <Route
-                path={`${url}/code/sourceext/:extension/:revision/:path*`}
-                render={() => <SourceExtensions repository={repository} baseUrl={`${url}/code/sources`} />}
-              />
-              <Route
-                path={`${url}/code`}
-                render={() => <CodeOverview baseUrl={`${url}/code`} repository={repository} />}
-              />
-              <Route
-                path={`${url}/branch/:branch`}
-                render={() => <BranchRoot repository={repository} baseUrl={`${url}/branch`} />}
-              />
-              <Route
-                path={`${url}/branches`}
-                exact={true}
-                render={() => <BranchesOverview repository={repository} baseUrl={`${url}/branch`} />}
-              />
-              <Route path={`${url}/branches/create`} render={() => <CreateBranch repository={repository} />} />
-              <ExtensionPoint name="repository.route" props={extensionProps} renderAll={true} />
-            </Switch>
-          </div>
-          <div className={collapsedMenu ? "column is-1" : "column is-3"}>
-            <Navigation>
-              <Section
-                label={t("repositoryRoot.menu.navigationLabel")}
-                onCollapse={!this.isCollapseForbidden() ? () => this.onCollapse(!collapsedMenu) : undefined}
-                collapsed={collapsedMenu}
-              >
-                <ExtensionPoint name="repository.navigation.topLevel" props={extensionProps} renderAll={true} />
-                <NavLink
-                  to={`${url}/info`}
-                  icon="fas fa-info-circle"
-                  label={t("repositoryRoot.menu.informationNavLink")}
-                  title={t("repositoryRoot.menu.informationNavLink")}
+                <Route path={`${url}/info`} exact component={() => <RepositoryDetails repository={repository} />} />
+                <Route path={`${url}/settings/general`} component={() => <EditRepo repository={repository} />} />
+                <Route
+                  path={`${url}/settings/permissions`}
+                  render={() => (
+                    <Permissions namespace={this.props.repository.namespace} repoName={this.props.repository.name} />
+                  )}
                 />
-                <RepositoryNavLink
-                  repository={repository}
-                  linkName="branches"
-                  to={`${url}/branches/`}
-                  icon="fas fa-code-branch"
-                  label={t("repositoryRoot.menu.branchesNavLink")}
-                  activeWhenMatch={this.matchesBranches}
-                  activeOnlyWhenExact={false}
-                  title={t("repositoryRoot.menu.branchesNavLink")}
+                <Route
+                  exact
+                  path={`${url}/code/changeset/:id`}
+                  render={() => <ChangesetView repository={repository} />}
                 />
-                <RepositoryNavLink
-                  repository={repository}
-                  linkName={this.getCodeLinkname()}
-                  to={this.evaluateDestinationForCodeLink()}
-                  icon="fas fa-code"
-                  label={t("repositoryRoot.menu.sourcesNavLink")}
-                  activeWhenMatch={this.matchesCode}
-                  activeOnlyWhenExact={false}
-                  title={t("repositoryRoot.menu.sourcesNavLink")}
+                <Route
+                  path={`${url}/code/sourceext/:extension`}
+                  exact={true}
+                  render={() => <SourceExtensions repository={repository} />}
                 />
-                <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true} />
-                <SubNavigation
-                  to={`${url}/settings/general`}
-                  label={t("repositoryRoot.menu.settingsNavLink")}
-                  onCollapsed={() => this.onCollapse(false)}
-                  title={t("repositoryRoot.menu.settingsNavLink")}
+                <Route
+                  path={`${url}/code/sourceext/:extension/:revision/:path*`}
+                  render={() => <SourceExtensions repository={repository} baseUrl={`${url}/code/sources`} />}
+                />
+                <Route
+                  path={`${url}/code`}
+                  render={() => <CodeOverview baseUrl={`${url}/code`} repository={repository} />}
+                />
+                <Route
+                  path={`${url}/branch/:branch`}
+                  render={() => <BranchRoot repository={repository} baseUrl={`${url}/branch`} />}
+                />
+                <Route
+                  path={`${url}/branches`}
+                  exact={true}
+                  render={() => <BranchesOverview repository={repository} baseUrl={`${url}/branch`} />}
+                />
+                <Route path={`${url}/branches/create`} render={() => <CreateBranch repository={repository} />} />
+                <ExtensionPoint name="repository.route" props={extensionProps} renderAll={true} />
+              </Switch>
+            </div>
+            <div className={collapsedRepositoryMenu ? "column is-1" : "column is-3"}>
+              <Navigation>
+                <Section
+                  label={t("repositoryRoot.menu.navigationLabel")}
+                  onCollapse={
+                    this.isCollapseForbidden()
+                      ? undefined
+                      : () => this.onCollapseRepositoryMenu(!collapsedRepositoryMenu)
+                  }
+                  collapsed={collapsedRepositoryMenu}
                 >
-                  <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
-                  <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
-                  <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true} />
-                </SubNavigation>
-              </Section>
-            </Navigation>
+                  <ExtensionPoint name="repository.navigation.topLevel" props={extensionProps} renderAll={true} />
+                  <NavLink
+                    to={`${url}/info`}
+                    icon="fas fa-info-circle"
+                    label={t("repositoryRoot.menu.informationNavLink")}
+                    title={t("repositoryRoot.menu.informationNavLink")}
+                  />
+                  <RepositoryNavLink
+                    repository={repository}
+                    linkName="branches"
+                    to={`${url}/branches/`}
+                    icon="fas fa-code-branch"
+                    label={t("repositoryRoot.menu.branchesNavLink")}
+                    activeWhenMatch={this.matchesBranches}
+                    activeOnlyWhenExact={false}
+                    title={t("repositoryRoot.menu.branchesNavLink")}
+                  />
+                  <RepositoryNavLink
+                    repository={repository}
+                    linkName={this.getCodeLinkname()}
+                    to={this.evaluateDestinationForCodeLink()}
+                    icon="fas fa-code"
+                    label={t("repositoryRoot.menu.sourcesNavLink")}
+                    activeWhenMatch={this.matchesCode}
+                    activeOnlyWhenExact={false}
+                    title={t("repositoryRoot.menu.sourcesNavLink")}
+                  />
+                  <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true} />
+                  <SubNavigation
+                    to={`${url}/settings/general`}
+                    label={t("repositoryRoot.menu.settingsNavLink")}
+                    title={t("repositoryRoot.menu.settingsNavLink")}
+                  >
+                    <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
+                    <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
+                    <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true} />
+                  </SubNavigation>
+                </Section>
+              </Navigation>
+            </div>
           </div>
-        </div>
-      </Page>
+        </Page>
+      </RepositoryContext.Provider>
     );
   }
 }

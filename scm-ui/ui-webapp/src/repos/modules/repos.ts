@@ -3,6 +3,7 @@ import * as types from "../../modules/types";
 import { Action, Repository, RepositoryCollection } from "@scm-manager/ui-types";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
+import React from "react";
 
 export const FETCH_REPOS = "scm/repos/FETCH_REPOS";
 export const FETCH_REPOS_PENDING = `${FETCH_REPOS}_${types.PENDING_SUFFIX}`;
@@ -450,3 +451,8 @@ export function isRepositoryMenuCollapsed() {
 export function switchRepositoryMenuCollapsed(status: boolean) {
   localStorage.setItem(REPOSITORY_MENU_COLLAPSED, String(status));
 }
+
+export const RepositoryContext = React.createContext({
+  menuCollapsed: isRepositoryMenuCollapsed(),
+  toggleMenuCollapsed: () => {}
+});

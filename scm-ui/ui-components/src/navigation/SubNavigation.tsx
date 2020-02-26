@@ -10,8 +10,7 @@ type Props = {
   activeWhenMatch?: (route: any) => boolean;
   children?: ReactNode;
   collapsed?: boolean;
-  onCollapsed?: (newStatus: boolean) => void;
-  title?: string
+  title?: string;
 };
 
 class SubNavigation extends React.Component<Props> {

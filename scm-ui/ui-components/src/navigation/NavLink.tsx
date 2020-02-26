@@ -10,7 +10,7 @@ type Props = {
   label: string;
   activeOnlyWhenExact?: boolean;
   activeWhenMatch?: (route: any) => boolean;
-  collapsed: boolean;
+  collapsed?: boolean;
   title?: string;
 };
 

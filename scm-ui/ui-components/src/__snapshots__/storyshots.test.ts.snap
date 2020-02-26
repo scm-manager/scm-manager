@@ -484,7 +484,7 @@ exports[`Storyshots DateFromNow Default 1`] = `
 
 exports[`Storyshots Diff Binaries 1`] = `
 <div
-  className="sc-TOsTZ flmUBf"
+  className="sc-ksYbfQ doheWp"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -753,7 +753,7 @@ exports[`Storyshots Diff Binaries 1`] = `
 
 exports[`Storyshots Diff Collapsed 1`] = `
 <div
-  className="sc-TOsTZ flmUBf"
+  className="sc-ksYbfQ doheWp"
 >
   <div
     className="sc-gZMcBi ckdmuY panel is-size-6"
@@ -1102,7 +1102,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
 
 exports[`Storyshots Diff CollapsingWithFunction 1`] = `
 <div
-  className="sc-TOsTZ flmUBf"
+  className="sc-ksYbfQ doheWp"
 >
   <div
     className="sc-gZMcBi ckdmuY panel is-size-6"
@@ -3028,7 +3028,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
 
 exports[`Storyshots Diff Default 1`] = `
 <div
-  className="sc-TOsTZ flmUBf"
+  className="sc-ksYbfQ doheWp"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -6936,7 +6936,7 @@ exports[`Storyshots Diff Default 1`] = `
 
 exports[`Storyshots Diff File Annotation 1`] = `
 <div
-  className="sc-TOsTZ flmUBf"
+  className="sc-ksYbfQ doheWp"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -10868,7 +10868,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
 
 exports[`Storyshots Diff File Controls 1`] = `
 <div
-  className="sc-TOsTZ flmUBf"
+  className="sc-ksYbfQ doheWp"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -14884,7 +14884,7 @@ exports[`Storyshots Diff File Controls 1`] = `
 
 exports[`Storyshots Diff Hunks 1`] = `
 <div
-  className="sc-TOsTZ flmUBf"
+  className="sc-ksYbfQ doheWp"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -15721,7 +15721,7 @@ exports[`Storyshots Diff Hunks 1`] = `
 
 exports[`Storyshots Diff Line Annotation 1`] = `
 <div
-  className="sc-TOsTZ flmUBf"
+  className="sc-ksYbfQ doheWp"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -19665,7 +19665,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
 
 exports[`Storyshots Diff OnClick 1`] = `
 <div
-  className="sc-TOsTZ flmUBf"
+  className="sc-ksYbfQ doheWp"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -23847,7 +23847,7 @@ exports[`Storyshots Diff OnClick 1`] = `
 
 exports[`Storyshots Diff Side-By-Side 1`] = `
 <div
-  className="sc-TOsTZ flmUBf"
+  className="sc-ksYbfQ doheWp"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -28284,7 +28284,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
 
 exports[`Storyshots Diff SyntaxHighlighting 1`] = `
 <div
-  className="sc-TOsTZ flmUBf"
+  className="sc-ksYbfQ doheWp"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -32192,7 +32192,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
 
 exports[`Storyshots Forms|Checkbox Default 1`] = `
 <div
-  className="sc-gisBJw jHakbY"
+  className="sc-TOsTZ dHMHJE"
 >
   <div
     className="field"
@@ -32237,7 +32237,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
 
 exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 <div
-  className="sc-gisBJw jHakbY"
+  className="sc-TOsTZ dHMHJE"
 >
   <div
     className="field"
@@ -32265,7 +32265,7 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 
 exports[`Storyshots Forms|Radio Default 1`] = `
 <div
-  className="sc-kjoXOD hVPZau"
+  className="sc-kgAjT khfRmZ"
 >
   <label
     className="sc-cMljjf kOqpHe radio"
@@ -32294,7 +32294,7 @@ exports[`Storyshots Forms|Radio Default 1`] = `
 
 exports[`Storyshots Forms|Radio Disabled 1`] = `
 <div
-  className="sc-kjoXOD hVPZau"
+  className="sc-kgAjT khfRmZ"
 >
   <label
     className="sc-cMljjf kOqpHe radio"
@@ -32314,7 +32314,7 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
 
 exports[`Storyshots Forms|Textarea OnCancel 1`] = `
 <div
-  className="sc-cHGsZl klfJMr"
+  className="sc-cJSrbW hLoADP"
 >
   <div
     className="field"
@@ -32337,7 +32337,7 @@ exports[`Storyshots Forms|Textarea OnCancel 1`] = `
 
 exports[`Storyshots Forms|Textarea OnChange 1`] = `
 <div
-  className="sc-cHGsZl klfJMr"
+  className="sc-cJSrbW hLoADP"
 >
   <div
     className="field"
@@ -32364,7 +32364,7 @@ exports[`Storyshots Forms|Textarea OnChange 1`] = `
 
 exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
 <div
-  className="sc-cHGsZl klfJMr"
+  className="sc-cJSrbW hLoADP"
 >
   <div
     className="field"
@@ -34243,7 +34243,7 @@ PORT_NUMBER =
 
 exports[`Storyshots Table|Table Default 1`] = `
 <table
-  className="sc-fBuWsC eeihxG table content is-hoverable"
+  className="sc-eqIVtm kRufpp table content is-hoverable"
 >
   <thead>
     <tr>
@@ -34261,7 +34261,7 @@ exports[`Storyshots Table|Table Default 1`] = `
       >
         Last Name
         <i
-          className="fas fa-sort-amount-down has-text-grey-light sc-jhAzac gDbcZp"
+          className="fas fa-sort-amount-down has-text-grey-light sc-dVhcbM koxAew"
         />
       </th>
       <th
@@ -34334,7 +34334,7 @@ exports[`Storyshots Table|Table Empty 1`] = `
 
 exports[`Storyshots Table|Table TextColumn 1`] = `
 <table
-  className="sc-fBuWsC eeihxG table content is-hoverable"
+  className="sc-eqIVtm kRufpp table content is-hoverable"
 >
   <thead>
     <tr>
@@ -34346,7 +34346,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Id
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light sc-jhAzac gDbcZp"
+          className="fas fa-sort-alpha-down has-text-grey-light sc-dVhcbM koxAew"
         />
       </th>
       <th
@@ -34357,7 +34357,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Name
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light sc-jhAzac gDbcZp"
+          className="fas fa-sort-alpha-down has-text-grey-light sc-dVhcbM koxAew"
         />
       </th>
       <th
@@ -34368,7 +34368,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Description
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light sc-jhAzac gDbcZp"
+          className="fas fa-sort-alpha-down has-text-grey-light sc-dVhcbM koxAew"
         />
       </th>
     </tr>
