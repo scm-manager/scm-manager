@@ -116,7 +116,8 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
       && Objects.equal(recursive, other.recursive)
       && Objects.equal(disableLastCommit, other.disableLastCommit)
       && Objects.equal(disableSubRepositoryDetection, other.disableSubRepositoryDetection)
-      && Objects.equal(offset, other.offset);
+      && Objects.equal(offset, other.offset)
+      && Objects.equal(limit, other.limit);
   }
 
   /**
@@ -129,7 +130,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
   public int hashCode()
   {
     return Objects.hashCode(super.hashCode(), recursive, disableLastCommit,
-      disableSubRepositoryDetection, offset);
+      disableSubRepositoryDetection, offset, limit);
   }
 
   /**
