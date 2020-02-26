@@ -268,6 +268,75 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     assertFalse(root.isTruncated());
   }
 
+  @Test
+  public void testRecursiveLimit() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setLimit(4);
+    request.setRecursive(true);
+
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt");
+
+    FileObject c = findFile(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("d.txt", "e.txt");
+  }
+
+  @Test
+  public void testRecursiveLimitInSubDir() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setLimit(2);
+    request.setRecursive(true);
+
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c");
+
+    FileObject c = findFile(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("d.txt");
+  }
+
+  @Test
+  public void testRecursiveOffset() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setOffset(2);
+    request.setRecursive(true);
+
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
+
+    FileObject c = findFile(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("e.txt");
+  }
+
   private FileObject findFile(Collection<FileObject> foList, String name) {
     return foList.stream()
       .filter(f -> name.equals(f.getName()))

@@ -269,12 +269,12 @@ public class GitBrowseCommand extends AbstractGitCommand
       TreeEntry entry = entryIterator.next();
       FileObject fileObject = createFileObject(repo, request, revId, entry);
 
-      if (resultCount > request.getOffset()) {
-        files.add(fileObject);
-      }
-
       if (request.isRecursive() && fileObject.isDirectory()) {
         convertToFileObject(fileObject, repo, request, revId, entry.getChildren());
+      }
+
+      if (resultCount > request.getOffset()) {
+        files.add(fileObject);
       }
     }
 
