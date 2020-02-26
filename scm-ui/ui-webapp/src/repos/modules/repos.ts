@@ -442,17 +442,3 @@ export function getPermissionsLink(state: object, namespace: string, name: strin
   const repo = getRepository(state, namespace, name);
   return repo && repo._links ? repo._links.permissions.href : undefined;
 }
-
-const REPOSITORY_MENU_COLLAPSED = "repository-menu-collapsed";
-
-export function isRepositoryMenuCollapsed() {
-  return localStorage.getItem(REPOSITORY_MENU_COLLAPSED) === "true";
-}
-export function switchRepositoryMenuCollapsed(status: boolean) {
-  localStorage.setItem(REPOSITORY_MENU_COLLAPSED, String(status));
-}
-
-export const RepositoryContext = React.createContext({
-  menuCollapsed: isRepositoryMenuCollapsed(),
-  toggleMenuCollapsed: () => {}
-});
