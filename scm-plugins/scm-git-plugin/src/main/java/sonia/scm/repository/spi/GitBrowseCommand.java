@@ -77,6 +77,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -254,34 +255,26 @@ public class GitBrowseCommand extends AbstractGitCommand
     return Strings.isNullOrEmpty(request.getPath()) || "/".equals(request.getPath());
   }
 
-  private FileObject findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException {
-    List<TreeEntry> entries = new ArrayList<>();
-    while (treeWalk.next()) {
-      entries.add(new TreeEntry(repo, treeWalk));
-    }
-    sort(entries, TreeEntry::isDirectory, TreeEntry::getNameString);
+  private void findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException {
+    TreeEntry entry = new TreeEntry();
+    createTree(parent.getPath(), entry, repo, request, treeWalk);
+    convertToFileObject(parent, repo, request, revId, entry.getChildren());
+  }
 
+  private void convertToFileObject(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, List<TreeEntry> entries) throws IOException {
     List<FileObject> files = Lists.newArrayList();
     Iterator<TreeEntry> entryIterator = entries.iterator();
     while (entryIterator.hasNext() && ++resultCount <= request.getLimit() + request.getOffset())
     {
       TreeEntry entry = entryIterator.next();
       FileObject fileObject = createFileObject(repo, request, revId, entry);
-      if (!fileObject.getPath().startsWith(parent.getPath())) {
-        parent.setChildren(files);
-        return fileObject;
-      }
 
       if (resultCount > request.getOffset()) {
         files.add(fileObject);
       }
 
       if (request.isRecursive() && fileObject.isDirectory()) {
-        treeWalk.enterSubtree();
-        FileObject rc = findChildren(fileObject, repo, request, revId, treeWalk);
-        if (rc != null) {
-          files.add(rc);
-        }
+        convertToFileObject(fileObject, repo, request, revId, entry.getChildren());
       }
     }
 
@@ -290,8 +283,27 @@ public class GitBrowseCommand extends AbstractGitCommand
     if (resultCount > request.getLimit() + request.getOffset()) {
       parent.setTruncated(true);
     }
+  }
 
-    return null;
+  private Optional<TreeEntry> createTree(String path, TreeEntry parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, TreeWalk treeWalk) throws IOException {
+    List<TreeEntry> entries = new ArrayList<>();
+    while (treeWalk.next()) {
+      TreeEntry treeEntry = new TreeEntry(repo, treeWalk);
+      if (!treeEntry.getPathString().startsWith(path)) {
+        parent.setChildren(entries);
+        return of(treeEntry);
+      }
+
+      entries.add(treeEntry);
+
+      if (request.isRecursive() && treeEntry.isDirectory()) {
+        treeWalk.enterSubtree();
+        Optional<TreeEntry> surplus = createTree(treeEntry.getNameString(), treeEntry, repo, request, treeWalk);
+        surplus.ifPresent(entries::add);
+      }
+    }
+    parent.setChildren(entries);
+    return empty();
   }
 
   private FileObject findFirstMatch(org.eclipse.jgit.lib.Repository repo,
@@ -458,14 +470,22 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
   }
 
-  private static class TreeEntry {
+  private class TreeEntry {
 
     private final String pathString;
     private final String nameString;
     private final ObjectId objectId;
     private final boolean directory;
+    private List<TreeEntry> children = emptyList();
 
-    public TreeEntry(org.eclipse.jgit.lib.Repository repo, TreeWalk treeWalk) throws IOException {
+    TreeEntry() {
+      pathString = "";
+      nameString = "";
+      objectId = null;
+      directory = true;
+    }
+
+    TreeEntry(org.eclipse.jgit.lib.Repository repo, TreeWalk treeWalk) throws IOException {
       this.pathString = treeWalk.getPathString();
       this.nameString = treeWalk.getNameString();
       this.objectId = treeWalk.getObjectId(0);
@@ -474,20 +494,29 @@ public class GitBrowseCommand extends AbstractGitCommand
       this.directory = loader.getType() == Constants.OBJ_TREE;
     }
 
-    public String getPathString() {
+    String getPathString() {
       return pathString;
     }
 
-    public String getNameString() {
+    String getNameString() {
       return nameString;
     }
 
-    public ObjectId getObjectId() {
+    ObjectId getObjectId() {
       return objectId;
     }
 
-    public boolean isDirectory() {
+    boolean isDirectory() {
       return directory;
+    }
+
+    List<TreeEntry> getChildren() {
+      return children;
+    }
+
+    void setChildren(List<TreeEntry> children) {
+      sort(children, TreeEntry::isDirectory, TreeEntry::getNameString);
+      this.children = children;
     }
   }
 }

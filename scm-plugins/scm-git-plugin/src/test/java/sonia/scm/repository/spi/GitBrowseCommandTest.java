@@ -175,7 +175,9 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
 
     Collection<FileObject> foList = root.getChildren();
 
-    assertThat(foList).hasSize(2);
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("d.txt", "e.txt");
 
     FileObject d = findFile(foList, "d.txt");
     FileObject e = findFile(foList, "e.txt");
