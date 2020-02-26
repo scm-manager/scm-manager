@@ -4,16 +4,19 @@ import { Redirect, Route, Switch, RouteComponentProps } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Repository } from "@scm-manager/ui-types";
-import { ErrorPage, Loading, Navigation, NavLink, Page, Section, SubNavigation } from "@scm-manager/ui-components";
 import {
-  fetchRepoByName,
-  getFetchRepoFailure,
-  getRepository,
-  isFetchRepoPending,
-  isRepositoryMenuCollapsed,
-  switchRepositoryMenuCollapsed,
-  RepositoryContext
-} from "../modules/repos";
+  ErrorPage,
+  Loading,
+  Navigation,
+  NavLink,
+  Page,
+  Section,
+  SubNavigation,
+  MenuContext,
+  storeMenuCollapsed,
+  isMenuCollapsed
+} from "@scm-manager/ui-components";
+import { fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending } from "../modules/repos";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
 import BranchesOverview from "../branches/containers/BranchesOverview";
@@ -43,24 +46,28 @@ type Props = RouteComponentProps &
   };
 
 type State = {
-  collapsedRepositoryMenu: boolean;
+  menuCollapsed: boolean;
+  setMenuCollapsed: (collapsed: boolean) => void;
 };
 
 class RepositoryRoot extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+
     this.state = {
-      collapsedRepositoryMenu: isRepositoryMenuCollapsed()
+      menuCollapsed: isMenuCollapsed(),
+      setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed })
     };
   }
+
   componentDidMount() {
     const { fetchRepoByName, namespace, name, repoLink } = this.props;
     fetchRepoByName(repoLink, namespace, name);
   }
 
   componentDidUpdate() {
-    if (this.state.collapsedRepositoryMenu && this.isCollapseForbidden()) {
-      this.onCollapseRepositoryMenu(false);
+    if (this.state.menuCollapsed && this.isCollapseForbidden()) {
+      this.setState({ menuCollapsed: false });
     }
   }
 
@@ -111,13 +118,13 @@ class RepositoryRoot extends React.Component<Props, State> {
     return `${url}/changesets`;
   };
 
-  onCollapseRepositoryMenu = (status: boolean) => {
-    this.setState({ collapsedRepositoryMenu: status }, () => switchRepositoryMenuCollapsed(status));
+  onCollapseRepositoryMenu = (collapsed: boolean) => {
+    this.setState({ menuCollapsed: collapsed }, () => storeMenuCollapsed(collapsed));
   };
 
   render() {
     const { loading, error, indexLinks, repository, t } = this.props;
-    const { collapsedRepositoryMenu } = this.state;
+    const { menuCollapsed } = this.state;
 
     if (error) {
       return (
@@ -135,7 +142,7 @@ class RepositoryRoot extends React.Component<Props, State> {
       repository,
       url,
       indexLinks,
-      collapsedRepositoryMenu
+      collapsedRepositoryMenu: menuCollapsed
     };
 
     const redirectUrlFactory = binder.getExtension("repository.redirect", this.props);
@@ -147,15 +154,10 @@ class RepositoryRoot extends React.Component<Props, State> {
     }
 
     return (
-      <RepositoryContext.Provider
-        value={{
-          menuCollapsed: this.state.collapsedRepositoryMenu,
-          toggleMenuCollapsed: () => this.setState({ collapsedRepositoryMenu: !this.state.collapsedRepositoryMenu })
-        }}
-      >
-        <Page title={repository.namespace + "/" + repository.name}>
-          <div className="columns">
-            <div className="column">
+      <Page title={repository.namespace + "/" + repository.name}>
+        <div className="columns">
+          <div className="column">
+            <MenuContext.Provider value={this.state}>
               <Switch>
                 <Redirect exact from={this.props.match.url} to={redirectedUrl} />
 
@@ -204,61 +206,59 @@ class RepositoryRoot extends React.Component<Props, State> {
                 <Route path={`${url}/branches/create`} render={() => <CreateBranch repository={repository} />} />
                 <ExtensionPoint name="repository.route" props={extensionProps} renderAll={true} />
               </Switch>
-            </div>
-            <div className={collapsedRepositoryMenu ? "column is-1" : "column is-3"}>
-              <Navigation>
-                <Section
-                  label={t("repositoryRoot.menu.navigationLabel")}
-                  onCollapse={
-                    this.isCollapseForbidden()
-                      ? undefined
-                      : () => this.onCollapseRepositoryMenu(!collapsedRepositoryMenu)
-                  }
-                  collapsed={collapsedRepositoryMenu}
-                >
-                  <ExtensionPoint name="repository.navigation.topLevel" props={extensionProps} renderAll={true} />
-                  <NavLink
-                    to={`${url}/info`}
-                    icon="fas fa-info-circle"
-                    label={t("repositoryRoot.menu.informationNavLink")}
-                    title={t("repositoryRoot.menu.informationNavLink")}
-                  />
-                  <RepositoryNavLink
-                    repository={repository}
-                    linkName="branches"
-                    to={`${url}/branches/`}
-                    icon="fas fa-code-branch"
-                    label={t("repositoryRoot.menu.branchesNavLink")}
-                    activeWhenMatch={this.matchesBranches}
-                    activeOnlyWhenExact={false}
-                    title={t("repositoryRoot.menu.branchesNavLink")}
-                  />
-                  <RepositoryNavLink
-                    repository={repository}
-                    linkName={this.getCodeLinkname()}
-                    to={this.evaluateDestinationForCodeLink()}
-                    icon="fas fa-code"
-                    label={t("repositoryRoot.menu.sourcesNavLink")}
-                    activeWhenMatch={this.matchesCode}
-                    activeOnlyWhenExact={false}
-                    title={t("repositoryRoot.menu.sourcesNavLink")}
-                  />
-                  <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true} />
-                  <SubNavigation
-                    to={`${url}/settings/general`}
-                    label={t("repositoryRoot.menu.settingsNavLink")}
-                    title={t("repositoryRoot.menu.settingsNavLink")}
-                  >
-                    <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
-                    <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
-                    <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true} />
-                  </SubNavigation>
-                </Section>
-              </Navigation>
-            </div>
+            </MenuContext.Provider>
           </div>
-        </Page>
-      </RepositoryContext.Provider>
+          <div className={menuCollapsed ? "column is-1" : "column is-3"}>
+            <Navigation>
+              <Section
+                label={t("repositoryRoot.menu.navigationLabel")}
+                onCollapse={
+                  this.isCollapseForbidden() ? undefined : () => this.onCollapseRepositoryMenu(!menuCollapsed)
+                }
+                collapsed={menuCollapsed}
+              >
+                <ExtensionPoint name="repository.navigation.topLevel" props={extensionProps} renderAll={true} />
+                <NavLink
+                  to={`${url}/info`}
+                  icon="fas fa-info-circle"
+                  label={t("repositoryRoot.menu.informationNavLink")}
+                  title={t("repositoryRoot.menu.informationNavLink")}
+                />
+                <RepositoryNavLink
+                  repository={repository}
+                  linkName="branches"
+                  to={`${url}/branches/`}
+                  icon="fas fa-code-branch"
+                  label={t("repositoryRoot.menu.branchesNavLink")}
+                  activeWhenMatch={this.matchesBranches}
+                  activeOnlyWhenExact={false}
+                  title={t("repositoryRoot.menu.branchesNavLink")}
+                />
+                <RepositoryNavLink
+                  repository={repository}
+                  linkName={this.getCodeLinkname()}
+                  to={this.evaluateDestinationForCodeLink()}
+                  icon="fas fa-code"
+                  label={t("repositoryRoot.menu.sourcesNavLink")}
+                  activeWhenMatch={this.matchesCode}
+                  activeOnlyWhenExact={false}
+                  title={t("repositoryRoot.menu.sourcesNavLink")}
+                />
+                <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true} />
+                <SubNavigation
+                  to={`${url}/settings/general`}
+                  label={t("repositoryRoot.menu.settingsNavLink")}
+                  title={t("repositoryRoot.menu.settingsNavLink")}
+                >
+                  <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
+                  <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
+                  <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true} />
+                </SubNavigation>
+              </Section>
+            </Navigation>
+          </div>
+        </div>
+      </Page>
     );
   }
 }

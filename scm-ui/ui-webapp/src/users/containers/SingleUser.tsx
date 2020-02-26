@@ -1,10 +1,20 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Route } from "react-router-dom";
+import { Route, RouteComponentProps } from "react-router-dom";
 import { History } from "history";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { User } from "@scm-manager/ui-types";
-import { ErrorPage, Loading, Navigation, NavLink, Page, Section, SubNavigation } from "@scm-manager/ui-components";
+import {
+  ErrorPage,
+  Loading,
+  Navigation,
+  NavLink,
+  Page,
+  Section,
+  SubNavigation,
+  MenuContext,
+  isMenuCollapsed
+} from "@scm-manager/ui-components";
 import { Details } from "./../components/table";
 import EditUser from "./EditUser";
 import { fetchUserByName, getFetchUserFailure, getUserByName, isFetchUserPending } from "../modules/users";
@@ -13,25 +23,43 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { getUsersLink } from "../../modules/indexResource";
 import SetUserPassword from "../components/SetUserPassword";
 import SetPermissions from "../../permissions/components/SetPermissions";
+import { storeMenuCollapsed } from "@scm-manager/ui-components/src";
 
-type Props = WithTranslation & {
-  name: string;
-  user: User;
-  loading: boolean;
-  error: Error;
-  usersLink: string;
+type Props = RouteComponentProps &
+  WithTranslation & {
+    name: string;
+    user: User;
+    loading: boolean;
+    error: Error;
+    usersLink: string;
 
-  // dispatcher function
-  fetchUserByName: (p1: string, p2: string) => void;
+    // dispatcher function
+    fetchUserByName: (p1: string, p2: string) => void;
+  };
 
-  // context objects
-  match: any;
-  history: History;
+type State = {
+  menuCollapsed: boolean;
+  setMenuCollapsed: (collapsed: boolean) => void;
 };
 
-class SingleUser extends React.Component<Props> {
+class SingleUser extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      menuCollapsed: isMenuCollapsed(),
+      setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed })
+    };
+  }
+
   componentDidMount() {
     this.props.fetchUserByName(this.props.usersLink, this.props.name);
+  }
+
+  componentDidUpdate() {
+    if (this.state.menuCollapsed && this.isCollapseForbidden()) {
+      this.setState({ menuCollapsed: false });
+    }
   }
 
   stripEndingSlash = (url: string) => {
@@ -41,12 +69,21 @@ class SingleUser extends React.Component<Props> {
     return url;
   };
 
+  isCollapseForbidden = () => {
+    return this.props.location.pathname.includes("/settings/");
+  };
+
+  onCollapseUserMenu = (collapsed: boolean) => {
+    this.setState({ menuCollapsed: collapsed }, () => storeMenuCollapsed(collapsed));
+  };
+
   matchedUrl = () => {
     return this.stripEndingSlash(this.props.match.url);
   };
 
   render() {
     const { t, loading, error, user } = this.props;
+    const { menuCollapsed } = this.state;
 
     if (error) {
       return <ErrorPage title={t("singleUser.errorTitle")} subtitle={t("singleUser.errorSubtitle")} error={error} />;
@@ -64,33 +101,48 @@ class SingleUser extends React.Component<Props> {
     };
 
     return (
-      <Page title={user.displayName}>
-        <div className="columns">
-          <div className="column is-three-quarters">
-            <Route path={url} exact component={() => <Details user={user} />} />
-            <Route path={`${url}/settings/general`} component={() => <EditUser user={user} />} />
-            <Route path={`${url}/settings/password`} component={() => <SetUserPassword user={user} />} />
-            <Route
-              path={`${url}/settings/permissions`}
-              component={() => <SetPermissions selectedPermissionsLink={user._links.permissions} />}
-            />
-            <ExtensionPoint name="user.route" props={extensionProps} renderAll={true} />
+      <MenuContext.Provider value={this.state}>
+        <Page title={user.displayName}>
+          <div className="columns">
+            <div className="column">
+              <Route path={url} exact component={() => <Details user={user} />} />
+              <Route path={`${url}/settings/general`} component={() => <EditUser user={user} />} />
+              <Route path={`${url}/settings/password`} component={() => <SetUserPassword user={user} />} />
+              <Route
+                path={`${url}/settings/permissions`}
+                component={() => <SetPermissions selectedPermissionsLink={user._links.permissions} />}
+              />
+              <ExtensionPoint name="user.route" props={extensionProps} renderAll={true} />
+            </div>
+            <div className={menuCollapsed ? "column is-1" : "column is-3"}>
+              <Navigation>
+                <Section
+                  label={t("singleUser.menu.navigationLabel")}
+                  onCollapse={this.isCollapseForbidden() ? undefined : () => this.onCollapseUserMenu(!menuCollapsed)}
+                  collapsed={menuCollapsed}
+                >
+                  <NavLink
+                    to={`${url}`}
+                    icon="fas fa-info-circle"
+                    label={t("singleUser.menu.informationNavLink")}
+                    title={t("singleUser.menu.informationNavLink")}
+                  />
+                  <SubNavigation
+                    to={`${url}/settings/general`}
+                    label={t("singleUser.menu.settingsNavLink")}
+                    title={t("singleUser.menu.settingsNavLink")}
+                  >
+                    <EditUserNavLink user={user} editUrl={`${url}/settings/general`} />
+                    <SetPasswordNavLink user={user} passwordUrl={`${url}/settings/password`} />
+                    <SetPermissionsNavLink user={user} permissionsUrl={`${url}/settings/permissions`} />
+                    <ExtensionPoint name="user.setting" props={extensionProps} renderAll={true} />
+                  </SubNavigation>
+                </Section>
+              </Navigation>
+            </div>
           </div>
-          <div className="column">
-            <Navigation>
-              <Section label={t("singleUser.menu.navigationLabel")}>
-                <NavLink to={`${url}`} icon="fas fa-info-circle" label={t("singleUser.menu.informationNavLink")} />
-                <SubNavigation to={`${url}/settings/general`} label={t("singleUser.menu.settingsNavLink")}>
-                  <EditUserNavLink user={user} editUrl={`${url}/settings/general`} />
-                  <SetPasswordNavLink user={user} passwordUrl={`${url}/settings/password`} />
-                  <SetPermissionsNavLink user={user} permissionsUrl={`${url}/settings/permissions`} />
-                  <ExtensionPoint name="user.setting" props={extensionProps} renderAll={true} />
-                </SubNavigation>
-              </Section>
-            </Navigation>
-          </div>
-        </div>
-      </Page>
+        </Page>
+      </MenuContext.Provider>
     );
   }
 }

@@ -1,37 +1,72 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Route } from "react-router-dom";
+import { Route, RouteComponentProps } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Group } from "@scm-manager/ui-types";
-import { ErrorPage, Loading, Navigation, NavLink, Page, Section, SubNavigation } from "@scm-manager/ui-components";
+import {
+  ErrorPage,
+  Loading,
+  Navigation,
+  NavLink,
+  Page,
+  Section,
+  SubNavigation,
+  isMenuCollapsed,
+  MenuContext
+} from "@scm-manager/ui-components";
 import { getGroupsLink } from "../../modules/indexResource";
 import { fetchGroupByName, getFetchGroupFailure, getGroupByName, isFetchGroupPending } from "../modules/groups";
 import { Details } from "./../components/table";
 import { EditGroupNavLink, SetPermissionsNavLink } from "./../components/navLinks";
 import EditGroup from "./EditGroup";
 import SetPermissions from "../../permissions/components/SetPermissions";
+import { storeMenuCollapsed } from "@scm-manager/ui-components/src";
 
-type Props = WithTranslation & {
-  name: string;
-  group: Group;
-  loading: boolean;
-  error: Error;
-  groupLink: string;
+type Props = RouteComponentProps &
+  WithTranslation & {
+    name: string;
+    group: Group;
+    loading: boolean;
+    error: Error;
+    groupLink: string;
 
-  // dispatcher functions
-  fetchGroupByName: (p1: string, p2: string) => void;
+    // dispatcher functions
+    fetchGroupByName: (p1: string, p2: string) => void;
+  };
 
-  // context objects
-  match: any;
-  history: History;
+type State = {
+  menuCollapsed: boolean;
+  setMenuCollapsed: (collapsed: boolean) => void;
 };
 
-class SingleGroup extends React.Component<Props> {
+class SingleGroup extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      menuCollapsed: isMenuCollapsed(),
+      setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed })
+    };
+  }
+
   componentDidMount() {
     this.props.fetchGroupByName(this.props.groupLink, this.props.name);
   }
+
+  componentDidUpdate() {
+    if (this.state.menuCollapsed && this.isCollapseForbidden()) {
+      this.setState({ menuCollapsed: false });
+    }
+  }
+
+  isCollapseForbidden = () => {
+    return this.props.location.pathname.includes("/settings/");
+  };
+
+  onCollapseGroupMenu = (collapsed: boolean) => {
+    this.setState({ menuCollapsed: collapsed }, () => storeMenuCollapsed(collapsed));
+  };
 
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {
@@ -46,6 +81,7 @@ class SingleGroup extends React.Component<Props> {
 
   render() {
     const { t, loading, error, group } = this.props;
+    const { menuCollapsed } = this.state;
 
     if (error) {
       return <ErrorPage title={t("singleGroup.errorTitle")} subtitle={t("singleGroup.errorSubtitle")} error={error} />;
@@ -63,33 +99,48 @@ class SingleGroup extends React.Component<Props> {
     };
 
     return (
-      <Page title={group.name}>
-        <div className="columns">
-          <div className="column is-three-quarters">
-            <Route path={url} exact component={() => <Details group={group} />} />
-            <Route path={`${url}/settings/general`} exact component={() => <EditGroup group={group} />} />
-            <Route
-              path={`${url}/settings/permissions`}
-              exact
-              component={() => <SetPermissions selectedPermissionsLink={group._links.permissions} />}
-            />
-            <ExtensionPoint name="group.route" props={extensionProps} renderAll={true} />
+      <MenuContext.Provider value={this.state}>
+        <Page title={group.name}>
+          <div className="columns">
+            <div className="column">
+              <Route path={url} exact component={() => <Details group={group} />} />
+              <Route path={`${url}/settings/general`} exact component={() => <EditGroup group={group} />} />
+              <Route
+                path={`${url}/settings/permissions`}
+                exact
+                component={() => <SetPermissions selectedPermissionsLink={group._links.permissions} />}
+              />
+              <ExtensionPoint name="group.route" props={extensionProps} renderAll={true} />
+            </div>
+            <div className={menuCollapsed ? "column is-1" : "column is-3"}>
+              <Navigation>
+                <Section
+                  label={t("singleGroup.menu.navigationLabel")}
+                  onCollapse={this.isCollapseForbidden() ? undefined : () => this.onCollapseGroupMenu(!menuCollapsed)}
+                  collapsed={menuCollapsed}
+                >
+                  <NavLink
+                    to={`${url}`}
+                    icon="fas fa-info-circle"
+                    label={t("singleGroup.menu.informationNavLink")}
+                    title={t("singleGroup.menu.informationNavLink")}
+                  />
+                  <ExtensionPoint name="group.navigation" props={extensionProps} renderAll={true} />
+                  <SubNavigation
+                    to={`${url}/settings/general`}
+                    label={t("singleGroup.menu.settingsNavLink")}
+                    title={t("singleGroup.menu.settingsNavLink")}
+                  >
+                    <EditGroupNavLink group={group} editUrl={`${url}/settings/general`} />
+                    <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`} />
+                    <ExtensionPoint name="group.setting" props={extensionProps} renderAll={true} />
+                  </SubNavigation>
+                </Section>
+              </Navigation>
+            </div>
           </div>
-          <div className="column">
-            <Navigation>
-              <Section label={t("singleGroup.menu.navigationLabel")}>
-                <NavLink to={`${url}`} icon="fas fa-info-circle" label={t("singleGroup.menu.informationNavLink")} />
-                <ExtensionPoint name="group.navigation" props={extensionProps} renderAll={true} />
-                <SubNavigation to={`${url}/settings/general`} label={t("singleGroup.menu.settingsNavLink")}>
-                  <EditGroupNavLink group={group} editUrl={`${url}/settings/general`} />
-                  <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`} />
-                  <ExtensionPoint name="group.setting" props={extensionProps} renderAll={true} />
-                </SubNavigation>
-              </Section>
-            </Navigation>
-          </div>
-        </div>
-      </Page>
+        </Page>
+      </MenuContext.Provider>
     );
   }
 }
