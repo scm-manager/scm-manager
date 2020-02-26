@@ -96,9 +96,6 @@ node('docker') {
     // Archive Unit and integration test results, if any
     junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
 
-    // Find maven warnings and visualize in job
-    warnings consoleParsers: [[parserName: 'Maven']], canRunOnFailed: true
-
     mailIfStatusChanged(commitAuthorEmail)
   }
 }
