@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Modification for mercurial repositories with enabled XSRF protection
 - Does not throw NullPointerException when merge fails without normal merge conflicts
+- Keep file attributes on modification
 
 ### Removed
 - Enunciate rest documentation
