@@ -12,13 +12,8 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.nio.file.attribute.PosixFilePermission;
-import java.util.Optional;
-import java.util.Set;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static sonia.scm.AlreadyExistsException.alreadyExists;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -66,32 +61,12 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
     if (!targetFile.toFile().exists()) {
       throw notFound(createFileContext(path));
     }
-    Optional<Set<PosixFilePermission>> posixFilePermissions = getPosixFilePermissions(targetFile);
+    boolean executable = Files.isExecutable(targetFile);
     Files.move(file.toPath(), targetFile, REPLACE_EXISTING);
-    posixFilePermissions.ifPresent(permissions -> setPosixFilePermissions(targetFile, permissions));
+    if (targetFile.toFile().setExecutable(executable)) {
+      LOG.warn("could not set executable flag for file {}", targetFile);
+    }
     addFileToScm(path, targetFile);
-  }
-
-  default Optional<Set<PosixFilePermission>> getPosixFilePermissions(Path targetFile) {
-    try {
-      return of(Files.getPosixFilePermissions(targetFile));
-    } catch (UnsupportedOperationException e) {
-      LOG.trace("posix file permissions not supported");
-      return empty();
-    } catch (IOException e) {
-      LOG.info("could not read posix file permissions for file {}", targetFile);
-      return empty();
-    }
-  }
-
-  default void setPosixFilePermissions(Path targetFile, Set<PosixFilePermission> permissions) {
-    try {
-      Files.setPosixFilePermissions(targetFile, permissions);
-    } catch (UnsupportedOperationException e) {
-      LOG.trace("posix file permissions not supported");
-    } catch (IOException e) {
-      LOG.info("could not write posix file permissions to file {}", targetFile);
-    }
   }
 
   void addFileToScm(String name, Path file);
