@@ -33,7 +33,7 @@ node('docker') {
       }
 
       stage('Unit Test') {
-        mvn 'test -Pcoverage -Dsonia.scm.test.skip.hg=true -Dmaven.test.failure.ignore=true'
+        mvn 'test -Pcoverage -Dmaven.test.failure.ignore=true'
       }
 
       stage('Integration Test') {
@@ -104,7 +104,7 @@ String mainBranch
 
 Maven setupMavenBuild() {
   // Keep this version number in sync with .mvn/maven-wrapper.properties
-  Maven mvn = new MavenInDocker(this, '3.6.3-jdk-11')
+  Maven mvn = new MavenWrapper(this)
 
   if (isMainBranch()) {
     // Release starts javadoc, which takes very long, so do only for certain branches
