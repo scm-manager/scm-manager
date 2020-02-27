@@ -199,6 +199,10 @@
     "8LRncum0S1": {
       "displayName": "Interner Fehler im Repository",
       "description": "Bei der Bearbeitung des internen Repositories ist ein Fehler oder ein unerwarteter Zustand aufgetreten. Bitte prüfen Sie die Logs für weitere Informationen."
+    },
+    "4GRrgkSC01": {
+      "displayName": "Unerwartetes Merge-Ergebnis",
+      "description": "Der Merge hatte ein unerwartetes Ergebis, das nicht automatisiert behandelt werden konnte. Nähere Details sind im Log zu finden. Führen Sie den Merge ggf. manuell durch."
     }
   },
   "namespaceStrategies": {

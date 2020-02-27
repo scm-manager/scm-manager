@@ -113,5 +113,4 @@ public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
 
   /** Field description */
   private GitContext context;
-  private ScmTransportProtocol scmTransportProtocol;
 }

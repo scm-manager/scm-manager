@@ -88,7 +88,14 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
   }
 
   MergeCommandResult analyseFailure(MergeResult result) {
-    logger.info("could not merge branch {} into {} due to conflict in paths {}", branchToMerge, targetBranch, result.getConflicts().keySet());
+    logger.info("could not merge branch {} into {} with merge status '{}' due to ...", branchToMerge, targetBranch, result.getMergeStatus());
+    logger.info("... conflicts: {}", result.getConflicts());
+    logger.info("... checkout conflicts: {}", result.getCheckoutConflicts());
+    logger.info("... failing paths: {}", result.getFailingPaths());
+    logger.info("... message: {}", result);
+    if (result.getConflicts() == null) {
+      throw new UnexpectedMergeResultException(getRepository(), result);
+    }
     return MergeCommandResult.failure(targetRevision.name(), revisionToMerge.name(), result.getConflicts().keySet());
   }
 }
