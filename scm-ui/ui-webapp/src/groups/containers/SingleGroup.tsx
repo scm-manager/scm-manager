@@ -6,14 +6,14 @@ import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Group } from "@scm-manager/ui-types";
 import {
   ErrorPage,
+  isMenuCollapsed,
   Loading,
+  MenuContext,
   Navigation,
   NavLink,
   Page,
   Section,
-  SubNavigation,
-  isMenuCollapsed,
-  MenuContext
+  SubNavigation
 } from "@scm-manager/ui-components";
 import { getGroupsLink } from "../../modules/indexResource";
 import { fetchGroupByName, getFetchGroupFailure, getGroupByName, isFetchGroupPending } from "../modules/groups";

@@ -1,19 +1,18 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Route, RouteComponentProps } from "react-router-dom";
-import { History } from "history";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { User } from "@scm-manager/ui-types";
 import {
   ErrorPage,
+  isMenuCollapsed,
   Loading,
+  MenuContext,
   Navigation,
   NavLink,
   Page,
   Section,
-  SubNavigation,
-  MenuContext,
-  isMenuCollapsed
+  SubNavigation
 } from "@scm-manager/ui-components";
 import { Details } from "./../components/table";
 import EditUser from "./EditUser";
