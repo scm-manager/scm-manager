@@ -27,7 +27,7 @@ const SmallButton = styled(Button)`
 const MenuLabel = styled.p`
   min-height: 2.5rem;
   display: flex;
-  justify-content: ${(props: StylingProps) => (props.collapsed ? "center" : "space-between")};
+  justify-content: ${(props: { collapsed: boolean }) => (props.collapsed ? "center" : "space-between")};
 `;
 
 const Section: FC<Props> = ({ label, children, collapsed, onCollapse }) => {
@@ -48,10 +48,10 @@ const Section: FC<Props> = ({ label, children, collapsed, onCollapse }) => {
 
   return (
     <SectionContainer collapsed={collapsed ? collapsed : false} scrollPositionY={onCollapse ? scrollPositionY : 0}>
-      <MenuLabel className="menu-label" collapsed={collapsed}>
+      <MenuLabel className="menu-label" collapsed={collapsed ? collapsed : false}>
         {collapsed ? "" : label}
         {onCollapse && (
-          <SmallButton color="info" className="is-small" action={() => onCollapse(!collapsed)}>
+          <SmallButton color="info" className="is-medium" action={() => onCollapse(!collapsed)}>
             {arrowIcon}
           </SmallButton>
         )}
