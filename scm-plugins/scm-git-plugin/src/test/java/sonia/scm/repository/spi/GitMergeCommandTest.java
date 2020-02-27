@@ -173,9 +173,8 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   @Test
   public void shouldHandleUnexpectedMergeResults() {
     GitMergeCommand command = createCommand(git -> {
-      FileWriter fw = null;
       try {
-        fw = new FileWriter(new File(git.getRepository().getWorkTree(), "b.txt"), true);
+        FileWriter fw = new FileWriter(new File(git.getRepository().getWorkTree(), "b.txt"), true);
         BufferedWriter bw = new BufferedWriter(fw);
         bw.write("change");
         bw.newLine();
