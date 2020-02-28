@@ -3,7 +3,7 @@ import React from "react";
 const MENU_COLLAPSED = "secondary-menu-collapsed";
 
 export const MenuContext = React.createContext({
-  menuCollapsed: localStorage.getItem(MENU_COLLAPSED) === "true",
+  menuCollapsed: isMenuCollapsed(),
   setMenuCollapsed: (collapsed: boolean) => {}
 });
 

@@ -106,7 +106,7 @@ class DiffFile extends React.Component<Props, State> {
       state => ({
         sideBySide: !state.sideBySide
       }),
-      () => callback(this.state.sideBySide ? this.state.sideBySide : false)
+      () => callback(true)
     );
   };
 
