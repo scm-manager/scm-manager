@@ -87,5 +87,18 @@
     "passwordConfirmFailed": "Passwords have to be identical",
     "submit": "Submit",
     "changedSuccessfully": "Password changed successfully"
+  },
+  "footer": {
+    "user": {
+      "profile": "Profile"
+    },
+    "information": {
+      "title": "Information"
+    },
+    "support": {
+      "title": "Support",
+      "community": "Community",
+      "enterprise": "Enterprise"
+    }
   }
 }

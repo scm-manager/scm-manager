@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
+import io.swagger.v3.oas.annotations.Operation;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.web.VndMediaType;
 
@@ -42,6 +43,7 @@ public class NamespaceStrategyResource {
   @GET
   @Path("")
   @Produces(VndMediaType.NAMESPACE_STRATEGIES)
+  @Operation(summary = "List of namespace strategies", description = "Returns all available namespace strategies and the current selected.", tags = "Repository")
   public NamespaceStrategiesDto get(@Context UriInfo uriInfo) {
     String currentStrategy = strategyAsString(namespaceStrategyProvider.get());
     List<String> availableStrategies = collectStrategyNames();

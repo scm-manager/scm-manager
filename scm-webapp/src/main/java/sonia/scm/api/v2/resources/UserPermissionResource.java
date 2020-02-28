@@ -1,8 +1,9 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.security.PermissionPermissions;
@@ -40,14 +41,32 @@ public class UserPermissionResource {
   @GET
   @Path("")
   @Produces(VndMediaType.PERMISSION_COLLECTION)
-  @TypeHint(PermissionListDto.class)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the user"),
-    @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(summary = "User permission", description = "Returns the global git configuration.", tags = {"User", "Permissions"})
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.PERMISSION_COLLECTION,
+      schema = @Schema(implementation = PermissionListDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the user")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no user with the specified id/name available",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public Response getPermissions(@PathParam("id") String id) {
     PermissionPermissions.read().check();
     Collection<PermissionDescriptor> permissions = permissionAssigner.readPermissionsForUser(id);
@@ -63,15 +82,26 @@ public class UserPermissionResource {
   @PUT
   @Path("")
   @Consumes(VndMediaType.PERMISSION_COLLECTION)
-  @StatusCodes({
-    @ResponseCode(code = 204, condition = "update success"),
-    @ResponseCode(code = 400, condition = "Invalid body"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the correct privilege"),
-    @ResponseCode(code = 404, condition = "not found, no user with the specified id/name available"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
+  @Operation(summary = "Update user permissions", description = "Sets permissions for a user. Overwrites all existing permissions.", tags = {"User", "Permissions"})
+  @ApiResponse(responseCode = "204", description = "update success")
+  @ApiResponse(responseCode = "400", description = "invalid body")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the correct privilege")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no user with the specified id/name available",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response overwritePermissions(@PathParam("id") String id, @Valid PermissionListDto newPermissions) {
     Collection<PermissionDescriptor> permissionDescriptors = Arrays.stream(newPermissions.getPermissions())
       .map(PermissionDescriptor::new)

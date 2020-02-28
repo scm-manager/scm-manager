@@ -1,24 +1,63 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.security.SecuritySchemes;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.security.*;
+import sonia.scm.security.AccessToken;
+import sonia.scm.security.AccessTokenBuilder;
+import sonia.scm.security.AccessTokenBuilderFactory;
+import sonia.scm.security.AccessTokenCookieIssuer;
+import sonia.scm.security.AllowAnonymousAccess;
+import sonia.scm.security.Scope;
+import sonia.scm.security.Tokens;
+import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.*;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Optional;
 
+@SecuritySchemes({
+  @SecurityScheme(
+    name = "Basic Authentication",
+    description = "HTTP Basic authentication with username and password",
+    scheme = "basic",
+    type = SecuritySchemeType.HTTP
+  ),
+  @SecurityScheme(
+    name = "Bearer Token Authentication",
+    description = "Authentication with a jwt bearer token",
+    scheme = "bearer",
+    bearerFormat = "JWT",
+    type = SecuritySchemeType.HTTP
+  )
+})
+@OpenAPIDefinition(tags = {
+  @Tag(name = "Authentication", description = "Authentication related endpoints")
+})
 @Path(AuthenticationResource.PATH)
 @AllowAnonymousAccess
 public class AuthenticationResource {
@@ -34,21 +73,33 @@ public class AuthenticationResource {
   private LogoutRedirection logoutRedirection;
 
   @Inject
-  public AuthenticationResource(AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer)
-  {
+  public AuthenticationResource(AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer) {
     this.tokenBuilderFactory = tokenBuilderFactory;
     this.cookieIssuer = cookieIssuer;
   }
 
   @POST
   @Path("access_token")
+  @Produces(MediaType.TEXT_PLAIN)
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 400, condition = "bad request, required parameter is missing"),
-    @ResponseCode(code = 401, condition = "unauthorized, the specified username or password is wrong"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(
+    summary = "Login via Form",
+    description = "Form-based authentication.",
+    tags = "Authentication",
+    hidden = true
+  )
+  @ApiResponse(responseCode = "200", description = "success")
+  @ApiResponse(responseCode = "204", description = "success without content")
+  @ApiResponse(responseCode = "400", description = "bad request, required parameter is missing")
+  @ApiResponse(responseCode = "401", description = "unauthorized, the specified username or password is wrong")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response authenticateViaForm(
     @Context HttpServletRequest request,
     @Context HttpServletResponse response,
@@ -59,18 +110,41 @@ public class AuthenticationResource {
 
   @POST
   @Path("access_token")
+  @Produces(MediaType.TEXT_PLAIN)
   @Consumes(MediaType.APPLICATION_JSON)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 400, condition = "bad request, required parameter is missing"),
-    @ResponseCode(code = 401, condition = "unauthorized, the specified username or password is wrong"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(
+    summary = "Login via JSON",
+    description = "JSON-based authentication.",
+    tags = "Authentication",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = MediaType.APPLICATION_JSON,
+        schema = @Schema(implementation = AuthenticationRequestDto.class),
+        examples = @ExampleObject(
+          name = "Simple login",
+          value = "{\n  \"username\":\"scmadmin\",\n  \"password\":\"scmadmin\",\n  \"cookie\":false,\n  \"grant_type\":\"password\"\n}",
+          summary = "Authenticate with username and password"
+        )
+      )
+    )
+  )
+  @ApiResponse(responseCode = "200", description = "success")
+  @ApiResponse(responseCode = "204", description = "success without content")
+  @ApiResponse(responseCode = "400", description = "bad request, required parameter is missing")
+  @ApiResponse(responseCode = "401", description = "unauthorized, the specified username or password is wrong")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response authenticateViaJSONBody(
     @Context HttpServletRequest request,
     @Context HttpServletResponse response,
     AuthenticationRequestDto authentication
-    ) {
+  ) {
     return authenticate(request, response, authentication);
   }
 
@@ -86,12 +160,11 @@ public class AuthenticationResource {
     Response res;
     Subject subject = SecurityUtils.getSubject();
 
-    try
-    {
+    try {
       subject.login(Tokens.createAuthenticationToken(request, authentication.getUsername(), authentication.getPassword()));
 
       AccessTokenBuilder tokenBuilder = tokenBuilderFactory.create();
-      if ( authentication.getScope() != null ) {
+      if (authentication.getScope() != null) {
         tokenBuilder.scope(Scope.valueOf(authentication.getScope()));
       }
 
@@ -101,17 +174,12 @@ public class AuthenticationResource {
         cookieIssuer.authenticate(request, response, token);
         res = Response.noContent().build();
       } else {
-        res = Response.ok( token.compact() ).build();
+        res = Response.ok(token.compact()).build();
       }
-    }
-    catch (AuthenticationException ex)
-    {
-      if (LOG.isTraceEnabled())
-      {
+    } catch (AuthenticationException ex) {
+      if (LOG.isTraceEnabled()) {
         LOG.trace("authentication failed for user ".concat(authentication.getUsername()), ex);
-      }
-      else
-      {
+      } else {
         LOG.warn("authentication failed for user {}", authentication.getUsername());
       }
 
@@ -126,12 +194,10 @@ public class AuthenticationResource {
   @DELETE
   @Path("access_token")
   @Produces(MediaType.APPLICATION_JSON)
-  @StatusCodes({
-    @ResponseCode(code = 204, condition = "success"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  public Response logout(@Context HttpServletRequest request, @Context HttpServletResponse response)
-  {
+  @Operation(summary = "Logout", description = "Removes the access token.", tags = "Authentication")
+  @ApiResponse(responseCode = "204", description = "success")
+  @ApiResponse(responseCode = "500", description = "internal server error")
+  public Response logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
     Subject subject = SecurityUtils.getSubject();
 
     subject.logout();
@@ -139,7 +205,6 @@ public class AuthenticationResource {
     // remove authentication cookie
     cookieIssuer.invalidate(request, response);
 
-    // TODO anonymous access ??
     if (logoutRedirection == null) {
       return Response.noContent().build();
     } else {
