@@ -10,6 +10,7 @@ import Icon from "../Icon";
 import { Change, ChangeEvent, DiffObjectProps, File, Hunk as HunkType } from "./DiffTypes";
 import TokenizedDiffView from "./TokenizedDiffView";
 import DiffButton from "./DiffButton";
+import { MenuContext } from "@scm-manager/ui-components";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
@@ -100,10 +101,13 @@ class DiffFile extends React.Component<Props, State> {
     }
   };
 
-  toggleSideBySide = () => {
-    this.setState(state => ({
-      sideBySide: !state.sideBySide
-    }));
+  toggleSideBySide = (callback: (collapsed: boolean) => void) => {
+    this.setState(
+      state => ({
+        sideBySide: !state.sideBySide
+      }),
+      () => callback(this.state.sideBySide ? this.state.sideBySide : false)
+    );
   };
 
   setCollapse = (collapsed: boolean) => {
@@ -259,11 +263,15 @@ class DiffFile extends React.Component<Props, State> {
       file.hunks && file.hunks.length > 0 ? (
         <ButtonWrapper className={classNames("level-right", "is-flex")}>
           <ButtonGroup>
-            <DiffButton
-              icon={sideBySide ? "align-left" : "columns"}
-              tooltip={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
-              onClick={this.toggleSideBySide}
-            />
+            <MenuContext.Consumer>
+              {({ setMenuCollapsed }) => (
+                <DiffButton
+                  icon={sideBySide ? "align-left" : "columns"}
+                  tooltip={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
+                  onClick={() => this.toggleSideBySide(() => setMenuCollapsed(sideBySide ? true : false))}
+                />
+              )}
+            </MenuContext.Consumer>
             {fileControls}
           </ButtonGroup>
         </ButtonWrapper>

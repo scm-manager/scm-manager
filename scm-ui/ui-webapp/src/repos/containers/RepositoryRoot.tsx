@@ -138,10 +138,14 @@ class RepositoryRoot extends React.Component<Props, State> {
 
     const url = this.matchedUrl();
 
-    const extensionProps = {
+    const extensionProps: any = {
       repository,
       url,
-      indexLinks,
+      indexLinks
+    };
+
+    const navExtensionProps = {
+      ...extensionProps,
       collapsedRepositoryMenu: menuCollapsed
     };
 
@@ -217,7 +221,7 @@ class RepositoryRoot extends React.Component<Props, State> {
                 }
                 collapsed={menuCollapsed}
               >
-                <ExtensionPoint name="repository.navigation.topLevel" props={extensionProps} renderAll={true} />
+                <ExtensionPoint name="repository.navigation.topLevel" props={navExtensionProps} renderAll={true} />
                 <NavLink
                   to={`${url}/info`}
                   icon="fas fa-info-circle"
@@ -244,7 +248,7 @@ class RepositoryRoot extends React.Component<Props, State> {
                   activeOnlyWhenExact={false}
                   title={t("repositoryRoot.menu.sourcesNavLink")}
                 />
-                <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true} />
+                <ExtensionPoint name="repository.navigation" props={navExtensionProps} renderAll={true} />
                 <SubNavigation
                   to={`${url}/settings/general`}
                   label={t("repositoryRoot.menu.settingsNavLink")}
@@ -252,7 +256,7 @@ class RepositoryRoot extends React.Component<Props, State> {
                 >
                   <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
                   <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
-                  <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true} />
+                  <ExtensionPoint name="repository.setting" props={navExtensionProps} renderAll={true} />
                 </SubNavigation>
               </Section>
             </Navigation>

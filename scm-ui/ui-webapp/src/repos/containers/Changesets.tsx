@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Branch, Changeset, PagedCollection, Repository } from "@scm-manager/ui-types";
 import {
@@ -20,28 +20,30 @@ import {
   selectListAsCollection
 } from "../modules/changesets";
 
-type Props = WithTranslation & {
-  repository: Repository;
-  branch: Branch;
-  page: number;
+type Props = RouteComponentProps &
+  WithTranslation & {
+    repository: Repository;
+    branch: Branch;
+    page: number;
 
-  // State props
-  changesets: Changeset[];
-  list: PagedCollection;
-  loading: boolean;
-  error: Error;
+    // State props
+    changesets: Changeset[];
+    list: PagedCollection;
+    loading: boolean;
+    error: Error;
 
-  // Dispatch props
-  fetchChangesets: (p1: Repository, p2: Branch, p3: number) => void;
-
-  // context props
-  match: any;
-};
+    // Dispatch props
+    fetchChangesets: (p1: Repository, p2: Branch, p3: number) => void;
+  };
 
 class Changesets extends React.Component<Props> {
   componentDidMount() {
     const { fetchChangesets, repository, branch, page } = this.props;
     fetchChangesets(repository, branch, page);
+  }
+
+  shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
+    return this.props.changesets !== nextProps.changesets;
   }
 
   render() {
