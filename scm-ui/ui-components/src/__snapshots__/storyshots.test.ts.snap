@@ -484,7 +484,7 @@ exports[`Storyshots DateFromNow Default 1`] = `
 
 exports[`Storyshots Diff Binaries 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="sc-hqyNC ebbHT"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -753,7 +753,7 @@ exports[`Storyshots Diff Binaries 1`] = `
 
 exports[`Storyshots Diff Collapsed 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="sc-hqyNC ebbHT"
 >
   <div
     className="sc-gZMcBi ckdmuY panel is-size-6"
@@ -1102,7 +1102,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
 
 exports[`Storyshots Diff CollapsingWithFunction 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="sc-hqyNC ebbHT"
 >
   <div
     className="sc-gZMcBi ckdmuY panel is-size-6"
@@ -3028,7 +3028,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
 
 exports[`Storyshots Diff Default 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="sc-hqyNC ebbHT"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -6936,7 +6936,7 @@ exports[`Storyshots Diff Default 1`] = `
 
 exports[`Storyshots Diff File Annotation 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="sc-hqyNC ebbHT"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -10868,7 +10868,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
 
 exports[`Storyshots Diff File Controls 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="sc-hqyNC ebbHT"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -14884,7 +14884,7 @@ exports[`Storyshots Diff File Controls 1`] = `
 
 exports[`Storyshots Diff Hunks 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="sc-hqyNC ebbHT"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -15721,7 +15721,7 @@ exports[`Storyshots Diff Hunks 1`] = `
 
 exports[`Storyshots Diff Line Annotation 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="sc-hqyNC ebbHT"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -19665,7 +19665,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
 
 exports[`Storyshots Diff OnClick 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="sc-hqyNC ebbHT"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -23847,7 +23847,7 @@ exports[`Storyshots Diff OnClick 1`] = `
 
 exports[`Storyshots Diff Side-By-Side 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="sc-hqyNC ebbHT"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -28284,7 +28284,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
 
 exports[`Storyshots Diff SyntaxHighlighting 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="sc-hqyNC ebbHT"
 >
   <div
     className="sc-gZMcBi iABzaT panel is-size-6"
@@ -32192,7 +32192,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
 
 exports[`Storyshots Forms|Checkbox Default 1`] = `
 <div
-  className="sc-kgAjT khfRmZ"
+  className="sc-hmzhuo huWlPy"
 >
   <div
     className="field"
@@ -32237,7 +32237,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
 
 exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 <div
-  className="sc-kgAjT khfRmZ"
+  className="sc-hmzhuo huWlPy"
 >
   <div
     className="field"
@@ -32265,7 +32265,7 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 
 exports[`Storyshots Forms|Radio Default 1`] = `
 <div
-  className="sc-cJSrbW hLoADP"
+  className="sc-frDJqD qQxSI"
 >
   <label
     className="sc-cMljjf kOqpHe radio"
@@ -32294,7 +32294,7 @@ exports[`Storyshots Forms|Radio Default 1`] = `
 
 exports[`Storyshots Forms|Radio Disabled 1`] = `
 <div
-  className="sc-cJSrbW hLoADP"
+  className="sc-frDJqD qQxSI"
 >
   <label
     className="sc-cMljjf kOqpHe radio"
@@ -32314,7 +32314,7 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
 
 exports[`Storyshots Forms|Textarea OnCancel 1`] = `
 <div
-  className="sc-ksYbfQ ePXdiL"
+  className="sc-kvZOFW iGjnWZ"
 >
   <div
     className="field"
@@ -32337,7 +32337,7 @@ exports[`Storyshots Forms|Textarea OnCancel 1`] = `
 
 exports[`Storyshots Forms|Textarea OnChange 1`] = `
 <div
-  className="sc-ksYbfQ ePXdiL"
+  className="sc-kvZOFW iGjnWZ"
 >
   <div
     className="field"
@@ -32364,7 +32364,7 @@ exports[`Storyshots Forms|Textarea OnChange 1`] = `
 
 exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
 <div
-  className="sc-ksYbfQ ePXdiL"
+  className="sc-kvZOFW iGjnWZ"
 >
   <div
     className="field"
@@ -32403,7 +32403,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="sc-fMiknA bYlDmz"
         >
           <i
             className="fas fa-user-circle fa-fw"
@@ -32412,7 +32412,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           Trillian McMillian
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="sc-dVhcbM dqMFgo"
         >
           <li>
             <a
@@ -32438,7 +32438,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="sc-fMiknA bYlDmz"
         >
           <i
             className="fas fa-info-circle fa-fw"
@@ -32447,7 +32447,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           footer.information.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="sc-dVhcbM dqMFgo"
         >
           <li>
             <a
@@ -32463,7 +32463,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="sc-fMiknA bYlDmz"
         >
           <i
             className="fas fa-life-ring fa-fw"
@@ -32472,7 +32472,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           footer.support.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="sc-dVhcbM dqMFgo"
         >
           <li>
             <a
@@ -32511,21 +32511,21 @@ exports[`Storyshots Layout|Footer Full 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="sc-fMiknA bYlDmz"
         >
           <span
-            className="sc-fMiknA fyPpQQ image is-rounded"
+            className="sc-fAjcbJ hVXurF image is-rounded"
           >
             <img
               alt="trillian"
-              className="is-rounded sc-fBuWsC djJrAv"
+              className="is-rounded sc-eqIVtm eXYEuD"
               src="test-file-stub"
             />
           </span>
           Trillian McMillian
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="sc-dVhcbM dqMFgo"
         >
           <li>
             <a
@@ -32560,7 +32560,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="sc-fMiknA bYlDmz"
         >
           <i
             className="fas fa-info-circle fa-fw"
@@ -32569,7 +32569,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           footer.information.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="sc-dVhcbM dqMFgo"
         >
           <li>
             <a
@@ -32601,7 +32601,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="sc-fMiknA bYlDmz"
         >
           <i
             className="fas fa-life-ring fa-fw"
@@ -32610,7 +32610,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           footer.support.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="sc-dVhcbM dqMFgo"
         >
           <li>
             <a
@@ -32657,21 +32657,21 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="sc-fMiknA bYlDmz"
         >
           <span
-            className="sc-fMiknA fyPpQQ image is-rounded"
+            className="sc-fAjcbJ hVXurF image is-rounded"
           >
             <img
               alt="trillian"
-              className="is-rounded sc-fBuWsC djJrAv"
+              className="is-rounded sc-eqIVtm eXYEuD"
               src="test-file-stub"
             />
           </span>
           Trillian McMillian
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="sc-dVhcbM dqMFgo"
         >
           <li>
             <a
@@ -32697,7 +32697,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="sc-fMiknA bYlDmz"
         >
           <i
             className="fas fa-info-circle fa-fw"
@@ -32706,7 +32706,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
           footer.information.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="sc-dVhcbM dqMFgo"
         >
           <li>
             <a
@@ -32722,7 +32722,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="sc-fMiknA bYlDmz"
         >
           <i
             className="fas fa-life-ring fa-fw"
@@ -32731,7 +32731,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
           footer.support.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="sc-dVhcbM dqMFgo"
         >
           <li>
             <a
@@ -32770,7 +32770,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="sc-fMiknA bYlDmz"
         >
           <i
             className="fas fa-user-circle fa-fw"
@@ -32779,7 +32779,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           Trillian McMillian
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="sc-dVhcbM dqMFgo"
         >
           <li>
             <a
@@ -32814,7 +32814,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="sc-fMiknA bYlDmz"
         >
           <i
             className="fas fa-info-circle fa-fw"
@@ -32823,7 +32823,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           footer.information.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="sc-dVhcbM dqMFgo"
         >
           <li>
             <a
@@ -32855,7 +32855,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="sc-fMiknA bYlDmz"
         >
           <i
             className="fas fa-life-ring fa-fw"
@@ -32864,7 +32864,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           footer.support.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="sc-dVhcbM dqMFgo"
         >
           <li>
             <a
@@ -34751,7 +34751,7 @@ PORT_NUMBER =
 
 exports[`Storyshots Table|Table Default 1`] = `
 <table
-  className="sc-fAjcbJ byigni table content is-hoverable"
+  className="sc-kjoXOD hpTAeq table content is-hoverable"
 >
   <thead>
     <tr>
@@ -34769,7 +34769,7 @@ exports[`Storyshots Table|Table Default 1`] = `
       >
         Last Name
         <i
-          className="fas fa-sort-amount-down has-text-grey-light sc-eqIVtm jxAoDg"
+          className="fas fa-sort-amount-down has-text-grey-light sc-gisBJw hYdOzi"
         />
       </th>
       <th
@@ -34842,7 +34842,7 @@ exports[`Storyshots Table|Table Empty 1`] = `
 
 exports[`Storyshots Table|Table TextColumn 1`] = `
 <table
-  className="sc-fAjcbJ byigni table content is-hoverable"
+  className="sc-kjoXOD hpTAeq table content is-hoverable"
 >
   <thead>
     <tr>
@@ -34854,7 +34854,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Id
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light sc-eqIVtm jxAoDg"
+          className="fas fa-sort-alpha-down has-text-grey-light sc-gisBJw hYdOzi"
         />
       </th>
       <th
@@ -34865,7 +34865,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Name
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light sc-eqIVtm jxAoDg"
+          className="fas fa-sort-alpha-down has-text-grey-light sc-gisBJw hYdOzi"
         />
       </th>
       <th
@@ -34876,7 +34876,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Description
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light sc-eqIVtm jxAoDg"
+          className="fas fa-sort-alpha-down has-text-grey-light sc-gisBJw hYdOzi"
         />
       </th>
     </tr>
