@@ -141,11 +141,7 @@ class RepositoryRoot extends React.Component<Props, State> {
     const extensionProps: any = {
       repository,
       url,
-      indexLinks
-    };
-
-    const navExtensionProps = {
-      ...extensionProps,
+      indexLinks,
       collapsedRepositoryMenu: menuCollapsed
     };
 
@@ -221,7 +217,7 @@ class RepositoryRoot extends React.Component<Props, State> {
                 }
                 collapsed={menuCollapsed}
               >
-                <ExtensionPoint name="repository.navigation.topLevel" props={navExtensionProps} renderAll={true} />
+                <ExtensionPoint name="repository.navigation.topLevel" props={extensionProps} renderAll={true} />
                 <NavLink
                   to={`${url}/info`}
                   icon="fas fa-info-circle"
@@ -248,7 +244,7 @@ class RepositoryRoot extends React.Component<Props, State> {
                   activeOnlyWhenExact={false}
                   title={t("repositoryRoot.menu.sourcesNavLink")}
                 />
-                <ExtensionPoint name="repository.navigation" props={navExtensionProps} renderAll={true} />
+                <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true} />
                 <SubNavigation
                   to={`${url}/settings/general`}
                   label={t("repositoryRoot.menu.settingsNavLink")}
@@ -256,7 +252,7 @@ class RepositoryRoot extends React.Component<Props, State> {
                 >
                   <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
                   <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
-                  <ExtensionPoint name="repository.setting" props={navExtensionProps} renderAll={true} />
+                  <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
               </Section>
             </Navigation>

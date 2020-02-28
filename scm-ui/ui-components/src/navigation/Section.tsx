@@ -21,6 +21,8 @@ const SectionContainer = styled.div`
 `;
 
 const SmallButton = styled(Button)`
+  padding-left: 1rem;
+  padding-right: 1rem;
   height: 1.5rem;
 `;
 
