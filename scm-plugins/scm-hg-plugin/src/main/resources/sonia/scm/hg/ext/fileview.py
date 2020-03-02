@@ -196,10 +196,17 @@ def collect_sub_repositories(revCtx):
 
   return subrepos
 
+class Writer:
+  def __init__(self, ui):
+    self.ui = ui
+
+  def write(self, value):
+    self.ui.write(value)
+
 class File_Printer:
 
-  def __init__(self, ui, repo, revCtx, disableLastCommit, transport, limit, offset):
-    self.ui = ui
+  def __init__(self, writer, repo, revCtx, disableLastCommit, transport, limit, offset):
+    self.writer = writer
     self.repo = repo
     self.revCtx = revCtx
     self.disableLastCommit = disableLastCommit
@@ -213,7 +220,7 @@ class File_Printer:
       format = '%s/\n'
       if self.transport:
           format = 'd%s/\0'
-      self.ui.write( format % path)
+      self.writer.write( format % path)
 
   def print_file(self, path):
     if self.shouldPrintResult():
@@ -227,14 +234,14 @@ class File_Printer:
       format = '%s %i %s %s\n'
       if self.transport:
         format = 'f%s\n%i %s %s\0'
-      self.ui.write( format % (file.path(), file.size(), date, description) )
+      self.writer.write( format % (file.path(), file.size(), date, description) )
 
   def print_sub_repository(self, path, subrepo):
     if self.shouldPrintResult():
       format = '%s/ %s %s\n'
       if self.transport:
         format = 's%s/\n%s %s\0'
-      self.ui.write( format % (path, subrepo.revision, subrepo.url))
+      self.writer.write( format % (path, subrepo.revision, subrepo.url))
 
   def visit(self, file):
     if file.sub_repository:
@@ -256,9 +263,9 @@ class File_Printer:
   def finish(self):
     if self.isTruncated():
       if self.transport:
-        self.ui.write( "t")
+        self.writer.write( "t")
       else:
-        self.ui.write("truncated")
+        self.writer.write("truncated")
 
 class File_Viewer:
   def __init__(self, revCtx, visitor):
@@ -302,7 +309,8 @@ def fileview(ui, repo, **opts):
   subrepos = {}
   if not opts["disableSubRepositoryDetection"]:
     subrepos = collect_sub_repositories(revCtx)
-  printer = File_Printer(ui, repo, revCtx, opts["disableLastCommit"], opts["transport"], opts["limit"], opts["offset"])
+  writer = Writer(ui)
+  printer = File_Printer(writer, repo, revCtx, opts["disableLastCommit"], opts["transport"], opts["limit"], opts["offset"])
   viewer = File_Viewer(revCtx, printer)
   viewer.recursive = opts["recursive"]
   viewer.sub_repositories = subrepos

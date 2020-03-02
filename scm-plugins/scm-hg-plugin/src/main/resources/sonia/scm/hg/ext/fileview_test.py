@@ -1,10 +1,23 @@
-from fileview import File_Viewer, SubRepository
+from fileview import File_Viewer, File_Printer, SubRepository
 import unittest
+
+class DummyManifestEntry:
+  def __init__(self, name):
+    self.name = name
+
+  def path(self):
+    return self.name
+
+  def size(self):
+    return len(self.name)
 
 class DummyRevContext():
 
   def __init__(self, mf):
     self.mf = mf
+
+  def __getitem__(self, path):
+    return DummyManifestEntry(path)
 
   def manifest(self):
     return self.mf
@@ -31,6 +44,18 @@ class File_Object_Collector():
       self.stack.append(file)
     self.last = file
     
+class CollectingWriter:
+  def __init__(self):
+    self.stack = []
+
+  def __len__(self):
+    return len(self.stack)
+
+  def __getitem__(self, key):
+    return self.stack[key]
+
+  def write(self, value):
+    self.stack.append(value)
 
 class Test_File_Viewer(unittest.TestCase):
 
@@ -52,6 +77,45 @@ class Test_File_Viewer(unittest.TestCase):
     g = c[0]
     self.assertDirectory(g, "c/g")
     self.assertChildren(g, ["c/g/h.txt"])
+
+  def test_printer(self):
+    paths = ["a", "b", "c/d.txt", "c/e.txt", "f.txt", "c/g/h.txt"]
+    writer = self.view_with_limit_and_offset(paths, 1000, 0)
+    self.assertPaths(writer, ["/", "c/", "c/g/", "c/g/h.txt", "c/d.txt", "c/e.txt", "a", "b", "f.txt"])
+
+  def test_printer_with_limit(self):
+    paths = ["a", "b", "c/d.txt", "c/e.txt", "f.txt", "c/g/h.txt"]
+    writer = self.view_with_limit_and_offset(paths, 3, 0)
+    self.assertPaths(writer, ["/", "c/", "c/g/", "c/g/h.txt"])
+
+  # TODO fix
+  def x_test_printer_with_offset(self):
+    paths = ["a", "b", "c/d.txt", "c/e.txt", "f.txt", "c/g/h.txt"]
+    writer = self.view_with_limit_and_offset(paths, 100, 3)
+    self.assertPaths(writer, ["/", "c", "c/d.txt", "c/e.txt", "a", "b", "f.txt"])
+
+  def view_with_limit_and_offset(self, paths, limit, offset):
+    revCtx = DummyRevContext(paths)
+    collector = File_Object_Collector()
+
+    writer = CollectingWriter()
+    printer = File_Printer(writer, None, revCtx, True, False, limit, offset)
+
+    viewer = File_Viewer(revCtx, printer)
+    viewer.recursive = True
+    viewer.view("")
+    return writer
+
+  def assertPath(self, actual, expected):
+    path = actual[:len(expected)]
+    self.assertEqual(path, expected)
+    nextChar = actual[len(expected)]
+    self.assertTrue(nextChar == " " or nextChar == "\n", expected + " does not match " + actual)
+
+  def assertPaths(self, actual, expected):
+    for idx,item in enumerate(actual):
+      self.assertPath(item, expected[idx])
+    self.assertEqual(len(actual), len(expected))
 
   def test_recursive_with_path(self):
     root = self.collect(["a", "b", "c/d.txt", "c/e.txt", "f.txt", "c/g/h.txt"], "c", True)
