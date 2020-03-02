@@ -24,7 +24,6 @@ public class GroupDto extends HalRepresentation {
   @Pattern(regexp = ValidationUtil.REGEX_NAME)
   private String name;
   private String type;
-  private Map<String, String> properties;
   private List<String> members;
   private boolean external;
 

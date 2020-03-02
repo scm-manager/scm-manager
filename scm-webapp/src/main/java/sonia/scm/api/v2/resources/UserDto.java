@@ -30,7 +30,6 @@ public class UserDto extends HalRepresentation {
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private String password;
   private String type;
-  private Map<String, String> properties;
 
   UserDto(Links links, Embedded embedded) {
     super(links, embedded);
