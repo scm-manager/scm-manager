@@ -30,10 +30,8 @@ public class RepositoryDto extends HalRepresentation {
   private String namespace;
   @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
   private String name;
-  private boolean archived = false;
   @NotEmpty
   private String type;
-  protected Map<String, String> properties;
 
   RepositoryDto(Links links, Embedded embedded) {
     super(links, embedded);

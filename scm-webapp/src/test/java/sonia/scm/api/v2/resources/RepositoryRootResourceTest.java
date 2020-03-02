@@ -139,19 +139,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldMapProperties() throws URISyntaxException, UnsupportedEncodingException {
-    Repository repository = mockRepository("space", "repo");
-    repository.setProperty("testKey", "testValue");
-
-    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertTrue(response.getContentAsString().contains("\"testKey\":\"testValue\""));
-  }
-
-  @Test
   public void shouldGetAll() throws URISyntaxException, UnsupportedEncodingException {
     PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
     when(repositoryManager.getPage(any(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
