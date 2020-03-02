@@ -7,32 +7,39 @@ type Props = {
   children: ReactElement[];
   collapsed?: boolean;
   onCollapse?: (newStatus: boolean) => void;
+  scrollTransitionAt?: number;
 };
 
-type StylingProps = {
-  scrollPositionY: number;
+type CollapsedProps = {
   collapsed: boolean;
 };
 
-const SectionContainer = styled.div`
-  position: ${(props: StylingProps) => (props.scrollPositionY > 210 && window.innerWidth > 770 ? "fixed" : "inherit")};
-  top: ${(props: StylingProps) => props.scrollPositionY > 210 && window.innerWidth > 770 && "4.5rem"};
-  width: ${(props: StylingProps) => (props.collapsed ? "5.5rem" : "20.5rem")};
+type PositionProps = CollapsedProps & {
+  scrollPositionY: number;
+  scrollTransitionAt: number;
+};
+
+const SectionContainer = styled.div<PositionProps>`
+  position: ${props =>
+    props.scrollPositionY > props.scrollTransitionAt && window.innerWidth > 770 ? "fixed" : "inherit"};
+  top: ${props => props.scrollPositionY > props.scrollTransitionAt && window.innerWidth > 770 && "2rem"};
+  width: ${props => (props.collapsed ? "5.5rem" : "20.5rem")};
 `;
 
-const SmallButton = styled(Button)`
+const SmallButton = styled(Button)<CollapsedProps>`
   padding-left: 1rem;
   padding-right: 1rem;
+  margin-right: ${(props: CollapsedProps) => (props.collapsed ? "0" : "0.5rem")};
   height: 1.5rem;
 `;
 
-const MenuLabel = styled.p`
+const MenuLabel = styled.p<CollapsedProps>`
   min-height: 2.5rem;
   display: flex;
-  justify-content: ${(props: { collapsed: boolean }) => (props.collapsed ? "center" : "space-between")};
+  justify-content: ${props => (props.collapsed ? "center" : "left")};
 `;
 
-const Section: FC<Props> = ({ label, children, collapsed, onCollapse }) => {
+const Section: FC<Props> = ({ label, children, collapsed, onCollapse, scrollTransitionAt }) => {
   const [scrollPositionY, setScrollPositionY] = useState(0);
 
   useEffect(() => {
@@ -49,14 +56,23 @@ const Section: FC<Props> = ({ label, children, collapsed, onCollapse }) => {
   const arrowIcon = collapsed ? <i className="fas fa-caret-down" /> : <i className="fas fa-caret-right" />;
 
   return (
-    <SectionContainer collapsed={collapsed ? collapsed : false} scrollPositionY={onCollapse ? scrollPositionY : 0}>
+    <SectionContainer
+      collapsed={collapsed ? collapsed : false}
+      scrollPositionY={onCollapse ? scrollPositionY : 0}
+      scrollTransitionAt={scrollTransitionAt ? scrollTransitionAt : 250}
+    >
       <MenuLabel className="menu-label" collapsed={collapsed ? collapsed : false}>
-        {collapsed ? "" : label}
         {onCollapse && (
-          <SmallButton color="info" className="is-medium" action={() => onCollapse(!collapsed)}>
+          <SmallButton
+            color="info"
+            className="is-medium"
+            action={() => onCollapse(!collapsed)}
+            collapsed={collapsed ? collapsed : false}
+          >
             {arrowIcon}
           </SmallButton>
         )}
+        {collapsed ? "" : label}
       </MenuLabel>
       <ul className="menu-list">{childrenWithProps}</ul>
     </SectionContainer>

@@ -62,7 +62,7 @@
     "previous": "Previous"
   },
   "profile": {
-    "navigationLabel": "Profile Navigation",
+    "navigationLabel": "Profile",
     "informationNavLink": "Information",
     "changePasswordNavLink": "Change password",
     "settingsNavLink": "Settings",

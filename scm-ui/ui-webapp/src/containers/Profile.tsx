@@ -30,7 +30,6 @@ type Props = RouteComponentProps &
 
 type State = {
   menuCollapsed: boolean;
-  setMenuCollapsed: (collapsed: boolean) => void;
 };
 
 class Profile extends React.Component<Props, State> {
@@ -38,20 +37,9 @@ class Profile extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      menuCollapsed: isMenuCollapsed(),
-      setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed })
+      menuCollapsed: isMenuCollapsed()
     };
   }
-
-  componentDidUpdate() {
-    if (this.state.menuCollapsed && this.isCollapseForbidden()) {
-      this.setState({ menuCollapsed: false });
-    }
-  }
-
-  isCollapseForbidden = () => {
-    return this.props.location.pathname.includes("/settings/");
-  };
 
   onCollapseProfileMenu = (collapsed: boolean) => {
     this.setState({ menuCollapsed: collapsed }, () => storeMenuCollapsed(collapsed));
@@ -93,7 +81,9 @@ class Profile extends React.Component<Props, State> {
     };
 
     return (
-      <MenuContext.Provider value={this.state}>
+      <MenuContext.Provider
+        value={{ menuCollapsed, setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed }) }}
+      >
         <Page title={me.displayName}>
           <div className="columns">
             <div className="column">
@@ -105,7 +95,7 @@ class Profile extends React.Component<Props, State> {
               <Navigation>
                 <Section
                   label={t("profile.navigationLabel")}
-                  onCollapse={this.isCollapseForbidden() ? undefined : () => this.onCollapseProfileMenu(!menuCollapsed)}
+                  onCollapse={() => this.onCollapseProfileMenu(!menuCollapsed)}
                   collapsed={menuCollapsed}
                 >
                   <NavLink

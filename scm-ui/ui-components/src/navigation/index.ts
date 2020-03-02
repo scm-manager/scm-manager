@@ -7,3 +7,4 @@ export { default as SubNavigation } from "./SubNavigation";
 export { default as PrimaryNavigation } from "./PrimaryNavigation";
 export { default as PrimaryNavigationLink } from "./PrimaryNavigationLink";
 export { default as Section } from "./Section";
+export { MenuContext, storeMenuCollapsed, isMenuCollapsed } from "./MenuContext";

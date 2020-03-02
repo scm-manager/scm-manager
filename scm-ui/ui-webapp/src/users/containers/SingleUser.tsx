@@ -38,7 +38,6 @@ type Props = RouteComponentProps &
 
 type State = {
   menuCollapsed: boolean;
-  setMenuCollapsed: (collapsed: boolean) => void;
 };
 
 class SingleUser extends React.Component<Props, State> {
@@ -46,8 +45,7 @@ class SingleUser extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      menuCollapsed: isMenuCollapsed(),
-      setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed })
+      menuCollapsed: isMenuCollapsed()
     };
   }
 
@@ -55,21 +53,11 @@ class SingleUser extends React.Component<Props, State> {
     this.props.fetchUserByName(this.props.usersLink, this.props.name);
   }
 
-  componentDidUpdate() {
-    if (this.state.menuCollapsed && this.isCollapseForbidden()) {
-      this.setState({ menuCollapsed: false });
-    }
-  }
-
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {
       return url.substring(0, url.length - 2);
     }
     return url;
-  };
-
-  isCollapseForbidden = () => {
-    return this.props.location.pathname.includes("/settings/");
   };
 
   onCollapseUserMenu = (collapsed: boolean) => {
@@ -100,7 +88,9 @@ class SingleUser extends React.Component<Props, State> {
     };
 
     return (
-      <MenuContext.Provider value={this.state}>
+      <MenuContext.Provider
+        value={{ menuCollapsed, setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed }) }}
+      >
         <Page title={user.displayName}>
           <div className="columns">
             <div className="column">
@@ -117,7 +107,7 @@ class SingleUser extends React.Component<Props, State> {
               <Navigation>
                 <Section
                   label={t("singleUser.menu.navigationLabel")}
-                  onCollapse={this.isCollapseForbidden() ? undefined : () => this.onCollapseUserMenu(!menuCollapsed)}
+                  onCollapse={() => this.onCollapseUserMenu(!menuCollapsed)}
                   collapsed={menuCollapsed}
                 >
                   <NavLink

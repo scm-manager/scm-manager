@@ -101,12 +101,12 @@ class DiffFile extends React.Component<Props, State> {
     }
   };
 
-  toggleSideBySide = (callback: (collapsed: boolean) => void) => {
+  toggleSideBySide = (callback: () => void) => {
     this.setState(
       state => ({
         sideBySide: !state.sideBySide
       }),
-      () => callback(true)
+      () => callback()
     );
   };
 

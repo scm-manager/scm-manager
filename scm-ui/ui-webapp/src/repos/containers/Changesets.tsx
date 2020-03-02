@@ -42,7 +42,7 @@ class Changesets extends React.Component<Props> {
     fetchChangesets(repository, branch, page);
   }
 
-  shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<{}>, nextContext: any): boolean {
+  shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
     return this.props.changesets !== nextProps.changesets;
   }
 

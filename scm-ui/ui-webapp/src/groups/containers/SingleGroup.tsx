@@ -37,7 +37,6 @@ type Props = RouteComponentProps &
 
 type State = {
   menuCollapsed: boolean;
-  setMenuCollapsed: (collapsed: boolean) => void;
 };
 
 class SingleGroup extends React.Component<Props, State> {
@@ -45,24 +44,13 @@ class SingleGroup extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      menuCollapsed: isMenuCollapsed(),
-      setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed })
+      menuCollapsed: isMenuCollapsed()
     };
   }
 
   componentDidMount() {
     this.props.fetchGroupByName(this.props.groupLink, this.props.name);
   }
-
-  componentDidUpdate() {
-    if (this.state.menuCollapsed && this.isCollapseForbidden()) {
-      this.setState({ menuCollapsed: false });
-    }
-  }
-
-  isCollapseForbidden = () => {
-    return this.props.location.pathname.includes("/settings/");
-  };
 
   onCollapseGroupMenu = (collapsed: boolean) => {
     this.setState({ menuCollapsed: collapsed }, () => storeMenuCollapsed(collapsed));
@@ -99,7 +87,9 @@ class SingleGroup extends React.Component<Props, State> {
     };
 
     return (
-      <MenuContext.Provider value={this.state}>
+      <MenuContext.Provider
+        value={{ menuCollapsed, setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed }) }}
+      >
         <Page title={group.name}>
           <div className="columns">
             <div className="column">
@@ -116,7 +106,7 @@ class SingleGroup extends React.Component<Props, State> {
               <Navigation>
                 <Section
                   label={t("singleGroup.menu.navigationLabel")}
-                  onCollapse={this.isCollapseForbidden() ? undefined : () => this.onCollapseGroupMenu(!menuCollapsed)}
+                  onCollapse={() => this.onCollapseGroupMenu(!menuCollapsed)}
                   collapsed={menuCollapsed}
                 >
                   <NavLink

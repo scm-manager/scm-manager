@@ -12,7 +12,8 @@ import {
   Section,
   SubNavigation,
   isMenuCollapsed,
-  MenuContext
+  MenuContext,
+  storeMenuCollapsed
 } from "@scm-manager/ui-components";
 import { getAvailablePluginsLink, getInstalledPluginsLink, getLinks } from "../../modules/indexResource";
 import AdminDetails from "./AdminDetails";
@@ -21,7 +22,6 @@ import GlobalConfig from "./GlobalConfig";
 import RepositoryRoles from "../roles/containers/RepositoryRoles";
 import SingleRepositoryRole from "../roles/containers/SingleRepositoryRole";
 import CreateRepositoryRole from "../roles/containers/CreateRepositoryRole";
-import { storeMenuCollapsed } from "@scm-manager/ui-components/src";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -32,7 +32,6 @@ type Props = RouteComponentProps &
 
 type State = {
   menuCollapsed: boolean;
-  setMenuCollapsed: (collapsed: boolean) => void;
 };
 
 class Admin extends React.Component<Props, State> {
@@ -40,20 +39,9 @@ class Admin extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      menuCollapsed: isMenuCollapsed(),
-      setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed })
+      menuCollapsed: isMenuCollapsed()
     };
   }
-
-  componentDidUpdate() {
-    if (this.state.menuCollapsed && this.isCollapseForbidden()) {
-      this.setState({ menuCollapsed: false });
-    }
-  }
-
-  isCollapseForbidden = () => {
-    return this.props.location.pathname.includes("/settings/") || this.props.location.pathname.includes("/plugins/");
-  };
 
   onCollapseAdminMenu = (collapsed: boolean) => {
     this.setState({ menuCollapsed: collapsed }, () => storeMenuCollapsed(collapsed));
@@ -90,7 +78,9 @@ class Admin extends React.Component<Props, State> {
     };
 
     return (
-      <MenuContext.Provider value={this.state}>
+      <MenuContext.Provider
+        value={{ menuCollapsed, setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed }) }}
+      >
         <Page>
           <div className="columns">
             <div className="column">
@@ -136,8 +126,9 @@ class Admin extends React.Component<Props, State> {
               <Navigation>
                 <Section
                   label={t("admin.menu.navigationLabel")}
-                  onCollapse={this.isCollapseForbidden() ? undefined : () => this.onCollapseAdminMenu(!menuCollapsed)}
+                  onCollapse={() => this.onCollapseAdminMenu(!menuCollapsed)}
                   collapsed={menuCollapsed}
+                  scrollTransitionAt={220}
                 >
                   <NavLink
                     to={`${url}/info`}
