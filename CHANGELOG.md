@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Enunciate rest documentation
+- Obsolete fields in data transfer objects
 
 ## 2.0.0-rc4 - 2020-02-14
 ### Added

@@ -12,9 +12,10 @@ import sonia.scm.util.ValidationUtil;
 import javax.validation.constraints.Pattern;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class GroupDto extends HalRepresentation {
 
   private Instant creationDate;

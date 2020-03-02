@@ -7,13 +7,12 @@ import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import sonia.scm.util.ValidationUtil;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.time.Instant;
-import java.util.Map;
 
 @NoArgsConstructor @Getter @Setter
 public class UserDto extends HalRepresentation {
