@@ -242,21 +242,37 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   @Test
   public void testBrowseLimit() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
-    request.setLimit(2);
+    request.setLimit(1);
     FileObject root = createCommand()
       .getBrowserResult(request).getFile();
     assertNotNull(root);
 
     Collection<FileObject> foList = root.getChildren();
 
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt");
     assertThat(foList).hasSize(2);
-    assertTrue(root.isTruncated());
+    assertTrue("result should be marked as trunctated", root.isTruncated());
+  }
+
+  @Test
+  public void testBrowseLimitWithoutTruncation() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(3);
+    FileObject root = createCommand()
+      .getBrowserResult(request).getFile();
+    assertNotNull(root);
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt", "b.txt", "f.txt");
+    assertThat(foList).hasSize(4);
+    assertFalse("result should not be marked as trunctated", root.isTruncated());
   }
 
   @Test
   public void testBrowseOffset() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
-    request.setLimit(2);
+    request.setLimit(1);
     request.setOffset(2);
     FileObject root = createCommand()
       .getBrowserResult(request).getFile();
@@ -264,15 +280,15 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
 
     Collection<FileObject> foList = root.getChildren();
 
-    assertThat(foList).extracting("name").contains("b.txt", "f.txt");
-    assertFalse(root.isTruncated());
+    assertThat(foList).extracting("name").contains("f.txt");
+    assertFalse("result should not be marked as trunctated", root.isTruncated());
   }
 
   @Test
   public void testRecursiveLimit() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
-    request.setLimit(4);
+    request.setLimit(3);
     request.setRecursive(true);
 
     FileObject root = createCommand().getBrowserResult(request).getFile();
@@ -295,7 +311,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   public void testRecursiveLimitInSubDir() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
-    request.setLimit(2);
+    request.setLimit(1);
     request.setRecursive(true);
 
     FileObject root = createCommand().getBrowserResult(request).getFile();
@@ -318,7 +334,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   public void testRecursiveOffset() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
-    request.setOffset(2);
+    request.setOffset(1);
     request.setRecursive(true);
 
     FileObject root = createCommand().getBrowserResult(request).getFile();

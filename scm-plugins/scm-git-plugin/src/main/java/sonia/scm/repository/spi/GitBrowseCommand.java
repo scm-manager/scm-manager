@@ -264,25 +264,28 @@ public class GitBrowseCommand extends AbstractGitCommand
   private void convertToFileObject(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, List<TreeEntry> entries) throws IOException {
     List<FileObject> files = Lists.newArrayList();
     Iterator<TreeEntry> entryIterator = entries.iterator();
-    while (entryIterator.hasNext() && ++resultCount <= request.getLimit() + request.getOffset())
+    boolean hasNext;
+    while ((hasNext = entryIterator.hasNext()) && resultCount < request.getLimit() + request.getOffset())
     {
       TreeEntry entry = entryIterator.next();
       FileObject fileObject = createFileObject(repo, request, revId, entry);
+
+      if (!fileObject.isDirectory()) {
+        ++resultCount;
+      }
 
       if (request.isRecursive() && fileObject.isDirectory()) {
         convertToFileObject(fileObject, repo, request, revId, entry.getChildren());
       }
 
-      if (resultCount > request.getOffset()) {
+      if (resultCount > request.getOffset() || fileObject.isDirectory()) {
         files.add(fileObject);
       }
     }
 
     parent.setChildren(files);
 
-    if (resultCount > request.getLimit() + request.getOffset()) {
-      parent.setTruncated(true);
-    }
+    parent.setTruncated(hasNext);
   }
 
   private Optional<TreeEntry> createTree(String path, TreeEntry parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, TreeWalk treeWalk) throws IOException {

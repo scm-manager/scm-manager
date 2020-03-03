@@ -306,7 +306,7 @@ public final class BrowseCommandBuilder
    * severe performance implications. Reading a repository with thousands of files in one folder
    * can generate a huge load for a longer time.
    *
-   * @param limit The maximal number of files this request shall return.
+   * @param limit The maximal number of files this request shall return (directories are <b>not</b> counted).
    *
    * @since 2.0.0
    */
@@ -318,8 +318,10 @@ public final class BrowseCommandBuilder
   /**
    * Proceed the list from the given number on (zero based).
    *
-   * @param offset The number of the entry, the result should start with (zero based).
-   *               All preceding entries will be omitted.
+   * @param offset The number of the file, the result should start with (zero based).
+   *               All preceding files will be omitted. Directories are <b>not</b>
+   *               counted. Therefore directories are only listed in results without
+   *               offset.
    * @since 2.0.0
    */
   public BrowseCommandBuilder setOffset(int offset) {
