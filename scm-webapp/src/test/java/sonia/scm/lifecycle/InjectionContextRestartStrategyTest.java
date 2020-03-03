@@ -9,7 +9,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.event.RecreateEventBusEvent;
 import sonia.scm.event.ScmEventBus;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,12 +31,11 @@ class InjectionContextRestartStrategyTest {
   }
 
   @Test
-  void shouldCallDestroyAndInitialize() throws InterruptedException {
-    strategy.restart(context);
-
-    verify(context).destroy();
-    Thread.sleep(50L);
-    verify(context).initialize();
+  void shouldCallDestroyAndInitialize() {
+    TestingInjectionContext ctx = new TestingInjectionContext();
+    strategy.restart(ctx);
+    await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> assertThat(ctx.destroyed).isTrue());
+    await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> assertThat(ctx.initialized).isTrue());
   }
 
   @Test
@@ -51,6 +53,7 @@ class InjectionContextRestartStrategyTest {
     TestingInjectionContext ctx = new TestingInjectionContext();
     strategy.restart(ctx);
 
+    await().atMost(1, TimeUnit.SECONDS).until(() -> ctx.initialized);
     Thread.sleep(50L);
     ScmEventBus.getInstance().post("hello event");
 
@@ -70,6 +73,8 @@ class InjectionContextRestartStrategyTest {
   public static class TestingInjectionContext implements RestartStrategy.InjectionContext {
 
     private volatile String event;
+    private boolean initialized = false;
+    private boolean destroyed = false;
 
     @Subscribe(async = false)
     public void setEvent(String event) {
@@ -78,12 +83,12 @@ class InjectionContextRestartStrategyTest {
 
     @Override
     public void initialize() {
-
+      this.initialized = true;
     }
 
     @Override
     public void destroy() {
-
+      this.destroyed = true;
     }
   }
 
