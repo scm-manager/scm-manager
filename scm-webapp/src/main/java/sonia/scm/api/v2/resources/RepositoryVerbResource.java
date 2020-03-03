@@ -1,8 +1,10 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
 import de.otto.edison.hal.Links;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.security.RepositoryPermissionProvider;
 import sonia.scm.web.VndMediaType;
 
@@ -30,11 +32,23 @@ public class RepositoryVerbResource {
 
   @GET
   @Path("")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
   @Produces(VndMediaType.REPOSITORY_VERB_COLLECTION)
+  @Operation(summary = "List of repository verbs", description = "Returns all repository-specific permissions.", hidden = true)
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.REPOSITORY_VERB_COLLECTION,
+      schema = @Schema(implementation = RepositoryVerbsDto.class)
+    )
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public RepositoryVerbsDto getAll() {
     return new RepositoryVerbsDto(
       Links.linkingTo().self(resourceLinks.repositoryVerbs().self()).build(),

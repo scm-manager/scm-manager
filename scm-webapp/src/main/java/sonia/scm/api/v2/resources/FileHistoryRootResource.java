@@ -1,8 +1,9 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.PageResult;
 import sonia.scm.repository.Changeset;
@@ -54,15 +55,32 @@ public class FileHistoryRootResource {
    */
   @GET
   @Path("{revision}/{path: .*}")
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the changeset"),
-    @ResponseCode(code = 404, condition = "not found, no changesets available in the repository"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
   @Produces(VndMediaType.CHANGESET_COLLECTION)
-  @TypeHint(CollectionDto.class)
+  @Operation(summary = "Changesets to given file", description = "Get all changesets related to the given file starting with the given revision.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.CHANGESET_COLLECTION,
+      schema = @Schema(implementation = CollectionDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the changeset")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no changesets available in the repository",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name,
                          @PathParam("revision") String revision,
                          @PathParam("path") String path,
