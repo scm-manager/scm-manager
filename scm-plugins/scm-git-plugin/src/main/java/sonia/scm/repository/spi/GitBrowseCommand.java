@@ -278,7 +278,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         convertToFileObject(fileObject, repo, request, revId, entry.getChildren());
       }
 
-      if (resultCount > request.getOffset() || fileObject.isDirectory()) {
+      if (resultCount > request.getOffset() || (request.getOffset() == 0 && fileObject.isDirectory())) {
         files.add(fileObject);
       }
     }

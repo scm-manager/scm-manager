@@ -280,7 +280,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
 
     Collection<FileObject> foList = root.getChildren();
 
-    assertThat(foList).extracting("name").contains("f.txt");
+    assertThat(foList).extracting("name").containsExactly("f.txt");
     assertFalse("result should not be marked as trunctated", root.isTruncated());
   }
 

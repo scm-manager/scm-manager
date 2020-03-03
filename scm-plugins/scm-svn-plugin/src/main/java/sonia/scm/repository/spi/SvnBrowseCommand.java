@@ -136,15 +136,18 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     List<SVNDirEntry> entries = new ArrayList<>(svnRepository.getDir(parent.getPath(), revisionNumber, null, (Collection) null));
     sort(entries, entry -> entry.getKind() == SVNNodeKind.DIR, SVNDirEntry::getName);
     for (Iterator<SVNDirEntry> iterator = entries.iterator(); resultCount < request.getLimit() + request.getOffset() && iterator.hasNext(); ) {
-      ++resultCount;
       SVNDirEntry entry = iterator.next();
       FileObject child = createFileObject(request, svnRepository, revisionNumber, entry, basePath);
+
+      if (!child.isDirectory()) {
+        ++resultCount;
+      }
 
       if (child.isDirectory() && request.isRecursive()) {
         traverse(svnRepository, revisionNumber, request, child, createBasePath(child.getPath()));
       }
 
-      if (resultCount > request.getOffset()) {
+      if (resultCount > request.getOffset() || (request.getOffset() == 0 && child.isDirectory())) {
         parent.addChild(child);
       }
     }

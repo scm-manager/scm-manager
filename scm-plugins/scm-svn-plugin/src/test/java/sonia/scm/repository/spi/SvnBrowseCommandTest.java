@@ -189,7 +189,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     Collection<FileObject> foList = result.getFile().getChildren();
 
-    assertThat(foList).extracting("name").containsExactly("c");
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt");
     assertThat(result.getFile().isTruncated()).isTrue();
   }
 
@@ -203,7 +203,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     Collection<FileObject> foList = result.getFile().getChildren();
 
-    assertThat(foList).extracting("name").containsExactly("a.txt");
+    assertThat(foList).isEmpty();
   }
 
   @Test
@@ -233,7 +233,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
   public void testRecursiveLimitInSubDir() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
-    request.setLimit(2);
+    request.setLimit(1);
     request.setRecursive(true);
 
     FileObject root = createCommand().getBrowserResult(request).getFile();
@@ -256,7 +256,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
   public void testRecursiveOffset() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
-    request.setOffset(2);
+    request.setOffset(1);
     request.setRecursive(true);
 
     FileObject root = createCommand().getBrowserResult(request).getFile();
