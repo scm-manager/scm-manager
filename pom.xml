@@ -480,6 +480,13 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.0</version>
+        <configuration>
+          <!--
+          skips surefire tests without skipping failsafe tests.
+          Property value seems to magically default to false
+          -->
+          <skipTests>${skipUnitTests}</skipTests>
+        </configuration>
       </plugin>
 
       <plugin>
@@ -881,7 +888,9 @@
 
     <sonar.nodejs.executable>./scm-ui/target/frontend/buildfrontend-node/node-v${nodejs.version}-linux-x64/bin/node</sonar.nodejs.executable>
 
-
+    <!-- Possibility to skip only the unit test. Can be useful when running only integration tests.
+    This can be used from the command line as follows: mvn <goals> -DskipUnitTests -->
+    <skipUnitTests>${skipTests}</skipUnitTests>
   </properties>
 
 </project>
