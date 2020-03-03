@@ -5,15 +5,17 @@ import com.github.sdorra.shiro.SubjectAware;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
+import sonia.scm.util.IOUtil;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.ByteArrayOutputStream;
@@ -29,6 +31,8 @@ import static org.mockito.Mockito.when;
 @SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini", username = "admin", password = "secret")
 public class GitModifyCommand_LFSTest extends AbstractGitCommandTestBase {
 
+  private static File contextDir;
+
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
   @Rule
@@ -38,14 +42,18 @@ public class GitModifyCommand_LFSTest extends AbstractGitCommandTestBase {
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory = mock(LfsBlobStoreFactory.class);
 
-  @Before
-  public void registerFilter() {
+  @BeforeClass
+  public static void registerFilter() throws IOException {
+    SCMContextProvider contextProvider = mock(SCMContextProvider.class);
+    contextDir = Files.createTempDirectory("scm").toFile();
+    when(contextProvider.getBaseDirectory()).thenReturn(contextDir);
     new GitLfsFilterContextListener(contextProvider).contextInitialized(null);
   }
 
-  @After
-  public void unregisterFilter() {
-    new GitLfsFilterContextListener(contextProvider).contextDestroyed(null);
+  @AfterClass
+  public static void unregisterFilter() throws IOException {
+    new GitLfsFilterContextListener(null).contextDestroyed(null);
+    IOUtil.delete(contextDir);
   }
 
   @Test
