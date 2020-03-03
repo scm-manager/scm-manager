@@ -1,8 +1,12 @@
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
@@ -21,6 +25,9 @@ import javax.ws.rs.core.Response;
 /**
  * RESTful Web Service Resource to manage the configuration.
  */
+@OpenAPIDefinition(tags = {
+  @Tag(name = "Instance configuration", description = "Global SCM-Manager instance configuration")
+})
 @Path(ConfigResource.CONFIG_PATH_V2)
 public class ConfigResource {
 
@@ -46,13 +53,25 @@ public class ConfigResource {
   @GET
   @Path("")
   @Produces(VndMediaType.CONFIG)
-  @TypeHint(UserDto.class)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"configuration:read:global\" privilege"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(summary = "Instance configuration", description = "Returns the instance configuration.", tags = "Instance configuration")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.CONFIG,
+      schema = @Schema(implementation = ConfigDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"configuration:read\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response get() {
 
     // We do this permission check in Resource and not in ScmConfiguration, because it must be available for reading
@@ -70,13 +89,18 @@ public class ConfigResource {
   @PUT
   @Path("")
   @Consumes(VndMediaType.CONFIG)
-  @StatusCodes({
-    @ResponseCode(code = 204, condition = "update success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"configuration:write:global\" privilege"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
+  @Operation(summary = "Update instance configuration", description = "Modifies the instance configuration.", tags = "Instance configuration")
+  @ApiResponse(responseCode = "204", description = "update success")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"configuration:write\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response update(@Valid ConfigDto configDto) {
 
     // This *could* be moved to ScmConfiguration or ScmConfigurationUtil classes.

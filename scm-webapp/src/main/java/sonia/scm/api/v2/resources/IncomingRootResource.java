@@ -1,9 +1,10 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.PageResult;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -81,17 +82,34 @@ public class IncomingRootResource {
    * @return
    * @throws Exception
    */
-  @Path("{source}/{target}/changesets")
   @GET
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the changeset"),
-    @ResponseCode(code = 404, condition = "not found, no changesets available in the repository"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Path("{source}/{target}/changesets")
   @Produces(VndMediaType.CHANGESET_COLLECTION)
-  @TypeHint(CollectionDto.class)
+  @Operation(summary = "Incoming changesets", description = "Get the incoming changesets from source to target.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.CHANGESET_COLLECTION,
+      schema = @Schema(implementation = CollectionDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the changeset")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no changesets available in the repository",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public Response incomingChangesets(@PathParam("namespace") String namespace,
                                      @PathParam("name") String name,
                                      @PathParam("source") String source,
@@ -117,18 +135,34 @@ public class IncomingRootResource {
     }
   }
 
-
-  @Path("{source}/{target}/diff")
   @GET
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the changeset"),
-    @ResponseCode(code = 404, condition = "not found, no changesets available in the repository"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Path("{source}/{target}/diff")
   @Produces(VndMediaType.DIFF)
-  @TypeHint(CollectionDto.class)
+  @Operation(summary = "Incoming diff", description = "Get the incoming diff from source to target.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.DIFF,
+      schema = @Schema(implementation = CollectionDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the changeset")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no changesets available in the repository",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public Response incomingDiff(@PathParam("namespace") String namespace,
                                @PathParam("name") String name,
                                @PathParam("source") String source,
@@ -155,14 +189,32 @@ public class IncomingRootResource {
   @GET
   @Path("{source}/{target}/diff/parsed")
   @Produces(VndMediaType.DIFF_PARSED)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 400, condition = "Bad Request"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the diff"),
-    @ResponseCode(code = 404, condition = "not found, source or target branch for the repository not available or repository not found"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(summary = "Incoming parsed diff", description = "Get the incoming parsed diff from source to target.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.DIFF_PARSED,
+      schema = @Schema(implementation = CollectionDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "400", description = "bad request")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the diff")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, source or target branch for the repository not available or repository not found",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public Response incomingDiffParsed(@PathParam("namespace") String namespace,
                             @PathParam("name") String name,
                             @PathParam("source") String source,

@@ -199,6 +199,10 @@
     "8LRncum0S1": {
       "displayName": "Internal repository error",
       "description": "There was an error or an unexpected condition while handling the native repository. Please consult the logs for further information."
+    },
+    "4GRrgkSC01": {
+      "displayName": "Unexpected merge result",
+      "description": "The merge led to an unexpected result, that could not be handled automatically. More details could be found in the log. Please merge the branches manually."
     }
   },
   "namespaceStrategies": {
