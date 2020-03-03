@@ -103,7 +103,7 @@ node('docker') {
 String mainBranch
 
 Maven setupMavenBuild() {
-  Maven mvn = new MavenWrapperInDocker(this)
+  Maven mvn = new MavenWrapperInDocker(this, "scmmanager/java-build:11.0.6_10")
 
   if (isMainBranch()) {
     // Release starts javadoc, which takes very long, so do only for certain branches
