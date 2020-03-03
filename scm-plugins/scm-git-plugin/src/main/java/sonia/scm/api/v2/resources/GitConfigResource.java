@@ -51,7 +51,7 @@ public class GitConfigResource {
   @GET
   @Path("")
   @Produces(GitVndMediaType.GIT_CONFIG)
-  @Operation(summary = "Git configuration", description = "Returns the global git configuration.", tags = "Git")
+  @Operation(summary = "Git configuration", description = "Returns the global git configuration.", tags = "Git", operationId = "git_get_config")
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -91,11 +91,8 @@ public class GitConfigResource {
   @PUT
   @Path("")
   @Consumes(GitVndMediaType.GIT_CONFIG)
-  @Operation(summary = "Modify git configuration", description = "Modifies the global git configuration.", tags = "Git")
-  @ApiResponse(
-    responseCode = "204",
-    description = "update success"
-  )
+  @Operation(summary = "Modify git configuration", description = "Modifies the global git configuration.", tags = "Git", operationId = "git_put_config")
+  @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"configuration:write:git\" privilege")
   @ApiResponse(

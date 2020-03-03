@@ -48,7 +48,7 @@ public class SvnConfigResource {
   @GET
   @Path("")
   @Produces(SvnVndMediaType.SVN_CONFIG)
-  @Operation(summary = "Svn configuration", description = "Returns the global subversion configuration.", tags = "Subversion")
+  @Operation(summary = "Svn configuration", description = "Returns the global subversion configuration.", tags = "Subversion", operationId = "svn_get_config")
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -88,7 +88,7 @@ public class SvnConfigResource {
   @PUT
   @Path("")
   @Consumes(SvnVndMediaType.SVN_CONFIG)
-  @Operation(summary = "Modify svn configuration", description = "Modifies the global subversion configuration.", tags = "Subversion")
+  @Operation(summary = "Modify svn configuration", description = "Modifies the global subversion configuration.", tags = "Subversion", operationId = "svn_put_config")
   @ApiResponse(
     responseCode = "204",
     description = "update success"

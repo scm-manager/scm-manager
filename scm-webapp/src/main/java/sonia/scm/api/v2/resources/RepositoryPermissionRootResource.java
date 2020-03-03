@@ -1,7 +1,6 @@
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.web.VndMediaType;
 
@@ -68,11 +67,7 @@ public class RepositoryPermissionRootResource {
   @Path("")
   @Consumes(VndMediaType.REPOSITORY_PERMISSION)
   @Operation(summary = "Create repository-specific permission", description = "Adds a new permission to the user or group managed by the repository.", tags = {"Repository", "Permissions"})
-  @ApiResponse(
-    responseCode = "201",
-    description = "creates",
-    headers = @Header(name = "Location", description = "uri of the created permission")
-  )
+  @ApiResponse(responseCode = "201", description = "creates")
   @ApiResponse(
     responseCode = "404",
     description = "not found",
