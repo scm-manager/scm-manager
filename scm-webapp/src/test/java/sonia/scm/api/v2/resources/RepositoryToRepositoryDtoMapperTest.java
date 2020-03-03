@@ -78,16 +78,6 @@ public class RepositoryToRepositoryDtoMapperTest {
   }
 
   @Test
-  public void shouldMapPropertiesProperty() {
-    Repository repository = createTestRepository();
-    repository.setProperty("testKey", "testValue");
-
-    RepositoryDto dto = mapper.map(repository);
-
-    assertEquals("testValue", dto.getProperties().get("testKey"));
-  }
-
-  @Test
   @SubjectAware(username = "unpriv")
   public void shouldCreateLinksForUnprivilegedUser() {
     RepositoryDto dto = mapper.map(createTestRepository());
