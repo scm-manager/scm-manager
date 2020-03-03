@@ -1,7 +1,7 @@
 #!groovy
 
 // Keep the version in sync with the one used in pom.xml in order to get correct syntax completion.
-@Library('github.com/cloudogu/ces-build-lib@59d3e94')
+@Library('github.com/cloudogu/ces-build-lib@1.35.1')
 import com.cloudogu.ces.cesbuildlib.*
 
 node('docker') {
@@ -103,8 +103,7 @@ node('docker') {
 String mainBranch
 
 Maven setupMavenBuild() {
-  // Keep this version number in sync with .mvn/maven-wrapper.properties
-  Maven mvn = new MavenWrapper(this)
+  Maven mvn = new MavenWrapperInDocker(this)
 
   if (isMainBranch()) {
     // Release starts javadoc, which takes very long, so do only for certain branches
