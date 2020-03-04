@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Iterator;
 import java.util.OptionalLong;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -176,6 +177,41 @@ class HgFileviewCommandResultReaderTest {
       .extracting("name")
       .containsExactly("a.txt");
     assertThat(subSubDir.getChildren())
+      .extracting("directory")
+      .containsExactly(false);
+  }
+
+  @Test
+  void shouldCreateSimilarSubDirectoriesCorrectly() throws IOException {
+    HgFileviewCommandResultReader reader = new MockInput()
+      .dir("")
+      .file("dir/a.txt")
+      .file("directory/b.txt")
+      .build();
+
+    FileObject fileObject = reader.parseResult();
+
+    assertThat(fileObject.getChildren())
+      .extracting("name")
+      .containsExactly("dir", "directory");
+    assertThat(fileObject.getChildren())
+      .extracting("directory")
+      .containsExactly(true, true);
+
+    Iterator<FileObject> fileIterator = fileObject.getChildren().iterator();
+    FileObject firstSubDir = fileIterator.next();
+    assertThat(firstSubDir.getChildren())
+      .extracting("name")
+      .containsExactly("a.txt");
+    assertThat(firstSubDir.getChildren())
+      .extracting("directory")
+      .containsExactly(false);
+
+    FileObject secondSubDir = fileIterator.next();
+    assertThat(secondSubDir.getChildren())
+      .extracting("name")
+      .containsExactly("b.txt");
+    assertThat(secondSubDir.getChildren())
       .extracting("directory")
       .containsExactly(false);
   }

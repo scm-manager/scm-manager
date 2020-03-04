@@ -95,7 +95,7 @@ class HgFileviewCommandResultReader {
 
   private boolean isAncestor(FileObject ancestor, FileObject child) {
     String ancestorPath = ancestor.getPath();
-    return child.getParentPath().startsWith(ancestorPath);
+    return ancestorPath.equals("") || child.getParentPath().startsWith(ancestorPath + '/');
   }
 
   private Collection<FileObject> createMissingParents(FileObject current, FileObject file) {
