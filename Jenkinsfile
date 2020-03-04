@@ -110,7 +110,9 @@ String mainBranch
 Maven setupMavenBuild() {
   Maven mvn = new MavenWrapperInDocker(this, "scmmanager/java-build:11.0.6_10")
   // disable logging durring the build
-  mvn.additionalArgs += ' -Dlogback.configurationFile=scm-webapp/src/main/resources/logback.ci.xml'
+  def logConf = "scm-webapp/src/main/resources/logback.ci.xml"
+  mvn.additionalArgs += " -Dlogback.configurationFile=${logConf}"
+  mvn.additionalArgs += " -Dscm-it.logbackConfiguration=${logConf}"
 
   if (isMainBranch()) {
     // Release starts javadoc, which takes very long, so do only for certain branches
