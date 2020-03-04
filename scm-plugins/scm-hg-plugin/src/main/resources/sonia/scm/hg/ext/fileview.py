@@ -211,18 +211,21 @@ class File_Printer:
     self.revCtx = revCtx
     self.disableLastCommit = disableLastCommit
     self.transport = transport
-    self.result_count = -1
+    self.result_count = 0
+    self.initial_path_printed = False
     self.limit = limit
     self.offset = offset
 
   def print_directory(self, path):
-    if self.shouldPrintResult():
+    if not self.initial_path_printed or self.offset == 0 or self.shouldPrintResult():
+      self.initial_path_printed = True
       format = '%s/\n'
       if self.transport:
           format = 'd%s/\0'
       self.writer.write( format % path)
 
   def print_file(self, path):
+    self.result_count += 1
     if self.shouldPrintResult():
       file = self.revCtx[path]
       date = '0 0'
@@ -252,10 +255,7 @@ class File_Printer:
       self.print_file(file.path)
 
   def shouldPrintResult(self):
-    # The first result is the selected path (or root if not specified). This
-    # always has to be printed. Therefore we start counting with -1.
-    self.result_count += 1
-    return self.result_count == 0 or self.offset < self.result_count <= self.limit + self.offset
+    return self.offset < self.result_count <= self.limit + self.offset
 
   def isTruncated(self):
     return self.result_count > self.limit + self.offset

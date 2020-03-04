@@ -197,8 +197,8 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
   @Test
   public void testOffset() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
-    request.setLimit(1);
-    request.setOffset(2);
+    request.setLimit(2);
+    request.setOffset(1);
 
     BrowserResult result = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request);
     FileObject root = result.getFile();
@@ -308,8 +308,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     Collection<FileObject> foList = root.getChildren();
 
     assertNotNull(foList);
-    assertFalse(foList.isEmpty());
-    assertEquals(4, foList.size());
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt", "b.txt", "f.txt");
 
     return foList;
   }
