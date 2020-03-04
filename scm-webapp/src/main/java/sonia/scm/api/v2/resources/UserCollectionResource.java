@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -99,7 +100,15 @@ public class UserCollectionResource {
   @Path("")
   @Consumes(VndMediaType.USER)
   @Operation(summary = "Create user", description = "Creates a new user.", tags = "User")
-  @ApiResponse(responseCode = "201", description = "create success")
+  @ApiResponse(
+    responseCode = "201",
+    description = "create success",
+    headers = @Header(
+      name = "Location",
+      description = "uri to the created user",
+      schema = @Schema(type = "string")
+    )
+  )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"user\" privilege")
   @ApiResponse(responseCode = "409", description = "conflict, a user with this name already exists")

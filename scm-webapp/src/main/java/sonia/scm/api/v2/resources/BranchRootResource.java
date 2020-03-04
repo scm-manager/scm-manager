@@ -2,6 +2,7 @@ package sonia.scm.api.v2.resources;
 
 import com.google.common.base.Strings;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -179,7 +180,15 @@ public class BranchRootResource {
   @Path("")
   @Consumes(VndMediaType.BRANCH_REQUEST)
   @Operation(summary = "Create branch", description = "Creates a new branch.", tags = "Repository")
-  @ApiResponse(responseCode = "201", description = "create success")
+  @ApiResponse(
+    responseCode = "201",
+    description = "create success",
+    headers = @Header(
+      name = "Location",
+      description = "uri to the created branch",
+      schema = @Schema(type = "string")
+    )
+  )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"push\" privilege")
   @ApiResponse(responseCode = "409", description = "conflict, a branch with this name already exists")

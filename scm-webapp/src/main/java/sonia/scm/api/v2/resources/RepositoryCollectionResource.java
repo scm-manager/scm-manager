@@ -1,6 +1,7 @@
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -103,7 +104,15 @@ public class RepositoryCollectionResource {
   @Path("")
   @Consumes(VndMediaType.REPOSITORY)
   @Operation(summary = "Create repository", description = "Creates a new repository.", tags = "Repository")
-  @ApiResponse(responseCode = "201", description = "create success")
+  @ApiResponse(
+    responseCode = "201",
+    description = "create success",
+    headers = @Header(
+      name = "Location",
+      description = "uri to the created repository",
+      schema = @Schema(type = "string")
+    )
+  )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"repository\" privilege")
   @ApiResponse(responseCode = "409", description = "conflict, a repository with this name already exists")
