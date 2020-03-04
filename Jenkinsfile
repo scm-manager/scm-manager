@@ -32,13 +32,18 @@ node('docker') {
         mvn 'clean install -DskipTests'
       }
 
-      stage('Unit Test') {
-        mvn 'test -DskipFrontendBuild -DskipTypecheck -Pcoverage -pl !scm-it -Dmaven.test.failure.ignore=true'
-      }
-
-      stage('Integration Test') {
-        mvn 'verify -Pit -DskipUnitTests -pl :scm-webapp,:scm-it -Dmaven.test.failure.ignore=true'
-      }
+      parallel(
+        unitTest: {
+          stage('Unit Test') {
+            mvn 'test -DskipFrontendBuild -DskipTypecheck -Pcoverage -pl !scm-it -Dmaven.test.failure.ignore=true'
+          }
+        },
+        integrationTest: {
+          stage('Integration Test') {
+            mvn 'verify -Pit -DskipUnitTests -pl :scm-webapp,:scm-it -Dmaven.test.failure.ignore=true'
+          }
+        }
+      )
 
       stage('SonarQube') {
 
