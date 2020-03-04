@@ -57,7 +57,7 @@ public class HgConfigResource {
   @GET
   @Path("")
   @Produces(HgVndMediaType.CONFIG)
-  @Operation(summary = "Hg configuration", description = "Returns the global mercurial configuration.", tags = "Mercurial")
+  @Operation(summary = "Hg configuration", description = "Returns the global mercurial configuration.", tags = "Mercurial", operationId = "hg_get_config")
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -97,7 +97,7 @@ public class HgConfigResource {
   @PUT
   @Path("")
   @Consumes(HgVndMediaType.CONFIG)
-  @Operation(summary = "Modify hg configuration", description = "Modifies the global mercurial configuration.", tags = "Mercurial")
+  @Operation(summary = "Modify hg configuration", description = "Modifies the global mercurial configuration.", tags = "Mercurial", operationId = "hg_put_config")
   @ApiResponse(
     responseCode = "204",
     description = "update success"
