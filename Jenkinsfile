@@ -33,7 +33,7 @@ node('docker') {
       }
 
       stage('Unit Test') {
-        mvn 'test -Pcoverage -Dmaven.test.failure.ignore=true'
+        mvn 'test -DskipFrontendBuild -DskipTypecheck -Pcoverage -pl !scm-it -Dmaven.test.failure.ignore=true'
       }
 
       stage('Integration Test') {
