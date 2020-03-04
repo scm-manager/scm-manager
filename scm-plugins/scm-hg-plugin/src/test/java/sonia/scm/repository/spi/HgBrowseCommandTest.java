@@ -183,21 +183,21 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
   @Test
   public void testLimit() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
-    request.setLimit(2);
+    request.setLimit(1);
 
     BrowserResult result = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request);
     FileObject root = result.getFile();
 
     Collection<FileObject> foList = root.getChildren();
 
-    assertThat(foList).extracting("name").containsExactlyInAnyOrder("c", "a.txt");
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt");
     assertThat(root.isTruncated()).isTrue();
   }
 
   @Test
   public void testOffset() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
-    request.setLimit(2);
+    request.setLimit(1);
     request.setOffset(2);
 
     BrowserResult result = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request);
@@ -205,7 +205,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
     Collection<FileObject> foList = root.getChildren();
 
-    assertThat(foList).extracting("name").containsExactlyInAnyOrder("b.txt", "f.txt");
+    assertThat(foList).extracting("name").containsExactly("b.txt", "f.txt");
     assertThat(root.isTruncated()).isFalse();
   }
 
@@ -214,7 +214,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
   public void testRecursiveLimit() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
-    request.setLimit(4);
+    request.setLimit(3);
     request.setRecursive(true);
 
     FileObject root = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request).getFile();
@@ -237,7 +237,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
   public void testRecursiveLimitInSubDir() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
-    request.setLimit(2);
+    request.setLimit(1);
     request.setRecursive(true);
 
     FileObject root = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request).getFile();
@@ -260,7 +260,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
   public void testRecursiveOffset() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
 
-    request.setOffset(2);
+    request.setOffset(1);
     request.setRecursive(true);
 
     FileObject root = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request).getFile();
