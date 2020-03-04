@@ -65,6 +65,22 @@ class HgFileviewCommandResultReaderTest {
   }
 
   @Test
+  void shouldParseSubDirectory() throws IOException {
+    HgFileviewCommandResultReader reader = new MockInput()
+      .dir("dir")
+      .file("dir/a.txt")
+      .build();
+
+    FileObject fileObject = reader.parseResult();
+
+    assertThat(fileObject.isDirectory()).isTrue();
+    assertThat(fileObject.getName()).isEqualTo("dir");
+    assertThat(fileObject.getChildren())
+      .extracting("name")
+      .containsExactly("a.txt");
+  }
+
+  @Test
   void shouldParseRecursiveResult() throws IOException {
     HgFileviewCommandResultReader reader = new MockInput()
       .dir("")

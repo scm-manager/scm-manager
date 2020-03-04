@@ -79,9 +79,6 @@ class HgFileviewCommandResultReader {
 
   private boolean isParent(FileObject parent, FileObject child) {
     String parentPath = parent.getPath();
-    if (parentPath.equals("")) {
-      return true;
-    }
     return child.getParentPath().equals(parentPath);
   }
 
