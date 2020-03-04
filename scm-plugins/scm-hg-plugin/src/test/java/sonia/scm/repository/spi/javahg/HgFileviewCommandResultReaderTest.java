@@ -119,6 +119,68 @@ class HgFileviewCommandResultReaderTest {
   }
 
   @Test
+  void shouldCreateDirectoriesImplicitly() throws IOException {
+    HgFileviewCommandResultReader reader = new MockInput()
+      .dir("")
+      .file("dir/a.txt")
+      .file("dir/b.txt")
+      .file("d.txt")
+      .build();
+
+    FileObject fileObject = reader.parseResult();
+
+    assertThat(fileObject.getChildren())
+      .extracting("name")
+      .containsExactly("dir", "d.txt");
+    assertThat(fileObject.getChildren())
+      .extracting("directory")
+      .containsExactly(true, false);
+
+    FileObject subDir = fileObject.getChildren().iterator().next();
+    assertThat(subDir.getChildren())
+      .extracting("name")
+      .containsExactly("a.txt", "b.txt");
+    assertThat(subDir.getChildren())
+      .extracting("directory")
+      .containsExactly(false, false);
+  }
+
+  @Test
+  void shouldCreateSubSubDirectoriesImplicitly() throws IOException {
+    HgFileviewCommandResultReader reader = new MockInput()
+      .dir("")
+      .file("dir/more/a.txt")
+      .file("dir/b.txt")
+      .file("d.txt")
+      .build();
+
+    FileObject fileObject = reader.parseResult();
+
+    assertThat(fileObject.getChildren())
+      .extracting("name")
+      .containsExactly("dir", "d.txt");
+    assertThat(fileObject.getChildren())
+      .extracting("directory")
+      .containsExactly(true, false);
+
+    FileObject subDir = fileObject.getChildren().iterator().next();
+    assertThat(subDir.getChildren())
+      .extracting("name")
+      .containsExactly("more", "b.txt");
+    assertThat(subDir.getChildren())
+      .extracting("directory")
+      .containsExactly(true, false);
+
+    FileObject subSubDir = subDir.getChildren().iterator().next();
+    assertThat(subSubDir.getChildren())
+      .extracting("name")
+      .containsExactly("a.txt");
+    assertThat(subSubDir.getChildren())
+      .extracting("directory")
+      .containsExactly(false);
+  }
+
+  @Test
   void shouldIgnoreTimeAndCommentWhenDisabled() throws IOException {
     HgFileviewCommandResultReader reader = new MockInput()
       .dir("")

@@ -7,6 +7,8 @@ import sonia.scm.repository.FileObject;
 import sonia.scm.repository.SubRepository;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -32,6 +34,15 @@ class HgFileviewCommandResultReader {
       while (!stack.isEmpty()) {
         FileObject current = stack.peek();
         if (isParent(current, file)) {
+          current.addChild(file);
+          break;
+        } else if (isAncestor(current, file)) {
+          Collection<FileObject> missingParents = createMissingParents(current, file);
+          for (FileObject subDir : missingParents) {
+            current.addChild(subDir);
+            stack.push(subDir);
+            current = stack.peek();
+          }
           current.addChild(file);
           break;
         } else {
@@ -80,6 +91,30 @@ class HgFileviewCommandResultReader {
   private boolean isParent(FileObject parent, FileObject child) {
     String parentPath = parent.getPath();
     return child.getParentPath().equals(parentPath);
+  }
+
+  private boolean isAncestor(FileObject ancestor, FileObject child) {
+    String ancestorPath = ancestor.getPath();
+    return child.getParentPath().startsWith(ancestorPath);
+  }
+
+  private Collection<FileObject> createMissingParents(FileObject current, FileObject file) {
+    String missingPath = file.getPath().substring(current.getPath().length(), file.getPath().lastIndexOf('/'));
+
+    FileObject directory = new FileObject();
+    directory.setName(getNameFromPath(missingPath));
+    directory.setDirectory(true);
+    directory.setPath(missingPath);
+
+    Collection<FileObject> parents = new ArrayList<>();
+
+    if (!isParent(current, directory)) {
+      parents.addAll(createMissingParents(current, directory));
+    }
+
+    parents.add(directory);
+
+    return parents;
   }
 
   private FileObject readDirectory(HgInputStream stream) throws IOException {
