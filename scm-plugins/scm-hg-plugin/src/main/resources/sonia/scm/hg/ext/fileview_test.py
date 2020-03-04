@@ -26,7 +26,7 @@ class File_Object_Collector():
 
   def __init__(self):
     self.stack = []
-  
+
   def __getitem__(self, key):
     if len(self.stack) == 0 and key == 0:
       return self.last
@@ -43,7 +43,7 @@ class File_Object_Collector():
     if file.directory:
       self.stack.append(file)
     self.last = file
-    
+
 class CollectingWriter:
   def __init__(self):
     self.stack = []
@@ -81,12 +81,12 @@ class Test_File_Viewer(unittest.TestCase):
   def test_printer(self):
     paths = ["a", "b", "c/d.txt", "c/e.txt", "f.txt", "c/g/h.txt"]
     writer = self.view_with_limit_and_offset(paths, 1000, 0)
-    self.assertPaths(writer, ["/", "c/g/h.txt", "c/d.txt", "c/e.txt", "a", "b", "f.txt"])
+    self.assertPaths(writer, ["/", "c/", "c/g/", "c/g/h.txt", "c/d.txt", "c/e.txt", "a", "b", "f.txt"])
 
   def test_printer_with_limit(self):
     paths = ["a", "b", "c/d.txt", "c/e.txt", "f.txt", "c/g/h.txt"]
     writer = self.view_with_limit_and_offset(paths, 1, 0)
-    self.assertPaths(writer, ["/", "c/g/h.txt"])
+    self.assertPaths(writer, ["/", "c/", "c/g/", "c/g/h.txt"])
 
   def test_printer_with_offset(self):
     paths = ["c/g/h.txt", "c/g/i.txt", "c/d.txt", "c/e.txt", "a", "b", "f.txt"]
@@ -177,7 +177,7 @@ class Test_File_Viewer(unittest.TestCase):
     self.assertEqual(len(parent), len(expectedPaths))
     for idx,item in enumerate(parent.children):
       self.assertEqual(item.path, expectedPaths[idx])
-    
+
   def assertFile(self, file, expectedPath):
     self.assertEquals(file.path, expectedPath)
     self.assertFalse(file.directory)
