@@ -19,6 +19,7 @@ module.exports = function(mode) {
       [name]: [path.resolve(__dirname, "webpack-public-path.js"), packageJSON.main || "src/main/js/index.js"]
     },
     mode,
+    stats: "minimal",
     devtool: "source-map",
     target: "web",
     node: {
