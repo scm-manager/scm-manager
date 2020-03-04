@@ -109,7 +109,8 @@ public class RepositoryCollectionResource {
     description = "create success",
     headers = @Header(
       name = "Location",
-      description = "uri to the created repository"
+      description = "uri to the created repository",
+      schema = @Schema(type = "string")
     )
   )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")

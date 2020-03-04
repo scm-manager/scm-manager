@@ -5,8 +5,8 @@ import com.github.sdorra.shiro.SubjectAware;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -38,14 +38,14 @@ public class GitModifyCommand_LFSTest extends AbstractGitCommandTestBase {
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory = mock(LfsBlobStoreFactory.class);
 
-  @Before
-  public void registerFilter() {
-    new GitLfsFilterContextListener(contextProvider).contextInitialized(null);
+  @BeforeClass
+  public static void registerFilter() {
+    new GitLfsFilterContextListener().contextInitialized(null);
   }
 
-  @After
-  public void unregisterFilter() {
-    new GitLfsFilterContextListener(contextProvider).contextDestroyed(null);
+  @AfterClass
+  public static void unregisterFilter() {
+    new GitLfsFilterContextListener().contextDestroyed(null);
   }
 
   @Test

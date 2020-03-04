@@ -95,13 +95,14 @@ public class GroupCollectionResource {
   @POST
   @Path("")
   @Consumes(VndMediaType.GROUP)
-  @Operation(summary = "Create group", description = "Creates a new group.", tags = "Group")
+  @Operation(summary = "Create group", description = "Creates a new group.", tags = "Group", operationId = "group_create")
   @ApiResponse(
     responseCode = "201",
     description = "create success",
     headers = @Header(
       name = "Location",
-      description = "uri to the created group"
+      description = "uri to the created group",
+      schema = @Schema(type = "string")
     )
   )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
