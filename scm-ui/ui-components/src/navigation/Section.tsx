@@ -33,6 +33,8 @@ const SmallButton = styled(Button)<CollapsedProps>`
   padding-right: 1rem;
   margin-right: ${(props: CollapsedProps) => (props.collapsed ? "0" : "0.5rem")};
   height: 1.5rem;
+  display: flex;
+  align-items: center;
 `;
 
 const MenuLabel = styled.p<CollapsedProps>`
