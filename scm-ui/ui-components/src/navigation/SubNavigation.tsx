@@ -1,7 +1,6 @@
 import React, { FC, ReactElement, useContext, useEffect } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import classNames from "classnames";
-import { MenuContext } from "./MenuContext";
 
 type Props = {
   to: string;
@@ -24,21 +23,13 @@ const SubNavigation: FC<Props> = ({ to, activeOnlyWhenExact, icon, collapsed, ti
     exact: activeOnlyWhenExact
   });
 
-  const menuContext = useContext(MenuContext);
-
-  useEffect(() => {
-    if (menuContext.menuCollapsed) {
-      menuContext.setMenuCollapsed(false);
-    }
-  }, [match]);
-
   let defaultIcon = "fas fa-cog";
   if (icon) {
     defaultIcon = icon;
   }
 
   let childrenList = null;
-  if (match) {
+  if (match && !collapsed) {
     childrenList = <ul className="sub-menu">{children}</ul>;
   }
 

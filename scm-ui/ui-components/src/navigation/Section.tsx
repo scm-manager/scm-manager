@@ -1,6 +1,8 @@
-import React, { FC, ReactElement, useEffect, useState } from "react";
+import React, { FC, ReactElement, ReactNode, useEffect, useState } from "react";
 import { Button } from "../buttons";
 import styled from "styled-components";
+import SubNavigation from "./SubNavigation";
+import { useLocation, matchPath } from "react-router-dom";
 
 type Props = {
   label: string;
@@ -39,8 +41,39 @@ const MenuLabel = styled.p<CollapsedProps>`
   justify-content: ${props => (props.collapsed ? "center" : "left")};
 `;
 
-const Section: FC<Props> = ({ label, children, collapsed, onCollapse, scrollTransitionAt }) => {
+const createParentPath = (to: string) => {
+  const parents = to.split("/");
+  parents.splice(-1, 1);
+  return parents.join("/");
+};
+
+const isSubNavigationActive = (children: ReactNode, url: string): boolean => {
+  const childArray = React.Children.toArray(children);
+  const match = childArray
+    .filter(child => {
+      // what about extension points?
+      // @ts-ignore
+      return child.type.name === SubNavigation.name;
+    })
+    .map(child => {
+      // @ts-ignore
+      return child.props;
+    })
+    .find(props => {
+      const path = createParentPath(props.to);
+      const matches = matchPath(url, {
+        path,
+        exact: props.activeOnlyWhenExact as boolean
+      });
+      return matches != null;
+    });
+
+  return match != null;
+};
+
+const Section: FC<Props> = ({ label, children, collapsed = false, onCollapse, scrollTransitionAt }) => {
   const [scrollPositionY, setScrollPositionY] = useState(0);
+  const location = useLocation();
 
   useEffect(() => {
     window.addEventListener("scroll", () => setScrollPositionY(window.pageYOffset));
@@ -50,29 +83,27 @@ const Section: FC<Props> = ({ label, children, collapsed, onCollapse, scrollTran
     };
   }, []);
 
+  const subNavActive = isSubNavigationActive(children, location.pathname);
+  const isCollapsed = collapsed && !subNavActive;
+
   const childrenWithProps = React.Children.map(children, (child: ReactElement) =>
-    React.cloneElement(child, { collapsed: collapsed })
+    React.cloneElement(child, { collapsed: isCollapsed })
   );
-  const arrowIcon = collapsed ? <i className="fas fa-caret-down" /> : <i className="fas fa-caret-right" />;
+  const arrowIcon = isCollapsed ? <i className="fas fa-caret-down" /> : <i className="fas fa-caret-right" />;
 
   return (
     <SectionContainer
-      collapsed={collapsed ? collapsed : false}
+      collapsed={isCollapsed}
       scrollPositionY={onCollapse ? scrollPositionY : 0}
       scrollTransitionAt={scrollTransitionAt ? scrollTransitionAt : 250}
     >
-      <MenuLabel className="menu-label" collapsed={collapsed ? collapsed : false}>
-        {onCollapse && (
-          <SmallButton
-            color="info"
-            className="is-medium"
-            action={() => onCollapse(!collapsed)}
-            collapsed={collapsed ? collapsed : false}
-          >
+      <MenuLabel className="menu-label" collapsed={isCollapsed}>
+        {onCollapse && !subNavActive && (
+          <SmallButton color="info" className="is-medium" action={() => onCollapse(!isCollapsed)} collapsed={isCollapsed}>
             {arrowIcon}
           </SmallButton>
         )}
-        {collapsed ? "" : label}
+        {isCollapsed ? "" : label}
       </MenuLabel>
       <ul className="menu-list">{childrenWithProps}</ul>
     </SectionContainer>
