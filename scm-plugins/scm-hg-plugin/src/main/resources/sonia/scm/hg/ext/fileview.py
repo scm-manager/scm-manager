@@ -153,7 +153,7 @@ class File_Walker:
     return path
 
   def walk(self, structure, parent = ""):
-    sortedItems = sorted(structure.iteritems(), key = lambda item: item[1])
+    sortedItems = sorted(structure.iteritems(), key = lambda item: self.sortKey(item))
     for key, value in sortedItems:
       if key == FILE_MARKER:
         if value:
@@ -165,6 +165,12 @@ class File_Walker:
           self.walk(value, self.create_path(parent, key))
         else:
           self.visit_directory(self.create_path(parent, value))
+
+  def sortKey(self, item):
+    if (item[0] == FILE_MARKER):
+      return "2"
+    else:
+      return "1" + item[0]
 
 class SubRepository:
   url = None
