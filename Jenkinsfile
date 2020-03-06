@@ -7,7 +7,7 @@ import com.cloudogu.ces.cesbuildlib.*
 node('docker') {
 
   // Change this as when we go back to default - necessary for proper SonarQube analysis
-  mainBranch = 'default'
+  mainBranch = 'develop'
 
   properties([
     // Keep only the last 10 build to preserve space
@@ -19,6 +19,8 @@ node('docker') {
   ])
 
   timeout(activity: true, time: 40, unit: 'MINUTES') {
+
+    Git git = new Git(this)
 
     catchError {
 
@@ -49,7 +51,7 @@ node('docker') {
         }
       }
 
-      def commitHash = getCommitHash()
+      def commitHash = git.getCommitHash()
       def dockerImageTag = "2.0.0-dev-${commitHash.substring(0,7)}-${BUILD_NUMBER}"
 
       if (isMainBranch()) {
@@ -96,7 +98,7 @@ node('docker') {
     // Archive Unit and integration test results, if any
     junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
 
-    mailIfStatusChanged(commitAuthorEmail)
+    mailIfStatusChanged(git.commitAuthorEmail)
   }
 }
 
@@ -158,15 +160,3 @@ boolean waitForQualityGateWebhookToBeCalled() {
   return isQualityGateSucceeded
 }
 
-String getCommitAuthorComplete() {
-  new Sh(this).returnStdOut 'hg log --branch . --limit 1 --template "{author}"'
-}
-
-String getCommitHash() {
-  new Sh(this).returnStdOut 'hg log --branch . --limit 1 --template "{node}"'
-}
-
-String getCommitAuthorEmail() {
-  def matcher = getCommitAuthorComplete() =~ "<(.*?)>"
-  matcher ? matcher[0][1] : ""
-}
