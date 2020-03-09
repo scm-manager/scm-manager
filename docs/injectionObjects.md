@@ -1,0 +1,25 @@
+Injection Objects
+-----------------
+
+-   [AdministrationContext](http://docs.scm-manager.org/apidocs/latest/sonia/scm/web/security/AdministrationContext.html "wikilink")
+-   [AuthenticationManager](http://docs.scm-manager.org/apidocs/latest/sonia/scm/web/security/AuthenticationManager.html "wikilink")
+-   [CGIExecutorFactory](http://docs.scm-manager.org/apidocs/latest/sonia/scm/web/cgi/CGIExecutorFactory.html "wikilink")
+-   [CacheManager](http://docs.scm-manager.org/apidocs/latest/sonia/scm/cache/CacheManager.html "wikilink")
+-   [ChangesetViewerUtil](http://docs.scm-manager.org/apidocs/latest/sonia/scm/repository/ChangesetViewerUtil.html "wikilink")
+-   [CipherHandler](http://docs.scm-manager.org/apidocs/latest/sonia/scm/security/CipherHandler.html "wikilink")
+-   [EncryptionHandler](http://docs.scm-manager.org/apidocs/latest/sonia/scm/security/EncryptionHandler.html "wikilink")
+-   [FileSystem](http://docs.scm-manager.org/apidocs/latest/sonia/scm/io/FileSystem.html "wikilink")
+-   [GroupManager](http://docs.scm-manager.org/apidocs/latest/sonia/scm/group/GroupManager.html "wikilink")
+-   [HttpClient](http://docs.scm-manager.org/apidocs/latest/sonia/scm/net/HttpClient.html "wikilink")
+-   [HttpServletRequest](http://java.sun.com/javaee/5/docs/api/javax/servlet/http/HttpServletRequest.html "wikilink")
+-   [HttpServletResponse](http://java.sun.com/javaee/5/docs/api/javax/servlet/http/HttpServletResponse.html "wikilink")
+-   [HttpSession](http://java.sun.com/javaee/5/docs/api/javax/servlet/http/HttpSession.html "wikilink")
+-   [KeyGenerator](http://docs.scm-manager.org/apidocs/latest/sonia/scm/security/KeyGenerator.html "wikilink")
+-   [RepositoryBrowserUtil](http://docs.scm-manager.org/apidocs/latest/sonia/scm/repository/RepositoryBrowserUtil.html "wikilink")
+-   [RepositoryManager](http://docs.scm-manager.org/apidocs/latest/sonia/scm/repository/RepositoryManager.html "wikilink")
+-   [
+    RepositoryRequestListenerUtil](http://docs.scm-manager.org/apidocs/latest/sonia/scm/repository/RepositoryRequestListenerUtil.html "wikilink")
+-   [ScmConfiguration](http://docs.scm-manager.org/apidocs/latest/sonia/scm/config/ScmConfiguration.html "wikilink")
+-   [StoreFactory](http://docs.scm-manager.org/apidocs/latest/sonia/scm/store/StoreFactory.html "wikilink")
+-   [UserManager](http://docs.scm-manager.org/apidocs/latest/sonia/scm/user/UserManager.html "wikilink")
+-   [WebSecurityContext](http://docs.scm-manager.org/apidocs/latest/sonia/scm/web/security/WebSecurityContext.html "wikilink")
