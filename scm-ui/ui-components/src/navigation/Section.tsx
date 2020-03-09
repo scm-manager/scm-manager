@@ -1,13 +1,12 @@
-import React, { FC, ReactElement, ReactNode, useEffect, useState } from "react";
-import { Button } from "../buttons";
+import React, { FC, ReactElement, ReactNode, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import SubNavigation from "./SubNavigation";
-import { useLocation, matchPath } from "react-router-dom";
+import { matchPath, useLocation } from "react-router-dom";
 
 type Props = {
   label: string;
   children: ReactElement[];
-  collapsed?: boolean;
+  collapsed: boolean;
   onCollapse?: (newStatus: boolean) => void;
   scrollTransitionAt?: number;
 };
@@ -28,19 +27,19 @@ const SectionContainer = styled.div<PositionProps>`
   width: ${props => (props.collapsed ? "5.5rem" : "20.5rem")};
 `;
 
-const SmallButton = styled(Button)<CollapsedProps>`
-  padding-left: 1rem;
-  padding-right: 1rem;
-  margin-right: ${(props: CollapsedProps) => (props.collapsed ? "0" : "0.5rem")};
-  height: 1.5rem;
-  display: flex;
-  align-items: center;
+const Icon = styled.i<CollapsedProps>`
+  padding-left: ${(props: CollapsedProps) => (props.collapsed ? "0" : "0.5rem")}
+  padding-right: ${(props: CollapsedProps) => (props.collapsed ? "0" : "0.3rem")};
+  height: 1.5rem;    
+  font-size: 24px;
+  margin-top: -0.75rem;
 `;
 
 const MenuLabel = styled.p<CollapsedProps>`
-  min-height: 2.5rem;
+  height: 3.2rem;
   display: flex;
-  justify-content: ${props => (props.collapsed ? "center" : "left")};
+  align-items: center;
+  justify-content: ${(props: CollapsedProps) => (props.collapsed ? "center" : "inherit")};
 `;
 
 const createParentPath = (to: string) => {
@@ -99,11 +98,15 @@ const Section: FC<Props> = ({ label, children, collapsed = false, onCollapse, sc
       scrollPositionY={onCollapse ? scrollPositionY : 0}
       scrollTransitionAt={scrollTransitionAt ? scrollTransitionAt : 250}
     >
-      <MenuLabel className="menu-label" collapsed={isCollapsed}>
+      <MenuLabel
+        className="menu-label"
+        collapsed={isCollapsed}
+        onClick={onCollapse ? () => onCollapse(!isCollapsed) : undefined}
+      >
         {onCollapse && !subNavActive && (
-          <SmallButton color="info" className="is-medium" action={() => onCollapse(!isCollapsed)} collapsed={isCollapsed}>
+          <Icon color="info" className="is-medium" collapsed={isCollapsed}>
             {arrowIcon}
-          </SmallButton>
+          </Icon>
         )}
         {isCollapsed ? "" : label}
       </MenuLabel>

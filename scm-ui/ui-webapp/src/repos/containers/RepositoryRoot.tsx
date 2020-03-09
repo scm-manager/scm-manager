@@ -129,8 +129,7 @@ class RepositoryRoot extends React.Component<Props, State> {
     const extensionProps = {
       repository,
       url,
-      indexLinks,
-      collapsedRepositoryMenu: menuCollapsed
+      indexLinks
     };
 
     const redirectUrlFactory = binder.getExtension("repository.redirect", this.props);
