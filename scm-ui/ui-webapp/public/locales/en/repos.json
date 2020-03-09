@@ -130,7 +130,7 @@
       "notBound": "No extension bound."
     },
     "loadMore": "Load",
-    "moreEntriesAvailable": "These are just the first {{count}} entries. There are more entries available."
+    "moreFilesAvailable": "These are just the first {{count}} files. There are more files available."
   },
   "permission": {
     "title": "Edit Permissions",

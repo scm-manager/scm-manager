@@ -31,7 +31,7 @@ export function fetchSources(repository: Repository, revision: string, path: str
     for (let i = 0; i < hunk; ++i) {
       const sources = getSources(state, repository, revision, path, i);
       if (sources?._embedded.children) {
-        offset += sources._embedded.children.length;
+        offset += sources._embedded.children.filter(c => !c.directory).length;
       }
     }
 

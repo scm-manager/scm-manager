@@ -92,15 +92,15 @@ class FileTree extends React.Component<Props, State> {
   renderTruncatedInfo = () => {
     const { hunks, t } = this.props;
     const lastHunk = hunks[hunks.length - 1];
-    const entryCount = hunks
+    const fileCount = hunks
       .filter(hunk => hunk?.tree?._embedded?.children)
-      .map(hunk => hunk.tree._embedded.children.length)
+      .map(hunk => hunk.tree._embedded.children.filter(c => !c.directory).length)
       .reduce((a, b) => a + b, 0);
     if (lastHunk.tree?.truncated) {
       return (
         <Notification type={"info"}>
           <div className={"columns is-centered"}>
-            <div className={"column"}>{t("sources.moreEntriesAvailable", { count: entryCount })}</div>
+            <div className={"column"}>{t("sources.moreFilesAvailable", { count: fileCount })}</div>
             <Button label={t("sources.loadMore")} action={this.loadMore} />
           </div>
         </Notification>

@@ -130,7 +130,7 @@
       "notBound": "Keine Erweiterung angebunden."
     },
     "loadMore": "Laden",
-    "moreEntriesAvailable": "Es werden nur die ersten {{count}} Einträge angezeigt. Es sind weitere Einträge vorhanden."
+    "moreFilesAvailable": "Es werden nur die ersten {{count}} Dateien angezeigt. Es sind weitere Dateien vorhanden."
   },
   "permission": {
     "title": "Berechtigungen bearbeiten",
