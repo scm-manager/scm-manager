@@ -66,6 +66,11 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
   @Test
   public void testBrowse() throws IOException {
     Collection<FileObject> foList = getRootFromTip(new BrowseCommandRequest());
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
+
     FileObject a = getFileObject(foList, "a.txt");
     FileObject c = getFileObject(foList, "c");
 
@@ -107,6 +112,10 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     FileObject c = result.getFile();
     assertEquals("c", c.getName());
     Collection<FileObject> foList = c.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("d.txt", "e.txt");
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
