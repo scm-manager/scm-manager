@@ -115,8 +115,8 @@ class FileTree extends React.Component<Props, State> {
       return null;
     }
 
-    if (hunks.some(hunk => hunk.error)) {
-      return <ErrorNotification error={hunks.map(hunk => hunk.error)[0]} />;
+    if (hunks[0]?.error) {
+      return <ErrorNotification error={hunks[0].error} />;
     }
 
     return (
@@ -183,6 +183,7 @@ class FileTree extends React.Component<Props, State> {
             </tbody>
           </table>
           {hunks[hunks.length - 1].loading && <Loading />}
+          {hunks[hunks.length - 1].error && <ErrorNotification error={hunks[hunks.length - 1].error} />}
         </>
       );
     }
@@ -210,9 +211,11 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   for (let i = 0; i < hunkCount; ++i) {
     const tree = getSources(state, repository, revision, path, i);
     const loading = isFetchSourcesPending(state, repository, revision, path, i);
+    const error = getFetchSourcesFailure(state, repository, revision, path, i);
     hunks.push({
       tree,
-      loading
+      loading,
+      error
     });
   }
 

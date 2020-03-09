@@ -103,7 +103,7 @@ export function fetchSourcesFailure(
 ): Action {
   return {
     type: FETCH_SOURCES_FAILURE,
-    payload: error,
+    payload: { hunk, pending: false, updatePending: false, error },
     itemId: createItemId(repository, revision, path, "")
   };
 }
@@ -122,12 +122,13 @@ export default function reducer(
     type: "UNKNOWN"
   }
 ): any {
-  if (action.itemId && action.type === FETCH_SOURCES_SUCCESS) {
+  if (action.itemId && (action.type === FETCH_SOURCES_SUCCESS || action.type === FETCH_SOURCES_FAILURE)) {
     return {
       ...state,
       [action.itemId + "hunkCount"]: action.payload.hunk + 1,
       [action.itemId + action.payload.hunk]: {
         sources: action.payload.sources,
+        error: action.payload.error,
         updatePending: false,
         pending: false
       }
@@ -220,5 +221,5 @@ export function getFetchSourcesFailure(
   path: string,
   hunk = 0
 ): Error | null | undefined {
-  return getFailure(state, FETCH_SOURCES, createItemId(repository, revision, path, ""));
+  return state.sources[createItemId(repository, revision, path, hunk)]?.error;
 }
