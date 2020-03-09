@@ -39,8 +39,8 @@ import com.google.common.collect.ImmutableSet;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectIdSubclassMap;
 import org.eclipse.jgit.revwalk.RevObject;
-import org.eclipse.jgit.transport.BaseReceivePack;
-import org.eclipse.jgit.transport.BaseReceivePack.PackParserListener;
+import org.eclipse.jgit.transport.ReceivePack;
+import org.eclipse.jgit.transport.ReceivePack.PackParserListener;
 import org.eclipse.jgit.transport.PackParser;
 
 import org.slf4j.Logger;
@@ -76,7 +76,7 @@ public class CollectingPackParserListener implements PackParserListener
    *
    * @return listener
    */
-  public static CollectingPackParserListener get(BaseReceivePack pack)
+  public static CollectingPackParserListener get(ReceivePack pack)
   {
     PackParserListener listener = pack.getPackParserListener();
 
@@ -101,7 +101,7 @@ public class CollectingPackParserListener implements PackParserListener
    *
    * @param pack receive pack
    */
-  public static void set(BaseReceivePack pack)
+  public static void set(ReceivePack pack)
   {
     logger.trace("apply collecting listener to receive pack");
     pack.setPackParserListener(new CollectingPackParserListener());

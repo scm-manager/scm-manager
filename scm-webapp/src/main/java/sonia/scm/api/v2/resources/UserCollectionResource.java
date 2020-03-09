@@ -105,7 +105,8 @@ public class UserCollectionResource {
     description = "create success",
     headers = @Header(
       name = "Location",
-      description = "uri to the created user"
+      description = "uri to the created user",
+      schema = @Schema(type = "string")
     )
   )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")

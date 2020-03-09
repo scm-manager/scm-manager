@@ -1,13 +1,13 @@
 #!groovy
 
 // Keep the version in sync with the one used in pom.xml in order to get correct syntax completion.
-@Library('github.com/cloudogu/ces-build-lib@59d3e94')
+@Library('github.com/cloudogu/ces-build-lib@1.35.1')
 import com.cloudogu.ces.cesbuildlib.*
 
 node('docker') {
 
   // Change this as when we go back to default - necessary for proper SonarQube analysis
-  mainBranch = 'default'
+  mainBranch = 'develop'
 
   properties([
     // Keep only the last 10 build to preserve space
@@ -19,6 +19,8 @@ node('docker') {
   ])
 
   timeout(activity: true, time: 40, unit: 'MINUTES') {
+
+    Git git = new Git(this)
 
     catchError {
 
@@ -33,7 +35,7 @@ node('docker') {
       }
 
       stage('Unit Test') {
-        mvn 'test -Pcoverage -Dsonia.scm.test.skip.hg=true -Dmaven.test.failure.ignore=true'
+        mvn 'test -Pcoverage -Dmaven.test.failure.ignore=true'
       }
 
       stage('Integration Test') {
@@ -49,7 +51,7 @@ node('docker') {
         }
       }
 
-      def commitHash = getCommitHash()
+      def commitHash = git.getCommitHash()
       def dockerImageTag = "2.0.0-dev-${commitHash.substring(0,7)}-${BUILD_NUMBER}"
 
       if (isMainBranch()) {
@@ -96,15 +98,14 @@ node('docker') {
     // Archive Unit and integration test results, if any
     junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
 
-    mailIfStatusChanged(commitAuthorEmail)
+    mailIfStatusChanged(git.commitAuthorEmail)
   }
 }
 
 String mainBranch
 
 Maven setupMavenBuild() {
-  // Keep this version number in sync with .mvn/maven-wrapper.properties
-  Maven mvn = new MavenInDocker(this, '3.6.3-jdk-11')
+  Maven mvn = new MavenWrapperInDocker(this, "scmmanager/java-build:11.0.6_10")
 
   if (isMainBranch()) {
     // Release starts javadoc, which takes very long, so do only for certain branches
@@ -159,15 +160,3 @@ boolean waitForQualityGateWebhookToBeCalled() {
   return isQualityGateSucceeded
 }
 
-String getCommitAuthorComplete() {
-  new Sh(this).returnStdOut 'hg log --branch . --limit 1 --template "{author}"'
-}
-
-String getCommitHash() {
-  new Sh(this).returnStdOut 'hg log --branch . --limit 1 --template "{node}"'
-}
-
-String getCommitAuthorEmail() {
-  def matcher = getCommitAuthorComplete() =~ "<(.*?)>"
-  matcher ? matcher[0][1] : ""
-}
