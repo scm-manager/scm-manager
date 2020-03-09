@@ -28,4 +28,4 @@ scm-ui/coverage
 node_modules
 # jrebel
 rebel.xml
-\.pyc
+*.pyc
