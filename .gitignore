@@ -20,7 +20,7 @@ Desktop DF
 .classpath
 .settings
 # idea files
-\.iml
+*.iml
 .idea
 # ui
 scm-ui/build
