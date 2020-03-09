@@ -70,13 +70,9 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     assertNotNull(result);
 
-    Collection<FileObject> foList1 = result.getFile().getChildren();
+    Collection<FileObject> foList = result.getFile().getChildren();
 
-    assertNotNull(foList1);
-    assertFalse(foList1.isEmpty());
-    assertEquals(2, foList1.size());
-
-    Collection<FileObject> foList = foList1;
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt");
 
     Iterator<FileObject> iterator = foList.iterator();
     FileObject c = iterator.next();
@@ -111,9 +107,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     Collection<FileObject> foList = result.getFile().getChildren();
 
-    assertNotNull(foList);
-    assertFalse(foList.isEmpty());
-    assertEquals(2, foList.size());
+    assertThat(foList).extracting("name").containsExactly("d.txt", "e.txt");
 
     Iterator<FileObject> iterator = foList.iterator();
     FileObject d = iterator.next();
