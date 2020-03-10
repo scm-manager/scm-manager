@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added footer extension points for links and avatar
 - Create OpenAPI specification during build
 - Extension point entries with supplied extensionName are sorted ascending
+- Possibility to configure git core config entries for jgit like core.trustfolderstat and core.supportsatomicfilecreation
 
 ### Changed
 - New footer design
