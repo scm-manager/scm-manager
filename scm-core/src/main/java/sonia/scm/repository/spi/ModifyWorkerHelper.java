@@ -1,6 +1,8 @@
 package sonia.scm.repository.spi;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
 
@@ -21,6 +23,8 @@ import static sonia.scm.NotFoundException.notFound;
  * a base class to reduce code redundancy in Worker instances.
  */
 public interface ModifyWorkerHelper extends ModifyCommand.Worker {
+
+  Logger LOG = LoggerFactory.getLogger(ModifyWorkerHelper.class);
 
   @Override
   default void delete(String toBeDeleted) throws IOException {
@@ -57,7 +61,11 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
     if (!targetFile.toFile().exists()) {
       throw notFound(createFileContext(path));
     }
+    boolean executable = Files.isExecutable(targetFile);
     Files.move(file.toPath(), targetFile, REPLACE_EXISTING);
+    if (targetFile.toFile().setExecutable(executable)) {
+      LOG.warn("could not set executable flag for file {}", targetFile);
+    }
     addFileToScm(path, targetFile);
   }
 

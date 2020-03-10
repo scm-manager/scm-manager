@@ -14,7 +14,7 @@
   </description>
   <name>scm</name>
 
-  <url>http://bitbucket.org/sdorra/scm-manager</url>
+  <url>https://github.com/scm-manager/scm-manager</url>
 
 
   <licenses>
@@ -34,15 +34,15 @@
   </developers>
 
   <scm>
-    <connection>scm:hg:http://bitbucket.org/sdorra/scm-manager</connection>
-    <developerConnection>scm:hg:https://bitbucket.org/sdorra/scm-manager</developerConnection>
-    <url>http://bitbucket.org/sdorra/scm-manager</url>
+    <connection>scm:git:https://github.com/scm-manager/scm-manager</connection>
+    <developerConnection>scm:git:ssh://github.com/scm-manager/scm-manager</developerConnection>
+    <url>https://github.com/scm-manager/scm-manager</url>
     <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
-    <system>bitbucket</system>
-    <url>http://bitbucket.org/sdorra/scm-manager/issues</url>
+    <system>github</system>
+    <url>https://github.com/scm-manager/scm-manager/issues</url>
   </issueManagement>
 
   <mailingLists>
@@ -362,6 +362,13 @@
         <scope>test</scope>
       </dependency>
 
+      <dependency>
+        <groupId>org.awaitility</groupId>
+        <artifactId>awaitility</artifactId>
+        <version>4.0.2</version>
+        <scope>test</scope>
+      </dependency>
+
       <!-- http -->
 
       <dependency>
@@ -677,7 +684,7 @@
 
       <!--
          fix maven troubleshooting part on
-         https://bitbucket.org/sdorra/scm-manager/wiki/configure-eclipse
+         https://github.com/scm-manager/scm-manager/blob/develop/docs/configure-eclipse.md
       -->
 
       <plugin>
@@ -848,8 +855,8 @@
     <shiro.version>1.4.1</shiro.version>
 
     <!-- repository libraries -->
-    <jgit.version>v5.4.0.201906121030-r-scm2</jgit.version>
-    <svnkit.version>1.9.0-scm3</svnkit.version>
+    <jgit.version>5.6.1.202002131546-r-scm1</jgit.version>
+    <svnkit.version>1.10.1-scm1</svnkit.version>
 
     <!-- util libraries -->
     <guava.version>26.0-jre</guava.version>

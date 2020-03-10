@@ -5,7 +5,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
-
 ### Added
 - Added footer extension points for links and avatar
 - Create OpenAPI specification during build
@@ -13,13 +12,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - New footer design
+- Update jgit to version 5.6.1.202002131546-r-scm1
+- Update svnkit to version 1.10.1-scm1
 
 ### Fixed
 - Modification for mercurial repositories with enabled XSRF protection
 - Does not throw NullPointerException when merge fails without normal merge conflicts
+- Keep file attributes on modification
 
 ### Removed
 - Enunciate rest documentation
+- Obsolete fields in data transfer objects
 
 ## 2.0.0-rc4 - 2020-02-14
 ### Added
@@ -31,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use icon only buttons for diff file controls
 - Upgrade [Legman](https://github.com/sdorra/legman) to v1.6.2 in order to fix execution on Java versions > 8
 - Upgrade [Lombok](https://projectlombok.org/) to version 1.18.10 in order to fix build on Java versions > 8
-- Upgrade [Mockito](https://site.mockito.org/) to version 2.28.2 in order to fix tests on Java versions > 8  
+- Upgrade [Mockito](https://site.mockito.org/) to version 2.28.2 in order to fix tests on Java versions > 8
 - Upgrade smp-maven-plugin to version 1.0.0-rc3
 
 ### Fixed

@@ -9,9 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.web.VndMediaType;
 
@@ -71,7 +71,11 @@ public class RepositoryPermissionRootResource {
   @ApiResponse(
     responseCode = "201",
     description = "creates",
-    headers = @Header(name = "Location", description = "uri of the created permission")
+    headers = @Header(
+      name = "Location",
+      description = "uri of the created permission",
+      schema = @Schema(type = "string")
+    )
   )
   @ApiResponse(
     responseCode = "404",
