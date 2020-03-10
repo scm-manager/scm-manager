@@ -39,7 +39,7 @@ node('docker') {
       }
 
       stage('Integration Test') {
-        mvn 'verify -Pit -pl :scm-webapp,:scm-it -Dmaven.test.failure.ignore=true -Dscm.git.core.supportsatomicfilecreation=false'
+        mvn 'verify -Pit -pl :scm-webapp,:scm-it -Dmaven.test.failure.ignore=true -Dscm.git.core.trustfolderstat=false'
       }
 
       stage('SonarQube') {
