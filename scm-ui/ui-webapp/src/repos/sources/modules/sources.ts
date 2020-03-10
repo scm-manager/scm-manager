@@ -7,6 +7,7 @@ export const FETCH_SOURCES = "scm/repos/FETCH_SOURCES";
 export const FETCH_SOURCES_PENDING = `${FETCH_SOURCES}_${types.PENDING_SUFFIX}`;
 export const FETCH_UPDATES_PENDING = `${FETCH_SOURCES}_UPDATE_PENDING`;
 export const FETCH_SOURCES_SUCCESS = `${FETCH_SOURCES}_${types.SUCCESS_SUFFIX}`;
+export const FETCH_UPDATES_SUCCESS = `${FETCH_SOURCES}_UPDATE_SUCCESS`;
 export const FETCH_SOURCES_FAILURE = `${FETCH_SOURCES}_${types.FAILURE_SUFFIX}`;
 
 export function fetchSources(repository: Repository, revision: string, path: string, initialLoad = true, hunk = 0) {
@@ -39,7 +40,11 @@ export function fetchSources(repository: Repository, revision: string, path: str
       .get(createUrl(repository, revision, path, offset))
       .then(response => response.json())
       .then((sources: File) => {
-        dispatch(fetchSourcesSuccess(repository, revision, path, hunk, sources));
+        if (initialLoad) {
+          dispatch(fetchSourcesSuccess(repository, revision, path, hunk, sources));
+        } else {
+          dispatch(fetchUpdatesSuccess(repository, revision, path, hunk, sources));
+        }
       })
       .catch(err => {
         dispatch(fetchSourcesFailure(repository, revision, path, hunk, err));
@@ -94,6 +99,20 @@ export function fetchSourcesSuccess(
   };
 }
 
+export function fetchUpdatesSuccess(
+  repository: Repository,
+  revision: string,
+  path: string,
+  hunk: number,
+  sources: File
+) {
+  return {
+    type: FETCH_UPDATES_SUCCESS,
+    payload: { hunk, pending: false, updatePending: false, sources },
+    itemId: createItemId(repository, revision, path, "")
+  };
+}
+
 export function fetchSourcesFailure(
   repository: Repository,
   revision: string,
@@ -126,6 +145,16 @@ export default function reducer(
     return {
       ...state,
       [action.itemId + "hunkCount"]: action.payload.hunk + 1,
+      [action.itemId + action.payload.hunk]: {
+        sources: action.payload.sources,
+        error: action.payload.error,
+        updatePending: false,
+        pending: false
+      }
+    };
+  } else if (action.itemId && (action.type === FETCH_UPDATES_SUCCESS)) {
+    return {
+      ...state,
       [action.itemId + action.payload.hunk]: {
         sources: action.payload.sources,
         error: action.payload.error,
@@ -221,5 +250,8 @@ export function getFetchSourcesFailure(
   path: string,
   hunk = 0
 ): Error | null | undefined {
-  return state.sources[createItemId(repository, revision, path, hunk)]?.error;
+  if (state.sources) {
+    return state.sources && state.sources[createItemId(repository, revision, path, hunk)]?.error;
+  }
+  return null;
 }

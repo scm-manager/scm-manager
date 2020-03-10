@@ -295,14 +295,18 @@ describe("selector tests", () => {
 
   it("should return error when fetch sources did fail", () => {
     const state = {
-      failure: {
-        [FETCH_SOURCES + "/scm/core/_//"]: error
+      sources: {
+        "scm/core/_//0": {
+          pending: false,
+          sources: {},
+          error: error
+        }
       }
     };
     expect(getFetchSourcesFailure(state, repository, "", "", 0)).toEqual(error);
   });
 
   it("should return undefined when fetch sources did not fail", () => {
-    expect(getFetchSourcesFailure({}, repository, "", "", 0)).toBe(undefined);
+    expect(getFetchSourcesFailure({}, repository, "", "", 0)).toBe(null);
   });
 });
