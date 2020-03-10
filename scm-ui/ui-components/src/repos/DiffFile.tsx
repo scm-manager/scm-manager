@@ -11,6 +11,7 @@ import { Change, ChangeEvent, DiffObjectProps, File, Hunk as HunkType } from "./
 import TokenizedDiffView from "./TokenizedDiffView";
 import DiffButton from "./DiffButton";
 import { MenuContext } from "@scm-manager/ui-components";
+import { storeMenuCollapsed } from "../navigation";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
@@ -108,6 +109,7 @@ class DiffFile extends React.Component<Props, State> {
       }),
       () => callback()
     );
+    storeMenuCollapsed(true);
   };
 
   setCollapse = (collapsed: boolean) => {
