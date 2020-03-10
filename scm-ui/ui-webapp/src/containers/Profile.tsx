@@ -92,28 +92,26 @@ class Profile extends React.Component<Props, State> {
               <ExtensionPoint name="profile.route" props={extensionProps} renderAll={true} />
             </div>
             <div className={menuCollapsed ? "column is-1" : "column is-3"}>
-              <Navigation>
-                <Section
-                  label={t("profile.navigationLabel")}
-                  onCollapse={() => this.onCollapseProfileMenu(!menuCollapsed)}
-                  collapsed={menuCollapsed}
+              <Section
+                label={t("profile.navigationLabel")}
+                onCollapse={() => this.onCollapseProfileMenu(!menuCollapsed)}
+                collapsed={menuCollapsed}
+              >
+                <NavLink
+                  to={`${url}`}
+                  icon="fas fa-info-circle"
+                  label={t("profile.informationNavLink")}
+                  title={t("profile.informationNavLink")}
+                />
+                <SubNavigation
+                  to={`${url}/settings/password`}
+                  label={t("profile.settingsNavLink")}
+                  title={t("profile.settingsNavLink")}
                 >
-                  <NavLink
-                    to={`${url}`}
-                    icon="fas fa-info-circle"
-                    label={t("profile.informationNavLink")}
-                    title={t("profile.informationNavLink")}
-                  />
-                  <SubNavigation
-                    to={`${url}/settings/password`}
-                    label={t("profile.settingsNavLink")}
-                    title={t("profile.settingsNavLink")}
-                  >
-                    <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
-                    <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
-                  </SubNavigation>
-                </Section>
-              </Navigation>
+                  <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
+                  <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
+                </SubNavigation>
+              </Section>
             </div>
           </div>
         </Page>

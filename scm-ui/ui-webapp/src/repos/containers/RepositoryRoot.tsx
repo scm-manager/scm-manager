@@ -7,7 +7,6 @@ import { Repository } from "@scm-manager/ui-types";
 import {
   ErrorPage,
   Loading,
-  Navigation,
   NavLink,
   Page,
   Section,
@@ -200,52 +199,49 @@ class RepositoryRoot extends React.Component<Props, State> {
               </Switch>
             </div>
             <div className={menuCollapsed ? "column is-1" : "column is-3"}>
-              <Navigation>
-                <Section
-                  label={t("repositoryRoot.menu.navigationLabel")}
-                  onCollapse={() => this.onCollapseRepositoryMenu(!menuCollapsed)}
-                  collapsed={menuCollapsed}
-                  scrollTransitionAt={250}
+              <Section
+                label={t("repositoryRoot.menu.navigationLabel")}
+                onCollapse={() => this.onCollapseRepositoryMenu(!menuCollapsed)}
+                collapsed={menuCollapsed}
+              >
+                <ExtensionPoint name="repository.navigation.topLevel" props={extensionProps} renderAll={true} />
+                <NavLink
+                  to={`${url}/info`}
+                  icon="fas fa-info-circle"
+                  label={t("repositoryRoot.menu.informationNavLink")}
+                  title={t("repositoryRoot.menu.informationNavLink")}
+                />
+                <RepositoryNavLink
+                  repository={repository}
+                  linkName="branches"
+                  to={`${url}/branches/`}
+                  icon="fas fa-code-branch"
+                  label={t("repositoryRoot.menu.branchesNavLink")}
+                  activeWhenMatch={this.matchesBranches}
+                  activeOnlyWhenExact={false}
+                  title={t("repositoryRoot.menu.branchesNavLink")}
+                />
+                <RepositoryNavLink
+                  repository={repository}
+                  linkName={this.getCodeLinkname()}
+                  to={this.evaluateDestinationForCodeLink()}
+                  icon="fas fa-code"
+                  label={t("repositoryRoot.menu.sourcesNavLink")}
+                  activeWhenMatch={this.matchesCode}
+                  activeOnlyWhenExact={false}
+                  title={t("repositoryRoot.menu.sourcesNavLink")}
+                />
+                <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true} />
+                <SubNavigation
+                  to={`${url}/settings/general`}
+                  label={t("repositoryRoot.menu.settingsNavLink")}
+                  title={t("repositoryRoot.menu.settingsNavLink")}
                 >
-                  <ExtensionPoint name="repository.navigation.topLevel" props={extensionProps} renderAll={true} />
-                  <NavLink
-                    to={`${url}/info`}
-                    icon="fas fa-info-circle"
-                    label={t("repositoryRoot.menu.informationNavLink")}
-                    title={t("repositoryRoot.menu.informationNavLink")}
-                  />
-                  <RepositoryNavLink
-                    repository={repository}
-                    linkName="branches"
-                    to={`${url}/branches/`}
-                    icon="fas fa-code-branch"
-                    label={t("repositoryRoot.menu.branchesNavLink")}
-                    activeWhenMatch={this.matchesBranches}
-                    activeOnlyWhenExact={false}
-                    title={t("repositoryRoot.menu.branchesNavLink")}
-                  />
-                  <RepositoryNavLink
-                    repository={repository}
-                    linkName={this.getCodeLinkname()}
-                    to={this.evaluateDestinationForCodeLink()}
-                    icon="fas fa-code"
-                    label={t("repositoryRoot.menu.sourcesNavLink")}
-                    activeWhenMatch={this.matchesCode}
-                    activeOnlyWhenExact={false}
-                    title={t("repositoryRoot.menu.sourcesNavLink")}
-                  />
-                  <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true} />
-                  <SubNavigation
-                    to={`${url}/settings/general`}
-                    label={t("repositoryRoot.menu.settingsNavLink")}
-                    title={t("repositoryRoot.menu.settingsNavLink")}
-                  >
-                    <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
-                    <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
-                    <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true} />
-                  </SubNavigation>
-                </Section>
-              </Navigation>
+                  <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
+                  <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
+                  <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true} />
+                </SubNavigation>
+              </Section>
             </div>
           </div>
         </Page>

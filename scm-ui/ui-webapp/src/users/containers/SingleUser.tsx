@@ -8,7 +8,6 @@ import {
   isMenuCollapsed,
   Loading,
   MenuContext,
-  Navigation,
   NavLink,
   Page,
   Section,
@@ -104,30 +103,28 @@ class SingleUser extends React.Component<Props, State> {
               <ExtensionPoint name="user.route" props={extensionProps} renderAll={true} />
             </div>
             <div className={menuCollapsed ? "column is-1" : "column is-3"}>
-              <Navigation>
-                <Section
-                  label={t("singleUser.menu.navigationLabel")}
-                  onCollapse={() => this.onCollapseUserMenu(!menuCollapsed)}
-                  collapsed={menuCollapsed}
+              <Section
+                label={t("singleUser.menu.navigationLabel")}
+                onCollapse={() => this.onCollapseUserMenu(!menuCollapsed)}
+                collapsed={menuCollapsed}
+              >
+                <NavLink
+                  to={`${url}`}
+                  icon="fas fa-info-circle"
+                  label={t("singleUser.menu.informationNavLink")}
+                  title={t("singleUser.menu.informationNavLink")}
+                />
+                <SubNavigation
+                  to={`${url}/settings/general`}
+                  label={t("singleUser.menu.settingsNavLink")}
+                  title={t("singleUser.menu.settingsNavLink")}
                 >
-                  <NavLink
-                    to={`${url}`}
-                    icon="fas fa-info-circle"
-                    label={t("singleUser.menu.informationNavLink")}
-                    title={t("singleUser.menu.informationNavLink")}
-                  />
-                  <SubNavigation
-                    to={`${url}/settings/general`}
-                    label={t("singleUser.menu.settingsNavLink")}
-                    title={t("singleUser.menu.settingsNavLink")}
-                  >
-                    <EditUserNavLink user={user} editUrl={`${url}/settings/general`} />
-                    <SetPasswordNavLink user={user} passwordUrl={`${url}/settings/password`} />
-                    <SetPermissionsNavLink user={user} permissionsUrl={`${url}/settings/permissions`} />
-                    <ExtensionPoint name="user.setting" props={extensionProps} renderAll={true} />
-                  </SubNavigation>
-                </Section>
-              </Navigation>
+                  <EditUserNavLink user={user} editUrl={`${url}/settings/general`} />
+                  <SetPasswordNavLink user={user} passwordUrl={`${url}/settings/password`} />
+                  <SetPermissionsNavLink user={user} permissionsUrl={`${url}/settings/permissions`} />
+                  <ExtensionPoint name="user.setting" props={extensionProps} renderAll={true} />
+                </SubNavigation>
+              </Section>
             </div>
           </div>
         </Page>

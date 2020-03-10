@@ -103,30 +103,28 @@ class SingleGroup extends React.Component<Props, State> {
               <ExtensionPoint name="group.route" props={extensionProps} renderAll={true} />
             </div>
             <div className={menuCollapsed ? "column is-1" : "column is-3"}>
-              <Navigation>
-                <Section
-                  label={t("singleGroup.menu.navigationLabel")}
-                  onCollapse={() => this.onCollapseGroupMenu(!menuCollapsed)}
-                  collapsed={menuCollapsed}
+              <Section
+                label={t("singleGroup.menu.navigationLabel")}
+                onCollapse={() => this.onCollapseGroupMenu(!menuCollapsed)}
+                collapsed={menuCollapsed}
+              >
+                <NavLink
+                  to={`${url}`}
+                  icon="fas fa-info-circle"
+                  label={t("singleGroup.menu.informationNavLink")}
+                  title={t("singleGroup.menu.informationNavLink")}
+                />
+                <ExtensionPoint name="group.navigation" props={extensionProps} renderAll={true} />
+                <SubNavigation
+                  to={`${url}/settings/general`}
+                  label={t("singleGroup.menu.settingsNavLink")}
+                  title={t("singleGroup.menu.settingsNavLink")}
                 >
-                  <NavLink
-                    to={`${url}`}
-                    icon="fas fa-info-circle"
-                    label={t("singleGroup.menu.informationNavLink")}
-                    title={t("singleGroup.menu.informationNavLink")}
-                  />
-                  <ExtensionPoint name="group.navigation" props={extensionProps} renderAll={true} />
-                  <SubNavigation
-                    to={`${url}/settings/general`}
-                    label={t("singleGroup.menu.settingsNavLink")}
-                    title={t("singleGroup.menu.settingsNavLink")}
-                  >
-                    <EditGroupNavLink group={group} editUrl={`${url}/settings/general`} />
-                    <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`} />
-                    <ExtensionPoint name="group.setting" props={extensionProps} renderAll={true} />
-                  </SubNavigation>
-                </Section>
-              </Navigation>
+                  <EditGroupNavLink group={group} editUrl={`${url}/settings/general`} />
+                  <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`} />
+                  <ExtensionPoint name="group.setting" props={extensionProps} renderAll={true} />
+                </SubNavigation>
+              </Section>
             </div>
           </div>
         </Page>

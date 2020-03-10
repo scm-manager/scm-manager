@@ -123,53 +123,50 @@ class Admin extends React.Component<Props, State> {
               </Switch>
             </div>
             <div className={menuCollapsed ? "column is-1" : "column is-3"}>
-              <Navigation>
-                <Section
-                  label={t("admin.menu.navigationLabel")}
-                  onCollapse={() => this.onCollapseAdminMenu(!menuCollapsed)}
-                  collapsed={menuCollapsed}
-                  scrollTransitionAt={220}
-                >
-                  <NavLink
-                    to={`${url}/info`}
-                    icon="fas fa-info-circle"
-                    label={t("admin.menu.informationNavLink")}
-                    title={t("admin.menu.informationNavLink")}
-                  />
-                  {(availablePluginsLink || installedPluginsLink) && (
-                    <SubNavigation
-                      to={`${url}/plugins/`}
-                      icon="fas fa-puzzle-piece"
-                      label={t("plugins.menu.pluginsNavLink")}
-                      title={t("plugins.menu.pluginsNavLink")}
-                    >
-                      {installedPluginsLink && (
-                        <NavLink to={`${url}/plugins/installed/`} label={t("plugins.menu.installedNavLink")} />
-                      )}
-                      {availablePluginsLink && (
-                        <NavLink to={`${url}/plugins/available/`} label={t("plugins.menu.availableNavLink")} />
-                      )}
-                    </SubNavigation>
-                  )}
-                  <NavLink
-                    to={`${url}/roles/`}
-                    icon="fas fa-user-shield"
-                    label={t("repositoryRole.navLink")}
-                    title={t("repositoryRole.navLink")}
-                    activeWhenMatch={this.matchesRoles}
-                    activeOnlyWhenExact={false}
-                  />
-                  <ExtensionPoint name="admin.navigation" props={extensionProps} renderAll={true} />
+              <Section
+                label={t("admin.menu.navigationLabel")}
+                onCollapse={() => this.onCollapseAdminMenu(!menuCollapsed)}
+                collapsed={menuCollapsed}
+              >
+                <NavLink
+                  to={`${url}/info`}
+                  icon="fas fa-info-circle"
+                  label={t("admin.menu.informationNavLink")}
+                  title={t("admin.menu.informationNavLink")}
+                />
+                {(availablePluginsLink || installedPluginsLink) && (
                   <SubNavigation
-                    to={`${url}/settings/general`}
-                    label={t("admin.menu.settingsNavLink")}
-                    title={t("admin.menu.settingsNavLink")}
+                    to={`${url}/plugins/`}
+                    icon="fas fa-puzzle-piece"
+                    label={t("plugins.menu.pluginsNavLink")}
+                    title={t("plugins.menu.pluginsNavLink")}
                   >
-                    <NavLink to={`${url}/settings/general`} label={t("admin.menu.generalNavLink")} />
-                    <ExtensionPoint name="admin.setting" props={extensionProps} renderAll={true} />
+                    {installedPluginsLink && (
+                      <NavLink to={`${url}/plugins/installed/`} label={t("plugins.menu.installedNavLink")} />
+                    )}
+                    {availablePluginsLink && (
+                      <NavLink to={`${url}/plugins/available/`} label={t("plugins.menu.availableNavLink")} />
+                    )}
                   </SubNavigation>
-                </Section>
-              </Navigation>
+                )}
+                <NavLink
+                  to={`${url}/roles/`}
+                  icon="fas fa-user-shield"
+                  label={t("repositoryRole.navLink")}
+                  title={t("repositoryRole.navLink")}
+                  activeWhenMatch={this.matchesRoles}
+                  activeOnlyWhenExact={false}
+                />
+                <ExtensionPoint name="admin.navigation" props={extensionProps} renderAll={true} />
+                <SubNavigation
+                  to={`${url}/settings/general`}
+                  label={t("admin.menu.settingsNavLink")}
+                  title={t("admin.menu.settingsNavLink")}
+                >
+                  <NavLink to={`${url}/settings/general`} label={t("admin.menu.generalNavLink")} />
+                  <ExtensionPoint name="admin.setting" props={extensionProps} renderAll={true} />
+                </SubNavigation>
+              </Section>
             </div>
           </div>
         </Page>
