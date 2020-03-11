@@ -1,7 +1,7 @@
 {
   "admin": {
     "menu": {
-      "navigationLabel": "Administrations Navigation",
+      "navigationLabel": "Administration",
       "informationNavLink": "Informationen",
       "settingsNavLink": "Einstellungen",
       "generalNavLink": "Generell"

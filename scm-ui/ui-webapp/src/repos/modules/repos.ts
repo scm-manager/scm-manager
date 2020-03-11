@@ -3,6 +3,7 @@ import * as types from "../../modules/types";
 import { Action, Repository, RepositoryCollection } from "@scm-manager/ui-types";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
+import React from "react";
 
 export const FETCH_REPOS = "scm/repos/FETCH_REPOS";
 export const FETCH_REPOS_PENDING = `${FETCH_REPOS}_${types.PENDING_SUFFIX}`;
@@ -155,7 +156,12 @@ export function fetchRepoFailure(namespace: string, name: string, error: Error):
 
 // create repo
 
-export function createRepo(link: string, repository: Repository, initRepository: boolean, callback?: (repo: Repository) => void) {
+export function createRepo(
+  link: string,
+  repository: Repository,
+  initRepository: boolean,
+  callback?: (repo: Repository) => void
+) {
   return function(dispatch: any) {
     dispatch(createRepoPending());
     const repoLink = initRepository ? link + "?initialize=true" : link;
