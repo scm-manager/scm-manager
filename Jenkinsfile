@@ -7,7 +7,6 @@ import com.cloudogu.ces.cesbuildlib.*
 
 node('docker') {
 
-  // Change this as when we go back to default - necessary for proper SonarQube analysis
   mainBranch = 'develop'
 
   properties([
