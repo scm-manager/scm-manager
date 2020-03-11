@@ -27,7 +27,7 @@ for more information.
     GmbH](https://www.scm-manager.org/scm-manager-2/scm-manager-2-gets-a-boost-by-cloudogu-gmbh/ "wikilink")
 -   \*\*2018-05-04\*\* - SCM-Manager 1.60 released
     ([download](http://www.scm-manager.org/download/ "wikilink") \|
-    [release notes](release-notes "wikilink"))
+    [release notes](release-notes.md "wikilink"))
 -   \*\*2018-04-11\*\* - SCM-Manager 1.59 released
 
 [All news](http://www.scm-manager.org/news/ "wikilink")
