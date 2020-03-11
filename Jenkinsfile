@@ -111,7 +111,7 @@ node('docker') {
             sh "rm -rf scm-server/target/appassembler"
 
             // deploy java artifacts
-            mvn.useRepositoryCredentials([id: 'maven.scm-manager.org', url: 'https://maven.scm-manager.org/nexus', credentialsId: 'oss-jenkins_maven.scm-manager.org', type: 'Nexus2'])
+            mvn.useRepositoryCredentials([id: 'maven.scm-manager.org', url: 'https://maven.scm-manager.org/nexus', credentialsId: 'maven.scm-manager.org', type: 'Nexus2'])
             mvn.deployToNexusRepository()
 
             // deploy frontend bits
