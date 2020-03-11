@@ -97,7 +97,7 @@ node('docker') {
 
           def imageVersion = mvn.getVersion()
           if (imageVersion.endsWith('-SNAPSHOT')) {
-            imageVersion = imageVersion.replace('-SNAPSHOT', "${commitHash.substring(0,7)}-${BUILD_NUMBER}")
+            imageVersion = imageVersion.replace('-SNAPSHOT', "-${commitHash.substring(0,7)}-${BUILD_NUMBER}")
           }
 
           stage('Archive') {
