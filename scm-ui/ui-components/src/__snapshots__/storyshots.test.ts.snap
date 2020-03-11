@@ -32263,6 +32263,66 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 </div>
 `;
 
+exports[`Storyshots Forms|DropDown Default 1`] = `
+<div
+  className="select"
+>
+  <select
+    onChange={[Function]}
+    value="de"
+  >
+    <option
+      selected={false}
+      value="en"
+    >
+      en
+    </option>
+    <option
+      selected={true}
+      value="de"
+    >
+      de
+    </option>
+    <option
+      selected={false}
+      value="es"
+    >
+      es
+    </option>
+  </select>
+</div>
+`;
+
+exports[`Storyshots Forms|DropDown With Translation 1`] = `
+<div
+  className="select"
+>
+  <select
+    onChange={[Function]}
+    value="dirk"
+  >
+    <option
+      selected={false}
+      value="hg2g"
+    >
+      The Hitchhiker's Guide to the Galaxy
+    </option>
+    <option
+      selected={true}
+      value="dirk"
+    >
+      Dirk Gently’s Holistic Detective Agency
+    </option>
+    <option
+      selected={false}
+      value="liff"
+    >
+      The Meaning Of Liff
+    </option>
+  </select>
+</div>
+`;
+
 exports[`Storyshots Forms|Radio Default 1`] = `
 <div
   className="sc-cJSrbW hLoADP"
