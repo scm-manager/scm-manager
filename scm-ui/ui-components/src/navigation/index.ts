@@ -8,3 +8,4 @@ export { default as PrimaryNavigation } from "./PrimaryNavigation";
 export { default as PrimaryNavigationLink } from "./PrimaryNavigationLink";
 export { default as Section } from "./Section";
 export { MenuContext, storeMenuCollapsed, isMenuCollapsed } from "./MenuContext";
+export { default as SecondaryNavigation } from "./SecondaryNavigation";
