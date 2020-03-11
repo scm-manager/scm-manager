@@ -487,16 +487,16 @@ exports[`Storyshots Diff Binaries 1`] = `
   className="sc-hqyNC ebbHT"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -504,18 +504,18 @@ exports[`Storyshots Diff Binaries 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -703,26 +703,26 @@ exports[`Storyshots Diff Binaries 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-jTzLTM hmfYFC panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="conflict.png"
         >
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             conflict.png
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             add
           </span>
@@ -756,16 +756,16 @@ exports[`Storyshots Diff Collapsed 1`] = `
   className="sc-hqyNC ebbHT"
 >
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-jTzLTM hmfYFC panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -773,18 +773,18 @@ exports[`Storyshots Diff Collapsed 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -813,16 +813,16 @@ exports[`Storyshots Diff Collapsed 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-jTzLTM hmfYFC panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -830,18 +830,18 @@ exports[`Storyshots Diff Collapsed 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -870,16 +870,16 @@ exports[`Storyshots Diff Collapsed 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-jTzLTM hmfYFC panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -887,18 +887,18 @@ exports[`Storyshots Diff Collapsed 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -927,16 +927,16 @@ exports[`Storyshots Diff Collapsed 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-jTzLTM hmfYFC panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -944,18 +944,18 @@ exports[`Storyshots Diff Collapsed 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -984,16 +984,16 @@ exports[`Storyshots Diff Collapsed 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-jTzLTM hmfYFC panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -1001,18 +1001,18 @@ exports[`Storyshots Diff Collapsed 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -1041,16 +1041,16 @@ exports[`Storyshots Diff Collapsed 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-jTzLTM hmfYFC panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -1058,18 +1058,18 @@ exports[`Storyshots Diff Collapsed 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -1105,16 +1105,16 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
   className="sc-hqyNC ebbHT"
 >
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-jTzLTM hmfYFC panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -1122,18 +1122,18 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -1162,16 +1162,16 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -1179,18 +1179,18 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -1431,7 +1431,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -2014,16 +2014,16 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -2031,18 +2031,18 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -2462,16 +2462,16 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -2479,18 +2479,18 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -2910,16 +2910,16 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-jTzLTM hmfYFC panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -2927,18 +2927,18 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -2967,16 +2967,16 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="sc-jTzLTM hmfYFC panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -2984,18 +2984,18 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -3031,16 +3031,16 @@ exports[`Storyshots Diff Default 1`] = `
   className="sc-hqyNC ebbHT"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -3048,18 +3048,18 @@ exports[`Storyshots Diff Default 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -3606,16 +3606,16 @@ exports[`Storyshots Diff Default 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -3623,18 +3623,18 @@ exports[`Storyshots Diff Default 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -3875,7 +3875,7 @@ exports[`Storyshots Diff Default 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -4458,16 +4458,16 @@ exports[`Storyshots Diff Default 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -4475,18 +4475,18 @@ exports[`Storyshots Diff Default 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -4906,16 +4906,16 @@ exports[`Storyshots Diff Default 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -4923,18 +4923,18 @@ exports[`Storyshots Diff Default 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -5354,16 +5354,16 @@ exports[`Storyshots Diff Default 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -5371,18 +5371,18 @@ exports[`Storyshots Diff Default 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -5940,7 +5940,7 @@ exports[`Storyshots Diff Default 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -6154,7 +6154,7 @@ exports[`Storyshots Diff Default 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -6409,16 +6409,16 @@ exports[`Storyshots Diff Default 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -6426,18 +6426,18 @@ exports[`Storyshots Diff Default 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -6939,16 +6939,16 @@ exports[`Storyshots Diff File Annotation 1`] = `
   className="sc-hqyNC ebbHT"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -6956,18 +6956,18 @@ exports[`Storyshots Diff File Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -7518,16 +7518,16 @@ exports[`Storyshots Diff File Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -7535,18 +7535,18 @@ exports[`Storyshots Diff File Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -7791,7 +7791,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -8374,16 +8374,16 @@ exports[`Storyshots Diff File Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -8391,18 +8391,18 @@ exports[`Storyshots Diff File Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -8826,16 +8826,16 @@ exports[`Storyshots Diff File Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -8843,18 +8843,18 @@ exports[`Storyshots Diff File Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -9278,16 +9278,16 @@ exports[`Storyshots Diff File Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -9295,18 +9295,18 @@ exports[`Storyshots Diff File Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -9868,7 +9868,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -10082,7 +10082,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -10337,16 +10337,16 @@ exports[`Storyshots Diff File Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -10354,18 +10354,18 @@ exports[`Storyshots Diff File Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -10871,16 +10871,16 @@ exports[`Storyshots Diff File Controls 1`] = `
   className="sc-hqyNC ebbHT"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -10888,18 +10888,18 @@ exports[`Storyshots Diff File Controls 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -11464,16 +11464,16 @@ exports[`Storyshots Diff File Controls 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -11481,18 +11481,18 @@ exports[`Storyshots Diff File Controls 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -11751,7 +11751,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -12334,16 +12334,16 @@ exports[`Storyshots Diff File Controls 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -12351,18 +12351,18 @@ exports[`Storyshots Diff File Controls 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -12800,16 +12800,16 @@ exports[`Storyshots Diff File Controls 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -12817,18 +12817,18 @@ exports[`Storyshots Diff File Controls 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -13266,16 +13266,16 @@ exports[`Storyshots Diff File Controls 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -13283,18 +13283,18 @@ exports[`Storyshots Diff File Controls 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -13870,7 +13870,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -14084,7 +14084,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -14339,16 +14339,16 @@ exports[`Storyshots Diff File Controls 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -14356,18 +14356,18 @@ exports[`Storyshots Diff File Controls 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -14887,16 +14887,16 @@ exports[`Storyshots Diff Hunks 1`] = `
   className="sc-hqyNC ebbHT"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java"
         >
@@ -14904,18 +14904,18 @@ exports[`Storyshots Diff Hunks 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -15179,7 +15179,7 @@ exports[`Storyshots Diff Hunks 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -15370,7 +15370,7 @@ exports[`Storyshots Diff Hunks 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -15724,16 +15724,16 @@ exports[`Storyshots Diff Line Annotation 1`] = `
   className="sc-hqyNC ebbHT"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -15741,18 +15741,18 @@ exports[`Storyshots Diff Line Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -16311,16 +16311,16 @@ exports[`Storyshots Diff Line Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -16328,18 +16328,18 @@ exports[`Storyshots Diff Line Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -16592,7 +16592,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -17175,16 +17175,16 @@ exports[`Storyshots Diff Line Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -17192,18 +17192,18 @@ exports[`Storyshots Diff Line Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -17623,16 +17623,16 @@ exports[`Storyshots Diff Line Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -17640,18 +17640,18 @@ exports[`Storyshots Diff Line Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -18071,16 +18071,16 @@ exports[`Storyshots Diff Line Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -18088,18 +18088,18 @@ exports[`Storyshots Diff Line Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -18657,7 +18657,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -18871,7 +18871,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -19126,16 +19126,16 @@ exports[`Storyshots Diff Line Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -19143,18 +19143,18 @@ exports[`Storyshots Diff Line Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -19668,16 +19668,16 @@ exports[`Storyshots Diff OnClick 1`] = `
   className="sc-hqyNC ebbHT"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -19685,18 +19685,18 @@ exports[`Storyshots Diff OnClick 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -20283,16 +20283,16 @@ exports[`Storyshots Diff OnClick 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -20300,18 +20300,18 @@ exports[`Storyshots Diff OnClick 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -20566,7 +20566,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -21197,16 +21197,16 @@ exports[`Storyshots Diff OnClick 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -21214,18 +21214,18 @@ exports[`Storyshots Diff OnClick 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -21675,16 +21675,16 @@ exports[`Storyshots Diff OnClick 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -21692,18 +21692,18 @@ exports[`Storyshots Diff OnClick 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -22153,16 +22153,16 @@ exports[`Storyshots Diff OnClick 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -22170,18 +22170,18 @@ exports[`Storyshots Diff OnClick 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -22779,7 +22779,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -23009,7 +23009,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -23284,16 +23284,16 @@ exports[`Storyshots Diff OnClick 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -23301,18 +23301,18 @@ exports[`Storyshots Diff OnClick 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -23850,16 +23850,16 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
   className="sc-hqyNC ebbHT"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -23867,18 +23867,18 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -24518,16 +24518,16 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -24535,18 +24535,18 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -24831,7 +24831,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               colSpan={4}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -25460,16 +25460,16 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -25477,18 +25477,18 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -25960,16 +25960,16 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -25977,18 +25977,18 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -26460,16 +26460,16 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -26477,18 +26477,18 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -27157,7 +27157,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               colSpan={4}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -27399,7 +27399,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               colSpan={4}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -27684,16 +27684,16 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -27701,18 +27701,18 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -28287,16 +28287,16 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
   className="sc-hqyNC ebbHT"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -28304,18 +28304,18 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -28862,16 +28862,16 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -28879,18 +28879,18 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -29131,7 +29131,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -29714,16 +29714,16 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -29731,18 +29731,18 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -30162,16 +30162,16 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -30179,18 +30179,18 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -30610,16 +30610,16 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -30627,18 +30627,18 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -31196,7 +31196,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -31410,7 +31410,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="sc-chPdSV iDxGaa"
               />
             </td>
           </tr>
@@ -31665,16 +31665,16 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="sc-jTzLTM kHrqaQ panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="sc-fjdhpX glLOcd level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="sc-jzJRlG cWqroF level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -31682,18 +31682,18 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="sc-cSHVUG ckScCA is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined sc-kgoBCf lfCumG is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="sc-kAzzGY blvgvG level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -32268,7 +32268,7 @@ exports[`Storyshots Forms|Radio Default 1`] = `
   className="sc-frDJqD qQxSI"
 >
   <label
-    className="sc-cMljjf kOqpHe radio"
+    className="sc-gPEVay fGxTeG radio"
   >
     <input
       checked={false}
@@ -32279,7 +32279,7 @@ exports[`Storyshots Forms|Radio Default 1`] = `
     Not checked
   </label>
   <label
-    className="sc-cMljjf kOqpHe radio"
+    className="sc-gPEVay fGxTeG radio"
   >
     <input
       checked={true}
@@ -32297,7 +32297,7 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
   className="sc-frDJqD qQxSI"
 >
   <label
-    className="sc-cMljjf kOqpHe radio"
+    className="sc-gPEVay fGxTeG radio"
     disabled={true}
   >
     <input
