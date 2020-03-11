@@ -1,7 +1,8 @@
 #!groovy
 
-// Keep the version in sync with the one used in pom.xml in order to get correct syntax completion.
-@Library('github.com/cloudogu/ces-build-lib@1.35.1')
+// switch back to a stable tag, after pr 22 is mreged an the next version is released
+// see https://github.com/cloudogu/ces-build-lib/pull/22
+@Library('github.com/cloudogu/ces-build-lib@8e9194e8')
 import com.cloudogu.ces.cesbuildlib.*
 
 node('docker') {
