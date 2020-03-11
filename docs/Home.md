@@ -59,7 +59,7 @@ for more information.
 -   [Using SCM-Manager with Nginx](nginx.md "wikilink")
 -   [Using SCM-Manager with ISS
     (Helicon)](SCM-Manager%20on%20ISS%20Helicon.md "wikilink")
--   [Permissions](https://bitbucket.org/sdorra/scm-manager/wiki/Permissions "wikilink")
+-   [Permissions](Permissions.md "wikilink")
 -   [Plugins](http://plugins.scm-manager.org/scm-plugin-backend/page/index.html "wikilink")
 -   [Revision Control Plugin
     Comparison](rv-plugin-comparison.md "wikilink")
