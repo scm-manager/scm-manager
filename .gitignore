@@ -15,7 +15,10 @@ Desktop DF
 *.NavData
 *.rej
 *.conflict
+*.iml
 # Eclipse Files
 .project
 .classpath
 .settings
+.vagrant
+.idea
