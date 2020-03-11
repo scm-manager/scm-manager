@@ -9,7 +9,7 @@ import {
   Loading,
   NavLink,
   Page,
-  Section,
+  SecondaryNavigation,
   SubNavigation,
   MenuContext,
   storeMenuCollapsed,
@@ -199,7 +199,7 @@ class RepositoryRoot extends React.Component<Props, State> {
               </Switch>
             </div>
             <div className={menuCollapsed ? "column is-1" : "column is-3"}>
-              <Section
+              <SecondaryNavigation
                 label={t("repositoryRoot.menu.navigationLabel")}
                 onCollapse={() => this.onCollapseRepositoryMenu(!menuCollapsed)}
                 collapsed={menuCollapsed}
@@ -241,7 +241,7 @@ class RepositoryRoot extends React.Component<Props, State> {
                   <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
                   <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
-              </Section>
+              </SecondaryNavigation>
             </div>
           </div>
         </Page>

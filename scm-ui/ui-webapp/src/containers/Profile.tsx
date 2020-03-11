@@ -9,10 +9,9 @@ import {
   ErrorPage,
   isMenuCollapsed,
   MenuContext,
-  Navigation,
   NavLink,
   Page,
-  Section,
+  SecondaryNavigation,
   SubNavigation
 } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
@@ -92,7 +91,7 @@ class Profile extends React.Component<Props, State> {
               <ExtensionPoint name="profile.route" props={extensionProps} renderAll={true} />
             </div>
             <div className={menuCollapsed ? "column is-1" : "column is-3"}>
-              <Section
+              <SecondaryNavigation
                 label={t("profile.navigationLabel")}
                 onCollapse={() => this.onCollapseProfileMenu(!menuCollapsed)}
                 collapsed={menuCollapsed}
@@ -111,7 +110,7 @@ class Profile extends React.Component<Props, State> {
                   <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
                   <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
-              </Section>
+              </SecondaryNavigation>
             </div>
           </div>
         </Page>

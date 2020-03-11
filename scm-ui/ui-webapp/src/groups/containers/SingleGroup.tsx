@@ -9,10 +9,9 @@ import {
   isMenuCollapsed,
   Loading,
   MenuContext,
-  Navigation,
   NavLink,
   Page,
-  Section,
+  SecondaryNavigation,
   SubNavigation
 } from "@scm-manager/ui-components";
 import { getGroupsLink } from "../../modules/indexResource";
@@ -103,7 +102,7 @@ class SingleGroup extends React.Component<Props, State> {
               <ExtensionPoint name="group.route" props={extensionProps} renderAll={true} />
             </div>
             <div className={menuCollapsed ? "column is-1" : "column is-3"}>
-              <Section
+              <SecondaryNavigation
                 label={t("singleGroup.menu.navigationLabel")}
                 onCollapse={() => this.onCollapseGroupMenu(!menuCollapsed)}
                 collapsed={menuCollapsed}
@@ -124,7 +123,7 @@ class SingleGroup extends React.Component<Props, State> {
                   <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`} />
                   <ExtensionPoint name="group.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
-              </Section>
+              </SecondaryNavigation>
             </div>
           </div>
         </Page>

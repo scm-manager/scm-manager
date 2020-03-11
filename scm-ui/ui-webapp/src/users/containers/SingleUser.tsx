@@ -10,7 +10,7 @@ import {
   MenuContext,
   NavLink,
   Page,
-  Section,
+  SecondaryNavigation,
   SubNavigation
 } from "@scm-manager/ui-components";
 import { Details } from "./../components/table";
@@ -103,7 +103,7 @@ class SingleUser extends React.Component<Props, State> {
               <ExtensionPoint name="user.route" props={extensionProps} renderAll={true} />
             </div>
             <div className={menuCollapsed ? "column is-1" : "column is-3"}>
-              <Section
+              <SecondaryNavigation
                 label={t("singleUser.menu.navigationLabel")}
                 onCollapse={() => this.onCollapseUserMenu(!menuCollapsed)}
                 collapsed={menuCollapsed}
@@ -124,7 +124,7 @@ class SingleUser extends React.Component<Props, State> {
                   <SetPermissionsNavLink user={user} permissionsUrl={`${url}/settings/permissions`} />
                   <ExtensionPoint name="user.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
-              </Section>
+              </SecondaryNavigation>
             </div>
           </div>
         </Page>

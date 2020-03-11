@@ -6,10 +6,9 @@ import { Redirect, Route, RouteComponentProps, Switch } from "react-router-dom";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Links } from "@scm-manager/ui-types";
 import {
-  Navigation,
   NavLink,
   Page,
-  Section,
+  SecondaryNavigation,
   SubNavigation,
   isMenuCollapsed,
   MenuContext,
@@ -123,7 +122,7 @@ class Admin extends React.Component<Props, State> {
               </Switch>
             </div>
             <div className={menuCollapsed ? "column is-1" : "column is-3"}>
-              <Section
+              <SecondaryNavigation
                 label={t("admin.menu.navigationLabel")}
                 onCollapse={() => this.onCollapseAdminMenu(!menuCollapsed)}
                 collapsed={menuCollapsed}
@@ -166,7 +165,7 @@ class Admin extends React.Component<Props, State> {
                   <NavLink to={`${url}/settings/general`} label={t("admin.menu.generalNavLink")} />
                   <ExtensionPoint name="admin.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
-              </Section>
+              </SecondaryNavigation>
             </div>
           </div>
         </Page>
