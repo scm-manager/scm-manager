@@ -122,7 +122,14 @@ node('docker') {
                 always-auth true
                 email cesmarvin@cloudogu.com
               '''.trim()
-              mvn "-pl :scm-ui buildfrontend:run@deploy"
+
+              // we are tricking lerna by pretending that we are not a git repository
+              sh "mv .git .git.disabled"
+              try {
+                mvn "-pl :scm-ui buildfrontend:run@deploy"
+              } finally {
+                sh "mv .git.disabled .git"
+              }
             }
           }
 
