@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create OpenAPI specification during build
 - Extension point entries with supplied extensionName are sorted ascending
 - Possibility to configure git core config entries for jgit like core.trustfolderstat and core.supportsatomicfilecreation
+- Babel-plugin-styled-components for persistent generated classnames
 
 ### Changed
 - New footer design
