@@ -8,20 +8,20 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static sonia.scm.repository.spi.BrowseCommandTest.Entry.d;
-import static sonia.scm.repository.spi.BrowseCommandTest.Entry.f;
+import static sonia.scm.repository.spi.BrowseCommandTest.Entry.directory;
+import static sonia.scm.repository.spi.BrowseCommandTest.Entry.file;
 
 class BrowseCommandTest implements BrowseCommand {
 
   @Test
   void shouldSort() {
     List<Entry> entries = asList(
-      f("b.txt"),
-      f("a.txt"),
-      f("Dockerfile"),
-      f(".gitignore"),
-      d("src"),
-      f("README")
+      file("b.txt"),
+      file("a.txt"),
+      file("Dockerfile"),
+      file(".gitignore"),
+      directory("src"),
+      file("README")
     );
 
     sort(entries, Entry::isDirectory, Entry::getName);
@@ -46,11 +46,11 @@ class BrowseCommandTest implements BrowseCommand {
     private final String name;
     private final boolean directory;
 
-    static Entry f(String name) {
+    static Entry file(String name) {
       return new Entry(name, false);
     }
 
-    static Entry d(String name) {
+    static Entry directory(String name) {
       return new Entry(name, true);
     }
 
