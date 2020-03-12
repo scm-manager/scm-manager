@@ -210,7 +210,8 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
 
   private DocumentBuilder createDocumentBuilder() throws ParserConfigurationException {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
     return factory.newDocumentBuilder();
   }
 
@@ -327,13 +328,10 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
 
 
   private void writeDocument(Document doc, File file) {
-
     try {
       file.getParentFile().mkdirs();
 
       Transformer transformer = createTransformer();
-
-      transformer.setOutputProperty(OutputKeys.INDENT, PROPERTY_VALUE);
       transformer.transform(new DOMSource(doc), new StreamResult(file));
     } catch (IllegalArgumentException | TransformerException ex) {
       printException("could not write document", ex);
@@ -342,10 +340,14 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
 
   private Transformer createTransformer() throws TransformerConfigurationException {
     TransformerFactory factory = TransformerFactory.newInstance();
-    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-    return factory.newTransformer();
-  }
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
 
+    Transformer transformer =  factory.newTransformer();
+    transformer.setOutputProperty(OutputKeys.INDENT, PROPERTY_VALUE);
+
+    return transformer;
+  }
 
   private Map<String, String> getAttributesFromAnnotation(Element el,
                                                           TypeElement annotation) {
