@@ -6,4 +6,6 @@ export { default as Navigation } from "./Navigation";
 export { default as SubNavigation } from "./SubNavigation";
 export { default as PrimaryNavigation } from "./PrimaryNavigation";
 export { default as PrimaryNavigationLink } from "./PrimaryNavigationLink";
-export { default as Section } from "./Section";
+export { default as SecondaryNavigation } from "./SecondaryNavigation";
+export { MenuContext, storeMenuCollapsed, isMenuCollapsed } from "./MenuContext";
+export { default as SecondaryNavigationItem } from "./SecondaryNavigationItem";

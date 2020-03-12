@@ -10,17 +10,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create OpenAPI specification during build
 - Extension point entries with supplied extensionName are sorted ascending
 - Possibility to configure git core config entries for jgit like core.trustfolderstat and core.supportsatomicfilecreation
+- Babel-plugin-styled-components for persistent generated classnames
 - By default, only 100 files will be listed in source view in one request
 
 ### Changed
 - New footer design
 - Update jgit to version 5.6.1.202002131546-r-scm1
 - Update svnkit to version 1.10.1-scm1
+- Secondary navigation collapsable
 
 ### Fixed
 - Modification for mercurial repositories with enabled XSRF protection
 - Does not throw NullPointerException when merge fails without normal merge conflicts
 - Keep file attributes on modification
+- Drop Down Component works again with translations
 
 ### Removed
 - Enunciate rest documentation

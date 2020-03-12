@@ -10,6 +10,7 @@ type Props = {
   activeWhenMatch?: (route: any) => boolean;
   activeOnlyWhenExact: boolean;
   icon?: string;
+  title?: string;
 };
 
 /**

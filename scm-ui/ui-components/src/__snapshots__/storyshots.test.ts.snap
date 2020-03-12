@@ -2,7 +2,7 @@
 
 exports[`Storyshots Buttons|AddButton Default 1`] = `
 <div
-  className="sc-gzVnrw isLyCl"
+  className="indexstories__Spacing-bpoict-0 FnHDe"
 >
   <button
     className="button is-default"
@@ -27,7 +27,7 @@ exports[`Storyshots Buttons|AddButton Default 1`] = `
 exports[`Storyshots Buttons|Button Colors 1`] = `
 <div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-primary"
@@ -39,7 +39,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-link"
@@ -51,7 +51,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-info"
@@ -63,7 +63,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-success"
@@ -75,7 +75,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-warning"
@@ -87,7 +87,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-danger"
@@ -99,7 +99,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-white"
@@ -111,7 +111,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-light"
@@ -123,7 +123,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-dark"
@@ -135,7 +135,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-black"
@@ -147,7 +147,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-text"
@@ -164,7 +164,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
 exports[`Storyshots Buttons|Button Disabled 1`] = `
 <div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-primary"
@@ -177,7 +177,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-link"
@@ -190,7 +190,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-info"
@@ -203,7 +203,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-success"
@@ -216,7 +216,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-warning"
@@ -229,7 +229,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-danger"
@@ -242,7 +242,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-white"
@@ -255,7 +255,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-light"
@@ -268,7 +268,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-dark"
@@ -281,7 +281,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-black"
@@ -294,7 +294,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
     </button>
   </div>
   <div
-    className="sc-gzVnrw isLyCl"
+    className="indexstories__Spacing-bpoict-0 FnHDe"
   >
     <button
       className="button is-text"
@@ -311,7 +311,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
 
 exports[`Storyshots Buttons|Button Loading 1`] = `
 <div
-  className="sc-gzVnrw isLyCl"
+  className="indexstories__Spacing-bpoict-0 FnHDe"
 >
   <button
     className="button is-primary is-loading"
@@ -326,10 +326,10 @@ exports[`Storyshots Buttons|Button Loading 1`] = `
 
 exports[`Storyshots Buttons|CreateButton Default 1`] = `
 <div
-  className="sc-gzVnrw isLyCl"
+  className="indexstories__Spacing-bpoict-0 FnHDe"
 >
   <div
-    className="sc-bZQynM hdKCAz has-text-centered"
+    className="CreateButton__Wrapper-f29oo-0 bKcwAq has-text-centered"
   >
     <button
       className="button is-primary"
@@ -345,7 +345,7 @@ exports[`Storyshots Buttons|CreateButton Default 1`] = `
 
 exports[`Storyshots Buttons|DeleteButton Default 1`] = `
 <div
-  className="sc-gzVnrw isLyCl"
+  className="indexstories__Spacing-bpoict-0 FnHDe"
 >
   <button
     className="button is-warning"
@@ -369,7 +369,7 @@ exports[`Storyshots Buttons|DeleteButton Default 1`] = `
 
 exports[`Storyshots Buttons|DownloadButton Default 1`] = `
 <div
-  className="sc-gzVnrw isLyCl"
+  className="indexstories__Spacing-bpoict-0 FnHDe"
 >
   <a
     className="button is-link"
@@ -393,7 +393,7 @@ exports[`Storyshots Buttons|DownloadButton Default 1`] = `
 
 exports[`Storyshots Buttons|DownloadButton Disabled 1`] = `
 <div
-  className="sc-gzVnrw isLyCl"
+  className="indexstories__Spacing-bpoict-0 FnHDe"
 >
   <a
     className="button is-link"
@@ -417,7 +417,7 @@ exports[`Storyshots Buttons|DownloadButton Disabled 1`] = `
 
 exports[`Storyshots Buttons|EditButton Default 1`] = `
 <div
-  className="sc-gzVnrw isLyCl"
+  className="indexstories__Spacing-bpoict-0 FnHDe"
 >
   <button
     className="button is-default"
@@ -432,7 +432,7 @@ exports[`Storyshots Buttons|EditButton Default 1`] = `
 
 exports[`Storyshots Buttons|SubmitButton Default 1`] = `
 <div
-  className="sc-gzVnrw isLyCl"
+  className="indexstories__Spacing-bpoict-0 FnHDe"
 >
   <button
     className="button is-primary"
@@ -449,7 +449,7 @@ exports[`Storyshots DateFromNow Default 1`] = `
 <div>
   <p>
     <time
-      className="sc-bdVaJa dkavpQ"
+      className="DateFromNow__DateElement-sc-16hnz72-0 ehlCzi"
       title="2009-06-30 18:30:00"
     >
       over 10 years ago
@@ -457,7 +457,7 @@ exports[`Storyshots DateFromNow Default 1`] = `
   </p>
   <p>
     <time
-      className="sc-bdVaJa dkavpQ"
+      className="DateFromNow__DateElement-sc-16hnz72-0 ehlCzi"
       title="2019-06-30 18:30:00"
     >
       3 months ago
@@ -465,7 +465,7 @@ exports[`Storyshots DateFromNow Default 1`] = `
   </p>
   <p>
     <time
-      className="sc-bdVaJa dkavpQ"
+      className="DateFromNow__DateElement-sc-16hnz72-0 ehlCzi"
       title="2019-10-12 13:56:40"
     >
       less than a minute ago
@@ -473,7 +473,7 @@ exports[`Storyshots DateFromNow Default 1`] = `
   </p>
   <p>
     <time
-      className="sc-bdVaJa dkavpQ"
+      className="DateFromNow__DateElement-sc-16hnz72-0 ehlCzi"
       title="2019-10-11 13:56:40"
     >
       1 day ago
@@ -484,19 +484,19 @@ exports[`Storyshots DateFromNow Default 1`] = `
 
 exports[`Storyshots Diff Binaries 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="Diffstories__Container-sc-28kjjp-0 lfGadu"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -504,18 +504,18 @@ exports[`Storyshots Diff Binaries 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -529,7 +529,7 @@ exports[`Storyshots Diff Binaries 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -546,7 +546,7 @@ exports[`Storyshots Diff Binaries 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -703,26 +703,26 @@ exports[`Storyshots Diff Binaries 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 doOmaG panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="conflict.png"
         >
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             conflict.png
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             add
           </span>
@@ -733,7 +733,7 @@ exports[`Storyshots Diff Binaries 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -753,19 +753,19 @@ exports[`Storyshots Diff Binaries 1`] = `
 
 exports[`Storyshots Diff Collapsed 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="Diffstories__Container-sc-28kjjp-0 lfGadu"
 >
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 doOmaG panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -773,18 +773,18 @@ exports[`Storyshots Diff Collapsed 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -798,7 +798,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -813,16 +813,16 @@ exports[`Storyshots Diff Collapsed 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 doOmaG panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -830,18 +830,18 @@ exports[`Storyshots Diff Collapsed 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -855,7 +855,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -870,16 +870,16 @@ exports[`Storyshots Diff Collapsed 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 doOmaG panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -887,18 +887,18 @@ exports[`Storyshots Diff Collapsed 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -912,7 +912,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -927,16 +927,16 @@ exports[`Storyshots Diff Collapsed 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 doOmaG panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -944,18 +944,18 @@ exports[`Storyshots Diff Collapsed 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -969,7 +969,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -984,16 +984,16 @@ exports[`Storyshots Diff Collapsed 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 doOmaG panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -1001,18 +1001,18 @@ exports[`Storyshots Diff Collapsed 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -1026,7 +1026,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -1041,16 +1041,16 @@ exports[`Storyshots Diff Collapsed 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 doOmaG panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -1058,18 +1058,18 @@ exports[`Storyshots Diff Collapsed 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -1083,7 +1083,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -1102,19 +1102,19 @@ exports[`Storyshots Diff Collapsed 1`] = `
 
 exports[`Storyshots Diff CollapsingWithFunction 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="Diffstories__Container-sc-28kjjp-0 lfGadu"
 >
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 doOmaG panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -1122,18 +1122,18 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -1147,7 +1147,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -1162,16 +1162,16 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -1179,18 +1179,18 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -1204,7 +1204,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -1221,7 +1221,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -1431,7 +1431,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -2014,16 +2014,16 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -2031,18 +2031,18 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -2056,7 +2056,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -2073,7 +2073,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -2462,16 +2462,16 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -2479,18 +2479,18 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -2504,7 +2504,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -2521,7 +2521,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -2910,16 +2910,16 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 doOmaG panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -2927,18 +2927,18 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -2952,7 +2952,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -2967,16 +2967,16 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi ckdmuY panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 doOmaG panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -2984,18 +2984,18 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
             className="fas fa-angle-right has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -3009,7 +3009,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -3028,19 +3028,19 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
 
 exports[`Storyshots Diff Default 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="Diffstories__Container-sc-28kjjp-0 lfGadu"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -3048,18 +3048,18 @@ exports[`Storyshots Diff Default 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -3073,7 +3073,7 @@ exports[`Storyshots Diff Default 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -3090,7 +3090,7 @@ exports[`Storyshots Diff Default 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -3606,16 +3606,16 @@ exports[`Storyshots Diff Default 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -3623,18 +3623,18 @@ exports[`Storyshots Diff Default 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -3648,7 +3648,7 @@ exports[`Storyshots Diff Default 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -3665,7 +3665,7 @@ exports[`Storyshots Diff Default 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -3875,7 +3875,7 @@ exports[`Storyshots Diff Default 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -4458,16 +4458,16 @@ exports[`Storyshots Diff Default 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -4475,18 +4475,18 @@ exports[`Storyshots Diff Default 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -4500,7 +4500,7 @@ exports[`Storyshots Diff Default 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -4517,7 +4517,7 @@ exports[`Storyshots Diff Default 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -4906,16 +4906,16 @@ exports[`Storyshots Diff Default 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -4923,18 +4923,18 @@ exports[`Storyshots Diff Default 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -4948,7 +4948,7 @@ exports[`Storyshots Diff Default 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -4965,7 +4965,7 @@ exports[`Storyshots Diff Default 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -5354,16 +5354,16 @@ exports[`Storyshots Diff Default 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -5371,18 +5371,18 @@ exports[`Storyshots Diff Default 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -5396,7 +5396,7 @@ exports[`Storyshots Diff Default 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -5413,7 +5413,7 @@ exports[`Storyshots Diff Default 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -5940,7 +5940,7 @@ exports[`Storyshots Diff Default 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -6154,7 +6154,7 @@ exports[`Storyshots Diff Default 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -6409,16 +6409,16 @@ exports[`Storyshots Diff Default 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -6426,18 +6426,18 @@ exports[`Storyshots Diff Default 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -6451,7 +6451,7 @@ exports[`Storyshots Diff Default 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -6468,7 +6468,7 @@ exports[`Storyshots Diff Default 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -6936,19 +6936,19 @@ exports[`Storyshots Diff Default 1`] = `
 
 exports[`Storyshots Diff File Annotation 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="Diffstories__Container-sc-28kjjp-0 lfGadu"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -6956,18 +6956,18 @@ exports[`Storyshots Diff File Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -6981,7 +6981,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -7002,7 +7002,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
         src/main/java/com/cloudogu/scm/review/events/EventListener.java
       </p>
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -7518,16 +7518,16 @@ exports[`Storyshots Diff File Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -7535,18 +7535,18 @@ exports[`Storyshots Diff File Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -7560,7 +7560,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -7581,7 +7581,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
         src/main/js/ChangeNotification.tsx
       </p>
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -7791,7 +7791,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -8374,16 +8374,16 @@ exports[`Storyshots Diff File Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -8391,18 +8391,18 @@ exports[`Storyshots Diff File Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -8416,7 +8416,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -8437,7 +8437,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
         src/main/resources/locales/de/plugins.json
       </p>
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -8826,16 +8826,16 @@ exports[`Storyshots Diff File Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -8843,18 +8843,18 @@ exports[`Storyshots Diff File Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -8868,7 +8868,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -8889,7 +8889,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
         src/main/resources/locales/en/plugins.json
       </p>
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -9278,16 +9278,16 @@ exports[`Storyshots Diff File Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -9295,18 +9295,18 @@ exports[`Storyshots Diff File Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -9320,7 +9320,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -9341,7 +9341,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
         src/test/java/com/cloudogu/scm/review/events/ClientTest.java
       </p>
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -9868,7 +9868,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -10082,7 +10082,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -10337,16 +10337,16 @@ exports[`Storyshots Diff File Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -10354,18 +10354,18 @@ exports[`Storyshots Diff File Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -10379,7 +10379,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -10400,7 +10400,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
         Main.java
       </p>
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -10868,19 +10868,19 @@ exports[`Storyshots Diff File Annotation 1`] = `
 
 exports[`Storyshots Diff File Controls 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="Diffstories__Container-sc-28kjjp-0 lfGadu"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -10888,18 +10888,18 @@ exports[`Storyshots Diff File Controls 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -10913,7 +10913,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -10931,7 +10931,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               >
                 <a
                   aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -10948,7 +10948,7 @@ exports[`Storyshots Diff File Controls 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -11464,16 +11464,16 @@ exports[`Storyshots Diff File Controls 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -11481,18 +11481,18 @@ exports[`Storyshots Diff File Controls 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -11506,7 +11506,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -11524,7 +11524,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               >
                 <a
                   aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -11541,7 +11541,7 @@ exports[`Storyshots Diff File Controls 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -11751,7 +11751,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -12334,16 +12334,16 @@ exports[`Storyshots Diff File Controls 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -12351,18 +12351,18 @@ exports[`Storyshots Diff File Controls 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -12376,7 +12376,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -12394,7 +12394,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               >
                 <a
                   aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -12411,7 +12411,7 @@ exports[`Storyshots Diff File Controls 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -12800,16 +12800,16 @@ exports[`Storyshots Diff File Controls 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -12817,18 +12817,18 @@ exports[`Storyshots Diff File Controls 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -12842,7 +12842,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -12860,7 +12860,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               >
                 <a
                   aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -12877,7 +12877,7 @@ exports[`Storyshots Diff File Controls 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -13266,16 +13266,16 @@ exports[`Storyshots Diff File Controls 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -13283,18 +13283,18 @@ exports[`Storyshots Diff File Controls 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -13308,7 +13308,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -13326,7 +13326,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               >
                 <a
                   aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -13343,7 +13343,7 @@ exports[`Storyshots Diff File Controls 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -13870,7 +13870,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -14084,7 +14084,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -14339,16 +14339,16 @@ exports[`Storyshots Diff File Controls 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -14356,18 +14356,18 @@ exports[`Storyshots Diff File Controls 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -14381,7 +14381,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -14399,7 +14399,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               >
                 <a
                   aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -14416,7 +14416,7 @@ exports[`Storyshots Diff File Controls 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -14884,19 +14884,19 @@ exports[`Storyshots Diff File Controls 1`] = `
 
 exports[`Storyshots Diff Hunks 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="Diffstories__Container-sc-28kjjp-0 lfGadu"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java"
         >
@@ -14904,18 +14904,18 @@ exports[`Storyshots Diff Hunks 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -14929,7 +14929,7 @@ exports[`Storyshots Diff Hunks 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -14946,7 +14946,7 @@ exports[`Storyshots Diff Hunks 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -15179,7 +15179,7 @@ exports[`Storyshots Diff Hunks 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -15370,7 +15370,7 @@ exports[`Storyshots Diff Hunks 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -15721,19 +15721,19 @@ exports[`Storyshots Diff Hunks 1`] = `
 
 exports[`Storyshots Diff Line Annotation 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="Diffstories__Container-sc-28kjjp-0 lfGadu"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -15741,18 +15741,18 @@ exports[`Storyshots Diff Line Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -15766,7 +15766,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -15783,7 +15783,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -16311,16 +16311,16 @@ exports[`Storyshots Diff Line Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -16328,18 +16328,18 @@ exports[`Storyshots Diff Line Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -16353,7 +16353,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -16370,7 +16370,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -16592,7 +16592,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -17175,16 +17175,16 @@ exports[`Storyshots Diff Line Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -17192,18 +17192,18 @@ exports[`Storyshots Diff Line Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -17217,7 +17217,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -17234,7 +17234,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -17623,16 +17623,16 @@ exports[`Storyshots Diff Line Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -17640,18 +17640,18 @@ exports[`Storyshots Diff Line Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -17665,7 +17665,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -17682,7 +17682,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -18071,16 +18071,16 @@ exports[`Storyshots Diff Line Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -18088,18 +18088,18 @@ exports[`Storyshots Diff Line Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -18113,7 +18113,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -18130,7 +18130,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -18657,7 +18657,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -18871,7 +18871,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -19126,16 +19126,16 @@ exports[`Storyshots Diff Line Annotation 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -19143,18 +19143,18 @@ exports[`Storyshots Diff Line Annotation 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -19168,7 +19168,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -19185,7 +19185,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -19665,19 +19665,19 @@ exports[`Storyshots Diff Line Annotation 1`] = `
 
 exports[`Storyshots Diff OnClick 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="Diffstories__Container-sc-28kjjp-0 lfGadu"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -19685,18 +19685,18 @@ exports[`Storyshots Diff OnClick 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -19710,7 +19710,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -19727,7 +19727,7 @@ exports[`Storyshots Diff OnClick 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -20283,16 +20283,16 @@ exports[`Storyshots Diff OnClick 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -20300,18 +20300,18 @@ exports[`Storyshots Diff OnClick 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -20325,7 +20325,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -20342,7 +20342,7 @@ exports[`Storyshots Diff OnClick 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -20566,7 +20566,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -21197,16 +21197,16 @@ exports[`Storyshots Diff OnClick 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -21214,18 +21214,18 @@ exports[`Storyshots Diff OnClick 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -21239,7 +21239,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -21256,7 +21256,7 @@ exports[`Storyshots Diff OnClick 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -21675,16 +21675,16 @@ exports[`Storyshots Diff OnClick 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -21692,18 +21692,18 @@ exports[`Storyshots Diff OnClick 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -21717,7 +21717,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -21734,7 +21734,7 @@ exports[`Storyshots Diff OnClick 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -22153,16 +22153,16 @@ exports[`Storyshots Diff OnClick 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -22170,18 +22170,18 @@ exports[`Storyshots Diff OnClick 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -22195,7 +22195,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -22212,7 +22212,7 @@ exports[`Storyshots Diff OnClick 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -22779,7 +22779,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -23009,7 +23009,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -23284,16 +23284,16 @@ exports[`Storyshots Diff OnClick 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -23301,18 +23301,18 @@ exports[`Storyshots Diff OnClick 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -23326,7 +23326,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -23343,7 +23343,7 @@ exports[`Storyshots Diff OnClick 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -23847,19 +23847,19 @@ exports[`Storyshots Diff OnClick 1`] = `
 
 exports[`Storyshots Diff Side-By-Side 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="Diffstories__Container-sc-28kjjp-0 lfGadu"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -23867,18 +23867,18 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -23892,7 +23892,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               >
                 <a
                   aria-label="diff.combined"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -23909,7 +23909,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-split sc-dnqmqq jOaOnw split"
+        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj split"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -24518,16 +24518,16 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -24535,18 +24535,18 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -24560,7 +24560,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               >
                 <a
                   aria-label="diff.combined"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -24577,7 +24577,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-split sc-dnqmqq jOaOnw split"
+        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj split"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -24831,7 +24831,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               colSpan={4}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -25460,16 +25460,16 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -25477,18 +25477,18 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -25502,7 +25502,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               >
                 <a
                   aria-label="diff.combined"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -25519,7 +25519,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-split sc-dnqmqq jOaOnw split"
+        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj split"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -25960,16 +25960,16 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -25977,18 +25977,18 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -26002,7 +26002,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               >
                 <a
                   aria-label="diff.combined"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -26019,7 +26019,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-split sc-dnqmqq jOaOnw split"
+        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj split"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -26460,16 +26460,16 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -26477,18 +26477,18 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -26502,7 +26502,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               >
                 <a
                   aria-label="diff.combined"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -26519,7 +26519,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-split sc-dnqmqq jOaOnw split"
+        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj split"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -27157,7 +27157,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               colSpan={4}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -27399,7 +27399,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               colSpan={4}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -27684,16 +27684,16 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -27701,18 +27701,18 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -27726,7 +27726,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               >
                 <a
                   aria-label="diff.combined"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -27743,7 +27743,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-split sc-dnqmqq jOaOnw split"
+        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj split"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -28284,19 +28284,19 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
 
 exports[`Storyshots Diff SyntaxHighlighting 1`] = `
 <div
-  className="sc-hmzhuo TypKC"
+  className="Diffstories__Container-sc-28kjjp-0 lfGadu"
 >
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
         >
@@ -28304,18 +28304,18 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/java/com/cloudogu/scm/review/events/EventListener.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -28329,7 +28329,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -28346,7 +28346,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -28862,16 +28862,16 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/js/ChangeNotification.tsx"
         >
@@ -28879,18 +28879,18 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/js/ChangeNotification.tsx
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -28904,7 +28904,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -28921,7 +28921,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -29131,7 +29131,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -29714,16 +29714,16 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/de/plugins.json"
         >
@@ -29731,18 +29731,18 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/de/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -29756,7 +29756,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -29773,7 +29773,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -30162,16 +30162,16 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/main/resources/locales/en/plugins.json"
         >
@@ -30179,18 +30179,18 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/main/resources/locales/en/plugins.json
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -30204,7 +30204,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -30221,7 +30221,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -30610,16 +30610,16 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
         >
@@ -30627,18 +30627,18 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             src/test/java/com/cloudogu/scm/review/events/ClientTest.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -30652,7 +30652,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -30669,7 +30669,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -31196,7 +31196,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -31410,7 +31410,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               colSpan={3}
             >
               <hr
-                className="sc-jzJRlG etTijH"
+                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
               />
             </td>
           </tr>
@@ -31665,16 +31665,16 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
     </div>
   </div>
   <div
-    className="sc-gZMcBi iABzaT panel is-size-6"
+    className="DiffFile__DiffFilePanel-sc-10deuqx-0 kPCYtO panel is-size-6"
   >
     <div
       className="panel-heading"
     >
       <div
-        className="sc-gqjmRU kjsEoG level"
+        className="DiffFile__FlexWrapLevel-sc-10deuqx-1 fJSQR level"
       >
         <div
-          className="sc-VigVT bfvjTo level-left is-flex has-cursor-pointer"
+          className="DiffFile__FullWidthTitleHeader-sc-10deuqx-2 coMBzD level-left is-flex has-cursor-pointer"
           onClick={[Function]}
           title="Main.java"
         >
@@ -31682,18 +31682,18 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
             className="fas fa-angle-down has-text-inherit"
           />
           <span
-            className="sc-jTzLTM dwNlfD is-ellipsis-overflow is-size-6"
+            className="DiffFile__TitleWrapper-sc-10deuqx-3 bdImLv is-ellipsis-overflow is-size-6"
           >
             Main.java
           </span>
           <span
-            className="tag is-info is-outlined sc-cSHVUG kqfxpj is-rounded has-text-weight-normal"
+            className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-6 iPZkeQ is-rounded has-text-weight-normal"
           >
             modify
           </span>
         </div>
         <div
-          className="sc-fjdhpX fibrmN level-right is-flex"
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 RNLYR level-right is-flex"
         >
           <div
             className="field is-grouped"
@@ -31707,7 +31707,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               >
                 <a
                   aria-label="diff.sideBySide"
-                  className="sc-iwsKbI jUFWvh button"
+                  className="DiffButton__Button-sc-18d99hb-0 jNMWaS button"
                   onClick={[Function]}
                 >
                   <i
@@ -31724,7 +31724,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified sc-dnqmqq jOaOnw unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -32192,7 +32192,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
 
 exports[`Storyshots Forms|Checkbox Default 1`] = `
 <div
-  className="sc-kgAjT khfRmZ"
+  className="Checkboxstories__Spacing-sc-1bg8q8e-0 leoZpa"
 >
   <div
     className="field"
@@ -32237,7 +32237,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
 
 exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 <div
-  className="sc-kgAjT khfRmZ"
+  className="Checkboxstories__Spacing-sc-1bg8q8e-0 leoZpa"
 >
   <div
     className="field"
@@ -32263,12 +32263,72 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 </div>
 `;
 
+exports[`Storyshots Forms|DropDown Default 1`] = `
+<div
+  className="select"
+>
+  <select
+    onChange={[Function]}
+    value="de"
+  >
+    <option
+      selected={false}
+      value="en"
+    >
+      en
+    </option>
+    <option
+      selected={true}
+      value="de"
+    >
+      de
+    </option>
+    <option
+      selected={false}
+      value="es"
+    >
+      es
+    </option>
+  </select>
+</div>
+`;
+
+exports[`Storyshots Forms|DropDown With Translation 1`] = `
+<div
+  className="select"
+>
+  <select
+    onChange={[Function]}
+    value="dirk"
+  >
+    <option
+      selected={false}
+      value="hg2g"
+    >
+      The Hitchhiker's Guide to the Galaxy
+    </option>
+    <option
+      selected={true}
+      value="dirk"
+    >
+      Dirk Gently’s Holistic Detective Agency
+    </option>
+    <option
+      selected={false}
+      value="liff"
+    >
+      The Meaning Of Liff
+    </option>
+  </select>
+</div>
+`;
+
 exports[`Storyshots Forms|Radio Default 1`] = `
 <div
-  className="sc-cJSrbW hLoADP"
+  className="Radiostories__Spacing-sc-18hvwhd-0 bpdnyr"
 >
   <label
-    className="sc-cMljjf kOqpHe radio"
+    className="Radio__StyledRadio-ays4vp-0 dbWFWU radio"
   >
     <input
       checked={false}
@@ -32279,7 +32339,7 @@ exports[`Storyshots Forms|Radio Default 1`] = `
     Not checked
   </label>
   <label
-    className="sc-cMljjf kOqpHe radio"
+    className="Radio__StyledRadio-ays4vp-0 dbWFWU radio"
   >
     <input
       checked={true}
@@ -32294,10 +32354,10 @@ exports[`Storyshots Forms|Radio Default 1`] = `
 
 exports[`Storyshots Forms|Radio Disabled 1`] = `
 <div
-  className="sc-cJSrbW hLoADP"
+  className="Radiostories__Spacing-sc-18hvwhd-0 bpdnyr"
 >
   <label
-    className="sc-cMljjf kOqpHe radio"
+    className="Radio__StyledRadio-ays4vp-0 dbWFWU radio"
     disabled={true}
   >
     <input
@@ -32314,7 +32374,7 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
 
 exports[`Storyshots Forms|Textarea OnCancel 1`] = `
 <div
-  className="sc-ksYbfQ ePXdiL"
+  className="Textareastories__Spacing-lk5v3m-0 ihUMGr"
 >
   <div
     className="field"
@@ -32337,7 +32397,7 @@ exports[`Storyshots Forms|Textarea OnCancel 1`] = `
 
 exports[`Storyshots Forms|Textarea OnChange 1`] = `
 <div
-  className="sc-ksYbfQ ePXdiL"
+  className="Textareastories__Spacing-lk5v3m-0 ihUMGr"
 >
   <div
     className="field"
@@ -32364,7 +32424,7 @@ exports[`Storyshots Forms|Textarea OnChange 1`] = `
 
 exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
 <div
-  className="sc-ksYbfQ ePXdiL"
+  className="Textareastories__Spacing-lk5v3m-0 ihUMGr"
 >
   <div
     className="field"
@@ -32403,7 +32463,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="FooterSection__Title-lx0ikb-0 bVGafM"
         >
           <i
             className="fas fa-user-circle fa-fw"
@@ -32412,7 +32472,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           Trillian McMillian
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="FooterSection__Menu-lx0ikb-1 qShDi"
         >
           <li>
             <a
@@ -32438,7 +32498,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="FooterSection__Title-lx0ikb-0 bVGafM"
         >
           <i
             className="fas fa-info-circle fa-fw"
@@ -32447,7 +32507,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           footer.information.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="FooterSection__Menu-lx0ikb-1 qShDi"
         >
           <li>
             <a
@@ -32463,7 +32523,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="FooterSection__Title-lx0ikb-0 bVGafM"
         >
           <i
             className="fas fa-life-ring fa-fw"
@@ -32472,7 +32532,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           footer.support.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="FooterSection__Menu-lx0ikb-1 qShDi"
         >
           <li>
             <a
@@ -32511,21 +32571,21 @@ exports[`Storyshots Layout|Footer Full 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="FooterSection__Title-lx0ikb-0 bVGafM"
         >
           <span
-            className="sc-fMiknA fyPpQQ image is-rounded"
+            className="Footer__AvatarContainer-k70cxq-1 cGAuNo image is-rounded"
           >
             <img
               alt="trillian"
-              className="is-rounded sc-fBuWsC djJrAv"
+              className="is-rounded Footer__VCenteredAvatar-k70cxq-0 jnmxnZ"
               src="test-file-stub"
             />
           </span>
           Trillian McMillian
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="FooterSection__Menu-lx0ikb-1 qShDi"
         >
           <li>
             <a
@@ -32560,7 +32620,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="FooterSection__Title-lx0ikb-0 bVGafM"
         >
           <i
             className="fas fa-info-circle fa-fw"
@@ -32569,7 +32629,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           footer.information.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="FooterSection__Menu-lx0ikb-1 qShDi"
         >
           <li>
             <a
@@ -32601,7 +32661,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="FooterSection__Title-lx0ikb-0 bVGafM"
         >
           <i
             className="fas fa-life-ring fa-fw"
@@ -32610,7 +32670,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           footer.support.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="FooterSection__Menu-lx0ikb-1 qShDi"
         >
           <li>
             <a
@@ -32657,21 +32717,21 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="FooterSection__Title-lx0ikb-0 bVGafM"
         >
           <span
-            className="sc-fMiknA fyPpQQ image is-rounded"
+            className="Footer__AvatarContainer-k70cxq-1 cGAuNo image is-rounded"
           >
             <img
               alt="trillian"
-              className="is-rounded sc-fBuWsC djJrAv"
+              className="is-rounded Footer__VCenteredAvatar-k70cxq-0 jnmxnZ"
               src="test-file-stub"
             />
           </span>
           Trillian McMillian
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="FooterSection__Menu-lx0ikb-1 qShDi"
         >
           <li>
             <a
@@ -32697,7 +32757,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="FooterSection__Title-lx0ikb-0 bVGafM"
         >
           <i
             className="fas fa-info-circle fa-fw"
@@ -32706,7 +32766,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
           footer.information.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="FooterSection__Menu-lx0ikb-1 qShDi"
         >
           <li>
             <a
@@ -32722,7 +32782,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="FooterSection__Title-lx0ikb-0 bVGafM"
         >
           <i
             className="fas fa-life-ring fa-fw"
@@ -32731,7 +32791,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
           footer.support.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="FooterSection__Menu-lx0ikb-1 qShDi"
         >
           <li>
             <a
@@ -32770,7 +32830,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="FooterSection__Title-lx0ikb-0 bVGafM"
         >
           <i
             className="fas fa-user-circle fa-fw"
@@ -32779,7 +32839,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           Trillian McMillian
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="FooterSection__Menu-lx0ikb-1 qShDi"
         >
           <li>
             <a
@@ -32814,7 +32874,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="FooterSection__Title-lx0ikb-0 bVGafM"
         >
           <i
             className="fas fa-info-circle fa-fw"
@@ -32823,7 +32883,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           footer.information.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="FooterSection__Menu-lx0ikb-1 qShDi"
         >
           <li>
             <a
@@ -32855,7 +32915,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
         className="column is-one-third"
       >
         <div
-          className="sc-hzDkRC jeksqW"
+          className="FooterSection__Title-lx0ikb-0 bVGafM"
         >
           <i
             className="fas fa-life-ring fa-fw"
@@ -32864,7 +32924,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           footer.support.title
         </div>
         <ul
-          className="sc-jhAzac eoWThz"
+          className="FooterSection__Menu-lx0ikb-1 qShDi"
         >
           <li>
             <a
@@ -32900,11 +32960,11 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
 exports[`Storyshots Loading Default 1`] = `
 <div>
   <div
-    className="sc-bwzfXH fuRxdH is-flex"
+    className="Loading__Wrapper-sc-1usnmho-0 goPAWJ is-flex"
   >
     <img
       alt="loading.alt"
-      className="sc-htpNat bhQHKl"
+      className="Loading__FixedSizedImage-sc-1usnmho-1 lnOJZK"
       src="/images/loading.svg"
     />
     <p
@@ -32916,7 +32976,7 @@ exports[`Storyshots Loading Default 1`] = `
 
 exports[`Storyshots Logo Default 1`] = `
 <div
-  className="sc-bxivhb gXEZub"
+  className="Logostories__Wrapper-sc-14nnt4j-0 bzjAAE"
 >
   <img
     alt="logo.alt"
@@ -32927,7 +32987,7 @@ exports[`Storyshots Logo Default 1`] = `
 
 exports[`Storyshots MarkdownView Code without Lang 1`] = `
 <div
-  className="sc-ifAKCX iJyTwA"
+  className="MarkdownViewstories__Spacing-sc-1hk90gd-0 eqTNCI"
 >
   <div>
     <div
@@ -32958,7 +33018,7 @@ exports[`Storyshots MarkdownView Code without Lang 1`] = `
 
 exports[`Storyshots MarkdownView Default 1`] = `
 <div
-  className="sc-ifAKCX iJyTwA"
+  className="MarkdownViewstories__Spacing-sc-1hk90gd-0 eqTNCI"
 >
   <div>
     <div
@@ -33710,7 +33770,7 @@ func main() {
 
 exports[`Storyshots SyntaxHighlighter Go 1`] = `
 <div
-  className="sc-EHOje LOEyq"
+  className="SyntaxHighlighterstories__Spacing-sc-1dcldp5-0 eofOgh"
 >
   <pre
     style={
@@ -33918,7 +33978,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
 
 exports[`Storyshots SyntaxHighlighter Java 1`] = `
 <div
-  className="sc-EHOje LOEyq"
+  className="SyntaxHighlighterstories__Spacing-sc-1dcldp5-0 eofOgh"
 >
   <pre
     style={
@@ -34357,7 +34417,7 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
 
 exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
 <div
-  className="sc-EHOje LOEyq"
+  className="SyntaxHighlighterstories__Spacing-sc-1dcldp5-0 eofOgh"
 >
   <pre
     style={
@@ -34491,7 +34551,7 @@ http.createServer(
 
 exports[`Storyshots SyntaxHighlighter Python 1`] = `
 <div
-  className="sc-EHOje LOEyq"
+  className="SyntaxHighlighterstories__Spacing-sc-1dcldp5-0 eofOgh"
 >
   <pre
     style={
@@ -34751,7 +34811,7 @@ PORT_NUMBER =
 
 exports[`Storyshots Table|Table Default 1`] = `
 <table
-  className="sc-fAjcbJ byigni table content is-hoverable"
+  className="Table__StyledTable-sc-1bx231g-0 uOAVq table content is-hoverable"
 >
   <thead>
     <tr>
@@ -34769,7 +34829,7 @@ exports[`Storyshots Table|Table Default 1`] = `
       >
         Last Name
         <i
-          className="fas fa-sort-amount-down has-text-grey-light sc-eqIVtm jxAoDg"
+          className="fas fa-sort-amount-down has-text-grey-light SortIcon__IconWithMarginLeft-izn5p7-0 eASrCy"
         />
       </th>
       <th
@@ -34842,7 +34902,7 @@ exports[`Storyshots Table|Table Empty 1`] = `
 
 exports[`Storyshots Table|Table TextColumn 1`] = `
 <table
-  className="sc-fAjcbJ byigni table content is-hoverable"
+  className="Table__StyledTable-sc-1bx231g-0 uOAVq table content is-hoverable"
 >
   <thead>
     <tr>
@@ -34854,7 +34914,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Id
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light sc-eqIVtm jxAoDg"
+          className="fas fa-sort-alpha-down has-text-grey-light SortIcon__IconWithMarginLeft-izn5p7-0 eASrCy"
         />
       </th>
       <th
@@ -34865,7 +34925,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Name
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light sc-eqIVtm jxAoDg"
+          className="fas fa-sort-alpha-down has-text-grey-light SortIcon__IconWithMarginLeft-izn5p7-0 eASrCy"
         />
       </th>
       <th
@@ -34876,7 +34936,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Description
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light sc-eqIVtm jxAoDg"
+          className="fas fa-sort-alpha-down has-text-grey-light SortIcon__IconWithMarginLeft-izn5p7-0 eASrCy"
         />
       </th>
     </tr>

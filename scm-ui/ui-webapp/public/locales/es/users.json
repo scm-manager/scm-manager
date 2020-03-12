@@ -32,7 +32,7 @@
     "errorTitle": "Error",
     "errorSubtitle": "Error de usuario desconocido",
     "menu": {
-      "navigationLabel": "Menú de usuario",
+      "navigationLabel": "Usuario",
       "informationNavLink": "Información",
       "settingsNavLink": "Ajustes",
       "generalNavLink": "General",
