@@ -15,7 +15,7 @@ import {
   isFetchSourcesPending
 } from "../modules/sources";
 import FileTreeLeaf from "./FileTreeLeaf";
-import Button from "@scm-manager/ui-components/src/buttons/Button";
+import { Button } from "@scm-manager/ui-components";
 
 type Hunk = {
   tree: File;
