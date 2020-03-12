@@ -24,7 +24,7 @@ class BrowseCommandTest implements BrowseCommand {
       f("README")
     );
 
-    sort(entries, Entry::isDirecotry, Entry::getName);
+    sort(entries, Entry::isDirectory, Entry::getName);
 
     assertThat(entries).extracting("name")
       .containsExactly(
@@ -44,7 +44,7 @@ class BrowseCommandTest implements BrowseCommand {
 
   static class Entry {
     private final String name;
-    private final boolean direcotry;
+    private final boolean directory;
 
     static Entry f(String name) {
       return new Entry(name, false);
@@ -54,17 +54,17 @@ class BrowseCommandTest implements BrowseCommand {
       return new Entry(name, true);
     }
 
-    public Entry(String name, boolean direcotry) {
+    public Entry(String name, boolean directory) {
       this.name = name;
-      this.direcotry = direcotry;
+      this.directory = directory;
     }
 
     public String getName() {
       return name;
     }
 
-    public boolean isDirecotry() {
-      return direcotry;
+    public boolean isDirectory() {
+      return directory;
     }
   }
 }
