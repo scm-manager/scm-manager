@@ -115,6 +115,18 @@
               </args>
             </configuration>
           </execution>
+          <execution>
+            <id>set-version</id>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <script>set-version</script>
+              <args>
+                <arg>${project.version}</arg>
+              </args>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
