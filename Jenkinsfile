@@ -33,7 +33,7 @@ node('docker') {
           // set maven versions
           mvn "versions:set -DgenerateBackupPoms=false -DnewVersion=${releaseVersion}"
           // set versions for ui packages
-          // we need to install in order to set version with ui-scripts
+          // we need to run 'yarn install' in order to set version with ui-scripts
           mvn "-pl :scm-ui buildfrontend:install@install"
           mvn "-pl :scm-ui buildfrontend:run@set-version"
 
@@ -135,9 +135,11 @@ node('docker') {
 
           stage('Docker') {
             docker.withRegistry('', 'hub.docker.com-cesmarvin') {
+              // push to cloudogu repository for internal usage
               def image = docker.build('cloudogu/scm-manager')
               image.push(imageVersion)
               if (isReleaseBranch()) {
+                // push to official repository
                 image = docker.build('scmmanager/scm-manager')
                 image.push(imageVersion)
               }
@@ -156,13 +158,13 @@ node('docker') {
 
               // merge changes into develop
               sh "git checkout develop"
-              // TODO what if we have an conflict
-              // e.g.: someone has edit the changelog durring the release
+              // TODO what if we have a conflict
+              // e.g.: someone has edited the changelog during the release
               sh "git merge master"
 
               // set versions for maven packages
               mvn "build-helper:parse-version versions:set -DgenerateBackupPoms=false -DnewVersion='\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}.0-SNAPSHOT'"
-              
+
               // set versions for ui packages
               mvn "-pl :scm-ui buildfrontend:run@set-version"
 
