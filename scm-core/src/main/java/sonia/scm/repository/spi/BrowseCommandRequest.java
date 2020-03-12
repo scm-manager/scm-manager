@@ -149,6 +149,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
                   .add("recursive", recursive)
                   .add("disableLastCommit", disableLastCommit)
                   .add("disableSubRepositoryDetection", disableSubRepositoryDetection)
+                  .add("limit", limit)
                   .add("offset", offset)
                   .toString();
     //J+
