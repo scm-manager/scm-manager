@@ -28,7 +28,7 @@
     "errorTitle": "Error",
     "errorSubtitle": "Error de repositorio desconocido",
     "menu": {
-      "navigationLabel": "Menú de repositorio",
+      "navigationLabel": "Repositorio",
       "informationNavLink": "Información",
       "branchesNavLink": "Ramas",
       "sourcesNavLink": "Código",

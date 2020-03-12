@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New footer design
 - Update jgit to version 5.6.1.202002131546-r-scm1
 - Update svnkit to version 1.10.1-scm1
+- Secondary navigation collapsable
 
 ### Fixed
 - Modification for mercurial repositories with enabled XSRF protection

@@ -1,6 +1,6 @@
 {
   "config": {
-    "navigationLabel": "Menú de administración",
+    "navigationLabel": "Administración",
     "title": "Configuración global",
     "errorTitle": "Error",
     "errorSubtitle": "Error de configuración desconocido",
