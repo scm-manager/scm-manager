@@ -10,6 +10,7 @@ import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.SubRepository;
+import sonia.scm.repository.spi.BrowseCommandRequest;
 
 import javax.inject.Inject;
 
@@ -30,7 +31,7 @@ abstract class BaseFileObjectDtoMapper extends HalAppenderMapper implements Inst
   abstract SubRepositoryDto mapSubrepository(SubRepository subRepository);
 
   @ObjectFactory
-  FileObjectDto createDto(@Context NamespaceAndName namespaceAndName, @Context BrowserResult browserResult, FileObject fileObject) {
+  FileObjectDto createDto(@Context NamespaceAndName namespaceAndName, @Context BrowserResult browserResult, @Context Integer offset, FileObject fileObject) {
     String path = removeFirstSlash(fileObject.getPath());
     Links.Builder links = Links.linkingTo();
     if (fileObject.isDirectory()) {
@@ -38,6 +39,9 @@ abstract class BaseFileObjectDtoMapper extends HalAppenderMapper implements Inst
     } else {
       links.self(resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path));
       links.single(link("history", resourceLinks.fileHistory().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path)));
+    }
+    if (fileObject.isTruncated()) {
+      links.single(link("proceed", resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path) + "?offset=" + (offset + BrowseCommandRequest.DEFAULT_REQUEST_LIMIT)));
     }
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();

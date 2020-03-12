@@ -72,6 +72,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     BrowserResult result = createCommand().getBrowserResult(request);
     FileObject fileObject = result.getFile();
     assertEquals("a.txt", fileObject.getName());
+    assertFalse(fileObject.isTruncated());
   }
 
   @Test
@@ -86,7 +87,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(foList)
       .extracting("name")
-      .containsExactly("a.txt", "b.txt", "c", "f.txt");
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
   }
 
   @Test
@@ -99,7 +100,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     Collection<FileObject> foList = root.getChildren();
     assertThat(foList)
       .extracting("name")
-      .containsExactly("a.txt", "c");
+      .containsExactly("c", "a.txt");
   }
 
   @Test
@@ -174,7 +175,9 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
 
     Collection<FileObject> foList = root.getChildren();
 
-    assertThat(foList).hasSize(2);
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("d.txt", "e.txt");
 
     FileObject d = findFile(foList, "d.txt");
     FileObject e = findFile(foList, "e.txt");
@@ -206,7 +209,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(foList)
       .extracting("name")
-      .containsExactly("a.txt", "b.txt", "c", "f.txt");
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
 
     FileObject c = findFile(foList, "c");
 
@@ -234,6 +237,120 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
       .filteredOn(f -> "lfs-image.png".equals(f.getName()))
       .extracting("length")
       .containsExactly(of(42L));
+  }
+
+  @Test
+  public void testBrowseLimit() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(1);
+    FileObject root = createCommand()
+      .getBrowserResult(request).getFile();
+    assertNotNull(root);
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt");
+    assertThat(foList).hasSize(2);
+    assertTrue("result should be marked as trunctated", root.isTruncated());
+  }
+
+  @Test
+  public void testBrowseLimitWithoutTruncation() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(3);
+    FileObject root = createCommand()
+      .getBrowserResult(request).getFile();
+    assertNotNull(root);
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt", "b.txt", "f.txt");
+    assertThat(foList).hasSize(4);
+    assertFalse("result should not be marked as trunctated", root.isTruncated());
+  }
+
+  @Test
+  public void testBrowseOffset() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(1);
+    request.setOffset(2);
+    FileObject root = createCommand()
+      .getBrowserResult(request).getFile();
+    assertNotNull(root);
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList).extracting("name").containsExactly("f.txt");
+    assertFalse("result should not be marked as trunctated", root.isTruncated());
+  }
+
+  @Test
+  public void testRecursiveLimit() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setLimit(3);
+    request.setRecursive(true);
+
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt");
+
+    FileObject c = findFile(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("d.txt", "e.txt");
+  }
+
+  @Test
+  public void testRecursiveLimitInSubDir() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setLimit(1);
+    request.setRecursive(true);
+
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c");
+
+    FileObject c = findFile(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("d.txt");
+  }
+
+  @Test
+  public void testRecursiveOffset() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setOffset(1);
+    request.setRecursive(true);
+
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
+
+    FileObject c = findFile(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("e.txt");
   }
 
   private FileObject findFile(Collection<FileObject> foList, String name) {

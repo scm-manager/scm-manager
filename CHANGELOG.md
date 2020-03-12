@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extension point entries with supplied extensionName are sorted ascending
 - Possibility to configure git core config entries for jgit like core.trustfolderstat and core.supportsatomicfilecreation
 - Babel-plugin-styled-components for persistent generated classnames
+- By default, only 100 files will be listed in source view in one request
 
 ### Changed
 - New footer design

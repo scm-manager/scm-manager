@@ -1,10 +1,23 @@
-from fileview import File_Viewer, SubRepository
+from fileview import File_Viewer, File_Printer, SubRepository
 import unittest
+
+class DummyManifestEntry:
+  def __init__(self, name):
+    self.name = name
+
+  def path(self):
+    return self.name
+
+  def size(self):
+    return len(self.name)
 
 class DummyRevContext():
 
   def __init__(self, mf):
     self.mf = mf
+
+  def __getitem__(self, path):
+    return DummyManifestEntry(path)
 
   def manifest(self):
     return self.mf
@@ -13,7 +26,7 @@ class File_Object_Collector():
 
   def __init__(self):
     self.stack = []
-  
+
   def __getitem__(self, key):
     if len(self.stack) == 0 and key == 0:
       return self.last
@@ -30,7 +43,19 @@ class File_Object_Collector():
     if file.directory:
       self.stack.append(file)
     self.last = file
-    
+
+class CollectingWriter:
+  def __init__(self):
+    self.stack = []
+
+  def __len__(self):
+    return len(self.stack)
+
+  def __getitem__(self, key):
+    return self.stack[key]
+
+  def write(self, value):
+    self.stack.append(value)
 
 class Test_File_Viewer(unittest.TestCase):
 
@@ -45,19 +70,57 @@ class Test_File_Viewer(unittest.TestCase):
 
   def test_recursive(self):
     root = self.collect(["a", "b", "c/d.txt", "c/e.txt", "f.txt", "c/g/h.txt"], "", True)
-    self.assertChildren(root, ["a", "b", "f.txt", "c"])
-    c = root[3]
+    self.assertChildren(root, ["c", "a", "b", "f.txt"])
+    c = root[0]
     self.assertDirectory(c, "c")
-    self.assertChildren(c, ["c/d.txt", "c/e.txt", "c/g"])
-    g = c[2]
+    self.assertChildren(c, ["c/g", "c/d.txt", "c/e.txt"])
+    g = c[0]
     self.assertDirectory(g, "c/g")
     self.assertChildren(g, ["c/g/h.txt"])
+
+  def test_printer(self):
+    paths = ["a", "b", "c/d.txt", "c/e.txt", "f.txt", "c/g/h.txt"]
+    writer = self.view_with_limit_and_offset(paths, 1000, 0)
+    self.assertPaths(writer, ["/", "c/", "c/g/", "c/g/h.txt", "c/d.txt", "c/e.txt", "a", "b", "f.txt"])
+
+  def test_printer_with_limit(self):
+    paths = ["a", "b", "c/d.txt", "c/e.txt", "f.txt", "c/g/h.txt"]
+    writer = self.view_with_limit_and_offset(paths, 1, 0)
+    self.assertPaths(writer, ["/", "c/", "c/g/", "c/g/h.txt"])
+
+  def test_printer_with_offset(self):
+    paths = ["c/g/h.txt", "c/g/i.txt", "c/d.txt", "c/e.txt", "a", "b", "f.txt"]
+    writer = self.view_with_limit_and_offset(paths, 100, 1)
+    self.assertPaths(writer, ["/", "c/g/i.txt", "c/d.txt", "c/e.txt", "a", "b", "f.txt"])
+
+  def view_with_limit_and_offset(self, paths, limit, offset):
+    revCtx = DummyRevContext(paths)
+    collector = File_Object_Collector()
+
+    writer = CollectingWriter()
+    printer = File_Printer(writer, None, revCtx, True, False, limit, offset)
+
+    viewer = File_Viewer(revCtx, printer)
+    viewer.recursive = True
+    viewer.view("")
+    return writer
+
+  def assertPath(self, actual, expected):
+    path = actual[:len(expected)]
+    self.assertEqual(path, expected)
+    nextChar = actual[len(expected)]
+    self.assertTrue(nextChar == " " or nextChar == "\n", expected + " does not match " + actual)
+
+  def assertPaths(self, actual, expected):
+    self.assertEqual(len(actual), len(expected))
+    for idx,item in enumerate(actual):
+      self.assertPath(item, expected[idx])
 
   def test_recursive_with_path(self):
     root = self.collect(["a", "b", "c/d.txt", "c/e.txt", "f.txt", "c/g/h.txt"], "c", True)
     self.assertDirectory(root, "c")
-    self.assertChildren(root, ["c/d.txt", "c/e.txt", "c/g"])
-    g = root[2]
+    self.assertChildren(root, ["c/g", "c/d.txt", "c/e.txt"])
+    g = root[0]
     self.assertDirectory(g, "c/g")
     self.assertChildren(g, ["c/g/h.txt"])
 
@@ -69,15 +132,15 @@ class Test_File_Viewer(unittest.TestCase):
   def test_non_recursive(self):
     root = self.collect(["a.txt", "b.txt", "c/d.txt", "c/e.txt", "c/f/g.txt"])
     self.assertDirectory(root, "")
-    self.assertChildren(root, ["a.txt", "b.txt", "c"])
-    c = root[2]
+    self.assertChildren(root, ["c", "a.txt", "b.txt"])
+    c = root[0]
     self.assertEmptyDirectory(c, "c")
 
   def test_non_recursive_with_path(self):
     root = self.collect(["a.txt", "b.txt", "c/d.txt", "c/e.txt", "c/f/g.txt"], "c")
     self.assertDirectory(root, "c")
-    self.assertChildren(root, ["c/d.txt", "c/e.txt", "c/f"])
-    f = root[2]
+    self.assertChildren(root, ["c/f", "c/d.txt", "c/e.txt"])
+    f = root[0]
     self.assertEmptyDirectory(f, "c/f")
 
   def test_non_recursive_with_path_with_ending_slash(self):
@@ -96,7 +159,7 @@ class Test_File_Viewer(unittest.TestCase):
     viewer.sub_repositories = sub_repositories
     viewer.view()
 
-    d = collector[0][2]
+    d = collector[0][1]
     self.assertDirectory(d, "d")
 
 
@@ -114,7 +177,7 @@ class Test_File_Viewer(unittest.TestCase):
     self.assertEqual(len(parent), len(expectedPaths))
     for idx,item in enumerate(parent.children):
       self.assertEqual(item.path, expectedPaths[idx])
-    
+
   def assertFile(self, file, expectedPath):
     self.assertEquals(file.path, expectedPath)
     self.assertFalse(file.directory)

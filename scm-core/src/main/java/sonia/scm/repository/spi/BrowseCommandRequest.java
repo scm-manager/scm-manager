@@ -49,8 +49,10 @@ import java.util.function.Consumer;
 public final class BrowseCommandRequest extends FileBaseCommandRequest
 {
 
-  /** Field description */
+  public static final int DEFAULT_REQUEST_LIMIT = 100;
+
   private static final long serialVersionUID = 7956624623516803183L;
+  private int offset;
 
   public BrowseCommandRequest() {
     this(null);
@@ -110,10 +112,12 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
 
     final BrowseCommandRequest other = (BrowseCommandRequest) obj;
 
-    return super.equals(obj) && Objects.equal(recursive, other.recursive)
+    return super.equals(obj)
+      && Objects.equal(recursive, other.recursive)
       && Objects.equal(disableLastCommit, other.disableLastCommit)
-      && Objects.equal(disableSubRepositoryDetection,
-        other.disableSubRepositoryDetection);
+      && Objects.equal(disableSubRepositoryDetection, other.disableSubRepositoryDetection)
+      && Objects.equal(offset, other.offset)
+      && Objects.equal(limit, other.limit);
   }
 
   /**
@@ -126,7 +130,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
   public int hashCode()
   {
     return Objects.hashCode(super.hashCode(), recursive, disableLastCommit,
-      disableSubRepositoryDetection);
+      disableSubRepositoryDetection, offset, limit);
   }
 
   /**
@@ -145,6 +149,8 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
                   .add("recursive", recursive)
                   .add("disableLastCommit", disableLastCommit)
                   .add("disableSubRepositoryDetection", disableSubRepositoryDetection)
+                  .add("limit", limit)
+                  .add("offset", offset)
                   .toString();
     //J+
   }
@@ -191,6 +197,28 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
     this.recursive = recursive;
   }
 
+  /**
+   * Limit the number of result files to <code>limit</code> entries.
+   *
+   * @param limit The maximal number of files this request shall return.
+   *
+   * @since 2.0.0
+   */
+  public void setLimit(int limit) {
+    this.limit = limit;
+  }
+
+  /**
+   * Proceed the list from the given number on (zero based).
+   *
+   * @param offset The number of the entry, the result should start with (zero based).
+   *               All preceding entries will be omitted.
+   * @since 2.0.0
+   */
+  public void setOffset(int offset) {
+    this.offset = offset;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -232,6 +260,24 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
     return recursive;
   }
 
+  /**
+   * Returns the limit for the number of result files.
+   *
+   * @since 2.0.0
+   */
+  public int getLimit() {
+    return limit;
+  }
+
+  /**
+   * The number of the entry, the result start with. All preceding entries will be omitted.
+   *
+   * @since 2.0.0
+   */
+  public int getOffset() {
+    return offset;
+  }
+
   public void updateCache(BrowserResult update) {
     if (updater != null) {
       updater.accept(update);
@@ -248,6 +294,10 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
 
   /** browse file objects recursive */
   private boolean recursive = false;
+
+
+  /** Limit the number of result files to <code>limit</code> entries. */
+  private int limit = DEFAULT_REQUEST_LIMIT;
 
   // WARNING / TODO: This field creates a reverse channel from the implementation to the API. This will break
   // whenever the API runs in a different process than the SPI (for example to run explicit hosts for git repositories).

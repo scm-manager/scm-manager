@@ -16,8 +16,9 @@ export type File = {
   length?: number;
   commitDate?: string;
   subRepository?: SubRepository; // TODO
-  partialResult: boolean;
-  computationAborted: boolean;
+  partialResult?: boolean;
+  computationAborted?: boolean;
+  truncated?: boolean;
   _links: Links;
   _embedded: {
     children: File[] | null | undefined;

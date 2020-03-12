@@ -128,7 +128,9 @@
     "noSources": "No sources found for this branch.",
     "extension": {
       "notBound": "No extension bound."
-    }
+    },
+    "loadMore": "Load",
+    "moreFilesAvailable": "These are just the first {{count}} files. There are more files available."
   },
   "permission": {
     "title": "Edit Permissions",

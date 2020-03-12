@@ -39,11 +39,12 @@ import sonia.scm.repository.FileObject;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -65,10 +66,17 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
   @Test
   public void testBrowse() {
-    Collection<FileObject> foList = getRootFromTip(new BrowseCommandRequest());
+    BrowserResult result = createCommand().getBrowserResult(new BrowseCommandRequest());
 
-    FileObject a = getFileObject(foList, "a.txt");
-    FileObject c = getFileObject(foList, "c");
+    assertNotNull(result);
+
+    Collection<FileObject> foList = result.getFile().getChildren();
+
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt");
+
+    Iterator<FileObject> iterator = foList.iterator();
+    FileObject c = iterator.next();
+    FileObject a = iterator.next();
 
     assertFalse(a.isDirectory());
     assertEquals("a.txt", a.getName());
@@ -99,24 +107,11 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     Collection<FileObject> foList = result.getFile().getChildren();
 
-    assertNotNull(foList);
-    assertFalse(foList.isEmpty());
-    assertEquals(2, foList.size());
+    assertThat(foList).extracting("name").containsExactly("d.txt", "e.txt");
 
-    FileObject d = null;
-    FileObject e = null;
-
-    for (FileObject f : foList)
-    {
-      if ("d.txt".equals(f.getName()))
-      {
-        d = f;
-      }
-      else if ("e.txt".equals(f.getName()))
-      {
-        e = f;
-      }
-    }
+    Iterator<FileObject> iterator = foList.iterator();
+    FileObject d = iterator.next();
+    FileObject e = iterator.next();
 
     assertNotNull(d);
     assertFalse(d.isDirectory());
@@ -140,14 +135,24 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     request.setDisableLastCommit(true);
 
-    Collection<FileObject> foList = getRootFromTip(request);
+    BrowserResult result = createCommand().getBrowserResult(request);
+
+    assertNotNull(result);
+
+    Collection<FileObject> foList1 = result.getFile().getChildren();
+
+    assertNotNull(foList1);
+    assertFalse(foList1.isEmpty());
+    assertEquals(2, foList1.size());
+
+    Collection<FileObject> foList = foList1;
 
     FileObject a = getFileObject(foList, "a.txt");
 
     assertFalse(a.getDescription().isPresent());
     assertFalse(a.getCommitDate().isPresent());
   }
-  
+
   @Test
   public void testRecursive() {
     BrowseCommandRequest request = new BrowseCommandRequest();
@@ -166,6 +171,102 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
     assertEquals("c", c.getName());
     assertTrue(c.isDirectory());
     assertEquals(2, c.getChildren().size());
+  }
+
+  @Test
+  public void testLimit() {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(1);
+    BrowserResult result = createCommand().getBrowserResult(request);
+
+    assertNotNull(result);
+
+    Collection<FileObject> foList = result.getFile().getChildren();
+
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt");
+    assertThat(result.getFile().isTruncated()).isTrue();
+  }
+
+  @Test
+  public void testOffset() {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setOffset(1);
+    BrowserResult result = createCommand().getBrowserResult(request);
+
+    assertNotNull(result);
+
+    Collection<FileObject> foList = result.getFile().getChildren();
+
+    assertThat(foList).isEmpty();
+  }
+
+  @Test
+  public void testRecursiveLimit() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setLimit(4);
+    request.setRecursive(true);
+
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt");
+
+    FileObject c = getFileObject(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("d.txt", "e.txt");
+  }
+
+  @Test
+  public void testRecursiveLimitInSubDir() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setLimit(1);
+    request.setRecursive(true);
+
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c");
+
+    FileObject c = getFileObject(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("d.txt");
+  }
+
+  @Test
+  public void testRecursiveOffset() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setOffset(1);
+    request.setRecursive(true);
+
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt");
+
+    FileObject c = getFileObject(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("e.txt");
   }
 
   /**
@@ -198,17 +299,4 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
       .orElseThrow(() -> new AssertionError("file " + name + " not found"));
   }
 
-  private Collection<FileObject> getRootFromTip(BrowseCommandRequest request) {
-    BrowserResult result = createCommand().getBrowserResult(request);
-
-    assertNotNull(result);
-
-    Collection<FileObject> foList = result.getFile().getChildren();
-
-    assertNotNull(foList);
-    assertFalse(foList.isEmpty());
-    assertEquals(2, foList.size());
-
-    return foList;
-  }
 }

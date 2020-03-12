@@ -51,8 +51,12 @@ import sonia.scm.repository.SubRepository;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.Util;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
+import static java.util.Comparator.comparing;
 import static org.tmatesoft.svn.core.SVNErrorCode.FS_NO_SUCH_REVISION;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -72,6 +76,8 @@ public class SvnBrowseCommand extends AbstractSvnCommand
    */
   private static final Logger logger =
     LoggerFactory.getLogger(SvnBrowseCommand.class);
+
+  private int resultCount = 0;
 
   SvnBrowseCommand(SvnContext context, Repository repository)
   {
@@ -127,16 +133,26 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     FileObject parent, String basePath)
     throws SVNException
   {
-    Collection<SVNDirEntry> entries = svnRepository.getDir(parent.getPath(), revisionNumber, null, (Collection) null);
-    for (SVNDirEntry entry : entries)
-    {
+    List<SVNDirEntry> entries = new ArrayList<>(svnRepository.getDir(parent.getPath(), revisionNumber, null, (Collection) null));
+    sort(entries, entry -> entry.getKind() == SVNNodeKind.DIR, SVNDirEntry::getName);
+    for (Iterator<SVNDirEntry> iterator = entries.iterator(); resultCount < request.getLimit() + request.getOffset() && iterator.hasNext(); ) {
+      SVNDirEntry entry = iterator.next();
       FileObject child = createFileObject(request, svnRepository, revisionNumber, entry, basePath);
 
-      parent.addChild(child);
+      if (!child.isDirectory()) {
+        ++resultCount;
+      }
 
       if (child.isDirectory() && request.isRecursive()) {
         traverse(svnRepository, revisionNumber, request, child, createBasePath(child.getPath()));
       }
+
+      if (resultCount > request.getOffset() || (request.getOffset() == 0 && child.isDirectory())) {
+        parent.addChild(child);
+      }
+    }
+    if (resultCount >= request.getLimit() + request.getOffset()) {
+      parent.setTruncated(true);
     }
   }
 

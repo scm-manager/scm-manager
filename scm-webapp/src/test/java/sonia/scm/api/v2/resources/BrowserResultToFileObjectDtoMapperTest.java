@@ -66,7 +66,7 @@ public class BrowserResultToFileObjectDtoMapperTest {
   public void shouldMapAttributesCorrectly() {
     BrowserResult browserResult = createBrowserResult();
 
-    FileObjectDto dto = mapper.map(browserResult, new NamespaceAndName("foo", "bar"));
+    FileObjectDto dto = mapper.map(browserResult, new NamespaceAndName("foo", "bar"), 0);
 
     assertEqualAttributes(browserResult, dto);
   }
@@ -76,7 +76,7 @@ public class BrowserResultToFileObjectDtoMapperTest {
     BrowserResult browserResult = createBrowserResult();
     NamespaceAndName namespaceAndName = new NamespaceAndName("foo", "bar");
 
-    FileObjectDto dto = mapper.map(browserResult, namespaceAndName);
+    FileObjectDto dto = mapper.map(browserResult, namespaceAndName, 0);
 
     assertThat(dto.getEmbedded().getItemsBy("children")).hasSize(2);
   }
@@ -86,7 +86,7 @@ public class BrowserResultToFileObjectDtoMapperTest {
     BrowserResult browserResult = createBrowserResult();
     NamespaceAndName namespaceAndName = new NamespaceAndName("foo", "bar");
 
-    FileObjectDto dto = mapper.map(browserResult, namespaceAndName);
+    FileObjectDto dto = mapper.map(browserResult, namespaceAndName, 0);
 
     assertThat(dto.getLinks().getLinkBy("self").get().getHref()).contains("path");
   }
