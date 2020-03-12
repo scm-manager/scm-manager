@@ -307,7 +307,7 @@ class File_Viewer:
     ('d', 'disableLastCommit', False, 'disables last commit description and date'),
     ('s', 'disableSubRepositoryDetection', False, 'disables detection of sub repositories'),
     ('t', 'transport', False, 'format the output for command server'),
-    ('l', 'limit', 1000, 'limit the number of results'),
+    ('l', 'limit', 100, 'limit the number of results'),
     ('o', 'offset', 0, 'proceed from the given result number (zero based)'),
   ])
 def fileview(ui, repo, **opts):
