@@ -71,6 +71,16 @@ docker push scmmanager/scm-manager:<version>
 
 To release a new version of a Plugin for SCM-Manager v2 you have to do the following steps (replace placeholder `<version>` accordingly, eg. with `2.1.0`):
 
+## Update to latest version
+
+Make sure you have no changes you want to keep.
+
+```
+git checkout develop
+git fetch
+git reset --hard origin/develop
+```
+
 ## Set new version
 
 Edit `pom.xml`:
@@ -106,10 +116,12 @@ git push origin develop
 
 ## Merge with master branch
 
+The merge should be possible with a fast forward. If this fails, check for changes on the `master` branch that are not present on the `develop` branch. Merge these changes into the `develop` branch, first!
+
 ```
 git checkout master
 git pull
-git merge develop
+git merge develop --ff-only
 git push origin master
 ```
 
