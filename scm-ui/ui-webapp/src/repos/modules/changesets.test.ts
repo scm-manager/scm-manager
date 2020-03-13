@@ -581,6 +581,31 @@ describe("changesets", () => {
       ]);
     });
 
+    it("should return always the same changeset array for the given parameters", () => {
+      const state = {
+        changesets: {
+          "foo/bar": {
+            byId: {
+              id2: {
+                id: "id2"
+              },
+              id1: {
+                id: "id1"
+              }
+            },
+            byBranch: {
+              "": {
+                entries: ["id1", "id2"]
+              }
+            }
+          }
+        }
+      };
+      const one = getChangesets(state, repository);
+      const two = getChangesets(state, repository);
+      expect(one).toBe(two);
+    });
+
     it("should return true, when fetching changesets is pending", () => {
       const state = {
         pending: {
@@ -638,6 +663,15 @@ describe("changesets", () => {
       const collection = selectListAsCollection(state, repository);
       expect(collection.page).toBe(1);
       expect(collection.pageTotal).toBe(10);
+    });
+
+    it("should return always the same empty object", () => {
+      const state = {
+        changesets: {}
+      };
+      const one = selectListAsCollection(state, repository);
+      const two = selectListAsCollection(state, repository);
+      expect(one).toBe(two);
     });
   });
 });

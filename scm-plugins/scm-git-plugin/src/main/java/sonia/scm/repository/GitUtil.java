@@ -744,14 +744,13 @@ public final class GitUtil
 
   public static Optional<LfsPointer> getLfsPointer(org.eclipse.jgit.lib.Repository repo, String path, RevCommit commit, TreeWalk treeWalk) throws IOException {
     Attributes attributes = LfsFactory.getAttributesForPath(repo, path, commit);
-
-    return getLfsPointer(repo, treeWalk, attributes);
+    ObjectId blobId = treeWalk.getObjectId(0);
+    return getLfsPointer(repo, blobId, attributes);
   }
 
-  public static Optional<LfsPointer> getLfsPointer(org.eclipse.jgit.lib.Repository repo, TreeWalk treeWalk, Attributes attributes) throws IOException {
+  public static Optional<LfsPointer> getLfsPointer(org.eclipse.jgit.lib.Repository repo, ObjectId blobId, Attributes attributes) throws IOException {
     Attribute filter = attributes.get("filter");
     if (filter != null && "lfs".equals(filter.getValue())) {
-      ObjectId blobId = treeWalk.getObjectId(0);
       try (InputStream is = repo.open(blobId, Constants.OBJ_BLOB).openStream()) {
         return of(LfsPointer.parseLfsPointer(is));
       }

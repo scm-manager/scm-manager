@@ -18,7 +18,7 @@
     "errorTitle": "Error",
     "errorSubtitle": "Error de grupo desconocido",
     "menu": {
-      "navigationLabel": "Menú de grupo",
+      "navigationLabel": "Grupo",
       "informationNavLink": "Información",
       "settingsNavLink": "Ajustes",
       "generalNavLink": "General",

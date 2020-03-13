@@ -7,6 +7,10 @@ module.exports = api => {
       require("@babel/preset-react"),
       require("@babel/preset-typescript")
     ],
-    plugins: [require("@babel/plugin-proposal-class-properties"), require("@babel/plugin-proposal-optional-chaining")]
+    plugins: [
+      require("babel-plugin-styled-components"),
+      require("@babel/plugin-proposal-class-properties"),
+      require("@babel/plugin-proposal-optional-chaining")
+    ]
   };
 };

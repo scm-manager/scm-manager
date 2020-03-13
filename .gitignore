@@ -19,3 +19,13 @@ Desktop DF
 .project
 .classpath
 .settings
+# idea files
+*.iml
+.idea
+# ui
+scm-ui/build
+scm-ui/coverage
+node_modules
+# jrebel
+rebel.xml
+*.pyc

@@ -1,6 +1,6 @@
 {
   "config": {
-    "navigationLabel": "Administration Navigation",
+    "navigationLabel": "Administration",
     "title": "Global Configuration",
     "errorTitle": "Error",
     "errorSubtitle": "Unknown Config Error",

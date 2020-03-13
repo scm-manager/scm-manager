@@ -50,13 +50,8 @@ import sonia.scm.plugin.PluginAnnotation;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
 
 import java.lang.annotation.Annotation;
 
@@ -89,11 +84,13 @@ import javax.tools.StandardLocation;
 import javax.ws.rs.Path;
 import javax.ws.rs.ext.Provider;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -160,18 +157,6 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     return false;
   }
 
-
-  private void close(Closeable closeable) {
-    if (closeable != null) {
-      try {
-        closeable.close();
-      } catch (IOException ex) {
-        printException("could not close closeable", ex);
-      }
-    }
-  }
-
-
   private TypeElement findAnnotation(Set<? extends TypeElement> annotations,
                                      Class<? extends Annotation> annotationClass) {
     TypeElement annotation = null;
@@ -205,15 +190,12 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
 
   private Document parseDocument(File file) {
     Document doc = null;
-    InputStream input = null;
 
     try {
-      DocumentBuilder builder =
-        DocumentBuilderFactory.newInstance().newDocumentBuilder();
+      DocumentBuilder builder = createDocumentBuilder();
 
       if (file.exists()) {
-        input = new FileInputStream(file);
-        doc = builder.parse(input);
+        doc = builder.parse(file);
       } else {
         doc = builder.newDocument();
         doc.appendChild(doc.createElement(EL_MODULE));
@@ -221,11 +203,16 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     } catch (ParserConfigurationException | SAXException | IOException
       | DOMException ex) {
       printException("could not parse document", ex);
-    } finally {
-      close(input);
     }
 
     return doc;
+  }
+
+  private DocumentBuilder createDocumentBuilder() throws ParserConfigurationException {
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+    return factory.newDocumentBuilder();
   }
 
 
@@ -341,24 +328,26 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
 
 
   private void writeDocument(Document doc, File file) {
-    Writer writer = null;
-
     try {
       file.getParentFile().mkdirs();
-      writer = new FileWriter(file);
 
-      Transformer transformer =
-        TransformerFactory.newInstance().newTransformer();
-
-      transformer.setOutputProperty(OutputKeys.INDENT, PROPERTY_VALUE);
-      transformer.transform(new DOMSource(doc), new StreamResult(writer));
-    } catch (IOException | IllegalArgumentException | TransformerException ex) {
+      Transformer transformer = createTransformer();
+      transformer.transform(new DOMSource(doc), new StreamResult(file));
+    } catch (IllegalArgumentException | TransformerException ex) {
       printException("could not write document", ex);
-    } finally {
-      close(writer);
     }
   }
 
+  private Transformer createTransformer() throws TransformerConfigurationException {
+    TransformerFactory factory = TransformerFactory.newInstance();
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+
+    Transformer transformer =  factory.newTransformer();
+    transformer.setOutputProperty(OutputKeys.INDENT, PROPERTY_VALUE);
+
+    return transformer;
+  }
 
   private Map<String, String> getAttributesFromAnnotation(Element el,
                                                           TypeElement annotation) {

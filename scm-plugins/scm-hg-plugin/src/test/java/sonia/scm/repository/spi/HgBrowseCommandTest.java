@@ -45,7 +45,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -67,6 +66,11 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
   @Test
   public void testBrowse() throws IOException {
     Collection<FileObject> foList = getRootFromTip(new BrowseCommandRequest());
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
+
     FileObject a = getFileObject(foList, "a.txt");
     FileObject c = getFileObject(foList, "c");
 
@@ -108,6 +112,10 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     FileObject c = result.getFile();
     assertEquals("c", c.getName());
     Collection<FileObject> foList = c.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("d.txt", "e.txt");
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
@@ -181,6 +189,105 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     assertEquals(2, c.getChildren().size());
   }
 
+  @Test
+  public void testLimit() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(1);
+
+    BrowserResult result = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request);
+    FileObject root = result.getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt");
+    assertThat(root.isTruncated()).isTrue();
+  }
+
+  @Test
+  public void testOffset() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(2);
+    request.setOffset(1);
+
+    BrowserResult result = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request);
+    FileObject root = result.getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList).extracting("name").containsExactly("b.txt", "f.txt");
+    assertThat(root.isTruncated()).isFalse();
+  }
+
+
+  @Test
+  public void testRecursiveLimit() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setLimit(3);
+    request.setRecursive(true);
+
+    FileObject root = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt");
+
+    FileObject c = getFileObject(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("d.txt", "e.txt");
+  }
+
+  @Test
+  public void testRecursiveLimitInSubDir() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setLimit(1);
+    request.setRecursive(true);
+
+    FileObject root = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c");
+
+    FileObject c = getFileObject(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("d.txt");
+  }
+
+  @Test
+  public void testRecursiveOffset() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setOffset(1);
+    request.setRecursive(true);
+
+    FileObject root = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
+
+    FileObject c = getFileObject(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("e.txt");
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -210,8 +317,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     Collection<FileObject> foList = root.getChildren();
 
     assertNotNull(foList);
-    assertFalse(foList.isEmpty());
-    assertEquals(4, foList.size());
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt", "b.txt", "f.txt");
 
     return foList;
   }

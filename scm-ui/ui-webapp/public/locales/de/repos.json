@@ -28,7 +28,7 @@
     "errorTitle": "Fehler",
     "errorSubtitle": "Unbekannter Repository Fehler",
     "menu": {
-      "navigationLabel": "Repository Navigation",
+      "navigationLabel": "Repository",
       "informationNavLink": "Informationen",
       "branchesNavLink": "Branches",
       "sourcesNavLink": "Code",
@@ -128,7 +128,9 @@
     "noSources": "Keine Sources in diesem Branch gefunden.",
     "extension": {
       "notBound": "Keine Erweiterung angebunden."
-    }
+    },
+    "loadMore": "Laden",
+    "moreFilesAvailable": "Es werden nur die ersten {{count}} Dateien angezeigt. Es sind weitere Dateien vorhanden."
   },
   "permission": {
     "title": "Berechtigungen bearbeiten",

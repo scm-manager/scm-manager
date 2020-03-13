@@ -97,6 +97,14 @@
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
+          <!--
+            We need no war file.
+            We only use war packaging for the jetty plugin.
+            In order to avoid deploying huge useless artifacts,
+            we will create an empty war file.
+            This is useless too, but it should be small.
+          -->
+          <packagingExcludes>**</packagingExcludes>
         </configuration>
       </plugin>
 
