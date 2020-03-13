@@ -77,11 +77,13 @@ Edit `pom.xml`:
 
 - `version` and `scm.tag` have to be set to the new version.
 - ensure that all dependencies to other scm resources have released versions
+- ensure `parent.version` points to stable release
 
 Edit `package.json`:
 
 - `version` has to be set to the new version.
 - ensure that all dependencies to other scm resources have released versions
+- ensure the version of `@scm-manager/ui-plugins` points to the same version as `parent.version` in the `pom.xml`
 
 ## Modify Changelog
 
