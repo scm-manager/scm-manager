@@ -6,13 +6,13 @@
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>2.0.0-rc5</version>
+    <version>2.0.0-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-webapp</artifactId>
   <packaging>war</packaging>
-  <version>2.0.0-rc5</version>
+  <version>2.0.0-SNAPSHOT</version>
   <name>scm-webapp</name>
 
   <dependencies>
@@ -22,7 +22,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-annotation-processor</artifactId>
-      <version>2.0.0-rc5</version>
+      <version>2.0.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
 
@@ -47,13 +47,13 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
-      <version>2.0.0-rc5</version>
+      <version>2.0.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-dao-xml</artifactId>
-      <version>2.0.0-rc5</version>
+      <version>2.0.0-SNAPSHOT</version>
     </dependency>
 
     <!-- security -->
@@ -300,7 +300,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-test</artifactId>
-      <version>2.0.0-rc5</version>
+      <version>2.0.0-SNAPSHOT</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -362,7 +362,7 @@
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-git-plugin</artifactId>
-      <version>2.0.0-rc5</version>
+      <version>2.0.0-SNAPSHOT</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
@@ -370,14 +370,14 @@
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-git-plugin</artifactId>
-      <version>2.0.0-rc5</version>
+      <version>2.0.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-hg-plugin</artifactId>
-      <version>2.0.0-rc5</version>
+      <version>2.0.0-SNAPSHOT</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
@@ -385,14 +385,14 @@
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-hg-plugin</artifactId>
-      <version>2.0.0-rc5</version>
+      <version>2.0.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-svn-plugin</artifactId>
-      <version>2.0.0-rc5</version>
+      <version>2.0.0-SNAPSHOT</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
@@ -400,7 +400,7 @@
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-svn-plugin</artifactId>
-      <version>2.0.0-rc5</version>
+      <version>2.0.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
@@ -673,7 +673,7 @@
         <dependency>
           <groupId>sonia.scm</groupId>
           <artifactId>scm-ui</artifactId>
-          <version>2.0.0-rc5</version>
+          <version>2.0.0-SNAPSHOT</version>
           <type>war</type>
         </dependency>
 
