@@ -839,7 +839,7 @@
     <resteasy.version>4.4.1.Final</resteasy.version>
     <jersey-client.version>1.19.4</jersey-client.version>
     <jackson.version>2.10.0</jackson.version>
-    <guice.version>4.0</guice.version>
+    <guice.version>4.2.2</guice.version>
     <jaxb.version>2.3.0</jaxb.version>
     <hibernate-validator.version>6.1.0.Final</hibernate-validator.version>
 
@@ -870,7 +870,7 @@
     <project.test.javaLevel>8</project.test.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <netbeans.hint.license>SCM-BSD</netbeans.hint.license>
-    <jdk.classifier />
+    <jdk.classifier/>
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
 
     <!-- Sonar exclusions -->
