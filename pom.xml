@@ -831,7 +831,7 @@
     <junit.version>5.2.0</junit.version>
 
     <!-- logging libraries -->
-    <slf4j.version>1.7.25</slf4j.version>
+    <slf4j.version>1.7.30</slf4j.version>
     <logback.version>1.2.3</logback.version>
     <servlet.version>3.0.1</servlet.version>
 
@@ -870,7 +870,7 @@
     <project.test.javaLevel>8</project.test.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <netbeans.hint.license>SCM-BSD</netbeans.hint.license>
-    <jdk.classifier />
+    <jdk.classifier/>
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
 
     <!-- Sonar exclusions -->
