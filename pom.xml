@@ -613,13 +613,20 @@
           <header>https://download.scm-manager.org/licenses/license.txt</header>
           <excludes>
             <exclude>target/**</exclude>
+            <exclude>**/target/**</exclude>
             <exclude>.git/**</exclude>
             <exclude>docs/**</exclude>
             <exclude>node_modules/**</exclude>
+            <exclude>**/node_modules/**</exclude>
             <exclude>*.txt</exclude>
+            <exclude>*.smp</exclude>
+            <exclude>*.ini</exclude>
             <exclude>mvnw</exclude>
             <exclude>mvnw.cmd</exclude>
           </excludes>
+          <mapping>
+            <tsx>SLASHSTAR_STYLE</tsx>  
+          </mapping>
           <strictCheck>true</strictCheck>
         </configuration>
       </plugin>
