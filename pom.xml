@@ -838,7 +838,7 @@
     <jaxrs.version>2.1.1</jaxrs.version>
     <resteasy.version>4.4.2.Final</resteasy.version>
     <jersey-client.version>1.19.4</jersey-client.version>
-    <jackson.version>2.10.0</jackson.version>
+    <jackson.version>2.10.2</jackson.version>
     <guice.version>4.2.2</guice.version>
     <jaxb.version>2.3.0</jaxb.version>
     <hibernate-validator.version>6.1.0.Final</hibernate-validator.version>
