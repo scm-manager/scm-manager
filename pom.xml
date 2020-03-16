@@ -606,18 +606,19 @@
       </plugin>
 
       <plugin>
-        <groupId>com.mycila.maven-license-plugin</groupId>
-        <artifactId>maven-license-plugin</artifactId>
-        <version>1.9.0</version>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>3.0</version>
         <configuration>
-          <header>http://download.scm-manager.org/licenses/mvn-license.txt</header>
-          <includes>
-            <include>src/**</include>
-            <include>**/test/**</include>
-          </includes>
+          <header>https://download.scm-manager.org/licenses/license.txt</header>
           <excludes>
             <exclude>target/**</exclude>
-            <exclude>.hg/**</exclude>
+            <exclude>.git/**</exclude>
+            <exclude>docs/**</exclude>
+            <exclude>node_modules/**</exclude>
+            <exclude>*.txt</exclude>
+            <exclude>mvnw</exclude>
+            <exclude>mvnw.cmd</exclude>
           </excludes>
           <strictCheck>true</strictCheck>
         </configuration>
