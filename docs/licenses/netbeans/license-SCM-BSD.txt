@@ -1,33 +1,27 @@
 <#if licenseFirst??>
 ${licenseFirst}*
 </#if>
-${licensePrefix}Copyright (c) 2010, Sebastian Sdorra
-${licensePrefix}All rights reserved.
+${licensePrefix}MIT License
 ${licensePrefix}
-${licensePrefix}Redistribution and use in source and binary forms, with or without
-${licensePrefix}modification, are permitted provided that the following conditions are met:
+${licensePrefix}Copyright (c) 2020-present Cloudogu GmbH and Contributors
 ${licensePrefix}
-${licensePrefix}1. Redistributions of source code must retain the above copyright notice,
-${licensePrefix}   this list of conditions and the following disclaimer.
-${licensePrefix}2. Redistributions in binary form must reproduce the above copyright notice,
-${licensePrefix}   this list of conditions and the following disclaimer in the documentation
-${licensePrefix}   and/or other materials provided with the distribution.
-${licensePrefix}3. Neither the name of SCM-Manager; nor the names of its
-${licensePrefix}   contributors may be used to endorse or promote products derived from this
-${licensePrefix}   software without specific prior written permission.
+${licensePrefix}Permission is hereby granted, free of charge, to any person obtaining a copy
+${licensePrefix}of this software and associated documentation files (the "Software"), to deal
+${licensePrefix}in the Software without restriction, including without limitation the rights
+${licensePrefix}to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+${licensePrefix}copies of the Software, and to permit persons to whom the Software is
+${licensePrefix}furnished to do so, subject to the following conditions:
 ${licensePrefix}
-${licensePrefix}THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-${licensePrefix}AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-${licensePrefix}IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-${licensePrefix}DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY
-${licensePrefix}DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-${licensePrefix}(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-${licensePrefix}LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-${licensePrefix}ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-${licensePrefix}(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-${licensePrefix}SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+${licensePrefix}The above copyright notice and this permission notice shall be included in all
+${licensePrefix}copies or substantial portions of the Software.
 ${licensePrefix}
-${licensePrefix}http://bitbucket.org/sdorra/scm-manager
+${licensePrefix}THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+${licensePrefix}IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+${licensePrefix}FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+${licensePrefix}AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+${licensePrefix}LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+${licensePrefix}OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+${licensePrefix}SOFTWARE.
 ${licensePrefix}
 <#if licenseLast??>
 ${licenseLast}
