@@ -81,6 +81,7 @@ storiesOf("Diff", module)
         const interval = setInterval(() => setChangeId(undefined), 2000);
         return () => clearInterval(interval);
       });
+      // @ts-ignore
       const onClick = (context: DiffEventContext) => setChangeId(context.changeId);
       return (
         <>
