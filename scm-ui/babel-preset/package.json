@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/babel-preset",
   "version": "2.0.0-SNAPSHOT",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "description": "Babel configuration for scm-manager and its plugins",
   "main": "index.js",
   "author": "Sebastian Sdorra <s.sdorra@cloudogu.com>",

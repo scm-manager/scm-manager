@@ -12,7 +12,7 @@ repositories over http.
 -   Simple Plugin API
 -   Useful plugins available ( f.e. Ldap-, ActiveDirectory-,
     PAM-Authentication)
--   Licensed under the BSD-License
+-   Licensed under the MIT-License
 
 Migration to Github
 -------------------

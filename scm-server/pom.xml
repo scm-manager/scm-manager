@@ -218,7 +218,7 @@
               <section>devel</section>
               <group>Development/Tools</group>
               <vendor>SCM-Manager</vendor>
-              <license>BSD 3-Clause</license>
+              <license>MIT</license>
               <url>www.scm-manager.org</url>
               <summary>${project.description}</summary>
               <packager>Sebastian Sdorra &lt;s.sdorra@gmail.com&gt;</packager>

@@ -44,8 +44,8 @@
 
   <licenses>
     <license>
-      <name>BSD</name>
-      <url>http://www.opensource.org/licenses/bsd-license.php</url>
+      <name>MIT License</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
     </license>
   </licenses>
 
@@ -902,7 +902,7 @@
     <project.build.javaLevel>8</project.build.javaLevel>
     <project.test.javaLevel>8</project.test.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <netbeans.hint.license>SCM-BSD</netbeans.hint.license>
+    <netbeans.hint.license>MIT</netbeans.hint.license>
     <jdk.classifier />
     <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
 
