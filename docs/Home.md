@@ -118,7 +118,7 @@ for more information.
 -   [i18n for Plugins](v2/i18n%20for%20Plugins.md "wikilink")
 -   [Extension Points](v2/Extension-Points.md "wikilink")
 -   [API changes](v2/API%20changes.md "wikilink")
--   [ui-components/ui-types](v2/UI:%20Additions%20or%20Changes%20to%20ui-components%20or%20ui-types.md "wikilink")
+-   [ui-components/ui-types](v2/UI%20Additions%20or%20Changes%20to%20ui-components%20or%20ui-types.md "wikilink")
 -   [Vulnerabilities](v2/vulnerabilities.md "wikilink")
 -   [Common pitfall](v2/Common%20pitfall.md "wikilink")
 -   [Release process](v2/Release%20process.md "wikilink")
