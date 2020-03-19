@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 /**
  * SPI for repository access. This package is only for service provider.
  */

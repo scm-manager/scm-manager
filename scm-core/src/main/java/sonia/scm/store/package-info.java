@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 /**
  * API's for storing data in SCM-Manager.
  */

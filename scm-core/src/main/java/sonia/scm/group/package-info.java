@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 /**
  * Package for the SCM-Manager group API.
  */

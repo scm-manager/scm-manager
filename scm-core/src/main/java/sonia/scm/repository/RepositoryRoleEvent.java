@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.repository;
 
 import sonia.scm.HandlerEventType;

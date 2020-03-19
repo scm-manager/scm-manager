@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 /**
  * Logging utilities for the SCM-Manager.
  */

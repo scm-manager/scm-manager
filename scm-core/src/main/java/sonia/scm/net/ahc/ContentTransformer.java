@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.net.ahc;
 
 import com.google.common.io.ByteSource;

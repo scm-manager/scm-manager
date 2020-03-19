@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.filter;
 
 import static sonia.scm.api.v2.resources.ScmPathInfo.REST_API_PATH;

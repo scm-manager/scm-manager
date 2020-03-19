@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 /**
  * This package contains the cache API.
  */

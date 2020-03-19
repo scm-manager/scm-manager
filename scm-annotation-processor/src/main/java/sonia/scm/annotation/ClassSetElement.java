@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.annotation;
 
 //~--- non-JDK imports --------------------------------------------------------

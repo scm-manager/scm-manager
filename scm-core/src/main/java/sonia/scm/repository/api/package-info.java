@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 /**
  * API for repository access.
  */

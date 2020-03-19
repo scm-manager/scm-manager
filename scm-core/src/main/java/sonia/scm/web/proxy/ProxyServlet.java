@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.web.proxy;
 
 //~--- non-JDK imports --------------------------------------------------------

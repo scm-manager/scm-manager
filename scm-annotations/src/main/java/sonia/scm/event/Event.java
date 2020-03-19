@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.event;
 
 //~--- non-JDK imports --------------------------------------------------------

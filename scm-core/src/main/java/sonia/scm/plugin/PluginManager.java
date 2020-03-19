@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.plugin;
 
 import java.util.List;

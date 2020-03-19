@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.lifecycle;
 
 //~--- non-JDK imports --------------------------------------------------------

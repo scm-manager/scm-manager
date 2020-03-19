@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.repository.spi;
 
 import sonia.scm.repository.Feature;

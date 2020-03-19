@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.i18n;
 
 //~--- non-JDK imports --------------------------------------------------------

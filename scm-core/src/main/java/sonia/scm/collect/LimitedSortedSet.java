@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.collect;
 
 //~--- non-JDK imports --------------------------------------------------------

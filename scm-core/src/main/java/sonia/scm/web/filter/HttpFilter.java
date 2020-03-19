@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.web.filter;
 
 //~--- JDK imports ------------------------------------------------------------

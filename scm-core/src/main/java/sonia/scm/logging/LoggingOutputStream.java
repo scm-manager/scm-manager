@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.logging;
 
 //~--- non-JDK imports --------------------------------------------------------
