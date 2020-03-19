@@ -648,6 +648,8 @@
             <exclude>*.ini</exclude>
             <exclude>mvnw</exclude>
             <exclude>mvnw.cmd</exclude>
+            <exclude>*.mustache</exclude>
+            <exclude>**/scm-hg-plugin/pkg/ourPackage/scm-source.properties</exclude>
           </excludes>
           <mapping>
             <tsx>SLASHSTAR_STYLE</tsx>  
