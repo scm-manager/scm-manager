@@ -646,9 +646,9 @@
             <exclude>*.txt</exclude>
             <exclude>*.smp</exclude>
             <exclude>*.ini</exclude>
+            <exclude>*.mustache</exclude>
             <exclude>mvnw</exclude>
             <exclude>mvnw.cmd</exclude>
-            <exclude>*.mustache</exclude>
             <exclude>**/scm-hg-plugin/pkg/ourPackage/scm-source.properties</exclude>
           </excludes>
           <mapping>
@@ -656,6 +656,14 @@
           </mapping>
           <strictCheck>true</strictCheck>
         </configuration>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
