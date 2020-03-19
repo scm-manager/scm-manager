@@ -104,6 +104,7 @@ class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
       return;
     }
     this.setState(
+      // @ts-ignore
       {
         ...this.state,
         // @ts-ignore null is needed to clear the selection; undefined does not work

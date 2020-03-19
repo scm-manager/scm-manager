@@ -22,9 +22,12 @@
  * SOFTWARE.
  */
 const { spawnSync } = require("child_process");
+const os = require("os");
+
+const yarnCmd = os.platform() === "win32" ? "yarn.cmd" : "yarn";
 
 const yarn = args => {
-  const result = spawnSync("yarn", args, { stdio: "inherit" });
+  const result = spawnSync(yarnCmd, args, { stdio: "inherit" });
   if (result.error) {
     console.log("could not start yarn command:", result.error);
     process.exit(2);

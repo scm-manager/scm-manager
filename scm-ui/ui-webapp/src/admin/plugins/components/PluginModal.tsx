@@ -184,7 +184,7 @@ class PluginModal extends React.Component<Props, State> {
   }
 
   renderNotifications = () => {
-    const { t } = this.props;
+    const { t, pluginAction } = this.props;
     const { restart, error, success } = this.state;
     if (error) {
       return (
@@ -195,7 +195,7 @@ class PluginModal extends React.Component<Props, State> {
     } else if (success) {
       return (
         <div className="media">
-          <SuccessNotification />
+          <SuccessNotification pluginAction={pluginAction} />
         </div>
       );
     } else if (restart) {
