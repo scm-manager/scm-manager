@@ -62,15 +62,25 @@ class RepositoryEntry extends React.Component<Props> {
     );
   };
 
+  createTitle = () => {
+    const { repository } = this.props;
+    return (
+      <>
+        <ExtensionPoint name="repository.card.beforeTitle" props={{repository}} /> <strong>{repository.name}</strong>
+      </>
+    );
+  };
+
   render() {
     const { repository } = this.props;
     const repositoryLink = this.createLink(repository);
     const footerLeft = this.createFooterLeft(repository, repositoryLink);
     const footerRight = this.createFooterRight(repository);
+    const title = this.createTitle();
     return (
       <CardColumn
         avatar={<RepositoryAvatar repository={repository} />}
-        title={repository.name}
+        title={title}
         description={repository.description}
         link={repositoryLink}
         footerLeft={footerLeft}

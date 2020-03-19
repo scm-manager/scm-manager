@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 type Props = {
-  title: string;
+  title: ReactNode;
   description?: string;
   avatar: ReactNode;
   contentRight?: ReactNode;
@@ -77,7 +77,7 @@ export default class CardColumn extends React.Component<Props> {
             <div className="is-flex">
               <ContentLeft className="content">
                 <p className="shorten-text is-marginless">
-                  <strong>{title}</strong>
+                  {title}
                 </p>
                 <p className="shorten-text">{description}</p>
               </ContentLeft>

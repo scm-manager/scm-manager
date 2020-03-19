@@ -158,7 +158,7 @@ class PluginEntry extends React.Component<Props, State> {
         <CardColumn
           action={this.isInstallable() ? () => this.toggleModal("showInstallModal") : null}
           avatar={avatar}
-          title={plugin.displayName ? plugin.displayName : plugin.name}
+          title={plugin.displayName ? <strong>{plugin.displayName}</strong> : <strong>{plugin.name}</strong>}
           description={plugin.description}
           contentRight={plugin.pending || plugin.markedForUninstall ? this.createPendingSpinner() : actionbar}
           footerRight={footerRight}
