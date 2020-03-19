@@ -3,12 +3,12 @@ package sonia.scm.web;
 import com.google.common.collect.Lists;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class WireProtocolRequestMockFactory {
 
@@ -88,7 +88,6 @@ public class WireProtocolRequestMockFactory {
   private HttpServletRequest base(String method, String queryStringValue) {
     HttpServletRequest request = mock(HttpServletRequest.class);
 
-    when(request.getRequestURI()).thenReturn(repositoryPath);
     when(request.getMethod()).thenReturn(method);
 
     queryString(request, queryStringValue);
