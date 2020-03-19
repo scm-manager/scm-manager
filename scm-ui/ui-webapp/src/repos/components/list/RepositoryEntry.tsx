@@ -3,6 +3,7 @@ import { Repository } from "@scm-manager/ui-types";
 import { CardColumn, DateFromNow } from "@scm-manager/ui-components";
 import RepositoryEntryLink from "./RepositoryEntryLink";
 import RepositoryAvatar from "./RepositoryAvatar";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   repository: Repository;
@@ -47,6 +48,7 @@ class RepositoryEntry extends React.Component<Props> {
         {this.renderBranchesLink(repository, repositoryLink)}
         {this.renderChangesetsLink(repository, repositoryLink)}
         {this.renderSourcesLink(repository, repositoryLink)}
+        <ExtensionPoint name={"repository.card.quickLink"} props={{ repository, repositoryLink }} renderAll={true} />
         {this.renderModifyLink(repository, repositoryLink)}
       </>
     );
