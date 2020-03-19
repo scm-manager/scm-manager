@@ -196,7 +196,7 @@
               <license>BSD 3-Clause</license>
               <url>www.scm-manager.org</url>
               <summary>${project.description}</summary>
-              <packager>Sebastian Sdorra &lt;s.sdorra@gmail.com&gt;</packager>
+              <packager>Sebastian Sdorra &lt;s.sdorra@gmail.com></packager>
               <platform>
                 <architecture>noarch</architecture>
                 <os>linux</os>
@@ -306,7 +306,7 @@
   </profiles>
 
   <properties>
-    <commons.daemon.version>1.1.0</commons.daemon.version>
+    <commons.daemon.version>1.2.2</commons.daemon.version>
     <commons.daemon.native.version>1.1.0</commons.daemon.native.version>
     <exploded.directory>${project.build.directory}/appassembler/commons-daemon/scm-server</exploded.directory>
   </properties>
