@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.commands.ExecutionException;

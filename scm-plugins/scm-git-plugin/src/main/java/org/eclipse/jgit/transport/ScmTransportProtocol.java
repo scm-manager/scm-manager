@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package org.eclipse.jgit.transport;
 
 //~--- non-JDK imports --------------------------------------------------------

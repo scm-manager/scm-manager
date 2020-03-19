@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.web;
 
 import com.google.inject.servlet.ServletModule;

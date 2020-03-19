@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.repository.client.spi;
 
 //~--- non-JDK imports --------------------------------------------------------

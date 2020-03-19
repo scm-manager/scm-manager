@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.repository.spi;
 
 import org.junit.Test;

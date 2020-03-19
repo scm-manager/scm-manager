@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.repository;
 
 import javax.xml.bind.annotation.XmlAccessType;

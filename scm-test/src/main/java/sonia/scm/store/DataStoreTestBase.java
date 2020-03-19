@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.store;
 
 import org.junit.Test;

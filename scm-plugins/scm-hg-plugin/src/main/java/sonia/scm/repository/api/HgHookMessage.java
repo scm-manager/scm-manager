@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.repository.api;
 
 //~--- JDK imports ------------------------------------------------------------

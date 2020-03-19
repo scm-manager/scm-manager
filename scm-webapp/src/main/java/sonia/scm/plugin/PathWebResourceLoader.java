@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.plugin;
 
 import org.slf4j.Logger;

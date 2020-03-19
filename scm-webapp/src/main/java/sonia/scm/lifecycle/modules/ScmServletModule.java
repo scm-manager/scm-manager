@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.lifecycle.modules;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

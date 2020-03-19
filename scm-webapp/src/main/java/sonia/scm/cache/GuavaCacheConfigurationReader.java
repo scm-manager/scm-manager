@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------

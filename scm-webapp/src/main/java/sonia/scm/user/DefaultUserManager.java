@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package sonia.scm.user;
 
 import com.github.sdorra.ssp.PermissionActionCheck;
