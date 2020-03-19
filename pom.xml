@@ -644,15 +644,18 @@
             <exclude>node_modules/**</exclude>
             <exclude>**/node_modules/**</exclude>
             <exclude>*.txt</exclude>
+            <exclude>**/*.txt</exclude>
             <exclude>*.smp</exclude>
             <exclude>*.ini</exclude>
             <exclude>*.mustache</exclude>
+            <exclude>**/*.mustache</exclude>
             <exclude>mvnw</exclude>
             <exclude>mvnw.cmd</exclude>
+            <exclude>.editorconfig</exclude>
             <exclude>**/scm-hg-plugin/pkg/ourPackage/scm-source.properties</exclude>
           </excludes>
           <mapping>
-            <tsx>SLASHSTAR_STYLE</tsx>  
+            <tsx>SLASHSTAR_STYLE</tsx>
           </mapping>
           <strictCheck>true</strictCheck>
         </configuration>
