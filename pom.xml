@@ -644,6 +644,7 @@
             <exclude>node_modules/**</exclude>
             <exclude>target/**</exclude>
             <exclude>**/.m2/**</exclude>
+            <exclude>**/.cache/**</exclude>
             <exclude>**/node_modules/**</exclude>
             <exclude>**/target/**</exclude>
             <exclude>**/*.mustache</exclude>
