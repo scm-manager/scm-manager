@@ -643,11 +643,12 @@
             <exclude>docs/**</exclude>
             <exclude>node_modules/**</exclude>
             <exclude>target/**</exclude>
+            <exclude>tmp/**</exclude>
             <exclude>**/.m2/**</exclude>
             <exclude>**/.cache/**</exclude>
             <exclude>**/node_modules/**</exclude>
             <exclude>**/target/**</exclude>
-            <exclude>**/tmp/workspace/**</exclude>
+            <exclude>**/tmp/**</exclude>
             <exclude>**/*.mustache</exclude>
             <exclude>**/*.txt</exclude>
             <exclude>*.ini</exclude>
@@ -657,6 +658,7 @@
             <exclude>mvnw</exclude>
             <exclude>mvnw.cmd</exclude>
             <exclude>yarn.lock</exclude>
+            <exclude>**/logback.ci.xml</exclude>
             <exclude>**/scm-hg-plugin/pkg/ourPackage/scm-source.properties</exclude>
           </excludes>
           <mapping>
