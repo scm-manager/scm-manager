@@ -1,4 +1,4 @@
-/**
+/*
  * MIT License
  *
  * Copyright (c) 2020-present Cloudogu GmbH and Contributors
@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+    
 package sonia.scm.api.rest;
 
 import org.apache.shiro.authc.AuthenticationException;
