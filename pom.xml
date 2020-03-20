@@ -643,6 +643,7 @@
             <exclude>docs/**</exclude>
             <exclude>node_modules/**</exclude>
             <exclude>target/**</exclude>
+            <exclude>tmp/workspace/**</exclude>
             <exclude>**/.m2/**</exclude>
             <exclude>**/.cache/**</exclude>
             <exclude>**/node_modules/**</exclude>
