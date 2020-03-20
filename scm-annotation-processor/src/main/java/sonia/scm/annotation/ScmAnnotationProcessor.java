@@ -208,10 +208,12 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     return doc;
   }
 
+  @SuppressWarnings("java:S2755") // we need to process https dtd, to avoid breaking intellij compilation on plugins
   private DocumentBuilder createDocumentBuilder() throws ParserConfigurationException {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "https");
     factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+    factory.setAttribute(XMLConstants.FEATURE_SECURE_PROCESSING, true);
     return factory.newDocumentBuilder();
   }
 
@@ -338,9 +340,10 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     }
   }
 
+  @SuppressWarnings("java:S2755") // we need to process https dtd, to avoid breaking intellij compilation on plugins
   private Transformer createTransformer() throws TransformerConfigurationException {
     TransformerFactory factory = TransformerFactory.newInstance();
-    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "https");
     factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
 
     Transformer transformer =  factory.newTransformer();
