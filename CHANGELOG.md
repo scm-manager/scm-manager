@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Extension point to add links to the repository cards from plug ins ([#1041](https://github.com/scm-manager/scm-manager/pull/1041))
 
+### Changed
+- Update resteasy to version 4.5.2.Final
+
 ## 2.0.0-rc5 - 2020-03-12
 ### Added
 - Added footer extension points for links and avatar
