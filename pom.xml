@@ -841,7 +841,7 @@
     <jersey-client.version>1.19.4</jersey-client.version>
     <jackson.version>2.10.2</jackson.version>
     <guice.version>4.2.2</guice.version>
-    <jaxb.version>2.3.0</jaxb.version>
+    <jaxb.version>2.3.1</jaxb.version>
     <hibernate-validator.version>6.1.2.Final</hibernate-validator.version>
 
     <!-- event bus -->
