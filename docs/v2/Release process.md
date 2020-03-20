@@ -1,69 +1,42 @@
 # How to release SCM-Manager v2 core
 
-To release a new version of SCM-Manager v2 you have to do the following steps (replace placeholders `<version>` and `<development-version>` accordingly, eg. with `2.1.0` and `2.2.0-SNAPSHOT`):
+To release a new version of SCM-Manager v2 you have to do the following steps (replace placeholders `<version>` accordingly, eg. with `2.1.0`):
 
 ## Check out default branch
 
-`hg checkout default`
+Make sure you have no changes you want to keep!
 
-## Set release version for maven artefacts:
-
-`mvn versions:set -DnewVersion=<version> -DgenerateBackupPoms=false`
-
-## Set release version for Javascript artefacts:
-
-`yarn run set-version <version>`
+```
+git fetch && git checkout default && git reset --hard origin/default
+```
 
 ## Modify Changelog
 
 Change "Unreleased" header in `CHANGELOG.md` to  `<version> - <current date>`
 
+## Create release branch:
+
+`git checkout -b release/<version>`
+
 ## Commit version changes
 
-`hg commit -m "Release version <version>"`
+```
+git add CHANGELOG.md
+git commit -m "Adjust changelog for release <version>"
+```
 
-## Run last test locally
+## Push release branch
 
-`mvn clean install -Pit -DClassLoaderLeakPreventor.threadWaitMs=10`
-
-## Create tag
-
-`hg tag "<version>"`
-
-## Push
-
-`hg push -b .`
+`git push origin release/<version>`
 
 ## Wait for Jenkins build
 
-## Deploy release version
+Jenkins will
 
-This only works with OpenJDK 8!
-
-`mvn clean deploy -DperformRelease`
-
-# Release docker image
-
-```
-docker build . -t scmmanager/scm-manager:<version>
-docker push scmmanager/scm-manager:<version>
-```
-
-## Set next development version for maven artefacts:
-
-`mvn versions:set -DnewVersion=<development-version> -DgenerateBackupPoms=false`
-
-## Set next development version for Javascript artefacts:
-
-`yarn run set-version <development-version>`
-
-## Commit version changes
-
-`hg commit -m "Prepare for next development iteration"`
-
-## Push
-
-`hg push -b .`
+- update `pom.xml` and `package.json`
+- merge with master branch
+- build and deploy everything
+- set the new development version for the develop branch
 
 ## Make a party
 
@@ -71,17 +44,27 @@ docker push scmmanager/scm-manager:<version>
 
 To release a new version of a Plugin for SCM-Manager v2 you have to do the following steps (replace placeholder `<version>` accordingly, eg. with `2.1.0`):
 
+## Update to latest version
+
+Make sure you have no changes you want to keep!
+
+```
+git fetch && git checkout develop && git reset --hard origin/develop
+```
+
 ## Set new version
 
 Edit `pom.xml`:
 
 - `version` and `scm.tag` have to be set to the new version.
 - ensure that all dependencies to other scm resources have released versions
+- ensure `parent.version` points to stable release
 
 Edit `package.json`:
 
 - `version` has to be set to the new version.
 - ensure that all dependencies to other scm resources have released versions
+- ensure the version of `@scm-manager/ui-plugins` points to the same version as `parent.version` in the `pom.xml`
 
 ## Modify Changelog
 
@@ -104,11 +87,10 @@ git push origin develop
 
 ## Merge with master branch
 
+The merge should be possible with a fast forward. If this fails, check for changes on the `master` branch that are not present on the `develop` branch. Merge these changes into the `develop` branch, first!
+
 ```
-git checkout master
-git pull
-git merge develop
-git push origin master
+git checkout master && git pull && git merge develop --ff-only && git push origin master
 ```
 
 ## Create and push tag
