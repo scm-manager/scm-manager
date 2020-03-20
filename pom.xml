@@ -254,6 +254,17 @@
         <version>${resteasy.version}</version>
       </dependency>
 
+      <!--
+        Ensure smallrye-config is at least 1.6.2,
+        smallrye-config is a transitive dependency of resteasy-core.
+        https://snyk.io/vuln/SNYK-JAVA-IOSMALLRYECONFIG-548898
+      -->
+      <dependency>
+        <groupId>io.smallrye.config</groupId>
+        <artifactId>smallrye-config</artifactId>
+        <version>1.6.2</version>
+      </dependency>
+
       <dependency>
         <groupId>javax.ws.rs</groupId>
         <artifactId>javax.ws.rs-api</artifactId>
