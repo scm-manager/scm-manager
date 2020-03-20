@@ -25,6 +25,7 @@ console.log(`build ${mode} bundles`);
 module.exports = [
   {
     mode,
+    stats: "minimal",
     context: root,
     entry: {
       webapp: [path.resolve(__dirname, "webpack-public-path.js"), "./ui-webapp/src/index.tsx"]
