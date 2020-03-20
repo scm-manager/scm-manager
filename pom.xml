@@ -643,7 +643,7 @@
             <exclude>docs/**</exclude>
             <exclude>node_modules/**</exclude>
             <exclude>target/**</exclude>
-            <exclude>**/.m2/repository/**</exclude>
+            <exclude>**/.m2/**</exclude>
             <exclude>**/node_modules/**</exclude>
             <exclude>**/target/**</exclude>
             <exclude>**/*.mustache</exclude>
