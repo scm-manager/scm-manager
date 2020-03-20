@@ -55,7 +55,7 @@ class DiffResultToDiffResultDtoMapperTest {
       .isPresent()
       .get()
       .extracting("href")
-      .contains("/scm/api/v2/repositories/space/X/diff/123/parsed");
+      .isEqualTo("/scm/api/v2/repositories/space/X/diff/123/parsed");
   }
 
   @Test
@@ -67,7 +67,7 @@ class DiffResultToDiffResultDtoMapperTest {
       .isPresent()
       .get()
       .extracting("href")
-      .contains("/scm/api/v2/repositories/space/X/incoming/feature%2Fsome/master/diff/parsed");
+      .isEqualTo("/scm/api/v2/repositories/space/X/incoming/feature%2Fsome/master/diff/parsed");
   }
 
   private DiffResult createResult() {
