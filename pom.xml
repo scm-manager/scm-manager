@@ -637,22 +637,23 @@
         <configuration>
           <header>https://download.scm-manager.org/licenses/license.txt</header>
           <excludes>
-            <exclude>target/**</exclude>
-            <exclude>**/target/**</exclude>
+            <exclude>.editorconfig</exclude>
             <exclude>.git/**</exclude>
+            <exclude>.mvn/wrapper/**</exclude>
             <exclude>docs/**</exclude>
             <exclude>node_modules/**</exclude>
-            <exclude>.mvn/wrapper/**</exclude>
+            <exclude>target/**</exclude>
+            <exclude>**/.m2/repository/**</exclude>
             <exclude>**/node_modules/**</exclude>
-            <exclude>*.txt</exclude>
+            <exclude>**/target/**</exclude>
+            <exclude>**/*.mustache</exclude>
             <exclude>**/*.txt</exclude>
-            <exclude>*.smp</exclude>
             <exclude>*.ini</exclude>
             <exclude>*.mustache</exclude>
-            <exclude>**/*.mustache</exclude>
+            <exclude>*.smp</exclude>
+            <exclude>*.txt</exclude>
             <exclude>mvnw</exclude>
             <exclude>mvnw.cmd</exclude>
-            <exclude>.editorconfig</exclude>
             <exclude>**/scm-hg-plugin/pkg/ourPackage/scm-source.properties</exclude>
           </excludes>
           <mapping>
@@ -916,7 +917,7 @@
     <project.build.javaLevel>8</project.build.javaLevel>
     <project.test.javaLevel>8</project.test.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <netbeans.hint.license>MIT</netbeans.hint.license>
+    <netbeans.hint.license>SCM-MIT</netbeans.hint.license>
     <jdk.classifier />
     <org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
 
