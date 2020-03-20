@@ -40,6 +40,8 @@ import sonia.scm.security.BearerToken;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+
+import sonia.scm.security.SessionId;
 import sonia.scm.util.HttpUtil;
 
 /**
@@ -62,19 +64,14 @@ public class CookieBearerWebTokenGenerator implements WebTokenGenerator
    * @return {@link BearerToken} or {@code null}
    */
   @Override
-  public BearerToken createToken(HttpServletRequest request)
-  {
+  public BearerToken createToken(HttpServletRequest request) {
     BearerToken token = null;
     Cookie[] cookies = request.getCookies();
 
-    if (cookies != null)
-    {
-      for (Cookie cookie : cookies)
-      {
-        if (HttpUtil.COOKIE_BEARER_AUTHENTICATION.equals(cookie.getName()))
-        {
-          String sessionId = HttpUtil.getHeader(request, HttpUtil.HEADER_SCM_SESSION, null);
-          token = BearerToken.create(sessionId, cookie.getValue());
+    if (cookies != null) {
+      for (Cookie cookie : cookies) {
+        if (HttpUtil.COOKIE_BEARER_AUTHENTICATION.equals(cookie.getName())) {
+          token = BearerToken.create(SessionId.from(request).orElse(null), cookie.getValue());
 
           break;
         }

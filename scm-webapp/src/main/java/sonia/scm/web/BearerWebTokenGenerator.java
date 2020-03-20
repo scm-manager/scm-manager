@@ -35,6 +35,7 @@ package sonia.scm.web;
 
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.BearerToken;
+import sonia.scm.security.SessionId;
 import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -68,10 +69,8 @@ public class BearerWebTokenGenerator extends SchemeBasedWebTokenGenerator
   {
     BearerToken token = null;
 
-    if (HttpUtil.AUTHORIZATION_SCHEME_BEARER.equalsIgnoreCase(scheme))
-    {
-      String sessionId = request.getHeader(HttpUtil.HEADER_SCM_SESSION);
-      token = BearerToken.create(sessionId, authorization);
+    if (HttpUtil.AUTHORIZATION_SCHEME_BEARER.equalsIgnoreCase(scheme)) {
+      token = BearerToken.create(SessionId.from(request).orElse(null), authorization);
     }
 
     return token;

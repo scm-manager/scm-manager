@@ -38,7 +38,9 @@ package sonia.scm.util;
 import org.junit.Test;
 
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.SessionId;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 import static org.mockito.Mockito.*;
@@ -465,5 +467,48 @@ public class HttpUtilTest
       HttpUtil.getUriWithoutStartSeperator("/test/two/"));
     assertEquals("test/two/three",
       HttpUtil.getUriWithoutStartSeperator("test/two/three"));
+  }
+
+  @Test
+  public void testGetHeaderOrGetParameterWithHeader() {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getHeader("Domain")).thenReturn("hitchhiker");
+
+    assertThat(HttpUtil.getHeaderOrGetParameter(request, "Domain")).contains("hitchhiker");
+  }
+
+  @Test
+  public void testGetHeaderOrGetParameterWithParameter() {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getMethod()).thenReturn("GET");
+    when(request.getParameter("Domain")).thenReturn("hitchhiker");
+
+    assertThat(HttpUtil.getHeaderOrGetParameter(request, "Domain")).contains("hitchhiker");
+  }
+
+  @Test
+  public void testGetHeaderOrGetParameterOnPost() {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getMethod()).thenReturn("POST");
+    lenient().when(request.getParameter("Domain")).thenReturn("hitchhiker");
+
+    assertThat(HttpUtil.getHeaderOrGetParameter(request, "Domain")).isEmpty();
+  }
+
+  @Test
+  public void testIsWUIRequestWithHeader() {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getHeader(HttpUtil.HEADER_SCM_CLIENT)).thenReturn(HttpUtil.SCM_CLIENT_WUI);
+
+    assertThat(HttpUtil.isWUIRequest(request)).isTrue();
+  }
+
+  @Test
+  public void testIsWUIRequestWithParameter() {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getMethod()).thenReturn("GET");
+    when(request.getParameter(HttpUtil.HEADER_SCM_CLIENT)).thenReturn(HttpUtil.SCM_CLIENT_WUI);
+
+    assertThat(HttpUtil.isWUIRequest(request)).isTrue();
   }
 }
