@@ -53,8 +53,8 @@ public class ChangesetCollectionToDtoMapperTest {
     assertThat(collectionDto.getEmbedded().getItemsBy("branch"))
       .hasSize(1)
       .first().matches(b -> b.getLinks().getLinkBy("self").isPresent())
-      .extracting(b -> b.getLinks().getLinkBy("self").get().getHref()).first().isEqualTo("/v2/repositories/space/name/branches/someBranch");
+      .extracting(b -> b.getLinks().getLinkBy("self").get().getHref()).isEqualTo("/v2/repositories/space/name/branches/someBranch");
     assertThat(collectionDto.getEmbedded().getItemsBy("branch"))
-      .first().extracting("name").first().isEqualTo("someBranch");
+      .first().extracting("name").isEqualTo("someBranch");
   }
 }
