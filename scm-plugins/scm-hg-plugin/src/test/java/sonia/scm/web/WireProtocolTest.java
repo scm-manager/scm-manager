@@ -47,7 +47,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -98,7 +101,6 @@ public class WireProtocolTest {
 
   @Test
   public void testGetCommandsOfWithHgArgsPost() throws IOException {
-    when(request.getMethod()).thenReturn("POST");
     when(request.getQueryString()).thenReturn("cmd=batch");
     when(request.getIntHeader("X-HgArgs-Post")).thenReturn(29);
     when(request.getHeaderNames()).thenReturn(Collections.enumeration(Lists.newArrayList("X-HgArgs-Post")));

@@ -18,8 +18,9 @@
 
   <properties>
     <build.script>build</build.script>
-    <skipTests>false</skipTests>
     <skipTypecheck>false</skipTypecheck>
+    <skipFrontendTests>${skipTests}</skipFrontendTests>
+    <skipFrontendBuild>false</skipFrontendBuild>
     <sonar.language>typescript</sonar.language>
     <sonar.sources>ui-extensions/src,ui-components/src,ui-webapp/src</sonar.sources>
     <sonar.test.exclusions>**/*.test.js,src/tests/**</sonar.test.exclusions>
@@ -88,6 +89,7 @@
               <goal>run</goal>
             </goals>
             <configuration>
+              <skip>${skipFrontendBuild}</skip>
               <script>${build.script}</script>
             </configuration>
           </execution>
@@ -99,7 +101,7 @@
             </goals>
             <configuration>
               <script>test</script>
-              <skip>${skipTests}</skip>
+              <skip>${skipFrontendTests}</skip>
             </configuration>
           </execution>
           <execution>
