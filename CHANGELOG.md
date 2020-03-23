@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Update resteasy to version 4.5.2.Final
-- Use browser build in EventSource for apiClient subscriptions
+- Use browser built-in EventSource for apiClient subscriptions
 
 ### Removed
 - EventSource Polyfill
