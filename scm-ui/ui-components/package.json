@@ -9,7 +9,7 @@
   ],
   "repository": "https://bitbucket.org/sdorra/scm-manager",
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "scripts": {
     "test": "jest",
     "typecheck": "tsc",
