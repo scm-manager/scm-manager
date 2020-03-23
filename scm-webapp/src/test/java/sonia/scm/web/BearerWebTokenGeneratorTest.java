@@ -24,20 +24,19 @@
     
 package sonia.scm.web;
 
-import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.authc.AuthenticationToken;
-
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.security.BearerToken;
 import sonia.scm.security.SessionId;
-import sonia.scm.util.HttpUtil;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 /**
  *
@@ -83,7 +82,7 @@ class BearerWebTokenGeneratorTest {
   @Test
   void shouldCreateTokenWithSessionId(){
     doReturn("Bearer asd").when(request).getHeader("Authorization");
-    doReturn("bcd123").when(request).getHeader(HttpUtil.HEADER_SCM_SESSION);
+    doReturn("bcd123").when(request).getHeader(SessionId.PARAMETER);
 
     AuthenticationToken token = tokenGenerator.createToken(request);
     assertThat(token)

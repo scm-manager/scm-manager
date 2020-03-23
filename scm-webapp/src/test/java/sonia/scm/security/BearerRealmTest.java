@@ -24,7 +24,6 @@
     
 package sonia.scm.security;
 
-import com.google.common.collect.ImmutableSet;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +34,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashMap;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -77,7 +75,7 @@ class BearerRealmTest {
 
   @Test
   void shouldDoGetAuthentication() {
-    BearerToken bearerToken = BearerToken.create("__session__", "__bearer__");
+    BearerToken bearerToken = BearerToken.create(SessionId.valueOf("__session__"), "__bearer__");
     AccessToken accessToken = mock(AccessToken.class);
 
     when(accessToken.getSubject()).thenReturn("trillian");

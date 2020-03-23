@@ -28,7 +28,6 @@ package sonia.scm.util;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +42,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -106,12 +106,6 @@ public final class HttpUtil
    * @since 1.19
    */
   public static final String HEADER_SCM_CLIENT = "X-SCM-Client";
-
-  /**
-   * header for identifying the scm-manager client session
-   * @since 2.0.0
-   */
-  public static final String HEADER_SCM_SESSION = "X-SCM-Session-ID";
 
   /** Field description */
   public static final String HEADER_USERAGENT = "User-Agent";
@@ -822,6 +816,24 @@ public final class HttpUtil
   }
 
   /**
+   * Returns header value or query parameter if the request is a get request.
+   *
+   * @param request http request
+   * @param parameter name of header/parameter
+   *
+   * @return header value or query parameter
+   *
+   * @since 2.0.0
+   */
+  public static Optional<String> getHeaderOrGetParameter(HttpServletRequest request, String parameter) {
+    String value = request.getHeader(parameter);
+    if (Strings.isNullOrEmpty(value) && "GET".equalsIgnoreCase(request.getMethod())) {
+      value = request.getParameter(parameter);
+    }
+    return Optional.ofNullable(value);
+  }
+
+  /**
    * Returns the given uri without leading separator.
    *
    *
@@ -873,16 +885,14 @@ public final class HttpUtil
   /**
    * Returns true if the http request is send by the scm-manager web interface.
    *
-   *
    * @param request http request
    *
    * @return true if the request comes from the web interface.
    * @since 1.19
    */
-  public static boolean isWUIRequest(HttpServletRequest request)
-  {
-    return SCM_CLIENT_WUI.equalsIgnoreCase(
-      request.getHeader(HEADER_SCM_CLIENT));
+  public static boolean isWUIRequest(HttpServletRequest request) {
+    Optional<String> client = getHeaderOrGetParameter(request, HEADER_SCM_CLIENT);
+    return client.isPresent() && SCM_CLIENT_WUI.equalsIgnoreCase(client.get());
   }
 
   //~--- methods --------------------------------------------------------------

@@ -49,7 +49,6 @@
     "@scm-manager/ui-types": "^2.0.0-SNAPSHOT",
     "classnames": "^2.2.6",
     "date-fns": "^2.4.1",
-    "event-source-polyfill": "^1.0.9",
     "gitdiff-parser": "^0.1.2",
     "lowlight": "^1.13.0",
     "query-string": "5",

@@ -237,6 +237,10 @@
                   <name>sonia.scm.classloading.lifecycle</name>
                   <value>simple</value>
                 </systemProperty>
+                <systemProperty>
+                  <name>logback.configurationFile</name>
+                  <value>${scm-it.logbackConfiguration}</value>
+                </systemProperty>
               </systemProperties>
               <webApp>
                 <contextPath>/scm</contextPath>
@@ -270,10 +274,10 @@
       <properties>
         <scm.stage>DEVELOPMENT</scm.stage>
         <scm.home>target/scm-it</scm.home>
+        <scm-it.logbackConfiguration>${project.basedir}/../scm-webapp/src/main/resources/logback.default.xml</scm-it.logbackConfiguration>
       </properties>
 
     </profile>
   </profiles>
 
 </project>
-

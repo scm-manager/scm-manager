@@ -23,8 +23,6 @@
  */
 
 import { contextPath } from "./urls";
-// @ts-ignore we have not types for event-source-polyfill
-import { EventSourcePolyfill } from "event-source-polyfill";
 import { createBackendError, ForbiddenError, isBackendError, UnauthorizedError, BackendErrorContent } from "./errors";
 
 type SubscriptionEvent = {
@@ -148,6 +146,10 @@ export function createUrl(url: string) {
   return `${contextPath}/api/v2${urlWithStartingSlash}`;
 }
 
+export function createUrlWithIdentifiers(url: string): string {
+  return createUrl(url) + "?X-SCM-Client=WUI&X-SCM-Session-ID=" + sessionId;
+}
+
 class ApiClient {
   get(url: string): Promise<Response> {
     return fetch(createUrl(url), applyFetchOptions({})).then(handleFailure);
@@ -242,9 +244,8 @@ class ApiClient {
   }
 
   subscribe(url: string, argument: SubscriptionArgument): Cancel {
-    const es = new EventSourcePolyfill(createUrl(url), {
-      withCredentials: true,
-      headers: createRequestHeaders()
+    const es = new EventSource(createUrlWithIdentifiers(url), {
+      withCredentials: true
     });
 
     let listeners: MessageListeners;
@@ -252,9 +253,11 @@ class ApiClient {
     if ("onMessage" in argument) {
       listeners = (argument as SubscriptionContext).onMessage;
       if (argument.onError) {
+        // @ts-ignore typing of EventSource is weird
         es.onerror = argument.onError;
       }
       if (argument.onOpen) {
+        // @ts-ignore typing of EventSource is weird
         es.onopen = argument.onOpen;
       }
     } else {
@@ -262,6 +265,7 @@ class ApiClient {
     }
 
     for (const type in listeners) {
+      // @ts-ignore typing of EventSource is weird
       es.addEventListener(type, listeners[type]);
     }
 

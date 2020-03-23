@@ -248,7 +248,7 @@ public class GitConfigResourceTest {
     assertThat(configurationStoreCaptor.getValue())
       .isInstanceOfSatisfying(GitRepositoryConfig.class, x -> { })
       .extracting("defaultBranch")
-      .containsExactly("new");
+      .isEqualTo("new");
   }
 
   private MockHttpResponse get() throws URISyntaxException {

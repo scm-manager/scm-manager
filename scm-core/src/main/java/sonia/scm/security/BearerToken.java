@@ -89,17 +89,13 @@ public final class BearerToken implements AuthenticationToken {
   /**
    * Creates a new {@link BearerToken} from raw string representation for the given ui session id.
    *
-   * @param sessionId session id of the client
+   * @param session session id of the client
    * @param rawToken bearer token string representation
    *
    * @return new bearer token
    */
-  public static BearerToken create(@Nullable String sessionId, String rawToken) {
+  public static BearerToken create(@Nullable SessionId session, String rawToken) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(rawToken), "raw token is required");
-    SessionId session = null;
-    if (!Strings.isNullOrEmpty(sessionId)) {
-      session = SessionId.valueOf(sessionId);
-    }
     return new BearerToken(session, rawToken);
   }
 }

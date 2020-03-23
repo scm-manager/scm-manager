@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extension point to add links to the repository cards from plug ins ([#1041](https://github.com/scm-manager/scm-manager/pull/1041))
 
 ### Changed
+- Update resteasy to version 4.5.2.Final
+- Use browser built-in EventSource for apiClient subscriptions
 - Changeover to MIT license ([#1066](https://github.com/scm-manager/scm-manager/pull/1066))
+
+### Removed
+- EventSource Polyfill
 
 ### Fixed
 - Build on windows ([#1048](https://github.com/scm-manager/scm-manager/issues/1048), [#1049](https://github.com/scm-manager/scm-manager/issues/1049), [#1056](https://github.com/scm-manager/scm-manager/pull/1056))

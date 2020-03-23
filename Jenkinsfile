@@ -64,15 +64,20 @@ node('docker') {
         mvn 'clean install -DskipTests'
       }
 
-      stage('Unit Test') {
-        mvn 'test -Pcoverage -Dmaven.test.failure.ignore=true'
-        junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
-      }
-
-      stage('Integration Test') {
-        mvn 'verify -Pit -pl :scm-webapp,:scm-it -Dmaven.test.failure.ignore=true -Dscm.git.core.supportsatomicfilecreation=false'
-        junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml'
-      }
+      parallel(
+        unitTest: {
+          stage('Unit Test') {
+            mvn 'test -DskipFrontendBuild -DskipTypecheck -Pcoverage -pl !scm-it -Dmaven.test.failure.ignore=true'
+            junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
+          }
+        },
+        integrationTest: {
+          stage('Integration Test') {
+            mvn 'verify -Pit -DskipUnitTests -pl :scm-webapp,:scm-it -Dmaven.test.failure.ignore=true'
+            junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml'
+          }
+        }
+      )
 
       stage('SonarQube') {
 
@@ -203,6 +208,10 @@ String mainBranch
 
 Maven setupMavenBuild() {
   Maven mvn = new MavenWrapperInDocker(this, "scmmanager/java-build:11.0.6_10")
+  // disable logging durring the build
+  def logConf = "scm-webapp/src/main/resources/logback.ci.xml"
+  mvn.additionalArgs += " -Dlogback.configurationFile=${logConf}"
+  mvn.additionalArgs += " -Dscm-it.logbackConfiguration=${logConf}"
 
   if (isMainBranch() || isReleaseBranch()) {
     // Release starts javadoc, which takes very long, so do only for certain branches
