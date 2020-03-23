@@ -14,13 +14,6 @@ repositories over http.
     PAM-Authentication)
 -   Licensed under the MIT-License
 
-Migration to Github
--------------------
-
-We will soon migrate SCM-Manager to Github, please read
-[here](https://www.scm-manager.org/scm-manager-2/migration-to-github/ "wikilink")
-for more information.
-
 ### News
 
 -   \*\*2018-09-25\*\* - [SCM-Manager 2 gets a boost by Cloudogu
