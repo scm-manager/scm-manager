@@ -161,7 +161,7 @@
     <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>6.1.0.Final</version>
+      <version>6.1.2.Final</version>
     </dependency>
 
     <dependency>
@@ -632,7 +632,7 @@
     <scm.stage>DEVELOPMENT</scm.stage>
     <scm.home>target/scm-it</scm.home>
     <environment.profile>default</environment.profile>
-    <jjwt.version>0.10.5</jjwt.version>
+    <jjwt.version>0.11.0</jjwt.version>
     <selenium.version>2.53.1</selenium.version>
     <wagon.version>1.0</wagon.version>
     <mustache.version>0.9.6-scm1</mustache.version>
