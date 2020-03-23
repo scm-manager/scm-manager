@@ -76,7 +76,7 @@ class CookieBearerWebTokenGeneratorTest {
 
   @Test
   void shouldCreateTokenWithSessionId() {
-    when(request.getHeader(HttpUtil.HEADER_SCM_SESSION)).thenReturn("abc123");
+    when(request.getHeader(SessionId.PARAMETER)).thenReturn("abc123");
 
     assignBearerCookie("authc");
 
