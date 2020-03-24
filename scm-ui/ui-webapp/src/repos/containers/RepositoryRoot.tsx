@@ -171,7 +171,7 @@ class RepositoryRoot extends React.Component<Props, State> {
       >
         <Page title={repository.namespace + "/" + repository.name}>
           <div className="columns">
-            <div className="column">
+            <div className={menuCollapsed ? "column is-11" : "column is-9"}>
               <Switch>
                 <Redirect exact from={this.props.match.url} to={redirectedUrl} />
 
