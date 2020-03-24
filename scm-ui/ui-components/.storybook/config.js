@@ -36,7 +36,6 @@ let i18n = i18next;
 // only use fetch backend for storybook
 // and not for storyshots
 if (!process.env.JEST_WORKER_ID) {
-  console.log("ADD backend");
   const Backend = require("i18next-fetch-backend");
   i18n = i18n.use(Backend.default)
 }
