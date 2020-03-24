@@ -21,9 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import i18n from "i18next";
+import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
-import Backend from "i18next-fetch-backend";
 import { addDecorator, configure } from "@storybook/react";
 import { withI18next } from "storybook-addon-i18next";
 
@@ -31,8 +30,18 @@ import "!style-loader!css-loader!sass-loader!../../ui-styles/src/scm.scss";
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 
+
+let i18n = i18next;
+
+// only use fetch backend for storybook
+// and not for storyshots
+if (!process.env.JEST_WORKER_ID) {
+  console.log("ADD backend");
+  const Backend = require("i18next-fetch-backend");
+  i18n = i18n.use(Backend.default)
+}
+
 i18n
-.use(Backend)
 .use(initReactI18next).init({
   whitelist: ["en", "de", "es"],
   lng: "en",
