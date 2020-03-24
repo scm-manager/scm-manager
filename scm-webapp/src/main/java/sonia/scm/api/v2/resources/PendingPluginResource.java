@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
@@ -31,6 +31,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import sonia.scm.lifecycle.Restarter;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginManager;
@@ -56,12 +57,14 @@ public class PendingPluginResource {
   private final PluginManager pluginManager;
   private final ResourceLinks resourceLinks;
   private final PluginDtoMapper mapper;
+  private final Restarter restarter;
 
   @Inject
-  public PendingPluginResource(PluginManager pluginManager, ResourceLinks resourceLinks, PluginDtoMapper mapper) {
+  public PendingPluginResource(PluginManager pluginManager, ResourceLinks resourceLinks, PluginDtoMapper mapper, Restarter restarter) {
     this.pluginManager = pluginManager;
     this.resourceLinks = resourceLinks;
     this.mapper = mapper;
+    this.restarter = restarter;
   }
 
   @GET
@@ -118,7 +121,9 @@ public class PendingPluginResource {
       PluginPermissions.manage().isPermitted() &&
         (!installDtos.isEmpty() || !updateDtos.isEmpty() || !uninstallDtos.isEmpty())
     ) {
-      linksBuilder.single(link("execute", resourceLinks.pendingPluginCollection().executePending()));
+      if (restarter.isSupported()) {
+        linksBuilder.single(link("execute", resourceLinks.pendingPluginCollection().executePending()));
+      }
       linksBuilder.single(link("cancel", resourceLinks.pendingPluginCollection().cancelPending()));
     }
 
