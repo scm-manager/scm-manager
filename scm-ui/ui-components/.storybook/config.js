@@ -23,14 +23,17 @@
  */
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import Backend from "i18next-fetch-backend";
 import { addDecorator, configure } from "@storybook/react";
 import { withI18next } from "storybook-addon-i18next";
 
 import "!style-loader!css-loader!sass-loader!../../ui-styles/src/scm.scss";
-import React, { ReactNode } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router-dom";
 
-i18n.use(initReactI18next).init({
+i18n
+.use(Backend)
+.use(initReactI18next).init({
   whitelist: ["en", "de", "es"],
   lng: "en",
   fallbackLng: "en",
@@ -39,6 +42,12 @@ i18n.use(initReactI18next).init({
   },
   react: {
     useSuspense: false
+  },
+  backend: {
+    loadPath: "/locales/{{lng}}/{{ns}}.json",
+    init: {
+      credentials: "same-origin"
+    }
   }
 });
 
