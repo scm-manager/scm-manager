@@ -3,6 +3,7 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 // @ts-ignore
 import Markdown from "react-markdown/with-html";
 import { binder } from "@scm-manager/ui-extensions";
+import ErrorBoundary from "./ErrorBoundary";
 import SyntaxHighlighter from "./SyntaxHighlighter";
 import MarkdownHeadingRenderer from "./MarkdownHeadingRenderer";
 
@@ -64,15 +65,17 @@ class MarkdownView extends React.Component<Props> {
     }
 
     return (
-      <div ref={el => (this.contentRef = el)}>
-        <Markdown
-          className="content"
-          skipHtml={skipHtml}
-          escapeHtml={skipHtml}
-          source={content}
-          renderers={rendererList}
-        />
-      </div>
+      <ErrorBoundary>
+        <div ref={el => (this.contentRef = el)}>
+          <Markdown
+            className="content"
+            skipHtml={skipHtml}
+            escapeHtml={skipHtml}
+            source={content}
+            renderers={rendererList}
+          />
+        </div>
+      </ErrorBoundary>
     );
   }
 }
