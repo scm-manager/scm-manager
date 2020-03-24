@@ -21,31 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { storiesOf } from "@storybook/react";
-import MarkdownView from "./MarkdownView";
-import styled from "styled-components";
+export default `# Xml in Markdown
+<project [...]>
 
-import TestPage from "./__resources__/test-page.md";
-import MarkdownWithoutLang from "./__resources__/markdown-without-lang.md";
-import MarkdownXmlCodeBlock from "./__resources__/markdown-xml-codeblock.md";
-import MarkdownInlineXml from "./__resources__/markdown-inline-xml.md";
-import Title from "./layout/Title";
-import { Subtitle } from "./layout";
+  [...]
 
-const Spacing = styled.div`
-  padding: 2em;
-`;
+  <build>
+    <plugins>
 
-storiesOf("MarkdownView", module)
-  .addDecorator(story => <Spacing>{story()}</Spacing>)
-  .add("Default", () => <MarkdownView content={TestPage} skipHtml={false} />)
-  .add("Code without Lang", () => <MarkdownView content={MarkdownWithoutLang} skipHtml={false} />)
-  .add("Xml Code Block", () => <MarkdownView content={MarkdownXmlCodeBlock} />)
-  .add("Inline Xml", () => (
-    <>
-      <Title title="Inline Xml" />
-      <Subtitle subtitle="Inline xml outside of a code block is not supported" />
-      <MarkdownView content={MarkdownInlineXml} />
-    </>
-  ));
+      [...]
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>animal-sniffer-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  [...]
+
+</project>`;
