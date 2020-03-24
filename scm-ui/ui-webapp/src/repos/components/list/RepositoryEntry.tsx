@@ -66,7 +66,7 @@ class RepositoryEntry extends React.Component<Props> {
     const { repository } = this.props;
     return (
       <>
-        <ExtensionPoint name="repository.card.beforeTitle" props={{repository}} /> <strong>{repository.name}</strong>
+        <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} /> <strong>{repository.name}</strong>
       </>
     );
   };
