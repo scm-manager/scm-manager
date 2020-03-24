@@ -69,7 +69,8 @@
       "restartNotification": "Der SCM-Manager Kontext sollte nur neu gestartet werden, wenn aktuell niemand damit arbeitet.",
       "executePending": "Die folgenden Plugin-Änderungen werden ausgeführt. Anschließend wird der SCM-Manager Kontext neu gestartet.",
       "cancelPending": "Die folgenden Plugin-Änderungen werden abgebrochen und zurückgesetzt.",
-      "updateAllInfo": "Die folgenden Plugins werden aktualisiert. Die Änderungen werden nach dem nächsten Neustart wirksam."
+      "updateAllInfo": "Die folgenden Plugins werden aktualisiert. Die Änderungen werden nach dem nächsten Neustart wirksam.",
+      "manualRestartRequired": "Nach dem die Plugin-Änderung durchgeführt wurde, muss SCM-Manager neu gestartet werden."
     }
   },
   "repositoryRole": {

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
@@ -36,6 +36,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.lifecycle.Restarter;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.AvailablePluginDescriptor;
 import sonia.scm.plugin.InstalledPlugin;
@@ -58,6 +59,9 @@ import static org.mockito.Mockito.when;
 class PluginDtoCollectionMapperTest {
 
   ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
+
+  @Mock
+  private Restarter restarter;
 
   @InjectMocks
   PluginDtoMapperImpl pluginDtoMapper;
@@ -142,7 +146,7 @@ class PluginDtoCollectionMapperTest {
   }
 
   @Test
-  void shouldAddInstallLinkForNewVersionWhenPermitted() {
+  void shouldAddUpdateLinkForNewVersionWhenPermitted() {
     when(subject.isPermitted("plugin:manage")).thenReturn(true);
     PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
 
@@ -152,6 +156,21 @@ class PluginDtoCollectionMapperTest {
 
     PluginDto plugin = getPluginDtoFromResult(result);
     assertThat(plugin.getLinks().getLinkBy("update")).isNotEmpty();
+  }
+
+  @Test
+  void shouldAddUpdateWithRestartLinkForNewVersionWhenPermitted() {
+    when(restarter.isSupported()).thenReturn(true);
+    when(subject.isPermitted("plugin:manage")).thenReturn(true);
+    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
+
+    HalRepresentation result = mapper.mapInstalled(
+      singletonList(createInstalledPlugin("scm-some-plugin", "1")),
+      singletonList(createAvailablePlugin("scm-some-plugin", "2")));
+
+    PluginDto plugin = getPluginDtoFromResult(result);
+    assertThat(plugin.getLinks().getLinkBy("update")).isNotEmpty();
+    assertThat(plugin.getLinks().getLinkBy("updateWithRestart")).isNotEmpty();
   }
 
   @Test
