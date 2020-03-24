@@ -34,7 +34,7 @@ type Props = {
 class BranchRow extends React.Component<Props> {
   renderLink(to: string, label: string, defaultBranch?: boolean) {
     return (
-      <Link to={to}>
+      <Link to={to} title={label}>
         {label} <DefaultBranchTag defaultBranch={defaultBranch} />
       </Link>
     );

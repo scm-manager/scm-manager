@@ -89,7 +89,7 @@ class MarkdownView extends React.Component<Props> {
     return (
       <div ref={el => (this.contentRef = el)}>
         <Markdown
-          className="content"
+          className="content is-word-break"
           skipHtml={skipHtml}
           escapeHtml={skipHtml}
           source={content}
