@@ -3,7 +3,7 @@
   "version": "2.0.0-SNAPSHOT",
   "description": "Styles for SCM-Manager",
   "main": "src/scm.scss",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "serve": "webpack-dev-server"

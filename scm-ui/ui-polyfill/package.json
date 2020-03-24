@@ -4,7 +4,7 @@
   "description": "Polyfills for SCM-Manager UI",
   "main": "src/index.js",
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "private": true,
   "prettier": "@scm-manager/prettier-config",
   "dependencies": {

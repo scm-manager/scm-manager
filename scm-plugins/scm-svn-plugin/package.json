@@ -2,7 +2,7 @@
   "name": "@scm-manager/scm-svn-plugin",
   "private": true,
   "version": "2.0.0-SNAPSHOT",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "main": "./src/main/js/index.ts",
   "scripts": {
     "build": "ui-scripts plugin",
