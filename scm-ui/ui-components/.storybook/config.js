@@ -21,16 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import i18n from "i18next";
+import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
 import { addDecorator, configure } from "@storybook/react";
 import { withI18next } from "storybook-addon-i18next";
 
 import "!style-loader!css-loader!sass-loader!../../ui-styles/src/scm.scss";
-import React, { ReactNode } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router-dom";
 
-i18n.use(initReactI18next).init({
+
+let i18n = i18next;
+
+// only use fetch backend for storybook
+// and not for storyshots
+if (!process.env.JEST_WORKER_ID) {
+  const Backend = require("i18next-fetch-backend");
+  i18n = i18n.use(Backend.default)
+}
+
+i18n
+.use(initReactI18next).init({
   whitelist: ["en", "de", "es"],
   lng: "en",
   fallbackLng: "en",
@@ -39,6 +50,12 @@ i18n.use(initReactI18next).init({
   },
   react: {
     useSuspense: false
+  },
+  backend: {
+    loadPath: "/locales/{{lng}}/{{ns}}.json",
+    init: {
+      credentials: "same-origin"
+    }
   }
 });
 
