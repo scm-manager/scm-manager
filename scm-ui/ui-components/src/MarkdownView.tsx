@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 // @ts-ignore
 import Markdown from "react-markdown/with-html";
@@ -29,6 +29,8 @@ import { binder } from "@scm-manager/ui-extensions";
 import ErrorBoundary from "./ErrorBoundary";
 import SyntaxHighlighter from "./SyntaxHighlighter";
 import MarkdownHeadingRenderer from "./MarkdownHeadingRenderer";
+import { useTranslation } from "react-i18next";
+import Notification from "./Notification";
 
 type Props = RouteComponentProps & {
   content: string;
@@ -36,6 +38,35 @@ type Props = RouteComponentProps & {
   renderers?: any;
   skipHtml?: boolean;
   enableAnchorHeadings?: boolean;
+};
+
+const xmlMarkupSample = `\`\`\`xml
+<your>
+  <xml>
+    <content/>
+  </xml>
+</your>
+\`\`\``;
+
+const MarkdownErrorNotification: FC = () => {
+  const [t] = useTranslation("commons");
+  return (
+    <Notification type="danger">
+      <div className="content">
+        <p className="subtitle">{t("markdownErrorNotification.title")}</p>
+        <p>{t("markdownErrorNotification.description")}</p>
+        <pre>
+          <code>{xmlMarkupSample}</code>
+        </pre>
+        <p>
+          {t("markdownErrorNotification.spec")}:{" "}
+          <a href="https://github.github.com/gfm/" target="_blank">
+            GitHub Flavored Markdown Spec
+          </a>
+        </p>
+      </div>
+    </Notification>
+  );
 };
 
 class MarkdownView extends React.Component<Props> {
@@ -88,7 +119,7 @@ class MarkdownView extends React.Component<Props> {
     }
 
     return (
-      <ErrorBoundary>
+      <ErrorBoundary fallback={MarkdownErrorNotification}>
         <div ref={el => (this.contentRef = el)}>
           <Markdown
             className="content"

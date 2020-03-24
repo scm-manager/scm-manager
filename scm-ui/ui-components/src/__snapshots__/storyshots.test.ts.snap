@@ -33786,12 +33786,40 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
     className="notification is-danger"
   >
     
-    <strong>
-      errorNotification.prefix
-      :
-    </strong>
-     
-    Cannot read property 'children' of undefined
+    <div
+      className="content"
+    >
+      <p
+        className="subtitle"
+      >
+        markdownErrorNotification.title
+      </p>
+      <p>
+        markdownErrorNotification.description
+      </p>
+      <pre>
+        <code>
+          \`\`\`xml
+&lt;your&gt;
+  &lt;xml&gt;
+    &lt;content/&gt;
+  &lt;/xml&gt;
+&lt;/your&gt;
+\`\`\`
+        </code>
+      </pre>
+      <p>
+        markdownErrorNotification.spec
+        :
+         
+        <a
+          href="https://github.github.com/gfm/"
+          target="_blank"
+        >
+          GitHub Flavored Markdown Spec
+        </a>
+      </p>
+    </div>
   </div>
 </div>
 `;
