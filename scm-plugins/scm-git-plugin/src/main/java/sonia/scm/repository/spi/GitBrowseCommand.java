@@ -1,36 +1,27 @@
-/**
- * Copyright (c) 2010, Sebastian Sdorra
- * All rights reserved.
+/*
+ * MIT License
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
  *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- * http://bitbucket.org/sdorra/scm-manager
- *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
-
-
-
+    
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -69,12 +60,15 @@ import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -109,6 +103,8 @@ public class GitBrowseCommand extends AbstractGitCommand
   private final SyncAsyncExecutor executor;
 
   private BrowserResult browserResult;
+
+  private int resultCount = 0;
 
   public GitBrowseCommand(GitContext context, Repository repository, LfsBlobStoreFactory lfsBlobStoreFactory, SyncAsyncExecutor executor) {
     super(context, repository);
@@ -151,18 +147,19 @@ public class GitBrowseCommand extends AbstractGitCommand
     fileObject.setName("");
     fileObject.setPath("");
     fileObject.setDirectory(true);
+    fileObject.setTruncated(false);
     return fileObject;
   }
 
   private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
-                                      BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk)
+                                      BrowseCommandRequest request, ObjectId revId, TreeEntry treeEntry)
     throws IOException {
 
     FileObject file = new FileObject();
 
-    String path = treeWalk.getPathString();
+    String path = treeEntry.getPathString();
 
-    file.setName(treeWalk.getNameString());
+    file.setName(treeEntry.getNameString());
     file.setPath(path);
 
     SubRepository sub = null;
@@ -180,7 +177,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
     else
     {
-      ObjectLoader loader = repo.open(treeWalk.getObjectId(0));
+      ObjectLoader loader = repo.open(treeEntry.getObjectId());
 
       file.setDirectory(loader.getType() == Constants.OBJ_TREE);
 
@@ -192,7 +189,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         try (RevWalk walk = new RevWalk(repo)) {
           commit = walk.parseCommit(revId);
         }
-        Optional<LfsPointer> lfsPointer = getLfsPointer(repo, path, commit, treeWalk);
+        Optional<LfsPointer> lfsPointer = getLfsPointer(repo, path, commit, treeEntry);
 
         if (lfsPointer.isPresent()) {
           setFileLengthFromLfsBlob(lfsPointer.get(), file);
@@ -249,31 +246,58 @@ public class GitBrowseCommand extends AbstractGitCommand
     return Strings.isNullOrEmpty(request.getPath()) || "/".equals(request.getPath());
   }
 
-  private FileObject findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException {
-    List<FileObject> files = Lists.newArrayList();
-    while (treeWalk.next())
-    {
+  private void findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException {
+    TreeEntry entry = new TreeEntry();
+    createTree(parent.getPath(), entry, repo, request, treeWalk);
+    convertToFileObject(parent, repo, request, revId, entry.getChildren());
+  }
 
-      FileObject fileObject = createFileObject(repo, request, revId, treeWalk);
-      if (!fileObject.getPath().startsWith(parent.getPath())) {
-        parent.setChildren(files);
-        return fileObject;
+  private void convertToFileObject(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, List<TreeEntry> entries) throws IOException {
+    List<FileObject> files = Lists.newArrayList();
+    Iterator<TreeEntry> entryIterator = entries.iterator();
+    boolean hasNext;
+    while ((hasNext = entryIterator.hasNext()) && resultCount < request.getLimit() + request.getOffset())
+    {
+      TreeEntry entry = entryIterator.next();
+      FileObject fileObject = createFileObject(repo, request, revId, entry);
+
+      if (!fileObject.isDirectory()) {
+        ++resultCount;
       }
 
-      files.add(fileObject);
-
       if (request.isRecursive() && fileObject.isDirectory()) {
-        treeWalk.enterSubtree();
-        FileObject rc = findChildren(fileObject, repo, request, revId, treeWalk);
-        if (rc != null) {
-          files.add(rc);
-        }
+        convertToFileObject(fileObject, repo, request, revId, entry.getChildren());
+      }
+
+      if (resultCount > request.getOffset() || (request.getOffset() == 0 && fileObject.isDirectory())) {
+        files.add(fileObject);
       }
     }
 
     parent.setChildren(files);
 
-    return null;
+    parent.setTruncated(hasNext);
+  }
+
+  private Optional<TreeEntry> createTree(String path, TreeEntry parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, TreeWalk treeWalk) throws IOException {
+    List<TreeEntry> entries = new ArrayList<>();
+    while (treeWalk.next()) {
+      TreeEntry treeEntry = new TreeEntry(repo, treeWalk);
+      if (!treeEntry.getPathString().startsWith(path)) {
+        parent.setChildren(entries);
+        return of(treeEntry);
+      }
+
+      entries.add(treeEntry);
+
+      if (request.isRecursive() && treeEntry.isDirectory()) {
+        treeWalk.enterSubtree();
+        Optional<TreeEntry> surplus = createTree(treeEntry.getNameString(), treeEntry, repo, request, treeWalk);
+        surplus.ifPresent(entries::add);
+      }
+    }
+    parent.setChildren(entries);
+    return empty();
   }
 
   private FileObject findFirstMatch(org.eclipse.jgit.lib.Repository repo,
@@ -289,7 +313,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         currentDepth++;
 
         if (currentDepth >= limit) {
-          return createFileObject(repo, request, revId, treeWalk);
+          return createFileObject(repo, request, revId, new TreeEntry(repo, treeWalk));
         } else {
           treeWalk.enterSubtree();
         }
@@ -329,11 +353,11 @@ public class GitBrowseCommand extends AbstractGitCommand
     return null;
   }
 
-  private Optional<LfsPointer> getLfsPointer(org.eclipse.jgit.lib.Repository repo, String path, RevCommit commit, TreeWalk treeWalk) {
+  private Optional<LfsPointer> getLfsPointer(org.eclipse.jgit.lib.Repository repo, String path, RevCommit commit, TreeEntry treeWalk) {
     try {
       Attributes attributes = LfsFactory.getAttributesForPath(repo, path, commit);
 
-      return GitUtil.getLfsPointer(repo, treeWalk, attributes);
+      return GitUtil.getLfsPointer(repo, treeWalk.getObjectId(), attributes);
     } catch (IOException e) {
       throw new InternalRepositoryException(repository, "could not read lfs pointer", e);
     }
@@ -437,6 +461,56 @@ public class GitBrowseCommand extends AbstractGitCommand
         changed |= markPartialAsAborted(child);
       }
       return changed;
+    }
+  }
+
+  private class TreeEntry {
+
+    private final String pathString;
+    private final String nameString;
+    private final ObjectId objectId;
+    private final boolean directory;
+    private List<TreeEntry> children = emptyList();
+
+    TreeEntry() {
+      pathString = "";
+      nameString = "";
+      objectId = null;
+      directory = true;
+    }
+
+    TreeEntry(org.eclipse.jgit.lib.Repository repo, TreeWalk treeWalk) throws IOException {
+      this.pathString = treeWalk.getPathString();
+      this.nameString = treeWalk.getNameString();
+      this.objectId = treeWalk.getObjectId(0);
+      ObjectLoader loader = repo.open(objectId);
+
+      this.directory = loader.getType() == Constants.OBJ_TREE;
+    }
+
+    String getPathString() {
+      return pathString;
+    }
+
+    String getNameString() {
+      return nameString;
+    }
+
+    ObjectId getObjectId() {
+      return objectId;
+    }
+
+    boolean isDirectory() {
+      return directory;
+    }
+
+    List<TreeEntry> getChildren() {
+      return children;
+    }
+
+    void setChildren(List<TreeEntry> children) {
+      sort(children, TreeEntry::isDirectory, TreeEntry::getNameString);
+      this.children = children;
     }
   }
 }

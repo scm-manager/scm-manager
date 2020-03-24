@@ -61,7 +61,7 @@
     "previous": "Zurück"
   },
   "profile": {
-    "navigationLabel": "Profil Navigation",
+    "navigationLabel": "Profil",
     "informationNavLink": "Information",
     "changePasswordNavLink": "Passwort ändern",
     "settingsNavLink": "Einstellungen",
@@ -86,5 +86,18 @@
     "passwordConfirmFailed": "Passwörter müssen identisch sein!",
     "submit": "Speichern",
     "changedSuccessfully": "Passwort erfolgreich geändert!"
+  },
+  "footer": {
+    "user": {
+      "profile": "Profil"
+    },
+    "information": {
+      "title": "Information"
+    },
+    "support": {
+      "title": "Support",
+      "community": "Community",
+      "enterprise": "Enterprise"
+    }
   }
 }

@@ -1,32 +1,27 @@
-/**
- * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
- * <p>
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * <p>
- * 1. Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer. 2. Redistributions in
- * binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other
- * materials provided with the distribution. 3. Neither the name of SCM-Manager;
- * nor the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
- * <p>
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * <p>
- * http://bitbucket.org/sdorra/scm-manager
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
-
-
+    
 package sonia.scm.annotation;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -50,13 +45,8 @@ import sonia.scm.plugin.PluginAnnotation;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
 
 import java.lang.annotation.Annotation;
 
@@ -89,11 +79,13 @@ import javax.tools.StandardLocation;
 import javax.ws.rs.Path;
 import javax.ws.rs.ext.Provider;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -160,18 +152,6 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     return false;
   }
 
-
-  private void close(Closeable closeable) {
-    if (closeable != null) {
-      try {
-        closeable.close();
-      } catch (IOException ex) {
-        printException("could not close closeable", ex);
-      }
-    }
-  }
-
-
   private TypeElement findAnnotation(Set<? extends TypeElement> annotations,
                                      Class<? extends Annotation> annotationClass) {
     TypeElement annotation = null;
@@ -205,15 +185,12 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
 
   private Document parseDocument(File file) {
     Document doc = null;
-    InputStream input = null;
 
     try {
-      DocumentBuilder builder =
-        DocumentBuilderFactory.newInstance().newDocumentBuilder();
+      DocumentBuilder builder = createDocumentBuilder();
 
       if (file.exists()) {
-        input = new FileInputStream(file);
-        doc = builder.parse(input);
+        doc = builder.parse(file);
       } else {
         doc = builder.newDocument();
         doc.appendChild(doc.createElement(EL_MODULE));
@@ -221,11 +198,18 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     } catch (ParserConfigurationException | SAXException | IOException
       | DOMException ex) {
       printException("could not parse document", ex);
-    } finally {
-      close(input);
     }
 
     return doc;
+  }
+
+  @SuppressWarnings("java:S2755") // we need to process https dtd, to avoid breaking intellij compilation on plugins
+  private DocumentBuilder createDocumentBuilder() throws ParserConfigurationException {
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "https");
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+    factory.setAttribute(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+    return factory.newDocumentBuilder();
   }
 
 
@@ -341,24 +325,27 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
 
 
   private void writeDocument(Document doc, File file) {
-    Writer writer = null;
-
     try {
       file.getParentFile().mkdirs();
-      writer = new FileWriter(file);
 
-      Transformer transformer =
-        TransformerFactory.newInstance().newTransformer();
-
-      transformer.setOutputProperty(OutputKeys.INDENT, PROPERTY_VALUE);
-      transformer.transform(new DOMSource(doc), new StreamResult(writer));
-    } catch (IOException | IllegalArgumentException | TransformerException ex) {
+      Transformer transformer = createTransformer();
+      transformer.transform(new DOMSource(doc), new StreamResult(file));
+    } catch (IllegalArgumentException | TransformerException ex) {
       printException("could not write document", ex);
-    } finally {
-      close(writer);
     }
   }
 
+  @SuppressWarnings("java:S2755") // we need to process https dtd, to avoid breaking intellij compilation on plugins
+  private Transformer createTransformer() throws TransformerConfigurationException {
+    TransformerFactory factory = TransformerFactory.newInstance();
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "https");
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+
+    Transformer transformer =  factory.newTransformer();
+    transformer.setOutputProperty(OutputKeys.INDENT, PROPERTY_VALUE);
+
+    return transformer;
+  }
 
   private Map<String, String> getAttributesFromAnnotation(Element el,
                                                           TypeElement annotation) {

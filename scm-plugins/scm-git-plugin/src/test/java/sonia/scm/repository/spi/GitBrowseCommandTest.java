@@ -1,34 +1,27 @@
-/**
- * Copyright (c) 2010, Sebastian Sdorra
- * All rights reserved.
+/*
+ * MIT License
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
  *
- * 1. Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
- * 3. Neither the name of SCM-Manager; nor the names of its
- * contributors may be used to endorse or promote products derived from this
- * software without specific prior written permission.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- * http://bitbucket.org/sdorra/scm-manager
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
-
-
+    
 package sonia.scm.repository.spi;
 
 import org.junit.Test;
@@ -72,6 +65,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     BrowserResult result = createCommand().getBrowserResult(request);
     FileObject fileObject = result.getFile();
     assertEquals("a.txt", fileObject.getName());
+    assertFalse(fileObject.isTruncated());
   }
 
   @Test
@@ -86,7 +80,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(foList)
       .extracting("name")
-      .containsExactly("a.txt", "b.txt", "c", "f.txt");
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
   }
 
   @Test
@@ -99,7 +93,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
     Collection<FileObject> foList = root.getChildren();
     assertThat(foList)
       .extracting("name")
-      .containsExactly("a.txt", "c");
+      .containsExactly("c", "a.txt");
   }
 
   @Test
@@ -174,7 +168,9 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
 
     Collection<FileObject> foList = root.getChildren();
 
-    assertThat(foList).hasSize(2);
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("d.txt", "e.txt");
 
     FileObject d = findFile(foList, "d.txt");
     FileObject e = findFile(foList, "e.txt");
@@ -206,7 +202,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(foList)
       .extracting("name")
-      .containsExactly("a.txt", "b.txt", "c", "f.txt");
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
 
     FileObject c = findFile(foList, "c");
 
@@ -234,6 +230,120 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
       .filteredOn(f -> "lfs-image.png".equals(f.getName()))
       .extracting("length")
       .containsExactly(of(42L));
+  }
+
+  @Test
+  public void testBrowseLimit() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(1);
+    FileObject root = createCommand()
+      .getBrowserResult(request).getFile();
+    assertNotNull(root);
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt");
+    assertThat(foList).hasSize(2);
+    assertTrue("result should be marked as trunctated", root.isTruncated());
+  }
+
+  @Test
+  public void testBrowseLimitWithoutTruncation() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(3);
+    FileObject root = createCommand()
+      .getBrowserResult(request).getFile();
+    assertNotNull(root);
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt", "b.txt", "f.txt");
+    assertThat(foList).hasSize(4);
+    assertFalse("result should not be marked as trunctated", root.isTruncated());
+  }
+
+  @Test
+  public void testBrowseOffset() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(1);
+    request.setOffset(2);
+    FileObject root = createCommand()
+      .getBrowserResult(request).getFile();
+    assertNotNull(root);
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList).extracting("name").containsExactly("f.txt");
+    assertFalse("result should not be marked as trunctated", root.isTruncated());
+  }
+
+  @Test
+  public void testRecursiveLimit() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setLimit(3);
+    request.setRecursive(true);
+
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt");
+
+    FileObject c = findFile(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("d.txt", "e.txt");
+  }
+
+  @Test
+  public void testRecursiveLimitInSubDir() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setLimit(1);
+    request.setRecursive(true);
+
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c");
+
+    FileObject c = findFile(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("d.txt");
+  }
+
+  @Test
+  public void testRecursiveOffset() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setOffset(1);
+    request.setRecursive(true);
+
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
+
+    FileObject c = findFile(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("e.txt");
   }
 
   private FileObject findFile(Collection<FileObject> foList, String name) {

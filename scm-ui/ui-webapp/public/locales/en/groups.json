@@ -18,7 +18,7 @@
     "errorTitle": "Error",
     "errorSubtitle": "Unknown group error",
     "menu": {
-      "navigationLabel": "Group Navigation",
+      "navigationLabel": "Group",
       "informationNavLink": "Information",
       "settingsNavLink": "Settings",
       "generalNavLink": "General",

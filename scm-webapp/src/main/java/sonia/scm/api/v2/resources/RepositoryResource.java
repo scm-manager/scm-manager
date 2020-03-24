@@ -1,8 +1,33 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+    
 package sonia.scm.api.v2.resources;
 
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
@@ -87,14 +112,39 @@ public class RepositoryResource {
   @GET
   @Path("")
   @Produces(VndMediaType.REPOSITORY)
-  @TypeHint(RepositoryDto.class)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the repository"),
-    @ResponseCode(code = 404, condition = "not found, no repository with the specified name available in the namespace"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(summary = "Get single repository", description = "Returns the repository for the given namespace and name.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.REPOSITORY,
+      schema = @Schema(implementation = RepositoryDto.class)
+    )
+  )
+  @ApiResponse(
+    responseCode = "401",
+    description = "not authenticated / invalid credentials"
+  )
+  @ApiResponse(
+    responseCode = "403",
+    description = "not authorized, the current user has no privileges to read the repository"
+  )
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no repository with the specified name available in the namespace",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name){
     return adapter.get(loadBy(namespace, name), repositoryToDtoMapper::map);
   }
@@ -110,13 +160,11 @@ public class RepositoryResource {
    */
   @DELETE
   @Path("")
-  @StatusCodes({
-    @ResponseCode(code = 204, condition = "delete success or nothing to delete"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"repository\" privilege"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
+  @Operation(summary = "Delete repository", description = "Deletes the repository with the given namespace and name.", tags = "Repository")
+  @ApiResponse(responseCode = "204", description = "delete success or nothing to delete")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"repository\" privilege")
+  @ApiResponse(responseCode = "500", description = "internal server error")
   public Response delete(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     return adapter.delete(loadBy(namespace, name));
   }
@@ -133,15 +181,19 @@ public class RepositoryResource {
   @PUT
   @Path("")
   @Consumes(VndMediaType.REPOSITORY)
-  @StatusCodes({
-    @ResponseCode(code = 204, condition = "update success"),
-    @ResponseCode(code = 400, condition = "Invalid body, e.g. illegal change of namespace or name"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"repository\" privilege"),
-    @ResponseCode(code = 404, condition = "not found, no repository with the specified namespace and name available"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
+  @Operation(summary = "Update repository", description = "Modifies the repository for the given namespace and name.", tags = "Repository")
+  @ApiResponse(responseCode = "204", description = "update success")
+  @ApiResponse(responseCode = "400", description = "invalid body, e.g. illegal change of namespace or name")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"repository\" privilege")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no repository with the specified namespace and name available",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(responseCode = "500", description = "internal server error")
   public Response update(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryDto repository) {
     return adapter.update(
       loadBy(namespace, name),
@@ -168,7 +220,7 @@ public class RepositoryResource {
   }
 
   @Path("branches/")
-  public BranchRootResource branches(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+  public BranchRootResource branches() {
     return branchRootResource.get();
   }
 

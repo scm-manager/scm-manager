@@ -1,3 +1,26 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 import React, { Component } from "react";
 import Main from "./Main";
 import { connect } from "react-redux";
@@ -8,6 +31,7 @@ import { fetchMe, getFetchMeFailure, getMe, isAuthenticated, isFetchMePending } 
 import { ErrorPage, Footer, Header, Loading, PrimaryNavigation } from "@scm-manager/ui-components";
 import { Links, Me } from "@scm-manager/ui-types";
 import {
+  getAppVersion,
   getFetchIndexResourcesFailure,
   getLinks,
   getMeLink,
@@ -21,6 +45,7 @@ type Props = WithTranslation & {
   loading: boolean;
   links: Links;
   meLink: string;
+  version: string;
 
   // dispatcher functions
   fetchMe: (link: string) => void;
@@ -34,7 +59,7 @@ class App extends Component<Props> {
   }
 
   render() {
-    const { me, loading, error, authenticated, links, t } = this.props;
+    const { me, loading, error, authenticated, links, version, t } = this.props;
 
     let content;
     const navigation = authenticated ? <PrimaryNavigation links={links} /> : "";
@@ -50,7 +75,7 @@ class App extends Component<Props> {
       <div className="App">
         <Header>{navigation}</Header>
         {content}
-        {authenticated && <Footer me={me} />}
+        {authenticated && <Footer me={me} version={version} links={links} />}
       </div>
     );
   }
@@ -69,13 +94,15 @@ const mapStateToProps = (state: any) => {
   const error = getFetchMeFailure(state) || getFetchIndexResourcesFailure(state);
   const links = getLinks(state);
   const meLink = getMeLink(state);
+  const version = getAppVersion(state);
   return {
     authenticated,
     me,
     loading,
     error,
     links,
-    meLink
+    meLink,
+    version
   };
 };
 

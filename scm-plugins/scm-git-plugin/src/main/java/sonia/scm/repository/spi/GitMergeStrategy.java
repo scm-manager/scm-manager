@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+    
 package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
@@ -88,7 +112,14 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
   }
 
   MergeCommandResult analyseFailure(MergeResult result) {
-    logger.info("could not merge branch {} into {} due to conflict in paths {}", branchToMerge, targetBranch, result.getConflicts().keySet());
+    logger.info("could not merge branch {} into {} with merge status '{}' due to ...", branchToMerge, targetBranch, result.getMergeStatus());
+    logger.info("... conflicts: {}", result.getConflicts());
+    logger.info("... checkout conflicts: {}", result.getCheckoutConflicts());
+    logger.info("... failing paths: {}", result.getFailingPaths());
+    logger.info("... message: {}", result);
+    if (result.getConflicts() == null) {
+      throw new UnexpectedMergeResultException(getRepository(), result);
+    }
     return MergeCommandResult.failure(targetRevision.name(), revisionToMerge.name(), result.getConflicts().keySet());
   }
 }

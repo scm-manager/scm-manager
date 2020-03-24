@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 import { File, Repository } from "@scm-manager/ui-types";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
@@ -37,6 +61,9 @@ const collection = {
   length: 176,
   revision: "76aae4bb4ceacf0e88938eb5b6832738b7d537b4",
   subRepository: undefined,
+  truncated: true,
+  partialResult: false,
+  computationAborted: false,
   _links: {
     self: {
       href:
@@ -115,17 +142,28 @@ describe("sources fetch", () => {
   });
 
   it("should fetch the sources of the repository", () => {
-    fetchMock.getOnce(sourcesUrl, collection);
+    fetchMock.getOnce(sourcesUrl + "?offset=0", collection);
 
     const expectedActions = [
       {
         type: FETCH_SOURCES_PENDING,
-        itemId: "scm/core/_/"
+        itemId: "scm/core/_//",
+        payload: {
+          hunk: 0,
+          updatePending: false,
+          pending: true,
+          sources: {}
+        }
       },
       {
         type: FETCH_SOURCES_SUCCESS,
-        itemId: "scm/core/_/",
-        payload: { updatePending: false, sources: collection }
+        itemId: "scm/core/_//",
+        payload: {
+          hunk: 0,
+          updatePending: false,
+          pending: false,
+          sources: collection
+        }
       }
     ];
 
@@ -136,17 +174,28 @@ describe("sources fetch", () => {
   });
 
   it("should fetch the sources of the repository with the given revision and path", () => {
-    fetchMock.getOnce(sourcesUrl + "abc/src", collection);
+    fetchMock.getOnce(sourcesUrl + "abc/src?offset=0", collection);
 
     const expectedActions = [
       {
         type: FETCH_SOURCES_PENDING,
-        itemId: "scm/core/abc/src"
+        itemId: "scm/core/abc/src/",
+        payload: {
+          hunk: 0,
+          updatePending: false,
+          pending: true,
+          sources: {}
+        }
       },
       {
         type: FETCH_SOURCES_SUCCESS,
-        itemId: "scm/core/abc/src",
-        payload: { updatePending: false, sources: collection }
+        itemId: "scm/core/abc/src/",
+        payload: {
+          hunk: 0,
+          updatePending: false,
+          pending: false,
+          sources: collection
+        }
       }
     ];
 
@@ -157,7 +206,7 @@ describe("sources fetch", () => {
   });
 
   it("should dispatch FETCH_SOURCES_FAILURE on server error", () => {
-    fetchMock.getOnce(sourcesUrl, {
+    fetchMock.getOnce(sourcesUrl + "?offset=0", {
       status: 500
     });
 
@@ -166,7 +215,7 @@ describe("sources fetch", () => {
       const actions = store.getActions();
       expect(actions[0].type).toBe(FETCH_SOURCES_PENDING);
       expect(actions[1].type).toBe(FETCH_SOURCES_FAILURE);
-      expect(actions[1].itemId).toBe("scm/core/_/");
+      expect(actions[1].itemId).toBe("scm/core/_//");
       expect(actions[1].payload).toBeDefined();
     });
   });
@@ -180,16 +229,18 @@ describe("reducer tests", () => {
 
   it("should store the collection, without revision and path", () => {
     const expectedState = {
-      "scm/core/_/": { updatePending: false, sources: collection }
+      "scm/core/_//0": { pending: false, updatePending: false, sources: collection },
+      "scm/core/_//hunkCount": 1
     };
-    expect(reducer({}, fetchSourcesSuccess(repository, "", "", collection))).toEqual(expectedState);
+    expect(reducer({}, fetchSourcesSuccess(repository, "", "", 0, collection))).toEqual(expectedState);
   });
 
   it("should store the collection, with revision and path", () => {
     const expectedState = {
-      "scm/core/abc/src/main": { updatePending: false, sources: collection }
+      "scm/core/abc/src/main/0": { pending: false, updatePending: false, sources: collection },
+      "scm/core/abc/src/main/hunkCount": 1
     };
-    expect(reducer({}, fetchSourcesSuccess(repository, "abc", "src/main", collection))).toEqual(expectedState);
+    expect(reducer({}, fetchSourcesSuccess(repository, "abc", "src/main", 0, collection))).toEqual(expectedState);
   });
 });
 
@@ -197,7 +248,7 @@ describe("selector tests", () => {
   it("should return false if it is no directory", () => {
     const state = {
       sources: {
-        "scm/core/abc/src/main/package.json": {
+        "scm/core/abc/src/main/package.json/0": {
           sources: { noDirectory }
         }
       }
@@ -208,7 +259,7 @@ describe("selector tests", () => {
   it("should return true if it is directory", () => {
     const state = {
       sources: {
-        "scm/core/abc/src": noDirectory
+        "scm/core/abc/src/0": noDirectory
       }
     };
     expect(isDirectory(state, repository, "abc", "src")).toBe(true);
@@ -221,7 +272,7 @@ describe("selector tests", () => {
   it("should return the source collection without revision and path", () => {
     const state = {
       sources: {
-        "scm/core/_/": {
+        "scm/core/_//0": {
           sources: collection
         }
       }
@@ -232,7 +283,7 @@ describe("selector tests", () => {
   it("should return the source collection with revision and path", () => {
     const state = {
       sources: {
-        "scm/core/abc/src/main": {
+        "scm/core/abc/src/main/0": {
           sources: collection
         }
       }
@@ -242,29 +293,44 @@ describe("selector tests", () => {
 
   it("should return true, when fetch sources is pending", () => {
     const state = {
-      pending: {
-        [FETCH_SOURCES + "/scm/core/_/"]: true
+      sources: {
+        "scm/core/_//0": {
+          pending: true,
+          sources: {}
+        }
       }
     };
-    expect(isFetchSourcesPending(state, repository, "", "")).toEqual(true);
+    expect(isFetchSourcesPending(state, repository, "", "", 0)).toEqual(true);
   });
 
   it("should return false, when fetch sources is not pending", () => {
-    expect(isFetchSourcesPending({}, repository, "", "")).toEqual(false);
+    const state = {
+      sources: {
+        "scm/core/_//0": {
+          pending: false,
+          sources: {}
+        }
+      }
+    };
+    expect(isFetchSourcesPending(state, repository, "", "", 0)).toEqual(false);
   });
 
   const error = new Error("incredible error from hell");
 
   it("should return error when fetch sources did fail", () => {
     const state = {
-      failure: {
-        [FETCH_SOURCES + "/scm/core/_/"]: error
+      sources: {
+        "scm/core/_//0": {
+          pending: false,
+          sources: {},
+          error: error
+        }
       }
     };
-    expect(getFetchSourcesFailure(state, repository, "", "")).toEqual(error);
+    expect(getFetchSourcesFailure(state, repository, "", "", 0)).toEqual(error);
   });
 
   it("should return undefined when fetch sources did not fail", () => {
-    expect(getFetchSourcesFailure({}, repository, "", "")).toBe(undefined);
+    expect(getFetchSourcesFailure({}, repository, "", "", 0)).toBe(null);
   });
 });

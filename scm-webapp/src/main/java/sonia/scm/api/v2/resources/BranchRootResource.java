@@ -1,11 +1,35 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+    
 package sonia.scm.api.v2.resources;
 
 import com.google.common.base.Strings;
-import com.webcohesion.enunciate.metadata.rs.ResponseCode;
-import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
-import com.webcohesion.enunciate.metadata.rs.ResponseHeaders;
-import com.webcohesion.enunciate.metadata.rs.StatusCodes;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.PageResult;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Branches;
@@ -69,15 +93,33 @@ public class BranchRootResource {
   @GET
   @Path("{branch}")
   @Produces(VndMediaType.BRANCH)
-  @TypeHint(BranchDto.class)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 400, condition = "branches not supported for given repository"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the branch"),
-    @ResponseCode(code = 404, condition = "not found, no branch with the specified name for the repository available or repository not found"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(summary = "Get single branch", description = "Returns a branch for a repository.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.BRANCH,
+      schema = @Schema(implementation = BranchDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "400", description = "branches not supported for given repository")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the branch")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no branch with the specified name for the repository available or repository found",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("branch") String branchName) throws IOException {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
@@ -95,24 +137,42 @@ public class BranchRootResource {
     }
   }
 
-  @Path("{branch}/changesets/")
   @GET
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user has no privileges to read the changeset"),
-    @ResponseCode(code = 404, condition = "not found, no changesets available in the repository"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Path("{branch}/changesets/")
   @Produces(VndMediaType.CHANGESET_COLLECTION)
-  @TypeHint(CollectionDto.class)
+  @Operation(summary = "Collection of changesets", description = "Returns a collection of changesets for specific branch.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.CHANGESET_COLLECTION,
+      schema = @Schema(implementation = CollectionDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the changeset")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no changesets available in the repository",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response history(@PathParam("namespace") String namespace,
                           @PathParam("name") String name,
                           @PathParam("branch") String branchName,
                           @DefaultValue("0") @QueryParam("page") int page,
                           @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      if (!branchExists(branchName, repositoryService)){
+      if (!branchExists(branchName, repositoryService)) {
         throw notFound(entity(Branch.class, branchName).in(Repository.class, namespace + "/" + name));
       }
       Repository repository = repositoryService.getRepository();
@@ -143,15 +203,26 @@ public class BranchRootResource {
   @POST
   @Path("")
   @Consumes(VndMediaType.BRANCH_REQUEST)
-  @StatusCodes({
-    @ResponseCode(code = 201, condition = "create success"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"push\" privilege"),
-    @ResponseCode(code = 409, condition = "conflict, a user with this name already exists"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
-  @TypeHint(TypeHint.NO_CONTENT.class)
-  @ResponseHeaders(@ResponseHeader(name = "Location", description = "uri to the created branch"))
+  @Operation(summary = "Create branch", description = "Creates a new branch.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "201",
+    description = "create success",
+    headers = @Header(
+      name = "Location",
+      description = "uri to the created branch",
+      schema = @Schema(type = "string")
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"push\" privilege")
+  @ApiResponse(responseCode = "409", description = "conflict, a branch with this name already exists")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public Response create(@PathParam("namespace") String namespace,
                          @PathParam("name") String name,
                          @Valid BranchRequestDto branchRequest) throws IOException {
@@ -195,15 +266,33 @@ public class BranchRootResource {
   @GET
   @Path("")
   @Produces(VndMediaType.BRANCH_COLLECTION)
-  @TypeHint(CollectionDto.class)
-  @StatusCodes({
-    @ResponseCode(code = 200, condition = "success"),
-    @ResponseCode(code = 400, condition = "branches not supported for given repository"),
-    @ResponseCode(code = 401, condition = "not authenticated / invalid credentials"),
-    @ResponseCode(code = 403, condition = "not authorized, the current user does not have the \"read repository\" privilege"),
-    @ResponseCode(code = 404, condition = "not found, no repository found for the given namespace and name"),
-    @ResponseCode(code = 500, condition = "internal server error")
-  })
+  @Operation(summary = "List of branches", description = "Returns all branches for a repository.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.BRANCH_COLLECTION,
+      schema = @Schema(implementation = CollectionDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "400", description = "branches not supported for given repository")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"read repository\" privilege")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no repository found for the given namespace and name",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Branches branches = repositoryService.getBranchesCommand().getBranches();

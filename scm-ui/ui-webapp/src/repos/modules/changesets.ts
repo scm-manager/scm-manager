@@ -1,8 +1,33 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 import { FAILURE_SUFFIX, PENDING_SUFFIX, SUCCESS_SUFFIX } from "../../modules/types";
 import { apiClient, urls } from "@scm-manager/ui-components";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 import { Action, Branch, PagedCollection, Repository } from "@scm-manager/ui-types";
+import memoizeOne from "memoize-one";
 
 export const FETCH_CHANGESETS = "scm/repos/FETCH_CHANGESETS";
 export const FETCH_CHANGESETS_PENDING = `${FETCH_CHANGESETS}_${PENDING_SUFFIX}`;
@@ -254,10 +279,15 @@ export function getChangesets(state: object, repository: Repository, branch?: Br
     return null;
   }
 
+  return collectChangesets(stateRoot, changesets);
+}
+const mapChangesets = (stateRoot, changesets) => {
   return changesets.entries.map((id: string) => {
     return stateRoot.byId[id];
   });
-}
+};
+
+const collectChangesets = memoizeOne(mapChangesets);
 
 export function getChangeset(state: object, repository: Repository, id: string) {
   const key = createItemId(repository);
@@ -291,6 +321,8 @@ export function getFetchChangesetsFailure(state: object, repository: Repository,
   return getFailure(state, FETCH_CHANGESETS, createItemId(repository, branch));
 }
 
+const EMPTY = {};
+
 const selectList = (state: object, repository: Repository, branch?: Branch) => {
   const repoId = createItemId(repository);
 
@@ -302,7 +334,7 @@ const selectList = (state: object, repository: Repository, branch?: Branch) => {
       return repoState.byBranch[branchName];
     }
   }
-  return {};
+  return EMPTY;
 };
 
 const selectListEntry = (state: object, repository: Repository, branch?: Branch): object => {
@@ -310,7 +342,7 @@ const selectListEntry = (state: object, repository: Repository, branch?: Branch)
   if (list.entry) {
     return list.entry;
   }
-  return {};
+  return EMPTY;
 };
 
 export const selectListAsCollection = (state: object, repository: Repository, branch?: Branch): PagedCollection => {

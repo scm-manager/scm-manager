@@ -6,6 +6,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
+- Extension point to add links to the repository cards from plug ins ([#1041](https://github.com/scm-manager/scm-manager/pull/1041))
+
+### Changed
+- Update resteasy to version 4.5.2.Final
+- Use browser built-in EventSource for apiClient subscriptions
+- Changeover to MIT license ([#1066](https://github.com/scm-manager/scm-manager/pull/1066))
+
+### Removed
+- EventSource Polyfill
+
+### Fixed
+- Build on windows ([#1048](https://github.com/scm-manager/scm-manager/issues/1048), [#1049](https://github.com/scm-manager/scm-manager/issues/1049), [#1056](https://github.com/scm-manager/scm-manager/pull/1056))
+- Show specific notification for plugin actions on plugin administration ([#1057](https://github.com/scm-manager/scm-manager/pull/1057))
+
+## 2.0.0-rc5 - 2020-03-12
+### Added
+- Added footer extension points for links and avatar
+- Create OpenAPI specification during build
+- Extension point entries with supplied extensionName are sorted ascending
+- Possibility to configure git core config entries for jgit like core.trustfolderstat and core.supportsatomicfilecreation
+- Babel-plugin-styled-components for persistent generated classnames
+- By default, only 100 files will be listed in source view in one request
+
+### Changed
+- New footer design
+- Update jgit to version 5.6.1.202002131546-r-scm1
+- Update svnkit to version 1.10.1-scm1
+- Secondary navigation collapsable
+
+### Fixed
+- Modification for mercurial repositories with enabled XSRF protection
+- Does not throw NullPointerException when merge fails without normal merge conflicts
+- Keep file attributes on modification
+- Drop Down Component works again with translations
+
+### Removed
+- Enunciate rest documentation
+- Obsolete fields in data transfer objects
+
+## 2.0.0-rc4 - 2020-02-14
+### Added
 - Support for Java versions > 8
 - Simple ClassLoaderLifeCycle to fix integration tests on Java > 8
 - Option to use a function for default collapse state in diffs
@@ -14,12 +55,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use icon only buttons for diff file controls
 - Upgrade [Legman](https://github.com/sdorra/legman) to v1.6.2 in order to fix execution on Java versions > 8
 - Upgrade [Lombok](https://projectlombok.org/) to version 1.18.10 in order to fix build on Java versions > 8
-- Upgrade [Mockito](https://site.mockito.org/) to version 2.28.2 in order to fix tests on Java versions > 8  
+- Upgrade [Mockito](https://site.mockito.org/) to version 2.28.2 in order to fix tests on Java versions > 8
 - Upgrade smp-maven-plugin to version 1.0.0-rc3
+
+### Fixed
+- Committer of new Git commits set to "SCM-Manager <noreply@scm-manager.org>"
 
 ## 2.0.0-rc3 - 2020-01-31
 ### Fixed
 - Broken plugin order fixed
+- MarkdownViewer in code section renders markdown properly
 
 ## 2.0.0-rc2 - 2020-01-29
 ### Added

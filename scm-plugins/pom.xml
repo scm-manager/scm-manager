@@ -1,4 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    MIT License
+
+    Copyright (c) 2020-present Cloudogu GmbH and Contributors
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
@@ -58,6 +83,13 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- openapi documentation -->
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-annotations</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -136,100 +168,37 @@
       </configuration>
     </plugin>
 
+      <plugin>
+        <groupId>io.openapitools.swagger</groupId>
+        <artifactId>swagger-maven-plugin</artifactId>
+        <configuration>
+          <resourcePackages>
+            <resourcePackage>sonia.scm.api.v2.resources</resourcePackage>
+          </resourcePackages>
+          <outputDirectory>${basedir}/target/classes/META-INF/scm</outputDirectory>
+          <outputFilename>openapi</outputFilename>
+          <outputFormats>JSON,YAML</outputFormats>
+          <prettyPrint>true</prettyPrint>
+          <swaggerConfig>
+            <info>
+              <title>SCM-Manager Plugin REST-API</title>
+              <version>${project.version}</version>
+              <license>
+                <url>http://www.opensource.org/licenses/bsd-license.php</url>
+                <name>BSD</name>
+              </license>
+            </info>
+          </swaggerConfig>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>plugin-doc</id>
-
-      <build>
-        <plugins>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>copy-enunciate-configuration</id>
-                <phase>compile</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${project.build.directory}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>src/main/doc</directory>
-                      <filtering>true</filtering>
-                      <includes>
-                        <include>**/enunciate.xml</include>
-                      </includes>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>com.webcohesion.enunciate</groupId>
-            <artifactId>enunciate-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>docs</goal>
-                </goals>
-                <phase>compile</phase>
-              </execution>
-            </executions>
-            <configuration>
-              <configFile>${project.build.directory}/enunciate.xml</configFile>
-              <docsDir>${project.build.directory}</docsDir>
-              <docsSubdir>restdocs</docsSubdir>
-            </configuration>
-            <dependencies>
-              <dependency>
-                <groupId>com.webcohesion.enunciate</groupId>
-                <artifactId>enunciate-top</artifactId>
-                <version>${enunciate.version}</version>
-                <exclusions>
-                  <exclusion>
-                    <groupId>com.webcohesion.enunciate</groupId>
-                    <artifactId>enunciate-swagger</artifactId>
-                  </exclusion>
-                </exclusions>
-              </dependency>
-              <dependency>
-                <groupId>com.webcohesion.enunciate</groupId>
-                <artifactId>enunciate-lombok</artifactId>
-                <version>${enunciate.version}</version>
-              </dependency>
-            </dependencies>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <configuration>
-              <descriptors>
-                <descriptor>src/main/doc/assembly.xml</descriptor>
-              </descriptors>
-            </configuration>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>single</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-
-        </plugins>
-      </build>
-    </profile>
-
-  </profiles>
 
 </project>

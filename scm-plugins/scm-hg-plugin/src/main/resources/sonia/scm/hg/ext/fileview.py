@@ -1,33 +1,27 @@
 #
-# Copyright (c) 2010, Sebastian Sdorra
-# aLL rights reserved.
+# MIT License
 #
-# rEDistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are met:
+# Copyright (c) 2020-present Cloudogu GmbH and Contributors
 #
-# 1. Redistributions of source code must retain the above copyright notice,
-#    this list of conditions and the following disclaimer.
-# 2. Redistributions in binary form must reproduce the above copyright notice,
-#    this list of conditions and the following disclaimer in the documentation
-#    and/or other materials provided with the distribution.
-# 3. Neither the name of SCM-Manager; nor the names of its
-#    contributors may be used to endorse or promote products derived from this
-#    software without specific prior written permission.
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 #
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY
-# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
 #
-# http://bitbucket.org/sdorra/scm-manager
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 #
-#
+
 """fileview
 
 Prints date, size and last message of files.
@@ -153,7 +147,8 @@ class File_Walker:
     return path
 
   def walk(self, structure, parent = ""):
-    for key, value in structure.iteritems():
+    sortedItems = sorted(structure.iteritems(), key = lambda item: self.sortKey(item))
+    for key, value in sortedItems:
       if key == FILE_MARKER:
         if value:
           for v in value:
@@ -164,6 +159,12 @@ class File_Walker:
           self.walk(value, self.create_path(parent, key))
         else:
           self.visit_directory(self.create_path(parent, value))
+
+  def sortKey(self, item):
+    if (item[0] == FILE_MARKER):
+      return "2"
+    else:
+      return "1" + item[0]
 
 class SubRepository:
   url = None
@@ -195,39 +196,55 @@ def collect_sub_repositories(revCtx):
 
   return subrepos
 
+class Writer:
+  def __init__(self, ui):
+    self.ui = ui
+
+  def write(self, value):
+    self.ui.write(value)
+
 class File_Printer:
 
-  def __init__(self, ui, repo, revCtx, disableLastCommit, transport):
-    self.ui = ui
+  def __init__(self, writer, repo, revCtx, disableLastCommit, transport, limit, offset):
+    self.writer = writer
     self.repo = repo
     self.revCtx = revCtx
     self.disableLastCommit = disableLastCommit
     self.transport = transport
+    self.result_count = 0
+    self.initial_path_printed = False
+    self.limit = limit
+    self.offset = offset
 
   def print_directory(self, path):
-    format = '%s/\n'
-    if self.transport:
-        format = 'd%s/\0'
-    self.ui.write( format % path)
+    if not self.initial_path_printed or self.offset == 0 or self.shouldPrintResult():
+      self.initial_path_printed = True
+      format = '%s/\n'
+      if self.transport:
+          format = 'd%s/\0'
+      self.writer.write( format % path)
 
   def print_file(self, path):
-    file = self.revCtx[path]
-    date = '0 0'
-    description = 'n/a'
-    if not self.disableLastCommit:
-      linkrev = self.repo[file.linkrev()]
-      date = '%d %d' % _parsedate(linkrev.date())
-      description = linkrev.description()
-    format = '%s %i %s %s\n'
-    if self.transport:
-      format = 'f%s\n%i %s %s\0'
-    self.ui.write( format % (file.path(), file.size(), date, description) )
+    self.result_count += 1
+    if self.shouldPrintResult():
+      file = self.revCtx[path]
+      date = '0 0'
+      description = 'n/a'
+      if not self.disableLastCommit:
+        linkrev = self.repo[file.linkrev()]
+        date = '%d %d' % _parsedate(linkrev.date())
+        description = linkrev.description()
+      format = '%s %i %s %s\n'
+      if self.transport:
+        format = 'f%s\n%i %s %s\0'
+      self.writer.write( format % (file.path(), file.size(), date, description) )
 
   def print_sub_repository(self, path, subrepo):
-    format = '%s/ %s %s\n'
-    if self.transport:
-      format = 's%s/\n%s %s\0'
-    self.ui.write( format % (path, subrepo.revision, subrepo.url))
+    if self.shouldPrintResult():
+      format = '%s/ %s %s\n'
+      if self.transport:
+        format = 's%s/\n%s %s\0'
+      self.writer.write( format % (path, subrepo.revision, subrepo.url))
 
   def visit(self, file):
     if file.sub_repository:
@@ -236,6 +253,19 @@ class File_Printer:
       self.print_directory(file.path)
     else:
       self.print_file(file.path)
+
+  def shouldPrintResult(self):
+    return self.offset < self.result_count <= self.limit + self.offset
+
+  def isTruncated(self):
+    return self.result_count > self.limit + self.offset
+
+  def finish(self):
+    if self.isTruncated():
+      if self.transport:
+        self.writer.write( "t")
+      else:
+        self.writer.write("truncated")
 
 class File_Viewer:
   def __init__(self, revCtx, visitor):
@@ -271,14 +301,18 @@ class File_Viewer:
     ('d', 'disableLastCommit', False, 'disables last commit description and date'),
     ('s', 'disableSubRepositoryDetection', False, 'disables detection of sub repositories'),
     ('t', 'transport', False, 'format the output for command server'),
+    ('l', 'limit', 100, 'limit the number of results'),
+    ('o', 'offset', 0, 'proceed from the given result number (zero based)'),
   ])
 def fileview(ui, repo, **opts):
   revCtx = scmutil.revsingle(repo, opts["revision"])
   subrepos = {}
   if not opts["disableSubRepositoryDetection"]:
     subrepos = collect_sub_repositories(revCtx)
-  printer = File_Printer(ui, repo, revCtx, opts["disableLastCommit"], opts["transport"])
+  writer = Writer(ui)
+  printer = File_Printer(writer, repo, revCtx, opts["disableLastCommit"], opts["transport"], opts["limit"], opts["offset"])
   viewer = File_Viewer(revCtx, printer)
   viewer.recursive = opts["recursive"]
   viewer.sub_repositories = subrepos
   viewer.view(opts["path"])
+  printer.finish()

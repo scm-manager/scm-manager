@@ -3,21 +3,21 @@
   "version": "2.0.0-SNAPSHOT",
   "description": "Styles for SCM-Manager",
   "main": "src/scm.scss",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "serve": "webpack-dev-server"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
-    "bulma": "^0.7.5",
+    "bulma": "^0.8.0",
     "bulma-popover": "^1.0.0",
     "bulma-tooltip": "^3.0.0",
     "react-diff-view": "^2.4.1"
   },
   "devDependencies": {
     "css-loader": "^3.2.0",
-    "node-sass": "^4.12.0",
+    "sass": "^1.26.3",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",
     "webpack": "^4.41.5",

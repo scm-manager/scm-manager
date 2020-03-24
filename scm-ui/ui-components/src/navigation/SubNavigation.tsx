@@ -1,5 +1,28 @@
-import React, { ReactNode } from "react";
-import { Link, Route } from "react-router-dom";
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+import React, { FC, ReactElement, useContext, useEffect } from "react";
+import { Link, useRouteMatch } from "react-router-dom";
 import classNames from "classnames";
 
 type Props = {
@@ -8,52 +31,39 @@ type Props = {
   label: string;
   activeOnlyWhenExact?: boolean;
   activeWhenMatch?: (route: any) => boolean;
-  children?: ReactNode;
+  children?: ReactElement[];
+  collapsed?: boolean;
+  title?: string;
 };
 
-class SubNavigation extends React.Component<Props> {
-  static defaultProps = {
-    activeOnlyWhenExact: false
-  };
+const SubNavigation: FC<Props> = ({ to, activeOnlyWhenExact, icon, collapsed, title, label, children }) => {
+  const parents = to.split("/");
+  parents.splice(-1, 1);
+  const parent = parents.join("/");
 
-  isActive(route: any) {
-    const { activeWhenMatch } = this.props;
-    return route.match || (activeWhenMatch && activeWhenMatch(route));
+  const match = useRouteMatch({
+    path: parent,
+    exact: activeOnlyWhenExact
+  });
+
+  let defaultIcon = "fas fa-cog";
+  if (icon) {
+    defaultIcon = icon;
   }
 
-  renderLink = (route: any) => {
-    const { to, icon, label } = this.props;
-
-    let defaultIcon = "fas fa-cog";
-    if (icon) {
-      defaultIcon = icon;
-    }
-
-    let children = null;
-    if (this.isActive(route)) {
-      children = <ul className="sub-menu">{this.props.children}</ul>;
-    }
-
-    return (
-      <li>
-        <Link className={this.isActive(route) ? "is-active" : ""} to={to}>
-          <i className={classNames(defaultIcon, "fa-fw")} /> {label}
-        </Link>
-        {children}
-      </li>
-    );
-  };
-
-  render() {
-    const { to, activeOnlyWhenExact } = this.props;
-
-    // removes last part of url
-    const parents = to.split("/");
-    parents.splice(-1, 1);
-    const parent = parents.join("/");
-
-    return <Route path={parent} exact={activeOnlyWhenExact} children={this.renderLink} />;
+  let childrenList = null;
+  if (match && !collapsed) {
+    childrenList = <ul className="sub-menu">{children}</ul>;
   }
-}
+
+  return (
+    <li title={collapsed ? title : undefined}>
+      <Link className={classNames(match != null ? "is-active" : "", collapsed ? "has-text-centered" : "")} to={to}>
+        <i className={classNames(defaultIcon, "fa-fw")} /> {collapsed ? "" : label}
+      </Link>
+      {childrenList}
+    </li>
+  );
+};
 
 export default SubNavigation;

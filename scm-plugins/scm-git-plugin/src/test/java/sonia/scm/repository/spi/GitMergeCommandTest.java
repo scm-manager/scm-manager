@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+    
 package sonia.scm.repository.spi;
 
 import com.github.sdorra.shiro.ShiroRule;
@@ -12,16 +36,23 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
+import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeStrategy;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.user.User;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -164,10 +195,33 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldHandleUnexpectedMergeResults() {
+    GitMergeCommand command = createCommand(git -> {
+      try {
+        FileWriter fw = new FileWriter(new File(git.getRepository().getWorkTree(), "b.txt"), true);
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write("change");
+        bw.newLine();
+        bw.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    });
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setBranchToMerge("mergeable");
+    request.setTargetBranch("master");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+    request.setMessageTemplate("simple");
+
+    Assertions.assertThrows(UnexpectedMergeResultException.class, () -> command.merge(request));
+  }
+
+  @Test
   public void shouldTakeAuthorFromSubjectIfNotSet() throws IOException, GitAPIException {
     SimplePrincipalCollection principals = new SimplePrincipalCollection();
     principals.add("admin", REALM);
-    principals.add( new User("dirk", "Dirk Gently", "dirk@holistic.det"), REALM);
+    principals.add(new User("dirk", "Dirk Gently", "dirk@holistic.det"), REALM);
     shiro.setSubject(
       new Subject.Builder()
         .principals(principals)
@@ -364,6 +418,20 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitMergeCommand createCommand() {
-    return new GitMergeCommand(createContext(), repository, new SimpleGitWorkdirFactory(new WorkdirProvider()));
+    return createCommand(git -> {
+    });
+  }
+
+  private GitMergeCommand createCommand(Consumer<Git> interceptor) {
+    return new GitMergeCommand(createContext(), repository, new SimpleGitWorkdirFactory(new WorkdirProvider())) {
+      @Override
+      <R, W extends GitCloneWorker<R>> R inClone(Function<Git, W> workerSupplier, GitWorkdirFactory workdirFactory, String initialBranch) {
+        Function<Git, W> interceptedWorkerSupplier = git -> {
+          interceptor.accept(git);
+          return workerSupplier.apply(git);
+        };
+        return super.inClone(interceptedWorkerSupplier, workdirFactory, initialBranch);
+      }
+    };
   }
 }

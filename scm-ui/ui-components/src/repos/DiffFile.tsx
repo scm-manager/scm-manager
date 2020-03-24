@@ -1,15 +1,40 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 // @ts-ignore
 import { Decoration, getChangeKey, Hunk } from "react-diff-view";
-import { Button, ButtonGroup } from "../buttons";
+import { ButtonGroup } from "../buttons";
 import Tag from "../Tag";
 import Icon from "../Icon";
 import { Change, ChangeEvent, DiffObjectProps, File, Hunk as HunkType } from "./DiffTypes";
 import TokenizedDiffView from "./TokenizedDiffView";
 import DiffButton from "./DiffButton";
+import { MenuContext } from "@scm-manager/ui-components";
+import { storeMenuCollapsed } from "../navigation";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
@@ -72,6 +97,14 @@ class DiffFile extends React.Component<Props, State> {
     };
   }
 
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any): void {
+    if (this.props.defaultCollapse !== prevProps.defaultCollapse) {
+      this.setState({
+        collapsed: this.defaultCollapse()
+      });
+    }
+  }
+
   defaultCollapse: () => boolean = () => {
     const { defaultCollapse, file } = this.props;
     if (typeof defaultCollapse === "boolean") {
@@ -92,10 +125,14 @@ class DiffFile extends React.Component<Props, State> {
     }
   };
 
-  toggleSideBySide = () => {
-    this.setState(state => ({
-      sideBySide: !state.sideBySide
-    }));
+  toggleSideBySide = (callback: () => void) => {
+    this.setState(
+      state => ({
+        sideBySide: !state.sideBySide
+      }),
+      () => callback()
+    );
+    storeMenuCollapsed(true);
   };
 
   setCollapse = (collapsed: boolean) => {
@@ -251,11 +288,15 @@ class DiffFile extends React.Component<Props, State> {
       file.hunks && file.hunks.length > 0 ? (
         <ButtonWrapper className={classNames("level-right", "is-flex")}>
           <ButtonGroup>
-            <DiffButton
-              icon={sideBySide ? "align-left" : "columns"}
-              tooltip={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
-              onClick={this.toggleSideBySide}
-            />
+            <MenuContext.Consumer>
+              {({ setMenuCollapsed }) => (
+                <DiffButton
+                  icon={sideBySide ? "align-left" : "columns"}
+                  tooltip={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
+                  onClick={() => this.toggleSideBySide(() => setMenuCollapsed(true))}
+                />
+              )}
+            </MenuContext.Consumer>
             {fileControls}
           </ButtonGroup>
         </ButtonWrapper>

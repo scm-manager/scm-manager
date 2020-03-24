@@ -1,37 +1,82 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 import React from "react";
 import { connect } from "react-redux";
-import { Route } from "react-router-dom";
+import { Route, RouteComponentProps } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Group } from "@scm-manager/ui-types";
-import { ErrorPage, Loading, Navigation, NavLink, Page, Section, SubNavigation } from "@scm-manager/ui-components";
+import {
+  ErrorPage,
+  isMenuCollapsed,
+  Loading,
+  MenuContext,
+  NavLink,
+  Page,
+  SecondaryNavigation,
+  SubNavigation
+} from "@scm-manager/ui-components";
 import { getGroupsLink } from "../../modules/indexResource";
 import { fetchGroupByName, getFetchGroupFailure, getGroupByName, isFetchGroupPending } from "../modules/groups";
 import { Details } from "./../components/table";
 import { EditGroupNavLink, SetPermissionsNavLink } from "./../components/navLinks";
 import EditGroup from "./EditGroup";
 import SetPermissions from "../../permissions/components/SetPermissions";
+import { storeMenuCollapsed } from "@scm-manager/ui-components/src";
 
-type Props = WithTranslation & {
-  name: string;
-  group: Group;
-  loading: boolean;
-  error: Error;
-  groupLink: string;
+type Props = RouteComponentProps &
+  WithTranslation & {
+    name: string;
+    group: Group;
+    loading: boolean;
+    error: Error;
+    groupLink: string;
 
-  // dispatcher functions
-  fetchGroupByName: (p1: string, p2: string) => void;
+    // dispatcher functions
+    fetchGroupByName: (p1: string, p2: string) => void;
+  };
 
-  // context objects
-  match: any;
-  history: History;
+type State = {
+  menuCollapsed: boolean;
 };
 
-class SingleGroup extends React.Component<Props> {
+class SingleGroup extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      menuCollapsed: isMenuCollapsed()
+    };
+  }
+
   componentDidMount() {
     this.props.fetchGroupByName(this.props.groupLink, this.props.name);
   }
+
+  onCollapseGroupMenu = (collapsed: boolean) => {
+    this.setState({ menuCollapsed: collapsed }, () => storeMenuCollapsed(collapsed));
+  };
 
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {
@@ -46,6 +91,7 @@ class SingleGroup extends React.Component<Props> {
 
   render() {
     const { t, loading, error, group } = this.props;
+    const { menuCollapsed } = this.state;
 
     if (error) {
       return <ErrorPage title={t("singleGroup.errorTitle")} subtitle={t("singleGroup.errorSubtitle")} error={error} />;
@@ -63,33 +109,48 @@ class SingleGroup extends React.Component<Props> {
     };
 
     return (
-      <Page title={group.name}>
-        <div className="columns">
-          <div className="column is-three-quarters">
-            <Route path={url} exact component={() => <Details group={group} />} />
-            <Route path={`${url}/settings/general`} exact component={() => <EditGroup group={group} />} />
-            <Route
-              path={`${url}/settings/permissions`}
-              exact
-              component={() => <SetPermissions selectedPermissionsLink={group._links.permissions} />}
-            />
-            <ExtensionPoint name="group.route" props={extensionProps} renderAll={true} />
-          </div>
-          <div className="column">
-            <Navigation>
-              <Section label={t("singleGroup.menu.navigationLabel")}>
-                <NavLink to={`${url}`} icon="fas fa-info-circle" label={t("singleGroup.menu.informationNavLink")} />
+      <MenuContext.Provider
+        value={{ menuCollapsed, setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed }) }}
+      >
+        <Page title={group.name}>
+          <div className="columns">
+            <div className="column">
+              <Route path={url} exact component={() => <Details group={group} />} />
+              <Route path={`${url}/settings/general`} exact component={() => <EditGroup group={group} />} />
+              <Route
+                path={`${url}/settings/permissions`}
+                exact
+                component={() => <SetPermissions selectedPermissionsLink={group._links.permissions} />}
+              />
+              <ExtensionPoint name="group.route" props={extensionProps} renderAll={true} />
+            </div>
+            <div className={menuCollapsed ? "column is-1" : "column is-3"}>
+              <SecondaryNavigation
+                label={t("singleGroup.menu.navigationLabel")}
+                onCollapse={() => this.onCollapseGroupMenu(!menuCollapsed)}
+                collapsed={menuCollapsed}
+              >
+                <NavLink
+                  to={`${url}`}
+                  icon="fas fa-info-circle"
+                  label={t("singleGroup.menu.informationNavLink")}
+                  title={t("singleGroup.menu.informationNavLink")}
+                />
                 <ExtensionPoint name="group.navigation" props={extensionProps} renderAll={true} />
-                <SubNavigation to={`${url}/settings/general`} label={t("singleGroup.menu.settingsNavLink")}>
+                <SubNavigation
+                  to={`${url}/settings/general`}
+                  label={t("singleGroup.menu.settingsNavLink")}
+                  title={t("singleGroup.menu.settingsNavLink")}
+                >
                   <EditGroupNavLink group={group} editUrl={`${url}/settings/general`} />
                   <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`} />
                   <ExtensionPoint name="group.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
-              </Section>
-            </Navigation>
+              </SecondaryNavigation>
+            </div>
           </div>
-        </div>
-      </Page>
+        </Page>
+      </MenuContext.Provider>
     );
   }
 }

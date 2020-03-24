@@ -1,36 +1,27 @@
-/**
- * Copyright (c) 2010, Sebastian Sdorra
- * All rights reserved.
+/*
+ * MIT License
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
  *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- * http://bitbucket.org/sdorra/scm-manager
- *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
-
-
-
+    
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.commands.LogCommand;
@@ -45,7 +36,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -67,6 +57,11 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
   @Test
   public void testBrowse() throws IOException {
     Collection<FileObject> foList = getRootFromTip(new BrowseCommandRequest());
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
+
     FileObject a = getFileObject(foList, "a.txt");
     FileObject c = getFileObject(foList, "c");
 
@@ -108,6 +103,10 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     FileObject c = result.getFile();
     assertEquals("c", c.getName());
     Collection<FileObject> foList = c.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("d.txt", "e.txt");
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
@@ -181,6 +180,105 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     assertEquals(2, c.getChildren().size());
   }
 
+  @Test
+  public void testLimit() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(1);
+
+    BrowserResult result = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request);
+    FileObject root = result.getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt");
+    assertThat(root.isTruncated()).isTrue();
+  }
+
+  @Test
+  public void testOffset() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(2);
+    request.setOffset(1);
+
+    BrowserResult result = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request);
+    FileObject root = result.getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList).extracting("name").containsExactly("b.txt", "f.txt");
+    assertThat(root.isTruncated()).isFalse();
+  }
+
+
+  @Test
+  public void testRecursiveLimit() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setLimit(3);
+    request.setRecursive(true);
+
+    FileObject root = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt");
+
+    FileObject c = getFileObject(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("d.txt", "e.txt");
+  }
+
+  @Test
+  public void testRecursiveLimitInSubDir() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setLimit(1);
+    request.setRecursive(true);
+
+    FileObject root = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c");
+
+    FileObject c = getFileObject(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("d.txt");
+  }
+
+  @Test
+  public void testRecursiveOffset() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setOffset(1);
+    request.setRecursive(true);
+
+    FileObject root = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request).getFile();
+
+    Collection<FileObject> foList = root.getChildren();
+
+    assertThat(foList)
+      .extracting("name")
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
+
+    FileObject c = getFileObject(foList, "c");
+
+    Collection<FileObject> cChildren = c.getChildren();
+    assertThat(cChildren)
+      .extracting("name")
+      .containsExactly("e.txt");
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -210,8 +308,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     Collection<FileObject> foList = root.getChildren();
 
     assertNotNull(foList);
-    assertFalse(foList.isEmpty());
-    assertEquals(4, foList.size());
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt", "b.txt", "f.txt");
 
     return foList;
   }

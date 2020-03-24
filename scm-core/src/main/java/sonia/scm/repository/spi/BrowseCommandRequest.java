@@ -1,36 +1,27 @@
-/**
- * Copyright (c) 2010, Sebastian Sdorra
- * All rights reserved.
+/*
+ * MIT License
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
  *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- * http://bitbucket.org/sdorra/scm-manager
- *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
-
-
-
+    
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -49,8 +40,10 @@ import java.util.function.Consumer;
 public final class BrowseCommandRequest extends FileBaseCommandRequest
 {
 
-  /** Field description */
+  public static final int DEFAULT_REQUEST_LIMIT = 100;
+
   private static final long serialVersionUID = 7956624623516803183L;
+  private int offset;
 
   public BrowseCommandRequest() {
     this(null);
@@ -110,10 +103,12 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
 
     final BrowseCommandRequest other = (BrowseCommandRequest) obj;
 
-    return super.equals(obj) && Objects.equal(recursive, other.recursive)
+    return super.equals(obj)
+      && Objects.equal(recursive, other.recursive)
       && Objects.equal(disableLastCommit, other.disableLastCommit)
-      && Objects.equal(disableSubRepositoryDetection,
-        other.disableSubRepositoryDetection);
+      && Objects.equal(disableSubRepositoryDetection, other.disableSubRepositoryDetection)
+      && Objects.equal(offset, other.offset)
+      && Objects.equal(limit, other.limit);
   }
 
   /**
@@ -126,7 +121,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
   public int hashCode()
   {
     return Objects.hashCode(super.hashCode(), recursive, disableLastCommit,
-      disableSubRepositoryDetection);
+      disableSubRepositoryDetection, offset, limit);
   }
 
   /**
@@ -145,6 +140,8 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
                   .add("recursive", recursive)
                   .add("disableLastCommit", disableLastCommit)
                   .add("disableSubRepositoryDetection", disableSubRepositoryDetection)
+                  .add("limit", limit)
+                  .add("offset", offset)
                   .toString();
     //J+
   }
@@ -191,6 +188,28 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
     this.recursive = recursive;
   }
 
+  /**
+   * Limit the number of result files to <code>limit</code> entries.
+   *
+   * @param limit The maximal number of files this request shall return.
+   *
+   * @since 2.0.0
+   */
+  public void setLimit(int limit) {
+    this.limit = limit;
+  }
+
+  /**
+   * Proceed the list from the given number on (zero based).
+   *
+   * @param offset The number of the entry, the result should start with (zero based).
+   *               All preceding entries will be omitted.
+   * @since 2.0.0
+   */
+  public void setOffset(int offset) {
+    this.offset = offset;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -232,6 +251,24 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
     return recursive;
   }
 
+  /**
+   * Returns the limit for the number of result files.
+   *
+   * @since 2.0.0
+   */
+  public int getLimit() {
+    return limit;
+  }
+
+  /**
+   * The number of the entry, the result start with. All preceding entries will be omitted.
+   *
+   * @since 2.0.0
+   */
+  public int getOffset() {
+    return offset;
+  }
+
   public void updateCache(BrowserResult update) {
     if (updater != null) {
       updater.accept(update);
@@ -248,6 +285,10 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
 
   /** browse file objects recursive */
   private boolean recursive = false;
+
+
+  /** Limit the number of result files to <code>limit</code> entries. */
+  private int limit = DEFAULT_REQUEST_LIMIT;
 
   // WARNING / TODO: This field creates a reverse channel from the implementation to the API. This will break
   // whenever the API runs in a different process than the SPI (for example to run explicit hosts for git repositories).
