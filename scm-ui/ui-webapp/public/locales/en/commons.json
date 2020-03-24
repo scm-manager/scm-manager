@@ -36,7 +36,7 @@
   },
   "markdownErrorNotification": {
     "title": "Markdown content could not be parsed",
-    "description": "Content does not contain valid markdown. If you use XML, please ensure that it is wrapped in a code block e.g.:",
+    "description": "The Content does not contain valid markdown. If you use XML, please ensure that it is wrapped in a code block e.g.:",
     "spec": "Please have a look at the specification"
   },
   "loading": {
