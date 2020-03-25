@@ -16,9 +16,7 @@ class RepositoryDetailTable extends React.Component<Props> {
         <tbody>
           <tr>
             <th>{t("repository.name")}</th>
-            <td>
-              <ExtensionPoint name={"repository.details.beforeName"} props={{ repository }} /> {repository.name}
-            </td>
+            <td>{repository.name}</td>
           </tr>
           <tr>
             <th>{t("repository.type")}</th>

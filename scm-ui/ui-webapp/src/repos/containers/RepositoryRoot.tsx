@@ -146,7 +146,10 @@ class RepositoryRoot extends React.Component<Props, State> {
           setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed })
         }}
       >
-        <Page title={repository.namespace + "/" + repository.name}>
+        <Page
+          title={repository.namespace + "/" + repository.name}
+          afterTitle={<ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />}
+        >
           <div className="columns">
             <div className="column">
               <Switch>
