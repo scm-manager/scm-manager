@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
@@ -86,7 +86,9 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
       if (repositoryService.isSupported(Feature.INCOMING_REVISION)) {
         linksBuilder.single(link("incomingChangesets", resourceLinks.incoming().changesets(repository.getNamespace(), repository.getName())));
         linksBuilder.single(link("incomingDiff", resourceLinks.incoming().diff(repository.getNamespace(), repository.getName())));
-        linksBuilder.single(link("incomingDiffParsed", resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName())));
+        if (repositoryService.isSupported(Command.DIFF_RESULT)) {
+          linksBuilder.single(link("incomingDiffParsed", resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName())));
+        }
       }
     }
     linksBuilder.single(link("changesets", resourceLinks.changeset().all(repository.getNamespace(), repository.getName())));
