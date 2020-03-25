@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -74,7 +74,11 @@ public class HgDiffCommand extends AbstractCommand implements DiffCommand
         cmd.git();
       }
 
-      cmd.change(HgUtil.getRevision(request.getRevision()));
+      if (request.getAncestorChangeset() != null) {
+        cmd.ancestor(request.getRevision(), request.getAncestorChangeset());
+      } else {
+        cmd.change(HgUtil.getRevision(request.getRevision()));
+      }
 
       InputStream inputStream = null;
 

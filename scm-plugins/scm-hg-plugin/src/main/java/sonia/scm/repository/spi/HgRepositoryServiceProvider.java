@@ -44,13 +44,11 @@ import java.util.Set;
 public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 {
 
-  /** Field description */
-  //J-
   public static final Set<Command> COMMANDS = EnumSet.of(
     Command.BLAME,
-    Command.BROWSE, 
+    Command.BROWSE,
     Command.CAT,
-    Command.DIFF, 
+    Command.DIFF,
     Command.LOG,
     Command.TAGS,
     Command.BRANCH,
@@ -59,13 +57,12 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
     Command.OUTGOING,
     Command.PUSH,
     Command.PULL,
-    Command.MODIFY
+    Command.MODIFY,
+    Command.MERGE
   );
-  //J+
 
-  /** Field description */
   public static final Set<Feature> FEATURES =
-    EnumSet.of(Feature.COMBINED_DEFAULT_BRANCH);
+    EnumSet.of(Feature.COMBINED_DEFAULT_BRANCH, Feature.INCOMING_REVISION);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -270,6 +267,11 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   public TagsCommand getTagsCommand()
   {
     return new HgTagsCommand(context, repository);
+  }
+
+  @Override
+  public MergeCommand getMergeCommand() {
+    return new HgMergeCommand(context, handler.getWorkdirFactory());
   }
 
   //~--- fields ---------------------------------------------------------------

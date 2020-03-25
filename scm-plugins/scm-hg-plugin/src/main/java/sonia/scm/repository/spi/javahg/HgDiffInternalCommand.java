@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi.javahg;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -45,8 +45,8 @@ public final class HgDiffInternalCommand extends AbstractCommand
   /** Field description */
   private static final String NAME = "diff";
 
-  //~--- constructors ---------------------------------------------------------
 
+  //~--- constructors ---------------------------------------------------------
   /**
    * Constructs ...
    *
@@ -58,8 +58,8 @@ public final class HgDiffInternalCommand extends AbstractCommand
     super(repository, NAME);
   }
 
-  //~--- methods --------------------------------------------------------------
 
+  //~--- methods --------------------------------------------------------------
   /**
    * Method description
    *
@@ -84,6 +84,13 @@ public final class HgDiffInternalCommand extends AbstractCommand
   public HgDiffInternalCommand change(String rev)
   {
     cmdAppend("--change", rev);
+
+    return this;
+  }
+
+  public HgDiffInternalCommand ancestor(String revision, String ancestorChangeset) {
+    cmdAppend("--rev", "ancestor(" + ancestorChangeset + ", " + revision + ")");
+    cmdAppend("--rev", revision);
 
     return this;
   }
