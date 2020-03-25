@@ -33,7 +33,7 @@ import static sonia.scm.lifecycle.CLibrary.*;
 /**
  * Restart strategy which uses execvp from libc. This strategy is only supported on posix base operating systems.
  */
-class PosixRestartStrategy implements RestartStrategy {
+class PosixRestartStrategy extends RestartStrategy {
 
   private static final Logger LOG = LoggerFactory.getLogger(PosixRestartStrategy.class);
 
@@ -41,10 +41,7 @@ class PosixRestartStrategy implements RestartStrategy {
   }
 
   @Override
-  public void restart(InjectionContext context) {
-    LOG.warn("destroy injection context");
-    context.destroy();
-
+  protected void executeRestart(InjectionContext context) {
     LOG.warn("restart scm-manager jvm process");
     try {
       restart();

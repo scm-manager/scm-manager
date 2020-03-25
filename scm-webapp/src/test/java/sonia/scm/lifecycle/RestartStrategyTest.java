@@ -117,14 +117,13 @@ class RestartStrategyTest {
     }
   }
 
-  public static class TestingRestartStrategy implements RestartStrategy {
+  public static class TestingRestartStrategy extends RestartStrategy {
     @Override
-    public void restart(InjectionContext context) {
-
+    protected void executeRestart(InjectionContext context) {
     }
   }
 
-  public static class ComplexRestartStrategy implements RestartStrategy {
+  public static class ComplexRestartStrategy extends RestartStrategy {
 
     private final ClassLoader classLoader;
 
@@ -133,8 +132,7 @@ class RestartStrategyTest {
     }
 
     @Override
-    public void restart(InjectionContext context) {
-
+    protected void executeRestart(InjectionContext context) {
     }
   }
 

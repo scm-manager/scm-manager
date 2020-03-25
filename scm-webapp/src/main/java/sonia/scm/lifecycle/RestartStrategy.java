@@ -24,23 +24,20 @@
 
 package sonia.scm.lifecycle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Optional;
 
 /**
  * Strategy for restarting SCM-Manager. Implementations must either have a default constructor or one taking the
  * class loader for the current context as a single argument.
  */
-public interface RestartStrategy {
+public abstract class RestartStrategy {
 
-  /**
-   * Context for Injection in SCM-Manager.
-   */
-  interface InjectionContext {
-    /**
-     * Initialize the injection context.
-     */
-    void initialize();
+  private static final Logger LOG = LoggerFactory.getLogger(RestartStrategy.class);
 
+  interface InternalInjectionContext extends InjectionContext {
     /**
      * Destroys the injection context.
      */
@@ -48,11 +45,43 @@ public interface RestartStrategy {
   }
 
   /**
-   * Restart SCM-Manager.
+   * Context for Injection in SCM-Manager.
+   */
+  public interface InjectionContext {
+    /**
+     * Initialize the injection context.
+     */
+    void initialize();
+  }
+
+  /**
+   * Restart SCM-Manager by first calling {@link #prepareRestart(InjectionContext)}, destroying the
+   * current context, and finally calling {@link #executeRestart(InjectionContext)}.
    *
    * @param context injection context
    */
-  void restart(InjectionContext context);
+  public final void restart(InternalInjectionContext context) {
+    prepareRestart(context);
+    LOG.warn("destroy injection context");
+    context.destroy();
+    executeRestart(context);
+  }
+
+  /**
+   * Prepare the restart of SCM-Manager. Here you can check whether restart is possible and,
+   * if necessary, throw a {@link RestartNotSupportedException} to abort the restart.
+   *
+   * @param context injection context
+   */
+  protected void prepareRestart(InjectionContext context) {
+  }
+
+  /**
+   * Actually restart SCM-Manager.
+   *
+   * @param context injection context
+   */
+  protected abstract void executeRestart(InjectionContext context);
 
   /**
    * Returns the configured strategy or empty if restart is not supported by the underlying platform.

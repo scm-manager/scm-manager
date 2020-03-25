@@ -39,7 +39,7 @@ import static org.mockito.Mockito.verify;
 class ExitRestartStrategyTest {
 
   @Mock
-  private RestartStrategy.InjectionContext context;
+  private RestartStrategy.InternalInjectionContext context;
 
   private ExitRestartStrategy strategy;
   private CapturingExiter exiter;

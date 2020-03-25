@@ -35,7 +35,7 @@ import java.util.function.IntConsumer;
  * <p>
  * This is useful if an external mechanism is able to restart the process after it has exited.
  */
-class ExitRestartStrategy implements RestartStrategy {
+class ExitRestartStrategy extends RestartStrategy {
 
   private static final Logger LOG = LoggerFactory.getLogger(ExitRestartStrategy.class);
 
@@ -44,6 +44,8 @@ class ExitRestartStrategy implements RestartStrategy {
   static final String PROPERTY_EXIT_CODE = "sonia.scm.restart.exit-code";
 
   private IntConsumer exiter = System::exit;
+
+  private int exitCode;
 
   ExitRestartStrategy() {
   }
@@ -54,12 +56,12 @@ class ExitRestartStrategy implements RestartStrategy {
   }
 
   @Override
-  public void restart(InjectionContext context) {
-    int exitCode = determineExitCode();
+  public void prepareRestart(InjectionContext context) {
+    exitCode = determineExitCode();
+  }
 
-    LOG.warn("destroy injection context");
-    context.destroy();
-
+  @Override
+  protected void executeRestart(InjectionContext context) {
     LOG.warn("exit scm-manager with exit code {}", exitCode);
     exiter.accept(exitCode);
   }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.lifecycle;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -103,7 +103,7 @@ public class BootstrapContextFilter extends GuiceFilter {
     }
   }
 
-  private class GuiceInjectionContext implements RestartStrategy.InjectionContext {
+  private class GuiceInjectionContext implements RestartStrategy.InternalInjectionContext {
 
     @Override
     public void initialize() {
