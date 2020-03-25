@@ -491,6 +491,16 @@ ul.is-separated {
     }
   }
 
+  .column.is-half-overlay {
+    .overlay-column {
+      width: calc(50% - 3rem);
+
+      @media screen and (max-width: 768px) {
+        width: calc(100% - 1.5rem);
+      }
+    }
+  }
+
   .column.is-full .overlay-column {
     width: calc(100% - 1.5rem);
   }
