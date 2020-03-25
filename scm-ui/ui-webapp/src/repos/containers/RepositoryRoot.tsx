@@ -32,6 +32,9 @@ import {
   Loading,
   NavLink,
   Page,
+  CustomQueryFlexWrappedColumns,
+  PrimaryContentColumn,
+  SecondaryNavigationColumn,
   SecondaryNavigation,
   SubNavigation,
   MenuContext,
@@ -170,8 +173,8 @@ class RepositoryRoot extends React.Component<Props, State> {
         }}
       >
         <Page title={repository.namespace + "/" + repository.name}>
-          <div className="columns">
-            <div className={menuCollapsed ? "column is-11" : "column is-9"}>
+          <CustomQueryFlexWrappedColumns>
+            <PrimaryContentColumn collapsed={menuCollapsed}>
               <Switch>
                 <Redirect exact from={this.props.match.url} to={redirectedUrl} />
 
@@ -220,8 +223,8 @@ class RepositoryRoot extends React.Component<Props, State> {
                 <Route path={`${url}/branches/create`} render={() => <CreateBranch repository={repository} />} />
                 <ExtensionPoint name="repository.route" props={extensionProps} renderAll={true} />
               </Switch>
-            </div>
-            <div className={menuCollapsed ? "column is-1" : "column is-3"}>
+            </PrimaryContentColumn>
+            <SecondaryNavigationColumn collapsed={menuCollapsed}>
               <SecondaryNavigation
                 label={t("repositoryRoot.menu.navigationLabel")}
                 onCollapse={() => this.onCollapseRepositoryMenu(!menuCollapsed)}
@@ -265,8 +268,8 @@ class RepositoryRoot extends React.Component<Props, State> {
                   <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
               </SecondaryNavigation>
-            </div>
-          </div>
+            </SecondaryNavigationColumn>
+          </CustomQueryFlexWrappedColumns>
         </Page>
       </MenuContext.Provider>
     );

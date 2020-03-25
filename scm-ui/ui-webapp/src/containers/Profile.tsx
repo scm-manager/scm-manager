@@ -34,6 +34,9 @@ import {
   MenuContext,
   NavLink,
   Page,
+  CustomQueryFlexWrappedColumns,
+  PrimaryContentColumn,
+  SecondaryNavigationColumn,
   SecondaryNavigation,
   SubNavigation
 } from "@scm-manager/ui-components";
@@ -107,13 +110,13 @@ class Profile extends React.Component<Props, State> {
         value={{ menuCollapsed, setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed }) }}
       >
         <Page title={me.displayName}>
-          <div className="columns">
-            <div className="column">
+          <CustomQueryFlexWrappedColumns>
+            <PrimaryContentColumn collapsed={menuCollapsed}>
               <Route path={url} exact render={() => <ProfileInfo me={me} />} />
               <Route path={`${url}/settings/password`} render={() => <ChangeUserPassword me={me} />} />
               <ExtensionPoint name="profile.route" props={extensionProps} renderAll={true} />
-            </div>
-            <div className={menuCollapsed ? "column is-1" : "column is-3"}>
+            </PrimaryContentColumn>
+            <SecondaryNavigationColumn collapsed={menuCollapsed}>
               <SecondaryNavigation
                 label={t("profile.navigationLabel")}
                 onCollapse={() => this.onCollapseProfileMenu(!menuCollapsed)}
@@ -134,8 +137,8 @@ class Profile extends React.Component<Props, State> {
                   <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
               </SecondaryNavigation>
-            </div>
-          </div>
+            </SecondaryNavigationColumn>
+          </CustomQueryFlexWrappedColumns>
         </Page>
       </MenuContext.Provider>
     );

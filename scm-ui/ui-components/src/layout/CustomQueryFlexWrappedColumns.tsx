@@ -21,17 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React, { ReactNode } from "react";
+import styled from "styled-components";
 
-// @create-index
+type Props = {
+  children?: ReactNode;
+};
 
-export { default as Footer } from "./Footer";
-export { default as Header } from "./Header";
-export { default as Level } from "./Level";
-export { default as Page } from "./Page";
-export { default as PageActions } from "./PageActions";
-export { default as Subtitle } from "./Subtitle";
-export { default as Title } from "./Title";
-export { default as CustomQueryFlexWrappedColumns } from "./CustomQueryFlexWrappedColumns";
-export { default as PrimaryContentColumn } from "./PrimaryContentColumn";
-export { default as SecondaryNavigationColumn } from "./SecondaryNavigationColumn";
+const FlexWrapped = styled.div`
+  /* Do not wrap before using the media query, 
+  otherwise long content will always break the navigation. */
+  @media (max-width: 785px) {
+    flex-wrap: wrap;
+  }
+`;
 
+export default class CustomQueryFlexWrappedColumns extends React.Component<Props> {
+  render() {
+    return <FlexWrapped className="columns">{this.props.children}</FlexWrapped>;
+  }
+}
