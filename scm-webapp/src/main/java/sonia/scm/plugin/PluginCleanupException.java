@@ -24,18 +24,17 @@
 
 package sonia.scm.plugin;
 
+import java.nio.file.Path;
+
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-public class PluginChecksumMismatchException extends PluginInstallException {
-  public PluginChecksumMismatchException(AvailablePlugin plugin, String calculatedChecksum, String expectedChecksum) {
-    super(
-      entity("Plugin", plugin.getDescriptor().getInformation().getName()).build(),
-      String.format("downloaded plugin checksum %s does not match expected %s", calculatedChecksum, expectedChecksum)
-    );
+public class PluginCleanupException extends PluginInstallException {
+  public PluginCleanupException(Path file) {
+    super(entity("File", file.toString()).build(), "failed to cleanup, after broken installation");
   }
 
   @Override
   public String getCode() {
-    return "6mRuFxaWM1";
+    return "8nRuFzjss1";
   }
 }

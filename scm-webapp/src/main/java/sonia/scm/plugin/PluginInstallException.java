@@ -21,16 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
-public class PluginInstallException extends RuntimeException {
+import sonia.scm.ContextEntry;
+import sonia.scm.ExceptionWithContext;
 
-  public PluginInstallException(String message) {
-    super(message);
+import java.util.List;
+
+abstract class PluginInstallException extends ExceptionWithContext {
+
+  public PluginInstallException(List<ContextEntry> context, String message) {
+    super(context, message);
   }
 
-  public PluginInstallException(String message, Throwable cause) {
-    super(message, cause);
+  public PluginInstallException(List<ContextEntry> context, String message, Exception cause) {
+    super(context, message, cause);
   }
 }

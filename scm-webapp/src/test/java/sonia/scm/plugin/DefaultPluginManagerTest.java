@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import com.google.common.collect.ImmutableList;
@@ -252,7 +252,7 @@ class DefaultPluginManagerTest {
       PendingPluginInstallation pendingMail = mock(PendingPluginInstallation.class);
       doReturn(pendingMail).when(installer).install(mail);
 
-      doThrow(new PluginChecksumMismatchException("checksum does not match")).when(installer).install(review);
+      doThrow(new PluginChecksumMismatchException(mail, "1", "2")).when(installer).install(review);
 
       assertThrows(PluginInstallException.class, () -> manager.install("scm-review-plugin", false));
 

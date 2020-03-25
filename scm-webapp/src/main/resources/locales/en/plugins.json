@@ -203,6 +203,18 @@
     "4GRrgkSC01": {
       "displayName": "Unexpected merge result",
       "description": "The merge led to an unexpected result, that could not be handled automatically. More details could be found in the log. Please merge the branches manually."
+    },
+    "6mRuFxaWM1": {
+      "displayName": "Wrong checksum",
+      "description": "The checksum of the downloaded plugin did not match the expected checksum. Please try again or check the internet settings like proxies."
+    },
+    "9iRuFz1UB1": {
+      "displayName": "Could not load plugin",
+      "description": "The plugin could not be loaded from the server. Please try again or check the internet settings like proxies. More information can be found in the server log."
+    },
+    "8nRuFzjss1": {
+      "displayName": "Error while cleaning up failed plugin",
+      "description": "A failed plugin download could not be removed correctly. Please check the server log and remove the plugin manually."
     }
   },
   "namespaceStrategies": {
