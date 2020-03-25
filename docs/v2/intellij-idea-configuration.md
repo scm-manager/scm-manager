@@ -65,3 +65,18 @@
 ## Both
 
 * EditorConfig
+
+* Editor / Copyright / Copyright Profiles
+    * Add Profile
+    * Name: SCM-MIT
+    * Copyright text: *see LICENSE.txt in the main directory*
+    * Regex: MIT License
+    
+* Editor / Copyright
+    * Default project copyright: SCM-MIT
+
+* Editor / Copyright / Formatting / XML
+    * Use custom formatting options
+    * Use block comment, check prefix each line
+    * Select: Separator before, Length: 0
+    * Separator: *space*

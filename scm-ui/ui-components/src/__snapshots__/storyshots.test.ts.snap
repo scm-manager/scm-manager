@@ -33768,6 +33768,426 @@ func main() {
 </div>
 `;
 
+exports[`Storyshots MarkdownView Inline Xml 1`] = `
+<div
+  className="MarkdownViewstories__Spacing-sc-1hk90gd-0 eqTNCI"
+>
+  <h1
+    className="title"
+  >
+    Inline Xml
+  </h1>
+  <h2
+    className="subtitle"
+  >
+    Inline xml outside of a code block is not supported
+  </h2>
+  <div
+    className="notification is-danger"
+  >
+    
+    <div
+      className="content"
+    >
+      <p
+        className="subtitle"
+      >
+        markdownErrorNotification.title
+      </p>
+      <p>
+        markdownErrorNotification.description
+      </p>
+      <pre>
+        <code>
+          \`\`\`xml
+&lt;your&gt;
+  &lt;xml&gt;
+    &lt;content/&gt;
+  &lt;/xml&gt;
+&lt;/your&gt;
+\`\`\`
+        </code>
+      </pre>
+      <p>
+        markdownErrorNotification.spec
+        :
+         
+        <a
+          href="https://github.github.com/gfm/"
+          target="_blank"
+        >
+          GitHub Flavored Markdown Spec
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots MarkdownView Xml Code Block 1`] = `
+<div
+  className="MarkdownViewstories__Spacing-sc-1hk90gd-0 eqTNCI"
+>
+  <div>
+    <div
+      className="content"
+    >
+      <h1>
+        Xml Code Block in Markdown
+      </h1>
+      <pre
+        style={
+          Object {
+            "background": "#FFFFFF",
+            "color": "#434f54",
+            "display": "block",
+            "overflowX": "auto",
+            "padding": "0.5em",
+          }
+        }
+      >
+        <code>
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              project
+            </span>
+             [
+            <span
+              className="hljs-attr"
+              style={Object {}}
+            >
+              ...
+            </span>
+            ]&gt;
+          </span>
+          
+
+  [...]
+
+  
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              build
+            </span>
+            &gt;
+          </span>
+          
+    
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              plugins
+            </span>
+            &gt;
+          </span>
+          
+
+      [...]
+
+      
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              plugin
+            </span>
+            &gt;
+          </span>
+          
+        
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              groupId
+            </span>
+            &gt;
+          </span>
+          org.apache.maven.plugins
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;/
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              groupId
+            </span>
+            &gt;
+          </span>
+          
+        
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              artifactId
+            </span>
+            &gt;
+          </span>
+          maven-enforcer-plugin
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;/
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              artifactId
+            </span>
+            &gt;
+          </span>
+          
+      
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;/
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              plugin
+            </span>
+            &gt;
+          </span>
+          
+      
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              plugin
+            </span>
+            &gt;
+          </span>
+          
+        
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              groupId
+            </span>
+            &gt;
+          </span>
+          org.codehaus.mojo
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;/
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              groupId
+            </span>
+            &gt;
+          </span>
+          
+        
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              artifactId
+            </span>
+            &gt;
+          </span>
+          animal-sniffer-maven-plugin
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;/
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              artifactId
+            </span>
+            &gt;
+          </span>
+          
+      
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;/
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              plugin
+            </span>
+            &gt;
+          </span>
+          
+    
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;/
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              plugins
+            </span>
+            &gt;
+          </span>
+          
+  
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;/
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              build
+            </span>
+            &gt;
+          </span>
+          
+
+  [...]
+
+
+          <span
+            className="hljs-tag"
+            style={Object {}}
+          >
+            &lt;/
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              project
+            </span>
+            &gt;
+          </span>
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots SyntaxHighlighter Go 1`] = `
 <div
   className="SyntaxHighlighterstories__Spacing-sc-1dcldp5-0 eofOgh"

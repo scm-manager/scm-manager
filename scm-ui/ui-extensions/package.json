@@ -2,7 +2,7 @@
   "name": "@scm-manager/ui-extensions",
   "version": "2.0.0-SNAPSHOT",
   "main": "src/index.ts",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "private": false,
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
   "scripts": {

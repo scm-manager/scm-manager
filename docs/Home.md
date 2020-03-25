@@ -12,14 +12,7 @@ repositories over http.
 -   Simple Plugin API
 -   Useful plugins available ( f.e. Ldap-, ActiveDirectory-,
     PAM-Authentication)
--   Licensed under the BSD-License
-
-Migration to Github
--------------------
-
-We will soon migrate SCM-Manager to Github, please read
-[here](https://www.scm-manager.org/scm-manager-2/migration-to-github/ "wikilink")
-for more information.
+-   Licensed under the MIT-License
 
 ### News
 
