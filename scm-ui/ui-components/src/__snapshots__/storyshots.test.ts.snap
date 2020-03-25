@@ -34188,6 +34188,232 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
 </div>
 `;
 
+exports[`Storyshots RepositoryEntry Git-Repo 1`] = `
+<div
+  className="RepositoryEntrystories__Container-toppdg-0 bQveHd"
+>
+  <a
+    className="overlay-column"
+    href="/repo/scmadmin/Git"
+    onClick={[Function]}
+  />
+  <article
+    className="CardColumn__NoEventWrapper-sc-1w6lsih-0 kZKqpc media"
+  >
+    <figure
+      className="CardColumn__AvatarWrapper-sc-1w6lsih-1 bZyfne media-left"
+    >
+      <p
+        className="image is-64x64"
+      >
+        Git
+      </p>
+    </figure>
+    <div
+      className="CardColumn__FlexFullHeight-sc-1w6lsih-2 cAdfGj media-content text-box is-flex"
+    >
+      <div
+        className="is-flex"
+      >
+        <div
+          className="CardColumn__ContentLeft-sc-1w6lsih-4 dumWkw content"
+        >
+          <p
+            className="shorten-text is-marginless"
+          >
+             
+            <strong>
+              Git
+            </strong>
+          </p>
+          <p
+            className="shorten-text"
+          >
+            
+          </p>
+        </div>
+        <div
+          className="CardColumn__ContentRight-sc-1w6lsih-5 kyEPRa"
+        />
+      </div>
+      <div
+        className="CardColumn__FooterWrapper-sc-1w6lsih-3 jlTqlS level is-flex"
+      >
+        <div
+          className="level-left is-hidden-mobile"
+        >
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
+            href="/repo/scmadmin/Git/branches"
+            onClick={[Function]}
+          >
+            <i
+              className="fas fa-code-branch has-text-inherit fa-lg"
+            />
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
+            href="/repo/scmadmin/Git/code/changesets/"
+            onClick={[Function]}
+          >
+            <i
+              className="fas fa-exchange-alt has-text-inherit fa-lg"
+            />
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
+            href="/repo/scmadmin/Git/code/sources/"
+            onClick={[Function]}
+          >
+            <i
+              className="fas fa-code has-text-inherit fa-lg"
+            />
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
+            href="/repo/scmadmin/Git/settings/general"
+            onClick={[Function]}
+          >
+            <i
+              className="fas fa-cog has-text-inherit fa-lg"
+            />
+          </a>
+        </div>
+        <div
+          className="level-right is-mobile is-marginless"
+        >
+          <small
+            className="level-item"
+          >
+            <time
+              className="DateFromNow__DateElement-sc-16hnz72-0 ehlCzi"
+              title="2020-03-23 09:26:01"
+            >
+              2 days ago
+            </time>
+          </small>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+`;
+
+exports[`Storyshots RepositoryEntry Hg-Repo 1`] = `
+<div
+  className="RepositoryEntrystories__Container-toppdg-0 bQveHd"
+>
+  <a
+    className="overlay-column"
+    href="/repo/scmadmin/Mercurial"
+    onClick={[Function]}
+  />
+  <article
+    className="CardColumn__NoEventWrapper-sc-1w6lsih-0 kZKqpc media"
+  >
+    <figure
+      className="CardColumn__AvatarWrapper-sc-1w6lsih-1 bZyfne media-left"
+    >
+      <p
+        className="image is-64x64"
+      >
+        <img
+          alt="Logo"
+          src="/images/blib.jpg"
+        />
+      </p>
+    </figure>
+    <div
+      className="CardColumn__FlexFullHeight-sc-1w6lsih-2 cAdfGj media-content text-box is-flex"
+    >
+      <div
+        className="is-flex"
+      >
+        <div
+          className="CardColumn__ContentLeft-sc-1w6lsih-4 dumWkw content"
+        >
+          <p
+            className="shorten-text is-marginless"
+          >
+            Hg
+             
+            <strong>
+              Mercurial
+            </strong>
+          </p>
+          <p
+            className="shorten-text"
+          >
+            
+          </p>
+        </div>
+        <div
+          className="CardColumn__ContentRight-sc-1w6lsih-5 kyEPRa"
+        />
+      </div>
+      <div
+        className="CardColumn__FooterWrapper-sc-1w6lsih-3 jlTqlS level is-flex"
+      >
+        <div
+          className="level-left is-hidden-mobile"
+        >
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
+            href="/repo/scmadmin/Mercurial/branches"
+            onClick={[Function]}
+          >
+            <i
+              className="fas fa-code-branch has-text-inherit fa-lg"
+            />
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
+            href="/repo/scmadmin/Mercurial/code/changesets/"
+            onClick={[Function]}
+          >
+            <i
+              className="fas fa-exchange-alt has-text-inherit fa-lg"
+            />
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
+            href="/repo/scmadmin/Mercurial/code/sources/"
+            onClick={[Function]}
+          >
+            <i
+              className="fas fa-code has-text-inherit fa-lg"
+            />
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
+            href="/repo/scmadmin/Mercurial/settings/general"
+            onClick={[Function]}
+          >
+            <i
+              className="fas fa-cog has-text-inherit fa-lg"
+            />
+          </a>
+        </div>
+        <div
+          className="level-right is-mobile is-marginless"
+        >
+          <small
+            className="level-item"
+          >
+            <time
+              className="DateFromNow__DateElement-sc-16hnz72-0 ehlCzi"
+              title="2020-03-23 09:26:01"
+            >
+              2 days ago
+            </time>
+          </small>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+`;
+
 exports[`Storyshots SyntaxHighlighter Go 1`] = `
 <div
   className="SyntaxHighlighterstories__Spacing-sc-1dcldp5-0 eofOgh"
