@@ -312,14 +312,6 @@
       <version>1.23</version>
     </dependency>
 
-    <!-- class loader leak prevention -->
-
-    <dependency>
-      <groupId>se.jiderhamn.classloader-leak-prevention</groupId>
-      <artifactId>classloader-leak-prevention-core</artifactId>
-      <version>2.7.0</version>
-    </dependency>
-
     <!-- unix restart -->
 
     <dependency>

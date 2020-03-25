@@ -27,6 +27,8 @@ import com.google.common.base.Strings;
 import sonia.scm.PlatformType;
 import sonia.scm.util.SystemUtil;
 
+import java.lang.reflect.Constructor;
+
 final class RestartStrategyFactory {
 
   /**
@@ -61,19 +63,26 @@ final class RestartStrategyFactory {
       return null;
     } else if (ExitRestartStrategy.NAME.equalsIgnoreCase(property)) {
       return new ExitRestartStrategy();
-    } else if (InjectionContextRestartStrategy.NAME.equalsIgnoreCase(property)) {
-      return new InjectionContextRestartStrategy(webAppClassLoader);
     } else {
-      return fromClassName(property);
+      return fromClassName(property, webAppClassLoader);
     }
   }
 
-  private static RestartStrategy fromClassName(String property) {
+  private static RestartStrategy fromClassName(String className, ClassLoader classLoader) {
     try {
-      Class<? extends RestartStrategy> rsClass = Class.forName(property).asSubclass(RestartStrategy.class);
-      return rsClass.getConstructor().newInstance();
+      Class<? extends RestartStrategy> rsClass = Class.forName(className).asSubclass(RestartStrategy.class);
+      return createInstance(rsClass, classLoader);
     } catch (Exception e) {
       throw new RestartNotSupportedException("failed to create restart strategy from property", e);
+    }
+  }
+
+  private static RestartStrategy createInstance(Class<? extends RestartStrategy> rsClass, ClassLoader classLoader) throws InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException, NoSuchMethodException {
+    try {
+      Constructor<? extends RestartStrategy> constructor = rsClass.getConstructor(ClassLoader.class);
+      return constructor.newInstance(classLoader);
+    } catch (NoSuchMethodException ex) {
+      return rsClass.getConstructor().newInstance();
     }
   }
 

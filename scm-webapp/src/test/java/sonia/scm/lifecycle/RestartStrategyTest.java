@@ -46,6 +46,16 @@ class RestartStrategyTest {
   }
 
   @Test
+  void shouldReturnRestartStrategyFromSystemPropertyWithClassLoaderConstructor() {
+    withStrategy(ComplexRestartStrategy.class.getName(), (rs) -> {
+      assertThat(rs).containsInstanceOf(ComplexRestartStrategy.class)
+        .get()
+        .extracting("classLoader")
+        .isSameAs(classLoader);
+    });
+  }
+
+  @Test
   void shouldThrowExceptionForNonStrategyClass() {
     withStrategy(RestartStrategyTest.class.getName(), () -> {
       assertThrows(RestartNotSupportedException.class, () -> RestartStrategy.get(classLoader));
@@ -71,13 +81,6 @@ class RestartStrategyTest {
   void shouldReturnExitRestartStrategy() {
     withStrategy(ExitRestartStrategy.NAME, (rs) -> {
       assertThat(rs).containsInstanceOf(ExitRestartStrategy.class);
-    });
-  }
-
-  @Test
-  void shouldReturnInjectionContextRestartStrategy() {
-    withStrategy(InjectionContextRestartStrategy.NAME, (rs) -> {
-      assertThat(rs).containsInstanceOf(InjectionContextRestartStrategy.class);
     });
   }
 
@@ -115,6 +118,20 @@ class RestartStrategyTest {
   }
 
   public static class TestingRestartStrategy implements RestartStrategy {
+    @Override
+    public void restart(InjectionContext context) {
+
+    }
+  }
+
+  public static class ComplexRestartStrategy implements RestartStrategy {
+
+    private final ClassLoader classLoader;
+
+    public ComplexRestartStrategy(ClassLoader classLoader) {
+      this.classLoader = classLoader;
+    }
+
     @Override
     public void restart(InjectionContext context) {
 

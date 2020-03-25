@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.lifecycle.classloading;
 
 import org.junit.jupiter.api.Test;
@@ -29,28 +29,6 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ClassLoaderLifeCycleTest {
-
-  @Test
-  void shouldCreateSimpleClassLoader() {
-    System.setProperty(ClassLoaderLifeCycle.PROPERTY, SimpleClassLoaderLifeCycle.NAME);
-    try {
-      ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
-      assertThat(classLoaderLifeCycle).isInstanceOf(SimpleClassLoaderLifeCycle.class);
-    } finally {
-      System.clearProperty(ClassLoaderLifeCycle.PROPERTY);
-    }
-  }
-
-  @Test
-  void shouldCreateWithLeakPreventionClassLoader() {
-    System.setProperty(ClassLoaderLifeCycle.PROPERTY, ClassLoaderLifeCycleWithLeakPrevention.NAME);
-    try {
-      ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
-      assertThat(classLoaderLifeCycle).isInstanceOf(ClassLoaderLifeCycleWithLeakPrevention.class);
-    } finally {
-      System.clearProperty(ClassLoaderLifeCycle.PROPERTY);
-    }
-  }
 
   @Test
   void shouldCreateDefaultClassLoader() {
