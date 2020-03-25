@@ -21,17 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
@@ -57,7 +59,7 @@ final class Differ implements AutoCloseable {
 
   static Diff diff(Repository repository, DiffCommandRequest request) throws IOException {
     try (Differ differ = create(repository, request)) {
-      return differ.diff();
+      return differ.diff(repository);
     }
   }
 
@@ -108,8 +110,13 @@ final class Differ implements AutoCloseable {
     return new Differ(commit, walk, treeWalk);
   }
 
-  private Diff diff() throws IOException {
-    List<DiffEntry> entries = DiffEntry.scan(treeWalk);
+  private Diff diff(Repository repository) throws IOException {
+    DiffFormatter diffFormatter = new DiffFormatter(null);
+    diffFormatter.setRepository(repository);
+    diffFormatter.setDetectRenames(true);
+    List<DiffEntry> entries = diffFormatter.scan(
+      treeWalk.getTree(0, AbstractTreeIterator.class),
+      treeWalk.getTree(1, AbstractTreeIterator.class));
     return new Diff(commit, entries);
   }
 
