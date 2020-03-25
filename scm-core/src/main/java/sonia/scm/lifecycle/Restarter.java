@@ -43,6 +43,7 @@ public interface Restarter {
    *
    * @param cause cause of the restart. This should be the class which calls this method.
    * @param reason reason for the required restart.
+   * @throws RestartNotSupportedException if restarting is not supported by the underlying platform.
    */
   void restart(Class<?> cause, String reason);
 }
