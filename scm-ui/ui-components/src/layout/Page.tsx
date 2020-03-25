@@ -32,6 +32,11 @@ const MarginLeft = styled.div`
 margin-left: 0.5rem;
 `;
 
+const FlexContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 export default class Page extends React.Component<Props> {
   componentDidUpdate() {
     const { title } = this.props;
@@ -86,9 +91,9 @@ export default class Page extends React.Component<Props> {
       <>
         <div className="columns">
           <div className="column">
-            <div className="is-flex">
-              <Title title={title} /> <MarginLeft>{afterTitle}</MarginLeft>
-            </div>
+            <FlexContainer>
+              <Title title={title} /> {afterTitle && <MarginLeft>{afterTitle}</MarginLeft>}
+            </FlexContainer>
             <Subtitle subtitle={subtitle} />
           </div>
           {pageActions}
