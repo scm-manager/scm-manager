@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.lifecycle;
 
 import java.util.Optional;
 
 /**
- * Strategy for restarting SCM-Manager.
+ * Strategy for restarting SCM-Manager. Implementations must either have a default constructor or one taking the
+ * class loader for the current context as a single argument.
  */
 public interface RestartStrategy {
 
