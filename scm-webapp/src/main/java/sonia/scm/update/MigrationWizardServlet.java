@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update;
 
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -143,14 +143,13 @@ class MigrationWizardServlet extends HttpServlet {
       );
 
     Map<String, Object> model = Collections.singletonMap("contextPath", req.getContextPath());
-
-    respondWithTemplate(resp, model, "templates/repository-migration-restart.mustache");
-
     ThreadContext.bind(new Subject.Builder(new DefaultSecurityManager()).authenticated(false).buildSubject());
 
     if (restarter.isSupported()) {
+      respondWithTemplate(resp, model, "templates/repository-migration-restart.mustache");
       restarter.restart(MigrationWizardServlet.class, "wrote migration data");
     } else {
+      respondWithTemplate(resp, model, "templates/repository-migration-manual-restart.mustache");
       LOG.error("Restarting is not supported on this platform.");
       LOG.error("Please do a manual restart");
     }
