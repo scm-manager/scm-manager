@@ -21,52 +21,73 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { storiesOf } from "@storybook/react";
-import React from "react";
+import {storiesOf} from "@storybook/react";
+import React, {FC, ReactNode} from "react";
 import styled from "styled-components";
-import GitRepository from "../__resources__/Git-Repository";
-import HgRepository from "../__resources__/Hg-Repository";
+import repository from "../__resources__/repository";
 // @ts-ignore ignore unknown png
 import Git from "../__resources__/git-logo.png";
-// @ts-ignore ignore unknown png
-import Hg from "../__resources__/hg-logo.png";
 import RepositoryEntry from "./RepositoryEntry";
-import { Binder, BinderContext } from "@scm-manager/ui-extensions";
-import { Repository } from "@scm-manager/ui-types";
+import {Binder, BinderContext} from "@scm-manager/ui-extensions";
+import {Repository} from "@scm-manager/ui-types";
+import Image from "../Image";
+import classNames from "classnames";
+import Icon from "../Icon";
 
-const Container = styled.div`
-  padding: 2rem 6rem;
+const Spacing = styled.div`
+  margin: 2rem;
 `;
+
+const Container: FC = ({children}) => (
+  <Spacing className="box box-link-shadow">{children}</Spacing>
+);
 
 const bindAvatar = (binder: Binder, avatar: string) => {
   binder.bind("repos.repository-avatar", () => {
-    return avatar;
+    return <Image src={avatar} alt="Logo"/>;
   });
 };
 
-const bindBeforeTitle = (binder: Binder, beforeTitle: string) => {
+const bindBeforeTitle = (binder: Binder, extension: ReactNode) => {
   binder.bind("repository.card.beforeTitle", () => {
-    return beforeTitle;
+    return extension;
+  });
+};
+
+const bindQuickLink = (binder: Binder, extension: ReactNode) => {
+  binder.bind("repository.card.quickLink", () => {
+    return extension;
   });
 };
 
 const withBinder = (binder: Binder, repository: Repository) => {
   return (
     <BinderContext.Provider value={binder}>
-      <RepositoryEntry repository={repository} />
+      <RepositoryEntry repository={repository}/>
     </BinderContext.Provider>
   );
 };
 
+const QuickLink = <a className="level-item"><Icon className="fa-lg" name="fas fa-code-branch fa-rotate-180 fa-fw"
+                                                  color="inherit"/></a>;
+
 storiesOf("RepositoryEntry", module)
   .addDecorator(storyFn => <Container>{storyFn()}</Container>)
-  .add("Git-Repo", () => {
-    const binder = new Binder("git-story");
-    bindAvatar(binder, "Git");
-    return withBinder(binder, GitRepository);
+  .add("Default", () => {
+    return <RepositoryEntry repository={repository}/>;
   })
-  .add("Hg-Repo", () => {
-    const binder = new Binder("hg-story");
-    bindBeforeTitle(binder, "Hg");
-    return withBinder(binder, HgRepository);
+  .add("Avatar EP", () => {
+    const binder = new Binder("avatar");
+    bindAvatar(binder, Git);
+    return withBinder(binder, repository);
+  })
+  .add("Before Title EP", () => {
+    const binder = new Binder("title");
+    bindBeforeTitle(binder, <i className="fas fa-star"/>);
+    return withBinder(binder, repository);
+  })
+  .add("Quick Link EP", () => {
+    const binder = new Binder("title");
+    bindQuickLink(binder, QuickLink);
+    return withBinder(binder, repository);
   });
