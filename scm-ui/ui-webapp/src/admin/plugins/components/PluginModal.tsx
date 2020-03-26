@@ -214,8 +214,25 @@ class PluginModal extends React.Component<Props, State> {
     });
   };
 
-  render() {
+  createRestartSectionContent = () => {
     const { restart } = this.state;
+    const { plugin, pluginAction, t } = this.props;
+
+    if (plugin._links[pluginAction + "WithRestart"]) {
+      return (
+        <Checkbox
+          checked={restart}
+          label={t("plugins.modal.restart")}
+          onChange={this.handleRestartChange}
+          disabled={false}
+        />
+      );
+    } else {
+      return <Notification type="warning">{t("plugins.modal.manualRestartRequired")}</Notification>;
+    }
+  };
+
+  render() {
     const { plugin, pluginAction, onClose, t } = this.props;
 
     const body = (
@@ -262,12 +279,7 @@ class PluginModal extends React.Component<Props, State> {
         </div>
         <div className="media">
           <div className="media-content">
-            <Checkbox
-              checked={restart}
-              label={t("plugins.modal.restart")}
-              onChange={this.handleRestartChange}
-              disabled={false}
-            />
+            {this.createRestartSectionContent()}
           </div>
         </div>
         {this.renderNotifications()}

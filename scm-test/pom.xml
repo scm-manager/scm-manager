@@ -38,7 +38,7 @@
   <artifactId>scm-test</artifactId>
   <version>2.0.0-SNAPSHOT</version>
   <name>scm-test</name>
-  
+
   <dependencies>
 
     <dependency>
@@ -51,6 +51,12 @@
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
       <version>2.0.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
@@ -88,17 +94,17 @@
     </dependency>
 
   </dependencies>
-  
+
   <!-- for svnkit and jgit -->
-  
+
   <repositories>
-      
+
     <repository>
       <id>maven.tmatesoft.com</id>
       <name>tmatesoft release repository</name>
       <url>https://maven.tmatesoft.com/content/repositories/releases</url>
     </repository>
-  
+
   </repositories>
 
 </project>

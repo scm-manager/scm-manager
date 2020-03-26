@@ -44,6 +44,7 @@ import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.lifecycle.RestartEventFactory;
 import sonia.scm.plugin.PluginLoader;
 
 import javax.servlet.http.HttpServletRequest;
@@ -138,7 +139,7 @@ public class I18nServletTest {
   public void shouldCleanCacheOnRestartEvent() {
     ScmEventBus.getInstance().register(servlet);
 
-    ScmEventBus.getInstance().post(new RestartEvent(I18nServlet.class, "Restart to reload the plugin resources"));
+    ScmEventBus.getInstance().post(RestartEventFactory.create(I18nServlet.class, "Restart to reload the plugin resources"));
 
     verify(cache).clear();
   }

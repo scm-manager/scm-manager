@@ -21,11 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+
 public class PluginChecksumMismatchException extends PluginInstallException {
-  public PluginChecksumMismatchException(String message) {
-    super(message);
+  public PluginChecksumMismatchException(AvailablePlugin plugin, String calculatedChecksum, String expectedChecksum) {
+    super(
+      entity("Plugin", plugin.getDescriptor().getInformation().getName()).build(),
+      String.format("downloaded plugin checksum %s does not match expected %s", calculatedChecksum, expectedChecksum)
+    );
+  }
+
+  @Override
+  public String getCode() {
+    return "6mRuFxaWM1";
   }
 }

@@ -21,11 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+
 public class PluginDownloadException extends PluginInstallException {
-  public PluginDownloadException(String message, Throwable cause) {
-    super(message, cause);
+  public PluginDownloadException(AvailablePlugin plugin, Exception cause) {
+    super(entity("Plugin", plugin.getDescriptor().getInformation().getName()).build(), "failed to download plugin", cause);
+  }
+
+  @Override
+  public String getCode() {
+    return "9iRuFz1UB1";
   }
 }

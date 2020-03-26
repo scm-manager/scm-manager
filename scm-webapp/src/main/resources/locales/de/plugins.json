@@ -203,6 +203,18 @@
     "4GRrgkSC01": {
       "displayName": "Unerwartetes Merge-Ergebnis",
       "description": "Der Merge hatte ein unerwartetes Ergebis, das nicht automatisiert behandelt werden konnte. Nähere Details sind im Log zu finden. Führen Sie den Merge ggf. manuell durch."
+    },
+    "6mRuFxaWM1": {
+      "displayName": "Falsche Checksumme",
+      "description": "Die Checksumme des heruntergeladenen Plugins stimmt nicht mit der erwarteten Checksumme überein. Bitte versuchen Sie es erneut und prüfen Sie die Interneteinstellungen wie z. B. die Proxy-Einstellungen."
+    },
+    "9iRuFz1UB1": {
+      "displayName": "Fehler beim Herunterladen",
+      "description": "Das Plugin konnte nicht vom Server heruntergeladen werden. BitteThe plugin could not be loaded from the server. Bitte versuchen Sie es erneut und prüfen Sie die Interneteinstellungen wie z. B. die Proxy-Einstellungen. Weitere Details finden sich im Server Log."
+    },
+    "8nRuFzjss1": {
+      "displayName": "Fehler beim Löschen falscher Downloads",
+      "description": "Ein fehlerhaft heruntergeladenes Plugin konnte nicht gelöscht werden. Bitte prüfen Sie die Server Logs und löschen die Datei manuell."
     }
   },
   "namespaceStrategies": {

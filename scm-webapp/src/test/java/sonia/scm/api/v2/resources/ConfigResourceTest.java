@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
@@ -89,6 +89,7 @@ public class ConfigResourceTest {
     initMocks(this);
 
     ConfigResource configResource = new ConfigResource(dtoToConfigMapper, configToDtoMapper, createConfiguration(), namespaceStrategyValidator);
+    configResource.setStore(config -> {});
 
     dispatcher.addSingletonResource(configResource);
   }
@@ -128,7 +129,9 @@ public class ConfigResourceTest {
 
     request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
     response = new MockHttpResponse();
-    dispatcher.invoke(request, response);    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"proxyPassword\":\"newPassword\""));
     assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/config"));
     assertTrue("link not found", response.getContentAsString().contains("\"update\":{\"href\":\"/v2/config"));
@@ -145,8 +148,6 @@ public class ConfigResourceTest {
     assertEquals("Subject does not have permission [configuration:write:global]", response.getContentAsString());
     assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
   }
-
-
 
   @Test
   @SubjectAware(username = "readWrite")

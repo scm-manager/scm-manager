@@ -55,6 +55,7 @@ import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
 import { Plugin } from "@scm-manager/ui-types/src";
+import ShowPendingModal from "../components/ShowPendingModal";
 
 type Props = WithTranslation & {
   loading: boolean;
@@ -74,6 +75,7 @@ type Props = WithTranslation & {
 
 type State = {
   showPendingModal: boolean;
+  showExecutePendingModal: boolean;
   showUpdateAllModal: boolean;
   showCancelModal: boolean;
 };
@@ -83,6 +85,7 @@ class PluginsOverview extends React.Component<Props, State> {
     super(props);
     this.state = {
       showPendingModal: false,
+      showExecutePendingModal: false,
       showUpdateAllModal: false,
       showCancelModal: false
     };
@@ -138,38 +141,57 @@ class PluginsOverview extends React.Component<Props, State> {
     const { pendingPlugins, collection, t } = this.props;
     const buttons = [];
 
-    if (pendingPlugins && pendingPlugins._links && pendingPlugins._links.execute) {
-      buttons.push(
-        <Button
-          color="primary"
-          reducedMobile={true}
-          key={"executePending"}
-          icon={"arrow-circle-right"}
-          label={t("plugins.executePending")}
-          action={() =>
-            this.setState({
-              showPendingModal: true
-            })
-          }
-        />
-      );
-    }
+    if (pendingPlugins && pendingPlugins._links) {
+      if (pendingPlugins._links.execute) {
+        buttons.push(
+          <Button
+            color="primary"
+            reducedMobile={true}
+            key={"executePending"}
+            icon={"arrow-circle-right"}
+            label={t("plugins.executePending")}
+            action={() =>
+              this.setState({
+                showExecutePendingModal: true
+              })
+            }
+          />
+        );
+      }
 
-    if (pendingPlugins && pendingPlugins._links && pendingPlugins._links.cancel) {
-      buttons.push(
-        <Button
-          color="primary"
-          reducedMobile={true}
-          key={"cancelPending"}
-          icon={"times"}
-          label={t("plugins.cancelPending")}
-          action={() =>
-            this.setState({
-              showCancelModal: true
-            })
-          }
-        />
-      );
+      if (pendingPlugins._links.cancel) {
+        if (!pendingPlugins._links.execute) {
+          buttons.push(
+            <Button
+              color="primary"
+              reducedMobile={true}
+              key={"showPending"}
+              icon={"info"}
+              label={t("plugins.showPending")}
+              action={() =>
+                this.setState({
+                  showPendingModal: true
+                })
+              }
+            />
+          );
+        }
+
+        buttons.push(
+          <Button
+            color="primary"
+            reducedMobile={true}
+            key={"cancelPending"}
+            icon={"times"}
+            label={t("plugins.cancelPending")}
+            action={() =>
+              this.setState({
+                showCancelModal: true
+              })
+            }
+          />
+        );
+      }
     }
 
     if (collection && collection._links && collection._links.update) {
@@ -228,14 +250,27 @@ class PluginsOverview extends React.Component<Props, State> {
 
   renderModals = () => {
     const { collection, pendingPlugins } = this.props;
-    const { showPendingModal, showCancelModal, showUpdateAllModal } = this.state;
+    const { showPendingModal, showExecutePendingModal, showCancelModal, showUpdateAllModal } = this.state;
 
     if (showPendingModal) {
+      return (
+        <ShowPendingModal
+          onClose={() =>
+            this.setState({
+              showPendingModal: false
+            })
+          }
+          pendingPlugins={pendingPlugins}
+        />
+      );
+    }
+
+    if (showExecutePendingModal) {
       return (
         <ExecutePendingActionModal
           onClose={() =>
             this.setState({
-              showPendingModal: false
+              showExecutePendingModal: false
             })
           }
           pendingPlugins={pendingPlugins}

@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.lifecycle.RestartEvent;
+import sonia.scm.lifecycle.Restarter;
 import sonia.scm.version.Version;
 
 import javax.inject.Inject;
@@ -59,20 +60,21 @@ public class DefaultPluginManager implements PluginManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(DefaultPluginManager.class);
 
-  private final ScmEventBus eventBus;
   private final PluginLoader loader;
   private final PluginCenter center;
   private final PluginInstaller installer;
+  private final Restarter restarter;
+
   private final Collection<PendingPluginInstallation> pendingInstallQueue = new ArrayList<>();
   private final Collection<PendingPluginUninstallation> pendingUninstallQueue = new ArrayList<>();
   private final PluginDependencyTracker dependencyTracker = new PluginDependencyTracker();
 
   @Inject
-  public DefaultPluginManager(ScmEventBus eventBus, PluginLoader loader, PluginCenter center, PluginInstaller installer) {
-    this.eventBus = eventBus;
+  public DefaultPluginManager(PluginLoader loader, PluginCenter center, PluginInstaller installer, Restarter restarter) {
     this.loader = loader;
     this.center = center;
     this.installer = installer;
+    this.restarter = restarter;
 
     this.computeInstallationDependencies();
   }
@@ -233,16 +235,8 @@ public class DefaultPluginManager implements PluginManager {
     }
   }
 
-  @VisibleForTesting
-  void triggerRestart(String cause) {
-    new Thread(() -> {
-      try {
-        Thread.sleep(200);
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-      }
-      eventBus.post(new RestartEvent(PluginManager.class, cause));
-    }).start();
+  private void triggerRestart(String cause) {
+    restarter.restart(PluginManager.class, cause);
   }
 
   private void cancelPending(List<PendingPluginInstallation> pendingInstallations) {

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.util.Providers;
@@ -38,6 +38,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.lifecycle.Restarter;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.AvailablePluginDescriptor;
 import sonia.scm.plugin.InstalledPlugin;
@@ -66,10 +67,15 @@ class PendingPluginResourceTest {
 
   private RestDispatcher dispatcher = new RestDispatcher();
 
+  @SuppressWarnings("unused")
   ResourceLinks resourceLinks = ResourceLinksMock.createMock(create("/"));
 
   @Mock
   PluginManager pluginManager;
+
+  @Mock
+  Restarter restarter;
+
   @Mock
   PluginDtoMapper mapper;
 
@@ -109,6 +115,7 @@ class PendingPluginResourceTest {
     void bindSubject() {
       ThreadContext.bind(subject);
       lenient().when(subject.isPermitted("plugin:manage")).thenReturn(true);
+      lenient().when(restarter.isSupported()).thenReturn(true);
     }
 
     @AfterEach
@@ -174,6 +181,23 @@ class PendingPluginResourceTest {
       assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
       assertThat(response.getContentAsString()).contains("\"uninstall\":[{\"name\":\"uninstalled-plugin\"");
       assertThat(response.getContentAsString()).contains("\"execute\":{\"href\":\"/v2/plugins/pending/execute\"}");
+    }
+
+    @Test
+    void shouldNotReturnExecuteLinkIfRestartIsNotSupported() throws URISyntaxException, UnsupportedEncodingException {
+      when(restarter.isSupported()).thenReturn(false);
+
+      when(pluginManager.getAvailable()).thenReturn(emptyList());
+      InstalledPlugin installedPlugin = createInstalledPlugin("uninstalled-plugin");
+      when(installedPlugin.isMarkedForUninstall()).thenReturn(true);
+      when(pluginManager.getInstalled()).thenReturn(singletonList(installedPlugin));
+
+      MockHttpRequest request = MockHttpRequest.get("/v2/plugins/pending");
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+      assertThat(response.getContentAsString()).contains("\"uninstall\":[{\"name\":\"uninstalled-plugin\"");
+      assertThat(response.getContentAsString()).doesNotContain("\"execute\"");
     }
 
     @Test

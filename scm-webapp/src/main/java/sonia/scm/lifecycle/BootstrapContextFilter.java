@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.lifecycle;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -35,6 +35,7 @@ import sonia.scm.event.ScmEventBus;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletException;
+import java.util.Optional;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -93,12 +94,16 @@ public class BootstrapContextFilter extends GuiceFilter {
     if (filterConfig == null) {
       LOG.error("filter config is null, scm-manager is not initialized");
     } else {
-      RestartStrategy restartStrategy = RestartStrategy.get(webAppClassLoader);
-      restartStrategy.restart(new GuiceInjectionContext());
+      Optional<RestartStrategy> restartStrategy = RestartStrategy.get(webAppClassLoader);
+      if (restartStrategy.isPresent()) {
+        restartStrategy.get().restart(new GuiceInjectionContext());
+      } else {
+        LOG.warn("restarting is not supported by the underlying platform");
+      }
     }
   }
 
-  private class GuiceInjectionContext implements RestartStrategy.InjectionContext {
+  private class GuiceInjectionContext implements RestartStrategy.InternalInjectionContext {
 
     @Override
     public void initialize() {

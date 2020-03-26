@@ -364,6 +364,13 @@
       </dependency>
 
       <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.13</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
         <groupId>org.hamcrest</groupId>
         <artifactId>hamcrest-core</artifactId>
         <version>${hamcrest.version}</version>
@@ -919,7 +926,7 @@
 
     <!-- security libraries -->
     <ssp.version>1.2.0</ssp.version>
-    <shiro.version>1.5.1</shiro.version>
+    <shiro.version>1.5.2</shiro.version>
 
     <!-- repository libraries -->
     <jgit.version>5.6.1.202002131546-r-scm1</jgit.version>

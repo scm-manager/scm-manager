@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import com.google.common.hash.HashCode;
@@ -64,7 +64,7 @@ class PluginInstaller {
       return new PendingPluginInstallation(plugin.install(), file);
     } catch (IOException ex) {
       cleanup(file);
-      throw new PluginDownloadException("failed to download plugin", ex);
+      throw new PluginDownloadException(plugin, ex);
     }
   }
 
@@ -74,7 +74,7 @@ class PluginInstaller {
         Files.deleteIfExists(file);
       }
     } catch (IOException e) {
-      throw new PluginInstallException("failed to cleanup, after broken installation");
+      throw new PluginCleanupException(file);
     }
   }
 
@@ -84,9 +84,7 @@ class PluginInstaller {
       String calculatedChecksum = hash.toString();
       if (!checksum.get().equalsIgnoreCase(calculatedChecksum)) {
         cleanup(file);
-        throw new PluginChecksumMismatchException(
-          String.format("downloaded plugin checksum %s does not match expected %s", calculatedChecksum, checksum.get())
-        );
+        throw new PluginChecksumMismatchException(plugin, calculatedChecksum, checksum.get());
       }
     }
   }

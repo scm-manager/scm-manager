@@ -21,18 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package sonia.scm.lifecycle;
 
-package sonia.scm.lifecycle.classloading;
+/**
+ * Creates restart events for testing.
+ * This is required, because the constructor of {@link RestartEvent} is package private.
+ */
+public final class RestartEventFactory {
 
-import org.junit.jupiter.api.Test;
+  private RestartEventFactory(){}
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-class ClassLoaderLifeCycleTest {
-
-  @Test
-  void shouldCreateDefaultClassLoader() {
-    ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
-    assertThat(classLoaderLifeCycle).isInstanceOf(SimpleClassLoaderLifeCycle.class);
+  public static RestartEvent create(Class<?> cause, String reason) {
+    return new RestartEvent(cause, reason);
   }
+
 }

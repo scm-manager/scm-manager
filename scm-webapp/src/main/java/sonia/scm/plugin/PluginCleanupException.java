@@ -22,17 +22,19 @@
  * SOFTWARE.
  */
 
-package sonia.scm.lifecycle.classloading;
+package sonia.scm.plugin;
 
-import org.junit.jupiter.api.Test;
+import java.nio.file.Path;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-class ClassLoaderLifeCycleTest {
+public class PluginCleanupException extends PluginInstallException {
+  public PluginCleanupException(Path file) {
+    super(entity("File", file.toString()).build(), "failed to cleanup, after broken installation");
+  }
 
-  @Test
-  void shouldCreateDefaultClassLoader() {
-    ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
-    assertThat(classLoaderLifeCycle).isInstanceOf(SimpleClassLoaderLifeCycle.class);
+  @Override
+  public String getCode() {
+    return "8nRuFzjss1";
   }
 }

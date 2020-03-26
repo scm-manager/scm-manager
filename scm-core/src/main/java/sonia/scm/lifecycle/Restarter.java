@@ -21,48 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.lifecycle.classloading;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.jiderhamn.classloader.leak.prevention.ClassLoaderLeakPreventor;
+package sonia.scm.lifecycle;
 
 /**
- * Logging adapter for {@link ClassLoaderLeakPreventor}.
+ * {@link Restarter} is able to restart scm-manager.
+ *
+ * @since 2.0.0
  */
-public class LoggingAdapter implements se.jiderhamn.classloader.leak.prevention.Logger {
+public interface Restarter {
 
-  @SuppressWarnings("squid:S3416") // suppress "loggers should be named for their enclosing classes" rule
-  private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderLeakPreventor.class);
+  /**
+   * Return {@code true} if restarting scm-manager is supported.
+   *
+   * @return {@code true} if restart is supported
+   */
+  boolean isSupported();
 
-  @Override
-  public void debug(String msg) {
-    LOG.debug(msg);
-  }
-
-  @Override
-  public void info(String msg) {
-    LOG.info(msg);
-  }
-
-  @Override
-  public void warn(String msg) {
-    LOG.warn(msg);
-  }
-
-  @Override
-  public void warn(Throwable t) {
-    LOG.warn(t.getMessage(), t);
-  }
-
-  @Override
-  public void error(String msg) {
-    LOG.error(msg);
-  }
-
-  @Override
-  public void error(Throwable t) {
-    LOG.error(t.getMessage(), t);
-  }
+  /**
+   * Issues a restart. The method will fire a {@link RestartEvent} to notify the system about the upcoming restart.
+   * If restarting is not supported by the underlying platform a {@link RestartNotSupportedException} is thrown.
+   *
+   * @param cause cause of the restart. This should be the class which calls this method.
+   * @param reason reason for the required restart.
+   * @throws RestartNotSupportedException if restarting is not supported by the underlying platform.
+   */
+  void restart(Class<?> cause, String reason);
 }
