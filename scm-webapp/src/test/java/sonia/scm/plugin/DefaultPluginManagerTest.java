@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import com.google.common.collect.ImmutableList;
@@ -36,10 +36,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junitpioneer.jupiter.TempDirectory;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
 import sonia.scm.ScmConstraintViolationException;
+import sonia.scm.lifecycle.Restarter;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -78,12 +80,14 @@ class DefaultPluginManagerTest {
   @Mock
   private PluginInstaller installer;
 
+  @Mock
+  private Restarter restarter;
+
+  @InjectMocks
   private DefaultPluginManager manager;
 
   @Mock
   private Subject subject;
-
-  private boolean restartTriggered = false;
 
   @BeforeEach
   void mockInstaller() {
@@ -91,16 +95,6 @@ class DefaultPluginManagerTest {
       AvailablePlugin plugin = ic.getArgument(0);
       return new PendingPluginInstallation(plugin.install(), null);
     });
-  }
-
-  @BeforeEach
-  void createPluginManagerToTestWithCapturedRestart() {
-    manager = new DefaultPluginManager(null, loader, center, installer) { // event bus is only used in restart and this is replaced here
-      @Override
-      void triggerRestart(String cause) {
-        restartTriggered = true;
-      }
-    };
   }
 
   @Nested
@@ -209,7 +203,7 @@ class DefaultPluginManagerTest {
       manager.install("scm-git-plugin", false);
 
       verify(installer).install(git);
-      assertThat(restartTriggered).isFalse();
+      verify(restarter, never()).restart(any(), any());
     }
 
     @Test
@@ -258,7 +252,7 @@ class DefaultPluginManagerTest {
       PendingPluginInstallation pendingMail = mock(PendingPluginInstallation.class);
       doReturn(pendingMail).when(installer).install(mail);
 
-      doThrow(new PluginChecksumMismatchException("checksum does not match")).when(installer).install(review);
+      doThrow(new PluginChecksumMismatchException(mail, "1", "2")).when(installer).install(review);
 
       assertThrows(PluginInstallException.class, () -> manager.install("scm-review-plugin", false));
 
@@ -287,7 +281,7 @@ class DefaultPluginManagerTest {
       manager.install("scm-git-plugin", true);
 
       verify(installer).install(git);
-      assertThat(restartTriggered).isTrue();
+      verify(restarter).restart(any(), any());
     }
 
     @Test
@@ -296,7 +290,7 @@ class DefaultPluginManagerTest {
       when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(gitInstalled));
 
       manager.install("scm-git-plugin", true);
-      assertThat(restartTriggered).isFalse();
+      verify(restarter, never()).restart(any(), any());
     }
 
     @Test
@@ -318,14 +312,14 @@ class DefaultPluginManagerTest {
       manager.install("scm-review-plugin", false);
       manager.executePendingAndRestart();
 
-      assertThat(restartTriggered).isTrue();
+      verify(restarter).restart(any(), any());
     }
 
     @Test
     void shouldNotSendRestartEventWithoutPendingPlugins() {
       manager.executePendingAndRestart();
 
-      assertThat(restartTriggered).isFalse();
+      verify(restarter, never()).restart(any(), any());
     }
 
     @Test
@@ -476,7 +470,7 @@ class DefaultPluginManagerTest {
 
       manager.executePendingAndRestart();
 
-      assertThat(restartTriggered).isTrue();
+      verify(restarter).restart(any(), any());
     }
 
     @Test

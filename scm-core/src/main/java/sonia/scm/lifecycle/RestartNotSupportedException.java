@@ -21,18 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package sonia.scm.lifecycle;
 
-package sonia.scm.lifecycle.classloading;
+/**
+ * Exception is thrown if a restart is not supported or a restart strategy is misconfigured.
+ */
+public class RestartNotSupportedException extends RuntimeException {
+  RestartNotSupportedException(String message) {
+    super(message);
+  }
 
-import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-class ClassLoaderLifeCycleTest {
-
-  @Test
-  void shouldCreateDefaultClassLoader() {
-    ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
-    assertThat(classLoaderLifeCycle).isInstanceOf(SimpleClassLoaderLifeCycle.class);
+  RestartNotSupportedException(String message, Throwable cause) {
+    super(message, cause);
   }
 }

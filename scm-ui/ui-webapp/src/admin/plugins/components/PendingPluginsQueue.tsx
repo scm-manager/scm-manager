@@ -22,17 +22,45 @@
  * SOFTWARE.
  */
 
-package sonia.scm.lifecycle.classloading;
+import React, { FC } from "react";
+import { PendingPlugins } from "@scm-manager/ui-types";
+import { useTranslation } from "react-i18next";
 
-import org.junit.jupiter.api.Test;
+type Props = {
+  pendingPlugins: PendingPlugins;
+};
 
-import static org.assertj.core.api.Assertions.assertThat;
+type SectionProps = Props & {
+  type: string;
+  label: string;
+};
 
-class ClassLoaderLifeCycleTest {
-
-  @Test
-  void shouldCreateDefaultClassLoader() {
-    ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
-    assertThat(classLoaderLifeCycle).isInstanceOf(SimpleClassLoaderLifeCycle.class);
+const Section: FC<SectionProps> = ({ pendingPlugins, type, label }) => {
+  const plugins = pendingPlugins?._embedded[type];
+  if (!plugins || plugins.length === 0) {
+    return null;
   }
-}
+  return (
+    <>
+      <strong>{label}</strong>
+      <ul>
+        {plugins.map(plugin => (
+          <li key={plugin.name}>{plugin.name}</li>
+        ))}
+      </ul>
+    </>
+  );
+};
+
+const PendingPluginsQueue: FC<Props> = ({ pendingPlugins }) => {
+  const [t] = useTranslation("admin");
+  return (
+    <>
+      <Section pendingPlugins={pendingPlugins} type="new" label={t("plugins.modal.installQueue")} />
+      <Section pendingPlugins={pendingPlugins} type="update" label={t("plugins.modal.updateQueue")} />
+      <Section pendingPlugins={pendingPlugins} type="uninstall" label={t("plugins.modal.uninstallQueue")} />
+    </>
+  );
+};
+
+export default PendingPluginsQueue;

@@ -21,18 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package sonia.scm.lifecycle;
 
-package sonia.scm.lifecycle.classloading;
+import com.google.common.annotations.VisibleForTesting;
+import sonia.scm.event.ScmEventBus;
 
-import org.junit.jupiter.api.Test;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import static org.assertj.core.api.Assertions.assertThat;
+@Singleton
+public class DefaultRestarter implements Restarter {
 
-class ClassLoaderLifeCycleTest {
+  private ScmEventBus eventBus;
+  private RestartStrategy strategy;
 
-  @Test
-  void shouldCreateDefaultClassLoader() {
-    ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
-    assertThat(classLoaderLifeCycle).isInstanceOf(SimpleClassLoaderLifeCycle.class);
+  @Inject
+  public DefaultRestarter() {
+    this(
+      ScmEventBus.getInstance(),
+      RestartStrategy.get(Thread.currentThread().getContextClassLoader()).orElse(null)
+    );
+  }
+
+  @VisibleForTesting
+  DefaultRestarter(ScmEventBus eventBus, RestartStrategy strategy) {
+    this.eventBus = eventBus;
+    this.strategy = strategy;
+  }
+
+  @Override
+  public boolean isSupported() {
+    return strategy != null;
+  }
+
+  @Override
+  public void restart(Class<?> cause, String reason) {
+    if (!isSupported()) {
+      throw new RestartNotSupportedException("restarting is not supported");
+    }
+    eventBus.post(new RestartEvent(cause, reason));
   }
 }

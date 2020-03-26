@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.lifecycle.classloading;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.lifecycle.LifeCycle;
@@ -42,18 +41,10 @@ public abstract class ClassLoaderLifeCycle implements LifeCycle {
 
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderLifeCycle.class);
 
-  @VisibleForTesting
-  static final String PROPERTY = "sonia.scm.classloading.lifecycle";
-
   public static ClassLoaderLifeCycle create() {
     ClassLoader webappClassLoader = Thread.currentThread().getContextClassLoader();
-    String implementation = System.getProperty(PROPERTY);
-    if (SimpleClassLoaderLifeCycle.NAME.equalsIgnoreCase(implementation)) {
-      LOG.info("create new simple ClassLoaderLifeCycle");
-      return new SimpleClassLoaderLifeCycle(webappClassLoader);
-    }
-    LOG.info("create new ClassLoaderLifeCycle with leak prevention");
-    return new ClassLoaderLifeCycleWithLeakPrevention(webappClassLoader);
+    LOG.info("create new simple ClassLoaderLifeCycle");
+    return new SimpleClassLoaderLifeCycle(webappClassLoader);
   }
 
   private final ClassLoader webappClassLoader;

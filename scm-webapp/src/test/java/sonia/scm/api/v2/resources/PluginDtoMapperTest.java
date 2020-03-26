@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.ImmutableSet;
@@ -35,6 +35,7 @@ import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.lifecycle.Restarter;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.AvailablePluginDescriptor;
 import sonia.scm.plugin.InstalledPlugin;
@@ -55,6 +56,9 @@ class PluginDtoMapperTest {
 
   @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("https://hitchhiker.com/"));
+
+  @Mock
+  private Restarter restarter;
 
   @InjectMocks
   private PluginDtoMapperImpl mapper;
@@ -122,6 +126,7 @@ class PluginDtoMapperTest {
 
     PluginDto dto = mapper.mapAvailable(plugin);
     assertThat(dto.getLinks().getLinkBy("install")).isEmpty();
+    assertThat(dto.getLinks().getLinkBy("installWithRestart")).isEmpty();
   }
 
   @Test
@@ -132,6 +137,17 @@ class PluginDtoMapperTest {
     PluginDto dto = mapper.mapAvailable(plugin);
     assertThat(dto.getLinks().getLinkBy("install").get().getHref())
       .isEqualTo("https://hitchhiker.com/v2/plugins/available/scm-cas-plugin/install");
+  }
+
+  @Test
+  void shouldAppendInstallWithRestartLink() {
+    when(restarter.isSupported()).thenReturn(true);
+    when(subject.isPermitted("plugin:manage")).thenReturn(true);
+    AvailablePlugin plugin = createAvailable(createPluginInformation());
+
+    PluginDto dto = mapper.mapAvailable(plugin);
+    assertThat(dto.getLinks().getLinkBy("installWithRestart").get().getHref())
+      .isEqualTo("https://hitchhiker.com/v2/plugins/available/scm-cas-plugin/install?restart=true");
   }
 
   @Test
@@ -161,5 +177,18 @@ class PluginDtoMapperTest {
     PluginDto dto = mapper.mapInstalled(plugin, emptyList());
     assertThat(dto.getLinks().getLinkBy("uninstall").get().getHref())
       .isEqualTo("https://hitchhiker.com/v2/plugins/installed/scm-cas-plugin/uninstall");
+  }
+
+  @Test
+  void shouldAppendUninstallWithRestartLink() {
+    when(restarter.isSupported()).thenReturn(true);
+    when(subject.isPermitted("plugin:manage")).thenReturn(true);
+
+    InstalledPlugin plugin = createInstalled(createPluginInformation());
+    when(plugin.isUninstallable()).thenReturn(true);
+
+    PluginDto dto = mapper.mapInstalled(plugin, emptyList());
+    assertThat(dto.getLinks().getLinkBy("uninstallWithRestart").get().getHref())
+      .isEqualTo("https://hitchhiker.com/v2/plugins/installed/scm-cas-plugin/uninstall?restart=true");
   }
 }

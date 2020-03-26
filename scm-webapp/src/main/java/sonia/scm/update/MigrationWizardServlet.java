@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update;
 
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.lifecycle.RestartEvent;
+import sonia.scm.lifecycle.Restarter;
 import sonia.scm.update.repository.DefaultMigrationStrategyDAO;
 import sonia.scm.update.repository.MigrationStrategy;
 import sonia.scm.update.repository.V1Repository;
@@ -65,11 +66,13 @@ class MigrationWizardServlet extends HttpServlet {
 
   private final XmlRepositoryV1UpdateStep repositoryV1UpdateStep;
   private final DefaultMigrationStrategyDAO migrationStrategyDao;
+  private final Restarter restarter;
 
   @Inject
-  MigrationWizardServlet(XmlRepositoryV1UpdateStep repositoryV1UpdateStep, DefaultMigrationStrategyDAO migrationStrategyDao) {
+  MigrationWizardServlet(XmlRepositoryV1UpdateStep repositoryV1UpdateStep, DefaultMigrationStrategyDAO migrationStrategyDao, Restarter restarter) {
     this.repositoryV1UpdateStep = repositoryV1UpdateStep;
     this.migrationStrategyDao = migrationStrategyDao;
+    this.restarter = restarter;
   }
 
   @Override
@@ -140,12 +143,16 @@ class MigrationWizardServlet extends HttpServlet {
       );
 
     Map<String, Object> model = Collections.singletonMap("contextPath", req.getContextPath());
-
-    respondWithTemplate(resp, model, "templates/repository-migration-restart.mustache");
-
     ThreadContext.bind(new Subject.Builder(new DefaultSecurityManager()).authenticated(false).buildSubject());
 
-    ScmEventBus.getInstance().post(new RestartEvent(MigrationWizardServlet.class, "wrote migration data"));
+    if (restarter.isSupported()) {
+      respondWithTemplate(resp, model, "templates/repository-migration-restart.mustache");
+      restarter.restart(MigrationWizardServlet.class, "wrote migration data");
+    } else {
+      respondWithTemplate(resp, model, "templates/repository-migration-manual-restart.mustache");
+      LOG.error("Restarting is not supported on this platform.");
+      LOG.error("Please do a manual restart");
+    }
   }
 
   private List<RepositoryLineEntry> getRepositoryLineEntries() {

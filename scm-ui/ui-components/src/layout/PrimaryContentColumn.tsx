@@ -21,18 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React, { ReactNode } from "react";
+import styled from "styled-components";
 
-package sonia.scm.lifecycle.classloading;
+type Props = {
+  children?: ReactNode;
+  collapsed: boolean;
+};
 
-import org.junit.jupiter.api.Test;
+const PrimaryColumn = styled.div<{ collapsed: boolean }>`
+  /* This is the counterpart to the specific column in SecondaryNavigationColumn. */
+  flex: none;
+  width: ${(props: { collapsed: boolean }) => (props.collapsed ? "89.7%" : "75%")};
+  /* Render this column to full size if column construct breaks (page size too small). */
+  @media (max-width: 785px) {
+    width: 100%;
+  }
+`;
 
-import static org.assertj.core.api.Assertions.assertThat;
+export default class PrimaryContentColumn extends React.Component<Props> {
+  static defaultProps = {
+    collapsed: false
+  };
 
-class ClassLoaderLifeCycleTest {
+  render() {
+    const { children, collapsed } = this.props;
 
-  @Test
-  void shouldCreateDefaultClassLoader() {
-    ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
-    assertThat(classLoaderLifeCycle).isInstanceOf(SimpleClassLoaderLifeCycle.class);
+    return (
+      <PrimaryColumn className="column" collapsed={collapsed}>
+        {children}
+      </PrimaryColumn>
+    );
   }
 }

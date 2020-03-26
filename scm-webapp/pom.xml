@@ -312,12 +312,18 @@
       <version>1.23</version>
     </dependency>
 
-    <!-- class loader leak prevention -->
+    <!-- unix restart -->
 
     <dependency>
-      <groupId>se.jiderhamn.classloader-leak-prevention</groupId>
-      <artifactId>classloader-leak-prevention-core</artifactId>
-      <version>2.7.0</version>
+      <groupId>org.kohsuke</groupId>
+      <artifactId>akuma</artifactId>
+      <version>1.10</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna</artifactId>
+      <version>5.5.0</version>
     </dependency>
 
     <!-- test scope -->
@@ -800,10 +806,6 @@
                   <name>scm.stage</name>
                   <value>${scm.stage}</value>
                 </systemProperty>
-                <systemProperty>
-                  <name>sonia.scm.classloading.lifecycle</name>
-                  <value>simple</value>
-                </systemProperty>
               </systemProperties>
               <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
               <scanIntervalSeconds>0</scanIntervalSeconds>
@@ -888,10 +890,6 @@
                 <systemProperty>
                   <name>scm.home</name>
                   <value>target/scm-it</value>
-                </systemProperty>
-                <systemProperty>
-                  <name>sonia.scm.classloading.lifecycle</name>
-                  <value>simple</value>
                 </systemProperty>
               </systemProperties>
               <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>

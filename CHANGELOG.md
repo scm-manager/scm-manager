@@ -7,14 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Extension point to add links to the repository cards from plug ins ([#1041](https://github.com/scm-manager/scm-manager/pull/1041))
+- Libc based restart strategy for posix operating systems ([#1079](https://github.com/scm-manager/scm-manager/pull/1079))
+- Simple restart strategy with System.exit ([#1079](https://github.com/scm-manager/scm-manager/pull/1079))
+- Notification if restart is not supported on the underlying platform ([#1079](https://github.com/scm-manager/scm-manager/pull/1079))
 
 ### Changed
 - Update resteasy to version 4.5.2.Final
+- Update shiro to version 1.5.2
 - Use browser built-in EventSource for apiClient subscriptions
 - Changeover to MIT license ([#1066](https://github.com/scm-manager/scm-manager/pull/1066))
 
 ### Removed
 - EventSource Polyfill
+- ClassLoader based restart logic ([#1079](https://github.com/scm-manager/scm-manager/pull/1079))
 
 ### Fixed
 - Build on windows ([#1048](https://github.com/scm-manager/scm-manager/issues/1048), [#1049](https://github.com/scm-manager/scm-manager/issues/1049), [#1056](https://github.com/scm-manager/scm-manager/pull/1056))

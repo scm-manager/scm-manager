@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.lifecycle.Restarter;
 import sonia.scm.update.repository.DefaultMigrationStrategyDAO;
 import sonia.scm.update.repository.MigrationStrategy;
 import sonia.scm.update.repository.V1Repository;
@@ -51,6 +52,8 @@ class MigrationWizardServletTest {
   XmlRepositoryV1UpdateStep updateStep;
   @Mock
   DefaultMigrationStrategyDAO migrationStrategyDao;
+  @Mock
+  Restarter restarter;
 
   @Mock
   HttpServletRequest request;
@@ -64,7 +67,7 @@ class MigrationWizardServletTest {
 
   @BeforeEach
   void initServlet() {
-    servlet = new MigrationWizardServlet(updateStep, migrationStrategyDao) {
+    servlet = new MigrationWizardServlet(updateStep, migrationStrategyDao, restarter) {
       @Override
       void respondWithTemplate(HttpServletResponse resp, Map<String, Object> model, String templateName) {
         renderedTemplateName = templateName;

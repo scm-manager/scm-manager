@@ -21,18 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React, { ReactNode } from "react";
+import styled from "styled-components";
 
-package sonia.scm.lifecycle.classloading;
+type Props = {
+  children?: ReactNode;
+};
 
-import org.junit.jupiter.api.Test;
+const FlexWrapped = styled.div`
+  /* Do not wrap before using the media query, 
+  otherwise long content will always break the navigation. */
+  @media (max-width: 785px) {
+    flex-wrap: wrap;
+  }
+`;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-class ClassLoaderLifeCycleTest {
-
-  @Test
-  void shouldCreateDefaultClassLoader() {
-    ClassLoaderLifeCycle classLoaderLifeCycle = ClassLoaderLifeCycle.create();
-    assertThat(classLoaderLifeCycle).isInstanceOf(SimpleClassLoaderLifeCycle.class);
+export default class CustomQueryFlexWrappedColumns extends React.Component<Props> {
+  render() {
+    return <FlexWrapped className="columns">{this.props.children}</FlexWrapped>;
   }
 }

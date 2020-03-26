@@ -53,7 +53,7 @@ class RepositoryDetailTable extends React.Component<Props> {
           </tr>
           <tr>
             <th>{t("repository.description")}</th>
-            <td>{repository.description}</td>
+            <td className="is-word-break">{repository.description}</td>
           </tr>
           <tr>
             <th>{t("repository.creationDate")}</th>
