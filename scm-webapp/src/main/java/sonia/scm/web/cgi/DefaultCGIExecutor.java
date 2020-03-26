@@ -295,9 +295,9 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     env.set(ENV_AUTH_TYPE, request.getAuthType());
     env.set(ENV_CONTENT_LENGTH, createCGIContentLength(request, contentLengthWorkaround));
 
-    /**
+    /*
      * Decode PATH_INFO
-     * https://bitbucket.org/sdorra/scm-manager/issue/79/hgweb-decoding-issue
+     * https://github.com/scm-manager/scm-manager/issues/79
      */
     if (Util.isNotEmpty(pathInfo))
     {

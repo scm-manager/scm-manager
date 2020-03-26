@@ -637,5 +637,4 @@ SCM-Manager 1.20
 
 -   update logback to version 1.0.7
 
-[Release 1.19 -
-1.0](https://bitbucket.org/sdorra/scm-manager/wiki/release%20notes%201.19%20-%201.0 "wikilink")
+[Release 1.19 - 1.0](release%20notes%201.19%20-%201.0.md "wikilink")

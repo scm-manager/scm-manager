@@ -12,13 +12,13 @@ Password: scmadmin
 SCM-Manager stores the complete data in a directory called .scm (the
 SCM-Manager home directory). This directory is located in the home
 directory of the user which is the owner of the process. Except for [rpm
-and
-deb](https://bitbucket.org/sdorra/scm-manager/wiki/RPM%20and%20DEB%20packages "wikilink")
+and deb](RPM%20and%20DEB%20packages.md "wikilink")
 installations, for those installations the home directory is located at
 /var/lib/scm.
 
-=== How can I change the SCM-Manager home directory? You could change
-the SCM-Manager home directory in a few ways:
+### How can I change the SCM-Manager home directory?
+
+You could change the SCM-Manager home directory in a few ways:
 
 -   Edit the scm.properties (WEB-INF/classes) file and add the path to
     your folder f.e. scm.home=/var/scm
@@ -34,8 +34,7 @@ use a \"/\" in the name of the repository to create the structure. For
 example the repositories Project/module-1, Project/module-2 and
 OtherProject/module-1 will result in the following structure.
 
-For more information have a look at
-<https://bitbucket.org/sdorra/scm-manager/issue/47/support-for-directory-structure>.
+For more information have a look at [Support for directory structure](https://github.com/scm-manager/scm-manager/issues/47).
 
 ### After creation of a new public repository I am trying to clone it anonymously, but I got request of user and password. What am I doing wrong?
 

@@ -2,8 +2,7 @@
 
 -   Versions prior to 1.36 are creating incompatible subversion
     repositories, if the subversion option \"with 1.7 Compatible\" is
-    enabled. [read
-    more](https://bitbucket.org/sdorra/scm-manager/wiki/healthchecks/svn-incompatible-dbformat "wikilink")
+    enabled. [read more](healthchecks/svn-incompatible-dbformat.md "wikilink")
 -   since version 1.18 scm-manager requires mercurial 1.9 or newer
 -   since version 1.49 Java 7 or newer is required
 -   version 1.58 and 1.59 are not working on java 7, but version 1.60
@@ -526,5 +525,4 @@ SCM-Manager 1.40
 
 -   update args4j to version 2.0.28
 
-[Release 1.39 -
-1.20](https://bitbucket.org/sdorra/scm-manager/wiki/release%20notes%201.39%20-%201.20 "wikilink")
+[Release 1.39 - 1.20](release%20notes%201.39%20-%201.20.md "wikilink")

@@ -505,8 +505,7 @@ SCM-Manager 1.5
 
 -   -   note\*\*
 
--   mod\_proxy users have to change their configuration, see [mod\_proxy
-    configuration](https://bitbucket.org/sdorra/scm-manager/wiki/apache/apache-mod_proxy "wikilink")
+-   mod\_proxy users have to change their configuration, see [mod\_proxy configuration](apache/apache-mod_proxy.md "wikilink")
 
 <!-- -->
 

@@ -80,8 +80,7 @@ repositories over http.
 
 -   [Building SCM-Manager from source](build-from-source.md "wikilink")
 -   [Java Client API](java-client-api.md "wikilink")
--   [Code
-    Snippets](https://bitbucket.org/sdorra/scm-manager/wiki/code-snippets "wikilink")
+-   [Code Snippets](code-snippets.md "wikilink")
 -   [Configuring Eclipse projects for
     SCM-Manager](configure-eclipse.md "wikilink")
 -   [Plugin Descriptor](plugin-descriptor.md "wikilink")

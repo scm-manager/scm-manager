@@ -1,1 +1,1 @@
-Moved to [State of SCM-Manager 2 development](https://bitbucket.org/sdorra/scm-manager/wiki/State%20of%20SCM-Manager%202%20development)
+Moved to [State of SCM-Manager 2 development](State of SCM-Manager 2 development.md)

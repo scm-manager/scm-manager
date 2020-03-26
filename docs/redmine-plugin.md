@@ -1,8 +1,7 @@
 Redmine Plugin
 --------------
 
-Is based on
-[scm-jira-plugin](https://bitbucket.org/sdorra/scm-manager/wiki/jira-plugin "wikilink")
+Is based on [scm-jira-plugin](jira-plugin.md "wikilink").
 
 The plugin enables the following features to integrate SCM-Manager to
 [Redmine](http://www.redmine.org/ "wikilink"):
@@ -15,10 +14,9 @@ The plugin enables the following features to integrate SCM-Manager to
 
 ### Installation and configuration
 
-1.  Enable redmine rest authentication
-    (http://www.redmine.org/projects/redmine/wiki/Rest\_api, basically
+1.  Enable [Redmine rest authentication](https://www.redmine.org/projects/redmine/wiki/Rest_api#Authentication), basically
     \'you have to check Enable REST API in Administration -\> Settings
-    -\> Authentication\' )
+    -\> Authentication\'
 2.  Install redmine-plugin over the plugin center in scm-manager
 3.  Configure the plugin, select a repository to enable the
     redmine-plugin for this repository
