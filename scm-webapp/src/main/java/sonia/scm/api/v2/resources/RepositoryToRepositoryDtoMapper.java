@@ -38,6 +38,7 @@ import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.ScmProtocol;
+import sonia.scm.web.api.RepositoryToHalMapper;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ import static java.util.stream.Collectors.toList;
 // Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
 @SuppressWarnings("squid:S3306")
 @Mapper
-public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Repository, RepositoryDto> {
+public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Repository, RepositoryDto> implements RepositoryToHalMapper {
 
   @Inject
   private ResourceLinks resourceLinks;
@@ -57,6 +58,9 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
   private RepositoryServiceFactory serviceFactory;
 
   abstract HealthCheckFailureDto toDto(HealthCheckFailure failure);
+
+  @Override
+  public abstract RepositoryDto map(Repository modelObject);
 
   @ObjectFactory
   RepositoryDto createDto(Repository repository) {

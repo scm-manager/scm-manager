@@ -27,6 +27,7 @@ package sonia.scm.api.v2.resources;
 import com.google.inject.AbstractModule;
 import com.google.inject.servlet.ServletScopes;
 import org.mapstruct.factory.Mappers;
+import sonia.scm.web.api.RepositoryToHalMapper;
 
 public class MapperModule extends AbstractModule {
   @Override
@@ -69,6 +70,8 @@ public class MapperModule extends AbstractModule {
     bind(ResteasyViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapper(ResteasyViolationExceptionToErrorDtoMapper.class).getClass());
     bind(ScmViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapper(ScmViolationExceptionToErrorDtoMapper.class).getClass());
     bind(ExceptionWithContextToErrorDtoMapper.class).to(Mappers.getMapper(ExceptionWithContextToErrorDtoMapper.class).getClass());
+
+    bind(RepositoryToHalMapper.class).to(Mappers.getMapper(RepositoryToRepositoryDtoMapper.class).getClass());
 
     // no mapstruct required
     bind(MeDtoFactory.class);
