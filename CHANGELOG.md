@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Update resteasy to version 4.5.2.Final
+- Update shiro to version 1.5.2
 - Use browser built-in EventSource for apiClient subscriptions
 - Changeover to MIT license ([#1066](https://github.com/scm-manager/scm-manager/pull/1066))
 
