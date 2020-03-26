@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Libc based restart strategy for posix operating systems ([#1079](https://github.com/scm-manager/scm-manager/pull/1079))
 - Simple restart strategy with System.exit ([#1079](https://github.com/scm-manager/scm-manager/pull/1079))
 - Notification if restart is not supported on the underlying platform ([#1079](https://github.com/scm-manager/scm-manager/pull/1079))
+- Extension point before title in repository cards (`repository.card.beforeTitle`)
+- Extension point after title on repository detail page (`repository.afterTitle`)
 
 ### Changed
 - Update resteasy to version 4.5.2.Final
