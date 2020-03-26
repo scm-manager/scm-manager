@@ -21,17 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React, { ReactNode } from "react";
+import styled from "styled-components";
 
-// @create-index
+type Props = {
+  children?: ReactNode;
+  collapsed: boolean;
+};
 
-export { default as Footer } from "./Footer";
-export { default as Header } from "./Header";
-export { default as Level } from "./Level";
-export { default as Page } from "./Page";
-export { default as PageActions } from "./PageActions";
-export { default as Subtitle } from "./Subtitle";
-export { default as Title } from "./Title";
-export { default as CustomQueryFlexWrappedColumns } from "./CustomQueryFlexWrappedColumns";
-export { default as PrimaryContentColumn } from "./PrimaryContentColumn";
-export { default as SecondaryNavigationColumn } from "./SecondaryNavigationColumn";
+const PrimaryColumn = styled.div<{ collapsed: boolean }>`
+  /* This is the counterpart to the specific column in SecondaryNavigationColumn. */
+  flex: none;
+  width: ${(props: { collapsed: boolean }) => (props.collapsed ? "89.7%" : "75%")};
+  /* Render this column to full size if column construct breaks (page size too small). */
+  @media (max-width: 785px) {
+    width: 100%;
+  }
+`;
 
+export default class PrimaryContentColumn extends React.Component<Props> {
+  static defaultProps = {
+    collapsed: false
+  };
+
+  render() {
+    const { children, collapsed } = this.props;
+
+    return (
+      <PrimaryColumn className="column" collapsed={collapsed}>
+        {children}
+      </PrimaryColumn>
+    );
+  }
+}

@@ -31,6 +31,9 @@ import { Links } from "@scm-manager/ui-types";
 import {
   NavLink,
   Page,
+  CustomQueryFlexWrappedColumns,
+  PrimaryContentColumn,
+  SecondaryNavigationColumn,
   SecondaryNavigation,
   SubNavigation,
   isMenuCollapsed,
@@ -104,8 +107,8 @@ class Admin extends React.Component<Props, State> {
         value={{ menuCollapsed, setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed }) }}
       >
         <Page>
-          <div className="columns">
-            <div className="column">
+          <CustomQueryFlexWrappedColumns>
+            <PrimaryContentColumn collapsed={menuCollapsed}>
               <Switch>
                 <Redirect exact from={url} to={`${url}/info`} />
                 <Route path={`${url}/info`} exact component={AdminDetails} />
@@ -143,8 +146,8 @@ class Admin extends React.Component<Props, State> {
                 <Route path={`${url}/roles/:page`} exact render={() => <RepositoryRoles baseUrl={`${url}/roles`} />} />
                 <ExtensionPoint name="admin.route" props={extensionProps} renderAll={true} />
               </Switch>
-            </div>
-            <div className={menuCollapsed ? "column is-1" : "column is-3"}>
+            </PrimaryContentColumn>
+            <SecondaryNavigationColumn collapsed={menuCollapsed}>
               <SecondaryNavigation
                 label={t("admin.menu.navigationLabel")}
                 onCollapse={() => this.onCollapseAdminMenu(!menuCollapsed)}
@@ -189,8 +192,8 @@ class Admin extends React.Component<Props, State> {
                   <ExtensionPoint name="admin.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
               </SecondaryNavigation>
-            </div>
-          </div>
+            </SecondaryNavigationColumn>
+          </CustomQueryFlexWrappedColumns>
         </Page>
       </MenuContext.Provider>
     );

@@ -34,6 +34,9 @@ import {
   MenuContext,
   NavLink,
   Page,
+  CustomQueryFlexWrappedColumns,
+  PrimaryContentColumn,
+  SecondaryNavigationColumn,
   SecondaryNavigation,
   SubNavigation
 } from "@scm-manager/ui-components";
@@ -113,8 +116,8 @@ class SingleGroup extends React.Component<Props, State> {
         value={{ menuCollapsed, setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed }) }}
       >
         <Page title={group.name}>
-          <div className="columns">
-            <div className="column">
+          <CustomQueryFlexWrappedColumns>
+            <PrimaryContentColumn collapsed={menuCollapsed}>
               <Route path={url} exact component={() => <Details group={group} />} />
               <Route path={`${url}/settings/general`} exact component={() => <EditGroup group={group} />} />
               <Route
@@ -123,8 +126,8 @@ class SingleGroup extends React.Component<Props, State> {
                 component={() => <SetPermissions selectedPermissionsLink={group._links.permissions} />}
               />
               <ExtensionPoint name="group.route" props={extensionProps} renderAll={true} />
-            </div>
-            <div className={menuCollapsed ? "column is-1" : "column is-3"}>
+            </PrimaryContentColumn>
+            <SecondaryNavigationColumn collapsed={menuCollapsed}>
               <SecondaryNavigation
                 label={t("singleGroup.menu.navigationLabel")}
                 onCollapse={() => this.onCollapseGroupMenu(!menuCollapsed)}
@@ -147,8 +150,8 @@ class SingleGroup extends React.Component<Props, State> {
                   <ExtensionPoint name="group.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
               </SecondaryNavigation>
-            </div>
-          </div>
+            </SecondaryNavigationColumn>
+          </CustomQueryFlexWrappedColumns>
         </Page>
       </MenuContext.Provider>
     );

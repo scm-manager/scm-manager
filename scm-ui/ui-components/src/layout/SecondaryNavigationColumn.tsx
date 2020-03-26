@@ -21,17 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React, { ReactNode } from "react";
+import styled from "styled-components";
 
-// @create-index
+type Props = {
+  children?: ReactNode;
+  collapsed: boolean;
+};
 
-export { default as Footer } from "./Footer";
-export { default as Header } from "./Header";
-export { default as Level } from "./Level";
-export { default as Page } from "./Page";
-export { default as PageActions } from "./PageActions";
-export { default as Subtitle } from "./Subtitle";
-export { default as Title } from "./Title";
-export { default as CustomQueryFlexWrappedColumns } from "./CustomQueryFlexWrappedColumns";
-export { default as PrimaryContentColumn } from "./PrimaryContentColumn";
-export { default as SecondaryNavigationColumn } from "./SecondaryNavigationColumn";
+const SecondaryColumn = styled.div<{ collapsed: boolean }>`
+  /* In Bulma there is unfortunately no intermediate step between .is-1 and .is-2, hence the size. 
+  Navigation size should be as constant as possible. */
+  flex: none;
+  width: ${props => (props.collapsed ? "5.5rem" : "20.5rem")};
+  max-width: ${(props: { collapsed: boolean }) => (props.collapsed ? "11.3%" : "25%")};
+  /* Render this column to full size if column construct breaks (page size too small). */
+  @media (max-width: 785px) {
+    width: 100%;
+    max-width: 100%;
+  }
+`;
 
+export default class SecondaryNavigationColumn extends React.Component<Props> {
+  static defaultProps = {
+    collapsed: false
+  };
+
+  render() {
+    const { children, collapsed } = this.props;
+
+    return (
+      <SecondaryColumn className="column" collapsed={collapsed}>
+        {children}
+      </SecondaryColumn>
+    );
+  }
+}

@@ -38,11 +38,10 @@ type CollapsedProps = {
   collapsed: boolean;
 };
 
-const SectionContainer = styled.aside<CollapsedProps>`
+const SectionContainer = styled.aside`
   position: sticky;
   position: -webkit-sticky; /* Safari */
   top: 2rem;
-  width: ${props => (props.collapsed ? "5.5rem" : "20.5rem")};
 `;
 
 const Icon = styled.i<CollapsedProps>`
@@ -80,7 +79,7 @@ const SecondaryNavigation: FC<Props> = ({ label, children, collapsed, onCollapse
   const arrowIcon = isCollapsed ? <i className="fas fa-caret-down" /> : <i className="fas fa-caret-right" />;
 
   return (
-    <SectionContainer className="menu" collapsed={isCollapsed}>
+    <SectionContainer className="menu">
       <div>
         <MenuLabel
           className="menu-label"

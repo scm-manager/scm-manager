@@ -35,7 +35,7 @@ class BranchTable extends React.Component<Props> {
   render() {
     const { t } = this.props;
     return (
-      <table className="card-table table is-hoverable is-fullwidth">
+      <table className="card-table table is-hoverable is-fullwidth is-word-break">
         <thead>
           <tr>
             <th>{t("branches.table.branches")}</th>

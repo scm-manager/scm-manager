@@ -32991,7 +32991,7 @@ exports[`Storyshots MarkdownView Code without Lang 1`] = `
 >
   <div>
     <div
-      className="content"
+      className="content is-word-break"
     >
       <p>
         Here is markdown with code, but without Language.
@@ -33022,7 +33022,7 @@ exports[`Storyshots MarkdownView Default 1`] = `
 >
   <div>
     <div
-      className="content"
+      className="content is-word-break"
     >
       <h1>
         <a
@@ -33830,7 +33830,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
 >
   <div>
     <div
-      className="content"
+      className="content is-word-break"
     >
       <h1>
         Xml Code Block in Markdown
