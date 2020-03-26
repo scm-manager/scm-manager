@@ -27,6 +27,19 @@ package sonia.scm.web.api;
 import de.otto.edison.hal.HalRepresentation;
 import sonia.scm.repository.Repository;
 
+/**
+ * Maps a repository to a hal representation.
+ * This is especially useful if a plugin would deliver a repository to the frontend.
+ *
+ * @since 2.0.0
+ */
 public interface RepositoryToHalMapper {
+
+  /**
+   * Returns the hal representation of the repository.
+   *
+   * @param repository repository to map
+   * @return hal representation
+   */
   HalRepresentation map(Repository repository);
 }
