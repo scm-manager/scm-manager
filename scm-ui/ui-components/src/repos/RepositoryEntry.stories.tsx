@@ -21,30 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import {storiesOf} from "@storybook/react";
-import React, {FC, ReactNode} from "react";
+import { storiesOf } from "@storybook/react";
+import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
 import repository from "../__resources__/repository";
 // @ts-ignore ignore unknown png
 import Git from "../__resources__/git-logo.png";
 import RepositoryEntry from "./RepositoryEntry";
-import {Binder, BinderContext} from "@scm-manager/ui-extensions";
-import {Repository} from "@scm-manager/ui-types";
+import { Binder, BinderContext } from "@scm-manager/ui-extensions";
+import { Repository } from "@scm-manager/ui-types";
 import Image from "../Image";
-import classNames from "classnames";
 import Icon from "../Icon";
+
+const baseDate = "2020-03-26T12:13:42+02:00";
 
 const Spacing = styled.div`
   margin: 2rem;
 `;
 
-const Container: FC = ({children}) => (
-  <Spacing className="box box-link-shadow">{children}</Spacing>
-);
+const Container: FC = ({ children }) => <Spacing className="box box-link-shadow">{children}</Spacing>;
 
 const bindAvatar = (binder: Binder, avatar: string) => {
   binder.bind("repos.repository-avatar", () => {
-    return <Image src={avatar} alt="Logo"/>;
+    return <Image src={avatar} alt="Logo" />;
   });
 };
 
@@ -63,18 +62,21 @@ const bindQuickLink = (binder: Binder, extension: ReactNode) => {
 const withBinder = (binder: Binder, repository: Repository) => {
   return (
     <BinderContext.Provider value={binder}>
-      <RepositoryEntry repository={repository}/>
+      <RepositoryEntry repository={repository} baseDate={baseDate} />
     </BinderContext.Provider>
   );
 };
 
-const QuickLink = <a className="level-item"><Icon className="fa-lg" name="fas fa-code-branch fa-rotate-180 fa-fw"
-                                                  color="inherit"/></a>;
+const QuickLink = (
+  <a className="level-item">
+    <Icon className="fa-lg" name="fas fa-code-branch fa-rotate-180 fa-fw" color="inherit" />
+  </a>
+);
 
 storiesOf("RepositoryEntry", module)
   .addDecorator(storyFn => <Container>{storyFn()}</Container>)
   .add("Default", () => {
-    return <RepositoryEntry repository={repository}/>;
+    return <RepositoryEntry repository={repository} baseDate={baseDate} />;
   })
   .add("Avatar EP", () => {
     const binder = new Binder("avatar");
@@ -83,7 +85,7 @@ storiesOf("RepositoryEntry", module)
   })
   .add("Before Title EP", () => {
     const binder = new Binder("title");
-    bindBeforeTitle(binder, <i className="fas fa-star"/>);
+    bindBeforeTitle(binder, <i className="fas fa-star" />);
     return withBinder(binder, repository);
   })
   .add("Quick Link EP", () => {

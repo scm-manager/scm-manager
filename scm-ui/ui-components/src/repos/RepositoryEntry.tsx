@@ -28,8 +28,13 @@ import RepositoryEntryLink from "./RepositoryEntryLink";
 import RepositoryAvatar from "./RepositoryAvatar";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
+type DateProp = Date | string;
+
 type Props = {
   repository: Repository;
+  // @VisibleForTesting
+  // the baseDate is only to avoid failing snapshot tests
+  baseDate?: DateProp;
 };
 
 class RepositoryEntry extends React.Component<Props> {
@@ -77,10 +82,10 @@ class RepositoryEntry extends React.Component<Props> {
     );
   };
 
-  createFooterRight = (repository: Repository) => {
+  createFooterRight = (repository: Repository, baseDate?: DateProp) => {
     return (
       <small className="level-item">
-        <DateFromNow date={repository.creationDate} />
+        <DateFromNow baseDate={baseDate} date={repository.creationDate} />
       </small>
     );
   };
@@ -95,10 +100,10 @@ class RepositoryEntry extends React.Component<Props> {
   };
 
   render() {
-    const { repository } = this.props;
+    const { repository, baseDate } = this.props;
     const repositoryLink = this.createLink(repository);
     const footerLeft = this.createFooterLeft(repository, repositoryLink);
-    const footerRight = this.createFooterRight(repository);
+    const footerRight = this.createFooterRight(repository, baseDate);
     const title = this.createTitle();
     return (
       <CardColumn
