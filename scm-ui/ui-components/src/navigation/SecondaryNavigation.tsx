@@ -26,6 +26,7 @@ import styled from "styled-components";
 import SubNavigation from "./SubNavigation";
 import { matchPath, useLocation } from "react-router-dom";
 import { isMenuCollapsed, MenuContext } from "./MenuContext";
+import { ExtensionPoint, Binder, useBinder } from "@scm-manager/ui-extensions";
 
 type Props = {
   label: string;
@@ -62,9 +63,10 @@ const MenuLabel = styled.p<CollapsedProps>`
 
 const SecondaryNavigation: FC<Props> = ({ label, children, collapsed, onCollapse }) => {
   const location = useLocation();
+  const binder = useBinder();
   const menuContext = useContext(MenuContext);
 
-  const subNavActive = isSubNavigationActive(children, location.pathname);
+  const subNavActive = isSubNavigationActive(binder, children, location.pathname);
   const isCollapsed = collapsed && !subNavActive;
 
   useEffect(() => {
@@ -74,7 +76,16 @@ const SecondaryNavigation: FC<Props> = ({ label, children, collapsed, onCollapse
   }, [subNavActive]);
 
   const childrenWithProps = React.Children.map(children, (child: ReactElement) =>
-    React.cloneElement(child, { collapsed: isCollapsed })
+    React.cloneElement(child, {
+      collapsed: isCollapsed,
+      propTransformer: (props: object) => {
+        const np = {
+          ...props,
+          collapsed: isCollapsed
+        };
+        return np;
+      }
+    })
   );
   const arrowIcon = isCollapsed ? <i className="fas fa-caret-down" /> : <i className="fas fa-caret-right" />;
 
@@ -105,16 +116,22 @@ const createParentPath = (to: string) => {
   return parents.join("/");
 };
 
-const isSubNavigationActive = (children: ReactNode, url: string): boolean => {
+const isSubNavigationActive = (binder: Binder, children: ReactNode, url: string): boolean => {
   const childArray = React.Children.toArray(children);
   const match = childArray
-    .filter(child => {
-      // what about extension points?
+    .filter(React.isValidElement)
+    .flatMap(child => {
       // @ts-ignore
+      if (child.type.name === ExtensionPoint.name) {
+        // @ts-ignore
+        return binder.getExtensions(child.props.name, child.props.props);
+      }
+      return [child];
+    })
+    .filter(child => {
       return child.type.name === SubNavigation.name;
     })
     .map(child => {
-      // @ts-ignore
       return child.props;
     })
     .find(props => {

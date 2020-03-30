@@ -21,48 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactElement, ReactNode } from "react";
+import React, { FC, ReactElement, ReactNode } from "react";
 import { MenuContext } from "./MenuContext";
 import SubNavigation from "./SubNavigation";
 import NavLink from "./NavLink";
 
 type Props = {
   to: string;
-  icon: string;
+  icon?: string;
   label: string;
   title: string;
+  collapsed?: boolean;
   activeWhenMatch?: (route: any) => boolean;
   activeOnlyWhenExact?: boolean;
   children?: ReactElement[];
 };
 
-export default class SecondaryNavigationItem extends React.Component<Props> {
-  render() {
-    const { to, icon, label, title, activeWhenMatch, activeOnlyWhenExact, children } = this.props;
-    if (children) {
-      return (
-        <MenuContext.Consumer>
-          {({ menuCollapsed }) => (
-            <SubNavigation
-              to={to}
-              icon={icon}
-              label={label}
-              title={title}
-              activeWhenMatch={activeWhenMatch}
-              activeOnlyWhenExact={activeOnlyWhenExact}
-              collapsed={menuCollapsed}
-            >
-              {children}
-            </SubNavigation>
-          )}
-        </MenuContext.Consumer>
-      );
-    } else {
-      return (
-        <MenuContext.Consumer>
-          {({ menuCollapsed }) => <NavLink to={to} icon={icon} label={label} title={title} collapsed={menuCollapsed} />}
-        </MenuContext.Consumer>
-      );
-    }
+const SecondaryNavigationItem: FC<Props> = ({ children, ...props }) => {
+  if (children) {
+    return <SubNavigation {...props}>{children}</SubNavigation>;
+  } else {
+    return <NavLink {...props} />;
   }
-}
+};
+
+export default SecondaryNavigationItem;
