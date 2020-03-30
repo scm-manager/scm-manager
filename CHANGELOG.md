@@ -5,12 +5,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Fixed
+- Authentication for write requests for repositories with anonymous read access ([#108](https://github.com/scm-manager/scm-manager/pull/1081))
+
+## 2.0.0-rc6 - 2020-03-26
 ### Added
 - Extension point to add links to the repository cards from plug ins ([#1041](https://github.com/scm-manager/scm-manager/pull/1041))
+- Libc based restart strategy for posix operating systems ([#1079](https://github.com/scm-manager/scm-manager/pull/1079))
+- Simple restart strategy with System.exit ([#1079](https://github.com/scm-manager/scm-manager/pull/1079))
+- Notification if restart is not supported on the underlying platform ([#1079](https://github.com/scm-manager/scm-manager/pull/1079))
+- Extension point before title in repository cards ([#1080](https://github.com/scm-manager/scm-manager/pull/1080))
+- Extension point after title on repository detail page ([#1080](https://github.com/scm-manager/scm-manager/pull/1080))
+
+### Changed
+- Update resteasy to version 4.5.2.Final
+- Update shiro to version 1.5.2
+- Use browser built-in EventSource for apiClient subscriptions
+- Changeover to MIT license ([#1066](https://github.com/scm-manager/scm-manager/pull/1066))
+
+### Removed
+- EventSource Polyfill
+- ClassLoader based restart logic ([#1079](https://github.com/scm-manager/scm-manager/pull/1079))
 
 ### Fixed
 - Build on windows ([#1048](https://github.com/scm-manager/scm-manager/issues/1048), [#1049](https://github.com/scm-manager/scm-manager/issues/1049), [#1056](https://github.com/scm-manager/scm-manager/pull/1056))
 - Show specific notification for plugin actions on plugin administration ([#1057](https://github.com/scm-manager/scm-manager/pull/1057))
+- Invalid markdown could make parts of the page inaccessible ([#1077](https://github.com/scm-manager/scm-manager/pull/1077)) 
 
 ## 2.0.0-rc5 - 2020-03-12
 ### Added

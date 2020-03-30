@@ -1,3 +1,26 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 import * as React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
@@ -32,6 +55,7 @@ import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
 import { Plugin } from "@scm-manager/ui-types/src";
+import ShowPendingModal from "../components/ShowPendingModal";
 
 type Props = WithTranslation & {
   loading: boolean;
@@ -51,6 +75,7 @@ type Props = WithTranslation & {
 
 type State = {
   showPendingModal: boolean;
+  showExecutePendingModal: boolean;
   showUpdateAllModal: boolean;
   showCancelModal: boolean;
 };
@@ -60,6 +85,7 @@ class PluginsOverview extends React.Component<Props, State> {
     super(props);
     this.state = {
       showPendingModal: false,
+      showExecutePendingModal: false,
       showUpdateAllModal: false,
       showCancelModal: false
     };
@@ -115,38 +141,57 @@ class PluginsOverview extends React.Component<Props, State> {
     const { pendingPlugins, collection, t } = this.props;
     const buttons = [];
 
-    if (pendingPlugins && pendingPlugins._links && pendingPlugins._links.execute) {
-      buttons.push(
-        <Button
-          color="primary"
-          reducedMobile={true}
-          key={"executePending"}
-          icon={"arrow-circle-right"}
-          label={t("plugins.executePending")}
-          action={() =>
-            this.setState({
-              showPendingModal: true
-            })
-          }
-        />
-      );
-    }
+    if (pendingPlugins && pendingPlugins._links) {
+      if (pendingPlugins._links.execute) {
+        buttons.push(
+          <Button
+            color="primary"
+            reducedMobile={true}
+            key={"executePending"}
+            icon={"arrow-circle-right"}
+            label={t("plugins.executePending")}
+            action={() =>
+              this.setState({
+                showExecutePendingModal: true
+              })
+            }
+          />
+        );
+      }
 
-    if (pendingPlugins && pendingPlugins._links && pendingPlugins._links.cancel) {
-      buttons.push(
-        <Button
-          color="primary"
-          reducedMobile={true}
-          key={"cancelPending"}
-          icon={"times"}
-          label={t("plugins.cancelPending")}
-          action={() =>
-            this.setState({
-              showCancelModal: true
-            })
-          }
-        />
-      );
+      if (pendingPlugins._links.cancel) {
+        if (!pendingPlugins._links.execute) {
+          buttons.push(
+            <Button
+              color="primary"
+              reducedMobile={true}
+              key={"showPending"}
+              icon={"info"}
+              label={t("plugins.showPending")}
+              action={() =>
+                this.setState({
+                  showPendingModal: true
+                })
+              }
+            />
+          );
+        }
+
+        buttons.push(
+          <Button
+            color="primary"
+            reducedMobile={true}
+            key={"cancelPending"}
+            icon={"times"}
+            label={t("plugins.cancelPending")}
+            action={() =>
+              this.setState({
+                showCancelModal: true
+              })
+            }
+          />
+        );
+      }
     }
 
     if (collection && collection._links && collection._links.update) {
@@ -205,14 +250,27 @@ class PluginsOverview extends React.Component<Props, State> {
 
   renderModals = () => {
     const { collection, pendingPlugins } = this.props;
-    const { showPendingModal, showCancelModal, showUpdateAllModal } = this.state;
+    const { showPendingModal, showExecutePendingModal, showCancelModal, showUpdateAllModal } = this.state;
 
     if (showPendingModal) {
+      return (
+        <ShowPendingModal
+          onClose={() =>
+            this.setState({
+              showPendingModal: false
+            })
+          }
+          pendingPlugins={pendingPlugins}
+        />
+      );
+    }
+
+    if (showExecutePendingModal) {
       return (
         <ExecutePendingActionModal
           onClose={() =>
             this.setState({
-              showPendingModal: false
+              showExecutePendingModal: false
             })
           }
           pendingPlugins={pendingPlugins}

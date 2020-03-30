@@ -1,3 +1,26 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 import React from "react";
 import { connect } from "react-redux";
 import { Redirect, Route, Switch, RouteComponentProps } from "react-router-dom";
@@ -9,6 +32,9 @@ import {
   Loading,
   NavLink,
   Page,
+  CustomQueryFlexWrappedColumns,
+  PrimaryContentColumn,
+  SecondaryNavigationColumn,
   SecondaryNavigation,
   SubNavigation,
   MenuContext,
@@ -146,9 +172,12 @@ class RepositoryRoot extends React.Component<Props, State> {
           setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed })
         }}
       >
-        <Page title={repository.namespace + "/" + repository.name}>
-          <div className="columns">
-            <div className="column">
+        <Page
+          title={repository.namespace + "/" + repository.name}
+          afterTitle={<ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />}
+        >
+          <CustomQueryFlexWrappedColumns>
+            <PrimaryContentColumn collapsed={menuCollapsed}>
               <Switch>
                 <Redirect exact from={this.props.match.url} to={redirectedUrl} />
 
@@ -197,8 +226,8 @@ class RepositoryRoot extends React.Component<Props, State> {
                 <Route path={`${url}/branches/create`} render={() => <CreateBranch repository={repository} />} />
                 <ExtensionPoint name="repository.route" props={extensionProps} renderAll={true} />
               </Switch>
-            </div>
-            <div className={menuCollapsed ? "column is-1" : "column is-3"}>
+            </PrimaryContentColumn>
+            <SecondaryNavigationColumn collapsed={menuCollapsed}>
               <SecondaryNavigation
                 label={t("repositoryRoot.menu.navigationLabel")}
                 onCollapse={() => this.onCollapseRepositoryMenu(!menuCollapsed)}
@@ -242,8 +271,8 @@ class RepositoryRoot extends React.Component<Props, State> {
                   <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
               </SecondaryNavigation>
-            </div>
-          </div>
+            </SecondaryNavigationColumn>
+          </CustomQueryFlexWrappedColumns>
         </Page>
       </MenuContext.Provider>
     );

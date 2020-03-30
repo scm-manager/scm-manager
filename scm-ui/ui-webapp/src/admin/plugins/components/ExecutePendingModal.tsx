@@ -1,9 +1,33 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 import React from "react";
 import { apiClient, Button, ButtonGroup, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
 import { PendingPlugins } from "@scm-manager/ui-types";
 import { WithTranslation, withTranslation } from "react-i18next";
 import waitForRestart from "./waitForRestart";
 import SuccessNotification from "./SuccessNotification";
+import PendingPluginsQueue from "./PendingPluginsQueue";
 
 type Props = WithTranslation & {
   onClose: () => void;
@@ -62,70 +86,14 @@ class ExecutePendingModal extends React.Component<Props, State> {
       });
   };
 
-  renderInstallQueue = () => {
-    const { pendingPlugins, t } = this.props;
-    return (
-      <>
-        {pendingPlugins._embedded && pendingPlugins._embedded.new.length > 0 && (
-          <>
-            <strong>{t("plugins.modal.installQueue")}</strong>
-            <ul>
-              {pendingPlugins._embedded.new.map(plugin => (
-                <li key={plugin.name}>{plugin.name}</li>
-              ))}
-            </ul>
-          </>
-        )}
-      </>
-    );
-  };
-
-  renderUpdateQueue = () => {
-    const { pendingPlugins, t } = this.props;
-    return (
-      <>
-        {pendingPlugins._embedded && pendingPlugins._embedded.update.length > 0 && (
-          <>
-            <strong>{t("plugins.modal.updateQueue")}</strong>
-            <ul>
-              {pendingPlugins._embedded.update.map(plugin => (
-                <li key={plugin.name}>{plugin.name}</li>
-              ))}
-            </ul>
-          </>
-        )}
-      </>
-    );
-  };
-
-  renderUninstallQueue = () => {
-    const { pendingPlugins, t } = this.props;
-    return (
-      <>
-        {pendingPlugins._embedded && pendingPlugins._embedded.uninstall.length > 0 && (
-          <>
-            <strong>{t("plugins.modal.uninstallQueue")}</strong>
-            <ul>
-              {pendingPlugins._embedded.uninstall.map(plugin => (
-                <li key={plugin.name}>{plugin.name}</li>
-              ))}
-            </ul>
-          </>
-        )}
-      </>
-    );
-  };
-
   renderBody = () => {
-    const { t } = this.props;
+    const { pendingPlugins, t } = this.props;
     return (
       <>
         <div className="media">
           <div className="content">
             <p>{t("plugins.modal.executePending")}</p>
-            {this.renderInstallQueue()}
-            {this.renderUpdateQueue()}
-            {this.renderUninstallQueue()}
+            <PendingPluginsQueue pendingPlugins={pendingPlugins} />
           </div>
         </div>
         <div className="media">{this.renderNotifications()}</div>

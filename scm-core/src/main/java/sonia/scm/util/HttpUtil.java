@@ -1,43 +1,33 @@
-/**
- * Copyright (c) 2010, Sebastian Sdorra
- * All rights reserved.
+/*
+ * MIT License
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
  *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- * http://bitbucket.org/sdorra/scm-manager
- *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
-
-
-
+    
 package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +42,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -115,12 +106,6 @@ public final class HttpUtil
    * @since 1.19
    */
   public static final String HEADER_SCM_CLIENT = "X-SCM-Client";
-
-  /**
-   * header for identifying the scm-manager client session
-   * @since 2.0.0
-   */
-  public static final String HEADER_SCM_SESSION = "X-SCM-Session-ID";
 
   /** Field description */
   public static final String HEADER_USERAGENT = "User-Agent";
@@ -831,6 +816,24 @@ public final class HttpUtil
   }
 
   /**
+   * Returns header value or query parameter if the request is a get request.
+   *
+   * @param request http request
+   * @param parameter name of header/parameter
+   *
+   * @return header value or query parameter
+   *
+   * @since 2.0.0
+   */
+  public static Optional<String> getHeaderOrGetParameter(HttpServletRequest request, String parameter) {
+    String value = request.getHeader(parameter);
+    if (Strings.isNullOrEmpty(value) && "GET".equalsIgnoreCase(request.getMethod())) {
+      value = request.getParameter(parameter);
+    }
+    return Optional.ofNullable(value);
+  }
+
+  /**
    * Returns the given uri without leading separator.
    *
    *
@@ -882,16 +885,14 @@ public final class HttpUtil
   /**
    * Returns true if the http request is send by the scm-manager web interface.
    *
-   *
    * @param request http request
    *
    * @return true if the request comes from the web interface.
    * @since 1.19
    */
-  public static boolean isWUIRequest(HttpServletRequest request)
-  {
-    return SCM_CLIENT_WUI.equalsIgnoreCase(
-      request.getHeader(HEADER_SCM_CLIENT));
+  public static boolean isWUIRequest(HttpServletRequest request) {
+    Optional<String> client = getHeaderOrGetParameter(request, HEADER_SCM_CLIENT);
+    return client.isPresent() && SCM_CLIENT_WUI.equalsIgnoreCase(client.get());
   }
 
   //~--- methods --------------------------------------------------------------

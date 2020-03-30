@@ -1,8 +1,33 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import sonia.scm.lifecycle.Restarter;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.Plugin;
@@ -22,6 +47,9 @@ public abstract class PluginDtoMapper {
 
   @Inject
   private ResourceLinks resourceLinks;
+
+  @Inject
+  private Restarter restarter;
 
   public abstract void map(PluginInformation plugin, @MappingTarget PluginDto dto);
 
@@ -54,10 +82,18 @@ public abstract class PluginDtoMapper {
         .self(information.getName()));
 
     if (!plugin.isPending() && PluginPermissions.manage().isPermitted()) {
-      links.single(link("install", resourceLinks.availablePlugin().install(information.getName())));
+      String href = resourceLinks.availablePlugin().install(information.getName());
+      appendLink(links, "install", href);
     }
 
     return new PluginDto(links.build());
+  }
+
+  private void appendLink(Links.Builder links, String name, String href) {
+    links.single(link(name, href));
+    if (restarter.isSupported()) {
+      links.single(link(name + "WithRestart", href + "?restart=true"));
+    }
   }
 
   private PluginDto createDtoForInstalled(InstalledPlugin plugin, List<AvailablePlugin> availablePlugins) {
@@ -72,13 +108,16 @@ public abstract class PluginDtoMapper {
       && !availablePlugin.get().isPending()
       && PluginPermissions.manage().isPermitted()
     ) {
-      links.single(link("update", resourceLinks.availablePlugin().install(information.getName())));
+      String href = resourceLinks.availablePlugin().install(information.getName());
+      appendLink(links, "update", href);
     }
+
     if (plugin.isUninstallable()
       && (!availablePlugin.isPresent() || !availablePlugin.get().isPending())
       && PluginPermissions.manage().isPermitted()
     ) {
-      links.single(link("uninstall", resourceLinks.installedPlugin().uninstall(information.getName())));
+      String href = resourceLinks.installedPlugin().uninstall(information.getName());
+      appendLink(links, "uninstall", href);
     }
 
     PluginDto dto = new PluginDto(links.build());

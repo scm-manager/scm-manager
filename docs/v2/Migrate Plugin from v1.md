@@ -135,7 +135,7 @@ diff -r a988f4cfb7ab src/main/resources/META-INF/scm/plugin.xml
 ```json
 {
   "name": "@scm-manager/name-of-plugin",
-  "license" : "BSD-3-Clause",
+  "license" : "MIT",
   "main": "src/main/js/index.js",
   "scripts": {
     "build": "ui-bundler plugin",

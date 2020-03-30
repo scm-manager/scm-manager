@@ -7,7 +7,7 @@ To release a new version of SCM-Manager v2 you have to do the following steps (r
 Make sure you have no changes you want to keep!
 
 ```
-git fetch && git checkout default && git reset --hard origin/default
+git fetch && git checkout develop && git reset --hard origin/develop
 ```
 
 ## Modify Changelog

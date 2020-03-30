@@ -48,7 +48,7 @@ node('docker') {
           sh "git -c user.name='CES Marvin' -c user.email='cesmarvin@cloudogu.com' commit -m 'release version ${releaseVersion}'"
 
           // we need to fetch all branches, so we can checkout master and develop later
-          sh "git config 'remote.origin.fetch +refs/heads/*:refs/remotes/origin/*'"
+          sh "git config 'remote.origin.fetch' '+refs/heads/*:refs/remotes/origin/*'"
           sh "git fetch --all"
 
           // merge release branch into master

@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
@@ -14,6 +38,7 @@ import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.ScmProtocol;
+import sonia.scm.web.api.RepositoryToHalMapper;
 
 import java.util.List;
 
@@ -25,7 +50,7 @@ import static java.util.stream.Collectors.toList;
 // Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
 @SuppressWarnings("squid:S3306")
 @Mapper
-public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Repository, RepositoryDto> {
+public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Repository, RepositoryDto> implements RepositoryToHalMapper {
 
   @Inject
   private ResourceLinks resourceLinks;
@@ -33,6 +58,9 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
   private RepositoryServiceFactory serviceFactory;
 
   abstract HealthCheckFailureDto toDto(HealthCheckFailure failure);
+
+  @Override
+  public abstract RepositoryDto map(Repository modelObject);
 
   @ObjectFactory
   RepositoryDto createDto(Repository repository) {
@@ -62,7 +90,9 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
       if (repositoryService.isSupported(Feature.INCOMING_REVISION)) {
         linksBuilder.single(link("incomingChangesets", resourceLinks.incoming().changesets(repository.getNamespace(), repository.getName())));
         linksBuilder.single(link("incomingDiff", resourceLinks.incoming().diff(repository.getNamespace(), repository.getName())));
-        linksBuilder.single(link("incomingDiffParsed", resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName())));
+        if (repositoryService.isSupported(Command.DIFF_RESULT)) {
+          linksBuilder.single(link("incomingDiffParsed", resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName())));
+        }
       }
     }
     linksBuilder.single(link("changesets", resourceLinks.changeset().all(repository.getNamespace(), repository.getName())));
