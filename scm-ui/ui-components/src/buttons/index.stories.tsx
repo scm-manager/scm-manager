@@ -32,6 +32,7 @@ import DownloadButton from "./DownloadButton";
 import EditButton from "./EditButton";
 import SubmitButton from "./SubmitButton";
 import { ReactElement } from "react";
+import { MemoryRouter } from "react-router-dom";
 
 const colors = ["primary", "link", "info", "success", "warning", "danger", "white", "light", "dark", "black", "text"];
 
@@ -42,6 +43,7 @@ const Spacing = styled.div`
 const SpacingDecorator = (story: () => ReactNode) => <Spacing>{story()}</Spacing>;
 
 storiesOf("Buttons|Button", module)
+  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .add("Colors", () => (
     <div>
       {colors.map(color => (

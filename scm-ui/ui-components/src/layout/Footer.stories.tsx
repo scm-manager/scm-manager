@@ -33,6 +33,7 @@ import hitchhiker from "../__resources__/hitchhiker.png";
 import marvin from "../__resources__/marvin.jpg";
 import NavLink from "../navigation/NavLink";
 import ExternalLink from "../navigation/ExternalLink";
+import {MemoryRouter} from "react-router-dom";
 
 const trillian: Me = {
   name: "trillian",
@@ -64,6 +65,7 @@ const withBinder = (binder: Binder) => {
 };
 
 storiesOf("Layout|Footer", module)
+  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .add("Default", () => {
     return <Footer me={trillian} version="2.0.0" links={{}} />;
   })
