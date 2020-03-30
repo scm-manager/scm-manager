@@ -23,32 +23,44 @@
  */
 import * as React from "react";
 import { Binder } from "./binder";
-import { FC, ReactNode } from "react";
+import {Component, FC, ReactNode} from "react";
 import useBinder from "./useBinder";
+
+type PropTransformer = (props: object) => object;
 
 type Props = {
   name: string;
   renderAll?: boolean;
   props?: object;
+  propTransformer?: PropTransformer;
 };
 
-const renderAllExtensions = (binder: Binder, name: string, props?: object) => {
+const createInstance = (Component: any, props: object, key?: number) => {
+  const instanceProps = {
+    ...props,
+    key
+  };
+  if (React.isValidElement(Component)) {
+    return React.cloneElement(Component, instanceProps);
+  }
+  return <Component {...instanceProps} />;
+};
+
+const renderAllExtensions = (binder: Binder, name: string, props: object) => {
   const extensions = binder.getExtensions(name, props);
   return (
     <>
-      {extensions.map((Component, index) => {
-        return <Component key={index} {...props} />;
-      })}
+      {extensions.map((cmp, index) => createInstance(cmp, props, index))}
     </>
   );
 };
 
-const renderSingleExtension = (binder: Binder, name: string, props?: object) => {
-  const Component = binder.getExtension(name, props);
-  if (!Component) {
+const renderSingleExtension = (binder: Binder, name: string, props: object) => {
+  const cmp = binder.getExtension(name, props);
+  if (!cmp) {
     return null;
   }
-  return <Component {...props} />;
+  return createInstance(cmp, props, undefined);
 };
 
 const renderDefault = (children: ReactNode) => {
@@ -58,17 +70,29 @@ const renderDefault = (children: ReactNode) => {
   return null;
 };
 
+const createRenderProps = (propTransformer?: PropTransformer, props?: object) => {
+  const transform = (props: object) => {
+    if (!propTransformer) {
+      return props;
+    }
+    return propTransformer(props);
+  };
+
+  return transform(props || {});
+};
+
 /**
  * ExtensionPoint renders components which are bound to an extension point.
  */
-const ExtensionPoint: FC<Props> = ({ name, renderAll, props, children }) => {
+const ExtensionPoint: FC<Props> = ({ name, propTransformer, props, renderAll, children }) => {
   const binder = useBinder();
-  if (!binder.hasExtension(name, props)) {
+  const renderProps = createRenderProps(propTransformer, props);
+  if (!binder.hasExtension(name, renderProps)) {
     return renderDefault(children);
   } else if (renderAll) {
-    return renderAllExtensions(binder, name, props);
+    return renderAllExtensions(binder, name, renderProps);
   }
-  return renderSingleExtension(binder, name, props);
+  return renderSingleExtension(binder, name, renderProps);
 };
 
 export default ExtensionPoint;

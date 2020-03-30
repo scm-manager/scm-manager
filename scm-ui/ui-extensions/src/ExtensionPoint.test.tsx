@@ -168,4 +168,46 @@ describe("ExtensionPoint test", () => {
     const text = rendered.text();
     expect(text).toBe("");
   });
+
+  it("should render an instance", () => {
+    const Label = () => {
+      return <label>Extension One</label>;
+    };
+
+    mockedBinder.hasExtension.mockReturnValue(true);
+    mockedBinder.getExtension.mockReturnValue(<Label />);
+
+    const rendered = mount(<ExtensionPoint name="something.special" />);
+    expect(rendered.text()).toBe("Extension One");
+  });
+
+  it("should render an instance with props", () => {
+    const Label = ({name}: {name: string}) => {
+      return <label>Extension {name}</label>;
+    };
+
+    mockedBinder.hasExtension.mockReturnValue(true);
+    mockedBinder.getExtension.mockReturnValue(<Label name="One" />);
+
+    const rendered = mount(<ExtensionPoint name="something.special" props={{name: "Two"}} />);
+    expect(rendered.text()).toBe("Extension Two");
+  });
+
+  it("should transform extension, before render", () => {
+    const label = ({name = "One"}: {name: string}) => {
+      return <label>Extension {name}</label>;
+    };
+    mockedBinder.hasExtension.mockReturnValue(true);
+    mockedBinder.getExtension.mockReturnValue(label);
+
+    const transformer = (props: object) => {
+      return {
+        ...props,
+        name: "Two"
+      }
+    };
+
+    const rendered = mount(<ExtensionPoint name="something.special" propTransformer={transformer} />);
+    expect(rendered.text()).toBe("Extension Two");
+  })
 });
