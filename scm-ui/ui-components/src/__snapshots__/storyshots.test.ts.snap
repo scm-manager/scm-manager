@@ -34188,6 +34188,347 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
 </div>
 `;
 
+exports[`Storyshots Navigation|Secondary Collapsed 1`] = `
+<div
+  className="SecondaryNavigationstories__Columns-fdxo4w-0 fJKROg columns"
+>
+  <div
+    className="column is-3"
+  >
+    <aside
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 bfoGdF menu"
+    >
+      <div>
+        <p
+          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 ktrCnD menu-label"
+          onClick={[Function]}
+        >
+          <i
+            className="SecondaryNavigation__Icon-sc-8p1rgi-1 cqWEjA is-medium"
+            color="info"
+          >
+            <i
+              className="fas fa-caret-down"
+            />
+          </i>
+          
+        </p>
+        <ul
+          className="menu-list"
+        >
+          <li
+            title="Puzzle 42"
+          >
+            <a
+              className="is-active has-text-centered"
+              href="/"
+              onClick={[Function]}
+            >
+              <i
+                className="fas fa-puzzle-piece fa-fw"
+              />
+               
+            </a>
+          </li>
+          <li
+            title="Heart Of Gold"
+          >
+            <a
+              className="has-text-centered"
+              href="/some"
+              onClick={[Function]}
+            >
+              <i
+                className="fas fa-star fa-fw"
+              />
+               
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Navigation|Secondary Collapsed EP Sub 1`] = `
+<div
+  className="SecondaryNavigationstories__Columns-fdxo4w-0 fJKROg columns"
+>
+  <div
+    className="column is-3"
+  >
+    <aside
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 bfoGdF menu"
+    >
+      <div>
+        <p
+          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 bGijuJ menu-label"
+        >
+          Hitchhiker
+        </p>
+        <ul
+          className="menu-list"
+        >
+          <li>
+            <a
+              className=""
+              href="/42"
+              onClick={[Function]}
+            >
+              <i
+                className="fas fa-puzzle-piece fa-fw"
+              />
+               
+              Puzzle 42
+            </a>
+          </li>
+          <li>
+            <a
+              className="is-active"
+              href="/hitchhiker/starships"
+              onClick={[Function]}
+            >
+              <i
+                className="fas fa-cog fa-fw"
+              />
+               
+              Starships
+            </a>
+            <ul
+              className="sub-menu"
+            >
+              <li>
+                <a
+                  className=""
+                  href="/hitchhiker/starships/heart-of-gold"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-star fa-fw"
+                  />
+                   
+                  Heart Of Gold
+                </a>
+              </li>
+              <li>
+                <a
+                  className="is-active"
+                  href="/hitchhiker/starships/titanic"
+                  onClick={[Function]}
+                >
+                  Titanic
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Navigation|Secondary Default 1`] = `
+<div
+  className="SecondaryNavigationstories__Columns-fdxo4w-0 fJKROg columns"
+>
+  <div
+    className="column is-3"
+  >
+    <aside
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 bfoGdF menu"
+    >
+      <div>
+        <p
+          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 bGijuJ menu-label"
+          onClick={[Function]}
+        >
+          <i
+            className="SecondaryNavigation__Icon-sc-8p1rgi-1 SeoNL is-medium"
+            color="info"
+          >
+            <i
+              className="fas fa-caret-right"
+            />
+          </i>
+          Hitchhiker
+        </p>
+        <ul
+          className="menu-list"
+        >
+          <li>
+            <a
+              className="is-active"
+              href="/"
+              onClick={[Function]}
+            >
+              <i
+                className="fas fa-puzzle-piece fa-fw"
+              />
+               
+              Puzzle 42
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              href="/some"
+              onClick={[Function]}
+            >
+              <i
+                className="fas fa-star fa-fw"
+              />
+               
+              Heart Of Gold
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Navigation|Secondary Sub Navigation 1`] = `
+<div
+  className="SecondaryNavigationstories__Columns-fdxo4w-0 fJKROg columns"
+>
+  <div
+    className="column is-3"
+  >
+    <aside
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 bfoGdF menu"
+    >
+      <div>
+        <p
+          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 bGijuJ menu-label"
+          onClick={[Function]}
+        >
+          <i
+            className="SecondaryNavigation__Icon-sc-8p1rgi-1 SeoNL is-medium"
+            color="info"
+          >
+            <i
+              className="fas fa-caret-right"
+            />
+          </i>
+          Hitchhiker
+        </p>
+        <ul
+          className="menu-list"
+        >
+          <li>
+            <a
+              className=""
+              href="/42"
+              onClick={[Function]}
+            >
+              <i
+                className="fas fa-puzzle-piece fa-fw"
+              />
+               
+              Puzzle 42
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              href="/hitchhiker/starships"
+              onClick={[Function]}
+            >
+              <i
+                className="fas fa-cog fa-fw"
+              />
+               
+              Starships
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Navigation|Secondary Sub Navigation Collapsed 1`] = `
+<div
+  className="SecondaryNavigationstories__Columns-fdxo4w-0 fJKROg columns"
+>
+  <div
+    className="column is-3"
+  >
+    <aside
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 bfoGdF menu"
+    >
+      <div>
+        <p
+          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 bGijuJ menu-label"
+        >
+          Hitchhiker
+        </p>
+        <ul
+          className="menu-list"
+        >
+          <li>
+            <a
+              className=""
+              href="/42"
+              onClick={[Function]}
+            >
+              <i
+                className="fas fa-puzzle-piece fa-fw"
+              />
+               
+              Puzzle 42
+            </a>
+          </li>
+          <li>
+            <a
+              className="is-active"
+              href="/hitchhiker/starships"
+              onClick={[Function]}
+            >
+              <i
+                className="fas fa-cog fa-fw"
+              />
+               
+              Starships
+            </a>
+            <ul
+              className="sub-menu"
+            >
+              <li>
+                <a
+                  className="is-active"
+                  href="/hitchhiker/starships/heart-of-gold"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-star fa-fw"
+                  />
+                   
+                  Heart Of Gold
+                </a>
+              </li>
+              <li>
+                <a
+                  className=""
+                  href="/hitchhiker/starships/titanic"
+                  onClick={[Function]}
+                >
+                  Titanic
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</div>
+`;
+
 exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-toppdg-0 khfzcK box box-link-shadow"

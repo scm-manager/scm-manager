@@ -41,9 +41,10 @@ const Spacing = styled.div`
 `;
 
 const SpacingDecorator = (story: () => ReactNode) => <Spacing>{story()}</Spacing>;
+const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
 
 storiesOf("Buttons|Button", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator(RoutingDecorator)
   .add("Colors", () => (
     <div>
       {colors.map(color => (
@@ -72,6 +73,7 @@ storiesOf("Buttons|Button", module)
 
 const buttonStory = (name: string, storyFn: () => ReactElement) => {
   return storiesOf("Buttons|" + name, module)
+    .addDecorator(RoutingDecorator)
     .addDecorator(SpacingDecorator)
     .add("Default", storyFn);
 };
