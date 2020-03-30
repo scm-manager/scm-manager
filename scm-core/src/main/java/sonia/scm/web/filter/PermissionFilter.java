@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.filter;
 
 import org.apache.shiro.SecurityUtils;
@@ -35,7 +35,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.repository.spi.ScmProviderHttpServletDecorator;
-import sonia.scm.security.Role;
+import sonia.scm.security.Authentications;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.HttpUtil;
 
@@ -177,7 +177,7 @@ public abstract class PermissionFilter extends ScmProviderHttpServletDecorator
     HttpServletResponse response, Subject subject)
     throws IOException
   {
-    if (subject.hasRole(Role.USER))
+    if (!Authentications.isAuthenticatedSubjectAnonymous())
     {
       sendNotEnoughPrivilegesError(request, response);
     }
