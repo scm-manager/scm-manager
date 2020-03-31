@@ -24,26 +24,9 @@
 
 import React, { FC, useContext, useState } from "react";
 
-const MENU_COLLAPSED = "secondary-menu-collapsed";
-
 export type MenuContext = {
   isCollapsed: () => boolean;
   setCollapsed: (collapsed: boolean) => void;
-};
-
-export const LocalStorageMenuContextProvider: FC = ({children}) => {
-  const [state, setState] = useState(localStorage.getItem(MENU_COLLAPSED) === "true");
-  const context = {
-    isCollapsed() {
-      return state;
-    },
-    setCollapsed(collapsed: boolean) {
-      localStorage.setItem(MENU_COLLAPSED, String(collapsed));
-      setState(collapsed);
-    }
-  };
-
-  return <MenuContext.Provider value={context}>{children}</MenuContext.Provider>;
 };
 
 export const MenuContext = React.createContext<MenuContext>({

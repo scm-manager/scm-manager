@@ -34265,6 +34265,14 @@ exports[`Storyshots Navigation|Secondary Extension Point 1`] = `
           className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 bGijuJ menu-label"
           onClick={[Function]}
         >
+          <i
+            className="SecondaryNavigation__Icon-sc-8p1rgi-1 SeoNL is-medium"
+            color="info"
+          >
+            <i
+              className="fas fa-caret-right"
+            />
+          </i>
           Hitchhiker
         </p>
         <ul
