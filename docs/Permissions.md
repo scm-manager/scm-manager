@@ -1,4 +1,4 @@
-## Permissions ##
+## Permissions
 
 SCM-Manager knows three different types of repository permissions:
 
@@ -11,19 +11,19 @@ OWNER | The user is able to read, write and to manager permissions
 Repository permissions can be assigned to users and groups. The permissions can be assigned
 to only one repository or to each repository. Administrators have owner permissions on every repository.
 
-### Repository permissions ###
+### Repository permissions
 
 Repository permissions can be managed by administrators and by repository owners. 
 The permissions can be managed on the permission tab of each repository.
 
-![repository permissions](https://bytebucket.org/sdorra/scm-manager/wiki/screenshots/permissions_repository.png "repository permissions")
+![repository permissions](screenshots/permissions_repository.png "repository permissions")
 
-### Global permissions ###
+### Global permissions
 
 Global permissions are only manageable by administrators. They can be managed at *Security -> Users* or *Security -> Groups*.
 
-![global permissions](https://bytebucket.org/sdorra/scm-manager/wiki/screenshots/permissions_global.png "global permissions")
+![global permissions](screenshots/permissions_global.png "global permissions")
 
-### Administrators ###
+### Administrators
 
 Administrators can mark other users as administrators at *Security -> Users*.

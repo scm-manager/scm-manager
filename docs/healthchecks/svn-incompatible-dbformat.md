@@ -1,4 +1,4 @@
-# Incompatible subversion db format #
+# Incompatible subversion db format
 
 SCM-Manager versions prior to 1.36 are creating incompatible subversion repositories, if the subversion option "with 1.7 Compatible" is enabled. This subversion repositories are neither compatible with svn 1.7 nor svn 1.8. These repositories are marked as unhealthy by SCM-Manager version 1.36 and above.
 
