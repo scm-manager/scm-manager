@@ -28,7 +28,6 @@ import { Icon } from "@scm-manager/ui-components";
 type Props = {
   title: string;
   separatedEntries: boolean;
-  children: ReactNode | Element[];
 };
 
 const Container = styled.div`
