@@ -9,9 +9,7 @@ This incompatible repositories must be converted, before they can be used with S
 * download the convert util from [here](https://maven.scm-manager.org/nexus/content/repositories/releases/sonia/scm/scm-fixsvndb5-cli/1.0.1/scm-fixsvndb5-cli-1.0.1-jar-with-dependencies.jar)
 * execute the convert util with your scm home directory as parameter e.g.:
 
-```
-#!bash
-
+```bash
 java -jar scm-fixsvndb5-cli-1.0.1-jar-with-dependencies.jar /path/to/.scm
 ```
 
@@ -19,5 +17,5 @@ java -jar scm-fixsvndb5-cli-1.0.1-jar-with-dependencies.jar /path/to/.scm
 
 For more informations have a look at:
 
-* [Issue #519](https://bitbucket.org/sdorra/scm-manager/issue/519/default-svn-repository-format-setting)
+* [Issue #519](https://github.com/scm-manager/scm-manager/issues/519)
 * [Subversion release notes](https://subversion.apache.org/docs/release-notes/1.7.html#revprop-packing)

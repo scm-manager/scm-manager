@@ -1,12 +1,11 @@
-Code Snippets
--------------
+# Code Snippets
 
 ### User Interface
 
--   [extend navigation](snippet-extend-navigation.md "wikilink")
--   [add tab to repository configuration](snippet-repository-tab.md "wikilink")
--   [extend global configuration](snippet-config-group.md "wikilink")
+- [extend navigation](snippet-extend-navigation.md)
+- [add tab to repository configuration](snippet-repository-tab.md)
+- [extend global configuration](snippet-config-group.md)
 
 ### Backend
 
--   [Authentication](snippet-authentication.md "wikilink")
+- [Authentication](snippet-authentication.md)

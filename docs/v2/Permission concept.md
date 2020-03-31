@@ -1,8 +1,8 @@
+# Permission Concept
+
 This documents describes a concept for a fine-grained permission managing via the SCMMv2 UI.
 
-[TOC]
-
-# Requirements
+## Requirements
 
 * Provide at least the features of SCMMv1 including the scm-groupmanager and scm-userrepo plugins.
 * In addition, the permissions on repositories should be more fine-grained, for example a user that does not have the
@@ -10,11 +10,11 @@ This documents describes a concept for a fine-grained permission managing via th
 * An ideal solution would be generic. That is, not implementing explicit features such as the groupmanager or userrepo.  
   SCMMv2 already evaluates fine-grained permissions, so why not allow our users to assign them?
 
-# Technical Foundations
+## Technical Foundations
 
-## Status Quo SCMv1
+### Status Quo SCMv1
 
-[SCMMv1 's permissions](../Permissions) are only related to Repositories:
+[SCMMv1 's permissions](../Permissions.md) are only related to Repositories:
 
 * Users can either have the Permission READ, WRITER or OWNER
 * globally (for all repositories) or
@@ -28,7 +28,7 @@ Some more permission-related features are added by plugins:
 * [scm-groupmanager-plugin](https://bitbucket.org/triologygmbh/scm-groupmanager-plugin/): Allows users to administer groups
 * [scm-userrepo-plugin](https://bitbucket.org/sdorra/scm-userrepo-plugin/): Allows users to create repositories
 
-## SCMMv2 Permission fundamentals
+### SCMMv2 Permission fundamentals
 
 SCMMv2 introduces much more fine-grained permission checks under the hood. 
 In the code permissions for all kinds of operations are designed as follows:
@@ -44,7 +44,7 @@ In addition, there are permissions that do not relate to an item, which are call
 The challenge solved by this document is to provide a concept that allows SCMMv2 users to manage these permissions. 
 That is, to assign those permissions to users and groups via the UI or REST API.
 
-## SCMMv2 implementation details
+### SCMMv2 implementation details
 
 This is not a core part of the concept but might be interesting when implementing it.
 
@@ -82,7 +82,7 @@ When a user logs in, all different kinds of permissions (`*` if admin, permissio
 from groups, some additional technical permissions such as `autocomplete`, etc.)  are collected and added to the Shiro 
 subject in the `DefaultAuthorizationCollector` class.
 
-## SCMMv2 Core permissions
+### SCMMv2 Core permissions
 
 Here are some more examples of permissions existing in SCMMv2 core, at the time of writing.
 Look for `@StaticPermissions` and note that there the annotation also declares defaults for `permissions` and `globalPermissions`.
@@ -105,25 +105,25 @@ Look for `@StaticPermissions` and note that there the annotation also declares d
     * Permissions: read, modify, delete, healthCheck, pull, push, permissionRead, permissionWrite
     * Items are the technical ID of dynamically added repositories
 
-# Repository and global permissions
+## Repository and global permissions
 
 In order to fulfill the requirements, this concept describes
 
 * how to extend the existing repository permissions to be more fine-grained
 * a new dialog to assign global permissions on user or group level
 
-# UI / UX
+## UI / UX
 
-## Global permissions
+### Global permissions
 
 The global permission component can be reached from **either user and groups** components navigations. The following mockup 
 shows this in the user component:
 
-![Permissions-mockup-user](Permissions-mockup-user.jpg).
+![Permissions-mockup-user](Permissions-mockup-user.jpg)
 
 The layout of the permission component UI could look like this:
 
-![Permissions-mockup-global-permissions](Permissions-mockup-global-permissions.jpg).
+![Permissions-mockup-global-permissions](Permissions-mockup-global-permissions.jpg)
 
 The UI 
 * queries all available global permissions from the REST API (shiro strings),
@@ -131,7 +131,7 @@ The UI
 * displays descriptions as tooltips,
 * and queries all user/group permissions to populate the check boxes.  
 
-## Repository permissions
+### Repository permissions
 
 The repository permission are already implemented and can be reached via Repositories | Permissions. Right now, it 
 allows for assigning the roles READ, WRITE, OWNER as in SCMMv1 (see above). Internally they are mapped to shiro 
@@ -139,9 +139,9 @@ permissions (see `PermissionType`).
 
 The UI is extended like so:
 
-![Permissions-mockup-repository-permissions](Permissions-mockup-repository-permissions.jpg).
+![Permissions-mockup-repository-permissions](Permissions-mockup-repository-permissions.jpg)
 
-### Existing repository dialog
+#### Existing repository dialog
 
 * queries all available repository permissions (shiro strings) and roles from the REST API,
 * queries all user/group permissions of the repository (shiro strings) and aggregates them to roles to populate the 
@@ -149,25 +149,25 @@ The UI is extended like so:
 * Note that the permissions are always stored as shiro strings not roles.  
 * A new `Advanced` button per user or group entry opens a modal dialog
 
-### New modal dialog
+#### New modal dialog
 
 * The modal dialog shows all available repository permissions (shiro strings)
 * via the shiro string the display name and descriptions are found (see i18n),
 * displays descriptions as tooltips,
 * the individual user/group permission of the repo are used to populate the check boxes 
 
-# REST API
+## REST API
 
 Note that the examples here are not specified in HAL/HATEOAS for brevity.
 
-## Global permissions
+### Global permissions
 
 Assigning global permissions must be implemented for **either user and groups**!
 Both use the same available permissions.
 
 The following shows user as an example.
 
-### Available global permissions
+#### Available global permissions
 
 * URL: `/globalPermissions`
 * HTTP Method: GET
@@ -189,7 +189,7 @@ The following shows user as an example.
 }
 ```
 
-### Assigned global permissions
+#### Assigned global permissions
 
 * URL: `/users/{id}/permissions/`
 * HTTP Method: GET/PUT
@@ -211,9 +211,9 @@ The following shows user as an example.
 }
 ```
 
-## Repository permissions
+### Repository permissions
 
-### Available repository permissions
+#### Available repository permissions
 
 * URL: `/repositoryPermissions` (similar to `/repositoryTypes`)
 * HTTP Method: GET
@@ -235,7 +235,7 @@ The following shows user as an example.
 }
 ```
 
-### Assigned repository permissions
+#### Assigned repository permissions
 
 Already implemented in `PermissionRootResource`. Needs to be adpated from roles (`WRITE`) to shiro permissions 
 (`repository:read:42`). 
@@ -272,7 +272,7 @@ Note that
 * On PUT, the REST API needs to **validate** that each entry in `permissions` does not contain `:`!  
   Otherwise we might allow for "permission injection", allowing to set permissions on other or all repositories.
 
-# Java API
+## Java API
 
 The biggest technical challenges for this concept are the questions:
 
@@ -287,13 +287,13 @@ Where each questions needs to be answered for
 
 permissions.
 
-## Global permissions
+### Global permissions
 
 
 In order to implement this for global permissions an existing mechanism of SCM-Manager can be used: 
 The `SecuritySystem`, implemented by the `DefaultSecuritySystem`. 
 
-### List available permissions
+#### List available permissions
 
 The `DefaultSecuritySystem` reads all `permissions.xml` files from classpath, which also works for plugins (see 
 [Proof Of Concept](https://bitbucket.org/sdorra/scm-manager/commits/4ed74bf266106c48db77d21558452b0c968884cb?at=feature/global_permissions#chg-scm-plugins/scm-git-plugin/src/main/resources/META-INF/scm/permissions.xml)).
@@ -308,7 +308,7 @@ For SCMMv2 we could extend this mechanism by
   The annotations should be extended to support a list of permissions that are not written to `permissions.xml` 
   (e.g. `user:autocomplete`)
 
-### Assign permissions
+#### Assign permissions
 
 The `SecuritySystem` also provides means to assign, store and load permissions to users or groups using Shiro string
  permissions like so: 
@@ -323,23 +323,23 @@ log.info("All permissions: {}", securitySystem.getAllPermissions()); // Contains
 
 See also the [Proof Of Concept](https://bitbucket.org/sdorra/scm-manager/src/4a88315d8f3ce0ad9a7c428da1081fb7e4967fe3/scm-webapp/src/main/java/sonia/scm/api/v2/resources/GlobalPermissionPocResource.java?at=feature/global_permissions).
 
-### Evaluating permissions
+#### Evaluating permissions
 
 The evaluation of permissions assigned via the `SecuritySystem` is already implemented in the 
 `DefaultAuthorizationCollector`.
 
-### Dynamically add new items to available permissions
+#### Dynamically add new items to available permissions
 
 Adding items (e.g. new users) dynamically during runtime is not implemented by the `SecuritySystem` and in order to 
 keep this simple we do not plan to support it, yet. See considered alternatives.
 
-## Repository Permissions
+### Repository Permissions
 
 For repository permissions we need to implement a new mechanism for discovering available permissions .
 Assigning is already implemented (on role level, e.g. `WRITE`), which needs to be adapted to shiro permission level 
 (e.g. `repository:read:42`).
 
-### List available permissions
+#### List available permissions
 
 We need to implement a new mechanism for discovering available permssions. Let's call it `RepositoryPermissionResolver`.
 It can work similar to the `DefaultSecuritySystem` (see global permissions). It reads all `repository-permissions.xml`
@@ -362,22 +362,22 @@ This obsoletes the `PermissionType` enum.
 </permissions>  
 ```
 
-### Assign permissions
+#### Assign permissions
 
 This is already implemented in `RepositoryManager`s. Needs to be adapted from roles (`WRITE`) to shiro permissions 
 (`repository:read:42`). 
 
-### Evaluating permissions
+#### Evaluating permissions
 
 Same here: Already implemented in `DefaultAuthorizationCollector`. Needs to be adapted from roles to shiro permissions.
 
-## The Admin flag/role
+### The Admin flag/role
 
 In addition to the fine-grained permission management described in this concept, we could just keep the admin flag 
 (or role) that add the permission `*` to a user.
 It's already implemented and a well-known concept from SCMMv1.
 
-## Permission for managing permissions
+### Permission for managing permissions
 
 Once permissions can be managed, an additional permission is necessary that answers the question: Who is allowed to 
 manage permissions?
@@ -391,11 +391,11 @@ and write. That is,
 * `permission:read`
 * `permission:write`
 
-# i18n
+## i18n
 
 Internationalization can be handled using the following conventions:
 
-* All permission i18n are described in `plugins.json` (also for core), see [i18n for Plugins](i18n for Plugins)
+* All permission i18n are described in `plugins.json` (also for core), see [i18n for Plugins](i18n%20for%20Plugins.md)
 * That way the UI for users and groups can find all the translation in the same file
 * Convention for i18n keys: `permissions.<shiro-String>`, containing `displayName` and `description` each.
 
@@ -412,7 +412,7 @@ Example:
 }
 ```
 
-# Group Manager Plugin
+## Group Manager Plugin
 
 One shortcoming of limiting the global permission concept to verbs (not items) is that the functionality of the 
 `scm-groupmanager-plugin` is not included.
@@ -432,7 +432,7 @@ The following needs to be implemented:
 * For storing the permission, make use of the `SecuritySystem` to set the `group:*:<id>` permissions.
 
 
-# Considered alternatives
+## Considered alternatives
 
 This chapter documents some other approaches that were considered but rejected and the reasons for rejecting them.
 
@@ -450,7 +450,7 @@ This chapter documents some other approaches that were considered but rejected a
   of userrepo or groupmanager plugins. Those could still be implemented separately. Still, as SCMMv2 provides a 
   mechanism for evaluate permissions on the fine-grained `subject:verb:item` level, why not allow our users to make use of it?
    
-# Implemented Permissions
+## Implemented Permissions
 
 This chapter documents the permissions implemented in SCM-Manager core and a lot of plugins that can be assigned to users and groups
 using the GUI/API.
@@ -458,10 +458,10 @@ Be aware, that this is only a snapshot and may not track each change in a plugin
 for a concrete version of the core or a plugin, take a look at the corresponding `permissions.xml`, `repository-permissions.xml` and
 `plugins.json` files.
 
-## Global Permissions
+### Global Permissions
 
 | plugin | permission | description |
-|-|-|-|
+|--------|------------|-------------|
 | core | `repository:read,pull:*` | read all repositories |
 | core | `repository:read,pull,push:*` | write all repositories |
 | core | `repository:*` | own all repositories |
@@ -501,10 +501,10 @@ for a concrete version of the core or a plugin, take a look at the corresponding
 | ssh | `user:readAuthorizedKeys:*` | read authorization keys for all users |
 | ssh | `user:readAuthorizedKeys,writeAuthorizedKeys:*` | configure authorization keys for all users |
 
-## Repository Permissions
+### Repository Permissions
 
 | plugin | verb | description |
-|-|-|-|
+|--------|------|-------------|
 | core | `read` | read metadata of repository |
 | core | `modify` | modify metadata of repository |
 | core | `delete` | delete repository |
@@ -530,13 +530,13 @@ for a concrete version of the core or a plugin, take a look at the corresponding
 | branchwp | `branchwp` | administer write protected paths for repository |
 | webhook | `webhook` | administer web hools for repository |
 
-## Repository Roles
+### Repository Roles
 
 The verbs for roles are merged internally, so that a resulting role will have all verbs specified by any plugin.
 Mind that a `OWNER` has overall permissions, including all possible permissions for all plugins.
 
 | plugin | role | verbs |
-|-|-|-|
+|--------|------|-------|
 | core | `READ` | `read`, `pull` |
 | core | `WRITE` | `read`, `pull`, `push` |
 | core | `OWNER` | `*` |

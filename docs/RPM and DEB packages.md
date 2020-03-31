@@ -1,3 +1,5 @@
+# RPM and DEB packages
+
 Since version 1.39, SCM-Manager is delivered as RPM and DEB package. The package are generated with the [nativepkg-maven-plugin](https://github.com/sdorra/nativepkg-maven-plugin). The following table shows the directory structure which will be created by the packages:
 
 File | Description
@@ -17,8 +19,7 @@ The package will create a user and group which are called scm. The scm user will
 
 The RPM package is tested with Fedora and Centos. Create a new files at /etc/yum.repos.d/SCM-Manager.repo with the following content to install the scm-manager repository:
 
-```
-#!text
+```text
 [scm-releases]
 name=SCM-Manager Releases
 baseurl=http://maven.scm-manager.org/nexus/content/repositories/releases
@@ -33,9 +34,7 @@ type=rpm-md
 After file creation execute the following command to install scm-server:
 
 
-```
-#!bash
-
+```bash
 # install the scm-server package
 sudo yum install scm-server
 ```
@@ -44,9 +43,7 @@ sudo yum install scm-server
 
 The DEB package is tested with Debian and Ubuntu. Execute the following commands to install scm-server:
 
-```
-#!bash
-
+```bash
 # add the scm-manager repository
 echo "echo 'deb http://maven.scm-manager.org/nexus/content/repositories/releases ./' >> /etc/apt/sources.list" | sudo sh
 
@@ -58,7 +55,6 @@ sudo apt-get update
 
 # install scm-server
 sudo apt-get install scm-server
-
 ```
 
 ## Migration from ApplicationServer or Standalone version

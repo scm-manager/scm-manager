@@ -1,5 +1,4 @@
-scm-jira-plugin
----------------
+# scm-jira-plugin
 
 The plugin enables the following features to integrate Atlassian JIRA to
 SCM-Manager:
@@ -16,11 +15,11 @@ SCM-Manager:
     (https://developer.atlassian.com/display/JIRADEV/JIRA+XML-RPC+Overview)
 2.  Install scm-jira-plugin over the plugin center in scm-manager
 3.  Be sure that your jira installation accepts remote calls
-    ([Screenshot](screenshots/scm-jira-plugin/jira-plugin-01.png "wikilink"))
+    ([Screenshot](screenshots/scm-jira-plugin/jira-plugin-01.png))
 4.  Configure the plugin, select a repository to enable the
     scm-jira-plugin for this repository
-    ([Screenshot](screenshots/scm-jira-plugin/jira-plugin-02.png "wikilink"))
-5.  \*\*Note: \*\* For the auto close and update feature it is necessary
+    ([Screenshot](screenshots/scm-jira-plugin/jira-plugin-02.png))
+5.  **Note**: For the auto close and update feature it is necessary
     that users have the same names and passwords in SCM-Manager and Jira
 
 ### Auto Close Words (Since v. 1.17)
@@ -41,8 +40,8 @@ close words with transition that are configured in JIRA.
 
 ### Screenshots
 
-[](screenshots/scm-jira-plugin/jira-plugin-01.png "wikilink")
-[](screenshots/scm-jira-plugin/jira-plugin-02.png "wikilink")
-[](screenshots/scm-jira-plugin/jira-plugin-03.png "wikilink")
-[](screenshots/scm-jira-plugin/jira-plugin-04.png "wikilink")
-[](screenshots/scm-jira-plugin/jira-plugin-05.png "wikilink")
+![](screenshots/scm-jira-plugin/jira-plugin-01.png)
+![](screenshots/scm-jira-plugin/jira-plugin-02.png)
+![](screenshots/scm-jira-plugin/jira-plugin-03.png)
+![](screenshots/scm-jira-plugin/jira-plugin-04.png)
+![](screenshots/scm-jira-plugin/jira-plugin-05.png)
