@@ -26,4 +26,4 @@ export type RoutingProps = {
   to: string;
   activeOnlyWhenExact?: boolean;
   activeWhenMatch?: (route: any) => boolean;
-}
+};

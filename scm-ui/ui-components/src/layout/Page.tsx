@@ -52,7 +52,7 @@ const PageActionContainer = styled.div`
 `;
 
 const MarginLeft = styled.div`
-margin-left: 0.5rem;
+  margin-left: 0.5rem;
 `;
 
 const FlexContainer = styled.div`

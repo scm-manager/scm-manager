@@ -32,7 +32,7 @@ import { Binder, BinderContext } from "@scm-manager/ui-extensions";
 import { Repository } from "@scm-manager/ui-types";
 import Image from "../Image";
 import Icon from "../Icon";
-import {MemoryRouter} from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 
 const baseDate = "2020-03-26T12:13:42+02:00";
 

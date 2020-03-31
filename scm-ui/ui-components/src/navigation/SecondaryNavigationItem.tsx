@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {FC} from "react";
+import React, { FC } from "react";
 import SubNavigation from "./SubNavigation";
 import NavLink from "./NavLink";
-import {RoutingProps} from "./RoutingProps";
+import { RoutingProps } from "./RoutingProps";
 
 type Props = RoutingProps & {
   label: string;

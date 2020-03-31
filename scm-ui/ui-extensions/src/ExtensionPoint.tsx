@@ -23,7 +23,7 @@
  */
 import * as React from "react";
 import { Binder } from "./binder";
-import {Component, FC, ReactNode} from "react";
+import { Component, FC, ReactNode } from "react";
 import useBinder from "./useBinder";
 
 type PropTransformer = (props: object) => object;
@@ -48,11 +48,7 @@ const createInstance = (Component: any, props: object, key?: number) => {
 
 const renderAllExtensions = (binder: Binder, name: string, props: object) => {
   const extensions = binder.getExtensions(name, props);
-  return (
-    <>
-      {extensions.map((cmp, index) => createInstance(cmp, props, index))}
-    </>
-  );
+  return <>{extensions.map((cmp, index) => createInstance(cmp, props, index))}</>;
 };
 
 const renderSingleExtension = (binder: Binder, name: string, props: object) => {

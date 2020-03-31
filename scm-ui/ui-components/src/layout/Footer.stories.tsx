@@ -33,7 +33,7 @@ import hitchhiker from "../__resources__/hitchhiker.png";
 import marvin from "../__resources__/marvin.jpg";
 import NavLink from "../navigation/NavLink";
 import ExternalLink from "../navigation/ExternalLink";
-import {MemoryRouter} from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 
 const trillian: Me = {
   name: "trillian",

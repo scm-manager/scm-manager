@@ -32,7 +32,7 @@ import MarkdownXmlCodeBlock from "./__resources__/markdown-xml-codeblock.md";
 import MarkdownInlineXml from "./__resources__/markdown-inline-xml.md";
 import Title from "./layout/Title";
 import { Subtitle } from "./layout";
-import {MemoryRouter} from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 
 const Spacing = styled.div`
   padding: 2em;

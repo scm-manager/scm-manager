@@ -62,7 +62,11 @@ class ConfirmAlert extends React.Component<Props> {
       <div className="field is-grouped">
         {buttons.map((button, i) => (
           <p className="control">
-            <a className={classNames("button", "is-info", button.className)} key={i} onClick={() => this.handleClickButton(button)}>
+            <a
+              className={classNames("button", "is-info", button.className)}
+              key={i}
+              onClick={() => this.handleClickButton(button)}
+            >
               {button.label}
             </a>
           </p>

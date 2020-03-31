@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useContext} from "react";
+import React, { FC, useContext } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import classNames from "classnames";
-import useMenuContext, {MenuContext} from "./MenuContext";
-import {RoutingProps} from "./RoutingProps";
+import useMenuContext, { MenuContext } from "./MenuContext";
+import { RoutingProps } from "./RoutingProps";
 
 type Props = RoutingProps & {
   label: string;
