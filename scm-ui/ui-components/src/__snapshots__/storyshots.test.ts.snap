@@ -445,6 +445,93 @@ exports[`Storyshots Buttons|SubmitButton Default 1`] = `
 </div>
 `;
 
+exports[`Storyshots CollapsibleContainer Default 1`] = `
+<div
+  className="CollapsibleContainer__Container-ex22j7-0 bndKdl"
+>
+  <div
+    className="has-cursor-pointer"
+    onClick={[Function]}
+  >
+    <h3
+      className="CollapsibleContainer__Headline-ex22j7-1 cqffFd"
+    >
+      <i
+        className="fas fa-angle-down has-text-default"
+      />
+       
+      Boxed Container
+    </h3>
+    <hr
+      className="CollapsibleContainer__Separator-ex22j7-3 cYwfXg"
+    />
+  </div>
+  <div
+    className="CollapsibleContainer__Content-ex22j7-2 dWBlWr box"
+  >
+    <div>
+      tricia
+    </div>
+    <div>
+      dent
+    </div>
+    <div>
+      zaphod
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots CollapsibleContainer Separated Entries 1`] = `
+<div
+  className="CollapsibleContainer__Container-ex22j7-0 bndKdl"
+>
+  <div
+    className="has-cursor-pointer"
+    onClick={[Function]}
+  >
+    <h3
+      className="CollapsibleContainer__Headline-ex22j7-1 cqffFd"
+    >
+      <i
+        className="fas fa-angle-down has-text-default"
+      />
+       
+      Separated Entries without box
+    </h3>
+    <hr
+      className="CollapsibleContainer__Separator-ex22j7-3 cYwfXg"
+    />
+  </div>
+  <div
+    className="CollapsibleContainer__Content-ex22j7-2 dWBlWr"
+  >
+     
+  </div>
+  <div
+    className="CollapsibleContainer__Content-ex22j7-2 dWBlWr"
+  >
+    <div>
+      tricia
+    </div>
+  </div>
+  <div
+    className="CollapsibleContainer__Content-ex22j7-2 dWBlWr"
+  >
+    <div>
+      dent
+    </div>
+  </div>
+  <div
+    className="CollapsibleContainer__Content-ex22j7-2 dWBlWr"
+  >
+    <div>
+      zaphod
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots DateFromNow Default 1`] = `
 <div>
   <p>
