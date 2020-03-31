@@ -54,7 +54,12 @@ type Props = WithTranslation & {
   // dispatch functions
   fetchNamespaceStrategiesIfNeeded: () => void;
   fetchRepositoryTypesIfNeeded: () => void;
-  createRepo: (link: string, repository: Repository, initRepository: boolean, callback: (repo: Repository) => void) => void;
+  createRepo: (
+    link: string,
+    repository: Repository,
+    initRepository: boolean,
+    callback: (repo: Repository) => void
+  ) => void;
   resetForm: () => void;
 
   // context props
