@@ -75,6 +75,7 @@ export { default as ErrorBoundary } from "./ErrorBoundary";
 export { default as OverviewPageActions } from "./OverviewPageActions";
 export { default as CardColumnGroup } from "./CardColumnGroup";
 export { default as CardColumn } from "./CardColumn";
+export { default as CollapsibleContainer } from"./CollapsibleContainer";
 
 export { default as comparators } from "./comparators";
 
