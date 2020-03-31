@@ -278,9 +278,7 @@ class PluginModal extends React.Component<Props, State> {
           </div>
         </div>
         <div className="media">
-          <div className="media-content">
-            {this.createRestartSectionContent()}
-          </div>
+          <div className="media-content">{this.createRestartSectionContent()}</div>
         </div>
         {this.renderNotifications()}
       </>

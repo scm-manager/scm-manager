@@ -37,9 +37,7 @@ import {
   SecondaryNavigationColumn,
   SecondaryNavigation,
   SubNavigation,
-  MenuContext,
-  storeMenuCollapsed,
-  isMenuCollapsed
+  StateMenuContextProvider
 } from "@scm-manager/ui-components";
 import { fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending } from "../modules/repos";
 import RepositoryDetails from "../components/RepositoryDetails";
@@ -70,19 +68,7 @@ type Props = RouteComponentProps &
     fetchRepoByName: (link: string, namespace: string, name: string) => void;
   };
 
-type State = {
-  menuCollapsed: boolean;
-};
-
-class RepositoryRoot extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      menuCollapsed: isMenuCollapsed()
-    };
-  }
-
+class RepositoryRoot extends React.Component<Props> {
   componentDidMount() {
     const { fetchRepoByName, namespace, name, repoLink } = this.props;
     fetchRepoByName(repoLink, namespace, name);
@@ -131,13 +117,8 @@ class RepositoryRoot extends React.Component<Props, State> {
     return `${url}/changesets`;
   };
 
-  onCollapseRepositoryMenu = (collapsed: boolean) => {
-    this.setState({ menuCollapsed: collapsed }, () => storeMenuCollapsed(collapsed));
-  };
-
   render() {
     const { loading, error, indexLinks, repository, t } = this.props;
-    const { menuCollapsed } = this.state;
 
     if (error) {
       return (
@@ -166,18 +147,13 @@ class RepositoryRoot extends React.Component<Props, State> {
     }
 
     return (
-      <MenuContext.Provider
-        value={{
-          menuCollapsed,
-          setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed })
-        }}
-      >
+      <StateMenuContextProvider>
         <Page
           title={repository.namespace + "/" + repository.name}
           afterTitle={<ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />}
         >
           <CustomQueryFlexWrappedColumns>
-            <PrimaryContentColumn collapsed={menuCollapsed}>
+            <PrimaryContentColumn>
               <Switch>
                 <Redirect exact from={this.props.match.url} to={redirectedUrl} />
 
@@ -227,12 +203,8 @@ class RepositoryRoot extends React.Component<Props, State> {
                 <ExtensionPoint name="repository.route" props={extensionProps} renderAll={true} />
               </Switch>
             </PrimaryContentColumn>
-            <SecondaryNavigationColumn collapsed={menuCollapsed}>
-              <SecondaryNavigation
-                label={t("repositoryRoot.menu.navigationLabel")}
-                onCollapse={() => this.onCollapseRepositoryMenu(!menuCollapsed)}
-                collapsed={menuCollapsed}
-              >
+            <SecondaryNavigationColumn>
+              <SecondaryNavigation label={t("repositoryRoot.menu.navigationLabel")}>
                 <ExtensionPoint name="repository.navigation.topLevel" props={extensionProps} renderAll={true} />
                 <NavLink
                   to={`${url}/info`}
@@ -274,7 +246,7 @@ class RepositoryRoot extends React.Component<Props, State> {
             </SecondaryNavigationColumn>
           </CustomQueryFlexWrappedColumns>
         </Page>
-      </MenuContext.Provider>
+      </StateMenuContextProvider>
     );
   }
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { storiesOf } from "@storybook/react";
 import styled from "styled-components";
 import Textarea from "./Textarea";

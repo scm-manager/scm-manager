@@ -30,6 +30,8 @@ type Props = {
   label: string;
 };
 
+// TODO is it used in the menu? should it use MenuContext for collapse state?
+
 const ExternalLink: FC<Props> = ({ to, icon, label }) => {
   let showIcon;
   if (icon) {

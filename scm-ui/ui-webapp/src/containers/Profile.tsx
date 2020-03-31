@@ -30,20 +30,18 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";
 import {
   ErrorPage,
-  isMenuCollapsed,
-  MenuContext,
   NavLink,
   Page,
   CustomQueryFlexWrappedColumns,
   PrimaryContentColumn,
   SecondaryNavigationColumn,
   SecondaryNavigation,
-  SubNavigation
+  SubNavigation,
+  StateMenuContextProvider
 } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { storeMenuCollapsed } from "@scm-manager/ui-components/src";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -53,23 +51,7 @@ type Props = RouteComponentProps &
     match: any;
   };
 
-type State = {
-  menuCollapsed: boolean;
-};
-
-class Profile extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      menuCollapsed: isMenuCollapsed()
-    };
-  }
-
-  onCollapseProfileMenu = (collapsed: boolean) => {
-    this.setState({ menuCollapsed: collapsed }, () => storeMenuCollapsed(collapsed));
-  };
-
+class Profile extends React.Component<Props> {
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {
       return url.substring(0, url.length - 2);
@@ -85,7 +67,6 @@ class Profile extends React.Component<Props, State> {
     const url = this.matchedUrl();
 
     const { me, t } = this.props;
-    const { menuCollapsed } = this.state;
 
     if (!me) {
       return (
@@ -106,22 +87,16 @@ class Profile extends React.Component<Props, State> {
     };
 
     return (
-      <MenuContext.Provider
-        value={{ menuCollapsed, setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed }) }}
-      >
+      <StateMenuContextProvider>
         <Page title={me.displayName}>
           <CustomQueryFlexWrappedColumns>
-            <PrimaryContentColumn collapsed={menuCollapsed}>
+            <PrimaryContentColumn>
               <Route path={url} exact render={() => <ProfileInfo me={me} />} />
               <Route path={`${url}/settings/password`} render={() => <ChangeUserPassword me={me} />} />
               <ExtensionPoint name="profile.route" props={extensionProps} renderAll={true} />
             </PrimaryContentColumn>
-            <SecondaryNavigationColumn collapsed={menuCollapsed}>
-              <SecondaryNavigation
-                label={t("profile.navigationLabel")}
-                onCollapse={() => this.onCollapseProfileMenu(!menuCollapsed)}
-                collapsed={menuCollapsed}
-              >
+            <SecondaryNavigationColumn>
+              <SecondaryNavigation label={t("profile.navigationLabel")}>
                 <NavLink
                   to={`${url}`}
                   icon="fas fa-info-circle"
@@ -140,7 +115,7 @@ class Profile extends React.Component<Props, State> {
             </SecondaryNavigationColumn>
           </CustomQueryFlexWrappedColumns>
         </Page>
-      </MenuContext.Provider>
+      </StateMenuContextProvider>
     );
   }
 }

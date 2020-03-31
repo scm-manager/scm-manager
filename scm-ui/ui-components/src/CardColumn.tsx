@@ -99,9 +99,7 @@ export default class CardColumn extends React.Component<Props> {
           <FlexFullHeight className={classNames("media-content", "text-box", "is-flex")}>
             <div className="is-flex">
               <ContentLeft className="content">
-                <p className="shorten-text is-marginless">
-                  {title}
-                </p>
+                <p className="shorten-text is-marginless">{title}</p>
                 <p className="shorten-text">{description}</p>
               </ContentLeft>
               <ContentRight>{contentRight}</ContentRight>

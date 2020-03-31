@@ -27,7 +27,6 @@ import { PendingPlugins } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import PendingPluginsQueue from "./PendingPluginsQueue";
 
-
 type ModalBodyProps = {
   pendingPlugins: PendingPlugins;
 };

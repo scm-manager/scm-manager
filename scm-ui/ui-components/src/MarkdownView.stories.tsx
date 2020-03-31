@@ -32,12 +32,14 @@ import MarkdownXmlCodeBlock from "./__resources__/markdown-xml-codeblock.md";
 import MarkdownInlineXml from "./__resources__/markdown-inline-xml.md";
 import Title from "./layout/Title";
 import { Subtitle } from "./layout";
+import { MemoryRouter } from "react-router-dom";
 
 const Spacing = styled.div`
   padding: 2em;
 `;
 
 storiesOf("MarkdownView", module)
+  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .addDecorator(story => <Spacing>{story()}</Spacing>)
   .add("Default", () => <MarkdownView content={TestPage} skipHtml={false} />)
   .add("Code without Lang", () => <MarkdownView content={MarkdownWithoutLang} skipHtml={false} />)

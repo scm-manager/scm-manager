@@ -23,60 +23,47 @@
  */
 import * as React from "react";
 import classNames from "classnames";
-import { Link, Route } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
+import { RoutingProps } from "./RoutingProps";
+import { FC } from "react";
+import useMenuContext from "./MenuContext";
 
-// TODO mostly copy of PrimaryNavigationLink
-
-type Props = {
-  to: string;
-  icon?: string;
+type Props = RoutingProps & {
   label: string;
-  activeOnlyWhenExact?: boolean;
-  activeWhenMatch?: (route: any) => boolean;
-  collapsed?: boolean;
   title?: string;
+  icon?: string;
 };
 
-class NavLink extends React.Component<Props> {
-  static defaultProps = {
-    activeOnlyWhenExact: true
-  };
+const NavLink: FC<Props> = ({ to, activeOnlyWhenExact, icon, label, title }) => {
+  const match = useRouteMatch({
+    path: to,
+    exact: activeOnlyWhenExact
+  });
 
-  isActive(route: any) {
-    const { activeWhenMatch } = this.props;
-    return route.match || (activeWhenMatch && activeWhenMatch(route));
-  }
+  const context = useMenuContext();
+  const collapsed = context.isCollapsed();
 
-  renderLink = (route: any) => {
-    const { to, icon, label, collapsed, title } = this.props;
-
-    let showIcon = null;
-    if (icon) {
-      showIcon = (
-        <>
-          <i className={classNames(icon, "fa-fw")} />{" "}
-        </>
-      );
-    }
-
-    return (
-      <li title={collapsed ? title : undefined}>
-        <Link
-          className={classNames(this.isActive(route) ? "is-active" : "", collapsed ? "has-text-centered" : "")}
-          to={to}
-        >
-          {showIcon}
-          {collapsed ? null : label}
-        </Link>
-      </li>
+  let showIcon = null;
+  if (icon) {
+    showIcon = (
+      <>
+        <i className={classNames(icon, "fa-fw")} />{" "}
+      </>
     );
-  };
-
-  render() {
-    const { to, activeOnlyWhenExact } = this.props;
-
-    return <Route path={to} exact={activeOnlyWhenExact} children={this.renderLink} />;
   }
-}
+
+  return (
+    <li title={collapsed ? title : undefined}>
+      <Link className={classNames(!!match ? "is-active" : "", collapsed ? "has-text-centered" : "")} to={to}>
+        {showIcon}
+        {collapsed ? null : label}
+      </Link>
+    </li>
+  );
+};
+
+NavLink.defaultProps = {
+  activeOnlyWhenExact: true
+};
 
 export default NavLink;

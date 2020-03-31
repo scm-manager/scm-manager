@@ -21,13 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
+import React, { FC } from "react";
 import styled from "styled-components";
-
-type Props = {
-  children?: ReactNode;
-  collapsed: boolean;
-};
+import useMenuContext from "../navigation/MenuContext";
 
 const PrimaryColumn = styled.div<{ collapsed: boolean }>`
   /* This is the counterpart to the specific column in SecondaryNavigationColumn. */
@@ -39,18 +35,13 @@ const PrimaryColumn = styled.div<{ collapsed: boolean }>`
   }
 `;
 
-export default class PrimaryContentColumn extends React.Component<Props> {
-  static defaultProps = {
-    collapsed: false
-  };
+const PrimaryContentColumn: FC = ({ children }) => {
+  const context = useMenuContext();
+  return (
+    <PrimaryColumn className="column" collapsed={context.isCollapsed()}>
+      {children}
+    </PrimaryColumn>
+  );
+};
 
-  render() {
-    const { children, collapsed } = this.props;
-
-    return (
-      <PrimaryColumn className="column" collapsed={collapsed}>
-        {children}
-      </PrimaryColumn>
-    );
-  }
-}
+export default PrimaryContentColumn;

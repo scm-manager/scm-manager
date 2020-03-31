@@ -10020,6 +10020,16 @@ mini-css-extract-plugin@^0.8.0:
     schema-utils "^1.0.0"
     webpack-sources "^1.1.0"
 
+mini-css-extract-plugin@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/mini-css-extract-plugin/-/mini-css-extract-plugin-0.9.0.tgz#47f2cf07aa165ab35733b1fc97d4c46c0564339e"
+  integrity sha512-lp3GeY7ygcgAmVIcRPBVhIkf8Us7FZjA+ILpal44qLdSu11wmjKQ3d9k15lfD7pO4esu9eUIAW7qiYIBppv40A==
+  dependencies:
+    loader-utils "^1.1.0"
+    normalize-url "1.9.1"
+    schema-utils "^1.0.0"
+    webpack-sources "^1.1.0"
+
 minimalistic-assert@^1.0.0, minimalistic-assert@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/minimalistic-assert/-/minimalistic-assert-1.0.1.tgz#2e194de044626d4a10e7f7fbc00ce73e83e4d5c7"
@@ -12247,10 +12257,10 @@ react-redux@^5.0.7:
     react-is "^16.6.0"
     react-lifecycles-compat "^3.0.0"
 
-react-refresh@^0.7.2:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.7.2.tgz#f30978d21eb8cac6e2f2fde056a7d04f6844dd50"
-  integrity sha512-u5l7fhAJXecWUJzVxzMRU2Zvw8m4QmDNHlTrT5uo3KBlYBhmChd7syAakBoay1yIiVhx/8Fi7a6v6kQZfsw81Q==
+react-refresh@^0.8.0:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.8.1.tgz#5500506ad6fc891fdd057d0bf3581f9310abc6a2"
+  integrity sha512-xZIKi49RtLUUSAZ4a4ut2xr+zr4+glOD5v0L413B55MPvlg4EQ6Ctx8PD4CmjlPGoAWmSCTmmkY59TErizNsow==
 
 react-router-dom@^5.1.2:
   version "5.1.2"

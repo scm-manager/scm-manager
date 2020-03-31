@@ -25,7 +25,6 @@
 import { chooseLocale, supportedLocales } from "./DateFromNow";
 
 describe("test choose locale", () => {
-
   it("should choose de", () => {
     const locale = chooseLocale("de_DE", ["de", "en"]);
     expect(locale).toBe(supportedLocales.de);
@@ -45,5 +44,4 @@ describe("test choose locale", () => {
     const locale = chooseLocale("af", ["af", "be"]);
     expect(locale).toBe(supportedLocales.en);
   });
-
 });

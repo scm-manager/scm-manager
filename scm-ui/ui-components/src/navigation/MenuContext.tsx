@@ -21,18 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
 
-type Props = {
-  children?: ReactNode;
+import React, { FC, useContext, useState } from "react";
+
+export type MenuContext = {
+  isCollapsed: () => boolean;
+  setCollapsed: (collapsed: boolean) => void;
 };
 
-// TODO it is used?
+export const MenuContext = React.createContext<MenuContext>({
+  isCollapsed() {
+    return false;
+  },
+  setCollapsed() {}
+});
 
-class Navigation extends React.Component<Props> {
-  render() {
-    return <aside className="menu">{this.props.children}</aside>;
-  }
-}
+export const StateMenuContextProvider: FC = ({ children }) => {
+  const [collapsed, setCollapsed] = useState(false);
 
-export default Navigation;
+  const context = {
+    isCollapsed() {
+      return collapsed;
+    },
+    setCollapsed
+  };
+
+  return <MenuContext.Provider value={context}>{children}</MenuContext.Provider>;
+};
+
+const useMenuContext = () => {
+  return useContext<MenuContext>(MenuContext);
+};
+
+export default useMenuContext;

@@ -176,7 +176,7 @@ export default function reducer(
         pending: false
       }
     };
-  } else if (action.itemId && (action.type === FETCH_UPDATES_SUCCESS)) {
+  } else if (action.itemId && action.type === FETCH_UPDATES_SUCCESS) {
     return {
       ...state,
       [action.itemId + action.payload.hunk]: {
