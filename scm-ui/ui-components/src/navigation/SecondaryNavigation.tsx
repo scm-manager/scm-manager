@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC, ReactElement, ReactNode} from "react";
+import React, {FC, ReactElement, ReactNode, useEffect, useMemo} from "react";
 import styled from "styled-components";
 import SubNavigation from "./SubNavigation";
 import { matchPath, useLocation } from "react-router-dom";
@@ -64,9 +64,26 @@ const SecondaryNavigation: FC<Props> = ({ label, children}) => {
   const location = useLocation();
   const binder = useBinder();
   const menuContext = useMenuContext();
-
   const subNavActive = isSubNavigationActive(binder, children, location.pathname);
   const isCollapsed = menuContext.isCollapsed();
+
+  useEffect(() => {
+    if (isCollapsed && subNavActive) {
+      menuContext.setCollapsed(false);
+    }
+  }, [subNavActive, isCollapsed]);
+
+  const toggleCollapseState = () => {
+    if (!subNavActive) {
+      menuContext.setCollapsed(!isCollapsed);
+    }
+  };
+
+  const uncollapseMenu = () => {
+    if (isCollapsed) {
+      menuContext.setCollapsed(false);
+    }
+  };
 
   const arrowIcon = isCollapsed ? <i className="fas fa-caret-down" /> : <i className="fas fa-caret-right" />;
 
@@ -76,7 +93,7 @@ const SecondaryNavigation: FC<Props> = ({ label, children}) => {
         <MenuLabel
           className="menu-label"
           collapsed={isCollapsed}
-          onClick={!subNavActive ? () => menuContext.setCollapsed(!isCollapsed) : undefined}
+          onClick={toggleCollapseState}
         >
           {!subNavActive && (
             <Icon color="info" className="is-medium" collapsed={isCollapsed}>
@@ -85,7 +102,7 @@ const SecondaryNavigation: FC<Props> = ({ label, children}) => {
           )}
           {isCollapsed ? "" : label}
         </MenuLabel>
-        <ul className="menu-list">{children}</ul>
+        <ul className="menu-list" onClick={uncollapseMenu}>{children}</ul>
       </div>
     </SectionContainer>
   );

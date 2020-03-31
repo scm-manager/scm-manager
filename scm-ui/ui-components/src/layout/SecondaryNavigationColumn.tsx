@@ -21,13 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
+import React, { FC } from "react";
 import styled from "styled-components";
-
-type Props = {
-  children?: ReactNode;
-  collapsed: boolean;
-};
+import useMenuContext from "../navigation/MenuContext";
 
 const SecondaryColumn = styled.div<{ collapsed: boolean }>`
   /* In Bulma there is unfortunately no intermediate step between .is-1 and .is-2, hence the size. 
@@ -42,18 +38,13 @@ const SecondaryColumn = styled.div<{ collapsed: boolean }>`
   }
 `;
 
-export default class SecondaryNavigationColumn extends React.Component<Props> {
-  static defaultProps = {
-    collapsed: false
-  };
+const SecondaryNavigationColumn: FC = ({ children }) => {
+  const context = useMenuContext();
+  return (
+    <SecondaryColumn className="column" collapsed={context.isCollapsed()}>
+      {children}
+    </SecondaryColumn>
+  );
+};
 
-  render() {
-    const { children, collapsed } = this.props;
-
-    return (
-      <SecondaryColumn className="column" collapsed={collapsed}>
-        {children}
-      </SecondaryColumn>
-    );
-  }
-}
+export default SecondaryNavigationColumn;
