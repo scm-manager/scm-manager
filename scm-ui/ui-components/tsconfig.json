@@ -1,9 +1,3 @@
 {
-  "extends": "@scm-manager/tsconfig",
-  "compilerOptions": {
-    "lib": [
-      "es2019",
-      "dom"
-    ]
-  }
+  "extends": "@scm-manager/tsconfig"
 }
