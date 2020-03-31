@@ -26,8 +26,7 @@ import classNames from "classnames";
 import { Link, useRouteMatch } from "react-router-dom";
 import { RoutingProps } from "./RoutingProps";
 import { FC } from "react";
-import { useContext } from "react";
-import useMenuContext, { MenuContext } from "./MenuContext";
+import useMenuContext from "./MenuContext";
 
 type Props = RoutingProps & {
   label: string;
@@ -61,6 +60,10 @@ const NavLink: FC<Props> = ({ to, activeOnlyWhenExact, icon, label, title }) => 
       </Link>
     </li>
   );
+};
+
+NavLink.defaultProps = {
+  activeOnlyWhenExact: true
 };
 
 export default NavLink;
