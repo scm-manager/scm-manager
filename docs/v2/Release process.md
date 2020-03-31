@@ -118,5 +118,3 @@ git push origin develop
 If you are creating a new plugin which doesn't exist in the SCM-Manager Plugin-Center yet, your plugin will not be shown after the release. First you have to create a `index.md` in the Plugin-Center Repository. 
 
 Example: https://github.com/scm-manager/plugin-center/blob/master/src/plugins/scm-teamscale-plugin/index.md
-
-- 
