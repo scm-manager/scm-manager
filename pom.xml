@@ -494,7 +494,7 @@
         <plugin>
           <groupId>sonia.scm.maven</groupId>
           <artifactId>smp-maven-plugin</artifactId>
-          <version>1.0.0-rc4</version>
+          <version>1.0.0-rc5</version>
         </plugin>
 
         <plugin>
