@@ -21,20 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactElement, ReactNode } from "react";
-import { MenuContext } from "./MenuContext";
+import React, {FC} from "react";
 import SubNavigation from "./SubNavigation";
 import NavLink from "./NavLink";
+import {RoutingProps} from "./RoutingProps";
 
-type Props = {
-  to: string;
-  icon?: string;
+type Props = RoutingProps & {
   label: string;
-  title: string;
-  collapsed?: boolean;
-  activeWhenMatch?: (route: any) => boolean;
-  activeOnlyWhenExact?: boolean;
-  children?: ReactElement[];
+  title?: string;
+  icon?: string;
 };
 
 const SecondaryNavigationItem: FC<Props> = ({ children, ...props }) => {

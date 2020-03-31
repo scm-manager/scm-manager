@@ -29,6 +29,8 @@ type Props = {
   action: () => void;
 };
 
+// TODO is it used in the menu? should it use MenuContext for collapse state?
+
 class NavAction extends React.Component<Props> {
   render() {
     const { label, icon, action } = this.props;

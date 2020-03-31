@@ -21,18 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactElement, ReactNode, useContext, useEffect } from "react";
+
+import React, { FC, ReactElement, ReactNode} from "react";
 import styled from "styled-components";
 import SubNavigation from "./SubNavigation";
 import { matchPath, useLocation } from "react-router-dom";
-import { isMenuCollapsed, MenuContext } from "./MenuContext";
+import useMenuContext from "./MenuContext";
 import { ExtensionPoint, Binder, useBinder } from "@scm-manager/ui-extensions";
+import { RoutingProps } from "./RoutingProps";
 
 type Props = {
   label: string;
-  children: ReactElement[];
-  collapsed: boolean;
-  onCollapse?: (newStatus: boolean) => void;
 };
 
 type CollapsedProps = {
@@ -61,32 +60,14 @@ const MenuLabel = styled.p<CollapsedProps>`
   cursor: pointer;
 `;
 
-const SecondaryNavigation: FC<Props> = ({ label, children, collapsed, onCollapse }) => {
+const SecondaryNavigation: FC<Props> = ({ label, children}) => {
   const location = useLocation();
   const binder = useBinder();
-  const menuContext = useContext(MenuContext);
+  const menuContext = useMenuContext();
 
   const subNavActive = isSubNavigationActive(binder, children, location.pathname);
-  const isCollapsed = collapsed && !subNavActive;
+  const isCollapsed = menuContext.isCollapsed();
 
-  useEffect(() => {
-    if (isMenuCollapsed()) {
-      menuContext.setMenuCollapsed(!subNavActive);
-    }
-  }, [subNavActive]);
-
-  const childrenWithProps = React.Children.map(children, (child: ReactElement) =>
-    React.cloneElement(child, {
-      collapsed: isCollapsed,
-      propTransformer: (props: object) => {
-        const np = {
-          ...props,
-          collapsed: isCollapsed
-        };
-        return np;
-      }
-    })
-  );
   const arrowIcon = isCollapsed ? <i className="fas fa-caret-down" /> : <i className="fas fa-caret-right" />;
 
   return (
@@ -95,16 +76,16 @@ const SecondaryNavigation: FC<Props> = ({ label, children, collapsed, onCollapse
         <MenuLabel
           className="menu-label"
           collapsed={isCollapsed}
-          onClick={onCollapse && !subNavActive ? () => onCollapse(!isCollapsed) : undefined}
+          onClick={!subNavActive ? () => menuContext.setCollapsed(!isCollapsed) : undefined}
         >
-          {onCollapse && !subNavActive && (
+          {!subNavActive && (
             <Icon color="info" className="is-medium" collapsed={isCollapsed}>
               {arrowIcon}
             </Icon>
           )}
           {isCollapsed ? "" : label}
         </MenuLabel>
-        <ul className="menu-list">{childrenWithProps}</ul>
+        <ul className="menu-list">{children}</ul>
       </div>
     </SectionContainer>
   );
@@ -116,32 +97,42 @@ const createParentPath = (to: string) => {
   return parents.join("/");
 };
 
+const expandExtensionPoints = (binder: Binder, child: ReactElement): Array<ReactElement> => {
+  // @ts-ignore
+  if (child.type.name === ExtensionPoint.name) {
+    // @ts-ignore
+    return binder.getExtensions(child.props.name, child.props.props);
+  }
+  return [child];
+};
+
+const mapToProps = (child: ReactElement<RoutingProps>) => {
+  return child.props;
+};
+
+const isSubNavigation = (child: ReactElement) => {
+  // @ts-ignore
+  return child.type.name === SubNavigation.name;
+};
+
+const isActive = (url: string, props: RoutingProps) => {
+  const path = createParentPath(props.to);
+  const matches = matchPath(url, {
+    path,
+    exact: props.activeOnlyWhenExact
+  });
+  return matches != null;
+};
+
 const isSubNavigationActive = (binder: Binder, children: ReactNode, url: string): boolean => {
   const childArray = React.Children.toArray(children);
+
   const match = childArray
     .filter(React.isValidElement)
-    .flatMap(child => {
-      // @ts-ignore
-      if (child.type.name === ExtensionPoint.name) {
-        // @ts-ignore
-        return binder.getExtensions(child.props.name, child.props.props);
-      }
-      return [child];
-    })
-    .filter(child => {
-      return child.type.name === SubNavigation.name;
-    })
-    .map(child => {
-      return child.props;
-    })
-    .find(props => {
-      const path = createParentPath(props.to);
-      const matches = matchPath(url, {
-        path,
-        exact: props.activeOnlyWhenExact as boolean
-      });
-      return matches != null;
-    });
+    .flatMap(child => expandExtensionPoints(binder, child))
+    .filter(isSubNavigation)
+    .map(mapToProps)
+    .find(props => isActive(url, props));
 
   return match != null;
 };

@@ -21,18 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
 
-type Props = {
-  children?: ReactNode;
-};
-
-// TODO it is used?
-
-class Navigation extends React.Component<Props> {
-  render() {
-    return <aside className="menu">{this.props.children}</aside>;
-  }
+export type RoutingProps = {
+  to: string;
+  activeOnlyWhenExact?: boolean;
+  activeWhenMatch?: (route: any) => boolean;
 }
-
-export default Navigation;

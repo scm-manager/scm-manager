@@ -30,6 +30,7 @@ import styled from "styled-components";
 import SubNavigation from "./SubNavigation";
 import { Binder, ExtensionPoint, BinderContext } from "@scm-manager/ui-extensions";
 import { MemoryRouter } from "react-router-dom";
+import { StateMenuContextProvider } from "./MenuContext";
 
 const Columns = styled.div`
   margin: 2rem;
@@ -52,6 +53,7 @@ const withRoute = (route: string) => {
 };
 
 storiesOf("Navigation|Secondary", module)
+  .addDecorator(story => <StateMenuContextProvider>{story()}</StateMenuContextProvider>)
   .addDecorator(story => (
     <Columns className="columns">
       <div className="column is-3">{story()}</div>
@@ -59,42 +61,26 @@ storiesOf("Navigation|Secondary", module)
   ))
   .add("Default", () =>
     withRoute("/")(
-      <SecondaryNavigation label="Hitchhiker" collapsed={false} onCollapse={() => {}}>
-        <SecondaryNavigationItem to="/" icon="fas fa-puzzle-piece" label="Puzzle 42" title="Puzzle 42" />
-        <SecondaryNavigationItem to="/some" icon="fas fa-star" label="Heart Of Gold" title="Heart Of Gold" />
-      </SecondaryNavigation>
-    )
-  )
-  .add("Collapsed", () =>
-    withRoute("/")(
-      <SecondaryNavigation label="Hitchhiker" collapsed={true} onCollapse={() => {}}>
-        <SecondaryNavigationItem to="/" icon="fas fa-puzzle-piece" label="Puzzle 42" title="Puzzle 42" />
-        <SecondaryNavigationItem to="/some" icon="fas fa-star" label="Heart Of Gold" title="Heart Of Gold" />
+      <SecondaryNavigation label="Hitchhiker">
+        <SecondaryNavigationItem to="/42" icon="fas fa-puzzle-piece" label="Puzzle 42" title="Puzzle 42" />
+        <SecondaryNavigationItem to="/heart-of-gold" icon="fas fa-star" label="Heart Of Gold" title="Heart Of Gold" />
       </SecondaryNavigation>
     )
   )
   .add("Sub Navigation", () =>
     withRoute("/")(
-      <SecondaryNavigation label="Hitchhiker" collapsed={false} onCollapse={() => {}}>
+      <SecondaryNavigation label="Hitchhiker">
         <SecondaryNavigationItem to="/42" icon="fas fa-puzzle-piece" label="Puzzle 42" title="Puzzle 42" />
         {starships}
       </SecondaryNavigation>
     )
   )
-  .add("Sub Navigation Collapsed", () =>
-    withRoute("/hitchhiker/starships/heart-of-gold")(
-      <SecondaryNavigation label="Hitchhiker" collapsed={true} onCollapse={() => {}}>
-        <SecondaryNavigationItem to="/42" icon="fas fa-puzzle-piece" label="Puzzle 42" title="Puzzle 42" />
-        {starships}
-      </SecondaryNavigation>
-    )
-  )
-  .add("Collapsed EP Sub", () => {
+  .add("Extension Point", () => {
     const binder = new Binder("menu");
     binder.bind("subnav.sample", starships);
     return withRoute("/hitchhiker/starships/titanic")(
       <BinderContext.Provider value={binder}>
-        <SecondaryNavigation label="Hitchhiker" collapsed={true} onCollapse={() => {}}>
+        <SecondaryNavigation label="Hitchhiker">
           <SecondaryNavigationItem to="/42" icon="fas fa-puzzle-piece" label="Puzzle 42" title="Puzzle 42" />
           <ExtensionPoint name="subnav.sample" renderAll={true} />
         </SecondaryNavigation>

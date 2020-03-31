@@ -21,22 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactElement, useContext, useEffect } from "react";
+import React, { FC, useContext} from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import classNames from "classnames";
+import useMenuContext, {MenuContext} from "./MenuContext";
+import {RoutingProps} from "./RoutingProps";
 
-type Props = {
-  to: string;
-  icon?: string;
+type Props = RoutingProps & {
   label: string;
-  activeOnlyWhenExact?: boolean;
-  activeWhenMatch?: (route: any) => boolean;
-  children?: ReactElement[];
-  collapsed?: boolean;
   title?: string;
+  icon?: string;
 };
 
-const SubNavigation: FC<Props> = ({ to, activeOnlyWhenExact, icon, collapsed, title, label, children }) => {
+const SubNavigation: FC<Props> = ({ to, activeOnlyWhenExact, icon, title, label, children }) => {
   const parents = to.split("/");
   parents.splice(-1, 1);
   const parent = parents.join("/");
@@ -45,6 +42,9 @@ const SubNavigation: FC<Props> = ({ to, activeOnlyWhenExact, icon, collapsed, ti
     path: parent,
     exact: activeOnlyWhenExact
   });
+
+  const context = useMenuContext();
+  const collapsed = context.isCollapsed();
 
   let defaultIcon = "fas fa-cog";
   if (icon) {

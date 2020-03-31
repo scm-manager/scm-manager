@@ -22,18 +22,52 @@
  * SOFTWARE.
  */
 
-import React from "react";
+import React, { FC, useContext, useState } from "react";
 
 const MENU_COLLAPSED = "secondary-menu-collapsed";
 
-export const MenuContext = React.createContext({
-  menuCollapsed: isMenuCollapsed(),
-  setMenuCollapsed: (collapsed: boolean) => {}
+export type MenuContext = {
+  isCollapsed: () => boolean;
+  setCollapsed: (collapsed: boolean) => void;
+};
+
+export const LocalStorageMenuContextProvider: FC = ({children}) => {
+  const [state, setState] = useState(localStorage.getItem(MENU_COLLAPSED) === "true");
+  const context = {
+    isCollapsed() {
+      return state;
+    },
+    setCollapsed(collapsed: boolean) {
+      localStorage.setItem(MENU_COLLAPSED, String(collapsed));
+      setState(collapsed);
+    }
+  };
+
+  return <MenuContext.Provider value={context}>{children}</MenuContext.Provider>;
+};
+
+export const MenuContext = React.createContext<MenuContext>({
+  isCollapsed() {
+    return false;
+  },
+  setCollapsed() {}
 });
 
-export function isMenuCollapsed() {
-  return localStorage.getItem(MENU_COLLAPSED) === "true";
-}
-export function storeMenuCollapsed(status: boolean) {
-  localStorage.setItem(MENU_COLLAPSED, String(status));
-}
+export const StateMenuContextProvider: FC = ({children}) => {
+  const [collapsed, setCollapsed] = useState(false);
+
+  const context = {
+    isCollapsed() {
+      return collapsed;
+    },
+    setCollapsed
+  };
+
+  return <MenuContext.Provider value={context}>{children}</MenuContext.Provider>;
+};
+
+const useMenuContext = () => {
+  return useContext<MenuContext>(MenuContext);
+};
+
+export default useMenuContext;
