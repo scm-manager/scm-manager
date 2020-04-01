@@ -1,20 +1,19 @@
 # Migrate an v1 plugin
 
-Before starting, make sure to read the [Plugin Development](Plugin%20Development.md)
+Before starting, make sure to read the [Plugin Development](plugin-development.md)
 
 **NOTE**: until there is no release the current version of scm-manager has to be cloned and build on the machine
 of the plugin developer.
 
 ```bash
-hg clone https://bitnucket.org/sdorra/scm-manager
+git clone git@github.com:scm-manager/scm-manager.git
 cd scm-manager
-hg update 2.0.0-m3
 ./mvnw clean install
 ```
 
 To migrate an existing SCM-Manager 1.x Plugin, you have to do the following steps:
 
-### Maven (pom.xml):
+### Maven (pom.xml)
 
 * create a separate branch for the new version
 * It might be helpful to start and review the old version of the plugin via `mvn scmp:run` for later reference.
@@ -80,7 +79,7 @@ diff -r a988f4cfb7ab pom.xml
      <repository>
 ```
 
-### Plugin Descriptor (src/main/resources/META-INF/scm/plugin.xml):
+### Plugin Descriptor (src/main/resources/META-INF/scm/plugin.xml)
 
 * add the following dtd to the top of the plugin.xml: `<!DOCTYPE plugin SYSTEM "https://download.scm-manager.org/dtd/plugin/2.0.0-01.dtd">`
 * add an scm-version element with the value 2 to the plugin.xml
@@ -123,7 +122,7 @@ diff -r a988f4cfb7ab src/main/resources/META-INF/scm/plugin.xml
 ### Java sources (src/main/java)
 
 * try to compile the sources: `mvn compile`
-* fix problems (See [API changes](API%20changes.md))
+* fix problems (See [API changes](api-changes.md))
 * Remove  XML accept headers from REST Resource classes -> SCMMv2 supports JSON only
 * Migrate REST Resources (e.g. `v2`, add to Index Resource, Update Links) - See core plugins Git, Hg, Svn, e.g. [`GitConfigResource`](https://bitbucket.org/sdorra/scm-manager/src/3d5a24c177f33c14a7c08f19e124be03b1a877ba/scm-plugins/scm-git-plugin/src/main/java/sonia/scm/api/v2/resources/GitConfigResource.java)
 
@@ -162,7 +161,7 @@ Some more hints:
 
  * For Configuration UIs use [`ConfigurationBinder`](https://bitbucket.org/sdorra/scm-manager/src/c888128358712ab1f5f34ff593e1cf6854b06c08/scm-ui-components/packages/ui-components/src/config/ConfigurationBinder.js) - See core plugins Git, Hg, Svn, e.g. [scm-git-plugin/index.js](https://bitbucket.org/sdorra/scm-manager/src/6d64a380a37db63c95eccbfbf18e4500c9224d32/scm-plugins/scm-git-plugin/src/main/js/index.js).  
   Note that `readOnly` property checks if update link is returned by REST resource
- * Don't forget [i18n for Plugins](i18n%20for%20Plugins.md)
+ * Don't forget [i18n for Plugins](i18n-for-plugins.md)
  * If you need to add extension points to core SCMM, you can link your local development instance into smp-maven-plugin, see [scm-review-plugin/pom.xml](https://github.com/scm-manager/scm-review-plugin/commit/0ea74634830ef4865afacf714de009302e26353d#diff-600376dffeb79835ede4a0b285078036R72)
 
 # Further reading

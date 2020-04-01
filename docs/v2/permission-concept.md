@@ -119,11 +119,11 @@ In order to fulfill the requirements, this concept describes
 The global permission component can be reached from **either user and groups** components navigations. The following mockup 
 shows this in the user component:
 
-![Permissions-mockup-user](Permissions-mockup-user.jpg)
+![Permissions mockup user](../resources/permissions-mockup-user.jpg)
 
 The layout of the permission component UI could look like this:
 
-![Permissions-mockup-global-permissions](Permissions-mockup-global-permissions.jpg)
+![Permissions mockup global permissions](../resources/permissions-mockup-global-permissions.jpg)
 
 The UI 
 * queries all available global permissions from the REST API (shiro strings),
@@ -139,7 +139,7 @@ permissions (see `PermissionType`).
 
 The UI is extended like so:
 
-![Permissions-mockup-repository-permissions](Permissions-mockup-repository-permissions.jpg)
+![Permissions mockup repository permissions](../resources/permissions-mockup-repository-permissions.jpg)
 
 #### Existing repository dialog
 
@@ -395,7 +395,7 @@ and write. That is,
 
 Internationalization can be handled using the following conventions:
 
-* All permission i18n are described in `plugins.json` (also for core), see [i18n for Plugins](i18n%20for%20Plugins.md)
+* All permission i18n are described in `plugins.json` (also for core), see [i18n for Plugins](i18n-for-plugins.md)
 * That way the UI for users and groups can find all the translation in the same file
 * Convention for i18n keys: `permissions.<shiro-String>`, containing `displayName` and `description` each.
 

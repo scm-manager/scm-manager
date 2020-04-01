@@ -42,7 +42,7 @@ the SCM-Manager context will restart automatically. So you can see your changes 
 * .eslintrc (ui linter configuration)
 * .flowconfig (ui typecheck configuration)
 * .babelrc (ui javascript language level configuration)
-* src/main/resource/locale/(de|en)/plugins.json (i18n configuration, see [i18n for plugins](i18n%20for%20Plugins.md))
+* src/main/resource/locale/(de|en)/plugins.json (i18n configuration, see [i18n for plugins](i18n-for-plugins.md))
 * META-INF/scm/plugin.xml (plugin descriptor)
 
 

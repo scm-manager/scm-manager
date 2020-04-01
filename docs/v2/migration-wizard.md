@@ -18,7 +18,11 @@ To specify the new names (and namespaces), the SCM-Manager version 2 starts a mi
 2019-12-05 14:01:35.110 [main] [          ] INFO  sonia.scm.update.MigrationWizardModule - ==========================================================
 ```
 
-You can open this wizard in an internet browser using the URL of your installation (eg. http://localhost:8080/scm/). In the figure you can see an example of the page. We tried to guess meaningful names, but for sure you want to make some changes here. Beside choosing new namespaces and names you have to select a migration strategy for each repository. The strategies are described on the page as follows:
+You can open this wizard in an internet browser using the URL of your installation (eg. http://localhost:8080/scm/). 
+
+![Migration Wizard](../screenshots/migration-wizard.png)
+
+In the figure you can see an example of the page. We tried to guess meaningful names, but for sure you want to make some changes here. Beside choosing new namespaces and names you have to select a migration strategy for each repository. The strategies are described on the page as follows:
 
 |Strategy|Action|
 |---|---|
