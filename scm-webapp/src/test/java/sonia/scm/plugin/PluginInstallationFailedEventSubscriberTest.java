@@ -21,74 +21,78 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
-import com.sun.mail.iap.Argument;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.net.ahc.AdvancedHttpClient;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class PluginCenterLoaderTest {
+class PluginInstallationFailedEventSubscriberTest {
 
-  private static final String PLUGIN_URL = "https://plugins.hitchhiker.com";
-
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private AdvancedHttpClient client;
+  private AvailablePlugin newPlugin = PluginTestHelper.createAvailable("scm-hitchhiker-plugin");
 
   @Mock
-  private PluginCenterDtoMapper mapper;
+  private Subject subject;
 
   @Mock
   private ScmEventBus eventBus;
 
+  @Mock
+  private PluginEvent event;
+
+  @Captor
+  private ArgumentCaptor<PluginInstallationFailedEventSubscriber.PluginInstallationFailedEvent> eventCaptor;
+
   @InjectMocks
-  private PluginCenterLoader loader;
+  private PluginInstallationFailedEventSubscriber subscriber;
 
-  @Test
-  void shouldFetch() throws IOException {
-    Set<AvailablePlugin> plugins = Collections.emptySet();
-    PluginCenterDto dto = new PluginCenterDto();
-    when(client.get(PLUGIN_URL).request().contentFromJson(PluginCenterDto.class)).thenReturn(dto);
-    when(mapper.map(dto)).thenReturn(plugins);
+  @BeforeEach
+  void bindSubject() {
+    ThreadContext.bind(subject);
+  }
 
-    Set<AvailablePlugin> fetched = loader.load(PLUGIN_URL);
-    assertThat(fetched).isSameAs(plugins);
+  @AfterEach
+  void tearDownSubject() {
+    ThreadContext.unbindSubject();
   }
 
   @Test
-  void shouldReturnEmptySetIfPluginCenterNotBeReached() throws IOException {
-    when(client.get(PLUGIN_URL).request()).thenThrow(new IOException("failed to fetch"));
+  void shouldFireMyEvent() {
+    when(event.getEventType()).thenReturn(PluginEventType.INSTALLATION_FAILED);
+    when(event.getPlugin()).thenReturn(newPlugin);
 
-    Set<AvailablePlugin> fetch = loader.load(PLUGIN_URL);
-    assertThat(fetch).isEmpty();
+    subscriber.handleEvent(event);
+
+    verify(eventBus).post(eventCaptor.capture());
+
+    PluginInstallationFailedEventSubscriber.PluginInstallationFailedEvent pluginInstalledEvent = eventCaptor.getValue();
+    assertThat(pluginInstalledEvent.getPermission()).isEqualTo("plugin:manage");
+    assertThat(pluginInstalledEvent.getPluginVersion()).isEqualTo("1.0");
+    assertThat(pluginInstalledEvent.getPluginName()).isEqualTo(newPlugin.getDescriptor().getInformation().getDisplayName());
   }
 
   @Test
-  void shouldThrowExceptionAndFirePluginCenterNotAvailableEvent() throws IOException {
-    when(client.get(PLUGIN_URL).request()).thenThrow(new IOException("failed to fetch"));
+  void shouldNotFireMyEventWhenNotCreatedEvent() {
+    when(event.getEventType()).thenReturn(PluginEventType.INSTALLED);
+    subscriber.handleEvent(event);
 
-    loader.load(PLUGIN_URL);
-
-    verify(eventBus).post(any(PluginCenterLoader.PluginCenterNotAvailableEvent.class));
+    verify(eventBus, never()).post(eventCaptor.capture());
   }
+
 }

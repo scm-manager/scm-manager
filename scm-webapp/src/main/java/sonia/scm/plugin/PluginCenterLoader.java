@@ -27,10 +27,11 @@ package sonia.scm.plugin;
 import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.event.Event;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -40,16 +41,18 @@ class PluginCenterLoader {
 
   private final AdvancedHttpClient client;
   private final PluginCenterDtoMapper mapper;
+  private final ScmEventBus eventBus;
 
   @Inject
-  public PluginCenterLoader(AdvancedHttpClient client) {
-    this(client, PluginCenterDtoMapper.INSTANCE);
+  public PluginCenterLoader(AdvancedHttpClient client, ScmEventBus eventBus) {
+    this(client, PluginCenterDtoMapper.INSTANCE, eventBus);
   }
 
   @VisibleForTesting
-  PluginCenterLoader(AdvancedHttpClient client, PluginCenterDtoMapper mapper) {
+  PluginCenterLoader(AdvancedHttpClient client, PluginCenterDtoMapper mapper, ScmEventBus eventBus) {
     this.client = client;
     this.mapper = mapper;
+    this.eventBus = eventBus;
   }
 
   Set<AvailablePlugin> load(String url) {
@@ -59,8 +62,12 @@ class PluginCenterLoader {
       return mapper.map(pluginCenterDto);
     } catch (Exception ex) {
       LOG.error("failed to load plugins from plugin center, returning empty list", ex);
+      eventBus.post(new PluginCenterNotAvailableEvent());
       return Collections.emptySet();
     }
   }
+
+  @Event
+  class PluginCenterNotAvailableEvent {}
 
 }

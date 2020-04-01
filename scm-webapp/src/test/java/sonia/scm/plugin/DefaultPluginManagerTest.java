@@ -36,16 +36,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junitpioneer.jupiter.TempDirectory;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
 import sonia.scm.ScmConstraintViolationException;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.lifecycle.Restarter;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,6 +56,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
@@ -82,6 +86,12 @@ class DefaultPluginManagerTest {
 
   @Mock
   private Restarter restarter;
+
+  @Mock
+  private ScmEventBus eventBus;
+
+  @Captor
+  private ArgumentCaptor<PluginEvent> eventCaptor;
 
   @InjectMocks
   private DefaultPluginManager manager;
@@ -537,7 +547,35 @@ class DefaultPluginManagerTest {
 
       verify(installer, never()).install(oldScriptPlugin);
     }
+
+    @Test
+    void shouldFirePluginEventOnInstallation() {
+      AvailablePlugin review = createAvailable("scm-review-plugin");
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
+
+      manager.install("scm-review-plugin", false);
+
+      verify(eventBus).post(eventCaptor.capture());
+
+      assertThat(eventCaptor.getValue().getEventType()).isEqualTo(PluginEventType.INSTALLED);
+      assertThat(eventCaptor.getValue().getPlugin()).isEqualTo(review);
+    }
+
+    @Test
+    void shouldFirePluginEventOnFailedInstallation() {
+      AvailablePlugin review = createAvailable("scm-review-plugin");
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
+      doThrow(new PluginDownloadException(review, new IOException())).when(installer).install(review);
+
+      assertThrows(PluginDownloadException.class, () -> manager.install("scm-review-plugin", false));
+
+      verify(eventBus).post(eventCaptor.capture());
+      assertThat(eventCaptor.getValue().getEventType()).isEqualTo(PluginEventType.INSTALLATION_FAILED);
+      assertThat(eventCaptor.getValue().getPlugin()).isEqualTo(review);
+    }
+
   }
+
 
   @Nested
   class WithoutReadPermissions {

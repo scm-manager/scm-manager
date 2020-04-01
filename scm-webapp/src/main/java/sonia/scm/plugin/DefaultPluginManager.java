@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.lifecycle.Restarter;
 import sonia.scm.version.Version;
 
@@ -64,17 +63,19 @@ public class DefaultPluginManager implements PluginManager {
   private final PluginCenter center;
   private final PluginInstaller installer;
   private final Restarter restarter;
+  private final ScmEventBus eventBus;
 
   private final Collection<PendingPluginInstallation> pendingInstallQueue = new ArrayList<>();
   private final Collection<PendingPluginUninstallation> pendingUninstallQueue = new ArrayList<>();
   private final PluginDependencyTracker dependencyTracker = new PluginDependencyTracker();
 
   @Inject
-  public DefaultPluginManager(PluginLoader loader, PluginCenter center, PluginInstaller installer, Restarter restarter) {
+  public DefaultPluginManager(PluginLoader loader, PluginCenter center, PluginInstaller installer, Restarter restarter, ScmEventBus eventBus) {
     this.loader = loader;
     this.center = center;
     this.installer = installer;
     this.restarter = restarter;
+    this.eventBus = eventBus;
 
     this.computeInstallationDependencies();
   }
@@ -172,8 +173,10 @@ public class DefaultPluginManager implements PluginManager {
         PendingPluginInstallation pending = installer.install(plugin);
         dependencyTracker.addInstalled(plugin.getDescriptor());
         pendingInstallations.add(pending);
+        eventBus.post(new PluginEvent(PluginEventType.INSTALLED, plugin));
       } catch (PluginInstallException ex) {
         cancelPending(pendingInstallations);
+        eventBus.post(new PluginEvent(PluginEventType.INSTALLATION_FAILED, plugin));
         throw ex;
       }
     }
