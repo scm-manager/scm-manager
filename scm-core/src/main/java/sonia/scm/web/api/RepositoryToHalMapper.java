@@ -22,43 +22,24 @@
  * SOFTWARE.
  */
 
-import * as diffs from "./diffs";
+package sonia.scm.web.api;
 
-import {
-  File,
-  FileChangeType,
-  Hunk,
-  Change,
-  ChangeType,
-  BaseContext,
-  AnnotationFactory,
-  AnnotationFactoryContext,
-  DiffEventHandler,
-  DiffEventContext
-} from "./DiffTypes";
+import de.otto.edison.hal.HalRepresentation;
+import sonia.scm.repository.Repository;
 
-export { diffs };
+/**
+ * Maps a repository to a hal representation.
+ * This is especially useful if a plugin would deliver a repository to the frontend.
+ *
+ * @since 2.0.0
+ */
+public interface RepositoryToHalMapper {
 
-export * from "./changesets";
-
-export { default as Diff } from "./Diff";
-export { default as DiffFile } from "./DiffFile";
-export { default as DiffButton } from "./DiffButton";
-export { default as LoadingDiff } from "./LoadingDiff";
-export { DefaultCollapsed, DefaultCollapsedFunction } from "./defaultCollapsed";
-export { default as RepositoryAvatar } from "./RepositoryAvatar";
-export { default as RepositoryEntry } from "./RepositoryEntry";
-export { default as RepositoryEntryLink } from "./RepositoryEntryLink";
-
-export {
-  File,
-  FileChangeType,
-  Hunk,
-  Change,
-  ChangeType,
-  BaseContext,
-  AnnotationFactory,
-  AnnotationFactoryContext,
-  DiffEventHandler,
-  DiffEventContext
-};
+  /**
+   * Returns the hal representation of the repository.
+   *
+   * @param repository repository to map
+   * @return hal representation
+   */
+  HalRepresentation map(Repository repository);
+}

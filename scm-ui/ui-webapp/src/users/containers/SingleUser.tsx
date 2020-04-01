@@ -28,9 +28,7 @@ import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { User } from "@scm-manager/ui-types";
 import {
   ErrorPage,
-  isMenuCollapsed,
   Loading,
-  MenuContext,
   NavLink,
   Page,
   CustomQueryFlexWrappedColumns,
@@ -38,7 +36,7 @@ import {
   SecondaryNavigationColumn,
   SecondaryNavigation,
   SubNavigation,
-  storeMenuCollapsed
+  StateMenuContextProvider
 } from "@scm-manager/ui-components";
 import { Details } from "./../components/table";
 import EditUser from "./EditUser";
@@ -61,19 +59,7 @@ type Props = RouteComponentProps &
     fetchUserByName: (p1: string, p2: string) => void;
   };
 
-type State = {
-  menuCollapsed: boolean;
-};
-
-class SingleUser extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      menuCollapsed: isMenuCollapsed()
-    };
-  }
-
+class SingleUser extends React.Component<Props> {
   componentDidMount() {
     this.props.fetchUserByName(this.props.usersLink, this.props.name);
   }
@@ -85,17 +71,12 @@ class SingleUser extends React.Component<Props, State> {
     return url;
   };
 
-  onCollapseUserMenu = (collapsed: boolean) => {
-    this.setState({ menuCollapsed: collapsed }, () => storeMenuCollapsed(collapsed));
-  };
-
   matchedUrl = () => {
     return this.stripEndingSlash(this.props.match.url);
   };
 
   render() {
     const { t, loading, error, user } = this.props;
-    const { menuCollapsed } = this.state;
 
     if (error) {
       return <ErrorPage title={t("singleUser.errorTitle")} subtitle={t("singleUser.errorSubtitle")} error={error} />;
@@ -113,12 +94,10 @@ class SingleUser extends React.Component<Props, State> {
     };
 
     return (
-      <MenuContext.Provider
-        value={{ menuCollapsed, setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed }) }}
-      >
+      <StateMenuContextProvider>
         <Page title={user.displayName}>
           <CustomQueryFlexWrappedColumns>
-            <PrimaryContentColumn collapsed={menuCollapsed}>
+            <PrimaryContentColumn>
               <Route path={url} exact component={() => <Details user={user} />} />
               <Route path={`${url}/settings/general`} component={() => <EditUser user={user} />} />
               <Route path={`${url}/settings/password`} component={() => <SetUserPassword user={user} />} />
@@ -128,12 +107,8 @@ class SingleUser extends React.Component<Props, State> {
               />
               <ExtensionPoint name="user.route" props={extensionProps} renderAll={true} />
             </PrimaryContentColumn>
-            <SecondaryNavigationColumn collapsed={menuCollapsed}>
-              <SecondaryNavigation
-                label={t("singleUser.menu.navigationLabel")}
-                onCollapse={() => this.onCollapseUserMenu(!menuCollapsed)}
-                collapsed={menuCollapsed}
-              >
+            <SecondaryNavigationColumn>
+              <SecondaryNavigation label={t("singleUser.menu.navigationLabel")}>
                 <NavLink
                   to={`${url}`}
                   icon="fas fa-info-circle"
@@ -154,7 +129,7 @@ class SingleUser extends React.Component<Props, State> {
             </SecondaryNavigationColumn>
           </CustomQueryFlexWrappedColumns>
         </Page>
-      </MenuContext.Provider>
+      </StateMenuContextProvider>
     );
   }
 }

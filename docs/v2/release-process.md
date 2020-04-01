@@ -7,7 +7,7 @@ To release a new version of SCM-Manager v2 you have to do the following steps (r
 Make sure you have no changes you want to keep!
 
 ```
-git fetch && git checkout default && git reset --hard origin/default
+git fetch && git checkout develop && git reset --hard origin/develop
 ```
 
 ## Modify Changelog
@@ -114,3 +114,7 @@ Edit `package.json`: `version` has to be set to the new development version.
 git commit -am "Prepare for next development iteration"
 git push origin develop
 ```
+## Attention: Creating new plugins
+If you are creating a new plugin which doesn't exist in the SCM-Manager Plugin-Center yet, your plugin will not be shown after the release. First you have to create a `index.md` in the Plugin-Center Repository. 
+
+Example: https://github.com/scm-manager/plugin-center/blob/master/src/plugins/scm-teamscale-plugin/index.md

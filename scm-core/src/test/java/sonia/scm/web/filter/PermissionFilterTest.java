@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.filter;
 
 import com.github.sdorra.shiro.ShiroRule;
@@ -78,6 +78,17 @@ public class PermissionFilterTest {
   @Test
   @SubjectAware(username = "reader", password = "secret")
   public void shouldBlockForReaderOnWriteRequest() throws IOException, ServletException {
+    writeRequest = true;
+
+    permissionFilter.service(request, response, REPOSITORY);
+
+    verify(response).sendError(eq(403));
+    verify(delegateServlet, never()).service(request, response, REPOSITORY);
+  }
+
+  @Test
+  @SubjectAware(username = "_anonymous", password = "secret")
+  public void shouldBlockForAnonymousOnWriteRequestWithAuthenticationRequest() throws IOException, ServletException {
     writeRequest = true;
 
     permissionFilter.service(request, response, REPOSITORY);

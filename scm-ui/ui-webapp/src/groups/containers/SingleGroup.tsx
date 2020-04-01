@@ -29,16 +29,15 @@ import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Group } from "@scm-manager/ui-types";
 import {
   ErrorPage,
-  isMenuCollapsed,
   Loading,
-  MenuContext,
   NavLink,
   Page,
   CustomQueryFlexWrappedColumns,
   PrimaryContentColumn,
   SecondaryNavigationColumn,
   SecondaryNavigation,
-  SubNavigation
+  SubNavigation,
+  StateMenuContextProvider
 } from "@scm-manager/ui-components";
 import { getGroupsLink } from "../../modules/indexResource";
 import { fetchGroupByName, getFetchGroupFailure, getGroupByName, isFetchGroupPending } from "../modules/groups";
@@ -46,7 +45,6 @@ import { Details } from "./../components/table";
 import { EditGroupNavLink, SetPermissionsNavLink } from "./../components/navLinks";
 import EditGroup from "./EditGroup";
 import SetPermissions from "../../permissions/components/SetPermissions";
-import { storeMenuCollapsed } from "@scm-manager/ui-components/src";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -60,26 +58,10 @@ type Props = RouteComponentProps &
     fetchGroupByName: (p1: string, p2: string) => void;
   };
 
-type State = {
-  menuCollapsed: boolean;
-};
-
-class SingleGroup extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      menuCollapsed: isMenuCollapsed()
-    };
-  }
-
+class SingleGroup extends React.Component<Props> {
   componentDidMount() {
     this.props.fetchGroupByName(this.props.groupLink, this.props.name);
   }
-
-  onCollapseGroupMenu = (collapsed: boolean) => {
-    this.setState({ menuCollapsed: collapsed }, () => storeMenuCollapsed(collapsed));
-  };
 
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {
@@ -94,7 +76,6 @@ class SingleGroup extends React.Component<Props, State> {
 
   render() {
     const { t, loading, error, group } = this.props;
-    const { menuCollapsed } = this.state;
 
     if (error) {
       return <ErrorPage title={t("singleGroup.errorTitle")} subtitle={t("singleGroup.errorSubtitle")} error={error} />;
@@ -112,12 +93,10 @@ class SingleGroup extends React.Component<Props, State> {
     };
 
     return (
-      <MenuContext.Provider
-        value={{ menuCollapsed, setMenuCollapsed: (collapsed: boolean) => this.setState({ menuCollapsed: collapsed }) }}
-      >
+      <StateMenuContextProvider>
         <Page title={group.name}>
           <CustomQueryFlexWrappedColumns>
-            <PrimaryContentColumn collapsed={menuCollapsed}>
+            <PrimaryContentColumn>
               <Route path={url} exact component={() => <Details group={group} />} />
               <Route path={`${url}/settings/general`} exact component={() => <EditGroup group={group} />} />
               <Route
@@ -127,12 +106,8 @@ class SingleGroup extends React.Component<Props, State> {
               />
               <ExtensionPoint name="group.route" props={extensionProps} renderAll={true} />
             </PrimaryContentColumn>
-            <SecondaryNavigationColumn collapsed={menuCollapsed}>
-              <SecondaryNavigation
-                label={t("singleGroup.menu.navigationLabel")}
-                onCollapse={() => this.onCollapseGroupMenu(!menuCollapsed)}
-                collapsed={menuCollapsed}
-              >
+            <SecondaryNavigationColumn>
+              <SecondaryNavigation label={t("singleGroup.menu.navigationLabel")}>
                 <NavLink
                   to={`${url}`}
                   icon="fas fa-info-circle"
@@ -153,7 +128,7 @@ class SingleGroup extends React.Component<Props, State> {
             </SecondaryNavigationColumn>
           </CustomQueryFlexWrappedColumns>
         </Page>
-      </MenuContext.Provider>
+      </StateMenuContextProvider>
     );
   }
 }

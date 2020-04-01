@@ -40,7 +40,7 @@ const Title: FC<Props> = ({ title, preventRefreshingPageTitle, customPageTitle, 
         document.title = title;
       }
     }
-  },[title, preventRefreshingPageTitle, customPageTitle]);
+  }, [title, preventRefreshingPageTitle, customPageTitle]);
 
   if (title) {
     return <h1 className={classNames("title", className)}>{title}</h1>;

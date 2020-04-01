@@ -22,9 +22,8 @@
  * SOFTWARE.
  */
 import React from "react";
-import { CardColumnGroup } from "@scm-manager/ui-components";
+import { CardColumnGroup, RepositoryEntry } from "@scm-manager/ui-components";
 import { RepositoryGroup } from "@scm-manager/ui-types";
-import RepositoryEntry from "./RepositoryEntry";
 
 type Props = {
   group: RepositoryGroup;

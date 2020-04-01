@@ -54,7 +54,7 @@ export default class Checkbox extends React.Component<Props> {
     if (title) {
       return <LabelWithHelpIcon label={title} helpText={helpText} />;
     }
-  }
+  };
 
   render() {
     const { label, checked, disabled } = this.props;
@@ -68,13 +68,7 @@ export default class Checkbox extends React.Component<Props> {
             but bulma does.
             // @ts-ignore */}
           <label className="checkbox" disabled={disabled}>
-            <input
-              type="checkbox"
-              checked={checked}
-              onChange={this.onCheckboxChange}
-              disabled={disabled}
-            />{" "}
-            {label}
+            <input type="checkbox" checked={checked} onChange={this.onCheckboxChange} disabled={disabled} /> {label}
             {this.renderHelp()}
           </label>
         </div>

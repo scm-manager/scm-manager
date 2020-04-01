@@ -5,11 +5,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- Simplified collapse state management of the secondary navigation ([#1086](https://github.com/scm-manager/scm-manager/pull/1086)
+
+### Fixed
+- Authentication for write requests for repositories with anonymous read access ([#108](https://github.com/scm-manager/scm-manager/pull/1081))
+
+
+## 2.0.0-rc6 - 2020-03-26
 ### Added
 - Extension point to add links to the repository cards from plug ins ([#1041](https://github.com/scm-manager/scm-manager/pull/1041))
 - Libc based restart strategy for posix operating systems ([#1079](https://github.com/scm-manager/scm-manager/pull/1079))
 - Simple restart strategy with System.exit ([#1079](https://github.com/scm-manager/scm-manager/pull/1079))
 - Notification if restart is not supported on the underlying platform ([#1079](https://github.com/scm-manager/scm-manager/pull/1079))
+- Extension point before title in repository cards ([#1080](https://github.com/scm-manager/scm-manager/pull/1080))
+- Extension point after title on repository detail page ([#1080](https://github.com/scm-manager/scm-manager/pull/1080))
 
 ### Changed
 - Update resteasy to version 4.5.2.Final

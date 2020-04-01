@@ -70,7 +70,4 @@ addDecorator(
   })
 );
 
-const RoutingDecorator = (story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
-addDecorator(RoutingDecorator);
-
 configure(require.context("../src", true, /\.stories\.tsx?$/), module);

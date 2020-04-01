@@ -21,17 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactElement, ReactNode, useContext, useEffect } from "react";
+
+import React, { FC } from "react";
 import styled from "styled-components";
-import SubNavigation from "./SubNavigation";
-import { matchPath, useLocation } from "react-router-dom";
-import { isMenuCollapsed, MenuContext } from "./MenuContext";
+import useMenuContext from "./MenuContext";
 
 type Props = {
   label: string;
-  children: ReactElement[];
-  collapsed: boolean;
-  onCollapse?: (newStatus: boolean) => void;
 };
 
 type CollapsedProps = {
@@ -60,73 +56,37 @@ const MenuLabel = styled.p<CollapsedProps>`
   cursor: pointer;
 `;
 
-const SecondaryNavigation: FC<Props> = ({ label, children, collapsed, onCollapse }) => {
-  const location = useLocation();
-  const menuContext = useContext(MenuContext);
+const SecondaryNavigation: FC<Props> = ({ label, children }) => {
+  const menuContext = useMenuContext();
+  const isCollapsed = menuContext.isCollapsed();
 
-  const subNavActive = isSubNavigationActive(children, location.pathname);
-  const isCollapsed = collapsed && !subNavActive;
+  const toggleCollapseState = () => {
+    menuContext.setCollapsed(!isCollapsed);
+  };
 
-  useEffect(() => {
-    if (isMenuCollapsed()) {
-      menuContext.setMenuCollapsed(!subNavActive);
+  const uncollapseMenu = () => {
+    if (isCollapsed) {
+      menuContext.setCollapsed(false);
     }
-  }, [subNavActive]);
+  };
 
-  const childrenWithProps = React.Children.map(children, (child: ReactElement) =>
-    React.cloneElement(child, { collapsed: isCollapsed })
-  );
   const arrowIcon = isCollapsed ? <i className="fas fa-caret-down" /> : <i className="fas fa-caret-right" />;
 
   return (
     <SectionContainer className="menu">
       <div>
-        <MenuLabel
-          className="menu-label"
-          collapsed={isCollapsed}
-          onClick={onCollapse && !subNavActive ? () => onCollapse(!isCollapsed) : undefined}
-        >
-          {onCollapse && !subNavActive && (
-            <Icon color="info" className="is-medium" collapsed={isCollapsed}>
-              {arrowIcon}
-            </Icon>
-          )}
+        <MenuLabel className="menu-label" collapsed={isCollapsed} onClick={toggleCollapseState}>
+          <Icon color="info" className="is-medium" collapsed={isCollapsed}>
+            {arrowIcon}
+          </Icon>
           {isCollapsed ? "" : label}
         </MenuLabel>
-        <ul className="menu-list">{childrenWithProps}</ul>
+        <ul className="menu-list" onClick={uncollapseMenu}>
+          {children}
+        </ul>
       </div>
     </SectionContainer>
   );
-};
-
-const createParentPath = (to: string) => {
-  const parents = to.split("/");
-  parents.splice(-1, 1);
-  return parents.join("/");
-};
-
-const isSubNavigationActive = (children: ReactNode, url: string): boolean => {
-  const childArray = React.Children.toArray(children);
-  const match = childArray
-    .filter(child => {
-      // what about extension points?
-      // @ts-ignore
-      return child.type.name === SubNavigation.name;
-    })
-    .map(child => {
-      // @ts-ignore
-      return child.props;
-    })
-    .find(props => {
-      const path = createParentPath(props.to);
-      const matches = matchPath(url, {
-        path,
-        exact: props.activeOnlyWhenExact as boolean
-      });
-      return matches != null;
-    });
-
-  return match != null;
 };
 
 export default SecondaryNavigation;

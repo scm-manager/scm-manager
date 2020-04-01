@@ -27,6 +27,8 @@ type Props = {
   children?: ReactNode;
 };
 
+// TODO it is used?
+
 class Navigation extends React.Component<Props> {
   render() {
     return <aside className="menu">{this.props.children}</aside>;
