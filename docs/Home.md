@@ -82,8 +82,8 @@ repositories over http.
 
 ### SCM Manager 2
 
+- [Getting started](v2/getting-started.md)
 - [Configuration for Intellij IDEA](v2/intellij-idea-configuration.md)
-- [State of SCM-Manager 2 development](v2/state-of-development.md)
 - [SCM v2 Test Cases](v2/test-cases.md)
 - [Table of decisions made during development](v2/decision-table.md)
 - [Definition of done](definition-of-done.md)

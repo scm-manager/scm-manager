@@ -2,18 +2,14 @@
 
 ### Install Java
 
-SCM-Manager needs an installed Java 1.7 or newer. It is recommended to
-use the [oracle jre](http://java.oracle.com/). How to check
-which version of Java is installed:
+SCM-Manager needs an installed Java 1.7 or newer. It is recommended to use the [oracle jre](http://java.oracle.com/). 
+How to check which version of Java is installed:
 
 ```bash
 java -version
 ```
 
-### Install the latest version of Java
-
-Download java from [here](http://java.oracle.com/) and follow
-the install instructions.
+Download java from [here](http://java.oracle.com/) and follow the install instructions.
 
 ### Install SCM-Manager
 
