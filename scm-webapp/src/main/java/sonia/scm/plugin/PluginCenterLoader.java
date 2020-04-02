@@ -61,7 +61,7 @@ class PluginCenterLoader {
       return mapper.map(pluginCenterDto);
     } catch (Exception ex) {
       LOG.error("failed to load plugins from plugin center, returning empty list", ex);
-      eventBus.post(new PluginCenterEvent());
+      eventBus.post(new PluginCenterErrorEvent());
       return Collections.emptySet();
     }
   }

@@ -27,4 +27,4 @@ package sonia.scm.plugin;
 import sonia.scm.event.Event;
 
 @Event
-public class PluginCenterEvent {}
+public class PluginCenterErrorEvent {}

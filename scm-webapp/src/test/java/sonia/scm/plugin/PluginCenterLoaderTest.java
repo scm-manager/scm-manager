@@ -79,11 +79,11 @@ class PluginCenterLoaderTest {
   }
 
   @Test
-  void shouldThrowExceptionAndFirePluginCenterNotAvailableEvent() throws IOException {
+  void shouldFirePluginCenterErrorEvent() throws IOException {
     when(client.get(PLUGIN_URL).request()).thenThrow(new IOException("failed to fetch"));
 
     loader.load(PLUGIN_URL);
 
-    verify(eventBus).post(any(PluginCenterEvent.class));
+    verify(eventBus).post(any(PluginCenterErrorEvent.class));
   }
 }
