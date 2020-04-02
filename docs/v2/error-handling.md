@@ -46,7 +46,7 @@ Here are some example error cases:
 
 In SCM-Manager we make heavy use of Java `Exception`s, not only for technical exceptions in the program flow like reading corrupt file systems, but also for "user errors" like illegal values or requests for missing data.
 
-These exceptions are handled by JEE [`ExceptionMapper`](https://docs.oracle.com/javaee/7/api/javax/ws/rs/ext/ExceptionMapper.html)s. Doing so, it is possible to concentrate on implementing the "happy path" without the need to explicitly handle error cases everywhere (for example you do not have to check whether got `null` as a result). Nonetheless we still had to decide whether to use checked or unchecked exceptions. We have chosen to use unchecked exceptions due to the following reasons:
+These exceptions are handled by JEE [`ExceptionMapper`](https://docs.oracle.com/javaee/7/api/javax/ws/rs/ext/ExceptionMapper.html) s. Doing so, it is possible to concentrate on implementing the "happy path" without the need to explicitly handle error cases everywhere (for example you do not have to check whether got `null` as a result). Nonetheless we still had to decide whether to use checked or unchecked exceptions. We have chosen to use unchecked exceptions due to the following reasons:
 
  - Checked exceptions would have had to be declared everywhere.
  - A checked exception can somehow trigger a "I have to handle this though I don't know how" feeling that would be wrong, because we do have mappers for these exceptions.
@@ -117,7 +117,7 @@ To be able to retrace errors a proper logging is indispensible. So we decided to
 SCM-Manager uses [http status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) to identify types of errors (and successes, that is) and doing so provides a first hint, what may have gone wrong:
 
 | Status code | Principal error cause |
-|-|-|
+|-------------|-----------------------|
 | 200 | No error, everything is fine |
 | 201 | The item has been created without an error |
 | 204 | The request has been processed without an error |
@@ -133,7 +133,7 @@ SCM-Manager uses [http status codes](https://en.wikipedia.org/wiki/List_of_HTTP_
 Whenever possible, an error response contains useful details about the error in a simple json format. These information are _not_ translated, so this is the responsibility of the frontend.
 
 | key | content | availability |
-|-|-|-|
+|-----|---------|--------------|
 | transactionId | A unique id to link your request to log messages | always |
 | errorCode | A code that can be used for translated error messages. To prevent the usage of the same codes in different exceptions we decided to use generated ids. | always |
 | context | (repo/key, branch/key, ...) | optional |
@@ -184,5 +184,5 @@ Basically we have to differentiate between errors the user can handle ("user err
 
 While creating this concepts we tried to adhere to best practices considering APIs of Twitter, Facebook, Bing,  Spotify and others, as summarized in the following articles:
 
-* https://apigee.com/about/blog/technology/restful-api-design-what-about-errors
-* https://nordicapis.com/best-practices-api-error-handling/
+* [RESTful API Design: What About Errors? (Apigee)](https://apigee.com/about/blog/technology/restful-api-design-what-about-errors)
+* [Best Practices for API Error Handling (Nordic APIS)](https://nordicapis.com/best-practices-api-error-handling/)

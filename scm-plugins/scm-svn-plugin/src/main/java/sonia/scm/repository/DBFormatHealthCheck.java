@@ -70,7 +70,7 @@ public class DBFormatHealthCheck extends DirectoryHealthCheck
   /** Field description */
   private static final HealthCheckFailure INCOMPATIBLE_DB_FORMAT =
     new HealthCheckFailure("AnOTx99ex1", "Incompatible DB Format",
-      "https://bitbucket.org/sdorra/scm-manager/wiki/healthchecks/svn-incompatible-dbformat",
+      "https://github.com/scm-manager/scm-manager/blob/develop/docs/healthchecks/svn-incompatible-dbformat.md",
       "The subversion db format is incompatible with the svn version used within scm-manager.");
 
   /** Field description */

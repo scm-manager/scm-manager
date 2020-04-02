@@ -1,5 +1,4 @@
-Branch Write Protect Plugin
----------------------------
+# Branch Write Protect Plugin
 
 ### Installation
 
@@ -26,7 +25,7 @@ plugin:
 
 The branchwp plugin works only for Git and Mercurial, for Subversion
 have a look at the
-[pathwp-plugin](http://plugins.scm-manager.org/scm-plugin-backend/page/detail/sonia.scm.plugins/scm-pathwp-plugin.html "wikilink").
+[pathwp-plugin](http://plugins.scm-manager.org/scm-plugin-backend/page/detail/sonia.scm.plugins/scm-pathwp-plugin.html).
 
 Since version 1.2 of the plugin it is possible to define deny
 permissions and placeholders for branch names. Deny permissions are
@@ -38,5 +37,4 @@ following placeholders are available:
     user
 
 ### Known issues
-
--   <https://bitbucket.org/sdorra/scm-manager/issue/235/branchwp-plugin-can-not-use-on-git>
+- [#235](https://github.com/scm-manager/scm-manager/issues/235 "branchwp plugin can not use on git")

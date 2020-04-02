@@ -1,3 +1,5 @@
+# Definition of Done
+
 * Acceptance criteria are checked manually (from the user's perspective)
 * Code coverage is checked manually (>= 80% on new code) ([sonarcloud](https://sonarcloud.io/dashboard?id=sonia.scm%3Ascm))
 * The clean code principles are respected ([CleanCode](https://clean-code-developer.com/virtues/))

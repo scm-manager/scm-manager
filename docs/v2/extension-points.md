@@ -74,11 +74,7 @@ The following extension points are provided for the frontend:
 **example:**
 
 
-```
-#!javascript
-
-
-
+```javascript
 let MarkdownFactory = (renderContext) => {
  
   let Heading= (props) => {
@@ -89,20 +85,13 @@ let MarkdownFactory = (renderContext) => {
     return {heading : Heading};
 };
 
-
-
 binder.bind("markdown-renderer-factory", MarkdownFactory);
 ```
 
-
-```
-#!javascript
-
-
+```javascript
 <MarkdownView
     renderContext={{pullRequest, repository}}
     className="content"
     content={pullRequest.description}
 />
-
 ```

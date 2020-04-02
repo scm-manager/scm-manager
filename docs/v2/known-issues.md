@@ -1,3 +1,5 @@
+# Known Issues
+
 ## Asnychronous PreReceiveRepositoryHooks do not work with subversion
 
 The following example will fail to log the changesets. 
@@ -26,7 +28,6 @@ public class DemoHook {
   }
 
 }
-
 ```
 
 This is because of the transaction management of subversion. The scm-manager subversion provider becomes a transaction id for the changes of the current push, but the transaction has finished before scm-manager can resolve the incoming commit. To solve the issue, we could use a synchronous subscription instead e.g.:
@@ -55,5 +56,4 @@ public class DemoHook {
   }
 
 }
-
 ```
