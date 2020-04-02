@@ -36,20 +36,20 @@ components
 
 -   import react-i18next
 ```javascript
-import { translate } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 ```
 
 -   declare the translation method `t: string => string` as property
 ```javascript
-type Props = {
-   t: string => string
+type Props = WithTranslation & {
+***your props***
 }
 ```
 
 -   wrap the react component with the translate method and give the json
     translation file name \"plugins\"
 ```javascript
-export default translate("plugins")(MyPluginComponent);
+export default withTranslation("plugins")(MyPluginComponent);
 ```
 
 -   use the translation keys like this:
