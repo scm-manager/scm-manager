@@ -34,7 +34,7 @@ scm-server\bin\scm-server.bat
 To start SCM-Manager with a persistent volume on port 8080 run the following command:
 
 ```bash
-docker run -p 8080:8080 -v scm-home:/var/lib/scm --name scm scmmanager/scm-manager:2.0.0-latest
+docker run -p 8080:8080 -v scm-home:/var/lib/scm --name scm scmmanager/scm-manager:2.0.0-rc6
 ```
 
 ### First access
