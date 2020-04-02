@@ -557,7 +557,7 @@ class DefaultPluginManagerTest {
 
       verify(eventBus).post(eventCaptor.capture());
 
-      assertThat(eventCaptor.getValue().getEventType()).isEqualTo(PluginEventType.INSTALLED);
+      assertThat(eventCaptor.getValue().getEventType()).isEqualTo(PluginEvent.PluginEventType.INSTALLED);
       assertThat(eventCaptor.getValue().getPlugin()).isEqualTo(review);
     }
 
@@ -570,7 +570,7 @@ class DefaultPluginManagerTest {
       assertThrows(PluginDownloadException.class, () -> manager.install("scm-review-plugin", false));
 
       verify(eventBus).post(eventCaptor.capture());
-      assertThat(eventCaptor.getValue().getEventType()).isEqualTo(PluginEventType.INSTALLATION_FAILED);
+      assertThat(eventCaptor.getValue().getEventType()).isEqualTo(PluginEvent.PluginEventType.INSTALLATION_FAILED);
       assertThat(eventCaptor.getValue().getPlugin()).isEqualTo(review);
     }
 

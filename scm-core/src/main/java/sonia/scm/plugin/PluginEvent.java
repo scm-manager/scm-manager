@@ -24,6 +24,20 @@
 
 package sonia.scm.plugin;
 
-enum PluginEventType {
-  INSTALLED, INSTALLATION_FAILED
+import lombok.Getter;
+import sonia.scm.event.Event;
+
+@Getter
+@Event
+public class PluginEvent {
+  private final PluginEventType eventType;
+  private final AvailablePlugin plugin;
+  public PluginEvent(PluginEventType eventType, AvailablePlugin plugin) {
+    this.eventType = eventType;
+    this.plugin = plugin;
+  }
+
+  public enum PluginEventType {
+    INSTALLED, INSTALLATION_FAILED
+  }
 }

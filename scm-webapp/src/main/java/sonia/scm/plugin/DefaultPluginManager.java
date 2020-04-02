@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -51,7 +51,6 @@ import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
 @Singleton
@@ -173,10 +172,10 @@ public class DefaultPluginManager implements PluginManager {
         PendingPluginInstallation pending = installer.install(plugin);
         dependencyTracker.addInstalled(plugin.getDescriptor());
         pendingInstallations.add(pending);
-        eventBus.post(new PluginEvent(PluginEventType.INSTALLED, plugin));
+        eventBus.post(new PluginEvent(PluginEvent.PluginEventType.INSTALLED, plugin));
       } catch (PluginInstallException ex) {
         cancelPending(pendingInstallations);
-        eventBus.post(new PluginEvent(PluginEventType.INSTALLATION_FAILED, plugin));
+        eventBus.post(new PluginEvent(PluginEvent.PluginEventType.INSTALLATION_FAILED, plugin));
         throw ex;
       }
     }
@@ -258,7 +257,7 @@ public class DefaultPluginManager implements PluginManager {
 
       Set<String> dependencies = plugin.getDescriptor().getDependencies();
       if (dependencies != null) {
-        for (String dependency: dependencies){
+        for (String dependency : dependencies) {
           collectPluginsToInstall(plugins, dependency, false);
         }
       }

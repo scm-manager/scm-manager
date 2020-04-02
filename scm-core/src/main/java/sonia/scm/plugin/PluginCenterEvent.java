@@ -24,16 +24,7 @@
 
 package sonia.scm.plugin;
 
-import lombok.Getter;
 import sonia.scm.event.Event;
 
-@Getter
 @Event
-public class PluginEvent {
-  private final PluginEventType eventType;
-  private final AvailablePlugin plugin;
-  public PluginEvent(PluginEventType eventType, AvailablePlugin plugin) {
-    this.eventType = eventType;
-    this.plugin = plugin;
-  }
-}
+public class PluginCenterEvent {}

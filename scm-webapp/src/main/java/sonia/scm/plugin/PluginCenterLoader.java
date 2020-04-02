@@ -27,7 +27,6 @@ package sonia.scm.plugin;
 import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.event.Event;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 
@@ -62,12 +61,8 @@ class PluginCenterLoader {
       return mapper.map(pluginCenterDto);
     } catch (Exception ex) {
       LOG.error("failed to load plugins from plugin center, returning empty list", ex);
-      eventBus.post(new PluginCenterNotAvailableEvent());
+      eventBus.post(new PluginCenterEvent());
       return Collections.emptySet();
     }
   }
-
-  @Event
-  class PluginCenterNotAvailableEvent {}
-
 }
