@@ -1,12 +1,11 @@
+# SCM-Manager on IIS Helicon
 First of all this setup is not recommended, because there were a lot of problems with it and it was never tested by the development team of SCM-Manager. However there are several working installation out there. But there some pitfalls:
 
 **Problem description:**
 
 When moving of copying files in SVN, the commit fails with the following message:
 
-```
-#!cmd
-
+```bash
 MyWorkstation:MyRepo user$ svn mv A.cs B.cs
 A         B.cs
 D         A.cs
@@ -25,33 +24,30 @@ This problem only occurs when accessing the repository via https, not http.
 
 1. Add the following rewrite rule to the web.config of the SCM application:
 
-```
-#!xml
-
-  <system.webServer>
+```xml
+<system.webServer>
     <!-- <heliconZoo /> -->
     <!-- <handlers /> -->
-        <rewrite>
-            <rules>
-                <rule name="Rewrite Destination Header" stopProcessing="true">
-                    <match url=".+" />
-                    <conditions>
-                        <add input="{REQUEST_METHOD}" pattern="MOVE|COPY" />
-                        <add input="{HTTP_Destination}" pattern="^https://(.+)$" />
-                    </conditions>
-                    <serverVariables>
-                        <set name="HTTP_Destination" value="http://{C:1}" />
-                    </serverVariables>
-                    <action />
-                </rule>
-            </rules>
-        </rewrite>
-  </system.webServer>
-
+    <rewrite>
+        <rules>
+            <rule name="Rewrite Destination Header" stopProcessing="true">
+                <match url=".+" />
+                <conditions>
+                    <add input="{REQUEST_METHOD}" pattern="MOVE|COPY" />
+                    <add input="{HTTP_Destination}" pattern="^https://(.+)$" />
+                </conditions>
+                <serverVariables>
+                    <set name="HTTP_Destination" value="http://{C:1}" />
+                </serverVariables>
+                <action />
+            </rule>
+        </rules>
+    </rewrite>
+</system.webServer>
 ```
 
 2. Add HTTP_Destination to the Allowed Server Variables using IIS:
 
-![2014-10-16_01-40-50.png](https://bitbucket.org/repo/65dEj/images/3287552754-2014-10-16_01-40-50.png)
+![Helicon: Allowed Server Variables](screenshots/helicon-server-vars.png)
 
-For more information, see issue [624](https://bitbucket.org/sdorra/scm-manager/issue/624/svn-400-bad-request-on-copy-or-move-when).
+For more information, see issue [#624](https://bitbucket.org/sdorra/scm-manager/issue/624/svn-400-bad-request-on-copy-or-move-when).

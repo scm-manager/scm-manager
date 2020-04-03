@@ -1,13 +1,13 @@
+# SCM-Manager v2 Test Cases
+
 Describes the expected behaviour for SCMM v2 REST Resources using manual tests.
-
-[TOC]
-
-# Test Cases
 
 The following states general test cases per HTTP Method and en expected return code as well as exemplary curl calls.
 Resource-specifics are stated 
 
-## GET
+## Test Cases
+
+### GET
 
 - Collection Resource (e.g. `/users`)
     - Without parameters -> 200
@@ -23,13 +23,13 @@ Resource-specifics are stated
     - Unknown field (e.g. `?fields=nam`) returns empty object
 - without permission (individual and collection (TODO)) -> 401
 
-## POST
+### POST
 
 - not existing -> 204
 - existing -> 409
 - without permission -> 401
 
-## PUT
+### PUT
 
 - existing -> 204
     - lastModified is updated
@@ -43,44 +43,37 @@ Resource-specifics are stated
   - creationDate, lastModified --> 200 is liberally ignored
   - Additional unmodifiable fields per resource, see examples
 
-## DELETE
+### DELETE
 
 - existing -> 204
 - not existing -> 204
 - without permission -> 401
 
-# Exemplary calls & Resource specific test cases
+## Exemplary calls & Resource specific test cases
 
 In order to extend those tests to other Resources, have a look at the rest docs. Note that the Content Type is specific to each resource as well.
 
 After calling `mvn -pl scm-webapp compile -P doc` the docs are available at `scm-webapp/target/restdocs/index.html`.
 
+### Users
 
-## Users
+#### GET
 
-### GET
+##### Collections 
 
-#### Collections 
-
-```
-#!bash
-
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/users?sortBy=admin&desc=true"
 ```
 
-#### Individual
+##### Individual
 
-```
-#!bash
-
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/users/scmadmin?fields=name,_links"
 ```
 
-### POST
+#### POST
 
-```
-#!bash
-
+```bash
 curl -vu scmadmin:scmadmin --data '{
   "properties": null,
   "active": true,
@@ -96,14 +89,12 @@ curl -vu scmadmin:scmadmin --data '{
    --header "Content-Type: application/vnd.scmm-user+json;v=2"  http://localhost:8081/scm/api/v2/users/
 ```
 
-### PUT
+#### PUT
 
 - Change unmodifiable fields
   - type? -> can be overwritten right now
 
-```
-#!bash
-
+```bash
 curl -X PUT -vu scmadmin:scmadmin --data '{
   "properties": null,
   "active": true,
@@ -119,40 +110,31 @@ curl -X PUT -vu scmadmin:scmadmin --data '{
    --header "Content-Type: application/vnd.scmm-user+json;v=2"  http://localhost:8081/scm/api/v2/users/xyz 
 ```
 
-### DELETE
+#### DELETE
 
-```
-#!bash
-
+```bash
 curl -X DELETE -vu scmadmin:scmadmin http://localhost:8081/scm/api/v2/users/xyz
 ```
 
+### Groups
 
+#### GET
 
-## Groups
+##### Collections 
 
-### GET
-
-#### Collections 
-
-```
-#!bash
-
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/groups/?sortBy=name&desc=true"
 ```
 
-#### Individual
+##### Individual
 
-```
-#!bash
+```bash
 curl -vu scmadmin:scmadmin http://localhost:8081/scm/api/v2/groups/firstGroup
-
 ```
 
-### POST
+#### POST
 
-```
-#!bash
+```bash
 curl -vu scmadmin:scmadmin --data '{                                                     
   "creationDate": "2018-06-28T07:42:45.281Z",
   "lastModified": "2018-06-28T07:42:45.281Z",
@@ -169,14 +151,11 @@ curl -vu scmadmin:scmadmin --data '{
   }
  }' \
   --header "Content-Type: application/vnd.scmm-group+json" http://localhost:8081/scm/api/v2/groups/
-
 ```
 
-### PUT
+#### PUT
 
-```
-#!bash
-
+```bash
 curl -X PUT -vu scmadmin:scmadmin --data '{                                              
   "creationDate": "2018-06-28T07:42:45.281Z",
   "lastModified": "2018-06-28T07:42:45.281Z",
@@ -195,40 +174,31 @@ curl -X PUT -vu scmadmin:scmadmin --data '{
   --header "Content-Type: application/vnd.scmm-group+json" http://localhost:8081/scm/api/v2/groups/firstGroup
 ```
 
-### DELETE
+#### DELETE
 
-```
-#!bash
-
+```bash
 curl -X DELETE -vu scmadmin:scmadmin http://localhost:8081/scm/api/v2/groups/firstGroup
 ```
 
+### Repositories
 
-## Repositories
+#### GET
 
-### GET
+##### Collections 
 
-#### Collections 
-
-```
-#!bash
-
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositories/?sortBy=name&pageSize=1&desc=true"
 ```
 
-#### Individual
+##### Individual
 
-```
-#!bash
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositories/42/arepo"
-
 ```
 
-### POST
+#### POST
 
-```
-#!bash
-
+```bash
 curl -vu scmadmin:scmadmin --data '{
   "contact": "a@con.tact",
   "creationDate": "2018-07-11T08:54:44.569Z",
@@ -236,17 +206,14 @@ curl -vu scmadmin:scmadmin --data '{
   "name": "arepo",
   "type": "git"
  }' --header "Content-Type: application/vnd.scmm-repository+json" http://localhost:8081/scm/api/v2/repositories
-
 ```
 
-### PUT
+#### PUT
 
 - Change unmodifiable fields
   - type? -> Leads to 500 right now
 
-```
-#!bash
-
+```bash
 curl -X PUT -vu scmadmin:scmadmin --data '{
   "contact": "anoter@con.tact",
   "creationDate": "2017-04-11T08:54:45.569Z",
@@ -258,20 +225,17 @@ curl -X PUT -vu scmadmin:scmadmin --data '{
  }' --header "Content-Type: application/vnd.scmm-repository+json" http://localhost:8081/scm/api/v2/repositories/42/arepo
 ```
 
-### DELETE
+#### DELETE
 
-```
-#!bash
-
+```bash
 curl -X DELETE -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositories/42/anSVNRepo"
 ```
 
-
-## Repository Permissions
+### Repository Permissions
 
 In this test we do not only test the REST endpoints themselves, but also the effect of the different permissions.
 
-### Prerequisites
+#### Prerequisites
 
 For these tests we assume that you have created
 
@@ -280,21 +244,17 @@ For these tests we assume that you have created
 
 If your entities have other ids, change them according to your data.
 
-### GET
+#### GET
 
 This request should return an empty list of permissions:
 
-```
-#!bash
-
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositories/scmadmin/git/permissions/"
 ```
 
-### POST / READ permission
+#### POST / READ permission
 
-```
-#!bash
-
+```bash
 curl -X POST -vu scmadmin:scmadmin --data '{
   "name": "user", "type":"READ"
   }' --header "Content-Type: application/vnd.scmm-permission+json"
@@ -303,17 +263,13 @@ curl -X POST -vu scmadmin:scmadmin --data '{
 
 After this, you should be able to `GET` the repository with the user `user`:
 
-```
-#!bash
-
+```bash
 curl -vu user:user "http://localhost:8081/scm/api/v2/repositories/scmadmin/git/permissions/"
 ```
 
 Trying to change the repository using `PUT` with the user `user` should result in `403`:
 
-```
-#!bash
-
+```bash
 curl -vu user:user -X PUT --data '{
   "contact": "zaphod.beeblebrox@hitchhiker.com",
   "namespace":"scmadmin",
@@ -326,25 +282,19 @@ curl -vu user:user -X PUT --data '{
 
 Reading the permissions of the repository with the user `user` should result in `403`:
 
-```
-#!bash
-
+```bash
 curl -vu user:user "http://localhost:8081/scm/api/v2/repositories/scmadmin/git/permissions/"
 ```
 
 The user should be able to `clone` the repository:
 
-```
-#!bash
-
+```bash
 git clone http://owner@localhost:8081/scm/git/scmadmin/git
 ```
 
 The user should *not* be able to `push` to the repository:
 
-```
-#!bash
-
+```bash
 cd git 
 touch a
 git add a
@@ -352,13 +302,11 @@ git commit -m a
 git push
 ```
 
-### PUT / WRITE permission
+#### PUT / WRITE permission
 
 It should be possible to change the permission for a specific user:
 
-```
-#!bash
-
+```bash
 curl -X PUT -vu scmadmin:scmadmin --data '{
   "name": "user",
    "type":"WRITE"
@@ -367,18 +315,14 @@ curl -X PUT -vu scmadmin:scmadmin --data '{
 
 After this the user `user` should now be able to `push` the repository created and modified beforehand.
 
-```
-#!bash
-
+```bash
 cd git 
 git push
 ```
 
-### OWNER permission
+#### OWNER permission
 
-```
-#!bash
-
+```bash
 curl -X PUT -vu scmadmin:scmadmin --data '{
   "name": "user",
    "type":"OWNER"
@@ -387,68 +331,57 @@ curl -X PUT -vu scmadmin:scmadmin --data '{
 
 After this, the user should be able to `GET` the permissions:
 
-```
-#!bash
-
+```bash
 curl -vu user:user "http://localhost:8081/scm/api/v2/repositories/scmadmin/git/permissions/"
 ```
 
 Additionally, the user should be able to change permissions:
 
-```
-#!bash
-
+```bash
 curl -X PUT -vu scmadmin:scmadmin --data '{
   "name": "user",
    "type":"OWNER"
    }' --header "Content-Type: application/vnd.scmm-permission+json" "http://localhost:8081/scm/api/v2/repositories/scmadmin/git/permissions/user"
 ```
 
-### DELETE
+#### DELETE
 
 Finally, a user with the role `OWNER` should be able to delete permissions:
 
-```
-#!bash
-
+```bash
 curl -X DELETE -vu user:user "http://localhost:8081/scm/api/v2/repositories/scmadmin/git/permissions/user"
 ```
 
-## Branches
+### Branches
 
 * In advance: POST repo.
 * Clone Repo, add Branches
 
-### GET
+#### GET
 
-#### Collections 
+##### Collections 
 
-```
-#!bash
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositories/scmadmin/arepo/branches"
 ```
 
-#### Individual
+##### Individual
 
-```
-#!bash
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositories/scmadmin/arepo/branches/master"
 ```
 
-## Configuration
+### Configuration
 
-### GET
+#### GET
 
-```
-#!bash
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/config"
 ```
 
-### PUT
+#### PUT
 
-```
-#!bash
-
+```bash
 curl -X PUT -vu scmadmin:scmadmin --data '{
   "proxyPassword": "pw",
   "proxyPort": 8082,
@@ -473,19 +406,17 @@ curl -X PUT -vu scmadmin:scmadmin --data '{
  }' --header "Content-Type: application/vnd.scmm-config+json" http://localhost:8081/scm/api/v2/config
 ```
 
-## Git Plugin Configuration
+### Git Plugin Configuration
 
-### GET
+#### GET
 
-```
-#!bash
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/config/git"
 ```
 
-### PUT
+#### PUT
 
-```
-#!bash
+```bash
 curl -X PUT -vu scmadmin:scmadmin --data '{
   "gcExpression": "0 0 14-6 ? * FRI-MON",
   "repositoryDirectory": "new",
@@ -493,19 +424,17 @@ curl -X PUT -vu scmadmin:scmadmin --data '{
  }' --header "Content-Type: application/vnd.scmm-gitConfig+json" http://localhost:8081/scm/api/v2/config/git
 ```
 
-## Hg Plugin Configuration
+### Hg Plugin Configuration
 
-### GET
+#### GET
 
-```
-#!bash
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/config/hg"
 ```
 
-### PUT
+#### PUT
 
-```
-#!bash
+```bash
 curl -X PUT -vu scmadmin:scmadmin --data '{
   "repositoryDirectory": "new",
   "disabled": true,
@@ -516,22 +445,19 @@ curl -X PUT -vu scmadmin:scmadmin --data '{
   "useOptimizedBytecode": true,
   "showRevisionInId": true
  }' --header "Content-Type: application/vnd.scmm-hgConfig+json" http://localhost:8081/scm/api/v2/config/hg
-
 ```
 
-### Auto Config
+#### Auto Config
 
-#### Default
+##### Default
 
-```
-#!bash
+```bash
 curl -v -X PUT -u scmadmin:scmadmin "http://localhost:8081/scm/api/v2/config/hg/auto-configuration"
 ```
 
-#### Specific config
+##### Specific config
 
-```
-#!bash
+```bash
 curl -v -X PUT -u scmadmin:scmadmin --data '{
   "repositoryDirectory": "new",
   "disabled": true,
@@ -544,113 +470,96 @@ curl -v -X PUT -u scmadmin:scmadmin --data '{
  }' --header "Content-Type: application/vnd.scmm-hgConfig+json" "http://localhost:8081/scm/api/v2/config/hg/auto-configuration"
 ```
 
-### Installations
+#### Installations
 
-#### Hg
+##### Hg
 
-```
-#!bash
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/config/hg/installations/hg" 
 ```
 
-#### Python
+##### Python
 
-```
-#!bash
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/config/hg/installations/python"
 ```
 
-### Packages
+#### Packages
+
+##### GET
+
+```bash
+curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/config/hg/packages"
+```
+
+##### PUT
+
+See [here](https://download.scm-manager.org/pkg/mercurial/packages.xml) for available packages. Will only work on Windows!
+
+```bash
+curl -X PUT -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/config/hg/packages/4338c4_x64" 
+```
+
+### Svn Plugin Configuration
 
 #### GET
 
-```
-#!bash
-curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/config/hg/packages"
+```bash
+curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/config/svn"
 ```
 
 #### PUT
 
-See [here](https://download.scm-manager.org/pkg/mercurial/packages.xml) for available packages. Will only work on Windows!
-
-```
-#!bash
-curl -X PUT -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/config/hg/packages/4338c4_x64" 
-```
-
-## Svn Plugin Configuration
-
-
-### GET
-
-```
-#!bash
-curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/config/svn"
-```
-
-### PUT
-
-```
-#!bash
+```bash
 curl -X PUT -vu scmadmin:scmadmin --data '{
   "repositoryDirectory": "new",
   "disabled": true,
   "enabledGZip": true,
   "compatibility": "PRE15"
  }' --header "Content-Type: application/vnd.scmm-svnConfig+json" http://localhost:8081/scm/api/v2/config/svn
-
 ```
 
-## Repository Types
+### Repository Types
 
-### GET
+#### GET
 
-####  Collections 
+#####  Collections 
 
-```
-#!bash
-
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repository-types"
 ```
 
-#### Individual
+##### Individual
 
-```
-#!bash
-
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repository-types/hg"
 ```
 
-## Tags
+### Tags
 
-### GET
+#### GET
 
 Pre-conditions: the git repository "HeartOfGold-git" exists and contains tags example v1.0 and v1.1
 
-#### Collections 
+##### Collections 
 
-```
-#!bash
-
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositories/scmadmin/HeartOfGold-git/tags/"
 ```
 
-#### Individual
+##### Individual
 
-```
-#!bash
+```bash
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositories/scmadmin/HeartOfGold-git/tags/v1.1"
-
 ```
 
-## Content
+### Content
 
-### git
+#### git
 
-#### Prepare
+##### Prepare
 
-```
-#!bash
+```bash
 curl -vu scmadmin:scmadmin --data '{
   "contact": "a@con.tact",
   "creationDate": "2018-07-11T08:54:44.569Z",
@@ -669,10 +578,10 @@ git add .
 git commit -m 'Msg'
 git push
 ```
-#### Query and assert
 
-```
-#!bash
+##### Query and assert
+
+```bash
 # Assert Content type text plain
 curl -X HEAD -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositories/scmadmin/arepo/content/$(git rev-parse HEAD)/b.txt"  2>&1   | grep Content-Type
 # Assert file content "bbb"
@@ -689,12 +598,11 @@ curl -X HEAD -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositorie
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositories/scmadmin/arepo/content/$(git rev-parse HEAD)/RestActionResult.java"
 ```
 
-### hg
+#### hg
 
-#### Prepare
+##### Prepare
 
-```
-#!bash
+```bash
 curl -vu scmadmin:scmadmin --data '{
   "contact": "a@con.tact",
   "creationDate": "2018-07-11T08:54:44.569Z",
@@ -713,11 +621,9 @@ hg commit -m 'msg'
 hg push
 ```
 
-#### Query and assert
+##### Query and assert
 
-```
-#!bash
-
+```bash
 # Assert Content type text plain
 curl -X HEAD -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositories/scmadmin/hgrepo/content/$(hg identify --id)/b.txt"  2>&1   | grep Content-Type
 # Assert file content "bbb"
@@ -734,12 +640,11 @@ curl -X HEAD -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositorie
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositories/scmadmin/hgrepo/content/$(hg identify --id)/RestActionResult.java"
 ```
 
-### svn
+#### svn
 
-#### Prepare
+##### Prepare
 
-```
-#!bash
+```bash
 curl -vu scmadmin:scmadmin --data '{
   "contact": "a@con.tact",
   "creationDate": "2018-07-11T08:54:44.569Z",
@@ -757,10 +662,9 @@ svn add ./*
 svn commit --non-interactive --no-auth-cache --username scmadmin --password scmadmin -m 'msg'
 ```
 
-#### Query and assert
+##### Query and assert
 
-```
-#!bash
+```bash
 REVISION=$(svn --non-interactive --no-auth-cache --username scmadmin --password scmadmin info -r 'HEAD' --show-item revision | xargs echo -n)
 # Assert Content type text plain
 curl -X HEAD -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositories/scmadmin/svnrepo/content/${REVISION}/b.txt"  2>&1   | grep Content-Type
@@ -778,14 +682,13 @@ curl -X HEAD -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositorie
 curl -vu scmadmin:scmadmin "http://localhost:8081/scm/api/v2/repositories/scmadmin/svnrepo/content/${REVISION}/RestActionResult.java"
 ```
 
-## Access Token
+### Access Token
 
-### Admin
+#### Admin
 
-#### Output all links of index resource
+##### Output all links of index resource
 
-```
-#!bash
+```bash
 TOKEN=$(curl -s 'http://localhost:8081/scm/api/v2/auth/access_token' -H 'content-type: application/json' --data '{
   "cookie": false,
   "grant_type": "password",
@@ -795,12 +698,11 @@ TOKEN=$(curl -s 'http://localhost:8081/scm/api/v2/auth/access_token' -H 'content
 curl -s http://localhost:8081/scm/api/v2/ -H "Authorization: Bearer ${TOKEN}" | jq
 ```
 
-#### Output only "config" and default logged in links 
+##### Output only "config" and default logged in links 
 
 default logged in links  = self, uiPlugins, me, logout
 
-```
-#!bash
+```bash
 TOKEN=$(curl -s 'http://localhost:8081/scm/api/v2/auth/access_token' -H 'content-type: application/json' --data '{
   "cookie": false,
   "grant_type": "password",
@@ -813,13 +715,11 @@ TOKEN=$(curl -s 'http://localhost:8081/scm/api/v2/auth/access_token' -H 'content
 curl -s http://localhost:8081/scm/api/v2/ -H "Authorization: Bearer ${TOKEN}" | jq
 ```
 
-### non-Admin
+#### non-Admin
 
 Create non-admin user
 
-```
-#!bash
-
+```bash
 curl -vu scmadmin:scmadmin --data '{
   "active": true,
   "admin": false,
@@ -832,12 +732,11 @@ curl -vu scmadmin:scmadmin --data '{
    --header "Content-Type: application/vnd.scmm-user+json;v=2"  http://localhost:8081/scm/api/v2/users/
 ```
    
-#### Standard permissions of a logged in user without additional permissions
+##### Standard permissions of a logged in user without additional permissions
 
 Standard links of a logged in user  = self, uiPlugins, me, logout, autocomplete, repositories
 
-```
-#!bash
+```bash
 TOKEN=$(curl -s 'http://localhost:8081/scm/api/v2/auth/access_token' -H 'content-type: application/json' --data '{
   "cookie": false,
   "grant_type": "password",
@@ -847,14 +746,12 @@ TOKEN=$(curl -s 'http://localhost:8081/scm/api/v2/auth/access_token' -H 'content
 curl -s http://localhost:8081/scm/api/v2/ -H "Authorization: Bearer ${TOKEN}" | jq
 ```
 
-#### Scope requests permission the user doesn't have
+##### Scope requests permission the user doesn't have
 
 This should not retrun `configuration` links, even though this scope was requested, because the user does not have the configuration permission. Otherwise this would be a major security flaw!
 Compare to admin tests above.
 
-```
-#!bash
-
+```bash
 TOKEN=$(curl -s 'http://localhost:8081/scm/api/v2/auth/access_token' -H 'content-type: application/json' --data '{
   "cookie": false,
   "grant_type": "password",

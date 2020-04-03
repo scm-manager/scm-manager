@@ -1,4 +1,4 @@
-== scm-mantisbt-plugin ==
+# scm-mantisbt-plugin
 
 The plugin enables the following features to integrate [MantisBT](https://www.mantisbt.org/) to SCM-Manager:
 

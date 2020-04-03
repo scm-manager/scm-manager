@@ -8,7 +8,7 @@ Also it is a good guide line to adapt Postel's law: *Be conservative in what you
 
 ## Java
 
-Please mind the [EditorConfig](https://editorconfig.org/) file `.editorconf` in the root of the SCM-Manager and the [configuration guide](intellij-idea-configuration) for IntelliJ IDEA. There are plugins for a lot of IDEs and text editors.
+Please mind the [EditorConfig](https://editorconfig.org/) file `.editorconf` in the root of the SCM-Manager and the [configuration guide](intellij-idea-configuration.md) for IntelliJ IDEA. There are plugins for a lot of IDEs and text editors.
 
 - Indentation with 2 spaces and no tabs (we have kept this rule from 1.x)
 - Order of members:
@@ -24,4 +24,5 @@ Please mind the [EditorConfig](https://editorconfig.org/) file `.editorconf` in 
 - Though we will not define a maximum line length, you should break lines when they go beyond 120 characters or so.
 
 ## JavaScript
-Take a look at our styleguide using `yarn serve` in ui-styles directory.
+
+Take a look at our styleguide using `yarn serve` in [ui-styles](scm-ui/ui-styles) directory.

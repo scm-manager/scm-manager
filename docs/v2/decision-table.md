@@ -1,6 +1,6 @@
-[TOC]
+# Decision Table
 
-# Lombok #
+### Lombok
 
 [Project Lombok](https://projectlombok.org/) provides an easy way to generate java beans with
 
@@ -26,11 +26,11 @@ The following lombok annotations will be used for DTOs:
   will be present. Because this one is necessary for deserialization, this one has to be created
   explicitly when the all-args constructor is declared)
 
-# /repo/ & /repos/ as URI prefixes #
+### /repo/ & /repos/ as URI prefixes
 
 The URI-format for accessing a repository, be it with a browser, or cloning/pulling via git/hg/svn, is defined to be `/repo/:namespace/:name`. The decision was made to allow users to choose namespaces as they please. If there would not be a prefix, some namespaces (e.g. `user`, `users`) would have to be reserved, since the names are already in use by SCM Manager itself. The `/repos` URI linked to a list of repositories, as well as operations such as creating a repositoriy (`/repos/create`).
 
-# Error handling
+### Error handling
 
 In v1 error handling was somewhat diverse. Some checks were made explicitly in the web resource classes leading
 to direct responses, some were made using exceptions and matching exception mappers.
@@ -53,7 +53,7 @@ in runtime exceptions like `RepositoryException` and will lead to internal serve
 
 For simple objects like users and groups we don't think that we will need more exceptions.
 
-# Logging
+### Logging
 
 Logging can be cucial when it comes to identify bugs in test or production environments. At implementation time one cannot foresee all possible error cases and therefore cannot determine with full certanty what informations will be needed and what can be neglected. Logging only crucial errors leaves the developer with no idea what events might have lead to the error. On the other hand logging too much will overburden the log, making it harder to handle and maybe hiding interesting steps.
 
@@ -67,7 +67,7 @@ Therefore it is best practice to be able to select the detail level of informati
 
 As a default the log level for SCM-Manager is INFO, so that by default all logs with the levels ERROR, WARN and INFO are stored. Finer levels can be enabled manually.
 
-## Log levels to use
+### Log levels to use
 
 We have agreed to apply to the following guidelines regarding log levels:
 

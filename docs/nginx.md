@@ -1,10 +1,8 @@
-# SCM-Server and Nginx #
+# SCM-Server and Nginx
 
-## Nginx configuration ##
+## Nginx configuration
 
-```
-#!text
-
+```text
 location /scm {
   proxy_set_header X-Real-IP         $remote_addr;
   proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
@@ -14,19 +12,17 @@ location /scm {
 }
 ```
 
-## SCM-Server conf/server-config.xml ##
+## SCM-Server conf/server-config.xml
 
 Uncomment following line:
 
-```
-#!xml
+```xml
 <Set name="forwarded">true</Set>
 ```
 
 Example:
 
-```
-#!xml
+```xml
 <Call name="addConnector">
   <Arg>
     <New class="org.eclipse.jetty.server.nio.SelectChannelConnector">
@@ -43,7 +39,7 @@ Example:
 </Call>
 ```
 
-## SCM-Manager Configuration version 1.5 and above ##
+## SCM-Manager Configuration version 1.5 and above
 * Login as an admin user and select "General"
 * Set the "Base Url" to the URL of Nginx (**warning:** don't check "Force Base Url")
 * Save the new new settings

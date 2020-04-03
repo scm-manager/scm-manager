@@ -1,7 +1,9 @@
+# Release Notes 1.39 - 1.20
+
 SCM-Manager 1.39
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   created rpm and deb packages for scm-server
 -   improve error handling of permission system
@@ -11,9 +13,9 @@ SCM-Manager 1.39
 -   implemented marker interface for plugin class loaders to make it
     easier to find class loader leaks
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   fix mailto links
 -   fix automatic start as service on windows server 2012, see \<\<issue
@@ -29,9 +31,9 @@ SCM-Manager 1.39
 -   fix marshalling exception on plugin installation with rest api, see
     \<\<issue \#578\>\>
 
-<!-- -->
 
--   -   library updates\*\*
+
+**library updates**
 
 -   update mustache to version 0.8.15
 -   update jgit to version 3.4.0.201406110918-r
@@ -41,7 +43,7 @@ SCM-Manager 1.39
 SCM-Manager 1.38
 ----------------
 
--   -   fixed bugs\*\*
+**fixed bugs**
 
 -   fix NoClassDefFoundError in scm-cli-client, see issue \<\<issue
     \#576\>\>
@@ -55,7 +57,7 @@ SCM-Manager 1.38
 SCM-Manager 1.37
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   improved git error messages for failed authentication and not enough
     permissions
@@ -65,9 +67,9 @@ SCM-Manager 1.37
 -   update last modified date of a repository after each push
 -   added hidden last modified column to repository grid
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   resolve dependency resolution conflicts, see \<\<issue 541\>\>,
     \<\<issue 549\>\> and \<\<issue 558\>\>
@@ -79,9 +81,9 @@ SCM-Manager 1.37
     \<\<issue 548\>\>
 -   subversion cannot delete properties, see \<\<issue 547\>\>
 
-<!-- -->
 
--   -   library updates\*\*
+
+**library updates**
 
 -   update jetty to version 7.6.15.v20140411
 -   update svnkit to version 1.8.5-scm1
@@ -93,18 +95,18 @@ SCM-Manager 1.37
 SCM-Manager 1.36
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   added feature to set custom realm description, see [PR
-    16](https://bitbucket.org/sdorra/scm-manager/pull-request/16/add-feature-to-set-custom-realm "wikilink")
+    16](https://bitbucket.org/sdorra/scm-manager/pull-request/16/add-feature-to-set-custom-realm)
 -   added option to skip failed authenticators
 -   cli-client: allow retrieving repositories by using type/name instead
     of repository id
 -   implemented repository health checks
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   solve classloading issues for plugin classes
 -   fix changing passwords which a shorter than 5 chars, see issue
@@ -119,9 +121,9 @@ SCM-Manager 1.36
 -   fix bug with some special chars in SearchUtil
 -   fix mercurial out of scope exception on startup
 
-<!-- -->
 
--   -   library updates\*\*
+
+**library updates**
 
 -   update args4j 2.0.26
 -   update svnkit to version 1.8.4-scm1
@@ -135,35 +137,35 @@ SCM-Manager 1.36
 SCM-Manager 1.35
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   Spanish translation, see [PR
-    9](https://bitbucket.org/sdorra/scm-manager/pull-request/9/spanish-translation "wikilink")
+    9](https://bitbucket.org/sdorra/scm-manager/pull-request/9/spanish-translation)
     thanks to [Ángel L.
-    García](https://bitbucket.org/algarcia "wikilink")
+    García](https://bitbucket.org/algarcia)
 -   added auto-login filter system, see [PR
-    4](https://bitbucket.org/sdorra/scm-manager/pull-request/4/modifications-for-auto-login "wikilink")
-    thanks to [Clemens Rabe](https://bitbucket.org/seeraven "wikilink")
+    4](https://bitbucket.org/sdorra/scm-manager/pull-request/4/modifications-for-auto-login)
+    thanks to [Clemens Rabe](https://bitbucket.org/seeraven)
 -   added property to disable escaping for blame, browse, log command
     and hooks, see \<\<issue 505\>\>
 -   remove cancel button on login window if anonymous access is
     disabled, see \<\<issue 396\>\>
 -   syntax highlighting for c, h, hh and cc files, see [PR
-    11](https://bitbucket.org/sdorra/scm-manager/pull-request/11/c-java-extensions-added-to "wikilink")
-    thanks to [pankaj azad](https://bitbucket.org/pankajazad "wikilink")
+    11](https://bitbucket.org/sdorra/scm-manager/pull-request/11/c-java-extensions-added-to)
+    thanks to [pankaj azad](https://bitbucket.org/pankajazad)
 -   custom subversion collection renderer
 -   use full message instead of short message for git commits, see
     \<\<issue 474\>\>
 -   improved german translation, see [PR
-    5](https://bitbucket.org/sdorra/scm-manager/pull-request/5/german-translation-adjusted/diff "wikilink")
-    thanks to [Ahmed Saad](https://bitbucket.org/saadous "wikilink")
+    5](https://bitbucket.org/sdorra/scm-manager/pull-request/5/german-translation-adjusted/diff)
+    thanks to [Ahmed Saad](https://bitbucket.org/saadous)
 -   use same validation rules for user and group names, see \<\<issue
     470\>\>
 -   added brushes for applescript and sass
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   fixed file leak, see \<\<issue 500\>\>
 -   fixed double escaping, see \<\<issue 505\>\>
@@ -178,9 +180,9 @@ SCM-Manager 1.35
     see \<\<issue 464\>\>
 -   fix wrong sql brush filename, see \<\<issue 461\>\>
 
-<!-- -->
 
--   -   library updates\*\*
+
+**library updates**
 
 -   update jetty to 7.6.14.v20131031
 -   update jersey to 1.18
@@ -193,7 +195,7 @@ SCM-Manager 1.35
 SCM-Manager 1.34
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   allow multi line mercurial messages
 -   change order of permission column and use a more robust cell editor
@@ -203,9 +205,9 @@ SCM-Manager 1.34
 -   added configuration changed event
 -   implement login attempt handler to handle failed authentications
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   fix bug with user events and decorated user managers
 -   fix hg push fails with \'URLError\' object has no attribute
@@ -222,9 +224,9 @@ SCM-Manager 1.34
 -   fix out of scope exception on access hgcontext, see \<\<issue
     451\>\>
 
-<!-- -->
 
--   -   library updates\*\*
+
+**library updates**
 
 -   update jetty to 7.6.13.v20130916
 -   update guava to version 15.0
@@ -232,7 +234,7 @@ SCM-Manager 1.34
 SCM-Manager 1.33
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   added api to bypass changeset pre processors during hook
 -   added api to send messages back to scm client during hook
@@ -240,9 +242,9 @@ SCM-Manager 1.33
 -   introduce Event annotation to mark event classes which are
     receiveable over the event system
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   fix login window scrollbars on linux with firefox 21, see \<\<issue
     411\>\>
@@ -259,9 +261,9 @@ SCM-Manager 1.33
 -   fix handling of pending changesets during pre receive repository
     hooks
 
-<!-- -->
 
--   -   library updates\*\*
+
+**library updates**
 
 -   update jgit to 3.0.0.201306101825-r
 -   update args4j to version 2.0.25
@@ -274,16 +276,16 @@ SCM-Manager 1.33
 SCM-Manager 1.32
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   added support for subversion 1.8 and ra\_serf (\<\<issue 222\>\>,
     \<\<issue 406\>\>)
 -   added detection eclipse jetty (standalone) to
     ServletContainerDetector (pull request 3)
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   fix loading of cache configurations from plugins
 -   resolve conflicts for plugins and plugin dependencies
@@ -295,7 +297,7 @@ SCM-Manager 1.32
 SCM-Manager 1.31
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   added first access url and credentials to readme
 -   option to assign global access permissions to users and groups
@@ -311,9 +313,9 @@ SCM-Manager 1.31
     parent
 -   create and deploy package for rest documentation
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   fix wrong message for deleting repositories (\<\<issue 370\>\>)
 -   fix button handling on repository grid with enabled archive mode
@@ -326,9 +328,9 @@ SCM-Manager 1.31
     395\>\>)
 -   fix daemon mode on some operating systems (\<\<issue 397\>\>)
 
-<!-- -->
 
--   -   library updates\*\*
+
+**library updates**
 
 -   update logback to version 1.0.13
 -   update svnkit to version 1.7.9-scm1
@@ -341,14 +343,14 @@ SCM-Manager 1.31
 SCM-Manager 1.30
 ----------------
 
--   -   fixed bugs\*\*
+**fixed bugs**
 
 -   fix missing copy strategy in guava cache configuration
 
 SCM-Manager 1.29
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   use guava as default cache implementation (\<\<issue 345\>\>)
 -   merge cache configuration from default location, config directory
@@ -363,9 +365,9 @@ SCM-Manager 1.29
 -   use template engine and repository service for git repository page
     (\<\<issue 341\>\>)
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   synchronize getCache method of cache manager implementations
     (\<\<issue 345\>\>)
@@ -381,9 +383,9 @@ SCM-Manager 1.29
 -   sonia.scm.net.HttpRequest.appendValues() adds parameter values twice
     (\<\<issue 342\>\>)
 
-<!-- -->
 
--   -   library updates\*\*
+
+**library updates**
 
 -   update ehcache to version 2.6.5
 -   update jersey to version 1.17.1
@@ -397,7 +399,7 @@ SCM-Manager 1.29
 SCM-Manager 1.28
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   added scm.home example for windows, see \<\<issue 328\>\>
 -   disable directory listings on default scm-server configuration
@@ -407,9 +409,9 @@ SCM-Manager 1.28
 -   use async cache for scm realm
 -   improve manager exception handling
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   fix path traversal vulnerability in git changelog api, see \<\<issue
     319\>\>
@@ -423,15 +425,15 @@ SCM-Manager 1.28
 SCM-Manager 1.27
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   exclude commons-logging and use jcl-over-slf4j instead
 -   icons of repository browser should be clickable
 -   post authentication events to the new event system
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   fix binding of extensions with eager singleton scope
 -   fix bug with registration of multiple authentication listeners
@@ -441,7 +443,7 @@ SCM-Manager 1.27
 SCM-Manager 1.26
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   use localStorage to store state of the user interface
 -   improve logging of plugin installer
@@ -450,9 +452,9 @@ SCM-Manager 1.26
 -   added recursive option to browse command
 -   added option to disable sub repository detection of browse command
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   normalize urls for BaseUrlFilter to prevent redirect loops, see
     \<\<issue 311\>\>
@@ -462,23 +464,23 @@ SCM-Manager 1.26
 -   synchronize getChangeset method of hook events and call registered
     pre processors before the changesets are returned to hook
 
-<!-- -->
 
--   -   library updates\*\*
+
+**library updates**
 
 -   update jersey to version 1.17
 
 SCM-Manager 1.25
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   added feature api for specific repository types
 -   improve logging of plugin installer
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   fix svn make and put with Polish characters in path, see \<\<issue
     298\>\>
@@ -489,9 +491,9 @@ SCM-Manager 1.25
 -   fix installing plugin package breaks classpath.xml, see \<\<issue
     306\>\>
 
-<!-- -->
 
--   -   library updates\*\*
+
+**library updates**
 
 -   update svnkit to version 1.7.8-scm1
 -   update ehcache to version 2.6.3
@@ -502,14 +504,14 @@ SCM-Manager 1.25
 SCM-Manager 1.24
 ----------------
 
--   -   fixed bugs\*\*
+**fixed bugs**
 
 -   fix wrong default date format
 
 SCM-Manager 1.23
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   new event api based on guavas EventBus
 -   added option to exclude hosts from proxy, see \<\<issue 281\>\>
@@ -523,9 +525,9 @@ SCM-Manager 1.23
 -   prepare server-config.xml for request logging
 -   improve javadoc
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   use system environment when executing \"hg create\"
 -   fix build from source, see \<\<issue 289\>\>
@@ -538,9 +540,9 @@ SCM-Manager 1.23
 -   fix mercurial sub repository detection in source browser
 -   fix non closing client response
 
-<!-- -->
 
--   -   library updates\*\*
+
+**library updates**
 
 -   update selenium to version 2.28.0
 -   update svnkit to version 1.7.6-scm3
@@ -554,7 +556,7 @@ SCM-Manager 1.23
 SCM-Manager 1.22
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   store expanded/collapsed state of groupingviews across sessions, see
     \<\<issue 268\>\>
@@ -562,15 +564,15 @@ SCM-Manager 1.22
 -   added method to read templates from a reader
 -   added repository type icons to grid
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   fix permission autocomplete, see \<\<issue 267\>\>
 
-<!-- -->
 
--   -   library updates\*\*
+
+**library updates**
 
 -   update mustache.java to version 0.8.8
 -   update mockito to version 1.9.5
@@ -578,7 +580,7 @@ SCM-Manager 1.22
 SCM-Manager 1.21
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   reimplment the complete security model on top of apache shiro
 -   allow execution of administration tasks without an active http
@@ -590,9 +592,9 @@ SCM-Manager 1.21
 -   improve performance and memory consumption of svn log command
 -   do not log sensitive cgi env variables
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   fix freezing configuration form on ie, see \<\<issue 236\>\>
 -   fix wrong branch informations of git repository hooks, \<\<issue
@@ -600,9 +602,9 @@ SCM-Manager 1.21
 -   fix bug in history of subversion repositories
 -   fix wrong mercurial changeset ids during hooks
 
-<!-- -->
 
--   -   library updates\*\*
+
+**library updates**
 
 -   update google guava to version 13.0.1
 -   update jetty to version 7.6.7.v20120910
@@ -616,26 +618,25 @@ SCM-Manager 1.21
 SCM-Manager 1.20
 ----------------
 
--   -   improvements\*\*
+**improvements**
 
 -   added java.awt.headless system property to server startup scripts
 -   strip changeset ids to 12 chars
 -   use eternal caches for new repository api
 -   added placeholder to commit view
 
-<!-- -->
 
--   -   fixed bugs\*\*
+
+**fixed bugs**
 
 -   fix non closing \"hg serve\" processes
 -   fix error on changing branches in commit viewer
 -   fix wrong file modifications on git changeset overview
 
-<!-- -->
 
--   -   library updates\*\*
+
+**library updates**
 
 -   update logback to version 1.0.7
 
-[Release 1.19 -
-1.0](https://bitbucket.org/sdorra/scm-manager/wiki/release%20notes%201.19%20-%201.0 "wikilink")
+[Release 1.19 - 1.0](release%20notes%201.19%20-%201.0.md)
