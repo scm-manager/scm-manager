@@ -34455,7 +34455,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 jlTqlS level is-flex"
       >
         <div
-          className="level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 dbLPPh level-left is-hidden-mobile"
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
@@ -34495,7 +34495,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
           </a>
         </div>
         <div
-          className="level-right is-mobile is-marginless"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 jkwBTE level-right is-block is-mobile is-marginless shorten-text"
         >
           <small
             className="level-item"
@@ -34572,7 +34572,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 jlTqlS level is-flex"
       >
         <div
-          className="level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 dbLPPh level-left is-hidden-mobile"
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
@@ -34612,7 +34612,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
           </a>
         </div>
         <div
-          className="level-right is-mobile is-marginless"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 jkwBTE level-right is-block is-mobile is-marginless shorten-text"
         >
           <small
             className="level-item"
@@ -34686,7 +34686,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 jlTqlS level is-flex"
       >
         <div
-          className="level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 dbLPPh level-left is-hidden-mobile"
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
@@ -34726,7 +34726,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
           </a>
         </div>
         <div
-          className="level-right is-mobile is-marginless"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 jkwBTE level-right is-block is-mobile is-marginless shorten-text"
         >
           <small
             className="level-item"
@@ -34800,7 +34800,7 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 jlTqlS level is-flex"
       >
         <div
-          className="level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 dbLPPh level-left is-hidden-mobile"
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
@@ -34847,7 +34847,7 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
           </a>
         </div>
         <div
-          className="level-right is-mobile is-marginless"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 jkwBTE level-right is-block is-mobile is-marginless shorten-text"
         >
           <small
             className="level-item"
