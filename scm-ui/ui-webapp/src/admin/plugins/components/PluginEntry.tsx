@@ -88,10 +88,7 @@ class PluginEntry extends React.Component<Props, State> {
   };
 
   createFooterLeft = (plugin: Plugin) => {
-    if (!this.isInstallable()) {
       return <small>{plugin.version}</small>;
-    }
-    return null;
   };
 
   createFooterRight = (plugin: Plugin) => {

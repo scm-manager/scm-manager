@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
-- Display plugin version for installed plugins ([#1089](https://github.com/scm-manager/scm-manager/pull/1089)
+- Display version for plugins ([#1089](https://github.com/scm-manager/scm-manager/pull/1089)
 
 ### Changed
 - Simplified collapse state management of the secondary navigation ([#1086](https://github.com/scm-manager/scm-manager/pull/1086)
