@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import org.junit.jupiter.api.Test;
@@ -30,6 +30,7 @@ import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 
 import java.io.IOException;
@@ -37,6 +38,8 @@ import java.util.Collections;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,6 +52,9 @@ class PluginCenterLoaderTest {
 
   @Mock
   private PluginCenterDtoMapper mapper;
+
+  @Mock
+  private ScmEventBus eventBus;
 
   @InjectMocks
   private PluginCenterLoader loader;
@@ -70,5 +76,14 @@ class PluginCenterLoaderTest {
 
     Set<AvailablePlugin> fetch = loader.load(PLUGIN_URL);
     assertThat(fetch).isEmpty();
+  }
+
+  @Test
+  void shouldFirePluginCenterErrorEvent() throws IOException {
+    when(client.get(PLUGIN_URL).request()).thenThrow(new IOException("failed to fetch"));
+
+    loader.load(PLUGIN_URL);
+
+    verify(eventBus).post(any(PluginCenterErrorEvent.class));
   }
 }

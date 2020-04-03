@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
+- Fire various plugin events ([#1088](https://github.com/scm-manager/scm-manager/pull/1088))
 - Display version for plugins ([#1089](https://github.com/scm-manager/scm-manager/pull/1089)
 
 ### Changed

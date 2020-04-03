@@ -31,22 +31,18 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.lifecycle.Restarter;
 import sonia.scm.plugin.AvailablePlugin;
-import sonia.scm.plugin.AvailablePluginDescriptor;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginInformation;
 
 import java.net.URI;
-import java.util.Collections;
 
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static sonia.scm.plugin.PluginTestHelper.createAvailable;
 import static sonia.scm.plugin.PluginTestHelper.createInstalled;
