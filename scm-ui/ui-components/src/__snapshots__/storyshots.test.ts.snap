@@ -445,6 +445,119 @@ exports[`Storyshots Buttons|SubmitButton Default 1`] = `
 </div>
 `;
 
+exports[`Storyshots CardColumn default 1`] = `
+<div
+  className="CardColumnstories__Wrapper-sc-1ztucl-0 IFDjP"
+>
+  <a
+    className="overlay-column"
+    href="/foo/bar"
+    onClick={[Function]}
+  />
+  <article
+    className="CardColumn__NoEventWrapper-sc-1w6lsih-0 kZKqpc media"
+  >
+    <figure
+      className="CardColumn__AvatarWrapper-sc-1w6lsih-1 bZyfne media-left"
+    >
+      <i
+        className="fas fa-icons fa-2x has-text-grey-light media-left"
+      />
+    </figure>
+    <div
+      className="CardColumn__FlexFullHeight-sc-1w6lsih-2 cAdfGj media-content text-box is-flex"
+    >
+      <div
+        className="is-flex"
+      >
+        <div
+          className="CardColumn__ContentLeft-sc-1w6lsih-4 dumWkw content"
+        >
+          <p
+            className="shorten-text is-marginless"
+          >
+            <strong>
+              title
+            </strong>
+          </p>
+          <p
+            className="shorten-text"
+          >
+            A description can be added here.
+          </p>
+        </div>
+        <div
+          className="CardColumn__ContentRight-sc-1w6lsih-5 kyEPRa"
+        />
+      </div>
+      <div
+        className="CardColumn__FooterWrapper-sc-1w6lsih-3 jlTqlS level is-flex"
+      >
+        <div
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 dbLPPh level-left is-hidden-mobile"
+        >
+          <small>
+            left footer
+          </small>
+        </div>
+        <div
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 jkwBTE level-right is-block is-mobile is-marginless shorten-text"
+        >
+          <small>
+            right footer
+          </small>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+`;
+
+exports[`Storyshots CardColumnSmall default 1`] = `
+<div
+  className="CardColumnSmallstories__Wrapper-ofr817-0 fwZASP"
+>
+  <a
+    className="CardColumnSmall__StyledLink-tk9h0o-4 bSCFyE"
+    href="/foo/bar"
+    onClick={[Function]}
+  >
+    <div
+      className="media"
+    >
+      <i
+        className="fas fa-icons fa-2x has-text-grey-light media-left"
+      />
+      <div
+        className="CardColumnSmall__FlexFullHeight-tk9h0o-0 fwRxNw media-content text-box is-flex"
+      >
+        <div
+          className="CardColumnSmall__CenteredItems-tk9h0o-3 eHPOKj is-flex"
+        >
+          <div
+            className="CardColumnSmall__ContentLeft-tk9h0o-1 ihirgF"
+          >
+            <strong
+              className="is-marginless"
+            >
+              main content
+            </strong>
+          </div>
+          <div
+            className="CardColumnSmall__ContentRight-tk9h0o-2 jZRaNn"
+          >
+            <small>
+              more text
+            </small>
+          </div>
+        </div>
+        <small />
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
 exports[`Storyshots DateFromNow Default 1`] = `
 <div>
   <p>
