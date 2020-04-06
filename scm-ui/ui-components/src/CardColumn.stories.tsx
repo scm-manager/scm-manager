@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { storiesOf } from "@storybook/react";
-import CardColumnSmall from "./CardColumnSmall";
+import CardColumn from "./CardColumn";
 import Icon from "./Icon";
 import styled from "styled-components";
 
@@ -35,14 +35,22 @@ const Wrapper = styled.div`
 
 const Container: FC = ({ children }) => <Wrapper>{children}</Wrapper>;
 
+const title = <strong>title</strong>;
+const avatar = <Icon name="icons fa-2x" className="media-left" />;
 const link = "/foo/bar";
-const icon = <Icon name="icons fa-2x" className="media-left" />;
-const contentLeft = <strong className="is-marginless">main content</strong>;
-const contentRight = <small>more text</small>;
+const footerLeft = <small>left footer</small>;
+const footerRight = <small>right footer</small>;
 
-storiesOf("CardColumnSmall", module)
+storiesOf("CardColumn", module)
   .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .addDecorator(storyFn => <Container>{storyFn()}</Container>)
   .add("default", () => (
-    <CardColumnSmall link={link} icon={icon} contentLeft={contentLeft} contentRight={contentRight} />
+    <CardColumn
+      title={title}
+      description="A description can be added here."
+      avatar={avatar}
+      link={link}
+      footerLeft={footerLeft}
+      footerRight={footerRight}
+    />
   ));
