@@ -445,6 +445,51 @@ exports[`Storyshots Buttons|SubmitButton Default 1`] = `
 </div>
 `;
 
+exports[`Storyshots CardColumnSmall Default 1`] = `
+<div
+  className="CardColumnSmallstories__Wrapper-ofr817-0 fwZASP"
+>
+  <a
+    className="CardColumnSmall__StyledLink-tk9h0o-4 bSCFyE"
+    href="/foo/bar"
+    onClick={[Function]}
+  >
+    <div
+      className="media"
+    >
+      <i
+        className="fas fa-icons fa-2x has-text-grey-light media-left"
+      />
+      <div
+        className="CardColumnSmall__FlexFullHeight-tk9h0o-0 fwRxNw media-content text-box is-flex"
+      >
+        <div
+          className="CardColumnSmall__CenteredItems-tk9h0o-3 eHPOKj is-flex"
+        >
+          <div
+            className="CardColumnSmall__ContentLeft-tk9h0o-1 ihirgF"
+          >
+            <strong
+              className="is-marginless"
+            >
+              Main content
+            </strong>
+          </div>
+          <div
+            className="CardColumnSmall__ContentRight-tk9h0o-2 jZRaNn"
+          >
+            <small>
+              More text
+            </small>
+          </div>
+        </div>
+        <small />
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
 exports[`Storyshots DateFromNow Default 1`] = `
 <div>
   <p>
