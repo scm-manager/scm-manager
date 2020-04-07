@@ -659,7 +659,7 @@ exports[`Storyshots Diff Binaries 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -846,7 +846,7 @@ exports[`Storyshots Diff Binaries 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -1334,7 +1334,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -2186,7 +2186,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -2634,7 +2634,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -3203,7 +3203,7 @@ exports[`Storyshots Diff Default 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -3778,7 +3778,7 @@ exports[`Storyshots Diff Default 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -4630,7 +4630,7 @@ exports[`Storyshots Diff Default 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -5078,7 +5078,7 @@ exports[`Storyshots Diff Default 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -5526,7 +5526,7 @@ exports[`Storyshots Diff Default 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -6581,7 +6581,7 @@ exports[`Storyshots Diff Default 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -7115,7 +7115,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
         src/main/java/com/cloudogu/scm/review/events/EventListener.java
       </p>
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -7694,7 +7694,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
         src/main/js/ChangeNotification.tsx
       </p>
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -8550,7 +8550,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
         src/main/resources/locales/de/plugins.json
       </p>
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -9002,7 +9002,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
         src/main/resources/locales/en/plugins.json
       </p>
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -9454,7 +9454,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
         src/test/java/com/cloudogu/scm/review/events/ClientTest.java
       </p>
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -10513,7 +10513,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
         Main.java
       </p>
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -11061,7 +11061,7 @@ exports[`Storyshots Diff File Controls 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -11654,7 +11654,7 @@ exports[`Storyshots Diff File Controls 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -12524,7 +12524,7 @@ exports[`Storyshots Diff File Controls 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -12990,7 +12990,7 @@ exports[`Storyshots Diff File Controls 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -13456,7 +13456,7 @@ exports[`Storyshots Diff File Controls 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -14529,7 +14529,7 @@ exports[`Storyshots Diff File Controls 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -15059,7 +15059,7 @@ exports[`Storyshots Diff Hunks 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -15896,7 +15896,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -16483,7 +16483,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -17347,7 +17347,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -17795,7 +17795,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -18243,7 +18243,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -19298,7 +19298,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -19840,7 +19840,7 @@ exports[`Storyshots Diff OnClick 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -20455,7 +20455,7 @@ exports[`Storyshots Diff OnClick 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -21369,7 +21369,7 @@ exports[`Storyshots Diff OnClick 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -21847,7 +21847,7 @@ exports[`Storyshots Diff OnClick 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -22325,7 +22325,7 @@ exports[`Storyshots Diff OnClick 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -23456,7 +23456,7 @@ exports[`Storyshots Diff OnClick 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -24022,7 +24022,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj split"
+        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu split"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -24690,7 +24690,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj split"
+        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu split"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -25632,7 +25632,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj split"
+        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu split"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -26132,7 +26132,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj split"
+        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu split"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -26632,7 +26632,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj split"
+        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu split"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -27856,7 +27856,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj split"
+        className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu split"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -28459,7 +28459,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -29034,7 +29034,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -29886,7 +29886,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -30334,7 +30334,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -30782,7 +30782,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>
@@ -31837,7 +31837,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
       className="panel-block is-paddingless"
     >
       <table
-        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 WDhdj unified"
+        className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 jMfsXu unified"
         onMouseDown={[Function]}
       >
         <colgroup>

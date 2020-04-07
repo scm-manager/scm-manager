@@ -44,9 +44,11 @@ const DiffView = styled(Diff)`
   > .diff-gutter:empty:hover::after {
     font-size: 0.7rem;
   }
-  /* smaller font size for code */
+  /* smaller font size for code and
+  ensure same monospace font throughout whole scmm */
   & .diff-line {
     font-size: 0.75rem;
+    font-family: "Courier New", Monaco, Menlo, "Ubuntu Mono", "source-code-pro", monospace;
   }
   /* comment padding for sidebyside view */
   &.split .diff-widget-content .is-indented-line {
