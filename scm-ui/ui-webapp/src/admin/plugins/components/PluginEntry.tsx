@@ -87,8 +87,12 @@ class PluginEntry extends React.Component<Props, State> {
     });
   };
 
+  createFooterLeft = (plugin: Plugin) => {
+      return <small>{plugin.version}</small>;
+  };
+
   createFooterRight = (plugin: Plugin) => {
-    return <small className="level-item">{plugin.author}</small>;
+    return <small className="level-item is-block shorten-text">{plugin.author}</small>;
   };
 
   isInstallable = () => {
@@ -172,8 +176,8 @@ class PluginEntry extends React.Component<Props, State> {
     const { plugin } = this.props;
     const avatar = this.createAvatar(plugin);
     const actionbar = this.createActionbar();
+    const footerLeft = this.createFooterLeft(plugin);
     const footerRight = this.createFooterRight(plugin);
-
     const modal = this.renderModal();
 
     return (
@@ -184,6 +188,7 @@ class PluginEntry extends React.Component<Props, State> {
           title={plugin.displayName ? <strong>{plugin.displayName}</strong> : <strong>{plugin.name}</strong>}
           description={plugin.description}
           contentRight={plugin.pending || plugin.markedForUninstall ? this.createPendingSpinner() : actionbar}
+          footerLeft={footerLeft}
           footerRight={footerRight}
         />
         {modal}

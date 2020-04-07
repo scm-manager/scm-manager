@@ -68,6 +68,14 @@ const ContentRight = styled.div`
   margin-left: auto;
 `;
 
+const RightMarginDiv = styled.div`
+  margin-right: 0.5rem;
+`;
+
+const InheritFlexShrinkDiv = styled.div`
+  flex-shrink: inherit;
+`;
+
 export default class CardColumn extends React.Component<Props> {
   createLink = () => {
     const { link, action } = this.props;
@@ -105,8 +113,10 @@ export default class CardColumn extends React.Component<Props> {
               <ContentRight>{contentRight}</ContentRight>
             </div>
             <FooterWrapper className={classNames("level", "is-flex")}>
-              <div className="level-left is-hidden-mobile">{footerLeft}</div>
-              <div className="level-right is-mobile is-marginless">{footerRight}</div>
+              <RightMarginDiv className="level-left is-hidden-mobile">{footerLeft}</RightMarginDiv>
+              <InheritFlexShrinkDiv className="level-right is-block is-mobile is-marginless shorten-text">
+                {footerRight}
+              </InheritFlexShrinkDiv>
             </FooterWrapper>
           </FlexFullHeight>
         </NoEventWrapper>

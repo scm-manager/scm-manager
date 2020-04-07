@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -104,6 +104,12 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   private BrowserResult browserResult;
 
+  private BrowseCommandRequest request;
+
+  private org.eclipse.jgit.lib.Repository repo;
+
+  private ObjectId revId;
+
   private int resultCount = 0;
 
   public GitBrowseCommand(GitContext context, Repository repository, LfsBlobStoreFactory lfsBlobStoreFactory, SyncAsyncExecutor executor) {
@@ -117,11 +123,12 @@ public class GitBrowseCommand extends AbstractGitCommand
     throws IOException {
     logger.debug("try to create browse result for {}", request);
 
-    org.eclipse.jgit.lib.Repository repo = open();
-    ObjectId revId = computeRevIdToBrowse(request, repo);
+    this.request = request;
+    repo = open();
+    revId = computeRevIdToBrowse();
 
     if (revId != null) {
-      browserResult = new BrowserResult(revId.getName(), request.getRevision(), getEntry(repo, request, revId));
+      browserResult = new BrowserResult(revId.getName(), request.getRevision(), getEntry());
       return browserResult;
     } else {
       logger.warn("could not find head of repository {}, empty?", repository.getNamespaceAndName());
@@ -129,7 +136,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
   }
 
-  private ObjectId computeRevIdToBrowse(BrowseCommandRequest request, org.eclipse.jgit.lib.Repository repo) throws IOException {
+  private ObjectId computeRevIdToBrowse() throws IOException {
     if (Util.isEmpty(request.getRevision())) {
       return getDefaultBranch(repo);
     } else {
@@ -151,9 +158,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     return fileObject;
   }
 
-  private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
-                                      BrowseCommandRequest request, ObjectId revId, TreeEntry treeEntry)
-    throws IOException {
+  private FileObject createFileObject(TreeEntry treeEntry) throws IOException {
 
     FileObject file = new FileObject();
 
@@ -162,18 +167,11 @@ public class GitBrowseCommand extends AbstractGitCommand
     file.setName(treeEntry.getNameString());
     file.setPath(path);
 
-    SubRepository sub = null;
-
-    if (!request.isDisableSubRepositoryDetection())
-    {
-      sub = getSubRepository(repo, revId, path);
-    }
-
-    if (sub != null)
+    if (treeEntry.getType() == TreeType.SUB_REPOSITORY)
     {
       logger.trace("{} seems to be a sub repository", path);
       file.setDirectory(true);
-      file.setSubRepository(sub);
+      file.setSubRepository(treeEntry.subRepository);
     }
     else
     {
@@ -189,7 +187,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         try (RevWalk walk = new RevWalk(repo)) {
           commit = walk.parseCommit(revId);
         }
-        Optional<LfsPointer> lfsPointer = getLfsPointer(repo, path, commit, treeEntry);
+        Optional<LfsPointer> lfsPointer = getLfsPointer(path, commit, treeEntry);
 
         if (lfsPointer.isPresent()) {
           setFileLengthFromLfsBlob(lfsPointer.get(), file);
@@ -198,24 +196,24 @@ public class GitBrowseCommand extends AbstractGitCommand
         }
 
         executor.execute(
-          new CompleteFileInformation(path, revId, repo, file, request),
-          new AbortFileInformation(request)
+          new CompleteFileInformation(path, file),
+          new AbortFileInformation()
         );
       }
     }
     return file;
   }
 
-  private void updateCache(BrowseCommandRequest request) {
+  private void updateCache() {
     request.updateCache(browserResult);
     logger.info("updated browser result for repository {}", repository.getNamespaceAndName());
   }
 
-  private FileObject getEntry(org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId) throws IOException {
+  private FileObject getEntry() throws IOException {
     try (RevWalk revWalk = new RevWalk(repo); TreeWalk treeWalk = new TreeWalk(repo)) {
       logger.debug("load repository browser for revision {}", revId.name());
 
-      if (!isRootRequest(request)) {
+      if (!isRootRequest()) {
         treeWalk.setFilter(PathFilter.create(request.getPath()));
       }
 
@@ -227,46 +225,46 @@ public class GitBrowseCommand extends AbstractGitCommand
         throw new IllegalStateException("could not find tree for " + revId.name());
       }
 
-      if (isRootRequest(request)) {
+      if (isRootRequest()) {
         FileObject result = createEmptyRoot();
-        findChildren(result, repo, request, revId, treeWalk);
+        findChildren(result, treeWalk);
         return result;
       } else {
-        FileObject result = findFirstMatch(repo, request, revId, treeWalk);
+        FileObject result = findFirstMatch(treeWalk);
         if ( result.isDirectory() ) {
           treeWalk.enterSubtree();
-          findChildren(result, repo, request, revId, treeWalk);
+          findChildren(result, treeWalk);
         }
         return result;
       }
     }
   }
 
-  private boolean isRootRequest(BrowseCommandRequest request) {
+  private boolean isRootRequest() {
     return Strings.isNullOrEmpty(request.getPath()) || "/".equals(request.getPath());
   }
 
-  private void findChildren(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException {
+  private void findChildren(FileObject parent, TreeWalk treeWalk) throws IOException {
     TreeEntry entry = new TreeEntry();
-    createTree(parent.getPath(), entry, repo, request, treeWalk);
-    convertToFileObject(parent, repo, request, revId, entry.getChildren());
+    createTree(parent.getPath(), entry, treeWalk);
+    convertToFileObject(parent, entry.getChildren());
   }
 
-  private void convertToFileObject(FileObject parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, ObjectId revId, List<TreeEntry> entries) throws IOException {
+  private void convertToFileObject(FileObject parent, List<TreeEntry> entries) throws IOException {
     List<FileObject> files = Lists.newArrayList();
     Iterator<TreeEntry> entryIterator = entries.iterator();
     boolean hasNext;
     while ((hasNext = entryIterator.hasNext()) && resultCount < request.getLimit() + request.getOffset())
     {
       TreeEntry entry = entryIterator.next();
-      FileObject fileObject = createFileObject(repo, request, revId, entry);
+      FileObject fileObject = createFileObject(entry);
 
       if (!fileObject.isDirectory()) {
         ++resultCount;
       }
 
       if (request.isRecursive() && fileObject.isDirectory()) {
-        convertToFileObject(fileObject, repo, request, revId, entry.getChildren());
+        convertToFileObject(fileObject, entry.getChildren());
       }
 
       if (resultCount > request.getOffset() || (request.getOffset() == 0 && fileObject.isDirectory())) {
@@ -279,7 +277,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     parent.setTruncated(hasNext);
   }
 
-  private Optional<TreeEntry> createTree(String path, TreeEntry parent, org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request, TreeWalk treeWalk) throws IOException {
+  private Optional<TreeEntry> createTree(String path, TreeEntry parent, TreeWalk treeWalk) throws IOException {
     List<TreeEntry> entries = new ArrayList<>();
     while (treeWalk.next()) {
       TreeEntry treeEntry = new TreeEntry(repo, treeWalk);
@@ -290,9 +288,9 @@ public class GitBrowseCommand extends AbstractGitCommand
 
       entries.add(treeEntry);
 
-      if (request.isRecursive() && treeEntry.isDirectory()) {
+      if (request.isRecursive() && treeEntry.getType() == TreeType.DIRECTORY) {
         treeWalk.enterSubtree();
-        Optional<TreeEntry> surplus = createTree(treeEntry.getNameString(), treeEntry, repo, request, treeWalk);
+        Optional<TreeEntry> surplus = createTree(treeEntry.getNameString(), treeEntry, treeWalk);
         surplus.ifPresent(entries::add);
       }
     }
@@ -300,8 +298,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     return empty();
   }
 
-  private FileObject findFirstMatch(org.eclipse.jgit.lib.Repository repo,
-                                    BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk) throws IOException {
+  private FileObject findFirstMatch(TreeWalk treeWalk) throws IOException {
     String[] pathElements = request.getPath().split("/");
     int currentDepth = 0;
     int limit = pathElements.length;
@@ -313,7 +310,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         currentDepth++;
 
         if (currentDepth >= limit) {
-          return createFileObject(repo, request, revId, new TreeEntry(repo, treeWalk));
+          return createFileObject(new TreeEntry(repo, treeWalk));
         } else {
           treeWalk.enterSubtree();
         }
@@ -323,13 +320,13 @@ public class GitBrowseCommand extends AbstractGitCommand
     throw notFound(entity("File", request.getPath()).in("Revision", revId.getName()).in(this.repository));
   }
 
-  private Map<String, SubRepository> getSubRepositories(org.eclipse.jgit.lib.Repository repo, ObjectId revision)
+  private Map<String, SubRepository> getSubRepositories()
     throws IOException {
 
-    logger.debug("read submodules of {} at {}", repository.getName(), revision);
+    logger.debug("read submodules of {} at {}", repository.getName(), revId);
 
     try ( ByteArrayOutputStream baos = new ByteArrayOutputStream() ) {
-      new GitCatCommand(context, repository, lfsBlobStoreFactory).getContent(repo, revision,
+      new GitCatCommand(context, repository, lfsBlobStoreFactory).getContent(repo, revId,
         PATH_MODULES, baos);
       return GitSubModuleParser.parse(baos.toString());
     } catch (NotFoundException ex) {
@@ -338,12 +335,12 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
   }
 
-  private SubRepository getSubRepository(org.eclipse.jgit.lib.Repository repo, ObjectId revId, String path)
+  private SubRepository getSubRepository(String path)
     throws IOException {
     Map<String, SubRepository> subRepositories = subrepositoryCache.get(revId);
 
     if (subRepositories == null) {
-      subRepositories = getSubRepositories(repo, revId);
+      subRepositories = getSubRepositories();
       subrepositoryCache.put(revId, subRepositories);
     }
 
@@ -353,7 +350,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     return null;
   }
 
-  private Optional<LfsPointer> getLfsPointer(org.eclipse.jgit.lib.Repository repo, String path, RevCommit commit, TreeEntry treeWalk) {
+  private Optional<LfsPointer> getLfsPointer(String path, RevCommit commit, TreeEntry treeWalk) {
     try {
       Attributes attributes = LfsFactory.getAttributesForPath(repo, path, commit);
 
@@ -377,17 +374,11 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   private class CompleteFileInformation implements Consumer<SyncAsyncExecutor.ExecutionType> {
     private final String path;
-    private final ObjectId revId;
-    private final org.eclipse.jgit.lib.Repository repo;
     private final FileObject file;
-    private final BrowseCommandRequest request;
 
-    public CompleteFileInformation(String path, ObjectId revId, org.eclipse.jgit.lib.Repository repo, FileObject file, BrowseCommandRequest request) {
+    public CompleteFileInformation(String path, FileObject file) {
       this.path = path;
-      this.revId = revId;
-      this.repo = repo;
       this.file = file;
-      this.request = request;
     }
 
     @Override
@@ -429,23 +420,18 @@ public class GitBrowseCommand extends AbstractGitCommand
       file.setCommitDate(GitUtil.getCommitTime(commit));
       file.setDescription(commit.getShortMessage());
       if (executionType == ASYNCHRONOUS && browserResult != null) {
-        updateCache(request);
+        updateCache();
       }
     }
   }
 
   private class AbortFileInformation implements Runnable {
-    private final BrowseCommandRequest request;
-
-    public AbortFileInformation(BrowseCommandRequest request) {
-      this.request = request;
-    }
 
     @Override
     public void run() {
       synchronized (asyncMonitor) {
         if (markPartialAsAborted(browserResult.getFile())) {
-          updateCache(request);
+          updateCache();
         }
       }
     }
@@ -464,28 +450,42 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
   }
 
+  private enum TreeType {
+    FILE, DIRECTORY, SUB_REPOSITORY
+  }
+
   private class TreeEntry {
 
     private final String pathString;
     private final String nameString;
     private final ObjectId objectId;
-    private final boolean directory;
+    private final TreeType type;
+    private final SubRepository subRepository;
     private List<TreeEntry> children = emptyList();
 
     TreeEntry() {
       pathString = "";
       nameString = "";
       objectId = null;
-      directory = true;
+      subRepository = null;
+      type = TreeType.DIRECTORY;
     }
 
     TreeEntry(org.eclipse.jgit.lib.Repository repo, TreeWalk treeWalk) throws IOException {
       this.pathString = treeWalk.getPathString();
       this.nameString = treeWalk.getNameString();
       this.objectId = treeWalk.getObjectId(0);
-      ObjectLoader loader = repo.open(objectId);
 
-      this.directory = loader.getType() == Constants.OBJ_TREE;
+      if (!request.isDisableSubRepositoryDetection() && GitBrowseCommand.this.getSubRepository(pathString) != null) {
+        subRepository = GitBrowseCommand.this.getSubRepository(pathString);
+        type = TreeType.SUB_REPOSITORY;
+      } else if (repo.open(objectId).getType() == Constants.OBJ_TREE) {
+        subRepository = null;
+        type = TreeType.DIRECTORY;
+      } else {
+        subRepository = null;
+        type = TreeType.FILE;
+      }
     }
 
     String getPathString() {
@@ -500,8 +500,12 @@ public class GitBrowseCommand extends AbstractGitCommand
       return objectId;
     }
 
-    boolean isDirectory() {
-      return directory;
+    SubRepository getSubRepository() {
+      return subRepository;
+    }
+
+    TreeType getType() {
+      return type;
     }
 
     List<TreeEntry> getChildren() {
@@ -509,7 +513,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
 
     void setChildren(List<TreeEntry> children) {
-      sort(children, TreeEntry::isDirectory, TreeEntry::getNameString);
+      sort(children, entry -> entry.type != TreeType.FILE, TreeEntry::getNameString);
       this.children = children;
     }
   }
