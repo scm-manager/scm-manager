@@ -63,7 +63,7 @@ public class ScmModuleTest
 
     //J-
     assertThat(
-      Iterables.transform(module.getExtensions(), ExtensionElement::getClazz),
+      Iterables.transform(module.getExtensions(), ClassElement::getClazz),
       containsInAnyOrder(
         String.class.getName(),
         Integer.class.getName()

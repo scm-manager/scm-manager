@@ -101,6 +101,14 @@ public class ClassSetElement implements DescriptorElement
         element.appendChild(attr);
       }
 
+      if (c.requires != null) {
+        for (String requiresEntry : c.requires) {
+          Element requiresElement = doc.createElement("requires");
+          requiresElement.setTextContent(requiresEntry);
+          element.appendChild(requiresElement);
+        }
+      }
+
       element.appendChild(classEl);
       root.appendChild(element);
     }
@@ -122,20 +130,23 @@ public class ClassSetElement implements DescriptorElement
     /**
      * Constructs ...
      *
-     *
-     * @param className
+     *  @param className
      * @param description
+     * @param requires
      * @param attributes
      */
     public ClassWithAttributes(String className, String description,
-      Map<String, String> attributes)
+                               String[] requires, Map<String, String> attributes)
     {
       this.className = className;
       this.description = description;
+      this.requires = requires;
       this.attributes = attributes;
     }
 
     //~--- fields -------------------------------------------------------------
+
+    private final String[] requires;
 
     /** Field description */
     private final Map<String, String> attributes;

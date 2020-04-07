@@ -21,133 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
+import lombok.Data;
 
 import javax.xml.bind.annotation.XmlElement;
+import java.util.HashSet;
+import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public final class ClassElement
-{
+@Data
+public final class ClassElement {
 
-  /**
-   * Constructs ...
-   *
-   */
-  ClassElement() {}
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param clazz
-   * @param description
-   */
-  public ClassElement(Class<?> clazz, String description)
-  {
-    this.clazz = clazz;
-    this.description = description;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
-  @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-
-    if (getClass() != obj.getClass())
-    {
-      return false;
-    }
-
-    final ClassElement other = (ClassElement) obj;
-
-    return Objects.equal(clazz, other.clazz)
-      && Objects.equal(description, other.description);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(clazz, description);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String toString()
-  {
-    //J-
-    return MoreObjects.toStringHelper(this)
-                  .add("clazz", clazz)
-                  .add("description", description)
-                  .toString();
-    //J+
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Class<?> getClazz()
-  {
-    return clazz;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getDescription()
-  {
-    return description;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
   @XmlElement(name = "class")
-  private Class<?> clazz;
-
-  /** Field description */
+  private String clazz;
   private String description;
+  private Set<String> requires = new HashSet<>();
+
+  ClassElement() {
+  }
 }

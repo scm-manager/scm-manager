@@ -21,30 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import java.util.HashSet;
-import java.util.Set;
-
-@Getter
-@ToString
-@NoArgsConstructor
-@EqualsAndHashCode
-@AllArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
-public class ExtensionElement {
-  @XmlElement(name = "class")
-  private String clazz;
-  private String description;
-  private Set<String> requires = new HashSet<>();
+@Documented
+@Target({ ElementType.TYPE })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Requires {
+  String[] value();
 }
