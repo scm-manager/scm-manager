@@ -62,11 +62,15 @@ const StyledLink = styled(Link)`
   }
 `;
 
+const IconWrapper = styled.figure`
+  margin-right: 0.5rem;
+`;
+
 const CardColumnSmall: FC<Props> = ({ link, icon, contentLeft, contentRight, footer }) => {
   return (
     <StyledLink to={link}>
       <div className="media">
-        {icon}
+        <IconWrapper className="media-left">{icon}</IconWrapper>
         <FlexFullHeight className={classNames("media-content", "text-box", "is-flex")}>
           <CenteredItems className="is-flex">
             <ContentLeft>{contentLeft}</ContentLeft>
