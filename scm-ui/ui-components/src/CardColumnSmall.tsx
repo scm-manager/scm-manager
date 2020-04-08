@@ -29,7 +29,7 @@ import { Link } from "react-router-dom";
 
 type Props = {
   link: string;
-  icon: ReactNode;
+  avatar?: ReactNode;
   contentLeft: ReactNode;
   contentRight: ReactNode;
   footer?: ReactNode;
@@ -62,21 +62,24 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const IconWrapper = styled.figure`
+const AvatarWrapper = styled.figure`
   margin-right: 0.5rem;
 `;
 
-const CardColumnSmall: FC<Props> = ({ link, icon, contentLeft, contentRight, footer }) => {
+const CardColumnSmall: FC<Props> = ({ link, avatar, contentLeft, contentRight, footer }) => {
+  const renderAvatar = avatar ? <AvatarWrapper className="media-left">{avatar}</AvatarWrapper> : null;
+  const renderFooter = footer ? <small>{footer}</small> : null;
+
   return (
     <StyledLink to={link}>
       <div className="media">
-        <IconWrapper className="media-left">{icon}</IconWrapper>
+        {renderAvatar}
         <FlexFullHeight className={classNames("media-content", "text-box", "is-flex")}>
           <CenteredItems className="is-flex">
             <ContentLeft>{contentLeft}</ContentLeft>
             <ContentRight>{contentRight}</ContentRight>
           </CenteredItems>
-          <small>{footer}</small>
+          {renderFooter}
         </FlexFullHeight>
       </div>
     </StyledLink>

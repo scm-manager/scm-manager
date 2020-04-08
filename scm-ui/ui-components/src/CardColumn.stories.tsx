@@ -35,9 +35,9 @@ const Wrapper = styled.div`
 
 const Container: FC = ({ children }) => <Wrapper>{children}</Wrapper>;
 
-const title = <strong>title</strong>;
-const avatar = <Icon name="icons fa-2x fa-fw" />;
 const link = "/foo/bar";
+const avatar = <Icon name="icons fa-2x fa-fw" />;
+const title = <strong>title</strong>;
 const footerLeft = <small>left footer</small>;
 const footerRight = <small>right footer</small>;
 
@@ -46,10 +46,17 @@ storiesOf("CardColumn", module)
   .addDecorator(storyFn => <Container>{storyFn()}</Container>)
   .add("default", () => (
     <CardColumn
+      link={link}
+      avatar={avatar}
       title={title}
       description="A description can be added here."
-      avatar={avatar}
-      link={link}
+      footerLeft={footerLeft}
+      footerRight={footerRight}
+    />
+  ))
+  .add("minimal", () => (
+    <CardColumn
+      title={title}
       footerLeft={footerLeft}
       footerRight={footerRight}
     />

@@ -486,9 +486,54 @@ exports[`Storyshots CardColumn default 1`] = `
             A description can be added here.
           </p>
         </div>
+      </div>
+      <div
+        className="CardColumn__FooterWrapper-sc-1w6lsih-3 jlTqlS level is-flex"
+      >
         <div
-          className="CardColumn__ContentRight-sc-1w6lsih-5 kyEPRa"
-        />
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 dbLPPh level-left is-hidden-mobile"
+        >
+          <small>
+            left footer
+          </small>
+        </div>
+        <div
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 jkwBTE level-right is-block is-mobile is-marginless shorten-text"
+        >
+          <small>
+            right footer
+          </small>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+`;
+
+exports[`Storyshots CardColumn minimal 1`] = `
+<div
+  className="CardColumnstories__Wrapper-sc-1ztucl-0 IFDjP"
+>
+  <article
+    className="CardColumn__NoEventWrapper-sc-1w6lsih-0 kZKqpc media"
+  >
+    <div
+      className="CardColumn__FlexFullHeight-sc-1w6lsih-2 cAdfGj media-content text-box is-flex"
+    >
+      <div
+        className="is-flex"
+      >
+        <div
+          className="CardColumn__ContentLeft-sc-1w6lsih-4 dumWkw content"
+        >
+          <p
+            className="shorten-text is-marginless"
+          >
+            <strong>
+              title
+            </strong>
+          </p>
+        </div>
       </div>
       <div
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 jlTqlS level is-flex"
@@ -526,7 +571,7 @@ exports[`Storyshots CardColumnSmall default 1`] = `
       className="media"
     >
       <figure
-        className="CardColumnSmall__IconWrapper-tk9h0o-5 bEHHUw media-left"
+        className="CardColumnSmall__AvatarWrapper-tk9h0o-5 jvTAoV media-left"
       >
         <i
           className="fas fa-icons fa-2x fa-fw has-text-grey-light"
@@ -555,7 +600,47 @@ exports[`Storyshots CardColumnSmall default 1`] = `
             </small>
           </div>
         </div>
-        <small />
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`Storyshots CardColumnSmall minimal 1`] = `
+<div
+  className="CardColumnSmallstories__Wrapper-ofr817-0 fwZASP"
+>
+  <a
+    className="CardColumnSmall__StyledLink-tk9h0o-4 bSCFyE"
+    href="/foo/bar"
+    onClick={[Function]}
+  >
+    <div
+      className="media"
+    >
+      <div
+        className="CardColumnSmall__FlexFullHeight-tk9h0o-0 fwRxNw media-content text-box is-flex"
+      >
+        <div
+          className="CardColumnSmall__CenteredItems-tk9h0o-3 eHPOKj is-flex"
+        >
+          <div
+            className="CardColumnSmall__ContentLeft-tk9h0o-1 ihirgF"
+          >
+            <strong
+              className="is-marginless"
+            >
+              main content
+            </strong>
+          </div>
+          <div
+            className="CardColumnSmall__ContentRight-tk9h0o-2 jZRaNn"
+          >
+            <small>
+              more text
+            </small>
+          </div>
+        </div>
       </div>
     </div>
   </a>
@@ -34564,9 +34649,6 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
             The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
           </p>
         </div>
-        <div
-          className="CardColumn__ContentRight-sc-1w6lsih-5 kyEPRa"
-        />
       </div>
       <div
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 jlTqlS level is-flex"
@@ -34681,9 +34763,6 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
             The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
           </p>
         </div>
-        <div
-          className="CardColumn__ContentRight-sc-1w6lsih-5 kyEPRa"
-        />
       </div>
       <div
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 jlTqlS level is-flex"
@@ -34795,9 +34874,6 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
             The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
           </p>
         </div>
-        <div
-          className="CardColumn__ContentRight-sc-1w6lsih-5 kyEPRa"
-        />
       </div>
       <div
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 jlTqlS level is-flex"
@@ -34909,9 +34985,6 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
             The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
           </p>
         </div>
-        <div
-          className="CardColumn__ContentRight-sc-1w6lsih-5 kyEPRa"
-        />
       </div>
       <div
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 jlTqlS level is-flex"
