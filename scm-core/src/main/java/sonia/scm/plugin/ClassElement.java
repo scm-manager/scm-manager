@@ -26,8 +26,15 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,14 +45,17 @@ import java.util.Set;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+@XmlAccessorType(XmlAccessType.FIELD)
 public final class ClassElement {
 
   @XmlElement(name = "class")
   private String clazz;
   private String description;
   private Set<String> requires = new HashSet<>();
-
-  ClassElement() {
-  }
 }
