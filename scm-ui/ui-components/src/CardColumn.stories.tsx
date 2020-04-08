@@ -36,7 +36,7 @@ const Wrapper = styled.div`
 const Container: FC = ({ children }) => <Wrapper>{children}</Wrapper>;
 
 const title = <strong>title</strong>;
-const avatar = <Icon name="icons fa-2x" className="media-left" />;
+const avatar = <Icon name="icons fa-2x fa-fw" />;
 const link = "/foo/bar";
 const footerLeft = <small>left footer</small>;
 const footerRight = <small>right footer</small>;

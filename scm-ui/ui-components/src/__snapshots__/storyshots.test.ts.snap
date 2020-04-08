@@ -461,7 +461,7 @@ exports[`Storyshots CardColumn default 1`] = `
       className="CardColumn__AvatarWrapper-sc-1w6lsih-1 bZyfne media-left"
     >
       <i
-        className="fas fa-icons fa-2x has-text-grey-light media-left"
+        className="fas fa-icons fa-2x fa-fw has-text-grey-light"
       />
     </figure>
     <div
@@ -525,9 +525,13 @@ exports[`Storyshots CardColumnSmall default 1`] = `
     <div
       className="media"
     >
-      <i
-        className="fas fa-icons fa-2x has-text-grey-light media-left"
-      />
+      <figure
+        className="CardColumnSmall__IconWrapper-tk9h0o-5 bEHHUw media-left"
+      >
+        <i
+          className="fas fa-icons fa-2x fa-fw has-text-grey-light"
+        />
+      </figure>
       <div
         className="CardColumnSmall__FlexFullHeight-tk9h0o-0 fwRxNw media-content text-box is-flex"
       >
