@@ -38,6 +38,7 @@ import static org.junit.Assert.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.net.URL;
+import java.util.Collections;
 
 import javax.xml.bind.JAXB;
 
@@ -78,11 +79,8 @@ public class ScmModuleTest
       )
     );
     assertThat(
-      module.getEvents(),
-      containsInAnyOrder(
-        String.class,
-        Boolean.class
-      )
+      module.getEvents().iterator().next(),
+      instanceOf(ClassElement.class)
     );
     assertThat(
       module.getSubscribers(),
@@ -92,18 +90,12 @@ public class ScmModuleTest
       )
     );
     assertThat(
-      module.getRestProviders(),
-      containsInAnyOrder(
-        Integer.class,
-        Long.class
-      )
+      module.getRestProviders().iterator().next(),
+      instanceOf(ClassElement.class)
     );
     assertThat(
-      module.getRestResources(),
-      containsInAnyOrder(
-        Float.class,
-        Double.class
-      )
+      module.getRestResources().iterator().next(),
+      instanceOf(ClassElement.class)
     );
     //J+
   }
