@@ -74,6 +74,7 @@ const RightMarginDiv = styled.div`
 
 const InheritFlexShrinkDiv = styled.div`
   flex-shrink: inherit;
+  pointer-events: all;
 `;
 
 const CardColumn: FC<Props> = ({
