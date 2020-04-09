@@ -44,5 +44,8 @@ storiesOf("CardColumnSmall", module)
   .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .addDecorator(storyFn => <Container>{storyFn()}</Container>)
   .add("default", () => (
-    <CardColumnSmall link={link} icon={icon} contentLeft={contentLeft} contentRight={contentRight} />
+    <CardColumnSmall link={link} avatar={icon} contentLeft={contentLeft} contentRight={contentRight} />
+  ))
+  .add("minimal", () => (
+    <CardColumnSmall link={link} contentLeft={contentLeft} contentRight={contentRight} />
   ));
