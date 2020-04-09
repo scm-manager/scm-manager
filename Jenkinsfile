@@ -53,6 +53,7 @@ node('docker') {
 
           // merge release branch into master
           sh "git checkout master"
+          sh "git reset --hard origin/master"
           sh "git merge --ff-only ${env.BRANCH_NAME}"
 
           // set tag
