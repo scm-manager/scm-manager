@@ -34,5 +34,12 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Requires {
+  /**
+   * The annotated class is loaded only if all of the specified plugins are installed.
+   * The value has to be an array of string with the plugin names the class should depend on.
+   *
+   * @since 2.0.0
+   * @return list of required plugins to load this class
+   */
   String[] value();
 }

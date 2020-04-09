@@ -21,32 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.annotation;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.Map;
 import java.util.Map.Entry;
 
+//~--- JDK imports ------------------------------------------------------------
+
 /**
- *
  * @author Sebastian Sdorra
  */
-public class ClassSetElement implements DescriptorElement
-{
+public class ClassSetElement implements DescriptorElement {
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private static final String EL_CLASS = "class";
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private static final String EL_DESCRIPTION = "description";
 
   //~--- constructors ---------------------------------------------------------
@@ -54,13 +55,11 @@ public class ClassSetElement implements DescriptorElement
   /**
    * Constructs ...
    *
-   *
    * @param elementName
    * @param classes
    */
   public ClassSetElement(String elementName,
-    Iterable<ClassWithAttributes> classes)
-  {
+                         Iterable<ClassWithAttributes> classes) {
     this.elementName = elementName;
     this.classes = classes;
   }
@@ -70,31 +69,26 @@ public class ClassSetElement implements DescriptorElement
   /**
    * Method description
    *
-   *
    * @param doc
    * @param root
    */
   @Override
-  public void append(Document doc, Element root)
-  {
+  public void append(Document doc, Element root) {
 
-    for (ClassWithAttributes c : classes)
-    {
+    for (ClassWithAttributes c : classes) {
       Element element = doc.createElement(elementName);
       Element classEl = doc.createElement(EL_CLASS);
 
       classEl.setTextContent(c.className);
 
-      if (!Strings.isNullOrEmpty(c.description))
-      {
+      if (!Strings.isNullOrEmpty(c.description)) {
         Element descriptionEl = doc.createElement(EL_DESCRIPTION);
 
         descriptionEl.setTextContent(c.description);
         element.appendChild(descriptionEl);
       }
 
-      for (Entry<String, String> e : c.attributes.entrySet())
-      {
+      for (Entry<String, String> e : c.attributes.entrySet()) {
         Element attr = doc.createElement(e.getKey());
 
         attr.setTextContent(e.getValue());
@@ -120,24 +114,21 @@ public class ClassSetElement implements DescriptorElement
   /**
    * Class description
    *
-   *
-   * @version        Enter version here..., 14/03/18
-   * @author         Enter your name here...
+   * @author Enter your name here...
+   * @version Enter version here..., 14/03/18
    */
-  public static class ClassWithAttributes
-  {
+  public static class ClassWithAttributes {
 
     /**
      * Constructs ...
      *
-     *  @param className
+     * @param className
      * @param description
      * @param requires
      * @param attributes
      */
     public ClassWithAttributes(String className, String description,
-                               String[] requires, Map<String, String> attributes)
-    {
+                               String[] requires, Map<String, String> attributes) {
       this.className = className;
       this.description = description;
       this.requires = requires;
@@ -148,22 +139,32 @@ public class ClassSetElement implements DescriptorElement
 
     private final String[] requires;
 
-    /** Field description */
+    /**
+     * Field description
+     */
     private final Map<String, String> attributes;
 
-    /** Field description */
+    /**
+     * Field description
+     */
     private final String className;
 
-    /** Field description */
+    /**
+     * Field description
+     */
     private final String description;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private final Iterable<ClassWithAttributes> classes;
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private final String elementName;
 }
