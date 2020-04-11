@@ -21,15 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
-import org.apache.commons.lang.exception.CloneFailedException;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.wc2.SvnCheckout;
 import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
 import org.tmatesoft.svn.core.wc2.SvnTarget;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnWorkDirFactory;
 import sonia.scm.repository.util.SimpleWorkdirFactory;
@@ -37,7 +37,6 @@ import sonia.scm.repository.util.WorkdirProvider;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.io.IOException;
 
 public class SimpleSvnWorkDirFactory extends SimpleWorkdirFactory<File, File, SvnContext> implements SvnWorkDirFactory {
 
@@ -60,7 +59,7 @@ public class SimpleSvnWorkDirFactory extends SimpleWorkdirFactory<File, File, Sv
     try {
       source = SVNURL.fromFile(context.getDirectory());
     } catch (SVNException ex) {
-      throw new CloneFailedException(ex.getMessage());
+      throw new InternalRepositoryException(getScmRepository(context), "error creating svn url from central directory", ex);
     }
 
     try {
@@ -69,7 +68,7 @@ public class SimpleSvnWorkDirFactory extends SimpleWorkdirFactory<File, File, Sv
       checkout.setSource(SvnTarget.fromURL(source));
       checkout.run();
     } catch (SVNException ex) {
-      throw new CloneFailedException(ex.getMessage());
+      throw new InternalRepositoryException(getScmRepository(context), "error running svn checkout", ex);
     } finally {
       svnOperationFactory.dispose();
     }
