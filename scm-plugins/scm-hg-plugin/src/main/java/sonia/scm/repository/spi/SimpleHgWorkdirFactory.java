@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.BaseRepository;
@@ -29,8 +29,8 @@ import com.aragost.javahg.Repository;
 import com.aragost.javahg.commands.CloneCommand;
 import com.aragost.javahg.commands.PullCommand;
 import com.aragost.javahg.commands.flags.CloneCommandFlags;
+import sonia.scm.repository.util.CacheSupportingWorkdirProvider;
 import sonia.scm.repository.util.SimpleWorkdirFactory;
-import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import javax.inject.Inject;
@@ -45,15 +45,13 @@ public class SimpleHgWorkdirFactory extends SimpleWorkdirFactory<Repository, Rep
   private final Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder;
 
   @Inject
-  public SimpleHgWorkdirFactory(Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder, WorkdirProvider workdirProvider) {
+  public SimpleHgWorkdirFactory(Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder, CacheSupportingWorkdirProvider workdirProvider) {
     super(workdirProvider);
     this.hgRepositoryEnvironmentBuilder = hgRepositoryEnvironmentBuilder;
   }
   @Override
   public ParentAndClone<Repository, Repository> cloneRepository(HgCommandContext context, File target, String initialBranch) throws IOException {
-    BiConsumer<sonia.scm.repository.Repository, Map<String, String>> repositoryMapBiConsumer =
-      (repository, environment) -> hgRepositoryEnvironmentBuilder.get().buildFor(repository, null, environment);
-    Repository centralRepository = context.openWithSpecialEnvironment(repositoryMapBiConsumer);
+    Repository centralRepository = openCentral(context);
     CloneCommand cloneCommand = CloneCommandFlags.on(centralRepository);
     if (initialBranch != null) {
       cloneCommand.updaterev(initialBranch);
@@ -62,7 +60,20 @@ public class SimpleHgWorkdirFactory extends SimpleWorkdirFactory<Repository, Rep
 
     BaseRepository clone = Repository.open(target);
 
-    return new ParentAndClone<>(centralRepository, clone);
+    return new ParentAndClone<>(centralRepository, clone, target);
+  }
+
+  public Repository openCentral(HgCommandContext context) {
+    BiConsumer<sonia.scm.repository.Repository, Map<String, String>> repositoryMapBiConsumer =
+      (repository, environment) -> hgRepositoryEnvironmentBuilder.get().buildFor(repository, null, environment);
+    return context.openWithSpecialEnvironment(repositoryMapBiConsumer);
+  }
+
+  @Override
+  protected ParentAndClone<Repository, Repository> reclaimRepository(HgCommandContext context, File target, String initialBranch) throws IOException {
+    Repository centralRepository = openCentral(context);
+    BaseRepository clone = Repository.open(target);
+    return new ParentAndClone<>(centralRepository, clone, target);
   }
 
   @Override

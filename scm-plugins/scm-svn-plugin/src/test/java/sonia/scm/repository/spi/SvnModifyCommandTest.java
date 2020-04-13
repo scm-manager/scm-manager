@@ -33,6 +33,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.util.NoneCachingWorkdirProvider;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.repository.util.WorkingCopy;
 
@@ -56,7 +57,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   @Before
   public void initSvnModifyCommand() {
     context = createContext();
-    workDirFactory = new SimpleSvnWorkDirFactory(new WorkdirProvider(context.getDirectory()));
+    workDirFactory = new SimpleSvnWorkDirFactory(new NoneCachingWorkdirProvider(new WorkdirProvider(context.getDirectory())));
     svnModifyCommand = new SvnModifyCommand(context, workDirFactory);
   }
 

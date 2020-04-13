@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.util;
 
 import org.slf4j.Logger;
@@ -36,21 +36,43 @@ public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R,
 
   private static final Logger logger = LoggerFactory.getLogger(SimpleWorkdirFactory.class);
 
-  private final WorkdirProvider workdirProvider;
+  private final CacheSupportingWorkdirProvider workdirProvider;
 
-  public SimpleWorkdirFactory(WorkdirProvider workdirProvider) {
+  public SimpleWorkdirFactory(CacheSupportingWorkdirProvider workdirProvider) {
     this.workdirProvider = workdirProvider;
   }
 
   @Override
   public WorkingCopy<R, W> createWorkingCopy(C context, String initialBranch) {
     try {
-      File directory = workdirProvider.createNewWorkdir();
-      ParentAndClone<R, W> parentAndClone = cloneRepository(context, directory, initialBranch);
-      return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), this::closeWorkdir, this::closeCentral, directory);
+      ParentAndClone<R, W> parentAndClone = workdirProvider.getWorkdir(
+        getScmRepository(context),
+        initialBranch,
+        context,
+        newFolder -> cloneRepository(context, newFolder, initialBranch),
+        cachedFolder -> reclaimRepository(context, cachedFolder, initialBranch)
+      );
+      return new WorkingCopy<R, W>(parentAndClone.getClone(), parentAndClone.getParent(), this::closeWorkdir, this::closeCentral, parentAndClone.getDirectory()) {
+        @Override
+        public void delete() throws IOException {
+          if (!workdirProvider.cache(getScmRepository(context), getDirectory())) {
+            super.delete();
+          }
+        }
+      };
     } catch (IOException e) {
       throw new InternalRepositoryException(getScmRepository(context), "could not clone repository in temporary directory", e);
     }
+  }
+
+  @FunctionalInterface
+  public interface WorkdirInitializer<R, W> {
+    ParentAndClone<R, W> initialize(File target) throws IOException;
+  }
+
+  @FunctionalInterface
+  public interface WorkdirReclaimer<R, W> {
+    ParentAndClone<R, W> reclaim(File target) throws IOException, ReclaimFailedException;
   }
 
   protected abstract Repository getScmRepository(C context);
@@ -63,6 +85,8 @@ public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R,
   protected abstract void closeWorkdirInternal(W workdir) throws Exception;
 
   protected abstract ParentAndClone<R, W> cloneRepository(C context, File target, String initialBranch) throws IOException;
+
+  protected abstract ParentAndClone<R, W> reclaimRepository(C context, File target, String initialBranch) throws IOException;
 
   private void closeCentral(R repository) {
     try {
@@ -83,10 +107,12 @@ public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R,
   protected static class ParentAndClone<R, W> {
     private final R parent;
     private final W clone;
+    private final File directory;
 
-    public ParentAndClone(R parent, W clone) {
+    public ParentAndClone(R parent, W clone, File directory) {
       this.parent = parent;
       this.clone = clone;
+      this.directory = directory;
     }
 
     public R getParent() {
@@ -96,5 +122,12 @@ public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R,
     public W getClone() {
       return clone;
     }
+
+    public File getDirectory() {
+      return directory;
+    }
+  }
+
+  public static class ReclaimFailedException extends Exception {
   }
 }

@@ -32,16 +32,17 @@ import org.tmatesoft.svn.core.wc2.SvnTarget;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnWorkDirFactory;
+import sonia.scm.repository.util.CacheSupportingWorkdirProvider;
 import sonia.scm.repository.util.SimpleWorkdirFactory;
-import sonia.scm.repository.util.WorkdirProvider;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.io.IOException;
 
 public class SimpleSvnWorkDirFactory extends SimpleWorkdirFactory<File, File, SvnContext> implements SvnWorkDirFactory {
 
   @Inject
-  public SimpleSvnWorkDirFactory(WorkdirProvider workdirProvider) {
+  public SimpleSvnWorkDirFactory(CacheSupportingWorkdirProvider workdirProvider) {
     super(workdirProvider);
   }
 
@@ -73,7 +74,12 @@ public class SimpleSvnWorkDirFactory extends SimpleWorkdirFactory<File, File, Sv
       svnOperationFactory.dispose();
     }
 
-    return new ParentAndClone<>(context.getDirectory(), workingCopy);
+    return new ParentAndClone<>(context.getDirectory(), workingCopy, workingCopy);
+  }
+
+  @Override
+  protected ParentAndClone<File, File> reclaimRepository(SvnContext context, File target, String initialBranch) throws IOException {
+    return new ParentAndClone<>(context.getDirectory(), target, target);
   }
 
   @Override

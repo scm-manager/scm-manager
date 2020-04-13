@@ -44,6 +44,7 @@ import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeStrategy;
+import sonia.scm.repository.util.NoneCachingWorkdirProvider;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.user.User;
 
@@ -424,7 +425,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitMergeCommand createCommand(Consumer<Git> interceptor) {
-    return new GitMergeCommand(createContext(), new SimpleGitWorkdirFactory(new WorkdirProvider())) {
+    return new GitMergeCommand(createContext(), new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(new WorkdirProvider()))) {
       @Override
       <R, W extends GitCloneWorker<R>> R inClone(Function<Git, W> workerSupplier, GitWorkdirFactory workdirFactory, String initialBranch) {
         Function<Git, W> interceptedWorkerSupplier = git -> {

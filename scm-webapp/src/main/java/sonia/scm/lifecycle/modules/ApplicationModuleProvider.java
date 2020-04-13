@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.lifecycle.modules;
 
 import com.google.common.base.Throwables;
@@ -77,6 +77,7 @@ public class ApplicationModuleProvider implements ModuleProvider {
     }
     moduleList.add(new MapperModule());
     moduleList.add(new ExecutorModule());
+    moduleList.add(new WorkdirModule(pluginLoader));
 
     return moduleList;
   }

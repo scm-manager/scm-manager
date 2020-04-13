@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.commands.PullCommand;
@@ -32,6 +32,7 @@ import sonia.scm.repository.Branch;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.BranchRequest;
+import sonia.scm.repository.util.NoneCachingWorkdirProvider;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
@@ -49,7 +50,7 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
     HgRepositoryEnvironmentBuilder hgRepositoryEnvironmentBuilder =
       new HgRepositoryEnvironmentBuilder(handler, HgTestUtil.createHookManager());
 
-    workdirFactory = new SimpleHgWorkdirFactory(Providers.of(hgRepositoryEnvironmentBuilder), new WorkdirProvider()) {
+    workdirFactory = new SimpleHgWorkdirFactory(Providers.of(hgRepositoryEnvironmentBuilder), new NoneCachingWorkdirProvider(new WorkdirProvider())) {
       @Override
       public void configure(PullCommand pullCommand) {
         // we do not want to configure http hooks in this unit test

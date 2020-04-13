@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.util;
 
 
@@ -52,10 +52,25 @@ public class SimpleWorkdirFactoryTest {
 
   private String initialBranchForLastCloneCall;
 
+  private boolean workdirIsCached = false;
+  private File workdir;
+
   @Before
   public void initFactory() throws IOException {
     WorkdirProvider workdirProvider = new WorkdirProvider(temporaryFolder.newFolder());
-    simpleWorkdirFactory = new SimpleWorkdirFactory<Closeable, Closeable, Context>(workdirProvider) {
+    CacheSupportingWorkdirProvider configurableTestWorkdirProvider = new CacheSupportingWorkdirProvider() {
+      @Override
+      public <R, W, C> SimpleWorkdirFactory.ParentAndClone<R, W> getWorkdir(Repository scmRepository, String requestedBranch, C context, SimpleWorkdirFactory.WorkdirInitializer<R, W> initializer, SimpleWorkdirFactory.WorkdirReclaimer<R, W> reclaimer) throws IOException {
+        workdir = workdirProvider.createNewWorkdir();
+        return initializer.initialize(workdir);
+      }
+
+      @Override
+      public boolean cache(Repository repository, File target) {
+        return workdirIsCached;
+      }
+    };
+    simpleWorkdirFactory = new SimpleWorkdirFactory<Closeable, Closeable, Context>(configurableTestWorkdirProvider) {
       @Override
       protected Repository getScmRepository(Context context) {
         return REPOSITORY;
@@ -67,6 +82,11 @@ public class SimpleWorkdirFactoryTest {
       }
 
       @Override
+      protected ParentAndClone<Closeable, Closeable> reclaimRepository(Context context, File target, String initialBranch) throws IOException {
+        throw new UnsupportedOperationException();
+      }
+
+      @Override
       protected void closeWorkdirInternal(Closeable workdir) throws Exception {
         workdir.close();
       }
@@ -74,7 +94,7 @@ public class SimpleWorkdirFactoryTest {
       @Override
       protected ParentAndClone<Closeable, Closeable> cloneRepository(Context context, File target, String initialBranch) {
         initialBranchForLastCloneCall = initialBranch;
-        return new ParentAndClone<>(parent, clone);
+        return new ParentAndClone<>(parent, clone, target);
       }
     };
   }
@@ -102,6 +122,23 @@ public class SimpleWorkdirFactoryTest {
     try (WorkingCopy<Closeable, Closeable> workingCopy = simpleWorkdirFactory.createWorkingCopy(context, null)) {}
 
     verify(clone).close();
+  }
+
+  @Test
+  public void shouldDeleteWorkdirIfNotCached() {
+    Context context = new Context();
+    try (WorkingCopy<Closeable, Closeable> workingCopy = simpleWorkdirFactory.createWorkingCopy(context, null)) {}
+
+    assertThat(workdir).doesNotExist();
+  }
+
+  @Test
+  public void shouldNotDeleteWorkdirIfCached() {
+    Context context = new Context();
+    workdirIsCached = true;
+    try (WorkingCopy<Closeable, Closeable> workingCopy = simpleWorkdirFactory.createWorkingCopy(context, null)) {}
+
+    assertThat(workdir).exists();
   }
 
   @Test

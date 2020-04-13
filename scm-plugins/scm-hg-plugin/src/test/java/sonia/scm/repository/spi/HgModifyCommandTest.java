@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.google.inject.util.Providers;
@@ -35,6 +35,7 @@ import sonia.scm.NotFoundException;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.util.NoneCachingWorkdirProvider;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
@@ -55,7 +56,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   public void initHgModifyCommand() {
     HgHookManager hookManager = HgTestUtil.createHookManager();
     HgRepositoryEnvironmentBuilder environmentBuilder = new HgRepositoryEnvironmentBuilder(handler, hookManager);
-    SimpleHgWorkdirFactory workdirFactory = new SimpleHgWorkdirFactory(Providers.of(environmentBuilder), new WorkdirProvider()) {
+    SimpleHgWorkdirFactory workdirFactory = new SimpleHgWorkdirFactory(Providers.of(environmentBuilder), new NoneCachingWorkdirProvider(new WorkdirProvider())) {
       @Override
       public void configure(com.aragost.javahg.commands.PullCommand pullCommand) {
         // we do not want to configure http hooks in this unit test

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.util;
 
 import org.slf4j.Logger;
@@ -67,9 +67,13 @@ public class WorkingCopy<R, W> implements AutoCloseable {
     try {
       cleanupWorkdir.accept(workingRepository);
       cleanupCentral.accept(centralRepository);
-      IOUtil.delete(directory);
+      delete();
     } catch (IOException e) {
       LOG.warn("could not delete temporary workdir '{}'", directory, e);
     }
+  }
+
+  void delete() throws IOException {
+    IOUtil.delete(directory);
   }
 }

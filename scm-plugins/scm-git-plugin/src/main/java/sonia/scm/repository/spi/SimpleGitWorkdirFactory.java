@@ -30,10 +30,11 @@ import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
+import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.util.CacheSupportingWorkdirProvider;
 import sonia.scm.repository.util.SimpleWorkdirFactory;
-import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.util.SystemUtil;
 
 import javax.inject.Inject;
@@ -46,7 +47,7 @@ import static sonia.scm.NotFoundException.notFound;
 public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Repository, GitContext> implements GitWorkdirFactory {
 
   @Inject
-  public SimpleGitWorkdirFactory(WorkdirProvider workdirProvider) {
+  public SimpleGitWorkdirFactory(CacheSupportingWorkdirProvider workdirProvider) {
     super(workdirProvider);
   }
 
@@ -66,10 +67,15 @@ public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Re
         throw notFound(entity("Branch", initialBranch).in(context.getRepository()));
       }
 
-      return new ParentAndClone<>(null, clone);
+      return new ParentAndClone<>(null, clone, target);
     } catch (GitAPIException | IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "could not clone working copy of repository", e);
     }
+  }
+
+  @Override
+  protected ParentAndClone<Repository, Repository> reclaimRepository(GitContext context, File target, String initialBranch) throws IOException {
+    return new ParentAndClone<>(null, GitUtil.open(target), target);
   }
 
   private String createScmTransportProtocolUri(File bareRepository) {
