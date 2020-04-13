@@ -86,7 +86,7 @@ public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R,
 
   protected abstract ParentAndClone<R, W> cloneRepository(C context, File target, String initialBranch) throws IOException;
 
-  protected abstract ParentAndClone<R, W> reclaimRepository(C context, File target, String initialBranch) throws IOException;
+  protected abstract ParentAndClone<R, W> reclaimRepository(C context, File target, String initialBranch) throws IOException, ReclaimFailedException;
 
   private void closeCentral(R repository) {
     try {
@@ -129,5 +129,11 @@ public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R,
   }
 
   public static class ReclaimFailedException extends Exception {
+    public ReclaimFailedException() {
+    }
+
+    public ReclaimFailedException(Throwable cause) {
+      super(cause);
+    }
   }
 }

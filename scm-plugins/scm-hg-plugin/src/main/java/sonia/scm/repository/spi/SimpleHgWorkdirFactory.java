@@ -28,6 +28,7 @@ import com.aragost.javahg.BaseRepository;
 import com.aragost.javahg.Repository;
 import com.aragost.javahg.commands.CloneCommand;
 import com.aragost.javahg.commands.PullCommand;
+import com.aragost.javahg.commands.UpdateCommand;
 import com.aragost.javahg.commands.flags.CloneCommandFlags;
 import sonia.scm.repository.util.CacheSupportingWorkdirProvider;
 import sonia.scm.repository.util.SimpleWorkdirFactory;
@@ -73,6 +74,7 @@ public class SimpleHgWorkdirFactory extends SimpleWorkdirFactory<Repository, Rep
   protected ParentAndClone<Repository, Repository> reclaimRepository(HgCommandContext context, File target, String initialBranch) throws IOException {
     Repository centralRepository = openCentral(context);
     BaseRepository clone = Repository.open(target);
+    UpdateCommand.on(clone).rev(initialBranch).execute();
     return new ParentAndClone<>(centralRepository, clone, target);
   }
 

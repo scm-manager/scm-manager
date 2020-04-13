@@ -24,8 +24,12 @@
 
 package sonia.scm.repository.spi;
 
+import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
+import org.tmatesoft.svn.core.wc.SVNClientManager;
+import org.tmatesoft.svn.core.wc.SVNRevision;
+import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc2.SvnCheckout;
 import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
 import org.tmatesoft.svn.core.wc2.SvnTarget;
@@ -78,7 +82,14 @@ public class SimpleSvnWorkDirFactory extends SimpleWorkdirFactory<File, File, Sv
   }
 
   @Override
-  protected ParentAndClone<File, File> reclaimRepository(SvnContext context, File target, String initialBranch) throws IOException {
+  protected ParentAndClone<File, File> reclaimRepository(SvnContext context, File target, String initialBranch) throws ReclaimFailedException {
+    SVNClientManager clientManager = SVNClientManager.newInstance();
+    try {
+      clientManager.getWCClient().doCleanup(target);
+      clientManager.getUpdateClient().doUpdate(target, SVNRevision.HEAD, SVNDepth.fromRecurse(true), false, false);
+    } catch (SVNException e) {
+      throw new ReclaimFailedException(e);
+    }
     return new ParentAndClone<>(context.getDirectory(), target, target);
   }
 

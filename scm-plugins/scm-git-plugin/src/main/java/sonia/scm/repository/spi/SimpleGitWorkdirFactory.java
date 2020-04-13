@@ -25,11 +25,14 @@
 package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
@@ -46,6 +49,8 @@ import static sonia.scm.NotFoundException.notFound;
 
 public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Repository, GitContext> implements GitWorkdirFactory {
 
+  private static final Logger LOG = LoggerFactory.getLogger(SimpleGitWorkdirFactory.class);
+
   @Inject
   public SimpleGitWorkdirFactory(CacheSupportingWorkdirProvider workdirProvider) {
     super(workdirProvider);
@@ -53,6 +58,8 @@ public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Re
 
   @Override
   public ParentAndClone<Repository, Repository> cloneRepository(GitContext context, File target, String initialBranch) {
+    LOG.trace("clone repository {}", context.getRepository().getId());
+    long start = System.nanoTime();
     try {
       Repository clone = Git.cloneRepository()
         .setURI(createScmTransportProtocolUri(context.getDirectory()))
@@ -70,12 +77,33 @@ public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Re
       return new ParentAndClone<>(null, clone, target);
     } catch (GitAPIException | IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "could not clone working copy of repository", e);
+    } finally {
+      long end = System.nanoTime();
+      long duration = end - start;
+      LOG.trace("took {} ns to clone repository {}", duration, context.getRepository().getId());
     }
   }
 
   @Override
-  protected ParentAndClone<Repository, Repository> reclaimRepository(GitContext context, File target, String initialBranch) throws IOException {
-    return new ParentAndClone<>(null, GitUtil.open(target), target);
+  protected ParentAndClone<Repository, Repository> reclaimRepository(GitContext context, File target, String initialBranch) throws IOException, ReclaimFailedException {
+    LOG.trace("reclaim repository {}", context.getRepository().getId());
+    long start = System.nanoTime();
+    Repository repo = GitUtil.open(target);
+    try (Git git = Git.open(target)) {
+      git.reset().setMode(ResetCommand.ResetType.HARD).call();
+      git.clean().setForce(true).setCleanDirectories(true).call();
+      git.fetch().call();
+      git.branchDelete().setBranchNames(initialBranch).setForce(true).call();
+      git.checkout().setForced(true).setName("origin/" + initialBranch).call();
+      git.checkout().setName(initialBranch).setCreateBranch(true).call();
+      return new ParentAndClone<>(null, repo, target);
+    } catch (GitAPIException e) {
+      throw new ReclaimFailedException(e);
+    } finally {
+      long end = System.nanoTime();
+      long duration = end - start;
+      LOG.trace("took {} ns to reclaim repository {}\n", duration, context.getRepository().getId());
+    }
   }
 
   private String createScmTransportProtocolUri(File bareRepository) {
