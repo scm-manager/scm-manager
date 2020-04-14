@@ -53,17 +53,22 @@ Make sure you have no changes you want to keep!
 git fetch && git checkout develop && git reset --hard origin/develop
 ```
 
-## Modify Changelog
+## Update SCM parent if necessary
 
-Change "Unreleased" header in `CHANGELOG.md` to  `<version> - <current date>`
+If you need to update the parent of the plugin to a new release of SCM-Manager, change it now:
 
-## Remove old dependencies
+- `pom.xml`: `parent.version`
+- `package.json`: `dependencies.ui-plugins`
 
-`rm -rf node_modules yarn.lock`
+```
+rm -rf node_modules yarn.lock
+mvn clean install
+git add yarn.lock pom.xml package.json
+git commit -m "Update to new version of SCM-Manager"
+git push
+```
 
-## Build
-
-`mvn clean install`
+Wait for Jenkins to be green.
 
 ## Create release branch
 
@@ -71,10 +76,14 @@ Change "Unreleased" header in `CHANGELOG.md` to  `<version> - <current date>`
 git checkout -b release/<version>
 ```
 
+## Modify Changelog
+
+Change "Unreleased" header in `CHANGELOG.md` to  `<version> - <current date>`
+
 ## Commit and push release
 
 ```
-git commit -am "Release version <version>"
+git commit -am "Prepare release of <version>"
 ```
 
 ## Push release branch
