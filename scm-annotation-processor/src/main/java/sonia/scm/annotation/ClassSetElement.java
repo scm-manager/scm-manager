@@ -21,138 +21,84 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.annotation;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.Map;
 import java.util.Map.Entry;
 
+//~--- JDK imports ------------------------------------------------------------
+
 /**
- *
  * @author Sebastian Sdorra
  */
-public class ClassSetElement implements DescriptorElement
-{
+public class ClassSetElement implements DescriptorElement {
 
-  /** Field description */
   private static final String EL_CLASS = "class";
-
-  /** Field description */
   private static final String EL_DESCRIPTION = "description";
 
-  //~--- constructors ---------------------------------------------------------
+  private final String elementName;
+  private final Iterable<ClassWithAttributes> classes;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param elementName
-   * @param classes
-   */
-  public ClassSetElement(String elementName,
-    Iterable<ClassWithAttributes> classes)
-  {
+  public ClassSetElement(String elementName, Iterable<ClassWithAttributes> classes) {
     this.elementName = elementName;
     this.classes = classes;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param doc
-   * @param root
-   */
   @Override
-  public void append(Document doc, Element root)
-  {
-
-    for (ClassWithAttributes c : classes)
-    {
+  public void append(Document doc, Element root) {
+    for (ClassWithAttributes c : classes) {
       Element element = doc.createElement(elementName);
       Element classEl = doc.createElement(EL_CLASS);
 
       classEl.setTextContent(c.className);
 
-      if (!Strings.isNullOrEmpty(c.description))
-      {
+      if (!Strings.isNullOrEmpty(c.description)) {
         Element descriptionEl = doc.createElement(EL_DESCRIPTION);
 
         descriptionEl.setTextContent(c.description);
         element.appendChild(descriptionEl);
       }
 
-      for (Entry<String, String> e : c.attributes.entrySet())
-      {
+      for (Entry<String, String> e : c.attributes.entrySet()) {
         Element attr = doc.createElement(e.getKey());
 
         attr.setTextContent(e.getValue());
         element.appendChild(attr);
       }
 
+      if (c.requires != null) {
+        for (String requiresEntry : c.requires) {
+          Element requiresElement = doc.createElement("requires");
+          requiresElement.setTextContent(requiresEntry);
+          element.appendChild(requiresElement);
+        }
+      }
+
       element.appendChild(classEl);
       root.appendChild(element);
     }
-
   }
 
-  //~--- inner classes --------------------------------------------------------
+  public static class ClassWithAttributes {
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/03/18
-   * @author         Enter your name here...
-   */
-  public static class ClassWithAttributes
-  {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param className
-     * @param description
-     * @param attributes
-     */
-    public ClassWithAttributes(String className, String description,
-      Map<String, String> attributes)
-    {
-      this.className = className;
-      this.description = description;
-      this.attributes = attributes;
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
+    private final String className;
+    private final String description;
+    private final String[] requires;
     private final Map<String, String> attributes;
 
-    /** Field description */
-    private final String className;
-
-    /** Field description */
-    private final String description;
+    public ClassWithAttributes(String className, String description,
+                               String[] requires, Map<String, String> attributes) {
+      this.className = className;
+      this.description = description;
+      this.requires = requires;
+      this.attributes = attributes;
+    }
   }
-
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final Iterable<ClassWithAttributes> classes;
-
-  /** Field description */
-  private final String elementName;
 }

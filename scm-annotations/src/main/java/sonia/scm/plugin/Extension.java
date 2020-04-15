@@ -41,14 +41,4 @@ import java.lang.annotation.Target;
 @PluginAnnotation("extension")
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Extension {
-  /**
-   * This extension is loaded only if all of the specified plugins are installed.
-   * The requires attribute can be used to implement optional extensions.
-   * A plugin author is able to implement an extension point of an optional plugin and the extension is only loaded if
-   * all of the specified plugins are installed.
-   *
-   * @since 2.0.0
-   * @return list of required plugins to load this extension
-   */
-  String[] requires() default {};
 }

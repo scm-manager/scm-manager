@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -60,10 +61,10 @@ public final class ExtensionCollector
     this.pluginIndex = createPluginIndex(installedPlugins);
 
     for (ScmModule module : modules) {
-      collectRootElements(module);
+      collectRootElements(moduleClassLoader, module);
     }
-    for (ScmModule plugin : PluginsInternal.unwrap(installedPlugins)) {
-      collectRootElements(plugin);
+    for (InstalledPlugin plugin : installedPlugins) {
+      collectRootElements(plugin.getClassLoader(), plugin.getDescriptor());
     }
 
     for (ScmModule module : modules) {
@@ -252,7 +253,7 @@ public final class ExtensionCollector
   }
 
   private void collectExtensions(ClassLoader defaultClassLoader, ScmModule module) {
-    for (ExtensionElement extension : module.getExtensions()) {
+    for (ClassElement extension : module.getExtensions()) {
       if (isRequirementFulfilled(extension)) {
         Class<?> extensionClass = loadExtension(defaultClassLoader, extension);
         appendExtension(extensionClass);
@@ -260,7 +261,18 @@ public final class ExtensionCollector
     }
   }
 
-  private Class<?> loadExtension(ClassLoader classLoader, ExtensionElement extension) {
+  private Set<Class<?>> collectClasses(ClassLoader defaultClassLoader, Iterable<ClassElement> classElements) {
+    Set<Class<?>> classes = new HashSet<>();
+    for (ClassElement element : classElements) {
+      if (isRequirementFulfilled(element)) {
+        Class<?> loadedClass = loadExtension(defaultClassLoader, element);
+        classes.add(loadedClass);
+      }
+    }
+    return classes;
+  }
+
+  private Class<?> loadExtension(ClassLoader classLoader, ClassElement extension) {
     try {
       return classLoader.loadClass(extension.getClazz());
     } catch (ClassNotFoundException ex) {
@@ -268,7 +280,7 @@ public final class ExtensionCollector
     }
   }
 
-  private boolean isRequirementFulfilled(ExtensionElement extension) {
+  private boolean isRequirementFulfilled(ClassElement extension) {
     if (extension.getRequires() != null) {
       for (String requiredPlugin : extension.getRequires()) {
         if (!pluginIndex.contains(requiredPlugin)) {
@@ -286,15 +298,15 @@ public final class ExtensionCollector
    *
    * @param module
    */
-  private void collectRootElements(ScmModule module)
+  private void collectRootElements(ClassLoader classLoader, ScmModule module)
   {
     for (ExtensionPointElement epe : module.getExtensionPoints())
     {
       extensionPointIndex.put(epe.getClazz(), epe);
     }
 
-    restProviders.addAll(Lists.newArrayList(module.getRestProviders()));
-    restResources.addAll(Lists.newArrayList(module.getRestResources()));
+    restProviders.addAll(collectClasses(classLoader, module.getRestProviders()));
+    restResources.addAll(collectClasses(classLoader, module.getRestResources()));
     Iterables.addAll(webElements, module.getWebElements());
   }
 

@@ -42,6 +42,7 @@ import org.xml.sax.SAXException;
 
 import sonia.scm.annotation.ClassSetElement.ClassWithAttributes;
 import sonia.scm.plugin.PluginAnnotation;
+import sonia.scm.plugin.Requires;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -247,6 +248,14 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
 
       if (isClassOrInterface(e)) {
         TypeElement type = (TypeElement) e;
+
+        String[] requires = null;
+        Requires requiresAnnotation = type.getAnnotation(Requires.class);
+
+        if (requiresAnnotation != null) {
+          requires = requiresAnnotation.value();
+        }
+
         String desc = processingEnv.getElementUtils().getDocComment(type);
 
         if (desc != null) {
@@ -255,7 +264,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
 
         classes.add(
           new ClassWithAttributes(
-            type.getQualifiedName().toString(), desc, getAttributesFromAnnotation(e, annotation)
+            type.getQualifiedName().toString(), desc, requires, getAttributesFromAnnotation(e, annotation)
           )
         );
       }

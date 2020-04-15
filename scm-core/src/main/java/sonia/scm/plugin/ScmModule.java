@@ -48,10 +48,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ScmModule
 {
-
-  /** Field description */
-  private static final Unwrapper unwrapper = new Unwrapper();
-
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -60,9 +56,9 @@ public class ScmModule
    *
    * @return
    */
-  public Iterable<Class<?>> getEvents()
+  public Iterable<ClassElement> getEvents()
   {
-    return unwrap(events);
+    return nonNull(events);
   }
 
   /**
@@ -82,7 +78,7 @@ public class ScmModule
    *
    * @return
    */
-  public Iterable<ExtensionElement> getExtensions()
+  public Iterable<ClassElement> getExtensions()
   {
     return nonNull(extensions);
   }
@@ -93,9 +89,9 @@ public class ScmModule
    *
    * @return
    */
-  public Iterable<Class<?>> getRestProviders()
+  public Iterable<ClassElement> getRestProviders()
   {
-    return unwrap(restProviders);
+    return nonNull(restProviders);
   }
 
   /**
@@ -104,9 +100,9 @@ public class ScmModule
    *
    * @return
    */
-  public Iterable<Class<?>> getRestResources()
+  public Iterable<ClassElement> getRestResources()
   {
-    return unwrap(restResources);
+    return nonNull(restResources);
   }
 
   /**
@@ -152,57 +148,6 @@ public class ScmModule
     return iterable;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param iterable
-   *
-   * @return
-   */
-  private Iterable<Class<?>> unwrap(Iterable<ClassElement> iterable)
-  {
-    Iterable<Class<?>> unwrapped;
-
-    if (iterable != null)
-    {
-      unwrapped = Iterables.transform(iterable, unwrapper);
-    }
-    else
-    {
-      unwrapped = ImmutableSet.of();
-    }
-
-    return unwrapped;
-  }
-
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/03/28
-   * @author         Enter your name here...
-   */
-  private static class Unwrapper implements Function<ClassElement, Class<?>>
-  {
-
-    /**
-     * Method description
-     *
-     *
-     * @param classElement
-     *
-     * @return
-     */
-    @Override
-    public Class<?> apply(ClassElement classElement)
-    {
-      return classElement.getClazz();
-    }
-  }
-
 
   //~--- fields ---------------------------------------------------------------
 
@@ -216,7 +161,7 @@ public class ScmModule
 
   /** Field description */
   @XmlElement(name = "extension")
-  private Set<ExtensionElement> extensions;
+  private Set<ClassElement> extensions;
 
   /** Field description */
   @XmlElement(name = "rest-provider")

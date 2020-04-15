@@ -21,30 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import java.util.HashSet;
-import java.util.Set;
+/**
+ * The {@link Requires} annotation can be used to bind classes (e.g. Extensions, Rest Resources, etc.) only if certain
+ * plugins is installed. This is very useful in combination with optional plugin dependencies.
+ *
+ * @since 2.0.0
+ */
+@Documented
+@Target({ ElementType.TYPE })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Requires {
 
-@Getter
-@ToString
-@NoArgsConstructor
-@EqualsAndHashCode
-@AllArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
-public class ExtensionElement {
-  @XmlElement(name = "class")
-  private String clazz;
-  private String description;
-  private Set<String> requires = new HashSet<>();
+  /**
+   * The annotated class is loaded only if all of the specified plugins are installed.
+   * The value has to be an array of string with the plugin names the class should depend on.
+   *
+   * @return list of required plugins to load this class
+   */
+  String[] value();
 }
