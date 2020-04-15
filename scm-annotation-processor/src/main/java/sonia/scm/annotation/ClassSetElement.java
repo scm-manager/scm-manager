@@ -40,41 +40,19 @@ import java.util.Map.Entry;
  */
 public class ClassSetElement implements DescriptorElement {
 
-  /**
-   * Field description
-   */
   private static final String EL_CLASS = "class";
-
-  /**
-   * Field description
-   */
   private static final String EL_DESCRIPTION = "description";
 
-  //~--- constructors ---------------------------------------------------------
+  private final String elementName;
+  private final Iterable<ClassWithAttributes> classes;
 
-  /**
-   * Constructs ...
-   *
-   * @param elementName
-   * @param classes
-   */
-  public ClassSetElement(String elementName,
-                         Iterable<ClassWithAttributes> classes) {
+  public ClassSetElement(String elementName, Iterable<ClassWithAttributes> classes) {
     this.elementName = elementName;
     this.classes = classes;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @param doc
-   * @param root
-   */
   @Override
   public void append(Document doc, Element root) {
-
     for (ClassWithAttributes c : classes) {
       Element element = doc.createElement(elementName);
       Element classEl = doc.createElement(EL_CLASS);
@@ -106,27 +84,15 @@ public class ClassSetElement implements DescriptorElement {
       element.appendChild(classEl);
       root.appendChild(element);
     }
-
   }
 
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   * @author Enter your name here...
-   * @version Enter version here..., 14/03/18
-   */
   public static class ClassWithAttributes {
 
-    /**
-     * Constructs ...
-     *
-     * @param className
-     * @param description
-     * @param requires
-     * @param attributes
-     */
+    private final String className;
+    private final String description;
+    private final String[] requires;
+    private final Map<String, String> attributes;
+
     public ClassWithAttributes(String className, String description,
                                String[] requires, Map<String, String> attributes) {
       this.className = className;
@@ -134,37 +100,5 @@ public class ClassSetElement implements DescriptorElement {
       this.requires = requires;
       this.attributes = attributes;
     }
-
-    //~--- fields -------------------------------------------------------------
-
-    private final String[] requires;
-
-    /**
-     * Field description
-     */
-    private final Map<String, String> attributes;
-
-    /**
-     * Field description
-     */
-    private final String className;
-
-    /**
-     * Field description
-     */
-    private final String description;
   }
-
-
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * Field description
-   */
-  private final Iterable<ClassWithAttributes> classes;
-
-  /**
-   * Field description
-   */
-  private final String elementName;
 }
