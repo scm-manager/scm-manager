@@ -30,15 +30,21 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The {@link Requires} annotation can be used to bind classes (e.g. Extensions, Rest Resources, etc.) only if certain
+ * plugins is installed. This is very useful in combination with optional plugin dependencies.
+ *
+ * @since 2.0.0
+ */
 @Documented
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Requires {
+
   /**
    * The annotated class is loaded only if all of the specified plugins are installed.
    * The value has to be an array of string with the plugin names the class should depend on.
    *
-   * @since 2.0.0
    * @return list of required plugins to load this class
    */
   String[] value();
