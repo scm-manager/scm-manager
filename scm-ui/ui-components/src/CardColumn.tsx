@@ -21,19 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
+import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 type Props = {
+  link?: string;
+  avatar?: ReactNode;
   title: ReactNode;
   description?: string;
-  avatar: ReactNode;
   contentRight?: ReactNode;
   footerLeft: ReactNode;
   footerRight: ReactNode;
-  link?: string;
   action?: () => void;
   className?: string;
 };
@@ -74,53 +74,63 @@ const RightMarginDiv = styled.div`
 
 const InheritFlexShrinkDiv = styled.div`
   flex-shrink: inherit;
+  pointer-events: all;
 `;
 
-export default class CardColumn extends React.Component<Props> {
-  createLink = () => {
-    const { link, action } = this.props;
-    if (link) {
-      return <Link className="overlay-column" to={link} />;
-    } else if (action) {
-      return (
-        <a
-          className="overlay-column"
-          onClick={e => {
-            e.preventDefault();
-            action();
-          }}
-          href="#"
-        />
-      );
-    }
-    return null;
-  };
+const CardColumn: FC<Props> = ({
+  link,
+  avatar,
+  title,
+  description,
+  contentRight,
+  footerLeft,
+  footerRight,
+  action,
+  className
+}) => {
+  const renderAvatar = avatar ? <AvatarWrapper className="media-left">{avatar}</AvatarWrapper> : null;
+  const renderDescription = description ? <p className="shorten-text">{description}</p> : null;
+  const renderContentRight = contentRight ? <ContentRight>{contentRight}</ContentRight> : null;
 
-  render() {
-    const { avatar, title, description, contentRight, footerLeft, footerRight, className } = this.props;
-    const link = this.createLink();
-    return (
-      <>
-        {link}
-        <NoEventWrapper className={classNames("media", className)}>
-          <AvatarWrapper className="media-left">{avatar}</AvatarWrapper>
-          <FlexFullHeight className={classNames("media-content", "text-box", "is-flex")}>
-            <div className="is-flex">
-              <ContentLeft className="content">
-                <p className="shorten-text is-marginless">{title}</p>
-                <p className="shorten-text">{description}</p>
-              </ContentLeft>
-              <ContentRight>{contentRight}</ContentRight>
-            </div>
-            <FooterWrapper className={classNames("level", "is-flex")}>
-              <RightMarginDiv className="level-left is-hidden-mobile">{footerLeft}</RightMarginDiv>
-              <InheritFlexShrinkDiv className="level-right is-block is-mobile is-marginless shorten-text">
-                {footerRight}
-              </InheritFlexShrinkDiv>
-            </FooterWrapper>
-          </FlexFullHeight>
-        </NoEventWrapper>
-      </>
+  let createLink = null;
+  if (link) {
+    createLink = <Link className="overlay-column" to={link} />;
+  } else if (action) {
+    createLink = (
+      <a
+        className="overlay-column"
+        onClick={e => {
+          e.preventDefault();
+          action();
+        }}
+        href="#"
+      />
     );
   }
-}
+
+  return (
+    <>
+      {createLink}
+      <NoEventWrapper className={classNames("media", className)}>
+        {renderAvatar}
+        <FlexFullHeight className={classNames("media-content", "text-box", "is-flex")}>
+          <div className="is-flex">
+            <ContentLeft className="content">
+              <p className="shorten-text is-marginless">{title}</p>
+              {renderDescription}
+            </ContentLeft>
+            {renderContentRight}
+          </div>
+          <FooterWrapper className={classNames("level", "is-flex")}>
+            <RightMarginDiv className="level-left is-hidden-mobile">{footerLeft}</RightMarginDiv>
+            <InheritFlexShrinkDiv className="level-right is-block is-mobile is-marginless shorten-text">
+              {footerRight}
+            </InheritFlexShrinkDiv>
+          </FooterWrapper>
+        </FlexFullHeight>
+      </NoEventWrapper>
+    </>
+  );
+};
+
+export default CardColumn;

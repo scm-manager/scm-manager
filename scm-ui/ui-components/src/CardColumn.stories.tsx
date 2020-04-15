@@ -27,6 +27,8 @@ import { storiesOf } from "@storybook/react";
 import CardColumn from "./CardColumn";
 import Icon from "./Icon";
 import styled from "styled-components";
+import { DateFromNow } from ".";
+import repository from "./__resources__/repository";
 
 const Wrapper = styled.div`
   margin: 2rem;
@@ -35,22 +37,36 @@ const Wrapper = styled.div`
 
 const Container: FC = ({ children }) => <Wrapper>{children}</Wrapper>;
 
-const title = <strong>title</strong>;
-const avatar = <Icon name="icons fa-2x fa-fw" />;
 const link = "/foo/bar";
+const avatar = <Icon name="icons fa-2x fa-fw" />;
+const title = <strong>title</strong>;
 const footerLeft = <small>left footer</small>;
 const footerRight = <small>right footer</small>;
+const baseDate = "2020-03-26T12:13:42+02:00";
 
 storiesOf("CardColumn", module)
   .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .addDecorator(storyFn => <Container>{storyFn()}</Container>)
   .add("default", () => (
     <CardColumn
+      link={link}
+      avatar={avatar}
       title={title}
       description="A description can be added here."
-      avatar={avatar}
-      link={link}
       footerLeft={footerLeft}
       footerRight={footerRight}
     />
-  ));
+  ))
+  .add("minimal", () => (
+    <CardColumn
+      title={title}
+      footerLeft={footerLeft}
+      footerRight={footerRight}
+    />
+  ))
+  .add("with hoverable date", () => (
+    <CardColumn title={title} footerLeft={footerLeft} footerRight={
+      <small className="level-item">
+      <DateFromNow baseDate={baseDate} date={repository.creationDate}/>
+    </small>} />
+    ));

@@ -14,7 +14,7 @@ git fetch && git checkout develop && git reset --hard origin/develop
 
 Change "Unreleased" header in `CHANGELOG.md` to  `<version> - <current date>`
 
-## Create release branch:
+## Create release branch
 
 `git checkout -b release/<version>`
 
@@ -37,6 +37,7 @@ Jenkins will
 - merge with master branch
 - build and deploy everything
 - set the new development version for the develop branch
+- delete the release branch
 
 ## Make a party
 
@@ -44,7 +45,7 @@ Jenkins will
 
 To release a new version of a Plugin for SCM-Manager v2 you have to do the following steps (replace placeholder `<version>` accordingly, eg. with `2.1.0`):
 
-## Update to latest version
+## Check out default branch
 
 Make sure you have no changes you want to keep!
 
@@ -52,68 +53,55 @@ Make sure you have no changes you want to keep!
 git fetch && git checkout develop && git reset --hard origin/develop
 ```
 
-## Set new version
+## Update SCM parent if necessary
 
-Edit `pom.xml`:
+If you need to update the parent of the plugin to a new release of SCM-Manager, change it now:
 
-- `version` and `scm.tag` have to be set to the new version.
-- ensure that all dependencies to other scm resources have released versions
-- ensure `parent.version` points to stable release
+- `pom.xml`: `parent.version`
+- `package.json`: `dependencies.ui-plugins`
 
-Edit `package.json`:
+```
+rm -rf node_modules yarn.lock
+mvn clean install
+git add yarn.lock pom.xml package.json
+git commit -m "Update to new version of SCM-Manager"
+git push
+```
 
-- `version` has to be set to the new version.
-- ensure that all dependencies to other scm resources have released versions
-- ensure the version of `@scm-manager/ui-plugins` points to the same version as `parent.version` in the `pom.xml`
+Wait for Jenkins to be green.
+
+## Create release branch
+
+```
+git checkout -b release/<version>
+```
 
 ## Modify Changelog
 
 Change "Unreleased" header in `CHANGELOG.md` to  `<version> - <current date>`
 
-## Remove old dependencies
-
-`rm -rf node_modules yarn.lock`
-
-## Build
-
-`mvn clean install`
-
 ## Commit and push release
 
 ```
-git commit -am "Release version <version>"
-git push origin develop
+git commit -am "Prepare release of <version>"
 ```
 
-## Merge with master branch
-
-The merge should be possible with a fast forward. If this fails, check for changes on the `master` branch that are not present on the `develop` branch. Merge these changes into the `develop` branch, first!
+## Push release branch
 
 ```
-git checkout master && git pull && git merge develop --ff-only && git push origin master
+git push origin release/<version>
 ```
 
-## Create and push tag
+## Wait for Jenkins build
 
-```
-git tag -s -a <version> -m "<version>"
-git push --tags origin
-```
+Jenkins will
 
-## Prepare next development version
+- update versions in pom.xml and package.json
+- merge with master branch
+- build and deploy everything
+- set the new development version for the develop branch
+- delete the release branch
 
-```
-git checkout develop
-```
-
-Edit `pom.xml`: `version` has to be set to the new development version, `tag` to `HEAD`.
-
-Edit `package.json`: `version` has to be set to the new development version.
-
-```
-git commit -am "Prepare for next development iteration"
-git push origin develop
-```
 ## Attention: Creating new plugins
 If you are creating a new plugin which doesn't exist in the SCM-Manager Plugin-Center yet, your plugin will not be shown after the release. First you have to create a `index.md` in the Plugin-Center Repository. 
 
