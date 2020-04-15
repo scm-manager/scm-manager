@@ -30,7 +30,6 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -39,21 +38,17 @@ import javax.xml.bind.annotation.XmlElement;
 import java.util.HashSet;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class ClassElement {
-
   @XmlElement(name = "class")
   private String clazz;
   private String description;
