@@ -21,35 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import classNames from "classnames";
+import React, { FC } from "react";
+import { storiesOf } from "@storybook/react";
+import styled from "styled-components";
+import Icon from "./Icon";
 
-type Props = {
-  title?: string;
-  iconStyle: string;
-  name: string;
-  color: string;
-  className?: string;
-  onClick?: () => void;
+const Wrapper = styled.div`
+  * {
+    margin: 0.5rem;
+  }
+`;
+
+const Container: FC = ({ children }) => <Wrapper>{children}</Wrapper>;
+
+const helloWorld = () => {
+  alert("Hello world!");
 };
 
-export default class Icon extends React.Component<Props> {
-  static defaultProps = {
-    iconStyle: "fas",
-    color: "grey-light"
-  };
-
-  render() {
-    const { title, iconStyle, name, color, className, onClick } = this.props;
-    if (title) {
-      return (
-        <i
-          title={title}
-          className={classNames(iconStyle, "fa-fw", "fa-" + name, `has-text-${color}`, className)}
-          onClick={onClick}
-        />
-      );
-    }
-    return <i className={classNames(iconStyle, "fa-" + name, `has-text-${color}`, className)} onClick={onClick} />;
-  }
-}
+storiesOf("Icon", module)
+  .addDecorator(storyFn => <Container>{storyFn()}</Container>)
+  .add("default", () => (
+    <>
+      <Icon title="Download" name="download" color="info" />
+      <Icon title="Pull Request" name="code-branch fa-rotate-180" color="warning" />
+      <Icon title="Star" iconStyle="far" name="star" color="inherit" />
+      <Icon
+        title="Hello world!"
+        name="hand-sparkles"
+        className="has-background-primary-25"
+        onClick={() => helloWorld()}
+      />
+    </>
+  ))
+  .add("minimal", () => (
+    <>
+      <Icon name="download" />
+      <Icon name="icons" />
+      <Icon name="cat" />
+    </>
+  ));

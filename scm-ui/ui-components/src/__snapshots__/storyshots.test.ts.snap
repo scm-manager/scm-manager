@@ -32706,6 +32706,46 @@ exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
 </div>
 `;
 
+exports[`Storyshots Icon default 1`] = `
+<div
+  className="Iconstories__Wrapper-sc-1g657fe-0 hCEjkH"
+>
+  <i
+    className="fas fa-fw fa-download has-text-info"
+    title="Download"
+  />
+  <i
+    className="fas fa-fw fa-code-branch fa-rotate-180 has-text-warning"
+    title="Pull Request"
+  />
+  <i
+    className="far fa-fw fa-star has-text-inherit"
+    title="Star"
+  />
+  <i
+    className="fas fa-fw fa-hand-sparkles has-text-grey-light has-background-primary-25"
+    onClick={[Function]}
+    title="Hello world!"
+  />
+</div>
+`;
+
+exports[`Storyshots Icon minimal 1`] = `
+<div
+  className="Iconstories__Wrapper-sc-1g657fe-0 hCEjkH"
+>
+  <i
+    className="fas fa-download has-text-grey-light"
+  />
+  <i
+    className="fas fa-icons has-text-grey-light"
+  />
+  <i
+    className="fas fa-cat has-text-grey-light"
+  />
+</div>
+`;
+
 exports[`Storyshots Layout|Footer Default 1`] = `
 <footer
   className="footer"
