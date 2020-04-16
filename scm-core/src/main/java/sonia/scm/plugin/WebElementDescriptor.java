@@ -49,9 +49,9 @@ import java.util.Arrays;
  * @since 2.0.0
  */
 @Getter
-@AllArgsConstructor
 @ToString
-@EqualsAndHashCode
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @XmlRootElement(name = "web-element")
 @XmlAccessorType(XmlAccessType.FIELD)
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
