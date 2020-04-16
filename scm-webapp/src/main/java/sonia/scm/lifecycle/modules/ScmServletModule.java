@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.lifecycle.modules;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -193,7 +193,7 @@ class ScmServletModule extends ServletModule {
 
     // bind sslcontext provider
     bind(SSLContext.class).toProvider(SSLContextProvider.class);
-    
+
     // bind ahc
     Multibinder<ContentTransformer> transformers =
       Multibinder.newSetBinder(binder(), ContentTransformer.class);
@@ -207,7 +207,7 @@ class ScmServletModule extends ServletModule {
     // bind new hook api
     bind(HookContextFactory.class);
     bind(HookEventFacade.class);
-    
+
     // bind user-agent parser
     bind(UserAgentParser.class);
 
@@ -215,7 +215,7 @@ class ScmServletModule extends ServletModule {
     if ("true".equalsIgnoreCase(System.getProperty(SYSTEM_PROPERTY_DEBUG_HTTP))) {
       filter(PATTERN_ALL).through(LoggingFilter.class);
     }
-    
+
     // debug servlet
     serve(PATTERN_DEBUG).with(DebugServlet.class);
 

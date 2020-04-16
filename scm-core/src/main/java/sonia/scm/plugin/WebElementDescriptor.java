@@ -21,155 +21,60 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import sonia.scm.xml.XmlArrayStringAdapter;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Arrays;
-import java.util.Objects;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.Arrays;
 
 /**
- * Descriptor for web elements such as filter or servlets. A web element can be registered by using the 
+ * Descriptor for web elements such as filter or servlets. A web element can be registered by using the
  * {@link sonia.scm.filter.WebElement} annotation.
- * 
+ *
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
+@Getter
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 @XmlRootElement(name = "web-element")
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class WebElementDescriptor
-{
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+public final class WebElementDescriptor extends ClassElement {
 
-  /**
-   * Constructs ...
-   *
-   */
-  WebElementDescriptor() {}
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param clazz
-   * @param pattern
-   * @param morePatterns
-   * @param regex
-   */
-  public WebElementDescriptor(Class<?> clazz, String pattern,
-    String[] morePatterns, boolean regex)
-  {
-    this.clazz = clazz;
-    this.pattern = pattern;
-    this.morePatterns = morePatterns;
-    this.regex = regex;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Class<?> getClazz()
-  {
-    return clazz;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String[] getMorePatterns()
-  {
-    String[] patterns;
-
-    if (morePatterns != null)
-    {
-      patterns = Arrays.copyOf(morePatterns, morePatterns.length);
-    }
-    else
-    {
-      patterns = new String[0];
-    }
-
-    return patterns;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getPattern()
-  {
-    return pattern;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public boolean isRegex()
-  {
-    return regex;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(clazz, pattern, Arrays.hashCode(morePatterns), regex);
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    
-    final WebElementDescriptor other = (WebElementDescriptor) obj;
-    return Objects.equals(clazz, other.clazz)
-      && Objects.equals(pattern, other.pattern)
-      && Arrays.equals(morePatterns, other.morePatterns)
-      && this.regex == other.regex;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "class")
-  private Class<?> clazz;
-
-  /** Field description */
-  @XmlJavaTypeAdapter(XmlArrayStringAdapter.class)
-  private String[] morePatterns;
-
-  /** Field description */
   @XmlElement(name = "value")
   private String pattern;
 
-  /** Field description */
+  @XmlJavaTypeAdapter(XmlArrayStringAdapter.class)
+  private String[] morePatterns = {};
+
   private boolean regex = false;
+
+  public String[] getMorePatterns() {
+    String[] patterns;
+    if (morePatterns != null) {
+      patterns = Arrays.copyOf(morePatterns, morePatterns.length);
+    } else {
+      patterns = new String[0];
+    }
+    return patterns;
+  }
+
 }
+
+

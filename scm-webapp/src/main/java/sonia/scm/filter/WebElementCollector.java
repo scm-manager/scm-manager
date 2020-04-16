@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.Priorities;
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.plugin.WebElementDescriptor;
+import sonia.scm.plugin.WebElementExtension;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -67,25 +67,25 @@ public final class WebElementCollector
    * @param elements
    */
   @SuppressWarnings("unchecked")
-  private WebElementCollector(Iterable<WebElementDescriptor> elements)
+  private WebElementCollector(Iterable<WebElementExtension> elements)
   {
     List<TypedWebElementDescriptor<? extends Filter>> fl = Lists.newArrayList();
     List<TypedWebElementDescriptor<? extends HttpServlet>> sl =
       Lists.newArrayList();
 
-    for (WebElementDescriptor element : elements)
+    for (WebElementExtension element : elements)
     {
       if (Filter.class.isAssignableFrom(element.getClazz()))
       {
         fl.add(
           new TypedWebElementDescriptor<>(
-            (Class<? extends Filter>) element.getClazz(), element));
+            (Class<? extends Filter>) element.getClazz(), element.getDescriptor()));
       }
       else if (Servlet.class.isAssignableFrom(element.getClazz()))
       {
         sl.add(
           new TypedWebElementDescriptor<>(
-            (Class<? extends HttpServlet>) element.getClazz(), element));
+            (Class<? extends HttpServlet>) element.getClazz(), element.getDescriptor()));
       }
       else
       {

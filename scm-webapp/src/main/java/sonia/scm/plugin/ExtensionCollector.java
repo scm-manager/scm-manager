@@ -21,21 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
 import java.util.Collections;
@@ -44,6 +41,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -63,6 +62,7 @@ public final class ExtensionCollector
     for (ScmModule module : modules) {
       collectRootElements(moduleClassLoader, module);
     }
+
     for (InstalledPlugin plugin : installedPlugins) {
       collectRootElements(plugin.getClassLoader(), plugin.getDescriptor());
     }
@@ -218,7 +218,7 @@ public final class ExtensionCollector
    *
    * @return
    */
-  public Set<WebElementDescriptor> getWebElements()
+  public Set<WebElementExtension> getWebElements()
   {
     return webElements;
   }
@@ -272,6 +272,17 @@ public final class ExtensionCollector
     return classes;
   }
 
+  private Set<WebElementExtension> collectWebElementExtensions(ClassLoader defaultClassLoader, Iterable<WebElementDescriptor> descriptors) {
+    Set<WebElementExtension> webElementExtensions = new HashSet<>();
+    for (WebElementDescriptor descriptor : descriptors) {
+      if (isRequirementFulfilled(descriptor)) {
+        Class<?> loadedClass = loadExtension(defaultClassLoader, descriptor);
+        webElementExtensions.add(new WebElementExtension(loadedClass, descriptor));
+      }
+    }
+    return webElementExtensions;
+  }
+
   private Class<?> loadExtension(ClassLoader classLoader, ClassElement extension) {
     try {
       return classLoader.loadClass(extension.getClazz());
@@ -307,13 +318,14 @@ public final class ExtensionCollector
 
     restProviders.addAll(collectClasses(classLoader, module.getRestProviders()));
     restResources.addAll(collectClasses(classLoader, module.getRestResources()));
-    Iterables.addAll(webElements, module.getWebElements());
+
+    webElements.addAll(collectWebElementExtensions(classLoader, module.getWebElements()));
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final Set<WebElementDescriptor> webElements = Sets.newHashSet();
+  private final Set<WebElementExtension> webElements = Sets.newHashSet();
 
   /** Field description */
   private final Set<Class> restResources = Sets.newHashSet();

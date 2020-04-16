@@ -26,6 +26,7 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -43,12 +44,12 @@ import java.util.Set;
  * @since 2.0.0
  */
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class ClassElement {
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+public class ClassElement {
   @XmlElement(name = "class")
   private String clazz;
   private String description;
