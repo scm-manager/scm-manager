@@ -445,7 +445,7 @@ exports[`Storyshots Buttons|SubmitButton Default 1`] = `
 </div>
 `;
 
-exports[`Storyshots CardColumn default 1`] = `
+exports[`Storyshots CardColumn Default 1`] = `
 <div
   className="CardColumnstories__Wrapper-sc-1ztucl-0 IFDjP"
 >
@@ -510,7 +510,7 @@ exports[`Storyshots CardColumn default 1`] = `
 </div>
 `;
 
-exports[`Storyshots CardColumn minimal 1`] = `
+exports[`Storyshots CardColumn Minimal 1`] = `
 <div
   className="CardColumnstories__Wrapper-sc-1ztucl-0 IFDjP"
 >
@@ -558,7 +558,7 @@ exports[`Storyshots CardColumn minimal 1`] = `
 </div>
 `;
 
-exports[`Storyshots CardColumn with hoverable date 1`] = `
+exports[`Storyshots CardColumn With hoverable date 1`] = `
 <div
   className="CardColumnstories__Wrapper-sc-1ztucl-0 IFDjP"
 >
@@ -613,7 +613,7 @@ exports[`Storyshots CardColumn with hoverable date 1`] = `
 </div>
 `;
 
-exports[`Storyshots CardColumnSmall default 1`] = `
+exports[`Storyshots CardColumnSmall Default 1`] = `
 <div
   className="CardColumnSmallstories__Wrapper-ofr817-0 fwZASP"
 >
@@ -661,7 +661,7 @@ exports[`Storyshots CardColumnSmall default 1`] = `
 </div>
 `;
 
-exports[`Storyshots CardColumnSmall minimal 1`] = `
+exports[`Storyshots CardColumnSmall Minimal 1`] = `
 <div
   className="CardColumnSmallstories__Wrapper-ofr817-0 fwZASP"
 >
@@ -32706,10 +32706,68 @@ exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
 </div>
 `;
 
-exports[`Storyshots Icon default 1`] = `
+exports[`Storyshots Icon Colors 1`] = `
 <div
   className="Iconstories__Wrapper-sc-1g657fe-0 hCEjkH"
 >
+  <i
+    className="fas fa-fw fa-cat has-text-grey-light"
+    title="default color"
+  />
+  <i
+    className="fas fa-fw fa-cat has-text-primary"
+    title="primary"
+  />
+  <i
+    className="fas fa-fw fa-cat has-text-link"
+    title="link"
+  />
+  <i
+    className="fas fa-fw fa-cat has-text-info"
+    title="info"
+  />
+  <i
+    className="fas fa-fw fa-cat has-text-success"
+    title="success"
+  />
+  <i
+    className="fas fa-fw fa-cat has-text-warning"
+    title="warning"
+  />
+  <i
+    className="fas fa-fw fa-cat has-text-danger"
+    title="danger"
+  />
+  <i
+    className="fas fa-fw fa-cat has-text-white"
+    title="white"
+  />
+  <i
+    className="fas fa-fw fa-cat has-text-light"
+    title="light"
+  />
+  <i
+    className="fas fa-fw fa-cat has-text-dark"
+    title="dark"
+  />
+  <i
+    className="fas fa-fw fa-cat has-text-black"
+    title="black"
+  />
+  <i
+    className="fas fa-fw fa-cat has-text-text"
+    title="text"
+  />
+</div>
+`;
+
+exports[`Storyshots Icon Default 1`] = `
+<div
+  className="Iconstories__Wrapper-sc-1g657fe-0 hCEjkH"
+>
+  <i
+    className="fas fa-cat has-text-grey-light"
+  />
   <i
     className="fas fa-fw fa-download has-text-info"
     title="Download"
@@ -32722,26 +32780,91 @@ exports[`Storyshots Icon default 1`] = `
     className="far fa-fw fa-star has-text-inherit"
     title="Star"
   />
-  <i
-    className="fas fa-fw fa-hand-sparkles has-text-grey-light has-background-primary-25"
-    onClick={[Function]}
-    title="Hello world!"
-  />
 </div>
 `;
 
-exports[`Storyshots Icon minimal 1`] = `
+exports[`Storyshots Icon Icon styles 1`] = `
 <div
   className="Iconstories__Wrapper-sc-1g657fe-0 hCEjkH"
 >
   <i
-    className="fas fa-download has-text-grey-light"
+    className="fas fa-fw fa-star has-text-inherit"
+    title="solid style"
   />
   <i
-    className="fas fa-icons has-text-grey-light"
+    className="far fa-fw fa-star has-text-inherit"
+    title="regular style"
   />
   <i
-    className="fas fa-cat has-text-grey-light"
+    className="fab fa-fw fa-react has-text-inherit"
+    title="brand style"
+  />
+</div>
+`;
+
+exports[`Storyshots Icon More options 1`] = `
+<div
+  className="Iconstories__Wrapper-sc-1g657fe-0 hCEjkH"
+>
+  <i
+    className="fas fa-fw fa-snowboarding fa-rotate-270 has-text-grey-light"
+    title="rotate-270"
+  />
+  <i
+    className="fas fa-fw fa-spinner fa-spin has-text-grey-light"
+    title="spin"
+  />
+  <i
+    className="fas fa-fw fa-cat has-text-grey-light is-size-4"
+    title="custom sizing"
+  />
+  <i
+    className="fas fa-fw fa-hand-sparkles has-text-grey-light has-background-primary-25"
+    onClick={[Function]}
+    title="custom background and onClick"
+  />
+</div>
+`;
+
+exports[`Storyshots Icon Sizing 1`] = `
+<div
+  className="Iconstories__Wrapper-sc-1g657fe-0 hCEjkH"
+>
+  <i
+    className="fas fa-fw fa-cat has-text-grey-light"
+    title="default size"
+  />
+  <i
+    className="fas fa-fw fa-cat fa-xs has-text-grey-light"
+    title="fa-xs"
+  />
+  <i
+    className="fas fa-fw fa-cat fa-sm has-text-grey-light"
+    title="fa-sm"
+  />
+  <i
+    className="fas fa-fw fa-cat fa-lg has-text-grey-light"
+    title="fa-lg"
+  />
+  <i
+    className="fas fa-fw fa-cat fa-2x has-text-grey-light"
+    title="fa-2x"
+  />
+  <i
+    className="fas fa-fw fa-cat fa-3x has-text-grey-light"
+    title="fa-3x"
+  />
+  <i
+    className="fas fa-fw fa-cat fa-5x has-text-grey-light"
+    title="fa-5x"
+  />
+  <i
+    className="fas fa-fw fa-cat fa-7x has-text-grey-light"
+    title="fa-7x"
+  />
+  <i
+    className="fas fa-fw fa-cat fa-10x has-text-grey-light"
+    title="fa-10x"
   />
 </div>
 `;

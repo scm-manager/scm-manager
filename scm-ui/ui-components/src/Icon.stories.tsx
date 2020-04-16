@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React from "react";
 import { storiesOf } from "@storybook/react";
 import styled from "styled-components";
 import Icon from "./Icon";
@@ -32,31 +32,56 @@ const Wrapper = styled.div`
   }
 `;
 
-const Container: FC = ({ children }) => <Wrapper>{children}</Wrapper>;
-
 const helloWorld = () => {
   alert("Hello world!");
 };
 
+const colors = ["primary", "link", "info", "success", "warning", "danger", "white", "light", "dark", "black", "text"];
+const sizing = ["xs", "sm", "lg", "2x", "3x", "5x", "7x", "10x"];
+
 storiesOf("Icon", module)
-  .addDecorator(storyFn => <Container>{storyFn()}</Container>)
-  .add("default", () => (
+  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .add("Default", () => (
     <>
+      <Icon name="cat" />
       <Icon title="Download" name="download" color="info" />
       <Icon title="Pull Request" name="code-branch fa-rotate-180" color="warning" />
       <Icon title="Star" iconStyle="far" name="star" color="inherit" />
+    </>
+  ))
+  .add("Colors", () => (
+    <>
+      <Icon title="default color" name="cat" />
+      {colors.map(color => (
+        <Icon key={color} title={color} name="cat" color={color} />
+      ))}
+    </>
+  ))
+  .add("Sizing", () => (
+    <>
+      <Icon title="default size" name="cat" />
+      {sizing.map(size => (
+        <Icon key={size} title={"fa-" + size} name={"cat fa-" + size} />
+      ))}
+    </>
+  ))
+  .add("Icon styles", () => (
+    <>
+      <Icon title="solid style" name="star" color="inherit" />
+      <Icon title="regular style" iconStyle="far" name="star" color="inherit" />
+      <Icon title="brand style" iconStyle="fab" name="react" color="inherit" />
+    </>
+  ))
+  .add("More options", () => (
+    <>
+      <Icon title="rotate-270" name="snowboarding fa-rotate-270" />
+      <Icon title="spin" name="spinner fa-spin" />
+      <Icon title="custom sizing" name="cat" className="is-size-4" />
       <Icon
-        title="Hello world!"
+        title="custom background and onClick"
         name="hand-sparkles"
         className="has-background-primary-25"
         onClick={() => helloWorld()}
       />
-    </>
-  ))
-  .add("minimal", () => (
-    <>
-      <Icon name="download" />
-      <Icon name="icons" />
-      <Icon name="cat" />
     </>
   ));
