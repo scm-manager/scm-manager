@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -29,25 +29,17 @@ package sonia.scm.plugin;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
-import com.google.common.collect.Iterables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.servlet.ServletContext;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
-
 import java.net.URL;
-
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -61,10 +53,6 @@ public class DefaultPluginLoader implements PluginLoader
 
   /** Field description */
   public static final String PATH_PLUGINCONFIG = "META-INF/scm/plugin.xml";
-
-  /** the logger for DefaultPluginLoader */
-  private static final Logger logger =
-    LoggerFactory.getLogger(DefaultPluginLoader.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -90,7 +78,7 @@ public class DefaultPluginLoader implements PluginLoader
 
       modules = getInstalled(parent, context, PATH_MODULECONFIG);
 
-      collector = new ExtensionCollector(parent, modules, installedPlugins);
+      ExtensionCollector collector = new ExtensionCollector(parent, modules, installedPlugins);
       extensionProcessor = new DefaultExtensionProcessor(collector);
     }
     catch (IOException | JAXBException ex)
@@ -197,9 +185,6 @@ public class DefaultPluginLoader implements PluginLoader
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final ExtensionCollector collector;
 
   /** Field description */
   private final ExtensionProcessor extensionProcessor;

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -75,13 +75,12 @@ public class WebElementModule extends ServletModule
   @Override
   protected void configureServlets()
   {
-    for (TypedWebElementDescriptor<? extends Filter> f : collector.getFilters())
+    for (TypedWebElementDescriptor<Filter> f : collector.getFilters())
     {
       bindFilter(f);
     }
 
-    for (TypedWebElementDescriptor<? extends HttpServlet> s :
-      collector.getServlets())
+    for (TypedWebElementDescriptor<HttpServlet> s : collector.getServlets())
     {
       bindServlet(s);
     }
@@ -93,9 +92,9 @@ public class WebElementModule extends ServletModule
    *
    * @param filter
    */
-  private void bindFilter(TypedWebElementDescriptor<? extends Filter> filter)
+  private void bindFilter(TypedWebElementDescriptor<Filter> filter)
   {
-    Class<? extends Filter> clazz = filter.getClazz();
+    Class<Filter> clazz = filter.getClazz();
 
     logger.info("bind filter {} to filter chain", clazz);
 
@@ -125,9 +124,9 @@ public class WebElementModule extends ServletModule
    * @param servlet
    */
   private void bindServlet(
-    TypedWebElementDescriptor<? extends HttpServlet> servlet)
+    TypedWebElementDescriptor<HttpServlet> servlet)
   {
-    Class<? extends HttpServlet> clazz = servlet.getClazz();
+    Class<HttpServlet> clazz = servlet.getClazz();
 
     logger.info("bind servlet {} to servlet chain", clazz);
 

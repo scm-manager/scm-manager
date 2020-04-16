@@ -98,7 +98,7 @@ public final class ExtensionCollector
 
     if (collection == null)
     {
-      collection = Collections.EMPTY_SET;
+      collection = Collections.emptySet();
     }
 
     return collection;
@@ -123,7 +123,7 @@ public final class ExtensionCollector
     }
     else
     {
-      exts = Collections.EMPTY_SET;
+      exts = Collections.emptySet();
     }
 
     return exts;

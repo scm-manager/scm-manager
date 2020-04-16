@@ -69,9 +69,8 @@ public final class WebElementCollector
   @SuppressWarnings("unchecked")
   private WebElementCollector(Iterable<WebElementExtension> elements)
   {
-    List<TypedWebElementDescriptor<? extends Filter>> fl = Lists.newArrayList();
-    List<TypedWebElementDescriptor<? extends HttpServlet>> sl =
-      Lists.newArrayList();
+    List<TypedWebElementDescriptor<Filter>> fl = Lists.newArrayList();
+    List<TypedWebElementDescriptor<HttpServlet>> sl = Lists.newArrayList();
 
     for (WebElementExtension element : elements)
     {
@@ -79,13 +78,13 @@ public final class WebElementCollector
       {
         fl.add(
           new TypedWebElementDescriptor<>(
-            (Class<? extends Filter>) element.getClazz(), element.getDescriptor()));
+            (Class<Filter>) element.getClazz(), element.getDescriptor()));
       }
       else if (Servlet.class.isAssignableFrom(element.getClazz()))
       {
         sl.add(
           new TypedWebElementDescriptor<>(
-            (Class<? extends HttpServlet>) element.getClazz(), element.getDescriptor()));
+            (Class<HttpServlet>) element.getClazz(), element.getDescriptor()));
       }
       else
       {
@@ -95,8 +94,7 @@ public final class WebElementCollector
       }
     }
 
-    TypedWebElementDescriptorOrdering ordering =
-      new TypedWebElementDescriptorOrdering();
+    TypedWebElementDescriptorOrdering ordering = new TypedWebElementDescriptorOrdering();
 
     filters = ordering.immutableSortedCopy(fl);
     servlets = ordering.immutableSortedCopy(sl);
@@ -126,7 +124,7 @@ public final class WebElementCollector
    *
    * @return
    */
-  public Iterable<TypedWebElementDescriptor<? extends Filter>> getFilters()
+  public Iterable<TypedWebElementDescriptor<Filter>> getFilters()
   {
     return filters;
   }
@@ -137,7 +135,7 @@ public final class WebElementCollector
    *
    * @return
    */
-  public Iterable<TypedWebElementDescriptor<? extends HttpServlet>> getServlets()
+  public Iterable<TypedWebElementDescriptor<HttpServlet>> getServlets()
   {
     return servlets;
   }
@@ -177,8 +175,8 @@ public final class WebElementCollector
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final Iterable<TypedWebElementDescriptor<? extends Filter>> filters;
+  private final Iterable<TypedWebElementDescriptor<Filter>> filters;
 
   /** Field description */
-  private final Iterable<TypedWebElementDescriptor<? extends HttpServlet>> servlets;
+  private final Iterable<TypedWebElementDescriptor<HttpServlet>> servlets;
 }
