@@ -24,9 +24,12 @@
 
 package sonia.scm.repository.spi;
 
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
 import org.eclipse.jgit.transport.Transport;
+import org.eclipse.jgit.transport.URIish;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,6 +44,8 @@ import sonia.scm.repository.util.WorkingCopy;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static com.google.inject.util.Providers.of;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -130,5 +135,86 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
       directory = workingCopy.getWorkingRepository().getWorkTree();
     }
     assertThat(directory).doesNotExist();
+  }
+
+  @Test
+  public void shouldReclaimCleanDirectoryWithSameBranch() throws Exception {
+    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    File workdir = createExistingClone(factory);
+
+    factory.reclaimRepository(createContext(), workdir, "master");
+
+    assertBranchCheckedOutAndClean(workdir, "master");
+  }
+
+  @Test
+  public void shouldReclaimCleanDirectoryWithOtherBranch() throws Exception {
+    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    File workdir = createExistingClone(factory);
+
+    factory.reclaimRepository(createContext(), workdir, "test-branch");
+
+    assertBranchCheckedOutAndClean(workdir, "test-branch");
+  }
+
+  @Test
+  public void shouldReclaimDirectoryWithDeletedFileInIndex() throws Exception {
+    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    File workdir = createExistingClone(factory);
+    Git.open(workdir).rm().addFilepattern("a.txt").call();
+
+    factory.reclaimRepository(createContext(), workdir, "master");
+
+    assertBranchCheckedOutAndClean(workdir, "master");
+  }
+
+  @Test
+  public void shouldReclaimDirectoryWithDeletedFileInDirectory() throws Exception {
+    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    File workdir = createExistingClone(factory);
+    Files.delete(workdir.toPath().resolve("a.txt"));
+
+    factory.reclaimRepository(createContext(), workdir, "master");
+
+    assertBranchCheckedOutAndClean(workdir, "master");
+  }
+
+  @Test
+  public void shouldReclaimDirectoryWithAdditionalFileInDirectory() throws Exception {
+    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    File workdir = createExistingClone(factory);
+    Path newDirectory = workdir.toPath().resolve("new");
+    Files.createDirectories(newDirectory);
+    Files.createFile(newDirectory.resolve("newFile"));
+
+    factory.reclaimRepository(createContext(), workdir, "master");
+
+    assertBranchCheckedOutAndClean(workdir, "master");
+  }
+
+  public File createExistingClone(SimpleGitWorkdirFactory factory) throws Exception {
+    File workdir = temporaryFolder.newFolder();
+    extract(workdir, "sonia/scm/repository/spi/scm-git-spi-test-workdir.zip");
+    Git.open(workdir).remoteSetUrl().setRemoteUri(new URIish(factory.createScmTransportProtocolUri(repositoryDirectory))).setRemoteName("origin").call();
+    return workdir;
+  }
+
+  private void assertBranchCheckedOutAndClean(File workdir, String expectedBranch) throws Exception {
+    Git git = Git.open(workdir);
+    assertThat(git.getRepository().getBranch()).isEqualTo(expectedBranch);
+    Status workdirStatus = git.status().call();
+    assertStatusClean(workdirStatus);
+  }
+
+  private void assertStatusClean(Status workdirStatus) {
+    assertThat(workdirStatus.getAdded()).isEmpty();
+    assertThat(workdirStatus.getChanged()).isEmpty();
+    assertThat(workdirStatus.getConflicting()).isEmpty();
+    assertThat(workdirStatus.getIgnoredNotInIndex()).isEmpty();
+    assertThat(workdirStatus.getMissing()).isEmpty();
+    assertThat(workdirStatus.getModified()).isEmpty();
+    assertThat(workdirStatus.getRemoved()).isEmpty();
+    assertThat(workdirStatus.getUntracked()).isEmpty();
+    assertThat(workdirStatus.getUncommittedChanges()).isEmpty();
   }
 }
