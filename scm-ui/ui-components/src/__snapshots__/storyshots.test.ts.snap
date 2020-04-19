@@ -32820,8 +32820,7 @@ exports[`Storyshots Icon More options 1`] = `
   />
   <i
     className="fas fa-fw fa-hand-sparkles has-text-grey-light has-background-primary-25"
-    onClick={[Function]}
-    title="custom background and onClick"
+    title="custom background"
   />
 </div>
 `;

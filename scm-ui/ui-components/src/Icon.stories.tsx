@@ -32,10 +32,6 @@ const Wrapper = styled.div`
   }
 `;
 
-const helloWorld = () => {
-  alert("Hello world!");
-};
-
 const colors = ["primary", "link", "info", "success", "warning", "danger", "white", "light", "dark", "black", "text"];
 const sizing = ["xs", "sm", "lg", "2x", "3x", "5x", "7x", "10x"];
 
@@ -77,11 +73,6 @@ storiesOf("Icon", module)
       <Icon title="rotate-270" name="snowboarding fa-rotate-270" />
       <Icon title="spin" name="spinner fa-spin" />
       <Icon title="custom sizing" name="cat" className="is-size-4" />
-      <Icon
-        title="custom background and onClick"
-        name="hand-sparkles"
-        className="has-background-primary-25"
-        onClick={() => helloWorld()}
-      />
+      <Icon title="custom background" name="hand-sparkles" className="has-background-primary-25" />
     </>
   ));
