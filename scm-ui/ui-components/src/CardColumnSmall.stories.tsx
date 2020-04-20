@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { storiesOf } from "@storybook/react";
 import CardColumnSmall from "./CardColumnSmall";
@@ -33,8 +33,6 @@ const Wrapper = styled.div`
   max-width: 400px;
 `;
 
-const Container: FC = ({ children }) => <Wrapper>{children}</Wrapper>;
-
 const link = "/foo/bar";
 const icon = <Icon name="icons fa-2x fa-fw" />;
 const contentLeft = <strong className="is-marginless">main content</strong>;
@@ -42,10 +40,8 @@ const contentRight = <small>more text</small>;
 
 storiesOf("CardColumnSmall", module)
   .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator(storyFn => <Container>{storyFn()}</Container>)
-  .add("default", () => (
+  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .add("Default", () => (
     <CardColumnSmall link={link} avatar={icon} contentLeft={contentLeft} contentRight={contentRight} />
   ))
-  .add("minimal", () => (
-    <CardColumnSmall link={link} contentLeft={contentLeft} contentRight={contentRight} />
-  ));
+  .add("Minimal", () => <CardColumnSmall link={link} contentLeft={contentLeft} contentRight={contentRight} />);
