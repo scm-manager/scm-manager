@@ -61,7 +61,7 @@
         <executions>
           <execution>
             <id>copy-server</id>
-            <phase>process-resources</phase>
+            <phase>prepare-package</phase>
             <goals>
               <goal>copy-dependencies</goal>
             </goals>
@@ -75,7 +75,7 @@
           </execution>
           <execution>
             <id>copy-jsvc</id>
-            <phase>process-resources</phase>
+            <phase>prepare-package</phase>
             <goals>
               <goal>unpack</goal>
             </goals>
@@ -99,7 +99,7 @@
           </execution>
           <execution>
             <id>copy-webapp</id>
-            <phase>process-resources</phase>
+            <phase>prepare-package</phase>
             <goals>
               <goal>copy</goal>
             </goals>
