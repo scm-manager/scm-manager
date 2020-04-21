@@ -99,6 +99,7 @@
     <module>scm-dao-xml</module>
     <module>scm-webapp</module>
     <module>scm-server</module>
+    <module>packaging</module>
     <module>scm-it</module>
   </modules>
 
@@ -658,6 +659,7 @@
           <excludes>
             <exclude>.editorconfig</exclude>
             <exclude>.git/**</exclude>
+            <exclude>.*/**</exclude>
             <exclude>.mvn/wrapper/**</exclude>
             <exclude>docs/**</exclude>
             <exclude>node_modules/**</exclude>
