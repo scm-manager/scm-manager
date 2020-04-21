@@ -24,57 +24,20 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Binder;
+import lombok.Value;
 
 /**
- * Process and resolve extensions.
+ * WebElementExtension can be a servlet or filter which is ready to bind.
+ * Those extensions are loaded by the {@link ExtensionProcessor} from a {@link WebElementDescriptor}.
  *
- * @author Sebastian Sdorra
+ * We don't know if we can load the defined class from the descriptor, because the class could be optional
+ * (annotated with {@link Requires}). So we have to load the class as string with {@link WebElementDescriptor} and when
+ * we know that it is safe to load the class (all requirements are fulfilled), we will create our WebElementExtension.
+ *
  * @since 2.0.0
  */
-public interface ExtensionProcessor
-{
-
-  /**
-   * Collect extension classes by extension point.
-   *
-   *
-   * @param <T> type of extension
-   * @param extensionPoint extension point
-   *
-   * @return extensions
-   */
-  public <T> Iterable<Class<? extends T>> byExtensionPoint(
-    Class<T> extensionPoint);
-
-  /**
-   * Returns single extension by its extension point.
-   *
-   *
-   * @param <T> type of extension
-   * @param extensionPoint extension point
-   *
-   * @return extension
-   */
-  public <T> Class<? extends T> oneByExtensionPoint(Class<T> extensionPoint);
-
-  /**
-   * Process auto bind extensions.
-   *
-   *
-   * @param binder injection binder
-   */
-  public void processAutoBindExtensions(Binder binder);
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns all collected web elements (servlets and filters).
-   *
-   *
-   * @return collected web elements
-   */
-  public Iterable<WebElementExtension> getWebElements();
+@Value
+public class WebElementExtension {
+  Class<?> clazz;
+  WebElementDescriptor descriptor;
 }
