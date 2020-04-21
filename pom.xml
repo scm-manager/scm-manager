@@ -359,7 +359,7 @@
       <dependency>
         <groupId>org.junit-pioneer</groupId>
         <artifactId>junit-pioneer</artifactId>
-        <version>0.5.4</version>
+        <version>0.5.5</version>
         <scope>test</scope>
       </dependency>
 
@@ -494,7 +494,7 @@
         <plugin>
           <groupId>sonia.scm.maven</groupId>
           <artifactId>smp-maven-plugin</artifactId>
-          <version>1.0.0-rc6</version>
+          <version>1.0.0-rc7</version>
         </plugin>
 
         <plugin>
@@ -910,7 +910,7 @@
     <servlet.version>3.0.1</servlet.version>
 
     <jaxrs.version>2.1.1</jaxrs.version>
-    <resteasy.version>4.5.2.Final</resteasy.version>
+    <resteasy.version>4.5.3.Final</resteasy.version>
     <jersey-client.version>1.19.4</jersey-client.version>
     <jackson.version>2.10.3</jackson.version>
     <guice.version>4.2.3</guice.version>

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { storiesOf } from "@storybook/react";
 import CardColumn from "./CardColumn";
@@ -35,8 +35,6 @@ const Wrapper = styled.div`
   max-width: 400px;
 `;
 
-const Container: FC = ({ children }) => <Wrapper>{children}</Wrapper>;
-
 const link = "/foo/bar";
 const avatar = <Icon name="icons fa-2x fa-fw" />;
 const title = <strong>title</strong>;
@@ -46,8 +44,8 @@ const baseDate = "2020-03-26T12:13:42+02:00";
 
 storiesOf("CardColumn", module)
   .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator(storyFn => <Container>{storyFn()}</Container>)
-  .add("default", () => (
+  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .add("Default", () => (
     <CardColumn
       link={link}
       avatar={avatar}
@@ -57,16 +55,15 @@ storiesOf("CardColumn", module)
       footerRight={footerRight}
     />
   ))
-  .add("minimal", () => (
+  .add("Minimal", () => <CardColumn title={title} footerLeft={footerLeft} footerRight={footerRight} />)
+  .add("With hoverable date", () => (
     <CardColumn
       title={title}
       footerLeft={footerLeft}
-      footerRight={footerRight}
+      footerRight={
+        <small className="level-item">
+          <DateFromNow baseDate={baseDate} date={repository.creationDate} />
+        </small>
+      }
     />
-  ))
-  .add("with hoverable date", () => (
-    <CardColumn title={title} footerLeft={footerLeft} footerRight={
-      <small className="level-item">
-      <DateFromNow baseDate={baseDate} date={repository.creationDate}/>
-    </small>} />
-    ));
+  ));
