@@ -52,7 +52,7 @@ A quick look at the files and directories you'll see in a SCM-Manager project.
 2.  **`src/`**: This directory will contain all of the code related to what you see or not. `src` is a convention for “source code”.
     1. **`main/`**
         1. **`java/`**: This directory contain the Java code.
-        2. **`js/`**: This directory contains the JavaScript code for the web ui, inclusive unit tests: suffixed with `.test.ts`
+        2. **`js/`**: This directory contains the TypeScript code for the web ui, inclusive unit tests: suffixed with `.test.ts` or `.test.tsx`
         3. **`resources/`**: This directory contains the the classpath resources.
     2. **`test/`**
         1. **`java/`**: This directory contains the Java unit tests.
@@ -85,15 +85,15 @@ In order to extend the ui the plugin requires a `package.json` in the project ro
 ```json
 {
   "name": "@scm-manager/scm-readme-plugin",
-  "main": "src/main/js/index.js",
+  "main": "src/main/js/index.tsx",
   "scripts": {
-    "build": "ui-bundler plugin"
+    "build" : "ui-scripts plugin",
+    "watch" : "ui-scripts plugin-watch",
+    "test" : "jest",
+    "postinstall" : "ui-plugins postinstall"
   },
   "dependencies": {
-    "@scm-manager/ui-extensions": "^0.0.6"
-  },
-  "devDependencies": {
-    "@scm-manager/ui-bundler": "^0.0.3"
+    "@scm-manager/ui-plugins" : "2.0.0-rc7"
   }
 }
 
@@ -104,14 +104,13 @@ The file specified at `main` should use the `binder` from the [@scm-manager/ui-e
 For more information of extensions, binder and extension points, please have a look at the [README.md](../../scm-ui/ui-extensions/README.md) of @scm-manager/ui-extensions.
 
 If the plugins gets build (`mvn package` or `mvn install`), the [buildfrontend-maven-plugin](https://github.com/sdorra/buildfrontend-maven-plugin), will call the `build` script of `package.json`.
-The build script triggers the `plugin` command of the [@scm-manager/ui-bundler](https://bitbucket.org/scm-manager/ui-bundler).
-The `ui-bundler` will do the following steps:
+The build script triggers the `plugin` command of [@scm-manager/ui-scripts](../../scm-ui/ui-scripts).
+The `ui-scripts` will do the following steps:
 
 * traverses the import statements of the script specified at `main`
-* transpiles flow/es@next to es5
+* transpiles TypeScript to es5
 * creates a single bundle
-* registers the bundle in the plugin.xml
-* stores the bundle in the final scmp package
+* stores the bundle in the final smp package
 
 At runtime the plugins are loaded by PluginLoader. The PluginLoader is a React component, which does the following steps:
 

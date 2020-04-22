@@ -96,7 +96,6 @@ repositories over http.
 - [Extension Points](v2/extension-points.md)
 - [Migrate Plugin from v1](v2/migrate-plugin-from-v1.md)
 - [API changes](v2/api-changes.md)
-- [Changes to ui-components/ui-types](v2/changes-to-ui-components-or-ui-types.md)
 - [Permission concept](v2/permission-concept.md)
 - [Vulnerabilities](v2/vulnerabilities.md)
 - [Common pitfall](v2/common-pitfall.md)

@@ -31,8 +31,27 @@ locales/en/plugins.json
 
 SCM-Manager use react-i18next to render translations.
 
+#### Functional components
+
 The following steps are needed to use react-i18next in the own
-components
+functional components:
+
+-   import react-i18next
+```javascript
+import { useTranslation } from "react-i18next";
+```
+
+-   use the translation keys like this:
+```javascript
+ const [t] = useTranslation("plugins");
+ ...
+ <h3>{t("scm-svn-plugin.information.checkout")}</h3>
+```
+
+#### Class components
+
+The following steps are needed to use react-i18next in the own
+class components:
 
 -   import react-i18next
 ```javascript

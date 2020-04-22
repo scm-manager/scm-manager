@@ -8,7 +8,7 @@ Also it is a good guide line to adapt Postel's law: *Be conservative in what you
 
 ## Java
 
-Please mind the [EditorConfig](https://editorconfig.org/) file `.editorconf` in the root of the SCM-Manager and the [configuration guide](intellij-idea-configuration.md) for IntelliJ IDEA. There are plugins for a lot of IDEs and text editors.
+Please mind the [EditorConfig](https://editorconfig.org/) file `.editorconfig` in the root of the SCM-Manager and the [configuration guide](intellij-idea-configuration.md) for IntelliJ IDEA. There are plugins for a lot of IDEs and text editors.
 
 - Indentation with 2 spaces and no tabs (we have kept this rule from 1.x)
 - Order of members:
