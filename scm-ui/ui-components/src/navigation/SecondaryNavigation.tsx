@@ -38,6 +38,11 @@ const SectionContainer = styled.aside`
   position: sticky;
   position: -webkit-sticky; /* Safari */
   top: 2rem;
+
+  @media (max-height: 900px) {
+    position: relative;
+    top: 0;
+  }
 `;
 
 const Icon = styled.i<CollapsedProps>`
