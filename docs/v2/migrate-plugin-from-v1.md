@@ -169,4 +169,3 @@ Some more hints:
 * [scm-manager/ui-extensions README](../../scm-ui/ui-extensions/README.md) - Extension Points within SCM-Manager
 * [scm-manager/ui-components](https://bitbucket.org/sdorra/scm-manager/src/6d64a380a37db63c95eccbfbf18e4500c9224d32/scm-ui-components/) - Reusable UI components within SCM-Manager
 * [smp-maven-plugin](https://bitbucket.org/scm-manager/smp-maven-plugin/src/default/) - Plugin that facilitates efficient plugin development for SCMM
-* [ui-bundler](https://bitbucket.org/scm-manager/ui-bundler/src/master/) - Bundles the UI Resources for plugins
