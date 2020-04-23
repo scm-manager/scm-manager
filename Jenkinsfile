@@ -148,6 +148,7 @@ node('docker') {
               // push to cloudogu repository for internal usage
               def image = docker.build('cloudogu/scm-manager')
               image.push(imageVersion)
+              image.push("latest")
               if (isReleaseBranch()) {
                 // push to official repository
                 image = docker.build('scmmanager/scm-manager')
