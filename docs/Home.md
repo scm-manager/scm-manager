@@ -83,6 +83,8 @@ repositories over http.
 ### SCM Manager 2
 
 - [Getting started](v2/getting-started.md)
+- [Base directory](v2/basedirectory.md)
+- [Logging](v2/logging.md)
 - [Configuration for Intellij IDEA](v2/intellij-idea-configuration.md)
 - [SCM v2 Test Cases](v2/test-cases.md)
 - [Table of decisions made during development](v2/decision-table.md)
