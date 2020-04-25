@@ -72,6 +72,7 @@ final class BaseDirectory {
    *
    * @return base directory
    */
+  @SuppressWarnings("java:S5304") // it is safe to use environment in this case
   static Path get() {
     return new BaseDirectory(
       SystemUtil.getPlatform(),
