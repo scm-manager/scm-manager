@@ -24,18 +24,17 @@
 
 package sonia.scm.repository.util;
 
-import sonia.scm.repository.Repository;
 import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CachingAllWorkdirProvider implements CacheSupportingWorkdirProvider {
 
-  private final Map<String, File> workdirs = new HashMap<>();
+  private final Map<String, File> workdirs = new ConcurrentHashMap<>();
 
   private final WorkdirProvider workdirProvider;
 
@@ -45,18 +44,17 @@ public class CachingAllWorkdirProvider implements CacheSupportingWorkdirProvider
   }
 
   @Override
-  public <R, W, C> SimpleWorkdirFactory.ParentAndClone<R, W> getWorkdir(Repository scmRepository, String requestedBranch, C context, SimpleWorkdirFactory.WorkdirInitializer<R, W> initializer, SimpleWorkdirFactory.WorkdirReclaimer<R, W> reclaimer) throws IOException {
-    String id = scmRepository.getId();
-    if (workdirs.containsKey(id)) {
-      File existingWorkdir = workdirs.get(id);
+  public <R, W, C> SimpleWorkdirFactory.ParentAndClone<R, W> getWorkdir(CreateWorkdirContext<R, W, C> createWorkdirContext) throws IOException {
+    String id = createWorkdirContext.getScmRepository().getId();
+    File existingWorkdir = workdirs.remove(id);
+    if (existingWorkdir != null) {
       try {
-        return reclaimer.reclaim(existingWorkdir);
+        return createWorkdirContext.getReclaimer().reclaim(existingWorkdir);
       } catch (SimpleWorkdirFactory.ReclaimFailedException e) {
-        workdirs.remove(id);
-        IOUtil.delete(existingWorkdir, true);
+        deleteWorkdir(existingWorkdir);
       }
     }
-    return createNewWorkdir(initializer, id);
+    return createNewWorkdir(createWorkdirContext.getInitializer(), id);
   }
 
   public <R, W> SimpleWorkdirFactory.ParentAndClone<R, W> createNewWorkdir(SimpleWorkdirFactory.WorkdirInitializer<R, W> initializer, String id) throws IOException {
@@ -66,7 +64,14 @@ public class CachingAllWorkdirProvider implements CacheSupportingWorkdirProvider
   }
 
   @Override
-  public boolean cache(Repository repository, File target) {
-    return true;
+  public void contextClosed(CreateWorkdirContext<?, ?, ?> createWorkdirContext, File workdir) throws IOException {
+    String id = createWorkdirContext.getScmRepository().getId();
+    if (workdirs.putIfAbsent(id, workdir) != null) {
+      deleteWorkdir(workdir);
+    }
+  }
+
+  private void deleteWorkdir(File existingWorkdir) throws IOException {
+    IOUtil.delete(existingWorkdir, true);
   }
 }

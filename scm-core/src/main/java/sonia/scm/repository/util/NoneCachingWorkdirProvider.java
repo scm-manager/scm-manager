@@ -24,7 +24,7 @@
 
 package sonia.scm.repository.util;
 
-import sonia.scm.repository.Repository;
+import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -40,12 +40,12 @@ public class NoneCachingWorkdirProvider implements CacheSupportingWorkdirProvide
   }
 
   @Override
-  public <R, W, C> SimpleWorkdirFactory.ParentAndClone<R, W> getWorkdir(Repository scmRepository, String requestedBranch, C context, SimpleWorkdirFactory.WorkdirInitializer<R, W> initializer, SimpleWorkdirFactory.WorkdirReclaimer<R, W> reclaimer) throws IOException {
-    return initializer.initialize(workdirProvider.createNewWorkdir());
+  public <R, W, C> SimpleWorkdirFactory.ParentAndClone<R, W> getWorkdir(CreateWorkdirContext<R, W, C> context) throws IOException {
+    return context.getInitializer().initialize(workdirProvider.createNewWorkdir());
   }
 
   @Override
-  public boolean cache(Repository repository, File target) {
-    return false;
+  public void contextClosed(CreateWorkdirContext<?, ?, ?> createWorkdirContext, File workdir) throws IOException {
+    IOUtil.delete(workdir, true);
   }
 }

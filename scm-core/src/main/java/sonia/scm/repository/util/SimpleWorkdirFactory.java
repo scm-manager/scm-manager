@@ -34,7 +34,7 @@ import java.io.IOException;
 
 public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R, W, C> {
 
-  private static final Logger logger = LoggerFactory.getLogger(SimpleWorkdirFactory.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SimpleWorkdirFactory.class);
 
   private final CacheSupportingWorkdirProvider workdirProvider;
 
@@ -45,23 +45,35 @@ public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R,
   @Override
   public WorkingCopy<R, W> createWorkingCopy(C context, String initialBranch) {
     try {
-      ParentAndClone<R, W> parentAndClone = workdirProvider.getWorkdir(
+      CreateWorkdirContext<R, W, C> createWorkdirContext = new CreateWorkdirContext<>(
         getScmRepository(context),
         initialBranch,
         context,
         newFolder -> cloneRepository(context, newFolder, initialBranch),
         cachedFolder -> reclaimRepository(context, cachedFolder, initialBranch)
       );
-      return new WorkingCopy<R, W>(parentAndClone.getClone(), parentAndClone.getParent(), this::closeWorkdir, this::closeCentral, parentAndClone.getDirectory()) {
-        @Override
-        public void delete() throws IOException {
-          if (!workdirProvider.cache(getScmRepository(context), getDirectory())) {
-            super.delete();
-          }
-        }
-      };
-    } catch (IOException e) {
+      ParentAndClone<R, W> parentAndClone = workdirProvider.getWorkdir(createWorkdirContext);
+      return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), () -> this.close(createWorkdirContext, parentAndClone), parentAndClone.getDirectory());
+    } catch (Exception e) {
       throw new InternalRepositoryException(getScmRepository(context), "could not clone repository in temporary directory", e);
+    }
+  }
+
+  private void close(CreateWorkdirContext<R, W, C> createWorkdirContext, ParentAndClone<R, W> parentAndClone) {
+    try {
+      closeRepository(parentAndClone.getParent());
+    } catch (Exception e) {
+      LOG.warn("could not close central repository for {}", createWorkdirContext.getScmRepository(), e);
+    }
+    try {
+      closeWorkdir(parentAndClone.getClone());
+    } catch (Exception e) {
+      LOG.warn("could not close clone for {} in directory {}", createWorkdirContext.getScmRepository(), parentAndClone.getDirectory(), e);
+    }
+    try {
+      workdirProvider.contextClosed(createWorkdirContext, parentAndClone.getDirectory());
+    } catch (Exception e) {
+      LOG.warn("could not close context for {} with directory {}", createWorkdirContext.getScmRepository(), parentAndClone.getDirectory(), e);
     }
   }
 
@@ -92,7 +104,7 @@ public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R,
     try {
       closeRepository(repository);
     } catch (Exception e) {
-      logger.warn("could not close temporary repository clone", e);
+      LOG.warn("could not close temporary repository clone", e);
     }
   }
 
@@ -100,7 +112,7 @@ public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R,
     try {
       closeWorkdirInternal(repository);
     } catch (Exception e) {
-      logger.warn("could not close temporary repository clone", e);
+      LOG.warn("could not close temporary repository clone", e);
     }
   }
 

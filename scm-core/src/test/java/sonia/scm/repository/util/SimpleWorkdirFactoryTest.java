@@ -30,6 +30,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.repository.Repository;
+import sonia.scm.util.IOUtil;
 
 import java.io.Closeable;
 import java.io.File;
@@ -60,14 +61,16 @@ public class SimpleWorkdirFactoryTest {
     WorkdirProvider workdirProvider = new WorkdirProvider(temporaryFolder.newFolder());
     CacheSupportingWorkdirProvider configurableTestWorkdirProvider = new CacheSupportingWorkdirProvider() {
       @Override
-      public <R, W, C> SimpleWorkdirFactory.ParentAndClone<R, W> getWorkdir(Repository scmRepository, String requestedBranch, C context, SimpleWorkdirFactory.WorkdirInitializer<R, W> initializer, SimpleWorkdirFactory.WorkdirReclaimer<R, W> reclaimer) throws IOException {
+      public <R, W, C> SimpleWorkdirFactory.ParentAndClone<R, W> getWorkdir(CreateWorkdirContext<R, W, C> context) throws IOException {
         workdir = workdirProvider.createNewWorkdir();
-        return initializer.initialize(workdir);
+        return context.getInitializer().initialize(workdir);
       }
 
       @Override
-      public boolean cache(Repository repository, File target) {
-        return workdirIsCached;
+      public void contextClosed(CreateWorkdirContext<?, ?, ?> createWorkdirContext, File workdir) throws Exception {
+        if (!workdirIsCached) {
+          IOUtil.delete(workdir);
+        }
       }
     };
     simpleWorkdirFactory = new SimpleWorkdirFactory<Closeable, Closeable, Context>(configurableTestWorkdirProvider) {

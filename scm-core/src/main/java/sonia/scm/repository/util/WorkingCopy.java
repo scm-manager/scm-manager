@@ -24,30 +24,23 @@
 
 package sonia.scm.repository.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.util.IOUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.function.Consumer;
 
-public class WorkingCopy<R, W> implements AutoCloseable {
-
-  private static final Logger LOG = LoggerFactory.getLogger(WorkingCopy.class);
+public final class WorkingCopy<R, W> implements AutoCloseable {
 
   private final File directory;
   private final W workingRepository;
   private final R centralRepository;
-  private final Consumer<W> cleanupWorkdir;
-  private final Consumer<R> cleanupCentral;
+  private final Runnable close;
 
-  public WorkingCopy(W workingRepository, R centralRepository, Consumer<W> cleanupWorkdir, Consumer<R> cleanupCentral, File directory) {
+  public WorkingCopy(W workingRepository, R centralRepository, Runnable close, File directory) {
     this.directory = directory;
     this.workingRepository = workingRepository;
     this.centralRepository = centralRepository;
-    this.cleanupCentral = cleanupCentral;
-    this.cleanupWorkdir = cleanupWorkdir;
+    this.close = close;
   }
 
   public W getWorkingRepository() {
@@ -64,13 +57,7 @@ public class WorkingCopy<R, W> implements AutoCloseable {
 
   @Override
   public void close() {
-    try {
-      cleanupWorkdir.accept(workingRepository);
-      cleanupCentral.accept(centralRepository);
-      delete();
-    } catch (IOException e) {
-      LOG.warn("could not delete temporary workdir '{}'", directory, e);
-    }
+    close.run();
   }
 
   void delete() throws IOException {
