@@ -24,6 +24,9 @@
 
 package sonia.scm.repository.util;
 
+import com.google.common.base.Stopwatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
@@ -33,6 +36,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CachingAllWorkdirProvider implements CacheSupportingWorkdirProvider {
+
+  private static final Logger LOG = LoggerFactory.getLogger(CachingAllWorkdirProvider.class);
 
   private final Map<String, File> workdirs = new ConcurrentHashMap<>();
 
@@ -48,19 +53,27 @@ public class CachingAllWorkdirProvider implements CacheSupportingWorkdirProvider
     String id = createWorkdirContext.getScmRepository().getId();
     File existingWorkdir = workdirs.remove(id);
     if (existingWorkdir != null) {
+      Stopwatch stopwatch = Stopwatch.createStarted();
       try {
-        return createWorkdirContext.getReclaimer().reclaim(existingWorkdir);
+        SimpleWorkdirFactory.ParentAndClone<R, W> reclaimed = createWorkdirContext.getReclaimer().reclaim(existingWorkdir);
+        LOG.debug("reclaimed workdir for {} in path {} in {}", createWorkdirContext.getScmRepository().getNamespaceAndName(), existingWorkdir, stopwatch.stop());
+        return reclaimed;
       } catch (SimpleWorkdirFactory.ReclaimFailedException e) {
+        LOG.debug("failed to relaim workdir for {} in path {} in {}", createWorkdirContext.getScmRepository().getNamespaceAndName(), existingWorkdir, stopwatch.stop(), e);
         deleteWorkdir(existingWorkdir);
       }
     }
-    return createNewWorkdir(createWorkdirContext.getInitializer(), id);
+    return createNewWorkdir(createWorkdirContext);
   }
 
-  public <R, W> SimpleWorkdirFactory.ParentAndClone<R, W> createNewWorkdir(SimpleWorkdirFactory.WorkdirInitializer<R, W> initializer, String id) throws IOException {
+  private  <R, W> SimpleWorkdirFactory.ParentAndClone<R, W> createNewWorkdir(CreateWorkdirContext<R, W, ?> createWorkdirContext) throws IOException {
+    String id = createWorkdirContext.getScmRepository().getId();
+    Stopwatch stopwatch = Stopwatch.createStarted();
     File newWorkdir = workdirProvider.createNewWorkdir();
     workdirs.put(id, newWorkdir);
-    return initializer.initialize(newWorkdir);
+    SimpleWorkdirFactory.ParentAndClone<R, W> parentAndClone = createWorkdirContext.getInitializer().initialize(newWorkdir);
+    LOG.debug("initialized new workdir for {} in path {} in {}", createWorkdirContext.getScmRepository().getNamespaceAndName(), newWorkdir, stopwatch.stop());
+    return parentAndClone;
   }
 
   @Override
