@@ -99,7 +99,7 @@
     <module>scm-dao-xml</module>
     <module>scm-webapp</module>
     <module>scm-server</module>
-    <module>packaging</module>
+    <module>scm-packaging</module>
     <module>scm-it</module>
   </modules>
 
