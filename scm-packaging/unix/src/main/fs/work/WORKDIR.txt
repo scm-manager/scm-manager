@@ -1,0 +1,5 @@
+This directory is the temp directory for the SCM-Manager webapp.
+
+Further reading on jetty temp directories:
+
+- http://wiki.eclipse.org/Jetty/Reference/Temporary_Directories
