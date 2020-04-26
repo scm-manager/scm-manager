@@ -54,13 +54,6 @@
       <type>war</type>
     </dependency>
 
-    <dependency>
-      <groupId>commons-daemon</groupId>
-      <artifactId>commons-daemon-native</artifactId>
-      <version>1.1.0</version>
-      <type>tar.gz</type>
-    </dependency>
-
   </dependencies>
 
   <build>
