@@ -54,6 +54,8 @@ public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R,
       );
       ParentAndClone<R, W> parentAndClone = workdirProvider.getWorkdir(createWorkdirContext);
       return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), () -> this.close(createWorkdirContext, parentAndClone), parentAndClone.getDirectory());
+    } catch (RuntimeException e) {
+      throw e;
     } catch (Exception e) {
       throw new InternalRepositoryException(getScmRepository(context), "could not clone repository in temporary directory", e);
     }
