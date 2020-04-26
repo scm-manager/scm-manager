@@ -79,7 +79,8 @@ public class CachingAllWorkdirProvider implements CacheSupportingWorkdirProvider
   @Override
   public void contextClosed(CreateWorkdirContext<?, ?, ?> createWorkdirContext, File workdir) throws IOException {
     String id = createWorkdirContext.getScmRepository().getId();
-    if (workdirs.putIfAbsent(id, workdir) != null) {
+    File putResult = workdirs.putIfAbsent(id, workdir);
+    if (putResult != null && putResult != workdir) {
       deleteWorkdir(workdir);
     }
   }
