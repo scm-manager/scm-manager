@@ -16,6 +16,7 @@ The location of the base directory depends on your operating system and type of 
 ## Change base directory location
 
 The location of the base directory can be changed by using one of the following ways.
+The preferences are the following: Properties file over system property over environment variable.
 
 ### Environment variable
 
