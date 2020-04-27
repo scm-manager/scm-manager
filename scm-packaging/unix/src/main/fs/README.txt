@@ -1,13 +1,14 @@
-SCM-Manager Version ${project.version}
+SCM-Manager
 ================================================================================
 
 First Access:
- 
+
  URL:      http://localhost:8080
  Username: scmadmin
  Password: scmadmin
 
-Further reading:
+FSupport:
 
- Release notes: https://bitbucket.org/sdorra/scm-manager/wiki/release-notes
- Getting started: https://bitbucket.org/sdorra/scm-manager/wiki/getting-started
+ Do you have any questions or do you need support? Have a look at:
+
+ https://www.scm-manager.org/support/

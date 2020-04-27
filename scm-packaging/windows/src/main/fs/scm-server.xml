@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     MIT License
@@ -24,27 +23,13 @@
     SOFTWARE.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <modelVersion>4.0.0</modelVersion>
+<service>
 
-  <parent>
-    <groupId>sonia.scm</groupId>
-    <artifactId>scm</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
-  </parent>
-
-  <groupId>sonia.scm.packaging</groupId>
-  <artifactId>scm-packaging</artifactId>
-  <packaging>pom</packaging>
-  <version>2.0.0-SNAPSHOT</version>
-
-  <modules>
-    <module>rpm</module>
-    <module>deb</module>
-    <module>unix</module>
-    <module>windows</module>
-    <module>docker</module>
-  </modules>
-
-</project>
+  <id>scm-server</id>
+  <name>SCM-Server</name>
+  <description>SCM-Manager Service</description>
+  <executable>java</executable>
+  <arguments>-cp "%BASE%\conf":"%BASE%\lib\*" -Djava.awt.headless=true -Dlogback.configurationFile=logging.xml sonia.scm.server.ScmServerDaemon</arguments>
+  <logmode>rotate</logmode>
+</service>

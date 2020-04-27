@@ -31,7 +31,7 @@
   <id>app</id>
 
   <formats>
-    <format>tar.gz</format>
+    <format>zip</format>
   </formats>
 
   <includeBaseDirectory>true</includeBaseDirectory>
@@ -45,18 +45,11 @@
     </fileSet>
 
     <fileSet>
-      <directory>src/main/bin</directory>
+      <directory>target/windows</directory>
       <filtered>false</filtered>
-      <outputDirectory>bin</outputDirectory>
-      <fileMode>0755</fileMode>
+      <outputDirectory></outputDirectory>
     </fileSet>
 
-    <fileSet>
-      <directory>target/unix/libexec</directory>
-      <filtered>false</filtered>
-      <outputDirectory>libexec</outputDirectory>
-      <fileMode>0755</fileMode>
-    </fileSet>
 
   </fileSets>
 
