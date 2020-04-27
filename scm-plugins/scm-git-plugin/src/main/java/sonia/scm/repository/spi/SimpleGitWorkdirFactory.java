@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.Git;
@@ -34,6 +34,7 @@ import sonia.scm.repository.GitWorkdirFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.util.SimpleWorkdirFactory;
 import sonia.scm.repository.util.WorkdirProvider;
+import sonia.scm.util.SystemUtil;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -72,7 +73,11 @@ public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Re
   }
 
   private String createScmTransportProtocolUri(File bareRepository) {
-    return ScmTransportProtocol.NAME + "://" + bareRepository.getAbsolutePath();
+    if (SystemUtil.isWindows()) {
+      return ScmTransportProtocol.NAME + ":///" + bareRepository.getAbsolutePath().replaceAll("\\\\", "/");
+    } else {
+      return ScmTransportProtocol.NAME + "://" + bareRepository.getAbsolutePath();
+    }
   }
 
   @Override
