@@ -16,7 +16,7 @@ The location of the **$BASEDIR** can be found [here](basedirectory).
 
 ## Configuration
 
-The logging behaviour of SCM-Manager can be configured via a xml find.
+The logging behaviour of SCM-Manager can be configured via a xml file.
 The syntax and properties can be found [here](http://logback.qos.ch/manual/configuration.html).
 The location of the file depends also on the type of installation.
 

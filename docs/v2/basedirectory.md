@@ -1,7 +1,7 @@
 # Base Directory
 
 The SCM-Manager base directory aka. home directory, 
-contains all data which is create by SCM-Manager such as repository and configurations.
+contains all data which is created by SCM-Manager such as repositories and configurations.
 The location of the base directory depends on your operating system and type of installation.
 
 | Type of Installation | Base directory |
