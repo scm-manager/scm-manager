@@ -10,7 +10,7 @@ The logging behavior depends on your operating system and installation.
 | DEB | /var/log/scm |
 | Unix | $BASEDIR/logs |
 | Mac OS X | ~/Library/Logs/SCM-Manager |
-| Windows | $BASEDIR\SCM-Manager |
+| Windows | $BASEDIR\logs |
 
 The location of the **$BASEDIR** can be found [here](basedirectory).
 
