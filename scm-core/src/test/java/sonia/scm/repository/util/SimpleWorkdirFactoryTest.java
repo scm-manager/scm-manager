@@ -32,6 +32,7 @@ import org.junit.rules.TemporaryFolder;
 import sonia.scm.repository.Repository;
 import sonia.scm.util.IOUtil;
 
+import javax.servlet.ServletContextEvent;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -71,6 +72,10 @@ public class SimpleWorkdirFactoryTest {
         if (!workdirIsCached) {
           IOUtil.delete(workdir);
         }
+      }
+
+      @Override
+      public void shutdown() {
       }
     };
     simpleWorkdirFactory = new SimpleWorkdirFactory<Closeable, Closeable, Context>(configurableTestWorkdirProvider) {

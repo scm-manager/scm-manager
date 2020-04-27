@@ -67,17 +67,15 @@ public class CachingAllWorkdirProvider implements CacheSupportingWorkdirProvider
   }
 
   private  <R, W> SimpleWorkdirFactory.ParentAndClone<R, W> createNewWorkdir(CreateWorkdirContext<R, W, ?> createWorkdirContext) throws IOException {
-    String id = createWorkdirContext.getScmRepository().getId();
     Stopwatch stopwatch = Stopwatch.createStarted();
     File newWorkdir = workdirProvider.createNewWorkdir();
-    workdirs.put(id, newWorkdir);
     SimpleWorkdirFactory.ParentAndClone<R, W> parentAndClone = createWorkdirContext.getInitializer().initialize(newWorkdir);
     LOG.debug("initialized new workdir for {} in path {} in {}", createWorkdirContext.getScmRepository().getNamespaceAndName(), newWorkdir, stopwatch.stop());
     return parentAndClone;
   }
 
   @Override
-  public void contextClosed(CreateWorkdirContext<?, ?, ?> createWorkdirContext, File workdir) throws IOException {
+  public void contextClosed(CreateWorkdirContext<?, ?, ?> createWorkdirContext, File workdir) {
     String id = createWorkdirContext.getScmRepository().getId();
     File putResult = workdirs.putIfAbsent(id, workdir);
     if (putResult != null && putResult != workdir) {
@@ -85,7 +83,15 @@ public class CachingAllWorkdirProvider implements CacheSupportingWorkdirProvider
     }
   }
 
-  private void deleteWorkdir(File existingWorkdir) throws IOException {
-    IOUtil.delete(existingWorkdir, true);
+  @Override
+  public void shutdown() {
+    workdirs.values().parallelStream().forEach(this::deleteWorkdir);
+    workdirs.clear();
+  }
+
+  private void deleteWorkdir(File existingWorkdir) {
+    if (existingWorkdir.exists()) {
+      IOUtil.deleteSilently(existingWorkdir);
+    }
   }
 }

@@ -40,6 +40,7 @@ import sonia.scm.repository.util.CacheSupportingWorkdirProvider;
 import sonia.scm.repository.util.SimpleWorkdirFactory;
 
 import javax.inject.Inject;
+import javax.servlet.ServletContextEvent;
 import java.io.File;
 import java.io.IOException;
 

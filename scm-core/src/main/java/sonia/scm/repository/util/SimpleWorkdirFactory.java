@@ -26,13 +26,17 @@ package sonia.scm.repository.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.plugin.Extension;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import java.io.File;
 import java.io.IOException;
 
-public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R, W, C> {
+@Extension
+public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R, W, C>, ServletContextListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(SimpleWorkdirFactory.class);
 
@@ -77,6 +81,16 @@ public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R,
     } catch (Exception e) {
       LOG.warn("could not close context for {} with directory {}", createWorkdirContext.getScmRepository(), parentAndClone.getDirectory(), e);
     }
+  }
+
+  @Override
+  public void contextDestroyed(ServletContextEvent sce) {
+    workdirProvider.shutdown();
+  }
+
+  @Override
+  public void contextInitialized(ServletContextEvent sce) {
+    // nothing to do
   }
 
   @FunctionalInterface

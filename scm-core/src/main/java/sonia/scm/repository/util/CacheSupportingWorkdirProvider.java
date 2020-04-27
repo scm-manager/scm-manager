@@ -30,4 +30,6 @@ public interface CacheSupportingWorkdirProvider {
   <R, W, C> SimpleWorkdirFactory.ParentAndClone<R, W> getWorkdir(CreateWorkdirContext<R, W, C> context) throws Exception;
 
   void contextClosed(CreateWorkdirContext<?, ?, ?> createWorkdirContext, File workdir) throws Exception;
+
+  void shutdown();
 }

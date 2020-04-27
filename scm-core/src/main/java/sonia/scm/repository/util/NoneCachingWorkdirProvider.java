@@ -48,4 +48,8 @@ public class NoneCachingWorkdirProvider implements CacheSupportingWorkdirProvide
   public void contextClosed(CreateWorkdirContext<?, ?, ?> createWorkdirContext, File workdir) throws IOException {
     IOUtil.delete(workdir, true);
   }
+
+  @Override
+  public void shutdown() {
+  }
 }

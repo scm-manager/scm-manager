@@ -36,6 +36,7 @@ import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.servlet.ServletContextEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
