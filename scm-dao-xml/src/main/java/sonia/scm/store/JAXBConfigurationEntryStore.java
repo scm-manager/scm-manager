@@ -24,8 +24,6 @@
 
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
@@ -45,32 +43,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
 
-//~--- JDK imports ------------------------------------------------------------
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 
-/**
- * @param <V>
- * @author Sebastian Sdorra
- */
 public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V> {
 
-  /**
-   * Field description
-   */
   private static final String TAG_CONFIGURATION = "configuration";
-
-  /**
-   * Field description
-   */
   private static final String TAG_ENTRY = "entry";
-
-  /**
-   * Field description
-   */
   private static final String TAG_KEY = "key";
-
-  /**
-   * Field description
-   */
   private static final String TAG_VALUE = "value";
 
   /**
@@ -191,7 +170,7 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
           }
 
           // closed or new entry tag
-          if (reader.nextTag() == XMLStreamReader.END_ELEMENT) {
+          if (reader.nextTag() == END_ELEMENT) {
 
             // fixed format, start new entry
             reader.nextTag();
@@ -203,9 +182,6 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
     });
   }
 
-  /**
-   * Method description
-   */
   private void store() {
     LOG.debug("store configuration to {}", file);
 
