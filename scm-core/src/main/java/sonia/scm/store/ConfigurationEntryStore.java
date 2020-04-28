@@ -21,20 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.Predicate;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Collection;
+import java.util.function.Predicate;
 
 /**
- * A ConfigurationEntryStore can be used to store multiple entries of structured 
- * configuration data. <b>Note:</b> the default implementation use JAXB to 
+ * A ConfigurationEntryStore can be used to store multiple entries of structured
+ * configuration data. <b>Note:</b> the default implementation use JAXB to
  * marshall the items.
  *
  * @author Sebastian Sdorra
@@ -52,5 +47,5 @@ public interface ConfigurationEntryStore<V> extends DataStore<V> {
    *
    * @return filtered collection of values
    */
-  public Collection<V> getMatchingValues(Predicate<V> predicate);
+  Collection<V> getMatchingValues(Predicate<V> predicate);
 }

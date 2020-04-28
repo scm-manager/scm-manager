@@ -26,7 +26,6 @@ package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
@@ -37,7 +36,6 @@ import sonia.scm.xml.XmlStreams;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 import java.io.File;
@@ -45,6 +43,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -152,7 +151,7 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
 
   @Override
   public Collection<V> getMatchingValues(Predicate<V> predicate) {
-    return Collections2.filter(entries.values(), predicate);
+    return Collections2.filter(entries.values(), predicate::test);
   }
 
   private void load() {
