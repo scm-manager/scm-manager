@@ -67,25 +67,15 @@ final class TypedStoreContext<T> {
 
   void withMarshaller(ThrowingConsumer<Marshaller> consumer) {
     Marshaller marshaller = createMarshaller();
-    ClassLoader contextClassLoader = null;
-    Optional<ClassLoader> classLoader = parameters.getClassLoader();
-    if (classLoader.isPresent()) {
-      contextClassLoader = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(classLoader.get());
-    }
-    try {
-      consumer.consume(marshaller);
-    } catch (Exception e) {
-      throw new StoreException("failure during work with marshaller", e);
-    } finally {
-      if (contextClassLoader != null) {
-        Thread.currentThread().setContextClassLoader(contextClassLoader);
-      }
-    }
+    withClassLoader(consumer, marshaller);
   }
 
   void withUnmarshaller(ThrowingConsumer<Unmarshaller> consumer) {
     Unmarshaller unmarshaller = createUnmarshaller();
+    withClassLoader(consumer, unmarshaller);
+  }
+
+  private <C> void withClassLoader(ThrowingConsumer<C> consumer, C consume) {
     ClassLoader contextClassLoader = null;
     Optional<ClassLoader> classLoader = parameters.getClassLoader();
     if (classLoader.isPresent()) {
@@ -93,9 +83,9 @@ final class TypedStoreContext<T> {
       Thread.currentThread().setContextClassLoader(classLoader.get());
     }
     try {
-      consumer.consume(unmarshaller);
+      consumer.consume(consume);
     } catch (Exception e) {
-      throw new StoreException("failure during work with unmarshaller", e);
+      throw new StoreException("failure during marshalling/unmarshalling", e);
     } finally {
       if (contextClassLoader != null) {
         Thread.currentThread().setContextClassLoader(contextClassLoader);
