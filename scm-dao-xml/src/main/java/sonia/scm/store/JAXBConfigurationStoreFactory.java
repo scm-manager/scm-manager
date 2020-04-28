@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 import com.google.inject.Inject;
@@ -49,10 +49,13 @@ public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory impleme
 
   @Override
   public <T> JAXBConfigurationStore<T> getStore(TypedStoreParameters<T> storeParameters) {
+    TypedStoreContext<T> context = TypedStoreContext.of(storeParameters);
     return new JAXBConfigurationStore<>(
+      context,
       storeParameters.getType(),
       getStoreLocation(storeParameters.getName().concat(StoreConstants.FILE_EXTENSION),
         storeParameters.getType(),
-        storeParameters.getRepositoryId()));
+        storeParameters.getRepositoryId())
+    );
   }
 }
