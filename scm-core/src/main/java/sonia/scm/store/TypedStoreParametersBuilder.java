@@ -24,11 +24,18 @@
 
 package sonia.scm.store;
 
+import com.google.common.collect.ImmutableSet;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.Repository;
+
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -64,9 +71,17 @@ public final class TypedStoreParametersBuilder<T,S> {
     private final Class<T> type;
     private String name;
     private String repositoryId;
+    private ClassLoader classLoader;
+    private Set<XmlAdapter<?, ?>> adapters;
+
+    public Optional<ClassLoader> getClassLoader() {
+      return Optional.ofNullable(classLoader);
+    }
   }
 
   public class OptionalRepositoryBuilder {
+
+    private final Set<XmlAdapter<?,?>> adapters = new HashSet<>();
 
     /**
      * Use this to create or get a store for a specific repository. This step is optional. If you
@@ -91,10 +106,36 @@ public final class TypedStoreParametersBuilder<T,S> {
     }
 
     /**
+     * Sets the {@link ClassLoader} which is used as context class loader during marshaling and unmarshalling.
+     * This is especially useful for storing class objects which come from an unknown source, in this case the
+     * UberClassLoader ({@link PluginLoader#getUberClassLoader()} could be used for the store.
+     *
+     * @param classLoader classLoader for the context
+     *
+     * @return {@code this}
+     */
+    public OptionalRepositoryBuilder withClassLoader(ClassLoader classLoader) {
+      parameters.setClassLoader(classLoader);
+      return this;
+    }
+
+    /**
+     * Sets an instance of an {@link XmlAdapter}.
+     *
+     * @param adapter adapter
+     * @return {@code this}
+     */
+    public OptionalRepositoryBuilder withAdapter(XmlAdapter<?, ?> adapter) {
+      adapters.add(adapter);
+      return this;
+    }
+
+    /**
      * Creates or gets the store with the given name and (if specified) the given repository. If no
      * repository is given, the store will be global.
      */
     public S build(){
+      parameters.setAdapters(ImmutableSet.copyOf(adapters));
       return factory.apply(parameters);
     }
   }

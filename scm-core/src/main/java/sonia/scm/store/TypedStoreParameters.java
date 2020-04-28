@@ -24,6 +24,10 @@
 
 package sonia.scm.store;
 
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import java.util.Optional;
+import java.util.Set;
+
 /**
  * The fields of the {@link TypedStoreParameters} are used from the {@link ConfigurationStoreFactory},
  * {@link ConfigurationEntryStoreFactory} and {@link DataStoreFactory} to create a type safe store.
@@ -34,5 +38,10 @@ package sonia.scm.store;
 public interface TypedStoreParameters<T> extends StoreParameters {
 
   Class<T> getType();
+
+  Optional<ClassLoader> getClassLoader();
+
+  @SuppressWarnings("java:S1452") // we could not provide generic type, because we don't know it here
+  Set<XmlAdapter<?,?>> getAdapters();
 
 }

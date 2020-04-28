@@ -28,7 +28,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.io.File;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 final class TypedStoreContext<T> {
 
@@ -50,38 +53,53 @@ final class TypedStoreContext<T> {
   }
 
   T unmarshall(File file) {
-    Unmarshaller unmarshaller = createUnmarshaller();
-    try {
-      return parameters.getType().cast(unmarshaller.unmarshal(file));
-    } catch (JAXBException e) {
-      throw new StoreException("failed to unmarshall " + file);
-    }
+    AtomicReference<T> ref = new AtomicReference<>();
+    withUnmarshaller(unmarshaller -> {
+      T value = parameters.getType().cast(unmarshaller.unmarshal(file));
+      ref.set(value);
+    });
+    return ref.get();
   }
 
   void marshal(Object object, File file) {
-    Marshaller marshaller = createMarshaller();
-    try {
-      marshaller.marshal(object, file);
-    } catch (JAXBException e) {
-      throw new StoreException("failed to marshall " + object + " to " + file);
-    }
+    withMarshaller(marshaller -> marshaller.marshal(object, file));
   }
 
   void withMarshaller(ThrowingConsumer<Marshaller> consumer) {
     Marshaller marshaller = createMarshaller();
+    ClassLoader contextClassLoader = null;
+    Optional<ClassLoader> classLoader = parameters.getClassLoader();
+    if (classLoader.isPresent()) {
+      contextClassLoader = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(classLoader.get());
+    }
     try {
       consumer.consume(marshaller);
     } catch (Exception e) {
-      throw new StoreException("failure during work with marshaller");
+      throw new StoreException("failure during work with marshaller", e);
+    } finally {
+      if (contextClassLoader != null) {
+        Thread.currentThread().setContextClassLoader(contextClassLoader);
+      }
     }
   }
 
   void withUnmarshaller(ThrowingConsumer<Unmarshaller> consumer) {
     Unmarshaller unmarshaller = createUnmarshaller();
+    ClassLoader contextClassLoader = null;
+    Optional<ClassLoader> classLoader = parameters.getClassLoader();
+    if (classLoader.isPresent()) {
+      contextClassLoader = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(classLoader.get());
+    }
     try {
       consumer.consume(unmarshaller);
     } catch (Exception e) {
       throw new StoreException("failure during work with unmarshaller", e);
+    } finally {
+      if (contextClassLoader != null) {
+        Thread.currentThread().setContextClassLoader(contextClassLoader);
+      }
     }
   }
 
@@ -89,6 +107,9 @@ final class TypedStoreContext<T> {
     try {
       Marshaller marshaller = jaxbContext.createMarshaller();
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+      for (XmlAdapter<?, ?> adapter : parameters.getAdapters()) {
+        marshaller.setAdapter(adapter);
+      }
       return marshaller;
     } catch (JAXBException e) {
       throw new StoreException("could not create marshaller", e);
@@ -98,6 +119,9 @@ final class TypedStoreContext<T> {
   private Unmarshaller createUnmarshaller() {
     try {
       Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+      for (XmlAdapter<?, ?> adapter : parameters.getAdapters()) {
+        unmarshaller.setAdapter(adapter);
+      }
       return unmarshaller;
     } catch (JAXBException e) {
       throw new StoreException("could not create unmarshaller", e);
@@ -106,6 +130,7 @@ final class TypedStoreContext<T> {
 
   @FunctionalInterface
   interface ThrowingConsumer<T> {
+    @SuppressWarnings("java:S112") // we need to throw Exception here
     void consume(T item) throws Exception;
   }
 
