@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.store;
 
-import sonia.scm.repository.Repository;
+package sonia.scm.store;
 
 /**
  * The fields of the {@link TypedStoreParameters} are used from the {@link ConfigurationStoreFactory},
@@ -33,11 +31,8 @@ import sonia.scm.repository.Repository;
  * @author Mohamed Karray
  * @since 2.0.0
  */
-public interface TypedStoreParameters<T> {
+public interface TypedStoreParameters<T> extends StoreParameters {
 
   Class<T> getType();
 
-  String getName();
-
-  String getRepositoryId();
 }

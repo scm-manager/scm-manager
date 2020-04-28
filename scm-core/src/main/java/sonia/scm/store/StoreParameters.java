@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.store;
 
-import sonia.scm.repository.Repository;
+package sonia.scm.store;
 
 /**
  * The fields of the {@link StoreParameters} are used from the {@link BlobStoreFactory} to create a store.

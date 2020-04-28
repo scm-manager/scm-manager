@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -52,7 +52,7 @@ public class JAXBDataStoreTest extends DataStoreTestBase {
   }
 
   @Override
-  protected DataStore getDataStore(Class type, Repository repository) {
+  protected <T> DataStore<T> getDataStore(Class<T> type, Repository repository) {
     return createDataStoreFactory()
       .withType(type)
       .withName("test")
@@ -61,7 +61,7 @@ public class JAXBDataStoreTest extends DataStoreTestBase {
   }
 
   @Override
-  protected DataStore getDataStore(Class type) {
+  protected <T> DataStore<T> getDataStore(Class<T> type) {
     return createDataStoreFactory()
       .withType(type)
       .withName("test")
