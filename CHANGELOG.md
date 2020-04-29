@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Protocol URI for git commands under windows ([#1108](https://github.com/scm-manager/scm-manager/pull/1108))
+- Fix usage of invalid cipher algorith on newer java versions ([#1110](https://github.com/scm-manager/scm-manager/issues/1110),[#1112](https://github.com/scm-manager/scm-manager/pull/1112))
 
 ## [2.0.0-rc7] - 2020-04-09
 ### Added
