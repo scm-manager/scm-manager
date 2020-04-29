@@ -24,6 +24,7 @@
 
 package sonia.scm.security;
 
+import com.google.common.io.Files;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junitpioneer.jupiter.TempDirectory;
@@ -32,6 +33,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -55,7 +58,7 @@ public class DefaultCipherHandlerTest {
    * Tests loading and storing default key.
    */
   @Test
-  void shouldLoadAndStoreDefaultKey(@TempDirectory.TempDir Path tempDir) {
+  void shouldLoadAndStoreDefaultKey(@TempDirectory.TempDir Path tempDir) throws IOException {
     File baseDirectory = tempDir.toFile();
 
     when(context.getBaseDirectory()).thenReturn(baseDirectory);
@@ -79,6 +82,30 @@ public class DefaultCipherHandlerTest {
     assertThat(cipher.decode(encrypted)).isEqualTo(plain);
   }
 
+  @Test
+  @SuppressWarnings("UnstableApiUsage") // is ok for unit test
+  void shouldReEncodeOldFormattedDefaultKey(@TempDirectory.TempDir Path tempDir) throws IOException {
+    String oldKey = "17eXopruTtX3S4dJ9KTEmbZ-vfZztw==";
+    String encryptedValue = "A11kQF7wytpWCkjPflxJB-zUWJ1CVKU3qhwhRFq4Pvl6XqiS9V2w-gqNktqMX6YNDw==";
+    String plainValue = "Marvin The Paranoid Android - RAM";
+
+    File baseDirectory = tempDir.toFile();
+
+    when(context.getBaseDirectory()).thenReturn(baseDirectory);
+
+    File configDirectory = new File(baseDirectory, "config");
+    configDirectory.mkdirs();
+    File defaultKeyFile = new File(configDirectory, DefaultCipherHandler.CIPHERKEY_FILENAME);
+    Files.write(oldKey.getBytes(StandardCharsets.UTF_8), defaultKeyFile);
+
+
+    DefaultCipherHandler cipher = new DefaultCipherHandler(context, keyGenerator);
+
+    String newKey = Files.readLines(defaultKeyFile, StandardCharsets.UTF_8).get(0);
+    assertThat(newKey).startsWith(DefaultCipherHandler.PREFIX_FORMAT_V2);
+    assertThat(cipher.decode(encryptedValue)).isEqualTo(plainValue);
+  }
+
   /**
    * Test encode and decode method with a separate key.
    */
@@ -96,6 +123,20 @@ public class DefaultCipherHandlerTest {
   void shouldEncodeAndDecodeWithDefaultKey() {
     DefaultCipherHandler cipher = new DefaultCipherHandler("testkey");
     assertThat(cipher.decode(cipher.encode("hallo123"))).isEqualTo("hallo123");
+  }
+
+  @Test
+  void shouldDecodeOldCipherFormat() {
+    DefaultCipherHandler cipher = new DefaultCipherHandler("hitchhiker-secrets");
+    String oldFormat = "zhoCMoApolM3cMPRqXHjcGBd-gDQN0JHwWBxvyh3xnCWzj5V";
+    assertThat(cipher.decode(oldFormat)).isEqualTo("Arthur Dent's Secret");
+  }
+
+  @Test
+  void shouldAddPrefixToEncodedValue() {
+    DefaultCipherHandler cipher = new DefaultCipherHandler("hitchhiker-secrets");
+    String encoded = cipher.encode("Trillian's Secret Dairy");
+    assertThat(encoded).startsWith(DefaultCipherHandler.PREFIX_FORMAT_V2);
   }
 
 }
