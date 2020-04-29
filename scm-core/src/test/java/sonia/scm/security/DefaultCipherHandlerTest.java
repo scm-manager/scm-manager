@@ -21,83 +21,81 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
-import java.io.File;
-import java.io.IOException;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junitpioneer.jupiter.TempDirectory;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
+
+import java.io.File;
+import java.nio.file.Path;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link DefaultCipherHandler}.
- * 
+ *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith({MockitoExtension.class, TempDirectory.class})
 public class DefaultCipherHandlerTest {
-  
+
   @Mock
   private SCMContextProvider context;
-  
+
   @Mock
   private KeyGenerator keyGenerator;
-  
-  @Rule
-  public TemporaryFolder tempFolder = new TemporaryFolder();
-  
+
   /**
    * Tests loading and storing default key.
-   * 
-   * @throws IOException 
    */
   @Test
-  public void testLoadingAndStoringDefaultKey() throws IOException {
-    File baseDirectory = tempFolder.newFolder();
+  void shouldLoadAndStoreDefaultKey(@TempDirectory.TempDir Path tempDir) {
+    File baseDirectory = tempDir.toFile();
+
     when(context.getBaseDirectory()).thenReturn(baseDirectory);
     when(keyGenerator.createKey()).thenReturn("secret");
-    
+
     DefaultCipherHandler cipher = new DefaultCipherHandler(context, keyGenerator);
     File configDirectory = new File(baseDirectory, "config");
-    assertTrue(new File(configDirectory, DefaultCipherHandler.CIPHERKEY_FILENAME).exists());
-    
+    File defaultKeyFile = new File(configDirectory, DefaultCipherHandler.CIPHERKEY_FILENAME);
+    assertThat(defaultKeyFile).exists();
+
     // plain text for assertion
     String plain = "hallo123";
-    
+
     // encrypt value with new generated key
     String encrypted = cipher.encode(plain);
-    
+
     // load key from disk
     cipher = new DefaultCipherHandler(context, keyGenerator);
-    
+
     // decrypt with loaded key
-    assertEquals(plain, cipher.decode(encrypted));
+    assertThat(cipher.decode(encrypted)).isEqualTo(plain);
   }
 
   /**
    * Test encode and decode method with a separate key.
    */
   @Test
-  public void testEncodeDecodeWithSeparateKey(){
+  void shouldEncodeAndDecodeWithSeparateKey(){
     char[] key = "testkey".toCharArray();
     DefaultCipherHandler cipher = new DefaultCipherHandler("somekey");
-    assertEquals("hallo123", cipher.decode(key, cipher.encode(key, "hallo123")));
+    assertThat(cipher.decode(key, cipher.encode(key, "hallo123"))).isEqualTo("hallo123");
   }
 
   /**
    * Test encode and decode method with the default key.
-   */  
+   */
   @Test
-  public void testEncodeDecodeWithDefaultKey() {
+  void shouldEncodeAndDecodeWithDefaultKey() {
     DefaultCipherHandler cipher = new DefaultCipherHandler("testkey");
-    assertEquals("hallo123", cipher.decode(cipher.encode("hallo123")));
+    assertThat(cipher.decode(cipher.encode("hallo123"))).isEqualTo("hallo123");
   }
 
 }
