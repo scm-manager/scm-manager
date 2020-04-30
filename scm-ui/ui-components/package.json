@@ -15,7 +15,9 @@
     "typecheck": "tsc",
     "storybook": "start-storybook -s ../ui-webapp/public",
     "storyshots": "jest --testPathPattern=\"storyshots.test.ts\" --collectCoverage=false",
-    "update-storyshots": "jest --testPathPattern=\"storyshots.test.ts\" --collectCoverage=false -u"
+    "update-storyshots": "jest --testPathPattern=\"storyshots.test.ts\" --collectCoverage=false -u",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "devDependencies": {
     "@scm-manager/ui-tests": "^2.0.0-SNAPSHOT",
@@ -60,7 +62,8 @@
     "react-markdown": "^4.0.6",
     "react-router-dom": "^5.1.2",
     "react-select": "^2.1.2",
-    "react-syntax-highlighter": "^11.0.2"
+    "react-syntax-highlighter": "^11.0.2",
+    "snyk": "^1.316.1"
   },
   "babel": {
     "presets": [
@@ -73,5 +76,6 @@
   "prettier": "@scm-manager/prettier-config",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "snyk": true
 }
