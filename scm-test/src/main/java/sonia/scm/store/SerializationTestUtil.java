@@ -33,20 +33,20 @@ import java.io.StringWriter;
 
 public class SerializationTestUtil {
 
-  static <T> T toAndFromJson(Class<T> clazz, T input) throws JsonProcessingException {
+  public static <T> T toAndFromJson(Class<T> clazz, T input) throws JsonProcessingException {
     final ObjectMapper objectMapper = new ObjectMapper();
     final String json = objectMapper.writeValueAsString(input);
     return objectMapper.readValue(json, clazz);
   }
 
-  static <T> T toAndFromXml(Class<T> clazz, T input) {
+  public static <T> T toAndFromXml(Class<T> clazz, T input) {
     final StringWriter xmlWriter = new StringWriter();
     JAXB.marshal(input, xmlWriter);
     final StringReader xmlReader = new StringReader(xmlWriter.toString());
     return JAXB.unmarshal(xmlReader, clazz);
   }
 
-  static <T> T toAndFromJsonAndXml(Class<T> clazz, T input) throws JsonProcessingException {
+  public static <T> T toAndFromJsonAndXml(Class<T> clazz, T input) throws JsonProcessingException {
     return toAndFromXml(clazz, toAndFromJson(clazz, input));
   }
 }
