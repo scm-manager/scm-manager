@@ -24,24 +24,36 @@
 
 package sonia.scm.web.api;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import java.util.Set;
+import org.junit.jupiter.api.Test;
 
-public final class DtoValidator {
+import javax.validation.ValidationException;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
-  private DtoValidator() {
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class DtoValidatorTest {
+
+  @Test
+  void shouldValidateInvalidBean() {
+    assertThrows(
+      ValidationException.class,
+      () -> DtoValidator.validate(new AnyQuestion(43))
+    );
   }
 
-  public static void validate(Object configuration) {
-    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    Validator validator = factory.getValidator();
-    Set<ConstraintViolation<Object>> violations = validator.validate(configuration);
-    if (!violations.isEmpty()) {
-      throw new ConstraintViolationException(violations);
+  @Test
+  void shouldValidateValidBean() {
+    DtoValidator.validate(new AnyQuestion(42));
+  }
+
+  static class AnyQuestion {
+    @Min(42)
+    @Max(42)
+    int answer;
+
+    public AnyQuestion(int answer) {
+      this.answer = answer;
     }
   }
 }
