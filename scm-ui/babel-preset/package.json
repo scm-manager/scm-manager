@@ -15,9 +15,15 @@
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.6.3",
     "@babel/preset-typescript": "^7.6.0",
-    "babel-plugin-styled-components": "^1.10.7"
+    "babel-plugin-styled-components": "^1.10.7",
+    "snyk": "^1.316.0"
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
