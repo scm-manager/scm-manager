@@ -25,7 +25,8 @@
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.10.1",
-    "worker-plugin": "^3.2.0"
+    "worker-plugin": "^3.2.0",
+    "snyk": "^1.316.0"
   },
   "eslintConfig": {
     "extends": "@scm-manager/eslint-config",
@@ -35,5 +36,10 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
