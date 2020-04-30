@@ -11,9 +11,15 @@
     "babel-jest": "^24.9.0",
     "babel-plugin-require-context-hook": "^1.0.0",
     "jest": "^24.9.0",
-    "jest-junit": "^8.0.0"
+    "jest-junit": "^8.0.0",
+    "snyk": "^1.316.1"
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
