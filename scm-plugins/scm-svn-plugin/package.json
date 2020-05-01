@@ -7,7 +7,9 @@
   "scripts": {
     "build": "ui-scripts plugin",
     "watch": "ui-scripts plugin-watch",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "babel": {
     "presets": [
@@ -19,6 +21,8 @@
   },
   "prettier": "@scm-manager/prettier-config",
   "dependencies": {
-    "@scm-manager/ui-plugins": "^2.0.0-SNAPSHOT"
-  }
+    "@scm-manager/ui-plugins": "^2.0.0-SNAPSHOT",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
