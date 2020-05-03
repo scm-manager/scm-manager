@@ -42,7 +42,7 @@ import sonia.scm.io.INISection;
 import sonia.scm.plugin.Extension;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.spi.HgRepositoryServiceProvider;
-import sonia.scm.repository.spi.HgWorkdirFactory;
+import sonia.scm.repository.spi.HgWorkingCopyFactory;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SystemUtil;
@@ -78,7 +78,7 @@ public class HgRepositoryHandler
 
   private final Provider<HgContext> hgContextProvider;
 
-  private final HgWorkdirFactory workdirFactory;
+  private final HgWorkingCopyFactory workingCopyFactory;
 
   private final JAXBContext jaxbContext;
 
@@ -86,10 +86,10 @@ public class HgRepositoryHandler
   public HgRepositoryHandler(ConfigurationStoreFactory storeFactory,
                              Provider<HgContext> hgContextProvider,
                              RepositoryLocationResolver repositoryLocationResolver,
-                             PluginLoader pluginLoader, HgWorkdirFactory workdirFactory) {
+                             PluginLoader pluginLoader, HgWorkingCopyFactory workingCopyFactory) {
     super(storeFactory, repositoryLocationResolver, pluginLoader);
     this.hgContextProvider = hgContextProvider;
-    this.workdirFactory = workdirFactory;
+    this.workingCopyFactory = workingCopyFactory;
 
     try
     {
@@ -259,8 +259,8 @@ public class HgRepositoryHandler
     }
   }
 
-  public HgWorkdirFactory getWorkdirFactory() {
-    return workdirFactory;
+  public HgWorkingCopyFactory getWorkingCopyFactory() {
+    return workingCopyFactory;
   }
 
   public JAXBContext getJaxbContext() {

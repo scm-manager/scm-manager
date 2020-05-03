@@ -21,13 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.spi;
 
-import com.aragost.javahg.Repository;
-import com.aragost.javahg.commands.PullCommand;
-import sonia.scm.repository.util.WorkdirFactory;
+package sonia.scm.repository.util;
 
-public interface HgWorkdirFactory extends WorkdirFactory<Repository, Repository, HgCommandContext> {
-  void configure(PullCommand pullCommand);
+public interface WorkingCopyFactory<R, W, C> {
+  WorkingCopy<R, W> createWorkingCopy(C repositoryContext, String initialBranch);
 }

@@ -35,7 +35,7 @@ import sonia.scm.NotFoundException;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.util.NoneCachingWorkdirProvider;
+import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
@@ -56,13 +56,13 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   public void initHgModifyCommand() {
     HgHookManager hookManager = HgTestUtil.createHookManager();
     HgRepositoryEnvironmentBuilder environmentBuilder = new HgRepositoryEnvironmentBuilder(handler, hookManager);
-    SimpleHgWorkdirFactory workdirFactory = new SimpleHgWorkdirFactory(Providers.of(environmentBuilder), new NoneCachingWorkdirProvider(new WorkdirProvider())) {
+    SimpleHgWorkingCopyFactory workingCopyFactory = new SimpleHgWorkingCopyFactory(Providers.of(environmentBuilder), new NoneCachingWorkingCopyPool(new WorkdirProvider())) {
       @Override
       public void configure(com.aragost.javahg.commands.PullCommand pullCommand) {
         // we do not want to configure http hooks in this unit test
       }
     };
-    hgModifyCommand = new HgModifyCommand(cmdContext, workdirFactory
+    hgModifyCommand = new HgModifyCommand(cmdContext, workingCopyFactory
     );
   }
 

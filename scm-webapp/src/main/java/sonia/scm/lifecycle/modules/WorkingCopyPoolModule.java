@@ -21,13 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository;
 
-import sonia.scm.repository.spi.SvnContext;
-import sonia.scm.repository.util.WorkdirFactory;
+package sonia.scm.lifecycle.modules;
 
-import java.io.File;
+import com.google.inject.AbstractModule;
+import sonia.scm.plugin.PluginLoader;
+import sonia.scm.repository.util.WorkingCopyPool;
 
-public interface SvnWorkDirFactory extends WorkdirFactory<File, File, SvnContext> {
+public class WorkingCopyPoolModule extends AbstractModule {
+  public static final String DEFAULT_WORKING_COPY_POOL_STRATEGY = "sonia.scm.repository.util.NoneCachingWorkingCopyPool";
+  public static final String WORKING_COPY_POOL_STRATEGY_PROPERTY = "scm.workingCopyPoolStrategy";
+  private final PluginLoader pluginLoader;
+
+  public WorkingCopyPoolModule(PluginLoader pluginLoader) {
+    this.pluginLoader = pluginLoader;
+  }
+
+  @Override
+  protected void configure() {
+    String workingCopyPoolStrategy = System.getProperty(WORKING_COPY_POOL_STRATEGY_PROPERTY, DEFAULT_WORKING_COPY_POOL_STRATEGY);
+    try {
+      Class<? extends WorkingCopyPool> strategyClass = (Class<? extends WorkingCopyPool>) pluginLoader.getUberClassLoader().loadClass(workingCopyPoolStrategy);
+      bind(WorkingCopyPool.class).to(strategyClass);
+    } catch (Exception e) {
+      throw new RuntimeException("could not instantiate class for working copy pool: " + workingCopyPoolStrategy, e);
+    }
+  }
 }

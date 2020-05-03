@@ -77,7 +77,7 @@ public class ApplicationModuleProvider implements ModuleProvider {
     }
     moduleList.add(new MapperModule());
     moduleList.add(new ExecutorModule());
-    moduleList.add(new WorkdirModule(pluginLoader));
+    moduleList.add(new WorkingCopyPoolModule(pluginLoader));
 
     return moduleList;
   }

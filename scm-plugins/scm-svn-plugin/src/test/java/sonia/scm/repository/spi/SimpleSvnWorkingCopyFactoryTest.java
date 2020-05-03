@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.tmatesoft.svn.core.SVNException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.util.NoneCachingWorkdirProvider;
+import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.repository.util.WorkingCopy;
 
@@ -39,7 +39,7 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SimpleSvnWorkDirFactoryTest extends AbstractSvnCommandTestBase {
+public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase {
 
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -54,7 +54,7 @@ public class SimpleSvnWorkDirFactoryTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void shouldCheckoutLatestRevision() throws SVNException, IOException {
-    SimpleSvnWorkDirFactory factory = new SimpleSvnWorkDirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
 
     try (WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null)) {
       assertThat(new File(workingCopy.getWorkingRepository(), "a.txt"))
@@ -66,7 +66,7 @@ public class SimpleSvnWorkDirFactoryTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void cloneFromPoolshouldNotBeReused() {
-    SimpleSvnWorkDirFactory factory = new SimpleSvnWorkDirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
 
     File firstDirectory;
     try (WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null)) {
@@ -80,7 +80,7 @@ public class SimpleSvnWorkDirFactoryTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void shouldDeleteCloneOnClose() {
-    SimpleSvnWorkDirFactory factory = new SimpleSvnWorkDirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
 
     File directory;
     File workingRepository;
@@ -95,7 +95,7 @@ public class SimpleSvnWorkDirFactoryTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void shouldReturnRepository() {
-    SimpleSvnWorkDirFactory factory = new SimpleSvnWorkDirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
     Repository scmRepository = factory.getScmRepository(createContext());
     assertThat(scmRepository).isSameAs(repository);
   }

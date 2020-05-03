@@ -26,10 +26,10 @@ package sonia.scm.repository.util;
 
 import java.io.File;
 
-public interface CacheSupportingWorkdirProvider {
-  <R, W, C> SimpleWorkdirFactory.ParentAndClone<R, W> getWorkdir(CreateWorkdirContext<R, W, C> context) throws Exception;
+public interface WorkingCopyPool {
+  <R, W, C> SimpleWorkingCopyFactory.ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws Exception;
 
-  void contextClosed(CreateWorkdirContext<?, ?, ?> createWorkdirContext, File workdir) throws Exception;
+  void contextClosed(WorkingCopyContext<?, ?, ?> workingCopyContext, File workdir) throws Exception;
 
   void shutdown();
 }

@@ -21,25 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.google.inject.Inject;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
-import sonia.scm.repository.SvnWorkDirFactory;
+import sonia.scm.repository.SvnWorkingCopyFactory;
 
 @Extension
 public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
 
   private SvnRepositoryHandler handler;
-  private SvnWorkDirFactory workdirFactory;
+  private SvnWorkingCopyFactory workingCopyFactory;
 
   @Inject
-  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler, SvnWorkDirFactory workdirFactory) {
+  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler, SvnWorkingCopyFactory workingCopyFactory) {
     this.handler = handler;
-    this.workdirFactory = workdirFactory;
+    this.workingCopyFactory = workingCopyFactory;
   }
 
   @Override
@@ -47,7 +47,7 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
     SvnRepositoryServiceProvider provider = null;
 
     if (SvnRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new SvnRepositoryServiceProvider(handler, repository, workdirFactory);
+      provider = new SvnRepositoryServiceProvider(handler, repository, workingCopyFactory);
     }
 
     return provider;

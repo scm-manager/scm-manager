@@ -22,42 +22,12 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.util;
+package sonia.scm.repository.spi;
 
-import sonia.scm.repository.Repository;
+import com.aragost.javahg.Repository;
+import com.aragost.javahg.commands.PullCommand;
+import sonia.scm.repository.util.WorkingCopyFactory;
 
-public class CreateWorkdirContext<R, W, C> {
-  private final Repository scmRepository;
-  private final String requestedBranch;
-  private final C context;
-  private final SimpleWorkdirFactory.WorkdirInitializer<R, W> initializer;
-  private final SimpleWorkdirFactory.WorkdirReclaimer<R, W> reclaimer;
-
-  public CreateWorkdirContext(Repository scmRepository, String requestedBranch, C context, SimpleWorkdirFactory.WorkdirInitializer<R, W> initializer, SimpleWorkdirFactory.WorkdirReclaimer<R, W> reclaimer) {
-    this.scmRepository = scmRepository;
-    this.requestedBranch = requestedBranch;
-    this.context = context;
-    this.initializer = initializer;
-    this.reclaimer = reclaimer;
-  }
-
-  public Repository getScmRepository() {
-    return scmRepository;
-  }
-
-  public String getRequestedBranch() {
-    return requestedBranch;
-  }
-
-  public C getContext() {
-    return context;
-  }
-
-  public SimpleWorkdirFactory.WorkdirInitializer<R, W> getInitializer() {
-    return initializer;
-  }
-
-  public SimpleWorkdirFactory.WorkdirReclaimer<R, W> getReclaimer() {
-    return reclaimer;
-  }
+public interface HgWorkingCopyFactory extends WorkingCopyFactory<Repository, Repository, HgCommandContext> {
+  void configure(PullCommand pullCommand);
 }

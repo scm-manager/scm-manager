@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.util.NoneCachingWorkdirProvider;
+import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.repository.util.WorkingCopy;
 
@@ -49,7 +49,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
 
   private SvnModifyCommand svnModifyCommand;
   private SvnContext context;
-  private SimpleSvnWorkDirFactory workDirFactory;
+  private SimpleSvnWorkingCopyFactory workingCopyFactory;
 
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -57,8 +57,8 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   @Before
   public void initSvnModifyCommand() {
     context = createContext();
-    workDirFactory = new SimpleSvnWorkDirFactory(new NoneCachingWorkdirProvider(new WorkdirProvider(context.getDirectory())));
-    svnModifyCommand = new SvnModifyCommand(context, workDirFactory);
+    workingCopyFactory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(context.getDirectory())));
+    svnModifyCommand = new SvnModifyCommand(context, workingCopyFactory);
   }
 
   @Before
@@ -81,7 +81,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
-    WorkingCopy<File, File> workingCopy = workDirFactory.createWorkingCopy(context, null);
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
     assertThat(new File(workingCopy.getWorkingRepository().getAbsolutePath() + "/a.txt")).doesNotExist();
     assertThat(new File(workingCopy.getWorkingRepository().getAbsolutePath() + "/c")).exists();
   }
@@ -97,7 +97,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
 
     svnModifyCommand.execute(request);
 
-    WorkingCopy<File, File> workingCopy = workDirFactory.createWorkingCopy(context, null);
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
     assertThat(new File(workingCopy.getWorkingRepository(), "Test123")).exists();
   }
 
@@ -124,7 +124,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
 
     svnModifyCommand.execute(request);
 
-    WorkingCopy<File, File> workingCopy = workDirFactory.createWorkingCopy(context, null);
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
     assertThat(new File(workingCopy.getWorkingRepository(), "a.txt")).exists();
     assertThat(new File(workingCopy.getWorkingRepository(), "a.txt")).hasContent("");
   }

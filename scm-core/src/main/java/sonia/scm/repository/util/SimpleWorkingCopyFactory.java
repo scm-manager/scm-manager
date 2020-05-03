@@ -36,56 +36,60 @@ import java.io.File;
 import java.io.IOException;
 
 @Extension
-public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R, W, C>, ServletContextListener {
+public abstract class SimpleWorkingCopyFactory<R, W, C> implements WorkingCopyFactory<R, W, C>, ServletContextListener {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SimpleWorkdirFactory.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SimpleWorkingCopyFactory.class);
 
-  private final CacheSupportingWorkdirProvider workdirProvider;
+  private final WorkingCopyPool workingCopyPool;
 
-  public SimpleWorkdirFactory(CacheSupportingWorkdirProvider workdirProvider) {
-    this.workdirProvider = workdirProvider;
+  public SimpleWorkingCopyFactory(WorkingCopyPool workingCopyPool) {
+    this.workingCopyPool = workingCopyPool;
   }
 
   @Override
-  public WorkingCopy<R, W> createWorkingCopy(C context, String initialBranch) {
+  public WorkingCopy<R, W> createWorkingCopy(C repositoryContext, String initialBranch) {
     try {
-      CreateWorkdirContext<R, W, C> createWorkdirContext = new CreateWorkdirContext<>(
-        getScmRepository(context),
-        initialBranch,
-        context,
-        newFolder -> cloneRepository(context, newFolder, initialBranch),
-        cachedFolder -> reclaimRepository(context, cachedFolder, initialBranch)
-      );
-      ParentAndClone<R, W> parentAndClone = workdirProvider.getWorkdir(createWorkdirContext);
-      return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), () -> this.close(createWorkdirContext, parentAndClone), parentAndClone.getDirectory());
+      WorkingCopyContext<R, W, C> workingCopyContext = createWorkingCopyContext(repositoryContext, initialBranch);
+      ParentAndClone<R, W> parentAndClone = workingCopyPool.getWorkingCopy(workingCopyContext);
+      return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), () -> this.close(workingCopyContext, parentAndClone), parentAndClone.getDirectory());
     } catch (RuntimeException e) {
       throw e;
     } catch (Exception e) {
-      throw new InternalRepositoryException(getScmRepository(context), "could not clone repository in temporary directory", e);
+      throw new InternalRepositoryException(getScmRepository(repositoryContext), "could not clone repository in temporary directory", e);
     }
   }
 
-  private void close(CreateWorkdirContext<R, W, C> createWorkdirContext, ParentAndClone<R, W> parentAndClone) {
+  public WorkingCopyContext<R, W, C> createWorkingCopyContext(C repositoryContext, String initialBranch) {
+    return new WorkingCopyContext<>(
+      getScmRepository(repositoryContext),
+      initialBranch,
+      repositoryContext,
+      newFolder -> cloneRepository(repositoryContext, newFolder, initialBranch),
+      cachedFolder -> reclaimRepository(repositoryContext, cachedFolder, initialBranch)
+    );
+  }
+
+  private void close(WorkingCopyContext<R, W, C> workingCopyContext, ParentAndClone<R, W> parentAndClone) {
     try {
       closeRepository(parentAndClone.getParent());
     } catch (Exception e) {
-      LOG.warn("could not close central repository for {}", createWorkdirContext.getScmRepository(), e);
+      LOG.warn("could not close central repository for {}", workingCopyContext.getScmRepository(), e);
     }
     try {
-      closeWorkdir(parentAndClone.getClone());
+      closeWorkingCopy(parentAndClone.getClone());
     } catch (Exception e) {
-      LOG.warn("could not close clone for {} in directory {}", createWorkdirContext.getScmRepository(), parentAndClone.getDirectory(), e);
+      LOG.warn("could not close clone for {} in directory {}", workingCopyContext.getScmRepository(), parentAndClone.getDirectory(), e);
     }
     try {
-      workdirProvider.contextClosed(createWorkdirContext, parentAndClone.getDirectory());
+      workingCopyPool.contextClosed(workingCopyContext, parentAndClone.getDirectory());
     } catch (Exception e) {
-      LOG.warn("could not close context for {} with directory {}", createWorkdirContext.getScmRepository(), parentAndClone.getDirectory(), e);
+      LOG.warn("could not close context for {} with directory {}", workingCopyContext.getScmRepository(), parentAndClone.getDirectory(), e);
     }
   }
 
   @Override
   public void contextDestroyed(ServletContextEvent sce) {
-    workdirProvider.shutdown();
+    workingCopyPool.shutdown();
   }
 
   @Override
@@ -94,12 +98,12 @@ public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R,
   }
 
   @FunctionalInterface
-  public interface WorkdirInitializer<R, W> {
+  public interface WorkingCopyInitializer<R, W> {
     ParentAndClone<R, W> initialize(File target) throws IOException;
   }
 
   @FunctionalInterface
-  public interface WorkdirReclaimer<R, W> {
+  public interface WorkingCopyReclaimer<R, W> {
     ParentAndClone<R, W> reclaim(File target) throws IOException, ReclaimFailedException;
   }
 
@@ -109,8 +113,8 @@ public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R,
   // We do allow implementations to throw arbitrary exceptions here, so that we can handle them in closeCentral
   protected abstract void closeRepository(R repository) throws Exception;
   @SuppressWarnings("squid:S00112")
-  // We do allow implementations to throw arbitrary exceptions here, so that we can handle them in closeWorkdir
-  protected abstract void closeWorkdirInternal(W workdir) throws Exception;
+  // We do allow implementations to throw arbitrary exceptions here, so that we can handle them in closeWorkingCopy
+  protected abstract void closeWorkingCopyInternal(W workingCopy) throws Exception;
 
   protected abstract ParentAndClone<R, W> cloneRepository(C context, File target, String initialBranch) throws IOException;
 
@@ -124,9 +128,9 @@ public abstract class SimpleWorkdirFactory<R, W, C> implements WorkdirFactory<R,
     }
   }
 
-  private void closeWorkdir(W repository) {
+  private void closeWorkingCopy(W repository) {
     try {
-      closeWorkdirInternal(repository);
+      closeWorkingCopyInternal(repository);
     } catch (Exception e) {
       LOG.warn("could not close temporary repository clone", e);
     }

@@ -35,48 +35,48 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CachingAllWorkdirProvider implements CacheSupportingWorkdirProvider {
+public class CachingAllWorkingCopyPool implements WorkingCopyPool {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CachingAllWorkdirProvider.class);
+  private static final Logger LOG = LoggerFactory.getLogger(CachingAllWorkingCopyPool.class);
 
   private final Map<String, File> workdirs = new ConcurrentHashMap<>();
 
   private final WorkdirProvider workdirProvider;
 
   @Inject
-  public CachingAllWorkdirProvider(WorkdirProvider workdirProvider) {
+  public CachingAllWorkingCopyPool(WorkdirProvider workdirProvider) {
     this.workdirProvider = workdirProvider;
   }
 
   @Override
-  public <R, W, C> SimpleWorkdirFactory.ParentAndClone<R, W> getWorkdir(CreateWorkdirContext<R, W, C> createWorkdirContext) throws IOException {
-    String id = createWorkdirContext.getScmRepository().getId();
+  public <R, W, C> SimpleWorkingCopyFactory.ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> workingCopyContext) throws IOException {
+    String id = workingCopyContext.getScmRepository().getId();
     File existingWorkdir = workdirs.remove(id);
     if (existingWorkdir != null) {
       Stopwatch stopwatch = Stopwatch.createStarted();
       try {
-        SimpleWorkdirFactory.ParentAndClone<R, W> reclaimed = createWorkdirContext.getReclaimer().reclaim(existingWorkdir);
-        LOG.debug("reclaimed workdir for {} in path {} in {}", createWorkdirContext.getScmRepository().getNamespaceAndName(), existingWorkdir, stopwatch.stop());
+        SimpleWorkingCopyFactory.ParentAndClone<R, W> reclaimed = workingCopyContext.getReclaimer().reclaim(existingWorkdir);
+        LOG.debug("reclaimed workdir for {} in path {} in {}", workingCopyContext.getScmRepository().getNamespaceAndName(), existingWorkdir, stopwatch.stop());
         return reclaimed;
-      } catch (SimpleWorkdirFactory.ReclaimFailedException e) {
-        LOG.debug("failed to relaim workdir for {} in path {} in {}", createWorkdirContext.getScmRepository().getNamespaceAndName(), existingWorkdir, stopwatch.stop(), e);
+      } catch (SimpleWorkingCopyFactory.ReclaimFailedException e) {
+        LOG.debug("failed to reclaim workdir for {} in path {} in {}", workingCopyContext.getScmRepository().getNamespaceAndName(), existingWorkdir, stopwatch.stop(), e);
         deleteWorkdir(existingWorkdir);
       }
     }
-    return createNewWorkdir(createWorkdirContext);
+    return createNewWorkdir(workingCopyContext);
   }
 
-  private  <R, W> SimpleWorkdirFactory.ParentAndClone<R, W> createNewWorkdir(CreateWorkdirContext<R, W, ?> createWorkdirContext) throws IOException {
+  private  <R, W> SimpleWorkingCopyFactory.ParentAndClone<R, W> createNewWorkdir(WorkingCopyContext<R, W, ?> workingCopyContext) throws IOException {
     Stopwatch stopwatch = Stopwatch.createStarted();
     File newWorkdir = workdirProvider.createNewWorkdir();
-    SimpleWorkdirFactory.ParentAndClone<R, W> parentAndClone = createWorkdirContext.getInitializer().initialize(newWorkdir);
-    LOG.debug("initialized new workdir for {} in path {} in {}", createWorkdirContext.getScmRepository().getNamespaceAndName(), newWorkdir, stopwatch.stop());
+    SimpleWorkingCopyFactory.ParentAndClone<R, W> parentAndClone = workingCopyContext.getInitializer().initialize(newWorkdir);
+    LOG.debug("initialized new workdir for {} in path {} in {}", workingCopyContext.getScmRepository().getNamespaceAndName(), newWorkdir, stopwatch.stop());
     return parentAndClone;
   }
 
   @Override
-  public void contextClosed(CreateWorkdirContext<?, ?, ?> createWorkdirContext, File workdir) {
-    String id = createWorkdirContext.getScmRepository().getId();
+  public void contextClosed(WorkingCopyContext<?, ?, ?> workingCopyContext, File workdir) {
+    String id = workingCopyContext.getScmRepository().getId();
     File putResult = workdirs.putIfAbsent(id, workdir);
     if (putResult != null && putResult != workdir) {
       deleteWorkdir(workdir);

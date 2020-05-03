@@ -22,29 +22,12 @@
  * SOFTWARE.
  */
 
-package sonia.scm.lifecycle.modules;
+package sonia.scm.repository;
 
-import com.google.inject.AbstractModule;
-import sonia.scm.plugin.PluginLoader;
-import sonia.scm.repository.util.CacheSupportingWorkdirProvider;
+import sonia.scm.repository.spi.SvnContext;
+import sonia.scm.repository.util.WorkingCopyFactory;
 
-public class WorkdirModule extends AbstractModule {
-  public static final String DEFAULT_WORKDIR_CACHE_STRATEGY = "sonia.scm.repository.util.NoneCachingWorkdirProvider";
-  public static final String WORKDIR_CACHE_STRATEGY_PROPERTY = "scm.workdirCacheStrategy";
-  private final PluginLoader pluginLoader;
+import java.io.File;
 
-  public WorkdirModule(PluginLoader pluginLoader) {
-    this.pluginLoader = pluginLoader;
-  }
-
-  @Override
-  protected void configure() {
-    try {
-      String workdirCacheStrategy = System.getProperty(WORKDIR_CACHE_STRATEGY_PROPERTY, DEFAULT_WORKDIR_CACHE_STRATEGY);
-      Class<? extends CacheSupportingWorkdirProvider> strategyClass = (Class<? extends CacheSupportingWorkdirProvider>) pluginLoader.getUberClassLoader().loadClass(workdirCacheStrategy);
-      bind(CacheSupportingWorkdirProvider.class).to(strategyClass);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
+public interface SvnWorkingCopyFactory extends WorkingCopyFactory<File, File, SvnContext> {
 }

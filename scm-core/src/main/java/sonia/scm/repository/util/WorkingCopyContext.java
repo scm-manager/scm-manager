@@ -24,32 +24,40 @@
 
 package sonia.scm.repository.util;
 
-import sonia.scm.util.IOUtil;
+import sonia.scm.repository.Repository;
 
-import javax.inject.Inject;
-import java.io.File;
-import java.io.IOException;
+public class WorkingCopyContext<R, W, C> {
+  private final Repository scmRepository;
+  private final String requestedBranch;
+  private final C context;
+  private final SimpleWorkingCopyFactory.WorkingCopyInitializer<R, W> initializer;
+  private final SimpleWorkingCopyFactory.WorkingCopyReclaimer<R, W> reclaimer;
 
-public class NoneCachingWorkdirProvider implements CacheSupportingWorkdirProvider {
-
-  private final WorkdirProvider workdirProvider;
-
-  @Inject
-  public NoneCachingWorkdirProvider(WorkdirProvider workdirProvider) {
-    this.workdirProvider = workdirProvider;
+  public WorkingCopyContext(Repository scmRepository, String requestedBranch, C context, SimpleWorkingCopyFactory.WorkingCopyInitializer<R, W> initializer, SimpleWorkingCopyFactory.WorkingCopyReclaimer<R, W> reclaimer) {
+    this.scmRepository = scmRepository;
+    this.requestedBranch = requestedBranch;
+    this.context = context;
+    this.initializer = initializer;
+    this.reclaimer = reclaimer;
   }
 
-  @Override
-  public <R, W, C> SimpleWorkdirFactory.ParentAndClone<R, W> getWorkdir(CreateWorkdirContext<R, W, C> context) throws IOException {
-    return context.getInitializer().initialize(workdirProvider.createNewWorkdir());
+  public Repository getScmRepository() {
+    return scmRepository;
   }
 
-  @Override
-  public void contextClosed(CreateWorkdirContext<?, ?, ?> createWorkdirContext, File workdir) throws IOException {
-    IOUtil.delete(workdir, true);
+  public String getRequestedBranch() {
+    return requestedBranch;
   }
 
-  @Override
-  public void shutdown() {
+  public C getContext() {
+    return context;
+  }
+
+  public SimpleWorkingCopyFactory.WorkingCopyInitializer<R, W> getInitializer() {
+    return initializer;
+  }
+
+  public SimpleWorkingCopyFactory.WorkingCopyReclaimer<R, W> getReclaimer() {
+    return reclaimer;
   }
 }

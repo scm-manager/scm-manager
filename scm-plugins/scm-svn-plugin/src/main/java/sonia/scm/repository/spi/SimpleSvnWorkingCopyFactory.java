@@ -29,26 +29,23 @@ import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNRevision;
-import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc2.SvnCheckout;
 import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
 import org.tmatesoft.svn.core.wc2.SvnTarget;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.SvnWorkDirFactory;
-import sonia.scm.repository.util.CacheSupportingWorkdirProvider;
-import sonia.scm.repository.util.SimpleWorkdirFactory;
+import sonia.scm.repository.SvnWorkingCopyFactory;
+import sonia.scm.repository.util.WorkingCopyPool;
+import sonia.scm.repository.util.SimpleWorkingCopyFactory;
 
 import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
 import java.io.File;
-import java.io.IOException;
 
-public class SimpleSvnWorkDirFactory extends SimpleWorkdirFactory<File, File, SvnContext> implements SvnWorkDirFactory {
+public class SimpleSvnWorkingCopyFactory extends SimpleWorkingCopyFactory<File, File, SvnContext> implements SvnWorkingCopyFactory {
 
   @Inject
-  public SimpleSvnWorkDirFactory(CacheSupportingWorkdirProvider workdirProvider) {
-    super(workdirProvider);
+  public SimpleSvnWorkingCopyFactory(WorkingCopyPool workingCopyPool) {
+    super(workingCopyPool);
   }
 
   @Override
@@ -99,6 +96,6 @@ public class SimpleSvnWorkDirFactory extends SimpleWorkdirFactory<File, File, Sv
   }
 
   @Override
-  protected void closeWorkdirInternal(File workdir) {
+  protected void closeWorkingCopyInternal(File workingCopy) {
   }
 }

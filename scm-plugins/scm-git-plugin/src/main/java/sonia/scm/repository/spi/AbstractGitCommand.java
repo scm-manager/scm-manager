@@ -42,7 +42,7 @@ import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.GitWorkdirFactory;
+import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.util.WorkingCopy;
@@ -135,8 +135,8 @@ class AbstractGitCommand
     }
   }
 
-  <R, W extends GitCloneWorker<R>> R inClone(Function<Git, W> workerSupplier, GitWorkdirFactory workdirFactory, String initialBranch) {
-    try (WorkingCopy<Repository, Repository> workingCopy = workdirFactory.createWorkingCopy(context, initialBranch)) {
+  <R, W extends GitCloneWorker<R>> R inClone(Function<Git, W> workerSupplier, GitWorkingCopyFactory workingCopyFactory, String initialBranch) {
+    try (WorkingCopy<Repository, Repository> workingCopy = workingCopyFactory.createWorkingCopy(context, initialBranch)) {
       Repository repository = workingCopy.getWorkingRepository();
       logger.debug("cloned repository to folder {}", repository.getWorkTree());
       return workerSupplier.apply(new Git(repository)).run();

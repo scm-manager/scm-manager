@@ -40,11 +40,11 @@ import org.junit.jupiter.api.Assertions;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Added;
-import sonia.scm.repository.GitWorkdirFactory;
+import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeStrategy;
-import sonia.scm.repository.util.NoneCachingWorkdirProvider;
+import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.user.User;
 
@@ -425,14 +425,14 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitMergeCommand createCommand(Consumer<Git> interceptor) {
-    return new GitMergeCommand(createContext(), new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(new WorkdirProvider()))) {
+    return new GitMergeCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider()))) {
       @Override
-      <R, W extends GitCloneWorker<R>> R inClone(Function<Git, W> workerSupplier, GitWorkdirFactory workdirFactory, String initialBranch) {
+      <R, W extends GitCloneWorker<R>> R inClone(Function<Git, W> workerSupplier, GitWorkingCopyFactory workingCopyFactory, String initialBranch) {
         Function<Git, W> interceptedWorkerSupplier = git -> {
           interceptor.accept(git);
           return workerSupplier.apply(git);
         };
-        return super.inClone(interceptedWorkerSupplier, workdirFactory, initialBranch);
+        return super.inClone(interceptedWorkerSupplier, workingCopyFactory, initialBranch);
       }
     };
   }

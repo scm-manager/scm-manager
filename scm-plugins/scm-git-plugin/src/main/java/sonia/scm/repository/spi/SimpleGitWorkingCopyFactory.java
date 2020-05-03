@@ -34,10 +34,10 @@ import org.eclipse.jgit.transport.ScmTransportProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.GitWorkdirFactory;
+import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.util.CacheSupportingWorkdirProvider;
-import sonia.scm.repository.util.SimpleWorkdirFactory;
+import sonia.scm.repository.util.WorkingCopyPool;
+import sonia.scm.repository.util.SimpleWorkingCopyFactory;
 import sonia.scm.util.SystemUtil;
 
 import javax.inject.Inject;
@@ -47,12 +47,12 @@ import java.io.IOException;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
-public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Repository, GitContext> implements GitWorkdirFactory {
+public class SimpleGitWorkingCopyFactory extends SimpleWorkingCopyFactory<Repository, Repository, GitContext> implements GitWorkingCopyFactory {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SimpleGitWorkdirFactory.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SimpleGitWorkingCopyFactory.class);
 
   @Inject
-  public SimpleGitWorkdirFactory(CacheSupportingWorkdirProvider workdirProvider) {
+  public SimpleGitWorkingCopyFactory(WorkingCopyPool workdirProvider) {
     super(workdirProvider);
   }
 
@@ -124,9 +124,9 @@ public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Re
   }
 
   @Override
-  protected void closeWorkdirInternal(Repository workdir) throws Exception {
-    if (workdir != null) {
-      workdir.close();
+  protected void closeWorkingCopyInternal(Repository workingCopy) throws Exception {
+    if (workingCopy != null) {
+      workingCopy.close();
     }
   }
 

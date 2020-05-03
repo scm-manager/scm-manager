@@ -35,7 +35,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.util.NoneCachingWorkdirProvider;
+import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
@@ -131,7 +131,7 @@ public class GitModifyCommand_LFSTest extends AbstractGitCommandTestBase {
   }
 
   private GitModifyCommand createCommand() {
-    return new GitModifyCommand(createContext(), new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(new WorkdirProvider())), lfsBlobStoreFactory);
+    return new GitModifyCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())), lfsBlobStoreFactory);
   }
 
   @Override

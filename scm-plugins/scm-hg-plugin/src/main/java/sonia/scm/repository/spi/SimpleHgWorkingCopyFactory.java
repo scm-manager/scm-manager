@@ -30,24 +30,23 @@ import com.aragost.javahg.commands.CloneCommand;
 import com.aragost.javahg.commands.PullCommand;
 import com.aragost.javahg.commands.UpdateCommand;
 import com.aragost.javahg.commands.flags.CloneCommandFlags;
-import sonia.scm.repository.util.CacheSupportingWorkdirProvider;
-import sonia.scm.repository.util.SimpleWorkdirFactory;
+import sonia.scm.repository.util.WorkingCopyPool;
+import sonia.scm.repository.util.SimpleWorkingCopyFactory;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.servlet.ServletContextEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class SimpleHgWorkdirFactory extends SimpleWorkdirFactory<Repository, Repository, HgCommandContext> implements HgWorkdirFactory {
+public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Repository, Repository, HgCommandContext> implements HgWorkingCopyFactory {
 
   private final Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder;
 
   @Inject
-  public SimpleHgWorkdirFactory(Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder, CacheSupportingWorkdirProvider workdirProvider) {
+  public SimpleHgWorkingCopyFactory(Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder, WorkingCopyPool workdirProvider) {
     super(workdirProvider);
     this.hgRepositoryEnvironmentBuilder = hgRepositoryEnvironmentBuilder;
   }
@@ -85,8 +84,8 @@ public class SimpleHgWorkdirFactory extends SimpleWorkdirFactory<Repository, Rep
   }
 
   @Override
-  protected void closeWorkdirInternal(Repository workdir) throws Exception {
-    workdir.close();
+  protected void closeWorkingCopyInternal(Repository workingCopy) throws Exception {
+    workingCopy.close();
   }
 
   @Override

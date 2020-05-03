@@ -42,7 +42,7 @@ import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.util.NoneCachingWorkdirProvider;
+import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
@@ -324,7 +324,7 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitModifyCommand createCommand() {
-    return new GitModifyCommand(createContext(), new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(new WorkdirProvider())), lfsBlobStoreFactory);
+    return new GitModifyCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())), lfsBlobStoreFactory);
   }
 
   @FunctionalInterface

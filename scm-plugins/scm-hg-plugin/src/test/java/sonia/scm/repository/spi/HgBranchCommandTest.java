@@ -32,7 +32,7 @@ import sonia.scm.repository.Branch;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.BranchRequest;
-import sonia.scm.repository.util.NoneCachingWorkdirProvider;
+import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
@@ -43,14 +43,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class HgBranchCommandTest extends AbstractHgCommandTestBase {
 
-  private SimpleHgWorkdirFactory workdirFactory;
+  private SimpleHgWorkingCopyFactory workingCopyFactory;
 
   @Before
-  public void initWorkdirFactory() {
+  public void initWorkingCopyFactory() {
     HgRepositoryEnvironmentBuilder hgRepositoryEnvironmentBuilder =
       new HgRepositoryEnvironmentBuilder(handler, HgTestUtil.createHookManager());
 
-    workdirFactory = new SimpleHgWorkdirFactory(Providers.of(hgRepositoryEnvironmentBuilder), new NoneCachingWorkdirProvider(new WorkdirProvider())) {
+    workingCopyFactory = new SimpleHgWorkingCopyFactory(Providers.of(hgRepositoryEnvironmentBuilder), new NoneCachingWorkingCopyPool(new WorkdirProvider())) {
       @Override
       public void configure(PullCommand pullCommand) {
         // we do not want to configure http hooks in this unit test
@@ -63,7 +63,7 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
     BranchRequest branchRequest = new BranchRequest();
     branchRequest.setNewBranch("new_branch");
 
-    Branch newBranch = new HgBranchCommand(cmdContext, workdirFactory).branch(branchRequest);
+    Branch newBranch = new HgBranchCommand(cmdContext, workingCopyFactory).branch(branchRequest);
 
     assertThat(readBranches()).filteredOn(b -> b.getName().equals("new_branch")).isNotEmpty();
     assertThat(cmdContext.open().changeset(newBranch.getRevision()).getParent1().getBranch()).isEqualTo("default");
@@ -75,7 +75,7 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
     branchRequest.setParentBranch("test-branch");
     branchRequest.setNewBranch("new_branch");
 
-    Branch newBranch = new HgBranchCommand(cmdContext, workdirFactory).branch(branchRequest);
+    Branch newBranch = new HgBranchCommand(cmdContext, workingCopyFactory).branch(branchRequest);
 
     assertThat(readBranches()).filteredOn(b -> b.getName().equals("new_branch")).isNotEmpty();
     assertThat(cmdContext.open().changeset(newBranch.getRevision()).getParent1().getBranch()).isEqualTo("test-branch");
@@ -85,7 +85,7 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
   public void shouldCloseBranch() {
     String branchToBeClosed = "test-branch";
 
-    new HgBranchCommand(cmdContext, workdirFactory).deleteOrClose(branchToBeClosed);
+    new HgBranchCommand(cmdContext, workingCopyFactory).deleteOrClose(branchToBeClosed);
     assertThat(readBranches()).filteredOn(b -> b.getName().equals(branchToBeClosed)).isEmpty();
   }
 
@@ -93,8 +93,8 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
   public void shouldThrowInternalRepositoryException() {
     String branchToBeClosed = "default";
 
-    new HgBranchCommand(cmdContext, workdirFactory).deleteOrClose(branchToBeClosed);
-    assertThrows(InternalRepositoryException.class, () -> new HgBranchCommand(cmdContext, workdirFactory).deleteOrClose(branchToBeClosed));
+    new HgBranchCommand(cmdContext, workingCopyFactory).deleteOrClose(branchToBeClosed);
+    assertThrows(InternalRepositoryException.class, () -> new HgBranchCommand(cmdContext, workingCopyFactory).deleteOrClose(branchToBeClosed));
   }
 
   private List<Branch> readBranches() {

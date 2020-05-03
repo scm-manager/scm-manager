@@ -27,7 +27,7 @@ package sonia.scm.repository.spi;
 import org.junit.Rule;
 import org.junit.Test;
 import sonia.scm.repository.spi.MergeConflictResult.SingleMergeConflict;
-import sonia.scm.repository.util.NoneCachingWorkdirProvider;
+import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.util.WorkdirProvider;
 
 import java.io.IOException;
@@ -92,7 +92,7 @@ public class GitMergeCommand_Conflict_Test extends AbstractGitCommandTestBase {
   }
 
   private MergeConflictResult computeMergeConflictResult(String branchToMerge, String targetBranch) {
-    GitMergeCommand gitMergeCommand = new GitMergeCommand(createContext(), new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(new WorkdirProvider())));
+    GitMergeCommand gitMergeCommand = new GitMergeCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())));
     MergeCommandRequest mergeCommandRequest = new MergeCommandRequest();
     mergeCommandRequest.setBranchToMerge(branchToMerge);
     mergeCommandRequest.setTargetBranch(targetBranch);

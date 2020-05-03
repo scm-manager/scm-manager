@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Changeset;
@@ -43,17 +43,17 @@ import java.util.List;
 public class HgModifyCommand implements ModifyCommand {
 
   private HgCommandContext context;
-  private final HgWorkdirFactory workdirFactory;
+  private final HgWorkingCopyFactory workingCopyFactory;
 
-  public HgModifyCommand(HgCommandContext context, HgWorkdirFactory workdirFactory) {
+  public HgModifyCommand(HgCommandContext context, HgWorkingCopyFactory workingCopyFactory) {
     this.context = context;
-    this.workdirFactory = workdirFactory;
+    this.workingCopyFactory = workingCopyFactory;
   }
 
   @Override
   public String execute(ModifyCommandRequest request) {
 
-    try (WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy = workdirFactory.createWorkingCopy(context, request.getBranch())) {
+    try (WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy = workingCopyFactory.createWorkingCopy(context, request.getBranch())) {
       Repository workingRepository = workingCopy.getWorkingRepository();
       request.getRequests().forEach(
         partialRequest -> {
@@ -112,7 +112,7 @@ public class HgModifyCommand implements ModifyCommand {
   private List<Changeset> pullModifyChangesToCentralRepository(ModifyCommandRequest request, WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy) {
     try {
       com.aragost.javahg.commands.PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
-      workdirFactory.configure(pullCommand);
+      workingCopyFactory.configure(pullCommand);
       return pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
     } catch (Exception e) {
       throw new IntegrateChangesFromWorkdirException(context.getScmRepository(),

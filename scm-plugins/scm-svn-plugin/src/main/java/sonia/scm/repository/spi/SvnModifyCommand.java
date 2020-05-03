@@ -33,7 +33,7 @@ import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.SvnWorkDirFactory;
+import sonia.scm.repository.SvnWorkingCopyFactory;
 import sonia.scm.repository.util.WorkingCopy;
 
 import java.io.File;
@@ -43,19 +43,19 @@ import java.nio.file.Path;
 public class SvnModifyCommand implements ModifyCommand {
 
   private SvnContext context;
-  private SvnWorkDirFactory workDirFactory;
+  private SvnWorkingCopyFactory workingCopyFactory;
   private Repository repository;
 
-  SvnModifyCommand(SvnContext context, SvnWorkDirFactory workDirFactory) {
+  SvnModifyCommand(SvnContext context, SvnWorkingCopyFactory workingCopyFactory) {
     this.context = context;
     this.repository = context.getRepository();
-    this.workDirFactory = workDirFactory;
+    this.workingCopyFactory = workingCopyFactory;
   }
 
   @Override
   public String execute(ModifyCommandRequest request) {
     SVNClientManager clientManager = SVNClientManager.newInstance();
-    try (WorkingCopy<File, File> workingCopy = workDirFactory.createWorkingCopy(context, null)) {
+    try (WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null)) {
       File workingDirectory = workingCopy.getDirectory();
       modifyWorkingDirectory(request, clientManager, workingDirectory);
       return commitChanges(clientManager, workingDirectory, request.getCommitMessage());

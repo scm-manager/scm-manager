@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import org.eclipse.jgit.lib.Repository;
 import sonia.scm.repository.spi.GitContext;
-import sonia.scm.repository.util.WorkdirFactory;
+import sonia.scm.repository.util.WorkingCopyFactory;
 
-public interface GitWorkdirFactory extends WorkdirFactory<Repository, Repository, GitContext> {
+public interface GitWorkingCopyFactory extends WorkingCopyFactory<Repository, Repository, GitContext> {
 }

@@ -38,7 +38,7 @@ import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.HookContextFactory;
-import sonia.scm.repository.util.NoneCachingWorkdirProvider;
+import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.repository.util.WorkingCopy;
 
@@ -51,7 +51,7 @@ import static com.google.inject.util.Providers.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
+public class SimpleGitWorkingCopyFactoryTest extends AbstractGitCommandTestBase {
 
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -72,7 +72,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
   @Test
   public void emptyPoolShouldCreateNewWorkdir() {
-    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    SimpleGitWorkingCopyFactory factory = new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
     File masterRepo = createRepositoryDirectory();
 
     try (WorkingCopy<Repository, Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
@@ -90,7 +90,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
   @Test
   public void shouldCheckoutInitialBranch() {
-    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    SimpleGitWorkingCopyFactory factory = new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
 
     try (WorkingCopy<Repository, Repository> workingCopy = factory.createWorkingCopy(createContext(), "test-branch")) {
       assertThat(new File(workingCopy.getWorkingRepository().getWorkTree(), "a.txt"))
@@ -102,7 +102,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
   @Test
   public void shouldCheckoutDefaultBranch() {
-    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    SimpleGitWorkingCopyFactory factory = new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
 
     try (WorkingCopy<Repository, Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
       assertThat(new File(workingCopy.getWorkingRepository().getWorkTree(), "a.txt"))
@@ -114,7 +114,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
   @Test
   public void cloneFromPoolShouldNotBeReused() {
-    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    SimpleGitWorkingCopyFactory factory = new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
 
     File firstDirectory;
     try (WorkingCopy<Repository, Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
@@ -128,7 +128,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
   @Test
   public void cloneFromPoolShouldBeDeletedOnClose() {
-    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    SimpleGitWorkingCopyFactory factory = new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
 
     File directory;
     try (WorkingCopy<Repository, Repository> workingCopy = factory.createWorkingCopy(createContext(), null)) {
@@ -139,7 +139,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
   @Test
   public void shouldReclaimCleanDirectoryWithSameBranch() throws Exception {
-    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    SimpleGitWorkingCopyFactory factory = new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
     File workdir = createExistingClone(factory);
 
     factory.reclaimRepository(createContext(), workdir, "master");
@@ -149,7 +149,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
   @Test
   public void shouldReclaimCleanDirectoryWithOtherBranch() throws Exception {
-    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    SimpleGitWorkingCopyFactory factory = new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
     File workdir = createExistingClone(factory);
 
     factory.reclaimRepository(createContext(), workdir, "test-branch");
@@ -159,7 +159,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
   @Test
   public void shouldReclaimDirectoryWithDeletedFileInIndex() throws Exception {
-    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    SimpleGitWorkingCopyFactory factory = new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
     File workdir = createExistingClone(factory);
     Git.open(workdir).rm().addFilepattern("a.txt").call();
 
@@ -170,7 +170,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
   @Test
   public void shouldReclaimDirectoryWithDeletedFileInDirectory() throws Exception {
-    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    SimpleGitWorkingCopyFactory factory = new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
     File workdir = createExistingClone(factory);
     Files.delete(workdir.toPath().resolve("a.txt"));
 
@@ -181,7 +181,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
 
   @Test
   public void shouldReclaimDirectoryWithAdditionalFileInDirectory() throws Exception {
-    SimpleGitWorkdirFactory factory = new SimpleGitWorkdirFactory(new NoneCachingWorkdirProvider(workdirProvider));
+    SimpleGitWorkingCopyFactory factory = new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
     File workdir = createExistingClone(factory);
     Path newDirectory = workdir.toPath().resolve("new");
     Files.createDirectories(newDirectory);
@@ -192,7 +192,7 @@ public class SimpleGitWorkdirFactoryTest extends AbstractGitCommandTestBase {
     assertBranchCheckedOutAndClean(workdir, "master");
   }
 
-  public File createExistingClone(SimpleGitWorkdirFactory factory) throws Exception {
+  public File createExistingClone(SimpleGitWorkingCopyFactory factory) throws Exception {
     File workdir = temporaryFolder.newFolder();
     extract(workdir, "sonia/scm/repository/spi/scm-git-spi-test-workdir.zip");
     Git.open(workdir).remoteSetUrl().setRemoteUri(new URIish(factory.createScmTransportProtocolUri(repositoryDirectory))).setRemoteName("origin").call();

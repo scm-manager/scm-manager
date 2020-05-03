@@ -21,9 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.util;
 
-public interface WorkdirFactory<R, W, C> {
-  WorkingCopy<R, W> createWorkingCopy(C context, String initialBranch);
+import sonia.scm.util.IOUtil;
+
+import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
+
+public class NoneCachingWorkingCopyPool implements WorkingCopyPool {
+
+  private final WorkdirProvider workdirProvider;
+
+  @Inject
+  public NoneCachingWorkingCopyPool(WorkdirProvider workdirProvider) {
+    this.workdirProvider = workdirProvider;
+  }
+
+  @Override
+  public <R, W, C> SimpleWorkingCopyFactory.ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws IOException {
+    return context.getInitializer().initialize(workdirProvider.createNewWorkdir());
+  }
+
+  @Override
+  public void contextClosed(WorkingCopyContext<?, ?, ?> workingCopyContext, File workdir) throws IOException {
+    IOUtil.delete(workdir, true);
+  }
+
+  @Override
+  public void shutdown() {
+  }
 }
