@@ -45,6 +45,7 @@
     <module>unix</module>
     <module>windows</module>
     <module>docker</module>
+    <module>helm</module>
   </modules>
 
 </project>
