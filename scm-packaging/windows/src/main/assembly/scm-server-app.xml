@@ -34,6 +34,7 @@
     <format>zip</format>
   </formats>
 
+  <baseDirectory>scm-server</baseDirectory>
   <includeBaseDirectory>true</includeBaseDirectory>
 
   <fileSets>
@@ -49,7 +50,6 @@
       <filtered>false</filtered>
       <outputDirectory></outputDirectory>
     </fileSet>
-
 
   </fileSets>
 
