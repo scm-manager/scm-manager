@@ -205,6 +205,7 @@
       <groupId>org.glassfish</groupId>
       <artifactId>javax.el</artifactId>
       <version>3.0.1-b11</version>
+      <scope>test</scope>
     </dependency>
 
     <!-- util -->
