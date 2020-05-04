@@ -28,6 +28,7 @@ package sonia.scm.repository.api;
 
 import com.github.legman.ReferenceType;
 import com.github.legman.Subscribe;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
@@ -126,7 +127,7 @@ public final class RepositoryServiceFactory
    * @param repositoryManager manager for repositories
    * @param resolvers a set of {@link RepositoryServiceResolver}
    * @param preProcessorUtil helper object for pre processor handling
-   *
+   * @param protocolProviders
    * @param workdirProvider
    * @since 1.21
    */
@@ -136,6 +137,19 @@ public final class RepositoryServiceFactory
                                   Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
                                   Set<ScmProtocolProvider> protocolProviders, WorkdirProvider workdirProvider)
   {
+    this(
+      configuration, cacheManager, repositoryManager, resolvers,
+      preProcessorUtil, protocolProviders, workdirProvider, ScmEventBus.getInstance()
+    );
+  }
+
+  @VisibleForTesting
+  RepositoryServiceFactory(ScmConfiguration configuration,
+                                  CacheManager cacheManager, RepositoryManager repositoryManager,
+                                  Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
+                                  Set<ScmProtocolProvider> protocolProviders, WorkdirProvider workdirProvider,
+                                  ScmEventBus eventBus)
+  {
     this.configuration = configuration;
     this.cacheManager = cacheManager;
     this.repositoryManager = repositoryManager;
@@ -144,7 +158,7 @@ public final class RepositoryServiceFactory
     this.protocolProviders = protocolProviders;
     this.workdirProvider = workdirProvider;
 
-    ScmEventBus.getInstance().register(new CacheClearHook(cacheManager));
+    eventBus.register(new CacheClearHook(cacheManager));
   }
 
   //~--- methods --------------------------------------------------------------
