@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.junit.jupiter.api.Test;
@@ -103,6 +103,15 @@ class GitHunkParserTest {
     "+added line\n" +
     "\\ No newline at end of file\n";
 
+  private static final String MULTIPLE_LINE_BREAKS = "diff --git a/.editorconfig b/.editorconfig\n" +
+    "index ea2a3ba..2f02f32 100644\n" +
+    "--- a/.editorconfig\n" +
+    "+++ b/.editorconfig\n" +
+    "@@ -10,3 +10,4 @@\n" +
+    " indent_style = space\r\r\n" +
+    " indent_size = 2\r\r\n" +
+    " charset = utf-8\n";
+
   @Test
   void shouldParseHunks() {
     List<Hunk> hunks = new GitHunkParser().parse(DIFF_001);
@@ -181,6 +190,24 @@ class GitHunkParserTest {
     assertThat(lastLine.getOldLineNumber()).isEmpty();
     assertThat(lastLine.getNewLineNumber()).hasValue(13);
     assertThat(lastLine.getContent()).isEqualTo("added line");
+  }
+
+  @Test
+  void shouldHandleMultipleLineBreaks() {
+    List<Hunk> hunks = new GitHunkParser().parse(MULTIPLE_LINE_BREAKS);
+
+    Hunk hunk = hunks.get(0);
+
+    Iterator<DiffLine> lines = hunk.iterator();
+
+    DiffLine line1 = lines.next();
+    assertThat(line1.getOldLineNumber()).hasValue(10);
+    assertThat(line1.getNewLineNumber()).hasValue(10);
+    assertThat(line1.getContent()).isEqualTo("indent_style = space");
+
+    lines.next();
+    lines.next();
+    assertThat(lines.hasNext()).isFalse();
   }
 
   private void assertHunk(Hunk hunk, int oldStart, int oldLineCount, int newStart, int newLineCount) {
