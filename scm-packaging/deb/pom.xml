@@ -284,6 +284,41 @@
           </dataSet>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.8.2</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>net.lopht.maven-plugins</groupId>
+        <artifactId>upload-maven-plugin</artifactId>
+        <version>0.6.0</version>
+        <executions>
+          <execution>
+            <phase>deploy</phase>
+            <goals>
+              <goal>upload-file</goal>
+            </goals>
+            <configuration>
+              <file>${project.artifact.file}</file>
+              <preemptiveAuth>true</preemptiveAuth>
+              <!--
+              TODO adjust url and path
+              -->
+              <repositoryUrl>http://localhost:8081</repositoryUrl>
+              <repositoryPath>/repository/debian-releases/</repositoryPath>
+              <serverId>local-nexus</serverId>
+              <usePOST>true</usePOST>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 
