@@ -24,7 +24,8 @@
     SOFTWARE.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -86,7 +87,7 @@
                   <version>1.1.0</version>
                   <type>tar.gz</type>
                   <fileMappers>
-                    <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
+                    <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper/>
                   </fileMappers>
                 </artifactItem>
               </artifactItems>
@@ -314,6 +315,41 @@
 
         </configuration>
       </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.8.2</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>net.lopht.maven-plugins</groupId>
+        <artifactId>upload-maven-plugin</artifactId>
+        <version>0.6.0</version>
+        <executions>
+          <execution>
+            <phase>deploy</phase>
+            <goals>
+              <goal>upload-file</goal>
+            </goals>
+            <configuration>
+              <file>${project.artifact.file}</file>
+              <preemptiveAuth>true</preemptiveAuth>
+              <!--
+              TODO adjust url and path
+              -->
+              <repositoryUrl>http://localhost:8081</repositoryUrl>
+              <repositoryPath>/repository/redhat-releases/${project.artifact.file.name}</repositoryPath>
+              <serverId>local-nexus</serverId>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 
