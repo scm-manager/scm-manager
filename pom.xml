@@ -678,7 +678,7 @@
             <exclude>mvnw.cmd</exclude>
             <exclude>yarn.lock</exclude>
             <exclude>**/logback.ci.xml</exclude>
-            <exclude>**/scm-hg-plugin/pkg/ourPackage/scm-source.properties</exclude>
+            <exclude>**/pkg/ourPackage/scm-source.properties</exclude>
           </excludes>
           <mapping>
             <tsx>SLASHSTAR_STYLE</tsx>
