@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -232,7 +232,7 @@ public final class RepositoryServiceFactory
     Preconditions.checkNotNull(repository, "repository is required");
 
     // check for read permissions of current user
-    RepositoryPermissions.read(repository);
+    RepositoryPermissions.read(repository).check();
 
     RepositoryService service = null;
 
@@ -271,7 +271,7 @@ public final class RepositoryServiceFactory
    */
   private static class CacheClearHook
   {
-    
+
     private final Set<Cache<?, ?>> caches = Sets.newHashSet();
 
     /**
@@ -293,14 +293,14 @@ public final class RepositoryServiceFactory
 
     /**
      * Clear caches on explicit repository cache clear event.
-     * 
+     *
      * @param event clear event
      */
     @Subscribe
     public void onEvent(ClearRepositoryCacheEvent event) {
       clearCaches(event.getRepository().getId());
     }
-    
+
     /**
      * Clear caches on repository push.
      *
@@ -332,7 +332,7 @@ public final class RepositoryServiceFactory
         clearCaches(event.getItem().getId());
       }
     }
-    
+
     @SuppressWarnings("unchecked")
     private void clearCaches(final String repositoryId)
     {
