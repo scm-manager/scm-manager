@@ -21,34 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.api.v2;
 
-import org.jboss.resteasy.api.validation.ResteasyViolationException;
-import sonia.scm.api.v2.resources.ResteasyViolationExceptionToErrorDtoMapper;
-import sonia.scm.web.VndMediaType;
+package sonia.scm.web.api;
 
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.util.Set;
 
-@Provider
-public class ResteasyValidationExceptionMapper implements ExceptionMapper<ResteasyViolationException> {
+public final class DtoValidator {
 
-  private final ResteasyViolationExceptionToErrorDtoMapper mapper;
-
-  @Inject
-  public ResteasyValidationExceptionMapper(ResteasyViolationExceptionToErrorDtoMapper mapper) {
-    this.mapper = mapper;
+  private DtoValidator() {
   }
 
-  @Override
-  public Response toResponse(ResteasyViolationException exception) {
-    return Response
-      .status(Response.Status.BAD_REQUEST)
-      .type(VndMediaType.ERROR_TYPE)
-      .entity(mapper.map(exception))
-      .build();
+  public static void validate(Object configuration) {
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    Validator validator = factory.getValidator();
+    Set<ConstraintViolation<Object>> violations = validator.validate(configuration);
+    if (!violations.isEmpty()) {
+      throw new ConstraintViolationException(violations);
+    }
   }
 }
