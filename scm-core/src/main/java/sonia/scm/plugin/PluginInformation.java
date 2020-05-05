@@ -47,7 +47,7 @@ import java.io.Serializable;
   value = "plugin",
   generatedClass = "PluginPermissions",
   permissions = {},
-  globalPermissions = {"read", "manage"},
+  globalPermissions = {"read", "write"},
   custom = true, customGlobal = true
 )
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -178,7 +178,7 @@ public class AvailablePluginResource {
     )
   )
   public Response installPlugin(@PathParam("name") String name, @QueryParam("restart") boolean restartAfterInstallation) {
-    PluginPermissions.manage().check();
+    PluginPermissions.write().check();
     pluginManager.install(name, restartAfterInstallation);
     return Response.ok().build();
   }
