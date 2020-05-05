@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import sonia.scm.repository.api.DiffLine;
@@ -49,9 +49,9 @@ final class GitHunkParser {
   public List<Hunk> parse(String content) {
     List<Hunk> hunks = new ArrayList<>();
 
-    try (Scanner scanner = new Scanner(content)) {
-      while (scanner.hasNextLine()) {
-        String line = scanner.nextLine();
+    try (Scanner scanner = new Scanner(content).useDelimiter("[\n\r\u2028\u2029\u0085]+")) {
+      while (scanner.hasNext()) {
+        String line = scanner.next();
         if (line.startsWith("@@")) {
           parseHeader(hunks, line);
         } else if (currentGitHunk != null) {
