@@ -127,7 +127,7 @@ class PluginDtoMapperTest {
 
   @Test
   void shouldAppendInstallLink() {
-    when(subject.isPermitted("plugin:manage")).thenReturn(true);
+    when(subject.isPermitted("plugin:write")).thenReturn(true);
     AvailablePlugin plugin = createAvailable(createPluginInformation());
 
     PluginDto dto = mapper.mapAvailable(plugin);
@@ -138,7 +138,7 @@ class PluginDtoMapperTest {
   @Test
   void shouldAppendInstallWithRestartLink() {
     when(restarter.isSupported()).thenReturn(true);
-    when(subject.isPermitted("plugin:manage")).thenReturn(true);
+    when(subject.isPermitted("plugin:write")).thenReturn(true);
     AvailablePlugin plugin = createAvailable(createPluginInformation());
 
     PluginDto dto = mapper.mapAvailable(plugin);
@@ -166,7 +166,7 @@ class PluginDtoMapperTest {
 
   @Test
   void shouldAppendUninstallLink() {
-    when(subject.isPermitted("plugin:manage")).thenReturn(true);
+    when(subject.isPermitted("plugin:write")).thenReturn(true);
     InstalledPlugin plugin = createInstalled(createPluginInformation());
     when(plugin.isUninstallable()).thenReturn(true);
 
@@ -178,7 +178,7 @@ class PluginDtoMapperTest {
   @Test
   void shouldAppendUninstallWithRestartLink() {
     when(restarter.isSupported()).thenReturn(true);
-    when(subject.isPermitted("plugin:manage")).thenReturn(true);
+    when(subject.isPermitted("plugin:write")).thenReturn(true);
 
     InstalledPlugin plugin = createInstalled(createPluginInformation());
     when(plugin.isUninstallable()).thenReturn(true);
