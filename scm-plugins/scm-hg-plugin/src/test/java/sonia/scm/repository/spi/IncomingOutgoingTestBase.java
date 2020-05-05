@@ -42,7 +42,6 @@ import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.HgTestUtil;
-import sonia.scm.repository.RepositoryPathNotFoundException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 import sonia.scm.util.MockUtil;
@@ -66,11 +65,10 @@ public abstract class IncomingOutgoingTestBase extends AbstractTestBase
   /**
    * Method description
    *
-   *
    * @throws IOException
    */
   @Before
-  public void initHgHandler() throws IOException, RepositoryPathNotFoundException {
+  public void initHgHandler() throws IOException {
     HgRepositoryHandler temp = HgTestUtil.createHandler(tempFolder.newFolder());
 
     HgTestUtil.checkForSkip(temp);

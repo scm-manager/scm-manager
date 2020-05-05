@@ -21,189 +21,69 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-import sonia.scm.util.Util;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
+@EqualsAndHashCode
+@ToString
+@Setter
+public class Modifications implements Serializable {
 
-/**
- *
- * @author Sebastian Sdorra
- */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "modifications")
-public class Modifications implements Serializable
-{
-
-  /** Field description */
   private static final long serialVersionUID = -8902033326668658140L;
-
-  //~--- constructors ---------------------------------------------------------
+  private String revision;
 
   /**
-   * Constructs ...
-   *
+   * lists of changed files
    */
+  private List<String> added;
+  private List<String> modified;
+  private List<String> removed;
+
   public Modifications() {
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param added
-   */
-  public Modifications(List<String> added)
-  {
+  ;
+
+  public Modifications(List<String> added) {
     this(added, null, null);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param added
-   * @param modified
-   */
-  public Modifications(List<String> added, List<String> modified)
-  {
+  public Modifications(List<String> added, List<String> modified) {
     this(added, modified, null);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param added
-   * @param modified
-   * @param removed
-   */
-  public Modifications(List<String> added, List<String> modified,
-    List<String> removed)
-  {
+  public Modifications(List<String> added, List<String> modified, List<String> removed) {
     this.added = added;
     this.modified = modified;
     this.removed = removed;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
-  @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-
-    if (getClass() != obj.getClass())
-    {
-      return false;
-    }
-
-    final Modifications other = (Modifications) obj;
-
-    return Objects.equal(added, other.added)
-      && Objects.equal(modified, other.modified)
-      && Objects.equal(removed, other.removed);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(added, modified, removed);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public String toString()
-  {
-    StringBuilder out = new StringBuilder();
-
-    out.append("added:").append(Util.toString(added)).append("\n");
-    out.append("modified:").append(Util.toString(modified)).append("\n");
-    out.append("removed:").append(Util.toString(removed)).append("\n");
-
-    return out.toString();
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<String> getAdded()
-  {
-    if (added == null)
-    {
+  public List<String> getAdded() {
+    if (added == null) {
       added = Lists.newArrayList();
     }
 
     return added;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<String> getModified()
-  {
-    if (modified == null)
-    {
+  public List<String> getModified() {
+    if (modified == null) {
       modified = Lists.newArrayList();
     }
 
     return modified;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<String> getRemoved()
-  {
-    if (removed == null)
-    {
+  public List<String> getRemoved() {
+    if (removed == null) {
       removed = Lists.newArrayList();
     }
 
@@ -213,62 +93,4 @@ public class Modifications implements Serializable
   public String getRevision() {
     return revision;
   }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param added
-   */
-  public void setAdded(List<String> added)
-  {
-    this.added = added;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param modified
-   */
-  public void setModified(List<String> modified)
-  {
-    this.modified = modified;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param removed
-   */
-  public void setRemoved(List<String> removed)
-  {
-    this.removed = removed;
-  }
-
-  public void setRevision(String revision) {
-    this.revision = revision;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  private String revision;
-
-  /** list of added files */
-  @XmlElement(name = "added")
-  @XmlElementWrapper(name = "added")
-  private List<String> added;
-
-  /** list of modified files */
-  @XmlElement(name = "modified")
-  @XmlElementWrapper(name = "modified")
-  private List<String> modified;
-
-  /** list of removed files */
-  @XmlElement(name = "removed")
-  @XmlElementWrapper(name = "removed")
-  private List<String> removed;
 }
