@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.ReferenceType;
 import com.github.legman.Subscribe;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
@@ -126,7 +127,7 @@ public final class RepositoryServiceFactory
    * @param repositoryManager manager for repositories
    * @param resolvers a set of {@link RepositoryServiceResolver}
    * @param preProcessorUtil helper object for pre processor handling
-   *
+   * @param protocolProviders
    * @param workdirProvider
    * @since 1.21
    */
@@ -136,6 +137,19 @@ public final class RepositoryServiceFactory
                                   Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
                                   Set<ScmProtocolProvider> protocolProviders, WorkdirProvider workdirProvider)
   {
+    this(
+      configuration, cacheManager, repositoryManager, resolvers,
+      preProcessorUtil, protocolProviders, workdirProvider, ScmEventBus.getInstance()
+    );
+  }
+
+  @VisibleForTesting
+  RepositoryServiceFactory(ScmConfiguration configuration,
+                                  CacheManager cacheManager, RepositoryManager repositoryManager,
+                                  Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
+                                  Set<ScmProtocolProvider> protocolProviders, WorkdirProvider workdirProvider,
+                                  ScmEventBus eventBus)
+  {
     this.configuration = configuration;
     this.cacheManager = cacheManager;
     this.repositoryManager = repositoryManager;
@@ -144,7 +158,7 @@ public final class RepositoryServiceFactory
     this.protocolProviders = protocolProviders;
     this.workdirProvider = workdirProvider;
 
-    ScmEventBus.getInstance().register(new CacheClearHook(cacheManager));
+    eventBus.register(new CacheClearHook(cacheManager));
   }
 
   //~--- methods --------------------------------------------------------------
@@ -232,7 +246,7 @@ public final class RepositoryServiceFactory
     Preconditions.checkNotNull(repository, "repository is required");
 
     // check for read permissions of current user
-    RepositoryPermissions.read(repository);
+    RepositoryPermissions.read(repository).check();
 
     RepositoryService service = null;
 
@@ -271,7 +285,7 @@ public final class RepositoryServiceFactory
    */
   private static class CacheClearHook
   {
-    
+
     private final Set<Cache<?, ?>> caches = Sets.newHashSet();
 
     /**
@@ -293,14 +307,14 @@ public final class RepositoryServiceFactory
 
     /**
      * Clear caches on explicit repository cache clear event.
-     * 
+     *
      * @param event clear event
      */
     @Subscribe
     public void onEvent(ClearRepositoryCacheEvent event) {
       clearCaches(event.getRepository().getId());
     }
-    
+
     /**
      * Clear caches on repository push.
      *
@@ -332,7 +346,7 @@ public final class RepositoryServiceFactory
         clearCaches(event.getItem().getId());
       }
     }
-    
+
     @SuppressWarnings("unchecked")
     private void clearCaches(final String repositoryId)
     {
