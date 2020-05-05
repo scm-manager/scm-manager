@@ -24,6 +24,8 @@
 
 package sonia.scm.repository.util;
 
+import sonia.scm.plugin.ExtensionPoint;
+
 public interface WorkingCopyFactory<R, W, C> {
   WorkingCopy<R, W> createWorkingCopy(C repositoryContext, String initialBranch);
 }

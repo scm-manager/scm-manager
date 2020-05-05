@@ -65,7 +65,7 @@ public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase 
   }
 
   @Test
-  public void cloneFromPoolshouldNotBeReused() {
+  public void cloneFromPoolShouldNotBeReused() {
     SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
 
     File firstDirectory;

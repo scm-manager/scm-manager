@@ -35,7 +35,6 @@ import javax.servlet.ServletContextListener;
 import java.io.File;
 import java.io.IOException;
 
-@Extension
 public abstract class SimpleWorkingCopyFactory<R, W, C> implements WorkingCopyFactory<R, W, C>, ServletContextListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(SimpleWorkingCopyFactory.class);
@@ -76,7 +75,7 @@ public abstract class SimpleWorkingCopyFactory<R, W, C> implements WorkingCopyFa
       LOG.warn("could not close central repository for {}", workingCopyContext.getScmRepository(), e);
     }
     try {
-      closeWorkingCopy(parentAndClone.getClone());
+      closeWorkingCopyInternal(parentAndClone.getClone());
     } catch (Exception e) {
       LOG.warn("could not close clone for {} in directory {}", workingCopyContext.getScmRepository(), parentAndClone.getDirectory(), e);
     }
@@ -119,22 +118,6 @@ public abstract class SimpleWorkingCopyFactory<R, W, C> implements WorkingCopyFa
   protected abstract ParentAndClone<R, W> cloneRepository(C context, File target, String initialBranch) throws IOException;
 
   protected abstract ParentAndClone<R, W> reclaimRepository(C context, File target, String initialBranch) throws IOException, ReclaimFailedException;
-
-  private void closeCentral(R repository) {
-    try {
-      closeRepository(repository);
-    } catch (Exception e) {
-      LOG.warn("could not close temporary repository clone", e);
-    }
-  }
-
-  private void closeWorkingCopy(W repository) {
-    try {
-      closeWorkingCopyInternal(repository);
-    } catch (Exception e) {
-      LOG.warn("could not close temporary repository clone", e);
-    }
-  }
 
   protected static class ParentAndClone<R, W> {
     private final R parent;
