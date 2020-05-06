@@ -1,4 +1,6 @@
-# SCM-Manager on IIS Helicon
+---
+title: SCM-Manager on IIS Helicon
+---
 First of all this setup is not recommended, because there were a lot of problems with it and it was never tested by the development team of SCM-Manager. However there are several working installation out there. But there some pitfalls:
 
 **Problem description:**

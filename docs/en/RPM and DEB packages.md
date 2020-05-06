@@ -1,4 +1,7 @@
-# RPM and DEB packages
+---
+title: RPM and DEB packages
+displayToc: true
+---
 
 Since version 1.39, SCM-Manager is delivered as RPM and DEB package. The package are generated with the [nativepkg-maven-plugin](https://github.com/sdorra/nativepkg-maven-plugin). The following table shows the directory structure which will be created by the packages:
 

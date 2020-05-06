@@ -1,4 +1,6 @@
-# Upgrade to a new Version
+---
+title: Upgrade to a new Version
+---
 
 If you would like to update SCM-Manager, you have to do the following
 steps.

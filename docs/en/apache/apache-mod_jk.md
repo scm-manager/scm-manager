@@ -1,6 +1,6 @@
 ---
 title: SCM-Server and Apache mod\_jk
-subtitle: Main documentation page
+subtitle: Setting up SCM-Manager with Apache Tomcat
 ---
 
 ### Apache Configuration

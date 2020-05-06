@@ -1,4 +1,6 @@
-# Revision Control Plugin Comparison
+---
+title: Revision Control Plugin Comparison
+---
 
 | Plugin Name | Name | Core-Plugin | Requirements | Url |
 | --- | --- | --- | --- | --- | 

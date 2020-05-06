@@ -1,3 +1,8 @@
+---
+title: Getting started
+subtitle: How to install and configure SCM-Manager
+---
+
 # Getting started
 
 ### Install Java

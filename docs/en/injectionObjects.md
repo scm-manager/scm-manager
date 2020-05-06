@@ -1,5 +1,6 @@
-# Injection Objects
-
+---
+title: Injection Objects
+---
 - [AdministrationContext](http://docs.scm-manager.org/apidocs/latest/sonia/scm/web/security/AdministrationContext.html)
 - [AuthenticationManager](http://docs.scm-manager.org/apidocs/latest/sonia/scm/web/security/AuthenticationManager.html)
 - [CGIExecutorFactory](http://docs.scm-manager.org/apidocs/latest/sonia/scm/web/cgi/CGIExecutorFactory.html)

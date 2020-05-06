@@ -1,4 +1,6 @@
-# Push bookmark
+---
+title: Push bookmark
+---
 
 ```http
 GET /scm/hg/hgtest?cmd=capabilities HTTP/1.1.

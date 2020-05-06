@@ -1,4 +1,6 @@
-# scm-scheduler-plugin
+---
+title: Scheduler Plugin
+---
 
 The scheduler plugin provides an api for other plugins to execute scheduled jobs. The plugin is based on the [quartz project](http://quartz-scheduler.org/).
 

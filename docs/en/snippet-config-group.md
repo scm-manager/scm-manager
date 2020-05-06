@@ -1,4 +1,6 @@
-# Snippet: Extend global configuration
+---
+title: Snippet - Extend global configuration
+---
 
 ```javascript
 // register the new configuration form

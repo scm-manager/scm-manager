@@ -1,4 +1,6 @@
-# Mercurial Subrepositories
+---
+title: Mercurial Subrepositories
+---
 
 In the following examples i will use the [scm-cli-client](command-line-client.md)
 to create the repositories, but you can also use the web interface to

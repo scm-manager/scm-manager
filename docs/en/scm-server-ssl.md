@@ -1,4 +1,6 @@
-# SCM-Server SSL
+---
+title: SCM-Server SSL
+---
 
 **Note**: This document describes a ssl configuration with a
         self-signed certificate

@@ -1,4 +1,6 @@
-# Path Write Protect Plugin
+---
+title: Path Write Protect Plugin
+---
 
 ### Installation
 

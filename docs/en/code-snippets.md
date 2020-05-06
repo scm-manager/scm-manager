@@ -1,4 +1,6 @@
-# Code Snippets
+---
+title: Code Snippets
+---
 
 ### User Interface
 

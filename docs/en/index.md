@@ -79,7 +79,7 @@ repositories over http.
 - [Configuring Eclipse projects for SCM-Manager](configure-eclipse.md)
 - [Plugin Descriptor](plugin-descriptor.md)
 - [ExtensionPoints](ExtensionPoints.md)
-- [How to create your own plugin](howto-create-a-plugin.md)
+- [How to create your own plugin](content/docs/1.60.x/en/how-to-create-a-plugin.md)
 - [Injection Objects](injectionObjects.md)
 - [API documentation](http://docs.scm-manager.org/apidocs/latest/)
 - [WebService documentation](http://docs.scm-manager.org/restdocs/current/)

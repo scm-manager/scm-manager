@@ -1,4 +1,7 @@
-# Release Notes 1.39 - 1.20
+---
+title: Release Notes 1.39 - 1.20
+displayToc: true
+---
 
 SCM-Manager 1.39
 ----------------

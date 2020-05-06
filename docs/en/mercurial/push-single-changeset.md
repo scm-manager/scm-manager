@@ -1,4 +1,6 @@
-# Push single changeset
+---
+title: Push single changeset
+---
 
 ```http
 GET /scm/hg/hgtest?cmd=capabilities HTTP/1.1.

@@ -1,4 +1,6 @@
-# Command line client
+---
+title: Command line client
+---
 
 You can download the command line client from
 [here](http://www.scm-manager.org/download/) (the scm-cli-client).

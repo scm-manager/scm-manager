@@ -1,4 +1,6 @@
-# Java Client API
+---
+title: Java Client API
+---
 
 ### Maven
 

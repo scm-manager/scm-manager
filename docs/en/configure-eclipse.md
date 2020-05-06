@@ -1,4 +1,6 @@
-# Configure Eclipse
+---
+title: Configuring Eclipse
+---
 
 There are multiple approaches to using Maven projects within Eclipse. If
 you use an approach that isn\'t listed here, feel free to add it.

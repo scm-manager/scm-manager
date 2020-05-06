@@ -1,4 +1,6 @@
-# Extension Points
+---
+title: Extension Points
+---
 
 - [AuthenticationHandler](http://docs.scm-manager.org/apidocs/latest/sonia/scm/web/security/AuthenticationHandler.html)
 - [AuthenticationListener](http://docs.scm-manager.org/apidocs/latest/sonia/scm/web/security/AuthenticationListener.html)

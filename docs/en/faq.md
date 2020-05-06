@@ -1,4 +1,6 @@
-# Frequently Asked Questions
+---
+title: FAQ
+---
 
 ### What are the username and the password in the default installation?
 

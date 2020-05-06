@@ -1,4 +1,6 @@
-# Redmine Plugin
+---
+title: Redmine Plugin
+---
 
 Is based on [scm-jira-plugin](jira-plugin.md).
 

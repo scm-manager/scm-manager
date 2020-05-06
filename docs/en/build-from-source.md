@@ -1,4 +1,6 @@
-# Building SCM-Manager from source
+---
+title: Building SCM-Manager from source
+---
 
 ### Software Requirements
 

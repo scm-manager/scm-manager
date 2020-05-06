@@ -1,4 +1,6 @@
-# Trac Plugin
+---
+title: Trac Plugin
+---
 
 The plugin enables the following features to integrate SCM-Manager to [Trac](http://trac.edgewall.org/):
 

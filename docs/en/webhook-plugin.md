@@ -1,4 +1,6 @@
-# WebHook Plugin
+---
+title: Webhook Plugin
+---
 
 ### Installation
 

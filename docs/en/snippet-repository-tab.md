@@ -1,4 +1,6 @@
-# Snippet: Add tab to repository configuration
+---
+title: Snippet - Add tab to repository configuration
+---
 
 ```javascript
 /** 

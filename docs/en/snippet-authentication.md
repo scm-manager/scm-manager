@@ -1,4 +1,6 @@
-# Snippet: Authentication
+---
+title: Snippet - Authentication
+---
 
 ```java
 package sonia.scm.snippets;

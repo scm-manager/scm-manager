@@ -1,4 +1,6 @@
-### Active Directory Plugin
+---
+title: Active Directory Plugin
+---
 
 - Connect your Windows machine to your local Active Directory
 - Log in as a user of that directory

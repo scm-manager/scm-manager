@@ -1,4 +1,6 @@
-# Branch Write Protect Plugin
+---
+title: Branch Write Protect Plugin
+---
 
 ### Installation
 

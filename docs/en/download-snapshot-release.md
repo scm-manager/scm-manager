@@ -1,4 +1,7 @@
-# Download latest Snapshot release
+---
+title: Snapshot Releases
+displayToc: true
+---
 
 ### SCM-Server 1.61 SNAPSHOT (standalone)
 

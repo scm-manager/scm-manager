@@ -1,4 +1,6 @@
-# scm-jenkins-plugin
+---
+title: SCM-Jenkins-Plugin
+---
 
 The jenkins plugin will ping your Jenkins CI server when a new commit is
 pushed to SCM-Manager. In SCM-Manager exists two differnt methods to

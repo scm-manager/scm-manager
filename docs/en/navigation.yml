@@ -1,10 +1,75 @@
 - section: Getting started
   entries:
     - /getting-started/
+    - /applicationserver/
+    - /iis-helicon/
+    - /nginx/
+    - /apache/apache-mod_jk/
+    - /apache/apache-mod_proxy/
+    - /daemons/
+    - /upgrade/
     - /faq/
 
-- section: Plugin Development
+- section: Downloads
   entries:
-    - /plugin-development/create/
-    - /plugin-development/i18n/
-    - /plugin-development/publish/
+    - /RPM and DEB packages/
+    - /download/
+    - /download-snapshot-release/
+    - /download-archive/
+
+- section: Release Notes
+  entries:
+    - /release-notes/
+    - /release notes 1.39 - 1.20/
+    - /release notes 1.19 - 1.0/
+
+- section: Administration
+  entries:
+    - /command-line-client/
+    - /scm-server-ssl/
+    - /Permissions/
+    - /rv-plugin-comparison/
+    - /healthchecks/svn-incompatible-dbformat/
+
+- section: Mercurial
+  entries:
+    - /mercurial/clone-empty/
+    - /mercurial/push-bookmark/
+    - /mercurial/push-multiple-branches/
+    - /mercurial/push-multiple-branches-to-new/
+    - /mercurial/push-single-changeset/
+
+- section: Plugins
+  entries:
+    - /scm-plugins/
+    - /how-to-create-a-plugin/
+    - /plugin-descriptor/
+    - /active-directory-plugin/
+    - /branchwp-plugin/
+    - /pathwp-plugin/
+    - /jira-plugin/
+    - /mail-plugin/
+    - /mantisbt-plugin/
+    - /redmine-plugin/
+    - /scheduler-plugin/
+    - /trac-plugin/
+    - /webhook-plugin/
+    - /jenkins-plugin/
+
+- section: Development
+  entries:
+    - /configure-eclipse/
+    - /build-from-source/
+    - /java-client-api/
+    - /ExtensionPoints/
+    - /injectionObjects/
+
+- section: Examples
+  entries:
+    - /screens/
+    - /code-snippets/
+    - /snippet-authentication/
+    - /snippet-config-group/
+    - /snippet-extend-navigation/
+    - /snippet-repository-tab/
+    - /subrepositories/

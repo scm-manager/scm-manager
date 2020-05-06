@@ -1,4 +1,6 @@
-# scm-mail-plugin
+---
+title: Mail Plugin
+---
 
 The mail plugin provides an central api for sending e-mails. This api
 can be used by other plugins.

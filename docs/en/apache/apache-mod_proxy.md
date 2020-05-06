@@ -1,4 +1,7 @@
-# SCM-Server and Apache mod\_proxy
+---
+title: SCM-Server and Apache mod\_proxy
+subtitle: Setting up SCM-Manager behind a reverse proxy
+---
 
 ### Apache configuration
 

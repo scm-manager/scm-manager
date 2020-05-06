@@ -1,4 +1,7 @@
-# Download Archive
+---
+title: Download Archive
+displayToc: true
+---
 
 ### SCM-Server 1.59 (standalone)
 

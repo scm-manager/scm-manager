@@ -1,3 +1,8 @@
+---
+title: Release Notes 1.60 - 1.40
+displayToc: true
+---
+
 **note**
 
 -   Versions prior to 1.36 are creating incompatible subversion

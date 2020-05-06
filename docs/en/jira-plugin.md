@@ -1,4 +1,6 @@
-# scm-jira-plugin
+---
+title: Jira Plugin
+---
 
 The plugin enables the following features to integrate Atlassian JIRA to
 SCM-Manager:

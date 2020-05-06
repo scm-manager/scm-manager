@@ -1,4 +1,6 @@
-## Permissions
+---
+title: Permissions
+---
 
 SCM-Manager knows three different types of repository permissions:
 

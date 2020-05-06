@@ -1,4 +1,6 @@
-# Unix Daemons and Windows Services
+---
+title: Unix Daemons and Windows Services
+---
 
 **Note**: If you are using a 64Bit operating system you should use a 64Bit JavaVirtualMachine as well 
 ([#74](https://github.com/scm-manager/scm-manager/issues/74) or 

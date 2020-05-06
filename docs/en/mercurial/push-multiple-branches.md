@@ -1,4 +1,6 @@
-# Push multiple branches
+---
+title: Push multiple branches
+---
 
 ```http
 GET /scm/hg/hgtest?cmd=capabilities HTTP/1.1.

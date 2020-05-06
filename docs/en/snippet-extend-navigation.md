@@ -1,4 +1,6 @@
-### Snippet: Extend Navigation
+---
+title: Snippet - Extend Navigation
+---
 
 ```javascript
 // add login callback

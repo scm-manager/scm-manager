@@ -1,4 +1,7 @@
-# Screenshots
+---
+title: Screenshots
+displayToc: true
+---
 
 <http://www.scm-manager.org/screenshots/>
 
