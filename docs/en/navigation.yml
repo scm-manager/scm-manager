@@ -3,7 +3,6 @@
   - /installation/
   - /configuration/
   - /migrate-scm-manager-from-v1/
-  - /migrate-plugin-from-v1/
   - /faq/
   - /known-issues/
 
@@ -16,5 +15,11 @@
 
 - section: Development
   entries:
-  - /development/plugins
   - /development/intellij-idea-configuration/
+  - /development/build-from-source/
+  - /development/common-pitfall/
+  - /development/error-handling/
+  - /development/i18n/
+  - /development/definition-of-done/
+  - /development/ui-dod/
+  - /development/plugins/

@@ -1,5 +1,5 @@
 ---
-title: Migrate an v1 plugin
+title: Migrate a v1 plugin
 ---
 
 Before starting, make sure to read the [Plugin Development](docs/en/plugin-development.mdpment.md).
@@ -168,6 +168,6 @@ Some more hints:
 
 # Further reading
 
-* [scm-manager/ui-extensions README](../../scm-ui/ui-extensions/README.md) - Extension Points within SCM-Manager
+* [scm-manager/ui-extensions README](scm-ui/ui-extensions/README.md) - Extension Points within SCM-Manager
 * [scm-manager/ui-components](https://github.com/scm-manager/scm-manager/tree/develop/scm-ui/ui-components) - Reusable UI components within SCM-Manager
 * [smp-maven-plugin](https://github.com/scm-manager/smp-maven-plugin) - Plugin that facilitates efficient plugin development for SCMM

@@ -13,14 +13,9 @@ Be sure you have installed the following software:
 
 # Create the plugin structure
 
-Use the scm-manager plugin [archetype](https://maven.apache.org/guides/introduction/introduction-to-archetypes.html)
-to create the plugin structure.
+There is a service which is able to create a skeleton for a new plugin:
 
-```bash
-mvn archetype:...
-```
-
-Answer the questions of the archetype.
+https://create-plugin.scm-manager.org/
 
 # Implement your plugin
 
