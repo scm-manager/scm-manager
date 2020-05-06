@@ -1,4 +1,6 @@
-# Error Handling
+---
+title: Error Handling
+---
 
 As a highly extensible product, SCM-Manager offers at least three ways to interact with:
 

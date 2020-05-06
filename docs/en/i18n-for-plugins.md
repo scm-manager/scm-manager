@@ -1,4 +1,6 @@
-# i18n for Plugins
+---
+title: i18n for Plugins
+---
 How to internationalize your own plugin
 
 ### Create the plugins.json file

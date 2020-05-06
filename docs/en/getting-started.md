@@ -1,8 +1,10 @@
-# Getting started
+---
+title: Getting started
+---
 
 ### Install Java
 
-SCM-Manager needs an installed Java 1.7 or newer. It is recommended to use the [oracle jre](http://java.oracle.com/). 
+SCM-Manager needs an installed Java 1.8 or newer. It is recommended to use the [oracle jre](http://java.oracle.com/). 
 How to check which version of Java is installed:
 
 ```bash
@@ -13,6 +15,8 @@ Download java from [here](http://java.oracle.com/) and follow the install instru
 
 ### Install SCM-Manager
 
+#### Standalone Server
+
 Download the latest version of SCM-Manager from
 [here](http://www.scm-manager.org/download/), unpack the .zip
 or .tar.gz package and start SCM-Manager with
@@ -21,7 +25,23 @@ or .tar.gz package and start SCM-Manager with
 scm-server/bin/scm-server
 ```
 
+or 
+
+```bash
+scm-server\bin\scm-server.bat
+```
+
+#### Docker
+
+To start SCM-Manager with a persistent volume on port 8080 run the following command:
+
+```bash
+docker run -p 8080:8080 -v scm-home:/var/lib/scm --name scm scmmanager/scm-manager:2.0.0-rc6
+```
+
 ### First access
+
+Your SCM-Manager should be running on port 8080. You can access it locally via <http://localhost:8080>.
 
 |              |                         |
 | ------------ | ----------------------- |

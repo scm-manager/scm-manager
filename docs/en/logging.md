@@ -1,4 +1,6 @@
-# Logging
+---
+title: Logging
+---
 
 SCM-Manager logs information which can be useful, if the system does not behave as expected.
 The logging behavior depends on your operating system and installation.

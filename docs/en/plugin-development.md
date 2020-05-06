@@ -1,4 +1,6 @@
-# SCM-Manager v2 Plugin Development
+---
+title: SCM-Manager v2 Plugin Development
+---
 
 ## Build and testing
 

@@ -1,4 +1,6 @@
-# Plugin Descriptor
+---
+title: Plugin Descriptor
+---
 
 The plugin descriptor contains informations and instructions for the
 scm-manager to integrate the plugin. The descriptor is located at

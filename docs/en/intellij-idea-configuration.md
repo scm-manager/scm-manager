@@ -1,4 +1,6 @@
-# Intellij IDEA Configuration
+---
+title: Intellij IDEA Configuration
+---
 
 ## Backend
 

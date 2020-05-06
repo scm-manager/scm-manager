@@ -1,4 +1,6 @@
-# State of SCM-Manager 2 development
+---
+title: State of SCM-Manager 2 development
+---
 
 The development of SCM-Manager 2.0.0 is organised in [Trello Boards](https://trello.com/scmmanager).
 

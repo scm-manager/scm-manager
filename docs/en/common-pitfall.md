@@ -1,4 +1,6 @@
-# Common pitfall occurred while developing the SCM V2 
+---
+title: Common pitfall occurred while developing the SCM V2 
+---
 
 ## React Component is loaded unexpectedly
 

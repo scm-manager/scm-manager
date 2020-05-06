@@ -1,4 +1,6 @@
-# SCM-Manager v2 Test Cases
+---
+title: SCM-Manager v2 Test Cases
+---
 
 Describes the expected behaviour for SCMM v2 REST Resources using manual tests.
 

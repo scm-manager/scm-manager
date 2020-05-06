@@ -1,4 +1,6 @@
-# Vulnerabilities
+---
+title: Vulnerabilities
+---
 
 ## Not applicable 
 

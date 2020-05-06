@@ -1,4 +1,6 @@
-# SCM-Server and Nginx
+---
+title: SCM-Server and Nginx
+---
 
 ## Nginx configuration
 

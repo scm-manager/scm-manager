@@ -1,4 +1,6 @@
-# Push multiple branches to new repository
+---
+title: Push multiple branches to new repository
+---
 
 ```http
 GET /scm/hg/hgtest?cmd=capabilities HTTP/1.1.

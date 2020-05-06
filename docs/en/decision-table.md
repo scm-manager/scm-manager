@@ -1,4 +1,6 @@
-# Decision Table
+---
+title: Decision Table
+---
 
 ### Lombok
 

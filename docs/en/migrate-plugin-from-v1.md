@@ -1,6 +1,8 @@
-# Migrate an v1 plugin
+---
+title: Migrate an v1 plugin
+---
 
-Before starting, make sure to read the [Plugin Development](plugin-development.md).
+Before starting, make sure to read the [Plugin Development](docs/en/plugin-development.mdpment.md).
 
 To migrate an existing SCM-Manager 1.x Plugin, you have to do the following steps:
 
@@ -162,7 +164,7 @@ Some more hints:
 
  * For Configuration UIs use [`ConfigurationBinder`](https://github.com/scm-manager/scm-manager/blob/develop/scm-ui/ui-components/src/config/ConfigurationBinder.tsx) - See core plugins Git, Hg, Svn, e.g. [scm-git-plugin/index.ts](https://github.com/scm-manager/scm-manager/blob/develop/scm-plugins/scm-git-plugin/src/main/js/index.ts).  
   Note that `readOnly` property checks if update link is returned by REST resource
- * Don't forget [i18n for Plugins](i18n-for-plugins.md)
+ * Don't forget [i18n for Plugins](docs/en/i18n-for-plugins.mdugins.md)
 
 # Further reading
 

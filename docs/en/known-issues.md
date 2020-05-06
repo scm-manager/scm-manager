@@ -1,4 +1,6 @@
-# Known Issues
+---
+title: Known Issues
+---
 
 ## Asnychronous PreReceiveRepositoryHooks do not work with subversion
 

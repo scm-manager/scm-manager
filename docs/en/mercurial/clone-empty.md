@@ -1,4 +1,6 @@
-# Clone empty repository
+---
+title: Clone empty repository
+---
 
 ```http
 GET /scm/hg/hgtest?cmd=capabilities HTTP/1.1.

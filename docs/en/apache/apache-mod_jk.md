@@ -1,4 +1,6 @@
-# SCM-Server and Apache mod\_jk
+---
+title: SCM-Server and Apache mod\_jk
+---
 
 ### Apache Configuration
 ```apache

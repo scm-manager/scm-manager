@@ -1,4 +1,6 @@
-# SCM-Server and Apache mod\_proxy
+---
+title: SCM-Server and Apache mod\_proxy
+---
 
 ### Apache configuration
 

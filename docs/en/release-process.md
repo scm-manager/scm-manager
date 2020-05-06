@@ -1,4 +1,6 @@
-# How to release SCM-Manager v2 core
+---
+title: How to release SCM-Manager v2 core
+---
 
 To release a new version of SCM-Manager v2 you have to do the following steps (replace placeholders `<version>` accordingly, eg. with `2.1.0`):
 

@@ -1,4 +1,6 @@
-# Extension Points
+---
+title: Extension Points
+---
 
 The following extension points are provided for the frontend:
 

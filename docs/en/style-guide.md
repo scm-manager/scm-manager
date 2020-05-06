@@ -1,4 +1,6 @@
-# Style Guide
+---
+title: Style Guide
+---
 
 Starting with version 2 of SCM-Manager we have decided to change the code style and conform to more common rules. Furthermore we abandon the rule, that everything needs to have a javadoc description. Nonetheless we have decided against a "big bang" adaption of the new rule, because this would have lead to enourmous problems for merges from 1.x to 2.x.
 
@@ -8,7 +10,7 @@ Also it is a good guide line to adapt Postel's law: *Be conservative in what you
 
 ## Java
 
-Please mind the [EditorConfig](https://editorconfig.org/) file `.editorconfig` in the root of the SCM-Manager and the [configuration guide](intellij-idea-configuration.md) for IntelliJ IDEA. There are plugins for a lot of IDEs and text editors.
+Please mind the [EditorConfig](https://editorconfig.org/) file `.editorconfig` in the root of the SCM-Manager and the [configuration guide](docs/en/intellij-idea-configuration.mdation.md) for IntelliJ IDEA. There are plugins for a lot of IDEs and text editors.
 
 - Indentation with 2 spaces and no tabs (we have kept this rule from 1.x)
 - Order of members:
