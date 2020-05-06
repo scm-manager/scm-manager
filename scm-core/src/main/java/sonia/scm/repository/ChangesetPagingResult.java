@@ -25,7 +25,6 @@
 package sonia.scm.repository;
 
 import com.google.common.base.Objects;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
@@ -39,7 +38,6 @@ import java.util.List;
  * @author Sebastian Sdorra
  */
 @ToString
-@Setter
 public class ChangesetPagingResult implements Iterable<Changeset>, Serializable {
 
   private static final long serialVersionUID = -8678755403658841733L;
@@ -135,6 +133,20 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable 
    */
   public String getBranchName() {
     return branchName;
+  }
+
+  void setChangesets(List<Changeset> changesets)
+  {
+    this.changesets = changesets;
+  }
+
+  void setTotal(int total)
+  {
+    this.total = total;
+  }
+
+  void setBranchName(String branchName) {
+    this.branchName = branchName;
   }
 
 }

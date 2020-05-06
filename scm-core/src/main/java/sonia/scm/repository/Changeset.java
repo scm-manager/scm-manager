@@ -39,7 +39,7 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   private static final long serialVersionUID = -8373308448928993039L;
