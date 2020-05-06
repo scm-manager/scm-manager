@@ -60,10 +60,10 @@ const bindQuickLink = (binder: Binder, extension: ReactNode) => {
   });
 };
 
-const withBinder = (binder: Binder, repository: Repository) => {
+const withBinder = (binder: Binder, repo: Repository) => {
   return (
     <BinderContext.Provider value={binder}>
-      <RepositoryEntry repository={repository} baseDate={baseDate} />
+      <RepositoryEntry repository={repo} baseDate={baseDate} />
     </BinderContext.Provider>
   );
 };
@@ -87,7 +87,7 @@ storiesOf("RepositoryEntry", module)
   })
   .add("Before Title EP", () => {
     const binder = new Binder("title");
-    bindBeforeTitle(binder, <i className="fas fa-star" />);
+    bindBeforeTitle(binder, <i className="far fa-star" />);
     return withBinder(binder, repository);
   })
   .add("Quick Link EP", () => {

@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 export default {
-  contact: "heart-of-gold@hitchhiher.com",
+  contact: "heart-of-gold@hitchhiker.com",
   creationDate: "2020-03-23T08:26:01.164Z",
   description: "The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive",
   healthCheckFailures: [],
   lastModified: "2020-03-23T08:26:01.876Z",
-  namespace: "hitchhiher",
+  namespace: "hitchhiker",
   name: "heartOfGold",
   type: "git",
   _links: {
