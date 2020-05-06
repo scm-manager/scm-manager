@@ -1,0 +1,20 @@
+- section: Getting started
+  entries:
+  - /installation/
+  - /configuration/
+  - /migrate-scm-manager-from-v1/
+  - /migrate-plugin-from-v1/
+  - /faq/
+  - /known-issues/
+
+- section: Administration
+  entries:
+    - /administration/scm-server-ssl/
+    - /administration/logging/
+    - /administration/permission-concept/
+    - /administration/command-line-client/
+
+- section: Development
+  entries:
+  - /development/plugins
+  - /development/intellij-idea-configuration/

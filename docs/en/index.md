@@ -54,7 +54,7 @@ repositories over http.
 - [Style Guide](style-guide.md)
 - [Error Handling in REST, Java, UI](error-handling.md)
 - [Create a new Plugin](create-plugin.md)
-- [Migration Wizard](migration-wizard.md)
+- [Migration Wizard](content/docs/2.0.x/en/migrate-scm-manager-from-v1.md)
 - [Plugin Development](plugin-development.md)
 - [i18n for Plugins](i18n-for-plugins.md)
 - [Extension Points](extension-points.md)
