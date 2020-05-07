@@ -31,6 +31,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.installer.HgInstaller;
 import sonia.scm.installer.HgInstallerFactory;
@@ -47,6 +48,7 @@ import sonia.scm.util.IOUtil;
 import sonia.scm.util.SystemUtil;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -78,7 +80,7 @@ public class HgRepositoryHandler
 
   private final HgWorkdirFactory workdirFactory;
 
-  private JAXBContext jaxbContext;
+  private final JAXBContext jaxbContext;
 
   @Inject
   public HgRepositoryHandler(ConfigurationStoreFactory storeFactory,
@@ -88,6 +90,17 @@ public class HgRepositoryHandler
     super(storeFactory, repositoryLocationResolver, pluginLoader);
     this.hgContextProvider = hgContextProvider;
     this.workdirFactory = workdirFactory;
+
+    try
+    {
+      this.jaxbContext = JAXBContext.newInstance(BrowserResult.class,
+        BlameResult.class, Changeset.class, ChangesetPagingResult.class,
+        HgVersion.class);
+    }
+    catch (JAXBException ex)
+    {
+      throw new ConfigurationException("could not create jaxbcontext", ex);
+    }
   }
 
   public void doAutoConfiguration(HgConfig autoConfig) {
