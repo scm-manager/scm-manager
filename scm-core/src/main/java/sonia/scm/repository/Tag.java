@@ -21,19 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-
-//~--- JDK imports ------------------------------------------------------------
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 /**
  * Represents a tag in a repository.
@@ -41,118 +34,22 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  * @since 1.18
  */
-@XmlRootElement(name = "tag")
-@XmlAccessorType(XmlAccessType.FIELD)
-public final class Tag
-{
+@EqualsAndHashCode
+@ToString
+@Getter
+public final class Tag {
 
-  /**
-   * Constructs a new instance of tag.
-   * This constructor should only be called from JAXB.
-   *
-   */
-  public Tag() {}
+  private final String name;
+  private final String revision;
 
   /**
    * Constructs a new tag.
    *
-   *
-   * @param name name of the tag
+   * @param name     name of the tag
    * @param revision tagged revision
    */
-  public Tag(String name, String revision)
-  {
+  public Tag(String name, String revision) {
     this.name = name;
     this.revision = revision;
   }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
-  @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-
-    if (getClass() != obj.getClass())
-    {
-      return false;
-    }
-
-    final Tag other = (Tag) obj;
-
-    return Objects.equal(name, other.name)
-      && Objects.equal(revision, other.revision);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(name, revision);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public String toString()
-  {
-    //J-
-    return MoreObjects.toStringHelper(this)
-                  .add("name", name)
-                  .add("revision", revision)
-                  .toString();
-    //J+
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns the name of the tag.
-   *
-   *
-   * @return name of the tag
-   */
-  public String getName()
-  {
-    return name;
-  }
-
-  /**
-   * Id of the tagged revision.
-   *
-   *
-   * @return tagged revision id
-   */
-  public String getRevision()
-  {
-    return revision;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String name;
-
-  /** Field description */
-  private String revision;
 }

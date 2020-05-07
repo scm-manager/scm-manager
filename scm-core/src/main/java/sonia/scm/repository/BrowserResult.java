@@ -21,28 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
-//~--- JDK imports ------------------------------------------------------------
-
-/**
- *
- * @author Sebastian Sdorra
- * @since 1.5
- */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "browser-result")
+@EqualsAndHashCode
+@ToString
 public class BrowserResult implements Serializable {
 
   private String revision;
@@ -73,36 +61,4 @@ public class BrowserResult implements Serializable {
   public FileObject getFile() {
     return file;
   }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-
-    final BrowserResult other = (BrowserResult) obj;
-
-    return Objects.equal(revision, other.revision)
-      && Objects.equal(file, other.file);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(revision, file);
-  }
-
-
-  @Override
-  public String toString() {
-    return MoreObjects.toStringHelper(this)
-      .add("revision", revision)
-      .add("files", file)
-      .toString();
-  }
-
-
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -56,55 +56,37 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.MessageFormat;
 
-//~--- JDK imports ------------------------------------------------------------
-
-/**
- *
- * @author Sebastian Sdorra
- */
 @Singleton
 @Extension
 public class HgRepositoryHandler
-  extends AbstractSimpleRepositoryHandler<HgConfig>
-{
+  extends AbstractSimpleRepositoryHandler<HgConfig> {
 
-  /** Field description */
   public static final String PATH_HOOK = ".hook-1.8";
-
-  /** Field description */
-  public static final String RESOURCE_VERSION =
-    "sonia/scm/version/scm-hg-plugin";
-
-  /** Field description */
+  public static final String RESOURCE_VERSION = "sonia/scm/version/scm-hg-plugin";
   public static final String TYPE_DISPLAYNAME = "Mercurial";
-
-  /** Field description */
   public static final String TYPE_NAME = "hg";
-
-  /** Field description */
   public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME,
-                                    TYPE_DISPLAYNAME,
-                                    HgRepositoryServiceProvider.COMMANDS,
-                                    HgRepositoryServiceProvider.FEATURES);
+    TYPE_DISPLAYNAME,
+    HgRepositoryServiceProvider.COMMANDS,
+    HgRepositoryServiceProvider.FEATURES);
 
-  /** the logger for HgRepositoryHandler */
-  private static final Logger logger =
-    LoggerFactory.getLogger(HgRepositoryHandler.class);
+  private static final Logger logger = LoggerFactory.getLogger(HgRepositoryHandler.class);
 
-  /** Field description */
-  public static final String PATH_HGRC =
-    ".hg".concat(File.separator).concat("hgrc");
+  public static final String PATH_HGRC = ".hg".concat(File.separator).concat("hgrc");
   private static final String CONFIG_SECTION_SCMM = "scmm";
   private static final String CONFIG_KEY_REPOSITORY_ID = "repositoryid";
 
-  //~--- constructors ---------------------------------------------------------
+  private final Provider<HgContext> hgContextProvider;
+
+  private final HgWorkdirFactory workdirFactory;
+
+  private final JAXBContext jaxbContext;
 
   @Inject
   public HgRepositoryHandler(ConfigurationStoreFactory storeFactory,
                              Provider<HgContext> hgContextProvider,
                              RepositoryLocationResolver repositoryLocationResolver,
-                             PluginLoader pluginLoader, HgWorkdirFactory workdirFactory)
-  {
+                             PluginLoader pluginLoader, HgWorkdirFactory workdirFactory) {
     super(storeFactory, repositoryLocationResolver, pluginLoader);
     this.hgContextProvider = hgContextProvider;
     this.workdirFactory = workdirFactory;
@@ -121,22 +103,11 @@ public class HgRepositoryHandler
     }
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param autoConfig
-   */
-  public void doAutoConfiguration(HgConfig autoConfig)
-  {
+  public void doAutoConfiguration(HgConfig autoConfig) {
     HgInstaller installer = HgInstallerFactory.createInstaller();
 
-    try
-    {
-      if (logger.isDebugEnabled())
-      {
+    try {
+      if (logger.isDebugEnabled()) {
         logger.debug("installing mercurial with {}",
           installer.getClass().getName());
       }
@@ -144,161 +115,85 @@ public class HgRepositoryHandler
       installer.install(baseDirectory, autoConfig);
       config = autoConfig;
       storeConfig();
-    }
-    catch (IOException ioe)
-    {
-      if (logger.isErrorEnabled())
-      {
+    } catch (IOException ioe) {
+      if (logger.isErrorEnabled()) {
         logger.error("Could not write Hg CGI for inital config.  "
           + "HgWeb may not function until a new Hg config is set", ioe);
       }
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   */
   @Override
-  public void init(SCMContextProvider context)
-  {
+  public void init(SCMContextProvider context) {
     super.init(context);
     writePythonScripts(context);
 
     // fix wrong hg.bat from package installation
-    if (SystemUtil.isWindows())
-    {
+    if (SystemUtil.isWindows()) {
       HgWindowsPackageFix.fixHgPackage(context, getConfig());
     }
   }
 
-  /**
-   * Method description
-   *
-   */
   @Override
-  public void loadConfig()
-  {
+  public void loadConfig() {
     super.loadConfig();
 
-    if (config == null)
-    {
+    if (config == null) {
       doAutoConfiguration(new HgConfig());
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public HgContext getHgContext()
-  {
+  public HgContext getHgContext() {
     HgContext context = hgContextProvider.get();
 
-    if (context == null)
-    {
+    if (context == null) {
       context = new HgContext();
     }
 
     return context;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public ImportHandler getImportHandler()
-  {
+  public ImportHandler getImportHandler() {
     return new HgImportHandler(this);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public JAXBContext getJaxbContext()
-  {
-    return jaxbContext;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public RepositoryType getType()
-  {
+  public RepositoryType getType() {
     return TYPE;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public String getVersionInformation()
-  {
+  public String getVersionInformation() {
     String version = getStringFromResource(RESOURCE_VERSION,
-                       DEFAULT_VERSION_INFORMATION);
+      DEFAULT_VERSION_INFORMATION);
 
-    try
-    {
+    try {
       HgVersion hgVersion = new HgVersionHandler(this, hgContextProvider.get(),
-                              baseDirectory).getVersion();
+        baseDirectory).getVersion();
 
-      if (hgVersion != null)
-      {
-        if (logger.isDebugEnabled())
-        {
+      if (hgVersion != null) {
+        if (logger.isDebugEnabled()) {
           logger.debug("mercurial/python informations: {}", hgVersion);
         }
 
         version = MessageFormat.format(version, hgVersion.getPython(),
           hgVersion.getMercurial());
-      }
-      else if (logger.isWarnEnabled())
-      {
+      } else if (logger.isWarnEnabled()) {
         logger.warn("could not retrieve version informations");
       }
-    }
-    catch (Exception ex)
-    {
+    } catch (Exception ex) {
       logger.error("could not read version informations", ex);
     }
 
     return version;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @return
-   */
   @Override
   protected ExtendedCommand buildCreateCommand(Repository repository,
-    File directory)
-  {
+                                               File directory) {
     ExtendedCommand cmd = new ExtendedCommand(config.getHgBinary(), "init",
-                            directory.getAbsolutePath());
+      directory.getAbsolutePath());
 
     // copy system environment, because of the PATH variable
     cmd.setUseSystemEnvironment(true);
@@ -315,13 +210,11 @@ public class HgRepositoryHandler
    *
    * @param repository
    * @param directory
-   *
    * @throws IOException
    */
   @Override
   protected void postCreate(Repository repository, File directory)
-    throws IOException
-  {
+    throws IOException {
     File hgrcFile = new File(directory, PATH_HGRC);
     INIConfiguration hgrc = new INIConfiguration();
 
@@ -336,55 +229,30 @@ public class HgRepositoryHandler
     writer.write(hgrc, hgrcFile);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  protected Class<HgConfig> getConfigClass()
-  {
+  protected Class<HgConfig> getConfigClass() {
     return HgConfig.class;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   */
-  private void writePythonScripts(SCMContextProvider context)
-  {
+  private void writePythonScripts(SCMContextProvider context) {
     IOUtil.mkdirs(HgPythonScript.getScriptDirectory(context));
 
-    for (HgPythonScript script : HgPythonScript.values())
-    {
-      if (logger.isDebugEnabled())
-      {
+    for (HgPythonScript script : HgPythonScript.values()) {
+      if (logger.isDebugEnabled()) {
         logger.debug("write python script {}", script.getName());
       }
 
       InputStream content = null;
       OutputStream output = null;
 
-      try
-      {
+      try {
         content = HgRepositoryHandler.class.getResourceAsStream(
           script.getResourcePath());
         output = new FileOutputStream(script.getFile(context));
         IOUtil.copy(content, output);
-      }
-      catch (IOException ex)
-      {
+      } catch (IOException ex) {
         logger.error("could not write script", ex);
-      }
-      finally
-      {
+      } finally {
         IOUtil.close(content);
         IOUtil.close(output);
       }
@@ -395,13 +263,7 @@ public class HgRepositoryHandler
     return workdirFactory;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final Provider<HgContext> hgContextProvider;
-
-  /** Field description */
-  private JAXBContext jaxbContext;
-
-  private final HgWorkdirFactory workdirFactory;
+  public JAXBContext getJaxbContext() {
+    return jaxbContext;
+  }
 }

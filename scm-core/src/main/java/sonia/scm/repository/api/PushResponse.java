@@ -21,39 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
- * The {@link PushResponse} is the result of the 
+ * The {@link PushResponse} is the result of the
  * {@link PushCommandBuilder#push(sonia.scm.repository.Repository)} method and
  * contains informations over the executed push command.
- * 
+ *
  * @author Sebastian Sdorra
  * @since 1.31
  */
-@XmlRootElement(name = "push-response")
-public final class PushResponse extends AbstractPushOrPullResponse
-{
+public final class PushResponse extends AbstractPushOrPullResponse {
 
   /**
    * Constructs a new PushResponse.
-   *
-   */
-  public PushResponse() {}
-
-  /**
-   * Constructs a new PushResponse.
-   *
    *
    * @param changesetCount count of pushed changesets
    */
-  public PushResponse(long changesetCount)
-  {
+  public PushResponse(long changesetCount) {
     super(changesetCount);
   }
 }
