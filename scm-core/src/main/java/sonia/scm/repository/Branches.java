@@ -48,8 +48,6 @@ public final class Branches implements Iterable<Branch> {
   public Branches() {
   }
 
-  ;
-
   public Branches(Branch... branches) {
     this.branches = Lists.newArrayList(branches);
   }
@@ -63,12 +61,15 @@ public final class Branches implements Iterable<Branch> {
     return getBranches().iterator();
   }
 
-
   public List<Branch> getBranches() {
     if (branches == null) {
       branches = Lists.newArrayList();
     }
 
     return branches;
+  }
+
+  public void setBranches(List<Branch> branches) {
+    this.branches = branches;
   }
 }

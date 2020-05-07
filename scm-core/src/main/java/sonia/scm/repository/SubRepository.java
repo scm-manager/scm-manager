@@ -46,8 +46,6 @@ public class SubRepository implements Serializable {
   public SubRepository() {
   }
 
-  ;
-
   public SubRepository(String repositoryUrl) {
     this.repositoryUrl = repositoryUrl;
   }

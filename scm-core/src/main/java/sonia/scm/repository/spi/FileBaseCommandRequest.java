@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -38,53 +38,13 @@ import java.io.Serializable;
  * @author Sebastian Sdorra
  * @since 1.17
  */
+@EqualsAndHashCode
+@ToString
 public abstract class FileBaseCommandRequest
-  implements Resetable, Serializable, Cloneable
-{
+  implements Resetable, Serializable, Cloneable {
 
   /** Field description */
   private static final long serialVersionUID = -3442101119408346165L;
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
-  @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-
-    if (getClass() != obj.getClass())
-    {
-      return false;
-    }
-
-    final FileBaseCommandRequest other = (FileBaseCommandRequest) obj;
-
-    return Objects.equal(path, other.path)
-      && Objects.equal(revision, other.revision);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(path, revision);
-  }
 
   /**
    * Method description
@@ -97,81 +57,26 @@ public abstract class FileBaseCommandRequest
     revision = null;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String toString()
-  {
-    //J-
-    return MoreObjects.toStringHelper(this)
-                  .add("path", path)
-                  .add("revision", revision)
-                  .toString();
-    //J+
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   */
   public void setPath(String path)
   {
     this.path = path;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param revision
-   */
   public void setRevision(String revision)
   {
     this.revision = revision;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public String getPath()
   {
     return path;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public String getRevision()
   {
     return revision;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws CloneNotSupportedException
-   */
   @Override
   protected FileBaseCommandRequest clone() throws CloneNotSupportedException
   {
@@ -192,11 +97,7 @@ public abstract class FileBaseCommandRequest
     return clone;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
   private String path;
 
-  /** Field description */
   private String revision;
 }

@@ -39,11 +39,8 @@ import lombok.ToString;
 @Getter
 public final class Tag {
 
-  private String name;
-  private String revision;
-
-  public Tag() {
-  }
+  private final String name;
+  private final String revision;
 
   /**
    * Constructs a new tag.

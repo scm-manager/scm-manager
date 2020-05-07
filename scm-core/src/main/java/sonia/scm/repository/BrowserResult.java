@@ -40,8 +40,6 @@ public class BrowserResult implements Serializable {
   public BrowserResult() {
   }
 
-  ;
-
   public BrowserResult(String revision, FileObject file) {
     this(revision, revision, file);
   }

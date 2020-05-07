@@ -24,7 +24,7 @@
 
 package sonia.scm.repository;
 
-import com.google.common.base.Objects;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.io.Serializable;
@@ -37,6 +37,7 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
+@EqualsAndHashCode
 @ToString
 public class ChangesetPagingResult implements Iterable<Changeset>, Serializable {
 
@@ -69,27 +70,6 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable 
     this.total = total;
     this.changesets = changesets;
     this.branchName = branchName;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-
-    final ChangesetPagingResult other = (ChangesetPagingResult) obj;
-
-    return Objects.equal(changesets, other.changesets)
-      && Objects.equal(total, other.total);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(changesets, total);
   }
 
   /**

@@ -50,8 +50,6 @@ public class Modifications implements Serializable {
   public Modifications() {
   }
 
-  ;
-
   public Modifications(List<String> added) {
     this(added, null, null);
   }

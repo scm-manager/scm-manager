@@ -48,8 +48,6 @@ public final class Tags implements Iterable<Tag> {
   public Tags() {
   }
 
-  ;
-
   public Tags(List<Tag> tags) {
     this.tags = tags;
   }

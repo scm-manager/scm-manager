@@ -148,7 +148,7 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
    */
   public List<String> getBranches() {
     if (branches == null) {
-      branches = new ArrayList<String>();
+      branches = new ArrayList<>();
     }
 
     return branches;
@@ -206,7 +206,7 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
    */
   public List<String> getParents() {
     if (parents == null) {
-      parents = new ArrayList<String>();
+      parents = new ArrayList<>();
     }
 
     return parents;
@@ -219,7 +219,7 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
    */
   public List<String> getTags() {
     if (tags == null) {
-      tags = new ArrayList<String>();
+      tags = new ArrayList<>();
     }
 
     return tags;

@@ -48,8 +48,7 @@ public class BlameResult implements Serializable, Iterable<BlameLine> {
   private int total;
 
   public BlameResult(List<BlameLine> blameLines) {
-    this.blameLines = blameLines;
-    this.total = blameLines.size();
+    this(blameLines.size(), blameLines);
   }
 
   public BlameResult(int total, List<BlameLine> blameLines) {

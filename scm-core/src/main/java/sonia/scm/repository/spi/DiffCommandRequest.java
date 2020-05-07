@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
-
+import lombok.EqualsAndHashCode;
 import sonia.scm.Validateable;
 import sonia.scm.repository.api.DiffFormat;
 
@@ -36,21 +36,12 @@ import sonia.scm.repository.api.DiffFormat;
  * @author Sebastian Sdorra
  * @since 1.17
  */
+@EqualsAndHashCode(callSuper = true)
 public final class DiffCommandRequest extends FileBaseCommandRequest
-  implements Validateable
-{
+  implements Validateable {
 
-  /** Field description */
   private static final long serialVersionUID = 4026911212676859626L;
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public DiffCommandRequest clone()
   {
@@ -70,22 +61,12 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
     return clone;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public boolean isValid()
   {
     return !Strings.isNullOrEmpty(getPath())
       ||!Strings.isNullOrEmpty(getRevision());
   }
-
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Sets the diff format which should be used for the output.
@@ -103,7 +84,6 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
   public void setAncestorChangeset(String ancestorChangeset) {
     this.ancestorChangeset = ancestorChangeset;
   }
-//~--- get methods ----------------------------------------------------------
 
   /**
    * Return the output format of the diff command.
@@ -121,7 +101,6 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
   public String getAncestorChangeset() {
     return ancestorChangeset;
   }
-//~--- fields ---------------------------------------------------------------
 
   /** diff format */
   private DiffFormat format = DiffFormat.NATIVE;
