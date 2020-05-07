@@ -27,11 +27,14 @@ package sonia.scm.repository.spi;
 import com.aragost.javahg.BaseRepository;
 import com.aragost.javahg.Repository;
 import com.aragost.javahg.commands.CloneCommand;
+import com.aragost.javahg.commands.ExecutionException;
 import com.aragost.javahg.commands.PullCommand;
+import com.aragost.javahg.commands.StatusCommand;
 import com.aragost.javahg.commands.UpdateCommand;
 import com.aragost.javahg.commands.flags.CloneCommandFlags;
 import sonia.scm.repository.util.WorkingCopyPool;
 import sonia.scm.repository.util.SimpleWorkingCopyFactory;
+import sonia.scm.util.IOUtil;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import javax.inject.Inject;
@@ -71,11 +74,22 @@ public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposit
   }
 
   @Override
-  protected ParentAndClone<Repository, Repository> reclaimRepository(HgCommandContext context, File target, String initialBranch) throws IOException {
+  protected ParentAndClone<Repository, Repository> reclaimRepository(HgCommandContext context, File target, String initialBranch) throws ReclaimFailedException {
     Repository centralRepository = openCentral(context);
-    BaseRepository clone = Repository.open(target);
-    UpdateCommand.on(clone).rev(initialBranch).execute();
-    return new ParentAndClone<>(centralRepository, clone, target);
+    try {
+      BaseRepository clone = Repository.open(target);
+      for (String unknown : StatusCommand.on(clone).execute().getUnknown()) {
+        delete(clone.getDirectory(), unknown);
+      }
+      UpdateCommand.on(clone).rev(initialBranch).clean().execute();
+      return new ParentAndClone<>(centralRepository, clone, target);
+    } catch (ExecutionException | IOException e) {
+      throw new ReclaimFailedException(e);
+    }
+  }
+
+  private void delete(File directory, String unknownFile) throws IOException {
+    IOUtil.delete(new File(directory, unknownFile));
   }
 
   @Override
