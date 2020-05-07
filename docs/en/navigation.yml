@@ -10,7 +10,6 @@
   entries:
     - /administration/scm-server-ssl/
     - /administration/logging/
-    - /administration/permission-concept/
     - /administration/command-line-client/
 
 - section: Development
@@ -18,8 +17,18 @@
   - /development/intellij-idea-configuration/
   - /development/build-from-source/
   - /development/common-pitfall/
+  - /administration/permission-concept/
   - /development/error-handling/
   - /development/i18n/
   - /development/definition-of-done/
   - /development/ui-dod/
-  - /development/plugins/
+
+- section: Plugin Development
+  entries:
+  - /development/plugins/create/
+  - /development/plugins/migrate-plugin-from-v1/
+  - /development/plugins/extension-points/
+  - /development/plugins/i18n-for-plugins/
+  - /development/plugins/plugin-descriptor/
+  - /development/plugins/plugin-development/
+  - /development/plugins/publish/
