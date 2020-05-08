@@ -38,6 +38,7 @@ import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.util.WorkingCopyPool;
 import sonia.scm.repository.util.SimpleWorkingCopyFactory;
+import sonia.scm.repository.util.WorkingCopyPool.ParentAndClone;
 import sonia.scm.util.SystemUtil;
 
 import javax.inject.Inject;
@@ -85,10 +86,10 @@ public class SimpleGitWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposi
   }
 
   @Override
-  protected ParentAndClone<Repository, Repository> reclaimRepository(GitContext context, File target, String initialBranch) throws IOException, ReclaimFailedException {
+  protected ParentAndClone<Repository, Repository> reclaimRepository(GitContext context, File target, String initialBranch) throws ReclaimFailedException {
     LOG.trace("reclaim repository {}", context.getRepository().getId());
     long start = System.nanoTime();
-    Repository repo = GitUtil.open(target);
+    Repository repo = openTarget(target);
     try (Git git = Git.open(target)) {
       git.reset().setMode(ResetCommand.ResetType.HARD).call();
       git.clean().setForce(true).setCleanDirectories(true).call();
@@ -97,12 +98,20 @@ public class SimpleGitWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposi
       git.branchDelete().setBranchNames(initialBranch).setForce(true).call();
       git.checkout().setName(initialBranch).setCreateBranch(true).call();
       return new ParentAndClone<>(null, repo, target);
-    } catch (GitAPIException e) {
+    } catch (GitAPIException | IOException e) {
       throw new ReclaimFailedException(e);
     } finally {
       long end = System.nanoTime();
       long duration = end - start;
       LOG.trace("took {} ns to reclaim repository {}\n", duration, context.getRepository().getId());
+    }
+  }
+
+  private Repository openTarget(File target) throws ReclaimFailedException {
+    try {
+      return GitUtil.open(target);
+    } catch (IOException e) {
+      throw new ReclaimFailedException(e);
     }
   }
 

@@ -37,6 +37,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnWorkingCopyFactory;
 import sonia.scm.repository.util.WorkingCopyPool;
 import sonia.scm.repository.util.SimpleWorkingCopyFactory;
+import sonia.scm.repository.util.WorkingCopyPool.ParentAndClone;
 
 import javax.inject.Inject;
 import java.io.File;

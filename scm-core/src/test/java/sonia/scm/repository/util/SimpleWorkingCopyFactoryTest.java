@@ -61,15 +61,15 @@ public class SimpleWorkingCopyFactoryTest {
     WorkdirProvider workdirProvider = new WorkdirProvider(temporaryFolder.newFolder());
     WorkingCopyPool configurableTestWorkingCopyPool = new WorkingCopyPool() {
       @Override
-      public <R, W, C> SimpleWorkingCopyFactory.ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws IOException {
+      public <R, W, C> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException {
         workdir = workdirProvider.createNewWorkdir();
         return context.getInitializer().initialize(workdir);
       }
 
       @Override
-      public void contextClosed(WorkingCopyContext<?, ?, ?> createWorkdirContext, File workdir) throws Exception {
+      public void contextClosed(WorkingCopyContext<?, ?, ?> createWorkdirContext, File workdir) {
         if (!workdirIsCached) {
-          IOUtil.delete(workdir);
+          IOUtil.deleteSilently(workdir);
         }
       }
 
@@ -89,7 +89,7 @@ public class SimpleWorkingCopyFactoryTest {
       }
 
       @Override
-      protected ParentAndClone<Closeable, Closeable> reclaimRepository(Context context, File target, String initialBranch) throws IOException {
+      protected WorkingCopyPool.ParentAndClone<Closeable, Closeable> reclaimRepository(Context context, File target, String initialBranch) {
         throw new UnsupportedOperationException();
       }
 
@@ -99,9 +99,9 @@ public class SimpleWorkingCopyFactoryTest {
       }
 
       @Override
-      protected ParentAndClone<Closeable, Closeable> cloneRepository(Context context, File target, String initialBranch) {
+      protected WorkingCopyPool.ParentAndClone<Closeable, Closeable> cloneRepository(Context context, File target, String initialBranch) {
         initialBranchForLastCloneCall = initialBranch;
-        return new ParentAndClone<>(parent, clone, target);
+        return new WorkingCopyPool.ParentAndClone<>(parent, clone, target);
       }
     };
   }

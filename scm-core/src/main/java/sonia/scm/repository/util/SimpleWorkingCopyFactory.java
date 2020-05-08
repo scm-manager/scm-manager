@@ -26,14 +26,12 @@ package sonia.scm.repository.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.plugin.Extension;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.File;
-import java.io.IOException;
 
 public abstract class SimpleWorkingCopyFactory<R, W, C> implements WorkingCopyFactory<R, W, C>, ServletContextListener {
 
@@ -49,16 +47,14 @@ public abstract class SimpleWorkingCopyFactory<R, W, C> implements WorkingCopyFa
   public WorkingCopy<R, W> createWorkingCopy(C repositoryContext, String initialBranch) {
     try {
       WorkingCopyContext<R, W, C> workingCopyContext = createWorkingCopyContext(repositoryContext, initialBranch);
-      ParentAndClone<R, W> parentAndClone = workingCopyPool.getWorkingCopy(workingCopyContext);
+      WorkingCopyPool.ParentAndClone<R, W> parentAndClone = workingCopyPool.getWorkingCopy(workingCopyContext);
       return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), () -> this.close(workingCopyContext, parentAndClone), parentAndClone.getDirectory());
-    } catch (RuntimeException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new InternalRepositoryException(getScmRepository(repositoryContext), "could not clone repository in temporary directory", e);
+    } catch (WorkingCopyFailedException e) {
+      throw new InternalRepositoryException(getScmRepository(repositoryContext), "could not create working copy for repository in temporary directory", e);
     }
   }
 
-  public WorkingCopyContext<R, W, C> createWorkingCopyContext(C repositoryContext, String initialBranch) {
+  private WorkingCopyContext<R, W, C> createWorkingCopyContext(C repositoryContext, String initialBranch) {
     return new WorkingCopyContext<>(
       getScmRepository(repositoryContext),
       initialBranch,
@@ -68,7 +64,7 @@ public abstract class SimpleWorkingCopyFactory<R, W, C> implements WorkingCopyFa
     );
   }
 
-  private void close(WorkingCopyContext<R, W, C> workingCopyContext, ParentAndClone<R, W> parentAndClone) {
+  private void close(WorkingCopyContext<R, W, C> workingCopyContext, WorkingCopyPool.ParentAndClone<R, W> parentAndClone) {
     try {
       closeRepository(parentAndClone.getParent());
     } catch (Exception e) {
@@ -98,12 +94,12 @@ public abstract class SimpleWorkingCopyFactory<R, W, C> implements WorkingCopyFa
 
   @FunctionalInterface
   public interface WorkingCopyInitializer<R, W> {
-    ParentAndClone<R, W> initialize(File target) throws IOException;
+    WorkingCopyPool.ParentAndClone<R, W> initialize(File target) throws WorkingCopyFailedException;
   }
 
   @FunctionalInterface
   public interface WorkingCopyReclaimer<R, W> {
-    ParentAndClone<R, W> reclaim(File target) throws IOException, ReclaimFailedException;
+    WorkingCopyPool.ParentAndClone<R, W> reclaim(File target) throws ReclaimFailedException;
   }
 
   protected abstract Repository getScmRepository(C context);
@@ -115,40 +111,21 @@ public abstract class SimpleWorkingCopyFactory<R, W, C> implements WorkingCopyFa
   // We do allow implementations to throw arbitrary exceptions here, so that we can handle them in closeWorkingCopy
   protected abstract void closeWorkingCopyInternal(W workingCopy) throws Exception;
 
-  protected abstract ParentAndClone<R, W> cloneRepository(C context, File target, String initialBranch) throws IOException;
+  protected abstract WorkingCopyPool.ParentAndClone<R, W> cloneRepository(C context, File target, String initialBranch) throws WorkingCopyFailedException;
 
-  protected abstract ParentAndClone<R, W> reclaimRepository(C context, File target, String initialBranch) throws IOException, ReclaimFailedException;
-
-  protected static class ParentAndClone<R, W> {
-    private final R parent;
-    private final W clone;
-    private final File directory;
-
-    public ParentAndClone(R parent, W clone, File directory) {
-      this.parent = parent;
-      this.clone = clone;
-      this.directory = directory;
-    }
-
-    public R getParent() {
-      return parent;
-    }
-
-    public W getClone() {
-      return clone;
-    }
-
-    public File getDirectory() {
-      return directory;
-    }
-  }
+  protected abstract WorkingCopyPool.ParentAndClone<R, W> reclaimRepository(C context, File target, String initialBranch) throws ReclaimFailedException;
 
   public static class ReclaimFailedException extends Exception {
-    public ReclaimFailedException() {
+    public ReclaimFailedException(String message) {
+      super(message);
     }
 
     public ReclaimFailedException(Throwable cause) {
       super(cause);
+    }
+
+    public ReclaimFailedException(String message, Throwable cause) {
+      super(message, cause);
     }
   }
 }

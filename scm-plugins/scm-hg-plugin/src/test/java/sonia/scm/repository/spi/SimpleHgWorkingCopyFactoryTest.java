@@ -31,13 +31,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.rules.TemporaryFolder;
-import org.junitpioneer.jupiter.TempDirectory;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.util.CachingAllWorkingCopyPool;
-import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.util.WorkdirProvider;
 import sonia.scm.repository.util.WorkingCopy;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
@@ -50,7 +47,6 @@ import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(TempDirectory.class)
 public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
 
   @Rule

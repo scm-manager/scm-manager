@@ -27,11 +27,11 @@ package sonia.scm.repository.util;
 import com.google.common.base.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,13 +49,13 @@ public class CachingAllWorkingCopyPool implements WorkingCopyPool {
   }
 
   @Override
-  public <R, W, C> SimpleWorkingCopyFactory.ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> workingCopyContext) throws IOException {
+  public <R, W, C> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> workingCopyContext) {
     String id = workingCopyContext.getScmRepository().getId();
     File existingWorkdir = workdirs.remove(id);
     if (existingWorkdir != null) {
       Stopwatch stopwatch = Stopwatch.createStarted();
       try {
-        SimpleWorkingCopyFactory.ParentAndClone<R, W> reclaimed = workingCopyContext.getReclaimer().reclaim(existingWorkdir);
+        ParentAndClone<R, W> reclaimed = workingCopyContext.getReclaimer().reclaim(existingWorkdir);
         LOG.debug("reclaimed workdir for {} in path {} in {}", workingCopyContext.getScmRepository().getNamespaceAndName(), existingWorkdir, stopwatch.stop());
         return reclaimed;
       } catch (SimpleWorkingCopyFactory.ReclaimFailedException e) {
@@ -63,13 +63,17 @@ public class CachingAllWorkingCopyPool implements WorkingCopyPool {
         deleteWorkdir(existingWorkdir);
       }
     }
-    return createNewWorkdir(workingCopyContext);
+    try {
+      return createNewWorkdir(workingCopyContext);
+    } catch (WorkingCopyFailedException e) {
+      throw new InternalRepositoryException(workingCopyContext.getScmRepository(), "failed to create working copy", e);
+    }
   }
 
-  private  <R, W> SimpleWorkingCopyFactory.ParentAndClone<R, W> createNewWorkdir(WorkingCopyContext<R, W, ?> workingCopyContext) throws IOException {
+  private  <R, W> ParentAndClone<R, W> createNewWorkdir(WorkingCopyContext<R, W, ?> workingCopyContext) throws WorkingCopyFailedException {
     Stopwatch stopwatch = Stopwatch.createStarted();
     File newWorkdir = workdirProvider.createNewWorkdir();
-    SimpleWorkingCopyFactory.ParentAndClone<R, W> parentAndClone = workingCopyContext.getInitializer().initialize(newWorkdir);
+    ParentAndClone<R, W> parentAndClone = workingCopyContext.getInitializer().initialize(newWorkdir);
     LOG.debug("initialized new workdir for {} in path {} in {}", workingCopyContext.getScmRepository().getNamespaceAndName(), newWorkdir, stopwatch.stop());
     return parentAndClone;
   }

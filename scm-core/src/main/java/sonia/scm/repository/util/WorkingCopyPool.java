@@ -27,9 +27,33 @@ package sonia.scm.repository.util;
 import java.io.File;
 
 public interface WorkingCopyPool {
-  <R, W, C> SimpleWorkingCopyFactory.ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws Exception;
+  <R, W, C> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException;
 
-  void contextClosed(WorkingCopyContext<?, ?, ?> workingCopyContext, File workdir) throws Exception;
+  void contextClosed(WorkingCopyContext<?, ?, ?> workingCopyContext, File workdir);
 
   void shutdown();
+
+  class ParentAndClone<R, W> {
+    private final R parent;
+    private final W clone;
+    private final File directory;
+
+    public ParentAndClone(R parent, W clone, File directory) {
+      this.parent = parent;
+      this.clone = clone;
+      this.directory = directory;
+    }
+
+    public R getParent() {
+      return parent;
+    }
+
+    public W getClone() {
+      return clone;
+    }
+
+    public File getDirectory() {
+      return directory;
+    }
+  }
 }

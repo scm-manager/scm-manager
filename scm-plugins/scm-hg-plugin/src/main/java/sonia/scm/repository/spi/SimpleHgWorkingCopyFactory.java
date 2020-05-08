@@ -32,8 +32,10 @@ import com.aragost.javahg.commands.PullCommand;
 import com.aragost.javahg.commands.StatusCommand;
 import com.aragost.javahg.commands.UpdateCommand;
 import com.aragost.javahg.commands.flags.CloneCommandFlags;
+import sonia.scm.repository.util.WorkingCopyFailedException;
 import sonia.scm.repository.util.WorkingCopyPool;
 import sonia.scm.repository.util.SimpleWorkingCopyFactory;
+import sonia.scm.repository.util.WorkingCopyPool.ParentAndClone;
 import sonia.scm.util.IOUtil;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
@@ -54,13 +56,17 @@ public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposit
     this.hgRepositoryEnvironmentBuilder = hgRepositoryEnvironmentBuilder;
   }
   @Override
-  public ParentAndClone<Repository, Repository> cloneRepository(HgCommandContext context, File target, String initialBranch) throws IOException {
+  public ParentAndClone<Repository, Repository> cloneRepository(HgCommandContext context, File target, String initialBranch) throws WorkingCopyFailedException {
     Repository centralRepository = openCentral(context);
     CloneCommand cloneCommand = CloneCommandFlags.on(centralRepository);
     if (initialBranch != null) {
       cloneCommand.updaterev(initialBranch);
     }
-    cloneCommand.execute(target.getAbsolutePath());
+    try {
+      cloneCommand.execute(target.getAbsolutePath());
+    } catch (IOException e) {
+      throw new WorkingCopyFailedException(e);
+    }
 
     BaseRepository clone = Repository.open(target);
 
