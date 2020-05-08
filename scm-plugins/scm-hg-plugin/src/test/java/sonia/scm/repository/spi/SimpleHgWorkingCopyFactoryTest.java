@@ -145,6 +145,6 @@ public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
 
     WorkingCopy<Repository, Repository> cachedWorkingCopy = workingCopyFactory.createWorkingCopy(cmdContext, "default");
     assertThat(cachedWorkingCopy.getDirectory()).isEqualTo(initialDirectory);
-    assertThat(cachedWorkingCopy.getDirectory().toPath().resolve("newDir")).doesNotExist();
+    assertThat(cachedWorkingCopy.getDirectory().toPath().resolve("newDir")).isEmptyDirectory();
   }
 }
