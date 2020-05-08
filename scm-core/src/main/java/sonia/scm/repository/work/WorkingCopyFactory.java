@@ -22,33 +22,8 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.util;
+package sonia.scm.repository.work;
 
-import sonia.scm.util.IOUtil;
-
-import javax.inject.Inject;
-import java.io.File;
-
-public class NoneCachingWorkingCopyPool implements WorkingCopyPool {
-
-  private final WorkdirProvider workdirProvider;
-
-  @Inject
-  public NoneCachingWorkingCopyPool(WorkdirProvider workdirProvider) {
-    this.workdirProvider = workdirProvider;
-  }
-
-  @Override
-  public <R, W, C> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException {
-    return context.getInitializer().initialize(workdirProvider.createNewWorkdir());
-  }
-
-  @Override
-  public void contextClosed(WorkingCopyContext<?, ?, ?> workingCopyContext, File workdir) {
-    IOUtil.deleteSilently(workdir);
-  }
-
-  @Override
-  public void shutdown() {
-  }
+public interface WorkingCopyFactory<R, W, C> {
+  WorkingCopy<R, W> createWorkingCopy(C repositoryContext, String initialBranch);
 }

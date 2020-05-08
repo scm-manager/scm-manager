@@ -21,25 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.util;
 
-import java.util.function.Consumer;
+package sonia.scm.repository.work;
 
-public class CloseableWrapper<T extends AutoCloseable> implements AutoCloseable {
+import sonia.scm.util.IOUtil;
 
-  private final T wrapped;
-  private final Consumer<T> cleanup;
+import java.io.File;
+import java.io.IOException;
 
-  public CloseableWrapper(T wrapped, Consumer<T> cleanup) {
-    this.wrapped = wrapped;
-    this.cleanup = cleanup;
+public final class WorkingCopy<R, W> implements AutoCloseable {
+
+  private final File directory;
+  private final W workingRepository;
+  private final R centralRepository;
+  private final Runnable close;
+
+  public WorkingCopy(W workingRepository, R centralRepository, Runnable close, File directory) {
+    this.directory = directory;
+    this.workingRepository = workingRepository;
+    this.centralRepository = centralRepository;
+    this.close = close;
   }
 
-  public T get() { return wrapped; }
+  public W getWorkingRepository() {
+    return workingRepository;
+  }
+
+  public R getCentralRepository() {
+    return centralRepository;
+  }
+
+  public File getDirectory() {
+    return directory;
+  }
 
   @Override
   public void close() {
-    cleanup.accept(wrapped);
+    close.run();
+  }
+
+  void delete() throws IOException {
+    IOUtil.delete(directory);
   }
 }

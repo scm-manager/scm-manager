@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.util;
+package sonia.scm.repository.work;
 
 import com.google.common.base.Stopwatch;
 import org.slf4j.Logger;

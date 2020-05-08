@@ -35,9 +35,9 @@ import org.tmatesoft.svn.core.wc2.SvnTarget;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnWorkingCopyFactory;
-import sonia.scm.repository.util.WorkingCopyPool;
-import sonia.scm.repository.util.SimpleWorkingCopyFactory;
-import sonia.scm.repository.util.WorkingCopyPool.ParentAndClone;
+import sonia.scm.repository.work.WorkingCopyPool;
+import sonia.scm.repository.work.SimpleWorkingCopyFactory;
+import sonia.scm.repository.work.WorkingCopyPool.ParentAndClone;
 
 import javax.inject.Inject;
 import java.io.File;

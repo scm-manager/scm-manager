@@ -34,7 +34,7 @@ import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnWorkingCopyFactory;
-import sonia.scm.repository.util.WorkingCopy;
+import sonia.scm.repository.work.WorkingCopy;
 
 import java.io.File;
 import java.io.IOException;

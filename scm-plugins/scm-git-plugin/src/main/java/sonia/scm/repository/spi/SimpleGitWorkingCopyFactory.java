@@ -36,9 +36,9 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.util.WorkingCopyPool;
-import sonia.scm.repository.util.SimpleWorkingCopyFactory;
-import sonia.scm.repository.util.WorkingCopyPool.ParentAndClone;
+import sonia.scm.repository.work.WorkingCopyPool;
+import sonia.scm.repository.work.SimpleWorkingCopyFactory;
+import sonia.scm.repository.work.WorkingCopyPool.ParentAndClone;
 import sonia.scm.util.SystemUtil;
 
 import javax.inject.Inject;

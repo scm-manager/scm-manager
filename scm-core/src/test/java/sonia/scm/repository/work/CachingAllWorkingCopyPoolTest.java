@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.util;
+package sonia.scm.repository.work;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

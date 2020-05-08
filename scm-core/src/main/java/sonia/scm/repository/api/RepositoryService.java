@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
-import sonia.scm.repository.util.WorkdirProvider;
+import sonia.scm.repository.work.WorkdirProvider;
 
 import java.io.Closeable;
 import java.io.IOException;

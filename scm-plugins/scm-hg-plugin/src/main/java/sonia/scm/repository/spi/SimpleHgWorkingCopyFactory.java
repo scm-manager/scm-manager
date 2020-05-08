@@ -32,10 +32,10 @@ import com.aragost.javahg.commands.PullCommand;
 import com.aragost.javahg.commands.StatusCommand;
 import com.aragost.javahg.commands.UpdateCommand;
 import com.aragost.javahg.commands.flags.CloneCommandFlags;
-import sonia.scm.repository.util.WorkingCopyFailedException;
-import sonia.scm.repository.util.WorkingCopyPool;
-import sonia.scm.repository.util.SimpleWorkingCopyFactory;
-import sonia.scm.repository.util.WorkingCopyPool.ParentAndClone;
+import sonia.scm.repository.work.WorkingCopyFailedException;
+import sonia.scm.repository.work.WorkingCopyPool;
+import sonia.scm.repository.work.SimpleWorkingCopyFactory;
+import sonia.scm.repository.work.WorkingCopyPool.ParentAndClone;
 import sonia.scm.util.IOUtil;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 

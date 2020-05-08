@@ -22,8 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.util;
-
+package sonia.scm.repository.work;
 
 import org.junit.Before;
 import org.junit.Rule;

@@ -38,9 +38,9 @@ import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.HookContextFactory;
-import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
-import sonia.scm.repository.util.WorkdirProvider;
-import sonia.scm.repository.util.WorkingCopy;
+import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
+import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.repository.work.WorkingCopy;
 
 import java.io.File;
 import java.io.IOException;

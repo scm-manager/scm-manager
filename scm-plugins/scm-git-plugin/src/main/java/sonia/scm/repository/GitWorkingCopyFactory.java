@@ -26,7 +26,7 @@ package sonia.scm.repository;
 
 import org.eclipse.jgit.lib.Repository;
 import sonia.scm.repository.spi.GitContext;
-import sonia.scm.repository.util.WorkingCopyFactory;
+import sonia.scm.repository.work.WorkingCopyFactory;
 
 public interface GitWorkingCopyFactory extends WorkingCopyFactory<Repository, Repository, GitContext> {
 }

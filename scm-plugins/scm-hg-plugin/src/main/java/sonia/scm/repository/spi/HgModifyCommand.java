@@ -33,7 +33,7 @@ import com.aragost.javahg.commands.RemoveCommand;
 import com.aragost.javahg.commands.StatusCommand;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.util.WorkingCopy;
+import sonia.scm.repository.work.WorkingCopy;
 
 import java.io.File;
 import java.io.IOException;

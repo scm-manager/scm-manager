@@ -22,32 +22,33 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.util;
+package sonia.scm.repository.work;
 
+import sonia.scm.util.IOUtil;
+
+import javax.inject.Inject;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 
-public class WorkdirProvider {
+public class NoneCachingWorkingCopyPool implements WorkingCopyPool {
 
-  private final File rootDirectory;
+  private final WorkdirProvider workdirProvider;
 
-  public WorkdirProvider() {
-    this(new File(System.getProperty("scm.workdir" , System.getProperty("java.io.tmpdir")), "scm-work"));
+  @Inject
+  public NoneCachingWorkingCopyPool(WorkdirProvider workdirProvider) {
+    this.workdirProvider = workdirProvider;
   }
 
-  public WorkdirProvider(File rootDirectory) {
-    this.rootDirectory = rootDirectory;
-    if (!rootDirectory.exists() && !rootDirectory.mkdirs()) {
-      throw new IllegalStateException("could not create pool directory " + rootDirectory);
-    }
+  @Override
+  public <R, W, C> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException {
+    return context.getInitializer().initialize(workdirProvider.createNewWorkdir());
   }
 
-  public File createNewWorkdir() {
-    try {
-      return Files.createTempDirectory(rootDirectory.toPath(),"workdir").toFile();
-    } catch (IOException e) {
-      throw new RuntimeException("could not create temporary workdir", e);
-    }
+  @Override
+  public void contextClosed(WorkingCopyContext<?, ?, ?> workingCopyContext, File workdir) {
+    IOUtil.deleteSilently(workdir);
+  }
+
+  @Override
+  public void shutdown() {
   }
 }

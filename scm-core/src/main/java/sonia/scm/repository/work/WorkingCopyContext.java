@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.util;
+package sonia.scm.repository.work;
 
 import sonia.scm.repository.Repository;
 

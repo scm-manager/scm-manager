@@ -35,8 +35,8 @@ import sonia.scm.NotFoundException;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
-import sonia.scm.repository.util.WorkdirProvider;
+import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
+import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import java.io.File;

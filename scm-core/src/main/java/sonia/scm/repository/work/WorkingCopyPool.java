@@ -22,10 +22,38 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.util;
+package sonia.scm.repository.work;
 
-import sonia.scm.plugin.ExtensionPoint;
+import java.io.File;
 
-public interface WorkingCopyFactory<R, W, C> {
-  WorkingCopy<R, W> createWorkingCopy(C repositoryContext, String initialBranch);
+public interface WorkingCopyPool {
+  <R, W, C> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException;
+
+  void contextClosed(WorkingCopyContext<?, ?, ?> workingCopyContext, File workdir);
+
+  void shutdown();
+
+  class ParentAndClone<R, W> {
+    private final R parent;
+    private final W clone;
+    private final File directory;
+
+    public ParentAndClone(R parent, W clone, File directory) {
+      this.parent = parent;
+      this.clone = clone;
+      this.directory = directory;
+    }
+
+    public R getParent() {
+      return parent;
+    }
+
+    public W getClone() {
+      return clone;
+    }
+
+    public File getDirectory() {
+      return directory;
+    }
+  }
 }

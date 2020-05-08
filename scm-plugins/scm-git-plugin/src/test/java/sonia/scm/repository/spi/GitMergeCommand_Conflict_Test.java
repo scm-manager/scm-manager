@@ -27,8 +27,8 @@ package sonia.scm.repository.spi;
 import org.junit.Rule;
 import org.junit.Test;
 import sonia.scm.repository.spi.MergeConflictResult.SingleMergeConflict;
-import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
-import sonia.scm.repository.util.WorkdirProvider;
+import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
+import sonia.scm.repository.work.WorkdirProvider;
 
 import java.io.IOException;
 

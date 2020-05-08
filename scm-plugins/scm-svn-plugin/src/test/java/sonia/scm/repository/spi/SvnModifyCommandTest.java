@@ -33,9 +33,9 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
-import sonia.scm.repository.util.WorkdirProvider;
-import sonia.scm.repository.util.WorkingCopy;
+import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
+import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.repository.work.WorkingCopy;
 
 import java.io.File;
 import java.io.IOException;

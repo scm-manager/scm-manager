@@ -42,8 +42,8 @@ import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
-import sonia.scm.repository.util.WorkdirProvider;
+import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
+import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.File;

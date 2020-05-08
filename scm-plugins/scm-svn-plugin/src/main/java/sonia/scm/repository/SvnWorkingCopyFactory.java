@@ -25,7 +25,7 @@
 package sonia.scm.repository;
 
 import sonia.scm.repository.spi.SvnContext;
-import sonia.scm.repository.util.WorkingCopyFactory;
+import sonia.scm.repository.work.WorkingCopyFactory;
 
 import java.io.File;
 

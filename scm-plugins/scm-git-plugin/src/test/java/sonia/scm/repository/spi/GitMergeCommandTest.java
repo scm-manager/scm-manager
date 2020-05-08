@@ -44,8 +44,8 @@ import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeStrategy;
-import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
-import sonia.scm.repository.util.WorkdirProvider;
+import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
+import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.user.User;
 
 import java.io.BufferedWriter;

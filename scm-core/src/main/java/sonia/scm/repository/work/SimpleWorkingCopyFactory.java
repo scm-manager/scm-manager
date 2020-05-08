@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.util;
+package sonia.scm.repository.work;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

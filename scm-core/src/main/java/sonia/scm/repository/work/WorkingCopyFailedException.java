@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.util;
+package sonia.scm.repository.work;
 
 public class WorkingCopyFailedException extends Exception {
   public WorkingCopyFailedException(String message) {

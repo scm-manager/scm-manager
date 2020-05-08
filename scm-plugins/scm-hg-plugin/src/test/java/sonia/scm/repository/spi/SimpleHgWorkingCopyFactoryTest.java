@@ -26,17 +26,15 @@ package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Repository;
 import com.google.inject.util.Providers;
-import org.assertj.core.api.Assertions;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgTestUtil;
-import sonia.scm.repository.util.CachingAllWorkingCopyPool;
-import sonia.scm.repository.util.WorkdirProvider;
-import sonia.scm.repository.util.WorkingCopy;
+import sonia.scm.repository.work.CachingAllWorkingCopyPool;
+import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.repository.work.WorkingCopy;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import java.io.File;

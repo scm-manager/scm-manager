@@ -32,8 +32,8 @@ import sonia.scm.repository.Branch;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.BranchRequest;
-import sonia.scm.repository.util.NoneCachingWorkingCopyPool;
-import sonia.scm.repository.util.WorkdirProvider;
+import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
+import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import java.util.List;

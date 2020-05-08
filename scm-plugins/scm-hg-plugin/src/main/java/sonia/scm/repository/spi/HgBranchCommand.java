@@ -34,7 +34,7 @@ import sonia.scm.ContextEntry;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.BranchRequest;
-import sonia.scm.repository.util.WorkingCopy;
+import sonia.scm.repository.work.WorkingCopy;
 import sonia.scm.user.User;
 
 /**

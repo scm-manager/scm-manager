@@ -45,7 +45,7 @@ import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.util.WorkingCopy;
+import sonia.scm.repository.work.WorkingCopy;
 import sonia.scm.user.User;
 
 import java.io.IOException;
