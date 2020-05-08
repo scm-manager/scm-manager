@@ -19,10 +19,6 @@ Change "Unreleased" header in `CHANGELOG.md` to  `<version> - <current date>`
 
 `git checkout -b release/<version>`
 
-## Plugin dependicies
-
-Check if all plugin dependicies are proper version and not SNAPSHOT!
-
 ## Commit version changes
 
 ```
@@ -72,6 +68,10 @@ git add yarn.lock pom.xml package.json
 git commit -m "Update to new version of SCM-Manager"
 git push
 ```
+
+## Plugin dependencies
+
+Check if all plugin dependicies are proper version and not SNAPSHOT!
 
 Wait for Jenkins to be green.
 
