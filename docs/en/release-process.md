@@ -71,7 +71,7 @@ git push
 
 ## Plugin dependencies
 
-Check if all plugin dependicies are proper version and not SNAPSHOT!
+Check if all plugin dependencies are proper versions and not SNAPSHOT!
 
 Wait for Jenkins to be green.
 
