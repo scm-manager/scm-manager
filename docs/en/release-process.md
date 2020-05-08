@@ -1,6 +1,5 @@
----
-title: How to release SCM-Manager v2 core
----
+# How to release SCM-Manager v2 core
+
 
 To release a new version of SCM-Manager v2 you have to do the following steps (replace placeholders `<version>` accordingly, eg. with `2.1.0`):
 
@@ -19,6 +18,10 @@ Change "Unreleased" header in `CHANGELOG.md` to  `<version> - <current date>`
 ## Create release branch
 
 `git checkout -b release/<version>`
+
+## Plugin dependicies
+
+Check if all plugin dependicies are proper version and not SNAPSHOT!
 
 ## Commit version changes
 
