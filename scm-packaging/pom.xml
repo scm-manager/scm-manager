@@ -39,13 +39,25 @@
   <packaging>pom</packaging>
   <version>2.0.0-SNAPSHOT</version>
 
-  <modules>
-    <module>rpm</module>
-    <module>deb</module>
-    <module>unix</module>
-    <module>windows</module>
-    <module>docker</module>
-    <module>helm</module>
-  </modules>
+  <profiles>
+    <profile>
+      <id>packaging</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+        </property>
+      </activation>
+
+      <modules>
+        <module>rpm</module>
+        <module>deb</module>
+        <module>unix</module>
+        <module>windows</module>
+        <module>docker</module>
+        <module>helm</module>
+      </modules>
+
+    </profile>
+  </profiles>
 
 </project>
