@@ -81,8 +81,8 @@ node('docker') {
       )
 
       stage('SonarQube') {
-
-        analyzeWith(mvn)
+        def sonarQube = new SonarCloud(this, [sonarQubeEnv: 'sonarcloud.io-scm', sonarOrganization: 'scm-manager'])
+        sonarQube.analyzeWith(mvn)
 
         if (!waitForQualityGateWebhookToBeCalled()) {
           currentBuild.result = 'UNSTABLE'
@@ -222,34 +222,6 @@ Maven setupMavenBuild() {
     mvn.additionalArgs += ' -Dmaven.javadoc.failOnError=false'
   }
   return mvn
-}
-
-void analyzeWith(Maven mvn) {
-
-  withSonarQubeEnv('sonarcloud.io-scm') {
-
-    String mvnArgs = "${env.SONAR_MAVEN_GOAL} " +
-      "-Dsonar.host.url=${env.SONAR_HOST_URL} " +
-      "-Dsonar.login=${env.SONAR_AUTH_TOKEN} "
-
-    if (isPullRequest()) {
-      echo "Analysing SQ in PR mode"
-      mvnArgs += "-Dsonar.pullrequest.base=${env.CHANGE_TARGET} " +
-        "-Dsonar.pullrequest.branch=${env.CHANGE_BRANCH} " +
-        "-Dsonar.pullrequest.key=${env.CHANGE_ID} " +
-        "-Dsonar.pullrequest.provider=bitbucketcloud " +
-        "-Dsonar.pullrequest.bitbucketcloud.owner=sdorra " +
-        "-Dsonar.pullrequest.bitbucketcloud.repository=scm-manager " +
-        "-Dsonar.cpd.exclusions=**/*StoreFactory.java,**/*UserPassword.js "
-    } else {
-      mvnArgs += " -Dsonar.branch.name=${env.BRANCH_NAME} "
-      if (!isMainBranch()) {
-        // Avoid exception "The main branch must not have a target" on main branch
-        mvnArgs += " -Dsonar.branch.target=${mainBranch} "
-      }
-    }
-    mvn "${mvnArgs}"
-  }
 }
 
 boolean isReleaseBranch() {
