@@ -208,7 +208,9 @@ node('docker') {
 String mainBranch
 
 Maven setupMavenBuild() {
-  Maven mvn = new MavenWrapperInDocker(this, "scmmanager/java-build:11.0.6_10")
+  MavenWrapperInDocker mvn = new MavenWrapperInDocker(this, "scmmanager/java-build:11.0.7_10")
+  mvn.enableDockerHost = true
+
   // disable logging durring the build
   def logConf = "scm-webapp/src/main/resources/logback.ci.xml"
   mvn.additionalArgs += " -Dlogback.configurationFile=${logConf}"
