@@ -34,6 +34,7 @@ import sonia.scm.util.IOUtil;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -60,7 +61,7 @@ public class SimpleWorkingCopyFactoryTest {
     WorkdirProvider workdirProvider = new WorkdirProvider(temporaryFolder.newFolder());
     WorkingCopyPool configurableTestWorkingCopyPool = new WorkingCopyPool() {
       @Override
-      public <R, W, C> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException {
+      public <R, W, C extends Supplier<Repository>> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException {
         workdir = workdirProvider.createNewWorkdir();
         return context.getInitializer().initialize(workdir);
       }
@@ -78,11 +79,6 @@ public class SimpleWorkingCopyFactoryTest {
     };
     simpleWorkingCopyFactory = new SimpleWorkingCopyFactory<Closeable, Closeable, Context>(configurableTestWorkingCopyPool) {
       @Override
-      protected Repository getScmRepository(Context context) {
-        return REPOSITORY;
-      }
-
-      @Override
       protected void closeRepository(Closeable repository) throws IOException {
         repository.close();
       }
@@ -93,7 +89,7 @@ public class SimpleWorkingCopyFactoryTest {
       }
 
       @Override
-      protected void closeWorkingCopyInternal(Closeable workingCopy) throws Exception {
+      protected void closeWorkingCopy(Closeable workingCopy) throws Exception {
         workingCopy.close();
       }
 
@@ -155,5 +151,10 @@ public class SimpleWorkingCopyFactoryTest {
     }
   }
 
-  private static class Context {}
+  private static class Context implements Supplier<Repository> {
+    @Override
+    public Repository get() {
+      return REPOSITORY;
+    }
+  }
 }

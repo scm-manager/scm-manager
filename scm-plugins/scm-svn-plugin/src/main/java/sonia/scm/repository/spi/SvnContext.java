@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -41,12 +41,13 @@ import sonia.scm.repository.SvnUtil;
 
 import java.io.Closeable;
 import java.io.File;
+import java.util.function.Supplier;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SvnContext implements Closeable {
+public class SvnContext implements Closeable, Supplier<Repository> {
 
   private static final Logger LOG = LoggerFactory.getLogger(SvnContext.class);
 
@@ -62,6 +63,11 @@ public class SvnContext implements Closeable {
 
   public Repository getRepository() {
     return repository;
+  }
+
+  @Override
+  public Repository get() {
+    return getRepository();
   }
 
   public File getDirectory() {

@@ -96,7 +96,7 @@ public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase 
   @Test
   public void shouldReturnRepository() {
     SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
-    Repository scmRepository = factory.getScmRepository(createContext());
+    Repository scmRepository = createContext().getRepository();
     assertThat(scmRepository).isSameAs(repository);
   }
 }

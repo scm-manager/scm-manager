@@ -26,15 +26,15 @@ package sonia.scm.repository.work;
 
 import sonia.scm.repository.Repository;
 
-public class WorkingCopyContext<R, W, C> {
-  private final Repository scmRepository;
+import java.util.function.Supplier;
+
+public class WorkingCopyContext<R, W, C extends Supplier<Repository>> {
   private final String requestedBranch;
   private final C context;
   private final SimpleWorkingCopyFactory.WorkingCopyInitializer<R, W> initializer;
   private final SimpleWorkingCopyFactory.WorkingCopyReclaimer<R, W> reclaimer;
 
-  public WorkingCopyContext(Repository scmRepository, String requestedBranch, C context, SimpleWorkingCopyFactory.WorkingCopyInitializer<R, W> initializer, SimpleWorkingCopyFactory.WorkingCopyReclaimer<R, W> reclaimer) {
-    this.scmRepository = scmRepository;
+  public WorkingCopyContext(String requestedBranch, C context, SimpleWorkingCopyFactory.WorkingCopyInitializer<R, W> initializer, SimpleWorkingCopyFactory.WorkingCopyReclaimer<R, W> reclaimer) {
     this.requestedBranch = requestedBranch;
     this.context = context;
     this.initializer = initializer;
@@ -42,7 +42,7 @@ public class WorkingCopyContext<R, W, C> {
   }
 
   public Repository getScmRepository() {
-    return scmRepository;
+    return context.get();
   }
 
   public String getRequestedBranch() {

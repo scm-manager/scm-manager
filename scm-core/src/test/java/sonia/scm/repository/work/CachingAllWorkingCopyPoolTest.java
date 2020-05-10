@@ -35,6 +35,7 @@ import sonia.scm.repository.Repository;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -54,7 +55,7 @@ class CachingAllWorkingCopyPoolTest {
   CachingAllWorkingCopyPool cachingAllWorkingCopyPool;
 
   @Mock
-  WorkingCopyContext<Object, Path, Path> workingCopyContext;
+  WorkingCopyContext<Object, Path, Supplier<Repository>> workingCopyContext;
   @Mock
   SimpleWorkingCopyFactory.WorkingCopyInitializer<Object, Path> initializer;
   @Mock

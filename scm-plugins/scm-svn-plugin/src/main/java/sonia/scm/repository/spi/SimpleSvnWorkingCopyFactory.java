@@ -50,11 +50,6 @@ public class SimpleSvnWorkingCopyFactory extends SimpleWorkingCopyFactory<File, 
   }
 
   @Override
-  protected Repository getScmRepository(SvnContext context) {
-    return context.getRepository();
-  }
-
-  @Override
   protected ParentAndClone<File, File> cloneRepository(SvnContext context, File workingCopy, String initialBranch) {
 
     final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
@@ -63,7 +58,7 @@ public class SimpleSvnWorkingCopyFactory extends SimpleWorkingCopyFactory<File, 
     try {
       source = SVNURL.fromFile(context.getDirectory());
     } catch (SVNException ex) {
-      throw new InternalRepositoryException(getScmRepository(context), "error creating svn url from central directory", ex);
+      throw new InternalRepositoryException(context.getRepository(), "error creating svn url from central directory", ex);
     }
 
     try {
@@ -72,7 +67,7 @@ public class SimpleSvnWorkingCopyFactory extends SimpleWorkingCopyFactory<File, 
       checkout.setSource(SvnTarget.fromURL(source));
       checkout.run();
     } catch (SVNException ex) {
-      throw new InternalRepositoryException(getScmRepository(context), "error running svn checkout", ex);
+      throw new InternalRepositoryException(context.getRepository(), "error running svn checkout", ex);
     } finally {
       svnOperationFactory.dispose();
     }
@@ -97,6 +92,6 @@ public class SimpleSvnWorkingCopyFactory extends SimpleWorkingCopyFactory<File, 
   }
 
   @Override
-  protected void closeWorkingCopyInternal(File workingCopy) {
+  protected void closeWorkingCopy(File workingCopy) {
   }
 }

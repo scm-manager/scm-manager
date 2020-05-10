@@ -28,12 +28,14 @@ import com.google.common.base.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.Repository;
 import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 public class CachingAllWorkingCopyPool implements WorkingCopyPool {
 
@@ -49,7 +51,7 @@ public class CachingAllWorkingCopyPool implements WorkingCopyPool {
   }
 
   @Override
-  public <R, W, C> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> workingCopyContext) {
+  public <R, W, C extends Supplier<Repository>> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> workingCopyContext) {
     String id = workingCopyContext.getScmRepository().getId();
     File existingWorkdir = workdirs.remove(id);
     if (existingWorkdir != null) {

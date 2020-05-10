@@ -104,13 +104,8 @@ public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposit
   }
 
   @Override
-  protected void closeWorkingCopyInternal(Repository workingCopy) throws Exception {
+  protected void closeWorkingCopy(Repository workingCopy) throws Exception {
     workingCopy.close();
-  }
-
-  @Override
-  protected sonia.scm.repository.Repository getScmRepository(HgCommandContext context) {
-    return context.getScmRepository();
   }
 
   @Override

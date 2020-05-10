@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -42,12 +42,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgCommandContext implements Closeable
+public class HgCommandContext implements Closeable, Supplier<sonia.scm.repository.Repository>
 {
 
   /** Field description */
@@ -153,6 +154,11 @@ public class HgCommandContext implements Closeable
 
   public sonia.scm.repository.Repository getScmRepository() {
     return scmRepository;
+  }
+
+  @Override
+  public sonia.scm.repository.Repository get() {
+    return getScmRepository();
   }
 
   //~--- fields ---------------------------------------------------------------

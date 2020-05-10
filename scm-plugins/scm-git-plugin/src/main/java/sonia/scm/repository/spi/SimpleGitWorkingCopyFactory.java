@@ -133,14 +133,9 @@ public class SimpleGitWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposi
   }
 
   @Override
-  protected void closeWorkingCopyInternal(Repository workingCopy) throws Exception {
+  protected void closeWorkingCopy(Repository workingCopy) throws Exception {
     if (workingCopy != null) {
       workingCopy.close();
     }
-  }
-
-  @Override
-  protected sonia.scm.repository.Repository getScmRepository(GitContext context) {
-    return context.getRepository();
   }
 }
