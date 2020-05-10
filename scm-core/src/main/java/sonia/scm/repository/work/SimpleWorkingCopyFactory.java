@@ -42,10 +42,10 @@ import java.util.function.Supplier;
  * implemented:
  *
  * <dl>
- *   <dt>{@link #cloneRepository(C, File, String)}</dt>
+ *   <dt>{@link #getInitializer(C, File, String)}</dt>
  *   <dd>Creates a new clone of the repository for the given context in the given
  *     directory with the given branch checked out (if branches are supported).</dd>
- *   <dt>{@link #reclaimRepository(C, File, String)}</dt>
+ *   <dt>{@link #getReclaimer(C, File, String)}</dt>
  *   <dd>Reclaim the working directory with a already checked out clone of the
  *     repository given in the context, so that the directory is not modified in
  *     respect to the repository and the given branch is checked out (if branches
@@ -82,19 +82,16 @@ import java.util.function.Supplier;
  *                            │                               │                             │                   reclaim                    │                          │
  *                            │                               │                             │<─────────────────────────────────────────────│                          │
  *                            │                               │                             │                     │                        │                          │
- *                            │                               │          reclaim            │                     │                        │                          │
- *                            │                               │<────────────────────────────│                     │                        │                          │
- *                            │                               │                             │                     │                        │                          │
  *                            │                               │                             │                     │                        │                          │
  *                            │       ╔══════╤════════════════╪═════════════════════════════╪═════════════════════╪════════════════════════╪══════════════════════════╪═════════════════╗
  *                            │       ║ ALT  │  reclaim successful                          │                     │                        │                          │                 ║
  *                            │       ╟──────┘                │                             │                     │                        │                          │                 ║
  *                            │       ║                       │                             │                     │                        │                          │                 ║
- *                            │       ║                       │───────────────────────────────────────────────────────────────────────────>│                          │                 ║
+ *                            │       ║                       │                             │─────────────────────────────────────────────>│                          │                 ║
  *                            │       ╠═══════════════════════╪═════════════════════════════╪═════════════════════╪════════════════════════╪══════════════════════════╪═════════════════╣
  *                            │       ║ [reclaim fails; create new]                         │                     │                        │                          │                 ║
- *                            │       ║                       │                      ReclaimFailedException       │                        │                          │                 ║
- *                            │       ║                       │───────────────────────────────────────────────────────────────────────────X│                          │                 ║
+ *                            │       ║                       │                          ReclaimFailedException   │                        │                          │                 ║
+ *                            │       ║                       │───────────────────────────────────────────────────────────────────────────>│                          │                 ║
  *                            │       ║                       │                             │                     │                        │                          │                 ║
  *                            │       ║                       │                             │                     │                        │    createNewWorkdir      │                 ║
  *                            │       ║                       │                             │                     │                        │─────────────────────────>│                 ║
@@ -105,16 +102,13 @@ import java.util.function.Supplier;
  *                            │       ║                       │                             │                     │      initialize        │                          │                 ║
  *                            │       ║                       │                             │                     │<───────────────────────│                          │                 ║
  *                            │       ║                       │                             │                     │                        │                          │                 ║
- *                            │       ║                       │                    initialize                     │                        │                          │                 ║
- *                            │       ║                       │<──────────────────────────────────────────────────│                        │                          │                 ║
  *                            │       ║                       │                             │                     │                        │                          │                 ║
- *                            │       ║                       │                             │                     │                        │                          │                 ║
- *                            │       ║                       │───────────────────────────────────────────────────────────────────────────>│                          │                 ║
+ *                            │       ║                       │                             │                     │───────────────────────>│                          │                 ║
  *                            │       ╚═══════════════════════╪═════════════════════════════╪═════════════════════╪════════════════════════╪══════════════════════════╪═════════════════╝
  *                            │                               │                             │                     │                        │                          │
+ *                            │                               │                             │ParentAndClone       │                        │                          │
+ *                            │                               │<───────────────────────────────────────────────────────────────────────────│                          │
  *                            │                               │                             │                     │                        │                          │
- *                            │                               │<───────────────────────────────────────────────────────────────────────────│                          │                        │
- *                            │                               │                             │                     │                        │                          │                        │
  *                            │                               │                             │                     │                        │                          │                  ┌───────────┐
  *                            │                               │────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────> │WorkingCopy│
  *                            │                               │                             │                     │                        │                          │                  └─────┬─────┘
@@ -148,17 +142,14 @@ import java.util.function.Supplier;
  *                            │                               │                             │                     │                        │                          │                        │
  *                            │                               │                             │ contextClosed       │                        │                          │                        │
  *                            │                               │───────────────────────────────────────────────────────────────────────────>│                          │                        │
- *                     ┌──────┴──────┐          ┌─────────────┴─────────────┐          ┌────┴────┐          ┌─────┴─────┐          ┌───────┴───────┐          ┌───────┴───────┐          ┌─────┴─────┐
- *                     │ModifyCommand│          │SimpleGitWorkingCopyFactory│          │Reclaimer│          │Initializer│          │WorkingCopyPool│          │WorkdirProvider│          │WorkingCopy│
- *                     └─────────────┘          └───────────────────────────┘          └─────────┘          └───────────┘          └───────────────┘          └───────────────┘          └───────────┘
  * </pre>
- * <img src="http://www.plantuml.com/plantuml/png/fLH1QiCm4Bph5JeRaWUeO0AcAJsqXBJGiv0sOQcaDPBSn7rzQw8OLG4beJThTsOyE_9w5QBqSR26lP36tTYHjTBfHVk6jZVmXF63_2UwVKVzk9OgaX-vuCg3Z92rM0LV5HCdgOvSX6Eio_0jA2FHWc-QnBj2U7OOKHhylfcIrJP4HkmXXx6zfw7dxtxaaRW_sM45Pz7EFiKPCbUgOSnmQU9PdOT1AGXXDvYwyvONFXYO0BFCJg893-dck8D3NUrOgeaqmlfN1_JZKK4VaTpby5D1ezzu-a8DFgN-2eVKO0LWqPQXNsfczoXmVcPPkPfhnhaxGwSlxTJUTVFdrJHNlFpPI94xOylbibpOh2qqJQThA6KeG3vSDSC4ho1ke6VrVofjeQU0q_c-VLQd7qqtQMYs0gS7Qtu0"/>
+ * <img src="http://www.plantuml.com/plantuml/png/fPF1QiCm38RlVWgV0-a3U10wmZfss2ZTO6TZgqLCiOBjhCsUVeIcmKkPcx5RB7t_7qcsrY5g7xk6n3DRtFSrDursjgnUiMa97Z6-i_z0TwYvxJVQHFQzLD9uq16IbCZmMJDrjghPHJZ5l8tSWI6D3VYY67Kt14yE8sh2hyMI9BPb9dM051C7prqhttml8qj_BaVCD6KrrQakYAPumMNeZ84GzXs92IohIivi1520IRJNIE5k7BnqSCotSPgxgV5N6uq4zk5ae8t8xhhs8M3HRpr_eWK_3kq5ZcD2p82oci_isZEv1eNJjvZ2l_JlxBLLzYrjjGSNxvsjYTtoYowAF5hzs0sL5YfMgzLyTPAqiZoSRb66E43IQtvbHZn3B90dyNywxQ3bWCFvRvjbpYjV3nvMhC7Phg5l"/>
  * @param <R> Type of central repository location
  * @param <W> Type of working copy for repository
  * @param <C> Type of repository context
  */
 /*
-http://www.plantuml.com/plantuml/uml/fLH1QiCm4Bph5JeRaWUeO0AcAJsqXBJGiv0sOQcaDPBSn7rzQw8OLG4beJThTsOyE_9w5QBqSR26lP36tTYHjTBfHVk6jZVmXF63_2UwVKVzk9OgaX-vuCg3Z92rM0LV5HCdgOvSX6Eio_0jA2FHWc-QnBj2U7OOKHhylfcIrJP4HkmXXx6zfw7dxtxaaRW_sM45Pz7EFiKPCbUgOSnmQU9PdOT1AGXXDvYwyvONFXYO0BFCJg893-dck8D3NUrOgeaqmlfN1_JZKK4VaTpby5D1ezzu-a8DFgN-2eVKO0LWqPQXNsfczoXmVcPPkPfhnhaxGwSlxTJUTVFdrJHNlFpPI94xOylbibpOh2qqJQThA6KeG3vSDSC4ho1ke6VrVofjeQU0q_c-VLQd7qqtQMYs0gS7Qtu0
+http://www.plantuml.com/plantuml/uml/fPF1QiCm38RlVWgV0-a3U10wmZfss2ZTO6TZgqLCiOBjhCsUVeIcmKkPcx5RB7t_7qcsrY5g7xk6n3DRtFSrDursjgnUiMa97Z6-i_z0TwYvxJVQHFQzLD9uq16IbCZmMJDrjghPHJZ5l8tSWI6D3VYY67Kt14yE8sh2hyMI9BPb9dM051C7prqhttml8qj_BaVCD6KrrQakYAPumMNeZ84GzXs92IohIivi1520IRJNIE5k7BnqSCotSPgxgV5N6uq4zk5ae8t8xhhs8M3HRpr_eWK_3kq5ZcD2p82oci_isZEv1eNJjvZ2l_JlxBLLzYrjjGSNxvsjYTtoYowAF5hzs0sL5YfMgzLyTPAqiZoSRb66E43IQtvbHZn3B90dyNywxQ3bWCFvRvjbpYjV3nvMhC7Phg5l
 @startuml
 ModifyCommand->SimpleGitWorkingCopyFactory : createWorkingCopy
 SimpleGitWorkingCopyFactory->SimpleGitWorkingCopyFactory:createContext
@@ -167,18 +158,16 @@ SimpleGitWorkingCopyFactory-> Initializer**:create
 SimpleGitWorkingCopyFactory->WorkingCopyPool:getWorkingCopy
 group Try to reclaim
 WorkingCopyPool->Reclaimer:reclaim
-Reclaimer->SimpleGitWorkingCopyFactory:reclaim
 alt reclaim successful
-SimpleGitWorkingCopyFactory->> WorkingCopyPool
+Reclaimer->> WorkingCopyPool
 else reclaim fails; create new
 SimpleGitWorkingCopyFactory->x WorkingCopyPool:ReclaimFailedException
 WorkingCopyPool->WorkdirProvider:createNewWorkdir
 WorkdirProvider->>WorkingCopyPool
 WorkingCopyPool->Initializer:initialize
-Initializer->SimpleGitWorkingCopyFactory:initialize
-SimpleGitWorkingCopyFactory->> WorkingCopyPool
+Initializer->> WorkingCopyPool
 end
-WorkingCopyPool->>SimpleGitWorkingCopyFactory
+WorkingCopyPool->>SimpleGitWorkingCopyFactory:ParentAndClone
 SimpleGitWorkingCopyFactory->WorkingCopy**
 SimpleGitWorkingCopyFactory->>ModifyCommand: WorkingCopy
 ...
@@ -216,8 +205,8 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends Supplier<Reposito
     return new WorkingCopyContext<>(
       initialBranch,
       repositoryContext,
-      newFolder -> cloneRepository(repositoryContext, newFolder, initialBranch),
-      cachedFolder -> reclaimRepository(repositoryContext, cachedFolder, initialBranch)
+      getInitializer(repositoryContext),
+      getReclaimer(repositoryContext)
     );
   }
 
@@ -251,17 +240,17 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends Supplier<Reposito
 
   @FunctionalInterface
   public interface WorkingCopyInitializer<R, W> {
-    WorkingCopyPool.ParentAndClone<R, W> initialize(File target) throws WorkingCopyFailedException;
+    WorkingCopyPool.ParentAndClone<R, W> initialize(File target, String initialBranch) throws WorkingCopyFailedException;
   }
 
   @FunctionalInterface
   public interface WorkingCopyReclaimer<R, W> {
-    WorkingCopyPool.ParentAndClone<R, W> reclaim(File target) throws ReclaimFailedException;
+    WorkingCopyPool.ParentAndClone<R, W> reclaim(File target, String initialBranch) throws ReclaimFailedException;
   }
 
-  protected abstract WorkingCopyPool.ParentAndClone<R, W> cloneRepository(C context, File target, String initialBranch) throws WorkingCopyFailedException;
+  protected abstract WorkingCopyInitializer<R, W> getInitializer(C context);
 
-  protected abstract WorkingCopyPool.ParentAndClone<R, W> reclaimRepository(C context, File target, String initialBranch) throws ReclaimFailedException;
+  protected abstract WorkingCopyReclaimer<R, W> getReclaimer(C context);
 
   @SuppressWarnings("squid:S00112")
   // We do allow implementations to throw arbitrary exceptions here, so that we can handle them in closeCentral

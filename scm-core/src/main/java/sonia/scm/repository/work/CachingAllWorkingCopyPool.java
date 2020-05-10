@@ -57,7 +57,7 @@ public class CachingAllWorkingCopyPool implements WorkingCopyPool {
     if (existingWorkdir != null) {
       Stopwatch stopwatch = Stopwatch.createStarted();
       try {
-        ParentAndClone<R, W> reclaimed = workingCopyContext.getReclaimer().reclaim(existingWorkdir);
+        ParentAndClone<R, W> reclaimed = workingCopyContext.getReclaimer().reclaim(existingWorkdir, workingCopyContext.getRequestedBranch());
         LOG.debug("reclaimed workdir for {} in path {} in {}", workingCopyContext.getScmRepository().getNamespaceAndName(), existingWorkdir, stopwatch.stop());
         return reclaimed;
       } catch (SimpleWorkingCopyFactory.ReclaimFailedException e) {
@@ -75,7 +75,8 @@ public class CachingAllWorkingCopyPool implements WorkingCopyPool {
   private  <R, W> ParentAndClone<R, W> createNewWorkdir(WorkingCopyContext<R, W, ?> workingCopyContext) throws WorkingCopyFailedException {
     Stopwatch stopwatch = Stopwatch.createStarted();
     File newWorkdir = workdirProvider.createNewWorkdir();
-    ParentAndClone<R, W> parentAndClone = workingCopyContext.getInitializer().initialize(newWorkdir);
+    SimpleWorkingCopyFactory.WorkingCopyInitializer<R, W> initializer = workingCopyContext.getInitializer();
+    ParentAndClone<R, W> parentAndClone = initializer.initialize(newWorkdir, workingCopyContext.getRequestedBranch());
     LOG.debug("initialized new workdir for {} in path {} in {}", workingCopyContext.getScmRepository().getNamespaceAndName(), newWorkdir, stopwatch.stop());
     return parentAndClone;
   }

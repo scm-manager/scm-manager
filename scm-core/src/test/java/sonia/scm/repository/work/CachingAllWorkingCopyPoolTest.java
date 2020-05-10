@@ -39,6 +39,7 @@ import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -66,9 +67,9 @@ class CachingAllWorkingCopyPoolTest {
     lenient().when(workingCopyContext.getInitializer()).thenReturn(initializer);
     lenient().when(workingCopyContext.getReclaimer()).thenReturn(reclaimer);
 
-    lenient().when(initializer.initialize(any()))
+    lenient().when(initializer.initialize(any(), any()))
       .thenAnswer(invocationOnMock -> new WorkingCopyPool.ParentAndClone<>(null, null, invocationOnMock.getArgument(0, File.class)));
-    lenient().when(reclaimer.reclaim(any()))
+    lenient().when(reclaimer.reclaim(any(), any()))
       .thenAnswer(invocationOnMock -> new WorkingCopyPool.ParentAndClone<>(null, null, invocationOnMock.getArgument(0, File.class)));
   }
 
@@ -79,7 +80,7 @@ class CachingAllWorkingCopyPoolTest {
 
     WorkingCopyPool.ParentAndClone<?, ?> workdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
 
-    verify(initializer).initialize(temp.toFile());
+    verify(initializer).initialize(temp.toFile(), null);
   }
 
   @Test
@@ -91,8 +92,8 @@ class CachingAllWorkingCopyPoolTest {
     cachingAllWorkingCopyPool.contextClosed(workingCopyContext, firstWorkdir.getDirectory());
     WorkingCopyPool.ParentAndClone<?, ?> secondWorkdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
 
-    verify(initializer).initialize(temp.toFile());
-    verify(reclaimer).reclaim(temp.toFile());
+    verify(initializer).initialize(temp.toFile(), null);
+    verify(reclaimer).reclaim(temp.toFile(), null);
     assertThat(secondWorkdir.getDirectory()).isEqualTo(temp.toFile());
   }
 
@@ -112,9 +113,9 @@ class CachingAllWorkingCopyPoolTest {
     cachingAllWorkingCopyPool.contextClosed(workingCopyContext, firstWorkdir.getDirectory());
     cachingAllWorkingCopyPool.contextClosed(workingCopyContext, secondWorkdir.getDirectory());
 
-    verify(reclaimer, never()).reclaim(any());
-    verify(initializer).initialize(firstDirectory);
-    verify(initializer).initialize(secondDirectory);
+    verify(reclaimer, never()).reclaim(any(), any());
+    verify(initializer).initialize(firstDirectory, null);
+    verify(initializer).initialize(secondDirectory, null);
     assertThat(firstWorkdir.getDirectory()).isNotEqualTo(secondWorkdir.getDirectory());
     assertThat(firstWorkdir.getDirectory()).exists();
     assertThat(secondWorkdir.getDirectory()).doesNotExist();

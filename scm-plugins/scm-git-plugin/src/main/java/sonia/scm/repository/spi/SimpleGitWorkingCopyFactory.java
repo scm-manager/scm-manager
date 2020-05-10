@@ -58,53 +58,57 @@ public class SimpleGitWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposi
   }
 
   @Override
-  public ParentAndClone<Repository, Repository> cloneRepository(GitContext context, File target, String initialBranch) {
-    LOG.trace("clone repository {}", context.getRepository().getId());
-    long start = System.nanoTime();
-    try {
-      Repository clone = Git.cloneRepository()
-        .setURI(createScmTransportProtocolUri(context.getDirectory()))
-        .setDirectory(target)
-        .setBranch(initialBranch)
-        .call()
-        .getRepository();
+  public WorkingCopyInitializer<Repository, Repository> getInitializer(GitContext context) {
+    return (target, initialBranch) -> {
+      LOG.trace("clone repository {}", context.getRepository().getId());
+      long start = System.nanoTime();
+      try {
+        Repository clone = Git.cloneRepository()
+          .setURI(createScmTransportProtocolUri(context.getDirectory()))
+          .setDirectory(target)
+          .setBranch(initialBranch)
+          .call()
+          .getRepository();
 
-      Ref head = clone.exactRef(Constants.HEAD);
+        Ref head = clone.exactRef(Constants.HEAD);
 
-      if (head == null || !head.isSymbolic() || (initialBranch != null && !head.getTarget().getName().endsWith(initialBranch))) {
-        throw notFound(entity("Branch", initialBranch).in(context.getRepository()));
+        if (head == null || !head.isSymbolic() || (initialBranch != null && !head.getTarget().getName().endsWith(initialBranch))) {
+          throw notFound(entity("Branch", initialBranch).in(context.getRepository()));
+        }
+
+        return new ParentAndClone<>(null, clone, target);
+      } catch (GitAPIException | IOException e) {
+        throw new InternalRepositoryException(context.getRepository(), "could not clone working copy of repository", e);
+      } finally {
+        long end = System.nanoTime();
+        long duration = end - start;
+        LOG.trace("took {} ns to clone repository {}", duration, context.getRepository().getId());
       }
-
-      return new ParentAndClone<>(null, clone, target);
-    } catch (GitAPIException | IOException e) {
-      throw new InternalRepositoryException(context.getRepository(), "could not clone working copy of repository", e);
-    } finally {
-      long end = System.nanoTime();
-      long duration = end - start;
-      LOG.trace("took {} ns to clone repository {}", duration, context.getRepository().getId());
-    }
+    };
   }
 
   @Override
-  protected ParentAndClone<Repository, Repository> reclaimRepository(GitContext context, File target, String initialBranch) throws ReclaimFailedException {
-    LOG.trace("reclaim repository {}", context.getRepository().getId());
-    long start = System.nanoTime();
-    Repository repo = openTarget(target);
-    try (Git git = Git.open(target)) {
-      git.reset().setMode(ResetCommand.ResetType.HARD).call();
-      git.clean().setForce(true).setCleanDirectories(true).call();
-      git.fetch().call();
-      git.checkout().setForced(true).setName("origin/" + initialBranch).call();
-      git.branchDelete().setBranchNames(initialBranch).setForce(true).call();
-      git.checkout().setName(initialBranch).setCreateBranch(true).call();
-      return new ParentAndClone<>(null, repo, target);
-    } catch (GitAPIException | IOException e) {
-      throw new ReclaimFailedException(e);
-    } finally {
-      long end = System.nanoTime();
-      long duration = end - start;
-      LOG.trace("took {} ns to reclaim repository {}\n", duration, context.getRepository().getId());
-    }
+  protected WorkingCopyReclaimer<Repository, Repository> getReclaimer(GitContext context) {
+    return (target, initialBranch) -> {
+      LOG.trace("reclaim repository {}", context.getRepository().getId());
+      long start = System.nanoTime();
+      Repository repo = openTarget(target);
+      try (Git git = Git.open(target)) {
+        git.reset().setMode(ResetCommand.ResetType.HARD).call();
+        git.clean().setForce(true).setCleanDirectories(true).call();
+        git.fetch().call();
+        git.checkout().setForced(true).setName("origin/" + initialBranch).call();
+        git.branchDelete().setBranchNames(initialBranch).setForce(true).call();
+        git.checkout().setName(initialBranch).setCreateBranch(true).call();
+        return new ParentAndClone<>(null, repo, target);
+      } catch (GitAPIException | IOException e) {
+        throw new ReclaimFailedException(e);
+      } finally {
+        long end = System.nanoTime();
+        long duration = end - start;
+        LOG.trace("took {} ns to reclaim repository {}\n", duration, context.getRepository().getId());
+      }
+    };
   }
 
   private Repository openTarget(File target) throws ReclaimFailedException {

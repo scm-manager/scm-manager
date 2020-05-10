@@ -63,7 +63,7 @@ public class SimpleWorkingCopyFactoryTest {
       @Override
       public <R, W, C extends Supplier<Repository>> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException {
         workdir = workdirProvider.createNewWorkdir();
-        return context.getInitializer().initialize(workdir);
+        return context.getInitializer().initialize(workdir, context.getRequestedBranch());
       }
 
       @Override
@@ -84,8 +84,9 @@ public class SimpleWorkingCopyFactoryTest {
       }
 
       @Override
-      protected WorkingCopyPool.ParentAndClone<Closeable, Closeable> reclaimRepository(Context context, File target, String initialBranch) {
-        throw new UnsupportedOperationException();
+      protected WorkingCopyReclaimer<
+        Closeable, Closeable> getReclaimer(Context context) {
+        return (target, initialBranch) -> {throw new UnsupportedOperationException();};
       }
 
       @Override
@@ -94,9 +95,11 @@ public class SimpleWorkingCopyFactoryTest {
       }
 
       @Override
-      protected WorkingCopyPool.ParentAndClone<Closeable, Closeable> cloneRepository(Context context, File target, String initialBranch) {
-        initialBranchForLastCloneCall = initialBranch;
-        return new WorkingCopyPool.ParentAndClone<>(parent, clone, target);
+      protected WorkingCopyInitializer<Closeable, Closeable> getInitializer(Context context) {
+        return (target, initialBranch) -> {
+          initialBranchForLastCloneCall = initialBranch;
+          return new WorkingCopyPool.ParentAndClone<>(parent, clone, target);
+        };
       }
     };
   }

@@ -42,7 +42,7 @@ public class NoneCachingWorkingCopyPool implements WorkingCopyPool {
 
   @Override
   public <R, W, C extends Supplier<Repository>> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException {
-    return context.getInitializer().initialize(workdirProvider.createNewWorkdir());
+    return context.getInitializer().initialize(workdirProvider.createNewWorkdir(), context.getRequestedBranch());
   }
 
   @Override

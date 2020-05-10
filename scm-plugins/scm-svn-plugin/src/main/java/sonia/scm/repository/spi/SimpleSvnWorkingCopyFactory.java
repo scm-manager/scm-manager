@@ -50,41 +50,44 @@ public class SimpleSvnWorkingCopyFactory extends SimpleWorkingCopyFactory<File, 
   }
 
   @Override
-  protected ParentAndClone<File, File> cloneRepository(SvnContext context, File workingCopy, String initialBranch) {
+  protected WorkingCopyInitializer getInitializer(SvnContext context) {
+    return (workingCopy, initialBranch) -> {
+      final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
 
-    final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
+      SVNURL source;
+      try {
+        source = SVNURL.fromFile(context.getDirectory());
+      } catch (SVNException ex) {
+        throw new InternalRepositoryException(context.getRepository(), "error creating svn url from central directory", ex);
+      }
 
-    SVNURL source;
-    try {
-      source = SVNURL.fromFile(context.getDirectory());
-    } catch (SVNException ex) {
-      throw new InternalRepositoryException(context.getRepository(), "error creating svn url from central directory", ex);
-    }
+      try {
+        final SvnCheckout checkout = svnOperationFactory.createCheckout();
+        checkout.setSingleTarget(SvnTarget.fromFile(workingCopy));
+        checkout.setSource(SvnTarget.fromURL(source));
+        checkout.run();
+      } catch (SVNException ex) {
+        throw new InternalRepositoryException(context.getRepository(), "error running svn checkout", ex);
+      } finally {
+        svnOperationFactory.dispose();
+      }
 
-    try {
-      final SvnCheckout checkout = svnOperationFactory.createCheckout();
-      checkout.setSingleTarget(SvnTarget.fromFile(workingCopy));
-      checkout.setSource(SvnTarget.fromURL(source));
-      checkout.run();
-    } catch (SVNException ex) {
-      throw new InternalRepositoryException(context.getRepository(), "error running svn checkout", ex);
-    } finally {
-      svnOperationFactory.dispose();
-    }
-
-    return new ParentAndClone<>(context.getDirectory(), workingCopy, workingCopy);
+      return new ParentAndClone<>(context.getDirectory(), workingCopy, workingCopy);
+    };
   }
 
   @Override
-  protected ParentAndClone<File, File> reclaimRepository(SvnContext context, File target, String initialBranch) throws ReclaimFailedException {
-    SVNClientManager clientManager = SVNClientManager.newInstance();
-    try {
-      clientManager.getWCClient().doCleanup(target);
-      clientManager.getUpdateClient().doUpdate(target, SVNRevision.HEAD, SVNDepth.fromRecurse(true), false, false);
-    } catch (SVNException e) {
-      throw new ReclaimFailedException(e);
-    }
-    return new ParentAndClone<>(context.getDirectory(), target, target);
+  protected WorkingCopyReclaimer<File, File> getReclaimer(SvnContext context) {
+    return (target, initialBranch) -> {
+      SVNClientManager clientManager = SVNClientManager.newInstance();
+      try {
+        clientManager.getWCClient().doCleanup(target);
+        clientManager.getUpdateClient().doUpdate(target, SVNRevision.HEAD, SVNDepth.fromRecurse(true), false, false);
+      } catch (SVNException e) {
+        throw new ReclaimFailedException(e);
+      }
+      return new ParentAndClone<>(context.getDirectory(), target, target);
+    };
   }
 
   @Override

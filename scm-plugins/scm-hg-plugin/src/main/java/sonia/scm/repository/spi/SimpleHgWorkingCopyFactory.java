@@ -41,6 +41,7 @@ import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.xml.stream.events.StartDocument;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -56,21 +57,23 @@ public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposit
     this.hgRepositoryEnvironmentBuilder = hgRepositoryEnvironmentBuilder;
   }
   @Override
-  public ParentAndClone<Repository, Repository> cloneRepository(HgCommandContext context, File target, String initialBranch) throws WorkingCopyFailedException {
-    Repository centralRepository = openCentral(context);
-    CloneCommand cloneCommand = CloneCommandFlags.on(centralRepository);
-    if (initialBranch != null) {
-      cloneCommand.updaterev(initialBranch);
-    }
-    try {
-      cloneCommand.execute(target.getAbsolutePath());
-    } catch (IOException e) {
-      throw new WorkingCopyFailedException(e);
-    }
+  public WorkingCopyInitializer<Repository, Repository> getInitializer(HgCommandContext context) {
+    return (target, initialBranch) -> {
+      Repository centralRepository = openCentral(context);
+      CloneCommand cloneCommand = CloneCommandFlags.on(centralRepository);
+      if (initialBranch != null) {
+        cloneCommand.updaterev(initialBranch);
+      }
+      try {
+        cloneCommand.execute(target.getAbsolutePath());
+      } catch (IOException e) {
+        throw new WorkingCopyFailedException(e);
+      }
 
-    BaseRepository clone = Repository.open(target);
+      BaseRepository clone = Repository.open(target);
 
-    return new ParentAndClone<>(centralRepository, clone, target);
+      return new ParentAndClone<>(centralRepository, clone, target);
+    };
   }
 
   public Repository openCentral(HgCommandContext context) {
@@ -80,18 +83,20 @@ public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposit
   }
 
   @Override
-  protected ParentAndClone<Repository, Repository> reclaimRepository(HgCommandContext context, File target, String initialBranch) throws ReclaimFailedException {
-    Repository centralRepository = openCentral(context);
-    try {
-      BaseRepository clone = Repository.open(target);
-      for (String unknown : StatusCommand.on(clone).execute().getUnknown()) {
-        delete(clone.getDirectory(), unknown);
+  protected WorkingCopyReclaimer<Repository, Repository> getReclaimer(HgCommandContext context) {
+    return (target, initialBranch) -> {
+      Repository centralRepository = openCentral(context);
+      try {
+        BaseRepository clone = Repository.open(target);
+        for (String unknown : StatusCommand.on(clone).execute().getUnknown()) {
+          delete(clone.getDirectory(), unknown);
+        }
+        UpdateCommand.on(clone).rev(initialBranch).clean().execute();
+        return new ParentAndClone<>(centralRepository, clone, target);
+      } catch (ExecutionException | IOException e) {
+        throw new ReclaimFailedException(e);
       }
-      UpdateCommand.on(clone).rev(initialBranch).clean().execute();
-      return new ParentAndClone<>(centralRepository, clone, target);
-    } catch (ExecutionException | IOException e) {
-      throw new ReclaimFailedException(e);
-    }
+    };
   }
 
   private void delete(File directory, String unknownFile) throws IOException {
