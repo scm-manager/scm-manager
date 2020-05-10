@@ -125,7 +125,7 @@
         <extensions>true</extensions>
         <configuration>
           <name>scm-server</name>
-          <deb>${project.build.directory}/scm-server_${version}_all.deb</deb>
+          <deb>${project.build.directory}/scm-server_${project.version}_all.deb</deb>
           <verbose>false</verbose>
           <snapshotExpand>true</snapshotExpand>
           <controlDir>${basedir}/src/main/deb/control</controlDir>
