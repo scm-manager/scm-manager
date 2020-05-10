@@ -39,6 +39,11 @@
   <packaging>pom</packaging>
   <version>2.0.0-SNAPSHOT</version>
 
+  <properties>
+    <deployment.serverId>packages-test.scm-manager.org</deployment.serverId>
+    <deployment.target>https://packages-test.scm-manager.org</deployment.target>
+  </properties>
+
   <profiles>
     <profile>
       <id>packaging</id>

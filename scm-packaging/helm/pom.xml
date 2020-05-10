@@ -134,15 +134,14 @@
           <autoDetectLocalHelmBinary>false</autoDetectLocalHelmBinary>
           <appVersion>${project.version}</appVersion>
           <helmDownloadUrl>https://get.helm.sh/helm-v${helm.version}-${helm.os}-${helm.arch}.tar.gz</helmDownloadUrl>
-          <!-- TODO urls and snapshot handling -->
           <uploadRepoStable>
-            <name>local-nexus</name>
-            <url>http://localhost:8081/repository/helm-releases/</url>
+            <name>${deployment.serverId}</name>
+            <url>${deployment.target}/repository/helm-v2-releases/</url>
             <type>ARTIFACTORY</type>
           </uploadRepoStable>
           <uploadRepoSnapshot>
-            <name>local-nexus</name>
-            <url>http://localhost:8081/repository/helm-releases/</url>
+            <name>${deployment.serverId}</name>
+            <url>${deployment.target}/repository/helm-v2-snapshots/</url>
             <type>ARTIFACTORY</type>
           </uploadRepoSnapshot>
         </configuration>

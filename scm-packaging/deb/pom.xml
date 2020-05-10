@@ -295,6 +295,43 @@
       </plugin>
 
       <plugin>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
+        <version>1.9.0</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>3.0.3</version>
+            <type>pom</type>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>set-repo-suffix</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <scripts>
+                <script>
+                  <![CDATA[
+                  String suffix = "releases"
+                  if (project.version.contains("SNAPSHOT")) {
+                    suffix = "snapshots"
+                  }
+                  project.properties.setProperty("apt.repository.suffix", suffix)
+                  ]]>
+                </script>
+              </scripts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>net.lopht.maven-plugins</groupId>
         <artifactId>upload-maven-plugin</artifactId>
         <version>0.6.0</version>
@@ -307,12 +344,9 @@
             <configuration>
               <file>${project.artifact.file}</file>
               <preemptiveAuth>true</preemptiveAuth>
-              <!--
-              TODO adjust url and path
-              -->
-              <repositoryUrl>http://localhost:8081</repositoryUrl>
-              <repositoryPath>/repository/debian-releases/</repositoryPath>
-              <serverId>local-nexus</serverId>
+              <repositoryUrl>${deployment.target}</repositoryUrl>
+              <repositoryPath>/repository/apt-v2-${apt.repository.suffix}/</repositoryPath>
+              <serverId>${deployment.serverId}</serverId>
               <usePOST>true</usePOST>
             </configuration>
           </execution>

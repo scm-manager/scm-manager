@@ -149,16 +149,58 @@
         </configuration>
       </plugin>
 
+
+      <plugin>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
+        <version>1.9.0</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>3.0.3</version>
+            <type>pom</type>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>set-repository-and-version</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <scripts>
+                <script>
+                  <![CDATA[
+                  def repository = "docker.io/scmmanager/scm-manager"
+                  def version = project.version
+
+                  if (version.contains("SNAPSHOT")) {
+                    repository = "docker.io/cloudogu/scm-manager"
+                    def format = new java.text.SimpleDateFormat("yyyyMMdd-HHmmss")
+                    version = version.replace("SNAPSHOT", format.format(new Date()))
+                  }
+
+                  project.properties.setProperty("docker.repository", repository)
+                  project.properties.setProperty("docker.tag", version)
+                  ]]>
+                </script>
+              </scripts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>com.spotify</groupId>
         <artifactId>dockerfile-maven-plugin</artifactId>
         <version>1.4.13</version>
         <configuration>
-          <!-- TODO adjust image name -->
-          <!--repository>docker.io/scmmanager/scm-manager</repository-->
-          <repository>artifacts.scm-manager.org:50000/scmmanager/scm-manager</repository>
+          <repository>${docker.repository}</repository>
           <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
-          <tag>${project.version}</tag>
+          <tag>${docker.tag}</tag>
           <contextDirectory>target/build</contextDirectory>
         </configuration>
         <executions>
