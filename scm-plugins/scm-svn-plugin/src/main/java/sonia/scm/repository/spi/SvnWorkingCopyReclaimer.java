@@ -24,35 +24,33 @@
 
 package sonia.scm.repository.spi;
 
-import sonia.scm.repository.SvnWorkingCopyFactory;
-import sonia.scm.repository.work.WorkingCopyPool;
+import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.wc.SVNClientManager;
+import org.tmatesoft.svn.core.wc.SVNRevision;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
+import sonia.scm.repository.work.WorkingCopyPool;
 
-import javax.inject.Inject;
 import java.io.File;
 
-public class SimpleSvnWorkingCopyFactory extends SimpleWorkingCopyFactory<File, File, SvnContext> implements SvnWorkingCopyFactory {
+import static org.tmatesoft.svn.core.SVNDepth.INFINITY;
 
-  @Inject
-  public SimpleSvnWorkingCopyFactory(WorkingCopyPool workingCopyPool) {
-    super(workingCopyPool);
+class SvnWorkingCopyReclaimer implements SimpleWorkingCopyFactory.WorkingCopyReclaimer<File, File> {
+  private final SvnContext context;
+
+  public SvnWorkingCopyReclaimer(SvnContext context) {
+    this.context = context;
   }
 
   @Override
-  protected WorkingCopyInitializer<File, File> getInitializer(SvnContext context) {
-    return new SvnWorkingCopyInitializer(context);
-  }
-
-  @Override
-  protected WorkingCopyReclaimer<File, File> getReclaimer(SvnContext context) {
-    return new SvnWorkingCopyReclaimer(context);
-  }
-
-  @Override
-  protected void closeRepository(File workingCopy) {
-  }
-
-  @Override
-  protected void closeWorkingCopy(File workingCopy) {
+  public WorkingCopyPool.ParentAndClone<File, File> reclaim(File target, String initialBranch) throws SimpleWorkingCopyFactory.ReclaimFailedException {
+    SVNClientManager clientManager = SVNClientManager.newInstance();
+    try {
+      clientManager.getWCClient().doRevert(new File[] {target}, INFINITY, null);
+      clientManager.getWCClient().doCleanup(target, true, true, true, true, true, false);
+      clientManager.getUpdateClient().doUpdate(target, SVNRevision.HEAD, INFINITY, false, false);
+    } catch (SVNException e) {
+      throw new SimpleWorkingCopyFactory.ReclaimFailedException(e);
+    }
+    return new WorkingCopyPool.ParentAndClone<>(context.getDirectory(), target, target);
   }
 }
