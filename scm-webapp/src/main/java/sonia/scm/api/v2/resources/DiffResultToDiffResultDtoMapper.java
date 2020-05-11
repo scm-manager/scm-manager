@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.spotter.ContentTypes;
@@ -89,11 +89,14 @@ class DiffResultToDiffResultDtoMapper {
     } else if (isFileNull(newPath) && isFilePath(oldPath)) {
       path = oldPath;
       dto.setType("delete");
+    } else if (!newPath.equals(oldPath)) {
+      path = newPath;
+      dto.setType("rename");
     } else if (isFilePath(newPath) && isFilePath(oldPath)) {
       path = newPath;
       dto.setType("modify");
     } else {
-      // TODO copy and rename?
+      // TODO copy?
       throw new IllegalStateException("no file without path");
     }
 
