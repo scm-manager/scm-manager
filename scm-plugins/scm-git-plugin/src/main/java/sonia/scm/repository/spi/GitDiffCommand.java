@@ -57,7 +57,7 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
         formatter.setRepository(repository);
 
         for (DiffEntry e : diff.getEntries()) {
-          if (!e.getOldId().equals(e.getNewId())) {
+          if (!e.getOldId().equals(e.getNewId()) || !e.getNewPath().equals(e.getOldPath())) {
             formatter.format(e);
           }
         }

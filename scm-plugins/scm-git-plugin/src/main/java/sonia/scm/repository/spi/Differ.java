@@ -50,11 +50,13 @@ final class Differ implements AutoCloseable {
   private final RevWalk walk;
   private final TreeWalk treeWalk;
   private final RevCommit commit;
+  private final PathFilter pathFilter;
 
-  private Differ(RevCommit commit, RevWalk walk, TreeWalk treeWalk) {
+  private Differ(RevCommit commit, RevWalk walk, TreeWalk treeWalk, PathFilter pathFilter) {
     this.commit = commit;
     this.walk = walk;
     this.treeWalk = treeWalk;
+    this.pathFilter = pathFilter;
   }
 
   static Diff diff(Repository repository, DiffCommandRequest request) throws IOException {
@@ -83,10 +85,10 @@ final class Differ implements AutoCloseable {
     treeWalk.reset();
     treeWalk.setRecursive(true);
 
+    PathFilter pathFilter = null;
     if (Util.isNotEmpty(request.getPath())) {
-      treeWalk.setFilter(PathFilter.create(request.getPath()));
+      pathFilter = PathFilter.create(request.getPath());
     }
-
 
     if (!Strings.isNullOrEmpty(request.getAncestorChangeset())) {
       ObjectId otherRevision = repository.resolve(request.getAncestorChangeset());
@@ -107,13 +109,16 @@ final class Differ implements AutoCloseable {
 
     treeWalk.addTree(commit.getTree());
 
-    return new Differ(commit, walk, treeWalk);
+    return new Differ(commit, walk, treeWalk, pathFilter);
   }
 
   private Diff diff(Repository repository) throws IOException {
     DiffFormatter diffFormatter = new DiffFormatter(null);
     diffFormatter.setRepository(repository);
     diffFormatter.setDetectRenames(true);
+    if (pathFilter != null) {
+      diffFormatter.setPathFilter(pathFilter);
+    }
     List<DiffEntry> entries = diffFormatter.scan(
       treeWalk.getTree(0, AbstractTreeIterator.class),
       treeWalk.getTree(1, AbstractTreeIterator.class));
