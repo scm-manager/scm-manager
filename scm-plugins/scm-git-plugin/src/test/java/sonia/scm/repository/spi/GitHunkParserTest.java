@@ -112,6 +112,15 @@ class GitHunkParserTest {
     " indent_size = 2\r\r\n" +
     " charset = utf-8\n";
 
+  private static final String RENAMES = "diff --git a/a.txt b/a-copy.txt\n" +
+    "similarity index 100%\n" +
+    "rename from a.txt\n" +
+    "rename to a-copy.txt\n" +
+    "diff --git a/b.txt b/b-copy.txt\n" +
+    "similarity index 100%\n" +
+    "rename from b.txt\n" +
+    "rename to b-copy.txt";
+
   @Test
   void shouldParseHunks() {
     List<Hunk> hunks = new GitHunkParser().parse(DIFF_001);
@@ -197,6 +206,25 @@ class GitHunkParserTest {
     List<Hunk> hunks = new GitHunkParser().parse(MULTIPLE_LINE_BREAKS);
 
     Hunk hunk = hunks.get(0);
+
+    Iterator<DiffLine> lines = hunk.iterator();
+
+    DiffLine line1 = lines.next();
+    assertThat(line1.getOldLineNumber()).hasValue(10);
+    assertThat(line1.getNewLineNumber()).hasValue(10);
+    assertThat(line1.getContent()).isEqualTo("indent_style = space");
+
+    lines.next();
+    lines.next();
+    assertThat(lines.hasNext()).isFalse();
+  }
+
+  @Test
+  void shouldHandleRenames() {
+    List<Hunk> hunks = new GitHunkParser().parse(RENAMES);
+
+    Hunk hunk = hunks.get(0);
+    hunk.getRawHeader();
 
     Iterator<DiffLine> lines = hunk.iterator();
 
