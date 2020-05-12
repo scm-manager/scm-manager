@@ -113,16 +113,17 @@ final class Differ implements AutoCloseable {
   }
 
   private Diff diff(Repository repository) throws IOException {
-    DiffFormatter diffFormatter = new DiffFormatter(null);
-    diffFormatter.setRepository(repository);
-    diffFormatter.setDetectRenames(true);
-    if (pathFilter != null) {
-      diffFormatter.setPathFilter(pathFilter);
+    try (DiffFormatter diffFormatter = new DiffFormatter(null)) {
+      diffFormatter.setRepository(repository);
+      diffFormatter.setDetectRenames(true);
+      if (pathFilter != null) {
+        diffFormatter.setPathFilter(pathFilter);
+      }
+      List<DiffEntry> entries = diffFormatter.scan(
+        treeWalk.getTree(0, AbstractTreeIterator.class),
+        treeWalk.getTree(1, AbstractTreeIterator.class));
+      return new Diff(commit, entries);
     }
-    List<DiffEntry> entries = diffFormatter.scan(
-      treeWalk.getTree(0, AbstractTreeIterator.class),
-      treeWalk.getTree(1, AbstractTreeIterator.class));
-    return new Diff(commit, entries);
   }
 
   @Override
