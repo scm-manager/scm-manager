@@ -81,7 +81,7 @@ node('docker') {
       )
 
       stage('SonarQube') {
-        def sonarQube = new SonarCloud(this, [sonarQubeEnv: 'sonarcloud.io-scm', sonarOrganization: 'scm-manager'])
+        def sonarQube = new SonarCloud(this, [sonarQubeEnv: 'sonarcloud.io-scm', sonarOrganization: 'scm-manager', integrationBranch: 'develop'])
         sonarQube.analyzeWith(mvn)
 
         if (!waitForQualityGateWebhookToBeCalled()) {
