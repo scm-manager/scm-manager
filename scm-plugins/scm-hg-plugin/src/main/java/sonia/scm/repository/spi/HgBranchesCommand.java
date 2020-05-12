@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -30,7 +30,6 @@ import com.aragost.javahg.Changeset;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import sonia.scm.repository.Branch;
-import sonia.scm.repository.Repository;
 
 import java.util.List;
 
@@ -49,13 +48,12 @@ public class HgBranchesCommand extends AbstractCommand
   /**
    * Constructs ...
    *
+   *  @param context
    *
-   * @param context
-   * @param repository
    */
-  public HgBranchesCommand(HgCommandContext context, Repository repository)
+  public HgBranchesCommand(HgCommandContext context)
   {
-    super(context, repository);
+    super(context);
   }
 
   //~--- get methods ----------------------------------------------------------

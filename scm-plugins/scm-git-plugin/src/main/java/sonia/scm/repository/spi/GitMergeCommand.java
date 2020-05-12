@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
@@ -61,8 +61,8 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     MergeStrategy.SQUASH
   );
 
-  GitMergeCommand(GitContext context, sonia.scm.repository.Repository repository, GitWorkdirFactory workdirFactory) {
-    super(context, repository);
+  GitMergeCommand(GitContext context, GitWorkdirFactory workdirFactory) {
+    super(context);
     this.workdirFactory = workdirFactory;
   }
 

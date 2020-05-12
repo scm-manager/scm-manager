@@ -110,6 +110,6 @@ public class SvnBlameCommandTest extends AbstractSvnCommandTestBase
    */
   private SvnBlameCommand createCommand()
   {
-    return new SvnBlameCommand(createContext(), repository);
+    return new SvnBlameCommand(createContext());
   }
 }

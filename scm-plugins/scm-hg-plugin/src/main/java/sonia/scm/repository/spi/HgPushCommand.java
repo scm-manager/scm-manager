@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -32,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.PushResponse;
 
 import java.io.IOException;
@@ -58,15 +57,12 @@ public class HgPushCommand extends AbstractHgPushOrPullCommand
   /**
    * Constructs ...
    *
-   *
-   * @param handler
+   *  @param handler
    * @param context
-   * @param repository
    */
-  public HgPushCommand(HgRepositoryHandler handler, HgCommandContext context,
-    Repository repository)
+  public HgPushCommand(HgRepositoryHandler handler, HgCommandContext context)
   {
-    super(handler, context, repository);
+    super(handler, context);
   }
 
   //~--- methods --------------------------------------------------------------

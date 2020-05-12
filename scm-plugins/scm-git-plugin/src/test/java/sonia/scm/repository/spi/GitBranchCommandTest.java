@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.junit.Test;
@@ -107,11 +107,11 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitBranchCommand createCommand() {
-    return new GitBranchCommand(createContext(), repository, hookContextFactory, eventBus);
+    return new GitBranchCommand(createContext(), hookContextFactory, eventBus);
   }
 
   private List<Branch> readBranches(GitContext context) throws IOException {
-    return new GitBranchesCommand(context, repository).getBranches();
+    return new GitBranchesCommand(context).getBranches();
   }
 
   @Test

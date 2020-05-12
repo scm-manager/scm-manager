@@ -62,7 +62,7 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
     BranchRequest branchRequest = new BranchRequest();
     branchRequest.setNewBranch("new_branch");
 
-    Branch newBranch = new HgBranchCommand(cmdContext, repository, workdirFactory).branch(branchRequest);
+    Branch newBranch = new HgBranchCommand(cmdContext, workdirFactory).branch(branchRequest);
 
     assertThat(readBranches()).filteredOn(b -> b.getName().equals("new_branch")).isNotEmpty();
     assertThat(cmdContext.open().changeset(newBranch.getRevision()).getParent1().getBranch()).isEqualTo("default");
@@ -74,7 +74,7 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
     branchRequest.setParentBranch("test-branch");
     branchRequest.setNewBranch("new_branch");
 
-    Branch newBranch = new HgBranchCommand(cmdContext, repository, workdirFactory).branch(branchRequest);
+    Branch newBranch = new HgBranchCommand(cmdContext, workdirFactory).branch(branchRequest);
 
     assertThat(readBranches()).filteredOn(b -> b.getName().equals("new_branch")).isNotEmpty();
     assertThat(cmdContext.open().changeset(newBranch.getRevision()).getParent1().getBranch()).isEqualTo("test-branch");
@@ -84,7 +84,7 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
   public void shouldCloseBranch() {
     String branchToBeClosed = "test-branch";
 
-    new HgBranchCommand(cmdContext, repository, workdirFactory).deleteOrClose(branchToBeClosed);
+    new HgBranchCommand(cmdContext, workdirFactory).deleteOrClose(branchToBeClosed);
     assertThat(readBranches()).filteredOn(b -> b.getName().equals(branchToBeClosed)).isEmpty();
   }
 
@@ -92,11 +92,11 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
   public void shouldThrowInternalRepositoryException() {
     String branchToBeClosed = "default";
 
-    new HgBranchCommand(cmdContext, repository, workdirFactory).deleteOrClose(branchToBeClosed);
-    assertThrows(InternalRepositoryException.class, () -> new HgBranchCommand(cmdContext, repository, workdirFactory).deleteOrClose(branchToBeClosed));
+    new HgBranchCommand(cmdContext, workdirFactory).deleteOrClose(branchToBeClosed);
+    assertThrows(InternalRepositoryException.class, () -> new HgBranchCommand(cmdContext, workdirFactory).deleteOrClose(branchToBeClosed));
   }
 
   private List<Branch> readBranches() {
-    return new HgBranchesCommand(cmdContext, repository).getBranches();
+    return new HgBranchesCommand(cmdContext).getBranches();
   }
 }

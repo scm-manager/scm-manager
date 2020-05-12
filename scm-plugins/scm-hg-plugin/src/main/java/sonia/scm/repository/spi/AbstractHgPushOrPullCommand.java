@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -39,15 +39,12 @@ public class AbstractHgPushOrPullCommand extends AbstractCommand
   /**
    * Constructs ...
    *
-   *
-   * @param handler
+   *  @param handler
    * @param context
-   * @param repository
    */
-  protected AbstractHgPushOrPullCommand(HgRepositoryHandler handler,
-    HgCommandContext context, Repository repository)
+  protected AbstractHgPushOrPullCommand(HgRepositoryHandler handler, HgCommandContext context)
   {
-    super(context, repository);
+    super(context);
     this.handler = handler;
   }
 

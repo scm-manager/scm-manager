@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -77,14 +77,12 @@ class AbstractGitCommand
   /**
    * Constructs ...
    *
+   *  @param context
    *
-   * @param context
-   * @param repository
    */
-  AbstractGitCommand(GitContext context,
-                               sonia.scm.repository.Repository repository)
+  AbstractGitCommand(GitContext context)
   {
-    this.repository = repository;
+    this.repository = context.getRepository();
     this.context = context;
   }
 
