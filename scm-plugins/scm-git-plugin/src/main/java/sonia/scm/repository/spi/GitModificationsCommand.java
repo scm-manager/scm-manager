@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,6 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Modifications;
-import sonia.scm.repository.Repository;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -47,8 +46,8 @@ import static sonia.scm.ContextEntry.ContextBuilder.entity;
 @Slf4j
 public class GitModificationsCommand extends AbstractGitCommand implements ModificationsCommand {
 
-  protected GitModificationsCommand(GitContext context, Repository repository) {
-    super(context, repository);
+  protected GitModificationsCommand(GitContext context) {
+    super(context);
   }
 
   private Modifications createModifications(TreeWalk treeWalk, RevCommit commit, RevWalk revWalk, String revision)

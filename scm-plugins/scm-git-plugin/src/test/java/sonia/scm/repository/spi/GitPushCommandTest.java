@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -89,7 +89,6 @@ public class GitPushCommandTest extends AbstractRemoteCommandTestBase
    */
   private GitPushCommand createCommand()
   {
-    return new GitPushCommand(handler, new GitContext(outgoingDirectory, null, null),
-      outgoingRepository);
+    return new GitPushCommand(handler, new GitContext(outgoingDirectory, outgoingRepository, null));
   }
 }

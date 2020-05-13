@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.google.common.io.Closeables;
@@ -48,9 +48,9 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   //J-
   public static final Set<Command> COMMANDS = EnumSet.of(
     Command.BLAME,
-    Command.BROWSE, 
+    Command.BROWSE,
     Command.CAT,
-    Command.DIFF, 
+    Command.DIFF,
     Command.LOG,
     Command.TAGS,
     Command.BRANCH,
@@ -72,7 +72,6 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
                               HgHookManager hookManager, Repository repository)
   {
-    this.repository = repository;
     this.handler = handler;
     this.repositoryDirectory = handler.getDirectory(repository.getId());
     this.context = new HgCommandContext(hookManager, handler, repository,
@@ -104,7 +103,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public HgBlameCommand getBlameCommand()
   {
-    return new HgBlameCommand(context, repository);
+    return new HgBlameCommand(context);
   }
 
   /**
@@ -116,12 +115,12 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public BranchesCommand getBranchesCommand()
   {
-    return new HgBranchesCommand(context, repository);
+    return new HgBranchesCommand(context);
   }
 
   @Override
   public BranchCommand getBranchCommand() {
-    return new HgBranchCommand(context, repository, handler.getWorkdirFactory());
+    return new HgBranchCommand(context, handler.getWorkdirFactory());
   }
 
   /**
@@ -133,7 +132,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public HgBrowseCommand getBrowseCommand()
   {
-    return new HgBrowseCommand(context, repository);
+    return new HgBrowseCommand(context);
   }
 
   /**
@@ -145,7 +144,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public HgCatCommand getCatCommand()
   {
-    return new HgCatCommand(context, repository);
+    return new HgCatCommand(context);
   }
 
   /**
@@ -157,7 +156,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public HgDiffCommand getDiffCommand()
   {
-    return new HgDiffCommand(context, repository);
+    return new HgDiffCommand(context);
   }
 
   /**
@@ -169,7 +168,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public IncomingCommand getIncomingCommand()
   {
-    return new HgIncomingCommand(context, repository, handler);
+    return new HgIncomingCommand(context, handler);
   }
 
   /**
@@ -181,7 +180,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public HgLogCommand getLogCommand()
   {
-    return new HgLogCommand(context, repository);
+    return new HgLogCommand(context);
   }
 
   /**
@@ -192,7 +191,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
    */
   @Override
   public ModificationsCommand getModificationsCommand() {
-    return new HgModificationsCommand(context,repository);
+    return new HgModificationsCommand(context);
   }
 
   /**
@@ -204,7 +203,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public OutgoingCommand getOutgoingCommand()
   {
-    return new HgOutgoingCommand(context, repository, handler);
+    return new HgOutgoingCommand(context, handler);
   }
 
   /**
@@ -216,7 +215,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public PullCommand getPullCommand()
   {
-    return new HgPullCommand(handler, context, repository);
+    return new HgPullCommand(handler, context);
   }
 
   /**
@@ -228,7 +227,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public PushCommand getPushCommand()
   {
-    return new HgPushCommand(handler, context, repository);
+    return new HgPushCommand(handler, context);
   }
 
   @Override
@@ -269,7 +268,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public TagsCommand getTagsCommand()
   {
-    return new HgTagsCommand(context, repository);
+    return new HgTagsCommand(context);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -279,9 +278,6 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   private HgRepositoryHandler handler;
-
-  /** Field description */
-  private Repository repository;
 
   /** Field description */
   private File repositoryDirectory;

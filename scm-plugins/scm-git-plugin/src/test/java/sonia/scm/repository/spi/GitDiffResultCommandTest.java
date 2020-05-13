@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.junit.Test;
@@ -104,7 +104,7 @@ public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
   }
 
   private DiffResult createDiffResult(String s) throws IOException {
-    GitDiffResultCommand gitDiffResultCommand = new GitDiffResultCommand(createContext(), repository);
+    GitDiffResultCommand gitDiffResultCommand = new GitDiffResultCommand(createContext());
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision(s);
 

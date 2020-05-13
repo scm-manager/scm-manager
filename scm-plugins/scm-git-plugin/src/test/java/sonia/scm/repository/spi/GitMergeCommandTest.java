@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.github.sdorra.shiro.ShiroRule;
@@ -317,7 +317,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     assertThat(mergeAuthor.getName()).isEqualTo("Dirk Gently");
     assertThat(message).isEqualTo("squash three commits");
 
-    GitModificationsCommand modificationsCommand = new GitModificationsCommand(createContext(), repository);
+    GitModificationsCommand modificationsCommand = new GitModificationsCommand(createContext());
     List<String> changes = modificationsCommand.getModifications("master").getAdded();
     assertThat(changes.size()).isEqualTo(3);
   }
@@ -423,7 +423,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitMergeCommand createCommand(Consumer<Git> interceptor) {
-    return new GitMergeCommand(createContext(), repository, new SimpleGitWorkdirFactory(new WorkdirProvider())) {
+    return new GitMergeCommand(createContext(), new SimpleGitWorkdirFactory(new WorkdirProvider())) {
       @Override
       <R, W extends GitCloneWorker<R>> R inClone(Function<Git, W> workerSupplier, GitWorkdirFactory workdirFactory, String initialBranch) {
         Function<Git, W> interceptedWorkerSupplier = git -> {

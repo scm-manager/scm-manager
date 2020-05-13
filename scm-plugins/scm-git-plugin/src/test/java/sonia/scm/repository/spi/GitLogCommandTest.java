@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.google.common.io.Files;
@@ -180,7 +180,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("douglas.adams@hitchhiker.com", c.getAuthor().getMail());
     assertEquals("added a and b files", c.getDescription());
 
-    GitModificationsCommand gitModificationsCommand = new GitModificationsCommand(createContext(), repository);
+    GitModificationsCommand gitModificationsCommand = new GitModificationsCommand(createContext());
     Modifications modifications = gitModificationsCommand.getModifications(revision);
 
     assertNotNull(modifications);
@@ -279,6 +279,6 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
 
   private GitLogCommand createCommand()
   {
-    return new GitLogCommand(createContext(), repository);
+    return new GitLogCommand(createContext());
   }
 }

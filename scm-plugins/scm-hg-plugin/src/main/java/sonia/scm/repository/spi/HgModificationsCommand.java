@@ -21,17 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import sonia.scm.repository.Modifications;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 
 public class HgModificationsCommand extends AbstractCommand implements ModificationsCommand {
 
-  HgModificationsCommand(HgCommandContext context, Repository repository) {
-    super(context, repository);
+  HgModificationsCommand(HgCommandContext context) {
+    super(context);
   }
 
 

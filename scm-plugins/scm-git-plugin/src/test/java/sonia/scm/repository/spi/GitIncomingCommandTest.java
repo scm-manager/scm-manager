@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -32,7 +32,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.Repository;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.IOException;
@@ -82,7 +81,7 @@ public class GitIncomingCommandTest
     assertCommitsEquals(c1, cpr.getChangesets().get(0));
     assertCommitsEquals(c2, cpr.getChangesets().get(1));
   }
-  
+
     /**
    * Method description
    *
@@ -97,8 +96,8 @@ public class GitIncomingCommandTest
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 
     commit(outgoing, "added a");
-    
-    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory, null, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())), incomingRepository);
+
+    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())));
     PullCommandRequest req = new PullCommandRequest();
     req.setRemoteRepository(outgoingRepository);
     pull.pull(req);
@@ -182,7 +181,6 @@ public class GitIncomingCommandTest
    */
   private GitIncomingCommand createCommand()
   {
-    return new GitIncomingCommand(handler, new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())),
-      this.incomingRepository);
+    return new GitIncomingCommand(handler, new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())));
   }
 }

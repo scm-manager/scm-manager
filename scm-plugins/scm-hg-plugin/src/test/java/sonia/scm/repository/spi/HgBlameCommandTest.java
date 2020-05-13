@@ -111,6 +111,6 @@ public class HgBlameCommandTest extends AbstractHgCommandTestBase
    */
   private BlameCommand createCommand()
   {
-    return new HgBlameCommand(cmdContext, repository);
+    return new HgBlameCommand(cmdContext);
   }
 }
