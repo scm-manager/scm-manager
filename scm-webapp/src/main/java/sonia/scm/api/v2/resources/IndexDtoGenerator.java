@@ -38,6 +38,7 @@ import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.security.Authentications;
 import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.UserPermissions;
+import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
 import java.util.List;
