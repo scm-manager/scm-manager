@@ -24,13 +24,12 @@
 
 package sonia.scm.repository.work;
 
-import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryProvider;
 
 import java.io.File;
-import java.util.function.Supplier;
 
 public interface WorkingCopyPool {
-  <R, W, C extends Supplier<Repository>> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException;
+  <R, W, C extends RepositoryProvider> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException;
 
   void contextClosed(WorkingCopyContext<?, ?, ?> workingCopyContext, File workdir);
 

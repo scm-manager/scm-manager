@@ -24,12 +24,11 @@
 
 package sonia.scm.repository.work;
 
-import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.util.function.Supplier;
 
 public class NoneCachingWorkingCopyPool implements WorkingCopyPool {
 
@@ -41,7 +40,7 @@ public class NoneCachingWorkingCopyPool implements WorkingCopyPool {
   }
 
   @Override
-  public <R, W, C extends Supplier<Repository>> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException {
+  public <R, W, C extends RepositoryProvider> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException {
     return context.getInitializer().initialize(workdirProvider.createNewWorkdir(), context.getRequestedBranch());
   }
 

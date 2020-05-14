@@ -25,10 +25,9 @@
 package sonia.scm.repository.work;
 
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryProvider;
 
-import java.util.function.Supplier;
-
-public class WorkingCopyContext<R, W, C extends Supplier<Repository>> {
+public class WorkingCopyContext<R, W, C extends RepositoryProvider> {
   private final String requestedBranch;
   private final C context;
   private final SimpleWorkingCopyFactory.WorkingCopyInitializer<R, W> initializer;

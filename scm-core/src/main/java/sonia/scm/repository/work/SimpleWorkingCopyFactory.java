@@ -27,12 +27,11 @@ package sonia.scm.repository.work;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryProvider;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.File;
-import java.util.function.Supplier;
 
 /**
  * This class is responsible to govern the creation, the reuse and the destruction
@@ -180,7 +179,7 @@ SimpleGitWorkingCopyFactory->SimpleGitWorkingCopyFactory:closeRepository
 SimpleGitWorkingCopyFactory->WorkingCopyPool:contextClosed
 @enduml
 */
-public abstract class SimpleWorkingCopyFactory<R, W, C extends Supplier<Repository>> implements WorkingCopyFactory<R, W, C>, ServletContextListener {
+public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvider> implements WorkingCopyFactory<R, W, C>, ServletContextListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(SimpleWorkingCopyFactory.class);
 

@@ -28,14 +28,13 @@ import com.google.common.base.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
 
 public class CachingAllWorkingCopyPool implements WorkingCopyPool {
 
@@ -51,7 +50,7 @@ public class CachingAllWorkingCopyPool implements WorkingCopyPool {
   }
 
   @Override
-  public <R, W, C extends Supplier<Repository>> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> workingCopyContext) {
+  public <R, W, C extends RepositoryProvider> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> workingCopyContext) {
     String id = workingCopyContext.getScmRepository().getId();
     File existingWorkdir = workdirs.remove(id);
     if (existingWorkdir != null) {
@@ -66,13 +65,13 @@ public class CachingAllWorkingCopyPool implements WorkingCopyPool {
       }
     }
     try {
-      return createNewWorkdir(workingCopyContext);
+      return createNewWorkingCopy(workingCopyContext);
     } catch (WorkingCopyFailedException e) {
       throw new InternalRepositoryException(workingCopyContext.getScmRepository(), "failed to create working copy", e);
     }
   }
 
-  private  <R, W> ParentAndClone<R, W> createNewWorkdir(WorkingCopyContext<R, W, ?> workingCopyContext) throws WorkingCopyFailedException {
+  private  <R, W> ParentAndClone<R, W> createNewWorkingCopy(WorkingCopyContext<R, W, ?> workingCopyContext) throws WorkingCopyFailedException {
     Stopwatch stopwatch = Stopwatch.createStarted();
     File newWorkdir = workdirProvider.createNewWorkdir();
     SimpleWorkingCopyFactory.WorkingCopyInitializer<R, W> initializer = workingCopyContext.getInitializer();
@@ -96,9 +95,9 @@ public class CachingAllWorkingCopyPool implements WorkingCopyPool {
     workdirs.clear();
   }
 
-  private void deleteWorkdir(File existingWorkdir) {
-    if (existingWorkdir.exists()) {
-      IOUtil.deleteSilently(existingWorkdir);
+  private void deleteWorkdir(File workdir) {
+    if (workdir.exists()) {
+      IOUtil.deleteSilently(workdir);
     }
   }
 }

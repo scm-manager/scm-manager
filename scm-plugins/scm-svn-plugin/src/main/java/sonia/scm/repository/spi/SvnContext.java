@@ -24,30 +24,24 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
-
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.SvnUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
 import java.io.File;
-import java.util.function.Supplier;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SvnContext implements Closeable, Supplier<Repository> {
+public class SvnContext implements Closeable, RepositoryProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(SvnContext.class);
 

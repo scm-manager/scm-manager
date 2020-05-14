@@ -29,12 +29,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.util.IOUtil;
 
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -61,7 +61,7 @@ public class SimpleWorkingCopyFactoryTest {
     WorkdirProvider workdirProvider = new WorkdirProvider(temporaryFolder.newFolder());
     WorkingCopyPool configurableTestWorkingCopyPool = new WorkingCopyPool() {
       @Override
-      public <R, W, C extends Supplier<Repository>> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException {
+      public <R, W, C extends RepositoryProvider> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException {
         workdir = workdirProvider.createNewWorkdir();
         return context.getInitializer().initialize(workdir, context.getRequestedBranch());
       }
@@ -154,7 +154,7 @@ public class SimpleWorkingCopyFactoryTest {
     }
   }
 
-  private static class Context implements Supplier<Repository> {
+  private static class Context implements RepositoryProvider {
     @Override
     public Repository get() {
       return REPOSITORY;

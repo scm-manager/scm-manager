@@ -24,28 +24,23 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.RepositoryProvider;
 
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-import java.util.function.Supplier;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GitContext implements Closeable, Supplier<Repository>
+public class GitContext implements Closeable, RepositoryProvider
 {
 
   /**

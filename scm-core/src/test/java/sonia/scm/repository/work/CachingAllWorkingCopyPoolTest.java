@@ -32,14 +32,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryProvider;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -56,7 +55,7 @@ class CachingAllWorkingCopyPoolTest {
   CachingAllWorkingCopyPool cachingAllWorkingCopyPool;
 
   @Mock
-  WorkingCopyContext<Object, Path, Supplier<Repository>> workingCopyContext;
+  WorkingCopyContext<Object, Path, RepositoryProvider> workingCopyContext;
   @Mock
   SimpleWorkingCopyFactory.WorkingCopyInitializer<Object, Path> initializer;
   @Mock
