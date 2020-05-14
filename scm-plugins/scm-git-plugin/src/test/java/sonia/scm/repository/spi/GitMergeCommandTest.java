@@ -40,6 +40,7 @@ import org.junit.jupiter.api.Assertions;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.GitWorkdirFactory;
+import sonia.scm.repository.Modification;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeStrategy;
@@ -318,7 +319,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     assertThat(message).isEqualTo("squash three commits");
 
     GitModificationsCommand modificationsCommand = new GitModificationsCommand(createContext());
-    List<String> changes = modificationsCommand.getModifications("master").getAdded();
+    List<Modification.Added> changes = modificationsCommand.getModifications("master").getAdded();
     assertThat(changes.size()).isEqualTo(3);
   }
 

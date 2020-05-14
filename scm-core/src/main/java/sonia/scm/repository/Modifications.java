@@ -24,71 +24,74 @@
 
 package sonia.scm.repository;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
-import lombok.Setter;
+import lombok.Getter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
+
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 @EqualsAndHashCode
 @ToString
-@Setter
+@Getter
 public class Modifications implements Serializable {
 
   private static final long serialVersionUID = -8902033326668658140L;
-  private String revision;
 
-  /**
-   * lists of changed files
-   */
-  private List<String> added;
-  private List<String> modified;
-  private List<String> removed;
+  private final String revision;
+  private final Collection<Modification> modifications;
 
-  public Modifications() {
+  public Modifications(String revision, Modification... modifications) {
+    this(revision, asList(modifications));
   }
 
-  public Modifications(List<String> added) {
-    this(added, null, null);
+  public Modifications(String revision, Collection<Modification> modifications) {
+    this.revision = revision;
+    this.modifications = ImmutableList.copyOf(modifications);
   }
 
-  public Modifications(List<String> added, List<String> modified) {
-    this(added, modified, null);
+  public List<String> getEffectedPaths() {
+    return modifications.stream().map(Modification::getEffectedPath).collect(toList());
   }
 
-  public Modifications(List<String> added, List<String> modified, List<String> removed) {
-    this.added = added;
-    this.modified = modified;
-    this.removed = removed;
+  public List<Modification.Added> getAdded() {
+    return modifications.stream()
+      .filter(m -> m instanceof Modification.Added)
+      .map(m -> (Modification.Added) m)
+      .collect(toList());
   }
 
-  public List<String> getAdded() {
-    if (added == null) {
-      added = Lists.newArrayList();
-    }
-
-    return added;
+  public List<Modification.Removed> getRemoved() {
+    return modifications.stream()
+      .filter(m -> m instanceof Modification.Removed)
+      .map(m -> (Modification.Removed) m)
+      .collect(toList());
   }
 
-  public List<String> getModified() {
-    if (modified == null) {
-      modified = Lists.newArrayList();
-    }
-
-    return modified;
+  public List<Modification.Modified> getModified() {
+    return modifications.stream()
+      .filter(m -> m instanceof Modification.Modified)
+      .map(m -> (Modification.Modified) m)
+      .collect(toList());
   }
 
-  public List<String> getRemoved() {
-    if (removed == null) {
-      removed = Lists.newArrayList();
-    }
-
-    return removed;
+  public List<Modification.Renamed> getRenamed() {
+    return modifications.stream()
+      .filter(m -> m instanceof Modification.Renamed)
+      .map(m -> (Modification.Renamed) m)
+      .collect(toList());
   }
 
-  public String getRevision() {
-    return revision;
+  public List<Modification.Copied> getCopied() {
+    return modifications.stream()
+      .filter(m -> m instanceof Modification.Copied)
+      .map(m -> (Modification.Copied) m)
+      .collect(toList());
   }
 }

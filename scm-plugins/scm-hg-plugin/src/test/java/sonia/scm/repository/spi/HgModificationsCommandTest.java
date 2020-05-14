@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Changeset;
@@ -96,6 +96,7 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
       assertThat(modifications.getRemoved())
         .as("removed files modifications")
         .hasSize(1)
+        .extracting("path")
         .containsOnly(fileName);
     };
   }
@@ -110,6 +111,7 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
       assertThat(modifications.getModified())
         .as("modified files modifications")
         .hasSize(1)
+        .extracting("path")
         .containsOnly(file);
       assertThat(modifications.getRemoved())
         .as("removed files modifications")
@@ -123,6 +125,7 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
       assertThat(modifications.getAdded())
         .as("added files modifications")
         .hasSize(1)
+        .extracting("path")
         .containsOnly(addedFile);
       assertThat(modifications.getModified())
         .as("modified files modifications")

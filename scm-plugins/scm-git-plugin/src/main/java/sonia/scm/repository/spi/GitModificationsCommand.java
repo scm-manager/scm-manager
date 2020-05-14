@@ -34,10 +34,13 @@ import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.Modification;
 import sonia.scm.repository.Modifications;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -72,15 +75,14 @@ public class GitModificationsCommand extends AbstractGitCommand implements Modif
       treeWalk.addTree(new EmptyTreeIterator());
     }
     treeWalk.addTree(commit.getTree());
-    List<DiffEntry> entries = DiffEntry.scan(treeWalk);
-    Modifications modifications = new Modifications();
+    List<DiffEntry> entries = Differ.scanWithRename(context.open(), null, treeWalk);
+    Collection<Modification> modifications = new ArrayList<>();
     for (DiffEntry e : entries) {
-      if (!e.getOldId().equals(e.getNewId())) {
-        appendModification(modifications, e);
+      if (!e.getOldId().equals(e.getNewId()) || !e.getOldPath().equals(e.getNewPath())) {
+        modifications.add(asModification(e));
       }
     }
-    modifications.setRevision(revision);
-    return modifications;
+    return new Modifications(revision, modifications);
   }
 
   @Override
@@ -111,16 +113,19 @@ public class GitModificationsCommand extends AbstractGitCommand implements Modif
     return getModifications(request.getRevision());
   }
 
-  private void appendModification(Modifications modifications, DiffEntry entry) throws UnsupportedModificationTypeException {
+  private Modification asModification(DiffEntry entry) throws UnsupportedModificationTypeException {
     DiffEntry.ChangeType type = entry.getChangeType();
-    if (type == DiffEntry.ChangeType.ADD) {
-      modifications.getAdded().add(entry.getNewPath());
-    } else if (type == DiffEntry.ChangeType.MODIFY) {
-      modifications.getModified().add(entry.getNewPath());
-    } else if (type == DiffEntry.ChangeType.DELETE) {
-      modifications.getRemoved().add(entry.getOldPath());
-    } else {
-      throw new UnsupportedModificationTypeException(entity(repository), MessageFormat.format("The modification type: {0} is not supported.", type));
+    switch (type) {
+      case ADD:
+        return new Modification.Added(entry.getNewPath());
+      case MODIFY:
+        return new Modification.Modified(entry.getNewPath());
+      case DELETE:
+        return new Modification.Removed(entry.getOldPath());
+      case RENAME:
+        return new Modification.Renamed(entry.getOldPath(), entry.getNewPath());
+      default:
+        throw new UnsupportedModificationTypeException(entity(repository), MessageFormat.format("The modification type: {0} is not supported.", type));
     }
   }
 }
