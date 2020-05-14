@@ -33,7 +33,7 @@ import sonia.scm.api.v2.resources.HalAppender;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EdisonHalAppender implements HalAppender {
+public final class EdisonHalAppender implements HalAppender {
 
   private final Links.Builder linkBuilder;
   private final Embedded.Builder embeddedBuilder;
