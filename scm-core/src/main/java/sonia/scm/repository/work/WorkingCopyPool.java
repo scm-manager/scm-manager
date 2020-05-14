@@ -24,14 +24,12 @@
 
 package sonia.scm.repository.work;
 
-import sonia.scm.repository.RepositoryProvider;
-
 import java.io.File;
 
 public interface WorkingCopyPool {
-  <R, W, C extends RepositoryProvider> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context);
+  <R, W> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W> context);
 
-  void contextClosed(WorkingCopyContext<?, ?, ?> workingCopyContext, File workdir);
+  void contextClosed(WorkingCopyContext<?, ?> workingCopyContext, File workdir);
 
   void shutdown();
 
@@ -46,15 +44,15 @@ public interface WorkingCopyPool {
       this.directory = directory;
     }
 
-    public R getParent() {
+    R getParent() {
       return parent;
     }
 
-    public W getClone() {
+    W getClone() {
       return clone;
     }
 
-    public File getDirectory() {
+    File getDirectory() {
       return directory;
     }
   }

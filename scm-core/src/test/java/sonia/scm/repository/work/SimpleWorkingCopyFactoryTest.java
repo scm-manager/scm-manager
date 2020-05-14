@@ -61,13 +61,13 @@ public class SimpleWorkingCopyFactoryTest {
     WorkdirProvider workdirProvider = new WorkdirProvider(temporaryFolder.newFolder());
     WorkingCopyPool configurableTestWorkingCopyPool = new WorkingCopyPool() {
       @Override
-      public <R, W, C extends RepositoryProvider> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) {
+      public <R, W> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W> context) {
         workdir = workdirProvider.createNewWorkdir();
-        return context.getInitializer().initialize(workdir, context.getRequestedBranch());
+        return context.initialize(workdir);
       }
 
       @Override
-      public void contextClosed(WorkingCopyContext<?, ?, ?> createWorkdirContext, File workdir) {
+      public void contextClosed(WorkingCopyContext<?, ?> createWorkdirContext, File workdir) {
         if (!workdirIsCached) {
           IOUtil.deleteSilently(workdir);
         }

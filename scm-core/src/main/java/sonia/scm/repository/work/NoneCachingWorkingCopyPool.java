@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.work;
 
-import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
@@ -40,12 +39,12 @@ public class NoneCachingWorkingCopyPool implements WorkingCopyPool {
   }
 
   @Override
-  public <R, W, C extends RepositoryProvider> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) {
-    return context.getInitializer().initialize(workdirProvider.createNewWorkdir(), context.getRequestedBranch());
+  public <R, W> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W> context) {
+    return context.initialize(workdirProvider.createNewWorkdir());
   }
 
   @Override
-  public void contextClosed(WorkingCopyContext<?, ?, ?> workingCopyContext, File workdir) {
+  public void contextClosed(WorkingCopyContext<?, ?> workingCopyContext, File workdir) {
     IOUtil.deleteSilently(workdir);
   }
 

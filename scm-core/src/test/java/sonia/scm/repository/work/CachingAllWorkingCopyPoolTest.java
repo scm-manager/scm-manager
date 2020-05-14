@@ -32,7 +32,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryProvider;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -55,20 +54,14 @@ class CachingAllWorkingCopyPoolTest {
   CachingAllWorkingCopyPool cachingAllWorkingCopyPool;
 
   @Mock
-  WorkingCopyContext<Object, Path, RepositoryProvider> workingCopyContext;
-  @Mock
-  SimpleWorkingCopyFactory.WorkingCopyInitializer<Object, Path> initializer;
-  @Mock
-  SimpleWorkingCopyFactory.WorkingCopyReclaimer<Object, Path> reclaimer;
+  WorkingCopyContext<Object, Path> workingCopyContext;
 
   @BeforeEach
   void initContext() throws SimpleWorkingCopyFactory.ReclaimFailedException {
-    lenient().when(workingCopyContext.getInitializer()).thenReturn(initializer);
-    lenient().when(workingCopyContext.getReclaimer()).thenReturn(reclaimer);
 
-    lenient().when(initializer.initialize(any(), any()))
+    lenient().when(workingCopyContext.initialize(any()))
       .thenAnswer(invocationOnMock -> new WorkingCopyPool.ParentAndClone<>(null, null, invocationOnMock.getArgument(0, File.class)));
-    lenient().when(reclaimer.reclaim(any(), any()))
+    lenient().when(workingCopyContext.reclaim(any()))
       .thenAnswer(invocationOnMock -> new WorkingCopyPool.ParentAndClone<>(null, null, invocationOnMock.getArgument(0, File.class)));
   }
 
@@ -79,7 +72,7 @@ class CachingAllWorkingCopyPoolTest {
 
     WorkingCopyPool.ParentAndClone<?, ?> workdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
 
-    verify(initializer).initialize(temp.toFile(), null);
+    verify(workingCopyContext).initialize(temp.toFile());
   }
 
   @Test
@@ -91,8 +84,8 @@ class CachingAllWorkingCopyPoolTest {
     cachingAllWorkingCopyPool.contextClosed(workingCopyContext, firstWorkdir.getDirectory());
     WorkingCopyPool.ParentAndClone<?, ?> secondWorkdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
 
-    verify(initializer).initialize(temp.toFile(), null);
-    verify(reclaimer).reclaim(temp.toFile(), null);
+    verify(workingCopyContext).initialize(temp.toFile());
+    verify(workingCopyContext).reclaim(temp.toFile());
     assertThat(secondWorkdir.getDirectory()).isEqualTo(temp.toFile());
   }
 
@@ -112,9 +105,9 @@ class CachingAllWorkingCopyPoolTest {
     cachingAllWorkingCopyPool.contextClosed(workingCopyContext, firstWorkdir.getDirectory());
     cachingAllWorkingCopyPool.contextClosed(workingCopyContext, secondWorkdir.getDirectory());
 
-    verify(reclaimer, never()).reclaim(any(), any());
-    verify(initializer).initialize(firstDirectory, null);
-    verify(initializer).initialize(secondDirectory, null);
+    verify(workingCopyContext, never()).reclaim(any());
+    verify(workingCopyContext).initialize(firstDirectory);
+    verify(workingCopyContext).initialize(secondDirectory);
     assertThat(firstWorkdir.getDirectory()).isNotEqualTo(secondWorkdir.getDirectory());
     assertThat(firstWorkdir.getDirectory()).exists();
     assertThat(secondWorkdir.getDirectory()).doesNotExist();
