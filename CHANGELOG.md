@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Handle obscure line breaks in diff viewer ([#1129](https://github.com/scm-manager/scm-manager/pull/1129))
 - Validate subversion client checksum ([#1113](https://github.com/scm-manager/scm-manager/issues/1113))
 - Fix plugin manage permission ([#1135](https://github.com/scm-manager/scm-manager/pull/1135))
+- Correctly resolve Links in markdown files ([#1152](https://github.com/scm-manager/scm-manager/pull/1152))
 
 ## [2.0.0-rc7] - 2020-04-09
 ### Added
