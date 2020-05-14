@@ -66,7 +66,9 @@ class Changesets extends React.Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
-    return this.props.changesets !== nextProps.changesets;
+    return this.props.changesets !== nextProps.changesets ||
+      this.props.loading !== nextProps.loading ||
+      this.props.error !== nextProps.error;
   }
 
   render() {
