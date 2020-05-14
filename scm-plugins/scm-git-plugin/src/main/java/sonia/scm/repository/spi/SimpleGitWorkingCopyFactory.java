@@ -26,17 +26,13 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitWorkingCopyFactory;
-import sonia.scm.repository.work.WorkingCopyPool;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
+import sonia.scm.repository.work.WorkingCopyPool;
 import sonia.scm.util.SystemUtil;
 
 import javax.inject.Inject;
 import java.io.File;
-
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 public class SimpleGitWorkingCopyFactory extends SimpleWorkingCopyFactory<Repository, Repository, GitContext> implements GitWorkingCopyFactory {
 
@@ -46,13 +42,13 @@ public class SimpleGitWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposi
   }
 
   @Override
-  public WorkingCopyInitializer<Repository, Repository> getInitializer(GitContext context) {
-    return new GitWorkingCopyInitializer(this, context);
+  public ParentAndClone<Repository, Repository> initialize(GitContext context, File target, String initialBranch) {
+    return new GitWorkingCopyInitializer(this, context).initialize(target, initialBranch);
   }
 
   @Override
-  protected WorkingCopyReclaimer<Repository, Repository> getReclaimer(GitContext context) {
-    return new GitWorkingCopyReclaimer(context);
+  public ParentAndClone<Repository, Repository> reclaim(GitContext context, File target, String initialBranch) throws SimpleWorkingCopyFactory.ReclaimFailedException {
+    return new GitWorkingCopyReclaimer(context).reclaim(target, initialBranch);
   }
 
   String createScmTransportProtocolUri(File bareRepository) {

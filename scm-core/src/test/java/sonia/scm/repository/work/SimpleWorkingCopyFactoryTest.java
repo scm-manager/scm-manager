@@ -84,22 +84,19 @@ public class SimpleWorkingCopyFactoryTest {
       }
 
       @Override
-      protected WorkingCopyReclaimer<
-        Closeable, Closeable> getReclaimer(Context context) {
-        return (target, initialBranch) -> {throw new UnsupportedOperationException();};
+      protected ParentAndClone<Closeable, Closeable> initialize(Context context, File target, String initialBranch) {
+        initialBranchForLastCloneCall = initialBranch;
+        return new ParentAndClone<>(parent, clone, target);
+      }
+
+      @Override
+      protected ParentAndClone<Closeable, Closeable> reclaim(Context context, File target, String initialBranch) throws ReclaimFailedException {
+        throw new UnsupportedOperationException();
       }
 
       @Override
       protected void closeWorkingCopy(Closeable workingCopy) throws Exception {
         workingCopy.close();
-      }
-
-      @Override
-      protected WorkingCopyInitializer<Closeable, Closeable> getInitializer(Context context) {
-        return (target, initialBranch) -> {
-          initialBranchForLastCloneCall = initialBranch;
-          return new ParentAndClone<>(parent, clone, target);
-        };
       }
     };
   }

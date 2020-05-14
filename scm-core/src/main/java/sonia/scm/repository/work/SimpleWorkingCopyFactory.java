@@ -41,10 +41,10 @@ import java.io.File;
  * implemented:
  *
  * <dl>
- *   <dt>{@link #getInitializer(C)}</dt>
+ *   <dt>{@link #initialize(C, File, String)}</dt>
  *   <dd>Creates a new clone of the repository for the given context in the given
  *     directory with the given branch checked out (if branches are supported).</dd>
- *   <dt>{@link #getReclaimer(C)}</dt>
+ *   <dt>{@link #reclaim(C, File, String)}</dt>
  *   <dd>Reclaim the working directory with a already checked out clone of the
  *     repository given in the context, so that the directory is not modified in
  *     respect to the repository and the given branch is checked out (if branches
@@ -215,19 +215,9 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvide
     // nothing to do
   }
 
-  @FunctionalInterface
-  public interface WorkingCopyInitializer<R, W> {
-    ParentAndClone<R, W> initialize(File target, String initialBranch);
-  }
+  protected abstract ParentAndClone<R, W> initialize(C context, File target, String initialBranch);
 
-  @FunctionalInterface
-  public interface WorkingCopyReclaimer<R, W> {
-    ParentAndClone<R, W> reclaim(File target, String initialBranch) throws ReclaimFailedException;
-  }
-
-  protected abstract WorkingCopyInitializer<R, W> getInitializer(C context);
-
-  protected abstract WorkingCopyReclaimer<R, W> getReclaimer(C context);
+  protected abstract ParentAndClone<R, W> reclaim(C context, File target, String initialBranch) throws ReclaimFailedException;
 
   @SuppressWarnings("squid:S00112")
   // We do allow implementations to throw arbitrary exceptions here, so that we can handle them in closeCentral
@@ -289,11 +279,11 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvide
     }
 
     public WorkingCopy<R, W> reclaim(File workdir) throws SimpleWorkingCopyFactory.ReclaimFailedException {
-      return createWorkingCopyFromParentAndClone(getReclaimer(repositoryContext).reclaim(workdir, requestedBranch));
+      return createWorkingCopyFromParentAndClone(SimpleWorkingCopyFactory.this.reclaim(repositoryContext, workdir, requestedBranch));
     }
 
     public WorkingCopy<R, W> initialize(File workdir) {
-      return createWorkingCopyFromParentAndClone(getInitializer(repositoryContext).initialize(workdir, requestedBranch));
+      return createWorkingCopyFromParentAndClone(SimpleWorkingCopyFactory.this.initialize(repositoryContext, workdir, requestedBranch));
     }
 
     public WorkingCopy<R, W> createWorkingCopyFromParentAndClone(ParentAndClone<R, W> parentAndClone) {

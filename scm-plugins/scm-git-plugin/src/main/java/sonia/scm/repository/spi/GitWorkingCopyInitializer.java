@@ -32,7 +32,6 @@ import org.eclipse.jgit.lib.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.work.SimpleWorkingCopyFactory;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory.ParentAndClone;
 
 import java.io.File;
@@ -41,7 +40,7 @@ import java.io.IOException;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
-class GitWorkingCopyInitializer implements SimpleWorkingCopyFactory.WorkingCopyInitializer<Repository, Repository> {
+class GitWorkingCopyInitializer {
 
   private static final Logger LOG = LoggerFactory.getLogger(GitWorkingCopyInitializer.class);
 
@@ -53,7 +52,6 @@ class GitWorkingCopyInitializer implements SimpleWorkingCopyFactory.WorkingCopyI
     this.context = context;
   }
 
-  @Override
   public ParentAndClone<Repository, Repository> initialize(File target, String initialBranch) {
     LOG.trace("clone repository {}", context.getRepository().getId());
     long start = System.nanoTime();

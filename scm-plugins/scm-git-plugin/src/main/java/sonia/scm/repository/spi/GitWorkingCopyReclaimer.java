@@ -37,7 +37,7 @@ import sonia.scm.repository.work.SimpleWorkingCopyFactory.ParentAndClone;
 import java.io.File;
 import java.io.IOException;
 
-class GitWorkingCopyReclaimer implements SimpleWorkingCopyFactory.WorkingCopyReclaimer<Repository, Repository> {
+class GitWorkingCopyReclaimer {
 
   private static final Logger LOG = LoggerFactory.getLogger(GitWorkingCopyReclaimer.class);
 
@@ -47,7 +47,6 @@ class GitWorkingCopyReclaimer implements SimpleWorkingCopyFactory.WorkingCopyRec
     this.context = context;
   }
 
-  @Override
   public ParentAndClone<Repository, Repository> reclaim(File target, String initialBranch) throws SimpleWorkingCopyFactory.ReclaimFailedException {
     LOG.trace("reclaim repository {}", context.getRepository().getId());
     long start = System.nanoTime();

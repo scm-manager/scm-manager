@@ -34,15 +34,14 @@ import java.io.File;
 
 import static org.tmatesoft.svn.core.SVNDepth.INFINITY;
 
-class SvnWorkingCopyReclaimer implements SimpleWorkingCopyFactory.WorkingCopyReclaimer<File, File> {
+class SvnWorkingCopyReclaimer {
   private final SvnContext context;
 
   public SvnWorkingCopyReclaimer(SvnContext context) {
     this.context = context;
   }
 
-  @Override
-  public ParentAndClone<File, File> reclaim(File target, String initialBranch) throws SimpleWorkingCopyFactory.ReclaimFailedException {
+  public ParentAndClone<File, File> reclaim(File target) throws SimpleWorkingCopyFactory.ReclaimFailedException {
     SVNClientManager clientManager = SVNClientManager.newInstance();
     try {
       clientManager.getWCClient().doRevert(new File[] {target}, INFINITY, null);

@@ -142,7 +142,7 @@ public class SimpleGitWorkingCopyFactoryTest extends AbstractGitCommandTestBase 
     SimpleGitWorkingCopyFactory factory = new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
     File workdir = createExistingClone(factory);
 
-    factory.getReclaimer(createContext()).reclaim(workdir, "master");
+    factory.reclaim(createContext(), workdir, "master");
 
     assertBranchCheckedOutAndClean(workdir, "master");
   }
@@ -152,7 +152,7 @@ public class SimpleGitWorkingCopyFactoryTest extends AbstractGitCommandTestBase 
     SimpleGitWorkingCopyFactory factory = new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
     File workdir = createExistingClone(factory);
 
-    factory.getReclaimer(createContext()).reclaim(workdir, "test-branch");
+    factory.reclaim(createContext(), workdir, "test-branch");
 
     assertBranchCheckedOutAndClean(workdir, "test-branch");
   }
@@ -163,7 +163,7 @@ public class SimpleGitWorkingCopyFactoryTest extends AbstractGitCommandTestBase 
     File workdir = createExistingClone(factory);
     Git.open(workdir).rm().addFilepattern("a.txt").call();
 
-    factory.getReclaimer(createContext()).reclaim(workdir, "master");
+    factory.reclaim(createContext(), workdir, "master");
 
     assertBranchCheckedOutAndClean(workdir, "master");
   }
@@ -174,7 +174,7 @@ public class SimpleGitWorkingCopyFactoryTest extends AbstractGitCommandTestBase 
     File workdir = createExistingClone(factory);
     Files.delete(workdir.toPath().resolve("a.txt"));
 
-    factory.getReclaimer(createContext()).reclaim(workdir, "master");
+    factory.reclaim(createContext(), workdir, "master");
 
     assertBranchCheckedOutAndClean(workdir, "master");
   }
@@ -187,7 +187,7 @@ public class SimpleGitWorkingCopyFactoryTest extends AbstractGitCommandTestBase 
     Files.createDirectories(newDirectory);
     Files.createFile(newDirectory.resolve("newFile"));
 
-    factory.getReclaimer(createContext()).reclaim(workdir, "master");
+    factory.reclaim(createContext(), workdir, "master");
 
     assertBranchCheckedOutAndClean(workdir, "master");
   }

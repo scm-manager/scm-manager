@@ -25,8 +25,8 @@
 package sonia.scm.repository.spi;
 
 import sonia.scm.repository.SvnWorkingCopyFactory;
-import sonia.scm.repository.work.WorkingCopyPool;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
+import sonia.scm.repository.work.WorkingCopyPool;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -39,13 +39,13 @@ public class SimpleSvnWorkingCopyFactory extends SimpleWorkingCopyFactory<File, 
   }
 
   @Override
-  protected WorkingCopyInitializer<File, File> getInitializer(SvnContext context) {
-    return new SvnWorkingCopyInitializer(context);
+  protected ParentAndClone<File, File> initialize(SvnContext context, File workingCopy, String initialBranch) {
+    return new SvnWorkingCopyInitializer(context).initialize(workingCopy);
   }
 
   @Override
-  protected WorkingCopyReclaimer<File, File> getReclaimer(SvnContext context) {
-    return new SvnWorkingCopyReclaimer(context);
+  protected ParentAndClone<File, File> reclaim(SvnContext context, File target, String initialBranch) throws SimpleWorkingCopyFactory.ReclaimFailedException {
+    return new SvnWorkingCopyReclaimer(context).reclaim(target);
   }
 
   @Override
