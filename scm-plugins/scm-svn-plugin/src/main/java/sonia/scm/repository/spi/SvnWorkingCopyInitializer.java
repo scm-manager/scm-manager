@@ -31,7 +31,6 @@ import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
 import org.tmatesoft.svn.core.wc2.SvnTarget;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
-import sonia.scm.repository.work.WorkingCopyFailedException;
 import sonia.scm.repository.work.WorkingCopyPool;
 
 import java.io.File;
@@ -44,7 +43,7 @@ class SvnWorkingCopyInitializer implements SimpleWorkingCopyFactory.WorkingCopyI
   }
 
   @Override
-  public WorkingCopyPool.ParentAndClone<File, File> initialize(File workingCopy, String initialBranch) throws WorkingCopyFailedException {
+  public WorkingCopyPool.ParentAndClone<File, File> initialize(File workingCopy, String initialBranch) {
     final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
 
     SVNURL source;

@@ -62,7 +62,7 @@ class CachingAllWorkingCopyPoolTest {
   SimpleWorkingCopyFactory.WorkingCopyReclaimer<Object, Path> reclaimer;
 
   @BeforeEach
-  void initContext() throws SimpleWorkingCopyFactory.ReclaimFailedException, WorkingCopyFailedException {
+  void initContext() throws SimpleWorkingCopyFactory.ReclaimFailedException {
     lenient().when(workingCopyContext.getInitializer()).thenReturn(initializer);
     lenient().when(workingCopyContext.getReclaimer()).thenReturn(reclaimer);
 
@@ -73,7 +73,7 @@ class CachingAllWorkingCopyPoolTest {
   }
 
   @Test
-  void shouldCreateNewWorkdirForTheFirstRequest(@TempDir Path temp) throws WorkingCopyFailedException {
+  void shouldCreateNewWorkdirForTheFirstRequest(@TempDir Path temp) {
     when(workingCopyContext.getScmRepository()).thenReturn(REPOSITORY);
     when(workdirProvider.createNewWorkdir()).thenReturn(temp.toFile());
 
@@ -83,7 +83,7 @@ class CachingAllWorkingCopyPoolTest {
   }
 
   @Test
-  void shouldCreateWorkdirOnlyOnceForTheSameRepository(@TempDir Path temp) throws SimpleWorkingCopyFactory.ReclaimFailedException, WorkingCopyFailedException {
+  void shouldCreateWorkdirOnlyOnceForTheSameRepository(@TempDir Path temp) throws SimpleWorkingCopyFactory.ReclaimFailedException {
     when(workingCopyContext.getScmRepository()).thenReturn(REPOSITORY);
     when(workdirProvider.createNewWorkdir()).thenReturn(temp.toFile());
 
@@ -97,7 +97,7 @@ class CachingAllWorkingCopyPoolTest {
   }
 
   @Test
-  void shouldCacheOnlyOneWorkdirForRepository(@TempDir Path temp) throws SimpleWorkingCopyFactory.ReclaimFailedException, WorkingCopyFailedException {
+  void shouldCacheOnlyOneWorkdirForRepository(@TempDir Path temp) throws SimpleWorkingCopyFactory.ReclaimFailedException {
     when(workingCopyContext.getScmRepository()).thenReturn(REPOSITORY);
     File firstDirectory = temp.resolve("first").toFile();
     firstDirectory.mkdirs();

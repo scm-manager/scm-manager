@@ -33,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
-import sonia.scm.repository.work.WorkingCopyFailedException;
 import sonia.scm.repository.work.WorkingCopyPool;
 
 import java.io.File;
@@ -55,7 +54,7 @@ class GitWorkingCopyInitializer implements SimpleWorkingCopyFactory.WorkingCopyI
   }
 
   @Override
-  public WorkingCopyPool.ParentAndClone<Repository, Repository> initialize(File target, String initialBranch) throws WorkingCopyFailedException {
+  public WorkingCopyPool.ParentAndClone<Repository, Repository> initialize(File target, String initialBranch) {
     LOG.trace("clone repository {}", context.getRepository().getId());
     long start = System.nanoTime();
     try {

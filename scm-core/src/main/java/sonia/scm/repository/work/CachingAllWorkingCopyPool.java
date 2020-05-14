@@ -27,7 +27,6 @@ package sonia.scm.repository.work;
 import com.google.common.base.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.util.IOUtil;
 
@@ -64,14 +63,10 @@ public class CachingAllWorkingCopyPool implements WorkingCopyPool {
         deleteWorkdir(existingWorkdir);
       }
     }
-    try {
-      return createNewWorkingCopy(workingCopyContext);
-    } catch (WorkingCopyFailedException e) {
-      throw new InternalRepositoryException(workingCopyContext.getScmRepository(), "failed to create working copy", e);
-    }
+    return createNewWorkingCopy(workingCopyContext);
   }
 
-  private  <R, W> ParentAndClone<R, W> createNewWorkingCopy(WorkingCopyContext<R, W, ?> workingCopyContext) throws WorkingCopyFailedException {
+  private <R, W> ParentAndClone<R, W> createNewWorkingCopy(WorkingCopyContext<R, W, ?> workingCopyContext) {
     Stopwatch stopwatch = Stopwatch.createStarted();
     File newWorkdir = workdirProvider.createNewWorkdir();
     SimpleWorkingCopyFactory.WorkingCopyInitializer<R, W> initializer = workingCopyContext.getInitializer();

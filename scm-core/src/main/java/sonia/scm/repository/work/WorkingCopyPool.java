@@ -29,7 +29,7 @@ import sonia.scm.repository.RepositoryProvider;
 import java.io.File;
 
 public interface WorkingCopyPool {
-  <R, W, C extends RepositoryProvider> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException;
+  <R, W, C extends RepositoryProvider> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context);
 
   void contextClosed(WorkingCopyContext<?, ?, ?> workingCopyContext, File workdir);
 

@@ -61,7 +61,7 @@ public class SimpleWorkingCopyFactoryTest {
     WorkdirProvider workdirProvider = new WorkdirProvider(temporaryFolder.newFolder());
     WorkingCopyPool configurableTestWorkingCopyPool = new WorkingCopyPool() {
       @Override
-      public <R, W, C extends RepositoryProvider> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) throws WorkingCopyFailedException {
+      public <R, W, C extends RepositoryProvider> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W, C> context) {
         workdir = workdirProvider.createNewWorkdir();
         return context.getInitializer().initialize(workdir, context.getRequestedBranch());
       }

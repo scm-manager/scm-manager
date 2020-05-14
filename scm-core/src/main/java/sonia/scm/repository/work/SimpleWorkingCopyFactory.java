@@ -191,13 +191,9 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvide
 
   @Override
   public WorkingCopy<R, W> createWorkingCopy(C repositoryContext, String initialBranch) {
-    try {
-      WorkingCopyContext<R, W, C> workingCopyContext = createWorkingCopyContext(repositoryContext, initialBranch);
-      WorkingCopyPool.ParentAndClone<R, W> parentAndClone = workingCopyPool.getWorkingCopy(workingCopyContext);
-      return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), () -> this.close(workingCopyContext, parentAndClone), parentAndClone.getDirectory());
-    } catch (WorkingCopyFailedException e) {
-      throw new InternalRepositoryException(repositoryContext.get(), "could not create working copy for repository in temporary directory", e);
-    }
+    WorkingCopyContext<R, W, C> workingCopyContext = createWorkingCopyContext(repositoryContext, initialBranch);
+    WorkingCopyPool.ParentAndClone<R, W> parentAndClone = workingCopyPool.getWorkingCopy(workingCopyContext);
+    return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), () -> this.close(workingCopyContext, parentAndClone), parentAndClone.getDirectory());
   }
 
   private WorkingCopyContext<R, W, C> createWorkingCopyContext(C repositoryContext, String initialBranch) {
@@ -239,7 +235,7 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvide
 
   @FunctionalInterface
   public interface WorkingCopyInitializer<R, W> {
-    WorkingCopyPool.ParentAndClone<R, W> initialize(File target, String initialBranch) throws WorkingCopyFailedException;
+    WorkingCopyPool.ParentAndClone<R, W> initialize(File target, String initialBranch);
   }
 
   @FunctionalInterface

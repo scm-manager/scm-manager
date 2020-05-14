@@ -32,8 +32,8 @@ import com.aragost.javahg.commands.PullCommand;
 import com.aragost.javahg.commands.StatusCommand;
 import com.aragost.javahg.commands.UpdateCommand;
 import com.aragost.javahg.commands.flags.CloneCommandFlags;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
-import sonia.scm.repository.work.WorkingCopyFailedException;
 import sonia.scm.repository.work.WorkingCopyPool;
 import sonia.scm.repository.work.WorkingCopyPool.ParentAndClone;
 import sonia.scm.util.IOUtil;
@@ -66,7 +66,7 @@ public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposit
       try {
         cloneCommand.execute(target.getAbsolutePath());
       } catch (IOException e) {
-        throw new WorkingCopyFailedException(e);
+        throw new InternalRepositoryException(context.getScmRepository(), "could not clone repository", e);
       }
 
       BaseRepository clone = Repository.open(target);
@@ -108,7 +108,7 @@ public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposit
   }
 
   @Override
-  protected void closeWorkingCopy(Repository workingCopy) throws Exception {
+  protected void closeWorkingCopy(Repository workingCopy) {
     workingCopy.close();
   }
 
