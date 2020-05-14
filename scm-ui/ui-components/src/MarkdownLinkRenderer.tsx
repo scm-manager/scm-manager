@@ -74,7 +74,7 @@ export function correctLocalLink(pathname: string, link: string) {
   return base + path;
 }
 function MarkdownLinkRenderer(props: Props) {
-  const compositeUrl = withContextPath(correctLocalLink(props.location.pathname, props.href));
+  const compositeUrl = correctLocalLink(withContextPath(props.location.pathname), props.href);
   return <a href={compositeUrl}>{props.children}</a>;
 }
 
