@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Changeset;
@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.util.WorkingCopy;
 import sonia.scm.user.User;
@@ -48,8 +47,8 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
 
   private final HgWorkdirFactory workdirFactory;
 
-  HgBranchCommand(HgCommandContext context, Repository repository, HgWorkdirFactory workdirFactory) {
-    super(context, repository);
+  HgBranchCommand(HgCommandContext context, HgWorkdirFactory workdirFactory) {
+    super(context);
     this.workdirFactory = workdirFactory;
   }
 

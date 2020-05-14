@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.hamcrest.BaseMatcher;
@@ -46,7 +46,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link GitCatCommand}.
- * 
+ *
  * TODO add not found test
  *
  * @author Sebastian Sdorra
@@ -61,9 +61,9 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
     // without default branch, the repository head should be used
     CatCommandRequest request = new CatCommandRequest();
     request.setPath("a.txt");
-    
+
     assertEquals("a\nline for blame", execute(request));
-    
+
     // set default branch for repository and check again
     createContext().setConfig(new GitRepositoryConfig("test-branch"));
     assertEquals("a and b", execute(request));
@@ -134,7 +134,7 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
     CatCommandRequest request = new CatCommandRequest();
     request.setPath("b.txt");
 
-    InputStream catResultStream = new GitCatCommand(createContext(), repository, null).getCatResultStream(request);
+    InputStream catResultStream = new GitCatCommand(createContext(), null).getCatResultStream(request);
 
     assertEquals('b', catResultStream.read());
     assertEquals('\n', catResultStream.read());
@@ -157,7 +157,7 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
     request.setRevision("lfs-test");
     request.setPath("lfs-image.png");
 
-    InputStream catResultStream = new GitCatCommand(createContext(), repository, lfsBlobStoreFactory)
+    InputStream catResultStream = new GitCatCommand(createContext(), lfsBlobStoreFactory)
       .getCatResultStream(request);
 
     assertEquals('i', catResultStream.read());
@@ -174,8 +174,7 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase {
 
     try
     {
-      new GitCatCommand(createContext(), repository, null).getCatResult(request,
-                        baos);
+      new GitCatCommand(createContext(), null).getCatResult(request, baos);
     }
     finally
     {

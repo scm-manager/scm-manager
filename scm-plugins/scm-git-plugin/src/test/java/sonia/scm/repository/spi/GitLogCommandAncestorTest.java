@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.junit.Test;
@@ -110,6 +110,6 @@ public class GitLogCommandAncestorTest extends AbstractGitCommandTestBase
 
   private GitLogCommand createCommand()
   {
-    return new GitLogCommand(createContext(), repository);
+    return new GitLogCommand(createContext());
   }
 }

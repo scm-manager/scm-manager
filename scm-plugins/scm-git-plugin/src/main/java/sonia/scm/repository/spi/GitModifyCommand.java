@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.google.common.util.concurrent.Striped;
@@ -53,8 +53,8 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
   private final GitWorkdirFactory workdirFactory;
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
-  GitModifyCommand(GitContext context, Repository repository, GitWorkdirFactory workdirFactory, LfsBlobStoreFactory lfsBlobStoreFactory) {
-    super(context, repository);
+  GitModifyCommand(GitContext context, GitWorkdirFactory workdirFactory, LfsBlobStoreFactory lfsBlobStoreFactory) {
+    super(context);
     this.workdirFactory = workdirFactory;
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
   }

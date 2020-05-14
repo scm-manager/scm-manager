@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.hamcrest.BaseMatcher;
@@ -111,7 +111,7 @@ public class SvnCatCommandTest extends AbstractSvnCommandTestBase {
     request.setPath("a.txt");
     request.setRevision("1");
 
-    InputStream catResultStream = new SvnCatCommand(createContext(), repository).getCatResultStream(request);
+    InputStream catResultStream = new SvnCatCommand(createContext()).getCatResultStream(request);
 
     assertEquals('a', catResultStream.read());
     assertEquals('\n', catResultStream.read());
@@ -126,8 +126,7 @@ public class SvnCatCommandTest extends AbstractSvnCommandTestBase {
 
     try
     {
-      new SvnCatCommand(createContext(), repository).getCatResult(request,
-                        baos);
+      new SvnCatCommand(createContext()).getCatResult(request, baos);
     }
     finally
     {

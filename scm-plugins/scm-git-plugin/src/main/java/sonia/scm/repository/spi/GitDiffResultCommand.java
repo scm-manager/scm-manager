@@ -21,14 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffFile;
 import sonia.scm.repository.api.DiffResult;
 import sonia.scm.repository.api.Hunk;
@@ -40,8 +39,8 @@ import java.util.stream.Collectors;
 
 public class GitDiffResultCommand extends AbstractGitCommand implements DiffResultCommand {
 
-  GitDiffResultCommand(GitContext context, Repository repository) {
-    super(context, repository);
+  GitDiffResultCommand(GitContext context) {
+    super(context);
   }
 
   public DiffResult getDiffResult(DiffCommandRequest diffCommandRequest) throws IOException {

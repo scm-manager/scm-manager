@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.Git;
@@ -36,7 +36,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.GitRepositoryConfig;
-import sonia.scm.repository.Repository;
 
 import java.io.IOException;
 import java.util.List;
@@ -73,7 +72,7 @@ class GitBranchesCommandTest {
   @BeforeEach
   void initCommand() {
     master = createRef("master", "0000");
-    branchesCommand = new GitBranchesCommand(context, new Repository("1", "git", "space", "X")) {
+    branchesCommand = new GitBranchesCommand(context) {
       @Override
       Git createGit() {
         return git;

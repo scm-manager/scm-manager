@@ -32,6 +32,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Tag;
+import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
 

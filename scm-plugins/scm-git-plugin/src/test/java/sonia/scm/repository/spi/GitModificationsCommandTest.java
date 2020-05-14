@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -42,8 +42,8 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
 
   @Before
   public void init() {
-    incomingModificationsCommand = new GitModificationsCommand(new GitContext(incomingDirectory, null, null), incomingRepository);
-    outgoingModificationsCommand = new GitModificationsCommand(new GitContext(outgoingDirectory, null, null), outgoingRepository);
+    incomingModificationsCommand = new GitModificationsCommand(new GitContext(incomingDirectory, incomingRepository, null));
+    outgoingModificationsCommand = new GitModificationsCommand(new GitContext(outgoingDirectory, outgoingRepository, null));
   }
 
   @Test
@@ -87,13 +87,11 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
   }
 
   void pushOutgoingAndPullIncoming() throws IOException {
-    GitPushCommand cmd = new GitPushCommand(handler, new GitContext(outgoingDirectory, null, null),
-      outgoingRepository);
+    GitPushCommand cmd = new GitPushCommand(handler, new GitContext(outgoingDirectory, outgoingRepository, null));
     PushCommandRequest request = new PushCommandRequest();
     request.setRemoteRepository(incomingRepository);
     cmd.push(request);
-    GitPullCommand pullCommand = new GitPullCommand(handler, new GitContext(incomingDirectory, null, null),
-      incomingRepository);
+    GitPullCommand pullCommand = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, null));
     PullCommandRequest pullRequest = new PullCommandRequest();
     pullRequest.setRemoteRepository(incomingRepository);
     pullCommand.pull(pullRequest);

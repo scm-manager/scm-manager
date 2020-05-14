@@ -22,22 +22,23 @@
  * SOFTWARE.
  */
     
-package sonia.scm.api.v2.resources;
+package sonia.scm.web;
 
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
+import sonia.scm.api.v2.resources.HalAppender;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class EdisonHalAppender implements HalAppender {
+public final class EdisonHalAppender implements HalAppender {
 
   private final Links.Builder linkBuilder;
   private final Embedded.Builder embeddedBuilder;
 
-  EdisonHalAppender(Links.Builder linkBuilder, Embedded.Builder embeddedBuilder) {
+  public EdisonHalAppender(Links.Builder linkBuilder, Embedded.Builder embeddedBuilder) {
     this.linkBuilder = linkBuilder;
     this.embeddedBuilder = embeddedBuilder;
   }

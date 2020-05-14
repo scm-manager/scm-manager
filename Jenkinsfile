@@ -2,7 +2,7 @@
 
 // switch back to a stable tag, after pr 22 is mreged an the next version is released
 // see https://github.com/cloudogu/ces-build-lib/pull/22
-@Library('github.com/cloudogu/ces-build-lib@8e9194e8')
+@Library('github.com/cloudogu/ces-build-lib@develop')
 import com.cloudogu.ces.cesbuildlib.*
 
 node('docker') {
@@ -81,7 +81,7 @@ node('docker') {
       )
 
       stage('SonarQube') {
-        def sonarQube = new SonarCloud(this, [sonarQubeEnv: 'sonarcloud.io-scm', sonarOrganization: 'scm-manager'])
+        def sonarQube = new SonarCloud(this, [sonarQubeEnv: 'sonarcloud.io-scm', sonarOrganization: 'scm-manager', integrationBranch: 'develop'])
         sonarQube.analyzeWith(mvn)
 
         if (!waitForQualityGateWebhookToBeCalled()) {
