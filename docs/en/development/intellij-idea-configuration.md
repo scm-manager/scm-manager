@@ -15,7 +15,7 @@ title: Intellij IDEA Configuration
     * Add Maven
     * Name: run-backend
     * Working directory: ../scm-webapp
-    * Command line: -DskipTests package jetty:run-war
+    * Command line: -DskipTests -Dlivereload package jetty:run-war
 * Editor / Code Style / Java
     * Tab Imports
         * Class count to use import with '*': <MAX_INT>
