@@ -30,10 +30,6 @@ type Props = RouteComponentProps & {
   href: string;
 };
 
-function flatten(text: string, child: any): any {
-  return typeof child === "string" ? text + child : React.Children.toArray(child.props.children).reduce(flatten, text);
-}
-
 /**
  * Handle local SCM-Manager and external links
  *
@@ -46,7 +42,7 @@ export function correctLocalLink(pathname: string, link: string) {
 
   // Leave uris unchanged which start with schemes
   const regex = new RegExp(".:");
-  if (link.match(regex)) {
+  if (link.match(regex) || link.startsWith("#")) {
     return link;
   }
 
@@ -79,9 +75,7 @@ export function correctLocalLink(pathname: string, link: string) {
 }
 function MarkdownLinkRenderer(props: Props) {
   const compositeUrl = withContextPath(correctLocalLink(props.location.pathname, props.href));
-  const linkText = React.Children.toArray(props.children).reduce(flatten, "");
-
-  return <a href={compositeUrl}>{linkText}</a>;
+  return <a href={compositeUrl}>{props.children}</a>;
 }
 
 export default withRouter(MarkdownLinkRenderer);

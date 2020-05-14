@@ -30,6 +30,7 @@ const pathname = basePath + "README.md/";
 describe("correctLocalLink tests", () => {
   it("should return same url", () => {
     expect(correctLocalLink(pathname, "")).toBe(pathname);
+    expect(correctLocalLink(pathname, "#42")).toBe("#42");
   });
 
   it("should return main directory", () => {
