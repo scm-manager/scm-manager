@@ -48,13 +48,13 @@ public class CachingAllWorkingCopyPool implements WorkingCopyPool {
   }
 
   @Override
-  public <R, W> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W> workingCopyContext) {
+  public <R, W> WorkingCopy<R, W> getWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext workingCopyContext) {
     String id = workingCopyContext.getScmRepository().getId();
     File existingWorkdir = workdirs.remove(id);
     if (existingWorkdir != null) {
       Stopwatch stopwatch = Stopwatch.createStarted();
       try {
-        ParentAndClone<R, W> reclaimed = workingCopyContext.reclaim(existingWorkdir);
+        WorkingCopy<R, W> reclaimed = workingCopyContext.reclaim(existingWorkdir);
         LOG.debug("reclaimed workdir for {} in path {} in {}", workingCopyContext.getScmRepository().getNamespaceAndName(), existingWorkdir, stopwatch.stop());
         return reclaimed;
       } catch (SimpleWorkingCopyFactory.ReclaimFailedException e) {
@@ -65,16 +65,16 @@ public class CachingAllWorkingCopyPool implements WorkingCopyPool {
     return createNewWorkingCopy(workingCopyContext);
   }
 
-  private <R, W> ParentAndClone<R, W> createNewWorkingCopy(WorkingCopyContext<R, W> workingCopyContext) {
+  private <R, W> WorkingCopy<R, W> createNewWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext workingCopyContext) {
     Stopwatch stopwatch = Stopwatch.createStarted();
     File newWorkdir = workdirProvider.createNewWorkdir();
-    ParentAndClone<R, W> parentAndClone = workingCopyContext.initialize(newWorkdir);
+    WorkingCopy<R, W> parentAndClone = workingCopyContext.initialize(newWorkdir);
     LOG.debug("initialized new workdir for {} in path {} in {}", workingCopyContext.getScmRepository().getNamespaceAndName(), newWorkdir, stopwatch.stop());
     return parentAndClone;
   }
 
   @Override
-  public void contextClosed(WorkingCopyContext<?, ?> workingCopyContext, File workdir) {
+  public void contextClosed(SimpleWorkingCopyFactory<?, ?, ?>.WorkingCopyContext workingCopyContext, File workdir) {
     String id = workingCopyContext.getScmRepository().getId();
     File putResult = workdirs.putIfAbsent(id, workdir);
     if (putResult != null && putResult != workdir) {

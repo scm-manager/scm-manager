@@ -54,15 +54,15 @@ class CachingAllWorkingCopyPoolTest {
   CachingAllWorkingCopyPool cachingAllWorkingCopyPool;
 
   @Mock
-  WorkingCopyContext<Object, Path> workingCopyContext;
+  SimpleWorkingCopyFactory<Object, Path, ?>.WorkingCopyContext workingCopyContext;
 
   @BeforeEach
   void initContext() throws SimpleWorkingCopyFactory.ReclaimFailedException {
 
     lenient().when(workingCopyContext.initialize(any()))
-      .thenAnswer(invocationOnMock -> new WorkingCopyPool.ParentAndClone<>(null, null, invocationOnMock.getArgument(0, File.class)));
+      .thenAnswer(invocationOnMock -> new WorkingCopy<>(null, null, () -> {}, invocationOnMock.getArgument(0, File.class)));
     lenient().when(workingCopyContext.reclaim(any()))
-      .thenAnswer(invocationOnMock -> new WorkingCopyPool.ParentAndClone<>(null, null, invocationOnMock.getArgument(0, File.class)));
+      .thenAnswer(invocationOnMock -> new WorkingCopy<>(null, null, () -> {}, invocationOnMock.getArgument(0, File.class)));
   }
 
   @Test
@@ -70,7 +70,7 @@ class CachingAllWorkingCopyPoolTest {
     when(workingCopyContext.getScmRepository()).thenReturn(REPOSITORY);
     when(workdirProvider.createNewWorkdir()).thenReturn(temp.toFile());
 
-    WorkingCopyPool.ParentAndClone<?, ?> workdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
+    WorkingCopy<?, ?> workdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
 
     verify(workingCopyContext).initialize(temp.toFile());
   }
@@ -80,9 +80,9 @@ class CachingAllWorkingCopyPoolTest {
     when(workingCopyContext.getScmRepository()).thenReturn(REPOSITORY);
     when(workdirProvider.createNewWorkdir()).thenReturn(temp.toFile());
 
-    WorkingCopyPool.ParentAndClone<?, ?> firstWorkdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
+    WorkingCopy<?, ?> firstWorkdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
     cachingAllWorkingCopyPool.contextClosed(workingCopyContext, firstWorkdir.getDirectory());
-    WorkingCopyPool.ParentAndClone<?, ?> secondWorkdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
+    WorkingCopy<?, ?> secondWorkdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
 
     verify(workingCopyContext).initialize(temp.toFile());
     verify(workingCopyContext).reclaim(temp.toFile());
@@ -100,8 +100,8 @@ class CachingAllWorkingCopyPoolTest {
       firstDirectory,
       secondDirectory);
 
-    WorkingCopyPool.ParentAndClone<?, ?> firstWorkdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
-    WorkingCopyPool.ParentAndClone<?, ?> secondWorkdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
+    WorkingCopy<?, ?> firstWorkdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
+    WorkingCopy<?, ?> secondWorkdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
     cachingAllWorkingCopyPool.contextClosed(workingCopyContext, firstWorkdir.getDirectory());
     cachingAllWorkingCopyPool.contextClosed(workingCopyContext, secondWorkdir.getDirectory());
 

@@ -28,7 +28,7 @@ import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
-import sonia.scm.repository.work.WorkingCopyPool;
+import sonia.scm.repository.work.SimpleWorkingCopyFactory.ParentAndClone;
 
 import java.io.File;
 
@@ -42,7 +42,7 @@ class SvnWorkingCopyReclaimer implements SimpleWorkingCopyFactory.WorkingCopyRec
   }
 
   @Override
-  public WorkingCopyPool.ParentAndClone<File, File> reclaim(File target, String initialBranch) throws SimpleWorkingCopyFactory.ReclaimFailedException {
+  public ParentAndClone<File, File> reclaim(File target, String initialBranch) throws SimpleWorkingCopyFactory.ReclaimFailedException {
     SVNClientManager clientManager = SVNClientManager.newInstance();
     try {
       clientManager.getWCClient().doRevert(new File[] {target}, INFINITY, null);
@@ -51,6 +51,6 @@ class SvnWorkingCopyReclaimer implements SimpleWorkingCopyFactory.WorkingCopyRec
     } catch (SVNException e) {
       throw new SimpleWorkingCopyFactory.ReclaimFailedException(e);
     }
-    return new WorkingCopyPool.ParentAndClone<>(context.getDirectory(), target, target);
+    return new ParentAndClone<>(context.getDirectory(), target, target);
   }
 }

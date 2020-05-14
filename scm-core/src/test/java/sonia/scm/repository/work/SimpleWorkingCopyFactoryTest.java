@@ -61,13 +61,13 @@ public class SimpleWorkingCopyFactoryTest {
     WorkdirProvider workdirProvider = new WorkdirProvider(temporaryFolder.newFolder());
     WorkingCopyPool configurableTestWorkingCopyPool = new WorkingCopyPool() {
       @Override
-      public <R, W> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W> context) {
+      public <R, W> WorkingCopy<R, W> getWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext context) {
         workdir = workdirProvider.createNewWorkdir();
         return context.initialize(workdir);
       }
 
       @Override
-      public void contextClosed(WorkingCopyContext<?, ?> createWorkdirContext, File workdir) {
+      public void contextClosed(SimpleWorkingCopyFactory<?, ?, ?>.WorkingCopyContext createWorkdirContext, File workdir) {
         if (!workdirIsCached) {
           IOUtil.deleteSilently(workdir);
         }
@@ -98,7 +98,7 @@ public class SimpleWorkingCopyFactoryTest {
       protected WorkingCopyInitializer<Closeable, Closeable> getInitializer(Context context) {
         return (target, initialBranch) -> {
           initialBranchForLastCloneCall = initialBranch;
-          return new WorkingCopyPool.ParentAndClone<>(parent, clone, target);
+          return new ParentAndClone<>(parent, clone, target);
         };
       }
     };

@@ -26,6 +26,7 @@ package sonia.scm.repository.work;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 
 import javax.servlet.ServletContextEvent;
@@ -55,95 +56,102 @@ import java.io.File;
  *   <dd>Closes resources allocated for the central repository.</dd>
  * </dl>
  * <pre>
- *                     ┌─────────────┐          ┌───────────────────────────┐                                        ┌───────────────┐          ┌───────────────┐
- *                     │ModifyCommand│          │SimpleGitWorkingCopyFactory│                                        │WorkingCopyPool│          │WorkdirProvider│
- *                     └──────┬──────┘          └─────────────┬─────────────┘                                        └───────┬───────┘          └───────┬───────┘
- *                            │      createWorkingCopy        │                                                              │                          │
- *                            │──────────────────────────────>│                                                              │                          │
- *                            │                               │                                                              │                          │
- *                            │                               │        create          ┌──────────────────┐                  │                          │
- *                            │                               │──────────────────────> │WorkingCopyContext│                  │                          │
- *                            │                               │                        └────────┬─────────┘                  │                          │
- *                            │                               │                       getWorkingCopy                         │                          │
- *                            │                               │─────────────────────────────────────────────────────────────>│                          │
- *                            │                               │                                 │                            │                          │
- *                            │                               │                                 │                            │                          │
- *                            │                               │                                 │                            │                          │
- *                            │                               │                                 │                            │                          │
- *                            │                               │                                 │          reclaim           │                          │
- *                            │                               │                                 │ <──────────────────────────│                          │
- *                            │                               │                                 │                            │                          │
- *                            │                               │                                 │                            │                          │
- *                            │                               │              ╔══════╤═══════════╪════════════════════════════╪══════════════════════════╪═════════════════╗
- *                            │                               │              ║ ALT  │  reclaim successful                    │                          │                 ║
- *                            │                               │              ╟──────┘           │                            │                          │                 ║
- *                            │                               │              ║                  │                            │                          │                 ║
- *                            │                               │              ║                  │ ──────────────────────────>│                          │                 ║
- *                            │                               │              ╠══════════════════╪════════════════════════════╪══════════════════════════╪═════════════════╣
- *                            │                               │              ║ [reclaim fails; create new]                   │                          │                 ║
- *                            │                               │              ║                  │   ReclaimFailedException   │                          │                 ║
- *                            │                               │              ║                  │ ──────────────────────────>│                          │                 ║
- *                            │                               │              ║                  │                            │                          │                 ║
- *                            │                               │              ║                  │                            │    createNewWorkdir      │                 ║
- *                            │                               │              ║                  │                            │─────────────────────────>│                 ║
- *                            │                               │              ║                  │                            │                          │                 ║
- *                            │                               │              ║                  │                            │                          │                 ║
- *                            │                               │              ║                  │                            │<─────────────────────────│                 ║
- *                            │                               │              ║                  │                            │                          │                 ║
- *                            │                               │              ║                  │         initialize         │                          │                 ║
- *                            │                               │              ║                  │ <──────────────────────────│                          │                 ║
- *                            │                               │              ║                  │                            │                          │                 ║
- *                            │                               │              ║                  │                            │                          │                 ║
- *                            │                               │              ║                  │ ──────────────────────────>│                          │                 ║
- *                            │                               │              ╚══════════════════╪════════════════════════════╪══════════════════════════╪═════════════════╝
- *                            │                               │                                 │                            │                          │
- *                            │                               │                       ParentAndClone                         │                          │
- *                            │                               │<─────────────────────────────────────────────────────────────│                          │
- *                            │                               │                                 │                            │                          │
- *                            │                               │                                 │                            │                          │                  ┌───────────┐
- *                            │                               │──────────────────────────────────────────────────────────────────────────────────────────────────────────> │WorkingCopy│
- *                            │                               │                                 │                            │                          │                  └─────┬─────┘
- *                            │         WorkingCopy           │                                 │                            │                          │                        │
- *                            │<──────────────────────────────│                                 │                            │                          │                        │
- *                            │                               │                                 │                            │                          │                        │
- *                            .                               .                                 .                            .                          .                        .
- *                            .                               .                                 .                            .                          .                        .
- *                            .                               .                                 .                            .                          .                        .
- *                            .                               .                                 .                            .                          .                        .
- *                            │                               │                                 │   doWork                   │                          │                        │
- *                            │─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────>│
- *                            │                               │                                 │                            │                          │                        │
- *                            .                               .                                 .                            .                          .                        .
- *                            .                               .                                 .                            .                          .                        .
- *                            .                               .                                 .                            .                          .                        .
- *                            .                               .                                 .                            .                          .                        .
- *                            │                               │                                 │    close                   │                          │                        │
- *                            │─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────>│
- *                            │                               │                                 │                            │                          │                        │
- *                            │                               │                                 │                    close   │                          │                        │
- *                            │                               │<─────────────────────────────────────────────────────────────────────────────────────────────────────────────────│
- *                            │                               │                                 │                            │                          │                        │
- *                            │                               ────┐                             │                            │                          │                        │
- *                            │                                   │ closeWorkingCopy            │                            │                          │                        │
- *                            │                               <───┘                             │                            │                          │                        │
- *                            │                               │                                 │                            │                          │                        │
- *                            │                               ────┐                             │                            │                          │                        │
- *                            │                                   │ closeRepository             │                            │                          │                        │
- *                            │                               <───┘                             │                            │                          │                        │
- *                            │                               │                                 │                            │                          │                        │
- *                            │                               │                        contextClosed                         │                          │                        │
- *                            │                               │─────────────────────────────────────────────────────────────>│                          │                        │
- *                     ┌──────┴──────┐          ┌─────────────┴─────────────┐          ┌────────┴─────────┐          ┌───────┴───────┐          ┌───────┴───────┐          ┌─────┴─────┐
- *                     │ModifyCommand│          │SimpleGitWorkingCopyFactory│          │WorkingCopyContext│          │WorkingCopyPool│          │WorkdirProvider│          │WorkingCopy│
- *                     └─────────────┘          └───────────────────────────┘          └──────────────────┘          └───────────────┘          └───────────────┘          └───────────┘
+ *                     ┌─────────────┐          ┌───────────────────────────┐                                        ┌───────────────┐                                 ┌───────────────┐
+ *                     │ModifyCommand│          │SimpleGitWorkingCopyFactory│                                        │WorkingCopyPool│                                 │WorkdirProvider│
+ *                     └──────┬──────┘          └─────────────┬─────────────┘                                        └───────┬───────┘                                 └───────┬───────┘
+ *                            │      createWorkingCopy        │                                                              │                                                 │
+ *                            │──────────────────────────────>│                                                              │                                                 │
+ *                            │                               │                                                              │                                                 │
+ *                            │                               │        create          ┌──────────────────┐                  │                                                 │
+ *                            │                               │──────────────────────> │WorkingCopyContext│                  │                                                 │
+ *                            │                               │                        └────────┬─────────┘                  │                                                 │
+ *                            │                               │                       getWorkingCopy                         │                                                 │
+ *                            │                               │─────────────────────────────────────────────────────────────>│                                                 │
+ *                            │                               │                                 │                            │                                                 │
+ *                            │                               │                                 │                            │                                                 │
+ *                            │                               │                                 │                            │                                                 │
+ *                            │                               │                                 │                            │                                                 │
+ *                            │                               │                                 │          reclaim           │                                                 │
+ *                            │                               │                                 │ <──────────────────────────│                                                 │
+ *                            │                               │                                 │                            │                                                 │
+ *                            │                               │                                 │                            │                                                 │
+ *                            │                               │              ╔══════╤═══════════╪════════════════════════════╪═════════════════════════════════════════════════╪═════════════════╗
+ *                            │                               │              ║ ALT  │  reclaim successful                    │                                                 │                 ║
+ *                            │                               │              ╟──────┘           │                            │                                                 │                 ║
+ *                            │                               │              ║                  │                            │                  ┌───────────┐                  │                 ║
+ *                            │                               │              ║                  │ ─────────────────────────────────────────────>│WorkingCopy│                  │                 ║
+ *                            │                               │              ║                  │                            │                  └─────┬─────┘                  │                 ║
+ *                            │                               │              ║                  │        WorkingCopy         │                                                 │                 ║
+ *                            │                               │              ║                  │ ──────────────────────────>│                                                 │                 ║
+ *                            │                               │              ╠══════════════════╪════════════════════════════╪═════════════════════════════════════════════════╪═════════════════╣
+ *                            │                               │              ║ [reclaim fails; create new]                   │                                                 │                 ║
+ *                            │                               │              ║                  │   ReclaimFailedException   │                                                 │                 ║
+ *                            │                               │              ║                  │ ──────────────────────────>│                                                 │                 ║
+ *                            │                               │              ║                  │                            │                                                 │                 ║
+ *                            │                               │              ║                  │                            │                createNewWorkdir                 │                 ║
+ *                            │                               │              ║                  │                            │────────────────────────────────────────────────>│                 ║
+ *                            │                               │              ║                  │                            │                                                 │                 ║
+ *                            │                               │              ║                  │                            │                                                 │                 ║
+ *                            │                               │              ║                  │                            │<────────────────────────────────────────────────│                 ║
+ *                            │                               │              ║                  │                            │                                                 │                 ║
+ *                            │                               │              ║                  │         initialize         │                                                 │                 ║
+ *                            │                               │              ║                  │ <──────────────────────────│                                                 │                 ║
+ *                            │                               │              ║                  │                            │                                                 │                 ║
+ *                            │                               │              ║                  │                            │                  ┌───────────┐                  │                 ║
+ *                            │                               │              ║                  │ ─────────────────────────────────────────────>│WorkingCopy│                  │                 ║
+ *                            │                               │              ║                  │                            │                  └─────┬─────┘                  │                 ║
+ *                            │                               │              ║                  │        WorkingCopy         │                        │                        │                 ║
+ *                            │                               │              ║                  │ ──────────────────────────>│                        │                        │                 ║
+ *                            │                               │              ╚══════════════════╪════════════════════════════╪════════════════════════╪════════════════════════╪═════════════════╝
+ *                            │                               │                                 │                            │                        │                        │
+ *                            │                               │                         WorkingCopy                          │                        │                        │
+ *                            │                               │<─────────────────────────────────────────────────────────────│                        │                        │
+ *                            │                               │                                 │                            │                        │                        │
+ *                            │         WorkingCopy           │                                 │                            │                        │                        │
+ *                            │<──────────────────────────────│                                 │                            │                        │                        │
+ *                            │                               │                                 │                            │                        │                        │
+ *                            .                               .                                 .                            .                        .                        .
+ *                            .                               .                                 .                            .                        .                        .
+ *                            .                               .                                 .                            .                        .                        .
+ *                            .                               .                                 .                            .                        .                        .
+ *                            │                               │                        doWork   │                            │                        │                        │
+ *                            │──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────>│                        │
+ *                            │                               │                                 │                            │                        │                        │
+ *                            .                               .                                 .                            .                        .                        .
+ *                            .                               .                                 .                            .                        .                        .
+ *                            .                               .                                 .                            .                        .                        .
+ *                            .                               .                                 .                            .                        .                        .
+ *                            │                               │                        close    │                            │                        │                        │
+ *                            │──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────>│                        │
+ *                            │                               │                                 │                            │                        │                        │
+ *                            │                               │                                 │      close                 │                        │                        │
+ *                            │                               │<──────────────────────────────────────────────────────────────────────────────────────│                        │
+ *                            │                               │                                 │                            │                        │                        │
+ *                            │                               ────┐                             │                            │                        │                        │
+ *                            │                                   │ closeWorkingCopy            │                            │                        │                        │
+ *                            │                               <───┘                             │                            │                        │                        │
+ *                            │                               │                                 │                            │                        │                        │
+ *                            │                               ────┐                             │                            │                        │                        │
+ *                            │                                   │ closeRepository             │                            │                        │                        │
+ *                            │                               <───┘                             │                            │                        │                        │
+ *                            │                               │                                 │                            │                        │                        │
+ *                            │                               │                        contextClosed                         │                        │                        │
+ *                            │                               │─────────────────────────────────────────────────────────────>│                        │                        │
+ *                            │                               │                                 │                            │                        │                        │
+ *                            │                               │                                 │                            ────┐                    │                        │
+ *                            │                               │                                 │                                │ cacheDirectory     │                        │
+ *                            │                               │                                 │                            <───┘                    │                        │
+ *                     ┌──────┴──────┐          ┌─────────────┴─────────────┐          ┌────────┴─────────┐          ┌───────┴───────┐          ┌─────┴─────┐          ┌───────┴───────┐
+ *                     │ModifyCommand│          │SimpleGitWorkingCopyFactory│          │WorkingCopyContext│          │WorkingCopyPool│          │WorkingCopy│          │WorkdirProvider│
+ *                     └─────────────┘          └───────────────────────────┘          └──────────────────┘          └───────────────┘          └───────────┘          └───────────────┘
  * </pre>
- * <img src="http://www.plantuml.com/plantuml/png/fPFHQlCm38Nl_HI-3gGFu1zCVyAwgutI3NPjRBM8ALQmdRNPqu_ITBX9yJ9sQUax9-H8MiTaGkfR4a_iS3yqtBR6krg_ODiHF69wu_2E_j1mDsoCJHm6gQGDO19aBL7WQospOiC-mIbLbRgOb9LPRSjCwW0v9Ww1-qw-Xa4cbW4i6Mp5H5Fh-TVLbJMKhZePUsiXndrFOgwejPOJOm4KuLkzDqZntvYCz72yQtAQcgZTHRynIE0UJXQwXEpl_uJ3i0tyWGx2cDup7CU6c02rdeQtA1ZqcD0GViBI4BoR6vVMHsrD09_-UzSG--NphweogcysMCcC4QlLQhhWMLivFhz-eYnnl4cbU2KZNY0MoBFw7vrsq774y_jt1sSlas_E7awimRk-fIy0"/>
+ * <img src="http://www.plantuml.com/plantuml/png/jLF1JiCm3BtdAtAkr7r0aQf9XN42JGE9SvHumyA9goHbAr-FnZgKDbCPGXnZl_ViFDlB49MFdINnm0QtVSFMAcVA-WbjIt2FyONz6xfTmss_KZgoxsKbjGSL8Kc96NnPooJOi8jmY4LHdKJccKbipKpL3bAOs7dkMldiUnbPUj2aq8e9fwppwjKPgoYUUJ9qMaC8suv4pXYf5CL5H2sdxQQz0WNuhhLLIE5cy54ws5yKF6I2cnD_fP30t1qqj17PNVwoGR_s_8u6_E3r8-o7X9W0odfgzLKseiE8Yl03_iSoP_8svbQpabVlP3rQ-35niLXCxo59LuQFhvzGcZYCR9azgW4-WxY2diJ_gBI1bWCUtx-xJtqQR7FKo6UNmvL-XLlqy2Kdbk1CP-aJ"/>
  * @param <R> Type of central repository location
  * @param <W> Type of working copy for repository
  * @param <C> Type of repository context
  */
 /*
-http://www.plantuml.com/plantuml/uml/fPFHQlCm38Nl_HI-3gGFu1zCVyAwgutI3NPjRBM8ALQmdRNPqu_ITBX9yJ9sQUax9-H8MiTaGkfR4a_iS3yqtBR6krg_ODiHF69wu_2E_j1mDsoCJHm6gQGDO19aBL7WQospOiC-mIbLbRgOb9LPRSjCwW0v9Ww1-qw-Xa4cbW4i6Mp5H5Fh-TVLbJMKhZePUsiXndrFOgwejPOJOm4KuLkzDqZntvYCz72yQtAQcgZTHRynIE0UJXQwXEpl_uJ3i0tyWGx2cDup7CU6c02rdeQtA1ZqcD0GViBI4BoR6vVMHsrD09_-UzSG--NphweogcysMCcC4QlLQhhWMLivFhz-eYnnl4cbU2KZNY0MoBFw7vrsq774y_jt1sSlas_E7awimRk-fIy0
+http://www.plantuml.com/plantuml/uml/jLF1JiCm3BtdAtAkr7r0aQf9XN42JGE9SvHumyA9goHbAr-FnZgKDbCPGXnZl_ViFDlB49MFdINnm0QtVSFMAcVA-WbjIt2FyONz6xfTmss_KZgoxsKbjGSL8Kc96NnPooJOi8jmY4LHdKJccKbipKpL3bAOs7dkMldiUnbPUj2aq8e9fwppwjKPgoYUUJ9qMaC8suv4pXYf5CL5H2sdxQQz0WNuhhLLIE5cy54ws5yKF6I2cnD_fP30t1qqj17PNVwoGR_s_8u6_E3r8-o7X9W0odfgzLKseiE8Yl03_iSoP_8svbQpabVlP3rQ-35niLXCxo59LuQFhvzGcZYCR9azgW4-WxY2diJ_gBI1bWCUtx-xJtqQR7FKo6UNmvL-XLlqy2Kdbk1CP-aJ
 @startuml
 ModifyCommand->SimpleGitWorkingCopyFactory : createWorkingCopy
 SimpleGitWorkingCopyFactory-> WorkingCopyContext**:create
@@ -151,16 +159,17 @@ SimpleGitWorkingCopyFactory->WorkingCopyPool:getWorkingCopy
 group Try to reclaim
 WorkingCopyPool->WorkingCopyContext:reclaim
 alt reclaim successful
-WorkingCopyContext->> WorkingCopyPool
+WorkingCopyContext->WorkingCopy**
+WorkingCopyContext->> WorkingCopyPool:WorkingCopy
 else reclaim fails; create new
 WorkingCopyContext->x WorkingCopyPool:ReclaimFailedException
 WorkingCopyPool->WorkdirProvider:createNewWorkdir
 WorkdirProvider->>WorkingCopyPool
 WorkingCopyPool->WorkingCopyContext:initialize
-WorkingCopyContext->> WorkingCopyPool
+WorkingCopyContext->WorkingCopy**
+WorkingCopyContext->> WorkingCopyPool:WorkingCopy
 end
-WorkingCopyPool->>SimpleGitWorkingCopyFactory:ParentAndClone
-SimpleGitWorkingCopyFactory->WorkingCopy**
+WorkingCopyPool->>SimpleGitWorkingCopyFactory: WorkingCopy
 SimpleGitWorkingCopyFactory->>ModifyCommand: WorkingCopy
 ...
 ModifyCommand->WorkingCopy:doWork
@@ -170,7 +179,9 @@ WorkingCopy->SimpleGitWorkingCopyFactory:close
 SimpleGitWorkingCopyFactory->SimpleGitWorkingCopyFactory:closeWorkingCopy
 SimpleGitWorkingCopyFactory->SimpleGitWorkingCopyFactory:closeRepository
 SimpleGitWorkingCopyFactory->WorkingCopyPool:contextClosed
-@enduml*/
+WorkingCopyPool->WorkingCopyPool:cacheDirectory
+@enduml
+*/
 public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvider> implements WorkingCopyFactory<R, W, C>, ServletContextListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(SimpleWorkingCopyFactory.class);
@@ -183,36 +194,15 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvide
 
   @Override
   public WorkingCopy<R, W> createWorkingCopy(C repositoryContext, String initialBranch) {
-    WorkingCopyContext<R, W> workingCopyContext = createWorkingCopyContext(repositoryContext, initialBranch);
-    WorkingCopyPool.ParentAndClone<R, W> parentAndClone = workingCopyPool.getWorkingCopy(workingCopyContext);
-    return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), () -> this.close(workingCopyContext, parentAndClone), parentAndClone.getDirectory());
+    WorkingCopyContext workingCopyContext = createWorkingCopyContext(repositoryContext, initialBranch);
+    return workingCopyPool.getWorkingCopy(workingCopyContext);
   }
 
-  private WorkingCopyContext<R, W> createWorkingCopyContext(C repositoryContext, String initialBranch) {
-    return new WorkingCopyContext<>(
+  private WorkingCopyContext createWorkingCopyContext(C repositoryContext, String initialBranch) {
+    return new WorkingCopyContext(
       initialBranch,
-      repositoryContext.get(),
-      getInitializer(repositoryContext),
-      getReclaimer(repositoryContext)
+      repositoryContext
     );
-  }
-
-  private void close(WorkingCopyContext<R, W> workingCopyContext, WorkingCopyPool.ParentAndClone<R, W> parentAndClone) {
-    try {
-      closeWorkingCopy(parentAndClone.getClone());
-    } catch (Exception e) {
-      LOG.warn("could not close clone for {} in directory {}", workingCopyContext.getScmRepository(), parentAndClone.getDirectory(), e);
-    }
-    try {
-      closeRepository(parentAndClone.getParent());
-    } catch (Exception e) {
-      LOG.warn("could not close central repository for {}", workingCopyContext.getScmRepository(), e);
-    }
-    try {
-      workingCopyPool.contextClosed(workingCopyContext, parentAndClone.getDirectory());
-    } catch (Exception e) {
-      LOG.warn("could not close context for {} with directory {}", workingCopyContext.getScmRepository(), parentAndClone.getDirectory(), e);
-    }
   }
 
   @Override
@@ -227,12 +217,12 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvide
 
   @FunctionalInterface
   public interface WorkingCopyInitializer<R, W> {
-    WorkingCopyPool.ParentAndClone<R, W> initialize(File target, String initialBranch);
+    ParentAndClone<R, W> initialize(File target, String initialBranch);
   }
 
   @FunctionalInterface
   public interface WorkingCopyReclaimer<R, W> {
-    WorkingCopyPool.ParentAndClone<R, W> reclaim(File target, String initialBranch) throws ReclaimFailedException;
+    ParentAndClone<R, W> reclaim(File target, String initialBranch) throws ReclaimFailedException;
   }
 
   protected abstract WorkingCopyInitializer<R, W> getInitializer(C context);
@@ -258,6 +248,74 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvide
 
     public ReclaimFailedException(String message, Throwable cause) {
       super(message, cause);
+    }
+  }
+
+  public static class ParentAndClone<R, W> {
+    private final R parent;
+    private final W clone;
+    private final File directory;
+
+    public ParentAndClone(R parent, W clone, File directory) {
+      this.parent = parent;
+      this.clone = clone;
+      this.directory = directory;
+    }
+
+    R getParent() {
+      return parent;
+    }
+
+    W getClone() {
+      return clone;
+    }
+
+    File getDirectory() {
+      return directory;
+    }
+  }
+
+  public class WorkingCopyContext {
+    private final String requestedBranch;
+    private final C repositoryContext;
+
+    public WorkingCopyContext(String requestedBranch, C repositoryContext) {
+      this.requestedBranch = requestedBranch;
+      this.repositoryContext = repositoryContext;
+    }
+
+    public Repository getScmRepository() {
+      return repositoryContext.get();
+    }
+
+    public WorkingCopy<R, W> reclaim(File workdir) throws SimpleWorkingCopyFactory.ReclaimFailedException {
+      return createWorkingCopyFromParentAndClone(getReclaimer(repositoryContext).reclaim(workdir, requestedBranch));
+    }
+
+    public WorkingCopy<R, W> initialize(File workdir) {
+      return createWorkingCopyFromParentAndClone(getInitializer(repositoryContext).initialize(workdir, requestedBranch));
+    }
+
+    public WorkingCopy<R, W> createWorkingCopyFromParentAndClone(ParentAndClone<R, W> parentAndClone) {
+      return new WorkingCopy<>(parentAndClone.getClone(), parentAndClone.getParent(), () -> close(parentAndClone), parentAndClone.getDirectory());
+    }
+
+    private void close(ParentAndClone<R, W> parentAndClone) {
+      try {
+        closeWorkingCopy(parentAndClone.getClone());
+      } catch (Exception e) {
+        LOG.warn("could not close clone for {} in directory {}", getScmRepository(), parentAndClone.getDirectory(), e);
+      }
+      try {
+        closeRepository(parentAndClone.getParent());
+      } catch (Exception e) {
+        LOG.warn("could not close central repository for {}", getScmRepository(), e);
+      }
+      try {
+        workingCopyPool.contextClosed(this, parentAndClone.getDirectory());
+      } catch (Exception e) {
+        LOG.warn("could not close context for {} with directory {}", getScmRepository(), parentAndClone.getDirectory(), e);
+      }
     }
   }
 }

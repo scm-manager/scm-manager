@@ -39,12 +39,12 @@ public class NoneCachingWorkingCopyPool implements WorkingCopyPool {
   }
 
   @Override
-  public <R, W> ParentAndClone<R, W> getWorkingCopy(WorkingCopyContext<R, W> context) {
+  public <R, W> WorkingCopy<R, W> getWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext context) {
     return context.initialize(workdirProvider.createNewWorkdir());
   }
 
   @Override
-  public void contextClosed(WorkingCopyContext<?, ?> workingCopyContext, File workdir) {
+  public void contextClosed(SimpleWorkingCopyFactory<?, ?, ?>.WorkingCopyContext workingCopyContext, File workdir) {
     IOUtil.deleteSilently(workdir);
   }
 

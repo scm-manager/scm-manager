@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
-import sonia.scm.repository.work.WorkingCopyPool;
+import sonia.scm.repository.work.SimpleWorkingCopyFactory.ParentAndClone;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +48,7 @@ class GitWorkingCopyReclaimer implements SimpleWorkingCopyFactory.WorkingCopyRec
   }
 
   @Override
-  public WorkingCopyPool.ParentAndClone<Repository, Repository> reclaim(File target, String initialBranch) throws SimpleWorkingCopyFactory.ReclaimFailedException {
+  public ParentAndClone<Repository, Repository> reclaim(File target, String initialBranch) throws SimpleWorkingCopyFactory.ReclaimFailedException {
     LOG.trace("reclaim repository {}", context.getRepository().getId());
     long start = System.nanoTime();
     Repository repo = openTarget(target);
@@ -59,7 +59,7 @@ class GitWorkingCopyReclaimer implements SimpleWorkingCopyFactory.WorkingCopyRec
       git.checkout().setForced(true).setName("origin/" + initialBranch).call();
       git.branchDelete().setBranchNames(initialBranch).setForce(true).call();
       git.checkout().setName(initialBranch).setCreateBranch(true).call();
-      return new WorkingCopyPool.ParentAndClone<>(null, repo, target);
+      return new ParentAndClone<>(null, repo, target);
     } catch (GitAPIException | IOException e) {
       throw new SimpleWorkingCopyFactory.ReclaimFailedException(e);
     } finally {

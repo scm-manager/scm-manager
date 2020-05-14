@@ -35,7 +35,6 @@ import com.aragost.javahg.commands.flags.CloneCommandFlags;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
 import sonia.scm.repository.work.WorkingCopyPool;
-import sonia.scm.repository.work.WorkingCopyPool.ParentAndClone;
 import sonia.scm.util.IOUtil;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
