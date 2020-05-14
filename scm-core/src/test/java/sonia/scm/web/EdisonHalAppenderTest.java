@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
     
-package sonia.scm.api.v2.resources;
+package sonia.scm.web;
 
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
@@ -30,6 +30,7 @@ import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sonia.scm.web.EdisonHalAppender;
 
 import java.util.List;
 

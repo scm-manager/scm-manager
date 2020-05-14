@@ -30,6 +30,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRolePermissions;
+import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
 
