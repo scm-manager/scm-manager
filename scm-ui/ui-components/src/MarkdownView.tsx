@@ -29,6 +29,7 @@ import { binder } from "@scm-manager/ui-extensions";
 import ErrorBoundary from "./ErrorBoundary";
 import SyntaxHighlighter from "./SyntaxHighlighter";
 import MarkdownHeadingRenderer from "./MarkdownHeadingRenderer";
+import MarkdownLinkRenderer from "./MarkdownLinkRenderer";
 import { useTranslation } from "react-i18next";
 import Notification from "./Notification";
 
@@ -113,6 +114,8 @@ class MarkdownView extends React.Component<Props> {
     if (enableAnchorHeadings) {
       rendererList.heading = MarkdownHeadingRenderer;
     }
+
+    rendererList.link = MarkdownLinkRenderer;
 
     if (!rendererList.code) {
       rendererList.code = SyntaxHighlighter;
