@@ -26,7 +26,6 @@ package sonia.scm.repository.work;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.RepositoryProvider;
 
 import javax.servlet.ServletContextEvent;
@@ -41,10 +40,10 @@ import java.io.File;
  * implemented:
  *
  * <dl>
- *   <dt>{@link #getInitializer(C, File, String)}</dt>
+ *   <dt>{@link #getInitializer(C)}</dt>
  *   <dd>Creates a new clone of the repository for the given context in the given
  *     directory with the given branch checked out (if branches are supported).</dd>
- *   <dt>{@link #getReclaimer(C, File, String)}</dt>
+ *   <dt>{@link #getReclaimer(C)}</dt>
  *   <dd>Reclaim the working directory with a already checked out clone of the
  *     repository given in the context, so that the directory is not modified in
  *     respect to the repository and the given branch is checked out (if branches
