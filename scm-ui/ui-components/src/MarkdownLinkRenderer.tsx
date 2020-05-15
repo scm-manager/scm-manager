@@ -21,14 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import React, { FC, ReactNode } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { withContextPath } from "./urls";
 
-type Props = RouteComponentProps & {
+type Props = {
   children: ReactNode;
   href: string;
 };
+
+const regex = new RegExp("[a-z]:");
 
 /**
  * Handle local SCM-Manager and external links
@@ -40,8 +42,7 @@ export function correctLocalLink(pathname: string, link: string) {
     return pathname;
   }
 
-  // Leave uris unchanged which start with schemes
-  const regex = new RegExp(".:");
+  // Leave uris unchanged which start with schemes or fragment
   if (link.match(regex) || link.startsWith("#")) {
     return link;
   }
@@ -73,9 +74,15 @@ export function correctLocalLink(pathname: string, link: string) {
 
   return base + path;
 }
-function MarkdownLinkRenderer(props: Props) {
-  const compositeUrl = correctLocalLink(withContextPath(props.location.pathname), props.href);
-  return <a href={compositeUrl}>{props.children}</a>;
-}
 
-export default withRouter(MarkdownLinkRenderer);
+const MarkdownLinkRenderer: FC<Props> = ({ children, href }) => {
+  const location = useLocation();
+  const compositeUrl = correctLocalLink(withContextPath(location.pathname), href);
+
+  if (compositeUrl.match(regex)) {
+    return <a href={compositeUrl}>{children}</a>;
+  }
+  return <Link to={compositeUrl}>{children}</Link>;
+};
+
+export default MarkdownLinkRenderer;
