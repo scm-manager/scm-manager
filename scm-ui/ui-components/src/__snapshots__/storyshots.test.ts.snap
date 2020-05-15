@@ -33581,56 +33581,64 @@ exports[`Storyshots MarkdownView Default 1`] = `
       <ul>
         <li>
           <a
-            href="#Headings"
+            href="/#Headings"
+            onClick={[Function]}
           >
             Headings
           </a>
         </li>
         <li>
           <a
-            href="#Paragraphs"
+            href="/#Paragraphs"
+            onClick={[Function]}
           >
             Paragraphs
           </a>
         </li>
         <li>
           <a
-            href="#Blockquotes"
+            href="/#Blockquotes"
+            onClick={[Function]}
           >
             Blockquotes
           </a>
         </li>
         <li>
           <a
-            href="#Lists"
+            href="/#Lists"
+            onClick={[Function]}
           >
             Lists
           </a>
         </li>
         <li>
           <a
-            href="#Horizontal"
+            href="/#Horizontal"
+            onClick={[Function]}
           >
             Horizontal rule
           </a>
         </li>
         <li>
           <a
-            href="#Table"
+            href="/#Table"
+            onClick={[Function]}
           >
             Table
           </a>
         </li>
         <li>
           <a
-            href="#Code"
+            href="/#Code"
+            onClick={[Function]}
           >
             Code
           </a>
         </li>
         <li>
           <a
-            href="#Inline"
+            href="/#Inline"
+            onClick={[Function]}
           >
             Inline elements
           </a>
@@ -33681,7 +33689,8 @@ exports[`Storyshots MarkdownView Default 1`] = `
       </p>
       <p>
         <a
-          href="#top"
+          href="/#top"
+          onClick={[Function]}
         >
           [Top]
         </a>
@@ -33703,7 +33712,8 @@ exports[`Storyshots MarkdownView Default 1`] = `
       </p>
       <p>
         <a
-          href="#top"
+          href="/#top"
+          onClick={[Function]}
         >
           [Top]
         </a>
@@ -33743,7 +33753,8 @@ exports[`Storyshots MarkdownView Default 1`] = `
       </p>
       <p>
         <a
-          href="#top"
+          href="/#top"
+          onClick={[Function]}
         >
           [Top]
         </a>
@@ -33822,7 +33833,8 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
       </ul>
       <p>
         <a
-          href="#top"
+          href="/#top"
+          onClick={[Function]}
         >
           [Top]
         </a>
@@ -33842,7 +33854,8 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
       </p>
       <p>
         <a
-          href="#top"
+          href="/#top"
+          onClick={[Function]}
         >
           [Top]
         </a>
@@ -34149,7 +34162,8 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
       </p>
       <p>
         <a
-          href="#top"
+          href="/#top"
+          onClick={[Function]}
         >
           [Top]
         </a>
@@ -34214,7 +34228,8 @@ func main() {
       </p>
       <p>
         <a
-          href="#top"
+          href="/#top"
+          onClick={[Function]}
         >
           [Top]
         </a>
@@ -34236,7 +34251,8 @@ func main() {
         </strong>
          reprehenderit duis 
         <a
-          href="#!"
+          href="/#!"
+          onClick={[Function]}
         >
           irure
         </a>
@@ -34262,7 +34278,8 @@ func main() {
         </code>
          anim aute reprehenderit id eu ea. Aute 
         <a
-          href="#!"
+          href="/#!"
+          onClick={[Function]}
         >
           excepteur proident
         </a>
@@ -34305,7 +34322,8 @@ func main() {
       <p>
         Reprehenderit non eu quis in ad elit esse qui aute id 
         <a
-          href="#!"
+          href="/#!"
+          onClick={[Function]}
         >
           incididunt
         </a>
