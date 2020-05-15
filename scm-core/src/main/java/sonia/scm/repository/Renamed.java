@@ -24,15 +24,13 @@
 
 package sonia.scm.repository;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Value;
 
 import java.util.stream.Stream;
 
 import static java.util.stream.Stream.of;
 
-@Getter
-@AllArgsConstructor
+@Value
 public class Renamed extends Modification {
   private final String oldPath;
   private final String newPath;
