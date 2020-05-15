@@ -28,6 +28,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.io.Serializable;
+import java.util.stream.Stream;
+
+import static java.util.stream.Stream.of;
 
 public interface Modification extends EffectedPath, Serializable {
 
@@ -37,8 +40,8 @@ public interface Modification extends EffectedPath, Serializable {
     private final String path;
 
     @Override
-    public String getEffectedPath() {
-      return path;
+    public Stream<String> getEffectedPaths() {
+      return of(path);
     }
   }
 
@@ -48,8 +51,8 @@ public interface Modification extends EffectedPath, Serializable {
     private final String path;
 
     @Override
-    public String getEffectedPath() {
-      return path;
+    public Stream<String> getEffectedPaths() {
+      return of(path);
     }
   }
 
@@ -59,8 +62,8 @@ public interface Modification extends EffectedPath, Serializable {
     private final String path;
 
     @Override
-    public String getEffectedPath() {
-      return path;
+    public Stream<String> getEffectedPaths() {
+      return of(path);
     }
   }
 
@@ -71,8 +74,8 @@ public interface Modification extends EffectedPath, Serializable {
     private final String newPath;
 
     @Override
-    public String getEffectedPath() {
-      return newPath;
+    public Stream<String> getEffectedPaths() {
+      return of(oldPath, newPath);
     }
   }
 
@@ -83,12 +86,12 @@ public interface Modification extends EffectedPath, Serializable {
     private final String targetPath;
 
     @Override
-    public String getEffectedPath() {
-      return targetPath;
+    public Stream<String> getEffectedPaths() {
+      return of(targetPath);
     }
   }
 }
 
 interface EffectedPath {
-  String getEffectedPath();
+  Stream<String> getEffectedPaths();
 }

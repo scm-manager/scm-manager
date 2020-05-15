@@ -25,7 +25,6 @@
 package sonia.scm.repository;
 
 import com.google.common.collect.ImmutableList;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -33,6 +32,7 @@ import lombok.ToString;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -57,7 +57,11 @@ public class Modifications implements Serializable {
   }
 
   public List<String> getEffectedPaths() {
-    return modifications.stream().map(Modification::getEffectedPath).collect(toList());
+    return effectedPathsStream().collect(toList());
+  }
+
+  public Stream<String> effectedPathsStream() {
+    return modifications.stream().flatMap(Modification::getEffectedPaths);
   }
 
   public List<Modification.Added> getAdded() {
