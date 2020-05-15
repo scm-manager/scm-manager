@@ -381,7 +381,6 @@
               <repositoryUrl>${deployment.target}</repositoryUrl>
               <repositoryPath>/repository/yum-v2-${yum.repository.suffix}/${project.artifact.file.name}</repositoryPath>
               <serverId>${deployment.serverId}</serverId>
-              <usePOST>true</usePOST>
             </configuration>
           </execution>
         </executions>
