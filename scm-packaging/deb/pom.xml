@@ -24,7 +24,8 @@
     SOFTWARE.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -86,7 +87,7 @@
                   <version>1.1.0</version>
                   <type>tar.gz</type>
                   <fileMappers>
-                    <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
+                    <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper/>
                   </fileMappers>
                 </artifactItem>
               </artifactItems>
@@ -355,5 +356,34 @@
 
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>sign</id>
+      <activation>
+        <property>
+          <name>gpg.scm.keyring</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>jdeb</artifactId>
+            <groupId>org.vafer</groupId>
+            <version>1.8</version>
+            <configuration>
+              <signRole>builder</signRole>
+              <signPackage>true</signPackage>
+              <keyring>${gpg.scm.keyring}</keyring>
+              <key>${gpg.scm.key}</key>
+              <passphrase>${gpg.scm.passphrase}</passphrase>
+            </configuration>
+          </plugin>
+
+        </plugins>
+
+      </build>
+    </profile>
+  </profiles>
 
 </project>

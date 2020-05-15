@@ -129,6 +129,7 @@
           <packageName>scm-server</packageName>
           <group>Development/Tools</group>
           <license>MIT</license>
+          <skipSigning>true</skipSigning>
 
           <requires>
             <require>java-11-openjdk-headless</require>
@@ -141,6 +142,7 @@
           <beforeInstallation>
             <file>src/main/scripts/before-installation.sh</file>
           </beforeInstallation>
+
           <afterInstallation>
             <file>src/main/scripts/after-installation.sh</file>
           </afterInstallation>
@@ -388,8 +390,34 @@
     </plugins>
   </build>
 
-  <properties>
-    <rpm.skipSigning>true</rpm.skipSigning>
-  </properties>
+  <profiles>
+    <profile>
+      <id>sign</id>
+      <activation>
+        <property>
+          <name>gpg.scm.keyring</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>de.dentrassi.maven</groupId>
+            <artifactId>rpm</artifactId>
+            <version>1.5.0</version>
+            <configuration>
+              <skipSigning>false</skipSigning>
+              <signature>
+                <keyringFile>${gpg.scm.keyring}</keyringFile>
+                <keyId>${gpg.scm.key}</keyId>
+                <passphrase>${gpg.scm.passphrase}</passphrase>
+              </signature>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
