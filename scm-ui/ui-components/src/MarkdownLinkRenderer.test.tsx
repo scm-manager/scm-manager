@@ -28,6 +28,11 @@ const basePath = "/repo/space/name/sources/master/";
 const pathname = basePath + "README.md/";
 
 describe("correctLocalLink tests", () => {
+  it("should return same directory", () => {
+    expect(correctLocalLink(pathname, "./another.md")).toBe(basePath + "./another.md/");
+    expect(correctLocalLink(pathname, "./another.md#42")).toBe(basePath + "./another.md/#42");
+  });
+
   it("should return same url", () => {
     expect(correctLocalLink(pathname, "")).toBe(pathname);
     expect(correctLocalLink(pathname, "#42")).toBe("#42");
@@ -40,13 +45,8 @@ describe("correctLocalLink tests", () => {
   });
 
   it("should return ascend directory", () => {
-    expect(correctLocalLink(pathname, "../")).toBe(basePath + "../"); // one layer up
-    expect(correctLocalLink(pathname, "../../")).toBe(basePath + "../../"); // one layer up
-  });
-
-  it("should return same directory", () => {
-    expect(correctLocalLink(pathname, "./another.md")).toBe(basePath + "./another.md/"); // same layer
-    expect(correctLocalLink(pathname, "./another.md#42")).toBe(basePath + "./another.md/#42"); // same layer
+    expect(correctLocalLink(pathname, "../")).toBe(basePath + "../");
+    expect(correctLocalLink(pathname, "../../")).toBe(basePath + "../../");
   });
 
   it("should return deeper links", () => {
