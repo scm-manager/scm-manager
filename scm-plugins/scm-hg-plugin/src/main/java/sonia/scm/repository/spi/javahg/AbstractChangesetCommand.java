@@ -34,11 +34,14 @@ import com.aragost.javahg.internals.RuntimeIOException;
 import com.aragost.javahg.internals.Utils;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import sonia.scm.repository.Added;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.Modification;
 import sonia.scm.repository.Modifications;
+import sonia.scm.repository.Modified;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.Removed;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -273,11 +276,11 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
     String line = in.textUpTo('\n');
     while (line.length() > 0) {
       if (line.startsWith("a ")) {
-        modifications.add(new Modification.Added(line.substring(2)));
+        modifications.add(new Added(line.substring(2)));
       } else if (line.startsWith("m ")) {
-        modifications.add(new Modification.Modified(line.substring(2)));
+        modifications.add(new Modified(line.substring(2)));
       } else if (line.startsWith("d ")) {
-        modifications.add(new Modification.Removed(line.substring(2)));
+        modifications.add(new Removed(line.substring(2)));
       }
       line = in.textUpTo('\n');
     }

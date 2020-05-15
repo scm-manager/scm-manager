@@ -24,20 +24,18 @@
 
 package sonia.scm.repository;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ModificationsTest {
 
   public static final Modifications MODIFICATIONS = new Modifications("123",
-    new Modification.Added("added"),
-    new Modification.Removed("removed"),
-    new Modification.Modified("modified"),
-    new Modification.Renamed("rename from", "rename to"),
-    new Modification.Copied("copy from", "copy to")
+    new Added("added"),
+    new Removed("removed"),
+    new Modified("modified"),
+    new Renamed("rename from", "rename to"),
+    new Copied("copy from", "copy to")
   );
 
   @Test

@@ -24,7 +24,8 @@
 
 package sonia.scm.repository;
 
-import java.io.Serializable;
+import java.util.stream.Stream;
 
-public abstract class Modification extends EffectedPath implements Serializable {
+abstract class EffectedPath {
+  abstract Stream<String> getEffectedPaths();
 }

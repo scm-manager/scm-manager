@@ -30,8 +30,11 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import sonia.scm.repository.Modification;
+import sonia.scm.repository.Added;
 import sonia.scm.repository.Modifications;
+import sonia.scm.repository.Modified;
+import sonia.scm.repository.Removed;
+import sonia.scm.repository.Renamed;
 import sonia.scm.repository.Repository;
 
 import javax.inject.Inject;
@@ -54,17 +57,17 @@ public abstract class ModificationsToDtoMapper {
     target.add(linksBuilder.build());
   }
 
-  String map(Modification.Added added) {
+  String map(Added added) {
     return added.getPath();
   }
 
-  String map(Modification.Removed removed) {
+  String map(Removed removed) {
     return removed.getPath();
   }
 
-  String map(Modification.Modified modified) {
+  String map(Modified modified) {
     return modified.getPath();
   }
 
-  abstract ModificationsDto.RenamedDto map(Modification.Renamed renamed);
+  abstract ModificationsDto.RenamedDto map(Renamed renamed);
 }

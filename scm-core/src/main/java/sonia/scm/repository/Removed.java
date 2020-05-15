@@ -24,7 +24,20 @@
 
 package sonia.scm.repository;
 
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-public abstract class Modification extends EffectedPath implements Serializable {
+import java.util.stream.Stream;
+
+import static java.util.stream.Stream.of;
+
+@Getter
+@AllArgsConstructor
+public class Removed extends Modification {
+  private final String path;
+
+  @Override
+  Stream<String> getEffectedPaths() {
+    return of(path);
+  }
 }

@@ -64,38 +64,38 @@ public class Modifications implements Serializable {
     return modifications.stream().flatMap(Modification::getEffectedPaths);
   }
 
-  public List<Modification.Added> getAdded() {
+  public List<Added> getAdded() {
     return modifications.stream()
-      .filter(m -> m instanceof Modification.Added)
-      .map(m -> (Modification.Added) m)
+      .filter(m -> m instanceof Added)
+      .map(m -> (Added) m)
       .collect(toList());
   }
 
-  public List<Modification.Removed> getRemoved() {
+  public List<Removed> getRemoved() {
     return modifications.stream()
-      .filter(m -> m instanceof Modification.Removed)
-      .map(m -> (Modification.Removed) m)
+      .filter(m -> m instanceof Removed)
+      .map(m -> (Removed) m)
       .collect(toList());
   }
 
-  public List<Modification.Modified> getModified() {
+  public List<Modified> getModified() {
     return modifications.stream()
-      .filter(m -> m instanceof Modification.Modified)
-      .map(m -> (Modification.Modified) m)
+      .filter(m -> m instanceof Modified)
+      .map(m -> (Modified) m)
       .collect(toList());
   }
 
-  public List<Modification.Renamed> getRenamed() {
+  public List<Renamed> getRenamed() {
     return modifications.stream()
-      .filter(m -> m instanceof Modification.Renamed)
-      .map(m -> (Modification.Renamed) m)
+      .filter(m -> m instanceof Renamed)
+      .map(m -> (Renamed) m)
       .collect(toList());
   }
 
-  public List<Modification.Copied> getCopied() {
+  public List<Copied> getCopied() {
     return modifications.stream()
-      .filter(m -> m instanceof Modification.Copied)
-      .map(m -> (Modification.Copied) m)
+      .filter(m -> m instanceof Copied)
+      .map(m -> (Copied) m)
       .collect(toList());
   }
 }

@@ -32,10 +32,14 @@ import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
+import sonia.scm.repository.Added;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Modification;
 import sonia.scm.repository.Modifications;
+import sonia.scm.repository.Modified;
+import sonia.scm.repository.Removed;
+import sonia.scm.repository.Renamed;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -117,13 +121,13 @@ public class GitModificationsCommand extends AbstractGitCommand implements Modif
     DiffEntry.ChangeType type = entry.getChangeType();
     switch (type) {
       case ADD:
-        return new Modification.Added(entry.getNewPath());
+        return new Added(entry.getNewPath());
       case MODIFY:
-        return new Modification.Modified(entry.getNewPath());
+        return new Modified(entry.getNewPath());
       case DELETE:
-        return new Modification.Removed(entry.getOldPath());
+        return new Removed(entry.getOldPath());
       case RENAME:
-        return new Modification.Renamed(entry.getOldPath(), entry.getNewPath());
+        return new Renamed(entry.getOldPath(), entry.getNewPath());
       default:
         throw new UnsupportedModificationTypeException(entity(repository), MessageFormat.format("The modification type: {0} is not supported.", type));
     }

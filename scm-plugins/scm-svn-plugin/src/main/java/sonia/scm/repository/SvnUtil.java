@@ -145,14 +145,14 @@ public final class SvnUtil
     switch (type)
     {
       case SVNLogEntryPath.TYPE_ADDED :
-        return Optional.of(new Modification.Added(path));
+        return Optional.of(new Added(path));
 
       case SVNLogEntryPath.TYPE_DELETED :
-        return Optional.of(new Modification.Removed(path));
+        return Optional.of(new Removed(path));
 
       case TYPE_UPDATED :
       case SVNLogEntryPath.TYPE_MODIFIED :
-        return Optional.of(new Modification.Modified(path));
+        return Optional.of(new Modified(path));
 
       default :
         logger.debug("unknown modification type {}", type);
