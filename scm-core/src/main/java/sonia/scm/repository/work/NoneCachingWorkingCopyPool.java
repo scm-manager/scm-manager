@@ -29,6 +29,12 @@ import sonia.scm.util.IOUtil;
 import javax.inject.Inject;
 import java.io.File;
 
+/**
+ * This is the default implementation for the {@link WorkingCopyPool}. For each requested {@link WorkingCopy} with
+ * {@link #getWorkingCopy(SimpleWorkingCopyFactory.WorkingCopyContext)}, a new directory is requested from the
+ * {@link WorkdirProvider}. This directory is deleted immediately when the context is closed with
+ * {@link #contextClosed(SimpleWorkingCopyFactory.WorkingCopyContext, File)}.
+ */
 public class NoneCachingWorkingCopyPool implements WorkingCopyPool {
 
   private final WorkdirProvider workdirProvider;

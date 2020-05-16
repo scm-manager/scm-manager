@@ -44,14 +44,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
-class CachingAllWorkingCopyPoolTest {
+class SimpleCachingWorkingCopyPoolTest {
 
   private static final Repository REPOSITORY = new Repository("1", "git", "space", "X");
 
   @Mock
   WorkdirProvider workdirProvider;
   @InjectMocks
-  CachingAllWorkingCopyPool cachingAllWorkingCopyPool;
+  SimpleCachingWorkingCopyPool simpleCachingWorkingCopyPool;
 
   @Mock
   SimpleWorkingCopyFactory<Object, Path, ?>.WorkingCopyContext workingCopyContext;
@@ -70,7 +70,7 @@ class CachingAllWorkingCopyPoolTest {
     when(workingCopyContext.getScmRepository()).thenReturn(REPOSITORY);
     when(workdirProvider.createNewWorkdir()).thenReturn(temp.toFile());
 
-    WorkingCopy<?, ?> workdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
+    WorkingCopy<?, ?> workdir = simpleCachingWorkingCopyPool.getWorkingCopy(workingCopyContext);
 
     verify(workingCopyContext).initialize(temp.toFile());
   }
@@ -80,9 +80,9 @@ class CachingAllWorkingCopyPoolTest {
     when(workingCopyContext.getScmRepository()).thenReturn(REPOSITORY);
     when(workdirProvider.createNewWorkdir()).thenReturn(temp.toFile());
 
-    WorkingCopy<?, ?> firstWorkdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
-    cachingAllWorkingCopyPool.contextClosed(workingCopyContext, firstWorkdir.getDirectory());
-    WorkingCopy<?, ?> secondWorkdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
+    WorkingCopy<?, ?> firstWorkdir = simpleCachingWorkingCopyPool.getWorkingCopy(workingCopyContext);
+    simpleCachingWorkingCopyPool.contextClosed(workingCopyContext, firstWorkdir.getDirectory());
+    WorkingCopy<?, ?> secondWorkdir = simpleCachingWorkingCopyPool.getWorkingCopy(workingCopyContext);
 
     verify(workingCopyContext).initialize(temp.toFile());
     verify(workingCopyContext).reclaim(temp.toFile());
@@ -100,10 +100,10 @@ class CachingAllWorkingCopyPoolTest {
       firstDirectory,
       secondDirectory);
 
-    WorkingCopy<?, ?> firstWorkdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
-    WorkingCopy<?, ?> secondWorkdir = cachingAllWorkingCopyPool.getWorkingCopy(workingCopyContext);
-    cachingAllWorkingCopyPool.contextClosed(workingCopyContext, firstWorkdir.getDirectory());
-    cachingAllWorkingCopyPool.contextClosed(workingCopyContext, secondWorkdir.getDirectory());
+    WorkingCopy<?, ?> firstWorkdir = simpleCachingWorkingCopyPool.getWorkingCopy(workingCopyContext);
+    WorkingCopy<?, ?> secondWorkdir = simpleCachingWorkingCopyPool.getWorkingCopy(workingCopyContext);
+    simpleCachingWorkingCopyPool.contextClosed(workingCopyContext, firstWorkdir.getDirectory());
+    simpleCachingWorkingCopyPool.contextClosed(workingCopyContext, secondWorkdir.getDirectory());
 
     verify(workingCopyContext, never()).reclaim(any());
     verify(workingCopyContext).initialize(firstDirectory);

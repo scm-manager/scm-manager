@@ -34,16 +34,45 @@ import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CachingAllWorkingCopyPool implements WorkingCopyPool {
+/**
+ * This class is a simple implementation of the {@link WorkingCopyPool} to demonstrate,
+ * how caching can work in the simplest way. For the first time a {@link WorkingCopy} is
+ * requested for a repository with {@link #getWorkingCopy(SimpleWorkingCopyFactory.WorkingCopyContext)},
+ * this implementation fetches a new directory from the {@link WorkdirProvider}.
+ * On {@link #contextClosed(SimpleWorkingCopyFactory.WorkingCopyContext, File)},
+ * the directory is not deleted, buy put into a map with the repository id as key.
+ * When a working copy is requested with {@link #getWorkingCopy(SimpleWorkingCopyFactory.WorkingCopyContext)}
+ * for a repository with such an existing directory, it is taken from the map, reclaimed and
+ * returned as {@link WorkingCopy}.
+ * If for one repository a working copy is requested, while another is in use already,
+ * a second directory is requested from the {@link WorkdirProvider} for the second one.
+ * If a context is closed with {@link #contextClosed(SimpleWorkingCopyFactory.WorkingCopyContext, File)}
+ * and there already is a directory stored in the map for the repository,
+ * the directory from the closed context simply is deleted.
+ * <br>
+ * In general, this implementation should speed up things a bit, but one has to take into
+ * account, that there is no monitoring of diskspace. So you have to make sure, that
+ * there is enough space for a clone of each repository in the working dir.
+ * <br>
+ * Possible enhancements:
+ * <ul>
+ *   <li>Monitoring of times</li>
+ *   <li>Allow multiple cached directories for busy repositories (possibly taking initial branches into account)</li>
+ *   <li>Measure allocated disk space and set a limit</li>
+ *   <li>Remove directories not used for a longer time</li>
+ *   <li>Wait for a cached directory on parallel requests</li>
+ * </ul>
+ */
+public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CachingAllWorkingCopyPool.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SimpleCachingWorkingCopyPool.class);
 
   private final Map<String, File> workdirs = new ConcurrentHashMap<>();
 
   private final WorkdirProvider workdirProvider;
 
   @Inject
-  public CachingAllWorkingCopyPool(WorkdirProvider workdirProvider) {
+  public SimpleCachingWorkingCopyPool(WorkdirProvider workdirProvider) {
     this.workdirProvider = workdirProvider;
   }
 

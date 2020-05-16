@@ -32,7 +32,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgTestUtil;
-import sonia.scm.repository.work.CachingAllWorkingCopyPool;
+import sonia.scm.repository.work.SimpleCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.repository.work.WorkingCopy;
 import sonia.scm.web.HgRepositoryEnvironmentBuilder;
@@ -59,7 +59,7 @@ public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
     workdirProvider = new WorkdirProvider(temporaryFolder.newFolder());
     HgHookManager hookManager = HgTestUtil.createHookManager();
     HgRepositoryEnvironmentBuilder environmentBuilder = new HgRepositoryEnvironmentBuilder(handler, hookManager);
-    workingCopyFactory = new SimpleHgWorkingCopyFactory(Providers.of(environmentBuilder), new CachingAllWorkingCopyPool(workdirProvider)) {
+    workingCopyFactory = new SimpleHgWorkingCopyFactory(Providers.of(environmentBuilder), new SimpleCachingWorkingCopyPool(workdirProvider)) {
       @Override
       public void configure(com.aragost.javahg.commands.PullCommand pullCommand) {
         // we do not want to configure http hooks in this unit test

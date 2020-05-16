@@ -29,7 +29,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.tmatesoft.svn.core.SVNException;
-import sonia.scm.repository.work.CachingAllWorkingCopyPool;
+import sonia.scm.repository.work.SimpleCachingWorkingCopyPool;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.repository.work.WorkingCopy;
@@ -95,7 +95,7 @@ public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase 
 
   @Test
   public void shouldDeleteUntrackedFileOnReclaim() throws IOException {
-    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new CachingAllWorkingCopyPool(workdirProvider));
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider));
 
     WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null);
     File directory = workingCopy.getWorkingRepository();
@@ -113,7 +113,7 @@ public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase 
 
   @Test
   public void shouldRestoreDeletedFileOnReclaim() throws IOException {
-    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new CachingAllWorkingCopyPool(workdirProvider));
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider));
 
     WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null);
     File directory = workingCopy.getWorkingRepository();
