@@ -110,17 +110,14 @@ node('docker') {
             imageVersion = imageVersion.replace('-SNAPSHOT', "-${commitHash.substring(0,7)}-${BUILD_NUMBER}")
           }
 
-          stage('Archive') {
-            archiveArtifacts 'scm-webapp/target/scm-webapp.war'
-            archiveArtifacts 'scm-server/target/scm-server-app.*'
-          }
-
           stage('Maven Deployment') {
-            // TODO why is the server recreated
-            // delete appassembler target, because the maven plugin fails to recreate the tar
-            sh "rm -rf scm-server/target/appassembler"
+            // configuration for docker deployment
+            mvn.useRepositoryCredentials([
+              id: 'docker.io',
+              credentialsId: 'hub.docker.com-cesmarvin'
+            ])
 
-            // deploy java artifacts
+            // configuration for maven deployment
             mvn.useDeploymentRepository([
               id: 'packages-test.scm-manager.org',
               url: 'https://packages-test.scm-manager.org/nexus',
@@ -150,24 +147,14 @@ node('docker') {
             }
           }
 
-          stage('Docker') {
-            docker.withRegistry('', 'hub.docker.com-cesmarvin') {
-              // push to cloudogu repository for internal usage
-              def image = docker.build('cloudogu/scm-manager')
-              image.push(imageVersion)
-              if (isReleaseBranch()) {
-                // push to official repository
-                image = docker.build('scmmanager/scm-manager')
-                image.push(imageVersion)
-              }
-            }
-          }
-
           stage('Presentation Environment') {
-            build job: 'scm-manager/next-scm.cloudogu.com', propagate: false, wait: false, parameters: [
-              string(name: 'changeset', value: commitHash),
-              string(name: 'imageTag', value: imageVersion)
-            ]
+            /**
+             * TODO does not match docker version (scm-packaging/docker)
+             * build job: 'scm-manager/next-scm.cloudogu.com', propagate: false, wait: false, parameters: [
+             *   string(name: 'changeset', value: commitHash),
+             *   string(name: 'imageTag', value: imageVersion)
+             * ]
+             */
           }
 
           if (isReleaseBranch()) {

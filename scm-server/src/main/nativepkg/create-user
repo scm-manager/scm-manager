@@ -1,6 +1,0 @@
-#!/bin/sh
-getent group scm >/dev/null || groupadd -r scm
-getent passwd scm >/dev/null || \
-    useradd -r -g scm -M -s /sbin/nologin \
-    -c "user for the scm-server process" scm
-exit 0
