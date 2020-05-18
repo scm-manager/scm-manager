@@ -42,7 +42,6 @@
 - section: Plugins
   entries:
     - /scm-plugins/
-    - /how-to-create-a-plugin/
     - /plugin-descriptor/
     - /active-directory-plugin/
     - /branchwp-plugin/

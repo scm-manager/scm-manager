@@ -1,5 +1,5 @@
 ---
-title: SCM-Server and Apache mod\_jk
+title: SCM-Server and Apache mod_jk
 subtitle: Setting up SCM-Manager with Apache Tomcat
 ---
 
