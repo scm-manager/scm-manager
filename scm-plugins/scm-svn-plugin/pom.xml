@@ -98,12 +98,6 @@
       <url>https://maven.tmatesoft.com/content/repositories/releases</url>
     </repository>
 
-    <repository>
-      <id>maven.scm-manager.org</id>
-      <name>scm-manager release repository</name>
-      <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
-    </repository>
-
   </repositories>
 
 </project>
