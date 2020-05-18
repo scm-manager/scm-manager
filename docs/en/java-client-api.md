@@ -11,9 +11,9 @@ SCM-Manager maven repository in your pom.xml:
 <repositories>
 
   <repository>
-    <id>maven.scm-manager.org</id>
-    <name>scm-manager release repository</name>
-    <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
+    <id>packages.scm-manager.org</id>
+    <name>scm-manager public repository</name>
+    <url>https://packages.scm-manager.org/repository/public</url>
   </repository>
 
 </repositories>

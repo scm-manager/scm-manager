@@ -8,7 +8,7 @@ This incompatible repositories must be converted, before they can be used with S
 
 * stop SCM-Manager
 * create a full backup of your scm home directory
-* download the convert util from [here](https://maven.scm-manager.org/nexus/content/repositories/releases/sonia/scm/scm-fixsvndb5-cli/1.0.1/scm-fixsvndb5-cli-1.0.1-jar-with-dependencies.jar)
+* download the convert util from [here](https://packages.scm-manager.org/repository/releases/sonia/scm/scm-fixsvndb5-cli/1.0.1/scm-fixsvndb5-cli-1.0.1-jar-with-dependencies.jar)
 * execute the convert util with your scm home directory as parameter e.g.:
 
 ```bash
