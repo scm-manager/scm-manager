@@ -25,13 +25,9 @@ The RPM package is tested with Fedora and Centos. Create a new files at /etc/yum
 ```text
 [scm-releases]
 name=SCM-Manager Releases
-baseurl=http://maven.scm-manager.org/nexus/content/repositories/releases
+baseurl=https://packages.scm-manager.org/repository/yum-v1-releases/
 enabled=1
-protect=0
 gpgcheck=0
-metadata_expire=30s
-autorefresh=1
-type=rpm-md
 ```
 
 After file creation execute the following command to install scm-server:
@@ -48,7 +44,7 @@ The DEB package is tested with Debian and Ubuntu. Execute the following commands
 
 ```bash
 # add the scm-manager repository
-echo "echo 'deb http://maven.scm-manager.org/nexus/content/repositories/releases ./' >> /etc/apt/sources.list" | sudo sh
+echo "echo 'deb https://packages.scm-manager.org/repository/apt-v1-releases/ stable main' >> /etc/apt/sources.list" | sudo sh
 
 # install gpg key for the scm-manager repository
 sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 D742B261

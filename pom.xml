@@ -76,9 +76,9 @@
   <repositories>
 
     <repository>
-      <id>maven.scm-manager.org</id>
+      <id>packages.scm-manager.org</id>
       <name>scm-manager release repository</name>
-      <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
+      <url>https://packages.scm-manager.org/repository/public/</url>
     </repository>
 
   </repositories>
@@ -86,9 +86,9 @@
   <pluginRepositories>
 
     <pluginRepository>
-      <id>maven.scm-manager.org</id>
+      <id>packages.scm-manager.org</id>
       <name>scm-manager release repository</name>
-      <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
+      <url>https://packages.scm-manager.org/repository/public/</url>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
@@ -508,15 +508,15 @@
   <distributionManagement>
 
     <repository>
-      <id>maven.scm-manager.org</id>
+      <id>packages.scm-manager.org</id>
       <name>scm-manager release repository</name>
-      <url>http://maven.scm-manager.org/nexus/content/repositories/releases</url>
+      <url>https://packages.scm-manager.org/repository/releases/</url>
     </repository>
 
     <snapshotRepository>
       <id>maven.scm-manager.org</id>
       <name>scm-manager snapshot repository</name>
-      <url>http://maven.scm-manager.org/nexus/content/repositories/snapshots</url>
+      <url>https://packages.scm-manager.org/repository/snapshots/</url>
     </snapshotRepository>
 
   </distributionManagement>
