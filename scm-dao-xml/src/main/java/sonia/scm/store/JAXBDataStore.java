@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -84,7 +84,10 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> 
       Marshaller marshaller = context.createMarshaller();
 
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-      marshaller.marshal(item, file);
+      CopyOnWrite.withTemporaryFile(
+        temp -> marshaller.marshal(item, temp.toFile()),
+        file.toPath()
+      );
     }
     catch (JAXBException ex) {
       throw new StoreException("could not write object with id ".concat(id),
