@@ -2,7 +2,7 @@
 
 // switch back to a stable tag, after pr 22 is mreged an the next version is released
 // see https://github.com/cloudogu/ces-build-lib/pull/22
-@Library('github.com/cloudogu/ces-build-lib@develop')
+@Library('github.com/cloudogu/ces-build-lib@7a14da6')
 import com.cloudogu.ces.cesbuildlib.*
 
 node('docker') {
@@ -108,7 +108,14 @@ node('docker') {
           sh "rm -rf scm-server/target/appassembler"
 
           // deploy java artifacts
-          mvn.useRepositoryCredentials([id: 'maven.scm-manager.org', url: 'https://maven.scm-manager.org/nexus', credentialsId: 'maven.scm-manager.org', type: 'Nexus2'])
+          mvn.useDeploymentRepository([
+            id: 'packages.scm-manager.org', 
+            url: 'https://packages.scm-manager.org', 
+            credentialsId: 'maven.scm-manager.org', 
+            snapshotRepository: '/repository/snapshots/', 
+            releaseRepository: '/repository/releases/',
+            type: 'Configurable'
+          ])
           mvn.deployToNexusRepository()
 
           // deploy frontend bits
