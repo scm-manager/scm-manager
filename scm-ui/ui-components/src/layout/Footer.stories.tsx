@@ -32,7 +32,7 @@ import hitchhiker from "../__resources__/hitchhiker.png";
 // @ts-ignore ignore unknown jpg
 import marvin from "../__resources__/marvin.jpg";
 import NavLink from "../navigation/NavLink";
-import ExternalLink from "../navigation/ExternalLink";
+import ExternalNavLink from "../navigation/ExternalNavLink";
 import { MemoryRouter } from "react-router-dom";
 
 const trillian: Me = {
@@ -50,9 +50,9 @@ const bindAvatar = (binder: Binder, avatar: string) => {
 };
 
 const bindLinks = (binder: Binder) => {
-  binder.bind("footer.information", () => <ExternalLink to="#" label="REST API" />);
-  binder.bind("footer.information", () => <ExternalLink to="#" label="CLI" />);
-  binder.bind("footer.support", () => <ExternalLink to="#" label="FAQ" />);
+  binder.bind("footer.information", () => <ExternalNavLink to="#" label="REST API" />);
+  binder.bind("footer.information", () => <ExternalNavLink to="#" label="CLI" />);
+  binder.bind("footer.support", () => <ExternalNavLink to="#" label="FAQ" />);
   binder.bind("profile.setting", () => <NavLink label="Authorized Keys" to="#" />);
 };
 

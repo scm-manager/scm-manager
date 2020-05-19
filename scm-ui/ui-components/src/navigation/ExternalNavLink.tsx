@@ -21,17 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React, { FC } from "react";
+import classNames from "classnames";
+import ExternalLink from "./ExternalLink";
 
-// @create-index
+type Props = {
+  to: string;
+  icon?: string;
+  label: string;
+};
 
-export { default as NavAction } from "./NavAction";
-export { default as NavLink } from "./NavLink";
-export { default as Navigation } from "./Navigation";
-export { default as SubNavigation } from "./SubNavigation";
-export { default as PrimaryNavigation } from "./PrimaryNavigation";
-export { default as PrimaryNavigationLink } from "./PrimaryNavigationLink";
-export { default as SecondaryNavigation } from "./SecondaryNavigation";
-export { MenuContext, StateMenuContextProvider } from "./MenuContext";
-export { default as SecondaryNavigationItem } from "./SecondaryNavigationItem";
-export { default as ExternalLink } from "./ExternalLink";
-export { default as ExternalNavLink } from "./ExternalNavLink";
+// TODO is it used in the menu? should it use MenuContext for collapse state?
+
+const ExternalNavLink: FC<Props> = ({ to, icon, label }) => {
+  let showIcon;
+  if (icon) {
+    showIcon = (
+      <>
+        <i className={classNames(icon, "fa-fw")} />{" "}
+      </>
+    );
+  }
+
+  return (
+    <li>
+      <ExternalLink to={to}>
+        {showIcon}
+        {label}
+      </ExternalLink>
+    </li>
+  );
+};
+
+export default ExternalNavLink;
