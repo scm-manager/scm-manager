@@ -182,11 +182,6 @@
       <artifactId>jaxb-runtime</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>javax.activation</groupId>
-      <artifactId>activation</artifactId>
-    </dependency>
-
     <!-- validation -->
 
     <dependency>
