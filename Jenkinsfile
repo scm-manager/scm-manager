@@ -199,6 +199,7 @@ Maven setupMavenBuild() {
   def logConf = "scm-webapp/src/main/resources/logback.ci.xml"
   mvn.additionalArgs += " -Dlogback.configurationFile=${logConf}"
   mvn.additionalArgs += " -Dscm-it.logbackConfiguration=${logConf}"
+  mvn.additionalArgs += " -Dsonar.coverage.exclusions=**/*.test.ts,**/*.test.tsx"
 
   if (isMainBranch() || isReleaseBranch()) {
     // Release starts javadoc, which takes very long, so do only for certain branches
