@@ -29,13 +29,14 @@ import styled from "styled-components";
 
 type Props = {
   file: File;
+  basePath: string;
 };
 
 const MarkdownContent = styled.div`
   padding: 0.5rem;
 `;
 
-const MarkdownViewer: FC<Props> = ({ file }) => {
+const MarkdownViewer: FC<Props> = ({ file, basePath }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | undefined>(undefined);
   const [content, setContent] = useState("");
@@ -62,7 +63,7 @@ const MarkdownViewer: FC<Props> = ({ file }) => {
 
   return (
     <MarkdownContent>
-      <MarkdownView content={content} />
+      <MarkdownView content={content} basePath={basePath} />
     </MarkdownContent>
   );
 };
