@@ -63,6 +63,7 @@ class DiffResultToDiffResultDtoMapperTest {
     assertModifiedFile(files.get(1), "B.ts", "abc", "def", "typescript");
     assertDeletedFile(files.get(2), "C.go", "ghi", "golang");
     assertRenamedFile(files.get(3), "typo.ts", "okay.ts", "def",  "fixed", "typescript");
+    assertCopiedFile(files.get(4), "good.ts", "better.ts", "def",  "fixed", "typescript");
 
     DiffResultDto.HunkDto hunk = files.get(1).getHunks().get(0);
     assertHunk(hunk, "@@ -3,4 1,2 @@", 1, 2, 3, 4);
@@ -108,7 +109,8 @@ class DiffResultToDiffResultDtoMapperTest {
         )
       ),
       deletedFile("C.go", "ghi"),
-      renamedFile("okay.ts", "typo.ts", "fixed", "def")
+      renamedFile("okay.ts", "typo.ts", "fixed", "def"),
+      copiedFile("better.ts", "good.ts", "fixed", "def")
     );
   }
 
@@ -174,6 +176,15 @@ class DiffResultToDiffResultDtoMapperTest {
     assertThat(file.getLanguage()).isEqualTo(language);
   }
 
+  private void assertCopiedFile(DiffResultDto.FileDto file, String oldPath, String newPath, String oldRevision, String newRevision, String language) {
+    assertThat(file.getOldPath()).isEqualTo(oldPath);
+    assertThat(file.getNewPath()).isEqualTo(newPath);
+    assertThat(file.getOldRevision()).isEqualTo(oldRevision);
+    assertThat(file.getNewRevision()).isEqualTo(newRevision);
+    assertThat(file.getType()).isEqualTo("copy");
+    assertThat(file.getLanguage()).isEqualTo(language);
+  }
+
   private DiffResult result(DiffFile... files) {
     DiffResult result = mock(DiffResult.class);
     when(result.iterator()).thenReturn(Arrays.asList(files).iterator());
@@ -184,6 +195,7 @@ class DiffResultToDiffResultDtoMapperTest {
     DiffFile file = mock(DiffFile.class);
     when(file.getNewPath()).thenReturn(path);
     when(file.getNewRevision()).thenReturn(revision);
+    when(file.getChangeType()).thenReturn(DiffFile.ChangeType.ADD);
     when(file.iterator()).thenReturn(Arrays.asList(hunks).iterator());
     return file;
   }
@@ -192,6 +204,7 @@ class DiffResultToDiffResultDtoMapperTest {
     DiffFile file = mock(DiffFile.class);
     when(file.getOldPath()).thenReturn(path);
     when(file.getOldRevision()).thenReturn(revision);
+    when(file.getChangeType()).thenReturn(DiffFile.ChangeType.DELETE);
     when(file.iterator()).thenReturn(Arrays.asList(hunks).iterator());
     return file;
   }
@@ -202,6 +215,7 @@ class DiffResultToDiffResultDtoMapperTest {
     when(file.getNewRevision()).thenReturn(newRevision);
     when(file.getOldPath()).thenReturn(path);
     when(file.getOldRevision()).thenReturn(oldRevision);
+    when(file.getChangeType()).thenReturn(DiffFile.ChangeType.MODIFY);
     when(file.iterator()).thenReturn(Arrays.asList(hunks).iterator());
     return file;
   }
@@ -212,6 +226,18 @@ class DiffResultToDiffResultDtoMapperTest {
     when(file.getNewRevision()).thenReturn(newRevision);
     when(file.getOldPath()).thenReturn(oldPath);
     when(file.getOldRevision()).thenReturn(oldRevision);
+    when(file.getChangeType()).thenReturn(DiffFile.ChangeType.RENAME);
+    when(file.iterator()).thenReturn(emptyIterator());
+    return file;
+  }
+
+  private DiffFile copiedFile(String newPath, String oldPath, String newRevision, String oldRevision) {
+    DiffFile file = mock(DiffFile.class);
+    when(file.getNewPath()).thenReturn(newPath);
+    when(file.getNewRevision()).thenReturn(newRevision);
+    when(file.getOldPath()).thenReturn(oldPath);
+    when(file.getOldRevision()).thenReturn(oldRevision);
+    when(file.getChangeType()).thenReturn(DiffFile.ChangeType.COPY);
     when(file.iterator()).thenReturn(emptyIterator());
     return file;
   }
