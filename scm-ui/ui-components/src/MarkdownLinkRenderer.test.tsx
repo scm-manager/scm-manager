@@ -21,52 +21,72 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { correctLocalLink } from "./MarkdownLinkRenderer";
+import { isAnchorLink, isExternalLink, isLinkWithProtocol, createLocalLink } from "./MarkdownLinkRenderer";
 
-const basePath = "/repo/space/name/sources/master/";
-const pathname = basePath + "README.md/";
-
-describe("correctLocalLink tests", () => {
-  it("should return same directory", () => {
-    expect(correctLocalLink(pathname, "./another.md")).toBe(basePath + "./another.md/");
-    expect(correctLocalLink(pathname, "./another.md#42")).toBe(basePath + "./another.md/#42");
+describe("test isAnchorLink", () => {
+  it("should return true", () => {
+    expect(isAnchorLink("#some-thing")).toBe(true);
+    expect(isAnchorLink("#/some/more/complicated-link")).toBe(true);
   });
 
-  it("should return same url", () => {
-    expect(correctLocalLink(pathname, "")).toBe(pathname);
-    expect(correctLocalLink(pathname, "#42")).toBe("#42");
+  it("should return false", () => {
+    expect(isAnchorLink("https://cloudogu.com")).toBe(false);
+    expect(isAnchorLink("/some/path/link")).toBe(false);
+  });
+});
+
+describe("test isExternalLink", () => {
+  it("should return true", () => {
+    expect(isExternalLink("https://cloudogu.com")).toBe(true);
+    expect(isExternalLink("http://cloudogu.com")).toBe(true);
+  });
+
+  it("should return false", () => {
+    expect(isExternalLink("some/path/link")).toBe(false);
+    expect(isExternalLink("/some/path/link")).toBe(false);
+    expect(isExternalLink("#some-anchor")).toBe(false);
+    expect(isExternalLink("mailto:trillian@hitchhiker.com")).toBe(false);
+  });
+});
+
+describe("test isLinkWithProtocol", () => {
+  it("should return true", () => {
+    expect(isLinkWithProtocol("ldap://[2001:db8::7]/c=GB?objectClass?one")).toBe(true);
+    expect(isLinkWithProtocol("mailto:trillian@hitchhiker.com")).toBe(true);
+    expect(isLinkWithProtocol("tel:+1-816-555-1212")).toBe(true);
+    expect(isLinkWithProtocol("urn:oasis:names:specification:docbook:dtd:xml:4.1.2")).toBe(true);
+    expect(isLinkWithProtocol("about:config")).toBe(true);
+    expect(isLinkWithProtocol("http://cloudogu.com")).toBe(true);
+  });
+  it("should return false", () => {
+    expect(isExternalLink("some/path/link")).toBe(false);
+    expect(isExternalLink("/some/path/link")).toBe(false);
+    expect(isExternalLink("#some-anchor")).toBe(false);
+  });
+});
+
+describe("test createLocalLink", () => {
+  const basePath = "/repo/space/name/sources/master/";
+  const pathname = basePath + "README.md/";
+
+  it("should return same directory", () => {
+    expect(createLocalLink(pathname, "./another.md")).toBe(basePath + "./another.md/");
+    expect(createLocalLink(pathname, "./another.md#42")).toBe(basePath + "./another.md/#42");
   });
 
   it("should return main directory", () => {
-    expect(correctLocalLink(pathname, "/")).toBe("/");
-    expect(correctLocalLink(pathname, "/users/")).toBe("/users/");
-    expect(correctLocalLink(pathname, "/users/#42")).toBe("/users/#42");
+    expect(createLocalLink(pathname, "/")).toBe("/");
+    expect(createLocalLink(pathname, "/users/")).toBe("/users/");
+    expect(createLocalLink(pathname, "/users/#42")).toBe("/users/#42");
   });
 
   it("should return ascend directory", () => {
-    expect(correctLocalLink(pathname, "../")).toBe(basePath + "../");
-    expect(correctLocalLink(pathname, "../../")).toBe(basePath + "../../");
+    expect(createLocalLink(pathname, "../")).toBe(basePath + "../");
+    expect(createLocalLink(pathname, "../../")).toBe(basePath + "../../");
   });
 
   it("should return deeper links", () => {
-    expect(correctLocalLink(pathname, "docs/Home.md")).toBe(basePath + "docs/Home.md/");
-    expect(correctLocalLink(pathname, "docs/Home.md#42")).toBe(basePath + "docs/Home.md/#42");
-  });
-
-  it("should return external link", () => {
-    expect(correctLocalLink(pathname, "https://foo.bar/baz#42")).toBe("https://foo.bar/baz#42");
-    expect(correctLocalLink(pathname, "ldap://[2001:db8::7]/c=GB?objectClass?one")).toBe(
-      "ldap://[2001:db8::7]/c=GB?objectClass?one"
-    );
-    expect(correctLocalLink(pathname, "mailto:John.Doe@example.com")).toBe("mailto:John.Doe@example.com");
-    expect(correctLocalLink(pathname, "http://userid:password@example.com:8080")).toBe(
-      "http://userid:password@example.com:8080"
-    );
-    expect(correctLocalLink(pathname, "tel:+1-816-555-1212")).toBe("tel:+1-816-555-1212");
-    expect(correctLocalLink(pathname, "urn:oasis:names:specification:docbook:dtd:xml:4.1.2")).toBe(
-      "urn:oasis:names:specification:docbook:dtd:xml:4.1.2"
-    );
-    expect(correctLocalLink(pathname, "about:config")).toBe("about:config");
+    expect(createLocalLink(pathname, "docs/Home.md")).toBe(basePath + "docs/Home.md/");
+    expect(createLocalLink(pathname, "docs/Home.md#42")).toBe(basePath + "docs/Home.md/#42");
   });
 });

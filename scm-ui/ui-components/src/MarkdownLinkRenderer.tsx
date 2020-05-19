@@ -21,68 +21,74 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactNode } from "react";
+import React, { FC } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { withContextPath } from "./urls";
+import ExternalLink from "./navigation/ExternalLink";
 
 type Props = {
-  children: ReactNode;
   href: string;
 };
 
-const regex = new RegExp("[a-z]:");
+const externalLinkRegex = new RegExp("^http(s)?://");
+export const isExternalLink = (link: string) => {
+  return externalLinkRegex.test(link);
+};
 
-/**
- * Handle local SCM-Manager and external links
- *
- * @VisibleForTesting
- */
-export function correctLocalLink(pathname: string, link: string) {
-  if (link === "") {
-    return pathname;
-  }
+export const isAnchorLink = (link: string) => {
+  return link.startsWith("#");
+};
 
-  // Leave uris unchanged which start with schemes or fragment
-  if (link.match(regex) || link.startsWith("#")) {
-    return link;
-  }
+const linkWithProtcolRegex = new RegExp("^[a-z]+:");
+export const isLinkWithProtocol = (link: string) => {
+  return linkWithProtcolRegex.test(link);
+};
 
+export const createLocalLink = (pathname: string, link: string) => {
   // Reference to the main directory possible if link starts with slash
   let base = "";
   let path = link;
   if (!link.startsWith("/")) {
     base = pathname;
     // Remove last slash temporary
-    if (base.endsWith("/")) base = base.substring(0, base.length - 1);
+    if (base.endsWith("/")) {
+      base = base.substring(0, base.length - 1);
+    }
+
     // Remove current called file from path
     base = base.substr(0, base.lastIndexOf("/") + 1);
 
     // Remove first slash for absolute consistence
-    if (path.startsWith("/")) path = path.substring(1);
+    if (path.startsWith("/")) {
+      path = path.substring(1);
+    }
   }
 
   // Link must end with fragment if it contains one
   const pathParts = path.split("#");
   if (pathParts.length > 1) {
     // Add ending slash in front of fragment
-    if (!pathParts[0].endsWith("/")) pathParts[0] += "/";
+    if (!pathParts[0].endsWith("/")) {
+      pathParts[0] += "/";
+    }
     path = pathParts[0] + "#" + pathParts[1];
-  } else {
-    // Add ending slash
-    if (!path.endsWith("/")) path += "/";
+  } else if (!path.endsWith("/")) {
+    path += "/";
   }
 
   return base + path;
-}
+};
 
-const MarkdownLinkRenderer: FC<Props> = ({ children, href }) => {
+const MarkdownLinkRenderer: FC<Props> = ({ href, children }) => {
   const location = useLocation();
-  const compositeUrl = correctLocalLink(withContextPath(location.pathname), href);
-
-  if (compositeUrl.match(regex)) {
-    return <a href={compositeUrl}>{children}</a>;
+  if (isExternalLink(href)) {
+    return <ExternalLink to={href}>{children}</ExternalLink>;
+  } else if (isAnchorLink(href) || isLinkWithProtocol(href)) {
+    return <a href={href}>{children}</a>;
+  } else {
+    const compositeUrl = createLocalLink(withContextPath(location.pathname), href);
+    return <Link to={compositeUrl}>{children}</Link>;
   }
-  return <Link to={compositeUrl}>{children}</Link>;
 };
 
 export default MarkdownLinkRenderer;
