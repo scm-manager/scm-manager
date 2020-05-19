@@ -21,14 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { withContextPath } from "./urls";
+import React, {FC} from "react";
+import {Link, useLocation} from "react-router-dom";
 import ExternalLink from "./navigation/ExternalLink";
-
-type Props = {
-  href: string;
-};
+import {withContextPath} from "./urls";
 
 const externalLinkRegex = new RegExp("^http(s)?://");
 export const isExternalLink = (link: string) => {
@@ -44,51 +40,61 @@ export const isLinkWithProtocol = (link: string) => {
   return linkWithProtcolRegex.test(link);
 };
 
-export const createLocalLink = (pathname: string, link: string) => {
-  // Reference to the main directory possible if link starts with slash
-  let base = "";
-  let path = link;
-  if (!link.startsWith("/")) {
-    base = pathname;
-    // Remove last slash temporary
-    if (base.endsWith("/")) {
-      base = base.substring(0, base.length - 1);
-    }
-
-    // Remove current called file from path
-    base = base.substr(0, base.lastIndexOf("/") + 1);
-
-    // Remove first slash for absolute consistence
-    if (path.startsWith("/")) {
-      path = path.substring(1);
-    }
+const join = (left: string, right: string) => {
+  if (left.endsWith("/") && right.startsWith("/")) {
+    return left + right.substring(1);
+  } else if (!left.endsWith("/") && !right.startsWith("/")) {
+    return left + "/" + right;
   }
-
-  // Link must end with fragment if it contains one
-  const pathParts = path.split("#");
-  if (pathParts.length > 1) {
-    // Add ending slash in front of fragment
-    if (!pathParts[0].endsWith("/")) {
-      pathParts[0] += "/";
-    }
-    path = pathParts[0] + "#" + pathParts[1];
-  } else if (!path.endsWith("/")) {
-    path += "/";
-  }
-
-  return base + path;
+  return left + right;
 };
 
-const MarkdownLinkRenderer: FC<Props> = ({ href, children }) => {
+export const createLocalLink = (basePath: string, currentPath: string, link: string) => {
+  if (link.startsWith("/")) {
+    return join(basePath, link);
+  }
+  if (!currentPath.startsWith(basePath)) {
+    return join(basePath, link);
+  }
+  let path = currentPath;
+  if (currentPath.endsWith("/")) {
+    path = currentPath.substring(0, currentPath.length - 2);
+  }
+  const lastSlash = path.lastIndexOf("/");
+  if (lastSlash < 0) {
+    path = "";
+  } else {
+    path = path.substring(0, lastSlash);
+  }
+  return join(path, link);
+};
+
+type LinkProps = {
+  href: string;
+};
+
+type Props = LinkProps & {
+  base: string;
+};
+
+const MarkdownLinkRenderer: FC<Props> = ({href, base, children}) => {
   const location = useLocation();
   if (isExternalLink(href)) {
     return <ExternalLink to={href}>{children}</ExternalLink>;
-  } else if (isAnchorLink(href) || isLinkWithProtocol(href)) {
+  } else if (isLinkWithProtocol(href)) {
     return <a href={href}>{children}</a>;
+  } else if (isAnchorLink(href)) {
+    return <a href={withContextPath(location.pathname) + href}>{children}</a>;
   } else {
-    const compositeUrl = createLocalLink(withContextPath(location.pathname), href);
-    return <Link to={compositeUrl}>{children}</Link>;
+    const localLink = createLocalLink(base, location.pathname, href);
+    return <Link to={localLink}>{children}</Link>;
   }
+};
+
+// we use a factory method, because react-markdown does not pass
+// base as prop down to our link component.
+export const create = (base: string): FC<LinkProps> => {
+  return props => <MarkdownLinkRenderer base={base} {...props} />;
 };
 
 export default MarkdownLinkRenderer;
