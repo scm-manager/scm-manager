@@ -954,7 +954,6 @@
     <sonar.cpd.exclusions>**/*StoreFactory.java,**/*UserPassword.js</sonar.cpd.exclusions>
 
     <sonar.nodejs.executable>./scm-ui/target/frontend/buildfrontend-node/node-v${nodejs.version}-linux-x64/bin/node</sonar.nodejs.executable>
-    <sonar.coverage.exclusions>**/*.test.ts,**/*.test.tsx</sonar.coverage.exclusions>
 
     <!-- Possibility to skip only the unit test. Can be useful when running only integration tests.
     This can be used from the command line as follows: mvn <goals> -DskipUnitTests -->
