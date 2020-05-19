@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 import com.google.common.base.Preconditions;
 
+import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -75,5 +76,20 @@ public class HgServletInputStream extends ServletInputStream {
   @Override
   public void close() throws IOException {
     original.close();
+  }
+
+  @Override
+  public boolean isFinished() {
+    return original.isFinished();
+  }
+
+  @Override
+  public boolean isReady() {
+    return original.isReady();
+  }
+
+  @Override
+  public void setReadListener(ReadListener readListener) {
+    original.setReadListener(readListener);
   }
 }

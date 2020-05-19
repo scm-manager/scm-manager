@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 import com.google.common.base.Charsets;
@@ -31,6 +31,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
@@ -181,6 +182,19 @@ public class WireProtocolTest {
       return input.read();
     }
 
+    @Override
+    public boolean isFinished() {
+      return false;
+    }
+
+    @Override
+    public boolean isReady() {
+      return false;
+    }
+
+    @Override
+    public void setReadListener(ReadListener readListener) {
+    }
   }
 
 }
