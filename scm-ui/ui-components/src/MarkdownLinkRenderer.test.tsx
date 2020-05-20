@@ -100,4 +100,19 @@ describe("test createLocalLink", () => {
     const localLink = createLocalLink("/src", "/src/docs/index.md", "/docs/Home.md");
     expect(localLink).toBe("/src/docs/Home.md");
   });
+
+  it("should resolve .. with in path", () => {
+    const localLink = createLocalLink("/src", "/src/docs/installation/index.md", "../../README.md");
+    expect(localLink).toBe("/src/README.md");
+  });
+
+  it("should resolve . with in path", () => {
+    const localLink = createLocalLink("/src", "/src/README.md", "./LICENSE.md");
+    expect(localLink).toBe("/src/LICENSE.md");
+  });
+
+  it("should handle complex path", () => {
+    const localLink = createLocalLink("/src", "/src/docs/installation/index.md", "./.././../docs/index.md");
+    expect(localLink).toBe("/src/docs/index.md");
+  });
 });

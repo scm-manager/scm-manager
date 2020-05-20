@@ -49,6 +49,19 @@ const join = (left: string, right: string) => {
   return left + right;
 };
 
+const normalizePath = (path: string) => {
+  const stack = [];
+  const parts = path.split("/");
+  for (const part of parts) {
+    if (part === "..") {
+      stack.pop();
+    } else if (part !== ".") {
+      stack.push(part)
+    }
+  }
+  return stack.join("/")
+};
+
 export const createLocalLink = (basePath: string, currentPath: string, link: string) => {
   if (link.startsWith("/")) {
     return join(basePath, link);
@@ -66,7 +79,7 @@ export const createLocalLink = (basePath: string, currentPath: string, link: str
   } else {
     path = path.substring(0, lastSlash);
   }
-  return join(path, link);
+  return normalizePath(join(path, link));
 };
 
 type LinkProps = {
