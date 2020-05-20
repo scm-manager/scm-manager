@@ -241,6 +241,16 @@
         <groupId>org.jboss.resteasy</groupId>
         <artifactId>resteasy-core</artifactId>
         <version>${resteasy.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.ws.rs</groupId>
+            <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.xml.bind</groupId>
+            <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -253,6 +263,12 @@
         <groupId>org.jboss.resteasy</groupId>
         <artifactId>resteasy-jaxb-provider</artifactId>
         <version>${resteasy.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.xml.bind</groupId>
+            <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -269,6 +285,30 @@
 
       <dependency>
         <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-client-api</artifactId>
+        <version>${resteasy.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.ws.rs</groupId>
+            <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-client</artifactId>
+        <version>${resteasy.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.ws.rs</groupId>
+            <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
         <artifactId>resteasy-guice</artifactId>
         <version>${resteasy.version}</version>
       </dependency>
@@ -277,6 +317,12 @@
         <groupId>org.jboss.resteasy</groupId>
         <artifactId>resteasy-servlet-initializer</artifactId>
         <version>${resteasy.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.ws.rs</groupId>
+            <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!--
