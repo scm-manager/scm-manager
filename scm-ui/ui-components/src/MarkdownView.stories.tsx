@@ -30,6 +30,7 @@ import TestPage from "./__resources__/test-page.md";
 import MarkdownWithoutLang from "./__resources__/markdown-without-lang.md";
 import MarkdownXmlCodeBlock from "./__resources__/markdown-xml-codeblock.md";
 import MarkdownInlineXml from "./__resources__/markdown-inline-xml.md";
+import MarkdownLinks from "./__resources__/markdown-links.md";
 import Title from "./layout/Title";
 import { Subtitle } from "./layout";
 import { MemoryRouter } from "react-router-dom";
@@ -50,4 +51,5 @@ storiesOf("MarkdownView", module)
       <Subtitle subtitle="Inline xml outside of a code block is not supported" />
       <MarkdownView content={MarkdownInlineXml} />
     </>
-  ));
+  ))
+  .add("Links", () => <MarkdownView content={MarkdownLinks} basePath="/" />);
