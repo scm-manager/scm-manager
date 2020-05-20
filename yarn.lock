@@ -7444,9 +7444,9 @@ gitconfiglocal@^1.0.0:
   dependencies:
     ini "^1.3.2"
 
-gitdiff-parser@^0.1.2, "gitdiff-parser@https://github.com/scm-manager/gitdiff-parser#1da10408e52ad1d58b1f817dd1d658d9f2eb4087":
+gitdiff-parser@^0.1.2, "gitdiff-parser@https://github.com/scm-manager/gitdiff-parser#617747460280bf4522bb84d217a9064ac8eb6d3d":
   version "0.1.2"
-  resolved "https://github.com/scm-manager/gitdiff-parser#1da10408e52ad1d58b1f817dd1d658d9f2eb4087"
+  resolved "https://github.com/scm-manager/gitdiff-parser#617747460280bf4522bb84d217a9064ac8eb6d3d"
 
 glob-base@^0.3.0:
   version "0.3.0"
