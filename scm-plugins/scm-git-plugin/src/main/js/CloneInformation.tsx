@@ -48,7 +48,7 @@ class CloneInformation extends React.Component<Props> {
             cd {repository.name}
             <br />
             echo "# {repository.name}
-            " > README.md
+            " &gt; README.md
             <br />
             git add README.md
             <br />

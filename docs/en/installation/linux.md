@@ -12,18 +12,18 @@ If you want to use [Mercurial](https://www.mercurial-scm.org/), ensure it is ins
 
 ## Installation
 
-Download [scm-server-2.0.0-rc5-app.tar.gz](https://maven.scm-manager.org/nexus/service/local/repositories/releases/content/sonia/scm/scm-server/2.0.0-rc5/scm-server-2.0.0-rc5-app.tar.gz)
-and verify the checksum (sha1: 3b2dff3fda0c46362c518be37edd4e77bccc88bb).
+Download [scm-server-2.0.0-rc8-app.tar.gz](https://packages.scm-manager.org/repository/releases/content/sonia/scm/scm-server/2.0.0-rc8/scm-server-2.0.0-rc8-app.tar.gz)
+and verify the checksum (sha1: 8bf465525d5a8c5907d1f74096af1783bc0b2fa7).
 
 ```bash
-wget https://maven.scm-manager.org/nexus/service/local/repositories/releases/content/sonia/scm/scm-server/2.0.0-rc5/scm-server-2.0.0-rc5-app.tar.gz
-echo "3b2dff3fda0c46362c518be37edd4e77bccc88bb *scm-server-2.0.0-rc5-app.tar.gz" | sha1sum -c -
+wget https://packages.scm-manager.org/repository/releases/content/sonia/scm/scm-server/2.0.0-rc8/scm-server-2.0.0-rc8-app.tar.gz
+echo "8bf465525d5a8c5907d1f74096af1783bc0b2fa7 *scm-server-2.0.0-rc8-app.tar.gz" | sha1sum -c -
 ```
 
 Extract the archive:
 
 ```bash
-tar xvfz scm-server-2.0.0-rc5-app.tar.gz -C /opt
+tar xvfz scm-server-2.0.0-rc8-app.tar.gz -C /opt
 ```
 
 ## Start

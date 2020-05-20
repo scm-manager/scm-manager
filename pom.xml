@@ -105,9 +105,9 @@
   <repositories>
 
     <repository>
-      <id>maven.scm-manager.org</id>
-      <name>scm-manager release repository</name>
-      <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
+      <id>packages.scm-manager.org</id>
+      <name>scm-manager public repository</name>
+      <url>https://packages.scm-manager.org/repository/public/</url>
     </repository>
 
   </repositories>
@@ -115,9 +115,9 @@
   <pluginRepositories>
 
     <pluginRepository>
-      <id>maven.scm-manager.org</id>
-      <name>scm-manager release repository</name>
-      <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
+      <id>packages.scm-manager.org</id>
+      <name>scm-manager public repository</name>
+      <url>https://packages.scm-manager.org/repository/public/</url>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
@@ -885,15 +885,15 @@
   <distributionManagement>
 
     <repository>
-      <id>maven.scm-manager.org</id>
+      <id>packages.scm-manager.org</id>
       <name>scm-manager release repository</name>
-      <url>http://maven.scm-manager.org/nexus/content/repositories/releases</url>
+      <url>https://packages.scm-manager.org/repository/releases/</url>
     </repository>
 
     <snapshotRepository>
-      <id>maven.scm-manager.org</id>
+      <id>packages.scm-manager.org</id>
       <name>scm-manager snapshot repository</name>
-      <url>http://maven.scm-manager.org/nexus/content/repositories/snapshots</url>
+      <url>https://packages.scm-manager.org/repository/snapshots/</url>
     </snapshotRepository>
 
   </distributionManagement>
@@ -912,7 +912,7 @@
     <jaxrs.version>2.1.1</jaxrs.version>
     <resteasy.version>4.5.3.Final</resteasy.version>
     <jersey-client.version>1.19.4</jersey-client.version>
-    <jackson.version>2.10.3</jackson.version>
+    <jackson.version>2.11.0</jackson.version>
     <guice.version>4.2.3</guice.version>
     <jaxb.version>2.3.1</jaxb.version>
     <hibernate-validator.version>6.1.4.Final</hibernate-validator.version>
@@ -926,7 +926,7 @@
 
     <!-- security libraries -->
     <ssp.version>1.2.0</ssp.version>
-    <shiro.version>1.5.2</shiro.version>
+    <shiro.version>1.5.3</shiro.version>
 
     <!-- repository libraries -->
     <jgit.version>5.6.1.202002131546-r-scm1</jgit.version>

@@ -85,14 +85,4 @@
     </plugins>
   </build>
 
-  <repositories>
-
-    <repository>
-      <id>maven.scm-manager.org</id>
-      <name>scm-manager release repository</name>
-      <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
-    </repository>
-
-  </repositories>
-
 </project>
