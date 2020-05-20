@@ -57,11 +57,13 @@ describe("test isLinkWithProtocol", () => {
     expect(isLinkWithProtocol("urn:oasis:names:specification:docbook:dtd:xml:4.1.2")).toBe(true);
     expect(isLinkWithProtocol("about:config")).toBe(true);
     expect(isLinkWithProtocol("http://cloudogu.com")).toBe(true);
+    expect(isLinkWithProtocol("file:///srv/git/project.git")).toBe(true);
+    expect(isLinkWithProtocol("ssh://trillian@server/project.git")).toBe(true);
   });
   it("should return false", () => {
-    expect(isExternalLink("some/path/link")).toBe(false);
-    expect(isExternalLink("/some/path/link")).toBe(false);
-    expect(isExternalLink("#some-anchor")).toBe(false);
+    expect(isLinkWithProtocol("some/path/link")).toBe(false);
+    expect(isLinkWithProtocol("/some/path/link")).toBe(false);
+    expect(isLinkWithProtocol("#some-anchor")).toBe(false);
   });
 });
 
@@ -106,9 +108,19 @@ describe("test createLocalLink", () => {
     expect(localLink).toBe("/src/README.md");
   });
 
+  it("should resolve .. to / if we reached the end", () => {
+    const localLink = createLocalLink("/", "/index.md", "../../README.md");
+    expect(localLink).toBe("/README.md");
+  });
+
   it("should resolve . with in path", () => {
     const localLink = createLocalLink("/src", "/src/README.md", "./LICENSE.md");
     expect(localLink).toBe("/src/LICENSE.md");
+  });
+
+  it("should resolve . with the current directory", () => {
+    const localLink = createLocalLink("/", "/README.md", "././LICENSE.md");
+    expect(localLink).toBe("/LICENSE.md");
   });
 
   it("should handle complex path", () => {

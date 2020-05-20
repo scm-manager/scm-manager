@@ -59,14 +59,26 @@ const normalizePath = (path: string) => {
       stack.push(part)
     }
   }
-  return stack.join("/")
+  const normalizedPath = stack.join("/")
+  if (normalizedPath.startsWith("/")) {
+    return normalizedPath;
+  }
+  return "/" + normalizedPath;
+};
+
+const isAbsolute = (link: string) => {
+  return link.startsWith("/");
+};
+
+const isSubDirectoryOf = (basePath: string, currentPath: string) => {
+  return currentPath.startsWith(basePath);
 };
 
 export const createLocalLink = (basePath: string, currentPath: string, link: string) => {
-  if (link.startsWith("/")) {
+  if (isAbsolute(link)) {
     return join(basePath, link);
   }
-  if (!currentPath.startsWith(basePath)) {
+  if (!isSubDirectoryOf(basePath, currentPath)) {
     return join(basePath, link);
   }
   let path = currentPath;
