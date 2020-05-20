@@ -21,10 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.filter;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,6 +40,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
@@ -47,6 +51,8 @@ import javax.servlet.http.HttpServletResponseWrapper;
  */
 public class BufferedHttpServletResponse extends HttpServletResponseWrapper
 {
+
+  private static final Logger LOG = LoggerFactory.getLogger(BufferedHttpServletResponse.class);
 
   /**
    *     Constructs ...
@@ -443,6 +449,20 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
     public void write(int param) throws IOException
     {
       baos.write(param);
+    }
+
+    @Override
+    public boolean isReady() {
+      return true;
+    }
+
+    @Override
+    public void setWriteListener(WriteListener writeListener) {
+      try {
+        writeListener.onWritePossible();
+      } catch (IOException e) {
+        LOG.debug("could not call writeListener.onWritePossible()", e);
+      }
     }
 
     //~--- fields -------------------------------------------------------------
