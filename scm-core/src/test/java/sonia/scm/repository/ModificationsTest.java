@@ -22,33 +22,50 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository;
 
-import sonia.scm.repository.Modification;
-import sonia.scm.repository.Modifications;
-import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
+import org.junit.jupiter.api.Test;
 
-import java.util.Collection;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class HgModificationsCommand extends AbstractCommand implements ModificationsCommand {
+class ModificationsTest {
 
-  HgModificationsCommand(HgCommandContext context) {
-    super(context);
+  public static final Modifications MODIFICATIONS = new Modifications("123",
+    new Added("added"),
+    new Removed("removed"),
+    new Modified("modified"),
+    new Renamed("rename from", "rename to"),
+    new Copied("copy from", "copy to")
+  );
+
+  @Test
+  void shouldFindAddedFilesAsEffected() {
+    assertThat(MODIFICATIONS.getEffectedPaths())
+      .contains("added");
   }
 
-
-  @Override
-  public Modifications getModifications(String revision) {
-    com.aragost.javahg.Repository repository = open();
-    HgLogChangesetCommand hgLogChangesetCommand = HgLogChangesetCommand.on(repository, getContext().getConfig());
-    Collection<Modification> modifications = hgLogChangesetCommand.rev(revision).extractModifications();
-    return new Modifications(revision, modifications);
+  @Test
+  void shouldFindRemovedFilesAsEffected() {
+    assertThat(MODIFICATIONS.getEffectedPaths())
+      .contains("removed");
   }
 
-  @Override
-  public Modifications getModifications(ModificationsCommandRequest request) {
-    return getModifications(request.getRevision());
+  @Test
+  void shouldFindModifiedFilesAsEffected() {
+    assertThat(MODIFICATIONS.getEffectedPaths())
+      .contains("modified");
   }
 
+  @Test
+  void shouldFindRenamedFilesAsEffected() {
+    assertThat(MODIFICATIONS.getEffectedPaths())
+      .contains("rename from", "rename to");
+  }
 
+  @Test
+  void shouldFindTargetOfCopiedFilesAsEffected() {
+    assertThat(MODIFICATIONS.getEffectedPaths())
+      .contains("copy to")
+      .doesNotContain("copy from");
+  }
 }

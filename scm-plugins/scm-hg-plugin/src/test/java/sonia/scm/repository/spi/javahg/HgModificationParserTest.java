@@ -22,52 +22,61 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.repository.spi.javahg;
 
-import de.otto.edison.hal.Links;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.junit.jupiter.api.Test;
 import sonia.scm.repository.Added;
-import sonia.scm.repository.Modifications;
+import sonia.scm.repository.Copied;
 import sonia.scm.repository.Modified;
 import sonia.scm.repository.Removed;
 import sonia.scm.repository.Renamed;
-import sonia.scm.repository.Repository;
 
-import javax.inject.Inject;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import static de.otto.edison.hal.Links.linkingTo;
+class HgModificationParserTest {
 
-@Mapper
-public abstract class ModificationsToDtoMapper {
+  HgModificationParser parser = new HgModificationParser();
 
-  @Inject
-  private ResourceLinks resourceLinks;
+  @Test
+  void shouldDetectAddedPath() {
+    parser.addLine("a added/file");
 
-  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
-  public abstract ModificationsDto map(Modifications modifications, @Context Repository repository);
-
-  @AfterMapping
-  void appendLinks(@MappingTarget ModificationsDto target, @Context Repository repository) {
-    Links.Builder linksBuilder = linkingTo()
-      .self(resourceLinks.modifications().self(repository.getNamespace(), repository.getName(), target.getRevision()));
-    target.add(linksBuilder.build());
+    assertThat(parser.getModifications())
+      .containsExactly(new Added("added/file"));
   }
 
-  String map(Added added) {
-    return added.getPath();
+  @Test
+  void shouldDetectModifiedPath() {
+    parser.addLine("m modified/file");
+
+    assertThat(parser.getModifications())
+      .containsExactly(new Modified("modified/file"));
   }
 
-  String map(Removed removed) {
-    return removed.getPath();
+  @Test
+  void shouldDetectRemovedPath() {
+    parser.addLine("d removed/file");
+
+    assertThat(parser.getModifications())
+      .containsExactly(new Removed("removed/file"));
   }
 
-  String map(Modified modified) {
-    return modified.getPath();
+  @Test
+  void shouldDetectRenamedPath() {
+    parser.addLine("a new/path");
+    parser.addLine("d old/path");
+    parser.addLine("c old/path\0new/path");
+
+    assertThat(parser.getModifications())
+      .containsExactly(new Renamed("old/path", "new/path"));
   }
 
-  abstract ModificationsDto.RenamedDto map(Renamed renamed);
+  @Test
+  void shouldCopiedRenamedPath() {
+    parser.addLine("a new/path");
+    parser.addLine("c old/path\0new/path");
+
+    assertThat(parser.getModifications())
+      .containsExactly(new Copied("old/path", "new/path"));
+  }
 }

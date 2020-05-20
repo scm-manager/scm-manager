@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 public interface DiffFile extends Iterable<Hunk> {
@@ -33,4 +33,10 @@ public interface DiffFile extends Iterable<Hunk> {
   String getOldPath();
 
   String getNewPath();
+
+  ChangeType getChangeType();
+
+  enum ChangeType {
+    ADD, MODIFY, DELETE, RENAME, COPY
+  }
 }

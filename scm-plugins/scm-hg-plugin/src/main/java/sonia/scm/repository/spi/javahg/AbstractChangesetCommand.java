@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi.javahg;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -36,10 +36,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.HgConfig;
-import sonia.scm.repository.Modifications;
+import sonia.scm.repository.Modification;
 import sonia.scm.repository.Person;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -251,7 +252,7 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
     return changeset;
   }
 
-  protected Modifications readModificationsFromStream(HgInputStream in) {
+  protected Collection<Modification> readModificationsFromStream(HgInputStream in) {
     try {
       boolean found = in.find(CHANGESET_PATTERN);
       if (found) {
@@ -265,20 +266,14 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
     return null;
   }
 
-  private Modifications extractModifications(HgInputStream in) throws IOException {
-    Modifications modifications = new Modifications();
+  private Collection<Modification> extractModifications(HgInputStream in) throws IOException {
+    HgModificationParser hgModificationParser = new HgModificationParser();
     String line = in.textUpTo('\n');
     while (line.length() > 0) {
-      if (line.startsWith("a ")) {
-        modifications.getAdded().add(line.substring(2));
-      } else if (line.startsWith("m ")) {
-        modifications.getModified().add(line.substring(2));
-      } else if (line.startsWith("d ")) {
-        modifications.getRemoved().add(line.substring(2));
-      }
+      hgModificationParser.addLine(line);
       line = in.textUpTo('\n');
     }
-    return modifications;
+    return hgModificationParser.getModifications();
   }
 
   /**
