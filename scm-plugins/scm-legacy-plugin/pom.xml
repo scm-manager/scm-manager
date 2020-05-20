@@ -36,9 +36,9 @@
   <description>Support migrated repository urls and v1 passwords</description>
   <version>2.0.0-SNAPSHOT</version>
   <packaging>smp</packaging>
-  
+
   <dependencies>
-    
+
     <!-- servlet api -->
 
     <dependency>
@@ -46,13 +46,6 @@
       <artifactId>javax.servlet-api</artifactId>
       <version>${servlet.version}</version>
       <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>jsr311-api</artifactId>
-      <version>1.1.1</version>
-      <scope>compile</scope>
     </dependency>
 
   </dependencies>
