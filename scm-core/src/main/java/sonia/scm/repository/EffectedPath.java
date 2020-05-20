@@ -22,33 +22,10 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository;
 
-import sonia.scm.repository.Modification;
-import sonia.scm.repository.Modifications;
-import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
+import java.util.stream.Stream;
 
-import java.util.Collection;
-
-public class HgModificationsCommand extends AbstractCommand implements ModificationsCommand {
-
-  HgModificationsCommand(HgCommandContext context) {
-    super(context);
-  }
-
-
-  @Override
-  public Modifications getModifications(String revision) {
-    com.aragost.javahg.Repository repository = open();
-    HgLogChangesetCommand hgLogChangesetCommand = HgLogChangesetCommand.on(repository, getContext().getConfig());
-    Collection<Modification> modifications = hgLogChangesetCommand.rev(revision).extractModifications();
-    return new Modifications(revision, modifications);
-  }
-
-  @Override
-  public Modifications getModifications(ModificationsCommandRequest request) {
-    return getModifications(request.getRevision());
-  }
-
-
+abstract class EffectedPath {
+  abstract Stream<String> getEffectedPaths();
 }

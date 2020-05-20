@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -49,7 +49,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
+import static java.util.Optional.empty;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
@@ -116,30 +120,23 @@ public final class SvnUtil
 
 
   public static Modifications createModifications(SVNLogEntry entry, String revision) {
-    Modifications modifications = new Modifications();
-    modifications.setRevision(revision);
     Map<String, SVNLogEntryPath> changeMap = entry.getChangedPaths();
 
+    List<Modification> modificationList;
     if (Util.isNotEmpty(changeMap)) {
-
-      for (SVNLogEntryPath e : changeMap.values()) {
-        appendModification(modifications, e.getType(), e.getPath());
-      }
+      modificationList = changeMap.values().stream()
+        .map(e -> asModification(e.getType(), e.getPath()))
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .collect(Collectors.toList());
+    } else {
+      modificationList = emptyList();
     }
-    return modifications;
+
+    return new Modifications(revision, modificationList);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param modifications
-   * @param type
-   * @param path
-   */
-  public static void appendModification(Modifications modifications, char type,
-    String path)
-  {
+  public static Optional<Modification> asModification(char type, String path) {
     if (path.startsWith("/"))
     {
       path = path.substring(1);
@@ -148,23 +145,18 @@ public final class SvnUtil
     switch (type)
     {
       case SVNLogEntryPath.TYPE_ADDED :
-        modifications.getAdded().add(path);
-
-        break;
+        return Optional.of(new Added(path));
 
       case SVNLogEntryPath.TYPE_DELETED :
-        modifications.getRemoved().add(path);
-
-        break;
+        return Optional.of(new Removed(path));
 
       case TYPE_UPDATED :
       case SVNLogEntryPath.TYPE_MODIFIED :
-        modifications.getModified().add(path);
-
-        break;
+        return Optional.of(new Modified(path));
 
       default :
         logger.debug("unknown modification type {}", type);
+        return empty();
     }
   }
 
