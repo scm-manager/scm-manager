@@ -69,62 +69,55 @@ describe("test isLinkWithProtocol", () => {
 
 describe("test createLocalLink", () => {
   it("should handle relative links", () => {
-    const localLink = createLocalLink("/src", "/src/README.md", "docs/Home.md");
-    expect(localLink).toBe("/src/docs/Home.md");
+    expectLocalLink("/src", "/src/README.md", "docs/Home.md", "/src/docs/Home.md");
   });
 
   it("should handle absolute links", () => {
-    const localLink = createLocalLink("/src", "/src/README.md", "/docs/Home.md");
-    expect(localLink).toBe("/src/docs/Home.md");
+    expectLocalLink("/src", "/src/README.md", "/docs/CHANGELOG.md", "/src/docs/CHANGELOG.md");
   });
 
   it("should handle relative links from locations with trailing slash", () => {
-    const localLink = createLocalLink("/src", "/src/README.md/", "/docs/Home.md");
-    expect(localLink).toBe("/src/docs/Home.md");
+    expectLocalLink("/src", "/src/README.md/", "/docs/LICENSE.md", "/src/docs/LICENSE.md");
   });
 
   it("should handle relative links from location outside of base", () => {
-    const localLink = createLocalLink("/src", "/info/readme", "docs/Home.md");
-    expect(localLink).toBe("/src/docs/Home.md");
+    expectLocalLink("/src", "/info/readme", "docs/index.md", "/src/docs/index.md");
   });
 
   it("should handle absolute links from location outside of base", () => {
-    const localLink = createLocalLink("/src", "/info/readme", "/docs/Home.md");
-    expect(localLink).toBe("/src/docs/Home.md");
+    expectLocalLink("/src", "/info/readme", "/info/index.md", "/src/info/index.md");
   });
 
   it("should handle relative links from sub directories", () => {
-    const localLink = createLocalLink("/src", "/src/docs/index.md", "installation/linux.md");
-    expect(localLink).toBe("/src/docs/installation/linux.md");
+    expectLocalLink("/src", "/src/docs/index.md", "installation/linux.md", "/src/docs/installation/linux.md");
   });
 
   it("should handle absolute links from sub directories", () => {
-    const localLink = createLocalLink("/src", "/src/docs/index.md", "/docs/Home.md");
-    expect(localLink).toBe("/src/docs/Home.md");
+    expectLocalLink("/src", "/src/docs/index.md", "/docs/CONTRIBUTIONS.md", "/src/docs/CONTRIBUTIONS.md");
   });
 
   it("should resolve .. with in path", () => {
-    const localLink = createLocalLink("/src", "/src/docs/installation/index.md", "../../README.md");
-    expect(localLink).toBe("/src/README.md");
+    expectLocalLink("/src", "/src/docs/installation/index.md", "../../README.md", "/src/README.md");
   });
 
   it("should resolve .. to / if we reached the end", () => {
-    const localLink = createLocalLink("/", "/index.md", "../../README.md");
-    expect(localLink).toBe("/README.md");
+    expectLocalLink("/", "/index.md", "../../README.md", "/README.md");
   });
 
   it("should resolve . with in path", () => {
-    const localLink = createLocalLink("/src", "/src/README.md", "./LICENSE.md");
-    expect(localLink).toBe("/src/LICENSE.md");
+    expectLocalLink("/src", "/src/README.md", "./SHAPESHIPS.md", "/src/SHAPESHIPS.md");
   });
 
   it("should resolve . with the current directory", () => {
-    const localLink = createLocalLink("/", "/README.md", "././LICENSE.md");
-    expect(localLink).toBe("/LICENSE.md");
+    expectLocalLink("/", "/README.md", "././HITCHHIKER.md", "/HITCHHIKER.md");
   });
 
   it("should handle complex path", () => {
-    const localLink = createLocalLink("/src", "/src/docs/installation/index.md", "./.././../docs/index.md");
-    expect(localLink).toBe("/src/docs/index.md");
+    expectLocalLink("/src", "/src/docs/installation/index.md", "./.././../docs/index.md", "/src/docs/index.md");
   });
+
+  const expectLocalLink = (basePath: string, currentPath: string, link: string, expected: string) => {
+    const localLink = createLocalLink(basePath, currentPath, link);
+    expect(localLink).toBe(expected);
+  };
 });
