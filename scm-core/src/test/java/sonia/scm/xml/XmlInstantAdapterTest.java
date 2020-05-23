@@ -21,12 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.xml;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 
 import javax.xml.bind.JAXB;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -36,13 +35,12 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.nio.file.Path;
 import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ExtendWith(TempDirectory.class)
 class XmlInstantAdapterTest {
 
   @Test
-  void shouldMarshalAndUnmarshalInstant(@TempDirectory.TempDir Path tempDirectory) {
+  void shouldMarshalAndUnmarshalInstant(@TempDir Path tempDirectory) {
     Path path = tempDirectory.resolve("instant.xml");
 
     Instant instant = Instant.now();

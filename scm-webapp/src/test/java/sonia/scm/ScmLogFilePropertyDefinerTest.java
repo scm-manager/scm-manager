@@ -26,7 +26,7 @@ package sonia.scm;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -36,14 +36,14 @@ import java.util.Properties;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@ExtendWith({MockitoExtension.class, TempDirectory.class})
+@ExtendWith({MockitoExtension.class})
 class ScmLogFilePropertyDefinerTest {
 
   @Mock
   private SCMContextProvider context;
 
   @Test
-  void shouldReturnPath(@TempDirectory.TempDir Path tempDir) {
+  void shouldReturnPath(@TempDir Path tempDir) {
     when(context.getBaseDirectory()).thenReturn(tempDir.toFile());
     ScmLogFilePropertyDefiner definer = builder().create();
 
@@ -52,7 +52,7 @@ class ScmLogFilePropertyDefinerTest {
   }
 
   @Test
-  void shouldReturnOsxPath(@TempDirectory.TempDir Path tempDir) {
+  void shouldReturnOsxPath(@TempDir Path tempDir) {
     ScmLogFilePropertyDefiner definer = builder()
       .withOs("Mac OS X")
       .withUserHome(tempDir.toAbsolutePath().toString())

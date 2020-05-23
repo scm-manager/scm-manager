@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.it;
 
 import io.restassured.RestAssured;
@@ -31,14 +31,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junitpioneer.jupiter.TempDirectory;
 import sonia.scm.it.utils.RepositoryUtil;
 import sonia.scm.it.utils.RestUtil;
 import sonia.scm.it.utils.ScmRequests;
@@ -50,12 +45,10 @@ import sonia.scm.repository.client.api.RepositoryClientException;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 import static java.util.Collections.emptyMap;
 import static org.junit.Assert.assertEquals;
@@ -65,7 +58,6 @@ import static sonia.scm.it.utils.TestData.USER_ANONYMOUS;
 import static sonia.scm.it.utils.TestData.WRITE;
 import static sonia.scm.it.utils.TestData.getDefaultRepositoryUrl;
 
-@ExtendWith(TempDirectory.class)
 class AnonymousAccessITCase {
 
   @Test
@@ -118,7 +110,7 @@ class AnonymousAccessITCase {
 
       @ParameterizedTest
       @ArgumentsSource(ScmTypes.class)
-      void shouldNotCloneRepository(String type, @TempDirectory.TempDir Path temporaryFolder) {
+      void shouldNotCloneRepository(String type, @TempDir Path temporaryFolder) {
         assertThrows(RepositoryClientException.class, () -> RepositoryUtil.createAnonymousRepositoryClient(type, Files.createDirectories(temporaryFolder).toFile()));
       }
     }
@@ -142,7 +134,7 @@ class AnonymousAccessITCase {
 
       @ParameterizedTest
       @ArgumentsSource(ScmTypes.class)
-      void shouldCloneRepository(String type, @TempDirectory.TempDir Path temporaryFolder) throws IOException {
+      void shouldCloneRepository(String type, @TempDir Path temporaryFolder) throws IOException {
         RepositoryClient client = RepositoryUtil.createAnonymousRepositoryClient(type, Files.createDirectories(temporaryFolder).toFile());
         assertEquals(1, Objects.requireNonNull(client.getWorkingCopy().list()).length);
       }

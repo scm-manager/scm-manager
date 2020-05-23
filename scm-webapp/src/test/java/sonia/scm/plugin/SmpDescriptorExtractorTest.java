@@ -21,13 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,7 +37,6 @@ import java.util.zip.ZipOutputStream;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ExtendWith(TempDirectory.class)
 class SmpDescriptorExtractorTest {
 
   private static final String PLUGIN_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
@@ -66,7 +64,7 @@ class SmpDescriptorExtractorTest {
     "</plugin>\n";
 
   @Test
-  void shouldExtractPluginXml(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldExtractPluginXml(@TempDir Path tempDir) throws IOException {
     Path pluginFile = createZipFile(tempDir, "META-INF/scm/plugin.xml", PLUGIN_XML);
 
     InstalledPluginDescriptor installedPluginDescriptor = new SmpDescriptorExtractor().extractPluginDescriptor(pluginFile);
@@ -75,14 +73,14 @@ class SmpDescriptorExtractorTest {
   }
 
   @Test
-  void shouldFailWithoutPluginXml(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldFailWithoutPluginXml(@TempDir Path tempDir) throws IOException {
     Path pluginFile = createZipFile(tempDir, "META-INF/wrong/plugin.xml", PLUGIN_XML);
 
     assertThrows(IOException.class, () -> new SmpDescriptorExtractor().extractPluginDescriptor(pluginFile));
   }
 
   @Test
-  void shouldFailWithIllegalPluginXml(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldFailWithIllegalPluginXml(@TempDir Path tempDir) throws IOException {
     Path pluginFile = createZipFile(tempDir, "META-INF/scm/plugin.xml", "<not><parsable>content</parsable></not>");
 
     assertThrows(IOException.class, () -> new SmpDescriptorExtractor().extractPluginDescriptor(pluginFile));

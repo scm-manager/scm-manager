@@ -21,14 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
 import java.net.URL;
@@ -43,13 +42,12 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(TempDirectory.class)
 class UberClassLoaderTest {
 
   private final URLClassLoader parentClassLoader = new URLClassLoader(new URL[0]);
 
   @Test
-  void shouldOnlyUseClassloaderOnce(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldOnlyUseClassloaderOnce(@TempDir Path tempDir) throws IOException {
     ClassLoader mailClassLoader = createClassLoader(tempDir, "plugin.txt", "mail");
     ClassLoader reviewClassLoader = createClassLoader(mailClassLoader, tempDir, "plugin.txt", "review");
 
@@ -61,7 +59,7 @@ class UberClassLoaderTest {
   }
 
   @Test
-  void shouldReturnResourceFromEachPluginClassLoader(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldReturnResourceFromEachPluginClassLoader(@TempDir Path tempDir) throws IOException {
     ClassLoader mailClassLoader = createClassLoader(tempDir, "scm.txt", "mail");
     ClassLoader reviewClassLoader = createClassLoader(tempDir, "scm.txt", "review");
 

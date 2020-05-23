@@ -21,12 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import sonia.scm.repository.Repository;
 
 import java.io.File;
@@ -36,11 +35,10 @@ import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(TempDirectory.class)
 class ModifyWorkerHelperTest {
 
   @Test
-  void shouldKeepExecutableFlag(@TempDirectory.TempDir Path temp) throws IOException {
+  void shouldKeepExecutableFlag(@TempDir Path temp) throws IOException {
 
     File target = createFile(temp, "executable.sh");
     File newFile = createFile(temp, "other");
