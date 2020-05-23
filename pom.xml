@@ -106,9 +106,9 @@
   <repositories>
 
     <repository>
-      <id>packages-test.scm-manager.org</id>
-      <name>scm-manager dependency repository</name>
-      <url>https://packages-test.scm-manager.org/repository/public/</url>
+      <id>packages.scm-manager.org</id>
+      <name>scm-manager group repository</name>
+      <url>https://packages.scm-manager.org/repository/public/</url>
     </repository>
 
   </repositories>
@@ -116,9 +116,9 @@
   <pluginRepositories>
 
     <pluginRepository>
-      <id>packages-test.scm-manager.org</id>
-      <name>scm-manager release repository</name>
-      <url>https://packages-test.scm-manager.org/repository/public/</url>
+      <id>packages.scm-manager.org</id>
+      <name>scm-manager public repository</name>
+      <url>https://packages.scm-manager.org/repository/public/</url>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
@@ -805,15 +805,15 @@
   <distributionManagement>
 
     <repository>
-      <id>packages-test.scm-manager.org</id>
+      <id>packages.scm-manager.org</id>
       <name>scm-manager release repository</name>
-      <url>https://packages-test.scm-manager.org/repository/releases/</url>
+      <url>https://packages.scm-manager.org/repository/releases/</url>
     </repository>
 
     <snapshotRepository>
-      <id>packages-test.scm-manager.org</id>
+      <id>packages.scm-manager.org</id>
       <name>scm-manager snapshot repository</name>
-      <url>https://packages-test.scm-manager.org/repository/snapshots/</url>
+      <url>https://packages.scm-manager.org/repository/snapshots/</url>
     </snapshotRepository>
 
   </distributionManagement>

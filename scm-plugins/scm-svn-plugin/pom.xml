@@ -98,12 +98,6 @@
       <url>https://maven.tmatesoft.com/content/repositories/releases</url>
     </repository>
 
-    <repository>
-      <id>packages-test.scm-manager.org</id>
-      <name>scm-manager dependency repository</name>
-      <url>https://packages-test.scm-manager.org/repository/public/</url>
-    </repository>
-
   </repositories>
 
 </project>

@@ -119,9 +119,9 @@ node('docker') {
 
             // configuration for maven deployment
             mvn.useDeploymentRepository([
-              id: 'packages-test.scm-manager.org',
-              url: 'https://packages-test.scm-manager.org/nexus',
-              credentialsId: 'packages-test.scm-manager.org',
+              id: 'packages.scm-manager.org',
+              url: 'https://packages.scm-manager.org',
+              credentialsId: 'packages.scm-manager.org',
               type: 'Configurable',
               snapshotRepository: '/repository/snapshots',
               releaseRepository: '/repository/releases'
