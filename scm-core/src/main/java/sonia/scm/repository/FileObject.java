@@ -21,18 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.base.Strings;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import sonia.scm.LastModifiedAware;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,98 +46,70 @@ import static java.util.Optional.ofNullable;
  * @author Sebastian Sdorra
  * @since 1.5
  */
-@XmlRootElement(name = "file")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class FileObject implements LastModifiedAware, Serializable
-{
+@EqualsAndHashCode
+@ToString
+public class FileObject implements LastModifiedAware, Serializable {
 
-  /** serial version uid */
   private static final long serialVersionUID = -5562537629609891499L;
 
-  //~--- methods --------------------------------------------------------------
+  private String description;
 
   /**
-   * {@inheritDoc}
+   * directory indicator
    */
-  @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-
-    if (getClass() != obj.getClass())
-    {
-      return false;
-    }
-
-    final FileObject other = (FileObject) obj;
-
-    //J-
-    return Objects.equal(name, other.name)
-           && Objects.equal(path, other.path)
-           && Objects.equal(directory, other.directory)
-           && Objects.equal(description, other.description)
-           && Objects.equal(length, other.length)
-           && Objects.equal(subRepository, other.subRepository)
-           && Objects.equal(commitDate, other.commitDate)
-           && Objects.equal(partialResult, other.partialResult)
-           && Objects.equal(computationAborted, other.computationAborted);
-    //J+
-  }
+  private boolean directory;
 
   /**
-   * {@inheritDoc}
+   * commit date
    */
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(
-      name,
-      path,
-      directory,
-      description,
-      length,
-      subRepository,
-      commitDate,
-      partialResult,
-      computationAborted);
-  }
+  private Long commitDate;
 
   /**
-   * {@inheritDoc}
+   * file length
    */
-  @Override
-  public String toString()
-  {
-    //J-
-    return MoreObjects.toStringHelper(this)
-            .add("name", name)
-            .add("path", path)
-            .add("directory", directory)
-            .add("description", description)
-            .add("length", length)
-            .add("subRepository", subRepository)
-            .add("commitDate", commitDate)
-            .add("partialResult", partialResult)
-            .add("computationAborted", computationAborted)
-            .toString();
-    //J+
-  }
+  private Long length;
 
-  //~--- get methods ----------------------------------------------------------
+  /**
+   * filename
+   */
+  private String name;
+
+  /**
+   * file path
+   */
+  private String path;
+
+  /**
+   * Marker for partial result.
+   */
+  private boolean partialResult = false;
+
+  /**
+   * Marker for aborted computation.
+   */
+  private boolean computationAborted = false;
+
+  /**
+   * sub repository informations
+   */
+  @XmlElement(name = "subrepository")
+  private SubRepository subRepository;
+
+  /**
+   * Children of this file (aka directory).
+   */
+  private Collection<FileObject> children = new ArrayList<>();
+
+  private boolean truncated;
 
   /**
    * Returns the last commit message for this file. The method will return null,
    * if the repository provider is not able to get the last commit for the path.
    *
-   *
    * @return Last commit message or <code>null</code>, when this value has not been computed
    * (see {@link #isPartialResult()}).
    */
-  public Optional<String> getDescription()
-  {
+  public Optional<String> getDescription() {
     return ofNullable(description);
   }
 
@@ -149,12 +118,11 @@ public class FileObject implements LastModifiedAware, Serializable
    * if the repository provider is not able to get the last commit for the path
    * or it has not been computed.
    *
-   *
    * @return last commit date
    */
   @Override
   public Long getLastModified() {
-    return this.isPartialResult()? null: this.commitDate;
+    return this.isPartialResult() ? null : this.commitDate;
   }
 
   /**
@@ -162,39 +130,33 @@ public class FileObject implements LastModifiedAware, Serializable
    * if the repository provider is not able to get the last commit for the path or if this value has not been computed
    * (see {@link #isPartialResult()} and {@link #isComputationAborted()}).
    */
-  public OptionalLong getCommitDate()
-  {
-    return commitDate == null? OptionalLong.empty(): OptionalLong.of(commitDate);
+  public OptionalLong getCommitDate() {
+    return commitDate == null ? OptionalLong.empty() : OptionalLong.of(commitDate);
   }
 
   /**
    * Returns the length of the file or {@link OptionalLong#empty()}, when this value has not been computed
    * (see {@link #isPartialResult()} and {@link #isComputationAborted()}).
    */
-  public OptionalLong getLength()
-  {
-    return length == null? OptionalLong.empty(): OptionalLong.of(length);
+  public OptionalLong getLength() {
+    return length == null ? OptionalLong.empty() : OptionalLong.of(length);
   }
 
   /**
    * Returns the name of the file.
    *
-   *
    * @return name of file
    */
-  public String getName()
-  {
+  public String getName() {
     return name;
   }
 
   /**
    * Returns the path of the file.
    *
-   *
    * @return path of file
    */
-  public String getPath()
-  {
+  public String getPath() {
     return path;
   }
 
@@ -218,22 +180,19 @@ public class FileObject implements LastModifiedAware, Serializable
    * Return sub repository information or null if the file is not
    * sub repository.
    *
-   * @since 1.10
    * @return sub repository informations or null
+   * @since 1.10
    */
-  public SubRepository getSubRepository()
-  {
+  public SubRepository getSubRepository() {
     return subRepository;
   }
 
   /**
    * Returns true if the file is a directory.
    *
-   *
    * @return true if file is a directory
    */
-  public boolean isDirectory()
-  {
+  public boolean isDirectory() {
     return directory;
   }
 
@@ -243,7 +202,7 @@ public class FileObject implements LastModifiedAware, Serializable
    * @return The children of this file if it is a directory.
    */
   public Collection<FileObject> getChildren() {
-    return children == null? null: unmodifiableCollection(children);
+    return children == null ? null : unmodifiableCollection(children);
   }
 
   /**
@@ -252,9 +211,8 @@ public class FileObject implements LastModifiedAware, Serializable
    * will return {@link Optional#empty()} (or {@link OptionalLong#empty()} respectively), unless they are computed.
    * There may be an asynchronous task running, that will set these values in the future.
    *
-   * @since 2.0.0
-   *
    * @return <code>true</code>, whenever some values of this object have not been computed, yet.
+   * @since 2.0.0
    */
   public boolean isPartialResult() {
     return partialResult;
@@ -265,9 +223,8 @@ public class FileObject implements LastModifiedAware, Serializable
    * values (like {@link #getLength()}, {@link #getDescription()} or {@link #getCommitDate()})
    * will return {@link Optional#empty()} (or {@link OptionalLong#empty()} respectively), unless they are computed.
    *
-   * @since 2.0.0
-   *
    * @return <code>true</code>, whenever some values of this object finally are not computed.
+   * @since 2.0.0
    */
   public boolean isComputationAborted() {
     return computationAborted;
@@ -282,87 +239,72 @@ public class FileObject implements LastModifiedAware, Serializable
   /**
    * Sets the description of the file.
    *
-   *
    * @param description description of file
    */
-  public void setDescription(String description)
-  {
+  public void setDescription(String description) {
     this.description = description;
   }
 
   /**
    * Set to true to indicate that the file is a directory.
    *
-   *
    * @param directory true for directory
    */
-  public void setDirectory(boolean directory)
-  {
+  public void setDirectory(boolean directory) {
     this.directory = directory;
   }
 
   /**
    * Sets the commit date of the file.
    *
-   *
    * @param commitDate commit date
    */
-  public void setCommitDate(Long commitDate)
-  {
+  public void setCommitDate(Long commitDate) {
     this.commitDate = commitDate;
   }
 
   /**
    * Sets the length of the file.
    *
-   *
    * @param length file length
    */
-  public void setLength(Long length)
-  {
+  public void setLength(Long length) {
     this.length = length;
   }
 
   /**
    * Sets the name of the file.
    *
-   *
    * @param name filename
    */
-  public void setName(String name)
-  {
+  public void setName(String name) {
     this.name = name;
   }
 
   /**
    * Sets the path of the file.
    *
-   *
    * @param path file path
    */
-  public void setPath(String path)
-  {
+  public void setPath(String path) {
     this.path = path;
   }
 
   /**
    * Set sub repository information for the file.
    *
-   * @since 1.10
-   *
    * @param subRepository sub repository informations
+   * @since 1.10
    */
-  public void setSubRepository(SubRepository subRepository)
-  {
+  public void setSubRepository(SubRepository subRepository) {
     this.subRepository = subRepository;
   }
 
   /**
    * Set marker, that some values for this object are not computed, yet.
    *
-   * @since 2.0.0
-   *
    * @param partialResult Set this to <code>true</code>, whenever some values of this object are not computed, yet.
+   * @since 2.0.0
    */
   public void setPartialResult(boolean partialResult) {
     this.partialResult = partialResult;
@@ -371,10 +313,9 @@ public class FileObject implements LastModifiedAware, Serializable
   /**
    * Set marker, that computation of some values for this object has been aborted.
    *
-   * @since 2.0.0
-   *
    * @param computationAborted Set this to <code>true</code>, whenever some values of this object are not computed and
    *                           will not be computed in the future.
+   * @since 2.0.0
    */
   public void setComputationAborted(boolean computationAborted) {
     this.computationAborted = computationAborted;
@@ -401,39 +342,4 @@ public class FileObject implements LastModifiedAware, Serializable
   public void setTruncated(boolean truncated) {
     this.truncated = truncated;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** file description */
-  private String description;
-
-  /** directory indicator */
-  private boolean directory;
-
-  /** commit date */
-  private Long commitDate;
-
-  /** file length */
-  private Long length;
-
-  /** filename */
-  private String name;
-
-  /** file path */
-  private String path;
-
-  /** Marker for partial result. */
-  private boolean partialResult = false;
-
-  /** Marker for aborted computation. */
-  private boolean computationAborted = false;
-
-  /** sub repository informations */
-  @XmlElement(name = "subrepository")
-  private SubRepository subRepository;
-
-  /** Children of this file (aka directory). */
-  private Collection<FileObject> children = new ArrayList<>();
-
-  private boolean truncated;
 }

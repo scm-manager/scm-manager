@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,7 +37,6 @@ import org.tmatesoft.svn.core.wc.SVNRevision;
 import sonia.scm.repository.BlameLine;
 import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnBlameHandler;
 import sonia.scm.util.Util;
 
@@ -53,9 +52,9 @@ import java.util.List;
 public class SvnBlameCommand extends AbstractSvnCommand implements BlameCommand
 {
 
-  public SvnBlameCommand(SvnContext context, Repository repository)
+  public SvnBlameCommand(SvnContext context)
   {
-    super(context, repository);
+    super(context);
   }
 
   @Override

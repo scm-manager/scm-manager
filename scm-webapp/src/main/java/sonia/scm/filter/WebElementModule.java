@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -44,60 +44,36 @@ import javax.servlet.http.HttpServlet;
  *
  * @author Sebastian Sdorra
  */
-public class WebElementModule extends ServletModule
-{
+public class WebElementModule extends ServletModule {
 
   /**
    * the logger for WebElementModule
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(WebElementModule.class);
+  private static final Logger LOG = LoggerFactory.getLogger(WebElementModule.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param pluginLoader
-   */
   public WebElementModule(PluginLoader pluginLoader)
   {
     collector = WebElementCollector.collect(pluginLoader);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
   @Override
   protected void configureServlets()
   {
-    for (TypedWebElementDescriptor<? extends Filter> f : collector.getFilters())
+    for (TypedWebElementDescriptor<Filter> f : collector.getFilters())
     {
       bindFilter(f);
     }
 
-    for (TypedWebElementDescriptor<? extends HttpServlet> s :
-      collector.getServlets())
+    for (TypedWebElementDescriptor<HttpServlet> s : collector.getServlets())
     {
       bindServlet(s);
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param filter
-   */
-  private void bindFilter(TypedWebElementDescriptor<? extends Filter> filter)
-  {
-    Class<? extends Filter> clazz = filter.getClazz();
+  private void bindFilter(TypedWebElementDescriptor<Filter> filter) {
+    Class<Filter> clazz = filter.getClazz();
 
-    logger.info("bind filter {} to filter chain", clazz);
+    LOG.info("bind filter {} to filter chain", clazz);
 
     // filters must be in singleton scope
     bind(clazz).in(Scopes.SINGLETON);
@@ -105,12 +81,13 @@ public class WebElementModule extends ServletModule
     WebElementDescriptor opts = filter.getDescriptor();
     FilterKeyBindingBuilder builder;
 
-    if (opts.isRegex())
-    {
+    if (opts.isRegex()) {
+      LOG.debug("bind regex filter {} to {} and {}", clazz, opts.getPattern(), opts.getMorePatterns());
       builder = filterRegex(opts.getPattern(), opts.getMorePatterns());
     }
     else
     {
+      LOG.debug("bind glob filter {} to {} and {}", clazz, opts.getPattern(), opts.getMorePatterns());
       builder = filter(opts.getPattern(), opts.getMorePatterns());
     }
 
@@ -118,18 +95,10 @@ public class WebElementModule extends ServletModule
     builder.through(clazz);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param servlet
-   */
-  private void bindServlet(
-    TypedWebElementDescriptor<? extends HttpServlet> servlet)
-  {
-    Class<? extends HttpServlet> clazz = servlet.getClazz();
+  private void bindServlet(TypedWebElementDescriptor<HttpServlet> servlet) {
+    Class<HttpServlet> clazz = servlet.getClazz();
 
-    logger.info("bind servlet {} to servlet chain", clazz);
+    LOG.info("bind servlet {} to servlet chain", clazz);
 
     // filters must be in singleton scope
     bind(clazz).in(Scopes.SINGLETON);
@@ -137,12 +106,11 @@ public class WebElementModule extends ServletModule
     WebElementDescriptor opts = servlet.getDescriptor();
     ServletKeyBindingBuilder builder;
 
-    if (opts.isRegex())
-    {
+    if (opts.isRegex()) {
+      LOG.debug("bind regex servlet {} to {} and {}", clazz, opts.getPattern(), opts.getMorePatterns());
       builder = serveRegex(opts.getPattern(), opts.getMorePatterns());
-    }
-    else
-    {
+    } else {
+      LOG.debug("bind glob servlet {} to {} and {}", clazz, opts.getPattern(), opts.getMorePatterns());
       builder = serve(opts.getPattern(), opts.getMorePatterns());
     }
 

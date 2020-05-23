@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -115,7 +115,7 @@ public class DefaultExtensionProcessor implements ExtensionProcessor
    * @return
    */
   @Override
-  public Iterable<WebElementDescriptor> getWebElements()
+  public Iterable<WebElementExtension> getWebElements()
   {
     return collector.getWebElements();
   }

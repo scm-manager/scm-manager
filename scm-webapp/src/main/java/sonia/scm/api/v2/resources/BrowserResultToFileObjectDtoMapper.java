@@ -24,22 +24,17 @@
     
 package sonia.scm.api.v2.resources;
 
-import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.ObjectFactory;
 import org.mapstruct.Qualifier;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.SubRepository;
-import sonia.scm.repository.spi.BrowseCommand;
-import sonia.scm.repository.spi.BrowseCommandRequest;
+import sonia.scm.web.EdisonHalAppender;
 
-import javax.inject.Inject;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -47,9 +42,6 @@ import java.lang.annotation.Target;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.OptionalLong;
-
-import static de.otto.edison.hal.Embedded.embeddedBuilder;
-import static de.otto.edison.hal.Link.link;
 
 @Mapper
 public abstract class BrowserResultToFileObjectDtoMapper extends BaseFileObjectDtoMapper {

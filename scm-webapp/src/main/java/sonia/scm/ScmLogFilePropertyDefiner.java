@@ -21,63 +21,64 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import ch.qos.logback.core.PropertyDefinerBase;
+import com.google.common.annotations.VisibleForTesting;
+import sonia.scm.util.SystemUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.util.Properties;
 
 /**
+ * Resolve directory path for SCM-Manager logs.
  *
  * @author Sebastian Sdorra
  */
-public class ScmLogFilePropertyDefiner extends PropertyDefinerBase
-{
+public class ScmLogFilePropertyDefiner extends PropertyDefinerBase {
 
-  /** Field description */
-  public static final String LOG_DIRECTORY = "logs";
+  private final String logDirectoryPath;
 
-  //~--- constructors ---------------------------------------------------------
+  public ScmLogFilePropertyDefiner() {
+    this(SCMContext.getContext(), SystemUtil.getPlatform(), System.getProperties());
+  }
 
-  /**
-   * Constructs ...
-   *
-   */
-  public ScmLogFilePropertyDefiner()
-  {
-    File logDirectory = new File(SCMContext.getContext().getBaseDirectory(),
-                                 LOG_DIRECTORY);
+  @VisibleForTesting
+  ScmLogFilePropertyDefiner(SCMContextProvider context, Platform platform, Properties properties) {
+    File logDirectory = resolveDirectory(context, platform, properties);
 
-    if (!logDirectory.exists() &&!logDirectory.mkdirs())
-    {
+    if (!logDirectory.exists() && !logDirectory.mkdirs()) {
       throw new ConfigurationException(
-          "could not create log directory ".concat(logDirectory.getPath()));
+        "could not create log directory ".concat(logDirectory.getPath()));
     }
 
     this.logDirectoryPath = logDirectory.getAbsolutePath();
   }
 
-  //~--- get methods ----------------------------------------------------------
+  private File resolveDirectory(SCMContextProvider context, Platform platform, Properties properties) {
+    if (platform.isMac()) {
+      return resolveOsX(properties);
+    } else {
+      return resolveDefault(context);
+    }
+  }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  private File resolveOsX(Properties properties) {
+    return new File(properties.getProperty("user.home"), "Library/Logs/SCM-Manager");
+  }
+
+  private File resolveDefault(SCMContextProvider context) {
+    return new File(context.getBaseDirectory(), "logs");
+  }
+
   @Override
-  public String getPropertyValue()
-  {
+  public String getPropertyValue() {
     return logDirectoryPath;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String logDirectoryPath;
 }

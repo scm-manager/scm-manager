@@ -44,7 +44,7 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
   @Before
   public void init() {
     HgCommandContext outgoingContext = new HgCommandContext(HgTestUtil.createHookManager(), handler, outgoingRepository, outgoingDirectory);
-    outgoingModificationsCommand = new HgModificationsCommand(outgoingContext, outgoingRepository);
+    outgoingModificationsCommand = new HgModificationsCommand(outgoingContext);
   }
 
   @Test

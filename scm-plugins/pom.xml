@@ -129,7 +129,6 @@
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
         <includes>
-          <include>META-INF/scm/plugin.xml</include>
           <include>sonia/scm/version/*</include>
         </includes>
       </resource>
@@ -138,6 +137,8 @@
         <directory>src/main/resources</directory>
         <filtering>false</filtering>
         <excludes>
+          <!-- We have to exclude the plugin.xml file here, because it has to be written -->
+          <!-- by the smp maven plugin. -->
           <exclude>META-INF/scm/plugin.xml</exclude>
           <exclude>sonia/scm/version/*</exclude>
         </excludes>

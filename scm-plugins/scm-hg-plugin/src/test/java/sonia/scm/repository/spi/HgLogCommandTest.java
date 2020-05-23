@@ -154,7 +154,7 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     assertEquals("Douglas Adams", c.getAuthor().getName());
     assertEquals("douglas.adams@hitchhiker.com", c.getAuthor().getMail());
     assertEquals("added a and b files", c.getDescription());
-    ModificationsCommand modificationsCommand = new HgModificationsCommand(cmdContext, repository);
+    ModificationsCommand modificationsCommand = new HgModificationsCommand(cmdContext);
     Modifications modifications = modificationsCommand.getModifications(revision);
 
     assertNotNull(modifications);
@@ -195,6 +195,6 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
    */
   private HgLogCommand createComamnd()
   {
-    return new HgLogCommand(cmdContext, repository);
+    return new HgLogCommand(cmdContext);
   }
 }

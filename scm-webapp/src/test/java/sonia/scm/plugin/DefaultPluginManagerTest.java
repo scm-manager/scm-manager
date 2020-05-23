@@ -602,12 +602,12 @@ class DefaultPluginManagerTest {
   }
 
   @Nested
-  class WithoutManagePermissions {
+  class WithoutWritePermissions {
 
     @BeforeEach
     void setUpSubject() {
       ThreadContext.bind(subject);
-      doThrow(AuthorizationException.class).when(subject).checkPermission("plugin:manage");
+      doThrow(AuthorizationException.class).when(subject).checkPermission("plugin:write");
     }
 
     @AfterEach

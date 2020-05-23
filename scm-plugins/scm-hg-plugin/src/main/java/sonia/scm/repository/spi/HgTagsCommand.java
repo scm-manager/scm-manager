@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -30,7 +30,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.Tag;
 import sonia.scm.util.Util;
 
@@ -48,13 +47,12 @@ public class HgTagsCommand extends AbstractCommand implements TagsCommand
   /**
    * Constructs ...
    *
+   *  @param context
    *
-   * @param context
-   * @param repository
    */
-  public HgTagsCommand(HgCommandContext context, Repository repository)
+  public HgTagsCommand(HgCommandContext context)
   {
-    super(context, repository);
+    super(context);
   }
 
   //~--- get methods ----------------------------------------------------------

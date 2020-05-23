@@ -21,13 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.util.QuotedString;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffCommandBuilder;
 
 import java.io.BufferedOutputStream;
@@ -42,8 +41,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
 
-  GitDiffCommand(GitContext context, Repository repository) {
-    super(context, repository);
+  GitDiffCommand(GitContext context) {
+    super(context);
   }
 
   @Override

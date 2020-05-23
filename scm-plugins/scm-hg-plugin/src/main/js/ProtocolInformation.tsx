@@ -50,13 +50,13 @@ class ProtocolInformation extends React.Component<Props> {
             <br />
             cd {repository.name}
             <br />
-            echo "[paths]" > .hg/hgrc
+            echo "[paths]" &gt; .hg/hgrc
             <br />
             echo "default = {href}
-            " > .hg/hgrc
+            " &gt; .hg/hgrc
             <br />
             echo "# {repository.name}
-            " > README.md
+            " &gt; README.md
             <br />
             hg add README.md
             <br />

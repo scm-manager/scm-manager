@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,7 +37,6 @@ import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNDiffClient;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
@@ -57,8 +56,8 @@ public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand {
   private static final Logger logger =
     LoggerFactory.getLogger(SvnDiffCommand.class);
 
-  public SvnDiffCommand(SvnContext context, Repository repository) {
-    super(context, repository);
+  public SvnDiffCommand(SvnContext context) {
+    super(context);
   }
 
   @Override

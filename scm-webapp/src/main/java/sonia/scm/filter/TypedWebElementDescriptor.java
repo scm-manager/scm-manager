@@ -21,11 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.filter;
 
-import java.util.Objects;
-
+import lombok.Value;
 import sonia.scm.plugin.WebElementDescriptor;
 
 /**
@@ -34,48 +33,8 @@ import sonia.scm.plugin.WebElementDescriptor;
  * @param <T>
  * @since 2.0.0
  */
-public final class TypedWebElementDescriptor<T> 
-{
-  private final Class<T> clazz;
-  private final WebElementDescriptor descriptor;
-
-  public TypedWebElementDescriptor(Class<T> clazz,
-    WebElementDescriptor descriptor)
-  {
-    this.clazz = clazz;
-    this.descriptor = descriptor;
-  }
-
-  public Class<T> getClazz()
-  {
-    return clazz;
-  }
-
-  public WebElementDescriptor getDescriptor()
-  {
-    return descriptor;
-  }
-  
-  @Override
-  public int hashCode() {
-    return Objects.hash(clazz, descriptor);
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    
-    final TypedWebElementDescriptor other = (TypedWebElementDescriptor) obj;
-    return Objects.equals(clazz, other.clazz)
-      && Objects.equals(descriptor, other.descriptor);
-  }
-  
+@Value
+public class TypedWebElementDescriptor<T> {
+  Class<T> clazz;
+  WebElementDescriptor descriptor;
 }

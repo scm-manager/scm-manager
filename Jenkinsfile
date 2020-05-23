@@ -2,7 +2,7 @@
 
 // switch back to a stable tag, after pr 22 is mreged an the next version is released
 // see https://github.com/cloudogu/ces-build-lib/pull/22
-@Library('github.com/cloudogu/ces-build-lib@c079662')
+@Library('github.com/cloudogu/ces-build-lib@7a14da6')
 import com.cloudogu.ces.cesbuildlib.*
 
 node('docker') {
@@ -81,71 +81,58 @@ node('docker') {
       )
 
       stage('SonarQube') {
-
-        analyzeWith(mvn)
+        def sonarQube = new SonarCloud(this, [sonarQubeEnv: 'sonarcloud.io-scm', sonarOrganization: 'scm-manager', integrationBranch: 'develop'])
+        sonarQube.analyzeWith(mvn)
 
         if (!waitForQualityGateWebhookToBeCalled()) {
           currentBuild.result = 'UNSTABLE'
         }
       }
 
-      if (isMainBranch() || isReleaseBranch()) {
+      if (isBuildSuccessful() && (isMainBranch() || isReleaseBranch())) {
+        def commitHash = git.getCommitHash()
 
-        stage('Lifecycle') {
-          try {
-            // failBuildOnNetworkError -> so we can catch the exception and neither fail nor make our build unstable
-            nexusPolicyEvaluation iqApplication: selectedApplication('scm'), iqScanPatterns: [[scanPattern: 'scm-server/target/scm-server-app.zip']], iqStage: 'build', failBuildOnNetworkError: true
-          } catch (Exception e) {
-            echo "ERROR: iQ Server policy eval failed. Not marking build unstable for now."
-            echo "ERROR: iQ Server Exception: ${e.getMessage()}"
-          }
+        def imageVersion = mvn.getVersion()
+        if (imageVersion.endsWith('-SNAPSHOT')) {
+          imageVersion = imageVersion.replace('-SNAPSHOT', "-${commitHash.substring(0,7)}-${BUILD_NUMBER}")
         }
 
-        if (isBuildSuccessful()) {
+        stage('Maven Deployment') {
+          // configuration for docker deployment
+          mvn.useRepositoryCredentials([
+            id: 'docker.io',
+            credentialsId: 'hub.docker.com-cesmarvin'
+          ])
 
-          def commitHash = git.getCommitHash()
+          // deploy java artifacts
+          mvn.useDeploymentRepository([
+            id: 'packages.scm-manager.org',
+            url: 'https://packages.scm-manager.org',
+            credentialsId: 'maven.scm-manager.org',
+            snapshotRepository: '/repository/snapshots/',
+            releaseRepository: '/repository/releases/',
+            type: 'Configurable'
+          ])
+          mvn.deployToNexusRepository()
 
-          def imageVersion = mvn.getVersion()
-          if (imageVersion.endsWith('-SNAPSHOT')) {
-            imageVersion = imageVersion.replace('-SNAPSHOT', "-${commitHash.substring(0,7)}-${BUILD_NUMBER}")
-          }
+          // deploy frontend bits
+          withCredentials([string(credentialsId: 'cesmarvin_npm_token', variable: 'NPM_TOKEN')]) {
+            writeFile encoding: 'UTF-8', file: '.npmrc', text: "//registry.npmjs.org/:_authToken='${NPM_TOKEN}'"
+            writeFile encoding: 'UTF-8', file: '.yarnrc', text: '''
+              registry "https://registry.npmjs.org/"
+              always-auth true
+              email cesmarvin@cloudogu.com
+            '''.trim()
 
-          stage('Maven Deployment') {
-            // configuration for docker deployment
-            mvn.useRepositoryCredentials([
-              id: 'docker.io',
-              credentialsId: 'hub.docker.com-cesmarvin'
-            ])
-
-            // configuration for maven deployment
-            mvn.useDeploymentRepository([
-              id: 'packages.scm-manager.org',
-              url: 'https://packages.scm-manager.org',
-              credentialsId: 'packages.scm-manager.org',
-              type: 'Configurable',
-              snapshotRepository: '/repository/snapshots',
-              releaseRepository: '/repository/releases'
-            ])
-            mvn.deployToNexusRepository()
-
-            // deploy frontend bits
-            withCredentials([string(credentialsId: 'cesmarvin_npm_token', variable: 'NPM_TOKEN')]) {
-              writeFile encoding: 'UTF-8', file: '.npmrc', text: "//registry.npmjs.org/:_authToken='${NPM_TOKEN}'"
-              writeFile encoding: 'UTF-8', file: '.yarnrc', text: '''
-                registry "https://registry.npmjs.org/"
-                always-auth true
-                email cesmarvin@cloudogu.com
-              '''.trim()
-
-              // we are tricking lerna by pretending that we are not a git repository
-              sh "mv .git .git.disabled"
-              try {
-                mvn "-pl :scm-ui buildfrontend:run@deploy"
-              } finally {
-                sh "mv .git.disabled .git"
-              }
+            // we are tricking lerna by pretending that we are not a git repository
+            sh "mv .git .git.disabled"
+            try {
+              mvn "-pl :scm-ui buildfrontend:run@deploy"
+            } finally {
+              sh "mv .git.disabled .git"
             }
           }
+        }
 
           stage('Presentation Environment') {
             /**
@@ -157,40 +144,38 @@ node('docker') {
              */
           }
 
-          if (isReleaseBranch()) {
-            stage('Update Repository') {
+        if (isReleaseBranch()) {
+          stage('Update Repository') {
 
-              // merge changes into develop
-              sh "git checkout develop"
-              // TODO what if we have a conflict
-              // e.g.: someone has edited the changelog during the release
-              sh "git merge master"
+            // merge changes into develop
+            sh "git checkout develop"
+            // TODO what if we have a conflict
+            // e.g.: someone has edited the changelog during the release
+            sh "git merge master"
 
-              // set versions for maven packages
-              mvn "build-helper:parse-version versions:set -DgenerateBackupPoms=false -DnewVersion='\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}.0-SNAPSHOT'"
+            // set versions for maven packages
+            mvn "build-helper:parse-version versions:set -DgenerateBackupPoms=false -DnewVersion='\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}.0-SNAPSHOT'"
 
-              // set versions for ui packages
-              mvn "-pl :scm-ui buildfrontend:run@set-version"
+            // set versions for ui packages
+            mvn "-pl :scm-ui buildfrontend:run@set-version"
 
-              // stage pom changes
-              sh "git status --porcelain | sed s/^...// | grep pom.xml | xargs git add"
-              // stage package.json changes
-              sh "git status --porcelain | sed s/^...// | grep package.json | xargs git add"
-              // stage lerna.json changes
-              sh "git add lerna.json"
+            // stage pom changes
+            sh "git status --porcelain | sed s/^...// | grep pom.xml | xargs git add"
+            // stage package.json changes
+            sh "git status --porcelain | sed s/^...// | grep package.json | xargs git add"
+            // stage lerna.json changes
+            sh "git add lerna.json"
 
-              // commit changes
-              sh "git -c user.name='CES Marvin' -c user.email='cesmarvin@cloudogu.com' commit -m 'prepare for next development iteration'"
+            // commit changes
+            sh "git -c user.name='CES Marvin' -c user.email='cesmarvin@cloudogu.com' commit -m 'prepare for next development iteration'"
 
-              // push changes back to remote repository
-              withCredentials([usernamePassword(credentialsId: 'cesmarvin-github', usernameVariable: 'GIT_AUTH_USR', passwordVariable: 'GIT_AUTH_PSW')]) {
-                sh "git -c credential.helper=\"!f() { echo username='\$GIT_AUTH_USR'; echo password='\$GIT_AUTH_PSW'; }; f\" push origin master --tags"
-                sh "git -c credential.helper=\"!f() { echo username='\$GIT_AUTH_USR'; echo password='\$GIT_AUTH_PSW'; }; f\" push origin develop --tags"
-                sh "git -c credential.helper=\"!f() { echo username='\$GIT_AUTH_USR'; echo password='\$GIT_AUTH_PSW'; }; f\" push origin :${env.BRANCH_NAME}"
-              }
+            // push changes back to remote repository
+            withCredentials([usernamePassword(credentialsId: 'cesmarvin-github', usernameVariable: 'GIT_AUTH_USR', passwordVariable: 'GIT_AUTH_PSW')]) {
+              sh "git -c credential.helper=\"!f() { echo username='\$GIT_AUTH_USR'; echo password='\$GIT_AUTH_PSW'; }; f\" push origin master --tags"
+              sh "git -c credential.helper=\"!f() { echo username='\$GIT_AUTH_USR'; echo password='\$GIT_AUTH_PSW'; }; f\" push origin develop --tags"
+              sh "git -c credential.helper=\"!f() { echo username='\$GIT_AUTH_USR'; echo password='\$GIT_AUTH_PSW'; }; f\" push origin :${env.BRANCH_NAME}"
             }
           }
-
         }
       }
     }
@@ -217,34 +202,6 @@ Maven setupMavenBuild() {
     mvn.additionalArgs += ' -Dmaven.javadoc.failOnError=false'
   }
   return mvn
-}
-
-void analyzeWith(Maven mvn) {
-
-  withSonarQubeEnv('sonarcloud.io-scm') {
-
-    String mvnArgs = "${env.SONAR_MAVEN_GOAL} " +
-      "-Dsonar.host.url=${env.SONAR_HOST_URL} " +
-      "-Dsonar.login=${env.SONAR_AUTH_TOKEN} "
-
-    if (isPullRequest()) {
-      echo "Analysing SQ in PR mode"
-      mvnArgs += "-Dsonar.pullrequest.base=${env.CHANGE_TARGET} " +
-        "-Dsonar.pullrequest.branch=${env.CHANGE_BRANCH} " +
-        "-Dsonar.pullrequest.key=${env.CHANGE_ID} " +
-        "-Dsonar.pullrequest.provider=bitbucketcloud " +
-        "-Dsonar.pullrequest.bitbucketcloud.owner=sdorra " +
-        "-Dsonar.pullrequest.bitbucketcloud.repository=scm-manager " +
-        "-Dsonar.cpd.exclusions=**/*StoreFactory.java,**/*UserPassword.js "
-    } else {
-      mvnArgs += " -Dsonar.branch.name=${env.BRANCH_NAME} "
-      if (!isMainBranch()) {
-        // Avoid exception "The main branch must not have a target" on main branch
-        mvnArgs += " -Dsonar.branch.target=${mainBranch} "
-      }
-    }
-    mvn "${mvnArgs}"
-  }
 }
 
 boolean isReleaseBranch() {

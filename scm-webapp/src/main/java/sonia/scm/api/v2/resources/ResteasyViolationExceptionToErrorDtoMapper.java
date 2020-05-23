@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
-import org.jboss.resteasy.api.validation.ResteasyViolationException;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -32,6 +31,7 @@ import org.mapstruct.MappingTarget;
 import org.slf4j.MDC;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +42,8 @@ public abstract class ResteasyViolationExceptionToErrorDtoMapper {
   @Mapping(target = "transactionId", ignore = true)
   @Mapping(target = "context", ignore = true)
   @Mapping(target = "url", ignore = true)
-  public abstract ErrorDto map(ResteasyViolationException exception);
+  @Mapping(target = "violations", ignore = true)
+  public abstract ErrorDto map(ConstraintViolationException exception);
 
   @AfterMapping
   void setTransactionId(@MappingTarget ErrorDto dto) {
@@ -50,7 +51,7 @@ public abstract class ResteasyViolationExceptionToErrorDtoMapper {
   }
 
   @AfterMapping
-  void mapViolations(ResteasyViolationException exception, @MappingTarget ErrorDto dto) {
+  void mapViolations(ConstraintViolationException exception, @MappingTarget ErrorDto dto) {
     List<ErrorDto.ConstraintViolationDto> violations =
       exception.getConstraintViolations()
         .stream()

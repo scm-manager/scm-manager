@@ -1,0 +1,34 @@
+- section: Getting started
+  entries:
+  - /installation/
+  - /configuration/
+  - /migrate-scm-manager-from-v1/
+  - /faq/
+  - /known-issues/
+
+- section: Administration
+  entries:
+    - /administration/scm-server-ssl/
+    - /administration/logging/
+    - /administration/command-line-client/
+
+- section: Development
+  entries:
+  - /development/intellij-idea-configuration/
+  - /development/build-from-source/
+  - /development/ui-common-pitfall/
+  - /administration/permission-concept/
+  - /development/error-handling/
+  - /development/i18n/
+  - /development/definition-of-done/
+  - /development/ui-dod/
+
+- section: Plugin Development
+  entries:
+  - /development/plugins/create/
+  - /development/plugins/migrate-plugin-from-v1/
+  - /development/plugins/extension-points/
+  - /development/plugins/i18n-for-plugins/
+  - /development/plugins/plugin-descriptor/
+  - /development/plugins/plugin-development/
+  - /development/plugins/publish/

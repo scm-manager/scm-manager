@@ -31,6 +31,7 @@ import de.otto.edison.hal.Links;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginManager;
+import sonia.scm.plugin.PluginPermissions;
 
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class PluginDtoCollectionMapper {
     Links.Builder linksBuilder = linkingTo()
       .with(Links.linkingTo().self(baseUrl).build());
 
-    if (!manager.getUpdatable().isEmpty()) {
+    if (!manager.getUpdatable().isEmpty() && PluginPermissions.write().isPermitted()) {
       linksBuilder.single(link("update", resourceLinks.installedPluginCollection().update()));
     }
 
