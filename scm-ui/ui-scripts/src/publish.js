@@ -68,7 +68,7 @@ const withAuthentication = async (directory, fn) => {
       await unlinkAsync(npmrc);
     }
   } else {
-    fn();
+    await fn();
   }
 };
 
