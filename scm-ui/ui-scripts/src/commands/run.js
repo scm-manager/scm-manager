@@ -22,23 +22,42 @@
  * SOFTWARE.
  */
 
-const { spawn } = require("child_process");
-const os = require("os");
+const resolveWorkspaces = require("../resolveWorkspaces");
+const yarn = require("../yarn");
+const minimatch = require("minimatch")
 
-const yarnCmd = os.platform() === "win32" ? "yarn.cmd" : "yarn";
+const args = process.argv.slice(2);
+if (args.length < 1) {
+  console.log("usage ui-scripts run [--filter=glob] script");
+  process.exit(1);
+}
 
-const yarn = (cwd, args) => {
-  return new Promise((resolve, reject) => {
-    spawn(yarnCmd, args, { cwd, stdio: "inherit" })
-      .on("error", reject)
-      .on("close", code => {
-        if (code === 0) {
-          resolve();
-        } else {
-          reject(code);
-        }
-      });
-  });
+let script;
+let filter = "**";
+if (args[0].startsWith("--filter=")) {
+  filter = args[0].substring(9);
+  script = args[1];
+} else {
+  script = args[0];
+}
+
+const applyFilter = workspace => minimatch(workspace.package.name, filter);
+
+const hasScript = workspace => {
+  return workspace.package.scripts && workspace.package.scripts[script];
 };
 
-module.exports = yarn;
+const run = async () => {
+  const workspaces = await resolveWorkspaces();
+  for (const workspace of workspaces.filter(applyFilter).filter(hasScript)) {
+    console.log(`run ${script} at ${workspace.package.name}`);
+    await yarn(workspace.path, ["run", script]);
+  }
+};
+
+run()
+  .then()
+  .catch(err => {
+    console.error("failed to run script:", err);
+    process.exit(1);
+  });
