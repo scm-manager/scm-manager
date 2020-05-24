@@ -21,38 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const versions = require("../versions");
-const setVersion = require("../setVersion");
-const publish = require("../publish");
-const resolveWorkspaces = require("../resolveWorkspaces");
+const { spawn } = require("child_process");
+const { promisify } = require("util");
+const os = require("os");
 
-const args = process.argv.slice(2);
+const spawnAsync = promisify(spawn);
 
-if (args.length < 1) {
-  console.log("usage ui-scripts publish <version>");
-  process.exit(1);
-}
+const yarnCmd = os.platform() === "win32" ? "yarn.cmd" : "yarn";
 
-const version = args[0];
+const yarn = (cwd, args) => spawnAsync(yarnCmd, args, { cwd, stdio: "inherit" });
 
-const publishAll = async () => {
-  const workspaces = await resolveWorkspaces();
-  const index = version.indexOf("-SNAPSHOT");
-  if (index > 0) {
-    const snapshotVersion = version.substring(0, index) + "-" + versions.createSnapshotVersion();
-    console.log("publish snapshot release " + snapshotVersion);
-    await setVersion(workspaces, snapshotVersion);
-    await publish(workspaces, snapshotVersion);
-    await setVersion(workspaces, version);
-  } else {
-    // ?? not sure
-    await publish(workspaces, version);
-  }
-};
-
-publishAll()
-  .then()
-  .catch(err => {
-    console.error("failed to publish packages:", err);
-    process.exit(1);
-  });
+module.exports = yarn;

@@ -21,38 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const versions = require("../versions");
-const setVersion = require("../setVersion");
-const publish = require("../publish");
-const resolveWorkspaces = require("../resolveWorkspaces");
 
-const args = process.argv.slice(2);
+const yarn = require("./yarn");
 
-if (args.length < 1) {
-  console.log("usage ui-scripts publish <version>");
-  process.exit(1);
-}
+const hasPublicAccess = workspace => {
+  const pkg = workspace.package;
+  if (pkg.publishConfig) {
+    return pkg.publishConfig.access === "public";
+  }
+  return false;
+};
 
-const version = args[0];
-
-const publishAll = async () => {
-  const workspaces = await resolveWorkspaces();
-  const index = version.indexOf("-SNAPSHOT");
-  if (index > 0) {
-    const snapshotVersion = version.substring(0, index) + "-" + versions.createSnapshotVersion();
-    console.log("publish snapshot release " + snapshotVersion);
-    await setVersion(workspaces, snapshotVersion);
-    await publish(workspaces, snapshotVersion);
-    await setVersion(workspaces, version);
-  } else {
-    // ?? not sure
-    await publish(workspaces, version);
+const publish = async (workspaces, newVersion) => {
+  for (const workspace of workspaces.filter(hasPublicAccess)) {
+    await yarn(workspace.path, ["publish", "--non-interactive", "--new-version", newVersion]);
   }
 };
 
-publishAll()
-  .then()
-  .catch(err => {
-    console.error("failed to publish packages:", err);
-    process.exit(1);
-  });
+module.exports = publish;
