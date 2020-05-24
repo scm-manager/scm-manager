@@ -109,10 +109,10 @@ node('docker') {
 
           // deploy java artifacts
           mvn.useDeploymentRepository([
-            id: 'packages.scm-manager.org', 
-            url: 'https://packages.scm-manager.org', 
-            credentialsId: 'maven.scm-manager.org', 
-            snapshotRepository: '/repository/snapshots/', 
+            id: 'packages.scm-manager.org',
+            url: 'https://packages.scm-manager.org',
+            credentialsId: 'maven.scm-manager.org',
+            snapshotRepository: '/repository/snapshots/',
             releaseRepository: '/repository/releases/',
             type: 'Configurable'
           ])
@@ -231,7 +231,7 @@ boolean isMainBranch() {
 
 boolean waitForQualityGateWebhookToBeCalled() {
   boolean isQualityGateSucceeded = true
-  timeout(time: 5, unit: 'MINUTES') { // Needed when there is no webhook for example
+  timeout(time: 10, unit: 'MINUTES') { // Needed when there is no webhook for example
     def qGate = waitForQualityGate()
     echo "SonarQube Quality Gate status: ${qGate.status}"
     if (qGate.status != 'OK') {
