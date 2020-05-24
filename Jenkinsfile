@@ -119,13 +119,7 @@ node('docker') {
           mvn.deployToNexusRepository()
 
           // deploy frontend bits
-          withCredentials([string(credentialsId: 'cesmarvin_npm_token', variable: 'NPM_TOKEN')]) {
-            writeFile encoding: 'UTF-8', file: '.npmrc', text: "//registry.npmjs.org/:_authToken='${NPM_TOKEN}'"
-            writeFile encoding: 'UTF-8', file: '.yarnrc', text: '''
-              registry "https://registry.npmjs.org/"
-              always-auth true
-              email cesmarvin@cloudogu.com
-            '''.trim()
+          withCredentials([string(credentialsId: 'cesmarvin_npm_token', variable: 'NODE_AUTH_TOKEN')]) {
             mvn "-pl :scm-ui buildfrontend:run@deploy"
           }
         }

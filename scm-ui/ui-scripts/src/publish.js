@@ -23,6 +23,11 @@
  */
 
 const yarn = require("./yarn");
+const path = require("path");
+const fs = require("fs");
+const { promisify } = require("util");
+const writeFileAsync = promisify(fs.writeFile);
+const unlinkAsync = promisify(fs.unlink);
 
 const isPublic = workspace => {
   return !workspace.package.private;
@@ -36,10 +41,47 @@ const hasPublicAccess = workspace => {
   return false;
 };
 
+const writeYarnrc = async pathname => {
+  const email = process.env.NODE_AUTH_EMAIL || "cesmarvin@cloudogu.com";
+  const configContent = `"registry" "https://registry.npmjs.org/"
+"always-auth" true
+"email" "${email}"
+`;
+  await writeFileAsync(pathname, configContent, { encoding: "utf8" });
+};
+
+const writeNpmrc = async pathname => {
+  const configContent = `//registry.npmjs.org/:_authToken='${process.env.NODE_AUTH_TOKEN}'`;
+  await writeFileAsync(pathname, configContent, { encoding: "utf8" });
+};
+
+const withAuthentication = async (directory, fn) => {
+  if (process.env.NODE_AUTH_TOKEN) {
+    const yarnrc = path.join(directory, ".yarnrc");
+    const npmrc = path.join(directory, ".npmrc");
+    try {
+      await writeYarnrc(yarnrc);
+      await writeNpmrc(npmrc);
+      await fn();
+    } finally {
+      await unlinkAsync(yarnrc);
+      await unlinkAsync(npmrc);
+    }
+  } else {
+    fn();
+  }
+};
+
+const publishWorkspace = (workspace, newVersion) => {
+  return withAuthentication(workspace.path, () => {
+    return yarn(workspace.path, ["publish", "--non-interactive", "--new-version", newVersion]);
+  });
+};
+
 const publish = async (workspaces, newVersion) => {
   for (const workspace of workspaces.filter(hasPublicAccess).filter(isPublic)) {
     console.log(`publish ${newVersion} of ${workspace.package.name}`);
-    await yarn(workspace.path, ["publish", "--non-interactive", "--new-version", newVersion]);
+    await publishWorkspace(workspace, newVersion);
   }
 };
 
