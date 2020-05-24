@@ -21,41 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 const fs = require("fs");
-const util = require("util");
-const glob = require("glob-promise");
-const path = require("path");
+const { promisify } = require("util");
 
-const readFile = util.promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
 
-const readJson = async pathname => {
-  const content = await readFile(pathname, { encoding: "utf8" });
-  return JSON.parse(content);
+const writeJson = async (path, content) => {
+  await writeFile(path, JSON.stringify(content, null, 2), { encoding: "utf8" })
 };
 
-const resolveWorkspaces = async () => {
-  const rootPath = process.cwd();
-  const packageJson = await readJson("./package.json");
-
-  const entries = (await Promise.all(packageJson.workspaces.map(pattern => glob(pattern, { cwd: rootPath }))))
-    .reduce((arr, filePaths) => {
-      arr.push(...filePaths);
-      return arr;
-    }, [])
-    .filter(p => !p.endsWith("target"))
-    .filter(p => fs.statSync(p).isDirectory())
-    .filter(p => fs.existsSync(path.join(p, "package.json")))
-    .map(async p => {
-      const packageJsonPath = path.join(p, "package.json");
-      const pkg = await readJson(packageJsonPath);
-      return {
-        path: p,
-        packageJsonPath,
-        package: pkg
-      };
-    });
-
-  return Promise.all(entries);
+const updateDependencies = (dependencies, packages, newVersion) => {
+  if (!dependencies) {
+    return;
+  }
+  Object.keys(dependencies).forEach(name => {
+    if (packages.includes(name)) {
+      dependencies[name] = newVersion;
+    }
+  });
 };
 
-module.exports = resolveWorkspaces;
+const setVersion = async (workspaces, newVersion) => {
+  const packages = workspaces.map(workspace => workspace.package.name);
+
+  for (const workspace of workspaces) {
+    workspace.package.version = newVersion;
+    updateDependencies(workspace.package.dependencies, packages, newVersion);
+    updateDependencies(workspace.package.devDependencies, packages, newVersion);
+    updateDependencies(workspace.package.optionalDependencies, packages, newVersion);
+    updateDependencies(workspace.package.peerDependencies, packages, newVersion);
+    await writeJson(workspace.packageJsonPath, workspace.package);
+  }
+
+  return packages;
+};
+
+module.exports = setVersion;

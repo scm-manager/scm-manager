@@ -21,11 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const resolveWorkspaces = require("../resolveWorkspaces");
-const fs = require("fs");
-const { promisify } = require("util");
 
-const writeFile = promisify(fs.writeFile);
+const resolveWorkspaces = require("../resolveWorkspaces");
+const setVersion = require("../setVersion");
 
 const args = process.argv.slice(2);
 
@@ -36,38 +34,12 @@ if (args.length < 1) {
 
 const newVersion = args[0];
 
-const writeJson = async (path, content) => {
-  await writeFile(path, JSON.stringify(2, null, content), { encoding: "utf8" })
-};
-
-const updateDependencies = (dependencies, packages) => {
-  if (!dependencies) {
-    return;
-  }
-  Object.keys(dependencies).forEach(name => {
-    if (packages.includes(name)) {
-      dependencies[name] = newVersion;
-    }
-  });
-};
-
-const setVersions = async () => {
+const updateVersions = async () => {
   const workspaces = await resolveWorkspaces();
-  const packages = workspaces.map(workspace => workspace.package.name);
-
-  for (const workspace of workspaces) {
-    workspace.package.version = newVersion;
-    updateDependencies(workspace.package.dependencies, packages);
-    updateDependencies(workspace.package.devDependencies, packages);
-    updateDependencies(workspace.package.optionalDependencies, packages,);
-    updateDependencies(workspace.package.peerDependencies, packages);
-    await writeJson(workspace.path, workspace.package);
-  }
-
-  return packages;
+  return setVersion(workspaces, newVersion);
 };
 
-setVersions()
+updateVersions()
   .then()
   .catch(err => {
     console.error("failed to update versions:", err);
