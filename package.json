@@ -8,15 +8,11 @@
   "scripts": {
     "build": "webpack --mode=production --config=scm-ui/ui-scripts/src/webpack.config.js",
     "build:dev": "webpack --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
-    "test": "lerna run --scope '@scm-manager/ui-*' test",
-    "typecheck": "lerna run --scope '@scm-manager/ui-*' typecheck",
+    "test": "ui-scripts run --filter='@scm-manager/ui-*' test",
+    "typecheck": "ui-scripts run --filter='@scm-manager/ui-*' typecheck",
     "serve": "NODE_ENV=development webpack-dev-server --hot --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
     "deploy": "ui-scripts publish",
     "set-version": "ui-scripts version"
-  },
-  "devDependencies": {
-    "babel-plugin-reflow": "^0.2.7",
-    "lerna": "^3.17.0"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0",
@@ -31,7 +27,5 @@
   "jest": {
     "preset": "@scm-manager/jest-preset"
   },
-  "prettier": "@scm-manager/prettier-config",
-  "dependencies": {},
-  "version": "0.0.0"
+  "prettier": "@scm-manager/prettier-config"
 }

@@ -109,10 +109,10 @@ node('docker') {
 
           // deploy java artifacts
           mvn.useDeploymentRepository([
-            id: 'packages.scm-manager.org', 
-            url: 'https://packages.scm-manager.org', 
-            credentialsId: 'maven.scm-manager.org', 
-            snapshotRepository: '/repository/snapshots/', 
+            id: 'packages.scm-manager.org',
+            url: 'https://packages.scm-manager.org',
+            credentialsId: 'maven.scm-manager.org',
+            snapshotRepository: '/repository/snapshots/',
             releaseRepository: '/repository/releases/',
             type: 'Configurable'
           ])
@@ -126,14 +126,7 @@ node('docker') {
               always-auth true
               email cesmarvin@cloudogu.com
             '''.trim()
-
-            // we are tricking lerna by pretending that we are not a git repository
-            sh "mv .git .git.disabled"
-            try {
-              mvn "-pl :scm-ui buildfrontend:run@deploy"
-            } finally {
-              sh "mv .git.disabled .git"
-            }
+            mvn "-pl :scm-ui buildfrontend:run@deploy"
           }
         }
 
