@@ -21,14 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const { spawn } = require("child_process");
-const { promisify } = require("util");
-const os = require("os");
 
-const spawnAsync = promisify(spawn);
+const { spawn } = require("child_process");
+const os = require("os");
 
 const yarnCmd = os.platform() === "win32" ? "yarn.cmd" : "yarn";
 
-const yarn = (cwd, args) => spawnAsync(yarnCmd, args, { cwd, stdio: "inherit" });
+const yarn = (cwd, args) => {
+  return new Promise((resolve, reject) => {
+    let stdout = "";
+    let stderr = "";
+
+    const p = spawn(yarnCmd, args, { cwd, stdio: "inherit" });
+    if (p.stdout) {
+      p.stdout.on("data", chunk => {
+        stdout += chunk;
+      });
+    }
+    if (p.stderr) {
+      p.stderr.on("data", chunk => {
+        stderr += chunk;
+      });
+    }
+
+    p.on("error", reject).on("close", code => {
+      if (code === 0) {
+        resolve(stdout);
+      } else {
+        reject(stderr);
+      }
+    });
+  });
+};
 
 module.exports = yarn;

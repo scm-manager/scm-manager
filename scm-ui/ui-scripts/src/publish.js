@@ -24,6 +24,10 @@
 
 const yarn = require("./yarn");
 
+const isPublic = workspace => {
+  return !workspace.package.private;
+};
+
 const hasPublicAccess = workspace => {
   const pkg = workspace.package;
   if (pkg.publishConfig) {
@@ -33,7 +37,8 @@ const hasPublicAccess = workspace => {
 };
 
 const publish = async (workspaces, newVersion) => {
-  for (const workspace of workspaces.filter(hasPublicAccess)) {
+  for (const workspace of workspaces.filter(hasPublicAccess).filter(isPublic)) {
+    console.log(`publish ${newVersion} of ${workspace.package.name}`);
     await yarn(workspace.path, ["publish", "--non-interactive", "--new-version", newVersion]);
   }
 };

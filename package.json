@@ -32,5 +32,6 @@
     "preset": "@scm-manager/jest-preset"
   },
   "prettier": "@scm-manager/prettier-config",
-  "dependencies": {}
+  "dependencies": {},
+  "version": "0.0.0"
 }
