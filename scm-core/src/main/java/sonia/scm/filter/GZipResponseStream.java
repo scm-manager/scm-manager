@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -243,6 +244,20 @@ public class GZipResponseStream extends ServletOutputStream
   public boolean isClosed()
   {
     return closed;
+  }
+
+  @Override
+  public boolean isReady() {
+    return true;
+  }
+
+  @Override
+  public void setWriteListener(WriteListener writeListener) {
+    try {
+      writeListener.onWritePossible();
+    } catch (IOException e) {
+      logger.debug("could not call writeListener.onWritePossible()", e);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------

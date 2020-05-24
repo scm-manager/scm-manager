@@ -22,52 +22,43 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.repository.spi.javahg;
 
-import de.otto.edison.hal.Links;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import sonia.scm.repository.Added;
-import sonia.scm.repository.Modifications;
+import sonia.scm.repository.Copied;
+import sonia.scm.repository.Modification;
 import sonia.scm.repository.Modified;
 import sonia.scm.repository.Removed;
 import sonia.scm.repository.Renamed;
-import sonia.scm.repository.Repository;
 
-import javax.inject.Inject;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 
-import static de.otto.edison.hal.Links.linkingTo;
+class HgModificationParser {
+  private final Collection<Modification> modifications = new LinkedHashSet<>();
 
-@Mapper
-public abstract class ModificationsToDtoMapper {
-
-  @Inject
-  private ResourceLinks resourceLinks;
-
-  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
-  public abstract ModificationsDto map(Modifications modifications, @Context Repository repository);
-
-  @AfterMapping
-  void appendLinks(@MappingTarget ModificationsDto target, @Context Repository repository) {
-    Links.Builder linksBuilder = linkingTo()
-      .self(resourceLinks.modifications().self(repository.getNamespace(), repository.getName(), target.getRevision()));
-    target.add(linksBuilder.build());
+  void addLine(String line) {
+    if (line.startsWith("a ")) {
+      modifications.add(new Added(line.substring(2)));
+    } else if (line.startsWith("m ")) {
+      modifications.add(new Modified(line.substring(2)));
+    } else if (line.startsWith("d ")) {
+      modifications.add(new Removed(line.substring(2)));
+    } else if (line.startsWith("c ")) {
+      String sourceTarget = line.substring(2);
+      int divider = sourceTarget.indexOf('\0');
+      String source = sourceTarget.substring(0, divider);
+      String target = sourceTarget.substring(divider + 1);
+      modifications.remove(new Added(target));
+      if (modifications.remove(new Removed(source))) {
+        modifications.add(new Renamed(source, target));
+      } else {
+        modifications.add(new Copied(source, target));
+      }
+    }
   }
 
-  String map(Added added) {
-    return added.getPath();
+  Collection<Modification> getModifications() {
+    return modifications;
   }
-
-  String map(Removed removed) {
-    return removed.getPath();
-  }
-
-  String map(Modified modified) {
-    return modified.getPath();
-  }
-
-  abstract ModificationsDto.RenamedDto map(Renamed renamed);
 }

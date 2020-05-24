@@ -24,8 +24,11 @@
 
 package sonia.scm.repository.spi;
 
+import sonia.scm.repository.Modification;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
+
+import java.util.Collection;
 
 public class HgModificationsCommand extends AbstractCommand implements ModificationsCommand {
 
@@ -38,9 +41,8 @@ public class HgModificationsCommand extends AbstractCommand implements Modificat
   public Modifications getModifications(String revision) {
     com.aragost.javahg.Repository repository = open();
     HgLogChangesetCommand hgLogChangesetCommand = HgLogChangesetCommand.on(repository, getContext().getConfig());
-    Modifications modifications = hgLogChangesetCommand.rev(revision).extractModifications();
-    modifications.setRevision(revision);
-    return modifications;
+    Collection<Modification> modifications = hgLogChangesetCommand.rev(revision).extractModifications();
+    return new Modifications(revision, modifications);
   }
 
   @Override

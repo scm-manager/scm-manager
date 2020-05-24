@@ -21,51 +21,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useEffect, useState } from "react";
-import { getContent } from "./SourcecodeViewer";
-import { Link, File } from "@scm-manager/ui-types";
-import { Loading, ErrorNotification, MarkdownView } from "@scm-manager/ui-components";
-import styled from "styled-components";
 
-type Props = {
-  file: File;
-  basePath: string;
-};
+package sonia.scm.repository;
 
-const MarkdownContent = styled.div`
-  padding: 0.5rem;
-`;
+import org.junit.jupiter.api.Test;
 
-const MarkdownViewer: FC<Props> = ({ file, basePath }) => {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | undefined>(undefined);
-  const [content, setContent] = useState("");
+import static org.assertj.core.api.Assertions.assertThat;
 
-  useEffect(() => {
-    getContent((file._links.self as Link).href)
-      .then(content => {
-        setLoading(false);
-        setContent(content);
-      })
-      .catch(error => {
-        setLoading(false);
-        setError(error);
-      });
-  }, [file]);
+class ModificationsTest {
 
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (error) {
-    return <ErrorNotification error={error} />;
-  }
-
-  return (
-    <MarkdownContent>
-      <MarkdownView content={content} basePath={basePath} />
-    </MarkdownContent>
+  public static final Modifications MODIFICATIONS = new Modifications("123",
+    new Added("added"),
+    new Removed("removed"),
+    new Modified("modified"),
+    new Renamed("rename from", "rename to"),
+    new Copied("copy from", "copy to")
   );
-};
 
-export default MarkdownViewer;
+  @Test
+  void shouldFindAddedFilesAsEffected() {
+    assertThat(MODIFICATIONS.getEffectedPaths())
+      .contains("added");
+  }
+
+  @Test
+  void shouldFindRemovedFilesAsEffected() {
+    assertThat(MODIFICATIONS.getEffectedPaths())
+      .contains("removed");
+  }
+
+  @Test
+  void shouldFindModifiedFilesAsEffected() {
+    assertThat(MODIFICATIONS.getEffectedPaths())
+      .contains("modified");
+  }
+
+  @Test
+  void shouldFindRenamedFilesAsEffected() {
+    assertThat(MODIFICATIONS.getEffectedPaths())
+      .contains("rename from", "rename to");
+  }
+
+  @Test
+  void shouldFindTargetOfCopiedFilesAsEffected() {
+    assertThat(MODIFICATIONS.getEffectedPaths())
+      .contains("copy to")
+      .doesNotContain("copy from");
+  }
+}

@@ -4,7 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-##Unreleased
+## Unreleased
+### Added
+- Detect renamed files in git and hg diffs ([#1157](https://github.com/scm-manager/scm-manager/pull/1157))
+
+### Fixed
+- Correctly resolve Links in markdown files ([#1152](https://github.com/scm-manager/scm-manager/pull/1152))
+- Missing copy on write in the data store ([#1155](https://github.com/scm-manager/scm-manager/pull/1155))
+- Resolved conflicting dependencies for scm-webapp ([#1159](https://github.com/scm-manager/scm-manager/pull/1159))
 
 ## [2.0.0-rc8] - 2020-05-08
 ### Added
@@ -26,7 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Handle obscure line breaks in diff viewer ([#1129](https://github.com/scm-manager/scm-manager/pull/1129))
 - Validate subversion client checksum ([#1113](https://github.com/scm-manager/scm-manager/issues/1113))
 - Fix plugin manage permission ([#1135](https://github.com/scm-manager/scm-manager/pull/1135))
-- Missing copy on write in the data store ([#1155](https://github.com/scm-manager/scm-manager/pull/1155))
 
 ## [2.0.0-rc7] - 2020-04-09
 ### Added

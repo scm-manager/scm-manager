@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.util.Providers;
@@ -30,7 +30,6 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
-import org.assertj.core.util.Lists;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.After;
@@ -40,9 +39,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.repository.Added;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Removed;
+import sonia.scm.repository.Modified;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ModificationsCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
@@ -141,7 +143,6 @@ public class ModificationsResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldGetModifications() throws Exception {
-    Modifications modifications = new Modifications();
     String revision = "revision";
     String addedFile_1 = "a.txt";
     String addedFile_2 = "b.txt";
@@ -149,10 +150,13 @@ public class ModificationsResourceTest extends RepositoryTestBase {
     String modifiedFile_2 = "c.txt";
     String removedFile_1 = "e.txt";
     String removedFile_2 = "f.txt";
-    modifications.setRevision(revision);
-    modifications.setAdded(Lists.newArrayList(addedFile_1, addedFile_2));
-    modifications.setModified(Lists.newArrayList(modifiedFile_1, modifiedFile_2));
-    modifications.setRemoved(Lists.newArrayList(removedFile_1, removedFile_2));
+    Modifications modifications = new Modifications(revision,
+      new Added(addedFile_1),
+      new Added(addedFile_2),
+      new Modified(modifiedFile_1),
+      new Modified(modifiedFile_2),
+      new Removed(removedFile_1),
+      new Removed(removedFile_2));
     when(modificationsCommandBuilder.getModifications()).thenReturn(modifications);
     when(modificationsCommandBuilder.revision(eq(revision))).thenReturn(modificationsCommandBuilder);
 

@@ -21,51 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useEffect, useState } from "react";
-import { getContent } from "./SourcecodeViewer";
-import { Link, File } from "@scm-manager/ui-types";
-import { Loading, ErrorNotification, MarkdownView } from "@scm-manager/ui-components";
-import styled from "styled-components";
 
-type Props = {
-  file: File;
-  basePath: string;
-};
+export default `# Links
 
-const MarkdownContent = styled.div`
-  padding: 0.5rem;
+Show case for different style of markdown links. 
+Please note that some of the links may not work in storybook, 
+the story is mostly for checking if the links are rendered correct.
+
+## External
+
+External Links should be opened in a new tab: [external link](https://scm-manager.org)
+
+## Anchor
+
+Anchor Links should be rendered a simple a tag with an href: [anchor link](#sample)
+
+## Protocol
+
+Links with a protocol other than http should be rendered a simple a tag with an href e.g.: [mail link](mailto:marvin@hitchhiker.com)
+
+## Internal
+
+Internal links should be rendered by react-router: [internal link](/buttons)
 `;
-
-const MarkdownViewer: FC<Props> = ({ file, basePath }) => {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | undefined>(undefined);
-  const [content, setContent] = useState("");
-
-  useEffect(() => {
-    getContent((file._links.self as Link).href)
-      .then(content => {
-        setLoading(false);
-        setContent(content);
-      })
-      .catch(error => {
-        setLoading(false);
-        setError(error);
-      });
-  }, [file]);
-
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (error) {
-    return <ErrorNotification error={error} />;
-  }
-
-  return (
-    <MarkdownContent>
-      <MarkdownView content={content} basePath={basePath} />
-    </MarkdownContent>
-  );
-};
-
-export default MarkdownViewer;
