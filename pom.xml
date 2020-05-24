@@ -982,8 +982,8 @@
     <guava.version>26.0-jre</guava.version>
 
     <!-- frontend -->
-    <nodejs.version>12.16.1</nodejs.version>
-    <yarn.version>1.22.0</yarn.version>
+    <nodejs.version>12.16.3</nodejs.version>
+    <yarn.version>1.22.4</yarn.version>
 
     <!-- build properties -->
     <project.build.javaLevel>8</project.build.javaLevel>
