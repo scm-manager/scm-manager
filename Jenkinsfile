@@ -41,8 +41,6 @@ node('docker') {
           sh "git status --porcelain | sed s/^...// | grep pom.xml | xargs git add"
           // stage package.json changes
           sh "git status --porcelain | sed s/^...// | grep package.json | xargs git add"
-          // stage lerna.json changes
-          sh "git add lerna.json"
 
           // commit changes
           sh "git -c user.name='CES Marvin' -c user.email='cesmarvin@cloudogu.com' commit -m 'release version ${releaseVersion}'"
@@ -164,8 +162,6 @@ node('docker') {
             sh "git status --porcelain | sed s/^...// | grep pom.xml | xargs git add"
             // stage package.json changes
             sh "git status --porcelain | sed s/^...// | grep package.json | xargs git add"
-            // stage lerna.json changes
-            sh "git add lerna.json"
 
             // commit changes
             sh "git -c user.name='CES Marvin' -c user.email='cesmarvin@cloudogu.com' commit -m 'prepare for next development iteration'"
