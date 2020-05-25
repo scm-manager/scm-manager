@@ -54,10 +54,10 @@
       </activation>
 
       <modules>
-        <module>rpm</module>
-        <module>deb</module>
         <module>unix</module>
         <module>windows</module>
+        <module>deb</module>
+        <module>rpm</module>
         <module>docker</module>
         <module>helm</module>
       </modules>
