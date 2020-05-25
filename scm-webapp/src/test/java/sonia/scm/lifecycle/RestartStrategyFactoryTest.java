@@ -25,10 +25,9 @@
 package sonia.scm.lifecycle;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junitpioneer.jupiter.TempDirectory;
 import sonia.scm.Platform;
 
 import java.io.File;
@@ -41,7 +40,6 @@ import java.util.Properties;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ExtendWith(TempDirectory.class)
 class RestartStrategyFactoryTest {
 
   private final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -94,7 +92,7 @@ class RestartStrategyFactoryTest {
   }
 
   @Test
-  void shouldReturnWinSWRestartStrategy(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldReturnWinSWRestartStrategy(@TempDir Path tempDir) throws IOException {
     File exe = tempDir.resolve("winsw.exe").toFile();
     exe.createNewFile();
 
