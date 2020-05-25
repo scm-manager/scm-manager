@@ -95,7 +95,7 @@ then
   REPO="$BASEDIR"/lib
 fi
 
-CLASSPATH=$CLASSPATH_PREFIX:"$BASEDIR"/conf:"$REPO"/scm-server-2.0.0-SNAPSHOT.jar:"$REPO"/commons-daemon-1.2.2.jar:"$REPO"/jetty-server-9.4.27.v20200227.jar:"$REPO"/javax.servlet-api-3.1.0.jar:"$REPO"/jetty-http-9.4.27.v20200227.jar:"$REPO"/jetty-io-9.4.27.v20200227.jar:"$REPO"/jetty-webapp-9.4.27.v20200227.jar:"$REPO"/jetty-xml-9.4.27.v20200227.jar:"$REPO"/jetty-servlet-9.4.27.v20200227.jar:"$REPO"/jetty-security-9.4.27.v20200227.jar:"$REPO"/jetty-jmx-9.4.27.v20200227.jar:"$REPO"/jetty-util-9.4.27.v20200227.jar
+CLASSPATH=$CLASSPATH_PREFIX:"$BASEDIR"/conf:"$REPO"/scm-server-2.0.0-SNAPSHOT.jar:"$REPO"/commons-daemon-1.2.2.jar:"$REPO"/jetty-server-9.4.28.v20200408.jar:"$REPO"/javax.servlet-api-3.1.0.jar:"$REPO"/jetty-http-9.4.28.v20200408.jar:"$REPO"/jetty-io-9.4.28.v20200408.jar:"$REPO"/jetty-webapp-9.4.28.v20200408.jar:"$REPO"/jetty-xml-9.4.28.v20200408.jar:"$REPO"/jetty-servlet-9.4.28.v20200408.jar:"$REPO"/jetty-security-9.4.28.v20200408.jar:"$REPO"/jetty-jmx-9.4.28.v20200408.jar:"$REPO"/jetty-util-9.4.28.v20200408.jar
 
 # For Cygwin, switch paths to Windows format before running java
 if $cygwin; then
