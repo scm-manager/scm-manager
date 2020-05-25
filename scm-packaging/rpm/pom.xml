@@ -179,7 +179,7 @@
 
             <entry>
               <name>/opt/scm-server/bin/scm-server</name>
-              <file>src/main/fs/opt/scm-server/bin/scm-server</file>
+              <file>${project.basedir}/../unix/src/main/bin/scm-server</file>
               <user>root</user>
               <group>scm</group>
               <mode>0750</mode>
@@ -196,7 +196,7 @@
 
             <entry>
               <name>/etc/scm/logging.xml</name>
-              <file>src/main/fs/etc/scm/logging.xml</file>
+              <file>${project.basedir}/../unix/src/main/fs/conf/logging.xml</file>
               <user>root</user>
               <group>scm</group>
               <mode>0640</mode>
@@ -205,7 +205,7 @@
 
             <entry>
               <name>/etc/scm/server-config.xml</name>
-              <file>src/main/fs/etc/scm/server-config.xml</file>
+              <file>${project.basedir}/../unix/src/main/fs/conf/server-config.xml</file>
               <user>root</user>
               <group>scm</group>
               <mode>0640</mode>
@@ -238,7 +238,7 @@
 
             <entry>
               <name>/opt/scm-server/var/webapp/docroot/index.html</name>
-              <file>src/main/fs/opt/scm-server/var/webapp/docroot/index.html</file>
+              <file>${project.basedir}/../unix/src/main/fs/var/webapp/docroot/index.html</file>
               <user>root</user>
               <group>scm</group>
               <mode>0644</mode>
