@@ -21,26 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
 import java.io.File;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 /**
  * JAXB implementation of {@link ConfigurationStore}.
  *
- * @author Sebastian Sdorra
- *
  * @param <T>
+ * @author Sebastian Sdorra
  */
 public class JAXBConfigurationStore<T> extends AbstractStore<T> {
 
@@ -49,27 +42,18 @@ public class JAXBConfigurationStore<T> extends AbstractStore<T> {
    */
   private static final Logger LOG = LoggerFactory.getLogger(JAXBConfigurationStore.class);
 
-  private Class<T> type;
-  
-  private File configFile;
-  
-  private JAXBContext context;
- 
-  public JAXBConfigurationStore(Class<T> type, File configFile) {
-    this.type = type;
+  private final TypedStoreContext<T> context;
+  private final Class<T> type;
+  private final File configFile;
 
-    try {
-      context = JAXBContext.newInstance(type);
-      this.configFile = configFile;
-    }
-    catch (JAXBException ex) {
-      throw new StoreException("failed to create jaxb context", ex);
-    }
+  public JAXBConfigurationStore(TypedStoreContext<T> context, Class<T> type, File configFile) {
+    this.context = context;
+    this.type = type;
+    this.configFile = configFile;
   }
 
   /**
    * Returns type of stored object.
-   *
    *
    * @return type
    */
@@ -82,38 +66,18 @@ public class JAXBConfigurationStore<T> extends AbstractStore<T> {
   protected T readObject() {
     LOG.debug("load {} from store {}", type, configFile);
 
-    T result = null;
-
     if (configFile.exists()) {
-      try {
-        result = (T) context.createUnmarshaller().unmarshal(configFile);
-      }
-      catch (JAXBException ex) {
-        throw new StoreException("failed to unmarshall object", ex);
-      }
+      return context.unmarshall(configFile);
     }
-
-    return result;
+    return null;
   }
 
   @Override
   protected void writeObject(T object) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("store {} to {}", object.getClass().getName(),
-        configFile.getPath());
-    }
-
-    try {
-      Marshaller marshaller = context.createMarshaller();
-
-      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-      CopyOnWrite.withTemporaryFile(
-        temp -> marshaller.marshal(object, temp.toFile()),
-        configFile.toPath()
-      );
-    }
-    catch (JAXBException ex) {
-      throw new StoreException("failed to marshall object", ex);
-    }
+    LOG.debug("store {} to {}", object.getClass().getName(), configFile.getPath());
+    CopyOnWrite.withTemporaryFile(
+      temp -> context.marshal(object, temp.toFile()),
+      configFile.toPath()
+    );
   }
 }
