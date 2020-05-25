@@ -134,15 +134,12 @@ node('docker') {
           }
         }
 
-          stage('Presentation Environment') {
-            /**
-             * TODO does not match docker version (scm-packaging/docker)
-             * build job: 'scm-manager/next-scm.cloudogu.com', propagate: false, wait: false, parameters: [
-             *   string(name: 'changeset', value: commitHash),
-             *   string(name: 'imageTag', value: imageVersion)
-             * ]
-             */
-          }
+        stage('Presentation Environment') {
+          build job: 'scm-manager/next-scm.cloudogu.com', propagate: false, wait: false, parameters: [
+            string(name: 'changeset', value: commitHash),
+            string(name: 'imageTag', value: imageVersion)
+          ]
+        }
 
         if (isReleaseBranch()) {
           stage('Update Repository') {

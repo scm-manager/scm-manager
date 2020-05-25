@@ -149,7 +149,6 @@
         </configuration>
       </plugin>
 
-
       <plugin>
         <groupId>org.codehaus.gmavenplus</groupId>
         <artifactId>gmavenplus-plugin</artifactId>
@@ -172,21 +171,7 @@
             </goals>
             <configuration>
               <scripts>
-                <script>
-                  <![CDATA[
-                  def repository = "docker.io/scmmanager/scm-manager"
-                  def version = project.version
-
-                  if (version.contains("SNAPSHOT")) {
-                    repository = "docker.io/cloudogu/scm-manager"
-                    def format = new java.text.SimpleDateFormat("yyyyMMdd-HHmmss")
-                    version = version.replace("SNAPSHOT", format.format(new Date()))
-                  }
-
-                  project.properties.setProperty("docker.repository", repository)
-                  project.properties.setProperty("docker.tag", version)
-                  ]]>
-                </script>
+                <script>src/main/build/name.groovy</script>
               </scripts>
             </configuration>
           </execution>
