@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
@@ -45,7 +45,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   /** Field description */
   //J-
   public static final Set<Command> COMMANDS = ImmutableSet.of(
-    Command.BLAME, Command.BROWSE, Command.CAT, Command.DIFF, 
+    Command.BLAME, Command.BROWSE, Command.CAT, Command.DIFF,
     Command.LOG, Command.BUNDLE, Command.UNBUNDLE, Command.MODIFY
   );
   //J+
@@ -56,7 +56,6 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   SvnRepositoryServiceProvider(SvnRepositoryHandler handler,
     Repository repository, SvnWorkDirFactory workdirFactory)
   {
-    this.repository = repository;
     this.context = new SvnContext(repository, handler.getDirectory(repository.getId()));
     this.workDirFactory = workdirFactory;
   }
@@ -86,7 +85,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public SvnBlameCommand getBlameCommand()
   {
-    return new SvnBlameCommand(context, repository);
+    return new SvnBlameCommand(context);
   }
 
   /**
@@ -98,7 +97,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public SvnBrowseCommand getBrowseCommand()
   {
-    return new SvnBrowseCommand(context, repository);
+    return new SvnBrowseCommand(context);
   }
 
   /**
@@ -110,7 +109,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public BundleCommand getBundleCommand()
   {
-    return new SvnBundleCommand(context, repository);
+    return new SvnBundleCommand(context);
   }
 
   /**
@@ -122,7 +121,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public SvnCatCommand getCatCommand()
   {
-    return new SvnCatCommand(context, repository);
+    return new SvnCatCommand(context);
   }
 
   /**
@@ -134,7 +133,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public SvnDiffCommand getDiffCommand()
   {
-    return new SvnDiffCommand(context, repository);
+    return new SvnDiffCommand(context);
   }
 
   /**
@@ -146,15 +145,15 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public SvnLogCommand getLogCommand()
   {
-    return new SvnLogCommand(context, repository);
+    return new SvnLogCommand(context);
   }
 
   public ModificationsCommand getModificationsCommand() {
-    return new SvnModificationsCommand(context, repository);
+    return new SvnModificationsCommand(context);
   }
 
   public ModifyCommand getModifyCommand() {
-    return new SvnModifyCommand(context, repository, workDirFactory);
+    return new SvnModifyCommand(context, workDirFactory);
   }
 
   /**
@@ -178,16 +177,13 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public UnbundleCommand getUnbundleCommand()
   {
-    return new SvnUnbundleCommand(context, repository);
+    return new SvnUnbundleCommand(context);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private final SvnContext context;
-
-  /** Field description */
-  private final Repository repository;
 
   private final SvnWorkDirFactory workDirFactory;
 }

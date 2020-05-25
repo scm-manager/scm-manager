@@ -51,7 +51,6 @@ import sonia.scm.repository.FileObject;
 import sonia.scm.repository.GitSubModuleParser;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.SubRepository;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
@@ -112,8 +111,8 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   private int resultCount = 0;
 
-  public GitBrowseCommand(GitContext context, Repository repository, LfsBlobStoreFactory lfsBlobStoreFactory, SyncAsyncExecutor executor) {
-    super(context, repository);
+  public GitBrowseCommand(GitContext context, LfsBlobStoreFactory lfsBlobStoreFactory, SyncAsyncExecutor executor) {
+    super(context);
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
     this.executor = executor;
   }
@@ -326,8 +325,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     logger.debug("read submodules of {} at {}", repository.getName(), revId);
 
     try ( ByteArrayOutputStream baos = new ByteArrayOutputStream() ) {
-      new GitCatCommand(context, repository, lfsBlobStoreFactory).getContent(repo, revId,
-        PATH_MODULES, baos);
+      new GitCatCommand(context, lfsBlobStoreFactory).getContent(repo, revId, PATH_MODULES, baos);
       return GitSubModuleParser.parse(baos.toString());
     } catch (NotFoundException ex) {
       logger.trace("could not find .gitmodules: {}", ex.getMessage());

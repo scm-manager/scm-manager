@@ -21,254 +21,81 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
+import com.google.common.collect.ImmutableList;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
-import sonia.scm.util.Util;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
-//~--- JDK imports ------------------------------------------------------------
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "modifications")
-public class Modifications implements Serializable
-{
+@EqualsAndHashCode
+@ToString
+@Getter
+public class Modifications implements Serializable {
 
-  /** Field description */
   private static final long serialVersionUID = -8902033326668658140L;
 
-  //~--- constructors ---------------------------------------------------------
+  private final String revision;
+  private final Collection<Modification> modifications;
 
-  /**
-   * Constructs ...
-   *
-   */
-  public Modifications() {
+  public Modifications(String revision, Modification... modifications) {
+    this(revision, asList(modifications));
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param added
-   */
-  public Modifications(List<String> added)
-  {
-    this(added, null, null);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param added
-   * @param modified
-   */
-  public Modifications(List<String> added, List<String> modified)
-  {
-    this(added, modified, null);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param added
-   * @param modified
-   * @param removed
-   */
-  public Modifications(List<String> added, List<String> modified,
-    List<String> removed)
-  {
-    this.added = added;
-    this.modified = modified;
-    this.removed = removed;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
-  @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-
-    if (getClass() != obj.getClass())
-    {
-      return false;
-    }
-
-    final Modifications other = (Modifications) obj;
-
-    return Objects.equal(added, other.added)
-      && Objects.equal(modified, other.modified)
-      && Objects.equal(removed, other.removed);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(added, modified, removed);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public String toString()
-  {
-    StringBuilder out = new StringBuilder();
-
-    out.append("added:").append(Util.toString(added)).append("\n");
-    out.append("modified:").append(Util.toString(modified)).append("\n");
-    out.append("removed:").append(Util.toString(removed)).append("\n");
-
-    return out.toString();
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<String> getAdded()
-  {
-    if (added == null)
-    {
-      added = Lists.newArrayList();
-    }
-
-    return added;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<String> getModified()
-  {
-    if (modified == null)
-    {
-      modified = Lists.newArrayList();
-    }
-
-    return modified;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<String> getRemoved()
-  {
-    if (removed == null)
-    {
-      removed = Lists.newArrayList();
-    }
-
-    return removed;
-  }
-
-  public String getRevision() {
-    return revision;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param added
-   */
-  public void setAdded(List<String> added)
-  {
-    this.added = added;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param modified
-   */
-  public void setModified(List<String> modified)
-  {
-    this.modified = modified;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param removed
-   */
-  public void setRemoved(List<String> removed)
-  {
-    this.removed = removed;
-  }
-
-  public void setRevision(String revision) {
+  public Modifications(String revision, Collection<Modification> modifications) {
     this.revision = revision;
+    this.modifications = ImmutableList.copyOf(modifications);
   }
 
-  //~--- fields ---------------------------------------------------------------
+  public List<String> getEffectedPaths() {
+    return effectedPathsStream().collect(toList());
+  }
 
-  private String revision;
+  public Stream<String> effectedPathsStream() {
+    return modifications.stream().flatMap(Modification::getEffectedPaths);
+  }
 
-  /** list of added files */
-  @XmlElement(name = "added")
-  @XmlElementWrapper(name = "added")
-  private List<String> added;
+  public List<Added> getAdded() {
+    return modifications.stream()
+      .filter(m -> m instanceof Added)
+      .map(m -> (Added) m)
+      .collect(toList());
+  }
 
-  /** list of modified files */
-  @XmlElement(name = "modified")
-  @XmlElementWrapper(name = "modified")
-  private List<String> modified;
+  public List<Removed> getRemoved() {
+    return modifications.stream()
+      .filter(m -> m instanceof Removed)
+      .map(m -> (Removed) m)
+      .collect(toList());
+  }
 
-  /** list of removed files */
-  @XmlElement(name = "removed")
-  @XmlElementWrapper(name = "removed")
-  private List<String> removed;
+  public List<Modified> getModified() {
+    return modifications.stream()
+      .filter(m -> m instanceof Modified)
+      .map(m -> (Modified) m)
+      .collect(toList());
+  }
+
+  public List<Renamed> getRenamed() {
+    return modifications.stream()
+      .filter(m -> m instanceof Renamed)
+      .map(m -> (Renamed) m)
+      .collect(toList());
+  }
+
+  public List<Copied> getCopied() {
+    return modifications.stream()
+      .filter(m -> m instanceof Copied)
+      .map(m -> (Copied) m)
+      .collect(toList());
+  }
 }

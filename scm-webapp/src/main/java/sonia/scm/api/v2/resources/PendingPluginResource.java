@@ -118,7 +118,7 @@ public class PendingPluginResource {
     List<PluginDto> uninstallDtos = uninstallPlugins.map(i -> mapper.mapInstalled(i, pending)).collect(toList());
 
     if (
-      PluginPermissions.manage().isPermitted() &&
+      PluginPermissions.write().isPermitted() &&
         (!installDtos.isEmpty() || !updateDtos.isEmpty() || !uninstallDtos.isEmpty())
     ) {
       if (restarter.isSupported()) {

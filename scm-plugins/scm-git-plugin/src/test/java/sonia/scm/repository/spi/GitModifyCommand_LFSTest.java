@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.github.sdorra.shiro.ShiroRule;
@@ -130,7 +130,7 @@ public class GitModifyCommand_LFSTest extends AbstractGitCommandTestBase {
   }
 
   private GitModifyCommand createCommand() {
-    return new GitModifyCommand(createContext(), repository, new SimpleGitWorkdirFactory(new WorkdirProvider()), lfsBlobStoreFactory);
+    return new GitModifyCommand(createContext(), new SimpleGitWorkdirFactory(new WorkdirProvider()), lfsBlobStoreFactory);
   }
 
   @Override

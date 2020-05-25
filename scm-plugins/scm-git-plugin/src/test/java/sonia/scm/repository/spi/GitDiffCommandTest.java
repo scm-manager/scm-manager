@@ -21,14 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public class GitDiffCommandTest extends AbstractGitCommandTestBase {
@@ -78,7 +80,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void diffForOneRevisionShouldCreateDiff() throws IOException {
-    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
+    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext());
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
     ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -88,7 +90,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void diffForOneBranchShouldCreateDiff() throws IOException {
-    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
+    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext());
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("test-branch");
     ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -98,7 +100,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void diffForPathShouldCreateLimitedDiff() throws IOException {
-    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
+    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext());
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("test-branch");
     diffCommandRequest.setPath("a.txt");
@@ -109,7 +111,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void diffBetweenTwoBranchesShouldCreateDiff() throws IOException {
-    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
+    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext());
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("master");
     diffCommandRequest.setAncestorChangeset("test-branch");
@@ -120,7 +122,7 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void diffBetweenTwoBranchesForPathShouldCreateLimitedDiff() throws IOException {
-    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
+    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext());
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("master");
     diffCommandRequest.setAncestorChangeset("test-branch");
@@ -132,12 +134,27 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void diffBetweenTwoBranchesWithMergedIntegrationBranchShouldCreateDiffOfAllIncomingChanges() throws IOException {
-    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext(), repository);
+    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext());
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
     diffCommandRequest.setRevision("partially_merged");
     diffCommandRequest.setAncestorChangeset("master");
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     gitDiffCommand.getDiffResult(diffCommandRequest).accept(output);
     assertEquals(DIFF_FILE_PARTIAL_MERGE, output.toString());
+  }
+
+  @Test
+  public void diffBetweenTwoBranchesWithMovedFiles() throws IOException {
+    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext());
+    DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
+    diffCommandRequest.setRevision("rename");
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    gitDiffCommand.getDiffResult(diffCommandRequest).accept(output);
+    assertThat(output.toString())
+      .contains("similarity index 100%")
+      .contains("rename from a.txt")
+      .contains("rename to a-copy.txt")
+      .contains("rename from b.txt")
+      .contains("rename to b-copy.txt");
   }
 }

@@ -21,17 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
+import sonia.scm.repository.Modification;
 import sonia.scm.repository.Modifications;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
+
+import java.util.Collection;
 
 public class HgModificationsCommand extends AbstractCommand implements ModificationsCommand {
 
-  HgModificationsCommand(HgCommandContext context, Repository repository) {
-    super(context, repository);
+  HgModificationsCommand(HgCommandContext context) {
+    super(context);
   }
 
 
@@ -39,9 +41,8 @@ public class HgModificationsCommand extends AbstractCommand implements Modificat
   public Modifications getModifications(String revision) {
     com.aragost.javahg.Repository repository = open();
     HgLogChangesetCommand hgLogChangesetCommand = HgLogChangesetCommand.on(repository, getContext().getConfig());
-    Modifications modifications = hgLogChangesetCommand.rev(revision).extractModifications();
-    modifications.setRevision(revision);
-    return modifications;
+    Collection<Modification> modifications = hgLogChangesetCommand.rev(revision).extractModifications();
+    return new Modifications(revision, modifications);
   }
 
   @Override

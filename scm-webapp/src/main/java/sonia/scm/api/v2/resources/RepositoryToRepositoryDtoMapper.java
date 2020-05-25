@@ -38,6 +38,7 @@ import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.ScmProtocol;
+import sonia.scm.web.EdisonHalAppender;
 import sonia.scm.web.api.RepositoryToHalMapper;
 
 import java.util.List;

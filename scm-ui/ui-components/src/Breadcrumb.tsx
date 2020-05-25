@@ -59,24 +59,23 @@ class Breadcrumb extends React.Component<Props> {
 
     if (path) {
       const paths = path.split("/");
-      const map = paths.map((path, index) => {
+      return paths.map((pathFragment, index) => {
         const currPath = paths.slice(0, index + 1).join("/");
         if (paths.length - 1 === index) {
           return (
             <li className="is-active" key={index}>
               <Link to="#" aria-current="page">
-                {path}
+                {pathFragment}
               </Link>
             </li>
           );
         }
         return (
           <li key={index}>
-            <Link to={baseUrl + "/" + revision + "/" + currPath}>{path}</Link>
+            <Link to={baseUrl + "/" + revision + "/" + currPath}>{pathFragment}</Link>
           </li>
         );
       });
-      return map;
     }
     return null;
   }

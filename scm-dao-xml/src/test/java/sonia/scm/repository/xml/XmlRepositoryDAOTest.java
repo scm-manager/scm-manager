@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.xml;
 
 
@@ -31,7 +31,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -61,7 +61,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith({MockitoExtension.class, TempDirectory.class})
+@ExtendWith({MockitoExtension.class})
 @MockitoSettings(strictness = Strictness.LENIENT)
 class XmlRepositoryDAOTest {
 
@@ -76,7 +76,7 @@ class XmlRepositoryDAOTest {
   private XmlRepositoryDAO dao;
 
   @BeforeEach
-  void createDAO(@TempDirectory.TempDir Path basePath) {
+  void createDAO(@TempDir Path basePath) {
     when(locationResolver.create(Path.class)).thenReturn(
       new RepositoryLocationResolver.RepositoryLocationResolverInstance<Path>() {
         @Override
@@ -103,7 +103,7 @@ class XmlRepositoryDAOTest {
     when(locationResolver.remove(anyString())).thenAnswer(invocation -> basePath.resolve(invocation.getArgument(0).toString()));
   }
 
-  private Path createMockedRepoPath(@TempDirectory.TempDir Path basePath, InvocationOnMock invocation) {
+  private Path createMockedRepoPath(@TempDir Path basePath, InvocationOnMock invocation) {
     Path resolvedPath = basePath.resolve(invocation.getArgument(0).toString());
     try {
       Files.createDirectories(resolvedPath);
@@ -337,7 +337,7 @@ class XmlRepositoryDAOTest {
     private Path repositoryPath;
 
     @BeforeEach
-    void createMetadataFileForRepository(@TempDirectory.TempDir Path basePath) throws IOException {
+    void createMetadataFileForRepository(@TempDir Path basePath) throws IOException {
       repositoryPath = basePath.resolve("existing");
 
       Files.createDirectories(repositoryPath);

@@ -81,7 +81,7 @@ public abstract class PluginDtoMapper {
       .self(resourceLinks.availablePlugin()
         .self(information.getName()));
 
-    if (!plugin.isPending() && PluginPermissions.manage().isPermitted()) {
+    if (!plugin.isPending() && PluginPermissions.write().isPermitted()) {
       String href = resourceLinks.availablePlugin().install(information.getName());
       appendLink(links, "install", href);
     }
@@ -106,7 +106,7 @@ public abstract class PluginDtoMapper {
     if (!plugin.isCore()
       && availablePlugin.isPresent()
       && !availablePlugin.get().isPending()
-      && PluginPermissions.manage().isPermitted()
+      && PluginPermissions.write().isPermitted()
     ) {
       String href = resourceLinks.availablePlugin().install(information.getName());
       appendLink(links, "update", href);
@@ -114,7 +114,7 @@ public abstract class PluginDtoMapper {
 
     if (plugin.isUninstallable()
       && (!availablePlugin.isPresent() || !availablePlugin.get().isPending())
-      && PluginPermissions.manage().isPermitted()
+      && PluginPermissions.write().isPermitted()
     ) {
       String href = resourceLinks.installedPlugin().uninstall(information.getName());
       appendLink(links, "uninstall", href);

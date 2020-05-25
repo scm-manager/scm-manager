@@ -31,6 +31,7 @@ import org.mapstruct.ObjectFactory;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupPermissions;
 import sonia.scm.security.PermissionPermissions;
+import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
 import java.util.List;

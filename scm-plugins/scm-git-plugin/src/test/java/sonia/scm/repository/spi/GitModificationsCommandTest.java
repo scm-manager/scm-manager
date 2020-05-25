@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -42,8 +42,8 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
 
   @Before
   public void init() {
-    incomingModificationsCommand = new GitModificationsCommand(new GitContext(incomingDirectory, null, null), incomingRepository);
-    outgoingModificationsCommand = new GitModificationsCommand(new GitContext(outgoingDirectory, null, null), outgoingRepository);
+    incomingModificationsCommand = new GitModificationsCommand(new GitContext(incomingDirectory, incomingRepository, null));
+    outgoingModificationsCommand = new GitModificationsCommand(new GitContext(outgoingDirectory, outgoingRepository, null));
   }
 
   @Test
@@ -86,14 +86,31 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
     assertModifications.accept(outgoingModificationsCommand.getModifications(revision));
   }
 
+  @Test
+  public void shouldReadRenamedFiles() throws Exception {
+    String originalFile = "a.txt";
+    write(outgoing, outgoingDirectory, originalFile, "bal bla");
+    commit(outgoing, "add file");
+    write(outgoing, outgoingDirectory, "b.txt", "bal bla");
+    File file = new File(outgoingDirectory, originalFile);
+    file.delete();
+    outgoing.rm().addFilepattern(originalFile).call();
+
+    RevCommit modifiedFileCommit = commit(outgoing, "rename file");
+    String revision = modifiedFileCommit.getName();
+
+    Consumer<Modifications> assertModifications = assertRenamedFiles("b.txt");
+    assertModifications.accept(outgoingModificationsCommand.getModifications(revision));
+    pushOutgoingAndPullIncoming();
+    assertModifications.accept(incomingModificationsCommand.getModifications(revision));
+  }
+
   void pushOutgoingAndPullIncoming() throws IOException {
-    GitPushCommand cmd = new GitPushCommand(handler, new GitContext(outgoingDirectory, null, null),
-      outgoingRepository);
+    GitPushCommand cmd = new GitPushCommand(handler, new GitContext(outgoingDirectory, outgoingRepository, null));
     PushCommandRequest request = new PushCommandRequest();
     request.setRemoteRepository(incomingRepository);
     cmd.push(request);
-    GitPullCommand pullCommand = new GitPullCommand(handler, new GitContext(incomingDirectory, null, null),
-      incomingRepository);
+    GitPullCommand pullCommand = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, null));
     PullCommandRequest pullRequest = new PullCommandRequest();
     pullRequest.setRemoteRepository(incomingRepository);
     pullCommand.pull(pullRequest);
@@ -104,31 +121,62 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
       assertThat(modifications).isNotNull();
       assertThat(modifications.getAdded())
         .as("added files modifications")
-        .hasSize(0);
+        .asList()
+        .isEmpty();
       assertThat(modifications.getModified())
         .as("modified files modifications")
-        .hasSize(0);
+        .asList()
+        .isEmpty();
       assertThat(modifications.getRemoved())
         .as("removed files modifications")
+        .asList()
         .hasSize(1)
+        .extracting("path")
         .containsOnly(fileName);
     };
   }
 
+  Consumer<Modifications> assertRenamedFiles(String fileName) {
+    return (modifications) -> {
+      assertThat(modifications).isNotNull();
+      assertThat(modifications.getAdded())
+        .as("added files modifications")
+        .asList()
+        .isEmpty();
+      assertThat(modifications.getModified())
+        .as("modified files modifications")
+        .asList()
+        .isEmpty();
+      assertThat(modifications.getRemoved())
+        .as("removed files modifications")
+        .asList()
+        .isEmpty();
+      assertThat(modifications.getRenamed())
+        .as("renamed files modifications")
+        .asList()
+        .hasSize(1)
+        .extracting("newPath")
+        .containsOnly(fileName);
+    };
+  }
 
   Consumer<Modifications> assertModifiedFiles(String file) {
     return (modifications) -> {
       assertThat(modifications).isNotNull();
       assertThat(modifications.getAdded())
         .as("added files modifications")
-        .hasSize(0);
+        .asList()
+        .isEmpty();
       assertThat(modifications.getModified())
         .as("modified files modifications")
+        .asList()
+        .extracting("path")
         .hasSize(1)
         .containsOnly(file);
       assertThat(modifications.getRemoved())
         .as("removed files modifications")
-        .hasSize(0);
+        .asList()
+        .isEmpty();
     };
   }
 
@@ -137,14 +185,18 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
       assertThat(modifications).isNotNull();
       assertThat(modifications.getAdded())
         .as("added files modifications")
+        .asList()
         .hasSize(1)
+        .extracting("path")
         .containsOnly(file);
       assertThat(modifications.getModified())
         .as("modified files modifications")
-        .hasSize(0);
+        .asList()
+        .isEmpty();
       assertThat(modifications.getRemoved())
         .as("removed files modifications")
-        .hasSize(0);
+        .asList()
+        .isEmpty();
     };
   }
 }

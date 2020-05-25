@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -42,6 +42,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 
 import java.security.MessageDigest;
@@ -51,27 +53,38 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Base64;
 
+import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * Default implementation of the {@link CipherHandler}, which uses AES for 
+ * Default implementation of the {@link CipherHandler}, which uses AES for
  * encryption and decryption.
- * 
+ *
  * @author Sebastian Sdorra
  * @since 1.7
  */
 public class DefaultCipherHandler implements CipherHandler {
 
-  /** used cipher type */
-  public static final String CIPHER_TYPE = "AES/CTR/PKCS5PADDING";
+  /**
+   * Cipher type used before v2.
+   * @see <a href="https://github.com/scm-manager/scm-manager/issues/1110">Issue 1110</a>
+   */
+  public static final String OLD_CIPHER_TYPE = "AES/CTR/PKCS5PADDING";
+
+  /** used cipher type for format v2 */
+  public static final String CIPHER_TYPE = "AES/GCM/NoPadding";
+
+  /** prefix to detect new format */
+  public static final String PREFIX_FORMAT_V2 = "v2:";
 
   /** digest type for key generation */
   public static final String DIGEST_TYPE = "SHA-512";
 
   /** string encoding */
-  public static final String ENCODING = "UTF-8";
+  public static final Charset ENCODING = StandardCharsets.UTF_8;
 
   /** default key length */
   public static final int KEY_LENGTH = 16;
@@ -92,12 +105,12 @@ public class DefaultCipherHandler implements CipherHandler {
   private static final String KEY_TYPE = "AES";
 
   /** the logger for DefaultCipherHandler */
-  private static final Logger logger = LoggerFactory.getLogger(DefaultCipherHandler.class);
-  
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultCipherHandler.class);
+
   private final SecureRandom random = new SecureRandom();
-  
+
   private final char[] key;
-  
+
   /**
    * Constructs a new DefaultCipherHandler. Note this constructor is only for
    * unit tests.
@@ -112,7 +125,7 @@ public class DefaultCipherHandler implements CipherHandler {
   }
 
   /**
-   * Constructs a new instance and reads the default key from the scm home directory, 
+   * Constructs a new instance and reads the default key from the scm home directory,
    * if the key file does not exists it will be generated with the {@link KeyGenerator}.
    *
    * @param context SCM-Manager context provider
@@ -161,25 +174,26 @@ public class DefaultCipherHandler implements CipherHandler {
   }
 
   private String decode(char[] plainKey, String value, Base64.Decoder decoder) {
+    CipherFactory cipherFactory = oldCipherFactor;
+    if (value.startsWith(PREFIX_FORMAT_V2)) {
+      cipherFactory = v2CipherFactor;
+      value = value.substring(PREFIX_FORMAT_V2.length());
+    } else {
+      LOG.warn("found encrypted data in old format, the data should be stored again to ensure the new format is used");
+    }
+
     try {
       byte[] encodedInput = decoder.decode(value);
       byte[] salt = new byte[SALT_LENGTH];
       byte[] encoded = new byte[encodedInput.length - SALT_LENGTH];
 
       System.arraycopy(encodedInput, 0, salt, 0, SALT_LENGTH);
-      System.arraycopy(encodedInput, SALT_LENGTH, encoded, 0,
-        encodedInput.length - SALT_LENGTH);
+      System.arraycopy(encodedInput, SALT_LENGTH, encoded, 0, encodedInput.length - SALT_LENGTH);
 
-      IvParameterSpec iv = new IvParameterSpec(salt);
-      SecretKey secretKey = buildSecretKey(plainKey);
-      javax.crypto.Cipher cipher = javax.crypto.Cipher.getInstance(CIPHER_TYPE);
-
-      cipher.init(javax.crypto.Cipher.DECRYPT_MODE, secretKey, iv);
-
+      Cipher cipher = cipherFactory.create(plainKey, salt, Cipher.DECRYPT_MODE);
       byte[] decoded = cipher.doFinal(encoded);
-
       return new String(decoded, ENCODING);
-    } catch (IOException | GeneralSecurityException ex) {
+    } catch (GeneralSecurityException ex) {
       throw new CipherException("could not decode string", ex);
     }
   }
@@ -204,11 +218,7 @@ public class DefaultCipherHandler implements CipherHandler {
 
       random.nextBytes(salt);
 
-      IvParameterSpec iv = new IvParameterSpec(salt);
-      SecretKey secretKey = buildSecretKey(plainKey);
-      javax.crypto.Cipher cipher = javax.crypto.Cipher.getInstance(CIPHER_TYPE);
-
-      cipher.init(javax.crypto.Cipher.ENCRYPT_MODE, secretKey, iv);
+      Cipher cipher = v2CipherFactor.create(plainKey, salt, Cipher.ENCRYPT_MODE);
 
       byte[] inputBytes = value.getBytes(ENCODING);
       byte[] encodedInput = cipher.doFinal(inputBytes);
@@ -217,15 +227,15 @@ public class DefaultCipherHandler implements CipherHandler {
       System.arraycopy(salt, 0, result, 0, SALT_LENGTH);
       System.arraycopy(encodedInput, 0, result, SALT_LENGTH,
         result.length - SALT_LENGTH);
-      res = new String(Base64.getUrlEncoder().encode(result), ENCODING);
-    } catch (IOException | GeneralSecurityException ex) {
+      res = PREFIX_FORMAT_V2  + new String(Base64.getUrlEncoder().encode(result), ENCODING);
+    } catch (GeneralSecurityException ex) {
       throw new CipherException("could not encode string", ex);
     }
 
     return res;
   }
 
-  private SecretKey buildSecretKey(char[] plainKey) throws IOException, NoSuchAlgorithmException {
+  private SecretKey buildSecretKey(char[] plainKey) throws NoSuchAlgorithmException {
     byte[] raw = new String(plainKey).getBytes(ENCODING);
     MessageDigest digest = MessageDigest.getInstance(DIGEST_TYPE);
 
@@ -237,16 +247,50 @@ public class DefaultCipherHandler implements CipherHandler {
 
   private char[] loadKey(File cipherKeyFile) throws IOException {
     try (BufferedReader reader =  new BufferedReader(new FileReader(cipherKeyFile))) {
-      String line = reader.readLine();
+      String encodedKey = reader.readLine();
 
-      return decode(KEY_BASE, line).toCharArray();
+      char[] decodedKey = decode(KEY_BASE, encodedKey).toCharArray();
+
+      // rewrite key in new format, if the stored key uses the old format
+      if (!encodedKey.startsWith(PREFIX_FORMAT_V2)) {
+        LOG.info("found default key in old format, rewrite with new format");
+        storeKey(cipherKeyFile, decodedKey);
+      }
+
+      return decodedKey;
     }
   }
 
   private void storeKey(File cipherKeyFile) throws FileNotFoundException {
+    storeKey(cipherKeyFile, key);
+  }
+
+  private void storeKey(File cipherKeyFile, char[] key) throws FileNotFoundException {
     String storeKey = encode(KEY_BASE, new String(key));
     try (PrintWriter output = new PrintWriter(cipherKeyFile)) {
       output.write(storeKey);
     }
   }
+
+  @FunctionalInterface
+  private interface CipherFactory {
+    Cipher create(char[] plainKey, byte[] salt, int mode) throws GeneralSecurityException;
+
+  }
+
+  private final CipherFactory v2CipherFactor = (char[] plainKey, byte[] salt, int mode) -> {
+    Cipher cipher = Cipher.getInstance(CIPHER_TYPE);
+    SecretKey secretKey = buildSecretKey(plainKey);
+    GCMParameterSpec parameterSpec = new GCMParameterSpec(128, salt);
+    cipher.init(mode, secretKey, parameterSpec);
+    return cipher;
+  };
+
+  private final CipherFactory oldCipherFactor = (char[] plainKey, byte[] salt, int mode) -> {
+    Cipher cipher = Cipher.getInstance(OLD_CIPHER_TYPE);
+    SecretKey secretKey = buildSecretKey(plainKey);
+    IvParameterSpec iv = new IvParameterSpec(salt);
+    cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
+    return cipher;
+  };
 }

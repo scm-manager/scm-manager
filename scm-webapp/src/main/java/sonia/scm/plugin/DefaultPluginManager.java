@@ -157,7 +157,7 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public void install(String name, boolean restartAfterInstallation) {
-    PluginPermissions.manage().check();
+    PluginPermissions.write().check();
 
     getInstalled(name)
       .map(InstalledPlugin::isCore)
@@ -192,7 +192,7 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public void uninstall(String name, boolean restartAfterInstallation) {
-    PluginPermissions.manage().check();
+    PluginPermissions.write().check();
     InstalledPlugin installed = getInstalled(name)
       .orElseThrow(() -> NotFoundException.notFound(entity(InstalledPlugin.class, name)));
     doThrow().violation("plugin is a core plugin and cannot be uninstalled").when(installed.isCore());
@@ -231,7 +231,7 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public void executePendingAndRestart() {
-    PluginPermissions.manage().check();
+    PluginPermissions.write().check();
     if (!pendingInstallQueue.isEmpty() || getInstalled().stream().anyMatch(InstalledPlugin::isMarkedForUninstall)) {
       triggerRestart("execute pending plugin changes");
     }
@@ -278,7 +278,7 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public void cancelPending() {
-    PluginPermissions.manage().check();
+    PluginPermissions.write().check();
     pendingUninstallQueue.forEach(PendingPluginUninstallation::cancel);
     pendingInstallQueue.forEach(PendingPluginInstallation::cancel);
     pendingUninstallQueue.clear();
@@ -288,7 +288,7 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public void updateAll() {
-    PluginPermissions.manage().check();
+    PluginPermissions.write().check();
     for (InstalledPlugin installedPlugin : getInstalled()) {
       String pluginName = installedPlugin.getDescriptor().getInformation().getName();
       if (isUpdatable(pluginName)) {

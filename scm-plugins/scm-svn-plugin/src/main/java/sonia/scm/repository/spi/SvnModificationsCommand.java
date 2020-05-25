@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,18 +31,19 @@ import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.admin.SVNLookClient;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.Modification;
 import sonia.scm.repository.Modifications;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.Util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Slf4j
 public class SvnModificationsCommand extends AbstractSvnCommand implements ModificationsCommand {
 
-  SvnModificationsCommand(SvnContext context, Repository repository) {
-    super(context, repository);
+  SvnModificationsCommand(SvnContext context) {
+    super(context);
   }
 
   @Override
@@ -79,12 +80,12 @@ public class SvnModificationsCommand extends AbstractSvnCommand implements Modif
 
   private Modifications getModificationsFromTransaction(String transaction) throws SVNException {
     log.debug("get svn modifications from transaction: {}", transaction);
-    final Modifications modifications = new Modifications();
     SVNLookClient client = SVNClientManager.newInstance().getLookClient();
+    Collection<Modification> modificationList = new ArrayList<>();
     client.doGetChanged(context.getDirectory(), transaction,
-      e -> SvnUtil.appendModification(modifications, e.getType(), e.getPath()), true);
+      e -> SvnUtil.asModification(e.getType(), e.getPath()).ifPresent(modificationList::add), true);
 
-    return modifications;
+    return new Modifications(null, modificationList);
   }
 
   @Override

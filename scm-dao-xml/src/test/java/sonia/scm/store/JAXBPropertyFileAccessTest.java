@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
@@ -48,7 +48,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 
-@ExtendWith(TempDirectory.class)
 @ExtendWith(MockitoExtension.class)
 class JAXBPropertyFileAccessTest {
 
@@ -63,7 +62,7 @@ class JAXBPropertyFileAccessTest {
   JAXBPropertyFileAccess fileAccess;
 
   @BeforeEach
-  void initTempDir(@TempDirectory.TempDir Path tempDir) {
+  void initTempDir(@TempDir Path tempDir) {
     lenient().when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
     lenient().when(contextProvider.resolve(any())).thenAnswer(invocation -> tempDir.resolve(invocation.getArgument(0).toString()));
 
@@ -99,7 +98,7 @@ class JAXBPropertyFileAccessTest {
     }
 
     @Test
-    void shouldMoveStoreFileToRepositoryBasedLocation(@TempDirectory.TempDir Path tempDir) throws IOException {
+    void shouldMoveStoreFileToRepositoryBasedLocation(@TempDir Path tempDir) throws IOException {
       createV1StoreFile(tempDir, "myStore.xml");
 
       fileAccess.forStoreName(STORE_NAME).moveAsRepositoryStore(Paths.get("myStore.xml"), REPOSITORY_ID);
@@ -108,7 +107,7 @@ class JAXBPropertyFileAccessTest {
     }
 
     @Test
-    void shouldMoveAllStoreFilesToRepositoryBasedLocations(@TempDirectory.TempDir Path tempDir) throws IOException {
+    void shouldMoveAllStoreFilesToRepositoryBasedLocations(@TempDir Path tempDir) throws IOException {
       locationResolver.forClass(Path.class).createLocation("repoId2");
 
       createV1StoreFile(tempDir, REPOSITORY_ID + ".xml");
@@ -122,7 +121,7 @@ class JAXBPropertyFileAccessTest {
     }
   }
 
-  private void createV1StoreFile(@TempDirectory.TempDir Path tempDir, String name) throws IOException {
+  private void createV1StoreFile(@TempDir Path tempDir, String name) throws IOException {
     Path v1Dir = tempDir.resolve("var").resolve("data").resolve(STORE_NAME);
     IOUtil.mkdirs(v1Dir.toFile());
     Files.createFile(v1Dir.resolve(name));
@@ -132,7 +131,7 @@ class JAXBPropertyFileAccessTest {
   class ForMissingRepository {
 
     @Test
-    void shouldIgnoreStoreFile(@TempDirectory.TempDir Path tempDir) throws IOException {
+    void shouldIgnoreStoreFile(@TempDir Path tempDir) throws IOException {
       createV1StoreFile(tempDir, "myStore.xml");
 
       fileAccess.forStoreName(STORE_NAME).moveAsRepositoryStore(Paths.get("myStore.xml"), REPOSITORY_ID);

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -40,7 +40,6 @@ import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.Repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,9 +64,9 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
 
   //~--- constructors ---------------------------------------------------------
 
-  public GitBlameCommand(GitContext context, Repository repository)
+  public GitBlameCommand(GitContext context)
   {
-    super(context, repository);
+    super(context);
   }
 
   //~--- get methods ----------------------------------------------------------

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -29,7 +29,6 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.spi.javahg.HgDiffInternalCommand;
@@ -49,13 +48,12 @@ public class HgDiffCommand extends AbstractCommand implements DiffCommand
   /**
    * Constructs ...
    *
+   *  @param context
    *
-   * @param context
-   * @param repository
    */
-  HgDiffCommand(HgCommandContext context, Repository repository)
+  HgDiffCommand(HgCommandContext context)
   {
-    super(context, repository);
+    super(context);
   }
 
   //~--- get methods ----------------------------------------------------------

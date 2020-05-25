@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -40,7 +40,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Unit tests for {@link GitBlameCommand}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 public class GitBlameCommandTest extends AbstractGitCommandTestBase
@@ -48,7 +48,7 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
 
   /**
    * Tests blame command with default branch.
-   * 
+   *
    * @throws IOException
    * @
    */
@@ -60,18 +60,18 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
 
     BlameResult result = createCommand().getBlameResult(request);
     assertNotNull(result);
-    assertEquals(2, result.getTotal()); 
+    assertEquals(2, result.getTotal());
     assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getLine(0).getRevision());
     assertEquals("fcd0ef1831e4002ac43ea539f4094334c79ea9ec", result.getLine(1).getRevision());
-    
+
     // set default branch and test again
     createContext().setConfig(new GitRepositoryConfig("test-branch"));
     result = createCommand().getBlameResult(request);
     assertNotNull(result);
-    assertEquals(1, result.getTotal()); 
+    assertEquals(1, result.getTotal());
     assertEquals("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", result.getLine(0).getRevision());
   }
-  
+
   /**
    * Method description
    *
@@ -156,6 +156,6 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
    */
   private GitBlameCommand createCommand()
   {
-    return new GitBlameCommand(createContext(), repository);
+    return new GitBlameCommand(createContext());
   }
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.junit.Test;
@@ -268,7 +268,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
    */
   private SvnBrowseCommand createCommand()
   {
-    return new SvnBrowseCommand(createContext(), repository);
+    return new SvnBrowseCommand(createContext());
   }
 
   //~--- get methods ----------------------------------------------------------

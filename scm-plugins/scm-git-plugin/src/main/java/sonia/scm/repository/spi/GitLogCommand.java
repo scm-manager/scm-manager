@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -77,13 +77,12 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    * Constructs ...
    *
    *
+   *  @param context
    *
-   * @param context
-   * @param repository
    */
-  GitLogCommand(GitContext context, sonia.scm.repository.Repository repository)
+  GitLogCommand(GitContext context)
   {
-    super(context, repository);
+    super(context);
   }
 
   //~--- get methods ----------------------------------------------------------

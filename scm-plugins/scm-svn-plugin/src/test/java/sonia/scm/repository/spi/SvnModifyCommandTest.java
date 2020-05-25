@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.apache.shiro.subject.Subject;
@@ -57,7 +57,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   public void initSvnModifyCommand() {
     context = createContext();
     workDirFactory = new SimpleSvnWorkDirFactory(new WorkdirProvider(context.getDirectory()));
-    svnModifyCommand = new SvnModifyCommand(context, createRepository(), workDirFactory);
+    svnModifyCommand = new SvnModifyCommand(context, workDirFactory);
   }
 
   @Before

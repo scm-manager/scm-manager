@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -31,7 +31,6 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.javahg.HgOutgoingChangesetCommand;
 
 import java.io.File;
@@ -56,15 +55,12 @@ public class HgOutgoingCommand extends AbstractCommand
   /**
    * Constructs ...
    *
-   *
-   * @param context
-   * @param repository
+   *  @param context
    * @param handler
    */
-  public HgOutgoingCommand(HgCommandContext context, Repository repository,
-    HgRepositoryHandler handler)
+  public HgOutgoingCommand(HgCommandContext context, HgRepositoryHandler handler)
   {
-    super(context, repository);
+    super(context);
     this.handler = handler;
   }
 

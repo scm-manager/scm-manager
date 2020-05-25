@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -30,21 +30,21 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Properties;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The default implementation of {@link SCMContextProvider}.
  *
  * @author Sebastian Sdorra
  */
+@SuppressWarnings("java:S106") // we can not use logger until base directory is not determined
 public class BasicContextProvider implements SCMContextProvider
 {
 
@@ -174,56 +174,27 @@ public class BasicContextProvider implements SCMContextProvider
    *
    * @return base directory SCM-Manager
    */
-  private File findBaseDirectory()
-  {
-    String path = getPathFromResource();
+  private File findBaseDirectory() {
+    File directory = BaseDirectory.get().toFile();
 
-    if (Util.isEmpty(path))
-    {
-      path = System.getProperty(DIRECTORY_PROPERTY);
-
-      if (Util.isEmpty(path))
-      {
-        path = System.getenv(DIRECTORY_ENVIRONMENT);
-
-        if (Util.isEmpty(path))
-        {
-          path = System.getProperty("user.home").concat(File.separator).concat(
-            DIRECTORY_DEFAULT);
-        }
-      }
-    }
-
-    File directory = new File(path);
-
-    if (!directory.exists() &&!directory.mkdirs())
-    {
-      String msg = "could not create home directory at ".concat(
-                     directory.getAbsolutePath());
-
-      // do not use logger
-      // http://www.slf4j.org/codes.html#substituteLogger
-      System.err.println("===================================================");
-      System.err.append("Error: ").println(msg);
-      System.err.println("===================================================");
-
-      throw new IllegalStateException(msg);
-    }
-    else if (directory.exists() && !directory.canWrite())
-    {
-      String msg = "could not modify home directory at ".concat(
-                     directory.getAbsolutePath());
-
-      // do not use logger
-      // http://www.slf4j.org/codes.html#substituteLogger
-      System.err.println("===================================================");
-      System.err.append("Error: ").println(msg);
-      System.err.println("===================================================");
-
-      throw new IllegalStateException(msg);
+    if (!directory.exists() &&!directory.mkdirs()) {
+      error("could not create home directory at " + directory.getAbsolutePath());
+    } else if (directory.exists() && !directory.canWrite()) {
+      error("could not modify home directory at " + directory.getAbsolutePath());
     }
 
     return directory;
+  }
+
+
+  private void error(String msg) {
+    // do not use logger
+    // http://www.slf4j.org/codes.html#substituteLogger
+    System.err.println("===================================================");
+    System.err.append("Error: ").println(msg);
+    System.err.println("===================================================");
+
+    throw new IllegalStateException(msg);
   }
 
   /**
@@ -256,11 +227,11 @@ public class BasicContextProvider implements SCMContextProvider
   }
 
   private String determineVersion() {
-    String version = System.getProperty(VERSION_PROPERTY);
-    if (Strings.isNullOrEmpty(version)) {
-      version = loadVersion();
+    String v = System.getProperty(VERSION_PROPERTY);
+    if (Strings.isNullOrEmpty(v)) {
+      v = loadVersion();
     }
-    return version;
+    return v;
   }
 
   /**
@@ -302,59 +273,6 @@ public class BasicContextProvider implements SCMContextProvider
     }
 
     return properties.getProperty(MAVEN_PROPERTY_VERSION, VERSION_DEFAULT);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Load path from classpath resource.
-   *
-   *
-   * @return path from classpath resource or null
-   */
-  private String getPathFromResource()
-  {
-    String path = null;
-    InputStream input = null;
-
-    try
-    {
-      input =
-        BasicContextProvider.class.getResourceAsStream(DIRECTORY_RESOURCE);
-
-      if (input != null)
-      {
-        Properties properties = new Properties();
-
-        properties.load(input);
-        path = properties.getProperty(DIRECTORY_PROPERTY);
-      }
-    }
-    catch (IOException ex)
-    {
-      throw new ConfigurationException(
-        "could not load properties form resource ".concat(DIRECTORY_RESOURCE),
-        ex);
-    }
-    finally
-    {
-
-      // do not use logger or IOUtil,
-      // http://www.slf4j.org/codes.html#substituteLogger
-      if (input != null)
-      {
-        try
-        {
-          input.close();
-        }
-        catch (IOException ex)
-        {
-          ex.printStackTrace(System.err);
-        }
-      }
-    }
-
-    return path;
   }
 
   //~--- fields ---------------------------------------------------------------

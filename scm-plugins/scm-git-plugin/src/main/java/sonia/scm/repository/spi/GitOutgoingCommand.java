@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -30,7 +30,6 @@ import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.lib.ObjectId;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.Repository;
 
 import java.io.IOException;
 
@@ -47,15 +46,12 @@ public class GitOutgoingCommand extends AbstractGitIncomingOutgoingCommand
   /**
    * Constructs ...
    *
-   *
-   * @param handler
+   *  @param handler
    * @param context
-   * @param repository
    */
-  GitOutgoingCommand(GitRepositoryHandler handler, GitContext context,
-    Repository repository)
+  GitOutgoingCommand(GitRepositoryHandler handler, GitContext context)
   {
-    super(handler, context, repository);
+    super(handler, context);
   }
 
   //~--- get methods ----------------------------------------------------------

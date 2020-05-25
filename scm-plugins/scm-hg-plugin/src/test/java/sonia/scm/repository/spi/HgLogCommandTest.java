@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -33,11 +33,10 @@ import sonia.scm.repository.Modifications;
 
 import java.io.IOException;
 
-import static org.hamcrest.Matchers.contains;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -154,7 +153,7 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     assertEquals("Douglas Adams", c.getAuthor().getName());
     assertEquals("douglas.adams@hitchhiker.com", c.getAuthor().getMail());
     assertEquals("added a and b files", c.getDescription());
-    ModificationsCommand modificationsCommand = new HgModificationsCommand(cmdContext, repository);
+    ModificationsCommand modificationsCommand = new HgModificationsCommand(cmdContext);
     Modifications modifications = modificationsCommand.getModifications(revision);
 
     assertNotNull(modifications);
@@ -162,7 +161,9 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     assertTrue("removed list should be empty", modifications.getRemoved().isEmpty());
     assertFalse("added list should not be empty", modifications.getAdded().isEmpty());
     assertEquals(2, modifications.getAdded().size());
-    assertThat(modifications.getAdded(), contains("a.txt", "b.txt"));
+    assertThat(modifications.getAdded())
+      .extracting("path")
+      .containsExactly("a.txt", "b.txt");
   }
 
   @Test
@@ -195,6 +196,6 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
    */
   private HgLogCommand createComamnd()
   {
-    return new HgLogCommand(cmdContext, repository);
+    return new HgLogCommand(cmdContext);
   }
 }

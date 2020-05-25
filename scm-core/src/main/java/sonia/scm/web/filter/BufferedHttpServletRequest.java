@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -36,6 +36,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -195,6 +196,25 @@ public class BufferedHttpServletRequest extends HttpServletRequestWrapper
     public int read(byte[] buf, int off, int len)
     {
       return bais.read(buf, off, len);
+    }
+
+    @Override
+    public boolean isFinished() {
+      return bais.available() == 0;
+    }
+
+    @Override
+    public boolean isReady() {
+      return bais.available() > 0;
+    }
+
+    @Override
+    public void setReadListener(ReadListener readListener) {
+      try {
+        readListener.onDataAvailable();
+      } catch (IOException e) {
+        logger.debug("could not call readListener.onDataAvailable()", e);
+      }
     }
 
     //~--- fields -------------------------------------------------------------

@@ -114,7 +114,7 @@ class PendingPluginResourceTest {
     @BeforeEach
     void bindSubject() {
       ThreadContext.bind(subject);
-      lenient().when(subject.isPermitted("plugin:manage")).thenReturn(true);
+      lenient().when(subject.isPermitted("plugin:write")).thenReturn(true);
       lenient().when(restarter.isSupported()).thenReturn(true);
     }
 
@@ -228,7 +228,7 @@ class PendingPluginResourceTest {
     @BeforeEach
     void bindSubject() {
       ThreadContext.bind(subject);
-      when(subject.isPermitted("plugin:manage")).thenReturn(false);
+      when(subject.isPermitted("plugin:write")).thenReturn(false);
     }
 
     @AfterEach

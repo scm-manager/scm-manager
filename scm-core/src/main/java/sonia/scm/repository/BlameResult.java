@@ -21,25 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Changeset information by line for a given file.
@@ -47,190 +38,41 @@ import java.util.List;
  * @author Sebastian Sdorra
  * @since 1.8
  */
-@XmlRootElement(name = "blame-result")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class BlameResult implements Serializable, Iterable<BlameLine>
-{
+@EqualsAndHashCode
+@ToString
+public class BlameResult implements Serializable, Iterable<BlameLine> {
 
-  /** Field description */
   private static final long serialVersionUID = -8606237881465520606L;
 
-  //~--- constructors ---------------------------------------------------------
+  private List<BlameLine> blameLines;
+  private int total;
 
-  /**
-   * Constructs ...
-   *
-   */
-  public BlameResult() {}
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param blameLines
-   */
-  public BlameResult(List<BlameLine> blameLines)
-  {
-    this.blameLines = blameLines;
-    this.total = blameLines.size();
+  public BlameResult(List<BlameLine> blameLines) {
+    this(blameLines.size(), blameLines);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param total
-   * @param blameLines
-   */
-  public BlameResult(int total, List<BlameLine> blameLines)
-  {
+  public BlameResult(int total, List<BlameLine> blameLines) {
     this.total = total;
     this.blameLines = blameLines;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
   @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-
-    if (getClass() != obj.getClass())
-    {
-      return false;
-    }
-
-    final BlameResult other = (BlameResult) obj;
-
-    return Objects.equal(total, other.total)
-           && Objects.equal(blameLines, other.blameLines);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(total, blameLines);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   * 
-   * @since 1.17
-   */
-  @Override
-  public Iterator<BlameLine> iterator()
-  {
+  public Iterator<BlameLine> iterator() {
     return getBlameLines().iterator();
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public String toString()
-  {
-    //J-
-    return MoreObjects.toStringHelper(this)
-            .add("total", total)
-            .add("blameLines", blameLines)
-            .toString();
-    //J+
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<BlameLine> getBlameLines()
-  {
-    if ( blameLines == null ){
+  public List<BlameLine> getBlameLines() {
+    if (blameLines == null) {
       blameLines = Lists.newArrayList();
     }
     return blameLines;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param i
-   *
-   * @return
-   */
-  public BlameLine getLine(int i)
-  {
+  public BlameLine getLine(int i) {
     return blameLines.get(i);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public int getTotal()
-  {
+  public int getTotal() {
     return total;
   }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param blameLines
-   */
-  public void setBlameLines(List<BlameLine> blameLines)
-  {
-    this.blameLines = blameLines;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param total
-   */
-  public void setTotal(int total)
-  {
-    this.total = total;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "blameline")
-  @XmlElementWrapper(name = "blamelines")
-  private List<BlameLine> blameLines;
-
-  /** Field description */
-  private int total;
 }

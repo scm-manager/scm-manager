@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -29,7 +29,6 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Strings;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 
 import java.util.ArrayList;
@@ -47,13 +46,12 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
   /**
    * Constructs ...
    *
+   *  @param context
    *
-   * @param context
-   * @param repository
    */
-  HgLogCommand(HgCommandContext context, Repository repository)
+  HgLogCommand(HgCommandContext context)
   {
-    super(context, repository);
+    super(context);
   }
 
   //~--- get methods ----------------------------------------------------------

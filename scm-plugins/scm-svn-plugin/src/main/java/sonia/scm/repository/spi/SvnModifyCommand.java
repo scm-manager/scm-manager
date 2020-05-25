@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.apache.shiro.SecurityUtils;
@@ -46,9 +46,9 @@ public class SvnModifyCommand implements ModifyCommand {
   private SvnWorkDirFactory workDirFactory;
   private Repository repository;
 
-  SvnModifyCommand(SvnContext context, Repository repository, SvnWorkDirFactory workDirFactory) {
+  SvnModifyCommand(SvnContext context, SvnWorkDirFactory workDirFactory) {
     this.context = context;
-    this.repository = repository;
+    this.repository = context.getRepository();
     this.workDirFactory = workDirFactory;
   }
 

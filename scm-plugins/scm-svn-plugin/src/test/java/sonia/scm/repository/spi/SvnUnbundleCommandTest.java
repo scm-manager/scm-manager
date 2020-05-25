@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -57,13 +57,8 @@ public class SvnUnbundleCommandTest extends AbstractSvnCommandTestBase
     File bundle = bundle();
     SvnContext ctx = createEmptyContext();
     //J-
-    UnbundleResponse res = new SvnUnbundleCommand(
-      ctx, 
-      repository
-    ).unbundle(
-      new UnbundleCommandRequest(
-        Files.asByteSource(bundle)
-      )
+    UnbundleResponse res = new SvnUnbundleCommand(ctx)
+      .unbundle(new UnbundleCommandRequest(Files.asByteSource(bundle))
     );
     //J+
 
@@ -81,13 +76,8 @@ public class SvnUnbundleCommandTest extends AbstractSvnCommandTestBase
     File file = tempFolder.newFile();
 
     //J-
-    new SvnBundleCommand(
-      createContext(),
-      repository
-    ).bundle(
-      new BundleCommandRequest(
-        Files.asByteSink(file)
-      )
+    new SvnBundleCommand(createContext())
+      .bundle(new BundleCommandRequest(Files.asByteSink(file))
     );
     //J+
 

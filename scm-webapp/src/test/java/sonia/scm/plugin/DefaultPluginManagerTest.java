@@ -34,7 +34,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
@@ -48,7 +48,6 @@ import sonia.scm.lifecycle.Restarter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,7 +55,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
@@ -72,7 +70,6 @@ import static sonia.scm.plugin.PluginTestHelper.createAvailable;
 import static sonia.scm.plugin.PluginTestHelper.createInstalled;
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(TempDirectory.class)
 class DefaultPluginManagerTest {
 
   @Mock
@@ -372,7 +369,7 @@ class DefaultPluginManagerTest {
     }
 
     @Test
-    void shouldCreateUninstallFile(@TempDirectory.TempDir Path temp) {
+    void shouldCreateUninstallFile(@TempDir Path temp) {
       InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
       when(mailPlugin.getDirectory()).thenReturn(temp);
 
@@ -384,7 +381,7 @@ class DefaultPluginManagerTest {
     }
 
     @Test
-    void shouldMarkPluginForUninstall(@TempDirectory.TempDir Path temp) {
+    void shouldMarkPluginForUninstall(@TempDir Path temp) {
       InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
       when(mailPlugin.getDirectory()).thenReturn(temp);
 
@@ -414,7 +411,7 @@ class DefaultPluginManagerTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenUninstallingCorePlugin(@TempDirectory.TempDir Path temp) {
+    void shouldThrowExceptionWhenUninstallingCorePlugin(@TempDir Path temp) {
       InstalledPlugin mailPlugin = createInstalled("scm-mail-plugin");
       when(mailPlugin.getDirectory()).thenReturn(temp);
       when(mailPlugin.isCore()).thenReturn(true);
@@ -484,7 +481,7 @@ class DefaultPluginManagerTest {
     }
 
     @Test
-    void shouldUndoPendingInstallations(@TempDirectory.TempDir Path temp) throws IOException {
+    void shouldUndoPendingInstallations(@TempDir Path temp) throws IOException {
       InstalledPlugin mailPlugin = createInstalled("scm-ssh-plugin");
       Path mailPluginPath = temp.resolve("scm-mail-plugin");
       Files.createDirectories(mailPluginPath);
@@ -602,12 +599,12 @@ class DefaultPluginManagerTest {
   }
 
   @Nested
-  class WithoutManagePermissions {
+  class WithoutWritePermissions {
 
     @BeforeEach
     void setUpSubject() {
       ThreadContext.bind(subject);
-      doThrow(AuthorizationException.class).when(subject).checkPermission("plugin:manage");
+      doThrow(AuthorizationException.class).when(subject).checkPermission("plugin:write");
     }
 
     @AfterEach

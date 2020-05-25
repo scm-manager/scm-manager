@@ -21,30 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-import com.google.common.base.Objects;
+import lombok.EqualsAndHashCode;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 
 /**
  * Represents a changeset/commit of a repository.
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "changeset")
-@XmlAccessorType(XmlAccessType.FIELD)
+@EqualsAndHashCode(callSuper = true)
 public class Changeset extends BasicPropertiesAware implements ModelObject {
 
   private static final long serialVersionUID = -8373308448928993039L;
@@ -91,8 +86,7 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
     this(id, date, author, null);
   }
 
-  public Changeset(String id, Long date, Person author, String description)
-  {
+  public Changeset(String id, Long date, Person author, String description) {
     this.id = id;
     this.date = date;
     this.author = author;
@@ -100,66 +94,18 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
   }
 
   @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-
-    final Changeset other = (Changeset) obj;
-
-    //J-
-    return Objects.equal(id, other.id)
-           && Objects.equal(date, other.date)
-           && Objects.equal(author, other.author)
-           && Objects.equal(description, other.description)
-           && Objects.equal(parents, other.parents)
-           && Objects.equal(tags, other.tags)
-           && Objects.equal(branches, other.branches)
-           && Objects.equal(properties, other.properties);
-    //J+
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(id, date, author, description, parents, tags,
-                            branches,  properties);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public String toString()
-  {
+  public String toString() {
     StringBuilder out = new StringBuilder("changeset: ");
 
     out.append(id).append("\n");
 
-    if (parents != null)
-    {
+    if (parents != null) {
       out.append("parents: ").append(Util.toString(parents)).append("\n");
     }
 
     out.append("author: ").append(author).append("\n");
 
-    if (date != null)
-    {
+    if (date != null) {
       out.append("date: ").append(Util.formatDate(new Date(date))).append("\n");
     }
 
@@ -169,7 +115,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
 
     return out.toString();
   }
-
 
   /**
    * Returns a timestamp of the creation date of the {@link Changeset}.
@@ -185,10 +130,8 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
     this.setDate(timestamp);
   }
 
-
   /**
    * Returns the author of the changeset.
-   *
    *
    * @return author of the changeset
    */
@@ -201,14 +144,11 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
    * only related to one branch, but in the case of receive hooks it is possible
    * that a changeset is related to more than a branch.
    *
-   *
    * @return branches of the changeset
    */
-  public List<String> getBranches()
-  {
-    if (branches == null)
-    {
-      branches = new ArrayList<String>();
+  public List<String> getBranches() {
+    if (branches == null) {
+      branches = new ArrayList<>();
     }
 
     return branches;
@@ -217,28 +157,23 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
   /**
    * Returns the creation date of the changeset.
    *
-   *
    * @return date of the changeset
    */
-  public Long getDate()
-  {
+  public Long getDate() {
     return date;
   }
 
   /**
    * Return the description (commit message) of the changeset.
    *
-   *
    * @return description of the changeset
    */
-  public String getDescription()
-  {
+  public String getDescription() {
     return description;
   }
 
   /**
    * Returns the id of the changeset.
-   *
    *
    * @return id of the changeset
    */
@@ -263,19 +198,15 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
   }
 
 
-
   /**
    * Return the ids of the parent changesets.
-   *
    *
    * @return
    * @since 1.11
    */
-  public List<String> getParents()
-  {
-    if (parents == null)
-    {
-      parents = new ArrayList<String>();
+  public List<String> getParents() {
+    if (parents == null) {
+      parents = new ArrayList<>();
     }
 
     return parents;
@@ -284,14 +215,11 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
   /**
    * Returns tags associated with this changeset.
    *
-   *
    * @return tags of the changeset
    */
-  public List<String> getTags()
-  {
-    if (tags == null)
-    {
-      tags = new ArrayList<String>();
+  public List<String> getTags() {
+    if (tags == null) {
+      tags = new ArrayList<>();
     }
 
     return tags;
@@ -300,91 +228,75 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
   /**
    * Returns true if the changeset is valid.
    *
-   *
    * @return true if the changeset is valid
    */
   @Override
-  public boolean isValid()
-  {
+  public boolean isValid() {
     return Util.isNotEmpty(id) && ValidationUtil.isValid(author)
-           && (date != null);
+      && (date != null);
   }
 
   /**
    * Sets the author of the changeset.
    *
-   *
    * @param author author of the changeset
    */
-  public void setAuthor(Person author)
-  {
+  public void setAuthor(Person author) {
     this.author = author;
   }
 
   /**
    * Sets the branches of the changeset.
    *
-   *
    * @param branches branches of the changeset
    */
-  public void setBranches(List<String> branches)
-  {
+  public void setBranches(List<String> branches) {
     this.branches = branches;
   }
 
   /**
    * Sets the date of the changeset.
    *
-   *
    * @param date date of the changeset
    */
-  public void setDate(Long date)
-  {
+  public void setDate(Long date) {
     this.date = date;
   }
 
   /**
    * Sets the description (commit message) of the changeset.
    *
-   *
    * @param description description of the changeset
    */
-  public void setDescription(String description)
-  {
+  public void setDescription(String description) {
     this.description = description;
   }
 
   /**
    * Sets the id of the changeset.
    *
-   *
    * @param id id of the changeset
    */
-  public void setId(String id)
-  {
+  public void setId(String id) {
     this.id = id;
   }
 
   /**
    * Sets the parents of the changeset.
    *
-   *
    * @param parents parents of the changeset
    * @since 1.11
    */
-  public void setParents(List<String> parents)
-  {
+  public void setParents(List<String> parents) {
     this.parents = parents;
   }
 
   /**
    * Sets the tags of the changeset
    *
-   *
    * @param tags tags of the changeset
    */
-  public void setTags(List<String> tags)
-  {
+  public void setTags(List<String> tags) {
     this.tags = tags;
   }
 

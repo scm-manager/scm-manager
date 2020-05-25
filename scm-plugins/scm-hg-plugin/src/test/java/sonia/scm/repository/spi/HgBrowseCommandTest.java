@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.commands.LogCommand;
@@ -48,7 +48,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
   public void testBrowseWithFilePath() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
     request.setPath("a.txt");
-    FileObject file = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request).getFile();
+    FileObject file = new HgBrowseCommand(cmdContext).getBrowserResult(request).getFile();
     assertEquals("a.txt", file.getName());
     assertFalse(file.isDirectory());
     assertTrue(file.getChildren() == null || file.getChildren().isEmpty());
@@ -83,8 +83,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     BrowseCommandRequest browseCommandRequest = new BrowseCommandRequest();
     browseCommandRequest.setRevision("default");
 
-    BrowserResult result = new HgBrowseCommand(cmdContext,
-      repository).getBrowserResult(browseCommandRequest);
+    BrowserResult result = new HgBrowseCommand(cmdContext).getBrowserResult(browseCommandRequest);
 
     assertThat(result.getRevision()).isEqualTo(defaultBranchRevision);
   }
@@ -95,8 +94,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
     request.setPath("c");
 
-    BrowserResult result = new HgBrowseCommand(cmdContext,
-                             repository).getBrowserResult(request);
+    BrowserResult result = new HgBrowseCommand(cmdContext).getBrowserResult(request);
 
     assertNotNull(result);
 
@@ -163,8 +161,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
     request.setRecursive(true);
 
-    BrowserResult result = new HgBrowseCommand(cmdContext,
-                             repository).getBrowserResult(request);
+    BrowserResult result = new HgBrowseCommand(cmdContext).getBrowserResult(request);
 
     assertNotNull(result);
 
@@ -185,7 +182,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     BrowseCommandRequest request = new BrowseCommandRequest();
     request.setLimit(1);
 
-    BrowserResult result = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request);
+    BrowserResult result = new HgBrowseCommand(cmdContext).getBrowserResult(request);
     FileObject root = result.getFile();
 
     Collection<FileObject> foList = root.getChildren();
@@ -200,7 +197,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     request.setLimit(2);
     request.setOffset(1);
 
-    BrowserResult result = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request);
+    BrowserResult result = new HgBrowseCommand(cmdContext).getBrowserResult(request);
     FileObject root = result.getFile();
 
     Collection<FileObject> foList = root.getChildren();
@@ -217,7 +214,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     request.setLimit(3);
     request.setRecursive(true);
 
-    FileObject root = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request).getFile();
+    FileObject root = new HgBrowseCommand(cmdContext).getBrowserResult(request).getFile();
 
     Collection<FileObject> foList = root.getChildren();
 
@@ -240,7 +237,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     request.setLimit(1);
     request.setRecursive(true);
 
-    FileObject root = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request).getFile();
+    FileObject root = new HgBrowseCommand(cmdContext).getBrowserResult(request).getFile();
 
     Collection<FileObject> foList = root.getChildren();
 
@@ -263,7 +260,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     request.setOffset(1);
     request.setRecursive(true);
 
-    FileObject root = new HgBrowseCommand(cmdContext, repository).getBrowserResult(request).getFile();
+    FileObject root = new HgBrowseCommand(cmdContext).getBrowserResult(request).getFile();
 
     Collection<FileObject> foList = root.getChildren();
 
@@ -299,8 +296,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
   }
 
   private Collection<FileObject> getRootFromTip(BrowseCommandRequest request) throws IOException {
-    BrowserResult result = new HgBrowseCommand(cmdContext,
-                             repository).getBrowserResult(request);
+    BrowserResult result = new HgBrowseCommand(cmdContext).getBrowserResult(request);
 
     assertNotNull(result);
 

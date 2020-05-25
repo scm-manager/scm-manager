@@ -215,6 +215,10 @@
     "8nRuFzjss1": {
       "displayName": "Fehler beim Löschen falscher Downloads",
       "description": "Ein fehlerhaft heruntergeladenes Plugin konnte nicht gelöscht werden. Bitte prüfen Sie die Server Logs und löschen die Datei manuell."
+    },
+    "2qRyyaVcJ1": {
+      "displayName": "Ungültig formatiertes Element",
+      "description": "Die Eingabe beinhaltete unfültige Formate. Bitte prüfen Sie die Server Logs für genauere Informationen."
     }
   },
   "namespaceStrategies": {

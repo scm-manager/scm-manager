@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,7 +37,6 @@ import org.tmatesoft.svn.core.SVNProperty;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.SubRepository;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.Util;
@@ -70,9 +69,9 @@ public class SvnBrowseCommand extends AbstractSvnCommand
 
   private int resultCount = 0;
 
-  SvnBrowseCommand(SvnContext context, Repository repository)
+  SvnBrowseCommand(SvnContext context)
   {
-    super(context, repository);
+    super(context);
   }
 
   @Override

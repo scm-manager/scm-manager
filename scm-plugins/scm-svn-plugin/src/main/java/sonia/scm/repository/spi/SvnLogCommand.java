@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,7 +37,6 @@ import org.tmatesoft.svn.core.io.SVNRepository;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.Util;
 
@@ -57,9 +56,9 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
   private static final Logger logger =
     LoggerFactory.getLogger(SvnLogCommand.class);
 
-  SvnLogCommand(SvnContext context, Repository repository)
+  SvnLogCommand(SvnContext context)
   {
-    super(context, repository);
+    super(context);
   }
 
   //~--- get methods ----------------------------------------------------------

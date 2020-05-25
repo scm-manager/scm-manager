@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.junit.Ignore;
@@ -77,7 +77,7 @@ public class HgCatCommandTest extends AbstractHgCommandTestBase {
     CatCommandRequest request = new CatCommandRequest();
     request.setPath("b.txt");
 
-    InputStream catResultStream = new HgCatCommand(cmdContext, repository).getCatResultStream(request);
+    InputStream catResultStream = new HgCatCommand(cmdContext).getCatResultStream(request);
 
     assertEquals('b', catResultStream.read());
     assertEquals('\n', catResultStream.read());
@@ -88,7 +88,7 @@ public class HgCatCommandTest extends AbstractHgCommandTestBase {
 
   private String execute(CatCommandRequest request) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    new HgCatCommand(cmdContext, repository).getCatResult(request, baos);
+    new HgCatCommand(cmdContext).getCatResult(request, baos);
     return baos.toString().trim();
   }
 }

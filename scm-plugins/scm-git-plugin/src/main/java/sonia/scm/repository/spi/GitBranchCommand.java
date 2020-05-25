@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.Git;
@@ -34,7 +34,6 @@ import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.PreReceiveRepositoryHookEvent;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.BranchRequest;
@@ -57,8 +56,8 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
   private final HookContextFactory hookContextFactory;
   private final ScmEventBus eventBus;
 
-  GitBranchCommand(GitContext context, Repository repository, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
-    super(context, repository);
+  GitBranchCommand(GitContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
+    super(context);
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
   }

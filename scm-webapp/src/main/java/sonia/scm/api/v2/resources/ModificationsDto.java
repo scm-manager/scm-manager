@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
@@ -54,10 +54,21 @@ public class ModificationsDto extends HalRepresentation {
    */
   private List<String> removed;
 
+  /**
+   * Mapping of renamed files
+   */
+  private List<RenamedDto> renamed;
+
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package
   protected HalRepresentation add(Links links) {
     return super.add(links);
   }
 
+  @Getter
+  @Setter
+  public static class RenamedDto {
+    private String oldPath;
+    private String newPath;
+  }
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.junit.Test;
@@ -121,7 +121,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   @Test
   public void testAsynchronousBrowse() throws IOException {
     try (AsyncExecutorStepper executor = stepperAsynchronousExecutor()) {
-      GitBrowseCommand command = new GitBrowseCommand(createContext(), repository, null, executor);
+      GitBrowseCommand command = new GitBrowseCommand(createContext(), null, executor);
       List<BrowserResult> updatedResults = new LinkedList<>();
       BrowseCommandRequest request = new BrowseCommandRequest(updatedResults::add);
       FileObject root = command.getBrowserResult(request).getFile();
@@ -354,6 +354,6 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitBrowseCommand createCommand() {
-    return new GitBrowseCommand(createContext(), repository, lfsBlobStoreFactory, synchronousExecutor());
+    return new GitBrowseCommand(createContext(), lfsBlobStoreFactory, synchronousExecutor());
   }
 }

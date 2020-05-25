@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.junit.Rule;
@@ -91,7 +91,7 @@ public class GitMergeCommand_Conflict_Test extends AbstractGitCommandTestBase {
   }
 
   private MergeConflictResult computeMergeConflictResult(String branchToMerge, String targetBranch) {
-    GitMergeCommand gitMergeCommand = new GitMergeCommand(createContext(), repository, new SimpleGitWorkdirFactory(new WorkdirProvider()));
+    GitMergeCommand gitMergeCommand = new GitMergeCommand(createContext(), new SimpleGitWorkdirFactory(new WorkdirProvider()));
     MergeCommandRequest mergeCommandRequest = new MergeCommandRequest();
     mergeCommandRequest.setBranchToMerge(branchToMerge);
     mergeCommandRequest.setTargetBranch(targetBranch);

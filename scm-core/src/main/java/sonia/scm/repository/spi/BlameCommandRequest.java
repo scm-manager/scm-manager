@@ -21,14 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
+
+import lombok.EqualsAndHashCode;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.17
  */
+@EqualsAndHashCode(callSuper = true)
 public final class BlameCommandRequest extends FileBaseCommandRequest
 {
 

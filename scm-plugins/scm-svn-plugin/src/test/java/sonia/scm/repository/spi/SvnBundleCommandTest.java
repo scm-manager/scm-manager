@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -57,8 +57,7 @@ public class SvnBundleCommandTest extends AbstractSvnCommandTestBase
     File file = temp.newFile();
     ByteSink sink = Files.asByteSink(file);
     BundleCommandRequest req = new BundleCommandRequest(sink);
-    BundleResponse res = new SvnBundleCommand(createContext(),
-                           repository).bundle(req);
+    BundleResponse res = new SvnBundleCommand(createContext()).bundle(req);
 
     assertThat(res, notNullValue());
     assertThat(res.getChangesetCount(), is(5l));

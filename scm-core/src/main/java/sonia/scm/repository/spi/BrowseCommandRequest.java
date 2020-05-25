@@ -21,13 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import sonia.scm.repository.BrowserResult;
 
 import java.util.function.Consumer;
@@ -37,6 +35,8 @@ import java.util.function.Consumer;
  * @author Sebastian Sdorra
  * @since 1.17
  */
+@EqualsAndHashCode(callSuper = true)
+@ToString
 public final class BrowseCommandRequest extends FileBaseCommandRequest
 {
 
@@ -53,14 +53,6 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
     this.updater = updater;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
   @Override
   public BrowseCommandRequest clone()
   {
@@ -79,74 +71,6 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
 
     return clone;
   }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
-  @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-
-    if (getClass() != obj.getClass())
-    {
-      return false;
-    }
-
-    final BrowseCommandRequest other = (BrowseCommandRequest) obj;
-
-    return super.equals(obj)
-      && Objects.equal(recursive, other.recursive)
-      && Objects.equal(disableLastCommit, other.disableLastCommit)
-      && Objects.equal(disableSubRepositoryDetection, other.disableSubRepositoryDetection)
-      && Objects.equal(offset, other.offset)
-      && Objects.equal(limit, other.limit);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(super.hashCode(), recursive, disableLastCommit,
-      disableSubRepositoryDetection, offset, limit);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public String toString()
-  {
-    //J-
-    return MoreObjects.toStringHelper(this)
-                  .add("path", getPath())
-                  .add("revision", getRevision())
-                  .add("recursive", recursive)
-                  .add("disableLastCommit", disableLastCommit)
-                  .add("disableSubRepositoryDetection", disableSubRepositoryDetection)
-                  .add("limit", limit)
-                  .add("offset", offset)
-                  .toString();
-    //J+
-  }
-
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * True to disable the last commit.
@@ -292,5 +216,6 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
 
   // WARNING / TODO: This field creates a reverse channel from the implementation to the API. This will break
   // whenever the API runs in a different process than the SPI (for example to run explicit hosts for git repositories).
+  @EqualsAndHashCode.Exclude
   private final transient Consumer<BrowserResult> updater;
 }

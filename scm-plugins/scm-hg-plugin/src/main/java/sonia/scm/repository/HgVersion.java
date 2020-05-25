@@ -21,19 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -41,118 +39,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "version")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class HgVersion
-{
-
-  /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
-  @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-
-    if (getClass() != obj.getClass())
-    {
-      return false;
-    }
-
-    final HgVersion other = (HgVersion) obj;
-
-    return Objects.equal(mercurial, other.mercurial)
-           && Objects.equal(python, other.python);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(mercurial, python);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String toString()
-  {
-    //J-
-    return MoreObjects.toStringHelper(this)
-                  .add("mercurial", mercurial)
-                  .add("python", python)
-                  .toString();
-    //J+
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getMercurial()
-  {
-    return mercurial;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getPython()
-  {
-    return python;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param mercurial
-   */
-  public void setMercurial(String mercurial)
-  {
-    this.mercurial = mercurial;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param python
-   */
-  public void setPython(String python)
-  {
-    this.python = python;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
+@EqualsAndHashCode
+@Getter
+@Setter
+@ToString
+public class HgVersion {
   private String mercurial;
-
-  /** Field description */
   private String python;
 }

@@ -93,7 +93,7 @@ final class TypedStoreContext<T> {
     }
   }
 
-  private Marshaller createMarshaller() {
+  Marshaller createMarshaller() {
     try {
       Marshaller marshaller = jaxbContext.createMarshaller();
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);

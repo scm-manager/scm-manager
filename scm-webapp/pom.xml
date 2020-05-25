@@ -146,6 +146,12 @@
       <version>${jackson.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
+    </dependency>
+
+
     <!-- rest api -->
 
     <dependency>
@@ -187,13 +193,13 @@
     <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>6.1.2.Final</version>
+      <version>6.1.4.Final</version>
     </dependency>
 
     <dependency>
-      <groupId>javax.el</groupId>
-      <artifactId>javax.el-api</artifactId>
-      <version>3.0.0</version>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>${jaxb.version}</version>
     </dependency>
 
     <dependency>
@@ -203,15 +209,9 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.xml.bind</groupId>
-      <artifactId>jaxb-api</artifactId>
-      <version>2.3.1</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.glassfish.jaxb</groupId>
       <artifactId>jaxb-runtime</artifactId>
-      <version>2.3.0</version>
+      <version>${jaxb.version}</version>
     </dependency>
 
     <!-- injection -->
@@ -310,7 +310,7 @@
     <dependency>
       <groupId>org.apache.tika</groupId>
       <artifactId>tika-core</artifactId>
-      <version>1.24</version>
+      <version>1.24.1</version>
     </dependency>
 
     <!-- unix restart -->
@@ -437,13 +437,6 @@
     </dependency>
 
     <!-- global excludes -->
-
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.1.3</version>
-      <scope>provided</scope>
-    </dependency>
 
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -654,6 +647,27 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <version>1.3.0</version>
+        <executions>
+          <execution>
+            <id>default</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <printEqualFiles>false</printEqualFiles>
+          <failBuildInCaseOfDifferentContentConflict>true</failBuildInCaseOfDifferentContentConflict>
+          <checkCompileClasspath>true</checkCompileClasspath>
+          <checkRuntimeClasspath>true</checkRuntimeClasspath>
+          <checkTestClasspath>false</checkTestClasspath>
+        </configuration>
+      </plugin>
     </plugins>
 
     <finalName>scm-webapp</finalName>

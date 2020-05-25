@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -44,13 +44,11 @@ public class AbstractSvnCommand
    *
    *
    * @param context
-   * @param repository
-   * @param repositoryDirectory
    */
-  protected AbstractSvnCommand(SvnContext context, Repository repository)
+  protected AbstractSvnCommand(SvnContext context)
   {
     this.context = context;
-    this.repository = repository;
+    this.repository = context.getRepository();
   }
 
   //~--- methods --------------------------------------------------------------

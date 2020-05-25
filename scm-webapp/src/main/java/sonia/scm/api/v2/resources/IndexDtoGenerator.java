@@ -38,6 +38,7 @@ import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.security.Authentications;
 import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.UserPermissions;
+import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -82,7 +83,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
         builder.single(link("installedPlugins", resourceLinks.installedPluginCollection().self()));
         builder.single(link("availablePlugins", resourceLinks.availablePluginCollection().self()));
       }
-      if (PluginPermissions.manage().isPermitted()) {
+      if (PluginPermissions.write().isPermitted()) {
         builder.single(link("pendingPlugins", resourceLinks.pendingPluginCollection().self()));
       }
       if (UserPermissions.list().isPermitted()) {

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.commands.ExecutionException;
@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
 import sonia.scm.web.HgUtil;
 
 import java.io.IOException;
@@ -42,8 +41,8 @@ public class HgCatCommand extends AbstractCommand implements CatCommand {
 
   private static final Logger log = LoggerFactory.getLogger(HgCatCommand.class);
 
-  HgCatCommand(HgCommandContext context, Repository repository) {
-    super(context, repository);
+  HgCatCommand(HgCommandContext context) {
+    super(context);
   }
 
   @Override

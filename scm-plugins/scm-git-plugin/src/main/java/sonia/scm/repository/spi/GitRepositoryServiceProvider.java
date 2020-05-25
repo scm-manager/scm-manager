@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
@@ -58,7 +58,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     Command.LOG,
     Command.TAGS,
     Command.BRANCH,
-    Command.BRANCHES, 
+    Command.BRANCHES,
     Command.INCOMING,
     Command.OUTGOING,
     Command.PUSH,
@@ -73,7 +73,6 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory, HookContextFactory hookContextFactory, ScmEventBus eventBus, SyncAsyncExecutorProvider executorProvider) {
     this.handler = handler;
-    this.repository = repository;
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
@@ -106,7 +105,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public BlameCommand getBlameCommand()
   {
-    return new GitBlameCommand(context, repository);
+    return new GitBlameCommand(context);
   }
 
   /**
@@ -118,7 +117,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public BranchesCommand getBranchesCommand()
   {
-    return new GitBranchesCommand(context, repository);
+    return new GitBranchesCommand(context);
   }
 
   /**
@@ -130,7 +129,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public BranchCommand getBranchCommand()
   {
-    return new GitBranchCommand(context, repository, hookContextFactory, eventBus);
+    return new GitBranchCommand(context, hookContextFactory, eventBus);
   }
 
   /**
@@ -142,7 +141,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public BrowseCommand getBrowseCommand()
   {
-    return new GitBrowseCommand(context, repository, lfsBlobStoreFactory, executorProvider.createExecutorWithDefaultTimeout());
+    return new GitBrowseCommand(context, lfsBlobStoreFactory, executorProvider.createExecutorWithDefaultTimeout());
   }
 
   /**
@@ -154,7 +153,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public CatCommand getCatCommand()
   {
-    return new GitCatCommand(context, repository, lfsBlobStoreFactory);
+    return new GitCatCommand(context, lfsBlobStoreFactory);
   }
 
   /**
@@ -166,12 +165,12 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public DiffCommand getDiffCommand()
   {
-    return new GitDiffCommand(context, repository);
+    return new GitDiffCommand(context);
   }
 
   @Override
   public DiffResultCommand getDiffResultCommand() {
-    return new GitDiffResultCommand(context, repository);
+    return new GitDiffResultCommand(context);
   }
 
   /**
@@ -183,7 +182,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public IncomingCommand getIncomingCommand()
   {
-    return new GitIncomingCommand(handler, context, repository);
+    return new GitIncomingCommand(handler, context);
   }
 
   /**
@@ -195,12 +194,12 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public LogCommand getLogCommand()
   {
-    return new GitLogCommand(context, repository);
+    return new GitLogCommand(context);
   }
 
   @Override
   public ModificationsCommand getModificationsCommand() {
-    return new GitModificationsCommand(context,repository);
+    return new GitModificationsCommand(context);
   }
 
   /**
@@ -212,7 +211,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public OutgoingCommand getOutgoingCommand()
   {
-    return new GitOutgoingCommand(handler, context, repository);
+    return new GitOutgoingCommand(handler, context);
   }
 
   /**
@@ -224,7 +223,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public PullCommand getPullCommand()
   {
-    return new GitPullCommand(handler, context, repository);
+    return new GitPullCommand(handler, context);
   }
 
   /**
@@ -236,7 +235,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public PushCommand getPushCommand()
   {
-    return new GitPushCommand(handler, context, repository);
+    return new GitPushCommand(handler, context);
   }
 
   /**
@@ -260,17 +259,17 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public TagsCommand getTagsCommand()
   {
-    return new GitTagsCommand(context, repository);
+    return new GitTagsCommand(context);
   }
 
   @Override
   public MergeCommand getMergeCommand() {
-    return new GitMergeCommand(context, repository, handler.getWorkdirFactory());
+    return new GitMergeCommand(context, handler.getWorkdirFactory());
   }
 
   @Override
   public ModifyCommand getModifyCommand() {
-    return new GitModifyCommand(context, repository, handler.getWorkdirFactory(), lfsBlobStoreFactory);
+    return new GitModifyCommand(context, handler.getWorkdirFactory(), lfsBlobStoreFactory);
   }
 
   @Override
@@ -284,9 +283,6 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   private final GitRepositoryHandler handler;
-
-  /** Field description */
-  private final Repository repository;
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
 

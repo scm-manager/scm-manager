@@ -30,6 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.security.KeyGenerator;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.util.Map;
 
@@ -60,7 +62,22 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> 
   @Override
   public void put(String id, T item) {
     LOG.debug("put item {} to store", id);
-    context.marshal(item, getFile(id));
+
+    File file = getFile(id);
+
+    try {
+      Marshaller marshaller = context.createMarshaller();
+
+      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+      CopyOnWrite.withTemporaryFile(
+        temp -> marshaller.marshal(item, temp.toFile()),
+        file.toPath()
+      );
+    }
+    catch (JAXBException ex) {
+      throw new StoreException("could not write object with id ".concat(id),
+        ex);
+    }
   }
 
   @Override

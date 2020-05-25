@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 import com.google.common.base.Charsets;
@@ -33,16 +33,23 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.util.*;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -173,7 +180,7 @@ public class ProxyPushStateDispatcherTest {
 
   private class DevServletInputStream extends ServletInputStream {
 
-    private InputStream inputStream;
+    private ByteArrayInputStream inputStream;
 
     private DevServletInputStream(String content) {
       inputStream = new ByteArrayInputStream(content.getBytes(Charsets.UTF_8));
@@ -182,6 +189,20 @@ public class ProxyPushStateDispatcherTest {
     @Override
     public int read() throws IOException {
       return inputStream.read();
+    }
+
+    @Override
+    public boolean isReady() {
+      return inputStream.available() > 0;
+    }
+
+    @Override
+    public boolean isFinished() {
+      return inputStream.available() == 0;
+    }
+
+    @Override
+    public void setReadListener(ReadListener readListener) {
     }
   }
 
@@ -192,6 +213,15 @@ public class ProxyPushStateDispatcherTest {
     @Override
     public void write(int b) {
       stream.write(b);
+    }
+
+    @Override
+    public boolean isReady() {
+      return true;
+    }
+
+    @Override
+    public void setWriteListener(WriteListener writeListener) {
     }
   }
 

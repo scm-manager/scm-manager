@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -32,7 +32,6 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.javahg.HgFileviewCommand;
 
 import java.io.IOException;
@@ -50,13 +49,12 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
   /**
    * Constructs ...
    *
+   *  @param context
    *
-   * @param context
-   * @param repository
    */
-  public HgBrowseCommand(HgCommandContext context, Repository repository)
+  public HgBrowseCommand(HgCommandContext context)
   {
-    super(context, repository);
+    super(context);
   }
 
   //~--- get methods ----------------------------------------------------------

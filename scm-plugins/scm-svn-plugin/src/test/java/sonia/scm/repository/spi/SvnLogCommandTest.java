@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -136,15 +136,15 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     checkDate(c.getDate());
     assertEquals("perfect", c.getAuthor().getName());
     assertNull("douglas.adams@hitchhiker.com", c.getAuthor().getMail());
-    SvnModificationsCommand modificationsCommand = new SvnModificationsCommand(createContext(), repository);
+    SvnModificationsCommand modificationsCommand = new SvnModificationsCommand(createContext());
     Modifications modifications = modificationsCommand.getModifications("3");
 
     assertNotNull(modifications);
     assertEquals(1, modifications.getModified().size());
     assertEquals(1, modifications.getRemoved().size());
     assertTrue("added list should be empty", modifications.getAdded().isEmpty());
-    assertEquals("a.txt", modifications.getModified().get(0));
-    assertEquals("b.txt", modifications.getRemoved().get(0));
+    assertEquals("a.txt", modifications.getModified().get(0).getPath());
+    assertEquals("b.txt", modifications.getRemoved().get(0).getPath());
   }
 
   @Test
@@ -177,6 +177,6 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
    */
   private SvnLogCommand createCommand()
   {
-    return new SvnLogCommand(createContext(), repository);
+    return new SvnLogCommand(createContext());
   }
 }

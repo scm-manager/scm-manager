@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -38,14 +38,13 @@ public class AbstractCommand
   /**
    * Constructs ...
    *
+   *  @param context
    *
-   * @param context
-   * @param repository
    */
-  public AbstractCommand(HgCommandContext context, Repository repository)
+  public AbstractCommand(HgCommandContext context)
   {
     this.context = context;
-    this.repository = repository;
+    this.repository = context.getScmRepository();
   }
 
   //~--- methods --------------------------------------------------------------

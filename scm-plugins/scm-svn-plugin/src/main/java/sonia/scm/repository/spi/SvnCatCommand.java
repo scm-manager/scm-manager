@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -35,7 +35,6 @@ import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.admin.SVNLookClient;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnUtil;
 
 import java.io.ByteArrayInputStream;
@@ -63,9 +62,9 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
 
   //~--- constructors ---------------------------------------------------------
 
-  SvnCatCommand(SvnContext context, Repository repository)
+  SvnCatCommand(SvnContext context)
   {
-    super(context, repository);
+    super(context);
   }
 
   //~--- get methods ----------------------------------------------------------

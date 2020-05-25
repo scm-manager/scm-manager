@@ -76,13 +76,19 @@ class SourcesView extends React.Component<Props, State> {
       });
   }
 
+  createBasePath() {
+    const { repository, revision } = this.props;
+    return `/repo/${repository.namespace}/${repository.name}/code/sources/${revision}/`;
+  }
+
   showSources() {
     const { file, revision } = this.props;
     const { contentType, language } = this.state;
+    const basePath = this.createBasePath();
     if (contentType.startsWith("image/")) {
       return <ImageViewer file={file} />;
     } else if (contentType.includes("markdown")) {
-      return <SwitchableMarkdownViewer file={file} />;
+      return <SwitchableMarkdownViewer file={file} basePath={basePath} />;
     } else if (language) {
       return <SourcecodeViewer file={file} language={language} />;
     } else if (contentType.startsWith("text/")) {
@@ -94,7 +100,8 @@ class SourcesView extends React.Component<Props, State> {
           props={{
             file,
             contentType,
-            revision
+            revision,
+            basePath
           }}
         >
           <DownloadViewer file={file} />

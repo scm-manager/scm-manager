@@ -21,11 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Changeset;
+import com.aragost.javahg.commands.CopyCommand;
 import com.aragost.javahg.commands.RemoveCommand;
+import com.aragost.javahg.commands.RenameCommand;
 import org.junit.Before;
 import org.junit.Test;
 import sonia.scm.repository.HgTestUtil;
@@ -34,7 +36,7 @@ import sonia.scm.repository.Modifications;
 import java.io.File;
 import java.util.function.Consumer;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
 
@@ -44,7 +46,7 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
   @Before
   public void init() {
     HgCommandContext outgoingContext = new HgCommandContext(HgTestUtil.createHookManager(), handler, outgoingRepository, outgoingDirectory);
-    outgoingModificationsCommand = new HgModificationsCommand(outgoingContext, outgoingRepository);
+    outgoingModificationsCommand = new HgModificationsCommand(outgoingContext);
   }
 
   @Test
@@ -83,6 +85,31 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
     assertModifications.accept(outgoingModificationsCommand.getModifications(revision));
   }
 
+  @Test
+  public void shouldReadRenamedFiles() throws Exception {
+    String oldFileName = "a.txt";
+    String newFileName = "b.txt";
+    writeNewFile(outgoing, outgoingDirectory, oldFileName, "bal bla");
+    commit(outgoing, "added a.txt");
+    RenameCommand.on(outgoing).execute(oldFileName, newFileName);
+    Changeset changeset = commit(outgoing, "rename a.txt to b.txt");
+    String revision = String.valueOf(changeset.getRevision());
+    Consumer<Modifications> assertModifications = assertRenamedFiles(oldFileName, newFileName);
+    assertModifications.accept(outgoingModificationsCommand.getModifications(revision));
+  }
+
+  @Test
+  public void shouldReadCopiedFiles() throws Exception {
+    String srcFileName = "a.txt";
+    String newFileName = "b.txt";
+    writeNewFile(outgoing, outgoingDirectory, srcFileName, "bal bla");
+    commit(outgoing, "added a.txt");
+    CopyCommand.on(outgoing).execute(srcFileName, newFileName);
+    Changeset changeset = commit(outgoing, "copy a.txt to b.txt");
+    String revision = String.valueOf(changeset.getRevision());
+    Consumer<Modifications> assertModifications = assertCopiedFiles(srcFileName, newFileName);
+    assertModifications.accept(outgoingModificationsCommand.getModifications(revision));
+  }
 
   Consumer<Modifications> assertRemovedFiles(String fileName) {
     return (modifications) -> {
@@ -96,10 +123,66 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
       assertThat(modifications.getRemoved())
         .as("removed files modifications")
         .hasSize(1)
+        .extracting("path")
         .containsOnly(fileName);
+      assertThat(modifications.getRenamed())
+        .as("renamed files modifications")
+        .isEmpty();
     };
   }
 
+  Consumer<Modifications> assertRenamedFiles(String oldFileName, String newFileName) {
+    return (modifications) -> {
+      assertThat(modifications).isNotNull();
+      assertThat(modifications.getAdded())
+        .as("added files modifications")
+        .hasSize(0);
+      assertThat(modifications.getModified())
+        .as("modified files modifications")
+        .hasSize(0);
+      assertThat(modifications.getRemoved())
+        .as("removed files modifications")
+        .isEmpty();
+      assertThat(modifications.getRenamed())
+        .as("renamed files modifications")
+        .hasSize(1)
+        .extracting("oldPath")
+        .containsOnly(oldFileName);
+      assertThat(modifications.getRenamed())
+        .as("renamed files modifications")
+        .hasSize(1)
+        .extracting("newPath")
+        .containsOnly(newFileName);
+    };
+  }
+
+  Consumer<Modifications> assertCopiedFiles(String srcFileName, String newFileName) {
+    return (modifications) -> {
+      assertThat(modifications).isNotNull();
+      assertThat(modifications.getAdded())
+        .as("added files modifications")
+        .hasSize(0);
+      assertThat(modifications.getModified())
+        .as("modified files modifications")
+        .hasSize(0);
+      assertThat(modifications.getRemoved())
+        .as("removed files modifications")
+        .isEmpty();
+      assertThat(modifications.getRenamed())
+        .as("renamed files modifications")
+        .isEmpty();
+      assertThat(modifications.getCopied())
+        .as("copied files modifications")
+        .hasSize(1)
+        .extracting("sourcePath")
+        .containsOnly(srcFileName);
+      assertThat(modifications.getCopied())
+        .as("copied files modifications")
+        .hasSize(1)
+        .extracting("targetPath")
+        .containsOnly(newFileName);
+    };
+  }
 
   Consumer<Modifications> assertModifiedFiles(String file) {
     return (modifications) -> {
@@ -110,9 +193,13 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
       assertThat(modifications.getModified())
         .as("modified files modifications")
         .hasSize(1)
+        .extracting("path")
         .containsOnly(file);
       assertThat(modifications.getRemoved())
         .as("removed files modifications")
+        .hasSize(0);
+      assertThat(modifications.getRenamed())
+        .as("renamed files modifications")
         .hasSize(0);
     };
   }
@@ -123,12 +210,16 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
       assertThat(modifications.getAdded())
         .as("added files modifications")
         .hasSize(1)
+        .extracting("path")
         .containsOnly(addedFile);
       assertThat(modifications.getModified())
         .as("modified files modifications")
         .hasSize(0);
       assertThat(modifications.getRemoved())
         .as("removed files modifications")
+        .hasSize(0);
+      assertThat(modifications.getRenamed())
+        .as("renamed files modifications")
         .hasSize(0);
     };
   }

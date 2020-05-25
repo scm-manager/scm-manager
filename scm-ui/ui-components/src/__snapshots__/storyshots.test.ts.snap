@@ -1,5 +1,134 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Storyshots BranchSelector Default 1`] = `
+<div
+  className="BranchSelectorstories__Wrapper-cg4ke7-0 fJnRhY"
+>
+  <div
+    className="field is-horizontal"
+  >
+    <div
+      className="BranchSelector__ZeroflexFieldLabel-sc-1120xyr-0 jDDnkZ field-label is-normal"
+    >
+      <label
+        className="label is-size-6"
+      >
+        Select branch:
+      </label>
+    </div>
+    <div
+      className="field-body"
+    >
+      <div
+        className="BranchSelector__NoBottomMarginField-sc-1120xyr-2 dwGRxk field is-narrow"
+      >
+        <div
+          className="BranchSelector__MinWidthControl-sc-1120xyr-1 ejZRKS control"
+        >
+          <div
+            className="is-fullwidth select"
+          >
+            <select
+              disabled={false}
+              onChange={[Function]}
+              value=""
+            >
+              <option
+                selected={false}
+                value="master"
+              >
+                master
+              </option>
+              <option
+                selected={false}
+                value="develop"
+              >
+                develop
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots BreadCrumb Default 1`] = `
+<div
+  className="Breadcrumbstories__Wrapper-sc-1eq8sgz-0 iQWHhZ"
+>
+  <div
+    className="is-flex"
+  >
+    <nav
+      aria-label="breadcrumbs"
+      className="Breadcrumb__FlexStartNav-zvtb4t-0 iSVqtO breadcrumb sources-breadcrumb"
+    >
+      <ul>
+        <li>
+          <a
+            href="/scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources/1/"
+            onClick={[Function]}
+          >
+            <i
+              className="fas fa-fw fa-home has-text-inherit Breadcrumb__HomeIcon-zvtb4t-1 dXzWcx"
+              title="breadcrumb.home"
+            />
+          </a>
+        </li>
+        <li>
+          <a
+            href="/scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources/1/src"
+            onClick={[Function]}
+          >
+            src
+          </a>
+        </li>
+        <li>
+          <a
+            href="/scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources/1/src/main"
+            onClick={[Function]}
+          >
+            main
+          </a>
+        </li>
+        <li>
+          <a
+            href="/scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources/1/src/main/java"
+            onClick={[Function]}
+          >
+            java
+          </a>
+        </li>
+        <li>
+          <a
+            href="/scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources/1/src/main/java/com"
+            onClick={[Function]}
+          >
+            com
+          </a>
+        </li>
+        <li
+          className="is-active"
+        >
+          <a
+            aria-current="page"
+            href="/"
+            onClick={[Function]}
+          >
+            cloudogu
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <hr
+    className="is-marginless"
+  />
+</div>
+`;
+
 exports[`Storyshots Buttons|AddButton Default 1`] = `
 <div
   className="indexstories__Spacing-bpoict-0 FnHDe"
@@ -32931,6 +33060,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               SCM-Manager 2.0.0
@@ -32956,6 +33086,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/support/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.community
@@ -32964,6 +33095,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           <li>
             <a
               href="https://cloudogu.com/en/scm-manager-enterprise/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.enterprise
@@ -33053,6 +33185,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               SCM-Manager 2.0.0
@@ -33061,6 +33194,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           <li>
             <a
               href="#"
+              rel="noopener noreferrer"
               target="_blank"
             >
               REST API
@@ -33069,6 +33203,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           <li>
             <a
               href="#"
+              rel="noopener noreferrer"
               target="_blank"
             >
               CLI
@@ -33094,6 +33229,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/support/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.community
@@ -33102,6 +33238,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           <li>
             <a
               href="https://cloudogu.com/en/scm-manager-enterprise/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.enterprise
@@ -33110,6 +33247,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           <li>
             <a
               href="#"
+              rel="noopener noreferrer"
               target="_blank"
             >
               FAQ
@@ -33190,6 +33328,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               SCM-Manager 2.0.0
@@ -33215,6 +33354,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/support/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.community
@@ -33223,6 +33363,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
           <li>
             <a
               href="https://cloudogu.com/en/scm-manager-enterprise/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.enterprise
@@ -33307,6 +33448,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               SCM-Manager 2.0.0
@@ -33315,6 +33457,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           <li>
             <a
               href="#"
+              rel="noopener noreferrer"
               target="_blank"
             >
               REST API
@@ -33323,6 +33466,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           <li>
             <a
               href="#"
+              rel="noopener noreferrer"
               target="_blank"
             >
               CLI
@@ -33348,6 +33492,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/support/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.community
@@ -33356,6 +33501,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           <li>
             <a
               href="https://cloudogu.com/en/scm-manager-enterprise/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.enterprise
@@ -33364,6 +33510,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           <li>
             <a
               href="#"
+              rel="noopener noreferrer"
               target="_blank"
             >
               FAQ
@@ -34243,6 +34390,74 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
 </div>
 `;
 
+exports[`Storyshots MarkdownView Links 1`] = `
+<div
+  className="MarkdownViewstories__Spacing-sc-1hk90gd-0 eqTNCI"
+>
+  <div>
+    <div
+      className="content is-word-break"
+    >
+      <h1>
+        Links
+      </h1>
+      <p>
+        Show case for different style of markdown links. 
+Please note that some of the links may not work in storybook, 
+the story is mostly for checking if the links are rendered correct.
+      </p>
+      <h2>
+        External
+      </h2>
+      <p>
+        External Links should be opened in a new tab: 
+        <a
+          href="https://scm-manager.org"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          external link
+        </a>
+      </p>
+      <h2>
+        Anchor
+      </h2>
+      <p>
+        Anchor Links should be rendered a simple a tag with an href: 
+        <a
+          href="/#sample"
+        >
+          anchor link
+        </a>
+      </p>
+      <h2>
+        Protocol
+      </h2>
+      <p>
+        Links with a protocol other than http should be rendered a simple a tag with an href e.g.: 
+        <a
+          href="mailto:marvin@hitchhiker.com"
+        >
+          mail link
+        </a>
+      </p>
+      <h2>
+        Internal
+      </h2>
+      <p>
+        Internal links should be rendered by react-router: 
+        <a
+          href="/buttons"
+          onClick={[Function]}
+        >
+          internal link
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots MarkdownView Xml Code Block 1`] = `
 <div
   className="MarkdownViewstories__Spacing-sc-1hk90gd-0 eqTNCI"
@@ -34607,6 +34822,105 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
 </div>
 `;
 
+exports[`Storyshots Modal|ConfirmAlert Default 1`] = `
+<div
+  className="modal is-active"
+>
+  <div
+    className="modal-background"
+  />
+  <div
+    className="modal-card"
+  >
+    <header
+      className="modal-card-head has-background-light"
+    >
+      <p
+        className="modal-card-title is-marginless"
+      >
+        Are you sure about that?
+      </p>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body"
+    >
+      Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+ hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance with
+ Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+ ordinary mob.
+    </section>
+    <footer
+      className="modal-card-foot"
+    >
+      <div
+        className="field is-grouped"
+      >
+        <p
+          className="control"
+        >
+          <a
+            className="button is-info is-outlined"
+            onClick={[Function]}
+          >
+            Cancel
+          </a>
+        </p>
+        <p
+          className="control"
+        >
+          <a
+            className="button is-info"
+            onClick={[Function]}
+          >
+            Submit
+          </a>
+        </p>
+      </div>
+    </footer>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Modal|Modal Default 1`] = `
+<div
+  className="modal is-active"
+>
+  <div
+    className="modal-background"
+  />
+  <div
+    className="modal-card"
+  >
+    <header
+      className="modal-card-head has-background-light"
+    >
+      <p
+        className="modal-card-title is-marginless"
+      >
+        Hitchhiker Modal
+      </p>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body"
+    >
+      <p>
+        Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly ordinary mob.
+      </p>
+    </section>
+  </div>
+</div>
+`;
+
 exports[`Storyshots Navigation|Secondary Default 1`] = `
 <div
   className="SecondaryNavigationstories__Columns-fdxo4w-0 fJKROg columns"
@@ -34819,13 +35133,112 @@ exports[`Storyshots Navigation|Secondary Sub Navigation 1`] = `
 </div>
 `;
 
+exports[`Storyshots Notification Closeable 1`] = `
+<div
+  className="Notificationstories__Wrapper-sc-8fx7tr-0 drTbYl"
+>
+  <div
+    className="notification is-warning"
+  >
+    <button
+      className="delete"
+      onClick={[Function]}
+    />
+    Cleverness nuclear genuine static irresponsibility invited President Zaphod
+Beeblebrox hyperspace ship. Another custard through computer-generated universe
+shapes field strong disaster parties Russell’s ancestors infinite colour
+imaginative generator sweep.
+  </div>
+</div>
+`;
+
+exports[`Storyshots Notification Danger 1`] = `
+<div
+  className="Notificationstories__Wrapper-sc-8fx7tr-0 drTbYl"
+>
+  <div
+    className="notification is-danger"
+  >
+    
+    Cleverness nuclear genuine static irresponsibility invited President Zaphod
+Beeblebrox hyperspace ship. Another custard through computer-generated universe
+shapes field strong disaster parties Russell’s ancestors infinite colour
+imaginative generator sweep.
+  </div>
+</div>
+`;
+
+exports[`Storyshots Notification Info 1`] = `
+<div
+  className="Notificationstories__Wrapper-sc-8fx7tr-0 drTbYl"
+>
+  <div
+    className="notification is-info"
+  >
+    
+    Cleverness nuclear genuine static irresponsibility invited President Zaphod
+Beeblebrox hyperspace ship. Another custard through computer-generated universe
+shapes field strong disaster parties Russell’s ancestors infinite colour
+imaginative generator sweep.
+  </div>
+</div>
+`;
+
+exports[`Storyshots Notification Primary 1`] = `
+<div
+  className="Notificationstories__Wrapper-sc-8fx7tr-0 drTbYl"
+>
+  <div
+    className="notification is-primary"
+  >
+    
+    Cleverness nuclear genuine static irresponsibility invited President Zaphod
+Beeblebrox hyperspace ship. Another custard through computer-generated universe
+shapes field strong disaster parties Russell’s ancestors infinite colour
+imaginative generator sweep.
+  </div>
+</div>
+`;
+
+exports[`Storyshots Notification Success 1`] = `
+<div
+  className="Notificationstories__Wrapper-sc-8fx7tr-0 drTbYl"
+>
+  <div
+    className="notification is-success"
+  >
+    
+    Cleverness nuclear genuine static irresponsibility invited President Zaphod
+Beeblebrox hyperspace ship. Another custard through computer-generated universe
+shapes field strong disaster parties Russell’s ancestors infinite colour
+imaginative generator sweep.
+  </div>
+</div>
+`;
+
+exports[`Storyshots Notification Warning 1`] = `
+<div
+  className="Notificationstories__Wrapper-sc-8fx7tr-0 drTbYl"
+>
+  <div
+    className="notification is-warning"
+  >
+    
+    Cleverness nuclear genuine static irresponsibility invited President Zaphod
+Beeblebrox hyperspace ship. Another custard through computer-generated universe
+shapes field strong disaster parties Russell’s ancestors infinite colour
+imaginative generator sweep.
+  </div>
+</div>
+`;
+
 exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-toppdg-0 khfzcK box box-link-shadow"
 >
   <a
     className="overlay-column"
-    href="/repo/hitchhiher/heartOfGold"
+    href="/repo/hitchhiker/heartOfGold"
     onClick={[Function]}
   />
   <article
@@ -34875,7 +35288,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/branches"
+            href="/repo/hitchhiker/heartOfGold/branches"
             onClick={[Function]}
           >
             <i
@@ -34884,7 +35297,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/code/changesets/"
+            href="/repo/hitchhiker/heartOfGold/code/changesets/"
             onClick={[Function]}
           >
             <i
@@ -34893,7 +35306,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/code/sources/"
+            href="/repo/hitchhiker/heartOfGold/code/sources/"
             onClick={[Function]}
           >
             <i
@@ -34902,7 +35315,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/settings/general"
+            href="/repo/hitchhiker/heartOfGold/settings/general"
             onClick={[Function]}
           >
             <i
@@ -34936,7 +35349,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
 >
   <a
     className="overlay-column"
-    href="/repo/hitchhiher/heartOfGold"
+    href="/repo/hitchhiker/heartOfGold"
     onClick={[Function]}
   />
   <article
@@ -34967,7 +35380,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
             className="shorten-text is-marginless"
           >
             <i
-              className="fas fa-star"
+              className="far fa-star"
             />
              
             <strong>
@@ -34989,7 +35402,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/branches"
+            href="/repo/hitchhiker/heartOfGold/branches"
             onClick={[Function]}
           >
             <i
@@ -34998,7 +35411,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/code/changesets/"
+            href="/repo/hitchhiker/heartOfGold/code/changesets/"
             onClick={[Function]}
           >
             <i
@@ -35007,7 +35420,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/code/sources/"
+            href="/repo/hitchhiker/heartOfGold/code/sources/"
             onClick={[Function]}
           >
             <i
@@ -35016,7 +35429,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/settings/general"
+            href="/repo/hitchhiker/heartOfGold/settings/general"
             onClick={[Function]}
           >
             <i
@@ -35050,7 +35463,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
 >
   <a
     className="overlay-column"
-    href="/repo/hitchhiher/heartOfGold"
+    href="/repo/hitchhiker/heartOfGold"
     onClick={[Function]}
   />
   <article
@@ -35100,7 +35513,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/branches"
+            href="/repo/hitchhiker/heartOfGold/branches"
             onClick={[Function]}
           >
             <i
@@ -35109,7 +35522,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/code/changesets/"
+            href="/repo/hitchhiker/heartOfGold/code/changesets/"
             onClick={[Function]}
           >
             <i
@@ -35118,7 +35531,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/code/sources/"
+            href="/repo/hitchhiker/heartOfGold/code/sources/"
             onClick={[Function]}
           >
             <i
@@ -35127,7 +35540,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/settings/general"
+            href="/repo/hitchhiker/heartOfGold/settings/general"
             onClick={[Function]}
           >
             <i
@@ -35161,7 +35574,7 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
 >
   <a
     className="overlay-column"
-    href="/repo/hitchhiher/heartOfGold"
+    href="/repo/hitchhiker/heartOfGold"
     onClick={[Function]}
   />
   <article
@@ -35211,7 +35624,7 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/branches"
+            href="/repo/hitchhiker/heartOfGold/branches"
             onClick={[Function]}
           >
             <i
@@ -35220,7 +35633,7 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/code/changesets/"
+            href="/repo/hitchhiker/heartOfGold/code/changesets/"
             onClick={[Function]}
           >
             <i
@@ -35229,7 +35642,7 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/code/sources/"
+            href="/repo/hitchhiker/heartOfGold/code/sources/"
             onClick={[Function]}
           >
             <i
@@ -35245,7 +35658,7 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 gtboNN level-item"
-            href="/repo/hitchhiher/heartOfGold/settings/general"
+            href="/repo/hitchhiker/heartOfGold/settings/general"
             onClick={[Function]}
           >
             <i
@@ -36484,6 +36897,123 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
 </table>
 `;
 
+exports[`Storyshots Tag Clickable 1`] = `
+<div
+  className="Tagstories__Wrapper-wsn8kx-0 cHkekU"
+>
+  <span
+    className="tag is-light"
+    onClick={[Function]}
+  >
+    Click here
+  </span>
+</div>
+`;
+
+exports[`Storyshots Tag Colors 1`] = `
+<div
+  className="Tagstories__Wrapper-wsn8kx-0 cHkekU"
+>
+  <div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 hLVcdx"
+    >
+      <span
+        className="tag is-primary"
+      >
+        primary
+      </span>
+    </div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 hLVcdx"
+    >
+      <span
+        className="tag is-link"
+      >
+        link
+      </span>
+    </div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 hLVcdx"
+    >
+      <span
+        className="tag is-info"
+      >
+        info
+      </span>
+    </div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 hLVcdx"
+    >
+      <span
+        className="tag is-success"
+      >
+        success
+      </span>
+    </div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 hLVcdx"
+    >
+      <span
+        className="tag is-warning"
+      >
+        warning
+      </span>
+    </div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 hLVcdx"
+    >
+      <span
+        className="tag is-danger"
+      >
+        danger
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Tag Default 1`] = `
+<div
+  className="Tagstories__Wrapper-wsn8kx-0 cHkekU"
+>
+  <span
+    className="tag is-light"
+  >
+    Default tag
+  </span>
+</div>
+`;
+
+exports[`Storyshots Tag With Icon 1`] = `
+<div
+  className="Tagstories__Wrapper-wsn8kx-0 cHkekU"
+>
+  <span
+    className="tag is-light"
+  >
+    <i
+      className="fas fa-bolt"
+    />
+     
+    System
+  </span>
+</div>
+`;
+
+exports[`Storyshots Tag With title 1`] = `
+<div
+  className="Tagstories__Wrapper-wsn8kx-0 cHkekU"
+>
+  <span
+    className="tag is-light"
+    title="good job"
+  >
+    hover me
+  </span>
+</div>
+`;
+
 exports[`Storyshots Toast Click to close 1`] = `null`;
 
 exports[`Storyshots Toast Danger 1`] = `null`;
@@ -36513,3 +37043,84 @@ exports[`Storyshots Toast Primary 1`] = `null`;
 exports[`Storyshots Toast Success 1`] = `null`;
 
 exports[`Storyshots Toast Warning 1`] = `null`;
+
+exports[`Storyshots Tooltip Default 1`] = `
+<div
+  className="Tooltipstories__Wrapper-sc-1c34uq-0 cmZvab"
+>
+  <div>
+    <div
+      className="Tooltipstories__Spacing-sc-1c34uq-1 ghDLyA"
+    >
+      <span
+        className="tooltip has-tooltip-right"
+        data-tooltip="Heart of Gold"
+      >
+        <button
+          className="button is-info"
+          onClick={[Function]}
+          type="button"
+        >
+          right
+           
+        </button>
+         
+      </span>
+    </div>
+    <div
+      className="Tooltipstories__Spacing-sc-1c34uq-1 ghDLyA"
+    >
+      <span
+        className="tooltip has-tooltip-top"
+        data-tooltip="Heart of Gold"
+      >
+        <button
+          className="button is-info"
+          onClick={[Function]}
+          type="button"
+        >
+          top
+           
+        </button>
+         
+      </span>
+    </div>
+    <div
+      className="Tooltipstories__Spacing-sc-1c34uq-1 ghDLyA"
+    >
+      <span
+        className="tooltip has-tooltip-left"
+        data-tooltip="Heart of Gold"
+      >
+        <button
+          className="button is-info"
+          onClick={[Function]}
+          type="button"
+        >
+          left
+           
+        </button>
+         
+      </span>
+    </div>
+    <div
+      className="Tooltipstories__Spacing-sc-1c34uq-1 ghDLyA"
+    >
+      <span
+        className="tooltip has-tooltip-bottom"
+        data-tooltip="Heart of Gold"
+      >
+        <button
+          className="button is-info"
+          onClick={[Function]}
+          type="button"
+        >
+          bottom
+           
+        </button>
+         
+      </span>
+    </div>
+  </div>
+</div>
+`;

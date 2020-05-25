@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -31,7 +31,6 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.Repository;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.IOException;
@@ -43,7 +42,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Unit tests for {@link OutgoingCommand}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
@@ -98,8 +97,8 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
     commit(outgoing, "added a");
 
     GitPushCommand push = new GitPushCommand(handler,
-                            new GitContext(outgoingDirectory, null, null),
-                            outgoingRepository);
+      new GitContext(outgoingDirectory, outgoingRepository, null)
+    );
     PushCommandRequest req = new PushCommandRequest();
 
     req.setRemoteRepository(incomingRepository);
@@ -152,7 +151,6 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
    */
   private GitOutgoingCommand createCommand()
   {
-    return new GitOutgoingCommand(handler, new GitContext(outgoingDirectory, outgoingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())),
-      outgoingRepository);
+    return new GitOutgoingCommand(handler, new GitContext(outgoingDirectory, outgoingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())));
   }
 }

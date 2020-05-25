@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.BlameLine;
 import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.Repository;
 import sonia.scm.web.HgUtil;
 
 import java.io.IOException;
@@ -62,13 +61,12 @@ public class HgBlameCommand extends AbstractCommand implements BlameCommand
   /**
    * Constructs ...
    *
+   *  @param context
    *
-   * @param context
-   * @param repository
    */
-  HgBlameCommand(HgCommandContext context, Repository repository)
+  HgBlameCommand(HgCommandContext context)
   {
-    super(context, repository);
+    super(context);
   }
 
   //~--- get methods ----------------------------------------------------------

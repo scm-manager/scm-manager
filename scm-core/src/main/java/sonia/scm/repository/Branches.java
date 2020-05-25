@@ -21,23 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Iterator;
 import java.util.List;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Represents all branches of a repository.
@@ -45,142 +38,38 @@ import java.util.List;
  * @author Sebastian Sdorra
  * @since 1.18
  */
-@XmlRootElement(name="branches")
-@XmlAccessorType(XmlAccessType.FIELD)
-public final class Branches implements Iterable<Branch>
-{
+@EqualsAndHashCode
+@ToString
+@Setter
+public final class Branches implements Iterable<Branch> {
 
-  /**
-   * Constructs a new instance of branches.
-   * This constructor should only be called from JAXB.
-   *
-   */
-  public Branches() {}
+  private List<Branch> branches;
 
-  /**
-   * Constructs a new instance of branches.
-   *
-   *
-   * @param branches list of branches.
-   */
-  public Branches(Branch... branches)
-  {
+  public Branches() {
+  }
+
+  public Branches(Branch... branches) {
     this.branches = Lists.newArrayList(branches);
   }
 
-  /**
-   * Constructs a new instance of branches.
-   *
-   *
-   * @param branches list of branches.
-   */
-  public Branches(List<Branch> branches)
-  {
+  public Branches(List<Branch> branches) {
     this.branches = branches;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
   @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-
-    if (getClass() != obj.getClass())
-    {
-      return false;
-    }
-
-    final Branches other = (Branches) obj;
-
-    return Objects.equal(branches, other.branches);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(branches);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Iterator<Branch> iterator()
-  {
+  public Iterator<Branch> iterator() {
     return getBranches().iterator();
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public String toString()
-  {
-    //J-
-    return MoreObjects.toStringHelper(this)
-                  .add("branches", branches)
-                  .toString();
-    //J+
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns all branches of a repository.
-   *
-   *
-   * @return all branches
-   */
-  public List<Branch> getBranches()
-  {
-    if (branches == null)
-    {
+  public List<Branch> getBranches() {
+    if (branches == null) {
       branches = Lists.newArrayList();
     }
 
     return branches;
   }
 
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Sets all branches.
-   *
-   *
-   * @param branches branches
-   */
-  public void setBranches(List<Branch> branches)
-  {
+  public void setBranches(List<Branch> branches) {
     this.branches = branches;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** branches */
-  @XmlElement(name="branch")
-  private List<Branch> branches;
 }

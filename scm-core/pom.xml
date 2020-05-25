@@ -173,8 +173,8 @@
     <!-- xml -->
 
     <dependency>
-      <groupId>javax.xml.bind</groupId>
-      <artifactId>jaxb-api</artifactId>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
     </dependency>
 
     <dependency>
@@ -182,16 +182,25 @@
       <artifactId>jaxb-runtime</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>javax.activation</groupId>
-      <artifactId>activation</artifactId>
-    </dependency>
-
     <!-- validation -->
 
     <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.el</groupId>
+      <artifactId>javax.el-api</artifactId>
+      <version>3.0.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.el</artifactId>
+      <version>3.0.1-b11</version>
+      <scope>test</scope>
     </dependency>
 
     <!-- util -->

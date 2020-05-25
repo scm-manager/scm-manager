@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.errors.MissingObjectException;
@@ -61,8 +61,8 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
-  public GitCatCommand(GitContext context, sonia.scm.repository.Repository repository, LfsBlobStoreFactory lfsBlobStoreFactory) {
-    super(context, repository);
+  public GitCatCommand(GitContext context, LfsBlobStoreFactory lfsBlobStoreFactory) {
+    super(context);
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
   }
 

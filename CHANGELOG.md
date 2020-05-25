@@ -6,12 +6,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
+- Detect renamed files in git and hg diffs ([#1157](https://github.com/scm-manager/scm-manager/pull/1157))
+- ClassLoader and Adapter parameters to typed store apis ([#1111](https://github.com/scm-manager/scm-manager/pull/1111))
+
+
+### Fixed
+- Correctly resolve Links in markdown files ([#1152](https://github.com/scm-manager/scm-manager/pull/1152))
+- Missing copy on write in the data store ([#1155](https://github.com/scm-manager/scm-manager/pull/1155))
+- Resolved conflicting dependencies for scm-webapp ([#1159](https://github.com/scm-manager/scm-manager/pull/1159))
+
+## [2.0.0-rc8] - 2020-05-08
+### Added
 - Add iconStyle + onClick option and story shot for icon component ([#1100](https://github.com/scm-manager/scm-manager/pull/1100))
 - Making WebElements (Servlet or Filter) optional by using the `@Requires` annotation ([#1101](https://github.com/scm-manager/scm-manager/pull/1101))
-- ClassLoader and Adapter parameters to typed store apis ([#1111](https://github.com/scm-manager/scm-manager/pull/1111))
+- Add class to manually validate rest data transfer objects with javax validation annotations ([#1114](https://github.com/scm-manager/scm-manager/pull/1114))
+- Missing stories for ui-components ([#1140](https://github.com/scm-manager/scm-manager/pull/1140))
 
 ### Changed
 - Removed the `requires` attribute on the `@Extension` annotation and instead create a new `@Requires` annotation ([#1097](https://github.com/scm-manager/scm-manager/pull/1097))
+- Update guide to prevent common pitfalls in ui development ([#1107](https://github.com/scm-manager/scm-manager/pull/1107))
+- Use os specific locations for scm home directory ([#1109](https://github.com/scm-manager/scm-manager/pull/1109))
+- Use Library/Logs/SCM-Manager on OSX for logging ([#1109](https://github.com/scm-manager/scm-manager/pull/1109))
+- Cleanup outdated jaxb annotation in scm-core ([#1136](https://github.com/scm-manager/scm-manager/pull/1136))
+
+### Fixed
+- Protocol URI for git commands under windows ([#1108](https://github.com/scm-manager/scm-manager/pull/1108))
+- Fix usage of invalid cipher algorithm on newer java versions ([#1110](https://github.com/scm-manager/scm-manager/issues/1110),[#1112](https://github.com/scm-manager/scm-manager/pull/1112))
+- Handle obscure line breaks in diff viewer ([#1129](https://github.com/scm-manager/scm-manager/pull/1129))
+- Validate subversion client checksum ([#1113](https://github.com/scm-manager/scm-manager/issues/1113))
+- Fix plugin manage permission ([#1135](https://github.com/scm-manager/scm-manager/pull/1135))
 
 ## [2.0.0-rc7] - 2020-04-09
 ### Added

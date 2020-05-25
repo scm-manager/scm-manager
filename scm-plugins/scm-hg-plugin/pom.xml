@@ -59,25 +59,6 @@
     <plugins>
 
       <plugin>
-        <groupId>com.mycila.maven-license-plugin</groupId>
-        <artifactId>maven-license-plugin</artifactId>
-        <version>1.9.0</version>
-        <configuration>
-          <header>http://download.scm-manager.org/licenses/mvn-license.txt</header>
-          <includes>
-            <include>src/**</include>
-            <include>**/test/**</include>
-          </includes>
-          <excludes>
-            <exclude>target/**</exclude>
-            <exclude>.hg/**</exclude>
-            <exclude>**/fileview.py</exclude>
-          </excludes>
-          <strictCheck>true</strictCheck>
-        </configuration>
-      </plugin>
-
-      <plugin>
         <groupId>sonia.scm.maven</groupId>
         <artifactId>smp-maven-plugin</artifactId>
         <extensions>true</extensions>
@@ -103,15 +84,5 @@
 
     </plugins>
   </build>
-
-  <repositories>
-
-    <repository>
-      <id>maven.scm-manager.org</id>
-      <name>scm-manager release repository</name>
-      <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
-    </repository>
-
-  </repositories>
 
 </project>

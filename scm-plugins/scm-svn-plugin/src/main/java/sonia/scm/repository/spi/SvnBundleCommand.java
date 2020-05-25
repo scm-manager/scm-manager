@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -32,7 +32,6 @@ import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.repository.api.BundleResponse;
 
@@ -52,9 +51,9 @@ public class SvnBundleCommand extends AbstractSvnCommand
   implements BundleCommand
 {
 
-  public SvnBundleCommand(SvnContext context, Repository repository)
+  public SvnBundleCommand(SvnContext context)
   {
-    super(context, repository);
+    super(context);
   }
 
   private static void dump(SVNAdminClient adminClient, File repository,

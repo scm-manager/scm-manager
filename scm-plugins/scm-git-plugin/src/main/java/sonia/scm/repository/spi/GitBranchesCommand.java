@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
 
 import java.io.IOException;
 import java.util.List;
@@ -54,9 +53,9 @@ public class GitBranchesCommand extends AbstractGitCommand implements BranchesCo
 
   private static final Logger LOG = LoggerFactory.getLogger(GitBranchesCommand.class);
 
-  public GitBranchesCommand(GitContext context, Repository repository)
+  public GitBranchesCommand(GitContext context)
   {
-    super(context, repository);
+    super(context);
   }
 
   //~--- get methods ----------------------------------------------------------

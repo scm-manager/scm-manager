@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -70,15 +70,12 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   /**
    * Constructs ...
    *
-   *
-   * @param handler
+   *  @param handler
    * @param context
-   * @param repository
    */
-  public GitPullCommand(GitRepositoryHandler handler, GitContext context,
-    Repository repository)
+  public GitPullCommand(GitRepositoryHandler handler, GitContext context)
   {
-    super(handler, context, repository);
+    super(handler, context);
   }
 
   //~--- methods --------------------------------------------------------------
