@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.xml;
 
 import com.google.common.base.Charsets;
@@ -29,7 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -52,7 +52,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(TempDirectory.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class PathBasedRepositoryLocationResolverTest {
 
@@ -74,7 +73,7 @@ class PathBasedRepositoryLocationResolverTest {
   private PathBasedRepositoryLocationResolver resolver;
 
   @BeforeEach
-  void beforeEach(@TempDirectory.TempDir Path temp) {
+  void beforeEach(@TempDir Path temp) {
     this.basePath = temp;
     when(contextProvider.getBaseDirectory()).thenReturn(temp.toFile());
     when(contextProvider.resolve(any(Path.class))).thenAnswer(invocation -> invocation.getArgument(0));

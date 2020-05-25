@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi.javahg;
 
 import com.aragost.javahg.Repository;
@@ -31,9 +31,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.HgConfig;
-import sonia.scm.repository.Modifications;
+import sonia.scm.repository.Modification;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -64,7 +65,7 @@ public class HgLogChangesetCommand extends AbstractChangesetCommand {
     return readListFromStream(getHgInputStream(files, CHANGESET_EAGER_STYLE_PATH));
   }
 
-  public Modifications extractModifications(String... files) {
+  public Collection<Modification> extractModifications(String... files) {
     HgInputStream hgInputStream = getHgInputStream(files, CHANGESET_EAGER_STYLE_PATH);
     try {
       return readModificationsFromStream(hgInputStream);

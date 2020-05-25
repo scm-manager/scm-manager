@@ -29,7 +29,7 @@ import NavLink from "../navigation/NavLink";
 import FooterSection from "./FooterSection";
 import styled from "styled-components";
 import { EXTENSION_POINT } from "../avatar/Avatar";
-import ExternalLink from "../navigation/ExternalLink";
+import ExternalNavLink from "../navigation/ExternalNavLink";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -99,12 +99,15 @@ const Footer: FC<Props> = ({ me, version, links }) => {
             <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
           </FooterSection>
           <FooterSection title={<TitleWithIcon title={t("footer.information.title")} icon="info-circle" />}>
-            <ExternalLink to="https://www.scm-manager.org/" label={`SCM-Manager ${version}`} />
+            <ExternalNavLink to="https://www.scm-manager.org/" label={`SCM-Manager ${version}`} />
             <ExtensionPoint name="footer.information" props={extensionProps} renderAll={true} />
           </FooterSection>
           <FooterSection title={<TitleWithIcon title={t("footer.support.title")} icon="life-ring" />}>
-            <ExternalLink to="https://www.scm-manager.org/support/" label={t("footer.support.community")} />
-            <ExternalLink to="https://cloudogu.com/en/scm-manager-enterprise/" label={t("footer.support.enterprise")} />
+            <ExternalNavLink to="https://www.scm-manager.org/support/" label={t("footer.support.community")} />
+            <ExternalNavLink
+              to="https://cloudogu.com/en/scm-manager-enterprise/"
+              label={t("footer.support.enterprise")}
+            />
             <ExtensionPoint name="footer.support" props={extensionProps} renderAll={true} />
           </FooterSection>
         </div>

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.lifecycle;
 
 import com.github.legman.Subscribe;
@@ -34,6 +34,7 @@ import sonia.scm.Stage;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.event.ScmTestEventBus;
 
+import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -128,6 +129,21 @@ public class RestartServletTest {
 
   private ServletInputStream createServletInputStream(final InputStream inputStream) {
     return new ServletInputStream() {
+      @Override
+      public boolean isFinished() {
+        return false;
+      }
+
+      @Override
+      public boolean isReady() {
+        return false;
+      }
+
+      @Override
+      public void setReadListener(ReadListener readListener) {
+
+      }
+
       @Override
       public int read() throws IOException {
         return inputStream.read();

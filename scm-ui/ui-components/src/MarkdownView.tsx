@@ -29,6 +29,7 @@ import { binder } from "@scm-manager/ui-extensions";
 import ErrorBoundary from "./ErrorBoundary";
 import SyntaxHighlighter from "./SyntaxHighlighter";
 import MarkdownHeadingRenderer from "./MarkdownHeadingRenderer";
+import { create } from "./MarkdownLinkRenderer";
 import { useTranslation } from "react-i18next";
 import Notification from "./Notification";
 
@@ -38,6 +39,8 @@ type Props = RouteComponentProps & {
   renderers?: any;
   skipHtml?: boolean;
   enableAnchorHeadings?: boolean;
+  // basePath for markdown links
+  basePath?: string;
 };
 
 const xmlMarkupSample = `\`\`\`xml
@@ -97,7 +100,7 @@ class MarkdownView extends React.Component<Props> {
   }
 
   render() {
-    const { content, renderers, renderContext, enableAnchorHeadings, skipHtml } = this.props;
+    const { content, renderers, renderContext, enableAnchorHeadings, skipHtml, basePath } = this.props;
 
     const rendererFactory = binder.getExtension("markdown-renderer-factory");
     let rendererList = renderers;
@@ -112,6 +115,10 @@ class MarkdownView extends React.Component<Props> {
 
     if (enableAnchorHeadings) {
       rendererList.heading = MarkdownHeadingRenderer;
+    }
+
+    if (basePath && !rendererList.link) {
+      rendererList.link = create(basePath);
     }
 
     if (!rendererList.code) {

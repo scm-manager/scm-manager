@@ -146,6 +146,12 @@
       <version>${jackson.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
+    </dependency>
+
+
     <!-- rest api -->
 
     <dependency>
@@ -191,9 +197,9 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.el</groupId>
-      <artifactId>javax.el-api</artifactId>
-      <version>3.0.0</version>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>${jaxb.version}</version>
     </dependency>
 
     <dependency>
@@ -203,15 +209,9 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.xml.bind</groupId>
-      <artifactId>jaxb-api</artifactId>
-      <version>2.3.1</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.glassfish.jaxb</groupId>
       <artifactId>jaxb-runtime</artifactId>
-      <version>2.3.0</version>
+      <version>${jaxb.version}</version>
     </dependency>
 
     <!-- injection -->
@@ -439,13 +439,6 @@
     <!-- global excludes -->
 
     <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.1.3</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
@@ -654,6 +647,20 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <version>1.3.0</version>
+        <configuration>
+          <printEqualFiles>false</printEqualFiles>
+          <failBuildInCaseOfDifferentContentConflict>false</failBuildInCaseOfDifferentContentConflict>
+          <failBuildInCaseOfEqualContentConflict>false</failBuildInCaseOfEqualContentConflict>
+          <failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
+          <checkCompileClasspath>true</checkCompileClasspath>
+          <checkRuntimeClasspath>true</checkRuntimeClasspath>
+          <checkTestClasspath>false</checkTestClasspath>
+        </configuration>
+      </plugin>
     </plugins>
 
     <finalName>scm-webapp</finalName>

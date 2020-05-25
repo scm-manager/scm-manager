@@ -33,3 +33,5 @@ export { default as PrimaryNavigationLink } from "./PrimaryNavigationLink";
 export { default as SecondaryNavigation } from "./SecondaryNavigation";
 export { MenuContext, StateMenuContextProvider } from "./MenuContext";
 export { default as SecondaryNavigationItem } from "./SecondaryNavigationItem";
+export { default as ExternalLink } from "./ExternalLink";
+export { default as ExternalNavLink } from "./ExternalNavLink";

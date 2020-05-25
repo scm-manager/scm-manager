@@ -143,8 +143,8 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals(1, modifications.getModified().size());
     assertEquals(1, modifications.getRemoved().size());
     assertTrue("added list should be empty", modifications.getAdded().isEmpty());
-    assertEquals("a.txt", modifications.getModified().get(0));
-    assertEquals("b.txt", modifications.getRemoved().get(0));
+    assertEquals("a.txt", modifications.getModified().get(0).getPath());
+    assertEquals("b.txt", modifications.getRemoved().get(0).getPath());
   }
 
   @Test

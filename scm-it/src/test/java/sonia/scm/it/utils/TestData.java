@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.it.utils;
 
 import io.restassured.response.ValidatableResponse;
@@ -86,7 +86,7 @@ public class TestData {
     String admin = isAdmin ? "true" : "false";
     given(VndMediaType.USER)
       .when()
-      .content(new StringBuilder()
+      .body(new StringBuilder()
         .append(" {\n")
         .append("    \"active\": true,\n")
         .append("    \"admin\": ").append(admin).append(",\n")
@@ -124,7 +124,7 @@ public class TestData {
     LOG.info("create group with group name: {} and description {}", groupName, desc);
     given(VndMediaType.GROUP)
       .when()
-      .content(getGroupJson(groupName,desc))
+      .body(getGroupJson(groupName,desc))
       .post(getGroupsUrl())
       .then()
       .statusCode(HttpStatus.SC_CREATED)
@@ -136,7 +136,7 @@ public class TestData {
     LOG.info("create permission with name {} and verbs {} using the endpoint: {}", username, verbs, defaultPermissionUrl);
     given(VndMediaType.REPOSITORY_PERMISSION)
       .when()
-      .content("{\n" +
+      .body("{\n" +
         "\t\"verbs\": " + verbs.stream().collect(Collectors.joining("\",\"", "[\"", "\"]")) + ",\n" +
         "\t\"name\": \"" + username + "\",\n" +
         "\t\"groupPermission\": false\n" +

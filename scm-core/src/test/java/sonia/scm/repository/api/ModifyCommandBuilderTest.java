@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import com.google.common.io.ByteSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -57,7 +57,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(TempDirectory.class)
 class ModifyCommandBuilderTest {
 
   @Mock
@@ -71,7 +70,7 @@ class ModifyCommandBuilderTest {
   Path workdir;
 
   @BeforeEach
-  void initWorkdir(@TempDirectory.TempDir Path temp) throws IOException {
+  void initWorkdir(@TempDir Path temp) throws IOException {
     workdir = Files.createDirectory(temp.resolve("workdir"));
     lenient().when(workdirProvider.createNewWorkdir()).thenReturn(workdir.toFile());
     commandBuilder = new ModifyCommandBuilder(command, workdirProvider);
@@ -207,7 +206,7 @@ class ModifyCommandBuilderTest {
   }
 
   @Test
-  void shouldDeleteTemporaryFiles(@TempDirectory.TempDir Path temp) throws IOException {
+  void shouldDeleteTemporaryFiles(@TempDir Path temp) throws IOException {
     ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<File> fileCaptor = ArgumentCaptor.forClass(File.class);
     doNothing().when(worker).modify(nameCaptor.capture(), fileCaptor.capture());

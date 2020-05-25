@@ -57,7 +57,7 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
         formatter.setRepository(repository);
 
         for (DiffEntry e : diff.getEntries()) {
-          if (!e.getOldId().equals(e.getNewId())) {
+          if (idOrPathChanged(e)) {
             formatter.format(e);
           }
         }
@@ -65,6 +65,10 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
         formatter.flush();
       }
     };
+  }
+
+  private boolean idOrPathChanged(DiffEntry e) {
+    return !e.getOldId().equals(e.getNewId()) || !e.getNewPath().equals(e.getOldPath());
   }
 
   static class DequoteOutputStream extends OutputStream {

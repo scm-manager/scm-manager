@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteStreams;
 import org.junit.Test;
 
+import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -68,6 +69,20 @@ public class HgServletInputStreamTest {
     @Override
     public int read() {
       return input.read();
+    }
+
+    @Override
+    public boolean isFinished() {
+      return false;
+    }
+
+    @Override
+    public boolean isReady() {
+      return false;
+    }
+
+    @Override
+    public void setReadListener(ReadListener readListener) {
     }
   }
 

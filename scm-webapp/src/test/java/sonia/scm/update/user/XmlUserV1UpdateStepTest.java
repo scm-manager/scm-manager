@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update.user;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -38,7 +38,6 @@ import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
 import sonia.scm.update.UpdateStepTestUtil;
 import sonia.scm.update.V1Properties;
-import sonia.scm.update.V1Property;
 import sonia.scm.user.User;
 import sonia.scm.user.xml.XmlUserDAO;
 
@@ -55,7 +54,6 @@ import static org.mockito.Mockito.verify;
 import static sonia.scm.store.InMemoryConfigurationEntryStoreFactory.create;
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(TempDirectory.class)
 class XmlUserV1UpdateStepTest {
 
   @Mock
@@ -71,7 +69,7 @@ class XmlUserV1UpdateStepTest {
   private UpdateStepTestUtil testUtil;
 
   @BeforeEach
-  void mockScmHome(@TempDirectory.TempDir Path tempDir) {
+  void mockScmHome(@TempDir Path tempDir) {
     testUtil = new UpdateStepTestUtil(tempDir);
     updateStep = new XmlUserV1UpdateStep(testUtil.getContextProvider(), userDAO, storeFactory);
   }

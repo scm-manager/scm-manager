@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 import com.google.common.base.Charsets;
@@ -37,6 +37,7 @@ import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.UberWebResourceLoader;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
@@ -151,6 +152,15 @@ public class WebResourceServletTest {
     @Override
     public void write(int b) {
       buffer.write(b);
+    }
+
+    @Override
+    public boolean isReady() {
+      return true;
+    }
+
+    @Override
+    public void setWriteListener(WriteListener writeListener) {
     }
   }
 

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update.repository;
 
 import com.google.common.io.Resources;
@@ -29,7 +29,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -51,7 +51,6 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(TempDirectory.class)
 class MigrateVerbsToPermissionRolesTest {
 
   private static final String EXISTING_REPOSITORY_ID = "id";
@@ -65,7 +64,7 @@ class MigrateVerbsToPermissionRolesTest {
   private MigrateVerbsToPermissionRoles migration;
 
   @BeforeEach
-  void init(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void init(@TempDir Path tempDir) throws IOException {
     URL metadataUrl = Resources.getResource("sonia/scm/update/repository/metadataWithoutRoles.xml");
     Files.copy(metadataUrl.openStream(), tempDir.resolve("metadata.xml"));
     doAnswer(invocation -> {
@@ -76,7 +75,7 @@ class MigrateVerbsToPermissionRolesTest {
   }
 
   @Test
-  void shouldUpdateToRolesIfPossible(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldUpdateToRolesIfPossible(@TempDir Path tempDir) throws IOException {
     migration.doUpdate();
 
     List<String> newMetadata = Files.readAllLines(tempDir.resolve("metadata.xml"));

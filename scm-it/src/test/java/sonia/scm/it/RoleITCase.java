@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.it;
 
 import org.apache.http.HttpStatus;
@@ -66,7 +66,7 @@ public class RoleITCase {
 
     given(VndMediaType.REPOSITORY_ROLE)
       .when()
-      .content("{" +
+      .body("{" +
         "\"name\": \"" + ROLE_NAME + "\"," +
         "\"verbs\": [\"read\",\"permissionRead\"]" +
         "}")
@@ -84,7 +84,7 @@ public class RoleITCase {
 
     given(VndMediaType.REPOSITORY_PERMISSION)
       .when()
-      .content("{\n" +
+      .body("{\n" +
         "\t\"role\": \"" + ROLE_NAME + "\",\n" +
         "\t\"name\": \"" + USER + "\",\n" +
         "\t\"groupPermission\": false\n" +

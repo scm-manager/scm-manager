@@ -103,6 +103,22 @@ public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
     assertThat(hunk.getNewLineCount()).isEqualTo(2);
   }
 
+  @Test
+  public void shouldReturnRenames() throws IOException {
+    DiffResult diffResult = createDiffResult("rename");
+
+    Iterator<DiffFile> fileIterator = diffResult.iterator();
+    DiffFile renameA = fileIterator.next();
+    assertThat(renameA.getOldPath()).isEqualTo("a.txt");
+    assertThat(renameA.getNewPath()).isEqualTo("a-copy.txt");
+    assertThat(renameA.iterator().hasNext()).isFalse();
+
+    DiffFile renameB = fileIterator.next();
+    assertThat(renameB.getOldPath()).isEqualTo("b.txt");
+    assertThat(renameB.getNewPath()).isEqualTo("b-copy.txt");
+    assertThat(renameB.iterator().hasNext()).isFalse();
+  }
+
   private DiffResult createDiffResult(String s) throws IOException {
     GitDiffResultCommand gitDiffResultCommand = new GitDiffResultCommand(createContext());
     DiffCommandRequest diffCommandRequest = new DiffCommandRequest();

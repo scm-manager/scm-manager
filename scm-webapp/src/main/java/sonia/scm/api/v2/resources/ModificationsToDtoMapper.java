@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
@@ -30,7 +30,11 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import sonia.scm.repository.Added;
 import sonia.scm.repository.Modifications;
+import sonia.scm.repository.Modified;
+import sonia.scm.repository.Removed;
+import sonia.scm.repository.Renamed;
 import sonia.scm.repository.Repository;
 
 import javax.inject.Inject;
@@ -52,4 +56,18 @@ public abstract class ModificationsToDtoMapper {
       .self(resourceLinks.modifications().self(repository.getNamespace(), repository.getName(), target.getRevision()));
     target.add(linksBuilder.build());
   }
+
+  String map(Added added) {
+    return added.getPath();
+  }
+
+  String map(Removed removed) {
+    return removed.getPath();
+  }
+
+  String map(Modified modified) {
+    return modified.getPath();
+  }
+
+  abstract ModificationsDto.RenamedDto map(Renamed renamed);
 }

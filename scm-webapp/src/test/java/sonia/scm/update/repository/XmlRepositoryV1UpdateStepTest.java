@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update.repository;
 
 import com.google.common.io.Resources;
@@ -30,7 +30,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -63,7 +63,6 @@ import static org.mockito.Mockito.when;
 import static sonia.scm.update.repository.MigrationStrategy.MOVE;
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(TempDirectory.class)
 class XmlRepositoryV1UpdateStepTest {
 
   Injector injectorMock = MigrationStrategyMock.init();
@@ -85,7 +84,7 @@ class XmlRepositoryV1UpdateStepTest {
   XmlRepositoryV1UpdateStep updateStep;
 
   @BeforeEach
-  void createUpdateStepFromMocks(@TempDirectory.TempDir Path tempDir) {
+  void createUpdateStepFromMocks(@TempDir Path tempDir) {
     testUtil = new UpdateStepTestUtil(tempDir);
     updateStep = new XmlRepositoryV1UpdateStep(
       testUtil.getContextProvider(),
@@ -100,7 +99,7 @@ class XmlRepositoryV1UpdateStepTest {
   class WithExistingDatabase {
 
     @BeforeEach
-    void createV1Home(@TempDirectory.TempDir Path tempDir) throws IOException {
+    void createV1Home(@TempDir Path tempDir) throws IOException {
       V1RepositoryFileSystem.createV1Home(tempDir);
     }
 
@@ -165,7 +164,7 @@ class XmlRepositoryV1UpdateStepTest {
     }
 
     @Test
-    void shouldUseDirectoryFromStrategy(@TempDirectory.TempDir Path tempDir) throws JAXBException {
+    void shouldUseDirectoryFromStrategy(@TempDir Path tempDir) throws JAXBException {
       Path targetDir = tempDir.resolve("someDir");
       MigrationStrategy.Instance strategyMock = injectorMock.getInstance(MoveMigrationStrategy.class);
       when(strategyMock.migrate("454972da-faf9-4437-b682-dc4a4e0aa8eb", "simple", "git")).thenReturn(of(targetDir));
@@ -195,7 +194,7 @@ class XmlRepositoryV1UpdateStepTest {
     }
 
     @Test
-    void shouldBackupOldRepositoryDatabaseFile(@TempDirectory.TempDir Path tempDir) throws JAXBException {
+    void shouldBackupOldRepositoryDatabaseFile(@TempDir Path tempDir) throws JAXBException {
       updateStep.doUpdate();
 
       assertThat(tempDir.resolve("config").resolve("repositories.xml")).doesNotExist();
@@ -209,14 +208,14 @@ class XmlRepositoryV1UpdateStepTest {
   }
 
   @Test
-  void shouldNotFailIfFormerV2DatabaseExists(@TempDirectory.TempDir Path tempDir) throws JAXBException, IOException {
+  void shouldNotFailIfFormerV2DatabaseExists(@TempDir Path tempDir) throws JAXBException, IOException {
     createFormerV2RepositoriesFile(tempDir);
 
     updateStep.doUpdate();
   }
 
   @Test
-  void shouldNotBackupFormerV2DatabaseFile(@TempDirectory.TempDir Path tempDir) throws JAXBException, IOException {
+  void shouldNotBackupFormerV2DatabaseFile(@TempDir Path tempDir) throws JAXBException, IOException {
     createFormerV2RepositoriesFile(tempDir);
 
     updateStep.doUpdate();
@@ -226,14 +225,14 @@ class XmlRepositoryV1UpdateStepTest {
   }
 
   @Test
-  void shouldGetNoMissingStrategiesWithFormerV2DatabaseFile(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldGetNoMissingStrategiesWithFormerV2DatabaseFile(@TempDir Path tempDir) throws IOException {
     createFormerV2RepositoriesFile(tempDir);
 
     assertThat(updateStep.getRepositoriesWithoutMigrationStrategies()).isEmpty();
   }
 
   @Test
-  void shouldFindMissingStrategies(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldFindMissingStrategies(@TempDir Path tempDir) throws IOException {
     V1RepositoryFileSystem.createV1Home(tempDir);
 
     assertThat(updateStep.getRepositoriesWithoutMigrationStrategies())
@@ -244,7 +243,7 @@ class XmlRepositoryV1UpdateStepTest {
         "454972da-faf9-4437-b682-dc4a4e0aa8eb");
   }
 
-  private void createFormerV2RepositoriesFile(@TempDirectory.TempDir Path tempDir) throws IOException {
+  private void createFormerV2RepositoriesFile(@TempDir Path tempDir) throws IOException {
     URL url = Resources.getResource("sonia/scm/update/repository/formerV2RepositoryFile.xml");
     Path configDir = tempDir.resolve("config");
     Files.createDirectories(configDir);

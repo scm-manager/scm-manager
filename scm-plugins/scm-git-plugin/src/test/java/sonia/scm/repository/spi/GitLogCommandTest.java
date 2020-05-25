@@ -39,11 +39,11 @@ import java.io.File;
 import java.io.IOException;
 
 import static java.nio.charset.Charset.defaultCharset;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -188,7 +188,9 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertTrue("removed list should be empty", modifications.getRemoved().isEmpty());
     assertFalse("added list should not be empty", modifications.getAdded().isEmpty());
     assertEquals(2, modifications.getAdded().size());
-    assertThat(modifications.getAdded(), contains("a.txt", "b.txt"));
+    assertThat(modifications.getAdded())
+      .extracting("path")
+      .containsExactly("a.txt", "b.txt");
   }
 
   @Test
@@ -198,14 +200,14 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     GitLogCommand command = createCommand();
     Changeset c = command.getChangeset("435df2f061add3589cb3", request);
 
-    Assertions.assertThat(c.getBranches()).containsOnly("master");
+    assertThat(c.getBranches()).containsOnly("master");
   }
 
   @Test
   public void shouldNotReturnCommitFromDifferentBranch() {
     when(request.getBranch()).thenReturn("master");
     Changeset changeset = createCommand().getChangeset("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", request);
-    Assertions.assertThat(changeset).isNull();
+    assertThat(changeset).isNull();
   }
 
   @Test

@@ -109,6 +109,24 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
     }
 
     @Override
+    public ChangeType getChangeType() {
+      switch (diffEntry.getChangeType()) {
+        case ADD:
+          return ChangeType.ADD;
+        case MODIFY:
+          return ChangeType.MODIFY;
+        case RENAME:
+          return ChangeType.RENAME;
+        case DELETE:
+          return ChangeType.DELETE;
+        case COPY:
+          return ChangeType.COPY;
+        default:
+          throw new IllegalArgumentException("Unknown change type: " + diffEntry.getChangeType());
+      }
+    }
+
+    @Override
     public Iterator<Hunk> iterator() {
       String content = format(repository, diffEntry);
       GitHunkParser parser = new GitHunkParser();

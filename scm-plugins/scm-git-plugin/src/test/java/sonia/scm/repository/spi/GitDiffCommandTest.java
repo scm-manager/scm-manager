@@ -24,11 +24,13 @@
 
 package sonia.scm.repository.spi;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public class GitDiffCommandTest extends AbstractGitCommandTestBase {
@@ -139,5 +141,20 @@ public class GitDiffCommandTest extends AbstractGitCommandTestBase {
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     gitDiffCommand.getDiffResult(diffCommandRequest).accept(output);
     assertEquals(DIFF_FILE_PARTIAL_MERGE, output.toString());
+  }
+
+  @Test
+  public void diffBetweenTwoBranchesWithMovedFiles() throws IOException {
+    GitDiffCommand gitDiffCommand = new GitDiffCommand(createContext());
+    DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
+    diffCommandRequest.setRevision("rename");
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    gitDiffCommand.getDiffResult(diffCommandRequest).accept(output);
+    assertThat(output.toString())
+      .contains("similarity index 100%")
+      .contains("rename from a.txt")
+      .contains("rename to a-copy.txt")
+      .contains("rename from b.txt")
+      .contains("rename to b-copy.txt");
   }
 }

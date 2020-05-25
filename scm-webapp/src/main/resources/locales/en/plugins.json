@@ -215,6 +215,10 @@
     "8nRuFzjss1": {
       "displayName": "Error while cleaning up failed plugin",
       "description": "A failed plugin download could not be removed correctly. Please check the server log and remove the plugin manually."
+    },
+    "2qRyyaVcJ1": {
+      "displayName": "Invalid format in element",
+      "description": "The input had some invalid formats. Please check the server log for further information."
     }
   },
   "namespaceStrategies": {

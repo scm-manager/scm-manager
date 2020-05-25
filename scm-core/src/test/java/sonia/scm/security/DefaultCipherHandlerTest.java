@@ -27,7 +27,7 @@ package sonia.scm.security;
 import com.google.common.io.Files;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Sebastian Sdorra
  */
-@ExtendWith({MockitoExtension.class, TempDirectory.class})
+@ExtendWith({MockitoExtension.class})
 public class DefaultCipherHandlerTest {
 
   @Mock
@@ -58,7 +58,7 @@ public class DefaultCipherHandlerTest {
    * Tests loading and storing default key.
    */
   @Test
-  void shouldLoadAndStoreDefaultKey(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldLoadAndStoreDefaultKey(@TempDir Path tempDir) throws IOException {
     File baseDirectory = tempDir.toFile();
 
     when(context.getBaseDirectory()).thenReturn(baseDirectory);
@@ -84,7 +84,7 @@ public class DefaultCipherHandlerTest {
 
   @Test
   @SuppressWarnings("UnstableApiUsage") // is ok for unit test
-  void shouldReEncodeOldFormattedDefaultKey(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldReEncodeOldFormattedDefaultKey(@TempDir Path tempDir) throws IOException {
     String oldKey = "17eXopruTtX3S4dJ9KTEmbZ-vfZztw==";
     String encryptedValue = "A11kQF7wytpWCkjPflxJB-zUWJ1CVKU3qhwhRFq4Pvl6XqiS9V2w-gqNktqMX6YNDw==";
     String plainValue = "Marvin The Paranoid Android - RAM";

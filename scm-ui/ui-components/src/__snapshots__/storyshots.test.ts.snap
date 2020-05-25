@@ -33060,6 +33060,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               SCM-Manager 2.0.0
@@ -33085,6 +33086,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/support/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.community
@@ -33093,6 +33095,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           <li>
             <a
               href="https://cloudogu.com/en/scm-manager-enterprise/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.enterprise
@@ -33182,6 +33185,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               SCM-Manager 2.0.0
@@ -33190,6 +33194,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           <li>
             <a
               href="#"
+              rel="noopener noreferrer"
               target="_blank"
             >
               REST API
@@ -33198,6 +33203,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           <li>
             <a
               href="#"
+              rel="noopener noreferrer"
               target="_blank"
             >
               CLI
@@ -33223,6 +33229,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/support/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.community
@@ -33231,6 +33238,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           <li>
             <a
               href="https://cloudogu.com/en/scm-manager-enterprise/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.enterprise
@@ -33239,6 +33247,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           <li>
             <a
               href="#"
+              rel="noopener noreferrer"
               target="_blank"
             >
               FAQ
@@ -33319,6 +33328,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               SCM-Manager 2.0.0
@@ -33344,6 +33354,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/support/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.community
@@ -33352,6 +33363,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
           <li>
             <a
               href="https://cloudogu.com/en/scm-manager-enterprise/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.enterprise
@@ -33436,6 +33448,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               SCM-Manager 2.0.0
@@ -33444,6 +33457,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           <li>
             <a
               href="#"
+              rel="noopener noreferrer"
               target="_blank"
             >
               REST API
@@ -33452,6 +33466,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           <li>
             <a
               href="#"
+              rel="noopener noreferrer"
               target="_blank"
             >
               CLI
@@ -33477,6 +33492,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           <li>
             <a
               href="https://www.scm-manager.org/support/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.community
@@ -33485,6 +33501,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           <li>
             <a
               href="https://cloudogu.com/en/scm-manager-enterprise/"
+              rel="noopener noreferrer"
               target="_blank"
             >
               footer.support.enterprise
@@ -33493,6 +33510,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           <li>
             <a
               href="#"
+              rel="noopener noreferrer"
               target="_blank"
             >
               FAQ
@@ -34365,6 +34383,74 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
           target="_blank"
         >
           GitHub Flavored Markdown Spec
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots MarkdownView Links 1`] = `
+<div
+  className="MarkdownViewstories__Spacing-sc-1hk90gd-0 eqTNCI"
+>
+  <div>
+    <div
+      className="content is-word-break"
+    >
+      <h1>
+        Links
+      </h1>
+      <p>
+        Show case for different style of markdown links. 
+Please note that some of the links may not work in storybook, 
+the story is mostly for checking if the links are rendered correct.
+      </p>
+      <h2>
+        External
+      </h2>
+      <p>
+        External Links should be opened in a new tab: 
+        <a
+          href="https://scm-manager.org"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          external link
+        </a>
+      </p>
+      <h2>
+        Anchor
+      </h2>
+      <p>
+        Anchor Links should be rendered a simple a tag with an href: 
+        <a
+          href="/#sample"
+        >
+          anchor link
+        </a>
+      </p>
+      <h2>
+        Protocol
+      </h2>
+      <p>
+        Links with a protocol other than http should be rendered a simple a tag with an href e.g.: 
+        <a
+          href="mailto:marvin@hitchhiker.com"
+        >
+          mail link
+        </a>
+      </p>
+      <h2>
+        Internal
+      </h2>
+      <p>
+        Internal links should be rendered by react-router: 
+        <a
+          href="/buttons"
+          onClick={[Function]}
+        >
+          internal link
         </a>
       </p>
     </div>

@@ -21,12 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.spotter.ContentTypes;
 import com.github.sdorra.spotter.Language;
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffFile;
@@ -42,7 +41,7 @@ import java.util.OptionalInt;
 import static de.otto.edison.hal.Links.linkingTo;
 
 /**
- * TODO conflicts, copy and rename
+ * TODO conflicts
  */
 class DiffResultToDiffResultDtoMapper {
 
@@ -83,18 +82,29 @@ class DiffResultToDiffResultDtoMapper {
     String oldPath = file.getOldPath();
 
     String path;
-    if (isFilePath(newPath) && isFileNull(oldPath)) {
-      path = newPath;
-      dto.setType("add");
-    } else if (isFileNull(newPath) && isFilePath(oldPath)) {
-      path = oldPath;
-      dto.setType("delete");
-    } else if (isFilePath(newPath) && isFilePath(oldPath)) {
-      path = newPath;
-      dto.setType("modify");
-    } else {
-      // TODO copy and rename?
-      throw new IllegalStateException("no file without path");
+    switch (file.getChangeType()) {
+      case ADD:
+        path = newPath;
+        dto.setType("add");
+        break;
+      case DELETE:
+        path = oldPath;
+        dto.setType("delete");
+        break;
+      case RENAME:
+        path = newPath;
+        dto.setType("rename");
+        break;
+      case MODIFY:
+        path = newPath;
+        dto.setType("modify");
+        break;
+      case COPY:
+        path = newPath;
+        dto.setType("copy");
+        break;
+      default:
+        throw new IllegalArgumentException("unknown change type: " + file.getChangeType());
     }
 
     dto.setNewPath(newPath);
@@ -114,14 +124,6 @@ class DiffResultToDiffResultDtoMapper {
     dto.setHunks(hunks);
 
     return dto;
-  }
-
-  private boolean isFilePath(String path) {
-    return !isFileNull(path);
-  }
-
-  private boolean isFileNull(String path) {
-    return Strings.isNullOrEmpty(path) || "/dev/null".equals(path);
   }
 
   private DiffResultDto.HunkDto mapHunk(Hunk hunk) {

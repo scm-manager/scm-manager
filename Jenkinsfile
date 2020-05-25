@@ -194,6 +194,7 @@ Maven setupMavenBuild() {
   def logConf = "scm-webapp/src/main/resources/logback.ci.xml"
   mvn.additionalArgs += " -Dlogback.configurationFile=${logConf}"
   mvn.additionalArgs += " -Dscm-it.logbackConfiguration=${logConf}"
+  mvn.additionalArgs += " -Dsonar.coverage.exclusions=**/*.test.ts,**/*.test.tsx,**/*.stories.tsx"
 
   if (isMainBranch() || isReleaseBranch()) {
     // Release starts javadoc, which takes very long, so do only for certain branches
@@ -218,7 +219,7 @@ boolean isMainBranch() {
 
 boolean waitForQualityGateWebhookToBeCalled() {
   boolean isQualityGateSucceeded = true
-  timeout(time: 5, unit: 'MINUTES') { // Needed when there is no webhook for example
+  timeout(time: 10, unit: 'MINUTES') { // Needed when there is no webhook for example
     def qGate = waitForQualityGate()
     echo "SonarQube Quality Gate status: ${qGate.status}"
     if (qGate.status != 'OK') {
