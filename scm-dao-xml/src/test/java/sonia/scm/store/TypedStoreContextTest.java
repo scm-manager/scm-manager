@@ -26,7 +26,7 @@ package sonia.scm.store;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -46,11 +46,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ExtendWith({MockitoExtension.class, TempDirectory.class})
+@ExtendWith(MockitoExtension.class)
 class TypedStoreContextTest {
 
   @Test
-  void shouldMarshallAndUnmarshall(@TempDirectory.TempDir Path tempDir) {
+  void shouldMarshallAndUnmarshall(@TempDir Path tempDir) {
     TypedStoreContext<Sample> context = context(Sample.class);
 
     File file = tempDir.resolve("test.xml").toFile();
@@ -61,7 +61,7 @@ class TypedStoreContextTest {
   }
 
   @Test
-  void shouldWorkWithMarshallerAndUnmarshaller(@TempDirectory.TempDir Path tempDir) {
+  void shouldWorkWithMarshallerAndUnmarshaller(@TempDir Path tempDir) {
     TypedStoreContext<Sample> context = context(Sample.class);
 
     File file = tempDir.resolve("test.xml").toFile();
@@ -101,7 +101,7 @@ class TypedStoreContextTest {
   }
 
   @Test
-  void shouldConfigureAdapter(@TempDirectory.TempDir Path tempDir) {
+  void shouldConfigureAdapter(@TempDir Path tempDir) {
     TypedStoreParameters<SampleWithAdapter> params = params(SampleWithAdapter.class);
     when(params.getAdapters()).thenReturn(Collections.singleton(new AppendingAdapter("!")));
 
