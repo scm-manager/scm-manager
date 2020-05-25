@@ -41,7 +41,6 @@
 
   <url>https://github.com/scm-manager/scm-manager</url>
 
-
   <licenses>
     <license>
       <name>MIT License</name>
@@ -82,7 +81,7 @@
 
   <ciManagement>
     <system>Jenkins</system>
-    <url>https://scm-manager.ci.cloudbees.com/</url>
+    <url>https://oss.cloudogu.com/jenkins/</url>
   </ciManagement>
 
   <prerequisites>
