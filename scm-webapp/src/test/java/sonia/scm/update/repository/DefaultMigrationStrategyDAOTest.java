@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update.repository;
 
 import org.assertj.core.api.Assertions;
@@ -29,7 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
@@ -43,7 +43,6 @@ import static org.mockito.Mockito.when;
 import static sonia.scm.update.repository.MigrationStrategy.INLINE;
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(TempDirectory.class)
 class DefaultMigrationStrategyDAOTest {
 
   @Mock
@@ -52,7 +51,7 @@ class DefaultMigrationStrategyDAOTest {
   private ConfigurationStoreFactory storeFactory;
 
   @BeforeEach
-  void initStore(@TempDirectory.TempDir Path tempDir) {
+  void initStore(@TempDir Path tempDir) {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
     storeFactory = new JAXBConfigurationStoreFactory(contextProvider, null);
   }

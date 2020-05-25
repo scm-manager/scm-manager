@@ -21,13 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,11 +37,10 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sonia.scm.store.CopyOnWrite.withTemporaryFile;
 
-@ExtendWith(TempDirectory.class)
 class CopyOnWriteTest {
 
   @Test
-  void shouldCreateNewFile(@TempDirectory.TempDir Path tempDir) {
+  void shouldCreateNewFile(@TempDir Path tempDir) {
     Path expectedFile = tempDir.resolve("toBeCreated.txt");
 
     withTemporaryFile(
@@ -53,7 +51,7 @@ class CopyOnWriteTest {
   }
 
   @Test
-  void shouldOverwriteExistingFile(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldOverwriteExistingFile(@TempDir Path tempDir) throws IOException {
     Path expectedFile = tempDir.resolve("toBeOverwritten.txt");
     Files.createFile(expectedFile);
 
@@ -65,7 +63,7 @@ class CopyOnWriteTest {
   }
 
   @Test
-  void shouldFailForDirectory(@TempDirectory.TempDir Path tempDir) {
+  void shouldFailForDirectory(@TempDir Path tempDir) {
     assertThrows(IllegalArgumentException.class,
       () -> withTemporaryFile(
         file -> new FileOutputStream(file.toFile()).write("should not be written".getBytes()),
@@ -82,7 +80,7 @@ class CopyOnWriteTest {
   }
 
   @Test
-  void shouldKeepBackupIfTemporaryFileCouldNotBeWritten(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldKeepBackupIfTemporaryFileCouldNotBeWritten(@TempDir Path tempDir) throws IOException {
     Path unchangedOriginalFile = tempDir.resolve("notToBeDeleted.txt");
     new FileOutputStream(unchangedOriginalFile.toFile()).write("this should be kept".getBytes());
 
@@ -98,7 +96,7 @@ class CopyOnWriteTest {
   }
 
   @Test
-  void shouldNotWrapRuntimeExceptions(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldNotWrapRuntimeExceptions(@TempDir Path tempDir) throws IOException {
     Path someFile = tempDir.resolve("something.txt");
 
     assertThrows(
@@ -111,7 +109,7 @@ class CopyOnWriteTest {
   }
 
   @Test
-  void shouldKeepBackupIfTemporaryFileIsMissing(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldKeepBackupIfTemporaryFileIsMissing(@TempDir Path tempDir) throws IOException {
     Path backedUpFile = tempDir.resolve("notToBeDeleted.txt");
     new FileOutputStream(backedUpFile.toFile()).write("this should be kept".getBytes());
 
@@ -125,7 +123,7 @@ class CopyOnWriteTest {
   }
 
   @Test
-  void shouldDeleteExistingFile(@TempDirectory.TempDir Path tempDir) throws IOException {
+  void shouldDeleteExistingFile(@TempDir Path tempDir) throws IOException {
     Path expectedFile = tempDir.resolve("toBeReplaced.txt");
     new FileOutputStream(expectedFile.toFile()).write("this should be removed".getBytes());
 

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update.security;
 
 import com.google.common.io.Resources;
@@ -29,7 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
@@ -50,7 +50,6 @@ import static org.mockito.Mockito.when;
 import static sonia.scm.store.InMemoryConfigurationEntryStoreFactory.create;
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(TempDirectory.class)
 class XmlSecurityV1UpdateStepTest {
 
   @Mock
@@ -60,7 +59,7 @@ class XmlSecurityV1UpdateStepTest {
   ConfigurationEntryStore<AssignedPermission> assignedPermissionStore;
 
   @BeforeEach
-  void mockScmHome(@TempDirectory.TempDir Path tempDir) {
+  void mockScmHome(@TempDir Path tempDir) {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
     InMemoryConfigurationEntryStoreFactory inMemoryConfigurationEntryStoreFactory = create();
     assignedPermissionStore = inMemoryConfigurationEntryStoreFactory.get("security");
@@ -71,7 +70,7 @@ class XmlSecurityV1UpdateStepTest {
   class WithExistingDatabase {
 
     @BeforeEach
-    void createConfigV1XML(@TempDirectory.TempDir Path tempDir) throws IOException {
+    void createConfigV1XML(@TempDir Path tempDir) throws IOException {
       Path configDir = tempDir.resolve("config");
       Files.createDirectories(configDir);
       copyTestDatabaseFile(configDir, "config.xml");
@@ -109,7 +108,7 @@ class XmlSecurityV1UpdateStepTest {
   class WithExistingSecurityXml {
 
     @BeforeEach
-    void createSecurityV1XML(@TempDirectory.TempDir Path tempDir) throws IOException {
+    void createSecurityV1XML(@TempDir Path tempDir) throws IOException {
       Path configDir = tempDir.resolve("config");
       Files.createDirectories(configDir);
       copyTestDatabaseFile(configDir, "securityV1.xml");

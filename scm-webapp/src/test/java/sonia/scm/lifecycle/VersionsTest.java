@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.lifecycle;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -41,7 +41,7 @@ import java.nio.file.Paths;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 
-@ExtendWith({MockitoExtension.class, TempDirectory.class})
+@ExtendWith({MockitoExtension.class})
 class VersionsTest {
 
   @Mock
@@ -51,7 +51,7 @@ class VersionsTest {
   private Versions versions;
 
   @Test
-  void shouldReturnTrueForVersionsPreviousTo160(@TempDirectory.TempDir Path directory) throws IOException {
+  void shouldReturnTrueForVersionsPreviousTo160(@TempDir Path directory) throws IOException {
     setVersion(directory, "1.59");
     assertThat(versions.isPreviousVersionTooOld()).isTrue();
 
@@ -60,19 +60,19 @@ class VersionsTest {
   }
 
   @Test
-  void shouldReturnFalseForVersion160(@TempDirectory.TempDir Path directory) throws IOException {
+  void shouldReturnFalseForVersion160(@TempDir Path directory) throws IOException {
     setVersion(directory, "1.60");
     assertThat(versions.isPreviousVersionTooOld()).isFalse();
   }
 
   @Test
-  void shouldNotFailIfVersionContainsLineBreak(@TempDirectory.TempDir Path directory) throws IOException {
+  void shouldNotFailIfVersionContainsLineBreak(@TempDir Path directory) throws IOException {
     setVersion(directory, "1.59\n");
     assertThat(versions.isPreviousVersionTooOld()).isTrue();
   }
 
   @Test
-  void shouldReturnFalseForVersionsNewerAs160(@TempDirectory.TempDir Path directory) throws IOException {
+  void shouldReturnFalseForVersionsNewerAs160(@TempDir Path directory) throws IOException {
     setVersion(directory, "1.61");
     assertThat(versions.isPreviousVersionTooOld()).isFalse();
 
@@ -81,13 +81,13 @@ class VersionsTest {
   }
 
   @Test
-  void shouldReturnFalseForNonExistingVersionFile(@TempDirectory.TempDir Path directory) {
+  void shouldReturnFalseForNonExistingVersionFile(@TempDir Path directory) {
     setVersionFile(directory.resolve("version.txt"));
     assertThat(versions.isPreviousVersionTooOld()).isFalse();
   }
 
   @Test
-  void shouldWriteNewVersion(@TempDirectory.TempDir Path directory) {
+  void shouldWriteNewVersion(@TempDir Path directory) {
     Path config = directory.resolve("config");
     doReturn(config).when(contextProvider).resolve(Paths.get("config"));
     doReturn("2.0.0").when(contextProvider).getVersion();

@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -39,14 +39,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-@ExtendWith({MockitoExtension.class, TempDirectory.class})
+@ExtendWith({MockitoExtension.class})
 class PendingPluginInstallationTest {
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private AvailablePlugin plugin;
 
   @Test
-  void shouldDeleteFileOnCancel(@TempDirectory.TempDir Path directory) throws IOException {
+  void shouldDeleteFileOnCancel(@TempDir Path directory) throws IOException {
     Path file = directory.resolve("file");
     Files.write(file, "42".getBytes());
 
@@ -59,7 +59,7 @@ class PendingPluginInstallationTest {
   }
 
   @Test
-  void shouldThrowExceptionIfCancelFailed(@TempDirectory.TempDir Path directory) {
+  void shouldThrowExceptionIfCancelFailed(@TempDir Path directory) {
     Path file = directory.resolve("file");
     when(plugin.getDescriptor().getInformation().getName()).thenReturn("scm-awesome-plugin");
 

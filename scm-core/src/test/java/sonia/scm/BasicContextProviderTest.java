@@ -27,15 +27,13 @@ package sonia.scm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(TempDirectory.class)
 class BasicContextProviderTest {
 
   @Nested
@@ -68,13 +66,13 @@ class BasicContextProviderTest {
     private BasicContextProvider context;
 
     @BeforeEach
-    void setUpContext(@TempDirectory.TempDir Path baseDirectory) {
+    void setUpContext(@TempDir Path baseDirectory) {
       this.baseDirectory = baseDirectory;
       context = new BasicContextProvider(baseDirectory.toFile(), "x.y.z", Stage.PRODUCTION);
     }
 
     @Test
-    void shouldReturnAbsolutePathAsIs(@TempDirectory.TempDir Path path) {
+    void shouldReturnAbsolutePathAsIs(@TempDir Path path) {
       Path absolutePath = path.toAbsolutePath();
       Path resolved = context.resolve(absolutePath);
 

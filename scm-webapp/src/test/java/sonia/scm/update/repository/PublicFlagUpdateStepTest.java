@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junitpioneer.jupiter.TempDirectory;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -35,7 +35,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContext;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermission;
-import sonia.scm.repository.RepositoryRolePermissions;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.update.UpdateStepTestUtil;
@@ -49,7 +48,6 @@ import java.nio.file.Path;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junitpioneer.jupiter.TempDirectory.TempDir;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
@@ -58,7 +56,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(TempDirectory.class)
 class PublicFlagUpdateStepTest {
 
   @Mock
