@@ -136,7 +136,7 @@ node('docker') {
 
           // deploy packages
           withGPGEnvironment {
-            mvn "-Dgpg.scm.keyring='${GPG_KEYRING}' -Dgpg.scm.key='${GPG_KEY_ID}' -Dgpg.scm.passphrase='${GPG_KEY_PASSPHRASE}' -P -rf :scm-packaging deploy"
+            mvn "-Dgpg.scm.keyring='${GPG_KEYRING}' -Dgpg.scm.key='${GPG_KEY_ID}' -Dgpg.scm.passphrase='${GPG_KEY_PASSPHRASE}' -Ppackaging -rf :scm-packaging deploy"
           }
         }
 
