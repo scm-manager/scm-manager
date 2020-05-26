@@ -56,6 +56,28 @@
       </plugin>
 
       <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <version>4.0.0</version>
+        <executions>
+          <execution>
+            <id>get-git-commit-id</id>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+            <phase>validate</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <skipPoms>false</skipPoms>
+          <dotGitDirectory>${project.basedir}/../../.git</dotGitDirectory>
+          <includeOnlyProperties>
+            <includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
+          </includeOnlyProperties>
+        </configuration>
+      </plugin>
+
+      <plugin>
         <groupId>org.codehaus.gmavenplus</groupId>
         <artifactId>gmavenplus-plugin</artifactId>
         <version>1.9.0</version>
@@ -77,21 +99,8 @@
             </goals>
             <configuration>
               <scripts>
-                <script>
-                  <![CDATA[
-                  String os = System.getProperty("os.name").toLowerCase()
-                  if (os.startsWith("mac")){
-                    os = "darwin"
-                  }
-                  project.properties.setProperty('helm.os', os)
-
-                  String arch = System.getProperty("os.arch").toLowerCase()
-                  if ("x86_64".equals(arch)) {
-                    arch = "amd64"
-                  }
-                  project.properties.setProperty('helm.arch', arch)
-                  ]]>
-                </script>
+                <script>${project.basedir}/src/main/build/download.groovy</script>
+                <script>${project.basedir}/../docker/src/main/build/name.groovy</script>
               </scripts>
             </configuration>
           </execution>
@@ -139,10 +148,10 @@
         <extensions>true</extensions>
         <configuration>
           <chartDirectory>${project.basedir}/target/chart</chartDirectory>
-          <chartVersion>${project.version}</chartVersion>
+          <chartVersion>${docker.tag}</chartVersion>
+          <appVersion>$${docker.tag}</appVersion>
           <autoDetectLocalHelmBinary>false</autoDetectLocalHelmBinary>
-          <appVersion>${project.version}</appVersion>
-          <helmDownloadUrl>https://get.helm.sh/helm-v${helm.version}-${helm.os}-${helm.arch}.tar.gz</helmDownloadUrl>
+          <helmDownloadUrl>https://get.helm.sh/helm-v${helm.version}-${helm.os}-${helm.arch}.${helm.ext}</helmDownloadUrl>
           <uploadRepoStable>
             <name>${deployment.serverId}</name>
             <url>${deployment.target}/repository/helm-v2-releases/</url>

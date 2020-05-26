@@ -29,8 +29,8 @@
 # replicaCount: 1
 
 image:
-  repository: scmmanager/scm-manager
-  tag: ${project.version}
+  repository: ${docker.repository}
+  tag: ${docker.tag}
   pullPolicy: Always
 
 nameOverride: ""

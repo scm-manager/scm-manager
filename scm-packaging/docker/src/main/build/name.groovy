@@ -22,23 +22,17 @@
  * SOFTWARE.
  */
 
-import java.text.SimpleDateFormat
-
 def repository = "docker.io/scmmanager/scm-manager"
 def version = project.version
 
 if (version.contains("SNAPSHOT")) {
   repository = "docker.io/cloudogu/scm-manager"
 
-  def commitHash = System.getenv("GIT_COMMIT")
-  def buildNumber = System.getenv("BUILD_NUMBER")
+  def snapshotVersion = project.properties.getProperty("git.commit.id.abbrev")
 
-  def snapshotVersion
-  if (commitHash != null && buildNumber != null) {
-    snapshotVersion = "${commitHash.substring(0,7)}-${buildNumber}"
-  } else {
-    def format = new SimpleDateFormat("yyyyMMdd-HHmmss")
-    snapshotVersion = format.format(new Date())
+  def buildNumber = System.getenv("BUILD_NUMBER")
+  if (buildNumber != null) {
+    snapshotVersion += "-${buildNumber}"
   }
 
   version = version.replace("SNAPSHOT", snapshotVersion)
