@@ -5,5 +5,5 @@ Priority: extra
 Architecture: all
 Description: The easiest way to share and manage your Git, Mercurial and Subversion repositories over http
 Maintainer: Sebastian Sdorra <sebastian.sdorra@cloudogu.com>
-Depends: openjdk-11-jre-headless, adduser, procps, psmisc, net-tools
-Recommends: mercurial
+Depends: adduser, procps, psmisc, net-tools
+Recommends: openjdk-11-jre-headless, mercurial

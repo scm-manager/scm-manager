@@ -132,10 +132,11 @@
           <skipSigning>true</skipSigning>
 
           <requires>
-            <require>java-11-openjdk-headless</require>
+            <require>procps</require>
           </requires>
 
           <recommends>
+            <recommend>java-11-openjdk-headless</recommend>
             <recommend>mercurial</recommend>
           </recommends>
 
