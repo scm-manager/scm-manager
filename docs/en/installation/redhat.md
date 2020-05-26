@@ -1,6 +1,7 @@
 ---
 title: Redhat/CentOS/Fedora
-subtitle: Installation for redhat based linux distributions
+subtitle: Installation for Red Hat based linux distributions
+displayToc: true
 ---
 
 ## Quickstart

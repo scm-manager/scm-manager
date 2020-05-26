@@ -1,6 +1,7 @@
 ---
 title: Debian/Ubuntu
 subtitle: Installation for debian based linux distributions
+displayToc: true
 ---
 
 ## Quickstart
