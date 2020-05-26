@@ -6,9 +6,18 @@ displayToc: true
 
 ## Quickstart
 
-```text
-docker run --name scm -p 8080:8080 -v scm-home:/var/lib/scm scmmanager/scm-manager:2.0.0-rc5
+Grab the latest version from [download page](/download) and replace `<version>` in the code blocks below
+
+```bash
+docker run --name scm -p 8080:8080 -v scm-home:/var/lib/scm scmmanager/scm-manager:<version>
 ```
+
+for example:
+
+```bash
+docker run --name scm -p 8080:8080 -v scm-home:/var/lib/scm scmmanager/scm-manager:2.0.0
+```
+
 
 ## Persistence
 
@@ -22,7 +31,7 @@ So ensure that the user with the uid 1000 can write to the directory e.g.:
 ```text
 mkdir /scm_home
 chown 1000:1000 /scm_home
-docker run --name scm -p 8080:8080 -v /scm_home:/var/lib/scm scmmanager/scm-manager:2.0.0-rc5
+docker run --name scm -p 8080:8080 -v /scm_home:/var/lib/scm scmmanager/scm-manager:<version>
 ```
 
 ## Exposed Ports
@@ -31,5 +40,24 @@ SCM-Manager exposes its http port on port 8080.
 If you want to use the ssh plugin, keep in mind that this plugin requires an extra port (default is 2222).
 
 ```text
-docker run --name scm -p 2222:2222 -p 8080:8080 -v scm-home:/var/lib/scm scmmanager/scm-manager:2.0.0-rc5
+docker run --name scm -p 2222:2222 -p 8080:8080 -v scm-home:/var/lib/scm scmmanager/scm-manager:<version>
+```
+
+## Docker Compose
+
+If you want to use the image with docker-compose have a look at the example below. 
+
+```yaml
+version: '2.0'
+services:
+  scm:
+    image: scmmanager/scm-manager:<version>
+    ports:
+    - "8080:8080"
+    # if the ssh plugin is used
+    - "2222:2222"
+    volumes:
+    - scmhome:/var/lib/scm
+volumes:
+  scmhome: {}
 ```
