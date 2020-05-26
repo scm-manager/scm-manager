@@ -5,7 +5,7 @@ partiallyActive: true
 ---
 
 * [Debian/Ubuntu](debian/)
-* Red Hat based
+* [Red Hat/CentOS/Fedora](redhat/)
 * [Linux General](linux/)
 * [Docker](docker/)
 * Kubernetes
