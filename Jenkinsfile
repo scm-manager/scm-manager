@@ -135,7 +135,9 @@ node('docker') {
           }
 
           // deploy packages
-          mvn "-rf :scm-packaging -pl '!scm-it' deploy"
+          withGPGEnvironment {
+            mvn "-Dgpg.scm.keyring='${GPG_KEYRING}' -Dgpg.scm.key='${GPG_KEY_ID}' -Dgpg.scm.passphrase='${GPG_KEY_PASSPHRASE}' -rf :scm-packaging -pl '!scm-it' deploy"
+          }
         }
 
         stage('Presentation Environment') {
@@ -230,3 +232,11 @@ boolean waitForQualityGateWebhookToBeCalled() {
   return isQualityGateSucceeded
 }
 
+void withGPGEnvironment(def closure) {
+  withCredentials([
+    file(credentialsId: 'oss-gpg-secring', variable: 'GPG_KEYRING'),
+    usernamePassword(credentialsId: 'oss-keyid-and-passphrase', usernameVariable: 'GPG_KEY_ID', passwordVariable: 'GPG_KEY_PASSPHRASE')
+  ]) {
+    closure.call()
+  }
+}
