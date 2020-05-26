@@ -62,14 +62,14 @@ node('docker') {
       }
 
       stage('Build') {
-        // we exclude scm-packaging and scm-it to speed-up build
-        mvn "clean install -DskipTests -pl '!:scm-packaging,!scm-it'"
+        // we exclude scm-it to speed-up build a little bit
+        mvn "clean install -DskipTests"
       }
 
       parallel(
         unitTest: {
           stage('Unit Test') {
-            mvn "test -DskipFrontendBuild -DskipTypecheck -Pcoverage -pl '!:scm-packaging,!scm-it' -Dmaven.test.failure.ignore=true"
+            mvn "test -DskipFrontendBuild -DskipTypecheck -Pcoverage -Dmaven.test.failure.ignore=true"
             junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
           }
         },
@@ -114,7 +114,7 @@ node('docker') {
             releaseRepository: '/repository/releases/',
             type: 'Configurable'
           ])
-          mvn.deployToNexusRepository("-pl '!:scm-packaging,!scm-it'")
+          mvn.deployToNexusRepository()
 
           // deploy frontend bits
           withCredentials([string(credentialsId: 'cesmarvin_npm_token', variable: 'NPM_TOKEN')]) {
@@ -136,7 +136,7 @@ node('docker') {
 
           // deploy packages
           withGPGEnvironment {
-            mvn "-Dgpg.scm.keyring='${GPG_KEYRING}' -Dgpg.scm.key='${GPG_KEY_ID}' -Dgpg.scm.passphrase='${GPG_KEY_PASSPHRASE}' -rf :scm-packaging -pl '!scm-it' deploy"
+            mvn "-Dgpg.scm.keyring='${GPG_KEYRING}' -Dgpg.scm.key='${GPG_KEY_ID}' -Dgpg.scm.passphrase='${GPG_KEY_PASSPHRASE}' -P -rf :scm-packaging deploy"
           }
         }
 

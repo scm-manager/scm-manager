@@ -47,11 +47,6 @@
   <profiles>
     <profile>
       <id>packaging</id>
-      <activation>
-        <property>
-          <name>performRelease</name>
-        </property>
-      </activation>
 
       <modules>
         <module>unix</module>
