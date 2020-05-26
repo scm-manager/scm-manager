@@ -207,7 +207,6 @@
         <configuration>
           <repository>${docker.repository}</repository>
           <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
-          <tag>${docker.tag}</tag>
           <contextDirectory>target/build</contextDirectory>
         </configuration>
         <executions>
@@ -217,6 +216,20 @@
             <goals>
               <goal>build</goal>
             </goals>
+            <configuration>
+              <tag>${docker.tag}</tag>
+            </configuration>
+          </execution>
+          <execution>
+            <id>build-latest</id>
+            <phase>package</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+            <configuration>
+              <tag>latest</tag>
+              <skip>${docker.skipLatest}</skip>
+            </configuration>
           </execution>
           <execution>
             <id>push</id>
@@ -224,6 +237,20 @@
             <goals>
               <goal>push</goal>
             </goals>
+            <configuration>
+              <tag>${docker.tag}</tag>
+            </configuration>
+          </execution>
+          <execution>
+            <id>push-latest</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>push</goal>
+            </goals>
+            <configuration>
+              <tag>latest</tag>
+              <skip>${docker.skipLatest}</skip>
+            </configuration>
           </execution>
         </executions>
       </plugin>

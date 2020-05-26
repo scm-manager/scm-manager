@@ -24,6 +24,7 @@
 
 def repository = "docker.io/scmmanager/scm-manager"
 def version = project.version
+def skipLatest = "false"
 
 if (version.contains("SNAPSHOT")) {
   repository = "docker.io/cloudogu/scm-manager"
@@ -36,7 +37,9 @@ if (version.contains("SNAPSHOT")) {
   }
 
   version = version.replace("SNAPSHOT", snapshotVersion)
+  skipLatest = "true"
 }
 
 project.properties.setProperty("docker.repository", repository)
 project.properties.setProperty("docker.tag", version)
+project.properties.setProperty("docker.skipLatest", skipLatest)
