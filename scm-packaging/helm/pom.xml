@@ -47,37 +47,6 @@
     <plugins>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>2.8.2</version>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>pl.project13.maven</groupId>
-        <artifactId>git-commit-id-plugin</artifactId>
-        <version>4.0.0</version>
-        <executions>
-          <execution>
-            <id>get-git-commit-id</id>
-            <goals>
-              <goal>revision</goal>
-            </goals>
-            <phase>validate</phase>
-          </execution>
-        </executions>
-        <configuration>
-          <skipPoms>false</skipPoms>
-          <dotGitDirectory>${project.basedir}/../../.git</dotGitDirectory>
-          <includeOnlyProperties>
-            <includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
-          </includeOnlyProperties>
-        </configuration>
-      </plugin>
-
-      <plugin>
         <groupId>org.codehaus.gmavenplus</groupId>
         <artifactId>gmavenplus-plugin</artifactId>
         <version>1.9.0</version>
