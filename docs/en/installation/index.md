@@ -8,6 +8,6 @@ partiallyActive: true
 * [Red Hat/CentOS/Fedora](redhat/)
 * [Linux General](linux/)
 * [Docker](docker/)
-* Kubernetes
+* [Helm/Kubernetes](helm/)
 * Mac OS X
 * Windows

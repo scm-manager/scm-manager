@@ -22,32 +22,42 @@
 # SOFTWARE.
 #
 
-# Default values for scm-manager.
+# Default values for SCM-Manager.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# replicaCount: 1
-
 image:
+  # image.repository --  Name of SCM-Manager image
   repository: ${docker.repository}
+  # image.tag -- Tag of SCM-Manager image
   tag: ${docker.tag}
-  pullPolicy: Always
+  # image.pullPolicy -- SCM-Manager image pull policy
+  pullPolicy: IfNotPresent
 
+# nameOverride -- Override the resource name prefix
 nameOverride: ""
+# fullnameOverride -- Override the full resource names
 fullnameOverride: ""
 
 service:
+  # service.type -- k8s service type
   type: LoadBalancer
+  # service.port -- k8s service port
   port: 80
 
 ingress:
+  # ingress.enabled -- Enables ingress
   enabled: false
+  # ingress.annotations -- Ingress annotations
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
+  # ingress.path -- Ingress path
   path: /
+  # ingress.hosts -- Ingress hosts
   hosts:
     - scm-manager.local
+  # ingress.tls -- Ingress TLS configuration
   tls: []
   #  - secretName: scm-manager-tls
   #    hosts:
@@ -57,6 +67,7 @@ ingress:
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ##
 persistence:
+  # persistence.enabled -- Enable the use of a PVC for SCM-Manager home
   enabled: true
   ## ghost data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
@@ -66,9 +77,12 @@ persistence:
   ##   GKE, AWS & OpenStack)
   ##
   # storageClass: "-"
+  # persistence.accessMode -- The PVC access mode
   accessMode: ReadWriteOnce
+  # persistence.size -- The size of the PVC
   size: 40Gi
 
+# resources -- Resources allocation (Requests and Limits)
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -81,8 +95,11 @@ resources: {}
   #  cpu: 50m
   #  memory: 256Mi
 
+# nodeSelector -- Node labels for pod assignment
 nodeSelector: {}
 
+# tolerations -- Toleration labels for pod assignment
 tolerations: []
 
+# affinity -- Affinity settings
 affinity: {}
