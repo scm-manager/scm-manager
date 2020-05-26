@@ -63,13 +63,13 @@ node('docker') {
 
       stage('Build') {
         // we exclude scm-packaging and scm-it to speed-up build
-        mvn 'clean install -DskipTests -pl "!scm-packaging,!scm-it"'
+        mvn "clean install -DskipTests -pl '!scm-packaging,!scm-it'"
       }
 
       parallel(
         unitTest: {
           stage('Unit Test') {
-            mvn 'test -DskipFrontendBuild -DskipTypecheck -Pcoverage -pl "!scm-packaging,!scm-it" -Dmaven.test.failure.ignore=true'
+            mvn "test -DskipFrontendBuild -DskipTypecheck -Pcoverage -pl '!scm-packaging,!scm-it' -Dmaven.test.failure.ignore=true"
             junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
           }
         },
@@ -98,7 +98,7 @@ node('docker') {
           imageVersion = imageVersion.replace('-SNAPSHOT', "-${commitHash.substring(0,7)}-${BUILD_NUMBER}")
         }
 
-        stage('Maven Deployment') {
+        stage('Deployment') {
           // configuration for docker deployment
           mvn.useRepositoryCredentials([
             id: 'docker.io',
@@ -114,7 +114,7 @@ node('docker') {
             releaseRepository: '/repository/releases/',
             type: 'Configurable'
           ])
-          mvn.deployToNexusRepository('-pl "!scm-packaging,!scm-it"')
+          mvn.deployToNexusRepository("-pl '!scm-packaging,!scm-it'")
 
           // deploy frontend bits
           withCredentials([string(credentialsId: 'cesmarvin_npm_token', variable: 'NPM_TOKEN')]) {
