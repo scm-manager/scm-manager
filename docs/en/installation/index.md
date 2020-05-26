@@ -4,7 +4,7 @@ subtitle: Installation of scm-manager
 partiallyActive: true
 ---
 
-* [Debian based](debian/)
+* [Debian/Ubuntu](debian/)
 * Red Hat based
 * [Linux General](linux/)
 * [Docker](docker/)

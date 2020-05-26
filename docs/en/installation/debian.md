@@ -1,5 +1,5 @@
 ---
-title: Debian
+title: Debian/Ubuntu
 subtitle: Installation for debian based linux distributions
 ---
 
@@ -8,7 +8,7 @@ subtitle: Installation for debian based linux distributions
 The following code block will configure an apt repository for scm-manager and install it.
 
 ```bash
-echo 'deb https://packages.scm-manager.org/repository/apt-v1-releases/ stable main' | sudo tee /etc/apt/sources.list.d/scm-manager.list
+echo 'deb https://packages.scm-manager.org/repository/apt-v2-releases/ stable main' | sudo tee /etc/apt/sources.list.d/scm-manager.list
 sudo apt-key adv --recv-keys --keyserver hkps://keys.openpgp.org 0x975922F193B07D6E
 sudo apt-get update
 sudo apt-get install scm-server
