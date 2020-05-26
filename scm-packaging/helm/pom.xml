@@ -47,6 +47,26 @@
     <plugins>
 
       <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <version>4.0.0</version>
+        <executions>
+          <execution>
+            <id>get-git-commit-id</id>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+            <phase>validate</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <includeOnlyProperties>
+            <includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
+          </includeOnlyProperties>
+        </configuration>
+      </plugin>
+
+      <plugin>
         <groupId>org.codehaus.gmavenplus</groupId>
         <artifactId>gmavenplus-plugin</artifactId>
         <version>1.9.0</version>
@@ -69,6 +89,7 @@
             <configuration>
               <scripts>
                 <script>${project.basedir}/src/main/build/download.groovy</script>
+                <script>${project.basedir}/src/main/build/repository.groovy</script>
                 <script>${project.basedir}/../docker/src/main/build/name.groovy</script>
               </scripts>
             </configuration>
@@ -118,17 +139,17 @@
         <configuration>
           <chartDirectory>${project.basedir}/target/chart</chartDirectory>
           <chartVersion>${docker.tag}</chartVersion>
-          <appVersion>$${docker.tag}</appVersion>
+          <appVersion>${docker.tag}</appVersion>
           <autoDetectLocalHelmBinary>false</autoDetectLocalHelmBinary>
           <helmDownloadUrl>https://get.helm.sh/helm-v${helm.version}-${helm.os}-${helm.arch}.${helm.ext}</helmDownloadUrl>
           <uploadRepoStable>
             <name>${deployment.serverId}</name>
-            <url>${deployment.target}/repository/helm-v2-releases/</url>
+            <url>${helm.repository}</url>
             <type>ARTIFACTORY</type>
           </uploadRepoStable>
           <uploadRepoSnapshot>
             <name>${deployment.serverId}</name>
-            <url>${deployment.target}/repository/helm-v2-snapshots/</url>
+            <url>${helm.repository}</url>
             <type>ARTIFACTORY</type>
           </uploadRepoSnapshot>
         </configuration>
