@@ -651,11 +651,18 @@
         <groupId>org.basepom.maven</groupId>
         <artifactId>duplicate-finder-maven-plugin</artifactId>
         <version>1.3.0</version>
+        <executions>
+          <execution>
+            <id>default</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
           <printEqualFiles>false</printEqualFiles>
-          <failBuildInCaseOfDifferentContentConflict>false</failBuildInCaseOfDifferentContentConflict>
-          <failBuildInCaseOfEqualContentConflict>false</failBuildInCaseOfEqualContentConflict>
-          <failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
+          <failBuildInCaseOfDifferentContentConflict>true</failBuildInCaseOfDifferentContentConflict>
           <checkCompileClasspath>true</checkCompileClasspath>
           <checkRuntimeClasspath>true</checkRuntimeClasspath>
           <checkTestClasspath>false</checkTestClasspath>
