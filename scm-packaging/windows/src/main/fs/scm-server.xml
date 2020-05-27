@@ -29,7 +29,17 @@
   <id>scm-server</id>
   <name>SCM-Server</name>
   <description>SCM-Manager Service</description>
-  <executable>java</executable>
+  <!--
+  Uncomment the line below and insert the path your java installation,
+  if you haven't configured a global JAVA_HOME environment variable
+  -->
+  <!-- env name="JAVA_HOME" value="C:\Program Files\Java\jre-11.0.7" /-->
+  <!--
+  Uncomment the line below and insert a path,
+  if you want to change the location of your SCM-Manager home directory.
+  -->
+  <!-- env name="SCM_HOME" value="D:\SCM-Manager" /-->
+  <executable>%JAVA_HOME%\bin\java</executable>
   <arguments>-cp "%BASE%\conf";"%BASE%\lib\*" -DBASE_DIR="%BASE%" -Djava.awt.headless=true -Dlogback.configurationFile=logging.xml sonia.scm.server.ScmServerDaemon</arguments>
   <logpath>%BASE%\logs</logpath>
   <logmode>rotate</logmode>

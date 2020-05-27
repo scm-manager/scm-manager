@@ -9,5 +9,5 @@ partiallyActive: true
 * [Linux General](linux/)
 * [Docker](docker/)
 * [Helm/Kubernetes](helm/)
+* [Windows](windows/)
 * Mac OS X
-* Windows
