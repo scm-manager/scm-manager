@@ -1,5 +1,5 @@
 ---
-title: Helm/Kubernetes
+title: Kubernetes
 subtitle: Install scm-manager on kubernetes with helm
 displayToc: true
 ---

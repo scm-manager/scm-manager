@@ -10,4 +10,4 @@ partiallyActive: true
 * Mac OS X
 * [Unix General](unix/)
 * [Docker](docker/)
-* [Helm/Kubernetes](helm/)
+* [Kubernetes](k8s/)
