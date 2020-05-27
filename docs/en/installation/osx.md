@@ -61,4 +61,4 @@ The default configuration of the debian package should match 90% of the use case
 if you have to change something ensure you know what you are doing.
 
 To configure the startup have a look at `/usr/local/opt/scm-server/libexec/bin/scm-server`.
-To configure logging and the webserver, `//usr/local/opt/scm-server/libexec/conf` is the right place.
+To configure logging and the webserver, `/usr/local/opt/scm-server/libexec/conf` is the right place.
