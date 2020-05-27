@@ -69,7 +69,7 @@ node('docker') {
       parallel(
         unitTest: {
           stage('Unit Test') {
-            mvn "test -DskipFrontendBuild -DskipTypecheck -Pcoverage -Dmaven.test.failure.ignore=true"
+            mvn 'test -DskipFrontendBuild -DskipTypecheck -Pcoverage -pl !scm-it -Dmaven.test.failure.ignore=true'
             junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
           }
         },
