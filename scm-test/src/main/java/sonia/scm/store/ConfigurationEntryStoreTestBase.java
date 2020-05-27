@@ -21,13 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 import sonia.scm.repository.Repository;
 
 /**
- *
  * @author Sebastian Sdorra
  */
 public abstract class ConfigurationEntryStoreTestBase extends KeyValueStoreTestBase {
@@ -35,26 +34,25 @@ public abstract class ConfigurationEntryStoreTestBase extends KeyValueStoreTestB
   /**
    * Method description
    *
-   *
    * @return
    */
   protected abstract ConfigurationEntryStoreFactory createConfigurationStoreFactory();
 
   //~--- get methods ----------------------------------------------------------
   @Override
-  protected ConfigurationEntryStore getDataStore(Class type) {
+  protected <T> ConfigurationEntryStore<T> getDataStore(Class<T> type) {
     return this.createConfigurationStoreFactory()
       .withType(type)
       .withName(storeName)
       .build();
   }
 
- @Override
-  protected ConfigurationEntryStore getDataStore(Class type, Repository repository) {
-   return this.createConfigurationStoreFactory()
-     .withType(type)
-     .withName(repoStoreName)
-     .forRepository(repository)
-     .build();
+  @Override
+  protected <T> ConfigurationEntryStore<T> getDataStore(Class<T> type, Repository repository) {
+    return this.createConfigurationStoreFactory()
+      .withType(type)
+      .withName(repoStoreName)
+      .forRepository(repository)
+      .build();
   }
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -56,6 +56,6 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
   public <T> DataStore<T> getStore(TypedStoreParameters<T> storeParameters) {
     File storeLocation = getStoreLocation(storeParameters);
     IOUtil.mkdirs(storeLocation);
-    return new JAXBDataStore<>(keyGenerator, storeParameters.getType(), storeLocation);
+    return new JAXBDataStore<>(keyGenerator, TypedStoreContext.of(storeParameters), storeLocation);
   }
 }

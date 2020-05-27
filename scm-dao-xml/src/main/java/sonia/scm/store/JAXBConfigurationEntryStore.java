@@ -21,12 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
@@ -35,11 +32,8 @@ import sonia.scm.security.KeyGenerator;
 import sonia.scm.xml.IndentXMLStreamWriter;
 import sonia.scm.xml.XmlStreams;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 import java.io.File;
@@ -47,98 +41,52 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 
-//~--- JDK imports ------------------------------------------------------------
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 
-/**
- *
- * @author Sebastian Sdorra
- *
- * @param <V>
- */
-public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V>
-{
+public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V> {
 
-  /** Field description */
   private static final String TAG_CONFIGURATION = "configuration";
-
-  /** Field description */
   private static final String TAG_ENTRY = "entry";
-
-  /** Field description */
   private static final String TAG_KEY = "key";
-
-  /** Field description */
   private static final String TAG_VALUE = "value";
 
   /**
    * the logger for JAXBConfigurationEntryStore
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(JAXBConfigurationEntryStore.class);
+  private static final Logger LOG = LoggerFactory.getLogger(JAXBConfigurationEntryStore.class);
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param keyGenerator
-   * @param file
-   * @param type
-   */
-  JAXBConfigurationEntryStore(File file, KeyGenerator keyGenerator,
-    Class<V> type)
-  {
+  private final File file;
+  private final KeyGenerator keyGenerator;
+  private final Class<V> type;
+  private final TypedStoreContext<V> context;
+  private final Map<String, V> entries = Maps.newHashMap();
+
+  JAXBConfigurationEntryStore(File file, KeyGenerator keyGenerator, Class<V> type, TypedStoreContext<V> context) {
     this.file = file;
     this.keyGenerator = keyGenerator;
     this.type = type;
-
-    try
-    {
-      this.context = JAXBContext.newInstance(type);
-
-      if (file.exists())
-      {
-        load();
-      }
-    }
-    catch (JAXBException ex)
-    {
-      throw new StoreException("could not create jaxb context", ex);
+    this.context = context;
+    // initial load
+    if (file.exists()) {
+      load();
     }
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
   @Override
-  public void clear()
-  {
-    logger.debug("clear configuration store");
+  public void clear() {
+    LOG.debug("clear configuration store");
 
-    synchronized (file)
-    {
+    synchronized (file) {
       entries.clear();
       store();
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   *
-   * @return
-   */
   @Override
-  public String put(V item)
-  {
+  public String put(V item) {
     String id = keyGenerator.createKey();
 
     put(id, item);
@@ -146,225 +94,138 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
     return id;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   * @param item
-   */
   @Override
-  public void put(String id, V item)
-  {
-    logger.debug("put item {} to configuration store", id);
+  public void put(String id, V item) {
+    LOG.debug("put item {} to configuration store", id);
 
-    synchronized (file)
-    {
+    synchronized (file) {
       entries.put(id, item);
       store();
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
   @Override
-  public void remove(String id)
-  {
-    logger.debug("remove item {} from configuration store", id);
+  public void remove(String id) {
+    LOG.debug("remove item {} from configuration store", id);
 
-    synchronized (file)
-    {
+    synchronized (file) {
       entries.remove(id);
       store();
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
   @Override
-  public V get(String id)
-  {
-    logger.trace("get item {} from configuration store", id);
+  public V get(String id) {
+    LOG.trace("get item {} from configuration store", id);
 
     return entries.get(id);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Map<String, V> getAll()
-  {
-    logger.trace("get all items from configuration store");
+  public Map<String, V> getAll() {
+    LOG.trace("get all items from configuration store");
 
     return Collections.unmodifiableMap(entries);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param predicate
-   *
-   * @return
-   */
   @Override
-  public Collection<V> getMatchingValues(Predicate<V> predicate)
-  {
-    return Collections2.filter(entries.values(), predicate);
+  public Collection<V> getMatchingValues(Predicate<V> predicate) {
+    return Collections2.filter(entries.values(), predicate::test);
   }
 
-  //~--- methods --------------------------------------------------------------
+  private void load() {
+    LOG.debug("load configuration from {}", file);
 
-  /**
-   *   Method description
-   *
-   *
-   *   @return
-   */
-  private void load()
-  {
-    logger.debug("load configuration from {}", file);
+    context.withUnmarshaller(u -> {
+      XMLStreamReader reader = null;
+      try {
+        reader = XmlStreams.createReader(file);
 
-    XMLStreamReader reader = null;
-
-    try
-    {
-      Unmarshaller u = context.createUnmarshaller();
-
-      reader = XmlStreams.createReader(file);
-
-      // configuration
-      reader.nextTag();
-
-      // entry start
-      reader.nextTag();
-
-      while (reader.isStartElement() && reader.getLocalName().equals(TAG_ENTRY))
-      {
-
-        // read key
+        // configuration
         reader.nextTag();
 
-        String key = reader.getElementText();
-
-        // read value
+        // entry start
         reader.nextTag();
 
-        JAXBElement<V> element = u.unmarshal(reader, type);
+        while (reader.isStartElement() && reader.getLocalName().equals(TAG_ENTRY)) {
 
-        if (!element.isNil())
-        {
-          V v = element.getValue();
-
-          logger.trace("add element {} to configuration entry store", v);
-
-          entries.put(key, v);
-        }
-        else
-        {
-          logger.warn("could not unmarshall object of entry store");
-        }
-
-        // closed or new entry tag
-        if (reader.nextTag() == XMLStreamReader.END_ELEMENT)
-        {
-
-          // fixed format, start new entry
+          // read key
           reader.nextTag();
-        }
-      }
-    }
-    catch (Exception ex)
-    {
-      throw new StoreException("could not load configuration", ex);
-    }
-    finally
-    {
-      XmlStreams.close(reader);
-    }
-  }
 
-  /**
-   * Method description
-   *
-   */
-  private void store()
-  {
-    logger.debug("store configuration to {}", file);
+          String key = reader.getElementText();
 
-    CopyOnWrite.withTemporaryFile(
-      temp -> {
-        try (IndentXMLStreamWriter writer = XmlStreams.createWriter(temp)) {
-          writer.writeStartDocument();
+          // read value
+          reader.nextTag();
 
-          // configuration start
-          writer.writeStartElement(TAG_CONFIGURATION);
+          JAXBElement<V> element = u.unmarshal(reader, type);
 
-          Marshaller m = context.createMarshaller();
+          if (!element.isNil()) {
+            V v = element.getValue();
 
-          m.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+            LOG.trace("add element {} to configuration entry store", v);
 
-          for (Entry<String, V> e : entries.entrySet()) {
-
-            // entry start
-            writer.writeStartElement(TAG_ENTRY);
-
-            // key start
-            writer.writeStartElement(TAG_KEY);
-            writer.writeCharacters(e.getKey());
-
-            // key end
-            writer.writeEndElement();
-
-            // value
-            JAXBElement<V> je = new JAXBElement<>(QName.valueOf(TAG_VALUE), type,
-              e.getValue());
-
-            m.marshal(je, writer);
-
-            // entry end
-            writer.writeEndElement();
+            entries.put(key, v);
+          } else {
+            LOG.warn("could not unmarshall object of entry store");
           }
 
-          // configuration end
-          writer.writeEndElement();
-          writer.writeEndDocument();
+          // closed or new entry tag
+          if (reader.nextTag() == END_ELEMENT) {
+
+            // fixed format, start new entry
+            reader.nextTag();
+          }
         }
-      },
-      file.toPath()
-    );
+      } finally {
+        XmlStreams.close(reader);
+      }
+    });
   }
 
-  //~--- fields ---------------------------------------------------------------
+  private void store() {
+    LOG.debug("store configuration to {}", file);
 
-  /** Field description */
-  private final File file;
+    context.withMarshaller(m -> {
+      m.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
 
-  /** Field description */
-  private JAXBContext context;
+      CopyOnWrite.withTemporaryFile(
+        temp -> {
+          try (IndentXMLStreamWriter writer = XmlStreams.createWriter(temp)) {
+            writer.writeStartDocument();
 
-  /** Field description */
-  private Map<String, V> entries = Maps.newHashMap();
+            // configuration start
+            writer.writeStartElement(TAG_CONFIGURATION);
 
-  /** Field description */
-  private KeyGenerator keyGenerator;
 
-  /** Field description */
-  private Class<V> type;
+            for (Entry<String, V> e : entries.entrySet()) {
+
+              // entry start
+              writer.writeStartElement(TAG_ENTRY);
+
+              // key start
+              writer.writeStartElement(TAG_KEY);
+              writer.writeCharacters(e.getKey());
+
+              // key end
+              writer.writeEndElement();
+
+              // value
+              JAXBElement<V> je = new JAXBElement<>(QName.valueOf(TAG_VALUE), type,
+                e.getValue());
+
+              m.marshal(je, writer);
+
+              // entry end
+              writer.writeEndElement();
+            }
+
+            // configuration end
+            writer.writeEndElement();
+            writer.writeEndDocument();
+          }
+        },
+        file.toPath()
+      );
+    });
+  }
 }

@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.store;
 
-import sonia.scm.repository.Repository;
+package sonia.scm.store;
 
 /**
  * The ConfigurationEntryStoreFactory can be used to create new or get existing {@link ConfigurationEntryStore}s.
@@ -51,7 +49,7 @@ import sonia.scm.repository.Repository;
  *
  * @author Sebastian Sdorra
  * @since 1.31
- * 
+ *
  * @apiviz.landmark
  * @apiviz.uses sonia.scm.store.ConfigurationEntryStore
  */
@@ -72,67 +70,7 @@ public interface ConfigurationEntryStoreFactory {
    * @return Floating API to set the name and either specify a repository or directly build a global
    * {@link ConfigurationEntryStore}.
    */
-  default <T> TypedFloatingConfigurationEntryStoreParameters<T>.Builder withType(Class<T> type) {
-    return new TypedFloatingConfigurationEntryStoreParameters<T>(this).new Builder(type);
-  }
-}
-
-final class TypedFloatingConfigurationEntryStoreParameters<T> {
-
-  private final TypedStoreParametersImpl<T> parameters = new TypedStoreParametersImpl<>();
-  private final ConfigurationEntryStoreFactory factory;
-
-  TypedFloatingConfigurationEntryStoreParameters(ConfigurationEntryStoreFactory factory) {
-    this.factory = factory;
-  }
-
-  public class Builder {
-
-    Builder(Class<T> type) {
-      parameters.setType(type);
-    }
-
-    /**
-     * Use this to set the name for the {@link ConfigurationEntryStore}.
-     * @param name The name for the {@link ConfigurationEntryStore}.
-     * @return Floating API to either specify a repository or directly build a global {@link ConfigurationEntryStore}.
-     */
-    public OptionalRepositoryBuilder withName(String name) {
-      parameters.setName(name);
-      return new OptionalRepositoryBuilder();
-    }
-  }
-
-  public class OptionalRepositoryBuilder {
-
-    /**
-     * Use this to create or get a {@link ConfigurationEntryStore} for a specific repository. This step is optional. If
-     * you want to have a global {@link ConfigurationEntryStore}, omit this.
-     * @param repository The optional repository for the {@link ConfigurationEntryStore}.
-     * @return Floating API to finish the call.
-     */
-    public OptionalRepositoryBuilder forRepository(Repository repository) {
-      parameters.setRepositoryId(repository.getId());
-      return this;
-    }
-
-    /**
-     * Use this to create or get a {@link ConfigurationEntryStore} for a specific repository. This step is optional. If
-     * you want to have a global {@link ConfigurationEntryStore}, omit this.
-     * @param repositoryId The id of the optional repository for the {@link ConfigurationEntryStore}.
-     * @return Floating API to finish the call.
-     */
-    public OptionalRepositoryBuilder forRepository(String repositoryId) {
-      parameters.setRepositoryId(repositoryId);
-      return this;
-    }
-
-    /**
-     * Creates or gets the {@link ConfigurationEntryStore} with the given name and (if specified) the given repository.
-     * If no repository is given, the {@link ConfigurationEntryStore} will be global.
-     */
-    public ConfigurationEntryStore<T> build(){
-      return factory.getStore(parameters);
-    }
+  default <T> TypedStoreParametersBuilder<T, ConfigurationEntryStore<T>> withType(Class<T> type) {
+    return new TypedStoreParametersBuilder<>(type, this::getStore);
   }
 }

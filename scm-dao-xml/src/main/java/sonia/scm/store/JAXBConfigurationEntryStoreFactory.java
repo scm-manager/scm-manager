@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -55,6 +55,8 @@ public class JAXBConfigurationEntryStoreFactory extends FileBasedStoreFactory
     return new JAXBConfigurationEntryStore<>(
       getStoreLocation(storeParameters.getName().concat(StoreConstants.FILE_EXTENSION), storeParameters.getType(), storeParameters.getRepositoryId()),
       keyGenerator,
-      storeParameters.getType());
+      storeParameters.getType(),
+      TypedStoreContext.of(storeParameters)
+    );
   }
 }

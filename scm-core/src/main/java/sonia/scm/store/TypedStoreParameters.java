@@ -21,10 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
-import sonia.scm.repository.Repository;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * The fields of the {@link TypedStoreParameters} are used from the {@link ConfigurationStoreFactory},
@@ -33,11 +35,13 @@ import sonia.scm.repository.Repository;
  * @author Mohamed Karray
  * @since 2.0.0
  */
-public interface TypedStoreParameters<T> {
+public interface TypedStoreParameters<T> extends StoreParameters {
 
   Class<T> getType();
 
-  String getName();
+  Optional<ClassLoader> getClassLoader();
 
-  String getRepositoryId();
+  @SuppressWarnings("java:S1452") // we could not provide generic type, because we don't know it here
+  Set<XmlAdapter<?,?>> getAdapters();
+
 }

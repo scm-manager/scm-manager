@@ -24,23 +24,16 @@
 
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.security.KeyGenerator;
 
-//~--- JDK imports ------------------------------------------------------------
-import java.io.File;
-
-import java.util.Map;
-
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import java.io.File;
+import java.util.Map;
 
 /**
  * Jaxb implementation of {@link DataStore}.
@@ -54,24 +47,16 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> 
   /**
    * the logger for JAXBDataStore
    */
-  private static final Logger LOG
-    = LoggerFactory.getLogger(JAXBDataStore.class);
-
-  private final JAXBContext context;
+  private static final Logger LOG = LoggerFactory.getLogger(JAXBDataStore.class);
 
   private final KeyGenerator keyGenerator;
+  private final TypedStoreContext<T> context;
 
-  JAXBDataStore(KeyGenerator keyGenerator, Class<T> type, File directory) {
+  JAXBDataStore(KeyGenerator keyGenerator, TypedStoreContext<T> context, File directory) {
     super(directory, StoreConstants.FILE_EXTENSION);
     this.keyGenerator = keyGenerator;
-
-    try {
-      context = JAXBContext.newInstance(type);
-      this.directory = directory;
-    }
-    catch (JAXBException ex) {
-      throw new StoreException("failed to create jaxb context", ex);
-    }
+    this.directory = directory;
+    this.context = context;
   }
 
   @Override
@@ -118,22 +103,11 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> 
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   protected T read(File file) {
-    T item = null;
-
     if (file.exists()) {
       LOG.trace("try to read {}", file);
-
-      try {
-        item = (T) context.createUnmarshaller().unmarshal(file);
-      }
-      catch (JAXBException ex) {
-        throw new StoreException(
-          "could not read object ".concat(file.getPath()), ex);
-      }
+      return context.unmarshall(file);
     }
-
-    return item;
+    return null;
   }
 }
