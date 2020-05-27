@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.spotter.ContentType;
@@ -44,12 +44,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 
 public class ContentResource {
@@ -68,11 +70,12 @@ public class ContentResource {
    * Returns the content of a file for the given revision in the repository. The content type depends on the file
    * content and can be discovered calling <code>HEAD</code> on the same URL. If a programming languge could be
    * recognized, this will be given in the header <code>Language</code>.
-   *
-   * @param namespace the namespace of the repository
+   *  @param namespace the namespace of the repository
    * @param name      the name of the repository
    * @param revision  the revision
    * @param path      The path of the file
+   * @param start
+   * @param end
    */
   @GET
   @Path("{revision}/{path: .*}")
@@ -94,8 +97,14 @@ public class ContentResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
-    StreamingOutput stream = createStreamingOutput(namespace, name, revision, path);
+  public Response get(
+    @PathParam("namespace") String namespace,
+    @PathParam("name") String name,
+    @PathParam("revision") String revision,
+    @PathParam("path") String path,
+    @QueryParam("start") Integer start,
+    @QueryParam("end") Integer end) {
+    StreamingOutput stream = createStreamingOutput(namespace, name, revision, path, start, end);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Response.ResponseBuilder responseBuilder = Response.ok(stream);
       return createContentHeader(namespace, name, revision, path, repositoryService, responseBuilder);
@@ -105,11 +114,17 @@ public class ContentResource {
     }
   }
 
-  private StreamingOutput createStreamingOutput(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
+  private StreamingOutput createStreamingOutput(String namespace, String name, String revision, String path, Integer start, Integer end) {
     return os -> {
+      OutputStream sourceOut;
+      if (start != null || end != null) {
+        sourceOut = new LineFilteredOutputStream(os, start, end);
+      } else {
+        sourceOut = os;
+      }
       try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-        repositoryService.getCatCommand().setRevision(revision).retriveContent(os, path);
-        os.close();
+        repositoryService.getCatCommand().setRevision(revision).retriveContent(sourceOut, path);
+        sourceOut.close();
       } catch (NotFoundException e) {
         LOG.debug(e.getMessage());
         throw new WebApplicationException(Status.NOT_FOUND);

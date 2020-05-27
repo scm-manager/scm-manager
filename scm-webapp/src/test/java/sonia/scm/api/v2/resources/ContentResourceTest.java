@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.common.io.Resources;
@@ -89,7 +89,7 @@ public class ContentResourceTest {
   public void shouldReadSimpleFile() throws Exception {
     mockContent("file", "Hello".getBytes());
 
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "file");
+    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "file", null, null);
     assertEquals(200, response.getStatus());
 
     ByteArrayOutputStream baos = readOutputStream(response);
@@ -98,14 +98,26 @@ public class ContentResourceTest {
   }
 
   @Test
+  public void shouldLimitOutputByLines() throws Exception {
+    mockContent("file", "line 1\nline 2\nline 3\nline 4".getBytes());
+
+    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "file", 1, 3);
+    assertEquals(200, response.getStatus());
+
+    ByteArrayOutputStream baos = readOutputStream(response);
+
+    assertEquals("line 2\nline 3\n", baos.toString());
+  }
+
+  @Test
   public void shouldHandleMissingFile() {
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "doesNotExist");
+    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "doesNotExist", null, null);
     assertEquals(404, response.getStatus());
   }
 
   @Test
   public void shouldHandleMissingRepository() {
-    Response response = contentResource.get("no", "repo", REV, "anything");
+    Response response = contentResource.get("no", "repo", REV, "anything", null, null);
     assertEquals(404, response.getStatus());
   }
 
@@ -113,7 +125,7 @@ public class ContentResourceTest {
   public void shouldRecognizeTikaSourceCode() throws Exception {
     mockContentFromResource("SomeGoCode.go");
 
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "SomeGoCode.go");
+    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "SomeGoCode.go", null, null);
     assertEquals(200, response.getStatus());
 
     assertEquals("golang", response.getHeaderString("X-Programming-Language"));
@@ -124,7 +136,7 @@ public class ContentResourceTest {
   public void shouldRecognizeSpecialSourceCode() throws Exception {
     mockContentFromResource("Dockerfile");
 
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "Dockerfile");
+    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "Dockerfile", null, null);
     assertEquals(200, response.getStatus());
 
     assertEquals("dockerfile", response.getHeaderString("X-Programming-Language"));
@@ -135,7 +147,7 @@ public class ContentResourceTest {
   public void shouldHandleRandomByteFile() throws Exception {
     mockContentFromResource("JustBytes");
 
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "JustBytes");
+    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "JustBytes", null, null);
     assertEquals(200, response.getStatus());
 
     assertFalse(response.getHeaders().containsKey("Language"));
@@ -158,7 +170,7 @@ public class ContentResourceTest {
   public void shouldHandleEmptyFile() throws Exception {
     mockContent("empty", new byte[]{});
 
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "empty");
+    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "empty", null, null);
     assertEquals(200, response.getStatus());
 
     assertFalse(response.getHeaders().containsKey("Language"));
