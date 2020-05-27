@@ -26,10 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.ObjectFactory;
+import org.mapstruct.*;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
@@ -66,10 +63,16 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
   @Inject
   private TagCollectionToDtoMapper tagCollectionToDtoMapper;
 
+  @Inject
+  private ChangesetTrailerExtractor changesetTrailerExtractor;
 
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   public abstract ChangesetDto map(Changeset changeset, @Context Repository repository);
 
+  @AfterMapping
+  void appendTrailerPersons(Changeset changeset, @MappingTarget ChangesetDto target) {
+    target.setTrailerPersons(changesetTrailerExtractor.extractTrailersFromCommitMessage(changeset.getDescription()));
+  }
 
   @ObjectFactory
   ChangesetDto createDto(@Context Repository repository, Changeset source) {

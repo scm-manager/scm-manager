@@ -21,47 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+package sonia.scm.repository;
 
-import java.time.Instant;
-import java.util.Map;
+import sonia.scm.plugin.ExtensionPoint;
 
-@Getter
-@Setter
-@NoArgsConstructor
-public class ChangesetDto extends HalRepresentation {
+import java.util.List;
 
-  /**
-   * The changeset identification string
-   */
-  private String id;
+@ExtensionPoint
+public interface ChangesetTrailerTypes {
 
-  /**
-   * The author of the changeset
-   */
-  private PersonDto author;
-
-  /**
-   * The date when the changeset was committed
-   */
-  private Instant date;
-
-  /**
-   * The text of the changeset description
-   */
-  private String description;
-
-  private Map<String, PersonDto> trailerPersons;
-
-  public ChangesetDto(Links links, Embedded embedded) {
-    super(links, embedded);
-  }
+  List<String> getTrailerTypes();
 }
