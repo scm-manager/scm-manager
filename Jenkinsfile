@@ -62,7 +62,6 @@ node('docker') {
       }
 
       stage('Build') {
-        // we exclude scm-it to speed-up build a little bit
         mvn "clean install -DskipTests"
       }
 
