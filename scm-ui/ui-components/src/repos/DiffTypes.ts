@@ -24,6 +24,7 @@
 
 import { ReactNode } from "react";
 import { DefaultCollapsed } from "./defaultCollapsed";
+import { Links } from "@scm-manager/ui-types";
 
 // We place the types here and not in @scm-manager/ui-types,
 // because they represent not a real scm-manager related type.
@@ -46,11 +47,16 @@ export type File = {
   language?: string;
   // TODO does this property exists?
   isBinary?: boolean;
+  _links: Links;
 };
 
 export type Hunk = {
   changes: Change[];
   content: string;
+  oldStart: number;
+  newStart: number;
+  oldLines: number;
+  newLines: number;
 };
 
 export type ChangeType = "insert" | "delete" | "normal" | "conflict";

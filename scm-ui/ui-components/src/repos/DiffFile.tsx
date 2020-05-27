@@ -34,6 +34,7 @@ import { Change, ChangeEvent, DiffObjectProps, File, Hunk as HunkType } from "./
 import TokenizedDiffView from "./TokenizedDiffView";
 import DiffButton from "./DiffButton";
 import { MenuContext } from "@scm-manager/ui-components";
+import DiffExpander, { ExpandableHunk } from "./DiffExpander";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
@@ -48,6 +49,7 @@ type Collapsible = {
 
 type State = Collapsible & {
   sideBySide?: boolean;
+  diffExpander: DiffExpander;
 };
 
 const DiffFilePanel = styled.div`
@@ -74,8 +76,9 @@ const ButtonWrapper = styled.div`
   margin-left: auto;
 `;
 
-const HunkDivider = styled.hr`
-  margin: 0.5rem 0;
+const HunkDivider = styled.div`
+  background: #33b2e8;
+  font-size: 0.7rem;
 `;
 
 const ChangeTypeTag = styled(Tag)`
@@ -92,7 +95,8 @@ class DiffFile extends React.Component<Props, State> {
     super(props);
     this.state = {
       collapsed: this.defaultCollapse(),
-      sideBySide: props.sideBySide
+      sideBySide: props.sideBySide,
+      diffExpander: new DiffExpander(props.file)
     };
   }
 
@@ -139,9 +143,25 @@ class DiffFile extends React.Component<Props, State> {
     });
   };
 
-  createHunkHeader = (hunk: HunkType, i: number) => {
-    if (i > 0) {
-      return <HunkDivider />;
+  createHunkHeader = (expandableHunk: ExpandableHunk) => {
+    if (expandableHunk.maxExpandHeadRange > 0) {
+      return (
+        <Decoration>
+          <HunkDivider onClick={expandableHunk.expandHead}>{"Load first n lines"}</HunkDivider>
+        </Decoration>
+      );
+    }
+    // hunk header must be defined
+    return <span />;
+  };
+
+  createHunkFooter = (expandableHunk: ExpandableHunk) => {
+    if (expandableHunk.maxExpandBottomRange > 0) {
+      return (
+        <Decoration>
+          <HunkDivider onClick={expandableHunk.expandBottom}>{"Load last n lines"}</HunkDivider>
+        </Decoration>
+      );
     }
     // hunk header must be defined
     return <span />;
@@ -183,19 +203,27 @@ class DiffFile extends React.Component<Props, State> {
     }
   };
 
-  renderHunk = (hunk: HunkType, i: number) => {
+  renderHunk = (file: File, expandableHunk: ExpandableHunk, i: number) => {
+    const hunk = expandableHunk.hunk;
     if (this.props.markConflicts && hunk.changes) {
       this.markConflicts(hunk);
     }
-    return [
-      <Decoration key={"decoration-" + hunk.content}>{this.createHunkHeader(hunk, i)}</Decoration>,
+    const items = [];
+    if (file._links?.lines) {
+      items.push(this.createHunkHeader(expandableHunk));
+    }
+    items.push(
       <Hunk
         key={"hunk-" + hunk.content}
-        hunk={hunk}
+        hunk={expandableHunk.hunk}
         widgets={this.collectHunkAnnotations(hunk)}
         gutterEvents={this.createGutterEvents(hunk)}
       />
-    ];
+    );
+    if (file._links?.lines) {
+      items.push(this.createHunkFooter(expandableHunk));
+    }
+    return items;
   };
 
   markConflicts = (hunk: HunkType) => {
@@ -251,19 +279,11 @@ class DiffFile extends React.Component<Props, State> {
     return <ChangeTypeTag className={classNames("is-rounded", "has-text-weight-normal")} color={color} label={value} />;
   };
 
-  concat = (array: object[][]) => {
-    if (array.length > 0) {
-      return array.reduce((a, b) => a.concat(b));
-    } else {
-      return [];
-    }
-  };
-
   hasContent = (file: File) => file && !file.isBinary && file.hunks && file.hunks.length > 0;
 
   render() {
     const { file, fileControlFactory, fileAnnotationFactory, t } = this.props;
-    const { collapsed, sideBySide } = this.state;
+    const { collapsed, sideBySide, diffExpander } = this.state;
     const viewType = sideBySide ? "split" : "unified";
 
     let body = null;
@@ -275,7 +295,7 @@ class DiffFile extends React.Component<Props, State> {
         <div className="panel-block is-paddingless">
           {fileAnnotations}
           <TokenizedDiffView className={viewType} viewType={viewType} file={file}>
-            {(hunks: HunkType[]) => this.concat(hunks.map(this.renderHunk))}
+            {(hunks: HunkType[]) => hunks.map((hunk, n) => this.renderHunk(file, diffExpander.getHunk(n), n))}
           </TokenizedDiffView>
         </div>
       );
