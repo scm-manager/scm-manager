@@ -53,11 +53,23 @@ class ChangesetAuthor extends React.Component<Props> {
     );
   }
 
+  checkIfCoAuthorsExists() {
+    console.log(this.props.changeset.trailerPersons.filter(p => p.trailerType === "Co-authored-by").length > 0);
+    return this.props.changeset.trailerPersons.filter(p => p.trailerType === "Co-authored-by").length > 0;
+  }
+
+  renderCoAuthors() {
+    const { t } = this.props;
+
+    return <>{t("changeset.author.prefix")}</>;
+  }
+
   withExtensionPoint(child: any) {
     const { t } = this.props;
     return (
       <>
         {t("changeset.author.prefix")} {child}
+        {this.checkIfCoAuthorsExists() ? this.renderCoAuthors() : null}
         <ExtensionPoint
           name="changesets.author.suffix"
           props={{

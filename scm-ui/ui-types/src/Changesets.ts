@@ -34,12 +34,19 @@ export type Changeset = Collection & {
     mail?: string;
   };
   description: string;
+  trailerPersons: TrailerPerson[];
   _links: Links;
   _embedded: {
     tags?: Tag[];
     branches?: Branch[];
     parents?: ParentChangeset[];
   };
+};
+
+export type TrailerPerson = {
+  name: string;
+  mail: string;
+  trailerType: string;
 };
 
 export type ParentChangeset = {
