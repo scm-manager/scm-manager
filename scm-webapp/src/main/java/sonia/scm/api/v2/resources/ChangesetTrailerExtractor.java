@@ -26,27 +26,24 @@ package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.ImmutableList;
 import sonia.scm.repository.ChangesetTrailerTypes;
-import sonia.scm.user.DisplayUser;
-import sonia.scm.user.UserDisplayManager;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class ChangesetTrailerExtractor {
 
-  private final UserDisplayManager userDisplayManager;
   private final ChangesetTrailerTypes changesetTrailerTypes;
 
   @Inject
-  public ChangesetTrailerExtractor(UserDisplayManager userDisplayManager, ChangesetTrailerTypes changesetTrailerTypes) {
-    this.userDisplayManager = userDisplayManager;
+  public ChangesetTrailerExtractor(ChangesetTrailerTypes changesetTrailerTypes) {
     this.changesetTrailerTypes = changesetTrailerTypes;
   }
 
-  Map<String, PersonDto> extractTrailersFromCommitMessage(String commitMessage) {
-
-    HashMap<String, PersonDto> persons = new HashMap<>();
+  List<TrailerPersonDto> extractTrailersFromCommitMessage(String commitMessage) {
+    List<TrailerPersonDto> persons = new ArrayList<>();
 
     try (Scanner scanner = new Scanner(commitMessage)) {
       scanner.useDelimiter(Pattern.compile("[\\n;]"));
@@ -55,30 +52,29 @@ public class ChangesetTrailerExtractor {
 
         for (String trailerType : changesetTrailerTypes.getTrailerTypes()) {
           if (line.contains(trailerType)) {
-            String mail = line.split("<|>")[1];
-            persons.put(trailerType, createPersonDtoFromUser(mail));
+            TrailerPersonDto personDto = createPersonDtoFromUser(line);
+            personDto.setTrailerType(trailerType);
+            persons.add(personDto);
           }
         }
-
-/*        if (line.contains("Co-authored-by")) {
-          persons.put("Co-authored-by", createPersonDtoFromUser(mail));
-        }
-        if (line.contains("Reviewed-by")) {
-          persons.put("Reviewed-by", createPersonDtoFromUser(mail));
-        }*/
-
       }
     }
-
 
     return persons;
   }
 
-  private PersonDto createPersonDtoFromUser(String mail) {
-    DisplayUser displayUser = userDisplayManager.autocomplete(mail).iterator().next();
-    PersonDto personDto = new PersonDto();
-    personDto.setName(displayUser.getDisplayName());
-    personDto.setMail(displayUser.getMail());
+  private TrailerPersonDto createPersonDtoFromUser(String line) {
+    TrailerPersonDto personDto = new TrailerPersonDto();
+
+    String[] splittedTrailer = line.split("[:<>]");
+
+    if (splittedTrailer.length > 1) {
+      personDto.setName(splittedTrailer[1].trim());
+      if (splittedTrailer.length > 2) {
+        personDto.setMail(splittedTrailer[2]);
+      }
+    }
+
     return personDto;
   }
 

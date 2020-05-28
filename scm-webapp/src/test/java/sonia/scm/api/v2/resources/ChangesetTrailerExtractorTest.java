@@ -24,111 +24,104 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.api.v2.resources.ChangesetTrailerExtractor.TrailerTypes;
 import sonia.scm.user.DisplayUser;
 import sonia.scm.user.User;
-import sonia.scm.user.UserDisplayManager;
 
-import java.util.Map;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ChangesetTrailerExtractorTest {
-
-  @Mock
-  private UserDisplayManager userDisplayManager;
 
   private ChangesetTrailerExtractor extractor;
 
   @BeforeEach
   void initExtractor() {
     TrailerTypes trailerTypes = new TrailerTypes();
-    extractor = new ChangesetTrailerExtractor(userDisplayManager, trailerTypes);
+    extractor = new ChangesetTrailerExtractor(trailerTypes);
   }
 
   @Test
-  void shouldReturnEmptyMap() {
+  void shouldReturnEmptyList() {
     String commitMessage = "zaphod beetlebrox";
 
-    Map<String, PersonDto> map = extractor.extractTrailersFromCommitMessage(commitMessage);
+    List<TrailerPersonDto> trailerPersons = extractor.extractTrailersFromCommitMessage(commitMessage);
 
-    assertThat(map).isInstanceOf(Map.class);
-    assertThat(map).isNotNull();
-    assertThat(map.keySet()).isEmpty();
+    assertThat(trailerPersons).isNotNull();
+    assertThat(trailerPersons).isEmpty();
   }
 
   @Test
-  void shouldReturnMapWithCoAuthors() {
-    DisplayUser displayUser = mockDisplayUser("Arthur Dent", "dent@hitchhiker.org");
+  void shouldReturnTrailerPersonsWithCoAuthors() {
+    DisplayUser displayUser = createDisplayUser("Arthur Dent", "dent@hitchhiker.org");
     String commitMessage = "zaphod beetlebrox\n\nCo-authored-by: Arthur Dent <dent@hitchhiker.org>";
 
     PersonDto personDto = createPersonDto(displayUser);
 
-    Map<String, PersonDto> map = extractor.extractTrailersFromCommitMessage(commitMessage);
+    List<TrailerPersonDto> trailerPersons = extractor.extractTrailersFromCommitMessage(commitMessage);
 
-    assertThat(map.keySet().iterator().next()).isEqualTo("Co-authored-by");
-    PersonDto person = map.values().iterator().next();
-    assertThat(person.getName()).isEqualTo(personDto.getName());
-    assertThat(person.getMail()).isEqualTo(personDto.getMail());
+    TrailerPersonDto trailerPersonDto = trailerPersons.get(0);
+    assertThat(trailerPersonDto.getTrailerType()).isEqualTo("Co-authored-by");
+    assertThat(trailerPersonDto.getName()).isEqualTo(personDto.getName());
+    assertThat(trailerPersonDto.getMail()).isEqualTo(personDto.getMail());
   }
 
   @Test
-  void shouldReturnMapWithReviewers() {
-    DisplayUser displayUser = mockDisplayUser("Tricia McMillan", "trillian@hitchhiker.org");
+  void shouldReturnTrailerPersonsWithReviewers() {
+    DisplayUser displayUser = createDisplayUser("Tricia McMillan", "trillian@hitchhiker.org");
     String commitMessage = "zaphod beetlebrox\nReviewed-by: Tricia McMillan <trillian@hitchhiker.org>";
 
     PersonDto personDto = createPersonDto(displayUser);
 
-    Map<String, PersonDto> map = extractor.extractTrailersFromCommitMessage(commitMessage);
+    List<TrailerPersonDto> trailerPersons = extractor.extractTrailersFromCommitMessage(commitMessage);
 
-    assertThat(map.keySet().iterator().next()).isEqualTo("Reviewed-by");
-    PersonDto person = map.values().iterator().next();
-    assertThat(person.getName()).isEqualTo(personDto.getName());
-    assertThat(person.getMail()).isEqualTo(personDto.getMail());
+    TrailerPersonDto trailerPersonDto = trailerPersons.get(0);
+
+    assertThat(trailerPersonDto.getTrailerType()).isEqualTo("Reviewed-by");
+    assertThat(trailerPersonDto.getName()).isEqualTo(personDto.getName());
+    assertThat(trailerPersonDto.getMail()).isEqualTo(personDto.getMail());
   }
 
   @Test
-  void shouldReturnMapWithSigner() {
-    DisplayUser displayUser = mockDisplayUser("Tricia McMillan", "trillian@hitchhiker.org");
+  void shouldReturnTrailerPersonsWithSigner() {
+    DisplayUser displayUser = createDisplayUser("Tricia McMillan", "trillian@hitchhiker.org");
     String commitMessage = "zaphod beetlebrox\nSigned-off-by: Tricia McMillan <trillian@hitchhiker.org>";
 
     PersonDto personDto = createPersonDto(displayUser);
 
-    Map<String, PersonDto> map = extractor.extractTrailersFromCommitMessage(commitMessage);
+    List<TrailerPersonDto> trailerPersons = extractor.extractTrailersFromCommitMessage(commitMessage);
 
-    assertThat(map.keySet().iterator().next()).isEqualTo("Signed-off-by");
-    PersonDto person = map.values().iterator().next();
-    assertThat(person.getName()).isEqualTo(personDto.getName());
-    assertThat(person.getMail()).isEqualTo(personDto.getMail());
+    TrailerPersonDto trailerPersonDto = trailerPersons.get(0);
+
+    assertThat(trailerPersonDto.getTrailerType()).isEqualTo("Signed-off-by");
+    assertThat(trailerPersonDto.getName()).isEqualTo(personDto.getName());
+    assertThat(trailerPersonDto.getMail()).isEqualTo(personDto.getMail());
   }
 
   @Test
-  void shouldReturnMapWithCommitter() {
-    DisplayUser displayUser = mockDisplayUser("Tricia McMillan", "trillian@hitchhiker.org");
+  void shouldReturnTrailerPersonsWithCommitter() {
+    DisplayUser displayUser = createDisplayUser("Tricia McMillan", "trillian@hitchhiker.org");
     String commitMessage = "zaphod beetlebrox\nCommitted-by: Tricia McMillan <trillian@hitchhiker.org>";
 
     PersonDto personDto = createPersonDto(displayUser);
 
-    Map<String, PersonDto> map = extractor.extractTrailersFromCommitMessage(commitMessage);
+    List<TrailerPersonDto> trailerPersons = extractor.extractTrailersFromCommitMessage(commitMessage);
 
-    assertThat(map.keySet().iterator().next()).isEqualTo("Committed-by");
-    PersonDto person = map.values().iterator().next();
-    assertThat(person.getName()).isEqualTo(personDto.getName());
-    assertThat(person.getMail()).isEqualTo(personDto.getMail());
+    TrailerPersonDto trailerPersonDto = trailerPersons.get(0);
+
+    assertThat(trailerPersonDto.getTrailerType()).isEqualTo("Committed-by");
+    assertThat(trailerPersonDto.getName()).isEqualTo(personDto.getName());
+    assertThat(trailerPersonDto.getMail()).isEqualTo(personDto.getMail());
   }
 
-
-  private DisplayUser mockDisplayUser(String name, String mail) {
+  private DisplayUser createDisplayUser(String name, String mail) {
     DisplayUser displayUser = DisplayUser.from(new User(name, name, mail));
-    when(userDisplayManager.autocomplete(mail)).thenReturn(ImmutableList.of(displayUser));
     return displayUser;
   }
 
