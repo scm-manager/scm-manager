@@ -35,15 +35,37 @@ class DiffExpander {
     return this.file.hunks.length;
   };
 
+  minLineNumber = (n: number) => {
+    return this.file.hunks[n].newStart;
+  };
+
+  maxLineNumber = (n: number) => {
+    return this.file.hunks[n].newStart + this.file.hunks[n].newLines;
+  };
+
+  computeMaxExpandHeadRange = (n: number) => {
+    if (n === 0) {
+      return this.minLineNumber(n) - 1;
+    }
+    return this.minLineNumber(n) - this.maxLineNumber(n - 1);
+  };
+
+  computeMaxExpandBottomRange = (n: number) => {
+    if (n === this.file.hunks.length - 1) {
+      return Number.MAX_SAFE_INTEGER;
+    }
+    return this.minLineNumber(n + 1) - this.maxLineNumber(n);
+  };
+
   getHunk: (n: number) => ExpandableHunk = (n: number) => {
     return {
-      maxExpandHeadRange: 10,
-      maxExpandBottomRange: 10,
+      maxExpandHeadRange: this.computeMaxExpandHeadRange(n),
+      maxExpandBottomRange: this.computeMaxExpandBottomRange(n),
       expandHead: () => {
-        console.log("expand head", n);
+        return this;
       },
       expandBottom: () => {
-        console.log("expand bottom", n);
+        return this;
       },
       hunk: this.file.hunks[n]
     };
@@ -54,8 +76,8 @@ export type ExpandableHunk = {
   hunk: Hunk;
   maxExpandHeadRange: number;
   maxExpandBottomRange: number;
-  expandHead: () => void;
-  expandBottom: () => void;
+  expandHead: () => DiffExpander;
+  expandBottom: () => DiffExpander;
 };
 
 export default DiffExpander;

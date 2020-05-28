@@ -309,4 +309,20 @@ describe("diff expander", () => {
   it("should return correct hunk", () => {
     expect(diffExpander.getHunk(1).hunk).toBe(HUNK_1);
   });
+
+  it("should return max expand head range for first hunk", () => {
+    expect(diffExpander.getHunk(0).maxExpandHeadRange).toBe(0);
+  });
+
+  it("should return max expand head range for hunks in the middle", () => {
+    expect(diffExpander.getHunk(1).maxExpandHeadRange).toBe(5);
+  });
+
+  it("should return max expand bottom range for hunks in the middle", () => {
+    expect(diffExpander.getHunk(1).maxExpandBottomRange).toBe(1);
+  });
+
+  it("should return a really bix number for the expand bottom range of the last hunk", () => {
+    expect(diffExpander.getHunk(3).maxExpandBottomRange).toBeGreaterThan(99999);
+  });
 });

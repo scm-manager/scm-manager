@@ -147,7 +147,9 @@ class DiffFile extends React.Component<Props, State> {
     if (expandableHunk.maxExpandHeadRange > 0) {
       return (
         <Decoration>
-          <HunkDivider onClick={expandableHunk.expandHead}>{"Load first n lines"}</HunkDivider>
+          <HunkDivider onClick={() => this.setState({ diffExpander: expandableHunk.expandHead() })}>
+            {`Load ${expandableHunk.maxExpandHeadRange} more lines`}
+          </HunkDivider>
         </Decoration>
       );
     }
@@ -159,7 +161,9 @@ class DiffFile extends React.Component<Props, State> {
     if (expandableHunk.maxExpandBottomRange > 0) {
       return (
         <Decoration>
-          <HunkDivider onClick={expandableHunk.expandBottom}>{"Load last n lines"}</HunkDivider>
+          <HunkDivider onClick={() => this.setState({ diffExpander: expandableHunk.expandBottom() })}>
+            {`Load ${expandableHunk.maxExpandBottomRange} more lines`}
+          </HunkDivider>
         </Decoration>
       );
     }
