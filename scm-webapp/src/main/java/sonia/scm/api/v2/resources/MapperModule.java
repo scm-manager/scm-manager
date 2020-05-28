@@ -27,7 +27,6 @@ package sonia.scm.api.v2.resources;
 import com.google.inject.AbstractModule;
 import com.google.inject.servlet.ServletScopes;
 import org.mapstruct.factory.Mappers;
-import sonia.scm.repository.ChangesetTrailerTypes;
 import sonia.scm.web.api.RepositoryToHalMapper;
 
 public class MapperModule extends AbstractModule {
@@ -78,7 +77,6 @@ public class MapperModule extends AbstractModule {
     bind(MeDtoFactory.class);
     bind(UIPluginDtoMapper.class);
     bind(UIPluginDtoCollectionMapper.class);
-    bind(ChangesetTrailerTypes.class).to(ChangesetTrailerExtractor.TrailerTypes.class);
 
     bind(ScmPathInfoStore.class).in(ServletScopes.REQUEST);
 

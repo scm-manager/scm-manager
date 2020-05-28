@@ -23,7 +23,6 @@
  */
 import React from "react";
 import { Changeset } from "@scm-manager/ui-types";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { WithTranslation, withTranslation } from "react-i18next";
 
 type Props = WithTranslation & {
@@ -53,15 +52,27 @@ class ChangesetAuthor extends React.Component<Props> {
     );
   }
 
-  checkIfCoAuthorsExists() {
-    console.log(this.props.changeset.trailerPersons.filter(p => p.trailerType === "Co-authored-by").length > 0);
-    return this.props.changeset.trailerPersons.filter(p => p.trailerType === "Co-authored-by").length > 0;
+  getCoAuthorsFromChangeset() {
+    return this.props.changeset.trailerPersons.filter(p => p.trailerType === "Co-authored-by");
   }
 
   renderCoAuthors() {
     const { t } = this.props;
+    const coAuthors = this.getCoAuthorsFromChangeset();
 
-    return <>{t("changeset.author.prefix")}</>;
+    if (coAuthors.length > 0) {
+      const authorLabel = t("changeset.coAuthor.label", { count: coAuthors.length });
+      return (
+        <>
+          {" " + t("changeset.coAuthor.prefix") + " "}
+          <a title={authorLabel + ":\n" + coAuthors.map(person => "- " + person.name).join("\n")}>
+            {coAuthors.length + " " + authorLabel}
+          </a>
+        </>
+      );
+    }
+
+    return null;
   }
 
   withExtensionPoint(child: any) {
@@ -69,14 +80,7 @@ class ChangesetAuthor extends React.Component<Props> {
     return (
       <>
         {t("changeset.author.prefix")} {child}
-        {this.checkIfCoAuthorsExists() ? this.renderCoAuthors() : null}
-        <ExtensionPoint
-          name="changesets.author.suffix"
-          props={{
-            changeset: this.props.changeset
-          }}
-          renderAll={true}
-        />
+        {this.renderCoAuthors()}
       </>
     );
   }

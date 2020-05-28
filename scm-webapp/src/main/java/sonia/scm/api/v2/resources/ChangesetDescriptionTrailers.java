@@ -25,7 +25,10 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.ImmutableList;
-import sonia.scm.repository.ChangesetTrailerTypes;
+import sonia.scm.plugin.Extension;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.ChangesetTrailers;
+import sonia.scm.repository.Repository;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -33,24 +36,24 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-public class ChangesetTrailerExtractor {
+@Extension
+public class ChangesetDescriptionTrailers implements ChangesetTrailers {
 
-  private final ChangesetTrailerTypes changesetTrailerTypes;
+  private static final List<String> types = ImmutableList.of("Co-authored-by", "Reviewed-by", "Signed-off-by", "Committed-by");
 
   @Inject
-  public ChangesetTrailerExtractor(ChangesetTrailerTypes changesetTrailerTypes) {
-    this.changesetTrailerTypes = changesetTrailerTypes;
-  }
+  public ChangesetDescriptionTrailers() {}
 
-  List<TrailerPersonDto> extractTrailersFromCommitMessage(String commitMessage) {
+  @Override
+  public List<TrailerPersonDto> getTrailers(Repository repository, Changeset changeset) {
     List<TrailerPersonDto> persons = new ArrayList<>();
 
-    try (Scanner scanner = new Scanner(commitMessage)) {
-      scanner.useDelimiter(Pattern.compile("[\\n;]"));
+    try (Scanner scanner = new Scanner(changeset.getDescription())) {
+      scanner.useDelimiter(Pattern.compile("[\\n]"));
       while (scanner.hasNext()) {
         String line = scanner.next();
 
-        for (String trailerType : changesetTrailerTypes.getTrailerTypes()) {
+        for (String trailerType : types) {
           if (line.contains(trailerType)) {
             TrailerPersonDto personDto = createPersonDtoFromUser(line);
             personDto.setTrailerType(trailerType);
@@ -59,7 +62,6 @@ public class ChangesetTrailerExtractor {
         }
       }
     }
-
     return persons;
   }
 
@@ -76,13 +78,5 @@ public class ChangesetTrailerExtractor {
     }
 
     return personDto;
-  }
-
-  static class TrailerTypes implements ChangesetTrailerTypes {
-
-    @Override
-    public List<String> getTrailerTypes() {
-      return ImmutableList.of("Co-authored-by", "Reviewed-by", "Signed-off-by", "Committed-by");
-    }
   }
 }

@@ -24,11 +24,12 @@
 
 package sonia.scm.api.v2.resources;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.api.v2.resources.ChangesetTrailerExtractor.TrailerTypes;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.DisplayUser;
 import sonia.scm.user.User;
 
@@ -37,21 +38,17 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-class ChangesetTrailerExtractorTest {
+class ChangesetDescriptionTrailersTest {
 
-  private ChangesetTrailerExtractor extractor;
+  private static final Repository REPOSITORY = RepositoryTestData.createHeartOfGold();
 
-  @BeforeEach
-  void initExtractor() {
-    TrailerTypes trailerTypes = new TrailerTypes();
-    extractor = new ChangesetTrailerExtractor(trailerTypes);
-  }
+  private final ChangesetDescriptionTrailers changesetDescriptionTrailers = new ChangesetDescriptionTrailers();
 
   @Test
   void shouldReturnEmptyList() {
-    String commitMessage = "zaphod beetlebrox";
+    Changeset changeset = createChangeset("zaphod beeblebrox");
 
-    List<TrailerPersonDto> trailerPersons = extractor.extractTrailersFromCommitMessage(commitMessage);
+    List<TrailerPersonDto> trailerPersons = changesetDescriptionTrailers.getTrailers(REPOSITORY, changeset);
 
     assertThat(trailerPersons).isNotNull();
     assertThat(trailerPersons).isEmpty();
@@ -60,26 +57,26 @@ class ChangesetTrailerExtractorTest {
   @Test
   void shouldReturnTrailerPersonsWithCoAuthors() {
     DisplayUser displayUser = createDisplayUser("Arthur Dent", "dent@hitchhiker.org");
-    String commitMessage = "zaphod beetlebrox\n\nCo-authored-by: Arthur Dent <dent@hitchhiker.org>";
+    Changeset changeset = createChangeset("zaphod beeblebrox\n\nCo-authored-by: Arthur Dent <dent@hitchhiker.org>");
 
     PersonDto personDto = createPersonDto(displayUser);
 
-    List<TrailerPersonDto> trailerPersons = extractor.extractTrailersFromCommitMessage(commitMessage);
+    List<TrailerPersonDto> trailerPersons = changesetDescriptionTrailers.getTrailers(REPOSITORY, changeset);
 
-    TrailerPersonDto trailerPersonDto = trailerPersons.get(0);
-    assertThat(trailerPersonDto.getTrailerType()).isEqualTo("Co-authored-by");
-    assertThat(trailerPersonDto.getName()).isEqualTo(personDto.getName());
-    assertThat(trailerPersonDto.getMail()).isEqualTo(personDto.getMail());
+    TrailerPersonDto trailerPerson = trailerPersons.get(0);
+    assertThat(trailerPerson.getTrailerType()).isEqualTo("Co-authored-by");
+    assertThat(trailerPerson.getName()).isEqualTo(personDto.getName());
+    assertThat(trailerPerson.getMail()).isEqualTo(personDto.getMail());
   }
 
   @Test
   void shouldReturnTrailerPersonsWithReviewers() {
     DisplayUser displayUser = createDisplayUser("Tricia McMillan", "trillian@hitchhiker.org");
-    String commitMessage = "zaphod beetlebrox\nReviewed-by: Tricia McMillan <trillian@hitchhiker.org>";
+    Changeset changeset = createChangeset("zaphod beeblebrox\nReviewed-by: Tricia McMillan <trillian@hitchhiker.org>");
 
     PersonDto personDto = createPersonDto(displayUser);
 
-    List<TrailerPersonDto> trailerPersons = extractor.extractTrailersFromCommitMessage(commitMessage);
+    List<TrailerPersonDto> trailerPersons = changesetDescriptionTrailers.getTrailers(REPOSITORY, changeset);
 
     TrailerPersonDto trailerPersonDto = trailerPersons.get(0);
 
@@ -91,11 +88,11 @@ class ChangesetTrailerExtractorTest {
   @Test
   void shouldReturnTrailerPersonsWithSigner() {
     DisplayUser displayUser = createDisplayUser("Tricia McMillan", "trillian@hitchhiker.org");
-    String commitMessage = "zaphod beetlebrox\nSigned-off-by: Tricia McMillan <trillian@hitchhiker.org>";
+    Changeset changeset = createChangeset("zaphod beeblebrox\nSigned-off-by: Tricia McMillan <trillian@hitchhiker.org>");
 
     PersonDto personDto = createPersonDto(displayUser);
 
-    List<TrailerPersonDto> trailerPersons = extractor.extractTrailersFromCommitMessage(commitMessage);
+    List<TrailerPersonDto> trailerPersons = changesetDescriptionTrailers.getTrailers(REPOSITORY, changeset);
 
     TrailerPersonDto trailerPersonDto = trailerPersons.get(0);
 
@@ -107,11 +104,11 @@ class ChangesetTrailerExtractorTest {
   @Test
   void shouldReturnTrailerPersonsWithCommitter() {
     DisplayUser displayUser = createDisplayUser("Tricia McMillan", "trillian@hitchhiker.org");
-    String commitMessage = "zaphod beetlebrox\nCommitted-by: Tricia McMillan <trillian@hitchhiker.org>";
+    Changeset changeset = createChangeset("zaphod beeblebrox\nCommitted-by: Tricia McMillan <trillian@hitchhiker.org>");
 
     PersonDto personDto = createPersonDto(displayUser);
 
-    List<TrailerPersonDto> trailerPersons = extractor.extractTrailersFromCommitMessage(commitMessage);
+    List<TrailerPersonDto> trailerPersons = changesetDescriptionTrailers.getTrailers(REPOSITORY, changeset);
 
     TrailerPersonDto trailerPersonDto = trailerPersons.get(0);
 
@@ -120,9 +117,14 @@ class ChangesetTrailerExtractorTest {
     assertThat(trailerPersonDto.getMail()).isEqualTo(personDto.getMail());
   }
 
+  private Changeset createChangeset(String commitMessage) {
+    Changeset changeset = new Changeset();
+    changeset.setDescription(commitMessage);
+    return changeset;
+  }
+
   private DisplayUser createDisplayUser(String name, String mail) {
-    DisplayUser displayUser = DisplayUser.from(new User(name, name, mail));
-    return displayUser;
+    return DisplayUser.from(new User(name, name, mail));
   }
 
   private PersonDto createPersonDto(DisplayUser displayUser) {

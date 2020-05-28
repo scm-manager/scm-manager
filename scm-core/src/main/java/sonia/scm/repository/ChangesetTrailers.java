@@ -24,12 +24,12 @@
 
 package sonia.scm.repository;
 
+import sonia.scm.api.v2.resources.TrailerPersonDto;
 import sonia.scm.plugin.ExtensionPoint;
 
 import java.util.List;
 
 @ExtensionPoint
-public interface ChangesetTrailerTypes {
-
-  List<String> getTrailerTypes();
+public interface ChangesetTrailers {
+  List<TrailerPersonDto> getTrailers(Repository repository, Changeset changeset);
 }

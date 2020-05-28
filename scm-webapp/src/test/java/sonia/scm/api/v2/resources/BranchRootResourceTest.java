@@ -45,6 +45,7 @@ import sonia.scm.repository.Branch;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.ChangesetTrailers;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
@@ -61,6 +62,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -112,6 +114,9 @@ public class BranchRootResourceTest extends RepositoryTestBase {
 
   @Mock
   private TagCollectionToDtoMapper tagCollectionToDtoMapper;
+
+  @Mock
+  private Set<ChangesetTrailers> changesetTrailers;
 
 
   @InjectMocks

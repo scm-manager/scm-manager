@@ -31,7 +31,6 @@ import {
   AvatarImage,
   AvatarWrapper,
   Button,
-  ChangesetAuthor,
   ChangesetDiff,
   ChangesetId,
   changesets,
@@ -39,6 +38,7 @@ import {
   DateFromNow,
   Level
 } from "@scm-manager/ui-components";
+import { TrailerPerson } from "@scm-manager/ui-types/src/Changesets";
 
 type Props = WithTranslation & {
   changeset: Changeset;
@@ -63,12 +63,39 @@ const BottomMarginLevel = styled(Level)`
   margin-bottom: 1rem !important;
 `;
 
+const SizedTd = styled.td`
+  width: 10rem;
+`;
+
 class ChangesetDetails extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
       collapsed: false
     };
+  }
+
+  collectAvailableTrailerTypes() {
+    const { changeset } = this.props;
+
+    // @ts-ignore
+    return [...new Set(changeset.trailerPersons.map(person => person.trailerType))];
+  }
+
+  getTrailersByType(type: string) {
+    const { changeset } = this.props;
+    return changeset.trailerPersons?.filter(person => person.trailerType === type);
+  }
+
+  getTrailerPersonsByType() {
+    const availableTrailerTypes: string[] = this.collectAvailableTrailerTypes();
+
+    let type;
+    let trailerPersons = [];
+    for (type of availableTrailerTypes) {
+      trailerPersons.push({ type, persons: this.getTrailersByType(type) });
+    }
+    return trailerPersons;
   }
 
   render() {
@@ -78,6 +105,35 @@ class ChangesetDetails extends React.Component<Props, State> {
     const description = changesets.parseDescription(changeset.description);
     const id = <ChangesetId repository={repository} changeset={changeset} link={false} />;
     const date = <DateFromNow date={changeset.date} />;
+
+    const trailerPersons = this.getTrailerPersonsByType();
+
+    const trailerTable = (
+      <table>
+        <tr>
+          <SizedTd>{t("changeset.author.label") + ":"}</SizedTd>
+          <td>
+            <a title={changeset?.author?.mail} href={"mailto:" + changeset?.author?.mail}>
+              {changeset?.author?.name}
+            </a>
+          </td>
+        </tr>
+        {trailerPersons.map(p => (
+          <tr>
+            <SizedTd>{t("changeset.trailer.type." + p.type) + ":"}</SizedTd>
+            <td className="shorten-text is-marginless">
+              {p.persons
+                .map(person => (
+                  <a title={person.mail} href={"mailto:" + person.mail}>
+                    {person.name}
+                  </a>
+                ))
+                .reduce((prev, curr) => [prev, ", ", curr])}
+            </td>
+          </tr>
+        ))}
+      </table>
+    );
 
     return (
       <>
@@ -101,9 +157,7 @@ class ChangesetDetails extends React.Component<Props, State> {
               </RightMarginP>
             </AvatarWrapper>
             <div className="media-content">
-              <p>
-                <ChangesetAuthor changeset={changeset} />
-              </p>
+              {trailerTable}
               <p>
                 <Trans i18nKey="repos:changeset.summary" components={[id, date]} />
               </p>

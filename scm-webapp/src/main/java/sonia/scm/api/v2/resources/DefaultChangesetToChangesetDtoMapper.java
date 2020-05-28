@@ -21,14 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
-import org.mapstruct.*;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Context;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Changeset;
+import sonia.scm.repository.ChangesetTrailers;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.Command;
@@ -37,8 +43,12 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
@@ -46,7 +56,7 @@ import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMapper implements InstantAttributeMapper, ChangesetToChangesetDtoMapper{
+public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMapper implements InstantAttributeMapper, ChangesetToChangesetDtoMapper {
 
   @Inject
   private RepositoryServiceFactory serviceFactory;
@@ -64,14 +74,32 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
   private TagCollectionToDtoMapper tagCollectionToDtoMapper;
 
   @Inject
-  private ChangesetTrailerExtractor changesetTrailerExtractor;
+  private Set<ChangesetTrailers> changesetTrailersSet;
 
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   public abstract ChangesetDto map(Changeset changeset, @Context Repository repository);
 
   @AfterMapping
-  void appendTrailerPersons(Changeset changeset, @MappingTarget ChangesetDto target) {
-    target.setTrailerPersons(changesetTrailerExtractor.extractTrailersFromCommitMessage(changeset.getDescription()));
+  void appendTrailerPersons(Changeset changeset, @MappingTarget ChangesetDto target, @Context Repository repository) {
+    List<TrailerPersonDto> collectedTrailers = new ArrayList<>();
+    changesetTrailersSet.forEach(changesetTrailers -> collectedTrailers.addAll(changesetTrailers.getTrailers(repository, changeset)));
+    target.setTrailerPersons(collectedTrailers);
+  }
+
+  @AfterMapping
+  void removeTrailerFromChangesetDescription(@MappingTarget ChangesetDto target) {
+    StringBuilder builder = new StringBuilder();
+    try (Scanner scanner = new Scanner(target.getDescription())) {
+      scanner.useDelimiter(Pattern.compile("[\\n]"));
+      while (scanner.hasNext()) {
+        String line = scanner.next();
+        if (!line.contains("-by:")) {
+          builder.append(line).append("\n");
+        }
+      }
+    }
+
+    target.setDescription(builder.toString());
   }
 
   @ObjectFactory

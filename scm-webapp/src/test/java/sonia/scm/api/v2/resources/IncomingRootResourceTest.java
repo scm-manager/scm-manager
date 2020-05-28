@@ -45,6 +45,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.ChangesetTrailers;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
@@ -64,6 +65,7 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -77,7 +79,6 @@ import static sonia.scm.repository.api.DiffFormat.NATIVE;
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
 public class IncomingRootResourceTest extends RepositoryTestBase {
-
 
   public static final String INCOMING_PATH = "space/repo/incoming/";
   public static final String INCOMING_CHANGESETS_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + INCOMING_PATH;
@@ -107,6 +108,9 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
   private DiffResultToDiffResultDtoMapper diffResultToDiffResultDtoMapper;
 
   private IncomingChangesetCollectionToDtoMapper incomingChangesetCollectionToDtoMapper;
+
+  @Mock
+  private Set<ChangesetTrailers> changesetTrailers;
 
   @InjectMocks
   private DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;

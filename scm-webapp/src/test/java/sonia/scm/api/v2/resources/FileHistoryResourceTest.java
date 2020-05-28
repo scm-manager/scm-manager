@@ -44,6 +44,7 @@ import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.ChangesetTrailers;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
@@ -59,6 +60,7 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -88,6 +90,9 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
   private LogCommandBuilder logCommandBuilder;
 
   private FileHistoryCollectionToDtoMapper fileHistoryCollectionToDtoMapper;
+
+  @Mock
+  private Set<ChangesetTrailers> changesetTrailers;
 
   @InjectMocks
   private DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
