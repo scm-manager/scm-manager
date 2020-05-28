@@ -32,26 +32,34 @@ class DiffExpander {
   }
 
   hunkCount = () => {
-    return this.file.hunks.length;
+    if (this.file.hunks) {
+      return this.file.hunks.length;
+    } else {
+      return 0;
+    }
   };
 
-  minLineNumber = (n: number) => {
-    return this.file.hunks[n].newStart;
+  minLineNumber: (n: number) => number = (n: number) => {
+    return this.file.hunks![n]!.newStart!;
   };
 
-  maxLineNumber = (n: number) => {
-    return this.file.hunks[n].newStart + this.file.hunks[n].newLines;
+  maxLineNumber: (n: number) => number = (n: number) => {
+    return this.file.hunks![n]!.newStart! + this.file.hunks![n]!.newLines!;
   };
 
   computeMaxExpandHeadRange = (n: number) => {
-    if (n === 0) {
+    if (this.file.type === "delete") {
+      return 0;
+    } else if (n === 0) {
       return this.minLineNumber(n) - 1;
     }
     return this.minLineNumber(n) - this.maxLineNumber(n - 1);
   };
 
   computeMaxExpandBottomRange = (n: number) => {
-    if (n === this.file.hunks.length - 1) {
+    if (this.file.type === "add" || this.file.type === "delete") {
+      return 0;
+    } else if (n === this.file!.hunks!.length - 1) {
       return Number.MAX_SAFE_INTEGER;
     }
     return this.minLineNumber(n + 1) - this.maxLineNumber(n);
@@ -67,7 +75,7 @@ class DiffExpander {
       expandBottom: () => {
         return this;
       },
-      hunk: this.file.hunks[n]
+      hunk: this.file?.hunks![n]
     };
   };
 }

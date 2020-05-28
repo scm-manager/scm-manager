@@ -299,7 +299,7 @@ class DiffFile extends React.Component<Props, State> {
         <div className="panel-block is-paddingless">
           {fileAnnotations}
           <TokenizedDiffView className={viewType} viewType={viewType} file={file}>
-            {(hunks: HunkType[]) => hunks.map((hunk, n) => this.renderHunk(file, diffExpander.getHunk(n), n))}
+            {(hunks: HunkType[]) => hunks?.map((hunk, n) => this.renderHunk(file, diffExpander.getHunk(n), n))}
           </TokenizedDiffView>
         </div>
       );

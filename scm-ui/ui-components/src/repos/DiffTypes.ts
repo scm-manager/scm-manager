@@ -34,7 +34,7 @@ import { Links } from "@scm-manager/ui-types";
 export type FileChangeType = "add" | "modify" | "delete" | "copy" | "rename";
 
 export type File = {
-  hunks: Hunk[];
+  hunks?: Hunk[];
   newEndingNewLine: boolean;
   newMode?: string;
   newPath: string;
@@ -53,10 +53,10 @@ export type File = {
 export type Hunk = {
   changes: Change[];
   content: string;
-  oldStart: number;
-  newStart: number;
-  oldLines: number;
-  newLines: number;
+  oldStart?: number;
+  newStart?: number;
+  oldLines?: number;
+  newLines?: number;
 };
 
 export type ChangeType = "insert" | "delete" | "normal" | "conflict";

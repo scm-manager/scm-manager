@@ -281,7 +281,7 @@ const HUNK_3 = {
     }
   ]
 };
-const TEST_CONTENT = {
+const TEST_CONTENT_WITH_HUNKS = {
   oldPath: "src/main/js/CommitMessage.js",
   newPath: "src/main/js/CommitMessage.js",
   oldEndingNewLine: true,
@@ -300,8 +300,67 @@ const TEST_CONTENT = {
   }
 };
 
-describe("diff expander", () => {
-  const diffExpander = new DiffExpander(TEST_CONTENT);
+const TEST_CONTENT_WIT_NEW_BINARY_FILE = {
+  oldPath: "/dev/null",
+  newPath: "src/main/fileUploadV2.png",
+  oldEndingNewLine: true,
+  newEndingNewLine: true,
+  oldRevision: "0000000000000000000000000000000000000000",
+  newRevision: "86c370aae0727d628a5438f79a5cdd45752b9d99",
+  type: "add"
+};
+
+const TEST_CONTENT_WITH_NEW_TEXT_FILE = {
+  oldPath: "/dev/null",
+  newPath: "src/main/markdown/README.md",
+  oldEndingNewLine: true,
+  newEndingNewLine: true,
+  oldRevision: "0000000000000000000000000000000000000000",
+  newRevision: "4e173d365d796b9a9e7562fcd0ef90398ae37046",
+  type: "add",
+  language: "markdown",
+  hunks: [
+    {
+      content: "@@ -0,0 +1,2 @@",
+      newStart: 1,
+      newLines: 2,
+      changes: [
+        { content: "line 1", type: "insert", lineNumber: 1, isInsert: true },
+        { content: "line 2", type: "insert", lineNumber: 2, isInsert: true }
+      ]
+    }
+  ],
+  _links: {
+    lines: {
+      href:
+        "http://localhost:8081/scm/api/v2/repositories/scm-manager/scm-editor-plugin/content/c63898d35520ee47bcc3a8291660979918715762/src/main/markdown/README.md?start={start}?end={end}",
+      templated: true
+    }
+  }
+};
+
+const TEST_CONTENT_WITH_DELETED_TEXT_FILE = {
+  oldPath: "README.md",
+  newPath: "/dev/null",
+  oldEndingNewLine: true,
+  newEndingNewLine: true,
+  oldRevision: "4875ab3b7a1bb117e1948895148557fc5c0b6f75",
+  newRevision: "0000000000000000000000000000000000000000",
+  type: "delete",
+  language: "markdown",
+  hunks: [
+    {
+      content: "@@ -1 +0,0 @@",
+      oldStart: 1,
+      oldLines: 1,
+      changes: [{ content: "# scm-editor-plugin", type: "delete", lineNumber: 1, isDelete: true }]
+    }
+  ],
+  _links: { lines: { href: "http://localhost:8081/dev/null?start={start}?end={end}", templated: true } }
+};
+
+describe("with hunks the diff expander", () => {
+  const diffExpander = new DiffExpander(TEST_CONTENT_WITH_HUNKS);
   it("should have hunk count from origin", () => {
     expect(diffExpander.hunkCount()).toBe(4);
   });
@@ -324,5 +383,36 @@ describe("diff expander", () => {
 
   it("should return a really bix number for the expand bottom range of the last hunk", () => {
     expect(diffExpander.getHunk(3).maxExpandBottomRange).toBeGreaterThan(99999);
+  });
+});
+
+describe("for a new file with text input the diff expander", () => {
+  const diffExpander = new DiffExpander(TEST_CONTENT_WITH_NEW_TEXT_FILE);
+  it("should create answer for single hunk", () => {
+    expect(diffExpander.hunkCount()).toBe(1);
+  });
+  it("should neither give expandable lines for top nor bottom", () => {
+    const hunk = diffExpander.getHunk(0);
+    expect(hunk.maxExpandHeadRange).toBe(0);
+    expect(hunk.maxExpandBottomRange).toBe(0);
+  });
+});
+
+describe("for a deleted file with text input the diff expander", () => {
+  const diffExpander = new DiffExpander(TEST_CONTENT_WITH_DELETED_TEXT_FILE);
+  it("should create answer for single hunk", () => {
+    expect(diffExpander.hunkCount()).toBe(1);
+  });
+  it("should neither give expandable lines for top nor bottom", () => {
+    const hunk = diffExpander.getHunk(0);
+    expect(hunk.maxExpandHeadRange).toBe(0);
+    expect(hunk.maxExpandBottomRange).toBe(0);
+  });
+});
+
+describe("for a new file with binary input the diff expander", () => {
+  const diffExpander = new DiffExpander(TEST_CONTENT_WIT_NEW_BINARY_FILE);
+  it("should create answer for no hunk", () => {
+    expect(diffExpander.hunkCount()).toBe(0);
   });
 });
