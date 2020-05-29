@@ -48,6 +48,7 @@ type Collapsible = {
 };
 
 type State = Collapsible & {
+  file: File;
   sideBySide?: boolean;
   diffExpander: DiffExpander;
 };
@@ -96,7 +97,8 @@ class DiffFile extends React.Component<Props, State> {
     this.state = {
       collapsed: this.defaultCollapse(),
       sideBySide: props.sideBySide,
-      diffExpander: new DiffExpander(props.file)
+      diffExpander: new DiffExpander(props.file),
+      file: props.file
     };
   }
 
@@ -120,7 +122,7 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   toggleCollapse = () => {
-    const { file } = this.props;
+    const { file } = this.state;
     if (this.hasContent(file)) {
       this.setState(state => ({
         collapsed: !state.collapsed
@@ -143,11 +145,15 @@ class DiffFile extends React.Component<Props, State> {
     });
   };
 
+  diffExpanded = (newFile: File) => {
+    this.setState({ file: newFile, diffExpander: new DiffExpander(newFile) });
+  };
+
   createHunkHeader = (expandableHunk: ExpandableHunk) => {
     if (expandableHunk.maxExpandHeadRange > 0) {
       return (
         <Decoration>
-          <HunkDivider onClick={() => this.setState({ diffExpander: expandableHunk.expandHead() })}>
+          <HunkDivider onClick={() => expandableHunk.expandHead(this.diffExpanded)}>
             {`Load ${expandableHunk.maxExpandHeadRange} more lines`}
           </HunkDivider>
         </Decoration>
@@ -161,7 +167,7 @@ class DiffFile extends React.Component<Props, State> {
     if (expandableHunk.maxExpandBottomRange > 0) {
       return (
         <Decoration>
-          <HunkDivider onClick={() => this.setState({ diffExpander: expandableHunk.expandBottom() })}>
+          <HunkDivider onClick={() => expandableHunk.expandBottom(this.diffExpanded)}>
             {`Load ${expandableHunk.maxExpandBottomRange} more lines`}
           </HunkDivider>
         </Decoration>
@@ -172,7 +178,8 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   collectHunkAnnotations = (hunk: HunkType) => {
-    const { annotationFactory, file } = this.props;
+    const { annotationFactory } = this.props;
+    const { file } = this.state;
     if (annotationFactory) {
       return annotationFactory({
         hunk,
@@ -184,7 +191,8 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   handleClickEvent = (change: Change, hunk: HunkType) => {
-    const { file, onClick } = this.props;
+    const { onClick } = this.props;
+    const { file } = this.state;
     const context = {
       changeId: getChangeKey(change),
       change,
@@ -286,8 +294,8 @@ class DiffFile extends React.Component<Props, State> {
   hasContent = (file: File) => file && !file.isBinary && file.hunks && file.hunks.length > 0;
 
   render() {
-    const { file, fileControlFactory, fileAnnotationFactory, t } = this.props;
-    const { collapsed, sideBySide, diffExpander } = this.state;
+    const { fileControlFactory, fileAnnotationFactory, t } = this.props;
+    const { file, collapsed, sideBySide, diffExpander } = this.state;
     const viewType = sideBySide ? "split" : "unified";
 
     let body = null;
@@ -299,7 +307,11 @@ class DiffFile extends React.Component<Props, State> {
         <div className="panel-block is-paddingless">
           {fileAnnotations}
           <TokenizedDiffView className={viewType} viewType={viewType} file={file}>
-            {(hunks: HunkType[]) => hunks?.map((hunk, n) => this.renderHunk(file, diffExpander.getHunk(n), n))}
+            {(hunks: HunkType[]) =>
+              hunks?.map((hunk, n) => {
+                return this.renderHunk(file, diffExpander.getHunk(n), n);
+              })
+            }
           </TokenizedDiffView>
         </div>
       );

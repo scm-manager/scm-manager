@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+import fetchMock from "fetch-mock";
 import DiffExpander from "./DiffExpander";
 
 const HUNK_0 = {
@@ -294,7 +294,7 @@ const TEST_CONTENT_WITH_HUNKS = {
   _links: {
     lines: {
       href:
-        "http://localhost:8081/scm/api/v2/repositories/scm-manager/scm-editor-plugin/content/f7a23064f3f2418f26140a9545559e72d595feb5/src/main/js/CommitMessage.js?start={start}?end={end}",
+        "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start={start}&end={end}",
       templated: true
     }
   }
@@ -333,7 +333,7 @@ const TEST_CONTENT_WITH_NEW_TEXT_FILE = {
   _links: {
     lines: {
       href:
-        "http://localhost:8081/scm/api/v2/repositories/scm-manager/scm-editor-plugin/content/c63898d35520ee47bcc3a8291660979918715762/src/main/markdown/README.md?start={start}?end={end}",
+        "http://localhost:8081/scm/api/v2/repositories/scm-manager/scm-editor-plugin/content/c63898d35520ee47bcc3a8291660979918715762/src/main/markdown/README.md?start={start}&end={end}",
       templated: true
     }
   }
@@ -356,11 +356,17 @@ const TEST_CONTENT_WITH_DELETED_TEXT_FILE = {
       changes: [{ content: "# scm-editor-plugin", type: "delete", lineNumber: 1, isDelete: true }]
     }
   ],
-  _links: { lines: { href: "http://localhost:8081/dev/null?start={start}?end={end}", templated: true } }
+  _links: { lines: { href: "http://localhost:8081/dev/null?start={start}&end={end}", templated: true } }
 };
 
 describe("with hunks the diff expander", () => {
   const diffExpander = new DiffExpander(TEST_CONTENT_WITH_HUNKS);
+
+  afterEach(() => {
+    fetchMock.reset();
+    fetchMock.restore();
+  });
+
   it("should have hunk count from origin", () => {
     expect(diffExpander.hunkCount()).toBe(4);
   });
@@ -383,6 +389,36 @@ describe("with hunks the diff expander", () => {
 
   it("should return a really bix number for the expand bottom range of the last hunk", () => {
     expect(diffExpander.getHunk(3).maxExpandBottomRange).toBeGreaterThan(99999);
+  });
+  it("should expand hunk with new line from api client at the bottom", async () => {
+    expect(diffExpander.getHunk(1).hunk.changes.length).toBe(7);
+    fetchMock.get("http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=22&end=22", "new line 1\nnew line 2");
+    let newFile;
+    diffExpander.getHunk(1).expandBottom(file => {
+      newFile = file;
+    });
+    await fetchMock.flush(true);
+    expect(fetchMock.done()).toBe(true);
+    expect(newFile.hunks[1].changes.length).toBe(9);
+    expect(newFile.hunks[1].changes[7].content).toBe("new line 1");
+    expect(newFile.hunks[1].changes[8].content).toBe("new line 2");
+  });
+  it("should expand hunk with new line from api client at the top", async () => {
+    expect(diffExpander.getHunk(1).hunk.changes.length).toBe(7);
+    fetchMock.get("http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=9&end=13", "new line 1\nnew line 2");
+    let newFile;
+    diffExpander.getHunk(1).expandHead(file => {
+      newFile = file;
+    });
+    await fetchMock.flush(true);
+    expect(fetchMock.done()).toBe(true);
+    expect(newFile.hunks[1].changes.length).toBe(9);
+    expect(newFile.hunks[1].changes[0].content).toBe("new line 1");
+    expect(newFile.hunks[1].changes[0].oldLineNumber).toBe(12);
+    expect(newFile.hunks[1].changes[0].newLineNumber).toBe(12);
+    expect(newFile.hunks[1].changes[1].content).toBe("new line 2");
+    expect(newFile.hunks[1].changes[1].oldLineNumber).toBe(13);
+    expect(newFile.hunks[1].changes[1].newLineNumber).toBe(13);
   });
 });
 

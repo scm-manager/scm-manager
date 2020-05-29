@@ -77,7 +77,7 @@ class DiffResultToDiffResultDtoMapper {
   private DiffResultDto.FileDto mapFile(DiffFile file, Repository repository, String revision) {
     Links.Builder links = linkingTo();
     if (file.iterator().hasNext()) {
-      links.single(linkBuilder("lines", resourceLinks.source().content(repository.getNamespace(), repository.getName(), revision, file.getNewPath()) + "?start={start}?end={end}").build());
+      links.single(linkBuilder("lines", resourceLinks.source().content(repository.getNamespace(), repository.getName(), revision, file.getNewPath()) + "?start={start}&end={end}").build());
     }
     DiffResultDto.FileDto dto = new DiffResultDto.FileDto(links.build());
     // ???
