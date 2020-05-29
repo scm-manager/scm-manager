@@ -32,7 +32,7 @@ class LineFilteredOutputStream extends OutputStream {
   private final int start;
   private final Integer end;
 
-  private boolean inLineBreak;
+  private Character lastLineBreakCharacter;
   private int currentLine = 0;
 
   LineFilteredOutputStream(OutputStream target, Integer start, Integer end) {
@@ -46,25 +46,39 @@ class LineFilteredOutputStream extends OutputStream {
     switch (b) {
       case '\n':
       case '\r':
-        if (!inLineBreak) {
-          inLineBreak = true;
+        if (lastLineBreakCharacter == null) {
+          keepLineBreakInMind((char) b);
+        } else if (lastLineBreakCharacter == b) {
+          if (currentLine > start && currentLine <= end) {
+            target.write('\n');
+          }
           ++currentLine;
+        } else {
+          if (currentLine > start && currentLine <= end) {
+            target.write('\n');
+          }
+          lastLineBreakCharacter = null;
         }
         break;
       default:
-        if (inLineBreak && currentLine > start && currentLine <= end) {
+        if (lastLineBreakCharacter != null && currentLine > start && currentLine <= end) {
           target.write('\n');
         }
-        inLineBreak = false;
+        lastLineBreakCharacter = null;
         if (currentLine >= start && currentLine < end) {
           target.write(b);
         }
     }
   }
 
+  public void keepLineBreakInMind(char b) {
+    lastLineBreakCharacter = b;
+    ++currentLine;
+  }
+
   @Override
   public void close() throws IOException {
-    if (inLineBreak && currentLine >= start && currentLine < end) {
+    if (lastLineBreakCharacter != null && currentLine >= start && currentLine < end) {
       target.write('\n');
     }
     target.close();

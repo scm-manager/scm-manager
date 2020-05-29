@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -78,5 +79,25 @@ class LineFilteredOutputStreamTest {
     filtered.write(input.getBytes());
 
     assertThat(target.toString()).isEqualTo("line 1\nline 2\n");
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"line 1\n\nline 2\n\nline 3", "line 1\r\n\r\nline 2\r\n\r\nline 3"})
+  void shouldHandleDoubleBlankLinesCorrectly(String input) throws IOException {
+    LineFilteredOutputStream filtered = new LineFilteredOutputStream(target, 4, null);
+
+    filtered.write(input.getBytes());
+
+    assertThat(target.toString()).isEqualTo("line 3");
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"line 1\n\n\nline 2\n\n\nline 3", "line 1\r\n\r\n\r\nline 2\r\n\r\n\r\nline 3"})
+  void shouldHandleTripleBlankLinesCorrectly(String input) throws IOException {
+    LineFilteredOutputStream filtered = new LineFilteredOutputStream(target, 4, 6);
+
+    filtered.write(input.getBytes());
+
+    assertThat(target.toString()).isEqualTo("\n\n");
   }
 }
