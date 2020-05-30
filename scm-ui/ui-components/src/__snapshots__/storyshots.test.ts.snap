@@ -945,18 +945,6 @@ exports[`Storyshots Diff Binaries 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -1620,18 +1608,6 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -1805,20 +1781,6 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               onMouseLeave={[Function]}
             >
                 url: string;
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -2472,18 +2434,6 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -2919,18 +2869,6 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -3488,18 +3426,6 @@ exports[`Storyshots Diff Default 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -4064,18 +3990,6 @@ exports[`Storyshots Diff Default 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -4249,20 +4163,6 @@ exports[`Storyshots Diff Default 1`] = `
               onMouseLeave={[Function]}
             >
                 url: string;
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -4916,18 +4816,6 @@ exports[`Storyshots Diff Default 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -5364,18 +5252,6 @@ exports[`Storyshots Diff Default 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -5811,18 +5687,6 @@ exports[`Storyshots Diff Default 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -6318,20 +6182,6 @@ exports[`Storyshots Diff Default 1`] = `
           </tr>
         </tbody>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -6528,20 +6378,6 @@ exports[`Storyshots Diff Default 1`] = `
               onMouseLeave={[Function]}
             >
                   });
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -6866,18 +6702,6 @@ exports[`Storyshots Diff Default 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -7400,18 +7224,6 @@ exports[`Storyshots Diff File Annotation 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -7980,18 +7792,6 @@ exports[`Storyshots Diff File Annotation 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -8165,20 +7965,6 @@ exports[`Storyshots Diff File Annotation 1`] = `
               onMouseLeave={[Function]}
             >
                 url: string;
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -8836,18 +8622,6 @@ exports[`Storyshots Diff File Annotation 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -9288,18 +9062,6 @@ exports[`Storyshots Diff File Annotation 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -9739,18 +9501,6 @@ exports[`Storyshots Diff File Annotation 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -10246,20 +9996,6 @@ exports[`Storyshots Diff File Annotation 1`] = `
           </tr>
         </tbody>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -10456,20 +10192,6 @@ exports[`Storyshots Diff File Annotation 1`] = `
               onMouseLeave={[Function]}
             >
                   });
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -10798,18 +10520,6 @@ exports[`Storyshots Diff File Annotation 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -11347,18 +11057,6 @@ exports[`Storyshots Diff File Controls 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -11940,18 +11638,6 @@ exports[`Storyshots Diff File Controls 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -12125,20 +11811,6 @@ exports[`Storyshots Diff File Controls 1`] = `
               onMouseLeave={[Function]}
             >
                 url: string;
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -12810,18 +12482,6 @@ exports[`Storyshots Diff File Controls 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -13276,18 +12936,6 @@ exports[`Storyshots Diff File Controls 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -13741,18 +13389,6 @@ exports[`Storyshots Diff File Controls 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -14248,20 +13884,6 @@ exports[`Storyshots Diff File Controls 1`] = `
           </tr>
         </tbody>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -14458,20 +14080,6 @@ exports[`Storyshots Diff File Controls 1`] = `
               onMouseLeave={[Function]}
             >
                   });
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -14814,18 +14422,6 @@ exports[`Storyshots Diff File Controls 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -15345,18 +14941,6 @@ exports[`Storyshots Diff Hunks 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -15557,20 +15141,6 @@ exports[`Storyshots Diff Hunks 1`] = `
           </tr>
         </tbody>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -15744,20 +15314,6 @@ exports[`Storyshots Diff Hunks 1`] = `
               onMouseLeave={[Function]}
             >
                 @Override
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -16181,18 +15737,6 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -16769,18 +16313,6 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -16966,20 +16498,6 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               onMouseLeave={[Function]}
             >
                 url: string;
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -17633,18 +17151,6 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -18081,18 +17587,6 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -18528,18 +18022,6 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -19035,20 +18517,6 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           </tr>
         </tbody>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -19245,20 +18713,6 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               onMouseLeave={[Function]}
             >
                   });
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -19583,18 +19037,6 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -20126,18 +19568,6 @@ exports[`Storyshots Diff OnClick 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -20741,18 +20171,6 @@ exports[`Storyshots Diff OnClick 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -20940,20 +20358,6 @@ exports[`Storyshots Diff OnClick 1`] = `
               onMouseLeave={[Function]}
             >
                 url: string;
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -21655,18 +21059,6 @@ exports[`Storyshots Diff OnClick 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -22133,18 +21525,6 @@ exports[`Storyshots Diff OnClick 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -22610,18 +21990,6 @@ exports[`Storyshots Diff OnClick 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -23157,20 +22525,6 @@ exports[`Storyshots Diff OnClick 1`] = `
           </tr>
         </tbody>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -23383,20 +22737,6 @@ exports[`Storyshots Diff OnClick 1`] = `
               onMouseLeave={[Function]}
             >
                   });
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -23741,18 +23081,6 @@ exports[`Storyshots Diff OnClick 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -24309,18 +23637,6 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={4}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -24977,18 +24293,6 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={4}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -25205,20 +24509,6 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               onMouseLeave={[Function]}
             >
                 url: string;
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={4}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -25919,18 +25209,6 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={4}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -26419,18 +25697,6 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={4}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -26918,18 +26184,6 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={4}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -27535,20 +26789,6 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           </tr>
         </tbody>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={4}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -27773,20 +27013,6 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               onMouseLeave={[Function]}
             >
                   });
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={4}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -28142,18 +27368,6 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={4}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -28745,18 +27959,6 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -29320,18 +28522,6 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -29505,20 +28695,6 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               onMouseLeave={[Function]}
             >
                 url: string;
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -30172,18 +29348,6 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -30620,18 +29784,6 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           <col />
         </colgroup>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -31067,18 +30219,6 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
@@ -31574,20 +30714,6 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           </tr>
         </tbody>
         <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
-            </td>
-          </tr>
-        </tbody>
-        <tbody
           className="diff-hunk"
         >
           <tr
@@ -31784,20 +30910,6 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               onMouseLeave={[Function]}
             >
                   });
-            </td>
-          </tr>
-        </tbody>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <hr
-                className="DiffFile__HunkDivider-sc-10deuqx-5 kdhcMF"
-              />
             </td>
           </tr>
         </tbody>
@@ -32122,18 +31234,6 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           />
           <col />
         </colgroup>
-        <tbody
-          className="diff-decoration"
-        >
-          <tr>
-            <td
-              className="diff-decoration-content"
-              colSpan={3}
-            >
-              <span />
-            </td>
-          </tr>
-        </tbody>
         <tbody
           className="diff-hunk"
         >
