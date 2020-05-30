@@ -57,6 +57,7 @@ export type Hunk = {
   newStart?: number;
   oldLines?: number;
   newLines?: number;
+  fullyExpanded?: boolean;
 };
 
 export type ChangeType = "insert" | "delete" | "normal" | "conflict";

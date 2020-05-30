@@ -211,6 +211,25 @@ class DiffFile extends React.Component<Props, State> {
     return <span />;
   };
 
+  createLastHunkFooter = (expandableHunk: ExpandableHunk) => {
+    if (expandableHunk.maxExpandBottomRange > 0) {
+      return (
+        <Decoration>
+          <HunkDivider>
+            <span onClick={() => expandableHunk.expandBottom(10, this.diffExpanded)}>
+              {this.props.t("diff.expandLastBottomByLines")}
+            </span>{" "}
+            <span onClick={() => expandableHunk.expandBottom(expandableHunk.maxExpandBottomRange, this.diffExpanded)}>
+              {this.props.t("diff.expandLastBottomComplete")}
+            </span>
+          </HunkDivider>
+        </Decoration>
+      );
+    }
+    // hunk header must be defined
+    return <span />;
+  };
+
   collectHunkAnnotations = (hunk: HunkType) => {
     const { annotationFactory } = this.props;
     const { file } = this.state;
@@ -267,7 +286,11 @@ class DiffFile extends React.Component<Props, State> {
       />
     );
     if (file._links?.lines) {
-      items.push(this.createHunkFooter(expandableHunk));
+      if (i === file.hunks!.length - 1) {
+        items.push(this.createLastHunkFooter(expandableHunk));
+      } else {
+        items.push(this.createHunkFooter(expandableHunk));
+      }
     }
     return items;
   };

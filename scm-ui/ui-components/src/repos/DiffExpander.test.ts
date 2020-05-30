@@ -239,6 +239,18 @@ describe("with hunks the diff expander", () => {
     expect(newFile.hunks[1].changes[5].oldLineNumber).toBe(14);
     expect(newFile.hunks[1].changes[5].newLineNumber).toBe(14);
   });
+  it("should set fully expanded to true if expanded completely", async () => {
+    fetchMock.get(
+      "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=40&end=50",
+      "new line 40\nnew line 41\nnew line 42"
+    );
+    let newFile;
+    diffExpander.getHunk(3).expandBottom(10, file => {
+      newFile = file;
+    });
+    await fetchMock.flush(true);
+    expect(newFile.hunks[3].fullyExpanded).toBe(true);
+  });
 });
 
 describe("for a new file with text input the diff expander", () => {

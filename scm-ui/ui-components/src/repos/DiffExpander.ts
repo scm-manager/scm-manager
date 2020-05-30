@@ -61,7 +61,7 @@ class DiffExpander {
     if (this.file.type === "add" || this.file.type === "delete") {
       return 0;
     } else if (n === this.file!.hunks!.length - 1) {
-      return Number.MAX_SAFE_INTEGER;
+      return this.file!.hunks![this.file!.hunks!.length - 1].fullyExpanded ? 0 : Number.MAX_SAFE_INTEGER;
     }
     return this.minLineNumber(n + 1) - this.maxLineNumber(n) - 1;
   };
@@ -85,7 +85,7 @@ class DiffExpander {
       .get(lineRequestUrl)
       .then(response => response.text())
       .then(text => text.split("\n"))
-      .then(lines => this.expandHunkAtBottom(n, lines, callback));
+      .then(lines => this.expandHunkAtBottom(n, count, lines, callback));
   };
 
   expandHunkAtHead = (n: number, lines: string[], callback: (newFile: File) => void) => {
@@ -130,7 +130,7 @@ class DiffExpander {
     callback(newFile);
   };
 
-  expandHunkAtBottom = (n: number, lines: string[], callback: (newFile: File) => void) => {
+  expandHunkAtBottom = (n: number, requestedLines: number, lines: string[], callback: (newFile: File) => void) => {
     const hunk = this.file.hunks![n];
     if (lines[lines.length - 1] === "") {
       lines.pop();
@@ -155,7 +155,8 @@ class DiffExpander {
       ...hunk,
       oldLines: hunk.oldLines + lines.length,
       newLines: hunk.newLines + lines.length,
-      changes: newChanges
+      changes: newChanges,
+      fullyExpanded: lines.length < requestedLines
     };
     const newHunks: Hunk[] = [];
     this.file.hunks.forEach((oldHunk: Hunk, i: number) => {
