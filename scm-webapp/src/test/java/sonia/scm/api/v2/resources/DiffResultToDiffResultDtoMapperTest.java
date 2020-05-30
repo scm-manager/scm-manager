@@ -96,7 +96,7 @@ class DiffResultToDiffResultDtoMapperTest {
       .isPresent()
       .get()
       .extracting("href")
-      .isEqualTo("/scm/api/v2/repositories/space/X/content/123/B.ts?start={start}?end={end}");
+      .isEqualTo("/scm/api/v2/repositories/space/X/content/123/B.ts?start={start}&end={end}");
   }
 
   @Test
