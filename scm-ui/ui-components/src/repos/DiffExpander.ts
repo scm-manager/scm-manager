@@ -24,6 +24,7 @@
 
 import { apiClient } from "@scm-manager/ui-components";
 import { Change, File, Hunk } from "./DiffTypes";
+import { Link } from "@scm-manager/ui-types/src";
 
 class DiffExpander {
   file: File;
@@ -67,9 +68,9 @@ class DiffExpander {
   };
 
   expandHead = (n: number, count: number, callback: (newFile: File) => void) => {
-    const lineRequestUrl = this.file._links.lines.href
-      .replace("{start}", this.minLineNumber(n) - Math.min(count, this.computeMaxExpandHeadRange(n)) - 1)
-      .replace("{end}", this.minLineNumber(n) - 1);
+    const lineRequestUrl = (this.file._links!.lines as Link).href
+      .replace("{start}", (this.minLineNumber(n) - Math.min(count, this.computeMaxExpandHeadRange(n)) - 1).toString())
+      .replace("{end}", (this.minLineNumber(n) - 1).toString());
     apiClient
       .get(lineRequestUrl)
       .then(response => response.text())
@@ -79,9 +80,17 @@ class DiffExpander {
 
   expandBottom = (n: number, count: number, callback: (newFile: File) => void) => {
     const maxExpandBottomRange = this.computeMaxExpandBottomRange(n);
-    const lineRequestUrl = this.file._links.lines.href
-      .replace("{start}", this.maxLineNumber(n))
-      .replace("{end}", count > 0 ? this.maxLineNumber(n) + Math.min(count, maxExpandBottomRange > 0? maxExpandBottomRange:Number.MAX_SAFE_INTEGER) : -1);
+    const lineRequestUrl = (this.file._links!.lines as Link).href
+      .replace("{start}", this.maxLineNumber(n).toString())
+      .replace(
+        "{end}",
+        count > 0
+          ? (
+              this.maxLineNumber(n) +
+              Math.min(count, maxExpandBottomRange > 0 ? maxExpandBottomRange : Number.MAX_SAFE_INTEGER)
+            ).toString()
+          : "-1"
+      );
     apiClient
       .get(lineRequestUrl)
       .then(response => response.text())
@@ -90,13 +99,13 @@ class DiffExpander {
   };
 
   expandHunkAtHead = (n: number, lines: string[], callback: (newFile: File) => void) => {
-    const hunk = this.file.hunks[n];
+    const hunk = this.file.hunks![n];
     if (lines[lines.length - 1] === "") {
       lines.pop();
     }
     const newChanges: Change[] = [];
-    let oldLineNumber = hunk.changes[0].oldLineNumber - lines.length;
-    let newLineNumber = hunk.changes[0].newLineNumber - lines.length;
+    let oldLineNumber = hunk!.changes![0]!.oldLineNumber! - lines.length;
+    let newLineNumber = hunk!.changes![0]!.newLineNumber! - lines.length;
 
     lines.forEach(line => {
       newChanges.push({
@@ -113,10 +122,10 @@ class DiffExpander {
 
     const newHunk = {
       ...hunk,
-      oldStart: hunk.oldStart - lines.length,
-      newStart: hunk.newStart - lines.length,
-      oldLines: hunk.oldLines + lines.length,
-      newLines: hunk.newLines + lines.length,
+      oldStart: hunk.oldStart! - lines.length,
+      newStart: hunk.newStart! - lines.length,
+      oldLines: hunk.oldLines! + lines.length,
+      newLines: hunk.newLines! + lines.length,
       changes: newChanges
     };
     const newHunks: Hunk[] = [];
@@ -137,8 +146,8 @@ class DiffExpander {
       lines.pop();
     }
     const newChanges = [...hunk.changes];
-    let oldLineNumber = newChanges[newChanges.length - 1].oldLineNumber;
-    let newLineNumber = newChanges[newChanges.length - 1].newLineNumber;
+    let oldLineNumber: number = newChanges[newChanges.length - 1].oldLineNumber!;
+    let newLineNumber: number = newChanges[newChanges.length - 1].newLineNumber!;
 
     lines.forEach(line => {
       oldLineNumber += 1;
@@ -154,13 +163,13 @@ class DiffExpander {
 
     const newHunk = {
       ...hunk,
-      oldLines: hunk.oldLines + lines.length,
-      newLines: hunk.newLines + lines.length,
+      oldLines: hunk.oldLines! + lines.length,
+      newLines: hunk.newLines! + lines.length,
       changes: newChanges,
       fullyExpanded: requestedLines < 0 || lines.length < requestedLines
     };
     const newHunks: Hunk[] = [];
-    this.file.hunks.forEach((oldHunk: Hunk, i: number) => {
+    this.file.hunks!.forEach((oldHunk: Hunk, i: number) => {
       if (i === n) {
         newHunks.push(newHunk);
       } else {

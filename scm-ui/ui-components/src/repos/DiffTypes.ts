@@ -47,7 +47,7 @@ export type File = {
   language?: string;
   // TODO does this property exists?
   isBinary?: boolean;
-  _links: Links;
+  _links?: Links;
 };
 
 export type Hunk = {

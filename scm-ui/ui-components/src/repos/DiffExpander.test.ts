@@ -23,8 +23,9 @@
  */
 import fetchMock from "fetch-mock";
 import DiffExpander from "./DiffExpander";
+import { File, Hunk } from "./DiffTypes";
 
-const HUNK_0 = {
+const HUNK_0: Hunk = {
   content: "@@ -1,8 +1,8 @@",
   oldStart: 1,
   newStart: 1,
@@ -44,7 +45,7 @@ const HUNK_0 = {
     { content: "line", type: "normal", oldLineNumber: 8, newLineNumber: 8, isNormal: true }
   ]
 };
-const HUNK_1 = {
+const HUNK_1: Hunk = {
   content: "@@ -14,6 +14,7 @@",
   oldStart: 14,
   newStart: 14,
@@ -60,7 +61,7 @@ const HUNK_1 = {
     { content: "line", type: "normal", oldLineNumber: 19, newLineNumber: 20, isNormal: true }
   ]
 };
-const HUNK_2 = {
+const HUNK_2: Hunk = {
   content: "@@ -21,7 +22,7 @@",
   oldStart: 21,
   newStart: 22,
@@ -77,7 +78,7 @@ const HUNK_2 = {
     { content: "line", type: "normal", oldLineNumber: 27, newLineNumber: 28, isNormal: true }
   ]
 };
-const HUNK_3 = {
+const HUNK_3: Hunk = {
   content: "@@ -33,6 +34,7 @@",
   oldStart: 33,
   newStart: 34,
@@ -93,16 +94,16 @@ const HUNK_3 = {
     { content: "line", type: "normal", oldLineNumber: 38, newLineNumber: 40, isNormal: true }
   ]
 };
-const TEST_CONTENT_WITH_HUNKS = {
-  oldPath: "src/main/js/CommitMessage.js",
-  newPath: "src/main/js/CommitMessage.js",
-  oldEndingNewLine: true,
+const TEST_CONTENT_WITH_HUNKS: File = {
+  hunks: [HUNK_0, HUNK_1, HUNK_2, HUNK_3],
   newEndingNewLine: true,
-  oldRevision: "e05c8495bb1dc7505d73af26210c8ff4825c4500",
+  newPath: "src/main/js/CommitMessage.js",
   newRevision: "4305a8df175b7bec25acbe542a13fbe2a718a608",
+  oldEndingNewLine: true,
+  oldPath: "src/main/js/CommitMessage.js",
+  oldRevision: "e05c8495bb1dc7505d73af26210c8ff4825c4500",
   type: "modify",
   language: "javascript",
-  hunks: [HUNK_0, HUNK_1, HUNK_2, HUNK_3],
   _links: {
     lines: {
       href: "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start={start}&end={end}",
@@ -111,7 +112,7 @@ const TEST_CONTENT_WITH_HUNKS = {
   }
 };
 
-const TEST_CONTENT_WIT_NEW_BINARY_FILE = {
+const TEST_CONTENT_WIT_NEW_BINARY_FILE: File = {
   oldPath: "/dev/null",
   newPath: "src/main/fileUploadV2.png",
   oldEndingNewLine: true,
@@ -121,7 +122,7 @@ const TEST_CONTENT_WIT_NEW_BINARY_FILE = {
   type: "add"
 };
 
-const TEST_CONTENT_WITH_NEW_TEXT_FILE = {
+const TEST_CONTENT_WITH_NEW_TEXT_FILE: File = {
   oldPath: "/dev/null",
   newPath: "src/main/markdown/README.md",
   oldEndingNewLine: true,
@@ -150,7 +151,7 @@ const TEST_CONTENT_WITH_NEW_TEXT_FILE = {
   }
 };
 
-const TEST_CONTENT_WITH_DELETED_TEXT_FILE = {
+const TEST_CONTENT_WITH_DELETED_TEXT_FILE: File = {
   oldPath: "README.md",
   newPath: "/dev/null",
   oldEndingNewLine: true,
@@ -204,14 +205,14 @@ describe("with hunks the diff expander", () => {
   it("should expand hunk with new line from api client at the bottom", async () => {
     expect(diffExpander.getHunk(1).hunk.changes.length).toBe(7);
     fetchMock.get("http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=20&end=21", "new line 1");
-    let newFile;
+    let newFile: File;
     diffExpander.getHunk(1).expandBottom(1, file => {
       newFile = file;
     });
     await fetchMock.flush(true);
     expect(fetchMock.done()).toBe(true);
-    expect(newFile.hunks[1].changes.length).toBe(8);
-    expect(newFile.hunks[1].changes[7].content).toBe("new line 1");
+    expect(newFile!.hunks![1].changes.length).toBe(8);
+    expect(newFile!.hunks![1].changes[7].content).toBe("new line 1");
   });
   it("should expand hunk with new line from api client at the top", async () => {
     expect(diffExpander.getHunk(1).hunk.changes.length).toBe(7);
@@ -219,49 +220,49 @@ describe("with hunks the diff expander", () => {
       "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=8&end=13",
       "new line 9\nnew line 10\nnew line 11\nnew line 12\nnew line 13"
     );
-    let newFile;
+    let newFile: File;
     diffExpander.getHunk(1).expandHead(5, file => {
       newFile = file;
     });
     await fetchMock.flush(true);
     expect(fetchMock.done()).toBe(true);
-    expect(newFile.hunks[1].changes.length).toBe(12);
-    expect(newFile.hunks[1].changes[0].content).toBe("new line 9");
-    expect(newFile.hunks[1].changes[0].oldLineNumber).toBe(9);
-    expect(newFile.hunks[1].changes[0].newLineNumber).toBe(9);
-    expect(newFile.hunks[1].changes[1].content).toBe("new line 10");
-    expect(newFile.hunks[1].changes[1].oldLineNumber).toBe(10);
-    expect(newFile.hunks[1].changes[1].newLineNumber).toBe(10);
-    expect(newFile.hunks[1].changes[4].content).toBe("new line 13");
-    expect(newFile.hunks[1].changes[4].oldLineNumber).toBe(13);
-    expect(newFile.hunks[1].changes[4].newLineNumber).toBe(13);
-    expect(newFile.hunks[1].changes[5].content).toBe("line");
-    expect(newFile.hunks[1].changes[5].oldLineNumber).toBe(14);
-    expect(newFile.hunks[1].changes[5].newLineNumber).toBe(14);
+    expect(newFile!.hunks![1].changes.length).toBe(12);
+    expect(newFile!.hunks![1].changes[0].content).toBe("new line 9");
+    expect(newFile!.hunks![1].changes[0].oldLineNumber).toBe(9);
+    expect(newFile!.hunks![1].changes[0].newLineNumber).toBe(9);
+    expect(newFile!.hunks![1].changes[1].content).toBe("new line 10");
+    expect(newFile!.hunks![1].changes[1].oldLineNumber).toBe(10);
+    expect(newFile!.hunks![1].changes[1].newLineNumber).toBe(10);
+    expect(newFile!.hunks![1].changes[4].content).toBe("new line 13");
+    expect(newFile!.hunks![1].changes[4].oldLineNumber).toBe(13);
+    expect(newFile!.hunks![1].changes[4].newLineNumber).toBe(13);
+    expect(newFile!.hunks![1].changes[5].content).toBe("line");
+    expect(newFile!.hunks![1].changes[5].oldLineNumber).toBe(14);
+    expect(newFile!.hunks![1].changes[5].newLineNumber).toBe(14);
   });
   it("should set fully expanded to true if expanded completely", async () => {
     fetchMock.get(
       "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=40&end=50",
       "new line 40\nnew line 41\nnew line 42"
     );
-    let newFile;
+    let newFile: File;
     diffExpander.getHunk(3).expandBottom(10, file => {
       newFile = file;
     });
     await fetchMock.flush(true);
-    expect(newFile.hunks[3].fullyExpanded).toBe(true);
+    expect(newFile!.hunks![3].fullyExpanded).toBe(true);
   });
   it("should set end to -1 if requested to expand to the end", async () => {
     fetchMock.get(
       "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=40&end=-1",
       "new line 40\nnew line 41\nnew line 42"
     );
-    let newFile;
+    let newFile: File;
     diffExpander.getHunk(3).expandBottom(-1, file => {
       newFile = file;
     });
     await fetchMock.flush(true);
-    expect(newFile.hunks[3].fullyExpanded).toBe(true);
+    expect(newFile!.hunks![3].fullyExpanded).toBe(true);
   });
 });
 
