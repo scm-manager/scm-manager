@@ -204,8 +204,8 @@ describe("with hunks the diff expander", () => {
   it("should expand hunk with new line from api client at the bottom", async () => {
     expect(diffExpander.getHunk(1).hunk.changes.length).toBe(7);
     fetchMock.get(
-      "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=22&end=22",
-      "new line 1\nnew line 2"
+      "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=20&end=21",
+      "new line 1"
     );
     let newFile;
     diffExpander.getHunk(1).expandBottom(file => {
@@ -213,15 +213,14 @@ describe("with hunks the diff expander", () => {
     });
     await fetchMock.flush(true);
     expect(fetchMock.done()).toBe(true);
-    expect(newFile.hunks[1].changes.length).toBe(9);
+    expect(newFile.hunks[1].changes.length).toBe(8);
     expect(newFile.hunks[1].changes[7].content).toBe("new line 1");
-    expect(newFile.hunks[1].changes[8].content).toBe("new line 2");
   });
   it("should expand hunk with new line from api client at the top", async () => {
     expect(diffExpander.getHunk(1).hunk.changes.length).toBe(7);
     fetchMock.get(
-      "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=9&end=13",
-      "new line 1\nnew line 2"
+      "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=8&end=13",
+      "new line 9\nnew line 10\nnew line 11\nnew line 12\nnew line 13"
     );
     let newFile;
     diffExpander.getHunk(1).expandHead(file => {
@@ -229,13 +228,19 @@ describe("with hunks the diff expander", () => {
     });
     await fetchMock.flush(true);
     expect(fetchMock.done()).toBe(true);
-    expect(newFile.hunks[1].changes.length).toBe(9);
-    expect(newFile.hunks[1].changes[0].content).toBe("new line 1");
-    expect(newFile.hunks[1].changes[0].oldLineNumber).toBe(12);
-    expect(newFile.hunks[1].changes[0].newLineNumber).toBe(12);
-    expect(newFile.hunks[1].changes[1].content).toBe("new line 2");
-    expect(newFile.hunks[1].changes[1].oldLineNumber).toBe(13);
-    expect(newFile.hunks[1].changes[1].newLineNumber).toBe(13);
+    expect(newFile.hunks[1].changes.length).toBe(12);
+    expect(newFile.hunks[1].changes[0].content).toBe("new line 9");
+    expect(newFile.hunks[1].changes[0].oldLineNumber).toBe(9);
+    expect(newFile.hunks[1].changes[0].newLineNumber).toBe(9);
+    expect(newFile.hunks[1].changes[1].content).toBe("new line 10");
+    expect(newFile.hunks[1].changes[1].oldLineNumber).toBe(10);
+    expect(newFile.hunks[1].changes[1].newLineNumber).toBe(10);
+    expect(newFile.hunks[1].changes[4].content).toBe("new line 13");
+    expect(newFile.hunks[1].changes[4].oldLineNumber).toBe(13);
+    expect(newFile.hunks[1].changes[4].newLineNumber).toBe(13);
+    expect(newFile.hunks[1].changes[5].content).toBe("line");
+    expect(newFile.hunks[1].changes[5].oldLineNumber).toBe(14);
+    expect(newFile.hunks[1].changes[5].newLineNumber).toBe(14);
   });
 });
 

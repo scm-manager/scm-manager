@@ -45,7 +45,7 @@ class DiffExpander {
   };
 
   maxLineNumber: (n: number) => number = (n: number) => {
-    return this.file.hunks![n]!.newStart! + this.file.hunks![n]!.newLines!;
+    return this.file.hunks![n]!.newStart! + this.file.hunks![n]!.newLines! - 1;
   };
 
   computeMaxExpandHeadRange = (n: number) => {
@@ -54,7 +54,7 @@ class DiffExpander {
     } else if (n === 0) {
       return this.minLineNumber(n) - 1;
     }
-    return this.minLineNumber(n) - this.maxLineNumber(n - 1);
+    return this.minLineNumber(n) - this.maxLineNumber(n - 1) - 1;
   };
 
   computeMaxExpandBottomRange = (n: number) => {
@@ -63,12 +63,12 @@ class DiffExpander {
     } else if (n === this.file!.hunks!.length - 1) {
       return Number.MAX_SAFE_INTEGER;
     }
-    return this.minLineNumber(n + 1) - this.maxLineNumber(n);
+    return this.minLineNumber(n + 1) - this.maxLineNumber(n) - 1;
   };
 
   expandHead = (n: number, callback: (newFile: File) => void) => {
     const lineRequestUrl = this.file._links.lines.href
-      .replace("{start}", this.minLineNumber(n) - Math.min(10, this.computeMaxExpandHeadRange(n)))
+      .replace("{start}", this.minLineNumber(n) - Math.min(10, this.computeMaxExpandHeadRange(n)) - 1)
       .replace("{end}", this.minLineNumber(n) - 1);
     apiClient
       .get(lineRequestUrl)
@@ -79,7 +79,7 @@ class DiffExpander {
 
   expandBottom = (n: number, callback: (newFile: File) => void) => {
     const lineRequestUrl = this.file._links.lines.href
-      .replace("{start}", this.maxLineNumber(n) + 1)
+      .replace("{start}", this.maxLineNumber(n))
       .replace("{end}", this.maxLineNumber(n) + Math.min(10, this.computeMaxExpandBottomRange(n)));
     apiClient
       .get(lineRequestUrl)
@@ -90,6 +90,9 @@ class DiffExpander {
 
   expandHunkAtHead = (n: number, lines: string[], callback: (newFile: File) => void) => {
     const hunk = this.file.hunks[n];
+    if (lines[lines.length - 1] === "") {
+      lines.pop();
+    }
     const newChanges: Change[] = [];
     let oldLineNumber = hunk.changes[0].oldLineNumber - lines.length;
     let newLineNumber = hunk.changes[0].newLineNumber - lines.length;
@@ -129,6 +132,9 @@ class DiffExpander {
 
   expandHunkAtBottom = (n: number, lines: string[], callback: (newFile: File) => void) => {
     const hunk = this.file.hunks![n];
+    if (lines[lines.length - 1] === "") {
+      lines.pop();
+    }
     const newChanges = [...hunk.changes];
     let oldLineNumber = newChanges[newChanges.length - 1].oldLineNumber;
     let newLineNumber = newChanges[newChanges.length - 1].newLineNumber;
