@@ -115,10 +115,16 @@ public class ContentResource {
   }
 
   private StreamingOutput createStreamingOutput(String namespace, String name, String revision, String path, Integer start, Integer end) {
+    Integer effectiveEnd;
+    if (end != null && end < 0) {
+      effectiveEnd = null;
+    } else {
+      effectiveEnd = end;
+    }
     return os -> {
       OutputStream sourceOut;
-      if (start != null || end != null) {
-        sourceOut = new LineFilteredOutputStream(os, start, end);
+      if (start != null || effectiveEnd != null) {
+        sourceOut = new LineFilteredOutputStream(os, start, effectiveEnd);
       } else {
         sourceOut = os;
       }

@@ -61,7 +61,7 @@ class DiffExpander {
     if (this.file.type === "add" || this.file.type === "delete") {
       return 0;
     } else if (n === this.file!.hunks!.length - 1) {
-      return this.file!.hunks![this.file!.hunks!.length - 1].fullyExpanded ? 0 : Number.MAX_SAFE_INTEGER;
+      return this.file!.hunks![this.file!.hunks!.length - 1].fullyExpanded ? 0 : -1;
     }
     return this.minLineNumber(n + 1) - this.maxLineNumber(n) - 1;
   };
@@ -78,9 +78,10 @@ class DiffExpander {
   };
 
   expandBottom = (n: number, count: number, callback: (newFile: File) => void) => {
+    const maxExpandBottomRange = this.computeMaxExpandBottomRange(n);
     const lineRequestUrl = this.file._links.lines.href
       .replace("{start}", this.maxLineNumber(n))
-      .replace("{end}", this.maxLineNumber(n) + Math.min(count, this.computeMaxExpandBottomRange(n)));
+      .replace("{end}", count > 0 ? this.maxLineNumber(n) + Math.min(count, maxExpandBottomRange > 0? maxExpandBottomRange:Number.MAX_SAFE_INTEGER) : -1);
     apiClient
       .get(lineRequestUrl)
       .then(response => response.text())
@@ -156,7 +157,7 @@ class DiffExpander {
       oldLines: hunk.oldLines + lines.length,
       newLines: hunk.newLines + lines.length,
       changes: newChanges,
-      fullyExpanded: lines.length < requestedLines
+      fullyExpanded: requestedLines < 0 || lines.length < requestedLines
     };
     const newHunks: Hunk[] = [];
     this.file.hunks.forEach((oldHunk: Hunk, i: number) => {

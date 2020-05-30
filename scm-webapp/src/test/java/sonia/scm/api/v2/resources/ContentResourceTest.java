@@ -110,6 +110,18 @@ public class ContentResourceTest {
   }
 
   @Test
+  public void shouldNotLimitOutputWhenEndLessThanZero() throws Exception {
+    mockContent("file", "line 1\nline 2\nline 3\nline 4".getBytes());
+
+    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "file", 1, -1);
+    assertEquals(200, response.getStatus());
+
+    ByteArrayOutputStream baos = readOutputStream(response);
+
+    assertEquals("line 2\nline 3\nline 4", baos.toString());
+  }
+
+  @Test
   public void shouldHandleMissingFile() {
     Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "doesNotExist", null, null);
     assertEquals(404, response.getStatus());

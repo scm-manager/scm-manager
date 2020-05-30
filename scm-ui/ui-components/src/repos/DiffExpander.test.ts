@@ -199,7 +199,7 @@ describe("with hunks the diff expander", () => {
   });
 
   it("should return a really bix number for the expand bottom range of the last hunk", () => {
-    expect(diffExpander.getHunk(3).maxExpandBottomRange).toBeGreaterThan(99999);
+    expect(diffExpander.getHunk(3).maxExpandBottomRange).toBe(-1);
   });
   it("should expand hunk with new line from api client at the bottom", async () => {
     expect(diffExpander.getHunk(1).hunk.changes.length).toBe(7);
@@ -246,6 +246,18 @@ describe("with hunks the diff expander", () => {
     );
     let newFile;
     diffExpander.getHunk(3).expandBottom(10, file => {
+      newFile = file;
+    });
+    await fetchMock.flush(true);
+    expect(newFile.hunks[3].fullyExpanded).toBe(true);
+  });
+  it("should set end to -1 if requested to expand to the end", async () => {
+    fetchMock.get(
+      "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=40&end=-1",
+      "new line 40\nnew line 41\nnew line 42"
+    );
+    let newFile;
+    diffExpander.getHunk(3).expandBottom(-1, file => {
       newFile = file;
     });
     await fetchMock.flush(true);
