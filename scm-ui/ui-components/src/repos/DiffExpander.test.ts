@@ -203,12 +203,9 @@ describe("with hunks the diff expander", () => {
   });
   it("should expand hunk with new line from api client at the bottom", async () => {
     expect(diffExpander.getHunk(1).hunk.changes.length).toBe(7);
-    fetchMock.get(
-      "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=20&end=21",
-      "new line 1"
-    );
+    fetchMock.get("http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=20&end=21", "new line 1");
     let newFile;
-    diffExpander.getHunk(1).expandBottom(file => {
+    diffExpander.getHunk(1).expandBottom(1, file => {
       newFile = file;
     });
     await fetchMock.flush(true);
@@ -223,7 +220,7 @@ describe("with hunks the diff expander", () => {
       "new line 9\nnew line 10\nnew line 11\nnew line 12\nnew line 13"
     );
     let newFile;
-    diffExpander.getHunk(1).expandHead(file => {
+    diffExpander.getHunk(1).expandHead(5, file => {
       newFile = file;
     });
     await fetchMock.flush(true);

@@ -198,7 +198,15 @@
     },
     "sideBySide": "Switch to side-by-side view",
     "combined": "Switch to combined view",
-    "noDiffFound": "No Diff between the selected branches found."
+    "noDiffFound": "No Diff between the selected branches found.",
+    "expandHeadByLines": "> load {{count}} more line",
+    "expandHeadByLines_plural": "> load {{count}} more lines",
+    "expandHeadComplete": ">> load {{count}} line",
+    "expandHeadComplete_plural": ">> load all {{count}} lines",
+    "expandBottomByLines": "> load {{count}} more line",
+    "expandBottomByLines_plural": "> load {{count}} more lines",
+    "expandBottomComplete": ">> load {{count}} line",
+    "expandBottomComplete_plural": ">> load all {{count}} lines"
   },
   "fileUpload": {
     "clickHere": "Click here to select your file",

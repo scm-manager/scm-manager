@@ -151,13 +151,30 @@ class DiffFile extends React.Component<Props, State> {
 
   createHunkHeader = (expandableHunk: ExpandableHunk) => {
     if (expandableHunk.maxExpandHeadRange > 0) {
-      return (
-        <Decoration>
-          <HunkDivider onClick={() => expandableHunk.expandHead(this.diffExpanded)}>
-            {`Load ${expandableHunk.maxExpandHeadRange} more lines`}
-          </HunkDivider>
-        </Decoration>
-      );
+      if (expandableHunk.maxExpandHeadRange <= 10) {
+        return (
+          <Decoration>
+            <HunkDivider>
+              <span onClick={() => expandableHunk.expandHead(expandableHunk.maxExpandHeadRange, this.diffExpanded)}>
+                {this.props.t("diff.expandHeadComplete", { count: expandableHunk.maxExpandHeadRange })}
+              </span>
+            </HunkDivider>
+          </Decoration>
+        );
+      } else {
+        return (
+          <Decoration>
+            <HunkDivider>
+              <span onClick={() => expandableHunk.expandHead(10, this.diffExpanded)}>
+                {this.props.t("diff.expandHeadByLines", { count: 10 })}
+              </span>{" "}
+              <span onClick={() => expandableHunk.expandHead(expandableHunk.maxExpandHeadRange, this.diffExpanded)}>
+                {this.props.t("diff.expandHeadComplete", { count: expandableHunk.maxExpandHeadRange })}
+              </span>
+            </HunkDivider>
+          </Decoration>
+        );
+      }
     }
     // hunk header must be defined
     return <span />;
@@ -165,13 +182,30 @@ class DiffFile extends React.Component<Props, State> {
 
   createHunkFooter = (expandableHunk: ExpandableHunk) => {
     if (expandableHunk.maxExpandBottomRange > 0) {
-      return (
-        <Decoration>
-          <HunkDivider onClick={() => expandableHunk.expandBottom(this.diffExpanded)}>
-            {`Load ${expandableHunk.maxExpandBottomRange} more lines`}
-          </HunkDivider>
-        </Decoration>
-      );
+      if (expandableHunk.maxExpandBottomRange <= 10) {
+        return (
+          <Decoration>
+            <HunkDivider>
+              <span onClick={() => expandableHunk.expandBottom(expandableHunk.maxExpandBottomRange, this.diffExpanded)}>
+                {this.props.t("diff.expandBottomComplete", { count: expandableHunk.maxExpandBottomRange })}
+              </span>
+            </HunkDivider>
+          </Decoration>
+        );
+      } else {
+        return (
+          <Decoration>
+            <HunkDivider>
+              <span onClick={() => expandableHunk.expandBottom(10, this.diffExpanded)}>
+                {this.props.t("diff.expandBottomByLines", { count: 10 })}
+              </span>{" "}
+              <span onClick={() => expandableHunk.expandBottom(expandableHunk.maxExpandBottomRange, this.diffExpanded)}>
+                {this.props.t("diff.expandBottomComplete", { count: expandableHunk.maxExpandBottomRange })}
+              </span>
+            </HunkDivider>
+          </Decoration>
+        );
+      }
     }
     // hunk header must be defined
     return <span />;

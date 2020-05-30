@@ -66,9 +66,9 @@ class DiffExpander {
     return this.minLineNumber(n + 1) - this.maxLineNumber(n) - 1;
   };
 
-  expandHead = (n: number, callback: (newFile: File) => void) => {
+  expandHead = (n: number, count: number, callback: (newFile: File) => void) => {
     const lineRequestUrl = this.file._links.lines.href
-      .replace("{start}", this.minLineNumber(n) - Math.min(10, this.computeMaxExpandHeadRange(n)) - 1)
+      .replace("{start}", this.minLineNumber(n) - Math.min(count, this.computeMaxExpandHeadRange(n)) - 1)
       .replace("{end}", this.minLineNumber(n) - 1);
     apiClient
       .get(lineRequestUrl)
@@ -77,10 +77,10 @@ class DiffExpander {
       .then(lines => this.expandHunkAtHead(n, lines, callback));
   };
 
-  expandBottom = (n: number, callback: (newFile: File) => void) => {
+  expandBottom = (n: number, count: number, callback: (newFile: File) => void) => {
     const lineRequestUrl = this.file._links.lines.href
       .replace("{start}", this.maxLineNumber(n))
-      .replace("{end}", this.maxLineNumber(n) + Math.min(10, this.computeMaxExpandBottomRange(n)));
+      .replace("{end}", this.maxLineNumber(n) + Math.min(count, this.computeMaxExpandBottomRange(n)));
     apiClient
       .get(lineRequestUrl)
       .then(response => response.text())
@@ -173,8 +173,8 @@ class DiffExpander {
     return {
       maxExpandHeadRange: this.computeMaxExpandHeadRange(n),
       maxExpandBottomRange: this.computeMaxExpandBottomRange(n),
-      expandHead: (callback: (newFile: File) => void) => this.expandHead(n, callback),
-      expandBottom: (callback: (newFile: File) => void) => this.expandBottom(n, callback),
+      expandHead: (count: number, callback: (newFile: File) => void) => this.expandHead(n, count, callback),
+      expandBottom: (count: number, callback: (newFile: File) => void) => this.expandBottom(n, count, callback),
       hunk: this.file?.hunks![n]
     };
   };
@@ -184,8 +184,8 @@ export type ExpandableHunk = {
   hunk: Hunk;
   maxExpandHeadRange: number;
   maxExpandBottomRange: number;
-  expandHead: (callback: (newFile: File) => void) => void;
-  expandBottom: (callback: (newFile: File) => void) => void;
+  expandHead: (count: number, callback: (newFile: File) => void) => void;
+  expandBottom: (count: number, callback: (newFile: File) => void) => void;
 };
 
 export default DiffExpander;
