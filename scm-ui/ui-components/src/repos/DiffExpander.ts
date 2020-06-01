@@ -61,10 +61,16 @@ class DiffExpander {
   computeMaxExpandBottomRange = (n: number) => {
     if (this.file.type === "add" || this.file.type === "delete") {
       return 0;
-    } else if (n === this.file!.hunks!.length - 1) {
-      return this.file!.hunks![this.file!.hunks!.length - 1].fullyExpanded ? 0 : -1;
     }
-    return this.minLineNumber(n + 1) - this.maxLineNumber(n) - 1;
+    const changes = this.file.hunks![n].changes;
+    if (changes[changes.length - 1].type === "normal") {
+      if (n === this.file!.hunks!.length - 1) {
+        return this.file!.hunks![this.file!.hunks!.length - 1].fullyExpanded ? 0 : -1;
+      }
+      return this.minLineNumber(n + 1) - this.maxLineNumber(n) - 1;
+    } else {
+      return 0;
+    }
   };
 
   expandHead = (n: number, count: number, callback: (newFile: File) => void) => {
@@ -146,8 +152,8 @@ class DiffExpander {
       lines.pop();
     }
     const newChanges = [...hunk.changes];
-    let oldLineNumber: number = newChanges[newChanges.length - 1].oldLineNumber!;
-    let newLineNumber: number = newChanges[newChanges.length - 1].newLineNumber!;
+    let oldLineNumber: number = this.getMaxOldLineNumber(newChanges);
+    let newLineNumber: number = this.getMaxNewLineNumber(newChanges);
 
     lines.forEach(line => {
       oldLineNumber += 1;
@@ -178,6 +184,16 @@ class DiffExpander {
     });
     const newFile = { ...this.file, hunks: newHunks };
     callback(newFile);
+  };
+
+  getMaxOldLineNumber = (newChanges: Change[]) => {
+    const lastChange = newChanges[newChanges.length - 1];
+    return lastChange.oldLineNumber || lastChange.lineNumber!;
+  };
+
+  getMaxNewLineNumber = (newChanges: Change[]) => {
+    const lastChange = newChanges[newChanges.length - 1];
+    return lastChange.newLineNumber || lastChange.lineNumber!;
   };
 
   getHunk: (n: number) => ExpandableHunk = (n: number) => {

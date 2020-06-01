@@ -112,7 +112,7 @@ const TEST_CONTENT_WITH_HUNKS: File = {
   }
 };
 
-const TEST_CONTENT_WIT_NEW_BINARY_FILE: File = {
+const TEST_CONTENT_WITH_NEW_BINARY_FILE: File = {
   oldPath: "/dev/null",
   newPath: "src/main/fileUploadV2.png",
   oldEndingNewLine: true,
@@ -169,6 +169,79 @@ const TEST_CONTENT_WITH_DELETED_TEXT_FILE: File = {
     }
   ],
   _links: { lines: { href: "http://localhost:8081/dev/null?start={start}&end={end}", templated: true } }
+};
+
+const TEST_CONTENT_WITH_DELETED_LINES_AT_END: File = {
+  oldPath: "pom.xml",
+  newPath: "pom.xml",
+  oldEndingNewLine: true,
+  newEndingNewLine: true,
+  oldRevision: "b207512c0eab22536c9e5173afbe54cc3a24a22e",
+  newRevision: "5347c3fe0c2c4d4de7f308ae61bd5546460d7e93",
+  type: "modify",
+  language: "xml",
+  hunks: [
+    {
+      content: "@@ -108,15 +108,3 @@",
+      oldStart: 108,
+      newStart: 108,
+      oldLines: 15,
+      newLines: 3,
+      changes: [
+        { content: "line", type: "normal", oldLineNumber: 108, newLineNumber: 108, isNormal: true },
+        { content: "line", type: "normal", oldLineNumber: 109, newLineNumber: 109, isNormal: true },
+        { content: "line", type: "normal", oldLineNumber: 110, newLineNumber: 110, isNormal: true },
+        { content: "line", type: "delete", lineNumber: 111, isDelete: true },
+        { content: "line", type: "delete", lineNumber: 112, isDelete: true },
+        { content: "line", type: "delete", lineNumber: 113, isDelete: true },
+        { content: "line", type: "delete", lineNumber: 114, isDelete: true },
+        { content: "line", type: "delete", lineNumber: 115, isDelete: true },
+        { content: "line", type: "delete", lineNumber: 116, isDelete: true },
+        { content: "line", type: "delete", lineNumber: 117, isDelete: true },
+        { content: "line", type: "delete", lineNumber: 118, isDelete: true },
+        { content: "line", type: "delete", lineNumber: 119, isDelete: true },
+        { content: "line", type: "delete", lineNumber: 120, isDelete: true },
+        { content: "line", type: "delete", lineNumber: 121, isDelete: true },
+        { content: "line", type: "delete", lineNumber: 122, isDelete: true }
+      ]
+    }
+  ],
+  _links: {
+    lines: {
+      href: "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start={start}&end={end}",
+      templated: true
+    }
+  }
+};
+
+const TEST_CONTENT_WITH_ALL_LINES_REMOVED_FROM_FILE: File = {
+  oldPath: "pom.xml",
+  newPath: "pom.xml",
+  oldEndingNewLine: true,
+  newEndingNewLine: true,
+  oldRevision: "2cc811c64f71ceda28f1ec0d97e1973395b299ff",
+  newRevision: "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+  type: "modify",
+  language: "xml",
+  hunks: [
+    {
+      content: "@@ -1,3 +0,0 @@",
+      oldStart: 1,
+      oldLines: 3,
+      changes: [
+        { content: "line", type: "delete", lineNumber: 1, isDelete: true },
+        { content: "line", type: "delete", lineNumber: 2, isDelete: true },
+        { content: "line", type: "delete", lineNumber: 3, isDelete: true }
+      ]
+    }
+  ],
+  _links: {
+    lines: {
+      href:
+        "http://localhost:8081/scm/api/v2/repositories/scm-manager/scm-editor-plugin/content/b313a7690f028c77df98417c1ed6cba67e5692ec/pom.xml?start={start}&end={end}",
+      templated: true
+    }
+  }
 };
 
 describe("with hunks the diff expander", () => {
@@ -291,8 +364,22 @@ describe("for a deleted file with text input the diff expander", () => {
 });
 
 describe("for a new file with binary input the diff expander", () => {
-  const diffExpander = new DiffExpander(TEST_CONTENT_WIT_NEW_BINARY_FILE);
+  const diffExpander = new DiffExpander(TEST_CONTENT_WITH_NEW_BINARY_FILE);
   it("should create answer for no hunk", () => {
     expect(diffExpander.hunkCount()).toBe(0);
+  });
+});
+
+describe("with deleted lines at the end", () => {
+  const diffExpander = new DiffExpander(TEST_CONTENT_WITH_DELETED_LINES_AT_END);
+  it("should not be expandable", () => {
+    expect(diffExpander.getHunk(0)!.maxExpandBottomRange).toBe(0);
+  });
+});
+
+describe("with all lines removed from file", () => {
+  const diffExpander = new DiffExpander(TEST_CONTENT_WITH_ALL_LINES_REMOVED_FROM_FILE);
+  it("should not be expandable", () => {
+    expect(diffExpander.getHunk(0)!.maxExpandBottomRange).toBe(0);
   });
 });
