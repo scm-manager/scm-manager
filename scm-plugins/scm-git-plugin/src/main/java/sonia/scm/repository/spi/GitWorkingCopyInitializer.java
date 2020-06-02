@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.common.base.Stopwatch;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
@@ -54,7 +55,7 @@ class GitWorkingCopyInitializer {
 
   public ParentAndClone<Repository, Repository> initialize(File target, String initialBranch) {
     LOG.trace("clone repository {}", context.getRepository().getId());
-    long start = System.nanoTime();
+    Stopwatch stopwatch = Stopwatch.createStarted();
     try {
       Repository clone = Git.cloneRepository()
         .setURI(simpleGitWorkingCopyFactory.createScmTransportProtocolUri(context.getDirectory()))
@@ -73,9 +74,7 @@ class GitWorkingCopyInitializer {
     } catch (GitAPIException | IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "could not clone working copy of repository", e);
     } finally {
-      long end = System.nanoTime();
-      long duration = end - start;
-      LOG.trace("took {} ns to clone repository {}", duration, context.getRepository().getId());
+      LOG.trace("took {} to clone repository {}", stopwatch.stop(), context.getRepository().getId());
     }
   }
 }

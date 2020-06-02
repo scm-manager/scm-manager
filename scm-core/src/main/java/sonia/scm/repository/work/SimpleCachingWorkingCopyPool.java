@@ -40,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * requested for a repository with {@link #getWorkingCopy(SimpleWorkingCopyFactory.WorkingCopyContext)},
  * this implementation fetches a new directory from the {@link WorkdirProvider}.
  * On {@link #contextClosed(SimpleWorkingCopyFactory.WorkingCopyContext, File)},
- * the directory is not deleted, buy put into a map with the repository id as key.
+ * the directory is not deleted, but put into a map with the repository id as key.
  * When a working copy is requested with {@link #getWorkingCopy(SimpleWorkingCopyFactory.WorkingCopyContext)}
  * for a repository with such an existing directory, it is taken from the map, reclaimed and
  * returned as {@link WorkingCopy}.

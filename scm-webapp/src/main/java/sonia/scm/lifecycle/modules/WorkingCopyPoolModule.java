@@ -45,7 +45,7 @@ public class WorkingCopyPoolModule extends AbstractModule {
       Class<? extends WorkingCopyPool> strategyClass = (Class<? extends WorkingCopyPool>) classLoader.loadClass(workingCopyPoolStrategy);
       bind(WorkingCopyPool.class).to(strategyClass);
     } catch (Exception e) {
-      throw new RuntimeException("could not instantiate class for working copy pool: " + workingCopyPoolStrategy, e);
+      throw new IllegalStateException("could not instantiate class for working copy pool: " + workingCopyPoolStrategy, e);
     }
   }
 }

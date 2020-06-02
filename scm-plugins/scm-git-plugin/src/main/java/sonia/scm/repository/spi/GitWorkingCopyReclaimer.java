@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.common.base.Stopwatch;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -49,7 +50,7 @@ class GitWorkingCopyReclaimer {
 
   public ParentAndClone<Repository, Repository> reclaim(File target, String initialBranch) throws SimpleWorkingCopyFactory.ReclaimFailedException {
     LOG.trace("reclaim repository {}", context.getRepository().getId());
-    long start = System.nanoTime();
+    Stopwatch stopwatch = Stopwatch.createStarted();
     Repository repo = openTarget(target);
     try (Git git = Git.open(target)) {
       git.reset().setMode(ResetCommand.ResetType.HARD).call();
@@ -62,9 +63,7 @@ class GitWorkingCopyReclaimer {
     } catch (GitAPIException | IOException e) {
       throw new SimpleWorkingCopyFactory.ReclaimFailedException(e);
     } finally {
-      long end = System.nanoTime();
-      long duration = end - start;
-      LOG.trace("took {} ns to reclaim repository {}\n", duration, context.getRepository().getId());
+      LOG.trace("took {} to reclaim repository {}", stopwatch.stop(), context.getRepository().getId());
     }
   }
 
