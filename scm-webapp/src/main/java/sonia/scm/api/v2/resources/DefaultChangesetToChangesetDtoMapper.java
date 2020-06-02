@@ -33,7 +33,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.ChangesetTrailers;
+import sonia.scm.repository.ChangesetTrailerProvider;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.Tag;
@@ -74,7 +74,7 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
   private TagCollectionToDtoMapper tagCollectionToDtoMapper;
 
   @Inject
-  private Set<ChangesetTrailers> changesetTrailersSet;
+  private Set<ChangesetTrailerProvider> changesetTrailerProviderSet;
 
   abstract TrailerDto map(Trailer trailer);
 
@@ -83,7 +83,7 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
   @AfterMapping
   void appendTrailerPersons(Changeset changeset, @MappingTarget ChangesetDto target, @Context Repository repository) {
     List<TrailerDto> collectedTrailers = new ArrayList<>();
-    changesetTrailersSet.stream()
+    changesetTrailerProviderSet.stream()
       .flatMap(changesetTrailers -> changesetTrailers.getTrailers(repository, changeset).stream())
       .map(this::map)
       .forEach(collectedTrailers::add);

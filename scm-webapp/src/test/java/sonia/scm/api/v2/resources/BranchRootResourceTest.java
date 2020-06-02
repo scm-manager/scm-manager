@@ -30,7 +30,6 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -45,7 +44,7 @@ import sonia.scm.repository.Branch;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.ChangesetTrailers;
+import sonia.scm.repository.ChangesetTrailerProvider;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
@@ -117,7 +116,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
   private TagCollectionToDtoMapper tagCollectionToDtoMapper;
 
   @Mock
-  private Set<ChangesetTrailers> changesetTrailers;
+  private Set<ChangesetTrailerProvider> changesetTrailers;
 
 
   @InjectMocks

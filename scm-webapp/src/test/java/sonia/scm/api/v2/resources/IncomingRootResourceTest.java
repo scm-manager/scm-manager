@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 
@@ -45,7 +45,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.ChangesetTrailers;
+import sonia.scm.repository.ChangesetTrailerProvider;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
@@ -110,7 +110,7 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
   private IncomingChangesetCollectionToDtoMapper incomingChangesetCollectionToDtoMapper;
 
   @Mock
-  private Set<ChangesetTrailers> changesetTrailers;
+  private Set<ChangesetTrailerProvider> changesetTrailers;
 
   @InjectMocks
   private DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;

@@ -43,7 +43,7 @@ class ChangesetDescriptionTrailersTest {
 
   private static final Repository REPOSITORY = RepositoryTestData.createHeartOfGold();
 
-  private final ChangesetDescriptionTrailers changesetDescriptionTrailers = new ChangesetDescriptionTrailers();
+  private final ChangesetDescriptionTrailerProvider changesetDescriptionTrailers = new ChangesetDescriptionTrailerProvider();
 
   @Test
   void shouldReturnEmptyList() {

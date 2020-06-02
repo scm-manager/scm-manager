@@ -29,6 +29,6 @@ import sonia.scm.plugin.ExtensionPoint;
 import java.util.List;
 
 @ExtensionPoint
-public interface ChangesetTrailers {
+public interface ChangesetTrailerProvider {
   List<Trailer> getTrailers(Repository repository, Changeset changeset);
 }

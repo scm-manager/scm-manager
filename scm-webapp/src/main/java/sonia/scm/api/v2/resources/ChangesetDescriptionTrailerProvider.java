@@ -27,7 +27,7 @@ package sonia.scm.api.v2.resources;
 import com.google.common.collect.ImmutableSet;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.ChangesetTrailers;
+import sonia.scm.repository.ChangesetTrailerProvider;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.Trailer;
@@ -46,13 +46,13 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
 @Extension
-public class ChangesetDescriptionTrailers implements ChangesetTrailers {
+public class ChangesetDescriptionTrailerProvider implements ChangesetTrailerProvider {
 
   private static final Collection<String> SUPPORTED_TRAILER_TYPES = ImmutableSet.of("Co-authored-by", "Reviewed-by", "Signed-off-by", "Committed-by");
   private static final Pattern PERSON_PATTERN = Pattern.compile("^\\W*(.*)\\W+<(.*)>\\W*$");
 
   @Inject
-  public ChangesetDescriptionTrailers() {}
+  public ChangesetDescriptionTrailerProvider() {}
 
   @Override
   public List<Trailer> getTrailers(Repository repository, Changeset changeset) {
