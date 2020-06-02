@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableSet;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetTrailers;
+import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.Trailer;
 
@@ -79,7 +80,7 @@ public class ChangesetDescriptionTrailers implements ChangesetTrailers {
     Matcher matcher = PERSON_PATTERN.matcher(person.trim());
     if (matcher.matches()) {
       MatchResult matchResult = matcher.toMatchResult();
-      return of(new Trailer(type, matchResult.group(2), matchResult.group(1)));
+      return of(new Trailer(type, new Person(matchResult.group(1), matchResult.group(2))));
     } else {
       return empty();
     }

@@ -25,6 +25,7 @@
 import { Collection, Links } from "./hal";
 import { Tag } from "./Tags";
 import { Branch } from "./Branches";
+import { Person } from "@scm-manager/ui-components/src/avatar/Avatar";
 
 export type Changeset = Collection & {
   id: string;
@@ -34,7 +35,7 @@ export type Changeset = Collection & {
     mail?: string;
   };
   description: string;
-  trailerPersons: TrailerPerson[];
+  trailers: Trailer[];
   _links: Links;
   _embedded: {
     tags?: Tag[];
@@ -43,9 +44,8 @@ export type Changeset = Collection & {
   };
 };
 
-export type TrailerPerson = {
-  name: string;
-  mail: string;
+export type Trailer = {
+  person: Person;
   trailerType: string;
 };
 

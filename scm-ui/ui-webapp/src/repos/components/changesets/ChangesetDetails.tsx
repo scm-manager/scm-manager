@@ -38,7 +38,6 @@ import {
   DateFromNow,
   Level
 } from "@scm-manager/ui-components";
-import { TrailerPerson } from "@scm-manager/ui-types/src/Changesets";
 
 type Props = WithTranslation & {
   changeset: Changeset;
@@ -79,23 +78,22 @@ class ChangesetDetails extends React.Component<Props, State> {
     const { changeset } = this.props;
 
     // @ts-ignore
-    return [...new Set(changeset.trailerPersons.map(person => person.trailerType))];
+    return [...new Set(changeset.trailers.map(trailer => trailer.trailerType))];
   }
 
-  getTrailersByType(type: string) {
+  getPersonsByTrailersType(type: string) {
     const { changeset } = this.props;
-    return changeset.trailerPersons?.filter(person => person.trailerType === type);
+    return changeset.trailers?.filter(trailer => trailer.trailerType === type).map(t => t.person);
   }
 
-  getTrailerPersonsByType() {
+  getTrailersByType() {
     const availableTrailerTypes: string[] = this.collectAvailableTrailerTypes();
 
-    let type;
-    let trailerPersons = [];
-    for (type of availableTrailerTypes) {
-      trailerPersons.push({ type, persons: this.getTrailersByType(type) });
+    const personsByTrailerType = [];
+    for (const type of availableTrailerTypes) {
+      personsByTrailerType.push({ type, persons: this.getPersonsByTrailersType(type) });
     }
-    return trailerPersons;
+    return personsByTrailerType;
   }
 
   render() {
@@ -106,7 +104,7 @@ class ChangesetDetails extends React.Component<Props, State> {
     const id = <ChangesetId repository={repository} changeset={changeset} link={false} />;
     const date = <DateFromNow date={changeset.date} />;
 
-    const trailerPersons = this.getTrailerPersonsByType();
+    const trailersByType = this.getTrailersByType();
 
     const trailerTable = (
       <table>
@@ -118,11 +116,11 @@ class ChangesetDetails extends React.Component<Props, State> {
             </a>
           </td>
         </tr>
-        {trailerPersons.map(p => (
+        {trailersByType.map(trailer => (
           <tr>
-            <SizedTd>{t("changeset.trailer.type." + p.type) + ":"}</SizedTd>
+            <SizedTd>{t("changeset.trailer.type." + trailer.type) + ":"}</SizedTd>
             <td className="shorten-text is-marginless">
-              {p.persons
+              {trailer.persons
                 .map(person => (
                   <a title={person.mail} href={"mailto:" + person.mail}>
                     {person.name}

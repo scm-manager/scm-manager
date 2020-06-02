@@ -29,6 +29,5 @@ import lombok.Value;
 @Value
 public class Trailer {
   private String trailerType;
-  private String mail;
-  private String name;
+  private Person person;
 }

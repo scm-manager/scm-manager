@@ -31,6 +31,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TrailerPersonDto extends PersonDto {
+public class TrailerDto {
   private String trailerType;
+  private PersonDto person;
 }

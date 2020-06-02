@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
@@ -59,7 +59,7 @@ public class ChangesetDto extends HalRepresentation {
    */
   private String description;
 
-  private List<TrailerPersonDto> trailerPersons;
+  private List<TrailerDto> trailers;
 
   public ChangesetDto(Links links, Embedded embedded) {
     super(links, embedded);

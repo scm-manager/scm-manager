@@ -64,8 +64,8 @@ class ChangesetDescriptionTrailersTest {
 
     Trailer first = Trailer.get(0);
     assertThat(first.getTrailerType()).isEqualTo("Co-authored-by");
-    assertThat(first.getName()).isEqualTo(displayUser.getDisplayName());
-    assertThat(first.getMail()).isEqualTo(displayUser.getMail());
+    assertThat(first.getPerson().getName()).isEqualTo(displayUser.getDisplayName());
+    assertThat(first.getPerson().getMail()).isEqualTo(displayUser.getMail());
   }
 
   @Test
@@ -78,8 +78,8 @@ class ChangesetDescriptionTrailersTest {
     Trailer Trailer = trailer.get(0);
 
     assertThat(Trailer.getTrailerType()).isEqualTo("Reviewed-by");
-    assertThat(Trailer.getName()).isEqualTo(displayUser.getDisplayName());
-    assertThat(Trailer.getMail()).isEqualTo(displayUser.getMail());
+    assertThat(Trailer.getPerson().getName()).isEqualTo(displayUser.getDisplayName());
+    assertThat(Trailer.getPerson().getMail()).isEqualTo(displayUser.getMail());
   }
 
   @Test
@@ -92,8 +92,8 @@ class ChangesetDescriptionTrailersTest {
     Trailer Trailer = trailer.get(0);
 
     assertThat(Trailer.getTrailerType()).isEqualTo("Signed-off-by");
-    assertThat(Trailer.getName()).isEqualTo(displayUser.getDisplayName());
-    assertThat(Trailer.getMail()).isEqualTo(displayUser.getMail());
+    assertThat(Trailer.getPerson().getName()).isEqualTo(displayUser.getDisplayName());
+    assertThat(Trailer.getPerson().getMail()).isEqualTo(displayUser.getMail());
   }
 
   @Test
@@ -106,8 +106,8 @@ class ChangesetDescriptionTrailersTest {
     Trailer Trailer = trailer.get(0);
 
     assertThat(Trailer.getTrailerType()).isEqualTo("Committed-by");
-    assertThat(Trailer.getName()).isEqualTo(displayUser.getDisplayName());
-    assertThat(Trailer.getMail()).isEqualTo(displayUser.getMail());
+    assertThat(Trailer.getPerson().getName()).isEqualTo(displayUser.getDisplayName());
+    assertThat(Trailer.getPerson().getMail()).isEqualTo(displayUser.getMail());
   }
 
   private Changeset createChangeset(String commitMessage) {
