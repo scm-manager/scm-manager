@@ -56,5 +56,6 @@ public class NoneCachingWorkingCopyPool implements WorkingCopyPool {
 
   @Override
   public void shutdown() {
+    // no caches, nothing to clean up :-)
   }
 }

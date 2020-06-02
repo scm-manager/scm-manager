@@ -22,39 +22,21 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository.work;
 
-import sonia.scm.repository.SvnWorkingCopyFactory;
-import sonia.scm.repository.work.SimpleWorkingCopyFactory;
-import sonia.scm.repository.work.WorkingCopyPool;
+import sonia.scm.ContextEntry;
+import sonia.scm.ExceptionWithContext;
 
-import javax.inject.Inject;
-import java.io.File;
+public class WorkdirCreationException extends ExceptionWithContext {
 
-public class SimpleSvnWorkingCopyFactory extends SimpleWorkingCopyFactory<File, File, SvnContext> implements SvnWorkingCopyFactory {
+  public static final String CODE = "3tS0mjSoo1";
 
-  @Inject
-  public SimpleSvnWorkingCopyFactory(WorkingCopyPool workingCopyPool) {
-    super(workingCopyPool);
+  public WorkdirCreationException(String path, Exception cause) {
+    super(ContextEntry.ContextBuilder.entity("Path", path).build(), "Could not create directory " + path, cause);
   }
 
   @Override
-  protected ParentAndClone<File, File> initialize(SvnContext context, File workingCopy, String initialBranch) {
-    return new SvnWorkingCopyInitializer(context).initialize(workingCopy);
-  }
-
-  @Override
-  protected ParentAndClone<File, File> reclaim(SvnContext context, File target, String initialBranch) throws SimpleWorkingCopyFactory.ReclaimFailedException {
-    return new SvnWorkingCopyReclaimer(context).reclaim(target);
-  }
-
-  @Override
-  protected void closeRepository(File workingCopy) {
-    // No resources to be closed for svn
-  }
-
-  @Override
-  protected void closeWorkingCopy(File workingCopy) {
-    // No resources to be closed for svn
+  public String getCode() {
+    return CODE;
   }
 }

@@ -73,6 +73,8 @@ public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposit
   }
 
   @Override
+  // The hg api to create a command is meant to be used from the command classes, not from their "flags" base classes.
+  @SuppressWarnings("java:S3252")
   protected ParentAndClone<Repository, Repository> reclaim(HgCommandContext context, File target, String initialBranch) throws ReclaimFailedException {
     Repository centralRepository = openCentral(context);
     try {

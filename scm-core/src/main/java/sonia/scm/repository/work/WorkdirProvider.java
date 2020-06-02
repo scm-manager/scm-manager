@@ -47,7 +47,7 @@ public class WorkdirProvider {
     try {
       return Files.createTempDirectory(rootDirectory.toPath(),"workdir").toFile();
     } catch (IOException e) {
-      throw new RuntimeException("could not create temporary workdir", e);
+      throw new WorkdirCreationException(rootDirectory.toString(), e);
     }
   }
 }

@@ -93,8 +93,9 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
   public void shouldThrowInternalRepositoryException() {
     String branchToBeClosed = "default";
 
-    new HgBranchCommand(cmdContext, workingCopyFactory).deleteOrClose(branchToBeClosed);
-    assertThrows(InternalRepositoryException.class, () -> new HgBranchCommand(cmdContext, workingCopyFactory).deleteOrClose(branchToBeClosed));
+    HgBranchCommand hgBranchCommand = new HgBranchCommand(cmdContext, workingCopyFactory);
+    hgBranchCommand.deleteOrClose(branchToBeClosed);
+    assertThrows(InternalRepositoryException.class, () -> hgBranchCommand.deleteOrClose(branchToBeClosed));
   }
 
   private List<Branch> readBranches() {
