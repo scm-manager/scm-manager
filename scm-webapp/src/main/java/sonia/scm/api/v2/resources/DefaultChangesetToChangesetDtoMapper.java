@@ -37,6 +37,7 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetTrailers;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.Tag;
+import sonia.scm.repository.Trailer;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -76,13 +77,18 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
   @Inject
   private Set<ChangesetTrailers> changesetTrailersSet;
 
-  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
-  public abstract ChangesetDto map(Changeset changeset, @Context Repository repository);
+//  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
+//  public abstract ChangesetDto map(Changeset changeset, @Context Repository repository);
+
+  abstract TrailerPersonDto map(Trailer trailer);
 
   @AfterMapping
   void appendTrailerPersons(Changeset changeset, @MappingTarget ChangesetDto target, @Context Repository repository) {
     List<TrailerPersonDto> collectedTrailers = new ArrayList<>();
-    changesetTrailersSet.forEach(changesetTrailers -> collectedTrailers.addAll(changesetTrailers.getTrailers(repository, changeset)));
+    changesetTrailersSet.stream()
+      .flatMap(changesetTrailers -> changesetTrailers.getTrailers(repository, changeset).stream())
+      .map(this::map)
+      .forEach(collectedTrailers::add);
     target.setTrailerPersons(collectedTrailers);
   }
 

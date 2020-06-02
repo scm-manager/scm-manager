@@ -30,6 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
+import sonia.scm.repository.Trailer;
 import sonia.scm.user.DisplayUser;
 import sonia.scm.user.User;
 
@@ -48,73 +49,65 @@ class ChangesetDescriptionTrailersTest {
   void shouldReturnEmptyList() {
     Changeset changeset = createChangeset("zaphod beeblebrox");
 
-    List<TrailerPersonDto> trailerPersons = changesetDescriptionTrailers.getTrailers(REPOSITORY, changeset);
+    List<Trailer> trailer = changesetDescriptionTrailers.getTrailers(REPOSITORY, changeset);
 
-    assertThat(trailerPersons).isNotNull();
-    assertThat(trailerPersons).isEmpty();
+    assertThat(trailer).isNotNull();
+    assertThat(trailer).isEmpty();
   }
 
   @Test
-  void shouldReturnTrailerPersonsWithCoAuthors() {
+  void shouldReturnTrailerWithCoAuthors() {
     DisplayUser displayUser = createDisplayUser("Arthur Dent", "dent@hitchhiker.org");
     Changeset changeset = createChangeset("zaphod beeblebrox\n\nCo-authored-by: Arthur Dent <dent@hitchhiker.org>");
 
-    PersonDto personDto = createPersonDto(displayUser);
+    List<Trailer> Trailer = changesetDescriptionTrailers.getTrailers(REPOSITORY, changeset);
 
-    List<TrailerPersonDto> trailerPersons = changesetDescriptionTrailers.getTrailers(REPOSITORY, changeset);
-
-    TrailerPersonDto trailerPerson = trailerPersons.get(0);
-    assertThat(trailerPerson.getTrailerType()).isEqualTo("Co-authored-by");
-    assertThat(trailerPerson.getName()).isEqualTo(personDto.getName());
-    assertThat(trailerPerson.getMail()).isEqualTo(personDto.getMail());
+    Trailer first = Trailer.get(0);
+    assertThat(first.getTrailerType()).isEqualTo("Co-authored-by");
+    assertThat(first.getName()).isEqualTo(displayUser.getDisplayName());
+    assertThat(first.getMail()).isEqualTo(displayUser.getMail());
   }
 
   @Test
-  void shouldReturnTrailerPersonsWithReviewers() {
+  void shouldReturnTrailerWithReviewers() {
     DisplayUser displayUser = createDisplayUser("Tricia McMillan", "trillian@hitchhiker.org");
     Changeset changeset = createChangeset("zaphod beeblebrox\nReviewed-by: Tricia McMillan <trillian@hitchhiker.org>");
 
-    PersonDto personDto = createPersonDto(displayUser);
+    List<Trailer> trailer = changesetDescriptionTrailers.getTrailers(REPOSITORY, changeset);
 
-    List<TrailerPersonDto> trailerPersons = changesetDescriptionTrailers.getTrailers(REPOSITORY, changeset);
+    Trailer Trailer = trailer.get(0);
 
-    TrailerPersonDto trailerPersonDto = trailerPersons.get(0);
-
-    assertThat(trailerPersonDto.getTrailerType()).isEqualTo("Reviewed-by");
-    assertThat(trailerPersonDto.getName()).isEqualTo(personDto.getName());
-    assertThat(trailerPersonDto.getMail()).isEqualTo(personDto.getMail());
+    assertThat(Trailer.getTrailerType()).isEqualTo("Reviewed-by");
+    assertThat(Trailer.getName()).isEqualTo(displayUser.getDisplayName());
+    assertThat(Trailer.getMail()).isEqualTo(displayUser.getMail());
   }
 
   @Test
-  void shouldReturnTrailerPersonsWithSigner() {
+  void shouldReturnTrailerWithSigner() {
     DisplayUser displayUser = createDisplayUser("Tricia McMillan", "trillian@hitchhiker.org");
     Changeset changeset = createChangeset("zaphod beeblebrox\nSigned-off-by: Tricia McMillan <trillian@hitchhiker.org>");
 
-    PersonDto personDto = createPersonDto(displayUser);
+    List<Trailer> trailer = changesetDescriptionTrailers.getTrailers(REPOSITORY, changeset);
 
-    List<TrailerPersonDto> trailerPersons = changesetDescriptionTrailers.getTrailers(REPOSITORY, changeset);
+    Trailer Trailer = trailer.get(0);
 
-    TrailerPersonDto trailerPersonDto = trailerPersons.get(0);
-
-    assertThat(trailerPersonDto.getTrailerType()).isEqualTo("Signed-off-by");
-    assertThat(trailerPersonDto.getName()).isEqualTo(personDto.getName());
-    assertThat(trailerPersonDto.getMail()).isEqualTo(personDto.getMail());
+    assertThat(Trailer.getTrailerType()).isEqualTo("Signed-off-by");
+    assertThat(Trailer.getName()).isEqualTo(displayUser.getDisplayName());
+    assertThat(Trailer.getMail()).isEqualTo(displayUser.getMail());
   }
 
   @Test
-  void shouldReturnTrailerPersonsWithCommitter() {
+  void shouldReturnTrailerWithCommitter() {
     DisplayUser displayUser = createDisplayUser("Tricia McMillan", "trillian@hitchhiker.org");
     Changeset changeset = createChangeset("zaphod beeblebrox\nCommitted-by: Tricia McMillan <trillian@hitchhiker.org>");
 
-    PersonDto personDto = createPersonDto(displayUser);
+    List<Trailer> trailer = changesetDescriptionTrailers.getTrailers(REPOSITORY, changeset);
 
-    List<TrailerPersonDto> trailerPersons = changesetDescriptionTrailers.getTrailers(REPOSITORY, changeset);
+    Trailer Trailer = trailer.get(0);
 
-    TrailerPersonDto trailerPersonDto = trailerPersons.get(0);
-
-    assertThat(trailerPersonDto.getTrailerType()).isEqualTo("Committed-by");
-    assertThat(trailerPersonDto.getName()).isEqualTo(personDto.getName());
-    assertThat(trailerPersonDto.getMail()).isEqualTo(personDto.getMail());
+    assertThat(Trailer.getTrailerType()).isEqualTo("Committed-by");
+    assertThat(Trailer.getName()).isEqualTo(displayUser.getDisplayName());
+    assertThat(Trailer.getMail()).isEqualTo(displayUser.getMail());
   }
 
   private Changeset createChangeset(String commitMessage) {
@@ -126,12 +119,4 @@ class ChangesetDescriptionTrailersTest {
   private DisplayUser createDisplayUser(String name, String mail) {
     return DisplayUser.from(new User(name, name, mail));
   }
-
-  private PersonDto createPersonDto(DisplayUser displayUser) {
-    PersonDto personDto = new PersonDto();
-    personDto.setName(displayUser.getDisplayName());
-    personDto.setMail(displayUser.getMail());
-    return personDto;
-  }
-
 }

@@ -24,59 +24,64 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetTrailers;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.Trailer;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 @Extension
 public class ChangesetDescriptionTrailers implements ChangesetTrailers {
 
-  private static final List<String> types = ImmutableList.of("Co-authored-by", "Reviewed-by", "Signed-off-by", "Committed-by");
+  private static final Collection<String> SUPPORTED_TRAILER_TYPES = ImmutableSet.of("Co-authored-by", "Reviewed-by", "Signed-off-by", "Committed-by");
+  private static final Pattern PERSON_PATTERN = Pattern.compile("^\\W*(.*)\\W+<(.*)>\\W*$");
 
   @Inject
   public ChangesetDescriptionTrailers() {}
 
   @Override
-  public List<TrailerPersonDto> getTrailers(Repository repository, Changeset changeset) {
-    List<TrailerPersonDto> persons = new ArrayList<>();
+  public List<Trailer> getTrailers(Repository repository, Changeset changeset) {
+    List<Trailer> trailers = new ArrayList<>();
 
     try (Scanner scanner = new Scanner(changeset.getDescription())) {
-      scanner.useDelimiter(Pattern.compile("[\\n]"));
-      while (scanner.hasNext()) {
-        String line = scanner.next();
+      while (scanner.hasNextLine()) {
+        String line = scanner.nextLine();
 
-        for (String trailerType : types) {
-          if (line.contains(trailerType)) {
-            TrailerPersonDto personDto = createPersonDtoFromUser(line);
-            personDto.setTrailerType(trailerType);
-            persons.add(personDto);
+        String[] typeAndUser = line.split(":\\W");
+        if (typeAndUser.length == 2) {
+          String type = typeAndUser[0];
+          String person = typeAndUser[1];
+          if (SUPPORTED_TRAILER_TYPES.contains(type)) {
+          Optional<Trailer> trailer = createTrailer(type, person);
+          trailer.ifPresent(trailers::add);
           }
         }
       }
     }
-    return persons;
+    return trailers;
   }
 
-  private TrailerPersonDto createPersonDtoFromUser(String line) {
-    TrailerPersonDto personDto = new TrailerPersonDto();
-
-    String[] splittedTrailer = line.split("[:<>]");
-
-    if (splittedTrailer.length > 1) {
-      personDto.setName(splittedTrailer[1].trim());
-      if (splittedTrailer.length > 2) {
-        personDto.setMail(splittedTrailer[2]);
-      }
+  private Optional<Trailer> createTrailer(String type, String person) {
+    Matcher matcher = PERSON_PATTERN.matcher(person.trim());
+    if (matcher.matches()) {
+      MatchResult matchResult = matcher.toMatchResult();
+      return of(new Trailer(type, matchResult.group(2), matchResult.group(1)));
+    } else {
+      return empty();
     }
-
-    return personDto;
   }
 }

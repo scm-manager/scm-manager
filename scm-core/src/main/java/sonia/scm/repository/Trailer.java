@@ -24,12 +24,11 @@
 
 package sonia.scm.repository;
 
-import sonia.scm.api.v2.resources.TrailerPersonDto;
-import sonia.scm.plugin.ExtensionPoint;
+import lombok.Value;
 
-import java.util.List;
-
-@ExtensionPoint
-public interface ChangesetTrailers {
-  List<Trailer> getTrailers(Repository repository, Changeset changeset);
+@Value
+public class Trailer {
+  private String trailerType;
+  private String mail;
+  private String name;
 }
