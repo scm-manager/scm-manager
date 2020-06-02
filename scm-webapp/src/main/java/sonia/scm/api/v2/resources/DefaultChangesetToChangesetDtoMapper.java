@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
@@ -95,11 +94,13 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
   void removeTrailerFromChangesetDescription(@MappingTarget ChangesetDto target) {
     StringBuilder builder = new StringBuilder();
     try (Scanner scanner = new Scanner(target.getDescription())) {
-      scanner.useDelimiter(Pattern.compile("[\\n]"));
-      while (scanner.hasNext()) {
-        String line = scanner.next();
+      while (scanner.hasNextLine()) {
+        String line = scanner.nextLine();
         if (!line.contains("-by:")) {
-          builder.append(line).append("\n");
+          builder.append(line);
+          if (scanner.hasNextLine()) {
+            builder.append("\n");
+          }
         }
       }
     }
