@@ -23,11 +23,14 @@
  */
 package sonia.scm.lifecycle;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
-import sonia.scm.PlatformType;
+import sonia.scm.Platform;
 import sonia.scm.util.SystemUtil;
 
 import java.lang.reflect.Constructor;
+import java.util.Map;
+import java.util.Properties;
 
 final class RestartStrategyFactory {
 
@@ -41,7 +44,15 @@ final class RestartStrategyFactory {
    */
   static final  String STRATEGY_NONE = "none";
 
-  private RestartStrategyFactory() {
+  private final Platform platform;
+  private final Map<String, String> environment;
+  private final Properties systemProperties;
+
+  @VisibleForTesting
+  RestartStrategyFactory(Platform platform, Map<String, String> environment, Properties systemProperties) {
+    this.platform = platform;
+    this.environment = environment;
+    this.systemProperties = systemProperties;
   }
 
   /**
@@ -51,14 +62,24 @@ final class RestartStrategyFactory {
    * @return configured strategy or {@code null}
    */
   static RestartStrategy create(ClassLoader webAppClassLoader) {
-    String property = System.getProperty(PROPERTY_STRATEGY);
+    RestartStrategyFactory factory = new RestartStrategyFactory(
+      SystemUtil.getPlatform(),
+      System.getenv(),
+      System.getProperties()
+    );
+    return factory.fromClassLoader(webAppClassLoader);
+  }
+
+  @VisibleForTesting
+  RestartStrategy fromClassLoader(ClassLoader webAppClassLoader) {
+    String property = systemProperties.getProperty(PROPERTY_STRATEGY);
     if (Strings.isNullOrEmpty(property)) {
       return forPlatform();
     }
     return fromProperty(webAppClassLoader, property);
   }
 
-  private static RestartStrategy fromProperty(ClassLoader webAppClassLoader, String property) {
+  private RestartStrategy fromProperty(ClassLoader webAppClassLoader, String property) {
     if (STRATEGY_NONE.equalsIgnoreCase(property)) {
       return null;
     } else if (ExitRestartStrategy.NAME.equalsIgnoreCase(property)) {
@@ -68,7 +89,7 @@ final class RestartStrategyFactory {
     }
   }
 
-  private static RestartStrategy fromClassName(String className, ClassLoader classLoader) {
+  private RestartStrategy fromClassName(String className, ClassLoader classLoader) {
     try {
       Class<? extends RestartStrategy> rsClass = Class.forName(className).asSubclass(RestartStrategy.class);
       return createInstance(rsClass, classLoader);
@@ -77,7 +98,7 @@ final class RestartStrategyFactory {
     }
   }
 
-  private static RestartStrategy createInstance(Class<? extends RestartStrategy> rsClass, ClassLoader classLoader) throws InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException, NoSuchMethodException {
+  private RestartStrategy createInstance(Class<? extends RestartStrategy> rsClass, ClassLoader classLoader) throws InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException, NoSuchMethodException {
     try {
       Constructor<? extends RestartStrategy> constructor = rsClass.getConstructor(ClassLoader.class);
       return constructor.newInstance(classLoader);
@@ -86,12 +107,11 @@ final class RestartStrategyFactory {
     }
   }
 
-  private static RestartStrategy forPlatform() {
-    // we do not use SystemUtil here, to allow testing
-    String osName = System.getProperty(SystemUtil.PROPERTY_OSNAME);
-    PlatformType platform = PlatformType.createPlatformType(osName);
+  private RestartStrategy forPlatform() {
     if (platform.isPosix()) {
       return new PosixRestartStrategy();
+    } else if (platform.isWindows() && WinSWRestartStrategy.isSupported(environment)) {
+      return new WinSWRestartStrategy();
     }
     return null;
   }

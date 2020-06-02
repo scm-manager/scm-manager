@@ -1,0 +1,16 @@
+[Unit]
+Description=SCM-Manager Server
+After=syslog.target network.target
+
+[Service]
+Type=forking
+
+User=scm
+Group=scm
+
+WorkingDirectory=/opt/scm-server
+ExecStart=/opt/scm-server/bin/scm-server start
+ExecStop=/opt/scm-server/bin/scm-server stop
+
+[Install]
+WantedBy=multi-user.target

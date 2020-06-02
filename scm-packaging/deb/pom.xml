@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+    MIT License
+
+    Copyright (c) 2020-present Cloudogu GmbH and Contributors
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>sonia.scm.packaging</groupId>
+    <artifactId>scm-packaging</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>deb</artifactId>
+  <packaging>deb</packaging>
+  <version>2.0.0-SNAPSHOT</version>
+  <description>Packaging for Debian/Ubuntu</description>
+  <name>deb</name>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-server</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.1.2</version>
+        <executions>
+          <execution>
+            <id>copy-server</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeScope>runtime</includeScope>
+              <outputDirectory>${project.build.directory}/deb/lib</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-jsvc</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>commons-daemon</groupId>
+                  <artifactId>commons-daemon-native</artifactId>
+                  <version>1.1.0</version>
+                  <type>tar.gz</type>
+                  <fileMappers>
+                    <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper/>
+                  </fileMappers>
+                </artifactItem>
+              </artifactItems>
+              <includes>**/jsvc-linux-*</includes>
+              <outputDirectory>${project.build.directory}/deb/libexec</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-webapp</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>sonia.scm</groupId>
+                  <artifactId>scm-webapp</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                  <outputDirectory>${project.build.directory}/deb/var/webapp</outputDirectory>
+                  <destFileName>scm-webapp.war</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>jdeb</artifactId>
+        <groupId>org.vafer</groupId>
+        <version>1.8</version>
+        <extensions>true</extensions>
+        <configuration>
+          <name>scm-server</name>
+          <deb>${project.build.directory}/scm-server_${project.version}_all.deb</deb>
+          <verbose>false</verbose>
+          <snapshotExpand>true</snapshotExpand>
+          <controlDir>${basedir}/src/main/deb/control</controlDir>
+          <dataSet>
+
+            <data>
+              <type>file</type>
+              <src>${project.basedir}/../unix/src/main/bin/scm-server</src>
+              <dst>/opt/scm-server/bin/scm-server</dst>
+              <mapper>
+                <type>perm</type>
+                <user>root</user>
+                <group>scm</group>
+                <filemode>0750</filemode>
+              </mapper>
+            </data>
+
+            <data>
+              <type>file</type>
+              <src>src/main/fs/etc/default/scm-server</src>
+              <dst>/etc/default/scm-server</dst>
+              <conffile>true</conffile>
+              <mapper>
+                <type>perm</type>
+                <user>root</user>
+                <group>scm</group>
+                <filemode>0640</filemode>
+              </mapper>
+            </data>
+
+
+            <data>
+              <type>file</type>
+              <src>${project.basedir}/../unix/src/main/fs/conf/logging.xml</src>
+              <dst>/etc/scm/logging.xml</dst>
+              <conffile>true</conffile>
+              <mapper>
+                <type>perm</type>
+                <user>root</user>
+                <group>scm</group>
+                <filemode>0640</filemode>
+              </mapper>
+            </data>
+
+            <data>
+              <type>file</type>
+              <src>${project.basedir}/../unix/src/main/fs/conf/server-config.xml</src>
+              <dst>/etc/scm/server-config.xml</dst>
+              <conffile>true</conffile>
+              <mapper>
+                <type>perm</type>
+                <user>root</user>
+                <group>scm</group>
+                <filemode>0640</filemode>
+              </mapper>
+            </data>
+
+            <data>
+              <type>file</type>
+              <src>src/main/fs/etc/systemd/system/scm-server.service</src>
+              <dst>/etc/systemd/system/scm-server.service</dst>
+              <mapper>
+                <type>perm</type>
+                <user>root</user>
+                <group>root</group>
+                <filemode>0644</filemode>
+              </mapper>
+            </data>
+
+            <data>
+              <type>directory</type>
+              <src>${project.build.directory}/deb/lib</src>
+              <mapper>
+                <type>perm</type>
+                <prefix>/opt/scm-server/lib</prefix>
+                <user>root</user>
+                <group>scm</group>
+                <filemode>0644</filemode>
+              </mapper>
+            </data>
+
+            <data>
+              <type>directory</type>
+              <src>${project.build.directory}/deb/libexec</src>
+              <mapper>
+                <type>perm</type>
+                <prefix>/opt/scm-server/libexec</prefix>
+                <user>root</user>
+                <group>scm</group>
+                <filemode>0755</filemode>
+              </mapper>
+            </data>
+
+            <data>
+              <type>file</type>
+              <src>${project.basedir}/../unix/src/main/fs/var/webapp/docroot/index.html</src>
+              <dst>/opt/scm-server/var/webapp/docroot/index.html</dst>
+              <mapper>
+                <type>perm</type>
+                <user>root</user>
+                <group>scm</group>
+                <filemode>0644</filemode>
+              </mapper>
+            </data>
+
+            <data>
+              <type>file</type>
+              <src>${project.build.directory}/deb/var/webapp/scm-webapp.war</src>
+              <dst>/opt/scm-server/var/webapp/scm-webapp.war</dst>
+              <mapper>
+                <type>perm</type>
+                <user>root</user>
+                <group>scm</group>
+                <filemode>0644</filemode>
+              </mapper>
+            </data>
+
+            <data>
+              <type>template</type>
+              <paths>
+                <path>/run/scm</path>
+                <path>/var/log/scm</path>
+                <path>/var/lib/scm</path>
+                <path>/var/cache/scm</path>
+                <path>/var/cache/scm/work</path>
+              </paths>
+              <mapper>
+                <type>perm</type>
+                <user>scm</user>
+                <group>scm</group>
+                <filemode>0750</filemode>
+              </mapper>
+            </data>
+
+            <data>
+              <type>link</type>
+              <linkName>/opt/scm-server/var/log</linkName>
+              <linkTarget>/var/log/scm</linkTarget>
+              <symlink>true</symlink>
+            </data>
+
+            <data>
+              <type>link</type>
+              <linkName>/opt/scm-server/conf</linkName>
+              <linkTarget>/etc/scm</linkTarget>
+              <symlink>true</symlink>
+            </data>
+
+            <data>
+              <type>link</type>
+              <linkName>/opt/scm-server/work</linkName>
+              <linkTarget>/var/cache/scm/work</linkTarget>
+              <symlink>true</symlink>
+            </data>
+
+          </dataSet>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.8.2</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
+        <version>1.9.0</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>3.0.3</version>
+            <type>pom</type>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>set-repo-suffix</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <scripts>
+                <script>
+                  <![CDATA[
+                  String suffix = "releases"
+                  if (project.version.contains("SNAPSHOT")) {
+                    suffix = "snapshots"
+                  }
+                  project.properties.setProperty("apt.repository.suffix", suffix)
+                  ]]>
+                </script>
+              </scripts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>net.lopht.maven-plugins</groupId>
+        <artifactId>upload-maven-plugin</artifactId>
+        <version>0.6.0</version>
+        <executions>
+          <execution>
+            <phase>deploy</phase>
+            <goals>
+              <goal>upload-file</goal>
+            </goals>
+            <configuration>
+              <file>${project.artifact.file}</file>
+              <preemptiveAuth>true</preemptiveAuth>
+              <repositoryUrl>${deployment.target}</repositoryUrl>
+              <repositoryPath>/repository/apt-v2-${apt.repository.suffix}/</repositoryPath>
+              <serverId>${deployment.serverId}</serverId>
+              <usePOST>true</usePOST>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>sign</id>
+      <activation>
+        <property>
+          <name>gpg.scm.keyring</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>jdeb</artifactId>
+            <groupId>org.vafer</groupId>
+            <version>1.8</version>
+            <configuration>
+              <signRole>builder</signRole>
+              <signPackage>true</signPackage>
+              <keyring>${gpg.scm.keyring}</keyring>
+              <key>${gpg.scm.key}</key>
+              <passphrase>${gpg.scm.passphrase}</passphrase>
+            </configuration>
+          </plugin>
+
+        </plugins>
+
+      </build>
+    </profile>
+  </profiles>
+
+</project>

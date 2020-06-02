@@ -37,7 +37,7 @@ In the figure you can see an example of the page. We tried to guess meaningful n
 
 The probably most safe strategy (but also the most costly) is *COPY*. The old folder of the repository will be kept and all data will be copied to the new default folder (so this also is the default). *MOVE* and *INLINE* are more efficient. When you have a lot of repositories, maybe you will take the chance to clean them up and *IGNORE* or even *DELETE* old stuff.
 
-If you have more than 100 Repositories to migrate, you may have to adapt some configuration and increase the limit of jetty form keys. You can do this by setting the `maxFormKeys` and `maxFormContentSize` of the webapp in `conf/serverserver-config.xml`. You have to add the keys to the `WebAppContext` with the id `"scm-webapp"` e.g.:
+If you have more than 100 Repositories to migrate, you may have to adapt some configuration and increase the limit of jetty form keys. You can do this by setting the `maxFormKeys` and `maxFormContentSize` of the webapp in `conf/server-config.xml`. You have to add the keys to the `WebAppContext` with the id `"scm-webapp"` e.g.:
 
 ```
 <New id="scm-webapp" class="org.eclipse.jetty.webapp.WebAppContext">

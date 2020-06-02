@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+    MIT License
+
+    Copyright (c) 2020-present Cloudogu GmbH and Contributors
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>sonia.scm.packaging</groupId>
+    <artifactId>scm-packaging</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>rpm</artifactId>
+  <packaging>rpm</packaging>
+  <version>2.0.0-SNAPSHOT</version>
+  <description>Packaging for RedHat/Centos/Fedora</description>
+  <name>rpm</name>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-server</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.1.2</version>
+        <executions>
+          <execution>
+            <id>copy-server</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeScope>runtime</includeScope>
+              <outputDirectory>${project.build.directory}/rpm/lib</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-jsvc</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>commons-daemon</groupId>
+                  <artifactId>commons-daemon-native</artifactId>
+                  <version>1.1.0</version>
+                  <type>tar.gz</type>
+                  <fileMappers>
+                    <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper/>
+                  </fileMappers>
+                </artifactItem>
+              </artifactItems>
+              <includes>**/jsvc-linux-*</includes>
+              <outputDirectory>${project.build.directory}/rpm/libexec</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-webapp</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>sonia.scm</groupId>
+                  <artifactId>scm-webapp</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                  <outputDirectory>${project.build.directory}/rpm/var/webapp</outputDirectory>
+                  <destFileName>scm-webapp.war</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>de.dentrassi.maven</groupId>
+        <artifactId>rpm</artifactId>
+        <version>1.5.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <attach>true</attach>
+          <packageName>scm-server</packageName>
+          <group>Development/Tools</group>
+          <license>MIT</license>
+          <skipSigning>true</skipSigning>
+
+          <requires>
+            <require>procps</require>
+          </requires>
+
+          <recommends>
+            <recommend>java-11-openjdk-headless</recommend>
+            <recommend>mercurial</recommend>
+          </recommends>
+
+          <beforeInstallation>
+            <file>src/main/scripts/before-installation.sh</file>
+          </beforeInstallation>
+
+          <afterInstallation>
+            <file>src/main/scripts/after-installation.sh</file>
+          </afterInstallation>
+
+          <!-- rule sets -->
+
+          <rulesets>
+            <ruleset>
+              <id>default</id>
+              <rules>
+                <rule>
+                  <when>
+                    <type>file</type>
+                    <prefix>/opt/scm-server/lib</prefix>
+                  </when>
+                  <user>root</user>
+                  <group>scm</group>
+                  <mode>0644</mode>
+                </rule>
+                <rule>
+                  <when>
+                    <type>file</type>
+                    <prefix>/opt/scm-server/libexec</prefix>
+                  </when>
+                  <user>root</user>
+                  <group>scm</group>
+                  <mode>0755</mode>
+                </rule>
+              </rules>
+            </ruleset>
+          </rulesets>
+
+          <entries>
+
+            <entry>
+              <name>/opt/scm-server/bin/scm-server</name>
+              <file>${project.basedir}/../unix/src/main/bin/scm-server</file>
+              <user>root</user>
+              <group>scm</group>
+              <mode>0750</mode>
+            </entry>
+
+            <entry>
+              <name>/etc/default/scm-server</name>
+              <file>src/main/fs/etc/default/scm-server</file>
+              <user>root</user>
+              <group>scm</group>
+              <mode>0640</mode>
+              <configuration>true</configuration>
+            </entry>
+
+            <entry>
+              <name>/etc/scm/logging.xml</name>
+              <file>${project.basedir}/../unix/src/main/fs/conf/logging.xml</file>
+              <user>root</user>
+              <group>scm</group>
+              <mode>0640</mode>
+              <configuration>true</configuration>
+            </entry>
+
+            <entry>
+              <name>/etc/scm/server-config.xml</name>
+              <file>${project.basedir}/../unix/src/main/fs/conf/server-config.xml</file>
+              <user>root</user>
+              <group>scm</group>
+              <mode>0640</mode>
+              <configuration>true</configuration>
+            </entry>
+
+            <entry>
+              <name>/etc/systemd/system/scm-server.service</name>
+              <file>src/main/fs/etc/systemd/system/scm-server.service</file>
+              <user>root</user>
+              <group>root</group>
+              <mode>0644</mode>
+            </entry>
+
+            <entry>
+              <name>/opt/scm-server/lib</name>
+              <collect>
+                <from>${project.build.directory}/rpm/lib</from>
+              </collect>
+              <ruleset>default</ruleset>
+            </entry>
+
+            <entry>
+              <name>/opt/scm-server/libexec</name>
+              <collect>
+                <from>${project.build.directory}/rpm/libexec</from>
+              </collect>
+              <ruleset>default</ruleset>
+            </entry>
+
+            <entry>
+              <name>/opt/scm-server/var/webapp/docroot/index.html</name>
+              <file>${project.basedir}/../unix/src/main/fs/var/webapp/docroot/index.html</file>
+              <user>root</user>
+              <group>scm</group>
+              <mode>0644</mode>
+            </entry>
+
+            <entry>
+              <name>/opt/scm-server/var/webapp/scm-webapp.war</name>
+              <file>${project.build.directory}/rpm/var/webapp/scm-webapp.war</file>
+              <user>root</user>
+              <group>scm</group>
+              <mode>0644</mode>
+            </entry>
+
+            <entry>
+              <name>/var/log/scm</name>
+              <directory>true</directory>
+              <user>scm</user>
+              <group>scm</group>
+              <mode>0750</mode>
+            </entry>
+
+            <entry>
+              <name>/run/scm</name>
+              <directory>true</directory>
+              <user>scm</user>
+              <group>scm</group>
+              <mode>0750</mode>
+            </entry>
+
+            <entry>
+              <name>/opt/scm-server/var/log</name>
+              <linkTo>/var/log/scm</linkTo>
+              <user>scm</user>
+              <group>scm</group>
+            </entry>
+
+            <entry>
+              <name>/opt/scm-server/conf</name>
+              <linkTo>/etc/scm</linkTo>
+              <user>root</user>
+              <group>root</group>
+            </entry>
+
+            <entry>
+              <name>/var/lib/scm</name>
+              <directory>true</directory>
+              <user>scm</user>
+              <group>scm</group>
+              <mode>0750</mode>
+            </entry>
+
+            <entry>
+              <name>/var/cache/scm</name>
+              <directory>true</directory>
+              <user>scm</user>
+              <group>scm</group>
+              <mode>0750</mode>
+            </entry>
+
+            <entry>
+              <name>/var/cache/scm/work</name>
+              <directory>true</directory>
+              <user>scm</user>
+              <group>scm</group>
+              <mode>0750</mode>
+            </entry>
+
+            <entry>
+              <name>/opt/scm-server/work</name>
+              <linkTo>/var/cache/scm/work</linkTo>
+              <user>root</user>
+              <group>root</group>
+            </entry>
+
+          </entries>
+
+        </configuration>
+      </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.8.2</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
+        <version>1.9.0</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>3.0.3</version>
+            <type>pom</type>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>set-repo-suffix</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <scripts>
+                <script>
+                  <![CDATA[
+                  String suffix = "releases"
+                  if (project.version.contains("SNAPSHOT")) {
+                    suffix = "snapshots"
+                  }
+                  project.properties.setProperty("yum.repository.suffix", suffix)
+                  ]]>
+                </script>
+              </scripts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>net.lopht.maven-plugins</groupId>
+        <artifactId>upload-maven-plugin</artifactId>
+        <version>0.6.0</version>
+        <executions>
+          <execution>
+            <phase>deploy</phase>
+            <goals>
+              <goal>upload-file</goal>
+            </goals>
+            <configuration>
+              <file>${project.artifact.file}</file>
+              <preemptiveAuth>true</preemptiveAuth>
+              <repositoryUrl>${deployment.target}</repositoryUrl>
+              <repositoryPath>/repository/yum-v2-${yum.repository.suffix}/${project.artifact.file.name}</repositoryPath>
+              <serverId>${deployment.serverId}</serverId>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>sign</id>
+      <activation>
+        <property>
+          <name>gpg.scm.keyring</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>de.dentrassi.maven</groupId>
+            <artifactId>rpm</artifactId>
+            <version>1.5.0</version>
+            <configuration>
+              <skipSigning>false</skipSigning>
+              <signature>
+                <keyringFile>${gpg.scm.keyring}</keyringFile>
+                <keyId>${gpg.scm.key}</keyId>
+                <passphrase>${gpg.scm.passphrase}</passphrase>
+              </signature>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

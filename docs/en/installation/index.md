@@ -4,10 +4,10 @@ subtitle: Installation of scm-manager
 partiallyActive: true
 ---
 
+* [Debian/Ubuntu](debian/)
+* [Red Hat/CentOS/Fedora](redhat/)
+* [Windows](windows/)
+* [Mac OS X](osx/)
+* [Unix General](unix/)
 * [Docker](docker/)
-* Kubernetes
-* Debian based
-* Red Hat based
-* [Linux General](linux/)
-* Mac OS X
-* Windows
+* [Kubernetes](k8s/)

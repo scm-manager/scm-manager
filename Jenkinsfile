@@ -62,7 +62,7 @@ node('docker') {
       }
 
       stage('Build') {
-        mvn 'clean install -DskipTests'
+        mvn "clean install -DskipTests"
       }
 
       parallel(
@@ -97,15 +97,12 @@ node('docker') {
           imageVersion = imageVersion.replace('-SNAPSHOT', "-${commitHash.substring(0,7)}-${BUILD_NUMBER}")
         }
 
-        stage('Archive') {
-          archiveArtifacts 'scm-webapp/target/scm-webapp.war'
-          archiveArtifacts 'scm-server/target/scm-server-app.*'
-        }
-
-        stage('Maven Deployment') {
-          // TODO why is the server recreated
-          // delete appassembler target, because the maven plugin fails to recreate the tar
-          sh "rm -rf scm-server/target/appassembler"
+        stage('Deployment') {
+          // configuration for docker deployment
+          mvn.useRepositoryCredentials([
+            id: 'docker.io',
+            credentialsId: 'hub.docker.com-cesmarvin'
+          ])
 
           // deploy java artifacts
           mvn.useDeploymentRepository([
@@ -135,19 +132,10 @@ node('docker') {
               sh "mv .git.disabled .git"
             }
           }
-        }
 
-        stage('Docker') {
-          docker.withRegistry('', 'hub.docker.com-cesmarvin') {
-            // push to cloudogu repository for internal usage
-            def image = docker.build('cloudogu/scm-manager')
-            image.push(imageVersion)
-            image.push("latest")
-            if (isReleaseBranch()) {
-              // push to official repository
-              image = docker.build('scmmanager/scm-manager')
-              image.push(imageVersion)
-            }
+          // deploy packages
+          withGPGEnvironment {
+            mvn "-Dgpg.scm.keyring='${GPG_KEYRING}' -Dgpg.scm.key='${GPG_KEY_ID}' -Dgpg.scm.passphrase='${GPG_KEY_PASSPHRASE}' -Ppackaging -rf :scm-packaging deploy"
           }
         }
 
@@ -201,7 +189,9 @@ node('docker') {
 String mainBranch
 
 Maven setupMavenBuild() {
-  Maven mvn = new MavenWrapperInDocker(this, "scmmanager/java-build:11.0.6_10")
+  MavenWrapperInDocker mvn = new MavenWrapperInDocker(this, "scmmanager/java-build:11.0.7_10")
+  mvn.enableDockerHost = true
+
   // disable logging durring the build
   def logConf = "scm-webapp/src/main/resources/logback.ci.xml"
   mvn.additionalArgs += " -Dlogback.configurationFile=${logConf}"
@@ -241,3 +231,11 @@ boolean waitForQualityGateWebhookToBeCalled() {
   return isQualityGateSucceeded
 }
 
+void withGPGEnvironment(def closure) {
+  withCredentials([
+    file(credentialsId: 'oss-gpg-secring', variable: 'GPG_KEYRING'),
+    usernamePassword(credentialsId: 'oss-keyid-and-passphrase', usernameVariable: 'GPG_KEY_ID', passwordVariable: 'GPG_KEY_PASSPHRASE')
+  ]) {
+    closure.call()
+  }
+}

@@ -41,7 +41,8 @@ Example:
 </Call>
 ```
 
-## SCM-Manager Configuration version 1.5 and above
+## SCM-Manager Configuration
+
 * Login as an admin user and select "General"
 * Set the "Base Url" to the URL of Nginx (**warning:** don't check "Force Base Url")
-* Save the new new settings
+* Save the new settings
