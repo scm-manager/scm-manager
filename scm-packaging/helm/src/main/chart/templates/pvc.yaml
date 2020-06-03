@@ -22,7 +22,8 @@
 # SOFTWARE.
 #
 
-{{- if .Values.persistence.enabled -}}
+{{- if .Values.persistence.enabled }}
+
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -45,4 +46,5 @@ spec:
   storageClassName: "{{ .Values.persistence.storageClass }}"
 {{- end }}
 {{- end }}
-{{- end -}}
+
+{{- end }}
