@@ -81,7 +81,7 @@
         </dependencies>
         <executions>
           <execution>
-            <id>add-helm-url</id>
+            <id>init-helm-environment</id>
             <phase>validate</phase>
             <goals>
               <goal>execute</goal>
@@ -91,6 +91,18 @@
                 <script>${project.basedir}/src/main/build/download.groovy</script>
                 <script>${project.basedir}/src/main/build/repository.groovy</script>
                 <script>${project.basedir}/../docker/src/main/build/name.groovy</script>
+              </scripts>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-package-yml</id>
+            <phase>package</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <scripts>
+                <script>${project.basedir}/src/main/build/packageYaml.groovy</script>
               </scripts>
             </configuration>
           </execution>
