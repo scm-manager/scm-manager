@@ -104,6 +104,11 @@ node('docker') {
             credentialsId: 'hub.docker.com-cesmarvin'
           ])
 
+          mvn.useRepositoryCredentials([
+            id: 'github.com/scm-manager/website',
+            credentialsId: 'cesmarvin-github'
+          ])
+
           // deploy java artifacts
           mvn.useDeploymentRepository([
             id: 'packages.scm-manager.org',

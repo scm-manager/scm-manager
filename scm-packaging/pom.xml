@@ -55,6 +55,7 @@
         <module>rpm</module>
         <module>docker</module>
         <module>helm</module>
+        <module>release-yaml</module>
       </modules>
 
     </profile>
