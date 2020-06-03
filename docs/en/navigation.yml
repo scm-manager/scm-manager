@@ -25,10 +25,10 @@
 
 - section: Administration
   entries:
-    - /command-line-client/
-    - /scm-server-ssl/
-    - /Permissions/
-    - /rv-plugin-comparison/
+    - /administration/command-line-client/
+    - /administration/scm-server-ssl/
+    - /administration/Permissions/
+    - /administration/rv-plugin-comparison/
     - /healthchecks/svn-incompatible-dbformat/
 
 - section: Mercurial
