@@ -134,7 +134,7 @@
 
             <data>
               <type>file</type>
-              <src>${project.basedir}/../unix/src/main/bin/scm-server</src>
+              <src>src/main/bin/scm-server</src>
               <dst>/opt/scm-server/bin/scm-server</dst>
               <mapper>
                 <type>perm</type>
@@ -160,7 +160,7 @@
 
             <data>
               <type>file</type>
-              <src>${project.basedir}/../unix/src/main/fs/conf/logging.xml</src>
+              <src>src/main/fs/etc/scm/logging.xml</src>
               <dst>/etc/scm/logging.xml</dst>
               <conffile>true</conffile>
               <mapper>
@@ -173,7 +173,7 @@
 
             <data>
               <type>file</type>
-              <src>${project.basedir}/../unix/src/main/fs/conf/server-config.xml</src>
+              <src>src/main/fs/etc/scm/server-config.xml</src>
               <dst>/etc/scm/server-config.xml</dst>
               <conffile>true</conffile>
               <mapper>
@@ -222,7 +222,7 @@
 
             <data>
               <type>file</type>
-              <src>${project.basedir}/../unix/src/main/fs/var/webapp/docroot/index.html</src>
+              <src>src/main/fs/opt/scm-server/var/webapp/docroot/index.html</src>
               <dst>/opt/scm-server/var/webapp/docroot/index.html</dst>
               <mapper>
                 <type>perm</type>

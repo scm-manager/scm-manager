@@ -19,26 +19,21 @@
 #   reserved.
 
 # user used to run the daemon (defaults to current user)
-USER=""
+USER="scm"
 
 # extra jvm arguments
 EXTRA_JVM_ARGUMENTS="-Djava.awt.headless=true -Dlogback.configurationFile=logging.xml"
 
-BASEDIR=`dirname $0`/..
-BASEDIR=`(cd "$BASEDIR"; pwd)`
+BASEDIR="/opt/scm-server"
 
 # set pid path for jsvc
-PIDFILE="$BASEDIR/var/scm-server.pid"
+PIDFILE="/var/run/scm-server.pid"
 
 # set log dir for jsvc
-LOGDIR="$BASEDIR/var/log"
+LOGDIR="/var/log/scm"
 
 # load settings from defaults directory
 [ -r /etc/default/scm-server ] && . /etc/default/scm-server
-# mac os and bsd
-[ -r /etc/defaults/scm-server ] && . /etc/defaults/scm-server
-
-
 
 OS=`uname | tr '[:upper:]' '[:lower:]'`
 ARCH=`uname -m`

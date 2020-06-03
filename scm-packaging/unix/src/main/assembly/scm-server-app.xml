@@ -49,6 +49,7 @@
       <directory>src/main/bin</directory>
       <filtered>false</filtered>
       <outputDirectory>bin</outputDirectory>
+      <directoryMode>0755</directoryMode>
       <fileMode>0755</fileMode>
     </fileSet>
 
@@ -56,6 +57,7 @@
       <directory>target/unix/libexec</directory>
       <filtered>false</filtered>
       <outputDirectory>libexec</outputDirectory>
+      <directoryMode>0755</directoryMode>
       <fileMode>0755</fileMode>
     </fileSet>
 
