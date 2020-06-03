@@ -120,7 +120,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public BranchCommand getBranchCommand() {
-    return new HgBranchCommand(context, handler.getWorkdirFactory());
+    return new HgBranchCommand(context, handler.getWorkingCopyFactory());
   }
 
   /**
@@ -232,7 +232,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public ModifyCommand getModifyCommand() {
-    return new HgModifyCommand(context, handler.getWorkdirFactory());
+    return new HgModifyCommand(context, handler.getWorkingCopyFactory());
   }
 
   /**

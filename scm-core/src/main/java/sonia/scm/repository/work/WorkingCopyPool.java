@@ -21,9 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.util;
 
-public interface WorkdirFactory<R, W, C> {
-  WorkingCopy<R, W> createWorkingCopy(C context, String initialBranch);
+package sonia.scm.repository.work;
+
+import java.io.File;
+
+public interface WorkingCopyPool {
+  <R, W> WorkingCopy<R, W> getWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext context);
+
+  void contextClosed(SimpleWorkingCopyFactory<?, ?, ?>.WorkingCopyContext workingCopyContext, File workdir);
+
+  void shutdown();
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -56,7 +56,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   private ConfigurationStoreFactory factory;
 
   @Mock
-  private GitWorkdirFactory gitWorkdirFactory;
+  private GitWorkingCopyFactory gitWorkingCopyFactory;
 
 
   @Override
@@ -87,7 +87,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
                                                       RepositoryLocationResolver locationResolver,
                                                       File directory) {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      scheduler, locationResolver, gitWorkdirFactory, null);
+      scheduler, locationResolver, gitWorkingCopyFactory, null);
     repositoryHandler.init(contextProvider);
 
     GitConfig config = new GitConfig();
@@ -101,7 +101,7 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   @Test
   public void getDirectory() {
     GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
-      scheduler, locationResolver, gitWorkdirFactory, null);
+      scheduler, locationResolver, gitWorkingCopyFactory, null);
     GitConfig config = new GitConfig();
     config.setDisabled(false);
     config.setGcExpression("gc exp");

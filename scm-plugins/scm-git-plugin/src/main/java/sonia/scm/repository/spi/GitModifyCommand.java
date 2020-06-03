@@ -34,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NoChangesMadeException;
-import sonia.scm.repository.GitWorkdirFactory;
+import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
@@ -50,18 +50,18 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
   private static final Logger LOG = LoggerFactory.getLogger(GitModifyCommand.class);
   private static final Striped<Lock> REGISTER_LOCKS = Striped.lock(5);
 
-  private final GitWorkdirFactory workdirFactory;
+  private final GitWorkingCopyFactory workingCopyFactory;
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
-  GitModifyCommand(GitContext context, GitWorkdirFactory workdirFactory, LfsBlobStoreFactory lfsBlobStoreFactory) {
+  GitModifyCommand(GitContext context, GitWorkingCopyFactory workingCopyFactory, LfsBlobStoreFactory lfsBlobStoreFactory) {
     super(context);
-    this.workdirFactory = workdirFactory;
+    this.workingCopyFactory = workingCopyFactory;
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
   }
 
   @Override
   public String execute(ModifyCommandRequest request) {
-    return inClone(clone -> new ModifyWorker(clone, request), workdirFactory, request.getBranch());
+    return inClone(clone -> new ModifyWorker(clone, request), workingCopyFactory, request.getBranch());
   }
 
   private class ModifyWorker extends GitCloneWorker<String> implements ModifyWorkerHelper {

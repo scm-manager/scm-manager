@@ -21,13 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository;
 
-import sonia.scm.repository.spi.SvnContext;
-import sonia.scm.repository.util.WorkdirFactory;
+package sonia.scm.repository.work;
 
-import java.io.File;
-
-public interface SvnWorkDirFactory extends WorkdirFactory<File, File, SvnContext> {
+public interface WorkingCopyFactory<R, W, C> {
+  WorkingCopy<R, W> createWorkingCopy(C repositoryContext, String initialBranch);
 }

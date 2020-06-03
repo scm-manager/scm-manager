@@ -22,34 +22,40 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository.work;
 
-import com.google.inject.Inject;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.SvnRepositoryHandler;
-import sonia.scm.repository.SvnWorkingCopyFactory;
+import sonia.scm.util.IOUtil;
 
-@Extension
-public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
+import javax.inject.Inject;
+import java.io.File;
 
-  private SvnRepositoryHandler handler;
-  private SvnWorkingCopyFactory workingCopyFactory;
+/**
+ * This is the default implementation for the {@link WorkingCopyPool}. For each requested {@link WorkingCopy} with
+ * {@link #getWorkingCopy(SimpleWorkingCopyFactory.WorkingCopyContext)}, a new directory is requested from the
+ * {@link WorkdirProvider}. This directory is deleted immediately when the context is closed with
+ * {@link #contextClosed(SimpleWorkingCopyFactory.WorkingCopyContext, File)}.
+ */
+public class NoneCachingWorkingCopyPool implements WorkingCopyPool {
+
+  private final WorkdirProvider workdirProvider;
 
   @Inject
-  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler, SvnWorkingCopyFactory workingCopyFactory) {
-    this.handler = handler;
-    this.workingCopyFactory = workingCopyFactory;
+  public NoneCachingWorkingCopyPool(WorkdirProvider workdirProvider) {
+    this.workdirProvider = workdirProvider;
   }
 
   @Override
-  public SvnRepositoryServiceProvider resolve(Repository repository) {
-    SvnRepositoryServiceProvider provider = null;
+  public <R, W> WorkingCopy<R, W> getWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext context) {
+    return context.initialize(workdirProvider.createNewWorkdir());
+  }
 
-    if (SvnRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new SvnRepositoryServiceProvider(handler, repository, workingCopyFactory);
-    }
+  @Override
+  public void contextClosed(SimpleWorkingCopyFactory<?, ?, ?>.WorkingCopyContext workingCopyContext, File workdir) {
+    IOUtil.deleteSilently(workdir);
+  }
 
-    return provider;
+  @Override
+  public void shutdown() {
+    // no caches, nothing to clean up :-)
   }
 }

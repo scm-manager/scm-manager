@@ -24,37 +24,41 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.common.base.Stopwatch;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.ScmTransportProtocol;
-import sonia.scm.repository.GitWorkdirFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.util.SimpleWorkdirFactory;
-import sonia.scm.repository.util.WorkdirProvider;
-import sonia.scm.util.SystemUtil;
+import sonia.scm.repository.work.SimpleWorkingCopyFactory.ParentAndClone;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
-public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Repository, GitContext> implements GitWorkdirFactory {
+class GitWorkingCopyInitializer {
 
-  @Inject
-  public SimpleGitWorkdirFactory(WorkdirProvider workdirProvider) {
-    super(workdirProvider);
+  private static final Logger LOG = LoggerFactory.getLogger(GitWorkingCopyInitializer.class);
+
+  private final SimpleGitWorkingCopyFactory simpleGitWorkingCopyFactory;
+  private final GitContext context;
+
+  public GitWorkingCopyInitializer(SimpleGitWorkingCopyFactory simpleGitWorkingCopyFactory, GitContext context) {
+    this.simpleGitWorkingCopyFactory = simpleGitWorkingCopyFactory;
+    this.context = context;
   }
 
-  @Override
-  public ParentAndClone<Repository, Repository> cloneRepository(GitContext context, File target, String initialBranch) {
+  public ParentAndClone<Repository, Repository> initialize(File target, String initialBranch) {
+    LOG.trace("clone repository {}", context.getRepository().getId());
+    Stopwatch stopwatch = Stopwatch.createStarted();
     try {
       Repository clone = Git.cloneRepository()
-        .setURI(createScmTransportProtocolUri(context.getDirectory()))
+        .setURI(simpleGitWorkingCopyFactory.createScmTransportProtocolUri(context.getDirectory()))
         .setDirectory(target)
         .setBranch(initialBranch)
         .call()
@@ -66,38 +70,11 @@ public class SimpleGitWorkdirFactory extends SimpleWorkdirFactory<Repository, Re
         throw notFound(entity("Branch", initialBranch).in(context.getRepository()));
       }
 
-      return new ParentAndClone<>(null, clone);
+      return new ParentAndClone<>(null, clone, target);
     } catch (GitAPIException | IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "could not clone working copy of repository", e);
+    } finally {
+      LOG.trace("took {} to clone repository {}", stopwatch.stop(), context.getRepository().getId());
     }
-  }
-
-  private String createScmTransportProtocolUri(File bareRepository) {
-    if (SystemUtil.isWindows()) {
-      return ScmTransportProtocol.NAME + ":///" + bareRepository.getAbsolutePath().replaceAll("\\\\", "/");
-    } else {
-      return ScmTransportProtocol.NAME + "://" + bareRepository.getAbsolutePath();
-    }
-  }
-
-  @Override
-  protected void closeRepository(Repository repository) {
-    // we have to check for null here, because we do not create a repository for
-    // the parent in cloneRepository
-    if (repository != null) {
-      repository.close();
-    }
-  }
-
-  @Override
-  protected void closeWorkdirInternal(Repository workdir) throws Exception {
-    if (workdir != null) {
-      workdir.close();
-    }
-  }
-
-  @Override
-  protected sonia.scm.repository.Repository getScmRepository(GitContext context) {
-    return context.getRepository();
   }
 }

@@ -22,27 +22,30 @@
  * SOFTWARE.
  */
 
-package sonia.scm.web;
+package sonia.scm.lifecycle.modules;
 
-import com.google.inject.servlet.ServletModule;
-import org.mapstruct.factory.Mappers;
-import sonia.scm.api.v2.resources.SvnConfigDtoToSvnConfigMapper;
-import sonia.scm.api.v2.resources.SvnConfigToSvnConfigDtoMapper;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.SvnWorkingCopyFactory;
-import sonia.scm.repository.spi.SimpleSvnWorkingCopyFactory;
+import com.google.inject.AbstractModule;
+import sonia.scm.plugin.PluginLoader;
+import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
+import sonia.scm.repository.work.WorkingCopyPool;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-@Extension
-public class SvnServletModule extends ServletModule {
+public class WorkingCopyPoolModule extends AbstractModule {
+  public static final String DEFAULT_WORKING_COPY_POOL_STRATEGY = NoneCachingWorkingCopyPool.class.getName();
+  public static final String WORKING_COPY_POOL_STRATEGY_PROPERTY = "scm.workingCopyPoolStrategy";
+  private final ClassLoader classLoader;
+
+  public WorkingCopyPoolModule(PluginLoader pluginLoader) {
+    this.classLoader = pluginLoader.getUberClassLoader();
+  }
 
   @Override
-  protected void configureServlets() {
-    bind(SvnConfigDtoToSvnConfigMapper.class).to(Mappers.getMapper(SvnConfigDtoToSvnConfigMapper.class).getClass());
-    bind(SvnConfigToSvnConfigDtoMapper.class).to(Mappers.getMapper(SvnConfigToSvnConfigDtoMapper.class).getClass());
-    bind(SvnWorkingCopyFactory.class).to(SimpleSvnWorkingCopyFactory.class);
+  protected void configure() {
+    String workingCopyPoolStrategy = System.getProperty(WORKING_COPY_POOL_STRATEGY_PROPERTY, DEFAULT_WORKING_COPY_POOL_STRATEGY);
+    try {
+      Class<? extends WorkingCopyPool> strategyClass = (Class<? extends WorkingCopyPool>) classLoader.loadClass(workingCopyPoolStrategy);
+      bind(WorkingCopyPool.class).to(strategyClass);
+    } catch (Exception e) {
+      throw new IllegalStateException("could not instantiate class for working copy pool: " + workingCopyPoolStrategy, e);
+    }
   }
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import com.google.common.base.Preconditions;
@@ -34,7 +34,7 @@ import sonia.scm.repository.Person;
 import sonia.scm.repository.spi.ModifyCommand;
 import sonia.scm.repository.spi.ModifyCommandRequest;
 import sonia.scm.repository.util.AuthorUtil;
-import sonia.scm.repository.util.WorkdirProvider;
+import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.util.IOUtil;
 
 import java.io.File;

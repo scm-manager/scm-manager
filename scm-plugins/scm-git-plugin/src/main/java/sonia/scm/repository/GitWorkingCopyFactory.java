@@ -21,33 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+package sonia.scm.repository;
 
-public class WorkdirProvider {
+import org.eclipse.jgit.lib.Repository;
+import sonia.scm.repository.spi.GitContext;
+import sonia.scm.repository.work.WorkingCopyFactory;
 
-  private final File poolDirectory;
-
-  public WorkdirProvider() {
-    this(new File(System.getProperty("scm.workdir" , System.getProperty("java.io.tmpdir")), "scm-work"));
-  }
-
-  public WorkdirProvider(File poolDirectory) {
-    this.poolDirectory = poolDirectory;
-    if (!poolDirectory.exists() && !poolDirectory.mkdirs()) {
-      throw new IllegalStateException("could not create pool directory " + poolDirectory);
-    }
-  }
-
-  public File createNewWorkdir() {
-    try {
-      return Files.createTempDirectory(poolDirectory.toPath(),"workdir").toFile();
-    } catch (IOException e) {
-      throw new RuntimeException("could not create temporary workdir", e);
-    }
-  }
+public interface GitWorkingCopyFactory extends WorkingCopyFactory<Repository, Repository, GitContext> {
 }

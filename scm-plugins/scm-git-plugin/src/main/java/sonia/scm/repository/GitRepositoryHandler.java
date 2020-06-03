@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -83,7 +83,7 @@ public class GitRepositoryHandler
 
   private final Scheduler scheduler;
 
-  private final GitWorkdirFactory workdirFactory;
+  private final GitWorkingCopyFactory workingCopyFactory;
 
   private Task task;
 
@@ -93,12 +93,12 @@ public class GitRepositoryHandler
   public GitRepositoryHandler(ConfigurationStoreFactory storeFactory,
                               Scheduler scheduler,
                               RepositoryLocationResolver repositoryLocationResolver,
-                              GitWorkdirFactory workdirFactory,
+                              GitWorkingCopyFactory workingCopyFactory,
                               PluginLoader pluginLoader)
   {
     super(storeFactory, repositoryLocationResolver, pluginLoader);
     this.scheduler = scheduler;
-    this.workdirFactory = workdirFactory;
+    this.workingCopyFactory = workingCopyFactory;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -169,8 +169,8 @@ public class GitRepositoryHandler
     return getStringFromResource(RESOURCE_VERSION, DEFAULT_VERSION_INFORMATION);
   }
 
-  public GitWorkdirFactory getWorkdirFactory() {
-    return workdirFactory;
+  public GitWorkingCopyFactory getWorkingCopyFactory() {
+    return workingCopyFactory;
   }
 
   public String getRepositoryId(StoredConfig gitConfig) {

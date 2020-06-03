@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository;
 
-import org.eclipse.jgit.lib.Repository;
-import sonia.scm.repository.spi.GitContext;
-import sonia.scm.repository.util.WorkdirFactory;
+package sonia.scm.repository.spi;
 
-public interface GitWorkdirFactory extends WorkdirFactory<Repository, Repository, GitContext> {
+import com.aragost.javahg.Repository;
+import com.aragost.javahg.commands.PullCommand;
+import sonia.scm.repository.work.WorkingCopyFactory;
+
+public interface HgWorkingCopyFactory extends WorkingCopyFactory<Repository, Repository, HgCommandContext> {
+  void configure(PullCommand pullCommand);
 }
