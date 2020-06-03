@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -356,6 +356,15 @@ public final class IOUtil
   public static void delete(File file) throws IOException
   {
     delete(file, false);
+  }
+
+  public static void deleteSilently(File file)
+  {
+    try {
+      delete(file, true);
+    } catch (IOException e) {
+      // silent delete throws no exception
+    }
   }
 
   /**

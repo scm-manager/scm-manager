@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.junit.Before;
@@ -29,16 +29,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.tmatesoft.svn.core.SVNException;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.util.WorkdirProvider;
-import sonia.scm.repository.util.WorkingCopy;
+import sonia.scm.repository.work.SimpleCachingWorkingCopyPool;
+import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
+import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.repository.work.WorkingCopy;
 
 import java.io.File;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SimpleSvnWorkDirFactoryTest extends AbstractSvnCommandTestBase {
+public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase {
 
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -53,7 +54,7 @@ public class SimpleSvnWorkDirFactoryTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void shouldCheckoutLatestRevision() throws SVNException, IOException {
-    SimpleSvnWorkDirFactory factory = new SimpleSvnWorkDirFactory(workdirProvider);
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
 
     try (WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null)) {
       assertThat(new File(workingCopy.getWorkingRepository(), "a.txt"))
@@ -64,8 +65,8 @@ public class SimpleSvnWorkDirFactoryTest extends AbstractSvnCommandTestBase {
   }
 
   @Test
-  public void cloneFromPoolshouldNotBeReused() {
-    SimpleSvnWorkDirFactory factory = new SimpleSvnWorkDirFactory(workdirProvider);
+  public void cloneFromPoolShouldNotBeReused() {
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
 
     File firstDirectory;
     try (WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null)) {
@@ -79,23 +80,51 @@ public class SimpleSvnWorkDirFactoryTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void shouldDeleteCloneOnClose() {
-    SimpleSvnWorkDirFactory factory = new SimpleSvnWorkDirFactory(workdirProvider);
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
 
     File directory;
     File workingRepository;
     try (WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null)) {
       directory = workingCopy.getDirectory();
       workingRepository = workingCopy.getWorkingRepository();
-
     }
+
     assertThat(directory).doesNotExist();
     assertThat(workingRepository).doesNotExist();
   }
 
   @Test
-  public void shouldReturnRepository() {
-    SimpleSvnWorkDirFactory factory = new SimpleSvnWorkDirFactory(workdirProvider);
-    Repository scmRepository = factory.getScmRepository(createContext());
-    assertThat(scmRepository).isSameAs(repository);
+  public void shouldDeleteUntrackedFileOnReclaim() throws IOException {
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider));
+
+    WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null);
+    File directory = workingCopy.getWorkingRepository();
+    File untracked = new File(directory, "untracked");
+    untracked.createNewFile();
+
+    workingCopy.close();
+    assertThat(untracked).exists();
+
+    workingCopy = factory.createWorkingCopy(createContext(), null);
+
+    assertThat(workingCopy.getWorkingRepository()).isEqualTo(directory);
+    assertThat(untracked).doesNotExist();
+  }
+
+  @Test
+  public void shouldRestoreDeletedFileOnReclaim() throws IOException {
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider));
+
+    WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null);
+    File directory = workingCopy.getWorkingRepository();
+    File a_txt = new File(directory, "a.txt");
+    a_txt.delete();
+    workingCopy.close();
+    assertThat(a_txt).doesNotExist();
+
+    workingCopy = factory.createWorkingCopy(createContext(), null);
+
+    assertThat(workingCopy.getWorkingRepository()).isEqualTo(directory);
+    assertThat(a_txt).exists();
   }
 }

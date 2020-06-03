@@ -30,36 +30,25 @@ import org.tmatesoft.svn.core.wc2.SvnCheckout;
 import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
 import org.tmatesoft.svn.core.wc2.SvnTarget;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.SvnWorkDirFactory;
-import sonia.scm.repository.util.SimpleWorkdirFactory;
-import sonia.scm.repository.util.WorkdirProvider;
+import sonia.scm.repository.work.SimpleWorkingCopyFactory.ParentAndClone;
 
-import javax.inject.Inject;
 import java.io.File;
 
-public class SimpleSvnWorkDirFactory extends SimpleWorkdirFactory<File, File, SvnContext> implements SvnWorkDirFactory {
+class SvnWorkingCopyInitializer {
+  private final SvnContext context;
 
-  @Inject
-  public SimpleSvnWorkDirFactory(WorkdirProvider workdirProvider) {
-    super(workdirProvider);
+  public SvnWorkingCopyInitializer(SvnContext context) {
+    this.context = context;
   }
 
-  @Override
-  protected Repository getScmRepository(SvnContext context) {
-    return context.getRepository();
-  }
-
-  @Override
-  protected ParentAndClone<File, File> cloneRepository(SvnContext context, File workingCopy, String initialBranch) {
-
+  public ParentAndClone<File, File> initialize(File workingCopy) {
     final SvnOperationFactory svnOperationFactory = new SvnOperationFactory();
 
     SVNURL source;
     try {
       source = SVNURL.fromFile(context.getDirectory());
     } catch (SVNException ex) {
-      throw new InternalRepositoryException(getScmRepository(context), "error creating svn url from central directory", ex);
+      throw new InternalRepositoryException(context.getRepository(), "error creating svn url from central directory", ex);
     }
 
     try {
@@ -68,19 +57,11 @@ public class SimpleSvnWorkDirFactory extends SimpleWorkdirFactory<File, File, Sv
       checkout.setSource(SvnTarget.fromURL(source));
       checkout.run();
     } catch (SVNException ex) {
-      throw new InternalRepositoryException(getScmRepository(context), "error running svn checkout", ex);
+      throw new InternalRepositoryException(context.getRepository(), "error running svn checkout", ex);
     } finally {
       svnOperationFactory.dispose();
     }
 
-    return new ParentAndClone<>(context.getDirectory(), workingCopy);
-  }
-
-  @Override
-  protected void closeRepository(File workingCopy) {
-  }
-
-  @Override
-  protected void closeWorkdirInternal(File workdir) {
+    return new ParentAndClone<>(context.getDirectory(), workingCopy, workingCopy);
   }
 }

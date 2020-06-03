@@ -28,7 +28,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
-import sonia.scm.repository.SvnWorkDirFactory;
+import sonia.scm.repository.SvnWorkingCopyFactory;
 import sonia.scm.repository.api.Command;
 
 import javax.inject.Inject;
@@ -54,10 +54,10 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Inject
   SvnRepositoryServiceProvider(SvnRepositoryHandler handler,
-    Repository repository, SvnWorkDirFactory workdirFactory)
+    Repository repository, SvnWorkingCopyFactory workingCopyFactory)
   {
     this.context = new SvnContext(repository, handler.getDirectory(repository.getId()));
-    this.workDirFactory = workdirFactory;
+    this.workingCopyFactory = workingCopyFactory;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -153,7 +153,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   }
 
   public ModifyCommand getModifyCommand() {
-    return new SvnModifyCommand(context, workDirFactory);
+    return new SvnModifyCommand(context, workingCopyFactory);
   }
 
   /**
@@ -185,5 +185,5 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   /** Field description */
   private final SvnContext context;
 
-  private final SvnWorkDirFactory workDirFactory;
+  private final SvnWorkingCopyFactory workingCopyFactory;
 }

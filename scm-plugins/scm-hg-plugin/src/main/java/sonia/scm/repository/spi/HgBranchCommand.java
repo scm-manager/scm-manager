@@ -34,7 +34,7 @@ import sonia.scm.ContextEntry;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.BranchRequest;
-import sonia.scm.repository.util.WorkingCopy;
+import sonia.scm.repository.work.WorkingCopy;
 import sonia.scm.user.User;
 
 /**
@@ -45,16 +45,16 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(HgBranchCommand.class);
 
-  private final HgWorkdirFactory workdirFactory;
+  private final HgWorkingCopyFactory workingCopyFactory;
 
-  HgBranchCommand(HgCommandContext context, HgWorkdirFactory workdirFactory) {
+  HgBranchCommand(HgCommandContext context, HgWorkingCopyFactory workingCopyFactory) {
     super(context);
-    this.workdirFactory = workdirFactory;
+    this.workingCopyFactory = workingCopyFactory;
   }
 
   @Override
   public Branch branch(BranchRequest request) {
-    try (WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy = workdirFactory.createWorkingCopy(getContext(), request.getParentBranch())) {
+    try (WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy = workingCopyFactory.createWorkingCopy(getContext(), request.getParentBranch())) {
       com.aragost.javahg.Repository repository = workingCopy.getWorkingRepository();
 
       Changeset emptyChangeset = createNewBranchWithEmptyCommit(request, repository);
@@ -70,7 +70,7 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
 
   @Override
   public void deleteOrClose(String branchName) {
-    try (WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy = workdirFactory.createWorkingCopy(getContext(), branchName)) {
+    try (WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy = workingCopyFactory.createWorkingCopy(getContext(), branchName)) {
       User currentUser = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
 
       LOG.debug("Closing branch '{}' in repository {}", branchName, getRepository().getNamespaceAndName());
@@ -104,7 +104,7 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
   private void pullChangesIntoCentralRepository(WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy, String branch) {
     try {
       PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
-      workdirFactory.configure(pullCommand);
+      workingCopyFactory.configure(pullCommand);
       pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
     } catch (Exception e) {
       // TODO handle failed update

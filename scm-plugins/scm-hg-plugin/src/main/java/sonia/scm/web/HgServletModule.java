@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,8 +37,8 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgContextProvider;
 import sonia.scm.repository.HgHookManager;
-import sonia.scm.repository.spi.HgWorkdirFactory;
-import sonia.scm.repository.spi.SimpleHgWorkdirFactory;
+import sonia.scm.repository.spi.HgWorkingCopyFactory;
+import sonia.scm.repository.spi.SimpleHgWorkingCopyFactory;
 
 /**
  *
@@ -75,6 +75,6 @@ public class HgServletModule extends ServletModule
     // bind servlets
     serve(MAPPING_HOOK).with(HgHookCallbackServlet.class);
 
-    bind(HgWorkdirFactory.class).to(SimpleHgWorkdirFactory.class);
+    bind(HgWorkingCopyFactory.class).to(SimpleHgWorkingCopyFactory.class);
   }
 }

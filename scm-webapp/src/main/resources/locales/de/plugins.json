@@ -219,6 +219,10 @@
     "2qRyyaVcJ1": {
       "displayName": "Ungültig formatiertes Element",
       "description": "Die Eingabe beinhaltete unfültige Formate. Bitte prüfen Sie die Server Logs für genauere Informationen."
+    },
+    "3tS0mjSoo1": {
+      "displayName": "Fehler bei der Erstellung eines Arbeitsverzeichnisses",
+      "description": "Der Server konnte kein Arbeitsverzeichnis zur Abarbeitung der Anfrage erstellen. Bitte prüfen Sie die Server Logs für genauere Informationen."
     }
   },
   "namespaceStrategies": {

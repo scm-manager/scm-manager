@@ -24,32 +24,32 @@
 
 package sonia.scm.repository.spi;
 
-import com.google.inject.Inject;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.SvnRepositoryHandler;
-import sonia.scm.repository.SvnWorkingCopyFactory;
+import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.wc.SVNClientManager;
+import org.tmatesoft.svn.core.wc.SVNRevision;
+import sonia.scm.repository.work.SimpleWorkingCopyFactory;
+import sonia.scm.repository.work.SimpleWorkingCopyFactory.ParentAndClone;
 
-@Extension
-public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
+import java.io.File;
 
-  private SvnRepositoryHandler handler;
-  private SvnWorkingCopyFactory workingCopyFactory;
+import static org.tmatesoft.svn.core.SVNDepth.INFINITY;
 
-  @Inject
-  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler, SvnWorkingCopyFactory workingCopyFactory) {
-    this.handler = handler;
-    this.workingCopyFactory = workingCopyFactory;
+class SvnWorkingCopyReclaimer {
+  private final SvnContext context;
+
+  public SvnWorkingCopyReclaimer(SvnContext context) {
+    this.context = context;
   }
 
-  @Override
-  public SvnRepositoryServiceProvider resolve(Repository repository) {
-    SvnRepositoryServiceProvider provider = null;
-
-    if (SvnRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new SvnRepositoryServiceProvider(handler, repository, workingCopyFactory);
+  public ParentAndClone<File, File> reclaim(File target) throws SimpleWorkingCopyFactory.ReclaimFailedException {
+    SVNClientManager clientManager = SVNClientManager.newInstance();
+    try {
+      clientManager.getWCClient().doRevert(new File[] {target}, INFINITY, null);
+      clientManager.getWCClient().doCleanup(target, true, true, true, true, true, false);
+      clientManager.getUpdateClient().doUpdate(target, SVNRevision.HEAD, INFINITY, false, false);
+    } catch (SVNException e) {
+      throw new SimpleWorkingCopyFactory.ReclaimFailedException(e);
     }
-
-    return provider;
+    return new ParentAndClone<>(context.getDirectory(), target, target);
   }
 }

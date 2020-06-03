@@ -21,20 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.repository.spi;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.RepositoryProvider;
 
 import java.io.Closeable;
 import java.io.File;
@@ -44,7 +40,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class GitContext implements Closeable
+public class GitContext implements Closeable, RepositoryProvider
 {
 
   /**
@@ -106,6 +102,11 @@ public class GitContext implements Closeable
 
   Repository getRepository() {
     return repository;
+  }
+
+  @Override
+  public Repository get() {
+    return getRepository();
   }
 
   File getDirectory() {

@@ -38,7 +38,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.util.WorkdirProvider;
+import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
+import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.File;
@@ -101,7 +102,7 @@ public class GitModifyCommand_withEmptyRepositoryTest extends AbstractGitCommand
   }
 
   private GitModifyCommand createCommand() {
-    return new GitModifyCommand(createContext(), new SimpleGitWorkdirFactory(new WorkdirProvider()), lfsBlobStoreFactory);
+    return new GitModifyCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())), lfsBlobStoreFactory);
   }
 
   @FunctionalInterface

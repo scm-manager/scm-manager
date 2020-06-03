@@ -22,27 +22,21 @@
  * SOFTWARE.
  */
 
-package sonia.scm.web;
+package sonia.scm.repository.work;
 
-import com.google.inject.servlet.ServletModule;
-import org.mapstruct.factory.Mappers;
-import sonia.scm.api.v2.resources.SvnConfigDtoToSvnConfigMapper;
-import sonia.scm.api.v2.resources.SvnConfigToSvnConfigDtoMapper;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.SvnWorkingCopyFactory;
-import sonia.scm.repository.spi.SimpleSvnWorkingCopyFactory;
+import sonia.scm.ContextEntry;
+import sonia.scm.ExceptionWithContext;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-@Extension
-public class SvnServletModule extends ServletModule {
+public class WorkdirCreationException extends ExceptionWithContext {
+
+  public static final String CODE = "3tS0mjSoo1";
+
+  public WorkdirCreationException(String path, Exception cause) {
+    super(ContextEntry.ContextBuilder.entity("Path", path).build(), "Could not create directory " + path, cause);
+  }
 
   @Override
-  protected void configureServlets() {
-    bind(SvnConfigDtoToSvnConfigMapper.class).to(Mappers.getMapper(SvnConfigDtoToSvnConfigMapper.class).getClass());
-    bind(SvnConfigToSvnConfigDtoMapper.class).to(Mappers.getMapper(SvnConfigToSvnConfigDtoMapper.class).getClass());
-    bind(SvnWorkingCopyFactory.class).to(SimpleSvnWorkingCopyFactory.class);
+  public String getCode() {
+    return CODE;
   }
 }

@@ -21,35 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository;
 
-import org.junit.Test;
-import sonia.scm.repository.util.CloseableWrapper;
+package sonia.scm.repository.spi;
 
-import java.util.function.Consumer;
+import sonia.scm.repository.SvnWorkingCopyFactory;
+import sonia.scm.repository.work.SimpleWorkingCopyFactory;
+import sonia.scm.repository.work.WorkingCopyPool;
 
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import javax.inject.Inject;
+import java.io.File;
 
-public class CloseableWrapperTest {
+public class SimpleSvnWorkingCopyFactory extends SimpleWorkingCopyFactory<File, File, SvnContext> implements SvnWorkingCopyFactory {
 
-  @Test
-  public void shouldExecuteGivenMethodAtClose() {
-    Consumer<AutoCloseable> wrapped = new Consumer<AutoCloseable>() {
-      // no this cannot be replaced with a lambda because otherwise we could not use Mockito#spy
-      @Override
-      public void accept(AutoCloseable s) {
-      }
-    };
+  @Inject
+  public SimpleSvnWorkingCopyFactory(WorkingCopyPool workingCopyPool) {
+    super(workingCopyPool);
+  }
 
-    Consumer<AutoCloseable> closer = spy(wrapped);
+  @Override
+  protected ParentAndClone<File, File> initialize(SvnContext context, File workingCopy, String initialBranch) {
+    return new SvnWorkingCopyInitializer(context).initialize(workingCopy);
+  }
 
-    AutoCloseable autoCloseable = () -> {};
-    try (CloseableWrapper<AutoCloseable> wrapper = new CloseableWrapper<>(autoCloseable, closer)) {
-      // nothing to do here
-    }
+  @Override
+  protected ParentAndClone<File, File> reclaim(SvnContext context, File target, String initialBranch) throws SimpleWorkingCopyFactory.ReclaimFailedException {
+    return new SvnWorkingCopyReclaimer(context).reclaim(target);
+  }
 
-    verify(closer).accept(autoCloseable);
+  @Override
+  protected void closeRepository(File workingCopy) {
+    // No resources to be closed for svn
+  }
+
+  @Override
+  protected void closeWorkingCopy(File workingCopy) {
+    // No resources to be closed for svn
   }
 }

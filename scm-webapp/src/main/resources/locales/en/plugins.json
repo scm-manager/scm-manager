@@ -219,6 +219,10 @@
     "2qRyyaVcJ1": {
       "displayName": "Invalid format in element",
       "description": "The input had some invalid formats. Please check the server log for further information."
+    },
+    "3tS0mjSoo1": {
+      "displayName": "Error creating a new working directory",
+      "description": "The server could not create a new working directory to process the request. Please check the server log for further information."
     }
   },
   "namespaceStrategies": {

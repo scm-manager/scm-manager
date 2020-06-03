@@ -36,7 +36,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.merge.ResolveMerger;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
-import sonia.scm.repository.GitWorkdirFactory;
+import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.MergeCommandResult;
 import sonia.scm.repository.api.MergeDryRunCommandResult;
@@ -53,7 +53,7 @@ import static sonia.scm.NotFoundException.notFound;
 
 public class GitMergeCommand extends AbstractGitCommand implements MergeCommand {
 
-  private final GitWorkdirFactory workdirFactory;
+  private final GitWorkingCopyFactory workingCopyFactory;
 
   private static final Set<MergeStrategy> STRATEGIES = ImmutableSet.of(
     MergeStrategy.MERGE_COMMIT,
@@ -61,9 +61,9 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     MergeStrategy.SQUASH
   );
 
-  GitMergeCommand(GitContext context, GitWorkdirFactory workdirFactory) {
+  GitMergeCommand(GitContext context, GitWorkingCopyFactory workingCopyFactory) {
     super(context);
-    this.workdirFactory = workdirFactory;
+    this.workingCopyFactory = workingCopyFactory;
   }
 
   @Override
@@ -73,19 +73,19 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
   @Override
   public MergeConflictResult computeConflicts(MergeCommandRequest request) {
-    return inClone(git -> new ConflictWorker(git, request), workdirFactory, request.getTargetBranch());
+    return inClone(git -> new ConflictWorker(git, request), workingCopyFactory, request.getTargetBranch());
   }
 
   private MergeCommandResult mergeWithStrategy(MergeCommandRequest request) {
     switch(request.getMergeStrategy()) {
       case SQUASH:
-        return inClone(clone -> new GitMergeWithSquash(clone, request, context, repository), workdirFactory, request.getTargetBranch());
+        return inClone(clone -> new GitMergeWithSquash(clone, request, context, repository), workingCopyFactory, request.getTargetBranch());
 
       case FAST_FORWARD_IF_POSSIBLE:
-        return inClone(clone -> new GitFastForwardIfPossible(clone, request, context, repository), workdirFactory, request.getTargetBranch());
+        return inClone(clone -> new GitFastForwardIfPossible(clone, request, context, repository), workingCopyFactory, request.getTargetBranch());
 
       case MERGE_COMMIT:
-        return inClone(clone -> new GitMergeCommit(clone, request, context, repository), workdirFactory, request.getTargetBranch());
+        return inClone(clone -> new GitMergeCommit(clone, request, context, repository), workingCopyFactory, request.getTargetBranch());
 
       default:
         throw new MergeStrategyNotSupportedException(repository, request.getMergeStrategy());

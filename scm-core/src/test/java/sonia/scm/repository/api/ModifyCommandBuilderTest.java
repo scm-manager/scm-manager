@@ -37,7 +37,7 @@ import org.mockito.stubbing.Answer;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.spi.ModifyCommand;
 import sonia.scm.repository.spi.ModifyCommandRequest;
-import sonia.scm.repository.util.WorkdirProvider;
+import sonia.scm.repository.work.WorkdirProvider;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

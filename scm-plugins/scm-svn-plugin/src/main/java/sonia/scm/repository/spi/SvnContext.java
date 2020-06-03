@@ -21,23 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.repository.spi;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
-
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.SvnUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
 import java.io.File;
@@ -46,7 +41,7 @@ import java.io.File;
  *
  * @author Sebastian Sdorra
  */
-public class SvnContext implements Closeable {
+public class SvnContext implements Closeable, RepositoryProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(SvnContext.class);
 
@@ -62,6 +57,11 @@ public class SvnContext implements Closeable {
 
   public Repository getRepository() {
     return repository;
+  }
+
+  @Override
+  public Repository get() {
+    return getRepository();
   }
 
   public File getDirectory() {

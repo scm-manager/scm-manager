@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.spi;
 
-import com.aragost.javahg.Repository;
-import com.aragost.javahg.commands.PullCommand;
-import sonia.scm.repository.util.WorkdirFactory;
+package sonia.scm.repository;
 
-public interface HgWorkdirFactory extends WorkdirFactory<Repository, Repository, HgCommandContext> {
-  void configure(PullCommand pullCommand);
+import sonia.scm.repository.spi.SvnContext;
+import sonia.scm.repository.work.WorkingCopyFactory;
+
+import java.io.File;
+
+public interface SvnWorkingCopyFactory extends WorkingCopyFactory<File, File, SvnContext> {
 }

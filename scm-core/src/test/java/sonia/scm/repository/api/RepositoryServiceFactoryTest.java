@@ -45,11 +45,13 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.spi.RepositoryServiceResolver;
-import sonia.scm.repository.util.WorkdirProvider;
+import sonia.scm.repository.work.WorkdirProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RepositoryServiceFactoryTest {
