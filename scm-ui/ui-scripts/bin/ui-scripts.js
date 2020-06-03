@@ -25,7 +25,7 @@
 /* eslint-disable no-console */
 const { spawnSync } = require("child_process");
 
-const commands = ["plugin", "plugin-watch", "publish", "version"];
+const commands = ["plugin", "plugin-watch", "publish", "version", "run"];
 
 const args = process.argv.slice(2);
 

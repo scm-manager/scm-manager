@@ -21,8 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const lerna = require("../lerna");
 const versions = require("../versions");
+const setVersion = require("../setVersion");
+const publish = require("../publish");
+const resolveWorkspaces = require("../resolveWorkspaces");
 
 const args = process.argv.slice(2);
 
@@ -32,18 +34,25 @@ if (args.length < 1) {
 }
 
 const version = args[0];
-const index = version.indexOf("-SNAPSHOT");
-if (index > 0) {
-  const snapshotVersion = version.substring(0, index)  + "-" + versions.createSnapshotVersion();
-  console.log("publish snapshot release " + snapshotVersion);
-  lerna.version(snapshotVersion);
-  lerna.publish();
-  lerna.version(version);
-} else {
-  // ?? not sure
-  lerna.publish();
-}
 
+const publishAll = async () => {
+  const workspaces = await resolveWorkspaces();
+  const index = version.indexOf("-SNAPSHOT");
+  if (index > 0) {
+    const snapshotVersion = version.substring(0, index) + "-" + versions.createSnapshotVersion();
+    console.log("publish snapshot release " + snapshotVersion);
+    await setVersion(workspaces, snapshotVersion);
+    await publish(workspaces, snapshotVersion);
+    await setVersion(workspaces, version);
+  } else {
+    // ?? not sure
+    await publish(workspaces, version);
+  }
+};
 
-
-
+publishAll()
+  .then()
+  .catch(err => {
+    console.error("failed to publish packages:", err);
+    process.exit(1);
+  });

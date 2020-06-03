@@ -22,26 +22,23 @@
  * SOFTWARE.
  */
 
-const resolveWorkspaces = require("../resolveWorkspaces");
-const setVersion = require("../setVersion");
+const { spawn } = require("child_process");
+const os = require("os");
 
-const args = process.argv.slice(2);
+const yarnCmd = os.platform() === "win32" ? "yarn.cmd" : "yarn";
 
-if (args.length < 1) {
-  console.log("usage ui-scripts version <new-version>");
-  process.exit(1);
-}
-
-const newVersion = args[0];
-
-const updateVersions = async () => {
-  const workspaces = await resolveWorkspaces();
-  return setVersion(workspaces, newVersion);
+const yarn = (cwd, args) => {
+  return new Promise((resolve, reject) => {
+    spawn(yarnCmd, args, { cwd, stdio: "inherit" })
+      .on("error", reject)
+      .on("close", code => {
+        if (code === 0) {
+          resolve();
+        } else {
+          reject(code);
+        }
+      });
+  });
 };
 
-updateVersions()
-  .then()
-  .catch(err => {
-    console.error("failed to update versions:", err);
-    process.exit(1);
-  });
+module.exports = yarn;

@@ -41,8 +41,6 @@ node('docker') {
           sh "git status --porcelain | sed s/^...// | grep pom.xml | xargs git add"
           // stage package.json changes
           sh "git status --porcelain | sed s/^...// | grep package.json | xargs git add"
-          // stage lerna.json changes
-          sh "git add lerna.json"
 
           // commit changes
           sh "git -c user.name='CES Marvin' -c user.email='cesmarvin@cloudogu.com' commit -m 'release version ${releaseVersion}'"
@@ -121,21 +119,8 @@ node('docker') {
           mvn.deployToNexusRepository()
 
           // deploy frontend bits
-          withCredentials([string(credentialsId: 'cesmarvin_npm_token', variable: 'NPM_TOKEN')]) {
-            writeFile encoding: 'UTF-8', file: '.npmrc', text: "//registry.npmjs.org/:_authToken='${NPM_TOKEN}'"
-            writeFile encoding: 'UTF-8', file: '.yarnrc', text: '''
-              registry "https://registry.npmjs.org/"
-              always-auth true
-              email cesmarvin@cloudogu.com
-            '''.trim()
-
-            // we are tricking lerna by pretending that we are not a git repository
-            sh "mv .git .git.disabled"
-            try {
-              mvn "-pl :scm-ui buildfrontend:run@deploy"
-            } finally {
-              sh "mv .git.disabled .git"
-            }
+          withCredentials([string(credentialsId: 'cesmarvin_npm_token', variable: 'NODE_AUTH_TOKEN')]) {
+            mvn "-pl :scm-ui buildfrontend:run@deploy"
           }
 
           // deploy packages
@@ -170,8 +155,6 @@ node('docker') {
             sh "git status --porcelain | sed s/^...// | grep pom.xml | xargs git add"
             // stage package.json changes
             sh "git status --porcelain | sed s/^...// | grep package.json | xargs git add"
-            // stage lerna.json changes
-            sh "git add lerna.json"
 
             // commit changes
             sh "git -c user.name='CES Marvin' -c user.email='cesmarvin@cloudogu.com' commit -m 'prepare for next development iteration'"

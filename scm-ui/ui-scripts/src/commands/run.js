@@ -23,25 +23,41 @@
  */
 
 const resolveWorkspaces = require("../resolveWorkspaces");
-const setVersion = require("../setVersion");
+const yarn = require("../yarn");
+const minimatch = require("minimatch")
 
 const args = process.argv.slice(2);
-
 if (args.length < 1) {
-  console.log("usage ui-scripts version <new-version>");
+  console.log("usage ui-scripts run [--filter=glob] script");
   process.exit(1);
 }
 
-const newVersion = args[0];
+let script;
+let filter = "**";
+if (args[0].startsWith("--filter=")) {
+  filter = args[0].substring(9);
+  script = args[1];
+} else {
+  script = args[0];
+}
 
-const updateVersions = async () => {
-  const workspaces = await resolveWorkspaces();
-  return setVersion(workspaces, newVersion);
+const applyFilter = workspace => minimatch(workspace.package.name, filter);
+
+const hasScript = workspace => {
+  return workspace.package.scripts && workspace.package.scripts[script];
 };
 
-updateVersions()
+const run = async () => {
+  const workspaces = await resolveWorkspaces();
+  for (const workspace of workspaces.filter(applyFilter).filter(hasScript)) {
+    console.log(`run ${script} at ${workspace.package.name}`);
+    await yarn(workspace.path, ["run", script]);
+  }
+};
+
+run()
   .then()
   .catch(err => {
-    console.error("failed to update versions:", err);
+    console.error("failed to run script:", err);
     process.exit(1);
   });

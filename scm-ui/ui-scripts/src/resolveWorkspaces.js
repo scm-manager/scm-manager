@@ -21,39 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const { spawnSync } = require("child_process");
-const os = require("os");
+const fs = require("fs");
+const util = require("util");
+const glob = require("glob-promise");
+const path = require("path");
 
-const yarnCmd = os.platform() === "win32" ? "yarn.cmd" : "yarn";
+const readFile = util.promisify(fs.readFile);
 
-const yarn = args => {
-  const result = spawnSync(yarnCmd, args, { stdio: "inherit" });
-  if (result.error) {
-    console.log("could not start yarn command:", result.error);
-    process.exit(2);
-  } else if (result.status !== 0) {
-    console.log("yarn process ends with status code:", result.status);
-    process.exit(3);
-  }
+const readJson = async pathname => {
+  const content = await readFile(pathname, { encoding: "utf8" });
+  return JSON.parse(content);
 };
 
-const version = version => {
-  yarn([
-    "run",
-    "lerna",
-    "--no-git-tag-version",
-    "--no-push",
-    "version",
-    "--yes",
-    version
-  ]);
+const resolveWorkspaces = async () => {
+  const rootPath = process.cwd();
+  const packageJson = await readJson("./package.json");
+
+  const entries = (await Promise.all(packageJson.workspaces.map(pattern => glob(pattern, { cwd: rootPath }))))
+    .reduce((arr, filePaths) => {
+      arr.push(...filePaths);
+      return arr;
+    }, [])
+    .filter(p => !p.endsWith("target"))
+    .filter(p => fs.statSync(p).isDirectory())
+    .filter(p => fs.existsSync(path.join(p, "package.json")))
+    .map(async p => {
+      const packageJsonPath = path.join(p, "package.json");
+      const pkg = await readJson(packageJsonPath);
+      return {
+        path: p,
+        packageJsonPath,
+        package: pkg
+      };
+    });
+
+  return Promise.all(entries);
 };
 
-const publish = () => {
-  yarn(["run", "lerna", "publish", "from-package", "--yes"]);
-};
-
-module.exports = {
-  version,
-  publish
-};
+module.exports = resolveWorkspaces;

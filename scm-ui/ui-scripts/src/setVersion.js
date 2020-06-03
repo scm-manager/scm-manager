@@ -22,26 +22,39 @@
  * SOFTWARE.
  */
 
-const resolveWorkspaces = require("../resolveWorkspaces");
-const setVersion = require("../setVersion");
+const fs = require("fs");
+const { promisify } = require("util");
 
-const args = process.argv.slice(2);
+const writeFile = promisify(fs.writeFile);
 
-if (args.length < 1) {
-  console.log("usage ui-scripts version <new-version>");
-  process.exit(1);
-}
-
-const newVersion = args[0];
-
-const updateVersions = async () => {
-  const workspaces = await resolveWorkspaces();
-  return setVersion(workspaces, newVersion);
+const writeJson = async (path, content) => {
+  await writeFile(path, JSON.stringify(content, null, 2), { encoding: "utf8" })
 };
 
-updateVersions()
-  .then()
-  .catch(err => {
-    console.error("failed to update versions:", err);
-    process.exit(1);
+const updateDependencies = (dependencies, packages, newVersion) => {
+  if (!dependencies) {
+    return;
+  }
+  Object.keys(dependencies).forEach(name => {
+    if (packages.includes(name)) {
+      dependencies[name] = newVersion;
+    }
   });
+};
+
+const setVersion = async (workspaces, newVersion) => {
+  const packages = workspaces.map(workspace => workspace.package.name);
+
+  for (const workspace of workspaces) {
+    workspace.package.version = newVersion;
+    updateDependencies(workspace.package.dependencies, packages, newVersion);
+    updateDependencies(workspace.package.devDependencies, packages, newVersion);
+    updateDependencies(workspace.package.optionalDependencies, packages, newVersion);
+    updateDependencies(workspace.package.peerDependencies, packages, newVersion);
+    await writeJson(workspace.packageJsonPath, workspace.package);
+  }
+
+  return packages;
+};
+
+module.exports = setVersion;
