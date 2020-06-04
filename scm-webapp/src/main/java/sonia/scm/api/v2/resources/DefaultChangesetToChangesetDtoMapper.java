@@ -33,7 +33,6 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.ChangesetTrailerProvider;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.Tag;
@@ -44,10 +43,8 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -73,22 +70,9 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
   @Inject
   private TagCollectionToDtoMapper tagCollectionToDtoMapper;
 
-  @Inject
-  private Set<ChangesetTrailerProvider> changesetTrailerProviderSet;
-
   abstract TrailerDto map(Trailer trailer);
 
   abstract PersonDto map(Person person);
-
-  @AfterMapping
-  void appendTrailerPersons(Changeset changeset, @MappingTarget ChangesetDto target, @Context Repository repository) {
-    List<TrailerDto> collectedTrailers = new ArrayList<>();
-    changesetTrailerProviderSet.stream()
-      .flatMap(changesetTrailers -> changesetTrailers.getTrailers(repository, changeset).stream())
-      .map(this::map)
-      .forEach(collectedTrailers::add);
-    target.setTrailers(collectedTrailers);
-  }
 
   @AfterMapping
   void removeTrailerFromChangesetDescription(@MappingTarget ChangesetDto target) {

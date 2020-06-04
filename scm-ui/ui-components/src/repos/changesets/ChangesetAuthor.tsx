@@ -53,7 +53,7 @@ class ChangesetAuthor extends React.Component<Props> {
   }
 
   getCoAuthorsFromChangeset() {
-    return this.props.changeset.trailerPersons.filter(p => p.trailerType === "Co-authored-by");
+    return this.props.changeset.trailers.filter(p => p.trailerType === "Co-authored-by").map(trailer => trailer.person);
   }
 
   renderCoAuthors() {

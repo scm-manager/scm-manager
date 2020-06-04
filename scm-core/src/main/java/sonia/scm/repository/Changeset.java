@@ -31,6 +31,7 @@ import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -78,6 +79,11 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
    * The tags associated with the changeset
    */
   private List<String> tags;
+
+  /**
+   * Trailers for this changeset like reviewers or co-authors
+   */
+  private Collection<Trailer> trailers;
 
   public Changeset() {}
 
@@ -225,6 +231,10 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
     return tags;
   }
 
+  public Collection<Trailer> getTrailers() {
+    return trailers;
+  }
+
   /**
    * Returns true if the changeset is valid.
    *
@@ -300,4 +310,7 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
     this.tags = tags;
   }
 
+  public void setTrailers(Collection<Trailer> trailers) {
+    this.trailers = trailers;
+  }
 }
