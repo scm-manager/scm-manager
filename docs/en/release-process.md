@@ -65,7 +65,7 @@ If you need to update the parent of the plugin to a new release of SCM-Manager, 
 rm -rf node_modules yarn.lock && mvn clean install \
 && git add yarn.lock pom.xml package.json \
 && git commit -m "Update to new version of SCM-Manager" \
-&& git push
+&& git push origin develop
 ```
 
 ## Plugin dependencies
@@ -74,26 +74,17 @@ Check if all plugin dependencies are proper versions and not SNAPSHOT!
 
 Wait for Jenkins to be green.
 
-## Create release branch
-
-```
-git checkout -b release/<version>
-```
-
 ## Modify Changelog
 
 Change "Unreleased" header in `CHANGELOG.md` to  `<version> - <current date>`
 
-## Commit and push release
+## Create, commit and push release branch
 
 ```
-git commit -am "Prepare release of <version>"
-```
-
-## Push release branch
-
-```
-git push origin release/<version>
+export VERSION=<version> \
+&& git checkout -b release/$VERSION \
+&& echo git commit -am "Prepare release of $VERSION" \
+&& echo git push origin release/$VERSION
 ```
 
 ## Wait for Jenkins build
