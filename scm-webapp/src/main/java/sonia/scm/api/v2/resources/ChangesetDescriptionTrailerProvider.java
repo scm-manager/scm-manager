@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,7 +44,7 @@ import java.util.regex.Pattern;
 public class ChangesetDescriptionTrailerProvider implements ChangesetPreProcessorFactory {
 
   private static final Collection<String> SUPPORTED_TRAILER_TYPES = ImmutableSet.of("Co-authored-by", "Reviewed-by", "Signed-off-by", "Committed-by");
-  private static final Pattern PERSON_PATTERN = Pattern.compile("^\\W*(.*)\\W+<(.*)>\\W*$");
+  private static final Pattern TRAILER_PATTERN = Pattern.compile("^([\\w-]*):\\W*(.*)\\W+<(.*)>\\W*$");
 
   @Override
   public ChangesetPreProcessor createPreProcessor(Repository repository) {
@@ -64,11 +63,14 @@ public class ChangesetDescriptionTrailerProvider implements ChangesetPreProcesso
         while (scanner.hasNextLine()) {
           String line = scanner.nextLine();
 
-          String[] typeAndUser = line.split(":\\W");
-          if (typeAndUser.length == 2) {
-            String type = typeAndUser[0];
-            String person = typeAndUser[1];
-            if (!SUPPORTED_TRAILER_TYPES.contains(type) || !createTrailer(type, person)) {
+          Matcher matcher = TRAILER_PATTERN.matcher(line);
+          if (matcher.matches()) {
+            String type = matcher.group(1);
+            String name = matcher.group(2);
+            String mail = matcher.group(3);
+            if (SUPPORTED_TRAILER_TYPES.contains(type)) {
+              createTrailer(type, name, mail);
+            } else {
               appendLine(scanner, line);
             }
           } else {
@@ -87,15 +89,8 @@ public class ChangesetDescriptionTrailerProvider implements ChangesetPreProcesso
       }
     }
 
-    private boolean createTrailer(String type, String person) {
-      Matcher matcher = PERSON_PATTERN.matcher(person.trim());
-      if (matcher.matches()) {
-        MatchResult matchResult = matcher.toMatchResult();
-        trailers.add(new Trailer(type, new Person(matchResult.group(1), matchResult.group(2))));
-        return true;
-      } else {
-        return false;
-      }
+    private void createTrailer(String type, String name, String mail) {
+        trailers.add(new Trailer(type, new Person(name, mail)));
     }
   }
 }
