@@ -74,24 +74,6 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
 
   abstract PersonDto map(Person person);
 
-  @AfterMapping
-  void removeTrailerFromChangesetDescription(@MappingTarget ChangesetDto target) {
-    StringBuilder builder = new StringBuilder();
-    try (Scanner scanner = new Scanner(target.getDescription())) {
-      while (scanner.hasNextLine()) {
-        String line = scanner.nextLine();
-        if (!line.contains("-by:")) {
-          builder.append(line);
-          if (scanner.hasNextLine()) {
-            builder.append("\n");
-          }
-        }
-      }
-    }
-
-    target.setDescription(builder.toString());
-  }
-
   @ObjectFactory
   ChangesetDto createDto(@Context Repository repository, Changeset source) {
     String namespace = repository.getNamespace();

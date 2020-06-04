@@ -44,7 +44,6 @@ import sonia.scm.repository.Branch;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.ChangesetTrailerProvider;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
@@ -114,10 +113,6 @@ public class BranchRootResourceTest extends RepositoryTestBase {
 
   @Mock
   private TagCollectionToDtoMapper tagCollectionToDtoMapper;
-
-  @Mock
-  private Set<ChangesetTrailerProvider> changesetTrailers;
-
 
   @InjectMocks
   private DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;

@@ -313,4 +313,12 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
   public void setTrailers(Collection<Trailer> trailers) {
     this.trailers = trailers;
   }
+
+  public void addTrailers(Collection<Trailer> trailers) {
+    if (this.trailers == null) {
+      this.trailers = new ArrayList<>(trailers);
+    } else {
+      this.trailers.addAll(trailers);
+    }
+  }
 }

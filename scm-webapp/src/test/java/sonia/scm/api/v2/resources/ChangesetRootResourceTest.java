@@ -43,7 +43,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.ChangesetTrailerProvider;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
@@ -57,7 +56,6 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -86,9 +84,6 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
 
   @Mock
   private LogCommandBuilder logCommandBuilder;
-
-  @Mock
-  private Set<ChangesetTrailerProvider> changesetTrailers;
 
   @InjectMocks
   private ChangesetCollectionToDtoMapper changesetCollectionToDtoMapper;
