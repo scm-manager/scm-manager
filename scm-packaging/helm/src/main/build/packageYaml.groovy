@@ -23,4 +23,4 @@
  */
 
 def file = new File(project.build.directory, "package.yml")
-file << "type: helm\n"
+file << "type: k8s\n"
