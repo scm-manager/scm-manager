@@ -8,7 +8,7 @@ To release a new version of SCM-Manager v2 you have to do the following steps (r
 Make sure you have no changes you want to keep!
 
 ```
-git fetch && git checkout develop && git reset --hard origin/develop
+git fetch && git checkout -f origin/develop && git clean -fd && git checkout -B develop
 ```
 
 ## Modify Changelog
@@ -51,7 +51,7 @@ To release a new version of a Plugin for SCM-Manager v2 you have to do the follo
 Make sure you have no changes you want to keep!
 
 ```
-git fetch && git checkout develop && git reset --hard origin/develop
+git fetch && git checkout -f origin/develop && git clean -fd && git checkout -B develop
 ```
 
 ## Update SCM parent if necessary
@@ -62,11 +62,10 @@ If you need to update the parent of the plugin to a new release of SCM-Manager, 
 - `package.json`: `dependencies.ui-plugins`
 
 ```
-rm -rf node_modules yarn.lock
-mvn clean install
-git add yarn.lock pom.xml package.json
-git commit -m "Update to new version of SCM-Manager"
-git push
+rm -rf node_modules yarn.lock && mvn clean install \
+&& git add yarn.lock pom.xml package.json \
+&& git commit -m "Update to new version of SCM-Manager" \
+&& git push
 ```
 
 ## Plugin dependencies
