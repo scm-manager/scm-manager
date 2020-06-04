@@ -89,7 +89,7 @@ class ChangesetDescriptionTrailerProviderTest {
   @Test
   void shouldConvertTrailerWithSigner() {
     Person person = createPerson("Tricia McMillan", "trillian@hitchhiker.org");
-    Changeset changeset = createChangeset("zaphod beeblebrox\n\nSigned-off-by: Tricia McMillan <trillian@hitchhiker.org>");
+    Changeset changeset = createChangeset("zaphod beeblebrox\n\n\nSigned-off-by: Tricia McMillan <trillian@hitchhiker.org>");
 
     changesetDescriptionTrailers.createPreProcessor(REPOSITORY).process(changeset);
     Collection<Trailer> trailers = changeset.getTrailers();
@@ -98,7 +98,7 @@ class ChangesetDescriptionTrailerProviderTest {
 
     assertThat(trailer.getTrailerType()).isEqualTo("Signed-off-by");
     assertThat(trailer.getPerson()).isEqualTo(person);
-    assertThat(changeset.getDescription()).isEqualTo("zaphod beeblebrox\n\n");
+    assertThat(changeset.getDescription()).isEqualTo("zaphod beeblebrox\n\n\n");
   }
 
   @Test

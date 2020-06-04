@@ -56,30 +56,49 @@ public class ChangesetDescriptionTrailerProvider implements ChangesetPreProcesso
     private final List<Trailer> trailers = new ArrayList<>();
     private final StringBuilder newDescription = new StringBuilder();
 
+    boolean foundEmptyLine;
+
     @Override
     public void process(Changeset changeset) {
 
       try (Scanner scanner = new Scanner(changeset.getDescription())) {
         while (scanner.hasNextLine()) {
-          String line = scanner.nextLine();
-
-          Matcher matcher = TRAILER_PATTERN.matcher(line);
-          if (matcher.matches()) {
-            String type = matcher.group(1);
-            String name = matcher.group(2);
-            String mail = matcher.group(3);
-            if (SUPPORTED_TRAILER_TYPES.contains(type)) {
-              createTrailer(type, name, mail);
-            } else {
-              appendLine(scanner, line);
-            }
-          } else {
-            appendLine(scanner, line);
-          }
+          handleLine(scanner, scanner.nextLine());
         }
       }
       changeset.addTrailers(trailers);
       changeset.setDescription(newDescription.toString());
+    }
+
+    public void handleLine(Scanner scanner, String line) {
+      if (line.isEmpty()) {
+        handleEmptyLine(scanner, line);
+        return;
+      }
+
+      if (foundEmptyLine && checkForTrailer(line)) {
+        return;
+      }
+      appendLine(scanner, line);
+    }
+
+    public boolean checkForTrailer(String line) {
+      Matcher matcher = TRAILER_PATTERN.matcher(line);
+      if (matcher.matches()) {
+        String type = matcher.group(1);
+        String name = matcher.group(2);
+        String mail = matcher.group(3);
+        if (SUPPORTED_TRAILER_TYPES.contains(type)) {
+          createTrailer(type, name, mail);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    public void handleEmptyLine(Scanner scanner, String line) {
+      foundEmptyLine = true;
+      appendLine(scanner, line);
     }
 
     public void appendLine(Scanner scanner, String line) {
