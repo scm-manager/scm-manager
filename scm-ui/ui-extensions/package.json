@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-extensions",
-  "version": "2.0.0-SNAPSHOT",
+  "version": "2.0.0",
   "main": "src/index.ts",
   "license": "MIT",
   "private": false,
