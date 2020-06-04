@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [2.0.0] - 2020-06-04
 ### Added
 - Detect renamed files in git and hg diffs ([#1157](https://github.com/scm-manager/scm-manager/pull/1157))
 - ClassLoader and Adapter parameters to typed store apis ([#1111](https://github.com/scm-manager/scm-manager/pull/1111))
@@ -168,3 +168,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.0.0-rc5]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc5
 [2.0.0-rc6]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc6
 [2.0.0-rc7]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc7
+[2.0.0-rc8]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc8
+[2.0.0]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0
