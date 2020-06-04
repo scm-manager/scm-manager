@@ -48,7 +48,7 @@ except ImportError:
     from mercurial import util
     _parsedate = util.parsedate
 
-FILE_MARKER = b'<files>'
+FILE_MARKER = '<files>'
 
 class File_Collector:
 
@@ -56,13 +56,13 @@ class File_Collector:
     self.recursive = recursive
     self.structure = defaultdict(dict, ((FILE_MARKER, []),))
 
-  def collect(self, paths, path = b"", dir_only = False):
+  def collect(self, paths, path = "", dir_only = False):
     for p in paths:
       if p.startswith(path):
         self.attach(self.extract_name_without_parent(path, p), self.structure, dir_only)
 
   def attach(self, branch, trunk, dir_only = False):
-    parts = branch.split(b'/', 1)
+    parts = branch.split('/', 1)
     if len(parts) == 1:  # branch is a file
       if dir_only:
         trunk[parts[0]] = defaultdict(dict, ((FILE_MARKER, []),))
@@ -78,7 +78,7 @@ class File_Collector:
   def extract_name_without_parent(self, parent, name_with_parent):
     if len(parent) > 0:
       name_without_parent = name_with_parent[len(parent):]
-      if name_without_parent.startswith(b"/"):
+      if name_without_parent.startswith("/"):
           name_without_parent = name_without_parent[1:]
       return name_without_parent
     return name_with_parent
@@ -91,11 +91,11 @@ class File_Object:
     self.sub_repository = None
 
   def get_name(self):
-    parts = self.path.split(b"/")
+    parts = self.path.split("/")
     return parts[len(parts) - 1]
 
   def get_parent(self):
-    idx = self.path.rfind(b"/")
+    idx = self.path.rfind("/")
     if idx > 0:
       return self.path[0:idx]
     return ""
@@ -143,11 +143,11 @@ class File_Walker:
 
   def create_path(self, parent, path):
     if len(parent) > 0:
-      return parent + b"/" + path
+      return parent + "/" + path
     return path
 
-  def walk(self, structure, parent = b""):
-    sortedItems = sorted(structure.items(), key = lambda item: self.sortKey(item))
+  def walk(self, structure, parent = ""):
+    sortedItems = sorted(structure.iteritems(), key = lambda item: self.sortKey(item))
     for key, value in sortedItems:
       if key == FILE_MARKER:
         if value:
@@ -162,9 +162,9 @@ class File_Walker:
 
   def sortKey(self, item):
     if (item[0] == FILE_MARKER):
-      return b"2"
+      return "2"
     else:
-      return b"1" + item[0]
+      return "1" + item[0]
 
 class SubRepository:
   url = None
@@ -173,9 +173,9 @@ class SubRepository:
 def collect_sub_repositories(revCtx):
   subrepos = {}
   try:
-    hgsub = revCtx.filectx(b'.hgsub').data().split('\n')
+    hgsub = revCtx.filectx('.hgsub').data().split('\n')
     for line in hgsub:
-      parts = line.split(b'=')
+      parts = line.split('=')
       if len(parts) > 1:
         subrepo = SubRepository()
         subrepo.url = parts[1].strip()
@@ -184,9 +184,9 @@ def collect_sub_repositories(revCtx):
     pass
 
   try:
-    hgsubstate = revCtx.filectx(b'.hgsubstate').data().split('\n')
+    hgsubstate = revCtx.filectx('.hgsubstate').data().split('\n')
     for line in hgsubstate:
-      parts = line.split(b' ')
+      parts = line.split(' ')
       if len(parts) > 1:
         subrev = parts[0].strip()
         subrepo = subrepos[parts[1].strip()]
@@ -219,31 +219,31 @@ class File_Printer:
   def print_directory(self, path):
     if not self.initial_path_printed or self.offset == 0 or self.shouldPrintResult():
       self.initial_path_printed = True
-      format = b'%s/\n'
+      format = '%s/\n'
       if self.transport:
-          format = b'd%s/\0'
+          format = 'd%s/\0'
       self.writer.write( format % path)
 
   def print_file(self, path):
     self.result_count += 1
     if self.shouldPrintResult():
       file = self.revCtx[path]
-      date = b'0 0'
-      description = b'n/a'
+      date = '0 0'
+      description = 'n/a'
       if not self.disableLastCommit:
         linkrev = self.repo[file.linkrev()]
-        date = b'%d %d' % _parsedate(linkrev.date())
+        date = '%d %d' % _parsedate(linkrev.date())
         description = linkrev.description()
-      format = b'%s %i %s %s\n'
+      format = '%s %i %s %s\n'
       if self.transport:
-        format = b'f%s\n%i %s %s\0'
+        format = 'f%s\n%i %s %s\0'
       self.writer.write( format % (file.path(), file.size(), date, description) )
 
   def print_sub_repository(self, path, subrepo):
     if self.shouldPrintResult():
-      format = b'%s/ %s %s\n'
+      format = '%s/ %s %s\n'
       if self.transport:
-        format = b's%s/\n%s %s\0'
+        format = 's%s/\n%s %s\0'
       self.writer.write( format % (path, subrepo.revision, subrepo.url))
 
   def visit(self, file):
@@ -263,9 +263,9 @@ class File_Printer:
   def finish(self):
     if self.isTruncated():
       if self.transport:
-        self.writer.write(b"t")
+        self.writer.write( "t")
       else:
-        self.writer.write(b"truncated")
+        self.writer.write("truncated")
 
 class File_Viewer:
   def __init__(self, revCtx, visitor):
@@ -275,11 +275,11 @@ class File_Viewer:
     self.recursive = False
 
   def remove_ending_slash(self, path):
-    if path.endswith(b"/"):
+    if path.endswith("/"):
         return path[:-1]
     return path
 
-  def view(self, path = b""):
+  def view(self, path = ""):
     manifest = self.revCtx.manifest()
     if len(path) > 0 and path in manifest:
       self.visitor.visit(File_Object(False, path))
@@ -294,15 +294,15 @@ class File_Viewer:
       collector.collect(self.sub_repositories.keys(), p, True)
       walker.walk(collector.structure, p)
 
-@command(b'fileview', [
-    (b'r', b'revision', b'tip', b'revision to print'),
-    (b'p', b'path', b'', b'path to print'),
-    (b'c', b'recursive', False, b'browse repository recursive'),
-    (b'd', b'disableLastCommit', False, b'disables last commit description and date'),
-    (b's', b'disableSubRepositoryDetection', False, b'disables detection of sub repositories'),
-    (b't', b'transport', False, b'format the output for command server'),
-    (b'l', b'limit', 100, b'limit the number of results'),
-    (b'o', b'offset', 0, b'proceed from the given result number (zero based)'),
+@command('fileview', [
+    ('r', 'revision', 'tip', 'revision to print'),
+    ('p', 'path', '', 'path to print'),
+    ('c', 'recursive', False, 'browse repository recursive'),
+    ('d', 'disableLastCommit', False, 'disables last commit description and date'),
+    ('s', 'disableSubRepositoryDetection', False, 'disables detection of sub repositories'),
+    ('t', 'transport', False, 'format the output for command server'),
+    ('l', 'limit', 100, 'limit the number of results'),
+    ('o', 'offset', 0, 'proceed from the given result number (zero based)'),
   ])
 def fileview(ui, repo, **opts):
   revCtx = scmutil.revsingle(repo, opts["revision"])
