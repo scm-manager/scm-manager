@@ -722,6 +722,7 @@
             <exclude>yarn.lock</exclude>
             <exclude>**/logback.ci.xml</exclude>
             <exclude>**/pkg/ourPackage/scm-source.properties</exclude>
+            <exclude>**/.vagrant/**</exclude>
           </excludes>
           <mapping>
             <tsx>SLASHSTAR_STYLE</tsx>
