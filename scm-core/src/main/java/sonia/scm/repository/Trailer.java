@@ -26,8 +26,10 @@ package sonia.scm.repository;
 
 import lombok.Value;
 
+import java.io.Serializable;
+
 @Value
-public class Trailer {
+public class Trailer implements Serializable {
   private String trailerType;
   private Person person;
 }
