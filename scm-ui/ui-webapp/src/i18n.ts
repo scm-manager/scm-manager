@@ -61,6 +61,15 @@ i18n
       init: {
         credentials: "same-origin"
       }
+    },
+
+    // configure LanguageDetector
+    // see https://github.com/i18next/i18next-browser-languageDetector#detector-options
+    detection: {
+      // we only use browser configuration
+      order: ["navigator"],
+      // we do not cache the detected language
+      caches: []
     }
   });
 

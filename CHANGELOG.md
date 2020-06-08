@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Option to configure jvm parameter of docker container with env JAVA_OPTS or with arguments ([#1175](https://github.com/scm-manager/scm-manager/pull/1175))
 
 ### Fixed
+- Avoid caching of detected browser language ([#1176](https://github.com/scm-manager/scm-manager/pull/1176))
 - Fixes configuration of jetty listener address with system property `jetty.host` ([#1173](https://github.com/scm-manager/scm-manager/pull/1173), [#1174](https://github.com/scm-manager/scm-manager/pull/1174))
 
 ## [2.0.0] - 2020-06-04
