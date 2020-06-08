@@ -47,20 +47,20 @@ public class ChangesetDescriptionTrailerProvider implements ChangesetPreProcesso
 
   private static class TrailerChangesetPreProcessor implements ChangesetPreProcessor {
 
-    private final List<Trailer> trailers = new ArrayList<>();
     private final StringBuilder newDescription = new StringBuilder();
+
+    private Changeset changeset;
 
     boolean foundEmptyLine;
 
     @Override
     public void process(Changeset changeset) {
-
+      this.changeset = changeset;
       try (Scanner scanner = new Scanner(changeset.getDescription())) {
         while (scanner.hasNextLine()) {
           handleLine(scanner, scanner.nextLine());
         }
       }
-      changeset.addTrailers(trailers);
       changeset.setDescription(newDescription.toString());
     }
 
@@ -103,7 +103,7 @@ public class ChangesetDescriptionTrailerProvider implements ChangesetPreProcesso
     }
 
     private void createTrailer(String type, String name, String mail) {
-        trailers.add(new Trailer(type, new Person(name, mail)));
+        changeset.addTrailer(new Trailer(type, new Person(name, mail)));
     }
   }
 }
