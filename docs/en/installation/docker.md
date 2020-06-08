@@ -43,6 +43,24 @@ If you want to use the ssh plugin, keep in mind that this plugin requires an ext
 docker run --name scm -p 2222:2222 -p 8080:8080 -v scm-home:/var/lib/scm scmmanager/scm-manager:<version>
 ```
 
+## JVM Parameters
+
+If it becomes necessary to add JVM parameters to the start, there are two ways to do this:
+
+* As argument e.g.:
+
+```bash
+docker run scmmanager/scm-manager:<version> -Dsome.property=value
+```
+
+* Or as JAVA_OPTS environment variable e.g.:
+
+```bash
+docker run -e JAVA_OPTS="-Dsome.property=value" scmmanager/scm-manager:<version>
+
+```
+
+
 ## Docker Compose
 
 If you want to use the image with docker-compose have a look at the example below. 
