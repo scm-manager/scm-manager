@@ -47,7 +47,7 @@ docker run --name scm -p 2222:2222 -p 8080:8080 -v scm-home:/var/lib/scm scmmana
 
 If it becomes necessary to add JVM parameters to the start, there are two ways to do this:
 
-* As argument e.g.:
+* As arguments e.g.:
 
 ```bash
 docker run scmmanager/scm-manager:<version> -Dsome.property=value
