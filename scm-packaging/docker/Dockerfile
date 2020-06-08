@@ -47,6 +47,7 @@ RUN set -x \
  && addgroup -S -g 1000 scm \
  && adduser -S -s /bin/false -G scm -h ${SCM_HOME} -D -H -u 1000 scm \
  && mkdir -p ${SCM_HOME} ${CACHE_DIR} \
+ && chmod +x /opt/scm-server/bin/scm-server \
  && chown scm:scm ${SCM_HOME} ${CACHE_DIR}
 
 # copy mercurial installation
@@ -58,4 +59,4 @@ VOLUME ["${SCM_HOME}", "${CACHE_DIR}"]
 EXPOSE 8080
 USER scm
 
-CMD [ "java", "-cp", "/etc/scm:/opt/scm-server/lib/*", "-Djava.awt.headless=true", "-Dlogback.configurationFile=logging.xml", "sonia.scm.server.ScmServerDaemon" ]
+ENTRYPOINT [ "/opt/scm-server/bin/scm-server" ]
