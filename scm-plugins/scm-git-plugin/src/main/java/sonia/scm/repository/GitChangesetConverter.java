@@ -182,7 +182,7 @@ public class GitChangesetConverter implements Closeable
 
     Changeset changeset = new Changeset(id, date, author, message);
     if (!committerIdent.equals(authorIndent)) {
-      changeset.addTrailers(Collections.singleton(new Trailer("Committed-by", createPersonFor(committerIdent))));
+      changeset.addTrailer(new Trailer("Committed-by", createPersonFor(committerIdent)));
     }
 
     if (parentList != null)
