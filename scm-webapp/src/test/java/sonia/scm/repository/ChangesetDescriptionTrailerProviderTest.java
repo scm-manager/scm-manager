@@ -22,16 +22,11 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.repository;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.Person;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.repository.Trailer;
 
 import java.util.Collection;
 import java.util.Iterator;

@@ -22,16 +22,10 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.repository;
 
 import com.google.common.collect.ImmutableSet;
 import sonia.scm.plugin.Extension;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.ChangesetPreProcessor;
-import sonia.scm.repository.ChangesetPreProcessorFactory;
-import sonia.scm.repository.Person;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.Trailer;
 
 import java.util.ArrayList;
 import java.util.Collection;
