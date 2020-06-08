@@ -34,6 +34,7 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.Modifications;
+import sonia.scm.repository.Person;
 
 import java.io.File;
 import java.io.IOException;
@@ -269,6 +270,20 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     ChangesetPagingResult changesets = createCommand().getChangesets(new LogCommandRequest());
 
     assertEquals("master", changesets.getBranchName());
+  }
+
+  @Test
+  public void shouldAppendCommitterAsTrailer() {
+    LogCommandRequest request = new LogCommandRequest();
+    request.setStartChangeset("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
+    request.setEndChangeset("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
+
+    ChangesetPagingResult changesets = createCommand().getChangesets(request);
+    Changeset changeset = changesets.getChangesets().get(0);
+
+    assertThat(changeset.getTrailers()).hasSize(1);
+    assertThat(changeset.getTrailers().iterator().next().getPerson())
+      .isEqualTo(new Person("Sebastian Sdorra", "s.sdorra@ostfalia.de"));
   }
 
   private void setRepositoryHeadReference(String s) throws IOException {
