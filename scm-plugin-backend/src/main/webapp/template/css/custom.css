@@ -63,7 +63,7 @@ color: #33b2e8;
 /* Header */ 
 
 #branding {
-	background: url(https://www.scm-manager.org/wp-content/uploads/2019/06/scmManagerHero.jpg);
+	background: url(../images/scmManagerHero.jpg);
 }
 #navigation {
     padding: 40px 0 0;
