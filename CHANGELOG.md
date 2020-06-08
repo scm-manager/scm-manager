@@ -5,7 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
-
+### Added
+- Show commit trailers in table on changeset details view ([#1169](https://github.com/scm-manager/scm-manager/pull/1169))
 ### Fixed
 - Fixes configuration of jetty listener address with system property `jetty.host` ([#1173](https://github.com/scm-manager/scm-manager/pull/1173), [#1174](https://github.com/scm-manager/scm-manager/pull/1174))
 
@@ -15,7 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ClassLoader and Adapter parameters to typed store apis ([#1111](https://github.com/scm-manager/scm-manager/pull/1111))
 - Native packaging for Debian, Red Hat, Windows, Unix, Docker and Kubernetes ([#1165](https://github.com/scm-manager/scm-manager/pull/1165))  
 - Cache for working directories ([#1166](https://github.com/scm-manager/scm-manager/pull/1166))
-- Show commit trailers in table on changeset details view ([#1169](https://github.com/scm-manager/scm-manager/pull/1169))
 
 ### Fixed
 - Correctly resolve Links in markdown files ([#1152](https://github.com/scm-manager/scm-manager/pull/1152))
