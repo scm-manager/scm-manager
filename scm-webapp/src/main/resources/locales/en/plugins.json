@@ -1,4 +1,15 @@
 {
+  "changeset": {
+    "trailer": {
+      "type": {
+        "author": "Author",
+        "Reviewed-by": "Reviewers",
+        "Co-authored-by": "Co-Authors",
+        "Committed-by": "Commit by",
+        "Signed-off-by": "Signed-off"
+      }
+    }
+  },
   "permissions": {
     "*": {
       "displayName": "Global administrator",

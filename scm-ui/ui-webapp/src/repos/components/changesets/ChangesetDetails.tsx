@@ -38,6 +38,7 @@ import {
   DateFromNow,
   Level
 } from "@scm-manager/ui-components";
+import ContributorTable from "./ContributorTable";
 
 type Props = WithTranslation & {
   changeset: Changeset;
@@ -62,38 +63,12 @@ const BottomMarginLevel = styled(Level)`
   margin-bottom: 1rem !important;
 `;
 
-const SizedTd = styled.td`
-  width: 10rem;
-`;
-
 class ChangesetDetails extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
       collapsed: false
     };
-  }
-
-  collectAvailableTrailerTypes() {
-    const { changeset } = this.props;
-
-    // @ts-ignore
-    return [...new Set(changeset.trailers.map(trailer => trailer.trailerType))];
-  }
-
-  getPersonsByTrailersType(type: string) {
-    const { changeset } = this.props;
-    return changeset.trailers?.filter(trailer => trailer.trailerType === type).map(t => t.person);
-  }
-
-  getTrailersByType() {
-    const availableTrailerTypes: string[] = this.collectAvailableTrailerTypes();
-
-    const personsByTrailerType = [];
-    for (const type of availableTrailerTypes) {
-      personsByTrailerType.push({ type, persons: this.getPersonsByTrailersType(type) });
-    }
-    return personsByTrailerType;
   }
 
   render() {
@@ -103,35 +78,6 @@ class ChangesetDetails extends React.Component<Props, State> {
     const description = changesets.parseDescription(changeset.description);
     const id = <ChangesetId repository={repository} changeset={changeset} link={false} />;
     const date = <DateFromNow date={changeset.date} />;
-
-    const trailersByType = this.getTrailersByType();
-
-    const trailerTable = (
-      <table>
-        <tr>
-          <SizedTd>{t("changeset.author.label") + ":"}</SizedTd>
-          <td>
-            <a title={changeset?.author?.mail} href={"mailto:" + changeset?.author?.mail}>
-              {changeset?.author?.name}
-            </a>
-          </td>
-        </tr>
-        {trailersByType.map(trailer => (
-          <tr>
-            <SizedTd>{t("changeset.trailer.type." + trailer.type) + ":"}</SizedTd>
-            <td className="shorten-text is-marginless">
-              {trailer.persons
-                .map(person => (
-                  <a title={person.mail} href={"mailto:" + person.mail}>
-                    {person.name}
-                  </a>
-                ))
-                .reduce((prev, curr) => [prev, ", ", curr])}
-            </td>
-          </tr>
-        ))}
-      </table>
-    );
 
     return (
       <>
@@ -155,7 +101,7 @@ class ChangesetDetails extends React.Component<Props, State> {
               </RightMarginP>
             </AvatarWrapper>
             <div className="media-content">
-              {trailerTable}
+              <ContributorTable changeset={changeset} />
               <p>
                 <Trans i18nKey="repos:changeset.summary" components={[id, date]} />
               </p>

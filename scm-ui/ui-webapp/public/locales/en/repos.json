@@ -100,16 +100,6 @@
     "buttons": {
       "details": "Details",
       "sources": "Sources"
-    },
-    "trailer": {
-      "type": {
-        "Reviewed-by": "Reviewers",
-        "Co-authored-by": "Co-Authors",
-        "Committed-by": "Commit by",
-        "Signed-off-by": "Signed-off",
-        "Pushed-by": "Pushed by"
-      },
-      "person": "Person"
     }
   },
   "repositoryForm": {
