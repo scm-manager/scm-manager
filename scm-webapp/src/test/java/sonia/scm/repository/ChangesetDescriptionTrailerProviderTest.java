@@ -161,6 +161,18 @@ class ChangesetDescriptionTrailerProviderTest {
     assertThat(changeset.getDescription()).isEqualTo(originalCommitMessage);
   }
 
+  @Test
+  void shouldIgnoreWhitespacesInEmptyLines() {
+    String originalCommitMessage = "zaphod beeblebrox\n    \n" +
+      "Committed-by: Tricia McMillan <trillian@hitchhiker.org>";
+    Changeset changeset = createChangeset(originalCommitMessage);
+
+    changesetDescriptionTrailers.createPreProcessor(REPOSITORY).process(changeset);
+    Collection<Trailer> trailers = changeset.getTrailers();
+
+    assertThat(trailers).isNotEmpty();
+  }
+
   private Changeset createChangeset(String commitMessage) {
     Changeset changeset = new Changeset();
     changeset.setDescription(commitMessage);

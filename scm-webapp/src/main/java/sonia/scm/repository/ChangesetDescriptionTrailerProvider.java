@@ -65,7 +65,7 @@ public class ChangesetDescriptionTrailerProvider implements ChangesetPreProcesso
     }
 
     public void handleLine(Scanner scanner, String line) {
-      if (line.isEmpty()) {
+      if (line.trim().isEmpty()) {
         handleEmptyLine(scanner, line);
         return;
       }
