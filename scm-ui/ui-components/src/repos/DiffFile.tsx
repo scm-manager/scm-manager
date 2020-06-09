@@ -277,12 +277,14 @@ class DiffFile extends React.Component<Props, State> {
     if (file._links?.lines) {
       items.push(this.createHunkHeader(expandableHunk));
     }
+
     items.push(
       <Hunk
         key={"hunk-" + hunk.content}
         hunk={expandableHunk.hunk}
         widgets={this.collectHunkAnnotations(hunk)}
         gutterEvents={this.createGutterEvents(hunk)}
+        className={this.props.hunkClass ? this.props.hunkClass(hunk) : null}
       />
     );
     if (file._links?.lines) {

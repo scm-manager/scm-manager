@@ -111,4 +111,5 @@ export type DiffObjectProps = {
   annotationFactory?: AnnotationFactory;
   markConflicts?: boolean;
   defaultCollapse?: DefaultCollapsed;
+  hunkClass?: (hunk: Hunk) => string;
 };
