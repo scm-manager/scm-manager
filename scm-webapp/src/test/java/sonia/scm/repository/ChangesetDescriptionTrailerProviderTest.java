@@ -47,8 +47,7 @@ class ChangesetDescriptionTrailerProviderTest {
     changesetDescriptionTrailers.createPreProcessor(REPOSITORY).process(changeset);
     Collection<Trailer> trailers = changeset.getTrailers();
 
-    assertThat(trailers).isNotNull();
-    assertThat(trailers).isEmpty();
+    assertThat(trailers).isNullOrEmpty();
     assertThat(changeset.getDescription()).isEqualTo("zaphod beeblebrox");
   }
 
@@ -144,7 +143,7 @@ class ChangesetDescriptionTrailerProviderTest {
     changesetDescriptionTrailers.createPreProcessor(REPOSITORY).process(changeset);
     Collection<Trailer> trailers = changeset.getTrailers();
 
-    assertThat(trailers).isEmpty();
+    assertThat(trailers).isNullOrEmpty();
     assertThat(changeset.getDescription()).isEqualTo(originalCommitMessage);
   }
 
@@ -157,7 +156,7 @@ class ChangesetDescriptionTrailerProviderTest {
     changesetDescriptionTrailers.createPreProcessor(REPOSITORY).process(changeset);
     Collection<Trailer> trailers = changeset.getTrailers();
 
-    assertThat(trailers).isEmpty();
+    assertThat(trailers).isNullOrEmpty();
     assertThat(changeset.getDescription()).isEqualTo(originalCommitMessage);
   }
 
@@ -171,6 +170,23 @@ class ChangesetDescriptionTrailerProviderTest {
     Collection<Trailer> trailers = changeset.getTrailers();
 
     assertThat(trailers).isNotEmpty();
+  }
+
+  @Test
+  void shouldProcessChangesetsSeparately() {
+    Changeset changeset1 = createChangeset("message one\n\n" +
+      "Committed-by: Tricia McMillan <trillian@hitchhiker.org>");
+    Changeset changeset2 = createChangeset("message two");
+
+    ChangesetPreProcessor preProcessor = changesetDescriptionTrailers.createPreProcessor(REPOSITORY);
+    preProcessor.process(changeset1);
+    preProcessor.process(changeset2);
+
+    assertThat(changeset1.getDescription()).isEqualTo("message one\n\n");
+    assertThat(changeset1.getTrailers()).isNotEmpty();
+
+    assertThat(changeset2.getDescription()).isEqualTo("message two");
+    assertThat(changeset2.getTrailers()).isNullOrEmpty();
   }
 
   private Changeset createChangeset(String commitMessage) {

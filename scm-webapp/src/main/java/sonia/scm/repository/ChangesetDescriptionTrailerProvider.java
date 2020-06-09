@@ -27,9 +27,7 @@ package sonia.scm.repository;
 import com.google.common.collect.ImmutableSet;
 import sonia.scm.plugin.Extension;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,16 +44,23 @@ public class ChangesetDescriptionTrailerProvider implements ChangesetPreProcesso
   }
 
   private static class TrailerChangesetPreProcessor implements ChangesetPreProcessor {
+    @Override
+    public void process(Changeset changeset) {
+      new Worker(changeset).process();
+    }
+  }
 
+  private static class Worker {
     private final StringBuilder newDescription = new StringBuilder();
 
-    private Changeset changeset;
+    private final Changeset changeset;
 
     boolean foundEmptyLine;
 
-    @Override
-    public void process(Changeset changeset) {
+    private Worker(Changeset changeset) {
       this.changeset = changeset;
+    }
+    private void process() {
       try (Scanner scanner = new Scanner(changeset.getDescription())) {
         while (scanner.hasNextLine()) {
           handleLine(scanner, scanner.nextLine());
@@ -64,7 +69,7 @@ public class ChangesetDescriptionTrailerProvider implements ChangesetPreProcesso
       changeset.setDescription(newDescription.toString());
     }
 
-    public void handleLine(Scanner scanner, String line) {
+    private void handleLine(Scanner scanner, String line) {
       if (line.trim().isEmpty()) {
         handleEmptyLine(scanner, line);
         return;
@@ -76,7 +81,7 @@ public class ChangesetDescriptionTrailerProvider implements ChangesetPreProcesso
       appendLine(scanner, line);
     }
 
-    public boolean checkForTrailer(String line) {
+    private boolean checkForTrailer(String line) {
       Matcher matcher = TRAILER_PATTERN.matcher(line);
       if (matcher.matches()) {
         String type = matcher.group(1);
@@ -90,12 +95,12 @@ public class ChangesetDescriptionTrailerProvider implements ChangesetPreProcesso
       return false;
     }
 
-    public void handleEmptyLine(Scanner scanner, String line) {
+    private void handleEmptyLine(Scanner scanner, String line) {
       foundEmptyLine = true;
       appendLine(scanner, line);
     }
 
-    public void appendLine(Scanner scanner, String line) {
+    private void appendLine(Scanner scanner, String line) {
       newDescription.append(line);
       if (scanner.hasNextLine()) {
         newDescription.append('\n');
@@ -103,7 +108,7 @@ public class ChangesetDescriptionTrailerProvider implements ChangesetPreProcesso
     }
 
     private void createTrailer(String type, String name, String mail) {
-        changeset.addTrailer(new Trailer(type, new Person(name, mail)));
+      changeset.addTrailer(new Trailer(type, new Person(name, mail)));
     }
   }
 }
