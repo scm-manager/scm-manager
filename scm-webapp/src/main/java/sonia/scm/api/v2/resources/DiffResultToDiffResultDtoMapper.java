@@ -56,7 +56,7 @@ class DiffResultToDiffResultDtoMapper {
 
   public DiffResultDto mapForIncoming(Repository repository, DiffResult result, String source, String target) {
     DiffResultDto dto = new DiffResultDto(linkingTo().self(resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName(), source, target)).build());
-    setFiles(result, dto, repository, target);
+    setFiles(result, dto, repository, source);
     return dto;
   }
 
