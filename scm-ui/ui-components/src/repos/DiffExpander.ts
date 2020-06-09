@@ -110,8 +110,10 @@ class DiffExpander {
       lines.pop();
     }
     const newChanges: Change[] = [];
-    let oldLineNumber = hunk!.changes![0]!.oldLineNumber! - lines.length;
-    let newLineNumber = hunk!.changes![0]!.newLineNumber! - lines.length;
+    const minOldLineNumberOfNewHunk = hunk.oldStart! - lines.length;
+    const minNewLineNumberOfNewHunk = hunk.newStart! - lines.length;
+    let oldLineNumber = minOldLineNumberOfNewHunk;
+    let newLineNumber = minNewLineNumberOfNewHunk;
 
     lines.forEach(line => {
       newChanges.push({
@@ -124,23 +126,21 @@ class DiffExpander {
       oldLineNumber += 1;
       newLineNumber += 1;
     });
-    hunk.changes.forEach(change => newChanges.push(change));
 
-    const newHunk = {
-      ...hunk,
-      oldStart: hunk.oldStart! - lines.length,
-      newStart: hunk.newStart! - lines.length,
-      oldLines: hunk.oldLines! + lines.length,
-      newLines: hunk.newLines! + lines.length,
+    const newHunk: Hunk = {
+      content: "",
+      oldStart: minOldLineNumberOfNewHunk,
+      newStart: minNewLineNumberOfNewHunk,
+      oldLines: lines.length,
+      newLines: lines.length,
       changes: newChanges
     };
     const newHunks: Hunk[] = [];
     this.file.hunks!.forEach((oldHunk: Hunk, i: number) => {
       if (i === n) {
         newHunks.push(newHunk);
-      } else {
-        newHunks.push(oldHunk);
       }
+      newHunks.push(oldHunk);
     });
     const newFile = { ...this.file, hunks: newHunks };
     callback(newFile);
@@ -151,9 +151,13 @@ class DiffExpander {
     if (lines[lines.length - 1] === "") {
       lines.pop();
     }
-    const newChanges = [...hunk.changes];
-    let oldLineNumber: number = this.getMaxOldLineNumber(newChanges);
-    let newLineNumber: number = this.getMaxNewLineNumber(newChanges);
+    const newChanges: Change[] = [];
+
+    const maxOldLineNumberFromPrecedingHunk = this.getMaxOldLineNumber(hunk.changes);
+    const maxNewLineNumberFromPrecedingHunk = this.getMaxNewLineNumber(hunk.changes);
+
+    let oldLineNumber: number = maxOldLineNumberFromPrecedingHunk;
+    let newLineNumber: number = maxNewLineNumberFromPrecedingHunk;
 
     lines.forEach(line => {
       oldLineNumber += 1;
@@ -167,19 +171,21 @@ class DiffExpander {
       });
     });
 
-    const newHunk = {
-      ...hunk,
-      oldLines: hunk.oldLines! + lines.length,
-      newLines: hunk.newLines! + lines.length,
+    const newHunk: Hunk = {
       changes: newChanges,
+      content: "",
+      oldStart: maxOldLineNumberFromPrecedingHunk + 1,
+      newStart: maxNewLineNumberFromPrecedingHunk + 1,
+      oldLines: lines.length,
+      newLines: lines.length,
       fullyExpanded: requestedLines < 0 || lines.length < requestedLines
     };
+
     const newHunks: Hunk[] = [];
     this.file.hunks!.forEach((oldHunk: Hunk, i: number) => {
+      newHunks.push(oldHunk);
       if (i === n) {
         newHunks.push(newHunk);
-      } else {
-        newHunks.push(oldHunk);
       }
     });
     const newFile = { ...this.file, hunks: newHunks };

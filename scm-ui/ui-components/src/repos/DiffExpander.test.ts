@@ -275,8 +275,11 @@ describe("with hunks the diff expander", () => {
   it("should return a really bix number for the expand bottom range of the last hunk", () => {
     expect(diffExpander.getHunk(3).maxExpandBottomRange).toBe(-1);
   });
-  it("should expand hunk with new line from api client at the bottom", async () => {
+  it("should create new hunk with new line from api client at the bottom", async () => {
     expect(diffExpander.getHunk(1).hunk.changes.length).toBe(7);
+    const oldHunkCount = diffExpander.hunkCount();
+    const expandedHunk = diffExpander.getHunk(1).hunk;
+    const subsequentHunk = diffExpander.getHunk(2).hunk;
     fetchMock.get("http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=20&end=21", "new line 1");
     let newFile: File;
     diffExpander.getHunk(1).expandBottom(1, file => {
@@ -284,11 +287,18 @@ describe("with hunks the diff expander", () => {
     });
     await fetchMock.flush(true);
     expect(fetchMock.done()).toBe(true);
-    expect(newFile!.hunks![1].changes.length).toBe(8);
-    expect(newFile!.hunks![1].changes[7].content).toBe("new line 1");
+    expect(newFile!.hunks!.length).toBe(oldHunkCount + 1);
+    expect(newFile!.hunks![1]).toBe(expandedHunk);
+    const newHunk = newFile!.hunks![2].changes;
+    expect(newHunk.length).toBe(1);
+    expect(newHunk[0].content).toBe("new line 1");
+    expect(newFile!.hunks![3]).toBe(subsequentHunk);
   });
-  it("should expand hunk with new line from api client at the top", async () => {
+  it("should create new hunk with new line from api client at the top", async () => {
     expect(diffExpander.getHunk(1).hunk.changes.length).toBe(7);
+    const oldHunkCount = diffExpander.hunkCount();
+    const expandedHunk = diffExpander.getHunk(1).hunk;
+    const preceedingHunk = diffExpander.getHunk(0).hunk;
     fetchMock.get(
       "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=8&end=13",
       "new line 9\nnew line 10\nnew line 11\nnew line 12\nnew line 13"
@@ -299,7 +309,11 @@ describe("with hunks the diff expander", () => {
     });
     await fetchMock.flush(true);
     expect(fetchMock.done()).toBe(true);
-    expect(newFile!.hunks![1].changes.length).toBe(12);
+    expect(newFile!.hunks!.length).toBe(oldHunkCount + 1);
+    expect(newFile!.hunks![0]).toBe(preceedingHunk);
+    expect(newFile!.hunks![2]).toBe(expandedHunk);
+
+    expect(newFile!.hunks![1].changes.length).toBe(5);
     expect(newFile!.hunks![1].changes[0].content).toBe("new line 9");
     expect(newFile!.hunks![1].changes[0].oldLineNumber).toBe(9);
     expect(newFile!.hunks![1].changes[0].newLineNumber).toBe(9);
@@ -309,11 +323,9 @@ describe("with hunks the diff expander", () => {
     expect(newFile!.hunks![1].changes[4].content).toBe("new line 13");
     expect(newFile!.hunks![1].changes[4].oldLineNumber).toBe(13);
     expect(newFile!.hunks![1].changes[4].newLineNumber).toBe(13);
-    expect(newFile!.hunks![1].changes[5].content).toBe("line");
-    expect(newFile!.hunks![1].changes[5].oldLineNumber).toBe(14);
-    expect(newFile!.hunks![1].changes[5].newLineNumber).toBe(14);
   });
   it("should set fully expanded to true if expanded completely", async () => {
+    const oldHunkCount = diffExpander.hunkCount();
     fetchMock.get(
       "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=40&end=50",
       "new line 40\nnew line 41\nnew line 42"
@@ -323,7 +335,8 @@ describe("with hunks the diff expander", () => {
       newFile = file;
     });
     await fetchMock.flush(true);
-    expect(newFile!.hunks![3].fullyExpanded).toBe(true);
+    expect(newFile!.hunks!.length).toBe(oldHunkCount + 1);
+    expect(newFile!.hunks![4].fullyExpanded).toBe(true);
   });
   it("should set end to -1 if requested to expand to the end", async () => {
     fetchMock.get(
@@ -335,7 +348,7 @@ describe("with hunks the diff expander", () => {
       newFile = file;
     });
     await fetchMock.flush(true);
-    expect(newFile!.hunks![3].fullyExpanded).toBe(true);
+    expect(newFile!.hunks![4].fullyExpanded).toBe(true);
   });
 });
 
