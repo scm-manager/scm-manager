@@ -212,7 +212,6 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   createLastHunkFooter = (expandableHunk: ExpandableHunk) => {
-    console.log("maxExpandBottomRange:", expandableHunk.maxExpandBottomRange);
     if (expandableHunk.maxExpandBottomRange !== 0) {
       return (
         <Decoration>
