@@ -22,9 +22,11 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Changeset } from "@scm-manager/ui-types/src";
+import { Changeset } from "@scm-manager/ui-types";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
+import { useBinder } from "@scm-manager/ui-extensions";
+import { Image } from "@scm-manager/ui-components";
 
 type Props = {
   changeset: Changeset;
@@ -33,6 +35,43 @@ type Props = {
 const SizedTd = styled.td`
   width: 10rem;
 `;
+
+// TODO get from ui-types?
+type Person = {
+  name: string;
+  mail?: string;
+};
+
+const ContributorAvatar = styled(Image)`
+  width: 1em;
+  height: 1em;
+  margin-right: 0.5em;
+  vertical-align: middle;
+  border-radius: 0.25em;
+  margin-bottom: 0.2em;
+`;
+
+const Contributor: FC<{ person: Person }> = ({ person }) => {
+  const [t] = useTranslation("repos");
+  const binder = useBinder();
+  const avatarFactory = binder.getExtension("avatar.factory");
+  let prefix = null;
+  if (avatarFactory) {
+    const avatar = avatarFactory(person);
+    if (avatar) {
+      prefix = <ContributorAvatar src={avatar} alt={person.name} />;
+    }
+  }
+  if (person.mail) {
+    return (
+      <a href={"mailto:" + person.mail} title={t("changeset.author.mailto") + " " + person.mail}>
+        {prefix}
+        {person.name}
+      </a>
+    );
+  }
+  return <>{person.name}</>;
+};
 
 const ContributorTable: FC<Props> = ({ changeset }) => {
   const [t] = useTranslation("plugins");
@@ -61,9 +100,7 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
       <tr>
         <SizedTd>{t("changeset.trailer.type.author") + ":"}</SizedTd>
         <td>
-          <a title={changeset?.author?.mail} href={"mailto:" + changeset?.author?.mail}>
-            {changeset?.author?.name}
-          </a>
+          <Contributor person={changeset.author} />
         </td>
       </tr>
       {getTrailersByType().map(trailer => (
@@ -72,9 +109,7 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
           <td className="shorten-text is-marginless">
             {trailer.persons
               .map(person => (
-                <a title={person.mail} href={"mailto:" + person.mail}>
-                  {person.name}
-                </a>
+                <Contributor person={person} />
               ))
               .reduce((prev, curr) => [prev, ", ", curr])}
           </td>
