@@ -79,7 +79,14 @@
     "errorSubtitle": "Could not fetch changesets",
     "noChangesets": "No changesets found for this branch. The commits could have been removed.",
     "branchSelectorLabel": "Branches",
-    "collapseDiffs": "Collapse"
+    "collapseDiffs": "Collapse",
+    "authors": {
+      "and": "and",
+      "authoredBy": "Authored by",
+      "committedBy": "committed by",
+      "coAuthoredBy": "co authored by",
+      "more": "{{count}} more"
+    }
   },
   "changeset": {
     "description": "Description",

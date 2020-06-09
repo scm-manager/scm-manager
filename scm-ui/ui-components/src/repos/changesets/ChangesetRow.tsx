@@ -123,7 +123,7 @@ class ChangesetRow extends React.Component<Props> {
                     <p className="is-hidden-desktop">
                       <Trans i18nKey="repos:changeset.shortSummary" components={[changesetId, dateFromNow]} />
                     </p>
-                    <AuthorWrapper className="is-size-7">
+                    <AuthorWrapper className="is-size-7 is-ellipsis-overflow">
                       <ChangesetAuthor changeset={changeset} />
                     </AuthorWrapper>
                   </Metadata>
