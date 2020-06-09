@@ -74,95 +74,77 @@ class DiffExpander {
   };
 
   expandHead = (n: number, count: number, callback: (newFile: File) => void) => {
-    const lineRequestUrl = (this.file._links!.lines as Link).href
-      .replace("{start}", (this.minLineNumber(n) - Math.min(count, this.computeMaxExpandHeadRange(n)) - 1).toString())
-      .replace("{end}", (this.minLineNumber(n) - 1).toString());
-    apiClient
-      .get(lineRequestUrl)
-      .then(response => response.text())
-      .then(text => text.split("\n"))
-      .then(lines => this.expandHunkAtHead(n, lines, callback));
+    const start = this.minLineNumber(n) - Math.min(count, this.computeMaxExpandHeadRange(n)) - 1;
+    const end = this.minLineNumber(n) - 1;
+    this.loadLines(start, end).then(lines => {
+      const hunk = this.file.hunks![n];
+
+      const newHunk = this.createNewHunk(
+        hunk.oldStart! - lines.length,
+        hunk.newStart! - lines.length,
+        lines,
+        lines.length
+      );
+
+      const newFile = this.addHunkToFile(newHunk, n);
+      callback(newFile);
+    });
   };
 
   expandBottom = (n: number, count: number, callback: (newFile: File) => void) => {
     const maxExpandBottomRange = this.computeMaxExpandBottomRange(n);
-    const lineRequestUrl = (this.file._links!.lines as Link).href
-      .replace("{start}", this.maxLineNumber(n).toString())
-      .replace(
-        "{end}",
-        count > 0
-          ? (
-              this.maxLineNumber(n) +
-              Math.min(count, maxExpandBottomRange > 0 ? maxExpandBottomRange : Number.MAX_SAFE_INTEGER)
-            ).toString()
-          : "-1"
+    const start = this.maxLineNumber(n);
+    const end =
+      count > 0
+        ? start + Math.min(count, maxExpandBottomRange > 0 ? maxExpandBottomRange : Number.MAX_SAFE_INTEGER)
+        : -1;
+    this.loadLines(start, end).then(lines => {
+      const hunk = this.file.hunks![n];
+
+      const newHunk: Hunk = this.createNewHunk(
+        this.getMaxOldLineNumber(hunk.changes) + 1,
+        this.getMaxNewLineNumber(hunk.changes) + 1,
+        lines,
+        count
       );
-    apiClient
+
+      const newFile = this.addHunkToFile(newHunk, n + 1);
+      callback(newFile);
+    });
+  };
+
+  loadLines = (start: number, end: number) => {
+    const lineRequestUrl = (this.file._links!.lines as Link).href
+      .replace("{start}", start.toString())
+      .replace("{end}", end.toString());
+    return apiClient
       .get(lineRequestUrl)
       .then(response => response.text())
       .then(text => text.split("\n"))
-      .then(lines => this.expandHunkAtBottom(n, count, lines, callback));
+      .then(lines => (lines[lines.length - 1] === "" ? lines.slice(0, lines.length - 1) : lines));
   };
 
-  expandHunkAtHead = (n: number, lines: string[], callback: (newFile: File) => void) => {
-    const hunk = this.file.hunks![n];
-    if (lines[lines.length - 1] === "") {
-      lines.pop();
-    }
-    const newChanges: Change[] = [];
-    const minOldLineNumberOfNewHunk = hunk.oldStart! - lines.length;
-    const minNewLineNumberOfNewHunk = hunk.newStart! - lines.length;
-    let oldLineNumber = minOldLineNumberOfNewHunk;
-    let newLineNumber = minNewLineNumberOfNewHunk;
-
-    lines.forEach(line => {
-      newChanges.push({
-        content: line,
-        type: "normal",
-        oldLineNumber,
-        newLineNumber,
-        isNormal: true
-      });
-      oldLineNumber += 1;
-      newLineNumber += 1;
-    });
-
-    const newHunk: Hunk = {
-      content: "",
-      oldStart: minOldLineNumberOfNewHunk,
-      newStart: minNewLineNumberOfNewHunk,
-      oldLines: lines.length,
-      newLines: lines.length,
-      changes: newChanges,
-      expansion: true
-    };
+  addHunkToFile = (newHunk: Hunk, position: number) => {
     const newHunks: Hunk[] = [];
     this.file.hunks!.forEach((oldHunk: Hunk, i: number) => {
-      if (i === n) {
+      if (i === position) {
         newHunks.push(newHunk);
       }
       newHunks.push(oldHunk);
     });
-    const newFile = { ...this.file, hunks: newHunks };
-    callback(newFile);
+    if (position === newHunks.length) {
+      newHunks.push(newHunk);
+    }
+    return { ...this.file, hunks: newHunks };
   };
 
-  expandHunkAtBottom = (n: number, requestedLines: number, lines: string[], callback: (newFile: File) => void) => {
-    const hunk = this.file.hunks![n];
-    if (lines[lines.length - 1] === "") {
-      lines.pop();
-    }
+  createNewHunk = (oldFirstLineNumber: number, newFirstLineNumber: number, lines: string[], requestedLines: number) => {
     const newChanges: Change[] = [];
 
-    const maxOldLineNumberFromPrecedingHunk = this.getMaxOldLineNumber(hunk.changes);
-    const maxNewLineNumberFromPrecedingHunk = this.getMaxNewLineNumber(hunk.changes);
-
-    let oldLineNumber: number = maxOldLineNumberFromPrecedingHunk;
-    let newLineNumber: number = maxNewLineNumberFromPrecedingHunk;
+    let oldLineNumber: number = oldFirstLineNumber;
+    let newLineNumber: number = newFirstLineNumber;
 
     lines.forEach(line => {
-      oldLineNumber += 1;
-      newLineNumber += 1;
       newChanges.push({
         content: line,
         type: "normal",
@@ -170,28 +152,20 @@ class DiffExpander {
         newLineNumber,
         isNormal: true
       });
+      oldLineNumber += 1;
+      newLineNumber += 1;
     });
 
-    const newHunk: Hunk = {
+    return {
       changes: newChanges,
       content: "",
-      oldStart: maxOldLineNumberFromPrecedingHunk + 1,
-      newStart: maxNewLineNumberFromPrecedingHunk + 1,
+      oldStart: oldFirstLineNumber,
+      newStart: newFirstLineNumber,
       oldLines: lines.length,
       newLines: lines.length,
       expansion: true,
       fullyExpanded: requestedLines < 0 || lines.length < requestedLines
     };
-
-    const newHunks: Hunk[] = [];
-    this.file.hunks!.forEach((oldHunk: Hunk, i: number) => {
-      newHunks.push(oldHunk);
-      if (i === n) {
-        newHunks.push(newHunk);
-      }
-    });
-    const newFile = { ...this.file, hunks: newHunks };
-    callback(newFile);
   };
 
   getMaxOldLineNumber = (newChanges: Change[]) => {
