@@ -133,7 +133,8 @@ class DiffExpander {
       newStart: minNewLineNumberOfNewHunk,
       oldLines: lines.length,
       newLines: lines.length,
-      changes: newChanges
+      changes: newChanges,
+      expansion: true
     };
     const newHunks: Hunk[] = [];
     this.file.hunks!.forEach((oldHunk: Hunk, i: number) => {
@@ -178,6 +179,7 @@ class DiffExpander {
       newStart: maxNewLineNumberFromPrecedingHunk + 1,
       oldLines: lines.length,
       newLines: lines.length,
+      expansion: true,
       fullyExpanded: requestedLines < 0 || lines.length < requestedLines
     };
 

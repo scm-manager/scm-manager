@@ -289,9 +289,12 @@ describe("with hunks the diff expander", () => {
     expect(fetchMock.done()).toBe(true);
     expect(newFile!.hunks!.length).toBe(oldHunkCount + 1);
     expect(newFile!.hunks![1]).toBe(expandedHunk);
-    const newHunk = newFile!.hunks![2].changes;
-    expect(newHunk.length).toBe(1);
-    expect(newHunk[0].content).toBe("new line 1");
+
+    const newHunk = newFile!.hunks![2];
+    expect(newHunk.changes.length).toBe(1);
+    expect(newHunk.changes[0].content).toBe("new line 1");
+    expect(newHunk.expansion).toBe(true);
+
     expect(newFile!.hunks![3]).toBe(subsequentHunk);
   });
   it("should create new hunk with new line from api client at the top", async () => {
@@ -313,16 +316,18 @@ describe("with hunks the diff expander", () => {
     expect(newFile!.hunks![0]).toBe(preceedingHunk);
     expect(newFile!.hunks![2]).toBe(expandedHunk);
 
-    expect(newFile!.hunks![1].changes.length).toBe(5);
-    expect(newFile!.hunks![1].changes[0].content).toBe("new line 9");
-    expect(newFile!.hunks![1].changes[0].oldLineNumber).toBe(9);
-    expect(newFile!.hunks![1].changes[0].newLineNumber).toBe(9);
-    expect(newFile!.hunks![1].changes[1].content).toBe("new line 10");
-    expect(newFile!.hunks![1].changes[1].oldLineNumber).toBe(10);
-    expect(newFile!.hunks![1].changes[1].newLineNumber).toBe(10);
-    expect(newFile!.hunks![1].changes[4].content).toBe("new line 13");
-    expect(newFile!.hunks![1].changes[4].oldLineNumber).toBe(13);
-    expect(newFile!.hunks![1].changes[4].newLineNumber).toBe(13);
+    const newHunk = newFile!.hunks![1];
+    expect(newHunk.changes.length).toBe(5);
+    expect(newHunk.changes[0].content).toBe("new line 9");
+    expect(newHunk.changes[0].oldLineNumber).toBe(9);
+    expect(newHunk.changes[0].newLineNumber).toBe(9);
+    expect(newHunk.changes[1].content).toBe("new line 10");
+    expect(newHunk.changes[1].oldLineNumber).toBe(10);
+    expect(newHunk.changes[1].newLineNumber).toBe(10);
+    expect(newHunk.changes[4].content).toBe("new line 13");
+    expect(newHunk.changes[4].oldLineNumber).toBe(13);
+    expect(newHunk.changes[4].newLineNumber).toBe(13);
+    expect(newHunk.expansion).toBe(true);
   });
   it("should set fully expanded to true if expanded completely", async () => {
     const oldHunkCount = diffExpander.hunkCount();
