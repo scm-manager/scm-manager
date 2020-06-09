@@ -29,10 +29,29 @@ import { MemoryRouter } from "react-router-dom";
 import repository from "../../__resources__/repository";
 import ChangesetRow from "./ChangesetRow";
 import {one, two, three, four} from "../../__resources__/changesets";
+import {Binder, BinderContext} from "@scm-manager/ui-extensions";
+// @ts-ignore
+import hitchhiker from "../../__resources__/hitchhiker.png";
+import {Person} from "../../avatar/Avatar";
+import {Changeset} from "@scm-manager/ui-types/src";
 
 const Wrapper = styled.div`
   margin: 2rem;
 `;
+
+const robohash = (person: Person) => {
+  return `https://robohash.org/${person.mail}`;
+}
+
+const withAvatarFactory = (factory: (person: Person) => string, changeset: Changeset) => {
+  const binder = new Binder("changeset stories");
+  binder.bind("avatar.factory", factory);
+  return (
+    <BinderContext.Provider value={binder}>
+      <ChangesetRow repository={repository} changeset={changeset} />
+    </BinderContext.Provider>
+  );
+};
 
 storiesOf("Changesets", module)
   .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
@@ -48,4 +67,10 @@ storiesOf("Changesets", module)
   ))
   .add("With multiple Co-Authors", () => (
     <ChangesetRow repository={repository} changeset={four} />
-  ));
+  ))
+  .add("With avatar", () => {
+    return withAvatarFactory(person => hitchhiker, three);
+  })
+  .add("Co-Authors with avatar", () => {
+    return withAvatarFactory(robohash, four);
+  });
