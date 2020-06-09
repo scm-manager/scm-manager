@@ -50,6 +50,9 @@ const AvatarImage = styled(Image)`
   width: 1em;
   height: 1em;
   margin-right: 0.25em;
+  vertical-align: middle !important;
+  margin-bottom: 0.2em;
+  border-radius: 0.25em;
 `;
 
 type PersonAvatarProps = {
@@ -134,7 +137,7 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
     return filterTrailersByType("Co-authored-by");
   };
 
-  const getCommiters = () => {
+  const getCommitters = () => {
     return filterTrailersByType("Committed-by");
   };
 
@@ -153,25 +156,24 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
     );
   }
 
-  const commiters = getCommiters();
+  const commiters = getCommitters();
   if (commiters.length > 0) {
     authorLine.push(<Persons persons={commiters} label={"changesets.authors.committedBy"} />);
-
   }
+
   const coAuthors = getCoAuthors();
   if (coAuthors.length > 0) {
     authorLine.push(<Persons persons={coAuthors} label={"changesets.authors.coAuthoredBy"} />);
-
   }
+
   // extensions
   const extensions = binder.getExtensions("changesets.author.suffix", { changeset });
   if (extensions) {
     coAuthors.push(...extensions);
-
   }
 
   return (
-    <span style={{ verticalAlign: "middle" }}>
+    <>
       {authorLine.map((p, i) => {
         if (i === 0) {
           return <>{p}</>;
@@ -186,7 +188,7 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
           return <>, {p}</>;
         }
       })}
-    </span>
+    </>
   );
 };
 

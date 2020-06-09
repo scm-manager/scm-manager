@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC, useState } from "react";
 import { Trans, WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
@@ -31,12 +31,14 @@ import {
   AvatarImage,
   AvatarWrapper,
   Button,
+  ChangesetAuthor,
   ChangesetDiff,
   ChangesetId,
   changesets,
   ChangesetTag,
   DateFromNow,
-  Level
+  Level,
+  Icon
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
 
@@ -62,6 +64,31 @@ const TagsWrapper = styled.div`
 const BottomMarginLevel = styled(Level)`
   margin-bottom: 1rem !important;
 `;
+
+const countContributors = (changeset: Changeset) => {
+  return changeset.trailers.length + 1;
+};
+
+const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <div className="level has-cursor-pointer" onClick={e => setOpen(!open)}>
+        <div className="level-left">
+          <p>
+            <Icon name={open ? "angle-down" : "angle-right"} /> <ChangesetAuthor changeset={changeset} />
+          </p>
+        </div>
+        <div className="level-right">
+          <p>
+            (<span className="has-text-link">{countContributors(changeset)} Contributors</span>)
+          </p>
+        </div>
+      </div>
+      {open && <ContributorTable changeset={changeset} />}
+    </>
+  );
+};
 
 class ChangesetDetails extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -101,14 +128,13 @@ class ChangesetDetails extends React.Component<Props, State> {
               </RightMarginP>
             </AvatarWrapper>
             <div className="media-content">
-              <ContributorTable changeset={changeset} />
+              <Contributors changeset={changeset} />
               <p>
                 <Trans i18nKey="repos:changeset.summary" components={[id, date]} />
               </p>
             </div>
             <div className="media-right">{this.renderTags()}</div>
           </article>
-
           <p>
             {description.message.split("\n").map((item, key) => {
               return (
