@@ -46,10 +46,15 @@ const useAvatar = (person: Person): string | undefined => {
   }
 };
 
+const AvatarList = styled.span`
+  & > :not(:last-child) {
+    margin-right: 0.25em;
+  }
+`;
+
 const AvatarImage = styled(Image)`
   width: 1em;
   height: 1em;
-  margin-right: 0.25em;
   vertical-align: middle !important;
   margin-bottom: 0.2em;
   border-radius: 0.25em;
@@ -112,9 +117,11 @@ const Persons: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => {
     return (
       <>
         {t(label)}{" "}
-        {persons.map(p => (
-          <PersonAvatar person={p} avatar={avatarFactory(p)} />
-        ))}
+        <AvatarList>
+          {persons.map(p => (
+            <PersonAvatar person={p} avatar={avatarFactory(p)} />
+          ))}
+        </AvatarList>
       </>
     );
   } else {
@@ -148,11 +155,7 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
   const authorLine = [];
   if (changeset.author) {
     authorLine.push(
-      <Persons
-        persons={[changeset.author]}
-        label={"changesets.authors.authoredBy"}
-        displayTextOnly={true}
-      />
+      <Persons persons={[changeset.author]} label={"changesets.authors.authoredBy"} displayTextOnly={true} />
     );
   }
 
