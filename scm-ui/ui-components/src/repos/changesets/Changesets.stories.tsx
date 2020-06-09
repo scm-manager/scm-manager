@@ -71,6 +71,9 @@ storiesOf("Changesets", module)
   .add("With avatar", () => {
     return withAvatarFactory(person => hitchhiker, three);
   })
+  .add("Commiter and Co-Authors with avatar", () => {
+    return withAvatarFactory(robohash, one);
+  })
   .add("Co-Authors with avatar", () => {
     return withAvatarFactory(robohash, four);
   });

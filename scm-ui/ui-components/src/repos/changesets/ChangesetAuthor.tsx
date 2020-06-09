@@ -143,31 +143,31 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
   };
 
   const authorLine = [];
+  if (changeset.author) {
+    authorLine.push(
+      <Persons
+        persons={[changeset.author]}
+        label={"changesets.authors.authoredBy"}
+        displayTextOnly={true}
+      />
+    );
+  }
 
   const commiters = getCommiters();
   if (commiters.length > 0) {
     authorLine.push(<Persons persons={commiters} label={"changesets.authors.committedBy"} />);
-  }
 
+  }
   const coAuthors = getCoAuthors();
   if (coAuthors.length > 0) {
     authorLine.push(<Persons persons={coAuthors} label={"changesets.authors.coAuthoredBy"} />);
-  }
 
+  }
   // extensions
   const extensions = binder.getExtensions("changesets.author.suffix", { changeset });
   if (extensions) {
     coAuthors.push(...extensions);
-  }
 
-  if (changeset.author) {
-    authorLine.unshift(
-      <Persons
-        persons={[changeset.author]}
-        label={"changesets.authors.authoredBy"}
-        displayTextOnly={authorLine.length === 0}
-      />
-    );
   }
 
   return (
