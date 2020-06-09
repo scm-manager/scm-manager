@@ -282,10 +282,10 @@ describe("with hunks the diff expander", () => {
     const subsequentHunk = diffExpander.getHunk(2).hunk;
     fetchMock.get("http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=20&end=21", "new line 1");
     let newFile: File;
-    diffExpander.getHunk(1).expandBottom(1, file => {
-      newFile = file;
-    });
-    await fetchMock.flush(true);
+    await diffExpander
+      .getHunk(1)
+      .expandBottom(1)
+      .then(file => (newFile = file));
     expect(fetchMock.done()).toBe(true);
     expect(newFile!.hunks!.length).toBe(oldHunkCount + 1);
     expect(newFile!.hunks![1]).toBe(expandedHunk);
@@ -307,10 +307,10 @@ describe("with hunks the diff expander", () => {
       "new line 9\nnew line 10\nnew line 11\nnew line 12\nnew line 13"
     );
     let newFile: File;
-    diffExpander.getHunk(1).expandHead(5, file => {
-      newFile = file;
-    });
-    await fetchMock.flush(true);
+    await diffExpander
+      .getHunk(1)
+      .expandHead(5)
+      .then(file => (newFile = file));
     expect(fetchMock.done()).toBe(true);
     expect(newFile!.hunks!.length).toBe(oldHunkCount + 1);
     expect(newFile!.hunks![0]).toBe(preceedingHunk);
@@ -336,10 +336,10 @@ describe("with hunks the diff expander", () => {
       "new line 40\nnew line 41\nnew line 42"
     );
     let newFile: File;
-    diffExpander.getHunk(3).expandBottom(10, file => {
-      newFile = file;
-    });
-    await fetchMock.flush(true);
+    await diffExpander
+      .getHunk(3)
+      .expandBottom(10)
+      .then(file => (newFile = file));
     expect(newFile!.hunks!.length).toBe(oldHunkCount + 1);
     expect(newFile!.hunks![4].fullyExpanded).toBe(true);
   });
@@ -349,9 +349,10 @@ describe("with hunks the diff expander", () => {
       "new line 40\nnew line 41\nnew line 42"
     );
     let newFile: File;
-    diffExpander.getHunk(3).expandBottom(-1, file => {
-      newFile = file;
-    });
+    await diffExpander
+      .getHunk(3)
+      .expandBottom(-1)
+      .then(file => (newFile = file));
     await fetchMock.flush(true);
     expect(newFile!.hunks![4].fullyExpanded).toBe(true);
   });

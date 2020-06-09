@@ -78,7 +78,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const HunkDivider = styled.div`
-  background: #33b2e8;
+  background: #98d8f3;
   font-size: 0.7rem;
 `;
 
@@ -155,7 +155,7 @@ class DiffFile extends React.Component<Props, State> {
         return (
           <Decoration>
             <HunkDivider>
-              <span onClick={() => expandableHunk.expandHead(expandableHunk.maxExpandHeadRange, this.diffExpanded)}>
+              <span onClick={() => expandableHunk.expandHead(expandableHunk.maxExpandHeadRange).then(this.diffExpanded)}>
                 {this.props.t("diff.expandHeadComplete", { count: expandableHunk.maxExpandHeadRange })}
               </span>
             </HunkDivider>
@@ -165,10 +165,10 @@ class DiffFile extends React.Component<Props, State> {
         return (
           <Decoration>
             <HunkDivider>
-              <span onClick={() => expandableHunk.expandHead(10, this.diffExpanded)}>
+              <span onClick={() => expandableHunk.expandHead(10).then(this.diffExpanded)}>
                 {this.props.t("diff.expandHeadByLines", { count: 10 })}
               </span>{" "}
-              <span onClick={() => expandableHunk.expandHead(expandableHunk.maxExpandHeadRange, this.diffExpanded)}>
+              <span onClick={() => expandableHunk.expandHead(expandableHunk.maxExpandHeadRange).then(this.diffExpanded)}>
                 {this.props.t("diff.expandHeadComplete", { count: expandableHunk.maxExpandHeadRange })}
               </span>
             </HunkDivider>
@@ -186,7 +186,7 @@ class DiffFile extends React.Component<Props, State> {
         return (
           <Decoration>
             <HunkDivider>
-              <span onClick={() => expandableHunk.expandBottom(expandableHunk.maxExpandBottomRange, this.diffExpanded)}>
+              <span onClick={() => expandableHunk.expandBottom(expandableHunk.maxExpandBottomRange).then(this.diffExpanded)}>
                 {this.props.t("diff.expandBottomComplete", { count: expandableHunk.maxExpandBottomRange })}
               </span>
             </HunkDivider>
@@ -196,10 +196,10 @@ class DiffFile extends React.Component<Props, State> {
         return (
           <Decoration>
             <HunkDivider>
-              <span onClick={() => expandableHunk.expandBottom(10, this.diffExpanded)}>
+              <span onClick={() => expandableHunk.expandBottom(10).then(this.diffExpanded)}>
                 {this.props.t("diff.expandBottomByLines", { count: 10 })}
               </span>{" "}
-              <span onClick={() => expandableHunk.expandBottom(expandableHunk.maxExpandBottomRange, this.diffExpanded)}>
+              <span onClick={() => expandableHunk.expandBottom(expandableHunk.maxExpandBottomRange).then(this.diffExpanded)}>
                 {this.props.t("diff.expandBottomComplete", { count: expandableHunk.maxExpandBottomRange })}
               </span>
             </HunkDivider>
@@ -216,10 +216,10 @@ class DiffFile extends React.Component<Props, State> {
       return (
         <Decoration>
           <HunkDivider>
-            <span onClick={() => expandableHunk.expandBottom(10, this.diffExpanded)}>
+            <span onClick={() => expandableHunk.expandBottom(10).then(this.diffExpanded)}>
               {this.props.t("diff.expandLastBottomByLines")}
             </span>{" "}
-            <span onClick={() => expandableHunk.expandBottom(expandableHunk.maxExpandBottomRange, this.diffExpanded)}>
+            <span onClick={() => expandableHunk.expandBottom(expandableHunk.maxExpandBottomRange).then(this.diffExpanded)}>
               {this.props.t("diff.expandLastBottomComplete")}
             </span>
           </HunkDivider>

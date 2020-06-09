@@ -73,10 +73,10 @@ class DiffExpander {
     }
   };
 
-  expandHead = (n: number, count: number, callback: (newFile: File) => void) => {
+  expandHead: (n: number, count: number) => Promise<File> = (n, count) => {
     const start = this.minLineNumber(n) - Math.min(count, this.computeMaxExpandHeadRange(n)) - 1;
     const end = this.minLineNumber(n) - 1;
-    this.loadLines(start, end).then(lines => {
+    return this.loadLines(start, end).then(lines => {
       const hunk = this.file.hunks![n];
 
       const newHunk = this.createNewHunk(
@@ -86,19 +86,18 @@ class DiffExpander {
         lines.length
       );
 
-      const newFile = this.addHunkToFile(newHunk, n);
-      callback(newFile);
+      return this.addHunkToFile(newHunk, n);
     });
   };
 
-  expandBottom = (n: number, count: number, callback: (newFile: File) => void) => {
+  expandBottom: (n: number, count: number) => Promise<File> = (n, count) => {
     const maxExpandBottomRange = this.computeMaxExpandBottomRange(n);
     const start = this.maxLineNumber(n);
     const end =
       count > 0
         ? start + Math.min(count, maxExpandBottomRange > 0 ? maxExpandBottomRange : Number.MAX_SAFE_INTEGER)
         : -1;
-    this.loadLines(start, end).then(lines => {
+    return this.loadLines(start, end).then(lines => {
       const hunk = this.file.hunks![n];
 
       const newHunk: Hunk = this.createNewHunk(
@@ -108,8 +107,7 @@ class DiffExpander {
         count
       );
 
-      const newFile = this.addHunkToFile(newHunk, n + 1);
-      callback(newFile);
+      return this.addHunkToFile(newHunk, n + 1);
     });
   };
 
@@ -178,12 +176,12 @@ class DiffExpander {
     return lastChange.newLineNumber || lastChange.lineNumber!;
   };
 
-  getHunk: (n: number) => ExpandableHunk = (n: number) => {
+  getHunk: (n: number) => ExpandableHunk = n => {
     return {
       maxExpandHeadRange: this.computeMaxExpandHeadRange(n),
       maxExpandBottomRange: this.computeMaxExpandBottomRange(n),
-      expandHead: (count: number, callback: (newFile: File) => void) => this.expandHead(n, count, callback),
-      expandBottom: (count: number, callback: (newFile: File) => void) => this.expandBottom(n, count, callback),
+      expandHead: (count: number) => this.expandHead(n, count),
+      expandBottom: (count: number) => this.expandBottom(n, count),
       hunk: this.file?.hunks![n]
     };
   };
@@ -193,8 +191,8 @@ export type ExpandableHunk = {
   hunk: Hunk;
   maxExpandHeadRange: number;
   maxExpandBottomRange: number;
-  expandHead: (count: number, callback: (newFile: File) => void) => void;
-  expandBottom: (count: number, callback: (newFile: File) => void) => void;
+  expandHead: (count: number) => Promise<File>;
+  expandBottom: (count: number) => Promise<File>;
 };
 
 export default DiffExpander;
