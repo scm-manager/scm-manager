@@ -26,7 +26,7 @@ import { Changeset } from "@scm-manager/ui-types";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { useBinder } from "@scm-manager/ui-extensions";
-import { Image } from "@scm-manager/ui-components";
+import { Image, CommaSeparatedList } from "@scm-manager/ui-components";
 
 type Props = {
   changeset: Changeset;
@@ -104,14 +104,14 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
         </td>
       </tr>
       {getTrailersByType().map(trailer => (
-        <tr>
+        <tr key={trailer.type}>
           <SizedTd>{t("changeset.trailer.type." + trailer.type) + ":"}</SizedTd>
           <td className="shorten-text is-marginless">
-            {trailer.persons
-              .map(person => (
-                <Contributor person={person} />
-              ))
-              .reduce((prev, curr) => [prev, ", ", curr])}
+            <CommaSeparatedList>
+              {trailer.persons.map(person => (
+                <Contributor key={person.name} person={person} />
+              ))}
+            </CommaSeparatedList>
           </td>
         </tr>
       ))}

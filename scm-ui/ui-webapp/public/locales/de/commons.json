@@ -104,5 +104,8 @@
       "community": "Community",
       "enterprise": "Enterprise"
     }
+  },
+  "commaSeparatedList": {
+    "lastDivider": "und"
   }
 }

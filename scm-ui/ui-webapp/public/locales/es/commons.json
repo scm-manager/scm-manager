@@ -89,5 +89,8 @@
     "passwordConfirmFailed": "Las contraseñas deben ser identicas",
     "submit": "Guardar",
     "changedSuccessfully": "Contraseña cambiada correctamente"
+  },
+  "commaSeparatedList": {
+    "lastDivider": "y"
   }
 }

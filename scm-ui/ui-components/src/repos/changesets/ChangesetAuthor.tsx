@@ -28,6 +28,7 @@ import { useBinder } from "@scm-manager/ui-extensions";
 import { EXTENSION_POINT, Person } from "../../avatar/Avatar";
 import Image from "../../Image";
 import styled from "styled-components";
+import CommaSeparatedList from "../../CommaSeparatedList";
 
 type Props = {
   changeset: Changeset;
@@ -119,7 +120,7 @@ const Persons: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => {
         {t(label)}{" "}
         <AvatarList>
           {persons.map(p => (
-            <PersonAvatar person={p} avatar={avatarFactory(p)} />
+            <PersonAvatar key={p.name} person={p} avatar={avatarFactory(p)} />
           ))}
         </AvatarList>
       </>
@@ -128,7 +129,7 @@ const Persons: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => {
     return (
       <>
         {t(label)}{" "}
-        <a title={label + ":\n" + persons.map(person => "- " + person.name).join("\n")}>
+        <a title={persons.map(person => "- " + person.name).join("\n")}>
           {t("changesets.authors.more", { count: persons.length })}
         </a>
       </>
@@ -175,24 +176,7 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
     coAuthors.push(...extensions);
   }
 
-  return (
-    <>
-      {authorLine.map((p, i) => {
-        if (i === 0) {
-          return <>{p}</>;
-        } else if (i + 1 === authorLine.length) {
-          return (
-            <>
-              {" "}
-              {t("changesets.authors.and")} {p}{" "}
-            </>
-          );
-        } else {
-          return <>, {p}</>;
-        }
-      })}
-    </>
-  );
+  return <CommaSeparatedList>{authorLine}</CommaSeparatedList>
 };
 
 export default ChangesetAuthor;
