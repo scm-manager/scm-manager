@@ -207,10 +207,10 @@
     "expandBottomByLines_plural": "load {{count}} more lines",
     "expandBottomComplete": "load {{count}} line",
     "expandBottomComplete_plural": "load all {{count}} lines",
-    "expandLastBottomByLines": "load up to 10 more lines",
+    "expandLastBottomByLines": "load up to {{count}} more lines",
     "expandLastBottomComplete": "load all remaining lines",
     "expanding": "loading lines ...",
-    "expansionFailed": "Error loading additional content"
+    "expansionFailed": "Error while loading additional lines"
   },
   "fileUpload": {
     "clickHere": "Click here to select your file",

@@ -191,7 +191,19 @@
   "diff": {
     "sideBySide": "Zur zweispaltigen Ansicht wechseln",
     "combined": "Zur kombinierten Ansicht wechseln",
-    "noDiffFound": "Kein Diff zwischen den ausgewählten Branches gefunden."
+    "noDiffFound": "Kein Diff zwischen den ausgewählten Branches gefunden.",
+    "expandHeadByLines": "{{count}} weitere Zeile laden",
+    "expandHeadByLines_plural": "{{count}} weitere Zeilen laden",
+    "expandHeadComplete": "{{count}} verbleibende weitere Zeile laden",
+    "expandHeadComplete_plural": "Alle {{count}} weiteren Zeilen laden",
+    "expandBottomByLines": "{{count}} verbleibende weitere Zeile laden",
+    "expandBottomByLines_plural": "Alle {{count}} weiteren Zeilen laden",
+    "expandBottomComplete": "{{count}} verbleibende weitere Zeile laden",
+    "expandBottomComplete_plural": "Alle {{count}} weiteren Zeilen laden",
+    "expandLastBottomByLines": "Bis zu {{count}} weitere Zeilen laden",
+    "expandLastBottomComplete": "Alle weiteren Zeilen laden",
+    "expanding": "Zeilen werden geladen ...",
+    "expansionFailed": "Fehler beim Laden der zusätzlichen Zeilen"
   },
   "fileUpload": {
     "clickHere": "Klicken Sie hier um Ihre Datei hochzuladen.",

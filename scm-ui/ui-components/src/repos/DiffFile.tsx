@@ -231,7 +231,7 @@ class DiffFile extends React.Component<Props, State> {
             <HunkExpandLink
               icon={"fa-angle-down"}
               onClick={this.expandBottom(expandableHunk, 10)}
-              text={this.props.t("diff.expandLastBottomByLines")}
+              text={this.props.t("diff.expandLastBottomByLines", { count: 10 })}
             />{" "}
             <HunkExpandLink
               icon={"fa-angle-double-down"}
