@@ -642,4 +642,4 @@ SCM-Manager 1.20
 
 -   update logback to version 1.0.7
 
-[Release 1.19 - 1.0](release%20notes%201.19%20-%201.0.md)
+[Release 1.19 - 1.0](../release%20notes%201.19%20-%201.0/)

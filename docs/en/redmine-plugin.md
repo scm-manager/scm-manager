@@ -2,7 +2,7 @@
 title: Redmine Plugin
 ---
 
-Is based on [scm-jira-plugin](jira-plugin.md).
+Is based on [scm-jira-plugin](../jira-plugin/).
 
 The plugin enables the following features to integrate SCM-Manager to
 [Redmine](http://www.redmine.org/):

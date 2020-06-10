@@ -2,7 +2,7 @@
 title: Mercurial Subrepositories
 ---
 
-In the following examples i will use the [scm-cli-client](administration/command-line-client.md)
+In the following examples i will use the [scm-cli-client](../administration/command-line-client)
 to create the repositories, but you can also use the web interface to
 create the repositories.
 
@@ -35,7 +35,9 @@ from the plugin-center (requires scm-manager version 1.10 or higher).
 Create a repository for the main repository and for each nested
 repository. Configure the
 [scm-hgnested-plugin](https://bitbucket.org/sdorra/scm-hgnested-plugin)
-like [this](en/screenshots/scm-hgnested-plugin.png).
+as shown here:
+
+![scm-hgnested-plugin](assets/scm-hgnested-plugin.png)
 
 ### Further reading
 

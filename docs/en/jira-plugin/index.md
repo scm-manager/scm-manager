@@ -17,10 +17,13 @@ SCM-Manager:
     (https://developer.atlassian.com/display/JIRADEV/JIRA+XML-RPC+Overview)
 2.  Install scm-jira-plugin over the plugin center in scm-manager
 3.  Be sure that your jira installation accepts remote calls
-    ([Screenshot](en/screenshots/scm-jira-plugin/jira-plugin-01.png))
-4.  Configure the plugin, select a repository to enable the
-    scm-jira-plugin for this repository
-    ([Screenshot](en/screenshots/scm-jira-plugin/jira-plugin-02.png))
+
+![Screenshot](assets/jira-plugin-01.png)
+
+4.  Configure the plugin, select a repository to enable the scm-jira-plugin for this repository
+
+![Screenshot](assets/jira-plugin-02.png)
+
 5.  **Note**: For the auto close and update feature it is necessary
     that users have the same names and passwords in SCM-Manager and Jira
 
@@ -42,8 +45,12 @@ close words with transition that are configured in JIRA.
 
 ### Screenshots
 
-![](en/screenshots/scm-jira-plugin/jira-plugin-01.png)
-![](en/screenshots/scm-jira-plugin/jira-plugin-02.png)
-![](en/screenshots/scm-jira-plugin/jira-plugin-03.png)
-![](en/screenshots/scm-jira-plugin/jira-plugin-04.png)
-![](en/screenshots/scm-jira-plugin/jira-plugin-05.png)
+<div class="image-list">
+
+![](assets/jira-plugin-01.png)
+![](assets/jira-plugin-02.png)
+![](assets/jira-plugin-03.png)
+![](assets/jira-plugin-04.png)
+![](assets/jira-plugin-05.png)
+
+</div>

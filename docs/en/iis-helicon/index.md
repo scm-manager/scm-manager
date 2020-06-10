@@ -50,6 +50,6 @@ This problem only occurs when accessing the repository via https, not http.
 
 2. Add HTTP_Destination to the Allowed Server Variables using IIS:
 
-![Helicon: Allowed Server Variables](en/screenshots/helicon-server-vars.png)
+![Helicon: Allowed Server Variables](assets/helicon-server-vars.png)
 
-For more information, see issue [#624](https://bitbucket.org/sdorra/scm-manager/issue/624/svn-400-bad-request-on-copy-or-move-when).
+For more information, see issue [#624](https://github.com/scm-manager/scm-manager/issues/624).

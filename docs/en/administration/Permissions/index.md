@@ -18,13 +18,13 @@ to only one repository or to each repository. Administrators have owner permissi
 Repository permissions can be managed by administrators and by repository owners. 
 The permissions can be managed on the permission tab of each repository.
 
-![repository permissions](en/screenshots/permissions_repository.png "repository permissions")
+![repository permissions](assets/permissions_repository.png "repository permissions")
 
 ### Global permissions
 
 Global permissions are only manageable by administrators. They can be managed at *Security -> Users* or *Security -> Groups*.
 
-![global permissions](en/screenshots/permissions_global.png "global permissions")
+![global permissions](assets/permissions_global.png "global permissions")
 
 ### Administrators
 

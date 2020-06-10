@@ -395,7 +395,7 @@ displayToc: true
 **note**
 
 - GlassFish 3.x users have to change their GlassFish configuration,
-    see [SCM-Manager with GlassFish](glassfish.md)
+    see [SCM-Manager with GlassFish](../applicationserver/#glassfish)
 
 **improvements**
 
@@ -433,7 +433,7 @@ displayToc: true
 
 **note**
 
-- mod\_proxy users have to change their configuration, see [mod\_proxy configuration](en/apache/apache-mod_proxy.md)
+- mod\_proxy users have to change their configuration, see [mod\_proxy configuration](../apache/apache-mod_proxy)
 
 **improvements**
 

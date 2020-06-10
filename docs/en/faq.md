@@ -11,8 +11,8 @@ Password: `scmadmin`
 
 SCM-Manager stores the complete data in a directory called .scm (the
 SCM-Manager home directory). This directory is located in the home
-directory of the user which is the owner of the process. Except for [rpm
-and deb](RPM%20and%20DEB%20packages.md)
+directory of the user which is the owner of the process. Except for [rpm](../installation/redhat/)
+and [deb](../installation/debian/)
 installations, for those installations the home directory is located at
 /var/lib/scm.
 
