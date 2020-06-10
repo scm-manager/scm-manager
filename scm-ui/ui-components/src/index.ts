@@ -40,7 +40,6 @@ import {
   DiffEventHandler,
   DiffEventContext
 } from "./repos";
-import CommaSeparatedList from "./CommaSeparatedList";
 
 export { validation, urls, repositories };
 
