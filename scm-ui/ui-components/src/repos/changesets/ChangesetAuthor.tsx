@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Changeset } from "@scm-manager/ui-types";
+import { Changeset, Person } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { useBinder } from "@scm-manager/ui-extensions";
-import { EXTENSION_POINT, Person } from "../../avatar/Avatar";
+import { EXTENSION_POINT } from "../../avatar/Avatar";
 import styled from "styled-components";
 import CommaSeparatedList from "../../CommaSeparatedList";
 import ContributorAvatar from "./ContributorAvatar";
@@ -167,7 +167,7 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
     coAuthors.push(...extensions);
   }
 
-  return <CommaSeparatedList>{authorLine}</CommaSeparatedList>
+  return <CommaSeparatedList>{authorLine}</CommaSeparatedList>;
 };
 
 export default ChangesetAuthor;

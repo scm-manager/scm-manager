@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Changeset } from "@scm-manager/ui-types";
+import { Changeset, Person } from "@scm-manager/ui-types";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { useBinder } from "@scm-manager/ui-extensions";
@@ -35,12 +35,6 @@ type Props = {
 const SizedTd = styled.td`
   width: 10rem;
 `;
-
-// TODO get from ui-types?
-type Person = {
-  name: string;
-  mail?: string;
-};
 
 const Contributor: FC<{ person: Person }> = ({ person }) => {
   const [t] = useTranslation("repos");
@@ -101,7 +95,7 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
       {getTrailersByType().map(trailer => (
         <tr key={trailer.type}>
           <SizedTd>{t("changeset.trailer.type." + trailer.type) + ":"}</SizedTd>
-          <td className="shorten-text is-marginless">
+          <td className="is-ellipsis-overflow is-marginless">
             <CommaSeparatedList>
               {trailer.persons.map(person => (
                 <Contributor key={person.name} person={person} />
