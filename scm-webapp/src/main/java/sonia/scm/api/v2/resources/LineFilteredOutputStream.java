@@ -71,6 +71,14 @@ class LineFilteredOutputStream extends OutputStream {
     }
   }
 
+  @Override
+  public void write(byte[] b, int off, int len) throws IOException {
+    if (currentLine > end) {
+      return;
+    }
+    super.write(b, off, len);
+  }
+
   public void keepLineBreakInMind(char b) {
     lastLineBreakCharacter = b;
     ++currentLine;
