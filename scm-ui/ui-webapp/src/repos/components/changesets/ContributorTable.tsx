@@ -26,7 +26,7 @@ import { Changeset } from "@scm-manager/ui-types";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { useBinder } from "@scm-manager/ui-extensions";
-import { Image, CommaSeparatedList } from "@scm-manager/ui-components";
+import { ContributorAvatar, CommaSeparatedList } from "@scm-manager/ui-components";
 
 type Props = {
   changeset: Changeset;
@@ -42,15 +42,6 @@ type Person = {
   mail?: string;
 };
 
-const ContributorAvatar = styled(Image)`
-  width: 1em;
-  height: 1em;
-  margin-right: 0.25em;
-  vertical-align: middle;
-  border-radius: 0.25em;
-  margin-bottom: 0.2em;
-`;
-
 const Contributor: FC<{ person: Person }> = ({ person }) => {
   const [t] = useTranslation("repos");
   const binder = useBinder();
@@ -59,7 +50,11 @@ const Contributor: FC<{ person: Person }> = ({ person }) => {
   if (avatarFactory) {
     const avatar = avatarFactory(person);
     if (avatar) {
-      prefix = <ContributorAvatar src={avatar} alt={person.name} />;
+      prefix = (
+        <>
+          <ContributorAvatar src={avatar} alt={person.name} />{" "}
+        </>
+      );
     }
   }
   if (person.mail) {

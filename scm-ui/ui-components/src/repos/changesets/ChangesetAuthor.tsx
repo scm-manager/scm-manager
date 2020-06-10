@@ -26,9 +26,9 @@ import { Changeset } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { useBinder } from "@scm-manager/ui-extensions";
 import { EXTENSION_POINT, Person } from "../../avatar/Avatar";
-import Image from "../../Image";
 import styled from "styled-components";
 import CommaSeparatedList from "../../CommaSeparatedList";
+import ContributorAvatar from "./ContributorAvatar";
 
 type Props = {
   changeset: Changeset;
@@ -53,14 +53,6 @@ const AvatarList = styled.span`
   }
 `;
 
-const AvatarImage = styled(Image)`
-  width: 1em;
-  height: 1em;
-  vertical-align: middle !important;
-  margin-bottom: 0.2em;
-  border-radius: 0.25em;
-`;
-
 type PersonAvatarProps = {
   person: Person;
   avatar: string;
@@ -68,7 +60,7 @@ type PersonAvatarProps = {
 
 const PersonAvatar: FC<PersonAvatarProps> = ({ person, avatar }) => {
   const [t] = useTranslation("repos");
-  const img = <AvatarImage src={avatar} alt={person.name} title={person.name} />;
+  const img = <ContributorAvatar src={avatar} alt={person.name} title={person.name} />;
   if (person.mail) {
     return (
       <a href={"mailto:" + person.mail} title={t("changeset.author.mailto") + " " + person.mail}>
@@ -138,7 +130,6 @@ const Persons: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => {
 };
 
 const ChangesetAuthor: FC<Props> = ({ changeset }) => {
-  const [t] = useTranslation("repos");
   const binder = useBinder();
 
   const getCoAuthors = () => {

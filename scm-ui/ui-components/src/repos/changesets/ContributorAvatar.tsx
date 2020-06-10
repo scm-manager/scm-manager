@@ -22,16 +22,15 @@
  * SOFTWARE.
  */
 
-import * as changesets from "./changesets";
-export { changesets };
+import styled from "styled-components";
+import Image from "../../Image";
 
-export { default as ChangesetAuthor } from "./ChangesetAuthor";
-export { default as ChangesetButtonGroup } from "./ChangesetButtonGroup";
-export { default as ChangesetDiff } from "./ChangesetDiff";
-export { default as ChangesetId } from "./ChangesetId";
-export { default as ChangesetList } from "./ChangesetList";
-export { default as ChangesetRow } from "./ChangesetRow";
-export { default as ChangesetTag } from "./ChangesetTag";
-export { default as ChangesetTags } from "./ChangesetTags";
-export { default as ChangesetTagsCollapsed } from "./ChangesetTagsCollapsed";
-export { default as ContributorAvatar } from "./ContributorAvatar";
+const ContributorAvatar = styled(Image)`
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+  border-radius: 0.25em;
+  margin-bottom: 0.2em;
+`;
+
+export default ContributorAvatar;
