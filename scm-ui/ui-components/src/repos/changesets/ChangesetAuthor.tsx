@@ -58,28 +58,27 @@ type PersonAvatarProps = {
   avatar: string;
 };
 
-const PersonAvatar: FC<PersonAvatarProps> = ({ person, avatar }) => {
+const ContributorWithAvatar: FC<PersonAvatarProps> = ({ person, avatar }) => {
   const [t] = useTranslation("repos");
-  const img = <ContributorAvatar src={avatar} alt={person.name} title={person.name} />;
   if (person.mail) {
     return (
-      <a href={"mailto:" + person.mail} title={t("changeset.author.mailto") + " " + person.mail}>
-        {img}
+      <a href={"mailto:" + person.mail} title={t("changeset.contributors.mailto") + " " + person.mail}>
+        <ContributorAvatar src={avatar} alt={person.name} />
       </a>
     );
   }
-  return img;
+  return <ContributorAvatar src={avatar} alt={person.name} title={person.name} />;
 };
 
-const SinglePerson: FC<PersonProps> = ({ person, displayTextOnly }) => {
+const SingleContributor: FC<PersonProps> = ({ person, displayTextOnly }) => {
   const [t] = useTranslation("repos");
   const avatar = useAvatar(person);
   if (!displayTextOnly && avatar) {
-    return <PersonAvatar person={person} avatar={avatar} />;
+    return <ContributorWithAvatar person={person} avatar={avatar} />;
   }
   if (person.mail) {
     return (
-      <a href={"mailto:" + person.mail} title={t("changeset.author.mailto") + " " + person.mail}>
+      <a href={"mailto:" + person.mail} title={t("changeset.contributors.mailto") + " " + person.mail}>
         {person.name}
       </a>
     );
@@ -93,14 +92,14 @@ type PersonsProps = {
   displayTextOnly?: boolean;
 };
 
-const Persons: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => {
+const Contributors: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => {
   const binder = useBinder();
 
   const [t] = useTranslation("repos");
   if (persons.length === 1) {
     return (
       <>
-        {t(label)} <SinglePerson person={persons[0]} displayTextOnly={displayTextOnly} />
+        {t(label)} <SingleContributor person={persons[0]} displayTextOnly={displayTextOnly} />
       </>
     );
   }
@@ -112,7 +111,7 @@ const Persons: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => {
         {t(label)}{" "}
         <AvatarList>
           {persons.map(p => (
-            <PersonAvatar key={p.name} person={p} avatar={avatarFactory(p)} />
+            <ContributorWithAvatar key={p.name} person={p} avatar={avatarFactory(p)} />
           ))}
         </AvatarList>
       </>
@@ -122,7 +121,7 @@ const Persons: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => {
       <>
         {t(label)}{" "}
         <a title={persons.map(person => "- " + person.name).join("\n")}>
-          {t("changesets.authors.more", { count: persons.length })}
+          {t("changeset.contributors.more", { count: persons.length })}
         </a>
       </>
     );
@@ -133,32 +132,32 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
   const binder = useBinder();
 
   const getCoAuthors = () => {
-    return filterTrailersByType("Co-authored-by");
+    return filterContributorsByType("Co-authored-by");
   };
 
   const getCommitters = () => {
-    return filterTrailersByType("Committed-by");
+    return filterContributorsByType("Committed-by");
   };
 
-  const filterTrailersByType = (trailerType: string) => {
-    return changeset.trailers.filter(p => p.trailerType === trailerType).map(trailer => trailer.person);
+  const filterContributorsByType = (type: string) => {
+    return changeset.contributors.filter(p => p.type === type).map(contributor => contributor.person);
   };
 
   const authorLine = [];
   if (changeset.author) {
     authorLine.push(
-      <Persons persons={[changeset.author]} label={"changesets.authors.authoredBy"} displayTextOnly={true} />
+      <Contributors persons={[changeset.author]} label={"changeset.contributors.authoredBy"} displayTextOnly={true} />
     );
   }
 
   const commiters = getCommitters();
   if (commiters.length > 0) {
-    authorLine.push(<Persons persons={commiters} label={"changesets.authors.committedBy"} />);
+    authorLine.push(<Contributors persons={commiters} label={"changeset.contributors.committedBy"} />);
   }
 
   const coAuthors = getCoAuthors();
   if (coAuthors.length > 0) {
-    authorLine.push(<Persons persons={coAuthors} label={"changesets.authors.coAuthoredBy"} />);
+    authorLine.push(<Contributors persons={coAuthors} label={"changeset.contributors.coAuthoredBy"} />);
   }
 
   // extensions

@@ -25,7 +25,6 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.io.Files;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -273,7 +272,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   }
 
   @Test
-  public void shouldAppendCommitterAsTrailer() {
+  public void shouldAppendCommitterAsContributor() {
     LogCommandRequest request = new LogCommandRequest();
     request.setStartChangeset("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
     request.setEndChangeset("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
@@ -281,8 +280,8 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     ChangesetPagingResult changesets = createCommand().getChangesets(request);
     Changeset changeset = changesets.getChangesets().get(0);
 
-    assertThat(changeset.getTrailers()).hasSize(1);
-    assertThat(changeset.getTrailers().iterator().next().getPerson())
+    assertThat(changeset.getContributors()).hasSize(1);
+    assertThat(changeset.getContributors().iterator().next().getPerson())
       .isEqualTo(new Person("Sebastian Sdorra", "s.sdorra@ostfalia.de"));
   }
 

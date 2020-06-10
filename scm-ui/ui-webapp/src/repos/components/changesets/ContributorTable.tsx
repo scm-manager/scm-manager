@@ -53,7 +53,7 @@ const Contributor: FC<{ person: Person }> = ({ person }) => {
   }
   if (person.mail) {
     return (
-      <a href={"mailto:" + person.mail} title={t("changeset.author.mailto") + " " + person.mail}>
+      <a href={"mailto:" + person.mail} title={t("changeset.contributors.mailto") + " " + person.mail}>
         {prefix}
         {person.name}
       </a>
@@ -65,39 +65,39 @@ const Contributor: FC<{ person: Person }> = ({ person }) => {
 const ContributorTable: FC<Props> = ({ changeset }) => {
   const [t] = useTranslation("plugins");
 
-  const collectAvailableTrailerTypes = () => {
+  const collectAvailableContributorTypes = () => {
     // @ts-ignore
-    return [...new Set(changeset.trailers.map(trailer => trailer.trailerType))];
+    return [...new Set(changeset.contributors.map(contributor => contributor.type))];
   };
 
-  const getPersonsByTrailersType = (type: string) => {
-    return changeset.trailers?.filter(trailer => trailer.trailerType === type).map(t => t.person);
+  const getPersonsByContributorType = (type: string) => {
+    return changeset.contributors?.filter(contributor => contributor.type === type).map(t => t.person);
   };
 
-  const getTrailersByType = () => {
-    const availableTrailerTypes: string[] = collectAvailableTrailerTypes();
+  const getContributorsByType = () => {
+    const availableContributorTypes: string[] = collectAvailableContributorTypes();
 
-    const personsByTrailerType = [];
-    for (const type of availableTrailerTypes) {
-      personsByTrailerType.push({ type, persons: getPersonsByTrailersType(type) });
+    const personsByContributorType = [];
+    for (const type of availableContributorTypes) {
+      personsByContributorType.push({ type, persons: getPersonsByContributorType(type) });
     }
-    return personsByTrailerType;
+    return personsByContributorType;
   };
 
   return (
     <table>
       <tr>
-        <SizedTd>{t("changeset.trailer.type.author") + ":"}</SizedTd>
+        <SizedTd>{t("changeset.contributor.type.author") + ":"}</SizedTd>
         <td>
           <Contributor person={changeset.author} />
         </td>
       </tr>
-      {getTrailersByType().map(trailer => (
-        <tr key={trailer.type}>
-          <SizedTd>{t("changeset.trailer.type." + trailer.type) + ":"}</SizedTd>
+      {getContributorsByType().map(contributor => (
+        <tr key={contributor.type}>
+          <SizedTd>{t("changeset.contributor.type." + contributor.type) + ":"}</SizedTd>
           <td className="is-ellipsis-overflow is-marginless">
             <CommaSeparatedList>
-              {trailer.persons.map(person => (
+              {contributor.persons.map(person => (
                 <Contributor key={person.name} person={person} />
               ))}
             </CommaSeparatedList>

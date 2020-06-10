@@ -33,17 +33,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Extension
-public class ChangesetDescriptionTrailerProvider implements ChangesetPreProcessorFactory {
+public class ChangesetDescriptionContributorProvider implements ChangesetPreProcessorFactory {
 
-  private static final Collection<String> SUPPORTED_TRAILER_TYPES = ImmutableSet.of("Co-authored-by", "Reviewed-by", "Signed-off-by", "Committed-by");
-  private static final Pattern TRAILER_PATTERN = Pattern.compile("^([\\w-]*):\\W*(.*)\\W+<(.*)>\\W*$");
+  private static final Collection<String> SUPPORTED_CONTRIBUTOR_TYPES = ImmutableSet.of("Co-authored-by", "Reviewed-by", "Signed-off-by", "Committed-by");
+  private static final Pattern CONTRIBUTOR_PATTERN = Pattern.compile("^([\\w-]*):\\W*(.*)\\W+<(.*)>\\W*$");
 
   @Override
   public ChangesetPreProcessor createPreProcessor(Repository repository) {
-    return new TrailerChangesetPreProcessor();
+    return new ContributorChangesetPreProcessor();
   }
 
-  private static class TrailerChangesetPreProcessor implements ChangesetPreProcessor {
+  private static class ContributorChangesetPreProcessor implements ChangesetPreProcessor {
     @Override
     public void process(Changeset changeset) {
       new Worker(changeset).process();
@@ -75,20 +75,20 @@ public class ChangesetDescriptionTrailerProvider implements ChangesetPreProcesso
         return;
       }
 
-      if (foundEmptyLine && checkForTrailer(line)) {
+      if (foundEmptyLine && checkForContributor(line)) {
         return;
       }
       appendLine(scanner, line);
     }
 
-    private boolean checkForTrailer(String line) {
-      Matcher matcher = TRAILER_PATTERN.matcher(line);
+    private boolean checkForContributor(String line) {
+      Matcher matcher = CONTRIBUTOR_PATTERN.matcher(line);
       if (matcher.matches()) {
         String type = matcher.group(1);
         String name = matcher.group(2);
         String mail = matcher.group(3);
-        if (SUPPORTED_TRAILER_TYPES.contains(type)) {
-          createTrailer(type, name, mail);
+        if (SUPPORTED_CONTRIBUTOR_TYPES.contains(type)) {
+          createContributor(type, name, mail);
           return true;
         }
       }
@@ -107,8 +107,8 @@ public class ChangesetDescriptionTrailerProvider implements ChangesetPreProcesso
       }
     }
 
-    private void createTrailer(String type, String name, String mail) {
-      changeset.addTrailer(new Trailer(type, new Person(name, mail)));
+    private void createContributor(String type, String name, String mail) {
+      changeset.addContributor(new Contributor(type, new Person(name, mail)));
     }
   }
 }

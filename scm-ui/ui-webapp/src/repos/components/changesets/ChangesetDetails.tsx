@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC, useState } from "react";
-import {Trans, useTranslation, WithTranslation, withTranslation} from "react-i18next";
+import { Trans, useTranslation, WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -66,7 +66,7 @@ const BottomMarginLevel = styled(Level)`
 `;
 
 const countContributors = (changeset: Changeset) => {
-  return changeset.trailers.length + 1;
+  return changeset.contributors.length + 1;
 };
 
 const ContributorLine = styled.div`
@@ -101,12 +101,12 @@ const ContributorToggleLine = styled.p`
 
 const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
   const [t] = useTranslation("repos");
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   if (open) {
     return (
       <ContributorDetails>
         <ContributorToggleLine onClick={e => setOpen(!open)}>
-          <Icon name="angle-down" /> {t("changesets.contributors")}
+          <Icon name="angle-down" /> {t("changeset.contributors.list")}
         </ContributorToggleLine>
         <ContributorTable changeset={changeset} />
       </ContributorDetails>
@@ -119,7 +119,11 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
           <Icon name="angle-right" /> <ChangesetAuthor changeset={changeset} />
         </ContributorColumn>
         <CountColumn>
-          (<span className="has-text-link">{countContributors(changeset)} Contributors</span>)
+          (
+          <span className="has-text-link">
+            {t("changeset.contributors.count", { count: countContributors(changeset) })}
+          </span>
+          )
         </CountColumn>
       </ContributorLine>
     </>

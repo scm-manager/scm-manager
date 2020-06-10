@@ -30,12 +30,12 @@ const one: Changeset = {
   date: new Date("2020-06-09T06:34:47Z"),
   description:
     "The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive. The craft was stolen by then-President Zaphod Beeblebrox at the official launch of the ship, as he was supposed to be officiating the launch. Later, during the use of the Infinite Improbability Drive, the ship picked up Arthur Dent and Ford Prefect, who were floating unprotected in deep space in the same star sector, having just escaped the destruction of the same planet.\n\n",
-  trailers: [
+  contributors: [
     {
-      trailerType: "Committed-by",
+      type: "Committed-by",
       person: { mail: "zaphod.beeblebrox@hitchhiker.cm", name: "Zaphod Beeblebrox" }
     },
-    { trailerType: "Co-authored-by", person: { mail: "ford.prefect@hitchhiker.com", name: "Ford Prefect" } }
+    { type: "Co-authored-by", person: { mail: "ford.prefect@hitchhiker.com", name: "Ford Prefect" } }
   ],
   _links: {
     self: {
@@ -85,9 +85,9 @@ const two: Changeset = {
   author: { mail: "scm-admin@scm-manager.org", name: "SCM Administrator" },
   date: new Date("2020-06-09T05:39:50Z"),
   description: 'Change heading to "Heart Of Gold"\n\n',
-  trailers: [
+  contributors: [
     {
-      trailerType: "Committed-by",
+      type: "Committed-by",
       person: { mail: "zaphod.beeblebrox@hitchhiker.cm", name: "Zaphod Beeblebrox" }
     }
   ],
@@ -139,7 +139,7 @@ const three: Changeset = {
   author: { mail: "scm-admin@scm-manager.org", name: "SCM Administrator" },
   date: new Date("2020-06-09T05:25:16Z"),
   description: "initialize repository",
-  trailers: [],
+  contributors: [],
   _links: {
     self: {
       href:
@@ -170,10 +170,10 @@ const four: Changeset = {
   author: { mail: "scm-admin@scm-manager.org", name: "SCM Administrator" },
   date: new Date("2020-06-09T09:23:49Z"),
   description: "Added design docs\n\n",
-  trailers: [
-    { trailerType: "Co-authored-by", person: { mail: "ford.prefect@hitchhiker.com", name: "Ford Prefect" } },
-    { trailerType: "Co-authored-by", person: { mail: "zaphod.beeblebrox@hitchhiker.cm", name: "Zaphod Beeblebrox" } },
-    { trailerType: "Co-authored-by", person: { mail: "trillian@hitchhiker.cm", name: "Tricia Marie McMillan" } }
+  contributors: [
+    { type: "Co-authored-by", person: { mail: "ford.prefect@hitchhiker.com", name: "Ford Prefect" } },
+    { type: "Co-authored-by", person: { mail: "zaphod.beeblebrox@hitchhiker.cm", name: "Zaphod Beeblebrox" } },
+    { type: "Co-authored-by", person: { mail: "trillian@hitchhiker.cm", name: "Tricia Marie McMillan" } }
   ],
   _links: {
     self: {

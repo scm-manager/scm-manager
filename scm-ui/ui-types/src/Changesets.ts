@@ -36,7 +36,7 @@ export type Changeset = Collection & {
   date: Date;
   author: Person;
   description: string;
-  trailers: Trailer[];
+  contributors: Contributor[];
   _links: Links;
   _embedded: {
     tags?: Tag[];
@@ -45,9 +45,9 @@ export type Changeset = Collection & {
   };
 };
 
-export type Trailer = {
+export type Contributor = {
   person: Person;
-  trailerType: string;
+  type: string;
 };
 
 export type ParentChangeset = {

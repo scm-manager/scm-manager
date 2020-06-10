@@ -34,20 +34,20 @@ import java.util.Iterator;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-class ChangesetDescriptionTrailerProviderTest {
+class ChangesetDescriptionContributorProviderTest {
 
   private static final Repository REPOSITORY = RepositoryTestData.createHeartOfGold();
 
-  private final ChangesetDescriptionTrailerProvider changesetDescriptionTrailers = new ChangesetDescriptionTrailerProvider();
+  private final ChangesetDescriptionContributorProvider changesetDescriptionContributors = new ChangesetDescriptionContributorProvider();
 
   @Test
   void shouldReturnEmptyList() {
     Changeset changeset = createChangeset("zaphod beeblebrox");
 
-    changesetDescriptionTrailers.createPreProcessor(REPOSITORY).process(changeset);
-    Collection<Trailer> trailers = changeset.getTrailers();
+    changesetDescriptionContributors.createPreProcessor(REPOSITORY).process(changeset);
+    Collection<Contributor> contributors = changeset.getContributors();
 
-    assertThat(trailers).isNullOrEmpty();
+    assertThat(contributors).isNullOrEmpty();
     assertThat(changeset.getDescription()).isEqualTo("zaphod beeblebrox");
   }
 
@@ -56,12 +56,12 @@ class ChangesetDescriptionTrailerProviderTest {
     Person person = createPerson("Arthur Dent", "dent@hitchhiker.org");
     Changeset changeset = createChangeset("zaphod beeblebrox\n\nCo-authored-by: Arthur Dent <dent@hitchhiker.org>");
 
-    changesetDescriptionTrailers.createPreProcessor(REPOSITORY).process(changeset);
-    Collection<Trailer> trailers = changeset.getTrailers();
+    changesetDescriptionContributors.createPreProcessor(REPOSITORY).process(changeset);
+    Collection<Contributor> contributors = changeset.getContributors();
 
-    Trailer trailer = trailers.iterator().next();
-    assertThat(trailer.getTrailerType()).isEqualTo("Co-authored-by");
-    assertThat(trailer.getPerson()).isEqualTo(person);
+    Contributor contributor = contributors.iterator().next();
+    assertThat(contributor.getType()).isEqualTo("Co-authored-by");
+    assertThat(contributor.getPerson()).isEqualTo(person);
     assertThat(changeset.getDescription()).isEqualTo("zaphod beeblebrox\n\n");
   }
 
@@ -70,13 +70,13 @@ class ChangesetDescriptionTrailerProviderTest {
     Person person = createPerson("Tricia McMillan", "trillian@hitchhiker.org");
     Changeset changeset = createChangeset("zaphod beeblebrox\n\nReviewed-by: Tricia McMillan <trillian@hitchhiker.org>");
 
-    changesetDescriptionTrailers.createPreProcessor(REPOSITORY).process(changeset);
-    Collection<Trailer> trailers = changeset.getTrailers();
+    changesetDescriptionContributors.createPreProcessor(REPOSITORY).process(changeset);
+    Collection<Contributor> contributors = changeset.getContributors();
 
-    Trailer trailer = trailers.iterator().next();
+    Contributor contributor = contributors.iterator().next();
 
-    assertThat(trailer.getTrailerType()).isEqualTo("Reviewed-by");
-    assertThat(trailer.getPerson()).isEqualTo(person);
+    assertThat(contributor.getType()).isEqualTo("Reviewed-by");
+    assertThat(contributor.getPerson()).isEqualTo(person);
     assertThat(changeset.getDescription()).isEqualTo("zaphod beeblebrox\n\n");
   }
 
@@ -85,13 +85,13 @@ class ChangesetDescriptionTrailerProviderTest {
     Person person = createPerson("Tricia McMillan", "trillian@hitchhiker.org");
     Changeset changeset = createChangeset("zaphod beeblebrox\n\n\nSigned-off-by: Tricia McMillan <trillian@hitchhiker.org>");
 
-    changesetDescriptionTrailers.createPreProcessor(REPOSITORY).process(changeset);
-    Collection<Trailer> trailers = changeset.getTrailers();
+    changesetDescriptionContributors.createPreProcessor(REPOSITORY).process(changeset);
+    Collection<Contributor> contributors = changeset.getContributors();
 
-    Trailer trailer = trailers.iterator().next();
+    Contributor contributor = contributors.iterator().next();
 
-    assertThat(trailer.getTrailerType()).isEqualTo("Signed-off-by");
-    assertThat(trailer.getPerson()).isEqualTo(person);
+    assertThat(contributor.getType()).isEqualTo("Signed-off-by");
+    assertThat(contributor.getPerson()).isEqualTo(person);
     assertThat(changeset.getDescription()).isEqualTo("zaphod beeblebrox\n\n\n");
   }
 
@@ -100,13 +100,13 @@ class ChangesetDescriptionTrailerProviderTest {
     Person person = createPerson("Tricia McMillan", "trillian@hitchhiker.org");
     Changeset changeset = createChangeset("zaphod beeblebrox\n\nCommitted-by: Tricia McMillan <trillian@hitchhiker.org>");
 
-    changesetDescriptionTrailers.createPreProcessor(REPOSITORY).process(changeset);
-    Collection<Trailer> trailers = changeset.getTrailers();
+    changesetDescriptionContributors.createPreProcessor(REPOSITORY).process(changeset);
+    Collection<Contributor> contributors = changeset.getContributors();
 
-    Trailer trailer = trailers.iterator().next();
+    Contributor contributor = contributors.iterator().next();
 
-    assertThat(trailer.getTrailerType()).isEqualTo("Committed-by");
-    assertThat(trailer.getPerson()).isEqualTo(person);
+    assertThat(contributor.getType()).isEqualTo("Committed-by");
+    assertThat(contributor.getPerson()).isEqualTo(person);
     assertThat(changeset.getDescription()).isEqualTo("zaphod beeblebrox\n\n");
   }
 
@@ -116,19 +116,19 @@ class ChangesetDescriptionTrailerProviderTest {
       "Committed-by: Tricia McMillan <trillian@hitchhiker.org>\n" +
       "Signed-off-by: Artur Dent <dent@hitchhiker.org>");
 
-    changesetDescriptionTrailers.createPreProcessor(REPOSITORY).process(changeset);
-    Collection<Trailer> trailers = changeset.getTrailers();
+    changesetDescriptionContributors.createPreProcessor(REPOSITORY).process(changeset);
+    Collection<Contributor> contributors = changeset.getContributors();
 
-    Iterator<Trailer> trailerIterator = trailers.iterator();
-    Trailer firstTrailer = trailerIterator.next();
-    Trailer secondTrailer = trailerIterator.next();
+    Iterator<Contributor> contributorIterator = contributors.iterator();
+    Contributor firstContributor = contributorIterator.next();
+    Contributor secondContributor = contributorIterator.next();
 
-    assertThat(firstTrailer.getTrailerType()).isEqualTo("Committed-by");
-    assertThat(firstTrailer.getPerson())
+    assertThat(firstContributor.getType()).isEqualTo("Committed-by");
+    assertThat(firstContributor.getPerson())
       .isEqualTo(createPerson("Tricia McMillan", "trillian@hitchhiker.org"));
 
-    assertThat(secondTrailer.getTrailerType()).isEqualTo("Signed-off-by");
-    assertThat(secondTrailer.getPerson())
+    assertThat(secondContributor.getType()).isEqualTo("Signed-off-by");
+    assertThat(secondContributor.getPerson())
       .isEqualTo(createPerson("Artur Dent", "dent@hitchhiker.org"));
 
     assertThat(changeset.getDescription()).isEqualTo("zaphod beeblebrox\n\n");
@@ -140,10 +140,10 @@ class ChangesetDescriptionTrailerProviderTest {
       "Some-strange-tag: Tricia McMillan <trillian@hitchhiker.org>";
     Changeset changeset = createChangeset(originalCommitMessage);
 
-    changesetDescriptionTrailers.createPreProcessor(REPOSITORY).process(changeset);
-    Collection<Trailer> trailers = changeset.getTrailers();
+    changesetDescriptionContributors.createPreProcessor(REPOSITORY).process(changeset);
+    Collection<Contributor> contributors = changeset.getContributors();
 
-    assertThat(trailers).isNullOrEmpty();
+    assertThat(contributors).isNullOrEmpty();
     assertThat(changeset.getDescription()).isEqualTo(originalCommitMessage);
   }
 
@@ -153,10 +153,10 @@ class ChangesetDescriptionTrailerProviderTest {
       "Committed-by: Tricia McMillan";
     Changeset changeset = createChangeset(originalCommitMessage);
 
-    changesetDescriptionTrailers.createPreProcessor(REPOSITORY).process(changeset);
-    Collection<Trailer> trailers = changeset.getTrailers();
+    changesetDescriptionContributors.createPreProcessor(REPOSITORY).process(changeset);
+    Collection<Contributor> contributors = changeset.getContributors();
 
-    assertThat(trailers).isNullOrEmpty();
+    assertThat(contributors).isNullOrEmpty();
     assertThat(changeset.getDescription()).isEqualTo(originalCommitMessage);
   }
 
@@ -166,10 +166,10 @@ class ChangesetDescriptionTrailerProviderTest {
       "Committed-by: Tricia McMillan <trillian@hitchhiker.org>";
     Changeset changeset = createChangeset(originalCommitMessage);
 
-    changesetDescriptionTrailers.createPreProcessor(REPOSITORY).process(changeset);
-    Collection<Trailer> trailers = changeset.getTrailers();
+    changesetDescriptionContributors.createPreProcessor(REPOSITORY).process(changeset);
+    Collection<Contributor> contributors = changeset.getContributors();
 
-    assertThat(trailers).isNotEmpty();
+    assertThat(contributors).isNotEmpty();
   }
 
   @Test
@@ -178,15 +178,15 @@ class ChangesetDescriptionTrailerProviderTest {
       "Committed-by: Tricia McMillan <trillian@hitchhiker.org>");
     Changeset changeset2 = createChangeset("message two");
 
-    ChangesetPreProcessor preProcessor = changesetDescriptionTrailers.createPreProcessor(REPOSITORY);
+    ChangesetPreProcessor preProcessor = changesetDescriptionContributors.createPreProcessor(REPOSITORY);
     preProcessor.process(changeset1);
     preProcessor.process(changeset2);
 
     assertThat(changeset1.getDescription()).isEqualTo("message one\n\n");
-    assertThat(changeset1.getTrailers()).isNotEmpty();
+    assertThat(changeset1.getContributors()).isNotEmpty();
 
     assertThat(changeset2.getDescription()).isEqualTo("message two");
-    assertThat(changeset2.getTrailers()).isNullOrEmpty();
+    assertThat(changeset2.getContributors()).isNullOrEmpty();
   }
 
   private Changeset createChangeset(String commitMessage) {

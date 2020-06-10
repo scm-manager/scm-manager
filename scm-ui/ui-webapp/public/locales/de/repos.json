@@ -79,8 +79,7 @@
     "errorSubtitle": "Changesets konnten nicht abgerufen werden",
     "noChangesets": "Keine Changesets in diesem Branch gefunden. Die Commits könnten gelöscht worden sein.",
     "branchSelectorLabel": "Branches",
-    "collapseDiffs": "Auf-/Zuklappen",
-    "contributors": "Liste der Mitwirkenden"
+    "collapseDiffs": "Auf-/Zuklappen"
   },
   "changeset": {
     "description": "Beschreibung",
@@ -88,15 +87,14 @@
     "shortSummary": "Committet <0/> <1/>",
     "tags": "Tags",
     "diffNotSupported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt",
-    "author": {
-      "prefix": "Verfasst von",
+    "contributors": {
       "mailto": "Mail senden an",
-      "label": "Autor"
-    },
-    "coAuthor": {
-      "prefix": "und",
-      "label": "Co-Autor",
-      "label_plural": "Co-Autoren"
+      "list": "Liste der Mitwirkenden",
+      "authoredBy": "Verfasst von",
+      "committedBy": "Committed von",
+      "coAuthoredBy": "Co-Autoren",
+      "more": "{{count}} mehr",
+      "count": "5 Mitwirkende"
     },
     "buttons": {
       "details": "Details",

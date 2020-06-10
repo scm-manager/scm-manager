@@ -26,17 +26,15 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.Tag;
-import sonia.scm.repository.Trailer;
+import sonia.scm.repository.Contributor;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -44,7 +42,6 @@ import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Scanner;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -70,7 +67,7 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
   @Inject
   private TagCollectionToDtoMapper tagCollectionToDtoMapper;
 
-  abstract TrailerDto map(Trailer trailer);
+  abstract ContributorDto map(Contributor contributor);
 
   abstract PersonDto map(Person person);
 

@@ -34,7 +34,7 @@ export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
 
 export { Branch, BranchRequest } from "./Branches";
 
-export { Changeset, Person, Trailer, ParentChangeset } from "./Changesets";
+export { Changeset, Person, Contributor, ParentChangeset } from "./Changesets";
 
 export { Tag } from "./Tags";
 

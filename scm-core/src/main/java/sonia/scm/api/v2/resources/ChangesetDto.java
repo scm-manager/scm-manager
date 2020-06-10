@@ -59,7 +59,7 @@ public class ChangesetDto extends HalRepresentation {
    */
   private String description;
 
-  private List<TrailerDto> trailers;
+  private List<ContributorDto> contributors;
 
   public ChangesetDto(Links links, Embedded embedded) {
     super(links, embedded);

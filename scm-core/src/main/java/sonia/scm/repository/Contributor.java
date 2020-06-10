@@ -29,7 +29,7 @@ import lombok.Value;
 import java.io.Serializable;
 
 @Value
-public class Trailer implements Serializable {
-  private String trailerType;
+public class Contributor implements Serializable {
+  private String type;
   private Person person;
 }

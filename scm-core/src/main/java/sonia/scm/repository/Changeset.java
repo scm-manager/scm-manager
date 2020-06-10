@@ -83,7 +83,7 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
   /**
    * Trailers for this changeset like reviewers or co-authors
    */
-  private Collection<Trailer> trailers;
+  private Collection<Contributor> contributors;
 
   public Changeset() {}
 
@@ -231,8 +231,13 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
     return tags;
   }
 
-  public Collection<Trailer> getTrailers() {
-    return trailers;
+  /**
+   * Returns collection of contributors for this changeset.
+   * @return collection of contributors
+   * @since 2.1.0
+   */
+  public Collection<Contributor> getContributors() {
+    return contributors;
   }
 
   /**
@@ -310,22 +315,37 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
     this.tags = tags;
   }
 
-  public void setTrailers(Collection<Trailer> trailers) {
-    this.trailers = new ArrayList<>(trailers);
+  /**
+   * Sets the collection of contributors.
+   * @param contributors collection of contributors
+   * @since 2.1.0
+   */
+  public void setContributors(Collection<Contributor> contributors) {
+    this.contributors = new ArrayList<>(contributors);
   }
 
-  public void addTrailer(Trailer trailer) {
-    if (trailers == null) {
-      trailers = new ArrayList<>();
+  /**
+   * Adds a contributor to the list of contributors.
+   * @param contributor contributor to add
+   * @since 2.1.0
+   */
+  public void addContributor(Contributor contributor) {
+    if (contributors == null) {
+      contributors = new ArrayList<>();
     }
-    trailers.add(trailer);
+    contributors.add(contributor);
   }
 
-  public void addTrailers(Collection<Trailer> trailers) {
-    if (this.trailers == null) {
-      this.trailers = new ArrayList<>(trailers);
+  /**
+   * Adds all contributors from the given collection to the list of contributors.
+   * @param contributors collection of contributor
+   * @since 2.1.0
+   */
+  public void addContributors(Collection<Contributor> contributors) {
+    if (this.contributors == null) {
+      this.contributors = new ArrayList<>(contributors);
     } else {
-      this.trailers.addAll(trailers);
+      this.contributors.addAll(contributors);
     }
   }
 }
