@@ -27,6 +27,7 @@ package sonia.scm.api.v2.resources;
 import com.github.sdorra.spotter.ContentType;
 import com.github.sdorra.spotter.ContentTypes;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -97,6 +98,17 @@ public class ContentResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
+  @Parameter(
+    name = "start",
+    description = "If set, the content will be returned from this line on. The first line is line number 0. " +
+      "If omitted, the output will start with the first line."
+  )
+  @Parameter(
+    name = "end",
+    description = "If set, the content will be returned excluding the given line number and following." +
+      "The first line ist line number 0. " +
+      "If set to -1, no lines will be excluded (this equivalent to omitting this parameter"
+  )
   public Response get(
     @PathParam("namespace") String namespace,
     @PathParam("name") String name,
