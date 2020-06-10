@@ -156,7 +156,7 @@ class DiffFile extends React.Component<Props, State> {
           <Decoration>
             <HunkDivider>
               <HunkExpandLink
-                icon={"fa-angle-up"}
+                icon={"fa-angle-double-up"}
                 onClick={this.expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}
                 text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandHeadRange })}
               />
