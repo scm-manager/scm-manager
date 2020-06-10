@@ -1,6 +1,6 @@
 ---
 title: Documentation
-subtitle: SCM-Managert Documentation
+subtitle: SCM-Manager Documentation
 ---
 
 This documentation describes the administration and usage of SCM-Manager.
