@@ -24,7 +24,7 @@
 
 import { apiClient } from "@scm-manager/ui-components";
 import { Change, File, Hunk } from "./DiffTypes";
-import { Link } from "@scm-manager/ui-types/src";
+import { Link } from "@scm-manager/ui-types";
 
 class DiffExpander {
   file: File;
