@@ -43,7 +43,11 @@ const HunkExpandLink: FC<Props> = ({ icon, text, onClick }) => {
     onClick().then(() => setLoading(false));
   };
 
-  return <span onClick={onClickWithLoadingMarker}><i className={classNames("fa", icon)} />{" "}{loading? t("diff.expanding"): text}</span>;
+  return (
+    <span onClick={onClickWithLoadingMarker}>
+      <i className={classNames("fa", icon)} /> {loading ? t("diff.expanding") : text}
+    </span>
+  );
 };
 
 export default HunkExpandLink;
