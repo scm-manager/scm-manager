@@ -23,22 +23,27 @@
  */
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 
 type Props = {
+  icon: string;
   text: string;
   onClick: () => Promise<any>;
 };
 
-const HunkExpandLink: FC<Props> = ({ text, onClick }) => {
+const HunkExpandLink: FC<Props> = ({ icon, text, onClick }) => {
   const [t] = useTranslation("repos");
   const [loading, setLoading] = useState(false);
 
   const onClickWithLoadingMarker = () => {
+    if (loading) {
+      return;
+    }
     setLoading(true);
     onClick().then(() => setLoading(false));
   };
 
-  return <span onClick={onClickWithLoadingMarker}>{loading? t("diff.expanding"): text}</span>;
+  return <span onClick={onClickWithLoadingMarker}><i className={classNames("fa", icon)} />{" "}{loading? t("diff.expanding"): text}</span>;
 };
 
 export default HunkExpandLink;
