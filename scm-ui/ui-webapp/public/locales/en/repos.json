@@ -80,6 +80,7 @@
     "noChangesets": "No changesets found for this branch. The commits could have been removed.",
     "branchSelectorLabel": "Branches",
     "collapseDiffs": "Collapse",
+    "contributors": "List of contributors",
     "authors": {
       "and": "and",
       "authoredBy": "Authored by",

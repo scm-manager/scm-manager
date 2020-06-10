@@ -45,7 +45,7 @@ type Person = {
 const ContributorAvatar = styled(Image)`
   width: 1em;
   height: 1em;
-  margin-right: 0.5em;
+  margin-right: 0.25em;
   vertical-align: middle;
   border-radius: 0.25em;
   margin-bottom: 0.2em;

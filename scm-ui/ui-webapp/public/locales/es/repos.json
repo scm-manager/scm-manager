@@ -79,7 +79,8 @@
     "errorSubtitle": "No se han podido recuperar los changesets",
     "noChangesets": "No se han encontrado changesets para esta rama branch. Los commits podrían haber sido eliminados.",
     "branchSelectorLabel": "Ramas",
-    "collapseDiffs": "Colapso"
+    "collapseDiffs": "Colapso",
+    "contributors": "Lista de contribuyentes"
   },
   "changeset": {
     "description": "Descripción",

@@ -79,7 +79,8 @@
     "errorSubtitle": "Changesets konnten nicht abgerufen werden",
     "noChangesets": "Keine Changesets in diesem Branch gefunden. Die Commits könnten gelöscht worden sein.",
     "branchSelectorLabel": "Branches",
-    "collapseDiffs": "Auf-/Zuklappen"
+    "collapseDiffs": "Auf-/Zuklappen",
+    "contributors": "Liste der Mitwirkenden"
   },
   "changeset": {
     "description": "Beschreibung",

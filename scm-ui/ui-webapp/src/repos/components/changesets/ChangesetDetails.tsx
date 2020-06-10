@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC, useState } from "react";
-import { Trans, WithTranslation, withTranslation } from "react-i18next";
+import {Trans, useTranslation, WithTranslation, withTranslation} from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -87,19 +87,41 @@ const CountColumn = styled.p`
   white-space: nowrap;
 `;
 
+const ContributorDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+`;
+
+const ContributorToggleLine = styled.p`
+  cursor: pointer;
+  /** maring-bottom is inherit from content p **/
+  margin-bottom: 0.5rem !important;
+`;
+
 const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
-  const [open, setOpen] = useState(false);
+  const [t] = useTranslation("repos");
+  const [open, setOpen] = useState(true);
+  if (open) {
+    return (
+      <ContributorDetails>
+        <ContributorToggleLine onClick={e => setOpen(!open)}>
+          <Icon name="angle-down" /> {t("changesets.contributors")}
+        </ContributorToggleLine>
+        <ContributorTable changeset={changeset} />
+      </ContributorDetails>
+    );
+  }
   return (
     <>
       <ContributorLine onClick={e => setOpen(!open)}>
         <ContributorColumn>
-          <Icon name={open ? "angle-down" : "angle-right"} /> <ChangesetAuthor changeset={changeset} />
+          <Icon name="angle-right" /> <ChangesetAuthor changeset={changeset} />
         </ContributorColumn>
         <CountColumn>
           (<span className="has-text-link">{countContributors(changeset)} Contributors</span>)
         </CountColumn>
       </ContributorLine>
-      {open && <ContributorTable changeset={changeset} />}
     </>
   );
 };
