@@ -36,6 +36,8 @@ import DiffButton from "./DiffButton";
 import { MenuContext } from "@scm-manager/ui-components";
 import DiffExpander, { ExpandableHunk } from "./DiffExpander";
 import HunkExpandLink from "./HunkExpandLink";
+import { Modal } from "../modals";
+import ErrorNotification from "../ErrorNotification";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
@@ -153,9 +155,10 @@ class DiffFile extends React.Component<Props, State> {
         return (
           <Decoration>
             <HunkDivider>
-              <span onClick={this.expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}>
-                {this.props.t("diff.expandHeadComplete", { count: expandableHunk.maxExpandHeadRange })}
-              </span>
+              <HunkExpandLink
+                onClick={this.expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}
+                text={this.props.t("diff.expandHeadComplete", { count: expandableHunk.maxExpandHeadRange })}
+              />
             </HunkDivider>
           </Decoration>
         );
@@ -163,12 +166,14 @@ class DiffFile extends React.Component<Props, State> {
         return (
           <Decoration>
             <HunkDivider>
-              <span onClick={this.expandHead(expandableHunk, 10)}>
-                {this.props.t("diff.expandHeadByLines", { count: 10 })}
-              </span>{" "}
-              <span onClick={this.expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}>
-                {this.props.t("diff.expandHeadComplete", { count: expandableHunk.maxExpandHeadRange })}
-              </span>
+              <HunkExpandLink
+                onClick={this.expandHead(expandableHunk, 10)}
+                text={this.props.t("diff.expandHeadByLines", { count: 10 })}
+              />{" "}
+              <HunkExpandLink
+                onClick={this.expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}
+                text={this.props.t("diff.expandHeadComplete", { count: expandableHunk.maxExpandHeadRange })}
+              />
             </HunkDivider>
           </Decoration>
         );
@@ -184,9 +189,10 @@ class DiffFile extends React.Component<Props, State> {
         return (
           <Decoration>
             <HunkDivider>
-              <span onClick={() => expandableHunk.expandBottom(expandableHunk.maxExpandBottomRange).then(this.diffExpanded)}>
-                {this.props.t("diff.expandBottomComplete", { count: expandableHunk.maxExpandBottomRange })}
-              </span>
+              <HunkExpandLink
+                onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
+                text={this.props.t("diff.expandBottomComplete", { count: expandableHunk.maxExpandBottomRange })}
+              />
             </HunkDivider>
           </Decoration>
         );
@@ -194,12 +200,14 @@ class DiffFile extends React.Component<Props, State> {
         return (
           <Decoration>
             <HunkDivider>
-              <span onClick={this.expandBottom(expandableHunk, 10)}>
-                {this.props.t("diff.expandBottomByLines", { count: 10 })}
-              </span>{" "}
-              <span onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}>
-                {this.props.t("diff.expandBottomComplete", { count: expandableHunk.maxExpandBottomRange })}
-              </span>
+              <HunkExpandLink
+                onClick={this.expandBottom(expandableHunk, 10)}
+                text={this.props.t("diff.expandBottomByLines", { count: 10 })}
+              />{" "}
+              <HunkExpandLink
+                onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
+                text={this.props.t("diff.expandBottomComplete", { count: expandableHunk.maxExpandBottomRange })}
+              />
             </HunkDivider>
           </Decoration>
         );
@@ -214,10 +222,14 @@ class DiffFile extends React.Component<Props, State> {
       return (
         <Decoration>
           <HunkDivider>
-            <span onClick={this.expandBottom(expandableHunk, 10)}>{this.props.t("diff.expandLastBottomByLines")}</span>{" "}
-            <span onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}>
-              {this.props.t("diff.expandLastBottomComplete")}
-            </span>
+            <HunkExpandLink
+              onClick={this.expandBottom(expandableHunk, 10)}
+              text={this.props.t("diff.expandLastBottomByLines")}
+            />{" "}
+            <HunkExpandLink
+              onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
+              text={this.props.t("diff.expandLastBottomComplete")}
+            />
           </HunkDivider>
         </Decoration>
       );
@@ -228,7 +240,7 @@ class DiffFile extends React.Component<Props, State> {
 
   expandHead = (expandableHunk: ExpandableHunk, count: number) => {
     return () => {
-      expandableHunk
+      return expandableHunk
         .expandHead(count)
         .then(this.diffExpanded)
         .catch(this.diffExpansionFailed);
@@ -237,7 +249,7 @@ class DiffFile extends React.Component<Props, State> {
 
   expandBottom = (expandableHunk: ExpandableHunk, count: number) => {
     return () => {
-      expandableHunk
+      return expandableHunk
         .expandBottom(count)
         .then(this.diffExpanded)
         .catch(this.diffExpansionFailed);
@@ -424,8 +436,21 @@ class DiffFile extends React.Component<Props, State> {
         </ButtonWrapper>
       ) : null;
 
+    let errorModal;
+    if (expansionError) {
+      errorModal = (
+        <Modal
+          title={t("diff.expansionFailed")}
+          closeFunction={() => this.setState({ expansionError: undefined })}
+          body={<ErrorNotification error={expansionError} />}
+          active={true}
+        />
+      );
+    }
+
     return (
       <DiffFilePanel className={classNames("panel", "is-size-6")} collapsed={(file && file.isBinary) || collapsed}>
+        {errorModal}
         <div className="panel-heading">
           <FlexWrapLevel className="level">
             <FullWidthTitleHeader
