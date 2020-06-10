@@ -158,7 +158,7 @@ class DiffFile extends React.Component<Props, State> {
               <HunkExpandLink
                 icon={"fa-angle-up"}
                 onClick={this.expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}
-                text={this.props.t("diff.expandHeadComplete", { count: expandableHunk.maxExpandHeadRange })}
+                text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandHeadRange })}
               />
             </HunkDivider>
           </Decoration>
@@ -170,12 +170,12 @@ class DiffFile extends React.Component<Props, State> {
               <HunkExpandLink
                 icon={"fa-angle-up"}
                 onClick={this.expandHead(expandableHunk, 10)}
-                text={this.props.t("diff.expandHeadByLines", { count: 10 })}
+                text={this.props.t("diff.expandByLines", { count: 10 })}
               />{" "}
               <HunkExpandLink
                 icon={"fa-angle-double-up"}
                 onClick={this.expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}
-                text={this.props.t("diff.expandHeadComplete", { count: expandableHunk.maxExpandHeadRange })}
+                text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandHeadRange })}
               />
             </HunkDivider>
           </Decoration>
@@ -195,7 +195,7 @@ class DiffFile extends React.Component<Props, State> {
               <HunkExpandLink
                 icon={"fa-angle-double-down"}
                 onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
-                text={this.props.t("diff.expandBottomComplete", { count: expandableHunk.maxExpandBottomRange })}
+                text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandBottomRange })}
               />
             </HunkDivider>
           </Decoration>
@@ -207,12 +207,12 @@ class DiffFile extends React.Component<Props, State> {
               <HunkExpandLink
                 icon={"fa-angle-down"}
                 onClick={this.expandBottom(expandableHunk, 10)}
-                text={this.props.t("diff.expandBottomByLines", { count: 10 })}
+                text={this.props.t("diff.expandByLines", { count: 10 })}
               />{" "}
               <HunkExpandLink
                 icon={"fa-angle-double-down"}
                 onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
-                text={this.props.t("diff.expandBottomComplete", { count: expandableHunk.maxExpandBottomRange })}
+                text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandBottomRange })}
               />
             </HunkDivider>
           </Decoration>
