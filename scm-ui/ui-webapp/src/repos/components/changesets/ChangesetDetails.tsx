@@ -69,22 +69,36 @@ const countContributors = (changeset: Changeset) => {
   return changeset.trailers.length + 1;
 };
 
+const ContributorLine = styled.div`
+  display: flex;
+  cursor: pointer;
+`;
+
+const ContributorColumn = styled.p`
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+`;
+
+const CountColumn = styled.p`
+  text-align: right;
+  white-space: nowrap;
+`;
+
 const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <div className="level has-cursor-pointer" onClick={e => setOpen(!open)}>
-        <div className="level-left">
-          <p>
-            <Icon name={open ? "angle-down" : "angle-right"} /> <ChangesetAuthor changeset={changeset} />
-          </p>
-        </div>
-        <div className="level-right">
-          <p>
-            (<span className="has-text-link">{countContributors(changeset)} Contributors</span>)
-          </p>
-        </div>
-      </div>
+      <ContributorLine onClick={e => setOpen(!open)}>
+        <ContributorColumn>
+          <Icon name={open ? "angle-down" : "angle-right"} /> <ChangesetAuthor changeset={changeset} />
+        </ContributorColumn>
+        <CountColumn>
+          (<span className="has-text-link">{countContributors(changeset)} Contributors</span>)
+        </CountColumn>
+      </ContributorLine>
       {open && <ContributorTable changeset={changeset} />}
     </>
   );
@@ -127,7 +141,7 @@ class ChangesetDetails extends React.Component<Props, State> {
                 <AvatarImage person={changeset.author} />
               </RightMarginP>
             </AvatarWrapper>
-            <div className="media-content">
+            <div className="media-content is-ellipsis-overflow">
               <Contributors changeset={changeset} />
               <p>
                 <Trans i18nKey="repos:changeset.summary" components={[id, date]} />
