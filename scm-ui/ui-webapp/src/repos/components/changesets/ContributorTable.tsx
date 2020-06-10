@@ -87,14 +87,14 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
   return (
     <table>
       <tr>
-        <SizedTd>{t("changeset.contributor.type.author") + ":"}</SizedTd>
+        <SizedTd>{t("changeset.contributor.type.author")}:</SizedTd>
         <td>
           <Contributor person={changeset.author} />
         </td>
       </tr>
       {getContributorsByType().map(contributor => (
         <tr key={contributor.type}>
-          <SizedTd>{t("changeset.contributor.type." + contributor.type) + ":"}</SizedTd>
+          <SizedTd>{t("changeset.contributor.type." + contributor.type)}:</SizedTd>
           <td className="is-ellipsis-overflow is-marginless">
             <CommaSeparatedList>
               {contributor.persons.map(person => (
