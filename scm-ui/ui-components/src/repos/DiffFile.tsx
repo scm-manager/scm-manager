@@ -26,7 +26,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 // @ts-ignore
-import { getChangeKey, Hunk } from "react-diff-view";
+import { Decoration, getChangeKey, Hunk } from "react-diff-view";
 import { ButtonGroup } from "../buttons";
 import Tag from "../Tag";
 import Icon from "../Icon";
@@ -80,6 +80,10 @@ const TitleWrapper = styled.span`
 const ButtonWrapper = styled.div`
   /* align child to right */
   margin-left: auto;
+`;
+
+const HunkDivider = styled.hr`
+  margin: 0.5rem 0;
 `;
 
 const ChangeTypeTag = styled(Tag)`
@@ -304,6 +308,8 @@ class DiffFile extends React.Component<Props, State> {
     const items = [];
     if (file._links?.lines) {
       items.push(this.createHunkHeader(expandableHunk));
+    } else if (i > 0) {
+      items.push(<Decoration><HunkDivider /></Decoration>);
     }
 
     items.push(
