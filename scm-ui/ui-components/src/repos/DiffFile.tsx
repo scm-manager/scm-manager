@@ -26,7 +26,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 // @ts-ignore
-import { Decoration, getChangeKey, Hunk } from "react-diff-view";
+import { getChangeKey, Hunk } from "react-diff-view";
 import { ButtonGroup } from "../buttons";
 import Tag from "../Tag";
 import Icon from "../Icon";
@@ -38,6 +38,7 @@ import DiffExpander, { ExpandableHunk } from "./DiffExpander";
 import HunkExpandLink from "./HunkExpandLink";
 import { Modal } from "../modals";
 import ErrorNotification from "../ErrorNotification";
+import HunkExpandDivider from "./HunkExpandDivider";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
@@ -79,11 +80,6 @@ const TitleWrapper = styled.span`
 const ButtonWrapper = styled.div`
   /* align child to right */
   margin-left: auto;
-`;
-
-const HunkDivider = styled.div`
-  background: #98d8f3;
-  font-size: 0.7rem;
 `;
 
 const ChangeTypeTag = styled(Tag)`
@@ -153,32 +149,28 @@ class DiffFile extends React.Component<Props, State> {
     if (expandableHunk.maxExpandHeadRange > 0) {
       if (expandableHunk.maxExpandHeadRange <= 10) {
         return (
-          <Decoration>
-            <HunkDivider>
-              <HunkExpandLink
-                icon={"fa-angle-double-up"}
-                onClick={this.expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}
-                text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandHeadRange })}
-              />
-            </HunkDivider>
-          </Decoration>
+          <HunkExpandDivider>
+            <HunkExpandLink
+              icon={"fa-angle-double-up"}
+              onClick={this.expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}
+              text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandHeadRange })}
+            />
+          </HunkExpandDivider>
         );
       } else {
         return (
-          <Decoration>
-            <HunkDivider>
-              <HunkExpandLink
-                icon={"fa-angle-up"}
-                onClick={this.expandHead(expandableHunk, 10)}
-                text={this.props.t("diff.expandByLines", { count: 10 })}
-              />{" "}
-              <HunkExpandLink
-                icon={"fa-angle-double-up"}
-                onClick={this.expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}
-                text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandHeadRange })}
-              />
-            </HunkDivider>
-          </Decoration>
+          <HunkExpandDivider>
+            <HunkExpandLink
+              icon={"fa-angle-up"}
+              onClick={this.expandHead(expandableHunk, 10)}
+              text={this.props.t("diff.expandByLines", { count: 10 })}
+            />{" "}
+            <HunkExpandLink
+              icon={"fa-angle-double-up"}
+              onClick={this.expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}
+              text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandHeadRange })}
+            />
+          </HunkExpandDivider>
         );
       }
     }
@@ -190,32 +182,28 @@ class DiffFile extends React.Component<Props, State> {
     if (expandableHunk.maxExpandBottomRange > 0) {
       if (expandableHunk.maxExpandBottomRange <= 10) {
         return (
-          <Decoration>
-            <HunkDivider>
-              <HunkExpandLink
-                icon={"fa-angle-double-down"}
-                onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
-                text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandBottomRange })}
-              />
-            </HunkDivider>
-          </Decoration>
+          <HunkExpandDivider>
+            <HunkExpandLink
+              icon={"fa-angle-double-down"}
+              onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
+              text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandBottomRange })}
+            />
+          </HunkExpandDivider>
         );
       } else {
         return (
-          <Decoration>
-            <HunkDivider>
-              <HunkExpandLink
-                icon={"fa-angle-down"}
-                onClick={this.expandBottom(expandableHunk, 10)}
-                text={this.props.t("diff.expandByLines", { count: 10 })}
-              />{" "}
-              <HunkExpandLink
-                icon={"fa-angle-double-down"}
-                onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
-                text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandBottomRange })}
-              />
-            </HunkDivider>
-          </Decoration>
+          <HunkExpandDivider>
+            <HunkExpandLink
+              icon={"fa-angle-down"}
+              onClick={this.expandBottom(expandableHunk, 10)}
+              text={this.props.t("diff.expandByLines", { count: 10 })}
+            />{" "}
+            <HunkExpandLink
+              icon={"fa-angle-double-down"}
+              onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
+              text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandBottomRange })}
+            />
+          </HunkExpandDivider>
         );
       }
     }
@@ -226,20 +214,18 @@ class DiffFile extends React.Component<Props, State> {
   createLastHunkFooter = (expandableHunk: ExpandableHunk) => {
     if (expandableHunk.maxExpandBottomRange !== 0) {
       return (
-        <Decoration>
-          <HunkDivider>
-            <HunkExpandLink
-              icon={"fa-angle-down"}
-              onClick={this.expandBottom(expandableHunk, 10)}
-              text={this.props.t("diff.expandLastBottomByLines", { count: 10 })}
-            />{" "}
-            <HunkExpandLink
-              icon={"fa-angle-double-down"}
-              onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
-              text={this.props.t("diff.expandLastBottomComplete")}
-            />
-          </HunkDivider>
-        </Decoration>
+        <HunkExpandDivider>
+          <HunkExpandLink
+            icon={"fa-angle-down"}
+            onClick={this.expandBottom(expandableHunk, 10)}
+            text={this.props.t("diff.expandLastBottomByLines", { count: 10 })}
+          />{" "}
+          <HunkExpandLink
+            icon={"fa-angle-double-down"}
+            onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
+            text={this.props.t("diff.expandLastBottomComplete")}
+          />
+        </HunkExpandDivider>
       );
     }
     // hunk header must be defined
@@ -269,7 +255,6 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   diffExpansionFailed = (err: any) => {
-    console.log(err);
     this.setState({ expansionError: err });
   };
 

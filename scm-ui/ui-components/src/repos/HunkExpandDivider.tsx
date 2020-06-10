@@ -21,38 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
-import { useTranslation } from "react-i18next";
-import classNames from "classnames";
+import React, { FC } from "react";
+import { Decoration } from "react-diff-view";
 import styled from "styled-components";
 
-type Props = {
-  icon: string;
-  text: string;
-  onClick: () => Promise<any>;
-};
-
-const ExpandLink = styled.span`
-  cursor: pointer;
+const HunkDivider = styled.div`
+  background: #98d8f3;
+  font-size: 0.7rem;
+  padding-left: 1.78em;
 `;
 
-const HunkExpandLink: FC<Props> = ({ icon, text, onClick }) => {
-  const [t] = useTranslation("repos");
-  const [loading, setLoading] = useState(false);
-
-  const onClickWithLoadingMarker = () => {
-    if (loading) {
-      return;
-    }
-    setLoading(true);
-    onClick().then(() => setLoading(false));
-  };
-
+const HunkExpandDivider: FC = ({ children }) => {
   return (
-    <ExpandLink onClick={onClickWithLoadingMarker}>
-      <i className={classNames("fa", icon)} /> {loading ? t("diff.expanding") : text}
-    </ExpandLink>
+    <Decoration>
+      <HunkDivider>{children}</HunkDivider>
+    </Decoration>
   );
 };
 
-export default HunkExpandLink;
+export default HunkExpandDivider;
