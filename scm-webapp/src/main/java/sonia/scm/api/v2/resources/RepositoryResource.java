@@ -232,6 +232,11 @@ public class RepositoryResource {
     return resourceProvider.getIncomingRootResource();
   }
 
+  @Path("annotate/")
+  public AnnotateResource annotate() {
+    return resourceProvider.getAnnotateResource();
+  }
+
   private Supplier<Repository> loadBy(String namespace, String name) {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     return () -> Optional.ofNullable(manager.get(namespaceAndName)).orElseThrow(() -> notFound(entity(namespaceAndName)));

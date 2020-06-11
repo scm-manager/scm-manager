@@ -45,6 +45,7 @@ abstract class RepositoryTestBase {
   FileHistoryRootResource fileHistoryRootResource;
   IncomingRootResource incomingRootResource;
   RepositoryCollectionResource repositoryCollectionResource;
+  AnnotateResource annotateResource;
 
 
   RepositoryRootResource getRepositoryRootResource() {
@@ -58,8 +59,8 @@ abstract class RepositoryTestBase {
       of(diffRootResource),
       of(modificationsRootResource),
       of(fileHistoryRootResource),
-      of(incomingRootResource)
-    );
+      of(incomingRootResource),
+      of(annotateResource));
     return new RepositoryRootResource(
       of(new RepositoryResource(
         repositoryToDtoMapper,

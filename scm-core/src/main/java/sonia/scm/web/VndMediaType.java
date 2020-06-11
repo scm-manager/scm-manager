@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 import javax.ws.rs.core.MediaType;
@@ -71,13 +71,12 @@ public class VndMediaType {
   @SuppressWarnings("squid:S2068")
   public static final String PASSWORD_OVERWRITE = PREFIX + "passwordOverwrite" + SUFFIX;
   public static final String PERMISSION_COLLECTION = PREFIX + "permissionCollection" + SUFFIX;
-  public static final String MERGE_RESULT = PREFIX + "mergeResult" + SUFFIX;
-  public static final String MERGE_COMMAND = PREFIX + "mergeCommand" + SUFFIX;
 
   public static final String NAMESPACE_STRATEGIES = PREFIX + "namespaceStrategies" + SUFFIX;
 
   public static final String ME = PREFIX + "me" + SUFFIX;
   public static final String SOURCE = PREFIX + "source" + SUFFIX;
+  public static final String ANNOTATE = PREFIX + "annotate" + SUFFIX;
   public static final String ERROR_TYPE = PREFIX + "error" + SUFFIX;
 
   public static final String REPOSITORY_ROLE = PREFIX + "repositoryRole" + SUFFIX;
