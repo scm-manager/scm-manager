@@ -66,6 +66,9 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
   const [t] = useTranslation("plugins");
 
   const collectAvailableContributorTypes = () => {
+    if (!changeset.contributors) {
+      return [];
+    }
     // @ts-ignore
     return [...new Set(changeset.contributors.map(contributor => contributor.type))];
   };
@@ -97,7 +100,7 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
           <SizedTd>{t("changeset.contributor.type." + contributor.type)}:</SizedTd>
           <td className="is-ellipsis-overflow is-marginless">
             <CommaSeparatedList>
-              {contributor.persons.map(person => (
+              {contributor.persons!.map(person => (
                 <Contributor key={person.name} person={person} />
               ))}
             </CommaSeparatedList>
