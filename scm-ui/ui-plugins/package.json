@@ -1,13 +1,13 @@
 {
   "name": "@scm-manager/ui-plugins",
-  "version": "2.0.0",
+  "version": "2.0.1-SNAPSHOT",
   "license": "MIT",
   "bin": {
     "ui-plugins": "./bin/ui-plugins.js"
   },
   "dependencies": {
-    "@scm-manager/ui-components": "^2.0.0",
-    "@scm-manager/ui-extensions": "^2.0.0",
+    "@scm-manager/ui-components": "^2.0.1-SNAPSHOT",
+    "@scm-manager/ui-extensions": "^2.0.1-SNAPSHOT",
     "classnames": "^2.2.6",
     "query-string": "^5.0.1",
     "react": "^16.10.2",
@@ -18,14 +18,14 @@
     "styled-components": "^4.4.0"
   },
   "devDependencies": {
-    "@scm-manager/babel-preset": "^2.0.0",
-    "@scm-manager/eslint-config": "^2.0.0",
-    "@scm-manager/jest-preset": "^2.0.0",
-    "@scm-manager/prettier-config": "^2.0.0",
-    "@scm-manager/tsconfig": "^2.0.0",
-    "@scm-manager/ui-scripts": "^2.0.0",
-    "@scm-manager/ui-tests": "^2.0.0",
-    "@scm-manager/ui-types": "^2.0.0",
+    "@scm-manager/babel-preset": "^2.0.1-SNAPSHOT",
+    "@scm-manager/eslint-config": "^2.0.1-SNAPSHOT",
+    "@scm-manager/jest-preset": "^2.0.1-SNAPSHOT",
+    "@scm-manager/prettier-config": "^2.0.1-SNAPSHOT",
+    "@scm-manager/tsconfig": "^2.0.1-SNAPSHOT",
+    "@scm-manager/ui-scripts": "^2.0.1-SNAPSHOT",
+    "@scm-manager/ui-tests": "^2.0.1-SNAPSHOT",
+    "@scm-manager/ui-types": "^2.0.1-SNAPSHOT",
     "@types/classnames": "^2.2.9",
     "@types/enzyme": "^3.10.3",
     "@types/fetch-mock": "^7.3.1",
