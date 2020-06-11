@@ -36,7 +36,7 @@ export type Changeset = Collection & {
   date: Date;
   author: Person;
   description: string;
-  contributors: Contributor[];
+  contributors?: Contributor[];
   _links: Links;
   _embedded: {
     tags?: Tag[];

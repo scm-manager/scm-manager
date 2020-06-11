@@ -66,7 +66,10 @@ const BottomMarginLevel = styled(Level)`
 `;
 
 const countContributors = (changeset: Changeset) => {
-  return changeset.contributors.length + 1;
+  if (changeset.contributors) {
+    return changeset.contributors.length + 1;
+  }
+  return 1;
 };
 
 const ContributorLine = styled.div`

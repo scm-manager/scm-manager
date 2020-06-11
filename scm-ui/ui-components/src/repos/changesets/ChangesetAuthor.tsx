@@ -128,6 +128,8 @@ const Contributors: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => 
   }
 };
 
+const emptyListOfContributors: Person[] = [];
+
 const ChangesetAuthor: FC<Props> = ({ changeset }) => {
   const binder = useBinder();
 
@@ -140,7 +142,10 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
   };
 
   const filterContributorsByType = (type: string) => {
-    return changeset.contributors.filter(p => p.type === type).map(contributor => contributor.person);
+    if (changeset.contributors) {
+      return changeset.contributors.filter(p => p.type === type).map(contributor => contributor.person);
+    }
+    return emptyListOfContributors;
   };
 
   const authorLine = [];
