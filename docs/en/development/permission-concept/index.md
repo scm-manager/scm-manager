@@ -398,7 +398,7 @@ and write. That is,
 
 Internationalization can be handled using the following conventions:
 
-* All permission i18n are described in `plugins.json` (also for core), see [i18n for Plugins](docs/en/i18n-for-plugins.mdugins.md)
+* All permission i18n are described in `plugins.json` (also for core), see [i18n for Plugins](../plugins/i18n-for-plugins)
 * That way the UI for users and groups can find all the translation in the same file
 * Convention for i18n keys: `permissions.<shiro-String>`, containing `displayName` and `description` each.
 

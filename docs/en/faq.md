@@ -11,20 +11,20 @@ Password: `scmadmin`
 
 All data which is created by SCM-Manager, is stored in the SCM-Manager  base directory.
 The location of the base directory depends on your type of installation.
-Please have a look at the [documentation](../configuration/basedirectory/).
+Please have a look at the [documentation](../administration/basedirectory/).
 
 ### How can I change the SCM-Manager home directory?
 
-There are several ways to change the location of the home directory: [documentation](../configuration/basedirectory/#change-base-directory-location)
+There are several ways to change the location of the home directory: [documentation](../administration/basedirectory/#change-base-directory-location)
 
 ### Where does SCM-Manager stores it log files?
 
 The location of the log files depends on your operation system and the type of installation.
-Please have a look at the [documentation](../configuration/logging/).
+Please have a look at the [documentation](../administration/logging/).
 
 ### How do I enable trace logging?
 
-Find the location of your `logging.xml` in the [documentation](../configuration/logging/#configuration) and change the following line from:
+Find the location of your `logging.xml` in the [documentation](../administration/logging/#configuration) and change the following line from:
 
 ```xml
 <logger name="sonia.scm" level="INFO" />
