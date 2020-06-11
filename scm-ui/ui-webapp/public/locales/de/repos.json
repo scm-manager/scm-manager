@@ -94,7 +94,8 @@
       "committedBy": "Committed von",
       "coAuthoredBy": "Co-Autoren",
       "more": "{{count}} mehr",
-      "count": "{{count}} Contributors"
+      "count": "{{count}} Mitwirkender",
+      "count_plural": "{{count}} Mitwirkende"
     },
     "buttons": {
       "details": "Details",

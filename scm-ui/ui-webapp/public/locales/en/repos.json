@@ -98,7 +98,8 @@
       "committedBy": "committed by",
       "coAuthoredBy": "co authored by",
       "more": "{{count}} more",
-      "count": "5 Contributors"
+      "count": "{{count}} Contributor",
+      "count_plural": "{{count}} Contributors"
     }
   },
   "repositoryForm": {
