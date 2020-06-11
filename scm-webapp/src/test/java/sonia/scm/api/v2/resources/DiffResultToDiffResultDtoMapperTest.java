@@ -87,6 +87,19 @@ class DiffResultToDiffResultDtoMapperTest {
   }
 
   @Test
+  void shouldCreateLinkToLoadMoreLinesForFilesWithHunks() {
+    DiffResultDto dto = mapper.mapForRevision(REPOSITORY, createResult(), "123");
+
+    assertThat(dto.getFiles().get(0).getLinks().getLinkBy("lines"))
+      .isNotPresent();
+    assertThat(dto.getFiles().get(1).getLinks().getLinkBy("lines"))
+      .isPresent()
+      .get()
+      .extracting("href")
+      .isEqualTo("/scm/api/v2/repositories/space/X/content/123/B.ts?start={start}&end={end}");
+  }
+
+  @Test
   void shouldCreateSelfLinkForIncoming() {
     DiffResultDto dto = mapper.mapForIncoming(REPOSITORY, createResult(), "feature/some", "master");
 
