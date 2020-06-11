@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -171,8 +171,8 @@ public class GitChangesetConverter implements Closeable
 
     long date = GitUtil.getCommitTime(commit);
     PersonIdent authorIndent = commit.getAuthorIdent();
-    Person author = new Person(authorIndent.getName(),
-                      authorIndent.getEmailAddress());
+    PersonIdent committerIdent = commit.getCommitterIdent();
+    Person author = createPersonFor(authorIndent);
     String message = commit.getFullMessage();
 
     if (message != null)
@@ -181,6 +181,9 @@ public class GitChangesetConverter implements Closeable
     }
 
     Changeset changeset = new Changeset(id, date, author, message);
+    if (!committerIdent.equals(authorIndent)) {
+      changeset.addContributor(new Contributor("Committed-by", createPersonFor(committerIdent)));
+    }
 
     if (parentList != null)
     {
@@ -201,6 +204,9 @@ public class GitChangesetConverter implements Closeable
     return changeset;
   }
 
+  public Person createPersonFor(PersonIdent personIndent) {
+    return new Person(personIndent.getName(), personIndent.getEmailAddress());
+  }
 
 
   //~--- fields ---------------------------------------------------------------

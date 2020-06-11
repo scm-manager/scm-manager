@@ -21,53 +21,157 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { Changeset } from "@scm-manager/ui-types";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { Changeset, Person } from "@scm-manager/ui-types";
+import { useTranslation } from "react-i18next";
+import { useBinder } from "@scm-manager/ui-extensions";
+import { EXTENSION_POINT } from "../../avatar/Avatar";
+import styled from "styled-components";
+import CommaSeparatedList from "../../CommaSeparatedList";
+import ContributorAvatar from "./ContributorAvatar";
 
-type Props = WithTranslation & {
+type Props = {
   changeset: Changeset;
 };
 
-class ChangesetAuthor extends React.Component<Props> {
-  render() {
-    const { changeset } = this.props;
-    if (!changeset.author) {
-      return null;
-    }
+type PersonProps = {
+  person: Person;
+  displayTextOnly?: boolean;
+};
 
-    const { name, mail } = changeset.author;
-    if (mail) {
-      return this.withExtensionPoint(this.renderWithMail(name, mail));
-    }
-    return this.withExtensionPoint(<>{name}</>);
+const useAvatar = (person: Person): string | undefined => {
+  const binder = useBinder();
+  const factory: (person: Person) => string | undefined = binder.getExtension(EXTENSION_POINT);
+  if (factory) {
+    return factory(person);
   }
+};
 
-  renderWithMail(name: string, mail: string) {
-    const { t } = this.props;
+const AvatarList = styled.span`
+  & > :not(:last-child) {
+    margin-right: 0.25em;
+  }
+`;
+
+type PersonAvatarProps = {
+  person: Person;
+  avatar: string;
+};
+
+const ContributorWithAvatar: FC<PersonAvatarProps> = ({ person, avatar }) => {
+  const [t] = useTranslation("repos");
+  if (person.mail) {
     return (
-      <a href={"mailto:" + mail} title={t("changeset.author.mailto") + " " + mail}>
-        {name}
+      <a href={"mailto:" + person.mail} title={t("changeset.contributors.mailto") + " " + person.mail}>
+        <ContributorAvatar src={avatar} alt={person.name} />
       </a>
     );
   }
+  return <ContributorAvatar src={avatar} alt={person.name} title={person.name} />;
+};
 
-  withExtensionPoint(child: any) {
-    const { t } = this.props;
+const SingleContributor: FC<PersonProps> = ({ person, displayTextOnly }) => {
+  const [t] = useTranslation("repos");
+  const avatar = useAvatar(person);
+  if (!displayTextOnly && avatar) {
+    return <ContributorWithAvatar person={person} avatar={avatar} />;
+  }
+  if (person.mail) {
+    return (
+      <a href={"mailto:" + person.mail} title={t("changeset.contributors.mailto") + " " + person.mail}>
+        {person.name}
+      </a>
+    );
+  }
+  return <>{person.name}</>;
+};
+
+type PersonsProps = {
+  persons: Person[];
+  label: string;
+  displayTextOnly?: boolean;
+};
+
+const Contributors: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => {
+  const binder = useBinder();
+
+  const [t] = useTranslation("repos");
+  if (persons.length === 1) {
     return (
       <>
-        {t("changeset.author.prefix")} {child}
-        <ExtensionPoint
-          name="changesets.author.suffix"
-          props={{
-            changeset: this.props.changeset
-          }}
-          renderAll={true}
-        />
+        {t(label)} <SingleContributor person={persons[0]} displayTextOnly={displayTextOnly} />
       </>
     );
   }
-}
 
-export default withTranslation("repos")(ChangesetAuthor);
+  const avatarFactory = binder.getExtension(EXTENSION_POINT);
+  if (avatarFactory) {
+    return (
+      <>
+        {t(label)}{" "}
+        <AvatarList>
+          {persons.map(p => (
+            <ContributorWithAvatar key={p.name} person={p} avatar={avatarFactory(p)} />
+          ))}
+        </AvatarList>
+      </>
+    );
+  } else {
+    return (
+      <>
+        {t(label)}{" "}
+        <a title={persons.map(person => "- " + person.name).join("\n")}>
+          {t("changeset.contributors.more", { count: persons.length })}
+        </a>
+      </>
+    );
+  }
+};
+
+const emptyListOfContributors: Person[] = [];
+
+const ChangesetAuthor: FC<Props> = ({ changeset }) => {
+  const binder = useBinder();
+
+  const getCoAuthors = () => {
+    return filterContributorsByType("Co-authored-by");
+  };
+
+  const getCommitters = () => {
+    return filterContributorsByType("Committed-by");
+  };
+
+  const filterContributorsByType = (type: string) => {
+    if (changeset.contributors) {
+      return changeset.contributors.filter(p => p.type === type).map(contributor => contributor.person);
+    }
+    return emptyListOfContributors;
+  };
+
+  const authorLine = [];
+  if (changeset.author) {
+    authorLine.push(
+      <Contributors persons={[changeset.author]} label={"changeset.contributors.authoredBy"} displayTextOnly={true} />
+    );
+  }
+
+  const commiters = getCommitters();
+  if (commiters.length > 0) {
+    authorLine.push(<Contributors persons={commiters} label={"changeset.contributors.committedBy"} />);
+  }
+
+  const coAuthors = getCoAuthors();
+  if (coAuthors.length > 0) {
+    authorLine.push(<Contributors persons={coAuthors} label={"changeset.contributors.coAuthoredBy"} />);
+  }
+
+  // extensions
+  const extensions = binder.getExtensions("changesets.author.suffix", { changeset });
+  if (extensions) {
+    coAuthors.push(...extensions);
+  }
+
+  return <CommaSeparatedList>{authorLine}</CommaSeparatedList>;
+};
+
+export default ChangesetAuthor;

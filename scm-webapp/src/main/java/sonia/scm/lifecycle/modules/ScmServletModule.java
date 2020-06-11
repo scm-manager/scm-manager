@@ -111,7 +111,6 @@ import sonia.scm.web.security.DefaultAdministrationContext;
 import javax.net.ssl.SSLContext;
 
 /**
- *
  * @author Sebastian Sdorra
  */
 class ScmServletModule extends ServletModule {

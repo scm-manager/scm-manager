@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 
@@ -68,7 +68,6 @@ import static org.mockito.Mockito.when;
 @Slf4j
 public class ChangesetRootResourceTest extends RepositoryTestBase {
 
-
   public static final String CHANGESET_PATH = "space/repo/changesets/";
   public static final String CHANGESET_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + CHANGESET_PATH;
 
@@ -86,6 +85,7 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
   @Mock
   private LogCommandBuilder logCommandBuilder;
 
+  @InjectMocks
   private ChangesetCollectionToDtoMapper changesetCollectionToDtoMapper;
 
   @InjectMocks
@@ -93,10 +93,8 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
 
   private ChangesetRootResource changesetRootResource;
 
-
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
-
 
   @Before
   public void prepareEnvironment() {

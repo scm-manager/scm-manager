@@ -1,4 +1,15 @@
 {
+  "changeset": {
+    "contributor": {
+      "type": {
+        "author": "Autor",
+        "Reviewed-by": "Reviewer",
+        "Co-authored-by": "Co-Autoren",
+        "Committed-by": "Committed von",
+        "Signed-off-by": "Signiert von"
+      }
+    }
+  },
   "permissions": {
     "*": {
       "displayName": "Globaler Administrator",

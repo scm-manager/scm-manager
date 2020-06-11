@@ -87,9 +87,15 @@
     "shortSummary": "Committet <0/> <1/>",
     "tags": "Tags",
     "diffNotSupported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt",
-    "author": {
-      "prefix": "Verfasst von",
-      "mailto": "Mail senden an"
+    "contributors": {
+      "mailto": "Mail senden an",
+      "list": "Liste der Mitwirkenden",
+      "authoredBy": "Verfasst von",
+      "committedBy": "Committed von",
+      "coAuthoredBy": "Co-Autoren",
+      "more": "{{count}} mehr",
+      "count": "{{count}} Mitwirkender",
+      "count_plural": "{{count}} Mitwirkende"
     },
     "buttons": {
       "details": "Details",

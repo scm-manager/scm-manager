@@ -31,6 +31,7 @@ import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -78,6 +79,11 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
    * The tags associated with the changeset
    */
   private List<String> tags;
+
+  /**
+   * Trailers for this changeset like reviewers or co-authors
+   */
+  private Collection<Contributor> contributors;
 
   public Changeset() {}
 
@@ -226,6 +232,15 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
   }
 
   /**
+   * Returns collection of contributors for this changeset.
+   * @return collection of contributors
+   * @since 2.1.0
+   */
+  public Collection<Contributor> getContributors() {
+    return contributors;
+  }
+
+  /**
    * Returns true if the changeset is valid.
    *
    * @return true if the changeset is valid
@@ -300,4 +315,37 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
     this.tags = tags;
   }
 
+  /**
+   * Sets the collection of contributors.
+   * @param contributors collection of contributors
+   * @since 2.1.0
+   */
+  public void setContributors(Collection<Contributor> contributors) {
+    this.contributors = new ArrayList<>(contributors);
+  }
+
+  /**
+   * Adds a contributor to the list of contributors.
+   * @param contributor contributor to add
+   * @since 2.1.0
+   */
+  public void addContributor(Contributor contributor) {
+    if (contributors == null) {
+      contributors = new ArrayList<>();
+    }
+    contributors.add(contributor);
+  }
+
+  /**
+   * Adds all contributors from the given collection to the list of contributors.
+   * @param contributors collection of contributor
+   * @since 2.1.0
+   */
+  public void addContributors(Collection<Contributor> contributors) {
+    if (this.contributors == null) {
+      this.contributors = new ArrayList<>(contributors);
+    } else {
+      this.contributors.addAll(contributors);
+    }
+  }
 }

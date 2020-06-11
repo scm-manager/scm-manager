@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 
@@ -77,7 +77,6 @@ import static sonia.scm.repository.api.DiffFormat.NATIVE;
 @RunWith(MockitoJUnitRunner.Silent.class)
 @Slf4j
 public class IncomingRootResourceTest extends RepositoryTestBase {
-
 
   public static final String INCOMING_PATH = "space/repo/incoming/";
   public static final String INCOMING_CHANGESETS_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + INCOMING_PATH;

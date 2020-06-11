@@ -87,13 +87,19 @@
     "shortSummary": "Committed <0/> <1/>",
     "tags": "Tags",
     "diffNotSupported": "Diff of changesets is not supported by the type of repository",
-    "author": {
-      "prefix": "Authored by",
-      "mailto": "Send mail to"
-    },
     "buttons": {
       "details": "Details",
       "sources": "Sources"
+    },
+    "contributors": {
+      "mailto": "Send mail to",
+      "list": "List of contributors",
+      "authoredBy": "Authored by",
+      "committedBy": "committed by",
+      "coAuthoredBy": "co authored by",
+      "more": "{{count}} more",
+      "count": "{{count}} Contributor",
+      "count_plural": "{{count}} Contributors"
     }
   },
   "repositoryForm": {

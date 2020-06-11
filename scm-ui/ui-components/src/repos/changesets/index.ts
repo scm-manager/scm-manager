@@ -34,3 +34,4 @@ export { default as ChangesetRow } from "./ChangesetRow";
 export { default as ChangesetTag } from "./ChangesetTag";
 export { default as ChangesetTags } from "./ChangesetTags";
 export { default as ChangesetTagsCollapsed } from "./ChangesetTagsCollapsed";
+export { default as ContributorAvatar } from "./ContributorAvatar";

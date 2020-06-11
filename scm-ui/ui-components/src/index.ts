@@ -76,6 +76,7 @@ export { default as OverviewPageActions } from "./OverviewPageActions";
 export { default as CardColumnGroup } from "./CardColumnGroup";
 export { default as CardColumn } from "./CardColumn";
 export { default as CardColumnSmall } from "./CardColumnSmall";
+export { default as CommaSeparatedList } from "./CommaSeparatedList";
 
 export { default as comparators } from "./comparators";
 
