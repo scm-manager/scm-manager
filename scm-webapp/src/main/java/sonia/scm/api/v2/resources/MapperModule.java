@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.AbstractModule;
@@ -32,46 +32,46 @@ import sonia.scm.web.api.RepositoryToHalMapper;
 public class MapperModule extends AbstractModule {
   @Override
   protected void configure() {
-    bind(UserDtoToUserMapper.class).to(Mappers.getMapper(UserDtoToUserMapper.class).getClass());
-    bind(UserToUserDtoMapper.class).to(Mappers.getMapper(UserToUserDtoMapper.class).getClass());
+    bind(UserDtoToUserMapper.class).to(Mappers.getMapperClass(UserDtoToUserMapper.class));
+    bind(UserToUserDtoMapper.class).to(Mappers.getMapperClass(UserToUserDtoMapper.class));
     bind(UserCollectionToDtoMapper.class);
 
-    bind(GroupDtoToGroupMapper.class).to(Mappers.getMapper(GroupDtoToGroupMapper.class).getClass());
-    bind(GroupToGroupDtoMapper.class).to(Mappers.getMapper(GroupToGroupDtoMapper.class).getClass());
+    bind(GroupDtoToGroupMapper.class).to(Mappers.getMapperClass(GroupDtoToGroupMapper.class));
+    bind(GroupToGroupDtoMapper.class).to(Mappers.getMapperClass(GroupToGroupDtoMapper.class));
     bind(GroupCollectionToDtoMapper.class);
 
-    bind(ScmConfigurationToConfigDtoMapper.class).to(Mappers.getMapper(ScmConfigurationToConfigDtoMapper.class).getClass());
-    bind(ConfigDtoToScmConfigurationMapper.class).to(Mappers.getMapper(ConfigDtoToScmConfigurationMapper.class).getClass());
+    bind(ScmConfigurationToConfigDtoMapper.class).to(Mappers.getMapperClass(ScmConfigurationToConfigDtoMapper.class));
+    bind(ConfigDtoToScmConfigurationMapper.class).to(Mappers.getMapperClass(ConfigDtoToScmConfigurationMapper.class));
 
-    bind(RepositoryToRepositoryDtoMapper.class).to(Mappers.getMapper(RepositoryToRepositoryDtoMapper.class).getClass());
-    bind(RepositoryDtoToRepositoryMapper.class).to(Mappers.getMapper(RepositoryDtoToRepositoryMapper.class).getClass());
+    bind(RepositoryToRepositoryDtoMapper.class).to(Mappers.getMapperClass(RepositoryToRepositoryDtoMapper.class));
+    bind(RepositoryDtoToRepositoryMapper.class).to(Mappers.getMapperClass(RepositoryDtoToRepositoryMapper.class));
 
-    bind(RepositoryTypeToRepositoryTypeDtoMapper.class).to(Mappers.getMapper(RepositoryTypeToRepositoryTypeDtoMapper.class).getClass());
+    bind(RepositoryTypeToRepositoryTypeDtoMapper.class).to(Mappers.getMapperClass(RepositoryTypeToRepositoryTypeDtoMapper.class));
     bind(RepositoryTypeCollectionToDtoMapper.class);
 
-    bind(BranchToBranchDtoMapper.class).to(Mappers.getMapper(BranchToBranchDtoMapper.class).getClass());
-    bind(RepositoryPermissionDtoToRepositoryPermissionMapper.class).to(Mappers.getMapper(RepositoryPermissionDtoToRepositoryPermissionMapper.class).getClass());
-    bind(RepositoryPermissionToRepositoryPermissionDtoMapper.class).to(Mappers.getMapper(RepositoryPermissionToRepositoryPermissionDtoMapper.class).getClass());
+    bind(BranchToBranchDtoMapper.class).to(Mappers.getMapperClass(BranchToBranchDtoMapper.class));
+    bind(RepositoryPermissionDtoToRepositoryPermissionMapper.class).to(Mappers.getMapperClass(RepositoryPermissionDtoToRepositoryPermissionMapper.class));
+    bind(RepositoryPermissionToRepositoryPermissionDtoMapper.class).to(Mappers.getMapperClass(RepositoryPermissionToRepositoryPermissionDtoMapper.class));
 
-    bind(RepositoryRoleToRepositoryRoleDtoMapper.class).to(Mappers.getMapper(RepositoryRoleToRepositoryRoleDtoMapper.class).getClass());
-    bind(RepositoryRoleDtoToRepositoryRoleMapper.class).to(Mappers.getMapper(RepositoryRoleDtoToRepositoryRoleMapper.class).getClass());
+    bind(RepositoryRoleToRepositoryRoleDtoMapper.class).to(Mappers.getMapperClass(RepositoryRoleToRepositoryRoleDtoMapper.class));
+    bind(RepositoryRoleDtoToRepositoryRoleMapper.class).to(Mappers.getMapperClass(RepositoryRoleDtoToRepositoryRoleMapper.class));
     bind(RepositoryRoleCollectionToDtoMapper.class);
 
-    bind(ChangesetToChangesetDtoMapper.class).to(Mappers.getMapper(DefaultChangesetToChangesetDtoMapper.class).getClass());
-    bind(ChangesetToParentDtoMapper.class).to(Mappers.getMapper(ChangesetToParentDtoMapper.class).getClass());
+    bind(ChangesetToChangesetDtoMapper.class).to(Mappers.getMapperClass(DefaultChangesetToChangesetDtoMapper.class));
+    bind(ChangesetToParentDtoMapper.class).to(Mappers.getMapperClass(ChangesetToParentDtoMapper.class));
 
-    bind(TagToTagDtoMapper.class).to(Mappers.getMapper(TagToTagDtoMapper.class).getClass());
+    bind(TagToTagDtoMapper.class).to(Mappers.getMapperClass(TagToTagDtoMapper.class));
 
-    bind(BrowserResultToFileObjectDtoMapper.class).to(Mappers.getMapper(BrowserResultToFileObjectDtoMapper.class).getClass());
-    bind(ModificationsToDtoMapper.class).to(Mappers.getMapper(ModificationsToDtoMapper.class).getClass());
+    bind(BrowserResultToFileObjectDtoMapper.class).to(Mappers.getMapperClass(BrowserResultToFileObjectDtoMapper.class));
+    bind(ModificationsToDtoMapper.class).to(Mappers.getMapperClass(ModificationsToDtoMapper.class));
 
-    bind(ReducedObjectModelToDtoMapper.class).to(Mappers.getMapper(ReducedObjectModelToDtoMapper.class).getClass());
+    bind(ReducedObjectModelToDtoMapper.class).to(Mappers.getMapperClass(ReducedObjectModelToDtoMapper.class));
 
-    bind(ResteasyViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapper(ResteasyViolationExceptionToErrorDtoMapper.class).getClass());
-    bind(ScmViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapper(ScmViolationExceptionToErrorDtoMapper.class).getClass());
-    bind(ExceptionWithContextToErrorDtoMapper.class).to(Mappers.getMapper(ExceptionWithContextToErrorDtoMapper.class).getClass());
+    bind(ResteasyViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapperClass(ResteasyViolationExceptionToErrorDtoMapper.class));
+    bind(ScmViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapperClass(ScmViolationExceptionToErrorDtoMapper.class));
+    bind(ExceptionWithContextToErrorDtoMapper.class).to(Mappers.getMapperClass(ExceptionWithContextToErrorDtoMapper.class));
 
-    bind(RepositoryToHalMapper.class).to(Mappers.getMapper(RepositoryToRepositoryDtoMapper.class).getClass());
+    bind(RepositoryToHalMapper.class).to(Mappers.getMapperClass(RepositoryToRepositoryDtoMapper.class));
 
     // no mapstruct required
     bind(MeDtoFactory.class);
@@ -80,6 +80,6 @@ public class MapperModule extends AbstractModule {
 
     bind(ScmPathInfoStore.class).in(ServletScopes.REQUEST);
 
-    bind(PluginDtoMapper.class).to(Mappers.getMapper(PluginDtoMapper.class).getClass());
+    bind(PluginDtoMapper.class).to(Mappers.getMapperClass(PluginDtoMapper.class));
   }
 }
