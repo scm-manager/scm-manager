@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
@@ -122,7 +122,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     super.dtoToRepositoryMapper = dtoToRepositoryMapper;
     super.manager = repositoryManager;
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
-    super.repositoryCollectionResource = Providers.of(new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer));
+    super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);

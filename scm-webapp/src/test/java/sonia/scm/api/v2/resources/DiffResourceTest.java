@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 
@@ -90,9 +90,6 @@ public class DiffResourceTest extends RepositoryTestBase {
   @Mock
   private DiffResultToDiffResultDtoMapper diffResultToDiffResultDtoMapper;
 
-  private DiffRootResource diffRootResource;
-
-
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
@@ -100,7 +97,6 @@ public class DiffResourceTest extends RepositoryTestBase {
   @Before
   public void prepareEnvironment() {
     diffRootResource = new DiffRootResource(serviceFactory, diffResultToDiffResultDtoMapper);
-    super.diffRootResource = Providers.of(diffRootResource);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);

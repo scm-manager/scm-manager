@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -58,46 +58,19 @@ public class RepositoryResource {
 
   private final RepositoryManager manager;
   private final SingleResourceManagerAdapter<Repository, RepositoryDto> adapter;
-  private final Provider<TagRootResource> tagRootResource;
-  private final Provider<BranchRootResource> branchRootResource;
-  private final Provider<ChangesetRootResource> changesetRootResource;
-  private final Provider<SourceRootResource> sourceRootResource;
-  private final Provider<ContentResource> contentResource;
-  private final Provider<RepositoryPermissionRootResource> permissionRootResource;
-  private final Provider<DiffRootResource> diffRootResource;
-  private final Provider<ModificationsRootResource> modificationsRootResource;
-  private final Provider<FileHistoryRootResource> fileHistoryRootResource;
-  private final Provider<IncomingRootResource> incomingRootResource;
+  private final RepositoryBasedResourceProvider resourceProvider;
 
   @Inject
   public RepositoryResource(
     RepositoryToRepositoryDtoMapper repositoryToDtoMapper,
     RepositoryDtoToRepositoryMapper dtoToRepositoryMapper, RepositoryManager manager,
-    Provider<TagRootResource> tagRootResource,
-    Provider<BranchRootResource> branchRootResource,
-    Provider<ChangesetRootResource> changesetRootResource,
-    Provider<SourceRootResource> sourceRootResource, Provider<ContentResource> contentResource,
-    Provider<RepositoryPermissionRootResource> permissionRootResource,
-    Provider<DiffRootResource> diffRootResource,
-    Provider<ModificationsRootResource> modificationsRootResource,
-    Provider<FileHistoryRootResource> fileHistoryRootResource,
-    Provider<IncomingRootResource> incomingRootResource
+    RepositoryBasedResourceProvider resourceProvider
   ) {
     this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
     this.adapter = new SingleResourceManagerAdapter<>(manager, Repository.class);
-    this.tagRootResource = tagRootResource;
-    this.branchRootResource = branchRootResource;
-    this.changesetRootResource = changesetRootResource;
-    this.sourceRootResource = sourceRootResource;
-    this.contentResource = contentResource;
-    this.permissionRootResource = permissionRootResource;
-    this.diffRootResource = diffRootResource;
-    this.modificationsRootResource = modificationsRootResource;
-    this.fileHistoryRootResource = fileHistoryRootResource;
-    this.incomingRootResource = incomingRootResource;
-
+    this.resourceProvider = resourceProvider;
   }
 
   /**
@@ -211,52 +184,52 @@ public class RepositoryResource {
 
   @Path("tags/")
   public TagRootResource tags() {
-    return tagRootResource.get();
+    return resourceProvider.getTagRootResource();
   }
 
   @Path("diff/")
   public DiffRootResource diff() {
-    return diffRootResource.get();
+    return resourceProvider.getDiffRootResource();
   }
 
   @Path("branches/")
   public BranchRootResource branches() {
-    return branchRootResource.get();
+    return resourceProvider.getBranchRootResource();
   }
 
   @Path("changesets/")
   public ChangesetRootResource changesets() {
-    return changesetRootResource.get();
+    return resourceProvider.getChangesetRootResource();
   }
 
   @Path("history/")
   public FileHistoryRootResource history() {
-    return fileHistoryRootResource.get();
+    return resourceProvider.getFileHistoryRootResource();
   }
 
   @Path("sources/")
   public SourceRootResource sources() {
-    return sourceRootResource.get();
+    return resourceProvider.getSourceRootResource();
   }
 
   @Path("content/")
   public ContentResource content() {
-    return contentResource.get();
+    return resourceProvider.getContentResource();
   }
 
   @Path("permissions/")
   public RepositoryPermissionRootResource permissions() {
-    return permissionRootResource.get();
+    return resourceProvider.getPermissionRootResource();
   }
 
   @Path("modifications/")
   public ModificationsRootResource modifications() {
-    return modificationsRootResource.get();
+    return resourceProvider.getModificationsRootResource();
   }
 
   @Path("incoming/")
   public IncomingRootResource incoming() {
-    return incomingRootResource.get();
+    return resourceProvider.getIncomingRootResource();
   }
 
   private Supplier<Repository> loadBy(String namespace, String name) {
