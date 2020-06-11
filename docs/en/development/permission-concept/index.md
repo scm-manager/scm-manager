@@ -17,7 +17,7 @@ This documents describes a concept for a fine-grained permission managing via th
 
 ### Status Quo SCMv1
 
-SCMMv1 's permissions](../Permissions.md) are only related to Repositories:
+SCMMv1 's permissions are only related to Repositories:
 
 * Users can either have the Permission READ, WRITER or OWNER
 * globally (for all repositories) or
