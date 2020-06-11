@@ -9,7 +9,7 @@ If you want to share your plugin with SCM-Manager users, you can publish it to t
 * Develop your plugin as described in [Create a plugin](../create/)
 * Fork the [Plugin Center Repository](https://github.com/scm-manager/plugin-center)
 * Create a folder with the name of your plugin under the `content/plugins` directory
-* Create a `plugin.yml` in taht folder, which describes your plugin e.g.:
+* Create a `plugin.yml` in this folder, which describes your plugin e.g.:
 
 ```yaml
 name: scm-cas-plugin
