@@ -1,8 +1,20 @@
 ---
-title: SCM-Server and Apache mod_proxy
+title: Reverse Proxy
+subtitle: How to use SCM-Manager with common reverse proxies
+displayToc: true
 ---
 
-### Apache configuration
+TODO reverse proxies in general send X-Forwarded headers ...
+
+### nginx
+
+TODO ...
+
+### Apache
+
+<!--
+TODO: does this set X-Forwarded Headers?
+-->
 
 ```apache
 ProxyPass /scm http://localhost:8080/scm
@@ -16,7 +28,15 @@ ProxyPassReverse  /scm  http://servername:8080/scm
 - **Warning**: Setting ProxyPassReverseCookiePath would most likely cause problems with session handling!
 - **Note**: If you encounter timeout problems, please have a look at [Apache Module mod_proxy#Workers](http://httpd.apache.org/docs/current/mod/mod_proxy.html#workers).
 
+### HA-Proxy
+
+TODO ...
+
 ### SCM-Server conf/server-config.xml
+
+<!--
+TODO: do we need it
+-->
 
 NOTE: This file is found in the installation directory, not the user\'s
 home directory.
@@ -43,15 +63,3 @@ Example:
   </Arg>
 </Call>
 ```
-
-### SCM-Manager Configuration version 1.5 and above
-
-1. Login as an admin user and select \"General\"
-2. Set the \"Base Url\" to the URL of the Apache (**warning:** don\'t check \"Force Base Url\")
-3. Save the new new settings
-
-### SCM-Manager Configuration before version 1.5
-
-1. Login as an admin user and select \"General\"
-2. Set the Serverport to the apache port (normally port 80)
-3. Save the new settings

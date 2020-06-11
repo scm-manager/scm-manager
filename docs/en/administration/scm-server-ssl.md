@@ -2,6 +2,11 @@
 title: SCM-Server SSL
 ---
 
+<!--
+TODO: Update 
+Node: https://ssl-config.mozilla.org/#server=jetty&version=9.4.28&config=intermediate&guideline=5.4
+-->
+
 **Note**: This document describes a ssl configuration with a
         self-signed certificate
 

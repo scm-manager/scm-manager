@@ -1,4 +1,7 @@
-# ui-extensions
+---
+title: UI-Extensions
+subtitle: How to extend the SCM-Manager UI with plugins
+---
 
 UI-Extensions contains the building blocks for the [SCM-Manager](https://scm-manager.org) ui extension system.
 

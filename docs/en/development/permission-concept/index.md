@@ -1,5 +1,6 @@
 ---
 title: Permission Concept
+subtitle: Fine-grained permission for SCM-Manager v2
 ---
 
 This documents describes a concept for a fine-grained permission managing via the SCMMv2 UI.
@@ -16,7 +17,7 @@ This documents describes a concept for a fine-grained permission managing via th
 
 ### Status Quo SCMv1
 
-[SCMMv1 's permissions](../Permissions.md) are only related to Repositories:
+SCMMv1 's permissions](../Permissions.md) are only related to Repositories:
 
 * Users can either have the Permission READ, WRITER or OWNER
 * globally (for all repositories) or
@@ -121,11 +122,11 @@ In order to fulfill the requirements, this concept describes
 The global permission component can be reached from **either user and groups** components navigations. The following mockup 
 shows this in the user component:
 
-![Permissions mockup user](docs/en/resources/permissions-mockup-user.jpg)
+![Permissions mockup user](assets/permissions-mockup-user.jpg)
 
 The layout of the permission component UI could look like this:
 
-![Permissions mockup global permissions](docs/en/resources/permissions-mockup-global-permissions.jpg)
+![Permissions mockup global permissions](assets/permissions-mockup-global-permissions.jpg)
 
 The UI 
 * queries all available global permissions from the REST API (shiro strings),
@@ -141,7 +142,7 @@ permissions (see `PermissionType`).
 
 The UI is extended like so:
 
-![Permissions mockup repository permissions](docs/en/resources/permissions-mockup-repository-permissions.jpg)
+![Permissions mockup repository permissions](assets/permissions-mockup-repository-permissions.jpg)
 
 #### Existing repository dialog
 

@@ -12,4 +12,4 @@ Use this as a kind of a checklist whenever you develop something in the UI of SC
 | ☐ | add help icons to input components |
 | ☐ | not use colors directly, but refer to `is-primary` or `is-warning` |
 | ☐ | make sure your view works on mobile devices |
-| ☐ | document [extension points in wiki](docs/en/extension-points.mdoints.md) |
+| ☐ | document [extension points](../plugins/extension-points) |

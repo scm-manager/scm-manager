@@ -2,7 +2,7 @@
 title: Migrate a v1 plugin
 ---
 
-Before starting, make sure to read the [Plugin Development](docs/en/plugin-development.mdpment.md).
+Before starting, make sure to read the [Plugin Development](../plugin-development).
 
 To migrate an existing SCM-Manager 1.x Plugin, you have to do the following steps:
 
@@ -119,7 +119,7 @@ diff -r a988f4cfb7ab src/main/resources/META-INF/scm/plugin.xml
 ### Java sources (src/main/java)
 
 * try to compile the sources: `mvn compile`
-* fix problems (See [API changes](api-changes.md))
+* fix problems (TODO more help here)
 * Remove  XML accept headers from REST Resource classes -> SCMMv2 supports JSON only
 * Migrate REST Resources (e.g. `v2`, add to Index Resource, Update Links) - See core plugins Git, Hg, Svn, e.g. [`GitConfigResource`](https://github.com/scm-manager/scm-manager/blob/develop/scm-plugins/scm-git-plugin/src/main/java/sonia/scm/api/v2/resources/GitConfigResource.java)
 
@@ -139,7 +139,7 @@ diff -r a988f4cfb7ab src/main/resources/META-INF/scm/plugin.xml
     "postinstall" : "ui-plugins postinstall"
   },
   "dependencies": {
-    "@scm-manager/ui-plugins" : "2.0.0-rc7"
+    "@scm-manager/ui-plugins" : "2.0.0"
   }
 }
 ```
@@ -164,10 +164,10 @@ Some more hints:
 
  * For Configuration UIs use [`ConfigurationBinder`](https://github.com/scm-manager/scm-manager/blob/develop/scm-ui/ui-components/src/config/ConfigurationBinder.tsx) - See core plugins Git, Hg, Svn, e.g. [scm-git-plugin/index.ts](https://github.com/scm-manager/scm-manager/blob/develop/scm-plugins/scm-git-plugin/src/main/js/index.ts).  
   Note that `readOnly` property checks if update link is returned by REST resource
- * Don't forget [i18n for Plugins](docs/en/i18n-for-plugins.mdugins.md)
+ * Don't forget [i18n for Plugins](../i18n-for-plugins)
 
 # Further reading
 
-* [scm-manager/ui-extensions README](scm-ui/ui-extensions/README.md) - Extension Points within SCM-Manager
+* [UI Extensions](../../ui-extensions) - Extend the SCM-Manager UI
 * [scm-manager/ui-components](https://github.com/scm-manager/scm-manager/tree/develop/scm-ui/ui-components) - Reusable UI components within SCM-Manager
 * [smp-maven-plugin](https://github.com/scm-manager/smp-maven-plugin) - Plugin that facilitates efficient plugin development for SCMM
