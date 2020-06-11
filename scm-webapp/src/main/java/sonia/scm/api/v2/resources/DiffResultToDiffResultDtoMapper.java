@@ -27,6 +27,7 @@ package sonia.scm.api.v2.resources;
 import com.github.sdorra.spotter.ContentTypes;
 import com.github.sdorra.spotter.Language;
 import com.google.inject.Inject;
+import de.otto.edison.hal.Links;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffFile;
 import sonia.scm.repository.api.DiffLine;
@@ -38,6 +39,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 
+import static de.otto.edison.hal.Link.linkBuilder;
 import static de.otto.edison.hal.Links.linkingTo;
 
 /**
@@ -54,26 +56,30 @@ class DiffResultToDiffResultDtoMapper {
 
   public DiffResultDto mapForIncoming(Repository repository, DiffResult result, String source, String target) {
     DiffResultDto dto = new DiffResultDto(linkingTo().self(resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName(), source, target)).build());
-    setFiles(result, dto);
+    setFiles(result, dto, repository, source);
     return dto;
   }
 
   public DiffResultDto mapForRevision(Repository repository, DiffResult result, String revision) {
     DiffResultDto dto = new DiffResultDto(linkingTo().self(resourceLinks.diff().parsed(repository.getNamespace(), repository.getName(), revision)).build());
-    setFiles(result, dto);
+    setFiles(result, dto, repository, revision);
     return dto;
   }
 
-  private void setFiles(DiffResult result, DiffResultDto dto) {
+  private void setFiles(DiffResult result, DiffResultDto dto, Repository repository, String revision) {
     List<DiffResultDto.FileDto> files = new ArrayList<>();
     for (DiffFile file : result) {
-      files.add(mapFile(file));
+      files.add(mapFile(file, repository, revision));
     }
     dto.setFiles(files);
   }
 
-  private DiffResultDto.FileDto mapFile(DiffFile file) {
-    DiffResultDto.FileDto dto = new DiffResultDto.FileDto();
+  private DiffResultDto.FileDto mapFile(DiffFile file, Repository repository, String revision) {
+    Links.Builder links = linkingTo();
+    if (file.iterator().hasNext()) {
+      links.single(linkBuilder("lines", resourceLinks.source().content(repository.getNamespace(), repository.getName(), revision, file.getNewPath()) + "?start={start}&end={end}").build());
+    }
+    DiffResultDto.FileDto dto = new DiffResultDto.FileDto(links.build());
     // ???
     dto.setOldEndingNewLine(true);
     dto.setNewEndingNewLine(true);

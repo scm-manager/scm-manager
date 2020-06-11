@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -43,7 +43,11 @@ public class DiffResultDto extends HalRepresentation {
 
   @Data
   @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-  public static class FileDto {
+  public static class FileDto extends HalRepresentation {
+
+    public FileDto(Links links) {
+      super(links);
+    }
 
     private String oldPath;
     private String newPath;

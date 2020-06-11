@@ -24,6 +24,7 @@
 
 import { ReactNode } from "react";
 import { DefaultCollapsed } from "./defaultCollapsed";
+import { Links } from "@scm-manager/ui-types";
 
 // We place the types here and not in @scm-manager/ui-types,
 // because they represent not a real scm-manager related type.
@@ -33,7 +34,7 @@ import { DefaultCollapsed } from "./defaultCollapsed";
 export type FileChangeType = "add" | "modify" | "delete" | "copy" | "rename";
 
 export type File = {
-  hunks: Hunk[];
+  hunks?: Hunk[];
   newEndingNewLine: boolean;
   newMode?: string;
   newPath: string;
@@ -46,11 +47,18 @@ export type File = {
   language?: string;
   // TODO does this property exists?
   isBinary?: boolean;
+  _links?: Links;
 };
 
 export type Hunk = {
   changes: Change[];
   content: string;
+  oldStart?: number;
+  newStart?: number;
+  oldLines?: number;
+  newLines?: number;
+  fullyExpanded?: boolean;
+  expansion?: boolean;
 };
 
 export type ChangeType = "insert" | "delete" | "normal" | "conflict";
@@ -103,4 +111,5 @@ export type DiffObjectProps = {
   annotationFactory?: AnnotationFactory;
   markConflicts?: boolean;
   defaultCollapse?: DefaultCollapsed;
+  hunkClass?: (hunk: Hunk) => string;
 };
