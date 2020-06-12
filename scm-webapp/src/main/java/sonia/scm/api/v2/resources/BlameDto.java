@@ -33,7 +33,7 @@ import java.util.List;
 @Data
 public class BlameDto extends HalRepresentation {
 
-  private List<BlameLineDto> blameLines;
+  private List<BlameLineDto> lines;
 
   public BlameDto(Links links) {
     super(links);

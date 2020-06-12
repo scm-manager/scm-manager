@@ -24,20 +24,27 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Button, ButtonAddons } from "@scm-manager/ui-components";
+import { SourceViewSelection } from "../../containers/Content";
 
 type Props = WithTranslation & {
   className?: string;
-  historyIsSelected: boolean;
-  showHistory: (p: boolean) => void;
+  selected: SourceViewSelection;
+  showSources: () => void;
+  showHistory: () => void;
+  showAnnotations: () => void;
 };
 
 class FileButtonAddons extends React.Component<Props> {
   showHistory = () => {
-    this.props.showHistory(true);
+    this.props.showHistory();
   };
 
   showSources = () => {
-    this.props.showHistory(false);
+    this.props.showSources();
+  };
+
+  showAnnotations = () => {
+    this.props.showAnnotations();
   };
 
   color = (selected: boolean) => {
@@ -45,19 +52,26 @@ class FileButtonAddons extends React.Component<Props> {
   };
 
   render() {
-    const { className, t, historyIsSelected } = this.props;
+    const { className, t, selected, showSources, showHistory, showAnnotations } = this.props;
 
     return (
       <ButtonAddons className={className}>
         <div title={t("sources.content.sourcesButton")}>
-          <Button action={this.showSources} color={this.color(!historyIsSelected)}>
+          <Button action={showSources} color={this.color(selected === "source")}>
             <span className="icon">
               <i className="fas fa-code" />
             </span>
           </Button>
         </div>
+        <div title={t("sources.content.annotateButton")}>
+          <Button action={showAnnotations} color={this.color(selected === "annotations")}>
+            <span className="icon">
+              <i className="fas fa-user-clock" />
+            </span>
+          </Button>
+        </div>
         <div title={t("sources.content.historyButton")}>
-          <Button action={this.showHistory} color={this.color(historyIsSelected)}>
+          <Button action={showHistory} color={this.color(selected === "history")}>
             <span className="icon">
               <i className="fas fa-history" />
             </span>
