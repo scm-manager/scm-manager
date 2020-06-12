@@ -27,8 +27,6 @@ import { Person, Repository } from "@scm-manager/ui-types";
 
 // @ts-ignore
 import { LightAsync as ReactSyntaxHighlighter, createElement } from "react-syntax-highlighter";
-
-// @ts-ignore
 import { arduinoLight } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import styled from "styled-components";
 import DateShort from "./DateShort";
@@ -116,7 +114,7 @@ const Popover = styled.div`
     height: 0;
     width: 0;
     top: 100%;
-    /*left: 50%;*/
+    left: 5.5em;
     border-color: transparent;
     border-bottom-color: white;
     border-left-color: white;
@@ -163,11 +161,9 @@ const shortRevision = (revision: string) => {
 };
 
 const Annotate: FC<Props> = ({ source, repository }) => {
-  // @ts-ignore
-  const defaultRenderer = ({ rows, stylesheet, useInlineStyles }) => {
+  const defaultRenderer = ({ rows, stylesheet, useInlineStyles }: any) => {
     let lastRevision = "";
-    // @ts-ignore
-    return rows.map((node, i) => {
+    return rows.map((node: any, i: number) => {
       const line = createElement({
         node,
         stylesheet,
