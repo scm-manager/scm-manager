@@ -23,15 +23,13 @@
  */
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
-import { formatDistance, format, parseISO, Locale } from "date-fns";
+import { formatDistance, format, Locale } from "date-fns";
 import { enUS, de, es } from "date-fns/locale";
-import styled from "styled-components";
+import { DateInput, DateElement, FullDateFormat, toDate } from "./dates";
 
 type LocaleMap = {
   [key: string]: Locale;
 };
-
-type DateInput = Date | string;
 
 export const supportedLocales: LocaleMap = {
   enUS,
@@ -58,11 +56,6 @@ type Options = {
   locale: Locale;
   timeZone?: string;
 };
-
-const DateElement = styled.time`
-  border-bottom: 1px dotted rgba(219, 219, 219);
-  cursor: help;
-`;
 
 export const chooseLocale = (language: string, languages?: string[]) => {
   for (const lng of languages || []) {
@@ -98,17 +91,10 @@ class DateFromNow extends React.Component<Props> {
     return options;
   };
 
-  toDate = (value: DateInput): Date => {
-    if (value instanceof Date) {
-      return value;
-    }
-    return parseISO(value);
-  };
-
   getBaseDate = () => {
     const { baseDate } = this.props;
     if (baseDate) {
-      return this.toDate(baseDate);
+      return toDate(baseDate);
     }
     return new Date();
   };
@@ -116,10 +102,10 @@ class DateFromNow extends React.Component<Props> {
   render() {
     const { date } = this.props;
     if (date) {
-      const isoDate = this.toDate(date);
+      const isoDate = toDate(date);
       const options = this.createOptions();
       const distance = formatDistance(isoDate, this.getBaseDate(), options);
-      const formatted = format(isoDate, "yyyy-MM-dd HH:mm:ss", options);
+      const formatted = format(isoDate, FullDateFormat, options);
       return <DateElement title={formatted}>{distance}</DateElement>;
     }
     return null;
