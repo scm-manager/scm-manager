@@ -87,7 +87,7 @@ const SingleContributor: FC<PersonProps> = ({ person, displayTextOnly }) => {
 };
 
 type PersonsProps = {
-  persons: Person[];
+  persons: ReadonlyArray<Person>;
   label: string;
   displayTextOnly?: boolean;
 };
@@ -128,7 +128,7 @@ const Contributors: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => 
   }
 };
 
-const emptyListOfContributors: Person[] = [];
+const emptyListOfContributors: ReadonlyArray<Person> = [];
 
 const ChangesetAuthor: FC<Props> = ({ changeset }) => {
   const binder = useBinder();
@@ -168,7 +168,7 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
   // extensions
   const extensions = binder.getExtensions("changesets.author.suffix", { changeset });
   if (extensions) {
-    coAuthors.push(...extensions);
+    authorLine.push(...extensions);
   }
 
   return <CommaSeparatedList>{authorLine}</CommaSeparatedList>;
