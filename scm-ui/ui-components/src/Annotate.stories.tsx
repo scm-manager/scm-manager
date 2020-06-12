@@ -40,7 +40,7 @@ const commitCreateNewApp = {
     mail: "arthur.dent@hitchhiker.com"
   },
   description: "create new app",
-  when: new Date()
+  when: new Date("2020-04-09T13:07:42Z")
 };
 
 const commitFixedMissingImport = {
@@ -50,7 +50,7 @@ const commitFixedMissingImport = {
     mail: "trillian@hitchhiker.com"
   },
   description: "fixed missing import",
-  when: new Date()
+  when: new Date("2020-05-10T09:18:42Z")
 };
 
 const commitImplementMain = {
@@ -60,7 +60,7 @@ const commitImplementMain = {
     mail: "ford.prefect@hitchhiker.com"
   },
   description: "implemented main function",
-  when: new Date()
+  when: new Date("2020-04-12T16:29:42Z")
 };
 
 const source: AnnotatedSource = {
