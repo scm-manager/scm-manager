@@ -53,12 +53,29 @@ type Props = {
   source: AnnotatedSource;
 };
 
-const Author = styled.a`
+type LineElementProps = {
+  newAnnotation: boolean;
+};
+
+const Author = styled.a<LineElementProps>`
   width: 8em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   float: left;
+
+  visibility: ${({ newAnnotation }) => (newAnnotation ? "visible" : "hidden")};
+`;
+
+const When = styled.span<LineElementProps>`
+  width: 6.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  float: left;
+
+  margin: 0 0.5em;
+  visibility: ${({ newAnnotation }) => (newAnnotation ? "visible" : "hidden")};
 `;
 
 const LineNumber = styled.span`
@@ -76,19 +93,10 @@ const LineNumber = styled.span`
   padding: 0 0.5em;
 `;
 
-const When = styled.span`
-  width: 90px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  float: left;
-
-  margin: 0 0.5em;
-`;
-
 const Annotate: FC<Props> = ({ source }) => {
   // @ts-ignore
   const defaultRenderer = ({ rows, stylesheet, useInlineStyles }) => {
+    let lastRevision = "";
     // @ts-ignore
     return rows.map((node, i) => {
       const line = createElement({
@@ -100,10 +108,12 @@ const Annotate: FC<Props> = ({ source }) => {
 
       if (i + 1 < rows.length) {
         const annotation = source.lines[i];
+        const newAnnotation = annotation.revision !== lastRevision;
+        lastRevision = annotation.revision;
         return (
           <span>
-            <Author>{annotation.author.name}</Author>{" "}
-            <When>
+            <Author newAnnotation={newAnnotation}>{annotation.author.name}</Author>{" "}
+            <When newAnnotation={newAnnotation}>
               <DateShort value={annotation.when} />
             </When>{" "}
             <LineNumber>{i + 1}</LineNumber> {line}
