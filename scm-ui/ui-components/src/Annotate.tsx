@@ -23,7 +23,7 @@
  */
 
 import React, { FC } from "react";
-import { Person } from "@scm-manager/ui-types";
+import { Person, Repository } from "@scm-manager/ui-types";
 
 // @ts-ignore
 import { LightAsync as ReactSyntaxHighlighter, createElement } from "react-syntax-highlighter";
@@ -32,6 +32,9 @@ import { LightAsync as ReactSyntaxHighlighter, createElement } from "react-synta
 import { arduinoLight } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import styled from "styled-components";
 import DateShort from "./DateShort";
+import { SingleContributor } from "./repos/changesets";
+import DateFromNow from "./DateFromNow";
+import { Link } from "react-router-dom";
 
 // TODO move types to ui-types
 
@@ -51,13 +54,14 @@ export type AnnotatedLine = {
 
 type Props = {
   source: AnnotatedSource;
+  repository: Repository;
 };
 
 type LineElementProps = {
   newAnnotation: boolean;
 };
 
-const Author = styled.a<LineElementProps>`
+const Author = styled.span<LineElementProps>`
   width: 8em;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -93,7 +97,72 @@ const LineNumber = styled.span`
   padding: 0 0.5em;
 `;
 
-const Annotate: FC<Props> = ({ source }) => {
+const Popover = styled.div`
+  position: absolute;
+  left: -16.5em;
+  bottom: 0.1em;
+
+  z-index: 100;
+  visibility: hidden;
+  overflow: visible;
+
+  width: 35em;
+
+  &:before {
+    position: absolute;
+    content: "";
+    border-style: solid;
+    pointer-events: none;
+    height: 0;
+    width: 0;
+    top: 100%;
+    /*left: 50%;*/
+    border-color: transparent;
+    border-bottom-color: white;
+    border-left-color: white;
+    border-width: 0.4rem;
+    margin-left: -0.4rem;
+    margin-top: -0.4rem;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+    box-shadow: -1px 1px 2px rgba(10, 10, 10, 0.2);
+    transform: rotate(-45deg);
+  }
+`;
+
+const Line = styled.span`
+  position: relative;
+  z-index: 10;
+
+  &:hover .changeset-details {
+    visibility: visible !important;
+  }
+`;
+
+const PreTag = styled.pre`
+  overflow-x: visible !important;
+`;
+
+const SmallHr = styled.hr`
+  margin: 0.5em 0;
+`;
+
+const PopoverHeading = styled.div`
+  height: 1.5em;
+`;
+
+const PopoverDescription = styled.p`
+  margin-top: 0.5em;
+`;
+
+const shortRevision = (revision: string) => {
+  if (revision.length > 7) {
+    return revision.substring(0, 7);
+  }
+  return revision;
+};
+
+const Annotate: FC<Props> = ({ source, repository }) => {
   // @ts-ignore
   const defaultRenderer = ({ rows, stylesheet, useInlineStyles }) => {
     let lastRevision = "";
@@ -111,13 +180,26 @@ const Annotate: FC<Props> = ({ source }) => {
         const newAnnotation = annotation.revision !== lastRevision;
         lastRevision = annotation.revision;
         return (
-          <span>
-            <Author newAnnotation={newAnnotation}>{annotation.author.name}</Author>{" "}
+          <Line>
+            <Popover className="box changeset-details is-family-primary">
+              <PopoverHeading className="is-clearfix">
+                <SingleContributor className="is-pulled-left" person={annotation.author} />
+                <DateFromNow className="is-pulled-right" date={annotation.when} />
+              </PopoverHeading>
+              <SmallHr />
+              <p className="has-text-info">Changeset {shortRevision(annotation.revision)}</p>
+              <PopoverDescription className="content">{annotation.description}</PopoverDescription>
+            </Popover>
+            <Author className="trigger" newAnnotation={newAnnotation}>
+              <Link to={`/repo/${repository.namespace}/${repository.name}/code/changeset/${annotation.revision}`}>
+                {annotation.author.name}
+              </Link>
+            </Author>{" "}
             <When newAnnotation={newAnnotation}>
               <DateShort value={annotation.when} />
             </When>{" "}
             <LineNumber>{i + 1}</LineNumber> {line}
-          </span>
+          </Line>
         );
       }
 
@@ -136,6 +218,7 @@ const Annotate: FC<Props> = ({ source }) => {
       language={source.language}
       style={arduinoLight}
       renderer={defaultRenderer}
+      PreTag={PreTag}
     >
       {code}
     </ReactSyntaxHighlighter>

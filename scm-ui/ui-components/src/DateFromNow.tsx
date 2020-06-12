@@ -49,6 +49,7 @@ type Props = WithTranslation & {
    * ci server.
    */
   baseDate?: DateInput;
+  className?: string;
 };
 
 type Options = {
@@ -100,13 +101,17 @@ class DateFromNow extends React.Component<Props> {
   };
 
   render() {
-    const { date } = this.props;
+    const { date, className } = this.props;
     if (date) {
       const isoDate = toDate(date);
       const options = this.createOptions();
       const distance = formatDistance(isoDate, this.getBaseDate(), options);
       const formatted = format(isoDate, FullDateFormat, options);
-      return <DateElement title={formatted}>{distance}</DateElement>;
+      return (
+        <DateElement className={className} title={formatted}>
+          {distance}
+        </DateElement>
+      );
     }
     return null;
   }

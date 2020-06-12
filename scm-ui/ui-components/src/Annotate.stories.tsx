@@ -26,6 +26,8 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import styled from "styled-components";
 import Annotate, { AnnotatedSource } from "./Annotate";
+import { MemoryRouter } from "react-router-dom";
+import repository from "./__resources__/repository";
 
 const Wrapper = styled.div`
   margin: 2rem;
@@ -108,5 +110,6 @@ const source: AnnotatedSource = {
 };
 
 storiesOf("Annotate", module)
-  .addDecorator(storyFn => <Wrapper className="box box-link-shadow">{storyFn()}</Wrapper>)
-  .add("Default", () => <Annotate source={source} />);
+  .addDecorator(storyFn => <MemoryRouter initialEntries={["/"]}>{storyFn()}</MemoryRouter>)
+  .addDecorator(storyFn => <Wrapper className="box">{storyFn()}</Wrapper>)
+  .add("Default", () => <Annotate source={source} repository={repository} />);
