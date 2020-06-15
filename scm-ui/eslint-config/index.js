@@ -27,7 +27,7 @@ module.exports = {
   rules: {
     "prettier/prettier": "warn",
     semi: ["error", "always"],
-    quotes: ["error", "double"],
+    quotes: ["error", "double", "avoid-escape"],
     "jsx-a11y/href-no-hash": [0],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/ban-ts-ignore": "warn",
