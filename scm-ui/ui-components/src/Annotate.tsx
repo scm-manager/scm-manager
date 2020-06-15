@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC, useRef, useState, MouseEvent, useLayoutEffect } from "react";
+import React, { FC, useRef, useState, MouseEvent, useLayoutEffect, useReducer, Dispatch } from "react";
 import { Person, Repository } from "@scm-manager/ui-types";
 
 // @ts-ignore
@@ -32,6 +32,7 @@ import styled from "styled-components";
 import DateShort from "./DateShort";
 import { SingleContributor } from "./repos/changesets";
 import DateFromNow from "./DateFromNow";
+import { Link } from "react-router-dom";
 
 // TODO move types to ui-types
 
@@ -98,7 +99,8 @@ const PopoverContainer = styled.div`
   position: absolute;
   left: 2.25em;
   z-index: 100;
-  width: 35em;
+  width: 30em;
+  display: block;
 
   &:before {
     position: absolute;
@@ -156,16 +158,17 @@ type LineProps = {
   annotation: AnnotatedLine;
   showAnnotation: boolean;
   nr: number;
-  repository: Repository;
-  setPopOver: (popover: React.ReactNode) => void;
+  dispatch: Dispatch<Action>;
 };
 
 type PopoverProps = {
   annotation: AnnotatedLine;
   offsetTop?: number;
+  dispatch: Dispatch<Action>;
+  repository: Repository;
 };
 
-const Popover: FC<PopoverProps> = ({ annotation, offsetTop }) => {
+const Popover: FC<PopoverProps> = ({ annotation, offsetTop, repository, dispatch }) => {
   const [height, setHeight] = useState(125);
   const ref = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -174,15 +177,38 @@ const Popover: FC<PopoverProps> = ({ annotation, offsetTop }) => {
     }
   }, [ref]);
 
+  const onMouseEnter = (e: MouseEvent) => {
+    dispatch({
+      type: "enter-popover"
+    });
+  };
+
+  const OnMouseLeave = (e: MouseEvent) => {
+    dispatch({
+      type: "leave-popover"
+    });
+  };
+
   const top = (offsetTop || 0) - height - 5;
   return (
-    <PopoverContainer ref={ref} className="box changeset-details is-family-primary" style={{ top: `${top}px` }}>
+    <PopoverContainer
+      ref={ref}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={OnMouseLeave}
+      className="box changeset-details is-family-primary"
+      style={{ top: `${top}px` }}
+    >
       <PopoverHeading className="is-clearfix">
         <SingleContributor className="is-pulled-left" person={annotation.author} />
         <DateFromNow className="is-pulled-right" date={annotation.when} />
       </PopoverHeading>
       <SmallHr />
-      <p className="has-text-info">Changeset {shortRevision(annotation.revision)}</p>
+      <p>
+        Changeset{" "}
+        <Link to={`/repo/${repository.namespace}/${repository.name}/code/changeset/${annotation.revision}`}>
+          {shortRevision(annotation.revision)}
+        </Link>
+      </p>
       <PopoverDescription className="content">{annotation.description}</PopoverDescription>
     </PopoverContainer>
   );
@@ -196,18 +222,30 @@ const EmptyMetadata = styled(LineElement)`
   width: 16.7em;
 `;
 
-const AnnotateLine: FC<LineProps> = ({ annotation, showAnnotation, setPopOver, nr, children }) => {
+const dispatchDeferred = (dispatch: Dispatch<Action>, action: Action) => {
+  setTimeout(() => dispatch(action), 250);
+};
+
+const AnnotateLine: FC<LineProps> = ({ annotation, showAnnotation, dispatch, nr, children }) => {
   const link = useRef<HTMLDivElement>(null);
 
   const onMouseEnter = (e: MouseEvent) => {
     if (showAnnotation) {
-      setPopOver(<Popover annotation={annotation} offsetTop={link.current?.offsetTop} />);
+      dispatchDeferred(dispatch, {
+        annotation,
+        line: nr,
+        offset: link.current!.offsetTop,
+        type: "enter-line"
+      });
     }
   };
 
   const OnMouseLeave = (e: MouseEvent) => {
     if (showAnnotation) {
-      setPopOver(null);
+      dispatchDeferred(dispatch, {
+        line: nr,
+        type: "leave-line"
+      });
     }
   };
 
@@ -233,8 +271,84 @@ const AnnotateLine: FC<LineProps> = ({ annotation, showAnnotation, setPopOver, n
   );
 };
 
+type State = {
+  annotation?: AnnotatedLine;
+  offset?: number;
+  line?: number;
+  onPopover: boolean;
+  onLine: boolean;
+};
+
+type EnterLine = {
+  annotation: AnnotatedLine;
+  offset: number;
+  line: number;
+  type: "enter-line";
+};
+
+type LeaveLine = {
+  line: number;
+  type: "leave-line";
+};
+
+type EnterPopover = {
+  type: "enter-popover";
+};
+
+type LeavePopover = {
+  type: "leave-popover";
+};
+
+const initialState = {
+  onPopover: false,
+  onLine: false
+};
+
+type Action = EnterLine | LeaveLine | EnterPopover | LeavePopover;
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "enter-line": {
+      if (state.onPopover) {
+        return state;
+      }
+      return {
+        annotation: action.annotation,
+        offset: action.offset,
+        line: action.line,
+        onLine: true,
+        onPopover: false
+      };
+    }
+    case "leave-line": {
+      if (state.onPopover) {
+        return {
+          ...state,
+          onLine: false
+        };
+      }
+      return initialState;
+    }
+    case "enter-popover": {
+      return {
+        ...state,
+        onPopover: true
+      };
+    }
+    case "leave-popover": {
+      if (state.onLine) {
+        return {
+          ...state,
+          onPopover: false
+        };
+      }
+      return initialState;
+    }
+  }
+};
+
 const Annotate: FC<Props> = ({ source, repository }) => {
-  const [popOver, setPopOver] = useState<React.ReactNode | null>(null);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const defaultRenderer = ({ rows, stylesheet, useInlineStyles }: any) => {
     let lastRevision = "";
@@ -251,13 +365,7 @@ const Annotate: FC<Props> = ({ source, repository }) => {
         const newAnnotation = annotation.revision !== lastRevision;
         lastRevision = annotation.revision;
         return (
-          <AnnotateLine
-            setPopOver={setPopOver}
-            annotation={annotation}
-            showAnnotation={newAnnotation}
-            nr={i + 1}
-            repository={repository}
-          >
+          <AnnotateLine dispatch={dispatch} annotation={annotation} showAnnotation={newAnnotation} nr={i + 1}>
             {line}
           </AnnotateLine>
         );
@@ -267,6 +375,13 @@ const Annotate: FC<Props> = ({ source, repository }) => {
     });
   };
 
+  let popover = null;
+  if ((state.onPopover || state.onLine) && state.annotation) {
+    popover = (
+      <Popover annotation={state.annotation} dispatch={dispatch} offsetTop={state.offset} repository={repository} />
+    );
+  }
+
   const code = source.lines.reduce((content, line) => {
     content += line.code + "\n";
     return content;
@@ -274,7 +389,7 @@ const Annotate: FC<Props> = ({ source, repository }) => {
 
   return (
     <div style={{ position: "relative" }}>
-      {popOver}
+      {popover}
       <ReactSyntaxHighlighter
         showLineNumbers={false}
         language={source.language}
