@@ -26,7 +26,7 @@ import { Trans, useTranslation, WithTranslation, withTranslation } from "react-i
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Changeset, Repository, Tag } from "@scm-manager/ui-types";
+import { Changeset, Repository, Tag, Link } from "@scm-manager/ui-types";
 import {
   AvatarImage,
   AvatarWrapper,
@@ -41,6 +41,7 @@ import {
   Icon
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
+import { Link as ReactLink } from "react-router-dom";
 
 type Props = WithTranslation & {
   changeset: Changeset;
@@ -49,6 +50,11 @@ type Props = WithTranslation & {
 
 type State = {
   collapsed: boolean;
+};
+
+type Parent = {
+  id: string;
+  _links: Link[];
 };
 
 const RightMarginP = styled.p`
@@ -102,6 +108,18 @@ const ContributorToggleLine = styled.p`
   margin-bottom: 0.5rem !important;
 `;
 
+const ChangesetSummary = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+const SeparatedParents = styled.div`
+  a + a:before {
+    content: ",\\00A0";
+    color: #4a4a4a;
+  }
+`;
+
 const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
   const [t] = useTranslation("repos");
   const [open, setOpen] = useState(false);
@@ -148,6 +166,11 @@ class ChangesetDetails extends React.Component<Props, State> {
     const description = changesets.parseDescription(changeset.description);
     const id = <ChangesetId repository={repository} changeset={changeset} link={false} />;
     const date = <DateFromNow date={changeset.date} />;
+    const parents = changeset._embedded.parents.map((parent: Parent) => (
+      <ReactLink title={parent.id} to={parent.id}>
+        {parent.id.substring(0, 7)}
+      </ReactLink>
+    ));
 
     return (
       <>
@@ -172,9 +195,17 @@ class ChangesetDetails extends React.Component<Props, State> {
             </AvatarWrapper>
             <div className="media-content is-ellipsis-overflow">
               <Contributors changeset={changeset} />
-              <p>
-                <Trans i18nKey="repos:changeset.summary" components={[id, date]} />
-              </p>
+              <ChangesetSummary>
+                <p>
+                  <Trans i18nKey="repos:changeset.summary" components={[id, date]} />
+                </p>
+                {parents?.length > 0 && (
+                  <SeparatedParents>
+                    {t("changeset.parents.label", { count: parents?.length }) + ": "}
+                    {parents}
+                  </SeparatedParents>
+                )}
+              </ChangesetSummary>
             </div>
             <div className="media-right">{this.renderTags()}</div>
           </article>
