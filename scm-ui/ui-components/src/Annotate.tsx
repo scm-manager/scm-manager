@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
+import React, { FC, useRef, useState, MouseEvent, useLayoutEffect } from "react";
 import { Person, Repository } from "@scm-manager/ui-types";
 
 // @ts-ignore
@@ -32,7 +32,6 @@ import styled from "styled-components";
 import DateShort from "./DateShort";
 import { SingleContributor } from "./repos/changesets";
 import DateFromNow from "./DateFromNow";
-import { Link } from "react-router-dom";
 
 // TODO move types to ui-types
 
@@ -55,32 +54,33 @@ type Props = {
   repository: Repository;
 };
 
-type LineElementProps = {
-  newAnnotation: boolean;
-};
+const LineElement = styled.div`
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  vertical-align: top;
+`;
 
-const Author = styled.span<LineElementProps>`
+const Author = styled(LineElement)`
   width: 8em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  float: left;
-
-  visibility: ${({ newAnnotation }) => (newAnnotation ? "visible" : "hidden")};
 `;
 
-const When = styled.span<LineElementProps>`
+const When = styled(LineElement)`
+  display: inline-block;
+
   width: 6.5em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  float: left;
 
   margin: 0 0.5em;
-  visibility: ${({ newAnnotation }) => (newAnnotation ? "visible" : "hidden")};
 `;
 
-const LineNumber = styled.span`
+const LineNumber = styled(LineElement)`
   width: 3em;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -90,20 +90,14 @@ const LineNumber = styled.span`
   border-right: 1px solid lightgrey;
 
   text-align: right;
-  float: left;
 
   padding: 0 0.5em;
 `;
 
-const Popover = styled.div`
+const PopoverContainer = styled.div`
   position: absolute;
-  left: -16.5em;
-  bottom: 0.1em;
-
+  left: 2.25em;
   z-index: 100;
-  visibility: hidden;
-  overflow: visible;
-
   width: 35em;
 
   &:before {
@@ -128,17 +122,15 @@ const Popover = styled.div`
   }
 `;
 
-const Line = styled.span`
-  position: relative;
-  z-index: 10;
-
-  &:hover .changeset-details {
-    visibility: visible !important;
-  }
+const Line = styled.div`
+  margin: 0;
+  padding: 0;
+  height: 1.5em;
+  vertical-align: top;
 `;
 
 const PreTag = styled.pre`
-  overflow-x: visible !important;
+  position: relative;
 `;
 
 const SmallHr = styled.hr`
@@ -160,7 +152,90 @@ const shortRevision = (revision: string) => {
   return revision;
 };
 
+type LineProps = {
+  annotation: AnnotatedLine;
+  showAnnotation: boolean;
+  nr: number;
+  repository: Repository;
+  setPopOver: (popover: React.ReactNode) => void;
+};
+
+type PopoverProps = {
+  annotation: AnnotatedLine;
+  offsetTop?: number;
+};
+
+const Popover: FC<PopoverProps> = ({ annotation, offsetTop }) => {
+  const [height, setHeight] = useState(125);
+  const ref = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (ref.current) {
+      setHeight(ref.current.clientHeight);
+    }
+  }, [ref]);
+
+  const top = (offsetTop || 0) - height - 5;
+  return (
+    <PopoverContainer ref={ref} className="box changeset-details is-family-primary" style={{ top: `${top}px` }}>
+      <PopoverHeading className="is-clearfix">
+        <SingleContributor className="is-pulled-left" person={annotation.author} />
+        <DateFromNow className="is-pulled-right" date={annotation.when} />
+      </PopoverHeading>
+      <SmallHr />
+      <p className="has-text-info">Changeset {shortRevision(annotation.revision)}</p>
+      <PopoverDescription className="content">{annotation.description}</PopoverDescription>
+    </PopoverContainer>
+  );
+};
+
+const Metadata = styled(LineElement)`
+  cursor: help;
+`;
+
+const EmptyMetadata = styled(LineElement)`
+  width: 16.7em;
+`;
+
+const AnnotateLine: FC<LineProps> = ({ annotation, showAnnotation, setPopOver, nr, children }) => {
+  const link = useRef<HTMLDivElement>(null);
+
+  const onMouseEnter = (e: MouseEvent) => {
+    if (showAnnotation) {
+      setPopOver(<Popover annotation={annotation} offsetTop={link.current?.offsetTop} />);
+    }
+  };
+
+  const OnMouseLeave = (e: MouseEvent) => {
+    if (showAnnotation) {
+      setPopOver(null);
+    }
+  };
+
+  if (!showAnnotation) {
+    return (
+      <Line>
+        <EmptyMetadata />
+        <LineNumber>{nr}</LineNumber> <LineElement>{children}</LineElement>
+      </Line>
+    );
+  }
+
+  return (
+    <Line>
+      <Metadata className="has-text-info" onMouseOver={onMouseEnter} onMouseOut={OnMouseLeave} ref={link}>
+        <Author className="trigger">{annotation.author.name}</Author>{" "}
+        <When>
+          <DateShort value={annotation.when} />
+        </When>{" "}
+      </Metadata>
+      <LineNumber>{nr}</LineNumber> <LineElement>{children}</LineElement>
+    </Line>
+  );
+};
+
 const Annotate: FC<Props> = ({ source, repository }) => {
+  const [popOver, setPopOver] = useState<React.ReactNode | null>(null);
+
   const defaultRenderer = ({ rows, stylesheet, useInlineStyles }: any) => {
     let lastRevision = "";
     return rows.map((node: any, i: number) => {
@@ -176,26 +251,15 @@ const Annotate: FC<Props> = ({ source, repository }) => {
         const newAnnotation = annotation.revision !== lastRevision;
         lastRevision = annotation.revision;
         return (
-          <Line>
-            <Popover className="box changeset-details is-family-primary">
-              <PopoverHeading className="is-clearfix">
-                <SingleContributor className="is-pulled-left" person={annotation.author} />
-                <DateFromNow className="is-pulled-right" date={annotation.when} />
-              </PopoverHeading>
-              <SmallHr />
-              <p className="has-text-info">Changeset {shortRevision(annotation.revision)}</p>
-              <PopoverDescription className="content">{annotation.description}</PopoverDescription>
-            </Popover>
-            <Author className="trigger" newAnnotation={newAnnotation}>
-              <Link to={`/repo/${repository.namespace}/${repository.name}/code/changeset/${annotation.revision}`}>
-                {annotation.author.name}
-              </Link>
-            </Author>{" "}
-            <When newAnnotation={newAnnotation}>
-              <DateShort value={annotation.when} />
-            </When>{" "}
-            <LineNumber>{i + 1}</LineNumber> {line}
-          </Line>
+          <AnnotateLine
+            setPopOver={setPopOver}
+            annotation={annotation}
+            showAnnotation={newAnnotation}
+            nr={i + 1}
+            repository={repository}
+          >
+            {line}
+          </AnnotateLine>
         );
       }
 
@@ -209,15 +273,18 @@ const Annotate: FC<Props> = ({ source, repository }) => {
   }, "");
 
   return (
-    <ReactSyntaxHighlighter
-      showLineNumbers={false}
-      language={source.language}
-      style={arduinoLight}
-      renderer={defaultRenderer}
-      PreTag={PreTag}
-    >
-      {code}
-    </ReactSyntaxHighlighter>
+    <div style={{ position: "relative" }}>
+      {popOver}
+      <ReactSyntaxHighlighter
+        showLineNumbers={false}
+        language={source.language}
+        style={arduinoLight}
+        renderer={defaultRenderer}
+        PreTag={PreTag}
+      >
+        {code}
+      </ReactSyntaxHighlighter>
+    </div>
   );
 };
 
