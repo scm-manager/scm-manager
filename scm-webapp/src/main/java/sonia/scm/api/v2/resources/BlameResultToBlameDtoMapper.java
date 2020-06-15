@@ -44,7 +44,7 @@ public abstract class BlameResultToBlameDtoMapper implements InstantAttributeMap
 
   BlameDto map(BlameResult result, NamespaceAndName namespaceAndName, String revision, String path) {
     BlameDto dto = createDto(namespaceAndName, revision, path);
-    dto.setBlameLines(result.getBlameLines().stream().map(this::map).collect(Collectors.toList()));
+    dto.setLines(result.getBlameLines().stream().map(this::map).collect(Collectors.toList()));
     return dto;
   }
 
