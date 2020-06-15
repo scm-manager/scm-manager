@@ -21,8 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 module.exports = {
   parser: "@typescript-eslint/parser",
+  env: {
+    node: false,
+    browser: true
+  },
   extends: ["react-app", "plugin:prettier/recommended", "plugin:@typescript-eslint/recommended"],
   rules: {
     "prettier/prettier": "warn",
@@ -32,5 +37,14 @@ module.exports = {
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/ban-ts-ignore": "warn",
     "no-console": "error"
-  }
+  },
+  overrides: [
+    {
+      files: ["*.js"],
+      env: {
+        node: true,
+        browser: false
+      }
+    }
+  ]
 };
