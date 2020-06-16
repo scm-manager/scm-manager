@@ -26,7 +26,7 @@ import { Trans, useTranslation, WithTranslation, withTranslation } from "react-i
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Changeset, Repository, Tag, Link } from "@scm-manager/ui-types";
+import { Changeset, Repository, Tag, ParentChangeset } from "@scm-manager/ui-types";
 import {
   AvatarImage,
   AvatarWrapper,
@@ -50,11 +50,6 @@ type Props = WithTranslation & {
 
 type State = {
   collapsed: boolean;
-};
-
-type Parent = {
-  id: string;
-  _links: Link[];
 };
 
 const RightMarginP = styled.p`
@@ -166,7 +161,7 @@ class ChangesetDetails extends React.Component<Props, State> {
     const description = changesets.parseDescription(changeset.description);
     const id = <ChangesetId repository={repository} changeset={changeset} link={false} />;
     const date = <DateFromNow date={changeset.date} />;
-    const parents = changeset._embedded.parents.map((parent: Parent) => (
+    const parents = changeset._embedded.parents.map((parent: ParentChangeset) => (
       <ReactLink title={parent.id} to={parent.id}>
         {parent.id.substring(0, 7)}
       </ReactLink>
