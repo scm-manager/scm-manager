@@ -31,7 +31,10 @@ const rules = {
 
 const nodeConfiguration = {
   extends: ["airbnb-base", "plugin:prettier/recommended"],
-  rules
+  rules: {
+    "no-console": "off",
+    ...rules
+  }
 };
 
 const typescriptConfiguration = {
@@ -41,7 +44,7 @@ const typescriptConfiguration = {
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/ban-ts-ignore": "warn",
     "no-console": "error",
-    "jsx-a11y/href-no-hash": [0],
+    "jsx-a11y/href-no-hash": "off",
     ...rules
   }
 };
