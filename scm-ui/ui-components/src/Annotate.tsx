@@ -33,6 +33,7 @@ import DateShort from "./DateShort";
 import { SingleContributor } from "./repos/changesets";
 import DateFromNow from "./DateFromNow";
 import { Link } from "react-router-dom";
+import { DateInput } from "./dates";
 
 // TODO move types to ui-types
 
@@ -53,6 +54,7 @@ export type AnnotatedLine = {
 type Props = {
   source: AnnotatedSource;
   repository: Repository;
+  baseDate?: DateInput;
 };
 
 const LineElement = styled.div`
@@ -164,11 +166,12 @@ type LineProps = {
 type PopoverProps = {
   annotation: AnnotatedLine;
   offsetTop?: number;
-  dispatch: Dispatch<Action>;
   repository: Repository;
+  baseDate?: DateInput;
+  dispatch: Dispatch<Action>;
 };
 
-const Popover: FC<PopoverProps> = ({ annotation, offsetTop, repository, dispatch }) => {
+const Popover: FC<PopoverProps> = ({ annotation, offsetTop, repository, baseDate, dispatch }) => {
   const [height, setHeight] = useState(125);
   const ref = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -200,7 +203,7 @@ const Popover: FC<PopoverProps> = ({ annotation, offsetTop, repository, dispatch
     >
       <PopoverHeading className="is-clearfix">
         <SingleContributor className="is-pulled-left" person={annotation.author} />
-        <DateFromNow className="is-pulled-right" date={annotation.when} />
+        <DateFromNow className="is-pulled-right" date={annotation.when} baseDate={baseDate} />
       </PopoverHeading>
       <SmallHr />
       <p>
@@ -347,7 +350,7 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-const Annotate: FC<Props> = ({ source, repository }) => {
+const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const defaultRenderer = ({ rows, stylesheet, useInlineStyles }: any) => {
@@ -378,7 +381,13 @@ const Annotate: FC<Props> = ({ source, repository }) => {
   let popover = null;
   if ((state.onPopover || state.onLine) && state.annotation) {
     popover = (
-      <Popover annotation={state.annotation} dispatch={dispatch} offsetTop={state.offset} repository={repository} />
+      <Popover
+        annotation={state.annotation}
+        dispatch={dispatch}
+        offsetTop={state.offset}
+        repository={repository}
+        baseDate={baseDate}
+      />
     );
   }
 

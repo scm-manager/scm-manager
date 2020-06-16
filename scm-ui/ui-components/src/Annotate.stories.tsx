@@ -112,4 +112,6 @@ const source: AnnotatedSource = {
 storiesOf("Annotate", module)
   .addDecorator(storyFn => <MemoryRouter initialEntries={["/"]}>{storyFn()}</MemoryRouter>)
   .addDecorator(storyFn => <Wrapper className="box">{storyFn()}</Wrapper>)
-  .add("Default", () => <Annotate source={source} repository={repository} />);
+  .add("Default", () => (
+    <Annotate source={source} repository={repository} baseDate={new Date("2020-04-16T09:22:42Z")} />
+  ));
