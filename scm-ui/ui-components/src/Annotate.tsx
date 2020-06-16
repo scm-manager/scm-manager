@@ -34,6 +34,7 @@ import { SingleContributor } from "./repos/changesets";
 import DateFromNow from "./DateFromNow";
 import { Link } from "react-router-dom";
 import { DateInput } from "./dates";
+import { AvatarImage } from "./avatar";
 
 // TODO move types to ui-types
 
@@ -198,11 +199,14 @@ const Popover: FC<PopoverProps> = ({ annotation, offsetTop, repository, baseDate
       ref={ref}
       onMouseEnter={onMouseEnter}
       onMouseLeave={OnMouseLeave}
-      className="box changeset-details is-family-primary"
+      className="box"
       style={{ top: `${top}px` }}
     >
       <PopoverHeading className="is-clearfix">
-        <SingleContributor className="is-pulled-left" person={annotation.author} />
+        <span className="is-pulled-left">
+          <AuthorImage person={annotation.author} />
+          <SingleContributor person={annotation.author} displayTextOnly={true} />
+        </span>
         <DateFromNow className="is-pulled-right" date={annotation.when} baseDate={baseDate} />
       </PopoverHeading>
       <SmallHr />
@@ -228,6 +232,12 @@ const EmptyMetadata = styled(LineElement)`
 const dispatchDeferred = (dispatch: Dispatch<Action>, action: Action) => {
   setTimeout(() => dispatch(action), 250);
 };
+
+const AuthorImage = styled(AvatarImage)`
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+`;
 
 const AnnotateLine: FC<LineProps> = ({ annotation, showAnnotation, dispatch, nr, children }) => {
   const link = useRef<HTMLDivElement>(null);
@@ -264,7 +274,10 @@ const AnnotateLine: FC<LineProps> = ({ annotation, showAnnotation, dispatch, nr,
   return (
     <Line>
       <Metadata className="has-text-info" onMouseOver={onMouseEnter} onMouseOut={OnMouseLeave} ref={link}>
-        <Author className="trigger">{annotation.author.name}</Author>{" "}
+        <Author>
+          <AuthorImage person={annotation.author} />
+          {annotation.author.name}
+        </Author>{" "}
         <When>
           <DateShort value={annotation.when} />
         </When>{" "}

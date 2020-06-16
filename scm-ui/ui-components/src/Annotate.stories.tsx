@@ -23,11 +23,13 @@
  */
 
 import { storiesOf } from "@storybook/react";
-import * as React from "react";
+import React, { FC } from "react";
 import styled from "styled-components";
 import Annotate, { AnnotatedSource } from "./Annotate";
 import { MemoryRouter } from "react-router-dom";
 import repository from "./__resources__/repository";
+import { Binder, BinderContext } from "@scm-manager/ui-extensions";
+import { Person } from "./avatar/Avatar";
 
 const Wrapper = styled.div`
   margin: 2rem;
@@ -109,9 +111,20 @@ const source: AnnotatedSource = {
   ]
 };
 
+const Robohash: FC = ({ children }) => {
+  const binder = new Binder("robohash");
+  binder.bind("avatar.factory", (person: Person) => `https://robohash.org/${person.mail}.png`);
+  return <BinderContext.Provider value={binder}>{children}</BinderContext.Provider>;
+};
+
 storiesOf("Annotate", module)
   .addDecorator(storyFn => <MemoryRouter initialEntries={["/"]}>{storyFn()}</MemoryRouter>)
   .addDecorator(storyFn => <Wrapper className="box">{storyFn()}</Wrapper>)
   .add("Default", () => (
     <Annotate source={source} repository={repository} baseDate={new Date("2020-04-16T09:22:42Z")} />
+  ))
+  .add("With Avatars", () => (
+    <Robohash>
+      <Annotate source={source} repository={repository} baseDate={new Date("2020-04-15T09:47:42Z")} />
+    </Robohash>
   ));
