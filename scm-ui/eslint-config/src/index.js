@@ -22,29 +22,65 @@
  * SOFTWARE.
  */
 
-module.exports = {
+const rules = {
+  "prettier/prettier": "warn",
+  semi: ["error", "always"],
+  quotes: ["error", "double", "avoid-escape"],
+  "no-var": "error"
+};
+
+const nodeConfiguration = {
+  extends: ["airbnb-base", "plugin:prettier/recommended"],
+  rules
+};
+
+const typescriptConfiguration = {
   parser: "@typescript-eslint/parser",
-  env: {
-    node: false,
-    browser: true
-  },
-  extends: ["react-app", "plugin:prettier/recommended", "plugin:@typescript-eslint/recommended"],
+  extends: ["react-app", "plugin:@typescript-eslint/recommended"],
   rules: {
-    "prettier/prettier": "warn",
-    semi: ["error", "always"],
-    quotes: ["error", "double", "avoid-escape"],
-    "jsx-a11y/href-no-hash": [0],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/ban-ts-ignore": "warn",
-    "no-console": "error"
-  },
+    "no-console": "error",
+    "jsx-a11y/href-no-hash": [0],
+    ...rules
+  }
+};
+
+module.exports = {
   overrides: [
+    {
+      files: ["*.test.js"],
+      env: {
+        node: true,
+        jest: true,
+        browser: false
+      },
+      ...nodeConfiguration
+    },
     {
       files: ["*.js"],
       env: {
         node: true,
         browser: false
-      }
+      },
+      ...nodeConfiguration
+    },
+    {
+      files: ["*.test.ts", "*.test.tsx"],
+      env: {
+        node: true,
+        jest: true,
+        browser: false
+      },
+      ...typescriptConfiguration
+    },
+    {
+      files: ["*.ts", "*.tsx"],
+      env: {
+        node: false,
+        browser: true
+      },
+      ...typescriptConfiguration
     }
   ]
 };
