@@ -22,7 +22,7 @@
     "redux-devtools-extension": "^2.13.5",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "styled-components": "^4.4.0",
+    "styled-components": "^5.1.0",
     "systemjs": "0.21.6"
   },
   "scripts": {
@@ -39,7 +39,7 @@
     "@types/react-dom": "^16.9.2",
     "@types/react-redux": "5.0.7",
     "@types/react-router-dom": "^5.1.0",
-    "@types/styled-components": "^4.1.19",
+    "@types/styled-components": "^5.1.0",
     "@types/systemjs": "^0.20.6",
     "fetch-mock": "^7.5.1",
     "react-test-renderer": "^16.10.2",

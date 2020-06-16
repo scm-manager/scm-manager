@@ -34,7 +34,7 @@
     "@types/react-select": "^2.0.19",
     "@types/react-syntax-highlighter": "^11.0.1",
     "@types/storybook__addon-storyshots": "^5.1.1",
-    "@types/styled-components": "^4.1.19",
+    "@types/styled-components": "^5.1.0",
     "enzyme-context": "^1.1.2",
     "enzyme-context-react-router-4": "^2.0.0",
     "fetch-mock": "^7.5.1",
