@@ -87,6 +87,10 @@
     "shortSummary": "Committet <0/> <1/>",
     "tags": "Tags",
     "diffNotSupported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt",
+    "parents": {
+      "label" : "Parent",
+      "label_plural": "Parents"
+    },
     "contributors": {
       "mailto": "Mail senden an",
       "list": "Liste der Mitwirkenden",

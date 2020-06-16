@@ -19,6 +19,6 @@
   },
   "prettier": "@scm-manager/prettier-config",
   "dependencies": {
-    "@scm-manager/ui-plugins": "^2.0.0"
+    "@scm-manager/ui-plugins": "^2.1.0-SNAPSHOT"
   }
 }

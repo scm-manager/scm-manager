@@ -18,7 +18,7 @@
     "errorTitle": "Fehler",
     "errorSubtitle": "Unbekannter Gruppen Fehler",
     "menu": {
-      "navigationLabel": "Gruppen",
+      "navigationLabel": "Gruppe",
       "informationNavLink": "Informationen",
       "settingsNavLink": "Einstellungen",
       "generalNavLink": "Generell",
