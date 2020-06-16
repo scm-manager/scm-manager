@@ -29,6 +29,8 @@ const AuthorImage = styled(AvatarImage)`
   width: 1em;
   height: 1em;
   margin-right: 0.2em;
+  margin-bottom: 0.2em;
+  vertical-align: middle;
 `;
 
 export default AuthorImage;
