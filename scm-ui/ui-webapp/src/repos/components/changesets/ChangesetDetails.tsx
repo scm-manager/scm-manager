@@ -109,6 +109,7 @@ const ChangesetSummary = styled.div`
 `
 
 const SeparatedParents = styled.div`
+  margin-left: 1em;
   a + a:before {
     content: ",\\00A0";
     color: #4a4a4a;
