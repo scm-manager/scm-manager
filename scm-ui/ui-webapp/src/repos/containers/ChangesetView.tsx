@@ -53,6 +53,12 @@ class ChangesetView extends React.Component<Props> {
     fetchChangesetIfNeeded(repository, id);
   }
 
+  componentDidUpdate() {
+    const { fetchChangesetIfNeeded, repository } = this.props;
+    const id = this.props.match.params.id;
+    fetchChangesetIfNeeded(repository, id);
+  }
+
   render() {
     const { changeset, loading, error, t, repository } = this.props;
 

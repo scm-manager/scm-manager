@@ -91,6 +91,10 @@
       "details": "Details",
       "sources": "Sources"
     },
+    "parents": {
+      "label" : "Parent",
+      "label_plural": "Parents"
+    },
     "contributors": {
       "mailto": "Send mail to",
       "list": "List of contributors",
