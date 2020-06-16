@@ -37,6 +37,10 @@ const nodeConfiguration = {
   }
 };
 
+const restrictImportConfig = {
+  patterns: ["@scm-manager/*/*"]
+};
+
 const typescriptConfiguration = {
   parser: "@typescript-eslint/parser",
   extends: ["react-app", "plugin:@typescript-eslint/recommended"],
@@ -45,6 +49,7 @@ const typescriptConfiguration = {
     "@typescript-eslint/ban-ts-ignore": "warn",
     "no-console": "error",
     "jsx-a11y/href-no-hash": "off",
+    "no-restricted-imports": ["error", restrictImportConfig],
     ...rules
   }
 };
