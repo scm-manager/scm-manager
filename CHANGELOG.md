@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixes configuration of jetty listener address with system property `jetty.host` ([#1173](https://github.com/scm-manager/scm-manager/pull/1173), [#1174](https://github.com/scm-manager/scm-manager/pull/1174))
 - Fixes loading plugin bundles with context path `/` ([#1182](https://github.com/scm-manager/scm-manager/pull/1182/files), [#1181](https://github.com/scm-manager/scm-manager/issues/1181))
 - Sets the new plugin center URL once ([#1184](https://github.com/scm-manager/scm-manager/pull/1184))
+- Close file lists in migration ([#1191](https://github.com/scm-manager/scm-manager/pull/1191))
 
 ## [2.0.0] - 2020-06-04
 ### Added
