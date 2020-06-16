@@ -24,10 +24,9 @@
 
 import React, { FC, useReducer } from "react";
 import { Repository, AnnotatedSource, AnnotatedLine } from "@scm-manager/ui-types";
-
 // @ts-ignore
-import { LightAsync as ReactSyntaxHighlighter, createElement } from "react-syntax-highlighter";
-import { arduinoLight } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { PrismAsyncLight as ReactSyntaxHighlighter, createElement } from "react-syntax-highlighter";
+import { ghcolors } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { DateInput } from "../../dates";
 import Popover from "./Popover";
 import AnnotateLine from "./AnnotateLine";
@@ -145,7 +144,7 @@ const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
       <ReactSyntaxHighlighter
         showLineNumbers={false}
         language={source.language}
-        style={arduinoLight}
+        style={ghcolors}
         renderer={defaultRenderer}
       >
         {code}
