@@ -8,9 +8,9 @@
 
 - section: Administration
   entries:
-    - /administration/scm-server-ssl/
-    - /administration/logging/
-    - /administration/command-line-client/
+  - /administration/scm-server-ssl/
+  - /administration/logging/
+  - /administration/command-line-client/
 
 - section: Development
   entries:
@@ -32,3 +32,10 @@
   - /development/plugins/plugin-descriptor/
   - /development/plugins/plugin-development/
   - /development/plugins/publish/
+
+- section: User-oriented
+  entries:
+  - /user/repo/
+  - /user/user/
+  - /user/group/
+  - /user/admin/
