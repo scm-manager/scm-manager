@@ -25,11 +25,12 @@
 import { storiesOf } from "@storybook/react";
 import React, { FC } from "react";
 import styled from "styled-components";
-import Annotate, { AnnotatedSource } from "./Annotate";
+import Annotate from "./Annotate";
 import { MemoryRouter } from "react-router-dom";
-import repository from "./__resources__/repository";
+import repository from "../../__resources__/repository";
 import { Binder, BinderContext } from "@scm-manager/ui-extensions";
-import { Person } from "./avatar/Avatar";
+import { Person } from "../../avatar/Avatar";
+import { AnnotatedSource } from "@scm-manager/ui-types";
 
 const Wrapper = styled.div`
   margin: 2rem;
