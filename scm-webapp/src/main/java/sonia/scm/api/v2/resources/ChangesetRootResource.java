@@ -50,6 +50,9 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Optional;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
 
 @Slf4j
 public class ChangesetRootResource {
@@ -150,25 +153,11 @@ public class ChangesetRootResource {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();
-      ChangesetPagingResult changesets = repositoryService.getLogCommand()
-        .setStartChangeset(id)
-        .setEndChangeset(id)
-        .getChangesets();
-
-      if (changesets == null || changesets.getChangesets() == null || changesets.getChangesets().isEmpty()) {
-        return Response.status(Response.Status.NOT_FOUND).build();
+      Changeset changeset = repositoryService.getLogCommand().getChangeset(id);
+      if (changeset == null) {
+        throw notFound(entity(Changeset.class, id).in(repository));
       }
-      Optional<Changeset> changeset = changesets
-        .getChangesets()
-        .stream()
-        .filter(c -> c.getId().startsWith(id))
-        .findFirst();
-
-      if (!changeset.isPresent()) {
-        return Response.status(Response.Status.NOT_FOUND).build();
-      }
-
-      return Response.ok(changesetToChangesetDtoMapper.map(changeset.get(), repository)).build();
+      return Response.ok(changesetToChangesetDtoMapper.map(changeset, repository)).build();
     }
   }
 }
