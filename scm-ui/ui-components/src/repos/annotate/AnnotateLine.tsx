@@ -134,7 +134,7 @@ const AnnotateLine: FC<Props> = ({ annotation, showAnnotation, dispatch, nr, chi
           {annotation.author.name}
         </Author>{" "}
         <When>
-          <DateShort value={annotation.when} />
+          <DateShort date={annotation.when} />
         </When>{" "}
       </Metadata>
       <LineNumber>{nr}</LineNumber> <LineElement>{children}</LineElement>

@@ -21,27 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React from "react";
+import DateFromNow from "./DateFromNow";
+import { storiesOf } from "@storybook/react";
+import DateShort from "./DateShort";
+import styled from "styled-components";
 
-import { chooseLocale, supportedLocales } from "./DateFromNow";
+const baseProps = {
+  timeZone: "Europe/Berlin",
+  baseDate: "2019-10-12T13:56:42+02:00"
+};
 
-describe("test choose locale", () => {
-  it("should choose de", () => {
-    const locale = chooseLocale("de_DE", ["de", "en"]);
-    expect(locale).toBe(supportedLocales.de);
-  });
+const dates = [
+  "2009-06-30T18:30:00+02:00",
+  "2019-06-30T18:30:00+02:00",
+  "2019-10-12T13:56:40+02:00",
+  "2019-10-11T13:56:40+02:00"
+];
 
-  it("should choose de, even without language array", () => {
-    const locale = chooseLocale("de", []);
-    expect(locale).toBe(supportedLocales.de);
-  });
+const Wrapper = styled.div`
+  padding: 2rem;
+`;
 
-  it("should choose es", () => {
-    const locale = chooseLocale("de", ["af", "be", "es"]);
-    expect(locale).toBe(supportedLocales.es);
-  });
-
-  it("should fallback en", () => {
-    const locale = chooseLocale("af", ["af", "be"]);
-    expect(locale).toBe(supportedLocales.en);
-  });
-});
+storiesOf("Date", module)
+  .add("Date from now", () => (
+    <Wrapper>
+      {dates.map(d => (
+        <p>
+          <DateFromNow date={d} {...baseProps} />
+        </p>
+      ))}
+    </Wrapper>
+  ))
+  .add("Short", () => (
+    <Wrapper>
+      {dates.map(d => (
+        <p>
+          <DateShort date={d} {...baseProps} />
+        </p>
+      ))}
+    </Wrapper>
+  ));

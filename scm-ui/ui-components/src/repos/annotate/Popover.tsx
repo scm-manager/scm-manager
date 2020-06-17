@@ -27,7 +27,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import DateFromNow from "../../DateFromNow";
 import { SingleContributor } from "../changesets";
-import { DateInput } from "../../dates";
+import { DateInput } from "../../useDateFormatter";
 import { Repository, AnnotatedLine } from "@scm-manager/ui-types";
 import AuthorImage from "./AuthorImage";
 import { Action } from "./actions";

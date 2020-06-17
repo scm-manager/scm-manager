@@ -28,7 +28,7 @@ import { Repository, AnnotatedSource, AnnotatedLine } from "@scm-manager/ui-type
 // @ts-ignore
 import { LightAsync as ReactSyntaxHighlighter, createElement } from "react-syntax-highlighter";
 import { arduinoLight } from "react-syntax-highlighter/dist/cjs/styles/hljs";
-import { DateInput } from "../../dates";
+import { DateInput } from "../../useDateFormatter";
 import Popover from "./Popover";
 import AnnotateLine from "./AnnotateLine";
 import { Action } from "./actions";

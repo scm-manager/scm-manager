@@ -21,23 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { format } from "date-fns";
-import { toDate, ShortDateFormat, FullDateFormat, DateElement } from "./dates";
 
-type Props = {
-  value?: Date | string;
+import React, { FC } from "react";
+import useDateFormatter, { DateProps } from "./useDateFormatter";
+import DateElement from "./DateElement";
+
+type Props = DateProps & {
   className?: string;
 };
 
-const DateShort: FC<Props> = ({ value, className }) => {
-  if (!value) {
+const DateShort: FC<Props> = ({ className, ...dateProps }) => {
+  const formatter = useDateFormatter(dateProps);
+  if (!formatter) {
     return null;
   }
-  const date = toDate(value);
+
   return (
-    <DateElement className={className} title={format(date, FullDateFormat)}>
-      {format(date, ShortDateFormat)}
+    <DateElement className={className} title={formatter.formatFull()}>
+      {formatter.formatShort()}
     </DateElement>
   );
 };

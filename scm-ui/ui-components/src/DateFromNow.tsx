@@ -21,100 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { formatDistance, format, Locale } from "date-fns";
-import { enUS, de, es } from "date-fns/locale";
-import { DateInput, DateElement, FullDateFormat, toDate } from "./dates";
 
-type LocaleMap = {
-  [key: string]: Locale;
-};
+import React, { FC } from "react";
+import useDateFormatter, { DateProps } from "./useDateFormatter";
+import DateElement from "./DateElement";
 
-export const supportedLocales: LocaleMap = {
-  enUS,
-  en: enUS,
-  de,
-  es
-};
-
-type Props = WithTranslation & {
-  date?: DateInput;
-  timeZone?: string;
-
-  /**
-   * baseDate is the date from which the distance is calculated,
-   * default is the current time (new Date()). This property
-   * is required to keep snapshots tests green over the time on
-   * ci server.
-   */
-  baseDate?: DateInput;
+type Props = DateProps & {
   className?: string;
 };
 
-type Options = {
-  addSuffix: boolean;
-  locale: Locale;
-  timeZone?: string;
-};
-
-export const chooseLocale = (language: string, languages?: string[]) => {
-  for (const lng of languages || []) {
-    const locale = supportedLocales[lng];
-    if (locale) {
-      return locale;
-    }
-  }
-
-  const locale = supportedLocales[language];
-  if (locale) {
-    return locale;
-  }
-
-  return enUS;
-};
-
-class DateFromNow extends React.Component<Props> {
-  getLocale = (): Locale => {
-    const { i18n } = this.props;
-    return chooseLocale(i18n.language, i18n.languages);
-  };
-
-  createOptions = () => {
-    const { timeZone } = this.props;
-    const options: Options = {
-      addSuffix: true,
-      locale: this.getLocale()
-    };
-    if (timeZone) {
-      options.timeZone = timeZone;
-    }
-    return options;
-  };
-
-  getBaseDate = () => {
-    const { baseDate } = this.props;
-    if (baseDate) {
-      return toDate(baseDate);
-    }
-    return new Date();
-  };
-
-  render() {
-    const { date, className } = this.props;
-    if (date) {
-      const isoDate = toDate(date);
-      const options = this.createOptions();
-      const distance = formatDistance(isoDate, this.getBaseDate(), options);
-      const formatted = format(isoDate, FullDateFormat, options);
-      return (
-        <DateElement className={className} title={formatted}>
-          {distance}
-        </DateElement>
-      );
-    }
+const DateFromNow: FC<Props> = ({ className, ...dateProps }) => {
+  const formatter = useDateFormatter(dateProps);
+  if (!formatter) {
     return null;
   }
-}
 
-export default withTranslation()(DateFromNow);
+  return (
+    <DateElement className={className} title={formatter.formatFull()}>
+      {formatter.formatDistance()}
+    </DateElement>
+  );
+};
+
+export default DateFromNow;

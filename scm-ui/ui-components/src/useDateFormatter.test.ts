@@ -21,28 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import DateFromNow from "./DateFromNow";
-import { storiesOf } from "@storybook/react";
 
-const baseProps = {
-  timeZone: "Europe/Berlin",
-  baseDate: "2019-10-12T13:56:42+02:00"
-};
+import { chooseLocale, supportedLocales } from "./useDateFormatter";
 
-storiesOf("DateFromNow", module).add("Default", () => (
-  <div>
-    <p>
-      <DateFromNow date="2009-06-30T18:30:00+02:00" {...baseProps} />
-    </p>
-    <p>
-      <DateFromNow date="2019-06-30T18:30:00+02:00" {...baseProps} />
-    </p>
-    <p>
-      <DateFromNow date="2019-10-12T13:56:40+02:00" {...baseProps} />
-    </p>
-    <p>
-      <DateFromNow date="2019-10-11T13:56:40+02:00" {...baseProps} />
-    </p>
-  </div>
-));
+describe("test choose locale", () => {
+  it("should choose de", () => {
+    const locale = chooseLocale("de_DE", ["de", "en"]);
+    expect(locale).toBe(supportedLocales.de);
+  });
+
+  it("should choose de, even without language array", () => {
+    const locale = chooseLocale("de", []);
+    expect(locale).toBe(supportedLocales.de);
+  });
+
+  it("should choose es", () => {
+    const locale = chooseLocale("de", ["af", "be", "es"]);
+    expect(locale).toBe(supportedLocales.es);
+  });
+
+  it("should fallback en", () => {
+    const locale = chooseLocale("af", ["af", "be"]);
+    expect(locale).toBe(supportedLocales.en);
+  });
+});
