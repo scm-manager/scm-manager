@@ -60,6 +60,12 @@ The default username is `scmadmin` with the password `scmadmin`.
 
 ## Troubleshooting
 
+### Upgrade from SCM-Manager 1.x
+
+If you had an SCM-Manager 1.x installed before, please remove (or better back up) the old `/opt/scm-server` directory. This must not exist before installing the new 2.x version.
+
+### Service does not start
+
 If the service does not start have a look at the systemd journal:
 
 ```bash
