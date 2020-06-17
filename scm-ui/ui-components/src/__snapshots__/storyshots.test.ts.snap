@@ -465,7 +465,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
             >
               <img
                 alt="Arthur Dent"
-                className="has-rounded-border AuthorImage-ygvjd8-0 kwWfeM"
+                className="has-rounded-border AuthorImage-ygvjd8-0 eJZeUj"
                 src="https://robohash.org/arthur.dent@hitchhiker.com.png"
               />
               Arthur Dent
@@ -549,7 +549,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
             >
               <img
                 alt="Tricia Marie McMillan"
-                className="has-rounded-border AuthorImage-ygvjd8-0 kwWfeM"
+                className="has-rounded-border AuthorImage-ygvjd8-0 eJZeUj"
                 src="https://robohash.org/trillian@hitchhiker.com.png"
               />
               Tricia Marie McMillan
@@ -652,7 +652,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
             >
               <img
                 alt="Arthur Dent"
-                className="has-rounded-border AuthorImage-ygvjd8-0 kwWfeM"
+                className="has-rounded-border AuthorImage-ygvjd8-0 eJZeUj"
                 src="https://robohash.org/arthur.dent@hitchhiker.com.png"
               />
               Arthur Dent
@@ -747,7 +747,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
             >
               <img
                 alt="Ford Prefect"
-                className="has-rounded-border AuthorImage-ygvjd8-0 kwWfeM"
+                className="has-rounded-border AuthorImage-ygvjd8-0 eJZeUj"
                 src="https://robohash.org/ford.prefect@hitchhiker.com.png"
               />
               Ford Prefect
@@ -813,7 +813,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
             >
               <img
                 alt="Arthur Dent"
-                className="has-rounded-border AuthorImage-ygvjd8-0 kwWfeM"
+                className="has-rounded-border AuthorImage-ygvjd8-0 eJZeUj"
                 src="https://robohash.org/arthur.dent@hitchhiker.com.png"
               />
               Arthur Dent
