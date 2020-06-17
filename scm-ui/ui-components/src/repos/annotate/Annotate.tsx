@@ -144,7 +144,7 @@ const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
       {popover}
       <ReactSyntaxHighlighter
         showLineNumbers={false}
-        language={source.language}
+        language={source.language ? source.language : "text"}
         style={arduinoLight}
         renderer={defaultRenderer}
       >

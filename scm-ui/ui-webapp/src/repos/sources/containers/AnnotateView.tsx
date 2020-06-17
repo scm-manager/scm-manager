@@ -33,37 +33,35 @@ type Props = {
 };
 
 const AnnotateView: FC<Props> = ({ file, repository }) => {
-  const [annotation, setAnnotation] = useState<AnnotatedSource>(undefined);
-  const [error, setError] = useState<Error | undefined>(undefined);
+  const [annotation, setAnnotation] = useState<AnnotatedSource | undefined>(undefined);
   const [language, setLanguage] = useState<string | undefined>(undefined);
+  const [error, setError] = useState<Error | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getContentType(file._links.self.href)
-      .then(result => {
-        setLanguage(result.language);
-      })
-      .catch(error => {
-        setError(error);
-      });
+    const languagePromise = getContentType((file._links.self as Link).href).then(result =>
+      setLanguage(result.language)
+    );
 
-    apiClient
+    const apiClientPromise = apiClient
       .get((file._links.annotate as Link).href)
       .then(response => response.json())
-      .then(content => {
-        setAnnotation(content);
-      })
-      .catch(error => {
-        setError(error);
-      });
+      .then(setAnnotation);
+
+    Promise.all([languagePromise, apiClientPromise])
+      .then(() => setLoading(false))
+      .catch(setError);
   }, [file]);
 
   if (error) {
     return <ErrorNotification error={error} />;
-  } else if (annotation && language) {
-    return <Annotate source={{ ...annotation, language }} repository={repository} />;
-  } else {
+  }
+
+  if (!annotation || loading) {
     return <Loading />;
   }
+
+  return <Annotate source={{ ...annotation, language }} repository={repository} />;
 };
 
 export default AnnotateView;

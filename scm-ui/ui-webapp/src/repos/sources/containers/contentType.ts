@@ -24,18 +24,18 @@
 
 import { apiClient } from "@scm-manager/ui-components";
 
-export function getContentType(url: string) {
+export type ContentType = {
+  type : string;
+  language?: string;
+}
+
+export function getContentType(url: string) : Promise<ContentType> {
   return apiClient
     .head(url)
     .then(response => {
       return {
-        type: response.headers.get("Content-Type"),
-        language: response.headers.get("X-Programming-Language")
+        type: response.headers.get("Content-Type") || "application/octet-stream",
+        language: response.headers.get("X-Programming-Language") || undefined
       };
     })
-    .catch(err => {
-      return {
-        error: err
-      };
-    });
 }

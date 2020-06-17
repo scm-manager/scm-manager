@@ -26,7 +26,7 @@ import { Person } from "./Person";
 
 export type AnnotatedSource = {
   lines: AnnotatedLine[];
-  language: string;
+  language?: string;
 };
 
 export type AnnotatedLine = {
