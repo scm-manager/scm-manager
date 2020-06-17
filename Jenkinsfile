@@ -83,10 +83,6 @@ node('docker') {
       stage('SonarQube') {
         def sonarQube = new SonarCloud(this, [sonarQubeEnv: 'sonarcloud.io-scm', sonarOrganization: 'scm-manager', integrationBranch: 'develop'])
         sonarQube.analyzeWith(mvn)
-
-        if (!waitForQualityGateWebhookToBeCalled()) {
-          currentBuild.result = 'UNSTABLE'
-        }
       }
 
       if (isBuildSuccessful() && (isMainBranch() || isReleaseBranch())) {
@@ -222,18 +218,6 @@ String getReleaseVersion() {
 
 boolean isMainBranch() {
   return mainBranch.equals(env.BRANCH_NAME)
-}
-
-boolean waitForQualityGateWebhookToBeCalled() {
-  boolean isQualityGateSucceeded = true
-  timeout(time: 10, unit: 'MINUTES') { // Needed when there is no webhook for example
-    def qGate = waitForQualityGate()
-    echo "SonarQube Quality Gate status: ${qGate.status}"
-    if (qGate.status != 'OK') {
-      isQualityGateSucceeded = false
-    }
-  }
-  return isQualityGateSucceeded
 }
 
 void withGPGEnvironment(def closure) {
