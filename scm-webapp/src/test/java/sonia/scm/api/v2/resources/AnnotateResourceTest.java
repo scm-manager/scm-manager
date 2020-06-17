@@ -109,7 +109,7 @@ class AnnotateResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  void test() throws URISyntaxException, UnsupportedEncodingException, JsonProcessingException {
+  void shouldReturnAnnotations() throws URISyntaxException, UnsupportedEncodingException, JsonProcessingException {
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + NAMESPACE_AND_NAME + "/annotate/" + REVISION + "/" + PATH);
 
@@ -120,7 +120,7 @@ class AnnotateResourceTest extends RepositoryTestBase {
     String content = response.getContentAsString();
     ObjectMapper mapper = new ObjectMapper();
     JsonNode jsonNode = mapper.readTree(content);
-    JsonNode blameLines = jsonNode.get("blameLines");
+    JsonNode blameLines = jsonNode.get("lines");
     assertThat(blameLines.isArray()).isTrue();
     assertThat(jsonNode.get("_links").get("self").get("href").asText())
       .isEqualTo("/v2/repositories/space/X/annotate/123/some%2Ffile");
