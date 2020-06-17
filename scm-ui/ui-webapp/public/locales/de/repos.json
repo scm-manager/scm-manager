@@ -82,6 +82,7 @@
     "collapseDiffs": "Auf-/Zuklappen"
   },
   "changeset": {
+    "label": "Changeset",
     "description": "Beschreibung",
     "summary": "Changeset <0/> wurde <1/> committet",
     "shortSummary": "Committet <0/> <1/>",

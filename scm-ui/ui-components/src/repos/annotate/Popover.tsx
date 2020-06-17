@@ -31,6 +31,7 @@ import { DateInput } from "../../useDateFormatter";
 import { Repository, AnnotatedLine } from "@scm-manager/ui-types";
 import AuthorImage from "./AuthorImage";
 import { Action } from "./actions";
+import {useTranslation} from "react-i18next";
 
 const PopoverContainer = styled.div`
   position: absolute;
@@ -89,6 +90,7 @@ type PopoverProps = {
 };
 
 const Popover: FC<PopoverProps> = ({ annotation, offsetTop, repository, baseDate, dispatch }) => {
+  const [t] = useTranslation("repos");
   const [height, setHeight] = useState(125);
   const ref = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -127,7 +129,7 @@ const Popover: FC<PopoverProps> = ({ annotation, offsetTop, repository, baseDate
       </PopoverHeading>
       <SmallHr />
       <p>
-        Changeset{" "}
+        {t("changeset.label") + " "}
         <Link to={`/repo/${repository.namespace}/${repository.name}/code/changeset/${annotation.revision}`}>
           {shortRevision(annotation.revision)}
         </Link>

@@ -103,7 +103,7 @@ const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
         node,
         stylesheet,
         useInlineStyles,
-        key: `code-segement${i}`
+        key: `code-segment${i}`
       });
 
       if (i + 1 < rows.length) {
