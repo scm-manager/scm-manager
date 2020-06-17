@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useContext } from "react";
-import { Link, useRouteMatch, useLocation } from "react-router-dom";
+import React, { FC } from "react";
+import { Link } from "react-router-dom";
 import classNames from "classnames";
-import useMenuContext, { MenuContext } from "./MenuContext";
+import useMenuContext from "./MenuContext";
 import { RoutingProps } from "./RoutingProps";
 import useActiveMatch from "./useActiveMatch";
 
@@ -46,7 +46,7 @@ const SubNavigation: FC<Props> = ({ to, activeOnlyWhenExact, activeWhenMatch, ic
     to: parent,
     activeOnlyWhenExact,
     activeWhenMatch
-  })
+  });
 
   let defaultIcon = "fas fa-cog";
   if (icon) {

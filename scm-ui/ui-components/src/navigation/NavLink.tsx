@@ -23,7 +23,7 @@
  */
 import * as React from "react";
 import classNames from "classnames";
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { RoutingProps } from "./RoutingProps";
 import { FC } from "react";
 import useMenuContext from "./MenuContext";
