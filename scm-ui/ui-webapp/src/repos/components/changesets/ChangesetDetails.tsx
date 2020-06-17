@@ -135,7 +135,7 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
         <ContributorColumn>
           <Icon name="angle-right" /> <ChangesetAuthor changeset={changeset} />
         </ContributorColumn>
-        <CountColumn>
+        <CountColumn className={"is-hidden-mobile"}>
           (
           <span className="has-text-link">
             {t("changeset.contributors.count", { count: countContributors(changeset) })}
