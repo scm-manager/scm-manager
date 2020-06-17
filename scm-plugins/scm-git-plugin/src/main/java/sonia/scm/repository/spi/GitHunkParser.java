@@ -49,7 +49,7 @@ final class GitHunkParser {
   public List<Hunk> parse(String content) {
     List<Hunk> hunks = new ArrayList<>();
 
-    try (Scanner scanner = new Scanner(content).useDelimiter("[\n\r\u2028\u2029\u0085]+")) {
+    try (Scanner scanner = new Scanner(content).useDelimiter("\n")) {
       while (scanner.hasNext()) {
         String line = scanner.next();
         if (line.startsWith("@@")) {
