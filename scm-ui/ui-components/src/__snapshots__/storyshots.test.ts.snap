@@ -41,7 +41,7 @@ exports[`Storyshots Annotate Default 1`] = `
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 bJHcch"
             >
               <time
-                className="dates__DateElement-rne419-0 gZMOzs"
+                className="DateElement-sc-1schp8c-0 jGghOl"
                 title="2020-04-09 15:07:42"
               >
                 2020-04-09
@@ -120,7 +120,7 @@ exports[`Storyshots Annotate Default 1`] = `
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 bJHcch"
             >
               <time
-                className="dates__DateElement-rne419-0 gZMOzs"
+                className="DateElement-sc-1schp8c-0 jGghOl"
                 title="2020-05-10 11:18:42"
               >
                 2020-05-10
@@ -218,7 +218,7 @@ exports[`Storyshots Annotate Default 1`] = `
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 bJHcch"
             >
               <time
-                className="dates__DateElement-rne419-0 gZMOzs"
+                className="DateElement-sc-1schp8c-0 jGghOl"
                 title="2020-04-09 15:07:42"
               >
                 2020-04-09
@@ -308,7 +308,7 @@ exports[`Storyshots Annotate Default 1`] = `
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 bJHcch"
             >
               <time
-                className="dates__DateElement-rne419-0 gZMOzs"
+                className="DateElement-sc-1schp8c-0 jGghOl"
                 title="2020-04-12 18:29:42"
               >
                 2020-04-12
@@ -369,7 +369,7 @@ exports[`Storyshots Annotate Default 1`] = `
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 bJHcch"
             >
               <time
-                className="dates__DateElement-rne419-0 gZMOzs"
+                className="DateElement-sc-1schp8c-0 jGghOl"
                 title="2020-04-09 15:07:42"
               >
                 2020-04-09
@@ -475,7 +475,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 bJHcch"
             >
               <time
-                className="dates__DateElement-rne419-0 gZMOzs"
+                className="DateElement-sc-1schp8c-0 jGghOl"
                 title="2020-04-09 15:07:42"
               >
                 2020-04-09
@@ -559,7 +559,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 bJHcch"
             >
               <time
-                className="dates__DateElement-rne419-0 gZMOzs"
+                className="DateElement-sc-1schp8c-0 jGghOl"
                 title="2020-05-10 11:18:42"
               >
                 2020-05-10
@@ -662,7 +662,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 bJHcch"
             >
               <time
-                className="dates__DateElement-rne419-0 gZMOzs"
+                className="DateElement-sc-1schp8c-0 jGghOl"
                 title="2020-04-09 15:07:42"
               >
                 2020-04-09
@@ -757,7 +757,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 bJHcch"
             >
               <time
-                className="dates__DateElement-rne419-0 gZMOzs"
+                className="DateElement-sc-1schp8c-0 jGghOl"
                 title="2020-04-12 18:29:42"
               >
                 2020-04-12
@@ -823,7 +823,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 bJHcch"
             >
               <time
-                className="dates__DateElement-rne419-0 gZMOzs"
+                className="DateElement-sc-1schp8c-0 jGghOl"
                 title="2020-04-09 15:07:42"
               >
                 2020-04-09
@@ -1612,7 +1612,7 @@ exports[`Storyshots CardColumn With hoverable date 1`] = `
             className="level-item"
           >
             <time
-              className="dates__DateElement-rne419-0 gZMOzs"
+              className="DateElement-sc-1schp8c-0 jGghOl"
               title="2020-03-23 09:26:01"
             >
               3 days ago
@@ -2645,11 +2645,13 @@ exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
 </div>
 `;
 
-exports[`Storyshots DateFromNow Default 1`] = `
-<div>
+exports[`Storyshots Date Date from now 1`] = `
+<div
+  className="Datestories__Wrapper-sc-1uda3v2-0 duRVzW"
+>
   <p>
     <time
-      className="dates__DateElement-rne419-0 gZMOzs"
+      className="DateElement-sc-1schp8c-0 jGghOl"
       title="2009-06-30 18:30:00"
     >
       over 10 years ago
@@ -2657,7 +2659,7 @@ exports[`Storyshots DateFromNow Default 1`] = `
   </p>
   <p>
     <time
-      className="dates__DateElement-rne419-0 gZMOzs"
+      className="DateElement-sc-1schp8c-0 jGghOl"
       title="2019-06-30 18:30:00"
     >
       3 months ago
@@ -2665,7 +2667,7 @@ exports[`Storyshots DateFromNow Default 1`] = `
   </p>
   <p>
     <time
-      className="dates__DateElement-rne419-0 gZMOzs"
+      className="DateElement-sc-1schp8c-0 jGghOl"
       title="2019-10-12 13:56:40"
     >
       less than a minute ago
@@ -2673,10 +2675,49 @@ exports[`Storyshots DateFromNow Default 1`] = `
   </p>
   <p>
     <time
-      className="dates__DateElement-rne419-0 gZMOzs"
+      className="DateElement-sc-1schp8c-0 jGghOl"
       title="2019-10-11 13:56:40"
     >
       1 day ago
+    </time>
+  </p>
+</div>
+`;
+
+exports[`Storyshots Date Short 1`] = `
+<div
+  className="Datestories__Wrapper-sc-1uda3v2-0 duRVzW"
+>
+  <p>
+    <time
+      className="DateElement-sc-1schp8c-0 jGghOl"
+      title="2009-06-30 18:30:00"
+    >
+      2009-06-30
+    </time>
+  </p>
+  <p>
+    <time
+      className="DateElement-sc-1schp8c-0 jGghOl"
+      title="2019-06-30 18:30:00"
+    >
+      2019-06-30
+    </time>
+  </p>
+  <p>
+    <time
+      className="DateElement-sc-1schp8c-0 jGghOl"
+      title="2019-10-12 13:56:40"
+    >
+      2019-10-12
+    </time>
+  </p>
+  <p>
+    <time
+      className="DateElement-sc-1schp8c-0 jGghOl"
+      title="2019-10-11 13:56:40"
+    >
+      2019-10-11
     </time>
   </p>
 </div>
@@ -41145,7 +41186,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
             className="level-item"
           >
             <time
-              className="dates__DateElement-rne419-0 gZMOzs"
+              className="DateElement-sc-1schp8c-0 jGghOl"
               title="2020-03-23 09:26:01"
             >
               3 days ago
@@ -41259,7 +41300,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
             className="level-item"
           >
             <time
-              className="dates__DateElement-rne419-0 gZMOzs"
+              className="DateElement-sc-1schp8c-0 jGghOl"
               title="2020-03-23 09:26:01"
             >
               3 days ago
@@ -41370,7 +41411,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
             className="level-item"
           >
             <time
-              className="dates__DateElement-rne419-0 gZMOzs"
+              className="DateElement-sc-1schp8c-0 jGghOl"
               title="2020-03-23 09:26:01"
             >
               3 days ago
@@ -41488,7 +41529,7 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
             className="level-item"
           >
             <time
-              className="dates__DateElement-rne419-0 gZMOzs"
+              className="DateElement-sc-1schp8c-0 jGghOl"
               title="2020-03-23 09:26:01"
             >
               3 days ago
