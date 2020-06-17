@@ -204,7 +204,7 @@ export default function reducer(
           ...state[_key],
           byId: {
             ..._oldByIds,
-            [changeset.id]: changeset
+            [payload.id]: changeset
           }
         }
       };
