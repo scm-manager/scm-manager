@@ -72,6 +72,7 @@ const PopoverHeading = styled.div`
 
 const PopoverDescription = styled.p`
   margin-top: 0.5em;
+  overflow-wrap: break-word;
 `;
 
 const shortRevision = (revision: string) => {
