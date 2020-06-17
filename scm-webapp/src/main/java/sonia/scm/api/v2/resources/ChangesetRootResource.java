@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -154,15 +154,21 @@ public class ChangesetRootResource {
         .setStartChangeset(id)
         .setEndChangeset(id)
         .getChangesets();
-      if (changesets != null && changesets.getChangesets() != null && !changesets.getChangesets().isEmpty()) {
-        Optional<Changeset> changeset = changesets.getChangesets().stream().filter(ch -> ch.getId().equals(id)).findFirst();
-        if (!changeset.isPresent()) {
-          return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(changesetToChangesetDtoMapper.map(changeset.get(), repository)).build();
-      } else {
+
+      if (changesets == null || changesets.getChangesets() == null || changesets.getChangesets().isEmpty()) {
         return Response.status(Response.Status.NOT_FOUND).build();
       }
+      Optional<Changeset> changeset = changesets
+        .getChangesets()
+        .stream()
+        .filter(c -> c.getId().startsWith(id))
+        .findFirst();
+
+      if (!changeset.isPresent()) {
+        return Response.status(Response.Status.NOT_FOUND).build();
+      }
+
+      return Response.ok(changesetToChangesetDtoMapper.map(changeset.get(), repository)).build();
     }
   }
 }
