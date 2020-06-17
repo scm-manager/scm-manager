@@ -22,26 +22,15 @@
  * SOFTWARE.
  */
 
-import { chooseLocale, supportedLocales } from "./DateFromNow";
+import { AvatarImage } from "../../avatar";
+import styled from "styled-components";
 
-describe("test choose locale", () => {
-  it("should choose de", () => {
-    const locale = chooseLocale("de_DE", ["de", "en"]);
-    expect(locale).toBe(supportedLocales.de);
-  });
+const AuthorImage = styled(AvatarImage)`
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  margin-bottom: 0.2em;
+  vertical-align: middle;
+`;
 
-  it("should choose de, even without language array", () => {
-    const locale = chooseLocale("de", []);
-    expect(locale).toBe(supportedLocales.de);
-  });
-
-  it("should choose es", () => {
-    const locale = chooseLocale("de", ["af", "be", "es"]);
-    expect(locale).toBe(supportedLocales.es);
-  });
-
-  it("should fallback en", () => {
-    const locale = chooseLocale("af", ["af", "be"]);
-    expect(locale).toBe(supportedLocales.en);
-  });
-});
+export default AuthorImage;

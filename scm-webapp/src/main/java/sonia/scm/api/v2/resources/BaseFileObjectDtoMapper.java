@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -63,6 +63,7 @@ abstract class BaseFileObjectDtoMapper extends HalAppenderMapper implements Inst
     } else {
       links.self(resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path));
       links.single(link("history", resourceLinks.fileHistory().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path)));
+      links.single(link("annotate", resourceLinks.annotate().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path)));
     }
     if (fileObject.isTruncated()) {
       links.single(link("proceed", resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path) + "?offset=" + (offset + BrowseCommandRequest.DEFAULT_REQUEST_LIMIT)));

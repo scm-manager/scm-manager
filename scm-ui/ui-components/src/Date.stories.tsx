@@ -21,21 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React from "react";
+import DateFromNow from "./DateFromNow";
+import { storiesOf } from "@storybook/react";
+import DateShort from "./DateShort";
+import styled from "styled-components";
 
-import { apiClient } from "@scm-manager/ui-components";
+const baseProps = {
+  timeZone: "Europe/Berlin",
+  baseDate: "2019-10-12T13:56:42+02:00"
+};
 
-export type ContentType = {
-  type : string;
-  language?: string;
-}
+const dates = [
+  "2009-06-30T18:30:00+02:00",
+  "2019-06-30T18:30:00+02:00",
+  "2019-10-12T13:56:40+02:00",
+  "2019-10-11T13:56:40+02:00"
+];
 
-export function getContentType(url: string) : Promise<ContentType> {
-  return apiClient
-    .head(url)
-    .then(response => {
-      return {
-        type: response.headers.get("Content-Type") || "application/octet-stream",
-        language: response.headers.get("X-Programming-Language") || undefined
-      };
-    })
-}
+const Wrapper = styled.div`
+  padding: 2rem;
+`;
+
+storiesOf("Date", module)
+  .add("Date from now", () => (
+    <Wrapper>
+      {dates.map(d => (
+        <p>
+          <DateFromNow date={d} {...baseProps} />
+        </p>
+      ))}
+    </Wrapper>
+  ))
+  .add("Short", () => (
+    <Wrapper>
+      {dates.map(d => (
+        <p>
+          <DateShort date={d} {...baseProps} />
+        </p>
+      ))}
+    </Wrapper>
+  ));

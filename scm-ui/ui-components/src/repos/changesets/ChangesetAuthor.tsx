@@ -36,6 +36,7 @@ type Props = {
 
 type PersonProps = {
   person: Person;
+  className?: string;
   displayTextOnly?: boolean;
 };
 
@@ -70,7 +71,7 @@ const ContributorWithAvatar: FC<PersonAvatarProps> = ({ person, avatar }) => {
   return <ContributorAvatar src={avatar} alt={person.name} title={person.name} />;
 };
 
-const SingleContributor: FC<PersonProps> = ({ person, displayTextOnly }) => {
+export const SingleContributor: FC<PersonProps> = ({ person, className, displayTextOnly }) => {
   const [t] = useTranslation("repos");
   const avatar = useAvatar(person);
   if (!displayTextOnly && avatar) {
@@ -78,12 +79,16 @@ const SingleContributor: FC<PersonProps> = ({ person, displayTextOnly }) => {
   }
   if (person.mail) {
     return (
-      <a href={"mailto:" + person.mail} title={t("changeset.contributors.mailto") + " " + person.mail}>
+      <a
+        className={className}
+        href={"mailto:" + person.mail}
+        title={t("changeset.contributors.mailto") + " " + person.mail}
+      >
         {person.name}
       </a>
     );
   }
-  return <>{person.name}</>;
+  return <span className={className}>{person.name}</span>;
 };
 
 type PersonsProps = {

@@ -22,20 +22,21 @@
  * SOFTWARE.
  */
 
-import { apiClient } from "@scm-manager/ui-components";
+package sonia.scm.api.v2.resources;
 
-export type ContentType = {
-  type : string;
-  language?: string;
-}
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+import lombok.Data;
 
-export function getContentType(url: string) : Promise<ContentType> {
-  return apiClient
-    .head(url)
-    .then(response => {
-      return {
-        type: response.headers.get("Content-Type") || "application/octet-stream",
-        language: response.headers.get("X-Programming-Language") || undefined
-      };
-    })
+import java.util.List;
+
+@Data
+public class BlameDto extends HalRepresentation {
+
+  private List<BlameLineDto> lines;
+
+  public BlameDto(Links links) {
+    super(links);
+  }
+
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.util.Providers;
@@ -84,9 +84,6 @@ public class TagRootResourceTest extends RepositoryTestBase {
   @InjectMocks
   private TagToTagDtoMapperImpl tagToTagDtoMapper;
 
-  private TagRootResource tagRootResource;
-
-
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
@@ -95,7 +92,6 @@ public class TagRootResourceTest extends RepositoryTestBase {
   public void prepareEnvironment() throws Exception {
     tagCollectionToDtoMapper = new TagCollectionToDtoMapper(resourceLinks, tagToTagDtoMapper);
     tagRootResource = new TagRootResource(serviceFactory, tagCollectionToDtoMapper, tagToTagDtoMapper);
-    super.tagRootResource = Providers.of(tagRootResource);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);

@@ -44,6 +44,7 @@ import {
 export { validation, urls, repositories };
 
 export { default as DateFromNow } from "./DateFromNow";
+export { default as DateShort } from "./DateShort";
 export { default as ErrorNotification } from "./ErrorNotification";
 export { default as ErrorPage } from "./ErrorPage";
 export { default as Icon } from "./Icon";

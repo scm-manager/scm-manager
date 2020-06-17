@@ -22,20 +22,25 @@
  * SOFTWARE.
  */
 
-import { apiClient } from "@scm-manager/ui-components";
+import React, { FC } from "react";
+import useDateFormatter, { DateProps } from "./useDateFormatter";
+import DateElement from "./DateElement";
 
-export type ContentType = {
-  type : string;
-  language?: string;
-}
+type Props = DateProps & {
+  className?: string;
+};
 
-export function getContentType(url: string) : Promise<ContentType> {
-  return apiClient
-    .head(url)
-    .then(response => {
-      return {
-        type: response.headers.get("Content-Type") || "application/octet-stream",
-        language: response.headers.get("X-Programming-Language") || undefined
-      };
-    })
-}
+const DateShort: FC<Props> = ({ className, ...dateProps }) => {
+  const formatter = useDateFormatter(dateProps);
+  if (!formatter) {
+    return null;
+  }
+
+  return (
+    <DateElement className={className} title={formatter.formatFull()}>
+      {formatter.formatShort()}
+    </DateElement>
+  );
+};
+
+export default DateShort;

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -144,8 +144,6 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
 
   private RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper;
 
-  private RepositoryPermissionRootResource repositoryPermissionRootResource;
-
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
@@ -154,8 +152,7 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
   public void prepareEnvironment() {
     initMocks(this);
     repositoryPermissionCollectionToDtoMapper = new RepositoryPermissionCollectionToDtoMapper(permissionToPermissionDtoMapper, resourceLinks);
-    repositoryPermissionRootResource = new RepositoryPermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, repositoryPermissionCollectionToDtoMapper, resourceLinks, repositoryManager);
-    super.permissionRootResource = Providers.of(repositoryPermissionRootResource);
+    permissionRootResource = new RepositoryPermissionRootResource(permissionDtoToPermissionMapper, permissionToPermissionDtoMapper, repositoryPermissionCollectionToDtoMapper, resourceLinks, repositoryManager);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     subjectThreadState.bind();
     ThreadContext.bind(subject);

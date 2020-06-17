@@ -15,7 +15,7 @@
     "react-redux": "^5.0.7",
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.0",
-    "styled-components": "^4.4.0"
+    "styled-components": "^5.1.0"
   },
   "devDependencies": {
     "@scm-manager/babel-preset": "^2.0.0",
@@ -35,7 +35,7 @@
     "@types/react": "^16.9.9",
     "@types/react-redux": "5.0.7",
     "@types/react-router-dom": "^5.1.0",
-    "@types/styled-components": "^4.1.19",
+    "@types/styled-components": "^5.1.0",
     "jest": "^24.9.0"
   },
   "publishConfig": {

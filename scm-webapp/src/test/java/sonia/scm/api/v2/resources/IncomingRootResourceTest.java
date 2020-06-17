@@ -110,9 +110,6 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
   @InjectMocks
   private DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
 
-  private IncomingRootResource incomingRootResource;
-
-
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
@@ -121,7 +118,6 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
   public void prepareEnvironment() {
     incomingChangesetCollectionToDtoMapper = new IncomingChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     incomingRootResource = new IncomingRootResource(serviceFactory, incomingChangesetCollectionToDtoMapper, diffResultToDiffResultDtoMapper);
-    super.incomingRootResource = Providers.of(incomingRootResource);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(REPOSITORY)).thenReturn(repositoryService);

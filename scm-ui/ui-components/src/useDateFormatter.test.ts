@@ -22,20 +22,26 @@
  * SOFTWARE.
  */
 
-import { apiClient } from "@scm-manager/ui-components";
+import { chooseLocale, supportedLocales } from "./useDateFormatter";
 
-export type ContentType = {
-  type : string;
-  language?: string;
-}
+describe("test choose locale", () => {
+  it("should choose de", () => {
+    const locale = chooseLocale("de_DE", ["de", "en"]);
+    expect(locale).toBe(supportedLocales.de);
+  });
 
-export function getContentType(url: string) : Promise<ContentType> {
-  return apiClient
-    .head(url)
-    .then(response => {
-      return {
-        type: response.headers.get("Content-Type") || "application/octet-stream",
-        language: response.headers.get("X-Programming-Language") || undefined
-      };
-    })
-}
+  it("should choose de, even without language array", () => {
+    const locale = chooseLocale("de", []);
+    expect(locale).toBe(supportedLocales.de);
+  });
+
+  it("should choose es", () => {
+    const locale = chooseLocale("de", ["af", "be", "es"]);
+    expect(locale).toBe(supportedLocales.es);
+  });
+
+  it("should fallback en", () => {
+    const locale = chooseLocale("af", ["af", "be"]);
+    expect(locale).toBe(supportedLocales.en);
+  });
+});

@@ -22,20 +22,26 @@
  * SOFTWARE.
  */
 
-import { apiClient } from "@scm-manager/ui-components";
+import { AnnotatedLine } from "@scm-manager/ui-types";
 
-export type ContentType = {
-  type : string;
-  language?: string;
-}
+type EnterLine = {
+  annotation: AnnotatedLine;
+  offset: number;
+  line: number;
+  type: "enter-line";
+};
 
-export function getContentType(url: string) : Promise<ContentType> {
-  return apiClient
-    .head(url)
-    .then(response => {
-      return {
-        type: response.headers.get("Content-Type") || "application/octet-stream",
-        language: response.headers.get("X-Programming-Language") || undefined
-      };
-    })
-}
+type LeaveLine = {
+  line: number;
+  type: "leave-line";
+};
+
+type EnterPopover = {
+  type: "enter-popover";
+};
+
+type LeavePopover = {
+  type: "leave-popover";
+};
+
+export type Action = EnterLine | LeaveLine | EnterPopover | LeavePopover;

@@ -91,8 +91,6 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
   @InjectMocks
   private DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
 
-  private ChangesetRootResource changesetRootResource;
-
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
@@ -100,7 +98,6 @@ public class ChangesetRootResourceTest extends RepositoryTestBase {
   public void prepareEnvironment() {
     changesetCollectionToDtoMapper = new ChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     changesetRootResource = new ChangesetRootResource(serviceFactory, changesetCollectionToDtoMapper, changesetToChangesetDtoMapper);
-    super.changesetRootResource = Providers.of(changesetRootResource);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);

@@ -82,6 +82,7 @@
     "collapseDiffs": "Collapse"
   },
   "changeset": {
+    "label": "Changeset",
     "description": "Description",
     "summary": "Changeset <0/> was committed <1/>",
     "shortSummary": "Committed <0/> <1/>",

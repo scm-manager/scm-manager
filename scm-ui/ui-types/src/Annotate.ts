@@ -22,20 +22,18 @@
  * SOFTWARE.
  */
 
-import { apiClient } from "@scm-manager/ui-components";
+import { Person } from "./Person";
 
-export type ContentType = {
-  type : string;
+export type AnnotatedSource = {
+  lines: AnnotatedLine[];
   language?: string;
-}
+};
 
-export function getContentType(url: string) : Promise<ContentType> {
-  return apiClient
-    .head(url)
-    .then(response => {
-      return {
-        type: response.headers.get("Content-Type") || "application/octet-stream",
-        language: response.headers.get("X-Programming-Language") || undefined
-      };
-    })
-}
+export type AnnotatedLine = {
+  author: Person;
+  code: string;
+  description: string;
+  lineNumber: number;
+  revision: string;
+  when: Date;
+};

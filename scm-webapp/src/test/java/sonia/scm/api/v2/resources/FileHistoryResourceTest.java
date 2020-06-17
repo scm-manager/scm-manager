@@ -92,8 +92,6 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
   @InjectMocks
   private DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
 
-  private FileHistoryRootResource fileHistoryRootResource;
-
   private RestDispatcher dispatcher = new RestDispatcher();
 
   private final Subject subject = mock(Subject.class);
@@ -103,7 +101,6 @@ public class FileHistoryResourceTest extends RepositoryTestBase {
   public void prepareEnvironment() {
     fileHistoryCollectionToDtoMapper = new FileHistoryCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     fileHistoryRootResource = new FileHistoryRootResource(serviceFactory, fileHistoryCollectionToDtoMapper);
-    super.fileHistoryRootResource = Providers.of(fileHistoryRootResource);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);

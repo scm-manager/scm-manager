@@ -39,6 +39,7 @@ import {
 
 export { diffs };
 
+export * from "./annotate";
 export * from "./changesets";
 
 export { default as Diff } from "./Diff";

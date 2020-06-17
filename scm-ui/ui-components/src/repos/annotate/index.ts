@@ -22,20 +22,4 @@
  * SOFTWARE.
  */
 
-import { apiClient } from "@scm-manager/ui-components";
-
-export type ContentType = {
-  type : string;
-  language?: string;
-}
-
-export function getContentType(url: string) : Promise<ContentType> {
-  return apiClient
-    .head(url)
-    .then(response => {
-      return {
-        type: response.headers.get("Content-Type") || "application/octet-stream",
-        language: response.headers.get("X-Programming-Language") || undefined
-      };
-    })
-}
+export { default as Annotate } from "./Annotate";
