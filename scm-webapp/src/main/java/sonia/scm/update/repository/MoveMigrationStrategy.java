@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update.repository;
 
 import org.slf4j.Logger;
@@ -83,17 +83,20 @@ class MoveMigrationStrategy extends BaseMigrationStrategy {
 
   private void moveData(Path sourceDirectory, Path targetDirectory) {
     createDataDirectory(targetDirectory);
-    listSourceDirectory(sourceDirectory).forEach(
+    listSourceDirectory(sourceDirectory, paths -> paths.forEach(
       sourceFile -> {
         Path targetFile = targetDirectory.resolve(sourceFile.getFileName());
         if (Files.isDirectory(sourceFile)) {
+          LOG.trace("traversing down into sub directory {}", sourceFile);
           moveData(sourceFile, targetFile);
         } else {
+          LOG.trace("moving file {} to {}", sourceFile, targetFile);
           moveFile(sourceFile, targetFile);
         }
       }
-    );
+    ));
     try {
+      LOG.trace("deleting source directory {}", sourceDirectory);
       Files.delete(sourceDirectory);
     } catch (IOException e) {
       LOG.warn("could not delete source repository directory {}", sourceDirectory);

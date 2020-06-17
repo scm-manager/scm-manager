@@ -8,7 +8,7 @@
   "scripts": {
     "build": "webpack --mode=production --config=scm-ui/ui-scripts/src/webpack.config.js",
     "build:dev": "webpack --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
-    "test": "lerna run --scope '@scm-manager/ui-*' test",
+    "test": "lerna run --scope '@scm-manager/ui-*' --scope '@scm-manager/eslint-config' test",
     "typecheck": "lerna run --scope '@scm-manager/ui-*' typecheck",
     "serve": "NODE_ENV=development webpack-dev-server --hot --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
     "deploy": "ui-scripts publish",

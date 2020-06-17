@@ -1,9 +1,9 @@
 {
   "name": "@scm-manager/ui-webapp",
-  "version": "2.0.0",
+  "version": "2.1.0-SNAPSHOT",
   "private": true,
   "dependencies": {
-    "@scm-manager/ui-components": "^2.0.0",
+    "@scm-manager/ui-components": "^2.1.0-SNAPSHOT",
     "@scm-manager/ui-extensions": "^2.0.0",
     "classnames": "^2.2.5",
     "history": "^4.10.1",
