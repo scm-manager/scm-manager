@@ -23,10 +23,9 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { Link, Repository, File } from "@scm-manager/ui-types";
+import { Link, Repository, File, AnnotatedSource } from "@scm-manager/ui-types";
 import { Annotate, apiClient, ErrorNotification, Loading } from "@scm-manager/ui-components";
 import { getContentType } from "./contentType";
-import { AnnotatedSource } from "@scm-manager/ui-components/src/Annotate";
 
 type Props = {
   file: File;
