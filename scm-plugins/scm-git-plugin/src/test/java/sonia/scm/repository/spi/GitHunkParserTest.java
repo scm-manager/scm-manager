@@ -203,7 +203,7 @@ class GitHunkParserTest {
     DiffLine line1 = lines.next();
     assertThat(line1.getOldLineNumber()).hasValue(10);
     assertThat(line1.getNewLineNumber()).hasValue(10);
-    assertThat(line1.getContent()).isEqualTo("indent_style = space");
+    assertThat(line1.getContent()).isEqualTo("indent_style = space\r\r");
 
     lines.next();
     lines.next();
