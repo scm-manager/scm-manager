@@ -36,10 +36,10 @@ import java.util.stream.Stream;
 
 abstract class BaseMigrationStrategy implements MigrationStrategy.Instance {
 
-  private final SCMContextProvider contextProvider;
+  private final V1RepositoryMigrationLocationResolver locationResolver;
 
   BaseMigrationStrategy(SCMContextProvider contextProvider) {
-    this.contextProvider = contextProvider;
+    this.locationResolver = new V1RepositoryMigrationLocationResolver(contextProvider);
   }
 
   Path getSourceDataPath(String name, String type) {
@@ -48,7 +48,7 @@ abstract class BaseMigrationStrategy implements MigrationStrategy.Instance {
   }
 
   Path getTypeDependentPath(String type) {
-    return contextProvider.getBaseDirectory().toPath().resolve("repositories").resolve(type);
+    return locationResolver.getTypeDependentPath(type);
   }
 
   void listSourceDirectory(Path sourceDirectory, Consumer<Stream<Path>> pathConsumer) {
