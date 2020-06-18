@@ -21,47 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import * as React from "react";
-import classNames from "classnames";
-import { Link } from "react-router-dom";
+
+import { useLocation, useRouteMatch } from "react-router-dom";
 import { RoutingProps } from "./RoutingProps";
-import { FC } from "react";
-import useMenuContext from "./MenuContext";
-import useActiveMatch from "./useActiveMatch";
 
-type Props = RoutingProps & {
-  label: string;
-  title?: string;
-  icon?: string;
+const useActiveMatch = ({ to, activeOnlyWhenExact, activeWhenMatch }: RoutingProps) => {
+  const match = useRouteMatch({
+    path: to,
+    exact: activeOnlyWhenExact
+  });
+
+  const location = useLocation();
+
+  const isActiveWhenMatch = () => {
+    if (activeWhenMatch) {
+      return activeWhenMatch({
+        location
+      });
+    }
+    return false;
+  };
+
+  return !!match || isActiveWhenMatch();
 };
 
-const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, icon, label, title }) => {
-  const active = useActiveMatch({ to, activeWhenMatch, activeOnlyWhenExact });
-
-  const context = useMenuContext();
-  const collapsed = context.isCollapsed();
-
-  let showIcon = null;
-  if (icon) {
-    showIcon = (
-      <>
-        <i className={classNames(icon, "fa-fw")} />{" "}
-      </>
-    );
-  }
-
-  return (
-    <li title={collapsed ? title : undefined}>
-      <Link className={classNames(active ? "is-active" : "", collapsed ? "has-text-centered" : "")} to={to}>
-        {showIcon}
-        {collapsed ? null : label}
-      </Link>
-    </li>
-  );
-};
-
-NavLink.defaultProps = {
-  activeOnlyWhenExact: true
-};
-
-export default NavLink;
+export default useActiveMatch;

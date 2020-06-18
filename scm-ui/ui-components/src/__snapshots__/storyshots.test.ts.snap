@@ -40777,6 +40777,68 @@ exports[`Storyshots Modal|Modal Default 1`] = `
 </div>
 `;
 
+exports[`Storyshots Navigation|Secondary Active when match 1`] = `
+<div
+  className="SecondaryNavigationstories__Columns-fdxo4w-0 iEPunq columns"
+>
+  <div
+    className="column is-3"
+  >
+    <aside
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 cpLxdt menu"
+    >
+      <div>
+        <p
+          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 bzrEDi menu-label"
+          onClick={[Function]}
+        >
+          <i
+            className="SecondaryNavigation__Icon-sc-8p1rgi-1 djTcfn is-medium"
+            color="info"
+          >
+            <i
+              className="fas fa-caret-right"
+            />
+          </i>
+          Hitchhiker
+        </p>
+        <ul
+          className="menu-list"
+          onClick={[Function]}
+        >
+          <li>
+            <a
+              className=""
+              href="/42"
+              onClick={[Function]}
+            >
+              <i
+                className="fas fa-puzzle-piece fa-fw"
+              />
+               
+              Puzzle 42
+            </a>
+          </li>
+          <li>
+            <a
+              className="is-active"
+              href="/heart-of-gold"
+              onClick={[Function]}
+            >
+              <i
+                className="fas fa-star fa-fw"
+              />
+               
+              Heart Of Gold
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</div>
+`;
+
 exports[`Storyshots Navigation|Secondary Default 1`] = `
 <div
   className="SecondaryNavigationstories__Columns-fdxo4w-0 iEPunq columns"

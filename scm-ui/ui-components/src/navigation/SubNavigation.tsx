@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useContext } from "react";
-import { Link, useRouteMatch } from "react-router-dom";
+import React, { FC } from "react";
+import { Link } from "react-router-dom";
 import classNames from "classnames";
-import useMenuContext, { MenuContext } from "./MenuContext";
+import useMenuContext from "./MenuContext";
 import { RoutingProps } from "./RoutingProps";
+import useActiveMatch from "./useActiveMatch";
 
 type Props = RoutingProps & {
   label: string;
@@ -33,18 +34,19 @@ type Props = RoutingProps & {
   icon?: string;
 };
 
-const SubNavigation: FC<Props> = ({ to, activeOnlyWhenExact, icon, title, label, children }) => {
+const SubNavigation: FC<Props> = ({ to, activeOnlyWhenExact, activeWhenMatch, icon, title, label, children }) => {
+  const context = useMenuContext();
+  const collapsed = context.isCollapsed();
+
   const parents = to.split("/");
   parents.splice(-1, 1);
   const parent = parents.join("/");
 
-  const match = useRouteMatch({
-    path: parent,
-    exact: activeOnlyWhenExact
+  const active = useActiveMatch({
+    to: parent,
+    activeOnlyWhenExact,
+    activeWhenMatch
   });
-
-  const context = useMenuContext();
-  const collapsed = context.isCollapsed();
 
   let defaultIcon = "fas fa-cog";
   if (icon) {
@@ -52,13 +54,13 @@ const SubNavigation: FC<Props> = ({ to, activeOnlyWhenExact, icon, title, label,
   }
 
   let childrenList = null;
-  if (match && !collapsed) {
+  if (active && !collapsed) {
     childrenList = <ul className="sub-menu">{children}</ul>;
   }
 
   return (
     <li title={collapsed ? title : undefined}>
-      <Link className={classNames(match != null ? "is-active" : "", collapsed ? "has-text-centered" : "")} to={to}>
+      <Link className={classNames(active ? "is-active" : "", collapsed ? "has-text-centered" : "")} to={to}>
         <i className={classNames(defaultIcon, "fa-fw")} /> {collapsed ? "" : label}
       </Link>
       {childrenList}
