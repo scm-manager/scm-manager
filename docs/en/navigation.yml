@@ -6,6 +6,13 @@
   - /faq/
   - /known-issues/
 
+- section: User-oriented
+  entries:
+    - /user/repo/
+    - /user/user/
+    - /user/group/
+    - /user/admin/
+
 - section: Administration
   entries:
   - /administration/scm-server-ssl/
@@ -32,10 +39,3 @@
   - /development/plugins/plugin-descriptor/
   - /development/plugins/plugin-development/
   - /development/plugins/publish/
-
-- section: User-oriented
-  entries:
-  - /user/repo/
-  - /user/user/
-  - /user/group/
-  - /user/admin/
