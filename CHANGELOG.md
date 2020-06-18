@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Close file lists in migration ([#1191](https://github.com/scm-manager/scm-manager/pull/1191))
 - Use command in javahg.py from registrar (Upgrade to newer javahg version)  ([#1192](https://github.com/scm-manager/scm-manager/pull/1192))
 - Fixed wrong e-tag format ([sdorra/web-resource #1](https://github.com/sdorra/web-resources/pull/1))
+- Fixed refetching loop for non existing changesets ([#1203](https://github.com/scm-manager/scm-manager/pull/1203))
 - Fixed active state of sub navigation items, which are using activeWhenMatch ([#1199](https://github.com/scm-manager/scm-manager/pull/1199))
 - Handles repositories in custom directories correctly in migration from 1.x ([#1201](https://github.com/scm-manager/scm-manager/pull/1201))
 - Usage of short git commit ids in changeset urls ([#1200](https://github.com/scm-manager/scm-manager/pull/1200))
