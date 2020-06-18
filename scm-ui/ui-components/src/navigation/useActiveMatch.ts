@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-import {useLocation, useRouteMatch} from "react-router-dom";
-import {RoutingProps} from "./RoutingProps";
+import { useLocation, useRouteMatch } from "react-router-dom";
+import { RoutingProps } from "./RoutingProps";
 
-const useActiveMatch = ({to, activeOnlyWhenExact, activeWhenMatch}: RoutingProps) => {
+const useActiveMatch = ({ to, activeOnlyWhenExact, activeWhenMatch }: RoutingProps) => {
   const match = useRouteMatch({
     path: to,
     exact: activeOnlyWhenExact

@@ -36,7 +36,7 @@ type Props = RoutingProps & {
 };
 
 const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, icon, label, title }) => {
-  const active = useActiveMatch({to, activeWhenMatch, activeOnlyWhenExact});
+  const active = useActiveMatch({ to, activeWhenMatch, activeOnlyWhenExact });
 
   const context = useMenuContext();
   const collapsed = context.isCollapsed();
