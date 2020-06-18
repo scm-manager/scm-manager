@@ -17281,7 +17281,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               className="control"
             >
               <span
-                className="tooltip has-tooltip-top has-tooltip-multiline"
+                className="tooltip has-tooltip-top is-multiline"
                 data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
                 <a
@@ -17862,7 +17862,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               className="control"
             >
               <span
-                className="tooltip has-tooltip-top has-tooltip-multiline"
+                className="tooltip has-tooltip-top is-multiline"
                 data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
                 <a
@@ -18720,7 +18720,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               className="control"
             >
               <span
-                className="tooltip has-tooltip-top has-tooltip-multiline"
+                className="tooltip has-tooltip-top is-multiline"
                 data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
                 <a
@@ -19174,7 +19174,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               className="control"
             >
               <span
-                className="tooltip has-tooltip-top has-tooltip-multiline"
+                className="tooltip has-tooltip-top is-multiline"
                 data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
                 <a
@@ -19628,7 +19628,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               className="control"
             >
               <span
-                className="tooltip has-tooltip-top has-tooltip-multiline"
+                className="tooltip has-tooltip-top is-multiline"
                 data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
                 <a
@@ -20689,7 +20689,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               className="control"
             >
               <span
-                className="tooltip has-tooltip-top has-tooltip-multiline"
+                className="tooltip has-tooltip-top is-multiline"
                 data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
                 <a

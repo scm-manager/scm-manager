@@ -38,7 +38,7 @@ class Tooltip extends React.Component<Props> {
 
   render() {
     const { className, message, location, children } = this.props;
-    const multiline = message.length > 60 ? "has-tooltip-multiline" : "";
+    const multiline = message.length > 60 ? "is-multiline" : "";
     return (
       <span className={classNames("tooltip", "has-tooltip-" + location, multiline, className)} data-tooltip={message}>
         {children}
