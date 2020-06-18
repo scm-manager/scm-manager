@@ -125,6 +125,7 @@
     "content": {
       "historyButton": "History",
       "sourcesButton": "Sources",
+      "annotateButton": "Annotate",
       "downloadButton": "Download",
       "toggleButton": {
         "showMarkdown": "Markdown rendern",
