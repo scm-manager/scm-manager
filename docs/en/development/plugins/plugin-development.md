@@ -95,18 +95,17 @@ In order to extend the ui the plugin requires a `package.json` in the project ro
     "postinstall" : "ui-plugins postinstall"
   },
   "dependencies": {
-    "@scm-manager/ui-plugins" : "2.0.0-rc7"
+    "@scm-manager/ui-plugins" : "2.0.0"
   }
 }
 
 ```
 
 The `main` field of the `package.json` describes the main entry point of the plugin.
-The file specified at `main` should use the `binder` from the [@scm-manager/ui-extensions](../../scm-ui/ui-extensions) in oder to bind its extensions.
-For more information of extensions, binder and extension points, please have a look at the [README.md](../../scm-ui/ui-extensions/README.md) of @scm-manager/ui-extensions.
+The file specified at `main` should use the `binder` from the [@scm-manager/ui-extensions](../../ui-extensions) in oder to bind its extensions.
 
 If the plugins gets build (`mvn package` or `mvn install`), the [buildfrontend-maven-plugin](https://github.com/sdorra/buildfrontend-maven-plugin), will call the `build` script of `package.json`.
-The build script triggers the `plugin` command of [@scm-manager/ui-scripts](../../scm-ui/ui-scripts).
+The build script triggers the `plugin` command of `@scm-manager/ui-scripts`.
 The `ui-scripts` will do the following steps:
 
 * traverses the import statements of the script specified at `main`

@@ -18,7 +18,7 @@
     "update-storyshots": "jest --testPathPattern=\"storyshots.test.ts\" --collectCoverage=false -u"
   },
   "devDependencies": {
-    "@scm-manager/ui-tests": "^2.0.0",
+    "@scm-manager/ui-tests": "^2.1.0-SNAPSHOT",
     "@storybook/addon-actions": "^5.2.3",
     "@storybook/addon-storyshots": "^5.2.3",
     "@storybook/react": "^5.2.3",
@@ -46,7 +46,7 @@
     "worker-plugin": "^3.2.0"
   },
   "dependencies": {
-    "@scm-manager/ui-extensions": "^2.0.0",
+    "@scm-manager/ui-extensions": "^2.1.0-SNAPSHOT",
     "@scm-manager/ui-types": "^2.1.0-SNAPSHOT",
     "classnames": "^2.2.6",
     "date-fns": "^2.4.1",

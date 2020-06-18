@@ -23,7 +23,7 @@ To specify the new names (and namespaces), the SCM-Manager version 2 starts a mi
 
 You can open this wizard in an internet browser using the URL of your installation (eg. http://localhost:8080/scm/). 
 
-![Migration Wizard](screenshots/migration-wizard.png)
+![Migration Wizard](assets/migration-wizard.png)
 
 In the figure you can see an example of the page. We tried to guess meaningful names, but for sure you want to make some changes here. Beside choosing new namespaces and names you have to select a migration strategy for each repository. The strategies are described on the page as follows:
 
