@@ -39,5 +39,5 @@ sudo systemctl enable scm-server
 
 # we start scm-manager after 5 seconds
 # this is required, because if we install scm-manager with recommend java
-# java is not fully setup if we ran our posint script
+# java is not fully setup if we ran our postint script
 echo "sleep 5; sudo systemctl start scm-server" | at now
