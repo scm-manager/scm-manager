@@ -21,25 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+export default `# Commit Links in Markdown
+namespace/name@1a5s4w8a
 
-export const nameRegex = /^[A-Za-z0-9\.\-_][A-Za-z0-9\.\-_@]*$/;
+Please check for this commit: namespace/name@1a5s4w8a
 
-export const isNameValid = (name: string) => {
-  return nameRegex.test(name);
-};
+hitchhiker/heart-of-gold@c7237cb60689046990dc9dc2a388a517adb3e2b2
 
-const mailRegex = /^[ -~]+@[A-Za-z0-9][\w\-.]*\.[A-Za-z0-9][A-Za-z0-9-]+$/;
+hitchhiker/heart-of-gold@c7237cb
 
-export const isMailValid = (mail: string) => {
-  return mailRegex.test(mail);
-};
+hitchhiker/heart-of-gold@42
 
-export const isNumberValid = (number: any) => {
-  return !isNaN(number);
-};
+[hitchhiker/heart-of-gold@42](https://scm-manager.org/)
 
-const pathRegex = /^((?!\/{2,}).)*$/;
+Prefix hitchhiker/heart-of-gold@42 some text hitchhiker/heart-of-gold@21 suffix
 
-export const isPathValid = (path: string) => {
-  return pathRegex.test(path);
-};
+`;

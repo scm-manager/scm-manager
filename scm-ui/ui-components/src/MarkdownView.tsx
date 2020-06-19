@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 // @ts-ignore
 import Markdown from "react-markdown/with-html";
 import { binder } from "@scm-manager/ui-extensions";
@@ -30,10 +30,11 @@ import ErrorBoundary from "./ErrorBoundary";
 import SyntaxHighlighter from "./SyntaxHighlighter";
 import MarkdownHeadingRenderer from "./MarkdownHeadingRenderer";
 import { create } from "./MarkdownLinkRenderer";
-import { useTranslation } from "react-i18next";
+import {useTranslation, WithTranslation, withTranslation} from "react-i18next";
 import Notification from "./Notification";
+import { createTransformer } from "./remarkCommitLinksParser";
 
-type Props = RouteComponentProps & {
+type Props = RouteComponentProps & WithTranslation & {
   content: string;
   renderContext?: object;
   renderers?: any;
@@ -100,7 +101,7 @@ class MarkdownView extends React.Component<Props> {
   }
 
   render() {
-    const { content, renderers, renderContext, enableAnchorHeadings, skipHtml, basePath } = this.props;
+    const { content, renderers, renderContext, enableAnchorHeadings, skipHtml, basePath, t } = this.props;
 
     const rendererFactory = binder.getExtension("markdown-renderer-factory");
     let rendererList = renderers;
@@ -134,6 +135,7 @@ class MarkdownView extends React.Component<Props> {
             escapeHtml={skipHtml}
             source={content}
             renderers={rendererList}
+            astPlugins={[createTransformer(t)]}
           />
         </div>
       </ErrorBoundary>
@@ -141,4 +143,4 @@ class MarkdownView extends React.Component<Props> {
   }
 }
 
-export default withRouter(MarkdownView);
+export default withRouter(withTranslation("repos")(MarkdownView));
