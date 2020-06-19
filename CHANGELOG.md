@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Fixed
-- Wait until recommended java installation is available for deb packages
+- Wait until recommended java installation is available for deb packages ([#1209](https://github.com/scm-manager/scm-manager/pull/1209))
 
 ## [2.1.0] - 2020-06-18
 ### Added
