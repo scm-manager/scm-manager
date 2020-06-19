@@ -11,6 +11,14 @@ Make sure you have no changes you want to keep!
 git fetch && git checkout -f origin/develop && git clean -fd && git checkout -B develop
 ```
 
+## Merge support branch
+
+Check whether there is an integration branch for the previous release or bugfixes not merged into the develop branch. Merge them now.
+
+```
+git merge origin/support/<support branch>
+```
+
 ## Modify Changelog
 
 Change "Unreleased" header in `CHANGELOG.md` to  `<version> - <current date>`
@@ -52,6 +60,14 @@ Make sure you have no changes you want to keep!
 
 ```
 git fetch && git checkout -f origin/develop && git clean -fd && git checkout -B develop
+```
+
+## Merge support branch
+
+Check whether there is an integration branch for the previous release or bugfixes not merged into the develop branch. Merge them now.
+
+```
+git merge origin/support/<support branch>
 ```
 
 ## Update SCM parent if necessary
