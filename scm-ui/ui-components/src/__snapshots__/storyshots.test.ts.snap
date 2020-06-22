@@ -17281,7 +17281,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               className="control"
             >
               <span
-                className="tooltip has-tooltip-top has-tooltip-multiline"
+                className="tooltip has-tooltip-top"
                 data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
                 <a
@@ -17862,7 +17862,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               className="control"
             >
               <span
-                className="tooltip has-tooltip-top has-tooltip-multiline"
+                className="tooltip has-tooltip-top"
                 data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
                 <a
@@ -18720,7 +18720,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               className="control"
             >
               <span
-                className="tooltip has-tooltip-top has-tooltip-multiline"
+                className="tooltip has-tooltip-top"
                 data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
                 <a
@@ -19174,7 +19174,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               className="control"
             >
               <span
-                className="tooltip has-tooltip-top has-tooltip-multiline"
+                className="tooltip has-tooltip-top"
                 data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
                 <a
@@ -19628,7 +19628,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               className="control"
             >
               <span
-                className="tooltip has-tooltip-top has-tooltip-multiline"
+                className="tooltip has-tooltip-top"
                 data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
                 <a
@@ -20689,7 +20689,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               className="control"
             >
               <span
-                className="tooltip has-tooltip-top has-tooltip-multiline"
+                className="tooltip has-tooltip-top"
                 data-tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
               >
                 <a
@@ -43584,81 +43584,273 @@ exports[`Storyshots Toast Warning 1`] = `null`;
 
 exports[`Storyshots Tooltip Default 1`] = `
 <div
-  className="Tooltipstories__Wrapper-sc-1c34uq-0 kMYfDl"
+  className="Tooltipstories__Wrapper-sc-1c34uq-0 QoXmo"
 >
-  <div>
-    <div
-      className="Tooltipstories__Spacing-sc-1c34uq-1 loCuMv"
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 fFVjYs"
+  >
+    <span
+      className="tooltip has-tooltip-right"
+      data-tooltip="Heart of Gold"
     >
-      <span
-        className="tooltip has-tooltip-right"
-        data-tooltip="Heart of Gold"
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
       >
-        <button
-          className="button is-info"
-          onClick={[Function]}
-          type="button"
-        >
-          right
-           
-        </button>
+        right
          
-      </span>
-    </div>
-    <div
-      className="Tooltipstories__Spacing-sc-1c34uq-1 loCuMv"
+      </button>
+       
+    </span>
+  </div>
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 fFVjYs"
+  >
+    <span
+      className="tooltip has-tooltip-top"
+      data-tooltip="Heart of Gold"
     >
-      <span
-        className="tooltip has-tooltip-top"
-        data-tooltip="Heart of Gold"
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
       >
-        <button
-          className="button is-info"
-          onClick={[Function]}
-          type="button"
-        >
-          top
-           
-        </button>
+        top
          
-      </span>
-    </div>
-    <div
-      className="Tooltipstories__Spacing-sc-1c34uq-1 loCuMv"
+      </button>
+       
+    </span>
+  </div>
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 fFVjYs"
+  >
+    <span
+      className="tooltip has-tooltip-left"
+      data-tooltip="Heart of Gold"
     >
-      <span
-        className="tooltip has-tooltip-left"
-        data-tooltip="Heart of Gold"
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
       >
-        <button
-          className="button is-info"
-          onClick={[Function]}
-          type="button"
-        >
-          left
-           
-        </button>
+        left
          
-      </span>
-    </div>
-    <div
-      className="Tooltipstories__Spacing-sc-1c34uq-1 loCuMv"
+      </button>
+       
+    </span>
+  </div>
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 fFVjYs"
+  >
+    <span
+      className="tooltip has-tooltip-bottom"
+      data-tooltip="Heart of Gold"
     >
-      <span
-        className="tooltip has-tooltip-bottom"
-        data-tooltip="Heart of Gold"
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
       >
-        <button
-          className="button is-info"
-          onClick={[Function]}
-          type="button"
-        >
-          bottom
-           
-        </button>
+        bottom
          
-      </span>
-    </div>
+      </button>
+       
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Tooltip Multiline 1`] = `
+<div
+  className="Tooltipstories__Wrapper-sc-1c34uq-0 QoXmo"
+>
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 fFVjYs"
+  >
+    <span
+      className="tooltip has-tooltip-right"
+      data-tooltip="Characters:
+
+- Arthur Dent
+- Ford Prefect
+- Zaphod Beeblebrox
+- Marvin the Paranoid Android
+- Trillian
+- Slartibartfast"
+    >
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
+      >
+        right
+         
+      </button>
+       
+    </span>
+  </div>
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 fFVjYs"
+  >
+    <span
+      className="tooltip has-tooltip-top"
+      data-tooltip="Characters:
+
+- Arthur Dent
+- Ford Prefect
+- Zaphod Beeblebrox
+- Marvin the Paranoid Android
+- Trillian
+- Slartibartfast"
+    >
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
+      >
+        top
+         
+      </button>
+       
+    </span>
+  </div>
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 fFVjYs"
+  >
+    <span
+      className="tooltip has-tooltip-left"
+      data-tooltip="Characters:
+
+- Arthur Dent
+- Ford Prefect
+- Zaphod Beeblebrox
+- Marvin the Paranoid Android
+- Trillian
+- Slartibartfast"
+    >
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
+      >
+        left
+         
+      </button>
+       
+    </span>
+  </div>
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 fFVjYs"
+  >
+    <span
+      className="tooltip has-tooltip-bottom"
+      data-tooltip="Characters:
+
+- Arthur Dent
+- Ford Prefect
+- Zaphod Beeblebrox
+- Marvin the Paranoid Android
+- Trillian
+- Slartibartfast"
+    >
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
+      >
+        bottom
+         
+      </button>
+       
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Tooltip Short Multiline 1`] = `
+<div
+  className="Tooltipstories__Wrapper-sc-1c34uq-0 QoXmo"
+>
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 fFVjYs"
+  >
+    <span
+      className="tooltip has-tooltip-right"
+      data-tooltip="* a
+* b
+* c"
+    >
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
+      >
+        right
+         
+      </button>
+       
+    </span>
+  </div>
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 fFVjYs"
+  >
+    <span
+      className="tooltip has-tooltip-top"
+      data-tooltip="* a
+* b
+* c"
+    >
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
+      >
+        top
+         
+      </button>
+       
+    </span>
+  </div>
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 fFVjYs"
+  >
+    <span
+      className="tooltip has-tooltip-left"
+      data-tooltip="* a
+* b
+* c"
+    >
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
+      >
+        left
+         
+      </button>
+       
+    </span>
+  </div>
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 fFVjYs"
+  >
+    <span
+      className="tooltip has-tooltip-bottom"
+      data-tooltip="* a
+* b
+* c"
+    >
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
+      >
+        bottom
+         
+      </button>
+       
+    </span>
   </div>
 </div>
 `;
