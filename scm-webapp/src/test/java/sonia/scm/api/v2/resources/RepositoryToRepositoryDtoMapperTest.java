@@ -33,6 +33,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.HealthCheckFailure;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
@@ -72,6 +73,8 @@ public class RepositoryToRepositoryDtoMapperTest {
   private ScmPathInfoStore scmPathInfoStore;
   @Mock
   private ScmPathInfo uriInfo;
+  @Mock
+  private ScmConfiguration configuration;
 
   @InjectMocks
   private RepositoryToRepositoryDtoMapperImpl mapper;
@@ -83,6 +86,7 @@ public class RepositoryToRepositoryDtoMapperTest {
     when(repositoryService.isSupported(any(Command.class))).thenReturn(true);
     when(repositoryService.getSupportedProtocols()).thenReturn(of());
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
+    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
   }
 
@@ -127,6 +131,23 @@ public class RepositoryToRepositoryDtoMapperTest {
     assertEquals(
       "http://example.com/base/v2/repositories/testspace/test",
       dto.getLinks().getLinkBy("update").get().getHref());
+  }
+
+  @Test
+  public void shouldCreateRenameLink() {
+    when(configuration.getNamespaceStrategy()).thenReturn("test");
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertEquals(
+      "http://example.com/base/v2/repositories/testspace/test/rename",
+      dto.getLinks().getLinkBy("rename").get().getHref());
+  }
+
+  @Test
+  public void shouldCreateRenameWithNamespaceLink() {
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertEquals(
+      "http://example.com/base/v2/repositories/testspace/test/rename",
+      dto.getLinks().getLinkBy("renameWithNamespace").get().getHref());
   }
 
   @Test
