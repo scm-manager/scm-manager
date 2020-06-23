@@ -33,10 +33,6 @@ title: Intellij IDEA Configuration
 * Languages & Frameworks / Node.js and NPM
     * Package Manager: yarn
 
-* Languages & Frameworks / Javascript
-    * JavaScript language version: Flow
-    * Flow package or executable: .../node_modules/flow-bin
-
 * Languages & Frameworks / Javascript / Code Quality Tools / ESLint
     * Enable
     * ESLint package: .../node_modules/eslint
