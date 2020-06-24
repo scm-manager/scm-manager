@@ -4,9 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
 ## Unreleased
 ### Added
 - enrich commit mentions in markdown viewer by internal links  ([#1210](https://github.com/scm-manager/scm-manager/pull/1210))
+
+## [2.1.1] - 2020-06-23
+### Fixed
+- Wait until recommended java installation is available for deb packages ([#1209](https://github.com/scm-manager/scm-manager/pull/1209))
+- Do not force java home of recommended java dependency for rpm and deb packages ([#1195](https://github.com/scm-manager/scm-manager/issues/1195) and [#1208](https://github.com/scm-manager/scm-manager/pull/1208))
+- Migration of non-bare repositories ([#1213](https://github.com/scm-manager/scm-manager/pull/1213))
 
 ## [2.1.0] - 2020-06-18
 ### Added
@@ -29,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed active state of sub navigation items, which are using activeWhenMatch ([#1199](https://github.com/scm-manager/scm-manager/pull/1199))
 - Handles repositories in custom directories correctly in migration from 1.x ([#1201](https://github.com/scm-manager/scm-manager/pull/1201))
 - Usage of short git commit ids in changeset urls ([#1200](https://github.com/scm-manager/scm-manager/pull/1200))
+- Fixes linebreaks in multiline tooltip ([#1207](https://github.com/scm-manager/scm-manager/pull/1207))
 
 ## [2.0.0] - 2020-06-04
 ### Added
