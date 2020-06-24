@@ -25,13 +25,13 @@ import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import RepositoryForm from "../components/form";
-import DeleteRepo from "./DeleteRepo";
 import { Repository } from "@scm-manager/ui-types";
 import { getModifyRepoFailure, isModifyRepoPending, modifyRepo, modifyRepoReset } from "../modules/repos";
 import { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { compose } from "redux";
+import DangerZone from "./DangerZone";
 
 type Props = {
   loading: boolean;
@@ -79,7 +79,7 @@ class EditRepo extends React.Component<Props> {
     };
 
     return (
-      <div>
+      <>
         <ErrorNotification error={error} />
         <RepositoryForm
           repository={this.props.repository}
@@ -89,8 +89,8 @@ class EditRepo extends React.Component<Props> {
           }}
         />
         <ExtensionPoint name="repo-config.route" props={extensionProps} renderAll={true} />
-        <DeleteRepo repository={repository} />
-      </div>
+        <DangerZone repository={repository} />
+      </>
     );
   }
 }
@@ -116,4 +116,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter)(EditRepo);
+export default compose(connect(mapStateToProps, mapDispatchToProps))(withRouter(EditRepo));
