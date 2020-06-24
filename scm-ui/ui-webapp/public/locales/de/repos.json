@@ -88,6 +88,9 @@
     "shortSummary": "Committet <0/> <1/>",
     "tags": "Tags",
     "diffNotSupported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt",
+    "shortlink": {
+      "title": "Changeset {{id}} aus {{namespace}}/{{name}}"
+    },
     "parents": {
       "label" : "Parent",
       "label_plural": "Parents"

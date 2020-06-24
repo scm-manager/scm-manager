@@ -31,6 +31,7 @@ import MarkdownWithoutLang from "./__resources__/markdown-without-lang.md";
 import MarkdownXmlCodeBlock from "./__resources__/markdown-xml-codeblock.md";
 import MarkdownInlineXml from "./__resources__/markdown-inline-xml.md";
 import MarkdownLinks from "./__resources__/markdown-links.md";
+import MarkdownCommitLinks from "./__resources__/markdown-commit-link.md";
 import Title from "./layout/Title";
 import { Subtitle } from "./layout";
 import { MemoryRouter } from "react-router-dom";
@@ -52,4 +53,5 @@ storiesOf("MarkdownView", module)
       <MarkdownView content={MarkdownInlineXml} />
     </>
   ))
-  .add("Links", () => <MarkdownView content={MarkdownLinks} basePath="/" />);
+  .add("Links", () => <MarkdownView content={MarkdownLinks} basePath="/" />)
+  .add("Commit Links", () => <MarkdownView content={MarkdownCommitLinks} />);

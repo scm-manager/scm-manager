@@ -87,6 +87,9 @@
     "summary": "Changeset <0/> was committed <1/>",
     "shortSummary": "Committed <0/> <1/>",
     "tags": "Tags",
+    "shortlink": {
+      "title": "Changeset {{id}} of {{namespace}}/{{name}}"
+    },
     "diffNotSupported": "Diff of changesets is not supported by the type of repository",
     "buttons": {
       "details": "Details",
