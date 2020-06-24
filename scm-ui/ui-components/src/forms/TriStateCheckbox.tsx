@@ -25,21 +25,13 @@ import React, { FC } from "react";
 import Icon from "../Icon";
 
 type Props = {
-  onChange?: (value: boolean) => void;
   checked: boolean;
   indeterminate?: boolean;
   disabled?: boolean;
   label?: string;
 };
 
-const TriStateCheckbox: FC<Props> = ({ onChange, checked, indeterminate, disabled, label }) => {
-  const onCheckboxChange = () => {
-    if (onChange) {
-      console.log("clickediclick");
-      onChange(!checked);
-    }
-  };
-
+const TriStateCheckbox: FC<Props> = ({ checked, indeterminate, disabled, label }) => {
   let icon;
   if (indeterminate) {
     icon = "minus-square";
@@ -60,7 +52,7 @@ const TriStateCheckbox: FC<Props> = ({ onChange, checked, indeterminate, disable
   if (disabled) {
     color = "grey-light";
   } else if (checked || indeterminate) {
-    color = "blue";
+    color = "link";
   } else {
     color = "black";
   }
