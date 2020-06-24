@@ -24,11 +24,13 @@
 import React, { ChangeEvent } from "react";
 import { Help } from "../index";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
+import TriStateCheckbox from "./TriStateCheckbox";
 
 type Props = {
   label?: string;
   onChange?: (value: boolean, name?: string) => void;
   checked: boolean;
+  indeterminate?: boolean;
   name?: string;
   title?: string;
   disabled?: boolean;
@@ -36,9 +38,9 @@ type Props = {
 };
 
 export default class Checkbox extends React.Component<Props> {
-  onCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
+  onCheckboxChange = () => {
     if (this.props.onChange) {
-      this.props.onChange(event.target.checked, this.props.name);
+      this.props.onChange(!this.props.checked, this.props.name);
     }
   };
 
@@ -57,18 +59,19 @@ export default class Checkbox extends React.Component<Props> {
   };
 
   render() {
-    const { label, checked, disabled } = this.props;
+    const { label, checked, indeterminate, disabled } = this.props;
     return (
       <div className="field">
         {this.renderLabelWithHelp()}
-        <div className="control">
+        <div className="control" onClick={this.onCheckboxChange}>
           {/*
             we have to ignore the next line,
             because jsx label does not the custom disabled attribute
             but bulma does.
             // @ts-ignore */}
           <label className="checkbox" disabled={disabled}>
-            <input type="checkbox" checked={checked} onChange={this.onCheckboxChange} disabled={disabled} /> {label}
+            <TriStateCheckbox checked={checked} indeterminate={indeterminate} disabled={disabled} />
+            {label}
             {this.renderHelp()}
           </label>
         </div>

@@ -38182,14 +38182,13 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
   >
     <div
       className="control"
+      onClick={[Function]}
     >
       <label
         className="checkbox"
       >
-        <input
-          checked={false}
-          onChange={[Function]}
-          type="checkbox"
+        <i
+          className="is-outlined fa-square has-text-black far"
         />
          
         Not checked
@@ -38201,17 +38200,34 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
   >
     <div
       className="control"
+      onClick={[Function]}
     >
       <label
         className="checkbox"
       >
-        <input
-          checked={true}
-          onChange={[Function]}
-          type="checkbox"
+        <i
+          className="is-outlined fa-check-square has-text-blue fa"
         />
          
         Checked
+      </label>
+    </div>
+  </div>
+  <div
+    className="field"
+  >
+    <div
+      className="control"
+      onClick={[Function]}
+    >
+      <label
+        className="checkbox"
+      >
+        <i
+          className="is-outlined fa-minus-square has-text-blue far"
+        />
+         
+        Indeterminate
       </label>
     </div>
   </div>
@@ -38227,16 +38243,14 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
   >
     <div
       className="control"
+      onClick={[Function]}
     >
       <label
         className="checkbox"
         disabled={true}
       >
-        <input
-          checked={true}
-          disabled={true}
-          onChange={[Function]}
-          type="checkbox"
+        <i
+          className="is-outlined fa-check-square has-text-grey-light fa"
         />
          
         Checked but disabled

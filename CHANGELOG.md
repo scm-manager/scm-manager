@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - enrich commit mentions in markdown viewer by internal links  ([#1210](https://github.com/scm-manager/scm-manager/pull/1210))
 
+### Changed
+- Checkboxes can now be 'indeterminate' ([#1215](https://github.com/scm-manager/scm-manager/pull/1215))
+
 ## [2.1.1] - 2020-06-23
 ### Fixed
 - Wait until recommended java installation is available for deb packages ([#1209](https://github.com/scm-manager/scm-manager/pull/1209))
