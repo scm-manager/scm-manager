@@ -39183,6 +39183,87 @@ exports[`Storyshots MarkdownView Code without Lang 1`] = `
 </div>
 `;
 
+exports[`Storyshots MarkdownView Commit Links 1`] = `
+<div
+  className="MarkdownViewstories__Spacing-sc-1hk90gd-0 kiwuDa"
+>
+  <div>
+    <div
+      className="content is-word-break"
+    >
+      <h1>
+        Commit Links in Markdown
+      </h1>
+      <p>
+        <a
+          href="/repo/namespace/name/code/changeset/1a5s4w8a"
+          title="changeset.shortlink.title"
+        >
+          namespace/name@1a5s4w8a
+        </a>
+      </p>
+      <p>
+        Please check for this commit: 
+        <a
+          href="/repo/namespace/name/code/changeset/1a5s4w8a"
+          title="changeset.shortlink.title"
+        >
+          namespace/name@1a5s4w8a
+        </a>
+      </p>
+      <p>
+        <a
+          href="/repo/hitchhiker/heart-of-gold/code/changeset/c7237cb60689046990dc9dc2a388a517adb3e2b2"
+          title="changeset.shortlink.title"
+        >
+          hitchhiker/heart-of-gold@c7237cb60689046990dc9dc2a388a517adb3e2b2
+        </a>
+      </p>
+      <p>
+        <a
+          href="/repo/hitchhiker/heart-of-gold/code/changeset/c7237cb"
+          title="changeset.shortlink.title"
+        >
+          hitchhiker/heart-of-gold@c7237cb
+        </a>
+      </p>
+      <p>
+        <a
+          href="/repo/hitchhiker/heart-of-gold/code/changeset/42"
+          title="changeset.shortlink.title"
+        >
+          hitchhiker/heart-of-gold@42
+        </a>
+      </p>
+      <p>
+        <a
+          href="https://scm-manager.org/"
+        >
+          hitchhiker/heart-of-gold@42
+        </a>
+      </p>
+      <p>
+        Prefix 
+        <a
+          href="/repo/hitchhiker/heart-of-gold/code/changeset/42"
+          title="changeset.shortlink.title"
+        >
+          hitchhiker/heart-of-gold@42
+        </a>
+         some text 
+        <a
+          href="/repo/hitchhiker/heart-of-gold/code/changeset/21"
+          title="changeset.shortlink.title"
+        >
+          hitchhiker/heart-of-gold@21
+        </a>
+         suffix
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots MarkdownView Default 1`] = `
 <div
   className="MarkdownViewstories__Spacing-sc-1hk90gd-0 kiwuDa"

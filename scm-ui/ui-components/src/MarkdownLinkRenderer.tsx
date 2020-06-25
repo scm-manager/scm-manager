@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {FC} from "react";
-import {Link, useLocation} from "react-router-dom";
+import React, { FC } from "react";
+import { Link, useLocation } from "react-router-dom";
 import ExternalLink from "./navigation/ExternalLink";
-import {withContextPath} from "./urls";
+import { withContextPath } from "./urls";
 
 const externalLinkRegex = new RegExp("^http(s)?://");
 export const isExternalLink = (link: string) => {
@@ -33,6 +33,10 @@ export const isExternalLink = (link: string) => {
 
 export const isAnchorLink = (link: string) => {
   return link.startsWith("#");
+};
+
+export const isInternalScmRepoLink = (link: string) => {
+  return link.startsWith("/repo/");
 };
 
 const linkWithProtcolRegex = new RegExp("^[a-z]+:");
@@ -56,10 +60,10 @@ const normalizePath = (path: string) => {
     if (part === "..") {
       stack.pop();
     } else if (part !== ".") {
-      stack.push(part)
+      stack.push(part);
     }
   }
-  const normalizedPath = stack.join("/")
+  const normalizedPath = stack.join("/");
   if (normalizedPath.startsWith("/")) {
     return normalizedPath;
   }
@@ -75,6 +79,9 @@ const isSubDirectoryOf = (basePath: string, currentPath: string) => {
 };
 
 export const createLocalLink = (basePath: string, currentPath: string, link: string) => {
+  if (isInternalScmRepoLink(link)) {
+    return link;
+  }
   if (isAbsolute(link)) {
     return join(basePath, link);
   }
@@ -102,7 +109,7 @@ type Props = LinkProps & {
   base: string;
 };
 
-const MarkdownLinkRenderer: FC<Props> = ({href, base, children}) => {
+const MarkdownLinkRenderer: FC<Props> = ({ href, base, children }) => {
   const location = useLocation();
   if (isExternalLink(href)) {
     return <ExternalLink to={href}>{children}</ExternalLink>;
