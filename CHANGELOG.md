@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
-- enrich commit mentions in markdown viewer by internal links  ([#1210](https://github.com/scm-manager/scm-manager/pull/1210))
 - Rename repository name (and namespace if permitted) ([#1218](https://github.com/scm-manager/scm-manager/pull/1218))
+- enrich commit mentions in markdown viewer by internal links  ([#1210](https://github.com/scm-manager/scm-manager/pull/1210))
 
 ## [2.1.1] - 2020-06-23
 ### Fixed
