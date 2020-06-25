@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.update;
 
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -38,6 +38,7 @@ import sonia.scm.version.Version;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static sonia.scm.version.Version.parse;
@@ -60,7 +61,8 @@ public class GitV2UpdateStep implements UpdateStep {
       (repositoryId, path) -> {
         Repository repository = repositoryMetadataAccess.read(path);
         if (isGitDirectory(repository)) {
-          try (org.eclipse.jgit.lib.Repository gitRepository = build(path.resolve("data").toFile())) {
+          final Path effectiveGitPath = determineEffectiveGitFolder(path);
+          try (org.eclipse.jgit.lib.Repository gitRepository = build(effectiveGitPath.toFile())) {
             new GitConfigHelper().createScmmConfig(repository, gitRepository);
           } catch (IOException e) {
             throw new UpdateException("could not update repository with id " + repositoryId + " in path " + path, e);
@@ -68,6 +70,18 @@ public class GitV2UpdateStep implements UpdateStep {
         }
       }
     );
+  }
+
+  public Path determineEffectiveGitFolder(Path path) {
+    Path bareGitFolder = path.resolve("data");
+    Path nonBareGitFolder = bareGitFolder.resolve(".git");
+    final Path effectiveGitPath;
+    if (Files.exists(nonBareGitFolder)) {
+      effectiveGitPath = nonBareGitFolder;
+    } else {
+      effectiveGitPath = bareGitFolder;
+    }
+    return effectiveGitPath;
   }
 
   private org.eclipse.jgit.lib.Repository build(File directory) throws IOException {

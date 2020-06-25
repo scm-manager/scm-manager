@@ -21,7 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { isAnchorLink, isExternalLink, isLinkWithProtocol, createLocalLink } from "./MarkdownLinkRenderer";
+import {
+  isAnchorLink,
+  isExternalLink,
+  isLinkWithProtocol,
+  createLocalLink,
+  isInternalScmRepoLink
+} from "./MarkdownLinkRenderer";
 
 describe("test isAnchorLink", () => {
   it("should return true", () => {
@@ -64,6 +70,18 @@ describe("test isLinkWithProtocol", () => {
     expect(isLinkWithProtocol("some/path/link")).toBe(false);
     expect(isLinkWithProtocol("/some/path/link")).toBe(false);
     expect(isLinkWithProtocol("#some-anchor")).toBe(false);
+  });
+});
+
+describe("test isInternalScmRepoLink", () => {
+  it("should return true", () => {
+    expect(isInternalScmRepoLink("/repo/scmadmin/git/code/changeset/1234567")).toBe(true);
+    expect(isInternalScmRepoLink("/repo/scmadmin/git")).toBe(true);
+  });
+  it("should return false", () => {
+    expect(isInternalScmRepoLink("repo/path/link")).toBe(false);
+    expect(isInternalScmRepoLink("/some/path/link")).toBe(false);
+    expect(isInternalScmRepoLink("#some-anchor")).toBe(false);
   });
 });
 
