@@ -56,7 +56,7 @@ export const DELETE_REPO_PENDING = `${DELETE_REPO}_${types.PENDING_SUFFIX}`;
 export const DELETE_REPO_SUCCESS = `${DELETE_REPO}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_REPO_FAILURE = `${DELETE_REPO}_${types.FAILURE_SUFFIX}`;
 
-const CONTENT_TYPE = "application/vnd.scmm-repository+json;v=2";
+export const CONTENT_TYPE = "application/vnd.scmm-repository+json;v=2";
 
 // fetch repos
 

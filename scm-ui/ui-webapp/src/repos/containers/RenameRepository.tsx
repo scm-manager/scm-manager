@@ -23,7 +23,8 @@
  */
 
 import React, { FC, useState } from "react";
-import { Repository } from "@scm-manager/ui-types";
+import { Repository, Link } from "@scm-manager/ui-types";
+import { CONTENT_TYPE } from "../modules/repos";
 import {
   ErrorNotification,
   Level,
@@ -35,6 +36,8 @@ import {
   ButtonGroup
 } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
+import { apiClient } from "@scm-manager/ui-components/src";
+import { useHistory } from "react-router-dom";
 
 type Props = {
   repository: Repository;
@@ -42,12 +45,13 @@ type Props = {
 };
 
 const RenameRepository: FC<Props> = ({ repository, renameNamespace }) => {
+  let history = useHistory();
   const [t] = useTranslation("repos");
   const [error, setError] = useState<Error | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [repositoryName, setRepositoryName] = useState(repository.name);
-  const [repositoryNamespace, setRepositoryNamespace] = useState(repository.namespace);
+  const [name, setName] = useState(repository.name);
+  const [namespace, setNamespace] = useState(repository.namespace);
 
   if (error) {
     return <ErrorNotification error={error} />;
@@ -58,24 +62,37 @@ const RenameRepository: FC<Props> = ({ repository, renameNamespace }) => {
   }
 
   const isValid =
-    validation.isNameValid(repositoryName) &&
-    validation.isNameValid(repositoryNamespace) &&
-    (repository.name !== repositoryName || repository.namespace !== repositoryNamespace);
+    validation.isNameValid(name) &&
+    validation.isNameValid(namespace) &&
+    (repository.name !== name || repository.namespace !== namespace);
+
+  const rename = () => {
+    setLoading(true);
+    const url = renameNamespace
+      ? (repository?._links?.renameWithNamespace as Link).href
+      : (repository?._links?.rename as Link).href;
+
+    apiClient
+      .post(url, { name, namespace }, CONTENT_TYPE)
+      .then(() => setLoading(false))
+      .then(() => history.push(`/repo/${namespace}/${name}`))
+      .catch(setError);
+  };
 
   const modalBody = (
     <div>
       <InputField
         label={t("renameRepo.modal.label.repoName")}
         name={t("renameRepo.modal.label.repoName")}
-        value={repositoryName}
-        onChange={setRepositoryName}
+        value={name}
+        onChange={setName}
       />
       {renameNamespace && (
         <InputField
           label={t("renameRepo.modal.label.repoNamespace")}
           name={t("renameRepo.modal.label.repoNamespace")}
-          value={repositoryNamespace}
-          onChange={setRepositoryNamespace}
+          value={namespace}
+          onChange={setNamespace}
         />
       )}
     </div>
@@ -90,8 +107,13 @@ const RenameRepository: FC<Props> = ({ repository, renameNamespace }) => {
           label={t("renameRepo.modal.button.rename")}
           disabled={!isValid}
           title={t("renameRepo.modal.button.rename")}
+          action={rename}
         />
-        <Button label={t("renameRepo.modal.button.cancel")} action={() => setShowModal(false)} />
+        <Button
+          label={t("renameRepo.modal.button.cancel")}
+          title={t("renameRepo.modal.button.cancel")}
+          action={() => setShowModal(false)}
+        />
       </ButtonGroup>
     </>
   );

@@ -28,6 +28,12 @@
           "description": "May see, clone and push to all repositories"
         }
       },
+      "read,rename": {
+        "*": {
+          "displayName": "Rename all repositories",
+          "description": "May see and rename all repositories"
+        }
+      },
       "*": {
         "displayName": "Own all repositories",
         "description": "May see, clone, push to, configure and delete all repositories"
@@ -102,6 +108,10 @@
       "delete": {
         "displayName": "delete repository",
         "description": "May delete the repository"
+      },
+      "rename": {
+        "displayName": "rename repository",
+        "description": "May rename the repository."
       },
       "pull": {
         "displayName": "pull/checkout repository",

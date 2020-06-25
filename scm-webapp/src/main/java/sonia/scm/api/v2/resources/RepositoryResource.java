@@ -29,11 +29,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import sonia.scm.HandlerEventType;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.RepositoryRenamedEvent;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -186,7 +189,7 @@ public class RepositoryResource {
    *
    * @param namespace the namespace of the repository to be modified
    * @param name      the name of the repository to be modified
-   * @param renameDto    renameDto object to modify
+   * @param renameDto renameDto object to modify
    */
   @POST
   @Path("rename")
@@ -205,26 +208,31 @@ public class RepositoryResource {
     ))
   @ApiResponse(responseCode = "500", description = "internal server error")
   public Response rename(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryRenameDto renameDto) {
-    Repository repo = loadBy(namespace, name).get();
+    Supplier<Repository> repoSupplier = loadBy(namespace, name);
+    Repository unchangedRepo = repoSupplier.get();
+    Repository changedRepo = unchangedRepo.clone();
 
-    if (isRenameForbidden(repo)) {
+    if (isRenameForbidden(unchangedRepo, renameDto)) {
       return Response.status(403).build();
     }
 
-    if (hasNamespaceOrNameNotChanged(repo, renameDto)) {
+    if (hasNamespaceOrNameNotChanged(unchangedRepo, renameDto)) {
       return Response.status(400).build();
     }
 
     if (!Strings.isNullOrEmpty(renameDto.getName())) {
-      repo.setName(renameDto.getName());
+      changedRepo.setName(renameDto.getName());
     }
     if (!Strings.isNullOrEmpty(renameDto.getNamespace())) {
-      repo.setNamespace(renameDto.getNamespace());
+      changedRepo.setNamespace(renameDto.getNamespace());
     }
 
     return adapter.update(
-      loadBy(namespace, name),
-      existing -> repo,
+      repoSupplier,
+      existing -> {
+        ScmEventBus.getInstance().post(new RepositoryRenamedEvent(HandlerEventType.MODIFY, changedRepo, unchangedRepo));
+        return changedRepo;
+      },
       changed -> true,
       r -> r.getNamespaceAndName().logString()
     );
@@ -235,8 +243,9 @@ public class RepositoryResource {
       && repo.getNamespace().equals(renameDto.getNamespace());
   }
 
-  private boolean isRenameForbidden(Repository repo) {
+  private boolean isRenameForbidden(Repository repo, RepositoryRenameDto renameDto) {
     return !scmConfiguration.getNamespaceStrategy().equals("CustomNamespaceStrategy")
+      && !repo.getNamespace().equals(renameDto.getNamespace())
       || !RepositoryPermissions.rename(repo).isPermitted();
   }
 

@@ -103,6 +103,10 @@
         "displayName": "Repository Löschen",
         "description": "Darf das Repository löschen."
       },
+      "rename": {
+        "displayName": "Repository umbenennen",
+        "description": "Darf das Repository umbenennen."
+      },
       "pull": {
         "displayName": "Pull/Checkout",
         "description": "Darf pull/checkout auf das Repository ausführen."
