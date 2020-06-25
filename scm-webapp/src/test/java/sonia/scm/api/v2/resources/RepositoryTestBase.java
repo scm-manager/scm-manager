@@ -25,6 +25,7 @@
 package sonia.scm.api.v2.resources;
 
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.RepositoryManager;
 
 import static com.google.inject.util.Providers.of;
@@ -48,6 +49,7 @@ abstract class RepositoryTestBase {
   RepositoryCollectionResource repositoryCollectionResource;
   AnnotateResource annotateResource;
   ScmConfiguration scmConfiguration;
+  ScmEventBus scmEventBus;
 
 
   RepositoryRootResource getRepositoryRootResource() {
@@ -69,7 +71,7 @@ abstract class RepositoryTestBase {
         dtoToRepositoryMapper,
         manager,
         repositoryBasedResourceProvider,
-              scmConfiguration)),
+              scmConfiguration, scmEventBus)),
       of(repositoryCollectionResource));
   }
 }

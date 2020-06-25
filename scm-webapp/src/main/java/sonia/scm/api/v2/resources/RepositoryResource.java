@@ -66,19 +66,21 @@ public class RepositoryResource {
   private final SingleResourceManagerAdapter<Repository, RepositoryDto> adapter;
   private final RepositoryBasedResourceProvider resourceProvider;
   private final ScmConfiguration scmConfiguration;
+  private final ScmEventBus scmEventBus;
 
   @Inject
   public RepositoryResource(
     RepositoryToRepositoryDtoMapper repositoryToDtoMapper,
     RepositoryDtoToRepositoryMapper dtoToRepositoryMapper, RepositoryManager manager,
     RepositoryBasedResourceProvider resourceProvider,
-    ScmConfiguration scmConfiguration) {
+    ScmConfiguration scmConfiguration, ScmEventBus scmEventBus) {
     this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
     this.adapter = new SingleResourceManagerAdapter<>(manager, Repository.class);
     this.resourceProvider = resourceProvider;
     this.scmConfiguration = scmConfiguration;
+    this.scmEventBus = scmEventBus;
   }
 
   /**
@@ -230,7 +232,7 @@ public class RepositoryResource {
     return adapter.update(
       repoSupplier,
       existing -> {
-        ScmEventBus.getInstance().post(new RepositoryRenamedEvent(HandlerEventType.MODIFY, changedRepo, unchangedRepo));
+        scmEventBus.post(new RepositoryRenamedEvent(HandlerEventType.MODIFY, changedRepo, unchangedRepo));
         return changedRepo;
       },
       changed -> true,
