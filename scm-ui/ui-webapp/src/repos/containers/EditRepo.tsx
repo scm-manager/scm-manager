@@ -116,4 +116,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default compose(connect(mapStateToProps, mapDispatchToProps))(withRouter(EditRepo));
+export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter)(EditRepo);

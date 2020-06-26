@@ -24,14 +24,19 @@
 
 package sonia.scm.repository;
 
-import sonia.scm.HandlerEventType;
-import sonia.scm.event.AbstractHandlerEvent;
-import sonia.scm.event.Event;
+import sonia.scm.BadRequestException;
+import sonia.scm.ContextEntry;
 
-@Event
-public class RepositoryRenamedEvent extends AbstractHandlerEvent<Repository> {
+public class ChangeNamespaceNotAllowedException extends BadRequestException {
 
-  public RepositoryRenamedEvent(HandlerEventType eventType, Repository item, Repository oldItem) {
-    super(eventType, item, oldItem);
+  public ChangeNamespaceNotAllowedException(Repository repository) {
+    super(ContextEntry.ContextBuilder.entity(repository).build(), "change of namespace is not allowed in current namespace strategy");
+  }
+
+  private static final String CODE = "ERS2vYb7U1";
+
+  @Override
+  public String getCode() {
+    return CODE;
   }
 }

@@ -191,6 +191,10 @@
       "displayName": "Es wurden keine Änderungen durchgeführt",
       "description": "Das Repository wurde nicht verändert. Daher konnte kein neuer Commit erzeugt werden. Womöglich werden Änderungen aufgrund einer .ignore-Datei Definition nicht berücksichtigt."
     },
+    "ERS2vYb7U1": {
+      "displayName": "Änderung des Namespace nicht möglich",
+      "description": "Namespaces dürfen nur mit der Namespace Strategie \"Benutzerdefiniert\" verändert werden."
+    },
     "4iRct4avG1": {
       "displayName": "Die Revisionen haben keinen gemeinsamen Ursprung",
       "description": "Die Historie der Revisionen hat keinen gemeinsamen Urspung und kann somit auch nicht gegen einen solchen verglichen werden."

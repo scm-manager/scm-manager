@@ -27,7 +27,6 @@ package sonia.scm.api.v2.resources;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
-import com.google.inject.util.Providers;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -35,19 +34,16 @@ import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.Nested;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryInitializer;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryRenamedEvent;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.user.User;
@@ -66,7 +62,6 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Stream.of;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
-import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
@@ -109,9 +104,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Mock
   private RepositoryInitializer repositoryInitializer;
   @Mock
-  private ScmConfiguration scmConfiguration;
-  @Mock
-  private ScmEventBus scmEventBus;
+  private ScmConfiguration configuration;
 
   @Captor
   private ArgumentCaptor<Predicate<Repository>> filterCaptor;
@@ -130,14 +123,11 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     super.repositoryToDtoMapper = repositoryToDtoMapper;
     super.dtoToRepositoryMapper = dtoToRepositoryMapper;
     super.manager = repositoryManager;
-    super.scmConfiguration = scmConfiguration;
-    super.scmEventBus = scmEventBus;
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
-    when(scmConfiguration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
     SimplePrincipalCollection trillian = new SimplePrincipalCollection("trillian", REALM);
     trillian.add(new User("trillian"), REALM);
@@ -164,6 +154,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldFindExistingRepository() throws URISyntaxException, UnsupportedEncodingException {
     mockRepository("space", "repo");
+    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
     MockHttpResponse response = new MockHttpResponse();
@@ -178,6 +169,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   public void shouldGetAll() throws URISyntaxException, UnsupportedEncodingException {
     PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
     when(repositoryManager.getPage(any(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
@@ -192,6 +184,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   public void shouldCreateFilterForSearch() throws URISyntaxException {
     PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
     when(repositoryManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "?q=Rep");
     MockHttpResponse response = new MockHttpResponse();
@@ -374,6 +367,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   public void shouldCreateArrayOfProtocolUrls() throws Exception {
     mockRepository("space", "repo");
     when(service.getSupportedProtocols()).thenReturn(of(new MockScmProtocol("http", "http://"), new MockScmProtocol("ssh", "ssh://")));
+    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
     MockHttpResponse response = new MockHttpResponse();
@@ -385,47 +379,11 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldNotRenameRepositoryNamespaceIfNamespaceStrategyIsNotCustom() throws Exception {
-    mockRepository("hitchhiker", "heart-of-gold");
-    when(scmConfiguration.getNamespaceStrategy()).thenReturn("UsernameNamespaceStrategy");
-
-    URL url = Resources.getResource("sonia/scm/api/v2/rename-repo.json");
-    byte[] repository = Resources.toByteArray(url);
-
-    MockHttpRequest request = MockHttpRequest
-      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "hitchhiker/heart-of-gold/rename")
-      .contentType(VndMediaType.REPOSITORY)
-      .content(repository);
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertEquals(SC_FORBIDDEN, response.getStatus());
-  }
-
-  @Test
-  public void shouldNotRenameRepositoryIfNamespaceAndNameDidNotChanged() throws Exception {
-    mockRepository("space", "x");
-    when(scmConfiguration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
-
-    URL url = Resources.getResource("sonia/scm/api/v2/rename-repo.json");
-    byte[] repository = Resources.toByteArray(url);
-
-    MockHttpRequest request = MockHttpRequest
-      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/x/rename")
-      .contentType(VndMediaType.REPOSITORY)
-      .content(repository);
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertEquals(SC_BAD_REQUEST, response.getStatus());
-  }
-
-  @Test
   public void shouldRenameRepository() throws Exception {
-    mockRepository("space", "repo");
-    when(scmConfiguration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
+    String namespace = "space";
+    String name = "repo";
+    Repository repository1 = mockRepository(namespace, name);
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository1);
 
     URL url = Resources.getResource("sonia/scm/api/v2/rename-repo.json");
     byte[] repository = Resources.toByteArray(url);
@@ -439,30 +397,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertEquals(SC_NO_CONTENT, response.getStatus());
-    verify(repositoryManager).modify(any(Repository.class));
-    verify(scmEventBus).post(any(RepositoryRenamedEvent.class));
+    verify(repositoryManager).rename(repository1, "space", "x");
   }
-
-  @Test
-  public void shouldRenameRepositoryNameIfNamespaceStrategyNotCustom() throws Exception {
-    mockRepository("space", "repo");
-    when(scmConfiguration.getNamespaceStrategy()).thenReturn("UsernameNamespaceStrategy");
-
-    URL url = Resources.getResource("sonia/scm/api/v2/rename-repo.json");
-    byte[] repository = Resources.toByteArray(url);
-
-    MockHttpRequest request = MockHttpRequest
-      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/rename")
-      .contentType(VndMediaType.REPOSITORY)
-      .content(repository);
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertEquals(SC_NO_CONTENT, response.getStatus());
-    verify(repositoryManager).modify(any(Repository.class));
-  }
-
 
   private PageResult<Repository> createSingletonPageResult(Repository repository) {
     return new PageResult<>(singletonList(repository), 0);

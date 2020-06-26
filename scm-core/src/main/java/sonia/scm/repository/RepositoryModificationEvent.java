@@ -49,7 +49,7 @@ public final class RepositoryModificationEvent extends RepositoryEvent implement
    */
   public RepositoryModificationEvent(HandlerEventType eventType, Repository item, Repository itemBeforeModification)
   {
-    super(eventType, item);
+    super(eventType, item, itemBeforeModification);
     this.itemBeforeModification = itemBeforeModification;
   }
 

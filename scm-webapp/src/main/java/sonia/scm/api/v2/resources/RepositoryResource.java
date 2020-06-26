@@ -24,19 +24,13 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.google.common.base.Strings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import sonia.scm.HandlerEventType;
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryPermissions;
-import sonia.scm.repository.RepositoryRenamedEvent;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -65,22 +59,17 @@ public class RepositoryResource {
   private final RepositoryManager manager;
   private final SingleResourceManagerAdapter<Repository, RepositoryDto> adapter;
   private final RepositoryBasedResourceProvider resourceProvider;
-  private final ScmConfiguration scmConfiguration;
-  private final ScmEventBus scmEventBus;
 
   @Inject
   public RepositoryResource(
     RepositoryToRepositoryDtoMapper repositoryToDtoMapper,
     RepositoryDtoToRepositoryMapper dtoToRepositoryMapper, RepositoryManager manager,
-    RepositoryBasedResourceProvider resourceProvider,
-    ScmConfiguration scmConfiguration, ScmEventBus scmEventBus) {
+    RepositoryBasedResourceProvider resourceProvider) {
     this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
     this.adapter = new SingleResourceManagerAdapter<>(manager, Repository.class);
     this.resourceProvider = resourceProvider;
-    this.scmConfiguration = scmConfiguration;
-    this.scmEventBus = scmEventBus;
   }
 
   /**
@@ -210,47 +199,10 @@ public class RepositoryResource {
     ))
   @ApiResponse(responseCode = "500", description = "internal server error")
   public Response rename(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryRenameDto renameDto) {
-    Supplier<Repository> repoSupplier = loadBy(namespace, name);
-    Repository unchangedRepo = repoSupplier.get();
-    Repository changedRepo = unchangedRepo.clone();
-
-    if (isRenameForbidden(unchangedRepo, renameDto)) {
-      return Response.status(403).build();
-    }
-
-    if (hasNamespaceOrNameNotChanged(unchangedRepo, renameDto)) {
-      return Response.status(400).build();
-    }
-
-    if (!Strings.isNullOrEmpty(renameDto.getName())) {
-      changedRepo.setName(renameDto.getName());
-    }
-    if (!Strings.isNullOrEmpty(renameDto.getNamespace())) {
-      changedRepo.setNamespace(renameDto.getNamespace());
-    }
-
-    return adapter.update(
-      repoSupplier,
-      existing -> {
-        scmEventBus.post(new RepositoryRenamedEvent(HandlerEventType.MODIFY, changedRepo, unchangedRepo));
-        return changedRepo;
-      },
-      changed -> true,
-      r -> r.getNamespaceAndName().logString()
-    );
+    Repository repository = loadBy(namespace, name).get();
+    manager.rename(repository, renameDto.getNamespace(), renameDto.getName());
+    return Response.status(204).build();
   }
-
-  private boolean hasNamespaceOrNameNotChanged(Repository repo, @Valid RepositoryRenameDto renameDto) {
-    return repo.getName().equals(renameDto.getName())
-      && repo.getNamespace().equals(renameDto.getNamespace());
-  }
-
-  private boolean isRenameForbidden(Repository repo, RepositoryRenameDto renameDto) {
-    return !scmConfiguration.getNamespaceStrategy().equals("CustomNamespaceStrategy")
-      && !repo.getNamespace().equals(renameDto.getNamespace())
-      || !RepositoryPermissions.rename(repo).isPermitted();
-  }
-
 
   private Repository processUpdate(RepositoryDto repositoryDto, Repository existing) {
     Repository changedRepository = dtoToRepositoryMapper.map(repositoryDto, existing.getId());
