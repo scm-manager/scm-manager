@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Checkboxes can now be 'indeterminate' ([#1215](https://github.com/scm-manager/scm-manager/pull/1215))
 
+### Fixed
+- Fixed installation of debian packages on distros without preinstalled `at` ([#1216](https://github.com/scm-manager/scm-manager/issues/1216) and [#1217](https://github.com/scm-manager/scm-manager/pull/1217))
+
 ## [2.1.1] - 2020-06-23
 ### Fixed
 - Wait until recommended java installation is available for deb packages ([#1209](https://github.com/scm-manager/scm-manager/pull/1209))
