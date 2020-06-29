@@ -69,7 +69,7 @@ public class HgTagsCommand extends AbstractCommand implements TagsCommand
     com.aragost.javahg.commands.TagsCommand cmd =
       com.aragost.javahg.commands.TagsCommand.on(open());
 
-    List<com.aragost.javahg.commands.Tag> tagList = cmd.includeTip().execute();
+    List<com.aragost.javahg.Tag> tagList = cmd.includeTip().execute();
 
     List<Tag> tags = null;
 
@@ -97,7 +97,7 @@ public class HgTagsCommand extends AbstractCommand implements TagsCommand
    * @author         Enter your name here...
    */
   private static class TagTransformer
-    implements Function<com.aragost.javahg.commands.Tag, Tag>
+    implements Function<com.aragost.javahg.Tag, Tag>
   {
 
     /**
@@ -109,7 +109,7 @@ public class HgTagsCommand extends AbstractCommand implements TagsCommand
      * @return
      */
     @Override
-    public Tag apply(com.aragost.javahg.commands.Tag f)
+    public Tag apply(com.aragost.javahg.Tag f)
     {
       Tag t = null;
 
