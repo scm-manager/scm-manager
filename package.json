@@ -16,9 +16,7 @@
   },
   "devDependencies": {
     "babel-plugin-reflow": "^0.2.7",
-    "lerna": "^3.17.0",
-    "husky": "^4.2.5",
-    "lint-staged": "^10.2.11"
+    "lerna": "^3.17.0"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0",
@@ -34,12 +32,5 @@
     "preset": "@scm-manager/jest-preset"
   },
   "prettier": "@scm-manager/prettier-config",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged --verbose"
-    }
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "eslint"
-  }
+  "dependencies": {}
 }

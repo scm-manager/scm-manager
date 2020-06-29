@@ -21,31 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import classNames from "classnames";
+import React, { FC } from "react";
+import Icon from "../Icon";
 
 type Props = {
-  title?: string;
-  iconStyle: string;
-  name: string;
-  color: string;
-  className?: string;
-  onClick?: () => void;
+  checked: boolean;
+  indeterminate?: boolean;
+  disabled?: boolean;
+  label?: string;
 };
 
-export default class Icon extends React.Component<Props> {
-  static defaultProps = {
-    iconStyle: "fas",
-    color: "grey-light"
-  };
-
-  render() {
-    const { title, iconStyle, name, color, className, onClick } = this.props;
-    if (title) {
-      return (
-        <i onClick={onClick} title={title} className={classNames(iconStyle, "fa-fw", "fa-" + name, `has-text-${color}`, className)} />
-      );
-    }
-    return <i onClick={onClick} className={classNames(iconStyle, "fa-" + name, `has-text-${color}`, className)} />;
+const TriStateCheckbox: FC<Props> = ({ checked, indeterminate, disabled, label }) => {
+  let icon;
+  if (indeterminate) {
+    icon = "minus-square";
+  } else if (checked) {
+    icon = "check-square";
+  } else {
+    icon = "square";
   }
-}
+
+  let className;
+  if (!checked || indeterminate) {
+    className = "far";
+  } else {
+    className = "fa";
+  }
+
+  let color;
+  if (disabled) {
+    color = "grey-light";
+  } else if (checked || indeterminate) {
+    color = "link";
+  } else {
+    color = "black";
+  }
+
+  return <><Icon iconStyle={"is-outlined"} name={icon} className={className} color={color} />{" "}
+  {label}</>;
+};
+
+export default TriStateCheckbox;
