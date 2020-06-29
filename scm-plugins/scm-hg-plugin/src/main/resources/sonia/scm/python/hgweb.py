@@ -35,20 +35,20 @@ except AttributeError:
     # For installations earlier than Mercurial 4.1
     u = uimod.ui()
 
-u.setconfig('web', 'push_ssl', 'false')
-u.setconfig('web', 'allow_read', '*')
-u.setconfig('web', 'allow_push', '*')
+u.setconfig(b'web', b'push_ssl', b'false')
+u.setconfig(b'web', b'allow_read', b'*')
+u.setconfig(b'web', b'allow_push', b'*')
 
-u.setconfig('hooks', 'changegroup.scm', 'python:scmhooks.postHook')
-u.setconfig('hooks', 'pretxnchangegroup.scm', 'python:scmhooks.preHook')
+u.setconfig(b'hooks', b'changegroup.scm', b'python:scmhooks.postHook')
+u.setconfig(b'hooks', b'pretxnchangegroup.scm', b'python:scmhooks.preHook')
 
 # pass SCM_HTTP_POST_ARGS to enable experimental httppostargs protocol of mercurial
 # SCM_HTTP_POST_ARGS is set by HgCGIServlet
 # Issue 970: https://goo.gl/poascp
-u.setconfig('experimental', 'httppostargs', os.environ['SCM_HTTP_POST_ARGS'])
+u.setconfig(b'experimental', b'httppostargs', os.environ['SCM_HTTP_POST_ARGS'].encode())
 
 # open repository
 # SCM_REPOSITORY_PATH contains the repository path and is set by HgCGIServlet
-r = hg.repository(u, os.environ['SCM_REPOSITORY_PATH'])
+r = hg.repository(u, os.environ['SCM_REPOSITORY_PATH'].encode())
 application = hgweb(r)
 wsgicgi.launch(application)
