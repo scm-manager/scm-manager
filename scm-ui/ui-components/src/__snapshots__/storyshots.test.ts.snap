@@ -38206,7 +38206,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
         className="checkbox"
       >
         <i
-          className="is-outlined fa-check-square has-text-blue fa"
+          className="is-outlined fa-check-square has-text-link fa"
         />
          
         Checked
@@ -38224,7 +38224,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
         className="checkbox"
       >
         <i
-          className="is-outlined fa-minus-square has-text-blue far"
+          className="is-outlined fa-minus-square has-text-link far"
         />
          
         Indeterminate
