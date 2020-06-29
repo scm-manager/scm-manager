@@ -27,7 +27,6 @@ import * as types from "../../modules/types";
 import { Action, Repository, RepositoryCollection } from "@scm-manager/ui-types";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
-import React from "react";
 
 export const FETCH_REPOS = "scm/repos/FETCH_REPOS";
 export const FETCH_REPOS_PENDING = `${FETCH_REPOS}_${types.PENDING_SUFFIX}`;
@@ -57,6 +56,8 @@ export const DELETE_REPO_SUCCESS = `${DELETE_REPO}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_REPO_FAILURE = `${DELETE_REPO}_${types.FAILURE_SUFFIX}`;
 
 export const CONTENT_TYPE = "application/vnd.scmm-repository+json;v=2";
+
+export const CUSTOM_NAMESPACE_STRATEGY = "CustomNamespaceStrategy";
 
 // fetch repos
 

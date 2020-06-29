@@ -22,29 +22,22 @@
  * SOFTWARE.
  */
 
-import React, { FC, useState } from "react";
-import { Repository, Link } from "@scm-manager/ui-types";
-import { CONTENT_TYPE } from "../modules/repos";
-import {
-  ErrorNotification,
-  Level,
-  Button,
-  Loading,
-  Modal,
-  InputField,
-  validation,
-  ButtonGroup
-} from "@scm-manager/ui-components";
+import React, { FC, useEffect, useState } from "react";
+import { Link, Links, Repository } from "@scm-manager/ui-types";
+import { CONTENT_TYPE, CUSTOM_NAMESPACE_STRATEGY } from "../modules/repos";
+import { Button, ButtonGroup, ErrorNotification, InputField, Level, Loading, Modal } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { apiClient } from "@scm-manager/ui-components/src";
 import { useHistory } from "react-router-dom";
+import { ExtensionPoint } from "@scm-manager/ui-extensions/src";
+import * as validator from "../components/form/repositoryValidation";
 
 type Props = {
   repository: Repository;
-  renameNamespace: boolean;
+  indexLinks: Links;
 };
 
-const RenameRepository: FC<Props> = ({ repository, renameNamespace }) => {
+const RenameRepository: FC<Props> = ({ repository, indexLinks }) => {
   let history = useHistory();
   const [t] = useTranslation("repos");
   const [error, setError] = useState<Error | undefined>(undefined);
@@ -52,6 +45,17 @@ const RenameRepository: FC<Props> = ({ repository, renameNamespace }) => {
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState(repository.name);
   const [namespace, setNamespace] = useState(repository.namespace);
+  const [nameValidationError, setNameValidationError] = useState(false);
+  const [namespaceValidationError, setNamespaceValidationError] = useState(false);
+  const [currentNamespaceStrategie, setCurrentNamespaceStrategy] = useState("");
+
+  useEffect(() => {
+    apiClient
+      .get((indexLinks?.namespaceStrategies as Link).href)
+      .then(result => result.json())
+      .then(result => setCurrentNamespaceStrategy(result.current))
+      .catch(setError);
+  }, [repository]);
 
   if (error) {
     return <ErrorNotification error={error} />;
@@ -62,13 +66,40 @@ const RenameRepository: FC<Props> = ({ repository, renameNamespace }) => {
   }
 
   const isValid =
-    validation.isNameValid(name) &&
-    validation.isNameValid(namespace) &&
+    !nameValidationError &&
+    !namespaceValidationError &&
     (repository.name !== name || repository.namespace !== namespace);
+
+  const handleNamespaceChange = (namespace: string) => {
+    setNamespaceValidationError(!validator.isNameValid(namespace));
+    setNamespace(namespace);
+  };
+
+  const handleNameChange = (name: string) => {
+    setNameValidationError(!validator.isNameValid(name));
+    setName(name);
+  };
+
+  const renderNamespaceField = () => {
+    const props = {
+      label: t("repository.namespace"),
+      helpText: t("help.namespaceHelpText"),
+      value: namespace,
+      onChange: handleNamespaceChange,
+      errorMessage: t("validation.namespace-invalid"),
+      validationError: namespaceValidationError
+    };
+
+    if (currentNamespaceStrategie === CUSTOM_NAMESPACE_STRATEGY) {
+      return <InputField {...props} />;
+    }
+
+    return <ExtensionPoint name="repos.create.namespace" props={props} renderAll={false} />;
+  };
 
   const rename = () => {
     setLoading(true);
-    const url = renameNamespace
+    const url = repository?._links?.renameWithNamespace
       ? (repository?._links?.renameWithNamespace as Link).href
       : (repository?._links?.rename as Link).href;
 
@@ -84,17 +115,13 @@ const RenameRepository: FC<Props> = ({ repository, renameNamespace }) => {
       <InputField
         label={t("renameRepo.modal.label.repoName")}
         name={t("renameRepo.modal.label.repoName")}
+        errorMessage={t("validation.name-invalid")}
+        helpText={t("help.nameHelpText")}
+        validationError={nameValidationError}
         value={name}
-        onChange={setName}
+        onChange={handleNameChange}
       />
-      {renameNamespace && (
-        <InputField
-          label={t("renameRepo.modal.label.repoNamespace")}
-          name={t("renameRepo.modal.label.repoNamespace")}
-          value={namespace}
-          onChange={setNamespace}
-        />
-      )}
+      {renderNamespaceField()}
     </div>
   );
 

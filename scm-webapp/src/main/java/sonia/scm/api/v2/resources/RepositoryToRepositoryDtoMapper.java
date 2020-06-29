@@ -32,6 +32,7 @@ import org.mapstruct.ObjectFactory;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.HealthCheckFailure;
+import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.Command;
@@ -43,6 +44,7 @@ import sonia.scm.web.api.RepositoryToHalMapper;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Set;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
@@ -60,6 +62,8 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
   private ScmConfiguration scmConfiguration;
   @Inject
   private RepositoryServiceFactory serviceFactory;
+  @Inject
+  private Set<NamespaceStrategy> strategies;
 
   abstract HealthCheckFailureDto toDto(HealthCheckFailure failure);
 
@@ -76,7 +80,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
       linksBuilder.single(link("update", resourceLinks.repository().update(repository.getNamespace(), repository.getName())));
     }
     if (RepositoryPermissions.rename(repository).isPermitted()) {
-      if (scmConfiguration.getNamespaceStrategy().equals("CustomNamespaceStrategy")) {
+      if (isRenameNamespacePossible()) {
         linksBuilder.single(link("renameWithNamespace", resourceLinks.repository().rename(repository.getNamespace(), repository.getName())));
       } else {
         linksBuilder.single(link("rename", resourceLinks.repository().rename(repository.getNamespace(), repository.getName())));
@@ -113,6 +117,15 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), repository);
 
     return new RepositoryDto(linksBuilder.build(), embeddedBuilder.build());
+  }
+
+  private boolean isRenameNamespacePossible() {
+    for (NamespaceStrategy strategy : strategies) {
+      if (strategy.getClass().getSimpleName().equals(scmConfiguration.getNamespaceStrategy())) {
+        return strategy.canBeChanged();
+      }
+    }
+    return false;
   }
 
   private Link createProtocolLink(ScmProtocol protocol) {

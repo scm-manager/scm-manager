@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -40,7 +41,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.CustomNamespaceStrategy;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryInitializer;
 import sonia.scm.repository.RepositoryManager;
@@ -56,6 +59,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
@@ -72,6 +76,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -105,6 +110,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   private RepositoryInitializer repositoryInitializer;
   @Mock
   private ScmConfiguration configuration;
+  @Mock
+  private Set<NamespaceStrategy> strategies;
 
   @Captor
   private ArgumentCaptor<Predicate<Repository>> filterCaptor;
@@ -129,6 +136,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
+    doReturn(ImmutableSet.of(new CustomNamespaceStrategy()).iterator()).when(strategies).iterator();
     SimplePrincipalCollection trillian = new SimplePrincipalCollection("trillian", REALM);
     trillian.add(new User("trillian"), REALM);
     shiro.setSubject(

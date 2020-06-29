@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import org.junit.jupiter.api.Test;
@@ -66,11 +66,16 @@ class NamespaceStrategyProviderTest {
     return new LinkedHashSet<>(Arrays.asList(new Trillian(), new Zaphod(), new Arthur()));
   }
 
-  private static class Trillian implements NamespaceStrategy{
+  private static class Trillian implements NamespaceStrategy {
 
     @Override
     public String createNamespace(Repository repository) {
       return "trillian";
+    }
+
+    @Override
+    public boolean canBeChanged() {
+      return false;
     }
   }
 
@@ -80,6 +85,11 @@ class NamespaceStrategyProviderTest {
     public String createNamespace(Repository repository) {
       return "zaphod";
     }
+
+    @Override
+    public boolean canBeChanged() {
+      return false;
+    }
   }
 
   private static class Arthur implements NamespaceStrategy {
@@ -87,6 +97,11 @@ class NamespaceStrategyProviderTest {
     @Override
     public String createNamespace(Repository repository) {
       return "arthur";
+    }
+
+    @Override
+    public boolean canBeChanged() {
+      return false;
     }
   }
 

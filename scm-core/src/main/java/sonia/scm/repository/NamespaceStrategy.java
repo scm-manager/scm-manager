@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import sonia.scm.plugin.ExtensionPoint;
@@ -36,8 +36,14 @@ public interface NamespaceStrategy {
    * Create new namespace for the given repository.
    *
    * @param repository repository
-   *
    * @return namespace
    */
   String createNamespace(Repository repository);
+
+  /**
+   * Checks if the namespace can be changed when using this namespace strategy
+   *
+   * @return namespace can be changed
+   */
+  boolean canBeChanged();
 }
