@@ -43,7 +43,7 @@ ENV CACHE_DIR=/var/cache/scm/work
 COPY . /
 
 RUN set -x \
- && apk add --no-cache python2 bash \
+ && apk add --no-cache python2 bash ca-certificates \
  && addgroup -S -g 1000 scm \
  && adduser -S -s /bin/false -G scm -h ${SCM_HOME} -D -H -u 1000 scm \
  && mkdir -p ${SCM_HOME} ${CACHE_DIR} \
