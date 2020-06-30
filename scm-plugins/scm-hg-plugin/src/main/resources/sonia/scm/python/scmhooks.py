@@ -90,7 +90,6 @@ def callHookUrl(ui, repo, hooktype, node):
     ui.debug( b"send scm-hook to " + url.encode() + b" and " + node + b"\n" )
     values = {'node': node.decode("utf-8"), 'challenge': challenge, 'token': token, 'repositoryPath': repo.root, 'repositoryId': repositoryId}
     conn = client.post(url, values)
-    ui.warn(b"some thing strange")
     if 200 <= conn.code < 300:
       ui.debug( b"scm-hook " + hooktype + b" success with status code " + str(conn.code).encode() + b"\n" )
       printMessages(ui, conn)
