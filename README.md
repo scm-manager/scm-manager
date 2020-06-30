@@ -19,7 +19,7 @@ repositories over http.
 - Useful plugins available
 - Licensed under the MIT-License
 
-This branch (`default`) is for the development of SCM-Manager 2.x. If you are interested in the development of version
+This branch (`develop`) is for the development of SCM-Manager 2.x. If you are interested in the development of version
 1.x, please checkout the branch `support/1.x`.
 
 ## News
