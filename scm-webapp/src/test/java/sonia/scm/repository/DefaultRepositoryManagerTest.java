@@ -217,8 +217,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     // test for reference
     assertNotSame(heartOfGold, heartReference);
     heartReference.setDescription("prototype ship");
-    assertFalse(
-      heartOfGold.getDescription().equals(heartReference.getDescription()));
+    assertNotEquals(heartOfGold.getDescription(), heartReference.getDescription());
   }
 
   @Test
@@ -305,7 +304,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     Repository hearReference = manager.get(heartOfGold.getId());
 
     assertNotNull(hearReference);
-    assertEquals(hearReference.getDescription(), "prototype ship");
+    assertEquals("prototype ship", hearReference.getDescription());
   }
 
   @Test

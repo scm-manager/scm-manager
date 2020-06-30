@@ -27,6 +27,7 @@ package sonia.scm.repository;
 import sonia.scm.BadRequestException;
 import sonia.scm.ContextEntry;
 
+@SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here
 public class ChangeNamespaceNotAllowedException extends BadRequestException {
 
   public ChangeNamespaceNotAllowedException(Repository repository) {
