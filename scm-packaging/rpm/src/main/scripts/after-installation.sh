@@ -32,8 +32,8 @@ if [ -d "${WORKDIR}" ]; then
 fi
 
 # reload systemd and make service available
-systemctl daemon-reload
+systemctl --system daemon-reload >/dev/null || true
 
 # enable and start the service
-sudo systemctl enable scm-server
-sudo systemctl start scm-server
+systemctl enable scm-server
+systemctl start scm-server
