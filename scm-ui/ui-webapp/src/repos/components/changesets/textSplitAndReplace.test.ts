@@ -98,4 +98,37 @@ describe("text split and replace", () => {
     expect(result[7]).toStrictEqual({ text: "We are going to die." });
     expect(result[8]).toStrictEqual({ text: "“" });
   });
+
+  it("should ignore conflicting replacements", () => {
+    const result = textSplitAndReplace<Wrapped>(
+      "'So this is it,' said Arthur, 'We are going to die.'",
+      [
+        { textToReplace: "said Arthur", replacement: { text: "to be replaced" } },
+        { textToReplace: " said", replacement: { text: "to be ignored 1" }, replaceAll: true },
+        { textToReplace: "d A", replacement: { text: "to be ignored 2" }, replaceAll: true },
+        { textToReplace: "Arthur,", replacement: { text: "to be ignored 3" }, replaceAll: true }
+      ],
+      testWrapper
+    );
+    expect(result).toHaveLength(3);
+    expect(result[0]).toStrictEqual({ text: "'So this is it,' " });
+    expect(result[1]).toStrictEqual({ text: "to be replaced" });
+    expect(result[2]).toStrictEqual({ text: ", 'We are going to die.'" });
+  });
+
+  it("should replace adjacent texts", () => {
+    const result = textSplitAndReplace<Wrapped>(
+      "'So this is it,' said Arthur, 'We are going to die.'",
+      [
+        { textToReplace: "'So this is it,'", replacement: { text: "one" } },
+        { textToReplace: " said Arthur, ", replacement: { text: "two" } },
+        { textToReplace: "'We are going to die.'", replacement: { text: "three" } }
+      ],
+      testWrapper
+    );
+    expect(result).toHaveLength(3);
+    expect(result[0]).toStrictEqual({ text: "one" });
+    expect(result[1]).toStrictEqual({ text: "two" });
+    expect(result[2]).toStrictEqual({ text: "three" });
+  });
 });

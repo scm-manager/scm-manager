@@ -34,6 +34,14 @@ type PartToReplace<T> = {
   replacement: T;
 };
 
+function hasConflict<T>(alreadyFoundReplacements: PartToReplace<T>[], newReplacement: PartToReplace<T>) {
+  return !!alreadyFoundReplacements.find(
+    existing =>
+      (existing.start <= newReplacement.start && existing.start + existing.length > newReplacement.start) ||
+      (newReplacement.start <= existing.start && newReplacement.start + newReplacement.length > existing.start)
+  );
+}
+
 export default function textSplitAndReplace<T>(
   text: string,
   replacements: Replacement<T>[],
@@ -47,7 +55,10 @@ export default function textSplitAndReplace<T>(
       const start = text.indexOf(replacement.textToReplace, lastIndex);
       if (start >= 0) {
         const length = replacement.textToReplace.length;
-        partsToReplace.push({ start, length, replacement: replacement.replacement });
+        const newReplacement = { start, length, replacement: replacement.replacement };
+        if (!hasConflict(partsToReplace, newReplacement)) {
+          partsToReplace.push(newReplacement);
+        }
         lastIndex = start + length;
       } else {
         lastIndex = -1;
