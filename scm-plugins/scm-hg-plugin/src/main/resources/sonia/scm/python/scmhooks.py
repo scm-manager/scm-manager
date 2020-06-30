@@ -29,8 +29,45 @@
 # changegroup.scm = python:scmhooks.callback
 #
 
-import os, urllib, urllib2
+import os, sys
 
+client = None
+
+# compatibility layer between python 2 and 3 urllib implementations
+if sys.version_info[0] < 3:
+  import urllib, urllib2
+  # create type alias for url error
+  URLError = urllib2.URLError
+
+  class Python2Client:
+    def post(self, url, values):
+        data = urllib.urlencode(values)
+        # open url but ignore proxy settings
+        proxy_handler = urllib2.ProxyHandler({})
+        opener = urllib2.build_opener(proxy_handler)
+        req = urllib2.Request(url, data)
+        req.add_header("X-XSRF-Token", xsrf)
+        return opener.open(req)
+
+  client = Python2Client()
+else:
+  import urllib.parse, urllib.request, urllib.error
+  # create type alias for url error
+  URLError = urllib.error.URLError
+
+  class Python3Client:
+    def post(self, url, values):
+        data = urllib.parse.urlencode(values)
+        # open url but ignore proxy settings
+        proxy_handler = urllib.request.ProxyHandler({})
+        opener = urllib.request.build_opener(proxy_handler)
+        req = urllib.request.Request(url, data.encode())
+        req.add_header("X-XSRF-Token", xsrf)
+        return opener.open(req)
+
+  client = Python3Client()
+
+# read environment
 baseUrl = os.environ['SCM_URL']
 challenge = os.environ['SCM_CHALLENGE']
 token = os.environ['SCM_BEARER_TOKEN']
@@ -38,45 +75,44 @@ xsrf = os.environ['SCM_XSRF']
 repositoryId = os.environ['SCM_REPOSITORY_ID']
 
 def printMessages(ui, msgs):
-  for line in msgs:
-    if line.startswith("_e") or line.startswith("_n"):
-      line = line[2:];
-    ui.warn('%s\n' % line.rstrip())
+  for raw in msgs:
+    line = raw
+    if hasattr(line, "encode"):
+      line = line.encode()
+    if line.startswith(b"_e") or line.startswith(b"_n"):
+      line = line[2:]
+    ui.warn(b'%s\n' % line.rstrip())
 
 def callHookUrl(ui, repo, hooktype, node):
   abort = True
   try:
-    url = baseUrl + hooktype
-    ui.debug( "send scm-hook to " + url + " and " + node + "\n" )
-    data = urllib.urlencode({'node': node, 'challenge': challenge, 'token': token, 'repositoryPath': repo.root, 'repositoryId': repositoryId})
-    # open url but ignore proxy settings
-    proxy_handler = urllib2.ProxyHandler({})
-    opener = urllib2.build_opener(proxy_handler)
-    req = urllib2.Request(url, data)
-    req.add_header("X-XSRF-Token", xsrf)
-    conn = opener.open(req)
+    url = baseUrl + hooktype.decode("utf-8")
+    ui.debug( b"send scm-hook to " + url.encode() + b" and " + node + b"\n" )
+    values = {'node': node.decode("utf-8"), 'challenge': challenge, 'token': token, 'repositoryPath': repo.root, 'repositoryId': repositoryId}
+    conn = client.post(url, values)
+    ui.warn(b"some thing strange")
     if 200 <= conn.code < 300:
-      ui.debug( "scm-hook " + hooktype + " success with status code " + str(conn.code) + "\n" )
+      ui.debug( b"scm-hook " + hooktype + b" success with status code " + str(conn.code).encode() + b"\n" )
       printMessages(ui, conn)
       abort = False
     else:
-      ui.warn( "ERROR: scm-hook failed with error code " + str(conn.code) + "\n" )
-  except urllib2.URLError, e:
+      ui.warn( b"ERROR: scm-hook failed with error code " + str(conn.code).encode() + b"\n" )
+  except URLError as e:
     msg = None
     # some URLErrors have no read method
     if hasattr(e, "read"):
       msg = e.read()
     elif hasattr(e, "code"):
-      msg = "scm-hook failed with error code " + str(e.code) + "\n"
+      msg = "scm-hook failed with error code " + e.code + "\n"
     else:
       msg = str(e)
     if len(msg) > 0:
       printMessages(ui, msg.splitlines(True))
     else:
-      ui.warn( "ERROR: scm-hook failed with an unknown error\n" )
+      ui.warn( b"ERROR: scm-hook failed with an unknown error\n" )
     ui.traceback()
   except ValueError:
-    ui.warn( "scm-hook failed with an exception\n" )
+    ui.warn( b"scm-hook failed with an exception\n" )
     ui.traceback()
   return abort
 
@@ -86,10 +122,10 @@ def callback(ui, repo, hooktype, node=None):
     if len(baseUrl) > 0:
       abort = callHookUrl(ui, repo, hooktype, node)
     else:
-      ui.warn("ERROR: scm-manager hooks are disabled, please check your configuration and the scm-manager log for details\n")
+      ui.warn(b"ERROR: scm-manager hooks are disabled, please check your configuration and the scm-manager log for details\n")
       abort = False
   else:
-    ui.warn("changeset node is not available")
+    ui.warn(b"changeset node is not available")
   return abort
 
 def preHook(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs):
@@ -106,13 +142,12 @@ def preHook(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs):
       tr = repo.currenttransaction()
       repo.dirstate.write(tr)
       if tr and not tr.writepending():
-        ui.warn("no pending write transaction found")
+        ui.warn(b"no pending write transaction found")
   except AttributeError:
-    ui.debug("mercurial does not support currenttransation")
+    ui.debug(b"mercurial does not support currenttransation")
     # do nothing
 
   return callback(ui, repo, hooktype, node)
 
 def postHook(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs):
   return callback(ui, repo, hooktype, node)
-
