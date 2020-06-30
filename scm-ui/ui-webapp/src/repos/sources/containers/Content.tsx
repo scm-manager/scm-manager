@@ -33,6 +33,7 @@ import { getSources } from "../modules/sources";
 import FileButtonAddons from "../components/content/FileButtonAddons";
 import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
+import AnnotateView from "./AnnotateView";
 
 type Props = WithTranslation & {
   loading: boolean;
@@ -45,7 +46,7 @@ type Props = WithTranslation & {
 
 type State = {
   collapsed: boolean;
-  showHistory: boolean;
+  selected: SourceViewSelection;
   errorFromExtension?: Error;
 };
 
@@ -81,13 +82,15 @@ const LighterGreyBackgroundTable = styled.table`
   background-color: #fbfbfb;
 `;
 
+export type SourceViewSelection = "source" | "history" | "annotations";
+
 class Content extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
     this.state = {
       collapsed: true,
-      showHistory: false
+      selected: "source"
     };
   }
 
@@ -97,13 +100,6 @@ class Content extends React.Component<Props, State> {
     }));
   };
 
-  setShowHistoryState(showHistory: boolean) {
-    this.setState({
-      ...this.state,
-      showHistory
-    });
-  }
-
   handleExtensionError = (error: Error) => {
     this.setState({
       errorFromExtension: error
@@ -112,14 +108,15 @@ class Content extends React.Component<Props, State> {
 
   showHeader() {
     const { repository, file, revision } = this.props;
-    const { showHistory, collapsed } = this.state;
+    const { selected, collapsed } = this.state;
     const icon = collapsed ? "angle-right" : "angle-down";
 
     const selector = file._links.history ? (
       <RightMarginFileButtonAddons
-        file={file}
-        historyIsSelected={showHistory}
-        showHistory={(changeShowHistory: boolean) => this.setShowHistoryState(changeShowHistory)}
+        selected={selected}
+        showSources={() => this.setState({ selected: "source" })}
+        showHistory={() => this.setState({ selected: "history" })}
+        showAnnotations={() => this.setState({ selected: "annotations" })}
       />
     ) : null;
 
@@ -212,15 +209,26 @@ class Content extends React.Component<Props, State> {
 
   render() {
     const { file, revision, repository, path, breadcrumb } = this.props;
-    const { showHistory, errorFromExtension } = this.state;
+    const { selected, errorFromExtension } = this.state;
 
     const header = this.showHeader();
-    const content =
-      showHistory && file._links.history ? (
-        <HistoryView file={file} repository={repository} />
-      ) : (
-        <SourcesView revision={revision} file={file} repository={repository} path={path} />
-      );
+    let content;
+    switch (selected) {
+      case "source":
+        content = (
+          <SourcesView revision={revision} file={file} repository={repository} path={path}/>
+        );
+        break;
+      case "history":
+        content = (
+          <HistoryView file={file} repository={repository}/>
+        );
+        break;
+      case "annotations":
+        content = (
+          <AnnotateView file={file} repository={repository} />
+        );
+    }
     const moreInformation = this.showMoreInformation();
 
     return (

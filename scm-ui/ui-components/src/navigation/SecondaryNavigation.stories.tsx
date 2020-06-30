@@ -86,4 +86,18 @@ storiesOf("Navigation|Secondary", module)
         </SecondaryNavigation>
       </BinderContext.Provider>
     );
-  });
+  })
+  .add("Active when match", () =>
+    withRoute("/hog")(
+      <SecondaryNavigation label="Hitchhiker">
+        <SecondaryNavigationItem to="/42" icon="fas fa-puzzle-piece" label="Puzzle 42" title="Puzzle 42" />
+        <SecondaryNavigationItem
+          activeWhenMatch={route => route.location.pathname === "/hog"}
+          to="/heart-of-gold"
+          icon="fas fa-star"
+          label="Heart Of Gold"
+          title="Heart Of Gold"
+        />
+      </SecondaryNavigation>
+    )
+  );

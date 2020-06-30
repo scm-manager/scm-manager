@@ -35,5 +35,5 @@ def file = new File(project.build.directory, "package.yml")
 file << """
 type: windows
 checksum: ${hashCode}
-url: ${deploymentTarget}/${repository}/releases/sonia/scm/packaging/unix/${project.version}/${packageFile.name}
+url: ${deploymentTarget}/repository/${repository}/sonia/scm/packaging/windows/${project.version}/${packageFile.name}
 """

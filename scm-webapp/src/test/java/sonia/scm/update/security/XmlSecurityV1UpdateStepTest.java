@@ -43,6 +43,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -107,15 +108,17 @@ class XmlSecurityV1UpdateStepTest {
   @Nested
   class WithExistingSecurityXml {
 
+    private Path configDir;
+
     @BeforeEach
     void createSecurityV1XML(@TempDir Path tempDir) throws IOException {
-      Path configDir = tempDir.resolve("config");
+      configDir = tempDir.resolve("config");
       Files.createDirectories(configDir);
-      copyTestDatabaseFile(configDir, "securityV1.xml");
     }
 
     @Test
-    void shouldMapV1PermissionsFromSecurityV1XML() throws JAXBException {
+    void shouldMapV1PermissionsFromSecurityV1XML() throws IOException, JAXBException {
+      copyTestDatabaseFile(configDir, "securityV1.xml");
       updateStep.doUpdate();
       List<String> assignedPermission =
         assignedPermissionStore.getAll().values()
@@ -127,15 +130,27 @@ class XmlSecurityV1UpdateStepTest {
       assertThat(assignedPermission).contains("test");
     }
 
+    @Test
+    void shouldNotFailOnEmptyV1SecurityXml() throws IOException, JAXBException {
+      copyTestDatabaseFile(configDir, "emptySecurityV1.xml", "securityV1.xml");
+      updateStep.doUpdate();
+      assertThat(assignedPermissionStore.getAll()).isEmpty();
+    }
+
   }
 
   private void copyTestDatabaseFile(Path configDir, String fileName) throws IOException {
-    URL url = Resources.getResource("sonia/scm/update/security/" + fileName);
-    Files.copy(url.openStream(), configDir.resolve(fileName));
+    copyTestDatabaseFile(configDir, fileName, fileName);
+  }
+
+  private void copyTestDatabaseFile(Path configDir, String sourceFileName, String targetFileName) throws IOException {
+    URL url = Resources.getResource("sonia/scm/update/security/" + sourceFileName);
+    Files.copy(url.openStream(), configDir.resolve(targetFileName));
   }
 
   @Test
   void shouldNotFailForMissingConfigDir() throws JAXBException {
     updateStep.doUpdate();
+    assertThat(assignedPermissionStore.getAll()).isEmpty();
   }
 }

@@ -114,4 +114,11 @@ storiesOf("Diff", module)
   })
   .add("CollapsingWithFunction", () => (
     <Diff diff={diffFiles} defaultCollapse={(oldPath, newPath) => oldPath.endsWith(".java")} />
-  ));
+  ))
+  .add("Expandable", () => {
+    const filesWithLanguage = diffFiles.map((file: File) => {
+      file._links = { lines: { href: "http://example.com/" } };
+      return file;
+    });
+    return <Diff diff={filesWithLanguage} />;
+  });

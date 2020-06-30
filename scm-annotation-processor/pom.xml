@@ -25,30 +25,30 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  
+
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.2.0-SNAPSHOT</version>
   </parent>
-  
+
   <groupId>sonia.scm</groupId>
   <artifactId>scm-annotation-processor</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <version>2.2.0-SNAPSHOT</version>
   <name>scm-annotation-processor</name>
-  
+
   <dependencies>
-    
+
     <!-- scm annotations -->
-    
+
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-annotations</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
+      <version>2.2.0-SNAPSHOT</version>
     </dependency>
-    
+
     <!-- rest api -->
 
     <dependency>
@@ -56,31 +56,31 @@
       <artifactId>javax.ws.rs-api</artifactId>
       <version>${jaxrs.version}</version>
     </dependency>
-    
+
     <!-- event bus -->
-    
+
     <dependency>
       <groupId>com.github.legman</groupId>
       <artifactId>core</artifactId>
       <version>${legman.version}</version>
     </dependency>
-    
+
     <!-- util -->
-    
+
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>${guava.version}</version>
     </dependency>
-    
+
     <!-- meta-inf services -->
-    
+
     <dependency>
       <groupId>org.kohsuke.metainf-services</groupId>
       <artifactId>metainf-services</artifactId>
       <version>1.8</version>
     </dependency>
-    
+
   </dependencies>
-  
+
 </project>

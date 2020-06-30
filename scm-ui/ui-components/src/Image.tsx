@@ -27,6 +27,7 @@ import { withContextPath } from "./urls";
 type Props = {
   src: string;
   alt: string;
+  title?: string;
   className?: string;
 };
 
@@ -40,8 +41,8 @@ class Image extends React.Component<Props> {
   };
 
   render() {
-    const { alt, className } = this.props;
-    return <img className={className} src={this.createImageSrc()} alt={alt} />;
+    const { alt, title, className } = this.props;
+    return <img className={className} src={this.createImageSrc()} alt={alt} title={title} />;
   }
 }
 

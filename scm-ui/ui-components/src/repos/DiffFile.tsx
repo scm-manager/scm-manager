@@ -34,6 +34,11 @@ import { Change, ChangeEvent, DiffObjectProps, File, Hunk as HunkType } from "./
 import TokenizedDiffView from "./TokenizedDiffView";
 import DiffButton from "./DiffButton";
 import { MenuContext } from "@scm-manager/ui-components";
+import DiffExpander, { ExpandableHunk } from "./DiffExpander";
+import HunkExpandLink from "./HunkExpandLink";
+import { Modal } from "../modals";
+import ErrorNotification from "../ErrorNotification";
+import HunkExpandDivider from "./HunkExpandDivider";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
@@ -47,7 +52,10 @@ type Collapsible = {
 };
 
 type State = Collapsible & {
+  file: File;
   sideBySide?: boolean;
+  diffExpander: DiffExpander;
+  expansionError?: any;
 };
 
 const DiffFilePanel = styled.div`
@@ -92,7 +100,9 @@ class DiffFile extends React.Component<Props, State> {
     super(props);
     this.state = {
       collapsed: this.defaultCollapse(),
-      sideBySide: props.sideBySide
+      sideBySide: props.sideBySide,
+      diffExpander: new DiffExpander(props.file),
+      file: props.file
     };
   }
 
@@ -116,7 +126,7 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   toggleCollapse = () => {
-    const { file } = this.props;
+    const { file } = this.state;
     if (this.hasContent(file)) {
       this.setState(state => ({
         collapsed: !state.collapsed
@@ -139,16 +149,122 @@ class DiffFile extends React.Component<Props, State> {
     });
   };
 
-  createHunkHeader = (hunk: HunkType, i: number) => {
-    if (i > 0) {
-      return <HunkDivider />;
+  createHunkHeader = (expandableHunk: ExpandableHunk) => {
+    if (expandableHunk.maxExpandHeadRange > 0) {
+      if (expandableHunk.maxExpandHeadRange <= 10) {
+        return (
+          <HunkExpandDivider>
+            <HunkExpandLink
+              icon={"fa-angle-double-up"}
+              onClick={this.expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}
+              text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandHeadRange })}
+            />
+          </HunkExpandDivider>
+        );
+      } else {
+        return (
+          <HunkExpandDivider>
+            <HunkExpandLink
+              icon={"fa-angle-up"}
+              onClick={this.expandHead(expandableHunk, 10)}
+              text={this.props.t("diff.expandByLines", { count: 10 })}
+            />{" "}
+            <HunkExpandLink
+              icon={"fa-angle-double-up"}
+              onClick={this.expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}
+              text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandHeadRange })}
+            />
+          </HunkExpandDivider>
+        );
+      }
     }
     // hunk header must be defined
     return <span />;
   };
 
+  createHunkFooter = (expandableHunk: ExpandableHunk) => {
+    if (expandableHunk.maxExpandBottomRange > 0) {
+      if (expandableHunk.maxExpandBottomRange <= 10) {
+        return (
+          <HunkExpandDivider>
+            <HunkExpandLink
+              icon={"fa-angle-double-down"}
+              onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
+              text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandBottomRange })}
+            />
+          </HunkExpandDivider>
+        );
+      } else {
+        return (
+          <HunkExpandDivider>
+            <HunkExpandLink
+              icon={"fa-angle-down"}
+              onClick={this.expandBottom(expandableHunk, 10)}
+              text={this.props.t("diff.expandByLines", { count: 10 })}
+            />{" "}
+            <HunkExpandLink
+              icon={"fa-angle-double-down"}
+              onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
+              text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandBottomRange })}
+            />
+          </HunkExpandDivider>
+        );
+      }
+    }
+    // hunk footer must be defined
+    return <span />;
+  };
+
+  createLastHunkFooter = (expandableHunk: ExpandableHunk) => {
+    if (expandableHunk.maxExpandBottomRange !== 0) {
+      return (
+        <HunkExpandDivider>
+          <HunkExpandLink
+            icon={"fa-angle-down"}
+            onClick={this.expandBottom(expandableHunk, 10)}
+            text={this.props.t("diff.expandLastBottomByLines", { count: 10 })}
+          />{" "}
+          <HunkExpandLink
+            icon={"fa-angle-double-down"}
+            onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
+            text={this.props.t("diff.expandLastBottomComplete")}
+          />
+        </HunkExpandDivider>
+      );
+    }
+    // hunk header must be defined
+    return <span />;
+  };
+
+  expandHead = (expandableHunk: ExpandableHunk, count: number) => {
+    return () => {
+      return expandableHunk
+        .expandHead(count)
+        .then(this.diffExpanded)
+        .catch(this.diffExpansionFailed);
+    };
+  };
+
+  expandBottom = (expandableHunk: ExpandableHunk, count: number) => {
+    return () => {
+      return expandableHunk
+        .expandBottom(count)
+        .then(this.diffExpanded)
+        .catch(this.diffExpansionFailed);
+    };
+  };
+
+  diffExpanded = (newFile: File) => {
+    this.setState({ file: newFile, diffExpander: new DiffExpander(newFile) });
+  };
+
+  diffExpansionFailed = (err: any) => {
+    this.setState({ expansionError: err });
+  };
+
   collectHunkAnnotations = (hunk: HunkType) => {
-    const { annotationFactory, file } = this.props;
+    const { annotationFactory } = this.props;
+    const { file } = this.state;
     if (annotationFactory) {
       return annotationFactory({
         hunk,
@@ -160,7 +276,8 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   handleClickEvent = (change: Change, hunk: HunkType) => {
-    const { file, onClick } = this.props;
+    const { onClick } = this.props;
+    const { file } = this.state;
     const context = {
       changeId: getChangeKey(change),
       change,
@@ -183,19 +300,35 @@ class DiffFile extends React.Component<Props, State> {
     }
   };
 
-  renderHunk = (hunk: HunkType, i: number) => {
+  renderHunk = (file: File, expandableHunk: ExpandableHunk, i: number) => {
+    const hunk = expandableHunk.hunk;
     if (this.props.markConflicts && hunk.changes) {
       this.markConflicts(hunk);
     }
-    return [
-      <Decoration key={"decoration-" + hunk.content}>{this.createHunkHeader(hunk, i)}</Decoration>,
+    const items = [];
+    if (file._links?.lines) {
+      items.push(this.createHunkHeader(expandableHunk));
+    } else if (i > 0) {
+      items.push(<Decoration><HunkDivider /></Decoration>);
+    }
+
+    items.push(
       <Hunk
         key={"hunk-" + hunk.content}
-        hunk={hunk}
+        hunk={expandableHunk.hunk}
         widgets={this.collectHunkAnnotations(hunk)}
         gutterEvents={this.createGutterEvents(hunk)}
+        className={this.props.hunkClass ? this.props.hunkClass(hunk) : null}
       />
-    ];
+    );
+    if (file._links?.lines) {
+      if (i === file.hunks!.length - 1) {
+        items.push(this.createLastHunkFooter(expandableHunk));
+      } else {
+        items.push(this.createHunkFooter(expandableHunk));
+      }
+    }
+    return items;
   };
 
   markConflicts = (hunk: HunkType) => {
@@ -251,19 +384,11 @@ class DiffFile extends React.Component<Props, State> {
     return <ChangeTypeTag className={classNames("is-rounded", "has-text-weight-normal")} color={color} label={value} />;
   };
 
-  concat = (array: object[][]) => {
-    if (array.length > 0) {
-      return array.reduce((a, b) => a.concat(b));
-    } else {
-      return [];
-    }
-  };
-
   hasContent = (file: File) => file && !file.isBinary && file.hunks && file.hunks.length > 0;
 
   render() {
-    const { file, fileControlFactory, fileAnnotationFactory, t } = this.props;
-    const { collapsed, sideBySide } = this.state;
+    const { fileControlFactory, fileAnnotationFactory, t } = this.props;
+    const { file, collapsed, sideBySide, diffExpander, expansionError } = this.state;
     const viewType = sideBySide ? "split" : "unified";
 
     let body = null;
@@ -275,7 +400,11 @@ class DiffFile extends React.Component<Props, State> {
         <div className="panel-block is-paddingless">
           {fileAnnotations}
           <TokenizedDiffView className={viewType} viewType={viewType} file={file}>
-            {(hunks: HunkType[]) => this.concat(hunks.map(this.renderHunk))}
+            {(hunks: HunkType[]) =>
+              hunks?.map((hunk, n) => {
+                return this.renderHunk(file, diffExpander.getHunk(n), n);
+              })
+            }
           </TokenizedDiffView>
         </div>
       );
@@ -306,8 +435,21 @@ class DiffFile extends React.Component<Props, State> {
         </ButtonWrapper>
       ) : null;
 
+    let errorModal;
+    if (expansionError) {
+      errorModal = (
+        <Modal
+          title={t("diff.expansionFailed")}
+          closeFunction={() => this.setState({ expansionError: undefined })}
+          body={<ErrorNotification error={expansionError} />}
+          active={true}
+        />
+      );
+    }
+
     return (
       <DiffFilePanel className={classNames("panel", "is-size-6")} collapsed={(file && file.isBinary) || collapsed}>
+        {errorModal}
         <div className="panel-heading">
           <FlexWrapLevel className="level">
             <FullWidthTitleHeader

@@ -22,9 +22,10 @@
  * SOFTWARE.
  */
 
-export type Person = {
-  name: string;
-  mail?: string;
-};
+import { Person } from "@scm-manager/ui-types";
+
+// re export type to avoid breaking changes,
+// after the type was moved to ui-types
+export { Person };
 
 export const EXTENSION_POINT = "avatar.factory";

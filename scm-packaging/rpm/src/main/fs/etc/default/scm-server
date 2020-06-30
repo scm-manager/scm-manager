@@ -36,7 +36,7 @@ USER=scm
 export SCM_HOME=/var/lib/scm
 
 # force jvm path
-JAVA_HOME="/usr/lib/jvm/jre-11"
+# JAVA_HOME="/usr/lib/jvm/jre-11"
 
 # path to pid
 PIDFILE=/var/run/scm/scm.pid

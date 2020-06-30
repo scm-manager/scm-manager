@@ -4,7 +4,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
 ## Unreleased
+### Added
+- enrich commit mentions in markdown viewer by internal links  ([#1210](https://github.com/scm-manager/scm-manager/pull/1210))
+
+### Changed
+- Checkboxes can now be 'indeterminate' ([#1215](https://github.com/scm-manager/scm-manager/pull/1215))
+
+### Fixed
+- Fixed installation of debian packages on distros without preinstalled `at` ([#1216](https://github.com/scm-manager/scm-manager/issues/1216) and [#1217](https://github.com/scm-manager/scm-manager/pull/1217))
+- Fixed broken migration with empty security.xml ([#1219](https://github.com/scm-manager/scm-manager/issues/1219) and [#1221](https://github.com/scm-manager/scm-manager/pull/1221))
+- Mercurial on Python 3
+
+## [2.1.1] - 2020-06-23
+### Fixed
+- Wait until recommended java installation is available for deb packages ([#1209](https://github.com/scm-manager/scm-manager/pull/1209))
+- Do not force java home of recommended java dependency for rpm and deb packages ([#1195](https://github.com/scm-manager/scm-manager/issues/1195) and [#1208](https://github.com/scm-manager/scm-manager/pull/1208))
+- Migration of non-bare repositories ([#1213](https://github.com/scm-manager/scm-manager/pull/1213))
+
+## [2.1.0] - 2020-06-18
+### Added
+- Option to configure jvm parameter of docker container with env JAVA_OPTS or with arguments ([#1175](https://github.com/scm-manager/scm-manager/pull/1175))
+- Added links in diff views to expand the gaps between "hunks" ([#1178](https://github.com/scm-manager/scm-manager/pull/1178))
+- Show commit contributors in table on changeset details view ([#1169](https://github.com/scm-manager/scm-manager/pull/1169))
+- Show changeset parents on changeset details view ([#1189](https://github.com/scm-manager/scm-manager/pull/1189))
+- Annotate view to display commit metadata for each line of a file ([#1196](https://github.com/scm-manager/scm-manager/pull/1196))
+
+### Fixed
+- Avoid caching of detected browser language ([#1176](https://github.com/scm-manager/scm-manager/pull/1176))
+- Fixes configuration of jetty listener address with system property `jetty.host` ([#1173](https://github.com/scm-manager/scm-manager/pull/1173), [#1174](https://github.com/scm-manager/scm-manager/pull/1174))
+- Fixes loading plugin bundles with context path `/` ([#1182](https://github.com/scm-manager/scm-manager/pull/1182/files), [#1181](https://github.com/scm-manager/scm-manager/issues/1181))
+- Sets the new plugin center URL once ([#1184](https://github.com/scm-manager/scm-manager/pull/1184))
+- Diffs with CR characters are parsed correctly ([#1185](https://github.com/scm-manager/scm-manager/pull/1185))
+- Close file lists in migration ([#1191](https://github.com/scm-manager/scm-manager/pull/1191))
+- Use command in javahg.py from registrar (Upgrade to newer javahg version)  ([#1192](https://github.com/scm-manager/scm-manager/pull/1192))
+- Fixed wrong e-tag format ([sdorra/web-resource #1](https://github.com/sdorra/web-resources/pull/1))
+- Fixed refetching loop for non existing changesets ([#1203](https://github.com/scm-manager/scm-manager/pull/1203))
+- Fixed active state of sub navigation items, which are using activeWhenMatch ([#1199](https://github.com/scm-manager/scm-manager/pull/1199))
+- Handles repositories in custom directories correctly in migration from 1.x ([#1201](https://github.com/scm-manager/scm-manager/pull/1201))
+- Usage of short git commit ids in changeset urls ([#1200](https://github.com/scm-manager/scm-manager/pull/1200))
+- Fixes linebreaks in multiline tooltip ([#1207](https://github.com/scm-manager/scm-manager/pull/1207))
+
+## [2.0.0] - 2020-06-04
 ### Added
 - Detect renamed files in git and hg diffs ([#1157](https://github.com/scm-manager/scm-manager/pull/1157))
 - ClassLoader and Adapter parameters to typed store apis ([#1111](https://github.com/scm-manager/scm-manager/pull/1111))
@@ -15,7 +57,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Correctly resolve Links in markdown files ([#1152](https://github.com/scm-manager/scm-manager/pull/1152))
 - Missing copy on write in the data store ([#1155](https://github.com/scm-manager/scm-manager/pull/1155))
 - Resolved conflicting dependencies for scm-webapp ([#1159](https://github.com/scm-manager/scm-manager/pull/1159))
-- Mercurial on Python 3
 
 ## [2.0.0-rc8] - 2020-05-08
 ### Added
@@ -169,3 +210,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.0.0-rc5]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc5
 [2.0.0-rc6]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc6
 [2.0.0-rc7]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc7
+[2.0.0-rc8]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc8
+[2.0.0]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0

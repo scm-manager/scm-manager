@@ -21,49 +21,53 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
-import com.google.inject.util.Providers;
 import sonia.scm.repository.RepositoryManager;
 
-import javax.inject.Provider;
+import static com.google.inject.util.Providers.of;
+import static org.mockito.Mockito.mock;
 
-public abstract class RepositoryTestBase {
+abstract class RepositoryTestBase {
 
-
-  protected RepositoryToRepositoryDtoMapper repositoryToDtoMapper;
-  protected RepositoryDtoToRepositoryMapper dtoToRepositoryMapper;
-  protected RepositoryManager manager;
-  protected Provider<TagRootResource> tagRootResource;
-  protected Provider<BranchRootResource> branchRootResource;
-  protected Provider<ChangesetRootResource> changesetRootResource;
-  protected Provider<SourceRootResource> sourceRootResource;
-  protected Provider<ContentResource> contentResource;
-  protected Provider<RepositoryPermissionRootResource> permissionRootResource;
-  protected Provider<DiffRootResource> diffRootResource;
-  protected Provider<ModificationsRootResource> modificationsRootResource;
-  protected Provider<FileHistoryRootResource> fileHistoryRootResource;
-  protected Provider<RepositoryCollectionResource> repositoryCollectionResource;
-  protected Provider<IncomingRootResource> incomingRootResource;
+  RepositoryToRepositoryDtoMapper repositoryToDtoMapper;
+  RepositoryDtoToRepositoryMapper dtoToRepositoryMapper;
+  RepositoryManager manager;
+  TagRootResource tagRootResource;
+  BranchRootResource branchRootResource;
+  ChangesetRootResource changesetRootResource;
+  SourceRootResource sourceRootResource;
+  ContentResource contentResource;
+  RepositoryPermissionRootResource permissionRootResource;
+  DiffRootResource diffRootResource;
+  ModificationsRootResource modificationsRootResource;
+  FileHistoryRootResource fileHistoryRootResource;
+  IncomingRootResource incomingRootResource;
+  RepositoryCollectionResource repositoryCollectionResource;
+  AnnotateResource annotateResource;
 
 
   RepositoryRootResource getRepositoryRootResource() {
-    return new RepositoryRootResource(Providers.of(new RepositoryResource(
-      repositoryToDtoMapper,
-      dtoToRepositoryMapper,
-      manager,
-      tagRootResource,
-      branchRootResource,
-      changesetRootResource,
-      sourceRootResource,
-      contentResource,
-      permissionRootResource,
-      diffRootResource,
-      modificationsRootResource,
-      fileHistoryRootResource,
-      incomingRootResource)), repositoryCollectionResource);
+    RepositoryBasedResourceProvider repositoryBasedResourceProvider = new RepositoryBasedResourceProvider(
+      of(tagRootResource),
+      of(branchRootResource),
+      of(changesetRootResource),
+      of(sourceRootResource),
+      of(contentResource),
+      of(permissionRootResource),
+      of(diffRootResource),
+      of(modificationsRootResource),
+      of(fileHistoryRootResource),
+      of(incomingRootResource),
+      of(annotateResource));
+    return new RepositoryRootResource(
+      of(new RepositoryResource(
+        repositoryToDtoMapper,
+        dtoToRepositoryMapper,
+        manager,
+        repositoryBasedResourceProvider
+      )),
+      of(repositoryCollectionResource));
   }
-
-
 }

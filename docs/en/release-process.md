@@ -8,7 +8,15 @@ To release a new version of SCM-Manager v2 you have to do the following steps (r
 Make sure you have no changes you want to keep!
 
 ```
-git fetch && git checkout develop && git reset --hard origin/develop
+git fetch && git checkout -f origin/develop && git clean -fd && git checkout -B develop
+```
+
+## Merge support branch
+
+Check whether there is an integration branch for the previous release or bugfixes not merged into the develop branch. Merge them now.
+
+```
+git merge origin/support/<support branch>
 ```
 
 ## Modify Changelog
@@ -51,7 +59,15 @@ To release a new version of a Plugin for SCM-Manager v2 you have to do the follo
 Make sure you have no changes you want to keep!
 
 ```
-git fetch && git checkout develop && git reset --hard origin/develop
+git fetch && git checkout -f origin/develop && git clean -fd && git checkout -B develop
+```
+
+## Merge support branch
+
+Check whether there is an integration branch for the previous release or bugfixes not merged into the develop branch. Merge them now.
+
+```
+git merge origin/support/<support branch>
 ```
 
 ## Update SCM parent if necessary
@@ -61,40 +77,32 @@ If you need to update the parent of the plugin to a new release of SCM-Manager, 
 - `pom.xml`: `parent.version`
 - `package.json`: `dependencies.ui-plugins`
 
-```
-rm -rf node_modules yarn.lock
-mvn clean install
-git add yarn.lock pom.xml package.json
-git commit -m "Update to new version of SCM-Manager"
-git push
-```
-
 ## Plugin dependencies
 
 Check if all plugin dependencies are proper versions and not SNAPSHOT!
 
+## Build, commit and push
+
+```
+rm -rf node_modules yarn.lock && mvn clean install \
+&& git add yarn.lock pom.xml package.json \
+&& git commit -m "Update to new version of SCM-Manager" \
+&& git push origin develop
+```
+
 Wait for Jenkins to be green.
-
-## Create release branch
-
-```
-git checkout -b release/<version>
-```
 
 ## Modify Changelog
 
 Change "Unreleased" header in `CHANGELOG.md` to  `<version> - <current date>`
 
-## Commit and push release
+## Create, commit and push release branch
 
 ```
-git commit -am "Prepare release of <version>"
-```
-
-## Push release branch
-
-```
-git push origin release/<version>
+export VERSION=<version> \
+&& git checkout -b release/$VERSION \
+&& git commit -am "Prepare release of $VERSION" \
+&& git push origin release/$VERSION
 ```
 
 ## Wait for Jenkins build

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.util.Providers;
@@ -74,8 +74,7 @@ public class SourceRootResourceTest extends RepositoryTestBase {
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(service.getBrowseCommand()).thenReturn(browseCommandBuilder);
 
-    SourceRootResource sourceRootResource = new SourceRootResource(serviceFactory, browserResultToFileObjectDtoMapper);
-    super.sourceRootResource = Providers.of(sourceRootResource);
+    sourceRootResource = new SourceRootResource(serviceFactory, browserResultToFileObjectDtoMapper);
     dispatcher.addSingletonResource(getRepositoryRootResource());
   }
 

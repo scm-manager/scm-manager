@@ -48,9 +48,15 @@ type Props = WithTranslation & {
 
 class ChangesetView extends React.Component<Props> {
   componentDidMount() {
-    const { fetchChangesetIfNeeded, repository } = this.props;
-    const id = this.props.match.params.id;
+    const { fetchChangesetIfNeeded, repository, id } = this.props;
     fetchChangesetIfNeeded(repository, id);
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    const { fetchChangesetIfNeeded, repository, id } = this.props;
+    if (prevProps.id !== id) {
+      fetchChangesetIfNeeded(repository, id);
+    }
   }
 
   render() {
@@ -73,6 +79,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   const loading = isFetchChangesetPending(state, repository, id);
   const error = getFetchChangesetFailure(state, repository, id);
   return {
+    id,
     changeset,
     error,
     loading

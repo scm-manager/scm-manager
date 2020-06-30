@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.common.base.Strings;
@@ -77,7 +77,7 @@ public class UIPluginDtoMapper {
   private String addContextPath(String resource) {
     String ctxPath = request.getContextPath();
     if (Strings.isNullOrEmpty(ctxPath)) {
-      return resource;
+      return "/" + resource;
     }
     return HttpUtil.append(ctxPath, resource);
   }

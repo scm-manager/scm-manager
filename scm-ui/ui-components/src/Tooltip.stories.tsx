@@ -32,24 +32,38 @@ import Button from "./buttons/Button";
 
 const Wrapper = styled.div`
   margin: 2rem;
-  max-width: 400px;
+  width: 100%;
 `;
 
 const Spacing = styled.div`
   padding: 2em 6em;
+  width: 50%;
+  margin: 0 auto;
 `;
 
 const positions = ["right", "top", "left", "bottom"];
 
 const message = "Heart of Gold";
 
+const mutltiline = `Characters:
+
+- Arthur Dent
+- Ford Prefect
+- Zaphod Beeblebrox
+- Marvin the Paranoid Android
+- Trillian
+- Slartibartfast`;
+
+const shortMultiline = `* a
+* b
+* c`;
+
 const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
 
 storiesOf("Tooltip", module)
   .addDecorator(RoutingDecorator)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
   .add("Default", () => (
-    <div>
+    <Wrapper>
       {positions.map(position => (
         <Spacing>
           <Tooltip message={message} location={position}>
@@ -57,5 +71,27 @@ storiesOf("Tooltip", module)
           </Tooltip>
         </Spacing>
       ))}
-    </div>
+    </Wrapper>
+  ))
+  .add("Multiline", () => (
+    <Wrapper>
+      {positions.map(position => (
+        <Spacing>
+          <Tooltip message={mutltiline} location={position}>
+            <Button label={position} color="info" />{" "}
+          </Tooltip>
+        </Spacing>
+      ))}
+    </Wrapper>
+  ))
+  .add("Short Multiline", () => (
+    <Wrapper>
+      {positions.map(position => (
+        <Spacing>
+          <Tooltip message={shortMultiline} location={position}>
+            <Button label={position} color="info" />{" "}
+          </Tooltip>
+        </Spacing>
+      ))}
+    </Wrapper>
   ));

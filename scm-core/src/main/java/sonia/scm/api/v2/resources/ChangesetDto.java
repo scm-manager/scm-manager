@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
@@ -32,6 +32,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
@@ -57,6 +58,8 @@ public class ChangesetDto extends HalRepresentation {
    * The text of the changeset description
    */
   private String description;
+
+  private List<ContributorDto> contributors;
 
   public ChangesetDto(Links links, Embedded embedded) {
     super(links, embedded);

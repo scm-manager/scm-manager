@@ -82,14 +82,28 @@
     "collapseDiffs": "Auf-/Zuklappen"
   },
   "changeset": {
+    "label": "Changeset",
     "description": "Beschreibung",
     "summary": "Changeset <0/> wurde <1/> committet",
     "shortSummary": "Committet <0/> <1/>",
     "tags": "Tags",
     "diffNotSupported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt",
-    "author": {
-      "prefix": "Verfasst von",
-      "mailto": "Mail senden an"
+    "shortlink": {
+      "title": "Changeset {{id}} aus {{namespace}}/{{name}}"
+    },
+    "parents": {
+      "label" : "Parent",
+      "label_plural": "Parents"
+    },
+    "contributors": {
+      "mailto": "Mail senden an",
+      "list": "Liste der Mitwirkenden",
+      "authoredBy": "Verfasst von",
+      "committedBy": "Committed von",
+      "coAuthoredBy": "Co-Autoren",
+      "more": "{{count}} mehr",
+      "count": "{{count}} Mitwirkender",
+      "count_plural": "{{count}} Mitwirkende"
     },
     "buttons": {
       "details": "Details",
@@ -114,6 +128,7 @@
     "content": {
       "historyButton": "History",
       "sourcesButton": "Sources",
+      "annotateButton": "Annotate",
       "downloadButton": "Download",
       "toggleButton": {
         "showMarkdown": "Markdown rendern",
@@ -191,7 +206,15 @@
   "diff": {
     "sideBySide": "Zur zweispaltigen Ansicht wechseln",
     "combined": "Zur kombinierten Ansicht wechseln",
-    "noDiffFound": "Kein Diff zwischen den ausgewählten Branches gefunden."
+    "noDiffFound": "Kein Diff zwischen den ausgewählten Branches gefunden.",
+    "expandByLines": "{{count}} weitere Zeile laden",
+    "expandByLines_plural": "{{count}} weitere Zeilen laden",
+    "expandComplete": "{{count}} verbleibende Zeile laden",
+    "expandComplete_plural": "Alle {{count}} verbleibenden Zeilen laden",
+    "expandLastBottomByLines": "Bis zu {{count}} weitere Zeilen laden",
+    "expandLastBottomComplete": "Alle verbleibenden Zeilen laden",
+    "expanding": "Zeilen werden geladen ...",
+    "expansionFailed": "Fehler beim Laden der zusätzlichen Zeilen"
   },
   "fileUpload": {
     "clickHere": "Klicken Sie hier um Ihre Datei hochzuladen.",

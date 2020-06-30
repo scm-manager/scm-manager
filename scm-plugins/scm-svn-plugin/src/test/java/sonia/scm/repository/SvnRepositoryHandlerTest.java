@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 
@@ -59,6 +59,8 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   private HookEventFacade facade = new HookEventFacade(repositoryManagerProvider, hookContextFactory);
 
+  private SvnRepositoryHandler handler;
+
   @Override
   protected void postSetUp() throws IOException, RepositoryPathNotFoundException {
     initMocks(this);
@@ -82,7 +84,7 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory,
                                                       RepositoryLocationResolver locationResolver,
                                                       File directory)  {
-    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory, null, locationResolver, null);
+    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory, facade, locationResolver, null);
 
     handler.init(contextProvider);
 
@@ -95,16 +97,20 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   }
 
   @Test
-  public void getDirectory() {
+  public void getDirectory() throws IOException {
     when(factory.withType(any())).thenCallRealMethod();
     SvnRepositoryHandler repositoryHandler = new SvnRepositoryHandler(factory,
       facade, locationResolver, null);
 
-    SvnConfig svnConfig = new SvnConfig();
-    repositoryHandler.setConfig(svnConfig);
+    try {
+      SvnConfig svnConfig = new SvnConfig();
+      repositoryHandler.setConfig(svnConfig);
 
-    initRepository();
-    File path = repositoryHandler.getDirectory(repository.getId());
-    assertEquals(repoPath.toString()+File.separator+ RepositoryDirectoryHandler.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
+      initRepository();
+      File path = repositoryHandler.getDirectory(repository.getId());
+      assertEquals(repoPath.toString() + File.separator + RepositoryDirectoryHandler.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
+    } finally {
+      repositoryHandler.close();
+    }
   }
 }

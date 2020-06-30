@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 
@@ -78,7 +78,6 @@ import static sonia.scm.repository.api.DiffFormat.NATIVE;
 @Slf4j
 public class IncomingRootResourceTest extends RepositoryTestBase {
 
-
   public static final String INCOMING_PATH = "space/repo/incoming/";
   public static final String INCOMING_CHANGESETS_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + INCOMING_PATH;
   public static final String INCOMING_DIFF_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + INCOMING_PATH;
@@ -111,9 +110,6 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
   @InjectMocks
   private DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
 
-  private IncomingRootResource incomingRootResource;
-
-
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
@@ -122,7 +118,6 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
   public void prepareEnvironment() {
     incomingChangesetCollectionToDtoMapper = new IncomingChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     incomingRootResource = new IncomingRootResource(serviceFactory, incomingChangesetCollectionToDtoMapper, diffResultToDiffResultDtoMapper);
-    super.incomingRootResource = Providers.of(incomingRootResource);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(REPOSITORY)).thenReturn(repositoryService);

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update.repository;
 
 import org.slf4j.Logger;
@@ -62,15 +62,17 @@ class CopyMigrationStrategy extends BaseMigrationStrategy {
 
   private void copyData(Path sourceDirectory, Path targetDirectory) {
     createDataDirectory(targetDirectory);
-    listSourceDirectory(sourceDirectory).forEach(
+    listSourceDirectory(sourceDirectory, paths -> paths.forEach(
       sourceFile -> {
         Path targetFile = targetDirectory.resolve(sourceFile.getFileName());
         if (Files.isDirectory(sourceFile)) {
+          LOG.trace("traversing down into sub directory {}", sourceFile);
           copyData(sourceFile, targetFile);
         } else {
+          LOG.trace("copying file {} to {}", sourceFile, targetFile);
           copyFile(sourceFile, targetFile);
         }
       }
-    );
+    ));
   }
 }

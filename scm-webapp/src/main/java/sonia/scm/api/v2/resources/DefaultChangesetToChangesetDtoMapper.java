@@ -21,19 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Changeset;
+import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.Tag;
+import sonia.scm.repository.Contributor;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -49,7 +50,7 @@ import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMapper implements InstantAttributeMapper, ChangesetToChangesetDtoMapper{
+public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMapper implements InstantAttributeMapper, ChangesetToChangesetDtoMapper {
 
   @Inject
   private RepositoryServiceFactory serviceFactory;
@@ -66,10 +67,9 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
   @Inject
   private TagCollectionToDtoMapper tagCollectionToDtoMapper;
 
+  abstract ContributorDto map(Contributor contributor);
 
-  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
-  public abstract ChangesetDto map(Changeset changeset, @Context Repository repository);
-
+  abstract PersonDto map(Person person);
 
   @ObjectFactory
   ChangesetDto createDto(@Context Repository repository, Changeset source) {

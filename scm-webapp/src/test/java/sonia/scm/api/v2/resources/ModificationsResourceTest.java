@@ -88,9 +88,6 @@ public class ModificationsResourceTest extends RepositoryTestBase {
   @InjectMocks
   private ModificationsToDtoMapperImpl modificationsToDtoMapper;
 
-  private ModificationsRootResource modificationsRootResource;
-
-
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
@@ -98,7 +95,6 @@ public class ModificationsResourceTest extends RepositoryTestBase {
   @Before
   public void prepareEnvironment() {
     modificationsRootResource = new ModificationsRootResource(serviceFactory, modificationsToDtoMapper);
-    super.modificationsRootResource = Providers.of(modificationsRootResource);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(repositoryService);
     when(serviceFactory.create(any(Repository.class))).thenReturn(repositoryService);

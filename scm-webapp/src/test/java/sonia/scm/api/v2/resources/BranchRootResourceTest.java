@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.util.Providers;
@@ -30,7 +30,6 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -61,7 +60,9 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -102,8 +103,6 @@ public class BranchRootResourceTest extends RepositoryTestBase {
 
   private BranchChangesetCollectionToDtoMapper changesetCollectionToDtoMapper;
 
-  private BranchRootResource branchRootResource;
-
   @Mock
   private BranchCollectionToDtoMapper branchCollectionToDtoMapper;
 
@@ -112,7 +111,6 @@ public class BranchRootResourceTest extends RepositoryTestBase {
 
   @Mock
   private TagCollectionToDtoMapper tagCollectionToDtoMapper;
-
 
   @InjectMocks
   private DefaultChangesetToChangesetDtoMapperImpl changesetToChangesetDtoMapper;
@@ -126,7 +124,6 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     changesetCollectionToDtoMapper = new BranchChangesetCollectionToDtoMapper(changesetToChangesetDtoMapper, resourceLinks);
     BranchCollectionToDtoMapper branchCollectionToDtoMapper = new BranchCollectionToDtoMapper(branchToDtoMapper, resourceLinks);
     branchRootResource = new BranchRootResource(serviceFactory, branchToDtoMapper, branchCollectionToDtoMapper, changesetCollectionToDtoMapper, resourceLinks);
-    super.branchRootResource = Providers.of(branchRootResource);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
@@ -156,7 +153,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
 
     assertEquals(404, response.getStatus());
     MediaType contentType = (MediaType) response.getOutputHeaders().getFirst("Content-Type");
-    Assertions.assertThat(response.getContentAsString()).contains("branch", "master", "space/repo");
+    assertThat(response.getContentAsString()).contains("branch", "master", "space/repo");
   }
 
   @Test
@@ -196,10 +193,10 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
     assertEquals(200, response.getStatus());
     log.info("Response :{}", response.getContentAsString());
-    assertTrue(response.getContentAsString().contains(String.format("\"id\":\"%s\"", REVISION)));
-    assertTrue(response.getContentAsString().contains(String.format("\"name\":\"%s\"", authorName)));
-    assertTrue(response.getContentAsString().contains(String.format("\"mail\":\"%s\"", authorEmail)));
-    assertTrue(response.getContentAsString().contains(String.format("\"description\":\"%s\"", commit)));
+    assertThat(response.getContentAsString()).contains(String.format("\"id\":\"%s\"", REVISION));
+    assertThat(response.getContentAsString()).contains(String.format("\"name\":\"%s\"", authorName));
+    assertThat(response.getContentAsString()).contains(String.format("\"mail\":\"%s\"", authorEmail));
+    assertThat(response.getContentAsString()).contains(String.format("\"description\":\"%s\"", commit));
   }
 
   @Test

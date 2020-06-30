@@ -30,6 +30,7 @@ type Props = {
   name: string;
   color: string;
   className?: string;
+  onClick?: () => void;
 };
 
 export default class Icon extends React.Component<Props> {
@@ -39,12 +40,12 @@ export default class Icon extends React.Component<Props> {
   };
 
   render() {
-    const { title, iconStyle, name, color, className } = this.props;
+    const { title, iconStyle, name, color, className, onClick } = this.props;
     if (title) {
       return (
-        <i title={title} className={classNames(iconStyle, "fa-fw", "fa-" + name, `has-text-${color}`, className)} />
+        <i onClick={onClick} title={title} className={classNames(iconStyle, "fa-fw", "fa-" + name, `has-text-${color}`, className)} />
       );
     }
-    return <i className={classNames(iconStyle, "fa-" + name, `has-text-${color}`, className)} />;
+    return <i onClick={onClick} className={classNames(iconStyle, "fa-" + name, `has-text-${color}`, className)} />;
   }
 }

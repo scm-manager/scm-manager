@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,7 +48,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.Optional;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 
 @Slf4j
@@ -150,19 +152,11 @@ public class ChangesetRootResource {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.read(repository).check();
-      ChangesetPagingResult changesets = repositoryService.getLogCommand()
-        .setStartChangeset(id)
-        .setEndChangeset(id)
-        .getChangesets();
-      if (changesets != null && changesets.getChangesets() != null && !changesets.getChangesets().isEmpty()) {
-        Optional<Changeset> changeset = changesets.getChangesets().stream().filter(ch -> ch.getId().equals(id)).findFirst();
-        if (!changeset.isPresent()) {
-          return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(changesetToChangesetDtoMapper.map(changeset.get(), repository)).build();
-      } else {
-        return Response.status(Response.Status.NOT_FOUND).build();
+      Changeset changeset = repositoryService.getLogCommand().getChangeset(id);
+      if (changeset == null) {
+        throw notFound(entity(Changeset.class, id).in(repository));
       }
+      return Response.ok(changesetToChangesetDtoMapper.map(changeset, repository)).build();
     }
   }
 }

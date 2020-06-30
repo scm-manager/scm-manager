@@ -23,10 +23,11 @@
  */
 import * as React from "react";
 import classNames from "classnames";
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { RoutingProps } from "./RoutingProps";
 import { FC } from "react";
 import useMenuContext from "./MenuContext";
+import useActiveMatch from "./useActiveMatch";
 
 type Props = RoutingProps & {
   label: string;
@@ -34,11 +35,8 @@ type Props = RoutingProps & {
   icon?: string;
 };
 
-const NavLink: FC<Props> = ({ to, activeOnlyWhenExact, icon, label, title }) => {
-  const match = useRouteMatch({
-    path: to,
-    exact: activeOnlyWhenExact
-  });
+const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, icon, label, title }) => {
+  const active = useActiveMatch({ to, activeWhenMatch, activeOnlyWhenExact });
 
   const context = useMenuContext();
   const collapsed = context.isCollapsed();
@@ -54,7 +52,7 @@ const NavLink: FC<Props> = ({ to, activeOnlyWhenExact, icon, label, title }) => 
 
   return (
     <li title={collapsed ? title : undefined}>
-      <Link className={classNames(!!match ? "is-active" : "", collapsed ? "has-text-centered" : "")} to={to}>
+      <Link className={classNames(active ? "is-active" : "", collapsed ? "has-text-centered" : "")} to={to}>
         {showIcon}
         {collapsed ? null : label}
       </Link>

@@ -1,27 +1,35 @@
 - section: Getting started
   entries:
   - /installation/
-  - /configuration/
   - /migrate-scm-manager-from-v1/
   - /faq/
   - /known-issues/
 
+- section: User-oriented
+  entries:
+    - /user/repo/
+    - /user/user/
+    - /user/group/
+    - /user/admin/
+
 - section: Administration
   entries:
-    - /administration/scm-server-ssl/
-    - /administration/logging/
-    - /administration/command-line-client/
+  - /administration/basedirectory/
+  - /administration/logging/
+  - /administration/scm-server-ssl/
+  - /administration/reverse-proxies/
 
 - section: Development
   entries:
   - /development/intellij-idea-configuration/
   - /development/build-from-source/
   - /development/ui-common-pitfall/
-  - /administration/permission-concept/
+  - /development/permission-concept/
   - /development/error-handling/
   - /development/i18n/
   - /development/definition-of-done/
   - /development/ui-dod/
+  - /development/decision-table/
 
 - section: Plugin Development
   entries:

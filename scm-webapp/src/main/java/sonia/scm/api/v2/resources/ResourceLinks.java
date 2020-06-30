@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import sonia.scm.repository.NamespaceAndName;
@@ -563,6 +563,22 @@ class ResourceLinks {
 
     public String content(String namespace, String name, String revision, String path) {
       return addPath(sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("content").parameters().method("get").parameters(revision, "").href(), path);
+    }
+  }
+
+  public AnnotateLinks annotate() {
+    return new AnnotateLinks(scmPathInfoStore.get());
+  }
+
+  static class AnnotateLinks {
+    private final LinkBuilder annotateLinkBuilder;
+
+    AnnotateLinks(ScmPathInfo pathInfo) {
+      this.annotateLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, AnnotateResource.class);
+    }
+
+    String self(String namespace, String name, String revision, String path) {
+      return annotateLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("annotate").parameters().method("annotate").parameters(revision, path).href();
     }
   }
 

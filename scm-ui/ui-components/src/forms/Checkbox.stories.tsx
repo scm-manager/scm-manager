@@ -35,6 +35,7 @@ storiesOf("Forms|Checkbox", module)
     <Spacing>
       <Checkbox label="Not checked" checked={false} />
       <Checkbox label="Checked" checked={true} />
+      <Checkbox label="Indeterminate" checked={true} indeterminate={true} />
     </Spacing>
   ))
   .add("Disabled", () => (

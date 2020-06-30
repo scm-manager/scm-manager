@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update.repository;
 
 import sonia.scm.SCMContextProvider;
@@ -31,14 +31,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 abstract class BaseMigrationStrategy implements MigrationStrategy.Instance {
 
-  private final SCMContextProvider contextProvider;
+  private final V1RepositoryMigrationLocationResolver locationResolver;
 
   BaseMigrationStrategy(SCMContextProvider contextProvider) {
-    this.contextProvider = contextProvider;
+    this.locationResolver = new V1RepositoryMigrationLocationResolver(contextProvider);
   }
 
   Path getSourceDataPath(String name, String type) {
@@ -47,12 +48,12 @@ abstract class BaseMigrationStrategy implements MigrationStrategy.Instance {
   }
 
   Path getTypeDependentPath(String type) {
-    return contextProvider.getBaseDirectory().toPath().resolve("repositories").resolve(type);
+    return locationResolver.getTypeDependentPath(type);
   }
 
-  Stream<Path> listSourceDirectory(Path sourceDirectory) {
-    try {
-      return Files.list(sourceDirectory);
+  void listSourceDirectory(Path sourceDirectory, Consumer<Stream<Path>> pathConsumer) {
+    try (Stream<Path> paths = Files.list(sourceDirectory)) {
+      pathConsumer.accept(paths);
     } catch (IOException e) {
       throw new UpdateException("could not read original directory", e);
     }

@@ -82,18 +82,32 @@
     "collapseDiffs": "Collapse"
   },
   "changeset": {
+    "label": "Changeset",
     "description": "Description",
     "summary": "Changeset <0/> was committed <1/>",
     "shortSummary": "Committed <0/> <1/>",
     "tags": "Tags",
-    "diffNotSupported": "Diff of changesets is not supported by the type of repository",
-    "author": {
-      "prefix": "Authored by",
-      "mailto": "Send mail to"
+    "shortlink": {
+      "title": "Changeset {{id}} of {{namespace}}/{{name}}"
     },
+    "diffNotSupported": "Diff of changesets is not supported by the type of repository",
     "buttons": {
       "details": "Details",
       "sources": "Sources"
+    },
+    "parents": {
+      "label" : "Parent",
+      "label_plural": "Parents"
+    },
+    "contributors": {
+      "mailto": "Send mail to",
+      "list": "List of contributors",
+      "authoredBy": "Authored by",
+      "committedBy": "committed by",
+      "coAuthoredBy": "co authored by",
+      "more": "{{count}} more",
+      "count": "{{count}} Contributor",
+      "count_plural": "{{count}} Contributors"
     }
   },
   "repositoryForm": {
@@ -114,6 +128,7 @@
     "content": {
       "historyButton": "History",
       "sourcesButton": "Sources",
+      "annotateButton": "Annotate",
       "downloadButton": "Download",
       "toggleButton": {
         "showMarkdown": "Render markdown",
@@ -198,7 +213,15 @@
     },
     "sideBySide": "Switch to side-by-side view",
     "combined": "Switch to combined view",
-    "noDiffFound": "No Diff between the selected branches found."
+    "noDiffFound": "No Diff between the selected branches found.",
+    "expandByLines": "load {{count}} more line",
+    "expandByLines_plural": "load {{count}} more lines",
+    "expandComplete": "load {{count}} remaining line",
+    "expandComplete_plural": "load all {{count}} remaining lines",
+    "expandLastBottomByLines": "load up to {{count}} more lines",
+    "expandLastBottomComplete": "load all remaining lines",
+    "expanding": "loading lines ...",
+    "expansionFailed": "Error while loading additional lines"
   },
   "fileUpload": {
     "clickHere": "Click here to select your file",

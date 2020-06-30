@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -76,6 +76,7 @@ public class SvnRepositoryHandler
 
   private static final Logger logger =
     LoggerFactory.getLogger(SvnRepositoryHandler.class);
+  private SvnRepositoryHook hook;
 
   @Inject
   public SvnRepositoryHandler(ConfigurationStoreFactory storeFactory,
@@ -94,7 +95,8 @@ public class SvnRepositoryHandler
     // register hook
     if (eventFacade != null)
     {
-      FSHooks.registerHook(new SvnRepositoryHook(eventFacade, this));
+      hook = new SvnRepositoryHook(eventFacade, this);
+      FSHooks.registerHook(hook);
     }
     else if (logger.isWarnEnabled())
     {
@@ -211,5 +213,13 @@ public class SvnRepositoryHandler
 
   String getRepositoryId(File directory) {
     return new SvnConfigHelper().getRepositoryId(directory);
+  }
+
+  @Override
+  public void close() throws IOException {
+    if (hook != null) {
+      FSHooks.unregisterHook(hook);
+    }
+    super.close();
   }
 }
