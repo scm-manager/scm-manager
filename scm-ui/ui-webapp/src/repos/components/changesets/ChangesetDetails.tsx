@@ -32,6 +32,7 @@ import {
   AvatarWrapper,
   Button,
   ChangesetAuthor,
+  ChangesetDescription,
   ChangesetDiff,
   ChangesetId,
   changesets,
@@ -106,7 +107,7 @@ const ContributorToggleLine = styled.p`
 const ChangesetSummary = styled.div`
   display: flex;
   justify-content: space-between;
-`
+`;
 
 const SeparatedParents = styled.div`
   margin-left: 1em;
@@ -180,7 +181,7 @@ class ChangesetDetails extends React.Component<Props, State> {
               }}
               renderAll={false}
             >
-              {description.title}
+              <ChangesetDescription changeset={changeset} value={description.title} />
             </ExtensionPoint>
           </h4>
           <article className="media">
@@ -217,7 +218,7 @@ class ChangesetDetails extends React.Component<Props, State> {
                     }}
                     renderAll={false}
                   >
-                    {item}
+                    <ChangesetDescription changeset={changeset} value={item} />
                   </ExtensionPoint>
                   <br />
                 </span>

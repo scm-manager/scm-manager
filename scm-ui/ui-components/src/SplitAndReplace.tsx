@@ -24,10 +24,10 @@
 import React, { FC, ReactNode } from "react";
 import textSplitAndReplace from "./textSplitAndReplace";
 
-type Replacement = {
+export type Replacement = {
   textToReplace: string;
   replacement: ReactNode;
-  replaceAll: boolean;
+  replaceAll?: boolean;
 };
 
 type Props = {
