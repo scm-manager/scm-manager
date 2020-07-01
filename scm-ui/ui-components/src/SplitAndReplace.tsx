@@ -35,14 +35,20 @@ type Props = {
   replacements: Replacement[];
 };
 
-type PartToReplace = {
-  start: number;
-  length: number;
-  replacement: ReactNode;
+const textWrapper = (s: string) => {
+  const first = s.startsWith(" ") ? <>&nbsp;</> : "";
+  const last = s.endsWith(" ") ? <>&nbsp;</> : "";
+  return (
+    <div>
+      {first}
+      {s}
+      {last}
+    </div>
+  );
 };
 
 const SplitAndReplace: FC<Props> = ({ text, replacements }) => {
-  const parts = textSplitAndReplace<ReactNode>(text, replacements, s => <div>{s}</div>);
+  const parts = textSplitAndReplace<ReactNode>(text, replacements, textWrapper);
   if (parts.length === 0) {
     return <>{parts[0]}</>;
   }

@@ -22,28 +22,28 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 import { Changeset } from "@scm-manager/ui-types";
-import { useBinder } from "@scm-manager/ui-extensions";
-import { SplitAndReplace, Replacement } from "@scm-manager/ui-components";
+import { Replacement } from "@scm-manager/ui-components";
 
-type Props = {
-  changeset: Changeset;
-  value: string;
+const ChangesetShortLink: (changeset: Changeset, value: string) => Replacement[] = (changeset, value) => {
+  const matches = value.match(/(\w+)\/(\w+)@([a-f0-9]+)/g);
+  if (!matches) {
+    return [];
+  }
+  return matches.map(value => {
+    const groups = value.match(/(\w+)\/(\w+)@([a-f0-9]+)/);
+    const namespace = groups[1];
+    const name = groups[2];
+    const revision = groups[3];
+    const link = `/repo/${namespace}/${name}/changeset/${revision}`;
+    const replacement: Replacement = {
+      textToReplace: value,
+      replacement: <Link to={link}>{value}</Link>
+    };
+    return replacement;
+  });
 };
 
-const ChangesetDescription: FC<Props> = ({ changeset, value }) => {
-  const binder = useBinder();
-
-  const replacements: ((changeset: Changeset, value: string) => Replacement[])[] = binder.getExtensions(
-    "changeset.description.tokens",
-    {
-      changeset,
-      value
-    }
-  );
-
-  return <SplitAndReplace text={value} replacements={replacements.flatMap(r => r(changeset, value))} />;
-};
-
-export default ChangesetDescription;
+export default ChangesetShortLink;

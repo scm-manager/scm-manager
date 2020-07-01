@@ -24,36 +24,29 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 import SplitAndReplace from "./SplitAndReplace";
-import { Icon } from "@scm-manager/ui-components/src";
+import { Icon } from "@scm-manager/ui-components";
 
 storiesOf("SplitAndReplace", module).add("Simple replacement", () => {
   const replacements = [
     {
       textToReplace: "'",
-      replacement: <Icon name={"quote-left"}/>,
+      replacement: <Icon name={"quote-left"} />,
       replaceAll: true
     },
     {
       textToReplace: "`",
-      replacement: <Icon name={"quote-right"}/>,
-      replaceAll: true
-    },
-    {
-      replacement: <div>&nbsp;</div>,
-      textToReplace: " ",
+      replacement: <Icon name={"quote-right"} />,
       replaceAll: true
     }
   ];
   return (
     <>
-    <div className={"container"}><SplitAndReplace
-      text={"'So this is it,` said Arthur, 'We are going to die.`"}
-      replacements={replacements}
-    /></div>
-    <div className={"container"}><SplitAndReplace
-      text={"'Yes,` said Ford, 'except... no! Wait a minute!`"}
-      replacements={replacements}
-    /></div>
-      </>
+      <div className={"container"}>
+        <SplitAndReplace text={"'So this is it,` said Arthur, 'We are going to die.`"} replacements={replacements} />
+      </div>
+      <div className={"container"}>
+        <SplitAndReplace text={"'Yes,` said Ford, 'except... no! Wait a minute!`"} replacements={replacements} />
+      </div>
+    </>
   );
 });

@@ -54,7 +54,10 @@ const withAvatarFactory = (factory: (person: Person) => string, changeset: Chang
   );
 };
 
-const withReplacements = (replacements: Replacement[][], changeset: Changeset) => {
+const withReplacements = (
+  replacements: ((changeset: Changeset, value: string) => Replacement[])[],
+  changeset: Changeset
+) => {
   const binder = new Binder("changeset stories");
   replacements.forEach(replacement => binder.bind("changeset.description.tokens", replacement));
   return (
@@ -72,7 +75,7 @@ storiesOf("Changesets", module)
   .add("With Committer and Co-Author", () => <ChangesetRow repository={repository} changeset={one} />)
   .add("With multiple Co-Authors", () => <ChangesetRow repository={repository} changeset={four} />)
   .add("With avatar", () => {
-    return withAvatarFactory(person => hitchhiker, three);
+    return withAvatarFactory(() => hitchhiker, three);
   })
   .add("Commiter and Co-Authors with avatar", () => {
     return withAvatarFactory(robohash, one);
@@ -85,8 +88,8 @@ storiesOf("Changesets", module)
     const mail = <a href={"mailto:hog@example.com"}>Arthur</a>;
     return withReplacements(
       [
-        [{ textToReplace: "HOG-42", replacement: link }],
-        [{ textToReplace: "arthur@guide.galaxy", replacement: mail }]
+        () => [{ textToReplace: "HOG-42", replacement: link }],
+        () => [{ textToReplace: "arthur@guide.galaxy", replacement: mail }]
       ],
       five
     );
