@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+    
 package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.Lists;
@@ -68,7 +68,7 @@ class NamespaceStrategyResourceTest {
   }
 
   private Set<NamespaceStrategy> allStrategies() {
-    return strategies(new AwesomeNamespaceStrategy(), new SuperNamespaceStrategy(), new MegaNamespaceStrategy());
+    return  strategies(new AwesomeNamespaceStrategy(), new SuperNamespaceStrategy(), new MegaNamespaceStrategy());
   }
 
   private Set<NamespaceStrategy> strategies(NamespaceStrategy... strategies) {
@@ -80,11 +80,6 @@ class NamespaceStrategyResourceTest {
     public String createNamespace(Repository repository) {
       return "awesome";
     }
-
-    @Override
-    public boolean canBeChanged() {
-      return false;
-    }
   }
 
   private static class SuperNamespaceStrategy implements NamespaceStrategy {
@@ -92,22 +87,12 @@ class NamespaceStrategyResourceTest {
     public String createNamespace(Repository repository) {
       return "super";
     }
-
-    @Override
-    public boolean canBeChanged() {
-      return false;
-    }
   }
 
   private static class MegaNamespaceStrategy implements NamespaceStrategy {
     @Override
     public String createNamespace(Repository repository) {
       return "mega";
-    }
-
-    @Override
-    public boolean canBeChanged() {
-      return false;
     }
   }
 }

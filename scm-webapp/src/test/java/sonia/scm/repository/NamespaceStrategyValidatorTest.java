@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+    
 package sonia.scm.repository;
 
 import com.google.common.collect.Sets;
@@ -30,7 +30,7 @@ import sonia.scm.ScmConstraintViolationException;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class NamespaceStrategyValidatorTest {
 
@@ -51,11 +51,6 @@ class NamespaceStrategyValidatorTest {
     @Override
     public String createNamespace(Repository repository) {
       return null;
-    }
-
-    @Override
-    public boolean canBeChanged() {
-      return false;
     }
   }
 

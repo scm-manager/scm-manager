@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+    
 package sonia.scm.repository;
 
 import org.apache.shiro.SecurityUtils;
@@ -33,10 +33,5 @@ public class UsernameNamespaceStrategy implements NamespaceStrategy {
   @Override
   public String createNamespace(Repository repository) {
     return SecurityUtils.getSubject().getPrincipal().toString();
-  }
-
-  @Override
-  public boolean canBeChanged() {
-    return false;
   }
 }

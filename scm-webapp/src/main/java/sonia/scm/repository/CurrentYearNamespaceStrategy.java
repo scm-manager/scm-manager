@@ -50,9 +50,4 @@ public class CurrentYearNamespaceStrategy implements NamespaceStrategy {
   public String createNamespace(Repository repository) {
     return String.valueOf(Year.now(clock).getValue());
   }
-
-  @Override
-  public boolean canBeChanged() {
-    return false;
-  }
 }

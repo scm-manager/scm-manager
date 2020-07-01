@@ -45,5 +45,7 @@ public interface NamespaceStrategy {
    *
    * @return namespace can be changed
    */
-  boolean canBeChanged();
+  default boolean canBeChanged() {
+    return false;
+  }
 }

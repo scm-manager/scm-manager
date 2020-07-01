@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+    
 package sonia.scm.repository;
 
 import sonia.scm.plugin.Extension;
@@ -31,10 +31,5 @@ public class RepositoryTypeNamespaceStrategy implements NamespaceStrategy {
   @Override
   public String createNamespace(Repository repository) {
     return repository.getType();
-  }
-
-  @Override
-  public boolean canBeChanged() {
-    return false;
   }
 }
