@@ -28,6 +28,12 @@
           "description": "Darf alle Repositories lesen, klonen und schreiben."
         }
       },
+      "read,rename": {
+        "*": {
+          "displayName": "Alle Repositories umbenennen",
+          "description": "Darf alle Repositories lesen und umbenennen."
+        }
+      },
       "*": {
         "displayName": "Alle Repositories besitzen (Owner)",
         "description": "Darf alle Repositories lesen, klonen, schreiben, konfigurieren und löschen."
