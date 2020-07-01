@@ -3,7 +3,8 @@ Version: [[version]]
 Section: devel
 Priority: extra
 Architecture: all
-Description: The easiest way to share and manage your Git, Mercurial and Subversion repositories over http
-Maintainer: Sebastian Sdorra <sebastian.sdorra@cloudogu.com>
+Description: The easiest way to share and manage your Git, Mercurial and Subversion repositories
+Maintainer: SCM-Team <scm-team@cloudogu.com>
+Homepage: https://scm-manager.org
 Depends: adduser, procps, psmisc, net-tools
 Recommends: openjdk-11-jre-headless, mercurial
