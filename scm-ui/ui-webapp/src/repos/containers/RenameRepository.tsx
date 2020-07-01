@@ -27,9 +27,9 @@ import { Link, Links, Repository } from "@scm-manager/ui-types";
 import { CONTENT_TYPE, CUSTOM_NAMESPACE_STRATEGY } from "../modules/repos";
 import { Button, ButtonGroup, ErrorNotification, InputField, Level, Loading, Modal } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import { apiClient } from "@scm-manager/ui-components/src";
+import { apiClient } from "@scm-manager/ui-components";
 import { useHistory } from "react-router-dom";
-import { ExtensionPoint } from "@scm-manager/ui-extensions/src";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import * as validator from "../components/form/repositoryValidation";
 
 type Props = {
