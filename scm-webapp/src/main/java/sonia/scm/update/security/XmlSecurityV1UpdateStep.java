@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update.security;
 
 import org.slf4j.Logger;
@@ -44,6 +44,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -179,7 +180,7 @@ public class XmlSecurityV1UpdateStep implements UpdateStep {
   @XmlRootElement(name = "configuration")
   private static class V1Security {
     @XmlElement(name = "entry")
-    private List<Entry> entries;
+    private List<Entry> entries = new ArrayList<>();
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
