@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.autoconfig.AutoConfigurator;
 import sonia.scm.installer.HgInstaller;
 import sonia.scm.installer.HgInstallerFactory;
 import sonia.scm.io.ExtendedCommand;
@@ -55,6 +56,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.MessageFormat;
+import java.util.Optional;
 
 @Singleton
 @Extension
@@ -91,14 +93,11 @@ public class HgRepositoryHandler
     this.hgContextProvider = hgContextProvider;
     this.workingCopyFactory = workingCopyFactory;
 
-    try
-    {
+    try {
       this.jaxbContext = JAXBContext.newInstance(BrowserResult.class,
         BlameResult.class, Changeset.class, ChangesetPagingResult.class,
         HgVersion.class);
-    }
-    catch (JAXBException ex)
-    {
+    } catch (JAXBException ex) {
       throw new ConfigurationException("could not create jaxbcontext", ex);
     }
   }
@@ -139,7 +138,12 @@ public class HgRepositoryHandler
     super.loadConfig();
 
     if (config == null) {
-      doAutoConfiguration(new HgConfig());
+      HgConfig config = null;
+      Optional<AutoConfigurator> autoConfigurator = AutoConfigurator.get();
+      if (autoConfigurator.isPresent()) {
+        config = autoConfigurator.get().configure();
+      }
+      doAutoConfiguration(config != null ? config : new HgConfig());
     }
   }
 

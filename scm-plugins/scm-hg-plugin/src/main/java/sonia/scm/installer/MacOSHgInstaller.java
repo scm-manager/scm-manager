@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.installer;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -40,7 +40,9 @@ import java.io.IOException;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated use {@link sonia.scm.autoconfig.AutoConfigurator}
  */
+@Deprecated
 public class MacOSHgInstaller extends UnixHgInstaller
 {
 
