@@ -28,12 +28,13 @@ import { Changeset } from "@scm-manager/ui-types";
 import { Replacement } from "@scm-manager/ui-components";
 
 const ChangesetShortLink: (changeset: Changeset, value: string) => Replacement[] = (changeset, value) => {
-  const matches = value.match(/(\w+)\/(\w+)@([a-f0-9]+)/g);
+  const linkRegExp = "([A-Za-z0-9\.\-_]+)\/([A-Za-z0-9\.\-_]+)@([a-f0-9]+)";
+  const matches = value.match(new RegExp(linkRegExp, "g"));
   if (!matches) {
     return [];
   }
   return matches.map(value => {
-    const groups = value.match(/(\w+)\/(\w+)@([a-f0-9]+)/);
+    const groups = value.match(new RegExp(linkRegExp));
     const namespace = groups[1];
     const name = groups[2];
     const revision = groups[3];
