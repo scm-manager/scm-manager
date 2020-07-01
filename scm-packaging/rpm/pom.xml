@@ -74,30 +74,6 @@
             </configuration>
           </execution>
           <execution>
-            <id>copy-jsvc</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>commons-daemon</groupId>
-                  <artifactId>commons-daemon-native</artifactId>
-                  <version>1.1.0</version>
-                  <type>tar.gz</type>
-                  <fileMappers>
-                    <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper/>
-                  </fileMappers>
-                </artifactItem>
-              </artifactItems>
-              <includes>**/jsvc-linux-*</includes>
-              <outputDirectory>${project.build.directory}/rpm/libexec</outputDirectory>
-              <overWriteReleases>false</overWriteReleases>
-              <overWriteSnapshots>true</overWriteSnapshots>
-            </configuration>
-          </execution>
-          <execution>
             <id>copy-webapp</id>
             <phase>prepare-package</phase>
             <goals>
@@ -163,15 +139,6 @@
                   <group>scm</group>
                   <mode>0644</mode>
                 </rule>
-                <rule>
-                  <when>
-                    <type>file</type>
-                    <prefix>/opt/scm-server/libexec</prefix>
-                  </when>
-                  <user>root</user>
-                  <group>scm</group>
-                  <mode>0755</mode>
-                </rule>
               </rules>
             </ruleset>
           </rulesets>
@@ -225,14 +192,6 @@
               <name>/opt/scm-server/lib</name>
               <collect>
                 <from>${project.build.directory}/rpm/lib</from>
-              </collect>
-              <ruleset>default</ruleset>
-            </entry>
-
-            <entry>
-              <name>/opt/scm-server/libexec</name>
-              <collect>
-                <from>${project.build.directory}/rpm/libexec</from>
               </collect>
               <ruleset>default</ruleset>
             </entry>

@@ -3,14 +3,19 @@ Description=SCM-Manager Server
 After=syslog.target network.target
 
 [Service]
-Type=forking
+Type=simple
 
 User=scm
 Group=scm
 
 WorkingDirectory=/opt/scm-server
-ExecStart=/opt/scm-server/bin/scm-server start
-ExecStop=/opt/scm-server/bin/scm-server stop
+ExecStart=/opt/scm-server/bin/scm-server
+Restart=on-failure
+
+# Exit code 143 means that the program received a SIGTERM signal to instruct it to exit, 
+# but it did not handle the signal properly.
+# we suppress that warning for now
+SuccessExitStatus=143
 
 [Install]
 WantedBy=multi-user.target
