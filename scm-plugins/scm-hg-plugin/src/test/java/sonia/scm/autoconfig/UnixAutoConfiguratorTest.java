@@ -144,12 +144,15 @@ class UnixAutoConfiguratorTest {
     Path modules = directory.resolve("modules");
     Files.createDirectories(modules);
 
+    Path mercurialModule = modules.resolve("mercurial");
+    Files.createDirectories(mercurialModule);
+
     UnixAutoConfigurator configurator = create(directory);
     configurator.setExecutor((Path binary, String... args) -> {
       String content = String.join("\n",
         "checking Python executable (/python3.8)",
         "checking Python lib (/python3.8)...",
-        "checking installed modules (" + modules.toString() + ")...",
+        "checking installed modules (" + mercurialModule.toString() + ")...",
         "checking templates (/mercurial/templates)...",
         "checking default template (/mercurial/templates/map-cmdline.default))"
       );

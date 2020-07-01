@@ -143,7 +143,14 @@ public class HgRepositoryHandler
       if (autoConfigurator.isPresent()) {
         config = autoConfigurator.get().configure();
       }
-      doAutoConfiguration(config != null ? config : new HgConfig());
+
+      if (config != null && config.isValid()) {
+        this.config = config;
+        storeConfig();
+      } else {
+        // do the old configuration
+        doAutoConfiguration(config != null ? config : new HgConfig());
+      }
     }
   }
 

@@ -123,7 +123,9 @@ public class UnixAutoConfigurator implements AutoConfigurator {
             int end = line.indexOf(")");
             Path modulePath = Paths.get(line.substring(start + 1, end));
             if (Files.exists(modulePath)) {
-              return Optional.of(modulePath);
+              // installed modules contains the path to the mercurial module,
+              // but we need the parent for the python path
+              return Optional.of(modulePath.getParent());
             } else {
               LOG.warn("could not find module path at {}", modulePath);
             }
