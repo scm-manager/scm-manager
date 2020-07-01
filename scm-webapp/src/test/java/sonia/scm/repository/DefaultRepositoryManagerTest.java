@@ -79,7 +79,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -107,6 +106,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();
+
+  private NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
 
   private ScmConfiguration configuration;
 
@@ -390,6 +391,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   public void shouldThrowChangeNamespaceNotAllowedException() {
     Repository repository = new Repository("1", "hg", "space", "x");
     RepositoryManager repoManager = createManager();
+    when(namespaceStrategy.canBeChanged()).thenReturn(false);
+
     thrown.expect(ChangeNamespaceNotAllowedException.class);
 
     repoManager.rename(repository, "hitchhiker", "heart-of-gold");
@@ -397,7 +400,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
 
   @Test
   public void shouldThrowNoChangesMadeException() {
-    configuration.setNamespaceStrategy("CustomNamespaceStrategy");
     Repository repository = new Repository("1", "hg", "space", "x");
     RepositoryManager repoManager = createManager();
 
@@ -410,7 +412,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   public void shouldOnlyChangeRepositoryName() {
     Repository repository = createTestRepository();
     RepositoryManager repoManager = (RepositoryManager) manager;
-    configuration.setNamespaceStrategy("UsernameNamespaceStrategy");
 
     Repository changedRepo = repoManager.rename(repository, "default_namespace", "puzzle42");
     assertNotEquals(changedRepo.getName(), repository.getName());
@@ -420,11 +421,12 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   public void shouldRenameRepositoryNamespaceAndName() {
     Repository repository = createTestRepository();
     RepositoryManager repoManager = (RepositoryManager) manager;
-    configuration.setNamespaceStrategy("CustomNamespaceStrategy");
+    when(namespaceStrategy.canBeChanged()).thenReturn(true);
+    when(namespaceStrategy.createNamespace(any(Repository.class))).thenReturn("hitchhiker");
 
     Repository changedRepo = repoManager.rename(repository, "hitchhiker", "puzzle42");
-    assertNotEquals(changedRepo.getName(), repository.getName());
-    assertNotEquals(changedRepo.getNamespace(), repository.getNamespace());
+    assertEquals("puzzle42", changedRepo.getName());
+    assertEquals("hitchhiker", changedRepo.getNamespace());
   }
 
   //~--- methods --------------------------------------------------------------
@@ -445,7 +447,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
 
     this.configuration = new ScmConfiguration();
 
-    NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
     when(namespaceStrategy.createNamespace(Mockito.any(Repository.class))).thenAnswer(invocation -> mockedNamespace);
 
     return new DefaultRepositoryManager(configuration, contextProvider,

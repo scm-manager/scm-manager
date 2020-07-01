@@ -246,11 +246,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
   public Repository rename(Repository repository, String newNamespace, String newName) {
 
-    if (!configuration.getNamespaceStrategy().equals("CustomNamespaceStrategy")
-      && !repository.getNamespace().equals(newNamespace)) {
-      throw new ChangeNamespaceNotAllowedException(repository);
-    }
-
     if (hasNamespaceOrNameNotChanged(repository, newNamespace, newName)) {
       throw new NoChangesMadeException(repository);
     }
@@ -259,8 +254,13 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     if (!Strings.isNullOrEmpty(newName)) {
       changedRepository.setName(newName);
     }
-    if (!Strings.isNullOrEmpty(newNamespace)) {
-      changedRepository.setNamespace(newNamespace);
+
+    if (!Strings.isNullOrEmpty(newNamespace) && !repository.getNamespace().equals(newNamespace)) {
+      NamespaceStrategy strategy = namespaceStrategyProvider.get();
+      if (!strategy.canBeChanged()) {
+        throw new ChangeNamespaceNotAllowedException(repository);
+      }
+      changedRepository.setNamespace(strategy.createNamespace(changedRepository));
     }
 
     managerDaoAdapter.modify(
