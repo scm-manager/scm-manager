@@ -25,6 +25,11 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 import SplitAndReplace from "./SplitAndReplace";
 import { Icon } from "@scm-manager/ui-components";
+import styled from "styled-components";
+
+const Wrapper = styled.div`
+  margin: 2rem;
+`;
 
 storiesOf("SplitAndReplace", module).add("Simple replacement", () => {
   const replacements = [
@@ -41,12 +46,12 @@ storiesOf("SplitAndReplace", module).add("Simple replacement", () => {
   ];
   return (
     <>
-      <div className={"container"}>
+      <Wrapper>
         <SplitAndReplace text={"'So this is it,` said Arthur, 'We are going to die.`"} replacements={replacements} />
-      </div>
-      <div className={"container"}>
+      </Wrapper>
+      <Wrapper>
         <SplitAndReplace text={"'Yes,` said Ford, 'except... no! Wait a minute!`"} replacements={replacements} />
-      </div>
+      </Wrapper>
     </>
   );
 });

@@ -39,11 +39,11 @@ const textWrapper = (s: string) => {
   const first = s.startsWith(" ") ? <>&nbsp;</> : "";
   const last = s.endsWith(" ") ? <>&nbsp;</> : "";
   return (
-    <div>
+    <>
       {first}
       {s}
       {last}
-    </div>
+    </>
   );
 };
 
@@ -52,7 +52,7 @@ const SplitAndReplace: FC<Props> = ({ text, replacements }) => {
   if (parts.length === 0) {
     return <>{parts[0]}</>;
   }
-  return <div className={"media"}>{parts}</div>;
+  return <>{parts}</>;
 };
 
 export default SplitAndReplace;
