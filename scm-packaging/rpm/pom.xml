@@ -41,6 +41,12 @@
   <description>Packaging for RedHat/Centos/Fedora</description>
   <name>rpm</name>
 
+  <!--
+  de.dentrassi.maven:rpm
+  has no other way to set the url of the package
+  -->
+  <url>https://scm-manager.org</url>
+
   <dependencies>
 
     <dependency>
@@ -103,6 +109,8 @@
         <configuration>
           <attach>true</attach>
           <packageName>scm-server</packageName>
+          <summary>SCM-Manager Server</summary>
+          <description>The easiest way to share and manage your Git, Mercurial and Subversion repositories</description>
           <group>Development/Tools</group>
           <license>MIT</license>
           <skipSigning>true</skipSigning>
@@ -277,7 +285,6 @@
 
         </configuration>
       </plugin>
-
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
