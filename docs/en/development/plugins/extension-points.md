@@ -7,7 +7,12 @@ The following extension points are provided for the frontend:
 ### admin.navigation
 ### admin.route
 ### admin.setting
-### changeset.description
+### changeset.description.tokes
+- Can be used to replace parts of a changeset description with components
+- Has to be bound with a funktion taking the changeset and the (partial) description and returning `Replacement` objects with the following attributes:
+    - textToReplace: The text part of the description that should be replaced by a component
+    - replacement: The component to take instead of the text to replace
+    - replaceAll: Optional boolean; if set to `true`, all occurances of the text will be replaced (default: `false`)
 ### changeset.right
 ### changesets.author.suffix
 ### group.navigation
@@ -56,6 +61,8 @@ The following extension points are provided for the frontend:
 
 # Deprecated
 
+### changeset.description 
+
 ### changeset.avatar-factory
 - Location: At every changeset (detailed view as well as changeset overview)
 - can be used to add avatar (such as gravatar) for each changeset
@@ -72,7 +79,7 @@ The following extension points are provided for the frontend:
 ### markdown-renderer-factory
 - A Factory function to create markdown [renderer](https://github.com/rexxars/react-markdown#node-types)
 - The factory function will be called with a renderContext parameter of type Object. this parameter is given as a prop for the MarkdownView component.
- 
+
 **example:**
 
 
