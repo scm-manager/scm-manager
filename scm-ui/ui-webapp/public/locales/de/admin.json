@@ -61,7 +61,7 @@
       "version": "Version",
       "currentVersion": "Installierte Version",
       "newVersion": "Neue Version",
-      "dependencyNotification": "Mit diesem Plugin werden folgende Abhängigkeiten mit installiert, wenn sie noch nicht vorhanden sind!",
+      "dependencyNotification": "Mit diesem Plugin werden folgende Abhängigkeiten mit installiert bzw. aktualisiert, wenn sie noch nicht in der aktuellen Version vorhanden sind!",
       "dependencies": "Abhängigkeiten",
       "installedNotification": "Das Plugin wurde erfolgreich installiert. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden:",
       "updatedNotification": "Das Plugin wurde erfolgreich aktualisiert. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden:",
