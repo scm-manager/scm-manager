@@ -28,7 +28,7 @@ package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Changeset;
 import com.aragost.javahg.commands.AnnotateCommand;
-import com.aragost.javahg.commands.AnnotateLine;
+import com.aragost.javahg.AnnotateLine;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;

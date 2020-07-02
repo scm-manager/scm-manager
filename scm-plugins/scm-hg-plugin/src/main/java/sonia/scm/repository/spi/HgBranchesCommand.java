@@ -60,16 +60,16 @@ public class HgBranchesCommand extends AbstractCommand
 
   @Override
   public List<Branch> getBranches() {
-    List<com.aragost.javahg.commands.Branch> hgBranches =
+    List<com.aragost.javahg.Branch> hgBranches =
       com.aragost.javahg.commands.BranchesCommand.on(open()).execute();
 
     List<Branch> branches = Lists.transform(hgBranches,
-                              new Function<com.aragost.javahg.commands.Branch,
+                              new Function<com.aragost.javahg.Branch,
                                 Branch>()
     {
 
       @Override
-      public Branch apply(com.aragost.javahg.commands.Branch hgBranch)
+      public Branch apply(com.aragost.javahg.Branch hgBranch)
       {
         String node = null;
         Changeset changeset = hgBranch.getBranchTip();

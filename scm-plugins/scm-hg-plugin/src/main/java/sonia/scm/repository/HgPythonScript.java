@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -36,11 +36,9 @@ import java.io.File;
  *
  * @author Sebastian Sdorra
  */
-public enum HgPythonScript
-{
-  BLAME("blame.py"), CHANGELOG("changelog.py"), FILELOG("filelog.py"),
-  LOG("log.py"), UTIL("util.py"), HOOK("scmhooks.py"), HGWEB("hgweb.py"),
-  VERSION("version.py");
+public enum HgPythonScript {
+
+  HOOK("scmhooks.py"), HGWEB("hgweb.py"), VERSION("version.py");
 
   /** Field description */
   private static final String BASE_DIRECTORY =

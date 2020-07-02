@@ -19,8 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed restart with deb or rpm installation ([#1222](https://github.com/scm-manager/scm-manager/issues/1222) and [#1227](https://github.com/scm-manager/scm-manager/pull/1227))
 - Fixed broken migration with empty security.xml ([#1219](https://github.com/scm-manager/scm-manager/issues/1219) and [#1221](https://github.com/scm-manager/scm-manager/pull/1221))
 - Added missing architecture to debian installation documentation ([#1230](https://github.com/scm-manager/scm-manager/pull/1230))
+- Mercurial on Python 3 ([#1232](https://github.com/scm-manager/scm-manager/pull/1232))
 - Fixed wrong package information for deb and rpm packages ([#1229](https://github.com/scm-manager/scm-manager/pull/1229))
-
 
 ## [2.1.1] - 2020-06-23
 ### Fixed
