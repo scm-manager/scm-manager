@@ -7,7 +7,7 @@ The following extension points are provided for the frontend:
 ### admin.navigation
 ### admin.route
 ### admin.setting
-### changeset.description.tokes
+### changeset.description.tokens
 - Can be used to replace parts of a changeset description with components
 - Has to be bound with a funktion taking the changeset and the (partial) description and returning `Replacement` objects with the following attributes:
     - textToReplace: The text part of the description that should be replaced by a component
