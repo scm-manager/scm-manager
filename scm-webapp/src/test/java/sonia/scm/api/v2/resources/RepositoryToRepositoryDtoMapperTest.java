@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import com.google.common.collect.ImmutableSet;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.After;
 import org.junit.Before;
@@ -33,7 +34,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.CustomNamespaceStrategy;
 import sonia.scm.repository.HealthCheckFailure;
+import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
@@ -41,13 +45,16 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.ScmProtocol;
 
 import java.net.URI;
+import java.util.Set;
 
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Stream.of;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -72,6 +79,10 @@ public class RepositoryToRepositoryDtoMapperTest {
   private ScmPathInfoStore scmPathInfoStore;
   @Mock
   private ScmPathInfo uriInfo;
+  @Mock
+  private ScmConfiguration configuration;
+  @Mock
+  private Set<NamespaceStrategy> strategies;
 
   @InjectMocks
   private RepositoryToRepositoryDtoMapperImpl mapper;
@@ -83,7 +94,9 @@ public class RepositoryToRepositoryDtoMapperTest {
     when(repositoryService.isSupported(any(Command.class))).thenReturn(true);
     when(repositoryService.getSupportedProtocols()).thenReturn(of());
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
+    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
+    doReturn(ImmutableSet.of(new CustomNamespaceStrategy()).iterator()).when(strategies).iterator();
   }
 
   @After
@@ -127,6 +140,23 @@ public class RepositoryToRepositoryDtoMapperTest {
     assertEquals(
       "http://example.com/base/v2/repositories/testspace/test",
       dto.getLinks().getLinkBy("update").get().getHref());
+  }
+
+  @Test
+  public void shouldCreateRenameLink() {
+    when(configuration.getNamespaceStrategy()).thenReturn("test");
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertEquals(
+      "http://example.com/base/v2/repositories/testspace/test/rename",
+      dto.getLinks().getLinkBy("rename").get().getHref());
+  }
+
+  @Test
+  public void shouldCreateRenameWithNamespaceLink() {
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertEquals(
+      "http://example.com/base/v2/repositories/testspace/test/rename",
+      dto.getLinks().getLinkBy("renameWithNamespace").get().getHref());
   }
 
   @Test

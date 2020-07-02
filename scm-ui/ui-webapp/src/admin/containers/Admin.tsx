@@ -44,7 +44,7 @@ import GlobalConfig from "./GlobalConfig";
 import RepositoryRoles from "../roles/containers/RepositoryRoles";
 import SingleRepositoryRole from "../roles/containers/SingleRepositoryRole";
 import CreateRepositoryRole from "../roles/containers/CreateRepositoryRole";
-import { StateMenuContextProvider } from "@scm-manager/ui-components/src/navigation/MenuContext";
+import { StateMenuContextProvider } from "@scm-manager/ui-components";
 
 type Props = RouteComponentProps &
   WithTranslation & {

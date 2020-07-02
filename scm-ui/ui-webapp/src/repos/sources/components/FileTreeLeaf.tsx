@@ -29,7 +29,7 @@ import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { File } from "@scm-manager/ui-types";
 import { DateFromNow, FileSize, Tooltip } from "@scm-manager/ui-components";
 import FileIcon from "./FileIcon";
-import { Icon } from "@scm-manager/ui-components/src";
+import { Icon } from "@scm-manager/ui-components";
 import { WithTranslation, withTranslation } from "react-i18next";
 
 type Props = WithTranslation & {

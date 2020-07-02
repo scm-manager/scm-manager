@@ -5,7 +5,7 @@
 </p>
 
 The easiest way to share and manage your Git, Mercurial and Subversion
-repositories over http.
+repositories.
 
 - Very easy installation
 - No need to hack configuration files, SCM-Manager is completely

@@ -54,7 +54,7 @@ import PluginBottomActions from "../components/PluginBottomActions";
 import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
-import { Plugin } from "@scm-manager/ui-types/src";
+import { Plugin } from "@scm-manager/ui-types";
 import ShowPendingModal from "../components/ShowPendingModal";
 
 type Props = WithTranslation & {

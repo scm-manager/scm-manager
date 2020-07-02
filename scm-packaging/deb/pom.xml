@@ -133,7 +133,6 @@
               </mapper>
             </data>
 
-
             <data>
               <type>file</type>
               <src>src/main/fs/etc/scm/logging.xml</src>

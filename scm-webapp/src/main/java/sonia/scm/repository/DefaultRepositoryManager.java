@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import com.github.sdorra.ssp.PermissionActionCheck;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
@@ -35,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
+import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
@@ -82,7 +84,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   private final Set<Type> types;
   private final Provider<NamespaceStrategy> namespaceStrategyProvider;
   private final ManagerDaoAdapter<Repository> managerDaoAdapter;
-
 
   @Inject
   public DefaultRepositoryManager(ScmConfiguration configuration,
@@ -154,7 +155,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public void delete(Repository repository){
+  public void delete(Repository repository) {
     logger.info("delete repository {}/{} of type {}", repository.getNamespace(), repository.getName(), repository.getType());
     managerDaoAdapter.delete(
       repository,
@@ -179,7 +180,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   @Override
-  public void modify(Repository repository){
+  public void modify(Repository repository) {
     logger.info("modify repository {}/{} of type {}", repository.getNamespace(), repository.getName(), repository.getType());
 
     managerDaoAdapter.modify(
@@ -241,6 +242,40 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     }
 
     return repository;
+  }
+
+  public Repository rename(Repository repository, String newNamespace, String newName) {
+
+    if (hasNamespaceOrNameNotChanged(repository, newNamespace, newName)) {
+      throw new NoChangesMadeException(repository);
+    }
+
+    Repository changedRepository = repository.clone();
+    if (!Strings.isNullOrEmpty(newName)) {
+      changedRepository.setName(newName);
+    }
+
+    if (!Strings.isNullOrEmpty(newNamespace) && !repository.getNamespace().equals(newNamespace)) {
+      NamespaceStrategy strategy = namespaceStrategyProvider.get();
+      if (!strategy.canBeChanged()) {
+        throw new ChangeNamespaceNotAllowedException(repository);
+      }
+      changedRepository.setNamespace(strategy.createNamespace(changedRepository));
+    }
+
+    managerDaoAdapter.modify(
+      changedRepository,
+      RepositoryPermissions::rename,
+      notModified -> {
+      },
+      notModified -> fireEvent(HandlerEventType.MODIFY, changedRepository, repository));
+
+    return changedRepository;
+  }
+
+  private boolean hasNamespaceOrNameNotChanged(Repository repository, String newNamespace, String newName) {
+    return repository.getName().equals(newName)
+      && repository.getNamespace().equals(newNamespace);
   }
 
   @Override
@@ -345,8 +380,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     types.add(type);
   }
 
-  private RepositoryHandler getHandler(Repository repository)
-    {
+  private RepositoryHandler getHandler(Repository repository) {
     String type = repository.getType();
     RepositoryHandler handler = handlerMap.get(type);
 

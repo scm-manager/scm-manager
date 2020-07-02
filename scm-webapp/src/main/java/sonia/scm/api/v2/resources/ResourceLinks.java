@@ -279,6 +279,10 @@ class ResourceLinks {
     String update(String namespace, String name) {
       return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("update").parameters().href();
     }
+
+    String rename(String namespace, String name) {
+      return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("rename").parameters().href();
+    }
   }
 
   RepositoryCollectionLinks repositoryCollection() {

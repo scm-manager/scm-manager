@@ -24,23 +24,21 @@
 import React from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { withRouter } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { Repository } from "@scm-manager/ui-types";
-import { confirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { confirmAlert, DeleteButton, ErrorNotification, Level, ButtonGroup } from "@scm-manager/ui-components";
 import { deleteRepo, getDeleteRepoFailure, isDeleteRepoPending } from "../modules/repos";
 
-type Props = WithTranslation & {
-  loading: boolean;
-  error: Error;
-  repository: Repository;
-  confirmDialog?: boolean;
-  deleteRepo: (p1: Repository, p2: () => void) => void;
-
-  // context props
-  history: History;
-};
+type Props = RouteComponentProps &
+  WithTranslation & {
+    loading: boolean;
+    error: Error;
+    repository: Repository;
+    confirmDialog?: boolean;
+    deleteRepo: (p1: Repository, p2: () => void) => void;
+  };
 
 class DeleteRepo extends React.Component<Props> {
   static defaultProps = {
@@ -88,9 +86,16 @@ class DeleteRepo extends React.Component<Props> {
 
     return (
       <>
-        <hr />
         <ErrorNotification error={error} />
-        <Level right={<DeleteButton label={t("deleteRepo.button")} action={action} loading={loading} />} />
+        <Level
+          left={
+            <div>
+              <strong>{t("deleteRepo.subtitle")}</strong>
+              <p>{t("deleteRepo.description")}</p>
+            </div>
+          }
+          right={<DeleteButton label={t("deleteRepo.button")} action={action} loading={loading} />}
+        />
       </>
     );
   }

@@ -26,8 +26,8 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
-import com.google.inject.util.Providers;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -40,7 +40,10 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.CustomNamespaceStrategy;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryInitializer;
 import sonia.scm.repository.RepositoryManager;
@@ -56,6 +59,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
@@ -72,6 +76,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -103,6 +108,10 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   private ScmPathInfo uriInfo;
   @Mock
   private RepositoryInitializer repositoryInitializer;
+  @Mock
+  private ScmConfiguration configuration;
+  @Mock
+  private Set<NamespaceStrategy> strategies;
 
   @Captor
   private ArgumentCaptor<Predicate<Repository>> filterCaptor;
@@ -127,6 +136,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
+    doReturn(ImmutableSet.of(new CustomNamespaceStrategy()).iterator()).when(strategies).iterator();
     SimplePrincipalCollection trillian = new SimplePrincipalCollection("trillian", REALM);
     trillian.add(new User("trillian"), REALM);
     shiro.setSubject(
@@ -152,6 +162,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldFindExistingRepository() throws URISyntaxException, UnsupportedEncodingException {
     mockRepository("space", "repo");
+    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
     MockHttpResponse response = new MockHttpResponse();
@@ -166,6 +177,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   public void shouldGetAll() throws URISyntaxException, UnsupportedEncodingException {
     PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
     when(repositoryManager.getPage(any(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
@@ -180,6 +192,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   public void shouldCreateFilterForSearch() throws URISyntaxException {
     PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
     when(repositoryManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "?q=Rep");
     MockHttpResponse response = new MockHttpResponse();
@@ -362,6 +375,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   public void shouldCreateArrayOfProtocolUrls() throws Exception {
     mockRepository("space", "repo");
     when(service.getSupportedProtocols()).thenReturn(of(new MockScmProtocol("http", "http://"), new MockScmProtocol("ssh", "ssh://")));
+    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
     MockHttpResponse response = new MockHttpResponse();
@@ -370,6 +384,28 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     assertEquals(SC_OK, response.getStatus());
     assertTrue(response.getContentAsString().contains("\"protocol\":[{\"href\":\"http://\",\"name\":\"http\"},{\"href\":\"ssh://\",\"name\":\"ssh\"}]"));
+  }
+
+  @Test
+  public void shouldRenameRepository() throws Exception {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository1 = mockRepository(namespace, name);
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository1);
+
+    URL url = Resources.getResource("sonia/scm/api/v2/rename-repo.json");
+    byte[] repository = Resources.toByteArray(url);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/rename")
+      .contentType(VndMediaType.REPOSITORY)
+      .content(repository);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_NO_CONTENT, response.getStatus());
+    verify(repositoryManager).rename(repository1, "space", "x");
   }
 
   private PageResult<Repository> createSingletonPageResult(Repository repository) {

@@ -113,7 +113,8 @@
   "repositoryForm": {
     "subtitle": "Repository bearbeiten",
     "submit": "Speichern",
-    "initializeRepository": "Repository initiieren"
+    "initializeRepository": "Repository initiieren",
+    "dangerZone": "Gefahrenzone"
   },
   "sources": {
     "file-tree": {
@@ -196,11 +197,29 @@
   },
   "deleteRepo": {
     "button": "Repository löschen",
+    "subtitle": "Löscht dieses Repository",
+    "description": "Diese Aktion kann nicht rückgangig gemacht werden.",
     "confirmAlert": {
       "title": "Repository löschen",
       "message": "Soll das Repository wirklich gelöscht werden?",
       "submit": "Ja",
       "cancel": "Nein"
+    }
+  },
+  "renameRepo": {
+    "button": "Repository umbenennen",
+    "subtitle": "Benennt dieses Repository um",
+    "description": "Es werden keine Weiterleitung auf den neuen Namen eingerichtet.",
+    "modal": {
+      "title": "Repository umbenennen",
+      "label": {
+        "repoName": "Repository Name",
+        "repoNamespace": "Repository Namespace"
+      },
+      "button": {
+        "rename": "Umbenennen",
+        "cancel": "Abbrechen"
+      }
     }
   },
   "diff": {
