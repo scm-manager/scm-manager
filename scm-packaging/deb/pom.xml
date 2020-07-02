@@ -74,30 +74,6 @@
             </configuration>
           </execution>
           <execution>
-            <id>copy-jsvc</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>commons-daemon</groupId>
-                  <artifactId>commons-daemon-native</artifactId>
-                  <version>1.1.0</version>
-                  <type>tar.gz</type>
-                  <fileMappers>
-                    <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper/>
-                  </fileMappers>
-                </artifactItem>
-              </artifactItems>
-              <includes>**/jsvc-linux-*</includes>
-              <outputDirectory>${project.build.directory}/deb/libexec</outputDirectory>
-              <overWriteReleases>false</overWriteReleases>
-              <overWriteSnapshots>true</overWriteSnapshots>
-            </configuration>
-          </execution>
-          <execution>
             <id>copy-webapp</id>
             <phase>prepare-package</phase>
             <goals>
@@ -205,18 +181,6 @@
                 <user>root</user>
                 <group>scm</group>
                 <filemode>0644</filemode>
-              </mapper>
-            </data>
-
-            <data>
-              <type>directory</type>
-              <src>${project.build.directory}/deb/libexec</src>
-              <mapper>
-                <type>perm</type>
-                <prefix>/opt/scm-server/libexec</prefix>
-                <user>root</user>
-                <group>scm</group>
-                <filemode>0755</filemode>
               </mapper>
             </data>
 
