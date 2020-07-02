@@ -58,8 +58,6 @@ describe("Remark Commit Links RegEx Tests", () => {
       match = regExp.exec(text);
     }
 
-    console.log(matches)
-
     expect(matches[0]).toBe("hitchhiker/heart-of-gold@42");
     expect(matches[1]).toBe("hitchhiker/heart-of-gold@21");
   });
