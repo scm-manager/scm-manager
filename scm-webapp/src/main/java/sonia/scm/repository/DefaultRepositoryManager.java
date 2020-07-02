@@ -260,7 +260,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
       if (!strategy.canBeChanged()) {
         throw new ChangeNamespaceNotAllowedException(repository);
       }
-      changedRepository.setNamespace(strategy.createNamespace(changedRepository));
+      changedRepository.setNamespace(newNamespace);
     }
 
     managerDaoAdapter.modify(
