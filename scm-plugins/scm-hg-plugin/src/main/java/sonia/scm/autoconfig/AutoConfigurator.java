@@ -24,6 +24,7 @@
 
 package sonia.scm.autoconfig;
 
+import sonia.scm.Platform;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.util.SystemUtil;
 
@@ -32,16 +33,17 @@ import java.util.Optional;
 
 public interface AutoConfigurator {
 
-  static Optional<AutoConfigurator> get() {
-    // at the moment we have only support for unix based systems.
-    if (SystemUtil.isUnix()) {
-      return Optional.of(new UnixAutoConfigurator(System.getenv()));
-    }
-    return Optional.empty();
-  }
-
   HgConfig configure();
 
   HgConfig configure(Path hg);
+
+  static Optional<AutoConfigurator> get() {
+    // at the moment we have only support for posix based systems
+    Platform platform = SystemUtil.getPlatform();
+    if (platform.isPosix()) {
+      return Optional.of(new PosixAutoConfigurator(System.getenv()));
+    }
+    return Optional.empty();
+  }
 
 }

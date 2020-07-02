@@ -27,7 +27,6 @@ package sonia.scm.autoconfig;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import org.assertj.core.util.Strings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import sonia.scm.repository.HgConfig;
@@ -43,7 +42,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UnixAutoConfiguratorTest {
+class PosixAutoConfiguratorTest {
 
   @Test
   void shouldConfigureWithShebangPath(@TempDir Path directory) throws IOException {
@@ -53,15 +52,15 @@ class UnixAutoConfiguratorTest {
     Files.write(hg, ("#!" + python.toAbsolutePath().toString()).getBytes(StandardCharsets.UTF_8));
     Files.createFile(python);
 
-    UnixAutoConfigurator configurator = create(directory);
+    PosixAutoConfigurator configurator = create(directory);
     HgConfig config = configurator.configure();
 
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
     assertThat(config.getPythonBinary()).isEqualTo(python.toString());
   }
 
-  private UnixAutoConfigurator create(@TempDir Path directory) {
-    return new UnixAutoConfigurator(createEnv(directory), Collections.emptyList());
+  private PosixAutoConfigurator create(@TempDir Path directory) {
+    return new PosixAutoConfigurator(createEnv(directory), Collections.emptyList());
   }
 
   private Map<String, String> createEnv(Path... paths) {
@@ -76,7 +75,7 @@ class UnixAutoConfiguratorTest {
     Files.write(hg, "#!/usr/bin/env python3.8".getBytes(StandardCharsets.UTF_8));
     Files.createFile(python);
 
-    UnixAutoConfigurator configurator = create(directory);
+    PosixAutoConfigurator configurator = create(directory);
     HgConfig config = configurator.configure();
 
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
@@ -91,7 +90,7 @@ class UnixAutoConfiguratorTest {
     Files.createFile(hg);
     Files.createFile(python);
 
-    UnixAutoConfigurator configurator = create(directory);
+    PosixAutoConfigurator configurator = create(directory);
     HgConfig config = configurator.configure();
 
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
@@ -106,7 +105,7 @@ class UnixAutoConfiguratorTest {
     Files.createFile(hg);
     Files.createFile(python);
 
-    UnixAutoConfigurator configurator = create(directory);
+    PosixAutoConfigurator configurator = create(directory);
     HgConfig config = configurator.configure();
 
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
@@ -126,7 +125,7 @@ class UnixAutoConfiguratorTest {
     Files.createFile(hg);
     Files.createFile(python);
 
-    UnixAutoConfigurator configurator = new UnixAutoConfigurator(
+    PosixAutoConfigurator configurator = new PosixAutoConfigurator(
       createEnv(def), ImmutableList.of(additional.toAbsolutePath().toString())
     );
 
@@ -147,7 +146,7 @@ class UnixAutoConfiguratorTest {
     Path mercurialModule = modules.resolve("mercurial");
     Files.createDirectories(mercurialModule);
 
-    UnixAutoConfigurator configurator = create(directory);
+    PosixAutoConfigurator configurator = create(directory);
     configurator.setExecutor((Path binary, String... args) -> {
       String content = String.join("\n",
         "checking Python executable (/python3.8)",

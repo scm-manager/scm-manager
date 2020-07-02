@@ -48,9 +48,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public class UnixAutoConfigurator implements AutoConfigurator {
+public class PosixAutoConfigurator implements AutoConfigurator {
 
-  private static final Logger LOG = LoggerFactory.getLogger(UnixAutoConfigurator.class);
+  private static final Logger LOG = LoggerFactory.getLogger(PosixAutoConfigurator.class);
 
   private static final List<String> ADDITIONAL_PATH = ImmutableList.of(
     "/usr/bin",
@@ -72,11 +72,11 @@ public class UnixAutoConfigurator implements AutoConfigurator {
     return process.getInputStream();
   };
 
-  UnixAutoConfigurator(Map<String, String> env) {
+  PosixAutoConfigurator(Map<String, String> env) {
     this(env, ADDITIONAL_PATH);
   }
 
-  UnixAutoConfigurator(Map<String, String> env, List<String> additionalPaths) {
+  PosixAutoConfigurator(Map<String, String> env, List<String> additionalPaths) {
     String path = env.getOrDefault("PATH", "");
     fsPaths = new LinkedHashSet<>();
     fsPaths.addAll(Splitter.on(File.pathSeparator).splitToList(path));
