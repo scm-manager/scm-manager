@@ -62,6 +62,9 @@ The following extension points are provided for the frontend:
 # Deprecated
 
 ### changeset.description 
+- can be used to replace the whole description of a changeset
+
+**Deprecated:** Use `changeset.description.tokens` instead
 
 ### changeset.avatar-factory
 - Location: At every changeset (detailed view as well as changeset overview)
