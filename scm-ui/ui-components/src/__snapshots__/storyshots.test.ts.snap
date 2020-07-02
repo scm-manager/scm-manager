@@ -1755,7 +1755,9 @@ exports[`Storyshots Changesets Co-Authors with avatar 1`] = `
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
                 >
+                  
                   Added design docs
+                  
                 </h4>
                 <p
                   className="is-hidden-touch"
@@ -1919,7 +1921,9 @@ exports[`Storyshots Changesets Commiter and Co-Authors with avatar 1`] = `
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
                 >
+                  
                   The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive. The craft was stolen by then-President Zaphod Beeblebrox at the official launch of the ship, as he was supposed to be officiating the launch. Later, during the use of the Infinite Improbability Drive, the ship picked up Arthur Dent and Ford Prefect, who were floating unprotected in deep space in the same star sector, having just escaped the destruction of the same planet.
+                  
                 </h4>
                 <p
                   className="is-hidden-touch"
@@ -2059,7 +2063,132 @@ exports[`Storyshots Changesets Default 1`] = `
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
                 >
+                  
                   initialize repository
+                  
+                </h4>
+                <p
+                  className="is-hidden-touch"
+                />
+                <p
+                  className="is-hidden-desktop"
+                />
+                <p
+                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                >
+                  changeset.contributors.authoredBy
+                   
+                  <a
+                    href="mailto:scm-admin@scm-manager.org"
+                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  >
+                    SCM Administrator
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ChangesetRow__VCenteredColumn-tkpti5-5 jtvbjX column"
+          />
+        </div>
+      </div>
+      <div
+        className="ChangesetRow__VCenteredChildColumn-tkpti5-6 cciHUW column is-flex"
+      >
+        <div
+          className="ButtonAddons__Flex-sc-182golj-0 jSuMVB field has-addons is-marginless"
+        >
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-exchange-alt has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.details
+                 
+              </span>
+            </button>
+          </p>
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-code has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.sources
+                 
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Changesets Replacements 1`] = `
+<div
+  className="Changesetsstories__Wrapper-sc-122npan-0 hHKBXk box box-link-shadow"
+>
+  <div
+    className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
+  >
+    <div
+      className="columns is-gapless is-mobile"
+    >
+      <div
+        className="column is-three-fifths"
+      >
+        <div
+          className="columns is-gapless"
+        >
+          <div
+            className="column is-four-fifths"
+          >
+            <div
+              className="media"
+            >
+              <div
+                className="ChangesetRow__Metadata-tkpti5-3 dfKqLe media-right"
+              >
+                <h4
+                  className="has-text-weight-bold is-ellipsis-overflow"
+                >
+                  <a
+                    href="http://example.com/hog"
+                  >
+                    HOG-42
+                  </a>
+                   
+                   Change mail to 
+                   
+                  <a
+                    href="mailto:hog@example.com"
+                  >
+                    Arthur
+                  </a>
                 </h4>
                 <p
                   className="is-hidden-touch"
@@ -2170,7 +2299,9 @@ exports[`Storyshots Changesets With Committer 1`] = `
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
                 >
+                  
                   Change heading to "Heart Of Gold"
+                  
                 </h4>
                 <p
                   className="is-hidden-touch"
@@ -2293,7 +2424,9 @@ exports[`Storyshots Changesets With Committer and Co-Author 1`] = `
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
                 >
+                  
                   The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive. The craft was stolen by then-President Zaphod Beeblebrox at the official launch of the ship, as he was supposed to be officiating the launch. Later, during the use of the Infinite Improbability Drive, the ship picked up Arthur Dent and Ford Prefect, who were floating unprotected in deep space in the same star sector, having just escaped the destruction of the same planet.
+                  
                 </h4>
                 <p
                   className="is-hidden-touch"
@@ -2438,7 +2571,9 @@ exports[`Storyshots Changesets With avatar 1`] = `
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
                 >
+                  
                   initialize repository
+                  
                 </h4>
                 <p
                   className="is-hidden-touch"
@@ -2549,7 +2684,9 @@ exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
                 >
+                  
                   Added design docs
+                  
                 </h4>
                 <p
                   className="is-hidden-touch"
@@ -41697,6 +41834,61 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
     </div>
   </article>
 </div>
+`;
+
+exports[`Storyshots SplitAndReplace Simple replacement 1`] = `
+Array [
+  <div
+    className="SplitAndReplacestories__Wrapper-sc-1bo2tpl-0 bmWfkY"
+  >
+    <i
+      className="fas fa-quote-left has-text-grey-light"
+    />
+    
+    So this is it,
+    
+    <i
+      className="fas fa-quote-right has-text-grey-light"
+    />
+     
+     said Arthur, 
+     
+    <i
+      className="fas fa-quote-left has-text-grey-light"
+    />
+    
+    We are going to die.
+    
+    <i
+      className="fas fa-quote-right has-text-grey-light"
+    />
+  </div>,
+  <div
+    className="SplitAndReplacestories__Wrapper-sc-1bo2tpl-0 bmWfkY"
+  >
+    <i
+      className="fas fa-quote-left has-text-grey-light"
+    />
+    
+    Yes,
+    
+    <i
+      className="fas fa-quote-right has-text-grey-light"
+    />
+     
+     said Ford, 
+     
+    <i
+      className="fas fa-quote-left has-text-grey-light"
+    />
+    
+    except... no! Wait a minute!
+    
+    <i
+      className="fas fa-quote-right has-text-grey-light"
+    />
+  </div>,
+]
 `;
 
 exports[`Storyshots SyntaxHighlighter Go 1`] = `

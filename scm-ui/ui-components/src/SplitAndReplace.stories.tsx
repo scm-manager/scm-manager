@@ -21,18 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React from "react";
+import { storiesOf } from "@storybook/react";
+import SplitAndReplace from "./SplitAndReplace";
+import { Icon } from "@scm-manager/ui-components";
+import styled from "styled-components";
 
-import * as changesets from "./changesets";
-export { changesets };
+const Wrapper = styled.div`
+  margin: 2rem;
+`;
 
-export { default as ChangesetAuthor, SingleContributor } from "./ChangesetAuthor";
-export { default as ChangesetButtonGroup } from "./ChangesetButtonGroup";
-export { default as ChangesetDescription } from "./ChangesetDescription";
-export { default as ChangesetDiff } from "./ChangesetDiff";
-export { default as ChangesetId } from "./ChangesetId";
-export { default as ChangesetList } from "./ChangesetList";
-export { default as ChangesetRow } from "./ChangesetRow";
-export { default as ChangesetTag } from "./ChangesetTag";
-export { default as ChangesetTags } from "./ChangesetTags";
-export { default as ChangesetTagsCollapsed } from "./ChangesetTagsCollapsed";
-export { default as ContributorAvatar } from "./ContributorAvatar";
+storiesOf("SplitAndReplace", module).add("Simple replacement", () => {
+  const replacements = [
+    {
+      textToReplace: "'",
+      replacement: <Icon name={"quote-left"} />,
+      replaceAll: true
+    },
+    {
+      textToReplace: "`",
+      replacement: <Icon name={"quote-right"} />,
+      replaceAll: true
+    }
+  ];
+  return (
+    <>
+      <Wrapper>
+        <SplitAndReplace text={"'So this is it,` said Arthur, 'We are going to die.`"} replacements={replacements} />
+      </Wrapper>
+      <Wrapper>
+        <SplitAndReplace text={"'Yes,` said Ford, 'except... no! Wait a minute!`"} replacements={replacements} />
+      </Wrapper>
+    </>
+  );
+});

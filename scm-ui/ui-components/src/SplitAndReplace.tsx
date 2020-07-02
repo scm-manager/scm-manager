@@ -21,18 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React, { FC, ReactNode } from "react";
+import textSplitAndReplace from "./textSplitAndReplace";
 
-import * as changesets from "./changesets";
-export { changesets };
+export type Replacement = {
+  textToReplace: string;
+  replacement: ReactNode;
+  replaceAll?: boolean;
+};
 
-export { default as ChangesetAuthor, SingleContributor } from "./ChangesetAuthor";
-export { default as ChangesetButtonGroup } from "./ChangesetButtonGroup";
-export { default as ChangesetDescription } from "./ChangesetDescription";
-export { default as ChangesetDiff } from "./ChangesetDiff";
-export { default as ChangesetId } from "./ChangesetId";
-export { default as ChangesetList } from "./ChangesetList";
-export { default as ChangesetRow } from "./ChangesetRow";
-export { default as ChangesetTag } from "./ChangesetTag";
-export { default as ChangesetTags } from "./ChangesetTags";
-export { default as ChangesetTagsCollapsed } from "./ChangesetTagsCollapsed";
-export { default as ContributorAvatar } from "./ContributorAvatar";
+type Props = {
+  text: string;
+  replacements: Replacement[];
+};
+
+const textWrapper = (s: string) => {
+  const first = s.startsWith(" ") ? <>&nbsp;</> : "";
+  const last = s.endsWith(" ") ? <>&nbsp;</> : "";
+  return (
+    <>
+      {first}
+      {s}
+      {last}
+    </>
+  );
+};
+
+const SplitAndReplace: FC<Props> = ({ text, replacements }) => {
+  const parts = textSplitAndReplace<ReactNode>(text, replacements, textWrapper);
+  if (parts.length === 0) {
+    return <>{parts[0]}</>;
+  }
+  return <>{parts}</>;
+};
+
+export default SplitAndReplace;

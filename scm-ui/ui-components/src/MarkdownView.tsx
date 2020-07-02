@@ -32,7 +32,7 @@ import MarkdownHeadingRenderer from "./MarkdownHeadingRenderer";
 import { create } from "./MarkdownLinkRenderer";
 import {useTranslation, WithTranslation, withTranslation} from "react-i18next";
 import Notification from "./Notification";
-import { createTransformer } from "./remarkCommitLinksParser";
+import { createTransformer } from "./remarkChangesetShortLinkParser";
 
 type Props = RouteComponentProps & WithTranslation & {
   content: string;

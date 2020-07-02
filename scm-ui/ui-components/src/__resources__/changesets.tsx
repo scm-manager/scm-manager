@@ -218,6 +218,54 @@ const four: Changeset = {
   }
 };
 
+const five: Changeset = {
+  id: "d21cc6c359270aef2196796f4d96af65f51866dc",
+  author: { mail: "scm-admin@scm-manager.org", name: "SCM Administrator" },
+  date: new Date("2020-06-09T05:39:50Z"),
+  description: "HOG-42 Change mail to arthur@guide.galaxy\n\n",
+  _links: {
+    self: {
+      href:
+        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/d21cc6c359270aef2196796f4d96af65f51866dc"
+    },
+    diff: {
+      href:
+        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/d21cc6c359270aef2196796f4d96af65f51866dc"
+    },
+    sources: {
+      href:
+        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
+    },
+    modifications: {
+      href:
+        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/modifications/d21cc6c359270aef2196796f4d96af65f51866dc"
+    },
+    diffParsed: {
+      href:
+        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/d21cc6c359270aef2196796f4d96af65f51866dc/parsed"
+    }
+  },
+  _embedded: {
+    tags: [],
+    branches: [],
+    parents: [
+      {
+        id: "e163c8f632db571c9aa51a8eb440e37cf550b825",
+        _links: {
+          self: {
+            href:
+              "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/e163c8f632db571c9aa51a8eb440e37cf550b825"
+          },
+          diff: {
+            href:
+              "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/e163c8f632db571c9aa51a8eb440e37cf550b825"
+          }
+        }
+      }
+    ]
+  }
+};
+
 const changesets: PagedCollection = {
   page: 0,
   pageTotal: 1,
@@ -246,5 +294,5 @@ const changesets: PagedCollection = {
   }
 };
 
-export { one, two, three, four };
+export { one, two, three, four, five };
 export default changesets;

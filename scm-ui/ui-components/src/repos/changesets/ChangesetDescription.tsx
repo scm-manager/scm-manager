@@ -22,17 +22,28 @@
  * SOFTWARE.
  */
 
-import * as changesets from "./changesets";
-export { changesets };
+import React, { FC } from "react";
+import { Changeset } from "@scm-manager/ui-types";
+import { useBinder } from "@scm-manager/ui-extensions";
+import { SplitAndReplace, Replacement } from "@scm-manager/ui-components";
 
-export { default as ChangesetAuthor, SingleContributor } from "./ChangesetAuthor";
-export { default as ChangesetButtonGroup } from "./ChangesetButtonGroup";
-export { default as ChangesetDescription } from "./ChangesetDescription";
-export { default as ChangesetDiff } from "./ChangesetDiff";
-export { default as ChangesetId } from "./ChangesetId";
-export { default as ChangesetList } from "./ChangesetList";
-export { default as ChangesetRow } from "./ChangesetRow";
-export { default as ChangesetTag } from "./ChangesetTag";
-export { default as ChangesetTags } from "./ChangesetTags";
-export { default as ChangesetTagsCollapsed } from "./ChangesetTagsCollapsed";
-export { default as ContributorAvatar } from "./ContributorAvatar";
+type Props = {
+  changeset: Changeset;
+  value: string;
+};
+
+const ChangesetDescription: FC<Props> = ({ changeset, value }) => {
+  const binder = useBinder();
+
+  const replacements: ((changeset: Changeset, value: string) => Replacement[])[] = binder.getExtensions(
+    "changeset.description.tokens",
+    {
+      changeset,
+      value
+    }
+  );
+
+  return <SplitAndReplace text={value} replacements={replacements.flatMap(r => r(changeset, value))} />;
+};
+
+export default ChangesetDescription;

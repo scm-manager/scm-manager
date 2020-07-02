@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { regExpPattern } from "./remarkCommitLinksParser";
+import { regExpPattern } from "./remarkChangesetShortLinkParser";
 
 describe("Remark Commit Links RegEx Tests", () => {
   it("should match simple names", () => {
@@ -57,8 +57,6 @@ describe("Remark Commit Links RegEx Tests", () => {
       matches.push(match[0]);
       match = regExp.exec(text);
     }
-
-    console.log(matches)
 
     expect(matches[0]).toBe("hitchhiker/heart-of-gold@42");
     expect(matches[1]).toBe("hitchhiker/heart-of-gold@21");

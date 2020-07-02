@@ -34,6 +34,10 @@ import createReduxStore from "./createReduxStore";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import { urls } from "@scm-manager/ui-components";
+import { binder } from "@scm-manager/ui-extensions";
+import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink";
+
+binder.bind("changeset.description.tokens", ChangesetShortLink);
 
 const store = createReduxStore();
 

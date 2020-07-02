@@ -22,17 +22,30 @@
  * SOFTWARE.
  */
 
-import * as changesets from "./changesets";
-export { changesets };
+import React from "react";
+import { Link } from "react-router-dom";
+import { Changeset } from "@scm-manager/ui-types";
+import { Replacement, changesetShortLinkRegex } from "@scm-manager/ui-components";
 
-export { default as ChangesetAuthor, SingleContributor } from "./ChangesetAuthor";
-export { default as ChangesetButtonGroup } from "./ChangesetButtonGroup";
-export { default as ChangesetDescription } from "./ChangesetDescription";
-export { default as ChangesetDiff } from "./ChangesetDiff";
-export { default as ChangesetId } from "./ChangesetId";
-export { default as ChangesetList } from "./ChangesetList";
-export { default as ChangesetRow } from "./ChangesetRow";
-export { default as ChangesetTag } from "./ChangesetTag";
-export { default as ChangesetTags } from "./ChangesetTags";
-export { default as ChangesetTagsCollapsed } from "./ChangesetTagsCollapsed";
-export { default as ContributorAvatar } from "./ContributorAvatar";
+const ChangesetShortLink: (changeset: Changeset, value: string) => Replacement[] = (changeset, value) => {
+  const regex = new RegExp(changesetShortLinkRegex, "g")
+
+  const replacements: Replacement[] = [];
+
+  let m = regex.exec(value);
+  while (m) {
+    const namespace = m[1];
+    const name = m[2];
+    const revision = m[3];
+    const link = `/repo/${namespace}/${name}/code/changeset/${revision}`;
+    replacements.push({
+      textToReplace: m[0],
+      replacement: <Link to={link}>{m[0]}</Link>
+    });
+    m = regex.exec(value);
+  }
+
+  return replacements;
+};
+
+export default ChangesetShortLink;

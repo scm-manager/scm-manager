@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Rename repository name (and namespace if permitted) ([#1218](https://github.com/scm-manager/scm-manager/pull/1218))
 - enrich commit mentions in markdown viewer by internal links  ([#1210](https://github.com/scm-manager/scm-manager/pull/1210))
+- New extension point `changeset.description.tokens` to "enrich" commit messages ([#1231](https://github.com/scm-manager/scm-manager/pull/1231))
 - restart service after rpm or deb package upgrade
 
 ### Changed
 - Checkboxes can now be 'indeterminate' ([#1215](https://github.com/scm-manager/scm-manager/pull/1215))
+- The old frontend extension point `changeset.description` is deprecated and should be replaced with `changeset.description.tokens` ([#1231](https://github.com/scm-manager/scm-manager/pull/1231))
 
 ### Fixed
 - Fixed installation of debian packages on distros without preinstalled `at` ([#1216](https://github.com/scm-manager/scm-manager/issues/1216) and [#1217](https://github.com/scm-manager/scm-manager/pull/1217))

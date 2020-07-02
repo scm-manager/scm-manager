@@ -28,12 +28,13 @@ import styled from "styled-components";
 import { MemoryRouter } from "react-router-dom";
 import repository from "../../__resources__/repository";
 import ChangesetRow from "./ChangesetRow";
-import {one, two, three, four} from "../../__resources__/changesets";
-import {Binder, BinderContext} from "@scm-manager/ui-extensions";
+import { one, two, three, four, five } from "../../__resources__/changesets";
+import { Binder, BinderContext } from "@scm-manager/ui-extensions";
 // @ts-ignore
 import hitchhiker from "../../__resources__/hitchhiker.png";
-import {Person} from "../../avatar/Avatar";
-import {Changeset} from "@scm-manager/ui-types/src";
+import { Person } from "../../avatar/Avatar";
+import { Changeset } from "@scm-manager/ui-types";
+import { Replacement } from "../../SplitAndReplace";
 
 const Wrapper = styled.div`
   margin: 2rem;
@@ -41,7 +42,7 @@ const Wrapper = styled.div`
 
 const robohash = (person: Person) => {
   return `https://robohash.org/${person.mail}`;
-}
+};
 
 const withAvatarFactory = (factory: (person: Person) => string, changeset: Changeset) => {
   const binder = new Binder("changeset stories");
@@ -53,27 +54,43 @@ const withAvatarFactory = (factory: (person: Person) => string, changeset: Chang
   );
 };
 
+const withReplacements = (
+  replacements: ((changeset: Changeset, value: string) => Replacement[])[],
+  changeset: Changeset
+) => {
+  const binder = new Binder("changeset stories");
+  replacements.forEach(replacement => binder.bind("changeset.description.tokens", replacement));
+  return (
+    <BinderContext.Provider value={binder}>
+      <ChangesetRow repository={repository} changeset={changeset} />
+    </BinderContext.Provider>
+  );
+};
+
 storiesOf("Changesets", module)
   .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .addDecorator(storyFn => <Wrapper className="box box-link-shadow">{storyFn()}</Wrapper>)
-  .add("Default", () => (
-    <ChangesetRow repository={repository} changeset={three} />
-  ))
-  .add("With Committer", () => (
-    <ChangesetRow repository={repository} changeset={two} />
-  ))
-  .add("With Committer and Co-Author", () => (
-    <ChangesetRow repository={repository} changeset={one} />
-  ))
-  .add("With multiple Co-Authors", () => (
-    <ChangesetRow repository={repository} changeset={four} />
-  ))
+  .add("Default", () => <ChangesetRow repository={repository} changeset={three} />)
+  .add("With Committer", () => <ChangesetRow repository={repository} changeset={two} />)
+  .add("With Committer and Co-Author", () => <ChangesetRow repository={repository} changeset={one} />)
+  .add("With multiple Co-Authors", () => <ChangesetRow repository={repository} changeset={four} />)
   .add("With avatar", () => {
-    return withAvatarFactory(person => hitchhiker, three);
+    return withAvatarFactory(() => hitchhiker, three);
   })
   .add("Commiter and Co-Authors with avatar", () => {
     return withAvatarFactory(robohash, one);
   })
   .add("Co-Authors with avatar", () => {
     return withAvatarFactory(robohash, four);
+  })
+  .add("Replacements", () => {
+    const link = <a href={"http://example.com/hog"}>HOG-42</a>;
+    const mail = <a href={"mailto:hog@example.com"}>Arthur</a>;
+    return withReplacements(
+      [
+        () => [{ textToReplace: "HOG-42", replacement: link }],
+        () => [{ textToReplace: "arthur@guide.galaxy", replacement: mail }]
+      ],
+      five
+    );
   });
