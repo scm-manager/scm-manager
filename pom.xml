@@ -35,11 +35,16 @@
   <version>2.2.0-SNAPSHOT</version>
   <description>
     The easiest way to share your Git, Mercurial
-    and Subversion repositories over http.
+    and Subversion repositories.
   </description>
   <name>scm</name>
 
   <url>https://github.com/scm-manager/scm-manager</url>
+
+  <organization>
+    <name>Cloudogu GmbH</name>
+    <url>https://cloudogu.com</url>
+  </organization>
 
   <licenses>
     <license>
@@ -50,9 +55,33 @@
 
   <developers>
     <developer>
-      <id>sdorra</id>
+      <id>sebastian.sdorra</id>
       <name>Sebastian Sdorra</name>
-      <email>s.sdorra@gmail.com</email>
+      <email>sebastian.sdorra@cloudogu.com</email>
+      <timezone>Europe/Berlin</timezone>
+    </developer>
+    <developer>
+      <id>rene.pfeuffer</id>
+      <name>Rene Pfeufer</name>
+      <email>rene.pfeuffer@cloudogu.com</email>
+      <timezone>Europe/Berlin</timezone>
+    </developer>
+    <developer>
+      <id>eduard.heimbuch</id>
+      <name>Eduard Heimbuch</name>
+      <email>eduard.heimbuch@cloudogu.com</email>
+      <timezone>Europe/Berlin</timezone>
+    </developer>
+    <developer>
+      <id>florian.scholdei</id>
+      <name>Florian Scholdei</name>
+      <email>florian.scholdei@cloudogu.com</email>
+      <timezone>Europe/Berlin</timezone>
+    </developer>
+    <developer>
+      <id>Konstantin Schaper</id>
+      <name>Konstantin Schaper</name>
+      <email>konstantin.schaper@cloudogu.com</email>
       <timezone>Europe/Berlin</timezone>
     </developer>
   </developers>

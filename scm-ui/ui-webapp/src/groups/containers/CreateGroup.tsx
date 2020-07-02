@@ -31,7 +31,7 @@ import { Page } from "@scm-manager/ui-components";
 import { getGroupsLink, getUserAutoCompleteLink } from "../../modules/indexResource";
 import { createGroup, createGroupReset, getCreateGroupFailure, isCreateGroupPending } from "../modules/groups";
 import GroupForm from "../components/GroupForm";
-import { apiClient } from "@scm-manager/ui-components/src";
+import { apiClient } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   createGroup: (link: string, group: Group, callback?: () => void) => void;

@@ -36,6 +36,9 @@
     <value>repository:read,pull,push:*</value>
   </permission>
   <permission>
+    <value>repository:read,rename:*</value>
+  </permission>
+  <permission>
     <value>repository:*</value>
   </permission>
   <permission>

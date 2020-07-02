@@ -24,14 +24,15 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.google.inject.Inject;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
 import org.mapstruct.Mapper;
 import org.mapstruct.ObjectFactory;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.HealthCheckFailure;
+import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.Command;
@@ -41,7 +42,9 @@ import sonia.scm.repository.api.ScmProtocol;
 import sonia.scm.web.EdisonHalAppender;
 import sonia.scm.web.api.RepositoryToHalMapper;
 
+import javax.inject.Inject;
 import java.util.List;
+import java.util.Set;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
@@ -56,7 +59,11 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
   @Inject
   private ResourceLinks resourceLinks;
   @Inject
+  private ScmConfiguration scmConfiguration;
+  @Inject
   private RepositoryServiceFactory serviceFactory;
+  @Inject
+  private Set<NamespaceStrategy> strategies;
 
   abstract HealthCheckFailureDto toDto(HealthCheckFailure failure);
 
@@ -71,6 +78,13 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     }
     if (RepositoryPermissions.modify(repository).isPermitted()) {
       linksBuilder.single(link("update", resourceLinks.repository().update(repository.getNamespace(), repository.getName())));
+    }
+    if (RepositoryPermissions.rename(repository).isPermitted()) {
+      if (isRenameNamespacePossible()) {
+        linksBuilder.single(link("renameWithNamespace", resourceLinks.repository().rename(repository.getNamespace(), repository.getName())));
+      } else {
+        linksBuilder.single(link("rename", resourceLinks.repository().rename(repository.getNamespace(), repository.getName())));
+      }
     }
     if (RepositoryPermissions.permissionRead(repository).isPermitted()) {
       linksBuilder.single(link("permissions", resourceLinks.repositoryPermission().all(repository.getNamespace(), repository.getName())));
@@ -103,6 +117,15 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), repository);
 
     return new RepositoryDto(linksBuilder.build(), embeddedBuilder.build());
+  }
+
+  private boolean isRenameNamespacePossible() {
+    for (NamespaceStrategy strategy : strategies) {
+      if (strategy.getClass().getSimpleName().equals(scmConfiguration.getNamespaceStrategy())) {
+        return strategy.canBeChanged();
+      }
+    }
+    return false;
   }
 
   private Link createProtocolLink(ScmProtocol protocol) {

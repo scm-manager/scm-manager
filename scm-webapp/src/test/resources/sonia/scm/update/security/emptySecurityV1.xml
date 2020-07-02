@@ -1,3 +1,4 @@
+<?xml version="1.0" ?>
 <!--
 
     MIT License
@@ -23,39 +24,5 @@
     SOFTWARE.
 
 -->
-<repository-permissions>
-  <verbs>
-    <verb>read</verb>
-    <verb>modify</verb>
-    <verb>delete</verb>
-    <verb>rename</verb>
-    <verb>pull</verb>
-    <verb>push</verb>
-    <verb>permissionRead</verb>
-    <verb>permissionWrite</verb>
-    <verb>*</verb>
-  </verbs>
-  <roles>
-    <role>
-      <name>READ</name>
-      <verbs>
-        <verb>read</verb>
-        <verb>pull</verb>
-      </verbs>
-    </role>
-    <role>
-      <name>WRITE</name>
-      <verbs>
-        <verb>read</verb>
-        <verb>pull</verb>
-        <verb>push</verb>
-      </verbs>
-    </role>
-    <role>
-      <name>OWNER</name>
-      <verbs>
-        <verb>*</verb>
-      </verbs>
-    </role>
-  </roles>
-</repository-permissions>
+<configuration>
+</configuration>

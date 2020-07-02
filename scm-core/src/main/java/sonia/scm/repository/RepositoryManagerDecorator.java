@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -42,17 +42,14 @@ import java.util.Collection;
  */
 public class RepositoryManagerDecorator
   extends ManagerDecorator<Repository>
-  implements RepositoryManager
-{
+  implements RepositoryManager {
 
   /**
    * Constructs ...
    *
-   *
    * @param decorated
    */
-  public RepositoryManagerDecorator(RepositoryManager decorated)
-  {
+  public RepositoryManagerDecorator(RepositoryManager decorated) {
     super(decorated);
     this.decorated = decorated;
   }
@@ -63,8 +60,7 @@ public class RepositoryManagerDecorator
    * {@inheritDoc}
    */
   @Override
-  public void fireHookEvent(RepositoryHookEvent event)
-  {
+  public void fireHookEvent(RepositoryHookEvent event) {
     decorated.fireHookEvent(event);
   }
 
@@ -79,65 +75,66 @@ public class RepositoryManagerDecorator
   //~--- get methods ----------------------------------------------------------
 
   @Override
-  public Repository get(NamespaceAndName namespaceAndName)
-  {
+  public Repository get(NamespaceAndName namespaceAndName) {
     return decorated.get(namespaceAndName);
   }
 
   /**
    * {@inheritDoc}
    *
-   *
    * @return
    */
   @Override
-  public Collection<RepositoryType> getConfiguredTypes()
-  {
+  public Collection<RepositoryType> getConfiguredTypes() {
     return decorated.getConfiguredTypes();
   }
 
   /**
    * Returns the decorated {@link RepositoryManager}.
    *
-   *
    * @return decorated {@link RepositoryManager}
-   *
    * @since 1.34
    */
-  public RepositoryManager getDecorated()
-  {
+  public RepositoryManager getDecorated() {
     return decorated;
   }
 
   /**
    * {@inheritDoc}
    *
-   *
    * @param type
-   *
    * @return
    */
   @Override
   @SuppressWarnings("unchecked")
-  public RepositoryHandler getHandler(String type)
-  {
+  public RepositoryHandler getHandler(String type) {
     return decorated.getHandler(type);
   }
 
   /**
    * {@inheritDoc}
    *
+   * @return
+   */
+  @Override
+  public Collection<Type> getTypes() {
+    return decorated.getTypes();
+  }
+
+  /**
+   * {@inheritDoc}
    *
    * @return
    */
   @Override
-  public Collection<Type> getTypes()
-  {
-    return decorated.getTypes();
+  public Repository rename(Repository repository, String newNamespace, String newName) {
+    return decorated.rename(repository, newNamespace, newName);
   }
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private final RepositoryManager decorated;
 }

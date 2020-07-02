@@ -31,7 +31,7 @@ import { DisplayedUser, Group } from "@scm-manager/ui-types";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import { getUserAutoCompleteLink } from "../../modules/indexResource";
 import DeleteGroup from "./DeleteGroup";
-import { apiClient } from "@scm-manager/ui-components/src";
+import { apiClient } from "@scm-manager/ui-components";
 import { compose } from "redux";
 
 type Props = {

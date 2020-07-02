@@ -74,6 +74,13 @@ class RepositoryRoot extends React.Component<Props> {
     fetchRepoByName(repoLink, namespace, name);
   }
 
+  componentDidUpdate(prevProps: Props) {
+    const { fetchRepoByName, namespace, name, repoLink } = this.props;
+    if (namespace !== prevProps.namespace || name !== prevProps.name) {
+      fetchRepoByName(repoLink, namespace, name);
+    }
+  }
+
   stripEndingSlash = (url: string) => {
     if (url.endsWith("/")) {
       return url.substring(0, url.length - 1);

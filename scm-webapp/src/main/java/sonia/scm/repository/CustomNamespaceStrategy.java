@@ -41,4 +41,9 @@ public class CustomNamespaceStrategy implements NamespaceStrategy {
 
     return namespace;
   }
+
+  @Override
+  public boolean canBeChanged() {
+    return true;
+  }
 }

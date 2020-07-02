@@ -25,17 +25,19 @@ import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import RepositoryForm from "../components/form";
-import DeleteRepo from "./DeleteRepo";
-import { Repository } from "@scm-manager/ui-types";
+import { Repository, Links } from "@scm-manager/ui-types";
 import { getModifyRepoFailure, isModifyRepoPending, modifyRepo, modifyRepoReset } from "../modules/repos";
 import { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { compose } from "redux";
+import DangerZone from "./DangerZone";
+import { getLinks } from "../../modules/indexResource";
 
 type Props = {
   loading: boolean;
   error: Error;
+  indexLinks: Links;
 
   modifyRepo: (p1: Repository, p2: () => void) => void;
   modifyRepoReset: (p: Repository) => void;
@@ -69,7 +71,7 @@ class EditRepo extends React.Component<Props> {
   };
 
   render() {
-    const { loading, error, repository } = this.props;
+    const { loading, error, repository, indexLinks } = this.props;
 
     const url = this.matchedUrl();
 
@@ -79,7 +81,7 @@ class EditRepo extends React.Component<Props> {
     };
 
     return (
-      <div>
+      <>
         <ErrorNotification error={error} />
         <RepositoryForm
           repository={this.props.repository}
@@ -89,8 +91,8 @@ class EditRepo extends React.Component<Props> {
           }}
         />
         <ExtensionPoint name="repo-config.route" props={extensionProps} renderAll={true} />
-        <DeleteRepo repository={repository} />
-      </div>
+        <DangerZone repository={repository} indexLinks={indexLinks} />
+      </>
     );
   }
 }
@@ -99,9 +101,12 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   const { namespace, name } = ownProps.repository;
   const loading = isModifyRepoPending(state, namespace, name);
   const error = getModifyRepoFailure(state, namespace, name);
+  const indexLinks = getLinks(state);
+
   return {
     loading,
-    error
+    error,
+    indexLinks
   };
 };
 
