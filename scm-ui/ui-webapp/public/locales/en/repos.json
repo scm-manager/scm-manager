@@ -113,7 +113,8 @@
   "repositoryForm": {
     "subtitle": "Edit Repository",
     "submit": "Save",
-    "initializeRepository": "Initialize repository"
+    "initializeRepository": "Initialize repository",
+    "dangerZone": "Danger Zone"
   },
   "sources": {
     "file-tree": {
@@ -196,11 +197,29 @@
   },
   "deleteRepo": {
     "button": "Delete Repository",
+    "subtitle": "Deletes this repository",
+    "description": "Once a repository was deleted, this cannot be undone. Please be careful with this action.",
     "confirmAlert": {
       "title": "Delete repository",
       "message": "Do you really want to delete the repository?",
       "submit": "Yes",
       "cancel": "No"
+    }
+  },
+  "renameRepo": {
+    "button": "Rename Repository",
+    "subtitle": "Renames this repository",
+    "description": "There will be no redirects to the renamed repository.",
+    "modal": {
+      "title": "Rename repository",
+      "label": {
+        "repoName": "Repository name",
+        "repoNamespace": "Repository namespace"
+      },
+      "button": {
+        "rename": "Rename",
+        "cancel": "Cancel"
+      }
     }
   },
   "diff": {

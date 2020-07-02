@@ -24,28 +24,20 @@
 
 package sonia.scm.repository;
 
-import sonia.scm.plugin.ExtensionPoint;
+import sonia.scm.BadRequestException;
+import sonia.scm.ContextEntry;
 
-/**
- * Strategy to create a namespace for the new repository. Namespaces are used to order and identify repositories.
- */
-@ExtensionPoint
-public interface NamespaceStrategy {
+@SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here
+public class ChangeNamespaceNotAllowedException extends BadRequestException {
 
-  /**
-   * Create new namespace for the given repository.
-   *
-   * @param repository repository
-   * @return namespace
-   */
-  String createNamespace(Repository repository);
+  public ChangeNamespaceNotAllowedException(Repository repository) {
+    super(ContextEntry.ContextBuilder.entity(repository).build(), "change of namespace is not allowed in current namespace strategy");
+  }
 
-  /**
-   * Checks if the namespace can be changed when using this namespace strategy
-   *
-   * @return namespace can be changed
-   */
-  default boolean canBeChanged() {
-    return false;
+  private static final String CODE = "ERS2vYb7U1";
+
+  @Override
+  public String getCode() {
+    return CODE;
   }
 }

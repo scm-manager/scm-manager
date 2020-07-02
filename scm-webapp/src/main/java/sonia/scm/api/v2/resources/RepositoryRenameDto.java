@@ -22,30 +22,18 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package sonia.scm.api.v2.resources;
 
-import sonia.scm.plugin.ExtensionPoint;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import sonia.scm.util.ValidationUtil;
 
-/**
- * Strategy to create a namespace for the new repository. Namespaces are used to order and identify repositories.
- */
-@ExtensionPoint
-public interface NamespaceStrategy {
+import javax.validation.constraints.Pattern;
 
-  /**
-   * Create new namespace for the given repository.
-   *
-   * @param repository repository
-   * @return namespace
-   */
-  String createNamespace(Repository repository);
-
-  /**
-   * Checks if the namespace can be changed when using this namespace strategy
-   *
-   * @return namespace can be changed
-   */
-  default boolean canBeChanged() {
-    return false;
-  }
+@Getter
+@NoArgsConstructor
+public class RepositoryRenameDto {
+  @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
+  private String name;
+  private String namespace;
 }

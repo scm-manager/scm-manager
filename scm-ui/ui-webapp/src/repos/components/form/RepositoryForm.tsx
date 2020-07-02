@@ -26,8 +26,9 @@ import styled from "styled-components";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Repository, RepositoryType } from "@scm-manager/ui-types";
-import { Checkbox, Level, InputField, Select, SubmitButton, Subtitle, Textarea } from "@scm-manager/ui-components";
+import { Checkbox, InputField, Level, Select, SubmitButton, Subtitle, Textarea } from "@scm-manager/ui-components";
 import * as validator from "./repositoryValidation";
+import { CUSTOM_NAMESPACE_STRATEGY } from "../../modules/repos";
 
 const CheckboxWrapper = styled.div`
   margin-top: 2em;
@@ -58,8 +59,6 @@ type State = {
   nameValidationError: boolean;
   contactValidationError: boolean;
 };
-
-const CUSTOM_NAMESPACE_STRATEGY = "CustomNamespaceStrategy";
 
 class RepositoryForm extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -108,7 +107,7 @@ class RepositoryForm extends React.Component<Props, State> {
     );
   };
 
-  submit = (event: Event) => {
+  submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (this.isValid()) {
       this.props.submitForm(this.state.repository, this.state.initRepository);

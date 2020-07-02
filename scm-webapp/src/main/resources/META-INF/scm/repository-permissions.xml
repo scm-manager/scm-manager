@@ -28,6 +28,7 @@
     <verb>read</verb>
     <verb>modify</verb>
     <verb>delete</verb>
+    <verb>rename</verb>
     <verb>pull</verb>
     <verb>push</verb>
     <verb>permissionRead</verb>

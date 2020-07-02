@@ -34,11 +34,11 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -64,8 +64,7 @@ public class RepositoryResource {
   public RepositoryResource(
     RepositoryToRepositoryDtoMapper repositoryToDtoMapper,
     RepositoryDtoToRepositoryMapper dtoToRepositoryMapper, RepositoryManager manager,
-    RepositoryBasedResourceProvider resourceProvider
-  ) {
+    RepositoryBasedResourceProvider resourceProvider) {
     this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
@@ -79,8 +78,7 @@ public class RepositoryResource {
    * <strong>Note:</strong> This method requires "repository" privilege.
    *
    * @param namespace the namespace of the repository
-   * @param name the name of the repository
-   *
+   * @param name      the name of the repository
    */
   @GET
   @Path("")
@@ -118,7 +116,7 @@ public class RepositoryResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name){
+  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     return adapter.get(loadBy(namespace, name), repositoryToDtoMapper::map);
   }
 
@@ -128,8 +126,7 @@ public class RepositoryResource {
    * <strong>Note:</strong> This method requires "repository" privilege.
    *
    * @param namespace the namespace of the repository to delete
-   * @param name the name of the repository to delete
-   *
+   * @param name      the name of the repository to delete
    */
   @DELETE
   @Path("")
@@ -147,8 +144,8 @@ public class RepositoryResource {
    *
    * <strong>Note:</strong> This method requires "repository" privilege.
    *
-   * @param namespace the namespace of the repository to be modified
-   * @param name the name of the repository to be modified
+   * @param namespace  the namespace of the repository to be modified
+   * @param name       the name of the repository to be modified
    * @param repository repository object to modify
    */
   @PUT
@@ -174,6 +171,37 @@ public class RepositoryResource {
       nameAndNamespaceStaysTheSame(namespace, name),
       r -> r.getNamespaceAndName().logString()
     );
+  }
+
+  /**
+   * Renames the given repository.
+   *
+   * <strong>Note:</strong> This method requires "repository" privilege.
+   *
+   * @param namespace the namespace of the repository to be modified
+   * @param name      the name of the repository to be modified
+   * @param renameDto renameDto object to modify
+   */
+  @POST
+  @Path("rename")
+  @Consumes(VndMediaType.REPOSITORY)
+  @Operation(summary = "Rename repository", description = "Renames the repository for the given namespace and name.", tags = "Repository")
+  @ApiResponse(responseCode = "204", description = "update success")
+  @ApiResponse(responseCode = "400", description = "invalid body, e.g. illegal change of namespace or name")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"repository:renameDto\" privilege")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no repository with the specified namespace and name available",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(responseCode = "500", description = "internal server error")
+  public Response rename(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryRenameDto renameDto) {
+    Repository repository = loadBy(namespace, name).get();
+    manager.rename(repository, renameDto.getNamespace(), renameDto.getName());
+    return Response.status(204).build();
   }
 
   private Repository processUpdate(RepositoryDto repositoryDto, Repository existing) {
