@@ -30,7 +30,6 @@ import { TFunction } from "i18next";
 
 const namePartRegex = nameRegex.source.substring(1, nameRegex.source.length - 1);
 
-// Visible for testing
 export const regExpPattern = `(${namePartRegex})\\/(${namePartRegex})@([\\w\\d]+)`;
 
 function match(value: string): RegExpMatchArray[] {
@@ -45,7 +44,6 @@ function match(value: string): RegExpMatchArray[] {
 }
 
 export const createTransformer = (t: TFunction): MdastPlugin => {
-
   return (tree: MarkdownAbstractSyntaxTree) => {
     visit(tree, "text", (node: MarkdownAbstractSyntaxTree, index: number, parent: MarkdownAbstractSyntaxTree) => {
       if (parent.type === "link" || !node.value) {

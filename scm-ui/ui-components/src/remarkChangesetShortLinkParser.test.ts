@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { regExpPattern } from "./remarkCommitLinksParser";
+import { regExpPattern } from "./remarkChangesetShortLinkParser";
 
 describe("Remark Commit Links RegEx Tests", () => {
   it("should match simple names", () => {
