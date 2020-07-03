@@ -34,8 +34,6 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.lifecycle.Restarter;
 import sonia.scm.update.repository.DefaultMigrationStrategyDAO;
 import sonia.scm.update.repository.MigrationStrategy;
