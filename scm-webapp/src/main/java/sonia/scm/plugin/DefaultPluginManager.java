@@ -247,18 +247,18 @@ public class DefaultPluginManager implements PluginManager {
 
   private List<AvailablePlugin> collectPluginsToInstall(String name) {
     List<AvailablePlugin> plugins = new ArrayList<>();
-    collectPluginsToInstall(plugins, name, true);
+    collectPluginsToInstallOrUpdate(plugins, name);
     return plugins;
   }
 
-  private void collectPluginsToInstall(List<AvailablePlugin> plugins, String name, boolean isUpdate) {
-    if (!isInstalledOrPending(name) || isUpdate && isUpdatable(name)) {
+  private void collectPluginsToInstallOrUpdate(List<AvailablePlugin> plugins, String name) {
+    if (!isInstalledOrPending(name) || isUpdatable(name)) {
       AvailablePlugin plugin = getAvailable(name).orElseThrow(() -> NotFoundException.notFound(entity(AvailablePlugin.class, name)));
 
       Set<String> dependencies = plugin.getDescriptor().getDependencies();
       if (dependencies != null) {
         for (String dependency : dependencies) {
-          collectPluginsToInstall(plugins, dependency, false);
+          collectPluginsToInstallOrUpdate(plugins, dependency);
         }
       }
 
