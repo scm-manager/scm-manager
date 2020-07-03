@@ -227,7 +227,7 @@ class DefaultPluginManagerTest {
     }
 
     @Test
-    void shouldNotInstallAlreadyInstalledDependencies() {
+    void shouldNotInstallAlreadyInstalledDependenciesWhenUpToDate() {
       AvailablePlugin review = createAvailable("scm-review-plugin");
       when(review.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin"));
       AvailablePlugin mail = createAvailable("scm-mail-plugin");
@@ -242,6 +242,22 @@ class DefaultPluginManagerTest {
       verify(installer).install(captor.capture());
 
       assertThat(captor.getValue().getDescriptor().getInformation().getName()).isEqualTo("scm-review-plugin");
+    }
+
+    @Test
+    void shouldUpdateAlreadyInstalledDependenciesWhenNewerVersionIsAvailable() {
+      AvailablePlugin review = createAvailable("scm-review-plugin");
+      when(review.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin"));
+      AvailablePlugin mail = createAvailable("scm-mail-plugin", "1.1.0");
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail));
+
+      InstalledPlugin installedMail = createInstalled("scm-mail-plugin", "1.0.0");
+      when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(installedMail));
+
+      manager.install("scm-review-plugin", false);
+
+      verify(installer).install(mail);
+      verify(installer).install(review);
     }
 
     @Test

@@ -34,8 +34,6 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.lifecycle.Restarter;
 import sonia.scm.update.repository.DefaultMigrationStrategyDAO;
 import sonia.scm.update.repository.MigrationStrategy;
@@ -172,6 +170,9 @@ class MigrationWizardServlet extends HttpServlet {
   void respondWithTemplate(HttpServletResponse resp, Map<String, Object> model, String templateName) {
     MustacheFactory mf = new DefaultMustacheFactory();
     Mustache template = mf.compile(templateName);
+
+    resp.setContentType("text/html");
+    resp.setCharacterEncoding("UTF-8");
 
     PrintWriter writer;
     try {

@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Checkboxes can now be 'indeterminate' ([#1215](https://github.com/scm-manager/scm-manager/pull/1215))
 - The old frontend extension point `changeset.description` is deprecated and should be replaced with `changeset.description.tokens` ([#1231](https://github.com/scm-manager/scm-manager/pull/1231))
+- Required plugins will be updated, too, when a plugin is updated ([#1233](https://github.com/scm-manager/scm-manager/pull/1233))
 
 ### Fixed
 - Fixed installation of debian packages on distros without preinstalled `at` ([#1216](https://github.com/scm-manager/scm-manager/issues/1216) and [#1217](https://github.com/scm-manager/scm-manager/pull/1217))
@@ -23,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added missing architecture to debian installation documentation ([#1230](https://github.com/scm-manager/scm-manager/pull/1230))
 - Mercurial on Python 3 ([#1232](https://github.com/scm-manager/scm-manager/pull/1232))
 - Fixed wrong package information for deb and rpm packages ([#1229](https://github.com/scm-manager/scm-manager/pull/1229))
+- Fixed missing content type on migration wizard ([#1234](https://github.com/scm-manager/scm-manager/pull/1234))
 
 ## [2.1.1] - 2020-06-23
 ### Fixed
