@@ -173,6 +173,9 @@ class MigrationWizardServlet extends HttpServlet {
     MustacheFactory mf = new DefaultMustacheFactory();
     Mustache template = mf.compile(templateName);
 
+    resp.setContentType("text/html");
+    resp.setCharacterEncoding("UTF-8");
+
     PrintWriter writer;
     try {
       writer = resp.getWriter();

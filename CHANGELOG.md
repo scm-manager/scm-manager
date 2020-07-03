@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added missing architecture to debian installation documentation ([#1230](https://github.com/scm-manager/scm-manager/pull/1230))
 - Mercurial on Python 3 ([#1232](https://github.com/scm-manager/scm-manager/pull/1232))
 - Fixed wrong package information for deb and rpm packages ([#1229](https://github.com/scm-manager/scm-manager/pull/1229))
+- Fixed missing content type on migration wizard
 
 ## [2.1.1] - 2020-06-23
 ### Fixed
