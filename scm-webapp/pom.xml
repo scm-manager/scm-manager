@@ -677,7 +677,7 @@
     <scm.stage>DEVELOPMENT</scm.stage>
     <scm.home>target/scm-it</scm.home>
     <environment.profile>default</environment.profile>
-    <jjwt.version>0.11.1</jjwt.version>
+    <jjwt.version>0.11.2</jjwt.version>
     <selenium.version>2.53.1</selenium.version>
     <wagon.version>1.0</wagon.version>
     <mustache.version>0.9.6-scm1</mustache.version>
