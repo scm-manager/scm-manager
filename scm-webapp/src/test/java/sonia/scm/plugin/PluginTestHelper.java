@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import org.mockito.Answers;
@@ -32,10 +32,7 @@ import static org.mockito.Mockito.when;
 
 public class PluginTestHelper {
   public static AvailablePlugin createAvailable(String name) {
-    PluginInformation information = new PluginInformation();
-    information.setName(name);
-    information.setVersion("1.0");
-    return createAvailable(information);
+    return createAvailable(name, "1.0");
   }
 
   public static AvailablePlugin createAvailable(String name, String version) {
@@ -46,9 +43,13 @@ public class PluginTestHelper {
   }
 
   public static InstalledPlugin createInstalled(String name) {
+    return createInstalled(name, "1.0");
+  }
+
+  public static InstalledPlugin createInstalled(String name, String version) {
     PluginInformation information = new PluginInformation();
     information.setName(name);
-    information.setVersion("1.0");
+    information.setVersion(version);
     return createInstalled(information);
   }
 

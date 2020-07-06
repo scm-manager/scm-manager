@@ -4,17 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 ## Unreleased
 ### Added
+- Add branch link provider to access branch links in plugins [#1243](https://github.com/scm-manager/scm-manager/pull/1243)
+
+## [2.2.0] - 2020-07-03
+### Added
 - Rename repository name (and namespace if permitted) ([#1218](https://github.com/scm-manager/scm-manager/pull/1218))
-- enrich commit mentions in markdown viewer by internal links  ([#1210](https://github.com/scm-manager/scm-manager/pull/1210))
+- Enrich commit mentions in markdown viewer by internal links  ([#1210](https://github.com/scm-manager/scm-manager/pull/1210))
 - New extension point `changeset.description.tokens` to "enrich" commit messages ([#1231](https://github.com/scm-manager/scm-manager/pull/1231))
-- restart service after rpm or deb package upgrade
+- Restart service after rpm or deb package upgrade
 
 ### Changed
 - Checkboxes can now be 'indeterminate' ([#1215](https://github.com/scm-manager/scm-manager/pull/1215))
 - The old frontend extension point `changeset.description` is deprecated and should be replaced with `changeset.description.tokens` ([#1231](https://github.com/scm-manager/scm-manager/pull/1231))
+- Required plugins will be updated, too, when a plugin is updated ([#1233](https://github.com/scm-manager/scm-manager/pull/1233))
 
 ### Fixed
 - Fixed installation of debian packages on distros without preinstalled `at` ([#1216](https://github.com/scm-manager/scm-manager/issues/1216) and [#1217](https://github.com/scm-manager/scm-manager/pull/1217))
@@ -23,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added missing architecture to debian installation documentation ([#1230](https://github.com/scm-manager/scm-manager/pull/1230))
 - Mercurial on Python 3 ([#1232](https://github.com/scm-manager/scm-manager/pull/1232))
 - Fixed wrong package information for deb and rpm packages ([#1229](https://github.com/scm-manager/scm-manager/pull/1229))
+- Fixed missing content type on migration wizard ([#1234](https://github.com/scm-manager/scm-manager/pull/1234))
 
 ## [2.1.1] - 2020-06-23
 ### Fixed
@@ -210,12 +215,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cache and x-requested-with header to bundle requests
 - remove public flag from repository and migrate permissions to anonymous user
 
-[2.0.0-rc1]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc1
-[2.0.0-rc2]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc2
-[2.0.0-rc3]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc3
-[2.0.0-rc4]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc4
-[2.0.0-rc5]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc5
-[2.0.0-rc6]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc6
-[2.0.0-rc7]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc7
-[2.0.0-rc8]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0-rc8
-[2.0.0]: https://github.com/scm-manager/scm-manager/releases/tag/2.0.0
+[2.0.0-rc1]: https://www.scm-manager.org/download/2.0.0-rc1
+[2.0.0-rc2]: https://www.scm-manager.org/download/2.0.0-rc2
+[2.0.0-rc3]: https://www.scm-manager.org/download/2.0.0-rc3
+[2.0.0-rc4]: https://www.scm-manager.org/download/2.0.0-rc4
+[2.0.0-rc5]: https://www.scm-manager.org/download/2.0.0-rc5
+[2.0.0-rc6]: https://www.scm-manager.org/download/2.0.0-rc6
+[2.0.0-rc7]: https://www.scm-manager.org/download/2.0.0-rc7
+[2.0.0-rc8]: https://www.scm-manager.org/download/2.0.0-rc8
+[2.0.0]: https://www.scm-manager.org/download/2.0.0
+[2.1.0]: https://www.scm-manager.org/download/2.1.0
+[2.1.1]: https://www.scm-manager.org/download/2.1.1
+[2.2.0]: https://www.scm-manager.org/download/2.2.0

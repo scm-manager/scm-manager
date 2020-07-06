@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -44,9 +44,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Objects;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static sonia.scm.it.utils.RegExMatcher.matchesPattern;
 import static sonia.scm.it.utils.RestUtil.createResourceUrl;
@@ -91,7 +89,7 @@ public class RepositoriesITCase {
       .body(
         "name", equalTo("HeartOfGold-" + repositoryType),
         "type", equalTo(repositoryType),
-        "creationDate", matchesPattern("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d+Z"),
+        "creationDate", matchesPattern("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?Z"),
         "lastModified", is(nullValue()),
         "_links.self.href", equalTo(repositoryUrl)
       );
