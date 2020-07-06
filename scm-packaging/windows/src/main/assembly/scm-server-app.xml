@@ -63,7 +63,7 @@
     </dependencySet>
     <dependencySet>
       <useProjectArtifact>false</useProjectArtifact>
-      <outputDirectory>var/webapp</outputDirectory>
+      <outputDirectory>webapp</outputDirectory>
       <outputFileNameMapping>scm-webapp.war</outputFileNameMapping>
       <includes>
         <include>*:war</include>
