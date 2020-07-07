@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add branch link provider to access branch links in plugins [#1243](https://github.com/scm-manager/scm-manager/pull/1243)
 
+### Fixed
+- Fix file extension detection with new spotter version
+
 ## [2.2.0] - 2020-07-03
 ### Added
 - Rename repository name (and namespace if permitted) ([#1218](https://github.com/scm-manager/scm-manager/pull/1218))
