@@ -70,14 +70,16 @@
   <New id="scm-webapp" class="org.eclipse.jetty.webapp.WebAppContext">
     <Set name="contextPath">/scm</Set>
     <Set name="war">
-      <SystemProperty name="basedir" default="."/>/var/webapp/scm-webapp.war
+      <SystemProperty name="basedir" default="."/>/webapp/scm-webapp.war
     </Set>
     <!-- disable directory listings -->
     <Call name="setInitParameter">
       <Arg>org.eclipse.jetty.servlet.Default.dirAllowed</Arg>
       <Arg>false</Arg>
     </Call>
-    <Set name="tempDirectory">/var/cache/scm/work/webapp</Set>
+    <Set name="tempDirectory">
+      <SystemProperty name="basedir" default="."/>/work/scm-webapp
+    </Set>
   </New>
 
   <New id="docroot" class="org.eclipse.jetty.webapp.WebAppContext">
@@ -87,12 +89,15 @@
         <Arg>
           <Array type="java.lang.String">
             <Item>
-              <SystemProperty name="basedir" default="."/>/var/webapp/docroot</Item>
+              <SystemProperty name="basedir" default="."/>/webapp/docroot
+            </Item>
           </Array>
         </Arg>
       </New>
     </Set>
-    <Set name="tempDirectory">/var/cache/scm/work/work/docroot</Set>
+    <Set name="tempDirectory">
+      <SystemProperty name="basedir" default="."/>/work/docroot
+    </Set>
   </New>
   
   <Set name="handler">
