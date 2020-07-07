@@ -37,6 +37,8 @@ import sonia.scm.PushStateDispatcher;
 import sonia.scm.PushStateDispatcherProvider;
 import sonia.scm.Undecorated;
 import sonia.scm.api.rest.ObjectMapperProvider;
+import sonia.scm.api.v2.resources.BranchLinkProvider;
+import sonia.scm.api.v2.resources.DefaultBranchLinkProvider;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.config.ScmConfiguration;
@@ -234,6 +236,9 @@ class ScmServletModule extends ServletModule {
 
     bind(AccessTokenCookieIssuer.class).to(DefaultAccessTokenCookieIssuer.class);
     bind(PushStateDispatcher.class).toProvider(PushStateDispatcherProvider.class);
+
+    // bind api link provider
+    bind(BranchLinkProvider.class).to(DefaultBranchLinkProvider.class);
   }
 
   private <T> void bind(Class<T> clazz, Class<? extends T> defaultImplementation) {
