@@ -24,13 +24,10 @@
 
 package sonia.scm.api.v2.resources;
 
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.BranchLinkProvider;
 import sonia.scm.repository.NamespaceAndName;
 
 import javax.inject.Inject;
 
-@Extension
 public class DefaultBranchLinkProvider implements BranchLinkProvider {
 
   private final ResourceLinks resourceLinks;

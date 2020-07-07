@@ -22,19 +22,17 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package sonia.scm.api.v2.resources;
 
-import sonia.scm.plugin.ExtensionPoint;
+import sonia.scm.repository.NamespaceAndName;
 
-@ExtensionPoint
 public interface BranchLinkProvider {
 
   /**
    * Returns the internal api link for the given branch of the repository.
    *
    * @param namespaceAndName The namespace and name of the repository.
-   * @param branch       The name of the branch.
-   *
+   * @param branch           The name of the branch.
    * @return Internal api link for the given branch.
    */
   String get(NamespaceAndName namespaceAndName, String branch);
