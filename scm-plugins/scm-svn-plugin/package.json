@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/scm-svn-plugin",
   "private": true,
-  "version": "2.2.0",
+  "version": "2.3.0-SNAPSHOT",
   "license": "MIT",
   "main": "./src/main/js/index.ts",
   "scripts": {
