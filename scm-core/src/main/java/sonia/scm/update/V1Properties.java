@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -58,7 +58,11 @@ public class V1Properties {
   }
 
   public Optional<String> getOptional(String key) {
-    return streamProps().filter(p -> key.equals(p.getKey())).map(V1Property::getValue).findFirst();
+    return streamProps()
+      .filter(prop -> prop.getValue() != null)
+      .filter(p -> key.equals(p.getKey()))
+      .map(V1Property::getValue)
+      .findFirst();
   }
 
   public Optional<Boolean> getBoolean(String key) {
