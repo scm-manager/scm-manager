@@ -22,19 +22,36 @@
  * SOFTWARE.
  */
 
-// @create-index
+import styled from "styled-components";
+import { storiesOf } from "@storybook/react";
+import React from "react";
+import AddKeyValueEntryToTableField from "./AddKeyValueEntryToTableField";
+import { MemoryRouter } from "react-router-dom";
 
-export { default as AddEntryToTableField } from "./AddEntryToTableField";
-export { default as AddKeyValueEntryToTableField } from "./AddKeyValueEntryToTableField";
-export { default as AutocompleteAddEntryToTableField } from "./AutocompleteAddEntryToTableField";
-export { default as TagGroup } from "./TagGroup";
-export { default as MemberNameTagGroup } from "./MemberNameTagGroup";
-export { default as Checkbox } from "./Checkbox";
-export { default as Radio } from "./Radio";
-export { default as FilterInput } from "./FilterInput";
-export { default as InputField } from "./InputField";
-export { default as Select } from "./Select";
-export { default as Textarea } from "./Textarea";
-export { default as PasswordConfirmation } from "./PasswordConfirmation";
-export { default as LabelWithHelpIcon } from "./LabelWithHelpIcon";
-export { default as DropDown } from "./DropDown";
+const Spacing = styled.div`
+  padding: 2em;
+`;
+
+storiesOf("Forms|AddKeyValueEntryToTableField", module)
+  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .add("Default", () => (
+    <Spacing>
+      <AddKeyValueEntryToTableField
+        keyFieldLabel="Key"
+        valueFieldLabel="Value"
+        buttonLabel="Add to table"
+        addEntry={(key, value) => {console.log(key, value)}}
+      />
+    </Spacing>
+  ))
+  .add("Disabled", () => (
+    <Spacing>
+      <AddKeyValueEntryToTableField
+        keyFieldLabel="Key"
+        valueFieldLabel="Value"
+        buttonLabel="Add to table"
+        addEntry={() => {}}
+        disabled={true}
+      />
+    </Spacing>
+  ));
