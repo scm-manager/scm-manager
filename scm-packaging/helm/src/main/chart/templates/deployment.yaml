@@ -76,10 +76,12 @@ spec:
             httpGet:
               path: /scm
               port: http
+            initialDelaySeconds: 30
           readinessProbe:
             httpGet:
               path: /scm
               port: http
+            initialDelaySeconds: 10
           resources:
 {{ toYaml .Values.resources | indent 12 }}
           volumeMounts:
