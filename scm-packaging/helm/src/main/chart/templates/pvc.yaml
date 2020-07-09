@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 
-{{- if .Values.persistence.enabled }}
+{{ if .Values.persistence.enabled }}
 
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -47,4 +47,4 @@ spec:
 {{- end }}
 {{- end }}
 
-{{- end }}
+{{ end }}

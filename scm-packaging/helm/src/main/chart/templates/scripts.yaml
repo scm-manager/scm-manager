@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 
-{{- if .Values.plugins }}
+{{ if .Values.plugins }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -42,4 +42,4 @@ data:
     wget -O /data/plugins/{{ $plugin.name }}.smp {{ $plugin.url }}
     chown 1000:1000 /data/plugins/{{ $plugin.name }}.smp
     {{ end }}
-{{- end }}
+{{ end }}
