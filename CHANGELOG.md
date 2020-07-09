@@ -8,10 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add branch link provider to access branch links in plugins [#1243](https://github.com/scm-manager/scm-manager/pull/1243)
 
+### Changed
+- Adding start delay to liveness and readiness probes in helm chart template
+
 ### Fixed
 - Fixed file extension detection with new spotter version
 - Fixed wrong cache directory location ([#1236](https://github.com/scm-manager/scm-manager/issues/1236) and [#1242](https://github.com/scm-manager/scm-manager/issues/1242))
 - Fixed error in update step ([#1237](https://github.com/scm-manager/scm-manager/issues/1237) and [#1244](https://github.com/scm-manager/scm-manager/issues/1244))
+- Fix incorrect trimming of whitespaces in helm chart templates 
 
 ## [2.2.0] - 2020-07-03
 ### Added
