@@ -63,7 +63,7 @@ class DiffExpander {
       return 0;
     }
     const changes = this.file.hunks![n].changes;
-    if (changes[changes.length - 1].type === "normal") {
+    if (changes[changes.length - 1]?.type === "normal") {
       if (n === this.file!.hunks!.length - 1) {
         return this.file!.hunks![this.file!.hunks!.length - 1].fullyExpanded ? 0 : -1;
       }
