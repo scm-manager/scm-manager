@@ -38310,6 +38310,158 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
 </div>
 `;
 
+exports[`Storyshots Forms|AddKeyValueEntryToTableField Default 1`] = `
+<div
+  className="AddKeyValueEntryToTableFieldstories__Spacing-d5xy2z-0 dAnpDP"
+>
+  <div
+    className="AddKeyValueEntryToTableField__InputLevel-kiarql-0 dnNoUR"
+  >
+    <div
+      className="field AddKeyValueEntryToTableField__StyledInputField-kiarql-1 hsBwOW"
+    >
+      <label
+        className="label"
+      >
+        Key
+         
+      </label>
+      <div
+        className="control"
+      >
+        <input
+          className="input"
+          onChange={[Function]}
+          onKeyPress={[Function]}
+          placeholder=""
+          type="text"
+          value=""
+        />
+      </div>
+      
+    </div>
+    <div
+      className="field AddKeyValueEntryToTableField__StyledInputField-kiarql-1 hsBwOW"
+    >
+      <label
+        className="label"
+      >
+        Value
+         
+      </label>
+      <div
+        className="control"
+      >
+        <input
+          className="input"
+          onChange={[Function]}
+          onKeyPress={[Function]}
+          placeholder=""
+          type="text"
+          value=""
+        />
+      </div>
+      
+    </div>
+    <button
+      className="button is-default AddKeyValueEntryToTableField__MarginTopButton-kiarql-2 bvjJvd"
+      disabled={true}
+      onClick={[Function]}
+      type="button"
+    >
+      <span
+        className="icon is-medium"
+      >
+        <i
+          className="fas fa-plus has-text-inherit"
+        />
+      </span>
+      <span>
+        Add to table
+         
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Forms|AddKeyValueEntryToTableField Disabled 1`] = `
+<div
+  className="AddKeyValueEntryToTableFieldstories__Spacing-d5xy2z-0 dAnpDP"
+>
+  <div
+    className="AddKeyValueEntryToTableField__InputLevel-kiarql-0 dnNoUR"
+  >
+    <div
+      className="field AddKeyValueEntryToTableField__StyledInputField-kiarql-1 hsBwOW"
+    >
+      <label
+        className="label"
+      >
+        Key
+         
+      </label>
+      <div
+        className="control"
+      >
+        <input
+          className="input"
+          disabled={true}
+          onChange={[Function]}
+          onKeyPress={[Function]}
+          placeholder=""
+          type="text"
+          value=""
+        />
+      </div>
+      
+    </div>
+    <div
+      className="field AddKeyValueEntryToTableField__StyledInputField-kiarql-1 hsBwOW"
+    >
+      <label
+        className="label"
+      >
+        Value
+         
+      </label>
+      <div
+        className="control"
+      >
+        <input
+          className="input"
+          disabled={true}
+          onChange={[Function]}
+          onKeyPress={[Function]}
+          placeholder=""
+          type="text"
+          value=""
+        />
+      </div>
+      
+    </div>
+    <button
+      className="button is-default AddKeyValueEntryToTableField__MarginTopButton-kiarql-2 bvjJvd"
+      disabled={true}
+      onClick={[Function]}
+      type="button"
+    >
+      <span
+        className="icon is-medium"
+      >
+        <i
+          className="fas fa-plus has-text-inherit"
+        />
+      </span>
+      <span>
+        Add to table
+         
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
 exports[`Storyshots Forms|Checkbox Default 1`] = `
 <div
   className="Checkboxstories__Spacing-sc-1bg8q8e-0 kJtXav"
