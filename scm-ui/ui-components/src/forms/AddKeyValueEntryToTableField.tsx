@@ -75,6 +75,12 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
     }
   };
 
+  const add = () => {
+    addEntry(key, value);
+    setKey("")
+    setValue("");
+  }
+
   return (
     <InputLevel>
       <StyledInputField
@@ -83,7 +89,7 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
         onChange={setKey}
         validationError={!isValid(key)}
         value={key}
-        onReturnPressed={() => addEntry(key, value)}
+        onReturnPressed={add}
         disabled={disabled}
         helpText={keyHelpText}
       />
@@ -93,13 +99,13 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
         onChange={setValue}
         validationError={!isValid(value)}
         value={value}
-        onReturnPressed={() => addEntry(key, value)}
+        onReturnPressed={add}
         disabled={disabled}
         helpText={valueHelpText}
       />
       <MarginTopButton
         label={buttonLabel}
-        action={() => addEntry(key, value)}
+        action={add}
         disabled={disabled || !key || !value || !isValid(key) || !isValid(value)}
       />
     </InputLevel>
