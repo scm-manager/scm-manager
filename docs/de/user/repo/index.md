@@ -2,11 +2,13 @@
 title: Repository
 partiallyActive: true
 ---
+<!--- AppendLinkContentStart -->
 Der Bereich Repository umfasst alles auf Basis von Repositories in Namespaces. Dazu zählen alle Operationen auf Branches, der Code und Einstellungen.
 
 * [Branches](branches/)
 * [Code](code/)
 * [Einstellungen](settings/)
+<!--- AppendLinkContentEnd -->
 
 ### Übersicht
 Auf der Übersichtsseite der Repositories werden die einzelnen Repositories nach Namespaces gegliedert aufgelistet. Jedes Repository wird durch eine Kachel dargestellt. Durch einen Klick auf diese Kachel öffnet sich die Readme Seite des jeweiligen Repositories. 

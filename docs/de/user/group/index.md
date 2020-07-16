@@ -2,10 +2,12 @@
 title: Gruppen
 partiallyActive: true
 ---
+<!--- AppendLinkContentStart -->
 Der Bereich Gruppen umfasst alles, was auf einen Zusammenschluss mehrerer Anwender und deren Berechtigungen herunterzubrechen ist.
 
 * [Externe Gruppen (CAS)](external/)
 * [Einstellungen](settings/)
+<!--- AppendLinkContentEnd -->
 
 Um nicht jeden Benutzer einzeln berechtigen zu müssen, gibt es im SCM-Manager die Möglichkeit Gruppen anzulegen. Diese Gruppen können mit Berechtigungen ausgestattet werden und können beliebig viele Benutzer enthalten.
 

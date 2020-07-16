@@ -2,9 +2,11 @@
 title: Benutzer
 partiallyActive: true
 ---
+<!--- AppendLinkContentStart -->
 Der Bereich Benutzer umfasst alles, was auf einen einzelnen Anwender und dessen Berechtigungen herunterzubrechen ist.
 
 * [Einstellungen](settings/)
+<!--- AppendLinkContentEnd -->
 
 ### Übersicht
 Auf der Benutzer Übersichtsseite wird eine Liste der existierenden Benutzer angezeigt. Durch Klicken auf einen Benutzer gelangt man zu dessen Detailseite. Über die Schaltfläche "Benutzer erstellen" können neue Benutzer angelegt werden.
