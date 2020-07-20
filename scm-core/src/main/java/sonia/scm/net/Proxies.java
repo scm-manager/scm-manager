@@ -91,6 +91,13 @@ public final class Proxies
         url = url.substring(0, index);
       }
 
+      index = url.indexOf(':');
+
+      if (index > 0)
+      {
+        url = url.substring(0, index);
+      }
+
       for (String exclude : configuration.getProxyExcludes())
       {
         if (GlobUtil.matches(exclude, url))

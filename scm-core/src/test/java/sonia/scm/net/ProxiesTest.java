@@ -21,99 +21,65 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.net;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.collect.Sets;
-
 import org.junit.Test;
-
 import sonia.scm.config.ScmConfiguration;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class ProxiesTest
-{
+public class ProxiesTest {
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testDisabledWithoutExcludes()
-  {
+  public void testDisabledWithoutExcludes() {
     ScmConfiguration config = createConfiguration(false);
 
     assertFalse(Proxies.isEnabled(config, "localhost"));
+    assertFalse(Proxies.isEnabled(config, "localhost:8082"));
     assertFalse(Proxies.isEnabled(config, "download.scm-manager.org"));
     assertFalse(Proxies.isEnabled(config, "http://127.0.0.1"));
     assertFalse(Proxies.isEnabled(config, "http://127.0.0.1/test/ka"));
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testEnabledWithoutExcludes()
-  {
+  public void testEnabledWithoutExcludes() {
     ScmConfiguration config = createConfiguration(true);
 
     assertTrue(Proxies.isEnabled(config, "localhost"));
+    assertTrue(Proxies.isEnabled(config, "localhost:8082"));
     assertTrue(Proxies.isEnabled(config, "download.scm-manager.org"));
     assertTrue(Proxies.isEnabled(config, "http://127.0.0.1"));
     assertTrue(Proxies.isEnabled(config, "http://127.0.0.1/test/ka"));
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testWithExcludes()
-  {
+  public void testWithExcludes() {
     ScmConfiguration config = createConfiguration(true, "127.0.0.1",
-                                "localhost");
+      "localhost");
 
     assertFalse(Proxies.isEnabled(config, "localhost"));
+    assertFalse(Proxies.isEnabled(config, "localhost:8082"));
     assertTrue(Proxies.isEnabled(config, "download.scm-manager.org"));
     assertFalse(Proxies.isEnabled(config, "http://127.0.0.1"));
     assertFalse(Proxies.isEnabled(config, "http://127.0.0.1/test/ka"));
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testWithGlobExcludes()
-  {
+  public void testWithGlobExcludes() {
     ScmConfiguration config = createConfiguration(true, "127.*", "*host");
 
     assertFalse(Proxies.isEnabled(config, "localhost"));
+    assertFalse(Proxies.isEnabled(config, "localhost:8082"));
     assertTrue(Proxies.isEnabled(config, "download.scm-manager.org"));
     assertFalse(Proxies.isEnabled(config, "http://127.0.0.1"));
     assertFalse(Proxies.isEnabled(config, "http://127.0.0.1/test/ka"));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param enabled
-   * @param excludes
-   *
-   * @return
-   */
   private ScmConfiguration createConfiguration(boolean enabled,
-    String... excludes)
-  {
+                                               String... excludes) {
     ScmConfiguration configuration = new ScmConfiguration();
 
     configuration.setEnableProxy(enabled);
