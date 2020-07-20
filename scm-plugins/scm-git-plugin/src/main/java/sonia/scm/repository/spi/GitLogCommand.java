@@ -47,6 +47,7 @@ import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.util.IOUtil;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
@@ -80,6 +81,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    *  @param context
    *
    */
+  @Inject
   GitLogCommand(GitContext context)
   {
     super(context);

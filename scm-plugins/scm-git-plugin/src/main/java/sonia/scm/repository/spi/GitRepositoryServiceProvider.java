@@ -25,20 +25,13 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
-import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
-import sonia.scm.event.ScmEventBus;
+import com.google.inject.AbstractModule;
+import com.google.inject.Injector;
 import sonia.scm.repository.Feature;
-import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
-import sonia.scm.repository.api.HookContextFactory;
-import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
-import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -47,8 +40,6 @@ import java.util.Set;
 public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 {
 
-  /** Field description */
-  //J-
   public static final Set<Command> COMMANDS = ImmutableSet.of(
     Command.BLAME,
     Command.BROWSE,
@@ -66,105 +57,51 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     Command.MERGE,
     Command.MODIFY
   );
+
   protected static final Set<Feature> FEATURES = EnumSet.of(Feature.INCOMING_REVISION);
-  //J+
+
+  private final GitContext context;
+  private final Injector commandInjector;
 
   //~--- constructors ---------------------------------------------------------
 
-  public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory, HookContextFactory hookContextFactory, ScmEventBus eventBus, SyncAsyncExecutorProvider executorProvider) {
-    this.handler = handler;
-    this.lfsBlobStoreFactory = lfsBlobStoreFactory;
-    this.hookContextFactory = hookContextFactory;
-    this.eventBus = eventBus;
-    this.executorProvider = executorProvider;
-    this.context = new GitContext(handler.getDirectory(repository.getId()), repository, storeProvider);
+  GitRepositoryServiceProvider(Injector injector, GitContext context) {
+    this.context = context;
+    commandInjector = injector.createChildInjector(new AbstractModule() {
+      @Override
+      protected void configure() {
+        bind(GitContext.class).toInstance(context);
+      }
+    });
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Override
-  public void close() throws IOException
-  {
-    context.close();
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public BlameCommand getBlameCommand()
-  {
+  public BlameCommand getBlameCommand() {
     return new GitBlameCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public BranchesCommand getBranchesCommand()
-  {
+  public BranchesCommand getBranchesCommand() {
     return new GitBranchesCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public BranchCommand getBranchCommand()
-  {
-    return new GitBranchCommand(context, hookContextFactory, eventBus);
+  public BranchCommand getBranchCommand() {
+    return commandInjector.getInstance(GitBranchCommand.class);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public BrowseCommand getBrowseCommand()
-  {
-    return new GitBrowseCommand(context, lfsBlobStoreFactory, executorProvider.createExecutorWithDefaultTimeout());
+  public BrowseCommand getBrowseCommand() {
+    return commandInjector.getInstance(GitBrowseCommand.class);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public CatCommand getCatCommand()
-  {
-    return new GitCatCommand(context, lfsBlobStoreFactory);
+  public CatCommand getCatCommand() {
+    return commandInjector.getInstance(GitCatCommand.class);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public DiffCommand getDiffCommand()
-  {
+  public DiffCommand getDiffCommand() {
     return new GitDiffCommand(context);
   }
 
@@ -173,27 +110,13 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     return new GitDiffResultCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public IncomingCommand getIncomingCommand()
-  {
-    return new GitIncomingCommand(handler, context);
+  public IncomingCommand getIncomingCommand() {
+    return commandInjector.getInstance(GitIncomingCommand.class);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public LogCommand getLogCommand()
-  {
+  public LogCommand getLogCommand() {
     return new GitLogCommand(context);
   }
 
@@ -202,93 +125,48 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     return new GitModificationsCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public OutgoingCommand getOutgoingCommand()
-  {
-    return new GitOutgoingCommand(handler, context);
+  public OutgoingCommand getOutgoingCommand() {
+    return commandInjector.getInstance(GitOutgoingCommand.class);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public PullCommand getPullCommand()
-  {
-    return new GitPullCommand(handler, context);
+  public PullCommand getPullCommand() {
+    return commandInjector.getInstance(GitPullCommand.class);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public PushCommand getPushCommand()
-  {
-    return new GitPushCommand(handler, context);
+  public PushCommand getPushCommand() {
+    return commandInjector.getInstance(GitPushCommand.class);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Set<Command> getSupportedCommands()
-  {
-    return COMMANDS;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public TagsCommand getTagsCommand()
-  {
+  public TagsCommand getTagsCommand() {
     return new GitTagsCommand(context);
   }
 
   @Override
   public MergeCommand getMergeCommand() {
-    return new GitMergeCommand(context, handler.getWorkingCopyFactory());
+    return commandInjector.getInstance(GitMergeCommand.class);
   }
 
   @Override
   public ModifyCommand getModifyCommand() {
-    return new GitModifyCommand(context, handler.getWorkingCopyFactory(), lfsBlobStoreFactory);
+    return commandInjector.getInstance(GitModifyCommand.class);
+  }
+
+  @Override
+  public Set<Command> getSupportedCommands() {
+    return COMMANDS;
   }
 
   @Override
   public Set<Feature> getSupportedFeatures() {
     return FEATURES;
   }
-//~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private final GitContext context;
-
-  /** Field description */
-  private final GitRepositoryHandler handler;
-
-  private final LfsBlobStoreFactory lfsBlobStoreFactory;
-
-  private final HookContextFactory hookContextFactory;
-
-  private final ScmEventBus eventBus;
-
-  private final SyncAsyncExecutorProvider executorProvider;
+  @Override
+  public void close() {
+    context.close();
+  }
 }

@@ -24,35 +24,25 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import sonia.scm.plugin.Extension;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-@Extension
-public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
+import javax.inject.Inject;
 
-  private final Injector injector;
-  private final GitContextFactory contextFactory;
+class GitContextFactory {
+
+  private final GitRepositoryHandler handler;
+  private final GitRepositoryConfigStoreProvider storeProvider;
 
   @Inject
-  public GitRepositoryServiceResolver(Injector injector, GitContextFactory contextFactory) {
-    this.injector = injector;
-    this.contextFactory = contextFactory;
+  GitContextFactory(GitRepositoryHandler handler, GitRepositoryConfigStoreProvider storeProvider) {
+    this.handler = handler;
+    this.storeProvider = storeProvider;
   }
 
-  @Override
-  public GitRepositoryServiceProvider resolve(Repository repository) {
-    if (GitRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      return new GitRepositoryServiceProvider(injector, contextFactory.create(repository));
-    }
-    return null;
+  GitContext create(Repository repository) {
+    return new GitContext(handler.getDirectory(repository.getId()), repository, storeProvider);
   }
+
 }

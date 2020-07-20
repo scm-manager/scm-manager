@@ -34,11 +34,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NoChangesMadeException;
+import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -52,6 +54,11 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
 
   private final GitWorkingCopyFactory workingCopyFactory;
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
+
+  @Inject
+  GitModifyCommand(GitContext context, GitRepositoryHandler repositoryHandler, LfsBlobStoreFactory lfsBlobStoreFactory) {
+    this(context, repositoryHandler.getWorkingCopyFactory(), lfsBlobStoreFactory);
+  }
 
   GitModifyCommand(GitContext context, GitWorkingCopyFactory workingCopyFactory, LfsBlobStoreFactory lfsBlobStoreFactory) {
     super(context);

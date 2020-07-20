@@ -36,6 +36,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.merge.ResolveMerger;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
+import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.MergeCommandResult;
@@ -43,6 +44,7 @@ import sonia.scm.repository.api.MergeDryRunCommandResult;
 import sonia.scm.repository.api.MergeStrategy;
 import sonia.scm.repository.api.MergeStrategyNotSupportedException;
 
+import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Set;
@@ -60,6 +62,11 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
     MergeStrategy.FAST_FORWARD_IF_POSSIBLE,
     MergeStrategy.SQUASH
   );
+
+  @Inject
+  GitMergeCommand(GitContext context, GitRepositoryHandler handler) {
+    this(context, handler.getWorkingCopyFactory());
+  }
 
   GitMergeCommand(GitContext context, GitWorkingCopyFactory workingCopyFactory) {
     super(context);

@@ -24,35 +24,51 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Inject;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
 import com.google.inject.Injector;
-import sonia.scm.plugin.Extension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.Repository;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-@Extension
-public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 
-  private final Injector injector;
-  private final GitContextFactory contextFactory;
+@ExtendWith(MockitoExtension.class)
+class GitRepositoryServiceProviderTest {
 
-  @Inject
-  public GitRepositoryServiceResolver(Injector injector, GitContextFactory contextFactory) {
-    this.injector = injector;
-    this.contextFactory = contextFactory;
+  @Mock
+  private GitRepositoryHandler handler;
+
+  @Mock
+  private GitContext context;
+
+  @Test
+  void shouldCreatePushCommand() {
+    GitRepositoryServiceProvider provider = createProvider();
+    PushCommand pushCommand = provider.getPushCommand();
+    assertThat(pushCommand).isNotNull().isInstanceOf(GitPushCommand.class);
   }
 
-  @Override
-  public GitRepositoryServiceProvider resolve(Repository repository) {
-    if (GitRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      return new GitRepositoryServiceProvider(injector, contextFactory.create(repository));
-    }
-    return null;
+  @Test
+  void shouldDelegateCloseToContext() {
+    createProvider().close();
+    verify(context).close();
   }
+
+  private GitRepositoryServiceProvider createProvider() {
+    return new GitRepositoryServiceProvider(createParentInjector(), context);
+  }
+
+  private Injector createParentInjector() {
+    return Guice.createInjector(new AbstractModule() {
+      @Override
+      protected void configure() {
+        bind(GitRepositoryHandler.class).toInstance(handler);
+      }
+    });
+  }
+
 }

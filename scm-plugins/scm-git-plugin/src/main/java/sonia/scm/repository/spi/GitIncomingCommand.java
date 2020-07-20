@@ -31,6 +31,7 @@ import org.eclipse.jgit.lib.ObjectId;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitRepositoryHandler;
 
+import javax.inject.Inject;
 import java.io.IOException;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -49,6 +50,7 @@ public class GitIncomingCommand extends AbstractGitIncomingOutgoingCommand
    *  @param handler
    * @param context
    */
+  @Inject
   GitIncomingCommand(GitRepositoryHandler handler, GitContext context)
   {
     super(handler, context);

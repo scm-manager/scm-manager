@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.api.PushResponse;
 
+import javax.inject.Inject;
 import java.io.IOException;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -55,8 +56,8 @@ public class GitPushCommand extends AbstractGitPushOrPullCommand
    *  @param handler
    * @param context
    */
-  public GitPushCommand(GitRepositoryHandler handler, GitContext context)
-  {
+  @Inject
+  public GitPushCommand(GitRepositoryHandler handler, GitContext context) {
     super(handler, context);
     this.handler = handler;
   }

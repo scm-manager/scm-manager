@@ -24,35 +24,40 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Inject;
 import com.google.inject.Injector;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.Repository;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.repository.RepositoryTestData;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-@Extension
-public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
+import static org.assertj.core.api.Assertions.assertThat;
 
-  private final Injector injector;
-  private final GitContextFactory contextFactory;
+@ExtendWith(MockitoExtension.class)
+class GitRepositoryServiceResolverTest {
 
-  @Inject
-  public GitRepositoryServiceResolver(Injector injector, GitContextFactory contextFactory) {
-    this.injector = injector;
-    this.contextFactory = contextFactory;
+  @Mock
+  private Injector injector;
+
+  @Mock
+  private GitContextFactory contextFactory;
+
+  @InjectMocks
+  private GitRepositoryServiceResolver resolver;
+
+  @Test
+  void shouldCreateRepositoryServiceProvider() {
+    GitRepositoryServiceProvider provider = resolver.resolve(RepositoryTestData.createHeartOfGold("git"));
+    assertThat(provider).isNotNull();
   }
 
-  @Override
-  public GitRepositoryServiceProvider resolve(Repository repository) {
-    if (GitRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      return new GitRepositoryServiceProvider(injector, contextFactory.create(repository));
-    }
-    return null;
+  @ParameterizedTest
+  @ValueSource(strings = { "hg","svn", "unknown"})
+  void shouldReturnNullForNonGitRepositories(String type) {
+    GitRepositoryServiceProvider provider = resolver.resolve(RepositoryTestData.createHeartOfGold(type));
+    assertThat(provider).isNull();
   }
 }
