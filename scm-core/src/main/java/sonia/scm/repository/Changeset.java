@@ -32,6 +32,7 @@ import sonia.scm.util.ValidationUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -84,6 +85,8 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
    * Trailers for this changeset like reviewers or co-authors
    */
   private Collection<Contributor> contributors;
+
+  private List<Signature> signatures;
 
   public Changeset() {}
 
@@ -347,5 +350,35 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
     } else {
       this.contributors.addAll(contributors);
     }
+  }
+
+  /**
+   * Sets a collection of signatures which belong to this changeset.
+   * @param signatures collection of signatures
+   * @since 2.3.0
+   */
+  public void setSignatures(Collection<Signature> signatures) {
+    this.signatures = new ArrayList<>(signatures);
+  }
+
+  /**
+   * Returns a immutable list of signatures.
+   * @return signatures
+   * @since 2.3.0
+   */
+  public List<Signature> getSignatures() {
+    return Collections.unmodifiableList(signatures);
+  }
+
+  /**
+   * Adds a signature to the list of signatures.
+   * @param signature
+   * @since 2.3.0
+   */
+  public void addSignature(Signature signature) {
+    if (signatures == null) {
+      signatures = new ArrayList<>();
+    }
+    signatures.add(signature);
   }
 }
