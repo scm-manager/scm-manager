@@ -1,4 +1,3 @@
-#!/bin/bash
 #
 # MIT License
 #
@@ -23,32 +22,28 @@
 # SOFTWARE.
 #
 
-set -euo pipefail
-IFS=$'\n\t'
-
-if helm-docs --version > /dev/null 2>&1; then
-  SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-  MODULE_DIR="$( cd "${SCRIPT_DIR}/../../../" >/dev/null 2>&1 && pwd )"
-
-  CHARTDIR="${MODULE_DIR}/target/chart"
-  if [ ! -d "${CHARTDIR}" ]; then
-    echo "chart directory ${CHARTDIR} does not exists"
-    echo "please run maven package before"
-    echo "https://github.com/norwoodj/helm-docs"
-    exit 1
-  fi
-
-  cd "${CHARTDIR}"
-  PAGE="docs/en/installation/k8s.md"
-  echo helm-docs --template-file="${MODULE_DIR}/src/main/docs/helm.md.gotmpl" --output-file="${MODULE_DIR}/../../${PAGE}"
-  helm-docs --template-file="../../src/main/docs/helm.md.gotmpl" --output-file="../../../../${PAGE}"
-  echo "The helm documentation was successfully generated"
-  echo "Please check the results at ${PAGE}"
-  echo "And don't forget to commit ;)"
-
-else
-  echo "helm-docs not found"
-  echo "please install helm-docs, before running this script"
-  echo "https://github.com/norwoodj/helm-docs"
-  exit 1
-fi
+{{ if .Values.ssh.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "scm-manager.fullname" . }}-ssh
+  {{- if .Values.ssh.dns }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "{{- join ".," .Values.ssh.dns }}."
+  {{- end }}
+  labels:
+    app: {{ include "scm-manager.name" . }}
+    chart: {{ include "scm-manager.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.ssh.service.type }}
+  ports:
+    - port: {{ .Values.ssh.service.port }}
+      targetPort: {{ .Values.ssh.port }}
+      protocol: TCP
+      name: ssh
+  selector:
+    app: {{ include "scm-manager.name" . }}
+    release: {{ .Release.Name }}
+{{ end }}

@@ -63,6 +63,20 @@ ingress:
   #    hosts:
   #      - scm-manager.local
 
+ssh:
+  # ssh.enabled -- Enables ssh access (requires installed ssh plugin)
+  enabled: false
+  # ssh.port -- Intenernal ssh port (must match plugin configuration)
+  port: 2222
+  service:
+    # ssh.service.type -- k8s service type for ssh
+    type: LoadBalancer
+    # ssh.service.port -- k8s service port for ssh
+    port: 2222
+  # ssh.dns -- dns names for the ssh service (requires installed external dns)
+  dns:
+    - ssh.scm-manager.local
+
 ## Enable persistence using Persistent Volume Claims
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ##

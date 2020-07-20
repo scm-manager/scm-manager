@@ -47,4 +47,9 @@ The following table list the configurable parameters of the SCM-Manager chart an
 | resources | object | `{}` | Resources allocation (Requests and Limits) |
 | service.port | int | `80` | k8s service port |
 | service.type | string | `"LoadBalancer"` | k8s service type |
+| ssh.dns | list | `["ssh.scm-manager.local"]` | dns names for the ssh service (requires installed external dns) |
+| ssh.enabled | bool | `false` | Enables ssh access (requires installed ssh plugin) |
+| ssh.port | int | `2222` | Intenernal ssh port (must match plugin configuration) |
+| ssh.service.port | int | `2222` | k8s service port for ssh |
+| ssh.service.type | string | `"LoadBalancer"` | k8s service type for ssh |
 | tolerations | list | `[]` | Toleration labels for pod assignment |
