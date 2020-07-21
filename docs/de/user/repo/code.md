@@ -42,6 +42,11 @@ Nach einem Klick auf eine Datei in den Sources landet man in der Detailansicht d
 
 ![Repository-Code-FileDetails](assets/repository-code-fileViewer.png)
 
+### Datei Annotate
+Ergänzt jede Codezeile mit entsprechenden Informationen, wann und von welchem Autor diese zuletzt geändert wurde. Mit einem Hover auf der linken Seite erscheint ein Popover mit Changeset und weiteren Informationen.
+
+![Repository-Code-FileAnnotate](assets/repository-code-fileAnnotate.png)
+
 ### Datei Historie
 Bei der Datei Details Ansicht kann man über einen Switch oben rechts auf die Historien-Ansicht wechseln. Dort werden die Commits aufgelistet, die diese Datei verändert haben.
 
