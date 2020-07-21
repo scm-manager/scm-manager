@@ -22,7 +22,13 @@ Die Übersicht der Changesets/Commits zeigt die Änderungshistorie je Branch an.
 ![Repository-Code-Changesets](assets/repository-code-changesetsView.png)
 
 ### Changeset Details
-Auf der Detailseite eines Changesets sieht man zusätzlich zu den Metadaten des Changesets sämtliche Änderungen, die in diesem Changeset enthalten sind. Die Diffs werden dabei im bekannten Format je Datei inklusive Syntax-Highlighting angezeigt.
+Auf der Detailseite eines Changesets sieht man zusätzlich zu den Metadaten (z. B. Mitwirkende und Parent-Changeset) des Changesets sämtliche Änderungen, die in diesem Changeset enthalten sind. 
+Die Mitwirkenden können zu einer detaillierten Tabelle aufklappt werden und enthalten den Autor, die Co-Autoren, den Committer und den Signierer des Changesets. 
+Die Diffs werden dabei im bekannten Format je Datei inklusive Syntax-Highlighting angezeigt. 
+Die Diffs können durch Klicken auf den blauen Balken schrittweise oder vollständig erweitert werden.
+
+Falls sich Commit Links im Format "namespace/name@commitId" in der Changeset Beschreibung befinden, werden die zu relativen SCM-Manager Links erweitert.
+Beispielsweise wird der Text hitchhiker/HeartOfGold@1a2b3c4 zu einem Link zu dem Commit 1a2b3c4 im Repository hitchhiker/HeartOfGold umgewandelt.
 
 ![Repository-Code-Changesets](assets/repository-code-changesetDetails.png)
 
@@ -30,7 +36,7 @@ Auf der Detailseite eines Changesets sieht man zusätzlich zu den Metadaten des 
 Nach einem Klick auf eine Datei in den Sources landet man in der Detailansicht der Datei. Dabei sind je nach Dateiformat unterschiedliche Ansichten zu sehen: 
 
 - Bild-Datei: Bild wird gerendert angezeigt. 
-- Markdown-Datei: Markdown wird gerendert dargestellt. Die Ansicht kann auf eine nicht gerenderte Textansicht umgeschaltet werden.
+- Markdown-Datei: Markdown wird gerendert dargestellt. Die Ansicht kann auf eine nicht gerenderte Textansicht umgeschaltet werden. Im gerenderten Markdown können ebenfalls Commit Links wie bei den Changeset Details verwendet werden.
 - Text-basierte Datei: Der Text wird angezeigt. Falls verfügbar mit Syntax-Highlighting.
 - Nicht unterstützte Formate: Ein Download-Button wird angezeigt.
 
