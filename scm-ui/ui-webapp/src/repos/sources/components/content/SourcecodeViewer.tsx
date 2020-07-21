@@ -23,7 +23,7 @@
  */
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { apiClient, ErrorNotification, Loading, SyntaxHighlighter } from "@scm-manager/ui-components";
+import { apiClient, ErrorNotification, Loading, LineNumbers } from "@scm-manager/ui-components";
 import { File, Link } from "@scm-manager/ui-types";
 
 type Props = WithTranslation & {
@@ -98,8 +98,7 @@ class SourcecodeViewer extends React.Component<Props, State> {
     if (!content) {
       return null;
     }
-
-    return <SyntaxHighlighter language={getLanguage(language)} value={content} />;
+    return <LineNumbers language={getLanguage(language)} value={content} />;
   }
 }
 

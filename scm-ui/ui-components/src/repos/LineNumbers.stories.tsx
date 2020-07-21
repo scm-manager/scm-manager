@@ -22,45 +22,12 @@
  * SOFTWARE.
  */
 
-import * as diffs from "./diffs";
+import { storiesOf } from "@storybook/react";
+import React from "react";
+import LineNumbers from "./LineNumbers";
 
-import {
-  File,
-  FileChangeType,
-  Hunk,
-  Change,
-  ChangeType,
-  BaseContext,
-  AnnotationFactory,
-  AnnotationFactoryContext,
-  DiffEventHandler,
-  DiffEventContext
-} from "./DiffTypes";
+const code = 'package main\n\nimport "fmt"\n\nfunc main() {\n  fmt.Println("Hello World")\n}\n';
 
-export { diffs };
-
-export * from "./annotate";
-export * from "./changesets";
-
-export { default as Diff } from "./Diff";
-export { default as DiffFile } from "./DiffFile";
-export { default as DiffButton } from "./DiffButton";
-export { default as LineNumbers } from "./LineNumbers";
-export { default as LoadingDiff } from "./LoadingDiff";
-export { DefaultCollapsed, DefaultCollapsedFunction } from "./defaultCollapsed";
-export { default as RepositoryAvatar } from "./RepositoryAvatar";
-export { default as RepositoryEntry } from "./RepositoryEntry";
-export { default as RepositoryEntryLink } from "./RepositoryEntryLink";
-
-export {
-  File,
-  FileChangeType,
-  Hunk,
-  Change,
-  ChangeType,
-  BaseContext,
-  AnnotationFactory,
-  AnnotationFactoryContext,
-  DiffEventHandler,
-  DiffEventContext
-};
+storiesOf("LineNumbers", module)
+  .add("Default", () => <LineNumbers language="go" value={code} />)
+  .add("Without Numbers", () => <LineNumbers language="go" value={code} showLineNumbers={false} />);
