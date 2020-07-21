@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -29,6 +29,7 @@ package sonia.scm.repository.spi;
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
 
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.api.GitHookBranchProvider;
 import sonia.scm.repository.api.GitHookMessageProvider;
 import sonia.scm.repository.api.HookBranchProvider;
@@ -63,12 +64,12 @@ public class GitHookContextProvider extends HookContextProvider
    * @param receivePack git receive pack
    * @param receiveCommands received commands
    */
-  public GitHookContextProvider(ReceivePack receivePack,
-    List<ReceiveCommand> receiveCommands)
+  public GitHookContextProvider(GitChangesetConverterFactory converterFactory, ReceivePack receivePack,
+                                List<ReceiveCommand> receiveCommands)
   {
     this.receivePack = receivePack;
     this.receiveCommands = receiveCommands;
-    this.changesetProvider = new GitHookChangesetProvider(receivePack,
+    this.changesetProvider = new GitHookChangesetProvider(converterFactory, receivePack,
       receiveCommands);
   }
 

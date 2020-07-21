@@ -43,6 +43,7 @@ import sonia.scm.NotFoundException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverter;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.util.IOUtil;
@@ -71,6 +72,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
   private static final Logger logger =
     LoggerFactory.getLogger(GitLogCommand.class);
   public static final String REVISION = "Revision";
+  private final GitChangesetConverterFactory converterFactory;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -82,9 +84,10 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    *
    */
   @Inject
-  GitLogCommand(GitContext context)
+  GitLogCommand(GitContext context, GitChangesetConverterFactory converterFactory)
   {
     super(context);
+    this.converterFactory = converterFactory;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -122,7 +125,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
 
         if (commit != null)
         {
-          converter = new GitChangesetConverter(gr, revWalk);
+          converter = converterFactory.create(gr, revWalk);
 
           if (isBranchRequested(request)) {
             String branch = request.getBranch();
@@ -233,7 +236,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
 
         revWalk = new RevWalk(repository);
 
-        converter = new GitChangesetConverter(repository, revWalk);
+        converter = converterFactory.create(repository, revWalk);
 
         if (!Strings.isNullOrEmpty(request.getPath())) {
           revWalk.setTreeFilter(

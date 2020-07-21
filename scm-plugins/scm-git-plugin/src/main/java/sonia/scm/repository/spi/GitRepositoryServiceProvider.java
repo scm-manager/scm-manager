@@ -117,7 +117,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public LogCommand getLogCommand() {
-    return new GitLogCommand(context);
+    return commandInjector.getInstance(GitLogCommand.class);
   }
 
   @Override

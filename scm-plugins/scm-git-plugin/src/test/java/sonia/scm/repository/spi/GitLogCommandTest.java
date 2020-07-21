@@ -31,6 +31,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.Person;
@@ -293,8 +294,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     return new File(repositoryDirectory, "HEAD");
   }
 
-  private GitLogCommand createCommand()
-  {
-    return new GitLogCommand(createContext());
+  private GitLogCommand createCommand() {
+    return new GitLogCommand(createContext(), new GitChangesetConverterFactory());
   }
 }

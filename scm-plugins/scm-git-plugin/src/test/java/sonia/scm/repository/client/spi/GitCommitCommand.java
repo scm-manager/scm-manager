@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.client.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -32,6 +32,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.GitChangesetConverter;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.client.api.RepositoryClientException;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -71,7 +72,8 @@ public class GitCommitCommand implements CommitCommand
   @Override
   public Changeset commit(CommitRequest request) throws IOException
   {
-    try (GitChangesetConverter converter = new GitChangesetConverter(git.getRepository()))
+    GitChangesetConverterFactory converterFactory = new GitChangesetConverterFactory();
+    try (GitChangesetConverter converter = converterFactory.create(git.getRepository()))
     {
       RevCommit commit = git.commit()
         .setAuthor(request.getAuthor().getName(), request.getAuthor().getMail())

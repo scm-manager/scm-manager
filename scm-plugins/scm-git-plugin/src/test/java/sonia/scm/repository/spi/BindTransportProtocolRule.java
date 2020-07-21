@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.transport.ScmTransportProtocol;
 import org.eclipse.jgit.transport.Transport;
 import org.junit.rules.ExternalResource;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.RepositoryManager;
@@ -47,7 +48,7 @@ public class BindTransportProtocolRule extends ExternalResource {
     RepositoryManager repositoryManager = mock(RepositoryManager.class);
     HookEventFacade hookEventFacade = new HookEventFacade(of(repositoryManager), hookContextFactory);
     GitRepositoryHandler gitRepositoryHandler = mock(GitRepositoryHandler.class);
-    scmTransportProtocol = new ScmTransportProtocol(of(hookEventFacade), of(gitRepositoryHandler));
+    scmTransportProtocol = new ScmTransportProtocol(of(new GitChangesetConverterFactory()), of(hookEventFacade), of(gitRepositoryHandler));
 
     Transport.register(scmTransportProtocol);
 

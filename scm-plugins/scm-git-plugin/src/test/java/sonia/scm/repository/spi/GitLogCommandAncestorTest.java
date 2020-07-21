@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import org.junit.Test;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.GitChangesetConverterFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -108,8 +109,7 @@ public class GitLogCommandAncestorTest extends AbstractGitCommandTestBase
     createCommand().getChangesets(request);
   }
 
-  private GitLogCommand createCommand()
-  {
-    return new GitLogCommand(createContext());
+  private GitLogCommand createCommand() {
+    return new GitLogCommand(createContext(), new GitChangesetConverterFactory());
   }
 }

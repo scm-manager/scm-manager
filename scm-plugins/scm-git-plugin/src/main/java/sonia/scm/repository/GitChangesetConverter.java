@@ -67,7 +67,7 @@ public class GitChangesetConverter implements Closeable
    *
    * @param repository
    */
-  public GitChangesetConverter(org.eclipse.jgit.lib.Repository repository)
+  GitChangesetConverter(org.eclipse.jgit.lib.Repository repository)
   {
     this(repository, null);
   }
@@ -79,7 +79,7 @@ public class GitChangesetConverter implements Closeable
    * @param repository
    * @param revWalk
    */
-  public GitChangesetConverter(org.eclipse.jgit.lib.Repository repository,
+  GitChangesetConverter(org.eclipse.jgit.lib.Repository repository,
     RevWalk revWalk)
   {
     this.repository = repository;

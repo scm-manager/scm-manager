@@ -22,25 +22,19 @@
  * SOFTWARE.
  */
 
-package sonia.scm.protocolcommand.git;
+package sonia.scm.repository;
 
-import com.google.inject.Inject;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.ReceivePack;
-import sonia.scm.protocolcommand.RepositoryContext;
-import sonia.scm.repository.GitChangesetConverterFactory;
-import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.spi.HookEventFacade;
+import org.eclipse.jgit.revwalk.RevWalk;
 
-public class ScmReceivePackFactory extends BaseReceivePackFactory<RepositoryContext> {
+public class GitChangesetConverterFactory {
 
-  @Inject
-  public ScmReceivePackFactory(GitChangesetConverterFactory converterFactory, GitRepositoryHandler handler, HookEventFacade hookEventFacade) {
-    super(converterFactory, handler, hookEventFacade);
+  public GitChangesetConverter create(Repository repository) {
+    return new GitChangesetConverter(repository);
   }
 
-  @Override
-  protected ReceivePack createBasicReceivePack(RepositoryContext repositoryContext, Repository repository) {
-    return new ReceivePack(repository);
+  public GitChangesetConverter create(Repository repository, RevWalk revWalk) {
+    return new GitChangesetConverter(repository, revWalk);
   }
+
 }

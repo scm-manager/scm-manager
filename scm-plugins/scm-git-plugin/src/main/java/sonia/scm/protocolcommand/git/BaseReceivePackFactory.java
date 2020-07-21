@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.protocolcommand.git;
 
 import org.eclipse.jgit.lib.Repository;
@@ -29,6 +29,7 @@ import org.eclipse.jgit.transport.ReceivePack;
 import org.eclipse.jgit.transport.resolver.ReceivePackFactory;
 import org.eclipse.jgit.transport.resolver.ServiceNotAuthorizedException;
 import org.eclipse.jgit.transport.resolver.ServiceNotEnabledException;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.web.CollectingPackParserListener;
@@ -39,9 +40,9 @@ public abstract class BaseReceivePackFactory<T> implements ReceivePackFactory<T>
   private final GitRepositoryHandler handler;
   private final GitReceiveHook hook;
 
-  protected BaseReceivePackFactory(GitRepositoryHandler handler, HookEventFacade hookEventFacade) {
+  protected BaseReceivePackFactory(GitChangesetConverterFactory converterFactory, GitRepositoryHandler handler, HookEventFacade hookEventFacade) {
     this.handler = handler;
-    this.hook = new GitReceiveHook(hookEventFacade, handler);
+    this.hook = new GitReceiveHook(converterFactory, hookEventFacade, handler);
   }
 
   @Override

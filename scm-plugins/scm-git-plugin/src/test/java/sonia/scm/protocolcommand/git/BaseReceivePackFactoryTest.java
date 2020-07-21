@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.protocolcommand.git;
 
 import org.eclipse.jgit.api.Git;
@@ -38,6 +38,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.web.CollectingPackParserListener;
@@ -82,7 +83,7 @@ public class BaseReceivePackFactoryTest {
     ReceivePack receivePack = new ReceivePack(repository);
     when(wrappedReceivePackFactory.create(request, repository)).thenReturn(receivePack);
 
-    factory = new BaseReceivePackFactory<Object>(handler, null) {
+    factory = new BaseReceivePackFactory<Object>(new GitChangesetConverterFactory(), handler, null) {
       @Override
       protected ReceivePack createBasicReceivePack(Object request, Repository repository) throws ServiceNotEnabledException, ServiceNotAuthorizedException {
         return wrappedReceivePackFactory.create(request, repository);

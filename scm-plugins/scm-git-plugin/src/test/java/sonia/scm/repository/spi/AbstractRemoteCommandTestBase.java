@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -40,6 +40,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.repository.Changeset;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.user.User;
@@ -110,23 +111,7 @@ public class AbstractRemoteCommandTestBase
   {
 
     // store reference to handle weak references
-    proto = new ScmTransportProtocol(new Provider<HookEventFacade>()
-    {
-
-      @Override
-      public HookEventFacade get()
-      {
-        return null;
-      }
-    }, new Provider<GitRepositoryHandler>()
-    {
-
-      @Override
-      public GitRepositoryHandler get()
-      {
-        return null;
-      }
-    });
+    proto = new ScmTransportProtocol(GitChangesetConverterFactory::new, () -> null, () -> null);
     Transport.register(proto);
   }
 
