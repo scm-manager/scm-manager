@@ -7,7 +7,7 @@ Unter den Repository Einstellungen befinden sich zwei Einträge. Wenn weitere Pl
 ### Generell
 Unter dem Eintrag "Generell" kann man die Zusatzinformationen zum Repository editieren. Da es sich im Beispiel um ein Git Repository handelt, kann ebenfalls der Standard-Branch für dieses Repository gesetzt werden. Der Standard-Branch sorgt dafür, dass beim Arbeiten mit diesem Repository dieser Branch vorrangig geöffnet wird, falls kein expliziter Branch ausgewählt wurde.
 
-Über den Button unten auf dieser Seite besteht noch die Möglichkeit dieses Repository aus dem SCM-Manager zu löschen. Dieser Vorgang kann nicht rückgängig gemacht werden.
+Innerhalb der Gefahrenzone unten auf der Seite gibt es mit entsprechenden Rechten die Möglichkeit das Repository umzubenennen oder zu löschen. Wenn in der globalen SCM-Manager Konfiguration die Namespace Strategie `benutzerdefiniert` ausgewählt ist, kann zusätzlich zum Repository Namen auch der Namespace umbenannt werden.
 
 ![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
 

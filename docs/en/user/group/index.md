@@ -10,7 +10,7 @@ The group area includes everything that can be broken down into a group of sever
 It is possible to create groups in SCM-Manager to not authorize each user individually. Groups can be authorized and can contain an unlimited number of users.
 
 ### Overview
-The groups overview shows a list of all groups that are existing. Groups are distinguished between internal and external groups. Internal groups are groups that were created in SCM-Manager and are indicated by a house icon. External groups were created by external sources like a connected LDAP instance and have a world icon.
+The groups overview shows a list of all groups that are existing. Groups are distinguished between internal and external groups. Internal groups are groups that were created in SCM-Manager and are indicated by a house icon. External groups were created for [external sources](./external.md) like a connected LDAP instance and have a world icon.
 
 ![Groups Overview](assets/groups-overview.png)
 
