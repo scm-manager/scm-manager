@@ -39423,6 +39423,507 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
 </footer>
 `;
 
+exports[`Storyshots LineNumbers Default 1`] = `
+<div
+  style={
+    Object {
+      "position": "relative",
+    }
+  }
+>
+  <pre
+    style={
+      Object {
+        "background": "#FFFFFF",
+        "color": "#434f54",
+        "display": "block",
+        "overflowX": "auto",
+        "padding": "0.5em",
+      }
+    }
+  >
+    <code>
+      <div
+        className="LineNumbers__SingleLine-sc-1303f48-0 lhSVNj"
+      >
+        <div
+          className="LineNumbers__InnerLineNumber-sc-1303f48-1 dgcCZC"
+        >
+          1
+        </div>
+        <div
+          className="LineNumbers__InnerLineContent-sc-1303f48-2 iVTQRF"
+        >
+          <span
+            style={Object {}}
+          >
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              package
+            </span>
+            <span
+              style={Object {}}
+            >
+               main
+
+            </span>
+          </span>
+        </div>
+      </div>
+      <div
+        className="LineNumbers__SingleLine-sc-1303f48-0 lhSVNj"
+      >
+        <div
+          className="LineNumbers__InnerLineNumber-sc-1303f48-1 dgcCZC"
+        >
+          2
+        </div>
+        <div
+          className="LineNumbers__InnerLineContent-sc-1303f48-2 iVTQRF"
+        >
+          <span
+            style={Object {}}
+          >
+            
+
+          </span>
+        </div>
+      </div>
+      <div
+        className="LineNumbers__SingleLine-sc-1303f48-0 lhSVNj"
+      >
+        <div
+          className="LineNumbers__InnerLineNumber-sc-1303f48-1 dgcCZC"
+        >
+          3
+        </div>
+        <div
+          className="LineNumbers__InnerLineContent-sc-1303f48-2 iVTQRF"
+        >
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+              
+            </span>
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              import
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              style={
+                Object {
+                  "color": "#005C5F",
+                }
+              }
+            >
+              "fmt"
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+      </div>
+      <div
+        className="LineNumbers__SingleLine-sc-1303f48-0 lhSVNj"
+      >
+        <div
+          className="LineNumbers__InnerLineNumber-sc-1303f48-1 dgcCZC"
+        >
+          4
+        </div>
+        <div
+          className="LineNumbers__InnerLineContent-sc-1303f48-2 iVTQRF"
+        >
+          <span
+            style={Object {}}
+          >
+            
+
+          </span>
+        </div>
+      </div>
+      <div
+        className="LineNumbers__SingleLine-sc-1303f48-0 lhSVNj"
+      >
+        <div
+          className="LineNumbers__InnerLineNumber-sc-1303f48-1 dgcCZC"
+        >
+          5
+        </div>
+        <div
+          className="LineNumbers__InnerLineContent-sc-1303f48-2 iVTQRF"
+        >
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+              
+            </span>
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              func
+            </span>
+            <span
+              style={
+                Object {
+                  "color": "#728E00",
+                }
+              }
+            >
+               
+            </span>
+            <span
+              style={
+                Object {
+                  "color": "#880000",
+                  "fontWeight": "bold",
+                }
+              }
+            >
+              main
+            </span>
+            <span
+              className="hljs-params"
+              style={
+                Object {
+                  "color": "#728E00",
+                }
+              }
+            >
+              ()
+            </span>
+            <span
+              style={Object {}}
+            >
+               {
+
+            </span>
+          </span>
+        </div>
+      </div>
+      <div
+        className="LineNumbers__SingleLine-sc-1303f48-0 lhSVNj"
+      >
+        <div
+          className="LineNumbers__InnerLineNumber-sc-1303f48-1 dgcCZC"
+        >
+          6
+        </div>
+        <div
+          className="LineNumbers__InnerLineContent-sc-1303f48-2 iVTQRF"
+        >
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                fmt.Println(
+            </span>
+            <span
+              style={
+                Object {
+                  "color": "#005C5F",
+                }
+              }
+            >
+              "Hello World"
+            </span>
+            <span
+              style={Object {}}
+            >
+              )
+
+            </span>
+          </span>
+        </div>
+      </div>
+      <div
+        className="LineNumbers__SingleLine-sc-1303f48-0 lhSVNj"
+      >
+        <div
+          className="LineNumbers__InnerLineNumber-sc-1303f48-1 dgcCZC"
+        >
+          7
+        </div>
+        <div
+          className="LineNumbers__InnerLineContent-sc-1303f48-2 iVTQRF"
+        >
+          <span
+            style={Object {}}
+          >
+            }
+
+          </span>
+        </div>
+      </div>
+    </code>
+  </pre>
+</div>
+`;
+
+exports[`Storyshots LineNumbers Without Numbers 1`] = `
+<div
+  style={
+    Object {
+      "position": "relative",
+    }
+  }
+>
+  <pre
+    style={
+      Object {
+        "background": "#FFFFFF",
+        "color": "#434f54",
+        "display": "block",
+        "overflowX": "auto",
+        "padding": "0.5em",
+      }
+    }
+  >
+    <code>
+      <div
+        className="LineNumbers__SingleLine-sc-1303f48-0 lhSVNj"
+      >
+        <div
+          className="LineNumbers__InnerLineContent-sc-1303f48-2 iVTQRF"
+        >
+          <span
+            style={Object {}}
+          >
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              package
+            </span>
+            <span
+              style={Object {}}
+            >
+               main
+
+            </span>
+          </span>
+        </div>
+      </div>
+      <div
+        className="LineNumbers__SingleLine-sc-1303f48-0 lhSVNj"
+      >
+        <div
+          className="LineNumbers__InnerLineContent-sc-1303f48-2 iVTQRF"
+        >
+          <span
+            style={Object {}}
+          >
+            
+
+          </span>
+        </div>
+      </div>
+      <div
+        className="LineNumbers__SingleLine-sc-1303f48-0 lhSVNj"
+      >
+        <div
+          className="LineNumbers__InnerLineContent-sc-1303f48-2 iVTQRF"
+        >
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+              
+            </span>
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              import
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              style={
+                Object {
+                  "color": "#005C5F",
+                }
+              }
+            >
+              "fmt"
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+      </div>
+      <div
+        className="LineNumbers__SingleLine-sc-1303f48-0 lhSVNj"
+      >
+        <div
+          className="LineNumbers__InnerLineContent-sc-1303f48-2 iVTQRF"
+        >
+          <span
+            style={Object {}}
+          >
+            
+
+          </span>
+        </div>
+      </div>
+      <div
+        className="LineNumbers__SingleLine-sc-1303f48-0 lhSVNj"
+      >
+        <div
+          className="LineNumbers__InnerLineContent-sc-1303f48-2 iVTQRF"
+        >
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+              
+            </span>
+            <span
+              style={
+                Object {
+                  "color": "#00979D",
+                }
+              }
+            >
+              func
+            </span>
+            <span
+              style={
+                Object {
+                  "color": "#728E00",
+                }
+              }
+            >
+               
+            </span>
+            <span
+              style={
+                Object {
+                  "color": "#880000",
+                  "fontWeight": "bold",
+                }
+              }
+            >
+              main
+            </span>
+            <span
+              className="hljs-params"
+              style={
+                Object {
+                  "color": "#728E00",
+                }
+              }
+            >
+              ()
+            </span>
+            <span
+              style={Object {}}
+            >
+               {
+
+            </span>
+          </span>
+        </div>
+      </div>
+      <div
+        className="LineNumbers__SingleLine-sc-1303f48-0 lhSVNj"
+      >
+        <div
+          className="LineNumbers__InnerLineContent-sc-1303f48-2 iVTQRF"
+        >
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                fmt.Println(
+            </span>
+            <span
+              style={
+                Object {
+                  "color": "#005C5F",
+                }
+              }
+            >
+              "Hello World"
+            </span>
+            <span
+              style={Object {}}
+            >
+              )
+
+            </span>
+          </span>
+        </div>
+      </div>
+      <div
+        className="LineNumbers__SingleLine-sc-1303f48-0 lhSVNj"
+      >
+        <div
+          className="LineNumbers__InnerLineContent-sc-1303f48-2 iVTQRF"
+        >
+          <span
+            style={Object {}}
+          >
+            }
+
+          </span>
+        </div>
+      </div>
+    </code>
+  </pre>
+</div>
+`;
+
 exports[`Storyshots Loading Default 1`] = `
 <div>
   <div
