@@ -24,17 +24,22 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.common.base.Predicate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.cache.Cache;
+import sonia.scm.cache.CacheManager;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.PreReceiveRepositoryHookEvent;
+import sonia.scm.repository.RepositoryPredicate;
 import sonia.scm.repository.api.BranchRequest;
+import sonia.scm.repository.api.BranchesCommandBuilder;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 
@@ -46,6 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -56,9 +62,15 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
   private HookContextFactory hookContextFactory;
   @Mock
   private ScmEventBus eventBus;
+  @Mock
+  private CacheManager cacheManager;
+  @Mock
+  private Cache<Object, Object> cache;
 
   @Test
   public void shouldCreateBranchWithDefinedSourceBranch() throws IOException {
+    when(cacheManager.getCache(BranchesCommandBuilder.CACHE_NAME)).thenReturn(cache);
+
     GitContext context = createContext();
 
     Branch source = findBranch(context, "mergeable");
@@ -71,6 +83,8 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
 
     Branch newBranch = findBranch(context, "new_branch");
     assertThat(newBranch.getRevision()).isEqualTo(source.getRevision());
+
+    verify(cache).removeAll((Predicate) any(RepositoryPredicate.class));
   }
 
   private Branch findBranch(GitContext context, String name) throws IOException {
@@ -80,6 +94,7 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void shouldCreateBranch() throws IOException {
+    when(cacheManager.getCache(BranchesCommandBuilder.CACHE_NAME)).thenReturn(cache);
     GitContext context = createContext();
 
     assertThat(readBranches(context)).filteredOn(b -> b.getName().equals("new_branch")).isEmpty();
@@ -90,6 +105,8 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
     createCommand().branch(branchRequest);
 
     assertThat(readBranches(context)).filteredOn(b -> b.getName().equals("new_branch")).isNotEmpty();
+
+    verify(cache).removeAll((Predicate) any(RepositoryPredicate.class));
   }
 
   @Test
@@ -107,7 +124,7 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitBranchCommand createCommand() {
-    return new GitBranchCommand(createContext(), hookContextFactory, eventBus);
+    return new GitBranchCommand(createContext(), hookContextFactory, eventBus, cacheManager);
   }
 
   private List<Branch> readBranches(GitContext context) throws IOException {
@@ -116,6 +133,7 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void shouldPostCreateEvents() {
+    when(cacheManager.getCache(BranchesCommandBuilder.CACHE_NAME)).thenReturn(cache);
     ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
     doNothing().when(eventBus).post(captor.capture());
     when(hookContextFactory.createContext(any(), any())).thenAnswer(this::createMockedContext);

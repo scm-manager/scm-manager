@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
+import sonia.scm.cache.CacheManager;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.GitRepositoryHandler;
@@ -38,16 +39,16 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
+public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class GitRepositoryServiceProvider extends RepositoryServiceProvider
-{
+  private final GitContext context;
+  private final GitRepositoryHandler handler;
+  private final LfsBlobStoreFactory lfsBlobStoreFactory;
+  private final HookContextFactory hookContextFactory;
+  private final ScmEventBus eventBus;
+  private final SyncAsyncExecutorProvider executorProvider;
+  private final CacheManager cacheManager;
 
-  /** Field description */
   //J-
   public static final Set<Command> COMMANDS = ImmutableSet.of(
     Command.BLAME,
@@ -69,102 +70,48 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   protected static final Set<Feature> FEATURES = EnumSet.of(Feature.INCOMING_REVISION);
   //J+
 
-  //~--- constructors ---------------------------------------------------------
-
-  public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory, HookContextFactory hookContextFactory, ScmEventBus eventBus, SyncAsyncExecutorProvider executorProvider) {
+  public GitRepositoryServiceProvider(GitRepositoryHandler handler, Repository repository, GitRepositoryConfigStoreProvider storeProvider, LfsBlobStoreFactory lfsBlobStoreFactory, HookContextFactory hookContextFactory, ScmEventBus eventBus, SyncAsyncExecutorProvider executorProvider, CacheManager cacheManager) {
     this.handler = handler;
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
     this.executorProvider = executorProvider;
+    this.cacheManager = cacheManager;
     this.context = new GitContext(handler.getDirectory(repository.getId()), repository, storeProvider);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Override
-  public void close() throws IOException
-  {
+  public void close() throws IOException {
     context.close();
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public BlameCommand getBlameCommand()
-  {
+  public BlameCommand getBlameCommand() {
     return new GitBlameCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public BranchesCommand getBranchesCommand()
-  {
+  public BranchesCommand getBranchesCommand() {
     return new GitBranchesCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public BranchCommand getBranchCommand()
-  {
-    return new GitBranchCommand(context, hookContextFactory, eventBus);
+  public BranchCommand getBranchCommand() {
+    return new GitBranchCommand(context, hookContextFactory, eventBus, cacheManager);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public BrowseCommand getBrowseCommand()
-  {
+  public BrowseCommand getBrowseCommand() {
     return new GitBrowseCommand(context, lfsBlobStoreFactory, executorProvider.createExecutorWithDefaultTimeout());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public CatCommand getCatCommand()
-  {
+  public CatCommand getCatCommand() {
     return new GitCatCommand(context, lfsBlobStoreFactory);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public DiffCommand getDiffCommand()
-  {
+  public DiffCommand getDiffCommand() {
     return new GitDiffCommand(context);
   }
 
@@ -173,27 +120,13 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     return new GitDiffResultCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public IncomingCommand getIncomingCommand()
-  {
+  public IncomingCommand getIncomingCommand() {
     return new GitIncomingCommand(handler, context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public LogCommand getLogCommand()
-  {
+  public LogCommand getLogCommand() {
     return new GitLogCommand(context);
   }
 
@@ -202,63 +135,28 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     return new GitModificationsCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public OutgoingCommand getOutgoingCommand()
-  {
+  public OutgoingCommand getOutgoingCommand() {
     return new GitOutgoingCommand(handler, context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public PullCommand getPullCommand()
-  {
+  public PullCommand getPullCommand() {
     return new GitPullCommand(handler, context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public PushCommand getPushCommand()
-  {
+  public PushCommand getPushCommand() {
     return new GitPushCommand(handler, context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Set<Command> getSupportedCommands()
-  {
+  public Set<Command> getSupportedCommands() {
     return COMMANDS;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public TagsCommand getTagsCommand()
-  {
+  public TagsCommand getTagsCommand() {
     return new GitTagsCommand(context);
   }
 
@@ -276,19 +174,4 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   public Set<Feature> getSupportedFeatures() {
     return FEATURES;
   }
-//~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final GitContext context;
-
-  /** Field description */
-  private final GitRepositoryHandler handler;
-
-  private final LfsBlobStoreFactory lfsBlobStoreFactory;
-
-  private final HookContextFactory hookContextFactory;
-
-  private final ScmEventBus eventBus;
-
-  private final SyncAsyncExecutorProvider executorProvider;
 }

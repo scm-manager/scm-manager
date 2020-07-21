@@ -56,7 +56,7 @@ public final class BranchesCommandBuilder
 {
 
   /** name of the cache */
-  static final String CACHE_NAME = "sonia.cache.cmd.branches";
+  public static final String CACHE_NAME = "sonia.cache.cmd.branches";
 
   /**
    * the logger for BranchesCommandBuilder

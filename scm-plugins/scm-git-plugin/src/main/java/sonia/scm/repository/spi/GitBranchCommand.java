@@ -24,10 +24,13 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.common.base.Predicate;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.CannotDeleteCurrentBranchException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
+import sonia.scm.cache.Cache;
+import sonia.scm.cache.CacheManager;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.GitUtil;
@@ -36,7 +39,9 @@ import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.PreReceiveRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
+import sonia.scm.repository.RepositoryPredicate;
 import sonia.scm.repository.api.BranchRequest;
+import sonia.scm.repository.api.BranchesCommandBuilder;
 import sonia.scm.repository.api.HookBranchProvider;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
@@ -55,11 +60,13 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
 
   private final HookContextFactory hookContextFactory;
   private final ScmEventBus eventBus;
+  private final Cache<?, ?> cache;
 
-  GitBranchCommand(GitContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
+  GitBranchCommand(GitContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus, CacheManager cacheManager) {
     super(context);
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
+    this.cache = cacheManager.getCache(BranchesCommandBuilder.CACHE_NAME);
   }
 
   @Override
@@ -68,6 +75,7 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
       RepositoryHookEvent hookEvent = createBranchHookEvent(BranchHookContextProvider.createHookEvent(request.getNewBranch()));
       eventBus.post(new PreReceiveRepositoryHookEvent(hookEvent));
       Ref ref = git.branchCreate().setStartPoint(request.getParentBranch()).setName(request.getNewBranch()).call();
+      clearCache(hookEvent);
       eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
       return Branch.normalBranch(request.getNewBranch(), GitUtil.getId(ref.getObjectId()));
     } catch (GitAPIException | IOException ex) {
@@ -90,6 +98,14 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
       throw new CannotDeleteDefaultBranchException(context.getRepository(), branchName);
     } catch (GitAPIException | IOException ex) {
       throw new InternalRepositoryException(entity(context.getRepository()), String.format("Could not delete branch: %s", branchName));
+    }
+  }
+
+  private void clearCache(RepositoryHookEvent event) {
+    if (event != null) {
+      cache.removeAll((Predicate) new RepositoryPredicate(event));
+    } else {
+      cache.clear();
     }
   }
 
