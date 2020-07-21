@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation, withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 // @ts-ignore
@@ -39,6 +39,7 @@ import HunkExpandLink from "./HunkExpandLink";
 import { Modal } from "../modals";
 import ErrorNotification from "../ErrorNotification";
 import HunkExpandDivider from "./HunkExpandDivider";
+import Tooltip from "../Tooltip";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
@@ -88,6 +89,10 @@ const HunkDivider = styled.hr`
 
 const ChangeTypeTag = styled(Tag)`
   margin-left: 0.75rem;
+`;
+
+const LeftMarginSpan = styled.span`
+  margin-left: 0.25rem;
 `;
 
 class DiffFile extends React.Component<Props, State> {
@@ -309,7 +314,11 @@ class DiffFile extends React.Component<Props, State> {
     if (file._links?.lines) {
       items.push(this.createHunkHeader(expandableHunk));
     } else if (i > 0) {
-      items.push(<Decoration><HunkDivider /></Decoration>);
+      items.push(
+        <Decoration>
+          <HunkDivider />
+        </Decoration>
+      );
     }
 
     items.push(
@@ -461,6 +470,7 @@ class DiffFile extends React.Component<Props, State> {
               <TitleWrapper className={classNames("is-ellipsis-overflow", "is-size-6")}>
                 {this.renderFileTitle(file)}
               </TitleWrapper>
+              <LinkToFile file={file} />
               {this.renderChangeTag(file)}
             </FullWidthTitleHeader>
             {sideBySideToggle}
@@ -471,5 +481,16 @@ class DiffFile extends React.Component<Props, State> {
     );
   }
 }
+
+const LinkToFile: FC<Props> = ({ file }) => {
+  const [t] = useTranslation("repos");
+  return (
+    <LeftMarginSpan>
+      <Tooltip location="top" message={t("diff.jumpToFile")}>
+        <Icon iconStyle="far" name="file-alt" color="grey" className="fa-sm" />
+      </Tooltip>
+    </LeftMarginSpan>
+  );
+};
 
 export default withTranslation("repos")(DiffFile);

@@ -223,6 +223,7 @@
     }
   },
   "diff": {
+    "jumpToFile": "Zur Datei springen",
     "sideBySide": "Zur zweispaltigen Ansicht wechseln",
     "combined": "Zur kombinierten Ansicht wechseln",
     "noDiffFound": "Kein Diff zwischen den ausgewählten Branches gefunden.",
