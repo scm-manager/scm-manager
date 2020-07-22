@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.apache.commons.lang.StringUtils;
@@ -48,6 +48,7 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
   private String commitMessage;
   private String branch;
   private String expectedRevision;
+  private boolean defaultPath;
 
   @Override
   public void reset() {
@@ -55,6 +56,7 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
     author = null;
     commitMessage = null;
     branch = null;
+    defaultPath = false;
   }
 
   public void addRequest(PartialRequest request) {
@@ -93,6 +95,10 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
     return expectedRevision;
   }
 
+  public boolean isDefaultPath() {
+    return defaultPath;
+  }
+
   @Override
   public boolean isValid() {
     return StringUtils.isNotEmpty(commitMessage) && !requests.isEmpty();
@@ -100,6 +106,10 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
 
   public void setExpectedRevision(String expectedRevision) {
     this.expectedRevision = expectedRevision;
+  }
+
+  public void setDefaultPath(boolean defaultPath) {
+    this.defaultPath = defaultPath;
   }
 
   public interface PartialRequest {

@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Adding start delay to liveness and readiness probes in helm chart template
+- Init svn repositories with trunk folder ([#1259](https://github.com/scm-manager/scm-manager/pull/1259))
 
 ### Fixed
 - Fixed file extension detection with new spotter version
