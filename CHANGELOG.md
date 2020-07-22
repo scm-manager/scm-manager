@@ -8,7 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add branch link provider to access branch links in plugins ([#1243](https://github.com/scm-manager/scm-manager/pull/1243))
 - Add key value input field component ([#1246](https://github.com/scm-manager/scm-manager/pull/1246))
-- Add Jexl parser ([#1251](https://github.com/scm-manager/scm-manager/pull/1251))
 - Update installed optional plugin dependencies upon plugin upgrade ([#1260](https://github.com/scm-manager/scm-manager/pull/1260))
 
 ### Changed
