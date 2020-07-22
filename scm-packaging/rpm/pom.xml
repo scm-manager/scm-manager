@@ -62,6 +62,30 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/rpm/etc/scm</outputDirectory>
+              <resources>          
+                <resource>
+                  <directory>src/main/fs/etc/scm</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>              
+            </configuration>            
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>3.1.2</version>
         <executions>
@@ -172,7 +196,7 @@
 
             <entry>
               <name>/etc/scm/logging.xml</name>
-              <file>src/main/fs/etc/scm/logging.xml</file>
+              <file>${project.build.directory}/rpm/etc/scm/logging.xml</file>
               <user>root</user>
               <group>scm</group>
               <mode>0640</mode>
@@ -181,7 +205,7 @@
 
             <entry>
               <name>/etc/scm/server-config.xml</name>
-              <file>src/main/fs/etc/scm/server-config.xml</file>
+              <file>${project.build.directory}/rpm/etc/scm/server-config.xml</file>
               <user>root</user>
               <group>scm</group>
               <mode>0640</mode>
