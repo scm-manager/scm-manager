@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix incorrect trimming of whitespaces in helm chart templates 
 - Fixed error on empty diff expand response ([#1247](https://github.com/scm-manager/scm-manager/pull/1247))
 - Ignore ports on proxy exclusions ([#1256](https://github.com/scm-manager/scm-manager/pull/1256))
+- Invalidate branches cache synchronously on create new branch ([#1261](https://github.com/scm-manager/scm-manager/pull/1261))
 
 ## [2.2.0] - 2020-07-03
 ### Added

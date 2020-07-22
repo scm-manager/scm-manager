@@ -32,6 +32,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Branch;
+import sonia.scm.repository.BranchCreatedEvent;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.PreReceiveRepositoryHookEvent;
 import sonia.scm.repository.api.BranchRequest;
@@ -129,6 +130,7 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
     List<Object> events = captor.getAllValues();
     assertThat(events.get(0)).isInstanceOf(PreReceiveRepositoryHookEvent.class);
     assertThat(events.get(1)).isInstanceOf(PostReceiveRepositoryHookEvent.class);
+    assertThat(events.get(2)).isInstanceOf(BranchCreatedEvent.class);
 
     PreReceiveRepositoryHookEvent event = (PreReceiveRepositoryHookEvent) events.get(0);
     assertThat(event.getContext().getBranchProvider().getCreatedOrModified()).containsExactly("new_branch");

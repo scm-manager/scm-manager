@@ -42,6 +42,7 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.BranchCreatedEvent;
 import sonia.scm.repository.ClearRepositoryCacheEvent;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
@@ -287,6 +288,7 @@ public final class RepositoryServiceFactory
   {
 
     private final Set<Cache<?, ?>> caches = Sets.newHashSet();
+    private final CacheManager cacheManager;
 
     /**
      * Constructs a new instance and collect all repository relevant
@@ -296,6 +298,7 @@ public final class RepositoryServiceFactory
      */
     public CacheClearHook(CacheManager cacheManager)
     {
+      this.cacheManager = cacheManager;
       this.caches.add(cacheManager.getCache(BlameCommandBuilder.CACHE_NAME));
       this.caches.add(cacheManager.getCache(BrowseCommandBuilder.CACHE_NAME));
       this.caches.add(cacheManager.getCache(LogCommandBuilder.CACHE_NAME));
@@ -347,7 +350,14 @@ public final class RepositoryServiceFactory
       }
     }
 
-    @SuppressWarnings("unchecked")
+    @Subscribe(async = false)
+    @SuppressWarnings({"unchecked", "java:S3740", "rawtypes"})
+    public void onEvent(BranchCreatedEvent event) {
+      RepositoryCacheKeyPredicate predicate = new RepositoryCacheKeyPredicate(event.getRepository().getId());
+      cacheManager.getCache(BranchesCommandBuilder.CACHE_NAME).removeAll(predicate);
+    }
+
+    @SuppressWarnings({"unchecked", "java:S3740", "rawtypes"})
     private void clearCaches(final String repositoryId)
     {
       if (logger.isDebugEnabled())
