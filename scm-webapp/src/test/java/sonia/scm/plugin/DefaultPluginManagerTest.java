@@ -261,6 +261,35 @@ class DefaultPluginManagerTest {
     }
 
     @Test
+    void shouldUpdateAlreadyInstalledOptionalDependenciesWhenNewerVersionIsAvailable() {
+      AvailablePlugin review = createAvailable("scm-review-plugin");
+      when(review.getDescriptor().getOptionalDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin"));
+      AvailablePlugin mail = createAvailable("scm-mail-plugin", "1.1.0");
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail));
+
+      InstalledPlugin installedMail = createInstalled("scm-mail-plugin", "1.0.0");
+      when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(installedMail));
+
+      manager.install("scm-review-plugin", false);
+
+      verify(installer).install(mail);
+      verify(installer).install(review);
+    }
+
+    @Test
+    void shouldNotUpdateOptionalDependenciesWhenNewerVersionIsAvailableButItIsNotInstalled() {
+      AvailablePlugin review = createAvailable("scm-review-plugin");
+      when(review.getDescriptor().getOptionalDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin"));
+      AvailablePlugin mail = createAvailable("scm-mail-plugin", "1.1.0");
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail));
+
+      manager.install("scm-review-plugin", false);
+
+      verify(installer, never()).install(mail);
+      verify(installer).install(review);
+    }
+
+    @Test
     void shouldRollbackOnFailedInstallation() {
       AvailablePlugin review = createAvailable("scm-review-plugin");
       when(review.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin"));

@@ -183,6 +183,27 @@ class PluginModal extends React.Component<Props, State> {
     return dependencies;
   }
 
+  renderOptionalDependencies() {
+    const { plugin, t } = this.props;
+
+    let optionalDependencies = null;
+    if (plugin.optionalDependencies && plugin.optionalDependencies.length > 0) {
+      optionalDependencies = (
+        <div className="media">
+          <Notification type="warning">
+            <strong>{t("plugins.modal.optionalDependencyNotification")}</strong>
+            <ul>
+              {plugin.optionalDependencies.map((optionalDependency, index) => {
+                return <li key={index}>{optionalDependency}</li>;
+              })}
+            </ul>
+          </Notification>
+        </div>
+      );
+    }
+    return optionalDependencies;
+  }
+
   renderNotifications = () => {
     const { t, pluginAction } = this.props;
     const { restart, error, success } = this.state;
@@ -275,6 +296,7 @@ class PluginModal extends React.Component<Props, State> {
               </div>
             )}
             {this.renderDependencies()}
+            {this.renderOptionalDependencies()}
           </div>
         </div>
         <div className="media">

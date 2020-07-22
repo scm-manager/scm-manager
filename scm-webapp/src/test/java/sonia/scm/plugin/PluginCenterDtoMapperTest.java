@@ -67,6 +67,7 @@ class PluginCenterDtoMapperTest {
       "555000444",
       new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
       ImmutableSet.of("scm-review-plugin"),
+      ImmutableSet.of(),
       ImmutableMap.of("download", new Link("http://download.hitchhiker.com"))
     );
 
@@ -101,6 +102,7 @@ class PluginCenterDtoMapperTest {
       "12345678aa",
       new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
       ImmutableSet.of("scm-review-plugin"),
+      ImmutableSet.of(),
       ImmutableMap.of("download", new Link("http://download.hitchhiker.com/review"))
     );
 
@@ -115,6 +117,7 @@ class PluginCenterDtoMapperTest {
       "555000444",
       new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
       ImmutableSet.of("scm-review-plugin"),
+      ImmutableSet.of(),
       ImmutableMap.of("download", new Link("http://download.hitchhiker.com/hitchhiker"))
     );
 

@@ -43,7 +43,7 @@ public abstract class PluginCenterDtoMapper  {
     for (PluginCenterDto.Plugin plugin : pluginCenterDto.getEmbedded().getPlugins()) {
       String url = plugin.getLinks().get("download").getHref();
       AvailablePluginDescriptor descriptor = new AvailablePluginDescriptor(
-        map(plugin), map(plugin.getConditions()), plugin.getDependencies(), url, plugin.getSha256sum()
+        map(plugin), map(plugin.getConditions()), plugin.getDependencies(), plugin.getOptionalDependencies(), url, plugin.getSha256sum()
       );
       plugins.add(new AvailablePlugin(descriptor));
     }
