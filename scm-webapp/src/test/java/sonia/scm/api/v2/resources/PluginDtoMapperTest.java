@@ -165,6 +165,15 @@ class PluginDtoMapperTest {
   }
 
   @Test
+  void shouldAppendOptionalDependencies() {
+    AvailablePlugin plugin = createAvailable(createPluginInformation());
+    when(plugin.getDescriptor().getOptionalDependencies()).thenReturn(ImmutableSet.of("one", "two"));
+
+    PluginDto dto = mapper.mapAvailable(plugin);
+    assertThat(dto.getOptionalDependencies()).containsOnly("one", "two");
+  }
+
+  @Test
   void shouldAppendUninstallLink() {
     when(subject.isPermitted("plugin:write")).thenReturn(true);
     InstalledPlugin plugin = createInstalled(createPluginInformation());
