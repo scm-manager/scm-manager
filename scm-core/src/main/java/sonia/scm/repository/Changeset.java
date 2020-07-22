@@ -86,7 +86,7 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
    */
   private Collection<Contributor> contributors;
 
-  private List<Signature> signatures;
+  private List<Signature> signatures = new ArrayList<>();
 
   public Changeset() {}
 
@@ -376,9 +376,6 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
    * @since 2.3.0
    */
   public void addSignature(Signature signature) {
-    if (signatures == null) {
-      signatures = new ArrayList<>();
-    }
     signatures.add(signature);
   }
 }

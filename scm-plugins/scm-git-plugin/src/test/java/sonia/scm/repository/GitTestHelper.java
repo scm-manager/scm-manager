@@ -24,27 +24,42 @@
 
 package sonia.scm.repository;
 
-import lombok.Value;
+import sonia.scm.security.GPG;
+import sonia.scm.security.PrivateKey;
+import sonia.scm.security.PublicKey;
 
-import java.io.Serializable;
+import java.util.Collections;
 import java.util.Optional;
 
-/**
- * Signature is the output of a signature verification.
- * @since 2.3.0
- */
-@Value
-public class Signature implements Serializable {
+public final class GitTestHelper {
 
-  private static final long serialVersionUID = 1L;
-
-  private final String key;
-  private final String type;
-  private final boolean verified;
-  private final String owner;
-
-  public Optional<String> getOwner() {
-    return Optional.ofNullable(owner);
+  private GitTestHelper() {
   }
 
+  public static GitChangesetConverterFactory createConverterFactory() {
+    return new GitChangesetConverterFactory(new NoopGPG());
+  }
+
+  private static class NoopGPG implements GPG {
+
+    @Override
+    public String findPublicKeyId(byte[] signature) {
+      return "secret-key";
+    }
+
+    @Override
+    public Optional<PublicKey> findPublicKey(String id) {
+      return Optional.empty();
+    }
+
+    @Override
+    public Iterable<PublicKey> findPublicKeysByUsername(String username) {
+      return Collections.emptySet();
+    }
+
+    @Override
+    public PrivateKey getPrivateKey() {
+      return null;
+    }
+  }
 }

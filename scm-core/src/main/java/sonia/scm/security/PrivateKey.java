@@ -22,29 +22,30 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package sonia.scm.security;
 
-import lombok.Value;
-
-import java.io.Serializable;
-import java.util.Optional;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 /**
- * Signature is the output of a signature verification.
+ * Can be used to create signatures of data.
  * @since 2.3.0
  */
-@Value
-public class Signature implements Serializable {
+public interface PrivateKey {
 
-  private static final long serialVersionUID = 1L;
+  /**
+   * Creates a signature for the given data.
+   * @param stream data stream to sign
+   * @return signature
+   */
+  byte[] sign(InputStream stream);
 
-  private final String key;
-  private final String type;
-  private final boolean verified;
-  private final String owner;
-
-  public Optional<String> getOwner() {
-    return Optional.ofNullable(owner);
+  /**
+   * Creates a signature for the given data.
+   * @param data data to sign
+   * @return signature
+   */
+  default byte[] sign(byte[] data) {
+    return sign(new ByteArrayInputStream(data));
   }
-
 }

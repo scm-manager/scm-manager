@@ -33,6 +33,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitChangesetConverterFactory;
+import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.client.api.RepositoryClientException;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -72,7 +73,7 @@ public class GitCommitCommand implements CommitCommand
   @Override
   public Changeset commit(CommitRequest request) throws IOException
   {
-    GitChangesetConverterFactory converterFactory = new GitChangesetConverterFactory();
+    GitChangesetConverterFactory converterFactory = GitTestHelper.createConverterFactory();
     try (GitChangesetConverter converter = converterFactory.create(git.getRepository()))
     {
       RevCommit commit = git.commit()

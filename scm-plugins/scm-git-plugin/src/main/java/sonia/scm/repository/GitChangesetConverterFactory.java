@@ -26,15 +26,25 @@ package sonia.scm.repository;
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevWalk;
+import sonia.scm.security.GPG;
+
+import javax.inject.Inject;
 
 public class GitChangesetConverterFactory {
 
+  private final GPG gpg;
+
+  @Inject
+  public GitChangesetConverterFactory(GPG gpg) {
+    this.gpg = gpg;
+  }
+
   public GitChangesetConverter create(Repository repository) {
-    return new GitChangesetConverter(repository);
+    return new GitChangesetConverter(gpg, repository, new RevWalk(repository));
   }
 
   public GitChangesetConverter create(Repository repository, RevWalk revWalk) {
-    return new GitChangesetConverter(repository, revWalk);
+    return new GitChangesetConverter(gpg, repository, revWalk);
   }
 
 }

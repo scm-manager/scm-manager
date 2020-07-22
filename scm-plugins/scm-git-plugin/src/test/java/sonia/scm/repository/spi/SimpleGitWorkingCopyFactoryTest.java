@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.HookContextFactory;
@@ -66,7 +67,7 @@ public class SimpleGitWorkingCopyFactoryTest extends AbstractGitCommandTestBase 
     HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
     HookEventFacade hookEventFacade = new HookEventFacade(of(mock(RepositoryManager.class)), hookContextFactory);
     GitRepositoryHandler gitRepositoryHandler = mock(GitRepositoryHandler.class);
-    proto = new ScmTransportProtocol(of(new GitChangesetConverterFactory()), of(hookEventFacade), of(gitRepositoryHandler));
+    proto = new ScmTransportProtocol(of(GitTestHelper.createConverterFactory()), of(hookEventFacade), of(gitRepositoryHandler));
     Transport.register(proto);
     workdirProvider = new WorkdirProvider(temporaryFolder.newFolder());
   }

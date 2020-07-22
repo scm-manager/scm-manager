@@ -24,17 +24,40 @@
 
 package sonia.scm.security;
 
-import lombok.Value;
+import java.util.Optional;
 
 /**
- * Public gpg key.
+ * Allows signing and verification using gpg.
+ *
  * @since 2.3.0
  */
-@Value
-public class GPGPublicKey {
+public interface GPG {
 
-  private final String id;
-  private final String owner;
-  private final String raw;
+  /**
+   * Returns the id of the key from the given signature.
+   * @param signature signature
+   * @return public key id
+   */
+  String findPublicKeyId(byte[] signature);
 
+  /**
+   * Returns the public key with the given id or an empty optional.
+   * @param id id of public
+   * @return public key or empty optional
+   */
+  Optional<PublicKey> findPublicKey(String id);
+
+  /**
+   * Returns all public keys assigned to the given username
+   * @param username username of the public key owner
+   * @return collection of public keys
+   */
+  Iterable<PublicKey> findPublicKeysByUsername(String username);
+
+  /**
+   * Returns the default private key of the currently authenticated user.
+   *
+   * @return default private key
+   */
+  PrivateKey getPrivateKey();
 }

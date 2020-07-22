@@ -28,6 +28,7 @@ import org.junit.Test;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverterFactory;
+import sonia.scm.repository.GitTestHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -110,6 +111,6 @@ public class GitLogCommandAncestorTest extends AbstractGitCommandTestBase
   }
 
   private GitLogCommand createCommand() {
-    return new GitLogCommand(createContext(), new GitChangesetConverterFactory());
+    return new GitLogCommand(createContext(), GitTestHelper.createConverterFactory());
   }
 }

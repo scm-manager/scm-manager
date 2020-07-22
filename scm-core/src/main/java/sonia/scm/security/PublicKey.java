@@ -24,25 +24,46 @@
 
 package sonia.scm.security;
 
-import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Optional;
 
 /**
- * Resolver for public gpg keys.
+ * The public key can be used to verify signatures.
+ *
  * @since 2.3.0
  */
-public interface GPGPublicKeyResolver {
+public interface PublicKey {
 
   /**
-   * Resolves the public key by its id.
-   * @param keyId id of the key
-   * @return public gpg key or empty optional.
+   * Returns id of the public key.
+   *
+   * @return id of key
    */
-  Optional<GPGPublicKey> byId(String keyId);
+  String getId();
 
   /**
-   * Resolves all public gpg keys for the given user.
-   * @return list of public gpg keys
+   * Returns the username of the owner or an empty optional.
+   *
+   * @return owner or empty optional
    */
-  List<GPGPublicKey> byUser(String username);
+  Optional<String> getOwner();
+
+  /**
+   * Verifies that the signature is valid for the given data.
+   * @param stream stream of data to verify
+   * @param signature signature
+   * @return {@code true} if the signature is valid for the given data
+   */
+  boolean verify(InputStream stream, byte[] signature);
+
+  /**
+   * Verifies that the signature is valid for the given data.
+   * @param data data to verify
+   * @param signature signature
+   * @return {@code true} if the signature is valid for the given data
+   */
+  default boolean verify(byte[] data, byte[] signature) {
+    return verify(new ByteArrayInputStream(data), signature);
+  }
 }

@@ -33,16 +33,20 @@ import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.eclipse.jgit.util.RawParseUtils;
+import sonia.scm.security.GPG;
+import sonia.scm.security.PublicKey;
 import sonia.scm.util.Util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -50,121 +54,35 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class GitChangesetConverter implements Closeable
-{
+public class GitChangesetConverter implements Closeable {
 
-  /**
-   * the logger for GitChangesetConverter
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GitChangesetConverter.class);
+  private final GPG gpg;
+  private final Multimap<ObjectId, String> tags;
+  private final TreeWalk treeWalk;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param repository
-   */
-  GitChangesetConverter(org.eclipse.jgit.lib.Repository repository)
-  {
-    this(repository, null);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param repository
-   * @param revWalk
-   */
-  GitChangesetConverter(org.eclipse.jgit.lib.Repository repository,
-    RevWalk revWalk)
-  {
-    this.repository = repository;
-
-    if (revWalk != null)
-    {
-      this.revWalk = revWalk;
-
-    }
-    else
-    {
-      this.revWalk = new RevWalk(repository);
-    }
-
+  GitChangesetConverter(GPG gpg, org.eclipse.jgit.lib.Repository repository, RevWalk revWalk) {
+    this.gpg = gpg;
     this.tags = GitUtil.createTagMap(repository, revWalk);
-    treeWalk = new TreeWalk(repository);
+    this.treeWalk = new TreeWalk(repository);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  @Override
-  public void close()
-  {
-    GitUtil.release(treeWalk);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param commit
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public Changeset createChangeset(RevCommit commit)
-  {
+  public Changeset createChangeset(RevCommit commit) {
     return createChangeset(commit, Collections.emptyList());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param commit
-   * @param branch
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public Changeset createChangeset(RevCommit commit, String branch)
-  {
+  public Changeset createChangeset(RevCommit commit, String branch) {
     return createChangeset(commit, Lists.newArrayList(branch));
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param commit
-   * @param branches
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public Changeset createChangeset(RevCommit commit, List<String> branches)
-  {
+  public Changeset createChangeset(RevCommit commit, List<String> branches) {
     String id = commit.getId().name();
     List<String> parentList = null;
     RevCommit[] parents = commit.getParents();
 
-    if (Util.isNotEmpty(parents))
-    {
-      parentList = new ArrayList<String>();
+    if (Util.isNotEmpty(parents)) {
+      parentList = new ArrayList<>();
 
-      for (RevCommit parent : parents)
-      {
+      for (RevCommit parent : parents) {
         parentList.add(parent.getId().name());
       }
     }
@@ -175,8 +93,7 @@ public class GitChangesetConverter implements Closeable
     Person author = createPersonFor(authorIndent);
     String message = commit.getFullMessage();
 
-    if (message != null)
-    {
+    if (message != null) {
       message = message.trim();
     }
 
@@ -185,41 +102,73 @@ public class GitChangesetConverter implements Closeable
       changeset.addContributor(new Contributor("Committed-by", createPersonFor(committerIdent)));
     }
 
-    if (parentList != null)
-    {
+    if (parentList != null) {
       changeset.setParents(parentList);
     }
 
     Collection<String> tagCollection = tags.get(commit.getId());
 
-    if (Util.isNotEmpty(tagCollection))
-    {
-
+    if (Util.isNotEmpty(tagCollection)) {
       // create a copy of the tag collection to reduce memory on caching
       changeset.getTags().addAll(Lists.newArrayList(tagCollection));
     }
 
     changeset.setBranches(branches);
 
+    Signature signature = createSignature(commit);
+    if (signature != null) {
+      changeset.addSignature(signature);
+    }
+
     return changeset;
+  }
+
+  private static final byte[] GPG_HEADER = {'g', 'p', 'g', 's', 'i', 'g'};
+
+  private Signature createSignature(RevCommit commit) {
+    byte[] raw = commit.getRawBuffer();
+
+    int start = RawParseUtils.headerStart(GPG_HEADER, raw, 0);
+    if (start < 0) {
+      return null;
+    }
+
+    int end = RawParseUtils.headerEnd(raw, start);
+    byte[] signature = Arrays.copyOfRange(raw, start, end);
+
+    String publicKeyId = gpg.findPublicKeyId(signature);
+
+    Optional<PublicKey> publicKeyById = gpg.findPublicKey(publicKeyId);
+    if (!publicKeyById.isPresent()) {
+      // key not found
+      return new Signature(publicKeyId, "gpg", false, null);
+    }
+
+    PublicKey publicKey = publicKeyById.get();
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    try {
+      byte[] headerPrefix = Arrays.copyOfRange(raw, 0, start - GPG_HEADER.length - 1);
+      baos.write(headerPrefix);
+
+      byte[] headerSuffix = Arrays.copyOfRange(raw, end + 1, raw.length);
+      baos.write(headerSuffix);
+    } catch (IOException ex) {
+      // this will never happen, because we are writing into memory
+      throw new IllegalStateException("failed to write into memory", ex);
+    }
+
+    boolean verified = publicKey.verify(baos.toByteArray(), signature);
+    return new Signature(publicKeyId, "gpg", verified, publicKey.getOwner().orElse(null));
   }
 
   public Person createPersonFor(PersonIdent personIndent) {
     return new Person(personIndent.getName(), personIndent.getEmailAddress());
   }
 
+  @Override
+  public void close() {
+    GitUtil.release(treeWalk);
+  }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private org.eclipse.jgit.lib.Repository repository;
-
-  /** Field description */
-  private RevWalk revWalk;
-
-  /** Field description */
-  private Multimap<ObjectId, String> tags;
-
-  /** Field description */
-  private TreeWalk treeWalk;
 }

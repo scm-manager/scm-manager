@@ -42,6 +42,7 @@ import org.junit.rules.TemporaryFolder;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.Repository;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
@@ -111,7 +112,7 @@ public class AbstractRemoteCommandTestBase
   {
 
     // store reference to handle weak references
-    proto = new ScmTransportProtocol(GitChangesetConverterFactory::new, () -> null, () -> null);
+    proto = new ScmTransportProtocol(GitTestHelper::createConverterFactory, () -> null, () -> null);
     Transport.register(proto);
   }
 

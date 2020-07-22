@@ -33,6 +33,7 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryConfig;
+import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.Person;
 
@@ -295,6 +296,6 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   }
 
   private GitLogCommand createCommand() {
-    return new GitLogCommand(createContext(), new GitChangesetConverterFactory());
+    return new GitLogCommand(createContext(), GitTestHelper.createConverterFactory());
   }
 }

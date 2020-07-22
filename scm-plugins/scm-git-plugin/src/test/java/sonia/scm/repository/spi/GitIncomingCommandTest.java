@@ -33,6 +33,7 @@ import org.junit.Test;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverterFactory;
+import sonia.scm.repository.GitTestHelper;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.IOException;
@@ -178,7 +179,7 @@ public class GitIncomingCommandTest
     return new GitIncomingCommand(
       new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())),
       handler,
-      new GitChangesetConverterFactory()
+      GitTestHelper.createConverterFactory()
     );
   }
 }
