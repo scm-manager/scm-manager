@@ -56,6 +56,30 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/deb/etc/scm</outputDirectory>
+              <resources>          
+                <resource>
+                  <directory>src/main/fs/etc/scm</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>              
+            </configuration>            
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>3.1.2</version>
         <executions>
@@ -135,7 +159,7 @@
 
             <data>
               <type>file</type>
-              <src>src/main/fs/etc/scm/logging.xml</src>
+              <src>${project.build.directory}/deb/etc/scm/logging.xml</src>
               <dst>/etc/scm/logging.xml</dst>
               <conffile>true</conffile>
               <mapper>
@@ -148,7 +172,7 @@
 
             <data>
               <type>file</type>
-              <src>src/main/fs/etc/scm/server-config.xml</src>
+              <src>${project.build.directory}/deb/etc/scm/server-config.xml</src>
               <dst>/etc/scm/server-config.xml</dst>
               <conffile>true</conffile>
               <mapper>

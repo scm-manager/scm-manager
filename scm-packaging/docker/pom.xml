@@ -113,6 +113,16 @@
                 <resource>
                   <directory>src/main/fs</directory>
                   <filtering>false</filtering>
+                  <excludes>
+                    <exclude>**/scm/*</exclude>
+                  </excludes>
+                </resource>
+                <resource>
+                  <directory>src/main/fs</directory>
+                  <filtering>true</filtering>
+                  <includes>
+                    <include>**/scm/*</include>
+                  </includes>
                 </resource>
               </resources>
             </configuration>
