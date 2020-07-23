@@ -55,4 +55,9 @@ storiesOf("SyntaxHighlighter", module)
     <Spacing>
       <SyntaxHighlighter language="python" value={PyHttpServer} />
     </Spacing>
+  ))
+  .add("Without line numbers", () => (
+    <Spacing>
+      <SyntaxHighlighter language="java" value={JavaHttpServer} showLineNumbers={false} />
+    </Spacing>
   ));
