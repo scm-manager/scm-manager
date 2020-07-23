@@ -21,35 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import DiffFile from "./DiffFile";
-import { DiffObjectProps, File } from "./DiffTypes";
-import Notification from "../Notification";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import Tooltip from "../Tooltip";
+import Icon from "../Icon";
 
-type Props = WithTranslation &
-  DiffObjectProps & {
-    diff: File[];
-    changesetId?: string;
-  };
-
-class Diff extends React.Component<Props> {
-  static defaultProps: Partial<Props> = {
-    sideBySide: false
-  };
-
-  render() {
-    const { diff, t, ...fileProps } = this.props;
-    return (
-      <>
-        {diff.length === 0 ? (
-          <Notification type="info">{t("diff.noDiffFound")}</Notification>
-        ) : (
-          diff.map((file, index) => <DiffFile key={index} file={file} {...fileProps} {...this.props} />)
-        )}
-      </>
-    );
+const Button = styled(Link)`
+  width: 50px;
+  cursor: pointer;
+  &:hover {
+    color: #33b2e8;
   }
-}
+`;
 
-export default withTranslation("repos")(Diff);
+type Props = {
+  link: string;
+};
+
+const JumpToFileButton: FC<Props> = ({ link }) => {
+  const [t] = useTranslation("repos");
+  const tooltip = t("diff.jumpToFile");
+  return (
+    <Tooltip message={tooltip} location="top">
+      <Button aria-label={tooltip} className="button" to={link}>
+        <Icon name="file-code" color="inherit" />
+      </Button>
+    </Tooltip>
+  );
+};
+
+export default JumpToFileButton;

@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { useTranslation, withTranslation, WithTranslation } from "react-i18next";
+import React from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 // @ts-ignore
@@ -39,13 +39,14 @@ import HunkExpandLink from "./HunkExpandLink";
 import { Modal } from "../modals";
 import ErrorNotification from "../ErrorNotification";
 import HunkExpandDivider from "./HunkExpandDivider";
-import Tooltip from "../Tooltip";
+import JumpToFileButton from "./JumpToFileButton";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
 type Props = DiffObjectProps &
   WithTranslation & {
     file: File;
+    changesetId?: string;
   };
 
 type Collapsible = {
@@ -89,10 +90,6 @@ const HunkDivider = styled.hr`
 
 const ChangeTypeTag = styled(Tag)`
   margin-left: 0.75rem;
-`;
-
-const LeftMarginSpan = styled.span`
-  margin-left: 0.25rem;
 `;
 
 class DiffFile extends React.Component<Props, State> {
@@ -396,9 +393,10 @@ class DiffFile extends React.Component<Props, State> {
   hasContent = (file: File) => file && !file.isBinary && file.hunks && file.hunks.length > 0;
 
   render() {
-    const { fileControlFactory, fileAnnotationFactory, t } = this.props;
+    const { fileControlFactory, fileAnnotationFactory, changesetId, t } = this.props;
     const { file, collapsed, sideBySide, diffExpander, expansionError } = this.state;
     const viewType = sideBySide ? "split" : "unified";
+    console.log(`DifFile ${file.newPath}:`, file); //TODO: delete log
 
     let body = null;
     let icon = "angle-right";
@@ -420,6 +418,7 @@ class DiffFile extends React.Component<Props, State> {
     }
     const collapseIcon = this.hasContent(file) ? <Icon name={icon} color="inherit" /> : null;
     const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
+    const jumpToFile = changesetId ? <JumpToFileButton link={`../sources/${changesetId}/${file.newPath}/`} /> : null;
     const sideBySideToggle =
       file.hunks && file.hunks.length > 0 ? (
         <ButtonWrapper className={classNames("level-right", "is-flex")}>
@@ -440,9 +439,14 @@ class DiffFile extends React.Component<Props, State> {
               )}
             </MenuContext.Consumer>
             {fileControls}
+            {jumpToFile}
           </ButtonGroup>
         </ButtonWrapper>
-      ) : null;
+      ) : (
+        <ButtonWrapper className={classNames("level-right", "is-flex")}>
+          <ButtonGroup>{jumpToFile}</ButtonGroup>
+        </ButtonWrapper>
+      );
 
     let errorModal;
     if (expansionError) {
@@ -470,7 +474,6 @@ class DiffFile extends React.Component<Props, State> {
               <TitleWrapper className={classNames("is-ellipsis-overflow", "is-size-6")}>
                 {this.renderFileTitle(file)}
               </TitleWrapper>
-              <LinkToFile file={file} />
               {this.renderChangeTag(file)}
             </FullWidthTitleHeader>
             {sideBySideToggle}
@@ -481,16 +484,5 @@ class DiffFile extends React.Component<Props, State> {
     );
   }
 }
-
-const LinkToFile: FC<Props> = ({ file }) => {
-  const [t] = useTranslation("repos");
-  return (
-    <LeftMarginSpan>
-      <Tooltip location="top" message={t("diff.jumpToFile")}>
-        <Icon iconStyle="far" name="file-alt" color="grey" className="fa-sm" />
-      </Tooltip>
-    </LeftMarginSpan>
-  );
-};
 
 export default withTranslation("repos")(DiffFile);

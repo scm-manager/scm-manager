@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { storiesOf } from "@storybook/react";
 import Diff from "./Diff";
 // @ts-ignore
@@ -34,6 +34,7 @@ import Toast from "../toast/Toast";
 import { getPath } from "./diffs";
 import DiffButton from "./DiffButton";
 import styled from "styled-components";
+import { MemoryRouter } from "react-router-dom";
 
 const diffFiles = parser.parse(simpleDiff);
 
@@ -41,7 +42,10 @@ const Container = styled.div`
   padding: 2rem 6rem;
 `;
 
+const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
+
 storiesOf("Diff", module)
+  .addDecorator(RoutingDecorator)
   .addDecorator(storyFn => <Container>{storyFn()}</Container>)
   .add("Default", () => <Diff diff={diffFiles} />)
   .add("Side-By-Side", () => <Diff diff={diffFiles} sideBySide={true} />)
@@ -121,4 +125,5 @@ storiesOf("Diff", module)
       return file;
     });
     return <Diff diff={filesWithLanguage} />;
-  });
+  })
+  .add("WithLinkToFile", () => <Diff diff={diffFiles} changesetId="0b92307029a2a171e3b467a1502f392c733e3e8f" />);
