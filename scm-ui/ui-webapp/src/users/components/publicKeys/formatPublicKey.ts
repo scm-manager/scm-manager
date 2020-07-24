@@ -22,55 +22,22 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security.gpg;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import sonia.scm.xml.XmlInstantAdapter;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.time.Instant;
-import java.util.Objects;
-
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
-public class RawGpgKey {
-
-  private String id;
-  private String displayName;
-  private String owner;
-  private String raw;
-
-  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
-  private Instant created;
-
-  RawGpgKey(String id) {
-    this.id = id;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+export const formatPublicKey = (key: string) => {
+  const parts = key.split(/\s+/);
+  if (parts.length === 3) {
+    return parts[0] + " ... " + parts[2];
+  } else if (parts.length === 2) {
+    if (parts[0].length >= parts[1].length) {
+      return parts[0].substring(0, 7) + "... " + parts[1];
+    } else {
+      const keyLength = parts[1].length;
+      return parts[0] + " ..." + parts[1].substring(keyLength - 7);
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+  } else {
+    const keyLength = parts[0].length;
+    if (keyLength < 15) {
+      return parts[0];
     }
-    RawGpgKey that = (RawGpgKey) o;
-    return Objects.equals(id, that.id);
+    return parts[0].substring(0, 7) + "..." + parts[0].substring(keyLength - 7);
   }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
-  }
-
-}
+};

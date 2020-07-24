@@ -24,53 +24,25 @@
 
 package sonia.scm.security.gpg;
 
-import lombok.AllArgsConstructor;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sonia.scm.xml.XmlInstantAdapter;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.Instant;
-import java.util.Objects;
 
 @Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
-public class RawGpgKey {
+@SuppressWarnings("squid:S2160") // we do not need equals for dto
+public class RawGpgKeyDto extends HalRepresentation {
 
-  private String id;
   private String displayName;
-  private String owner;
   private String raw;
-
-  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
   private Instant created;
 
-  RawGpgKey(String id) {
-    this.id = id;
+  RawGpgKeyDto(Links links) {
+    super(links);
   }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    RawGpgKey that = (RawGpgKey) o;
-    return Objects.equals(id, that.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
-  }
-
 }

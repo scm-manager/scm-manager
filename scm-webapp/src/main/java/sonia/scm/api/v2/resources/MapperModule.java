@@ -27,6 +27,7 @@ package sonia.scm.api.v2.resources;
 import com.google.inject.AbstractModule;
 import com.google.inject.servlet.ServletScopes;
 import org.mapstruct.factory.Mappers;
+import sonia.scm.security.gpg.PublicKeyMapper;
 import sonia.scm.web.api.RepositoryToHalMapper;
 
 public class MapperModule extends AbstractModule {
@@ -35,6 +36,7 @@ public class MapperModule extends AbstractModule {
     bind(UserDtoToUserMapper.class).to(Mappers.getMapperClass(UserDtoToUserMapper.class));
     bind(UserToUserDtoMapper.class).to(Mappers.getMapperClass(UserToUserDtoMapper.class));
     bind(UserCollectionToDtoMapper.class);
+    bind(PublicKeyMapper.class).to(Mappers.getMapperClass(PublicKeyMapper.class));
 
     bind(GroupDtoToGroupMapper.class).to(Mappers.getMapperClass(GroupDtoToGroupMapper.class));
     bind(GroupToGroupDtoMapper.class).to(Mappers.getMapperClass(GroupToGroupDtoMapper.class));

@@ -22,55 +22,24 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security.gpg;
+package sonia.scm.security;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import sonia.scm.xml.XmlInstantAdapter;
+import sonia.scm.BadRequestException;
+import sonia.scm.ContextEntry;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.time.Instant;
-import java.util.Objects;
+import java.util.List;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
-public class RawGpgKey {
+public class NotPublicKeyException extends BadRequestException {
+  public NotPublicKeyException(List<ContextEntry> context, String message) {
+    super(context, message);
+  }
 
-  private String id;
-  private String displayName;
-  private String owner;
-  private String raw;
-
-  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
-  private Instant created;
-
-  RawGpgKey(String id) {
-    this.id = id;
+  public NotPublicKeyException(List<ContextEntry> context, String message, Exception cause) {
+    super(context, message, cause);
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    RawGpgKey that = (RawGpgKey) o;
-    return Objects.equals(id, that.id);
+  public String getCode() {
+    return "BxS5wX2v71";
   }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
-  }
-
 }

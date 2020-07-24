@@ -37,7 +37,8 @@
       "settingsNavLink": "Settings",
       "generalNavLink": "General",
       "setPasswordNavLink": "Password",
-      "setPermissionsNavLink": "Permissions"
+      "setPermissionsNavLink": "Permissions",
+      "setPublicKeyNavLink": "Public Keys"
     }
   },
   "createUser": {
@@ -60,5 +61,13 @@
   "userForm": {
     "subtitle": "Edit User",
     "button": "Submit"
+  },
+  "publicKey": {
+    "noStoredKeys": "No keys found.",
+    "displayName": "Display Name",
+    "raw": "Key",
+    "created": "Created on",
+    "addKey": "Add key",
+    "delete": "Delete"
   }
 }

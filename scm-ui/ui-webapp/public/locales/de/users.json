@@ -37,7 +37,8 @@
       "settingsNavLink": "Einstellungen",
       "generalNavLink": "Generell",
       "setPasswordNavLink": "Passwort",
-      "setPermissionsNavLink": "Berechtigungen"
+      "setPermissionsNavLink": "Berechtigungen",
+      "setPublicKeyNavLink": "Öffentliche Schlüssel"
     }
   },
   "createUser": {
@@ -60,5 +61,13 @@
   "userForm": {
     "subtitle": "Benutzer bearbeiten",
     "button": "Speichern"
+  },
+  "publicKey": {
+    "noStoredKeys": "Es wurden keine Schlüssel gefunden.",
+    "displayName": "Anzeigename",
+    "raw": "Schlüssel",
+    "created": "Eingetragen an",
+    "addKey": "Schlüssel hinzufügen",
+    "delete": "Löschen"
   }
 }

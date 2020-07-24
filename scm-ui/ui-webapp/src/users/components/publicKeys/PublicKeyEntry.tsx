@@ -22,55 +22,40 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security.gpg;
+import React, { FC } from "react";
+import { DateFromNow, DeleteButton } from "@scm-manager/ui-components/src";
+import { PublicKey } from "./SetPublicKeys";
+import { useTranslation } from "react-i18next";
+import { Link } from "@scm-manager/ui-types";
+import { formatPublicKey } from "./formatPublicKey";
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import sonia.scm.xml.XmlInstantAdapter;
+type Props = {
+  publicKey: PublicKey;
+  onDelete: (link: string) => void;
+};
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.time.Instant;
-import java.util.Objects;
+export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
+  const [t] = useTranslation("users");
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
-public class RawGpgKey {
-
-  private String id;
-  private String displayName;
-  private String owner;
-  private String raw;
-
-  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
-  private Instant created;
-
-  RawGpgKey(String id) {
-    this.id = id;
+  let deleteButton;
+  if (publicKey?._links?.delete) {
+    deleteButton = (
+      <DeleteButton label={t("publicKey.delete")} action={() => onDelete((publicKey._links.delete as Link).href)} />
+    );
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    RawGpgKey that = (RawGpgKey) o;
-    return Objects.equals(id, that.id);
-  }
+  return (
+    <>
+      <tr>
+        <td>{publicKey.displayName}</td>
+        <td>
+          <DateFromNow date={publicKey.created} />
+        </td>
+        <td className="is-hidden-mobile">{formatPublicKey(publicKey.raw)}</td>
+        <td>{deleteButton}</td>
+      </tr>
+    </>
+  );
+};
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
-  }
-
-}
+export default PublicKeyEntry;

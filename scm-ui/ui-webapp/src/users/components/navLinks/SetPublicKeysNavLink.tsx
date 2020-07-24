@@ -21,56 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React, { FC } from "react";
+import { Link, User, Me } from "@scm-manager/ui-types";
+import { NavLink } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
 
-package sonia.scm.security.gpg;
+type Props = {
+  user: User | Me;
+  publicKeyUrl: string;
+};
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import sonia.scm.xml.XmlInstantAdapter;
+const SetPublicKeyNavLink: FC<Props> = ({ user, publicKeyUrl }) => {
+  const [t] = useTranslation("users");
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.time.Instant;
-import java.util.Objects;
-
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
-public class RawGpgKey {
-
-  private String id;
-  private String displayName;
-  private String owner;
-  private String raw;
-
-  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
-  private Instant created;
-
-  RawGpgKey(String id) {
-    this.id = id;
+  if ((user?._links?.publicKeys as Link)?.href) {
+    return <NavLink to={publicKeyUrl} label={t("singleUser.menu.setPublicKeyNavLink")} />;
   }
+  return null;
+};
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    RawGpgKey that = (RawGpgKey) o;
-    return Objects.equals(id, that.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
-  }
-
-}
+export default SetPublicKeyNavLink;

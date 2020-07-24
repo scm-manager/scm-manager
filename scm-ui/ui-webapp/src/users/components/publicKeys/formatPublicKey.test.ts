@@ -21,56 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { formatPublicKey } from "./formatPublicKey";
 
-package sonia.scm.security.gpg;
+describe("format authorized key tests", () => {
+  it("should format the given key", () => {
+    const key = "ssh-rsa ACB0DEFGHIJKLMOPQRSTUVWXYZ tricia@hitchhiker.com";
+    expect(formatPublicKey(key)).toEqual("ssh-rsa ... tricia@hitchhiker.com");
+  });
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import sonia.scm.xml.XmlInstantAdapter;
+  it("should use the first chars of the key without prefix", () => {
+    const key = "ACB0DEFGHIJKLMOPQRSTUVWXYZ tricia@hitchhiker.com";
+    expect(formatPublicKey(key)).toEqual("ACB0DEF... tricia@hitchhiker.com");
+  });
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.time.Instant;
-import java.util.Objects;
+  it("should use the last chars of the key without suffix", () => {
+    const key = "ssh-rsa ACB0DEFGHIJKLMOPQRSTUVWXYZ";
+    expect(formatPublicKey(key)).toEqual("ssh-rsa ...TUVWXYZ");
+  });
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
-public class RawGpgKey {
+  it("should use a few chars from the beginning and a few from the end, if the key has no prefix and suffix", () => {
+    const key = "ACB0DEFGHIJKLMOPQRSTUVWXYZ0123456789";
+    expect(formatPublicKey(key)).toEqual("ACB0DEF...3456789");
+  });
 
-  private String id;
-  private String displayName;
-  private String owner;
-  private String raw;
-
-  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
-  private Instant created;
-
-  RawGpgKey(String id) {
-    this.id = id;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    RawGpgKey that = (RawGpgKey) o;
-    return Objects.equals(id, that.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
-  }
-
-}
+  it("should return the whole string for a short key", () => {
+    const key = "ABCDE";
+    expect(formatPublicKey(key)).toEqual("ABCDE");
+  });
+});
