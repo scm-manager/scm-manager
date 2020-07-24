@@ -22,42 +22,16 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security;
+package sonia.scm.security.gpg;
 
-import java.util.Optional;
+import com.google.inject.AbstractModule;
+import sonia.scm.plugin.Extension;
+import sonia.scm.security.GPG;
 
-/**
- * Allows signing and verification using gpg.
- *
- * @since 2.4.0
- */
-public interface GPG {
-
-  /**
-   * Returns the id of the key from the given signature.
-   * @param signature signature
-   * @return public key id
-   */
-  String findPublicKeyId(byte[] signature);
-
-  /**
-   * Returns the public key with the given id or an empty optional.
-   * @param id id of public
-   * @return public key or empty optional
-   */
-  Optional<PublicKey> findPublicKey(String id);
-
-  /**
-   * Returns all public keys assigned to the given username
-   * @param username username of the public key owner
-   * @return collection of public keys
-   */
-  Iterable<PublicKey> findPublicKeysByUsername(String username);
-
-  /**
-   * Returns the default private key of the currently authenticated user.
-   *
-   * @return default private key
-   */
-  PrivateKey getPrivateKey();
+@Extension
+public class GPGModule extends AbstractModule {
+  @Override
+  protected void configure() {
+    bind(GPG.class).to(DummyGPG.class);
+  }
 }

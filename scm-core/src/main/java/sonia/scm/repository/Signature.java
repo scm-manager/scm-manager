@@ -31,14 +31,14 @@ import java.util.Optional;
 
 /**
  * Signature is the output of a signature verification.
- * @since 2.3.0
+ * @since 2.4.0
  */
 @Value
 public class Signature implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  private final String key;
+  private final String keyId;
   private final String type;
   private final boolean verified;
   private final String owner;

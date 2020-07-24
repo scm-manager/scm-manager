@@ -355,7 +355,7 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
   /**
    * Sets a collection of signatures which belong to this changeset.
    * @param signatures collection of signatures
-   * @since 2.3.0
+   * @since 2.4.0
    */
   public void setSignatures(Collection<Signature> signatures) {
     this.signatures = new ArrayList<>(signatures);
@@ -364,7 +364,7 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
   /**
    * Returns a immutable list of signatures.
    * @return signatures
-   * @since 2.3.0
+   * @since 2.4.0
    */
   public List<Signature> getSignatures() {
     return Collections.unmodifiableList(signatures);
@@ -373,7 +373,7 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
   /**
    * Adds a signature to the list of signatures.
    * @param signature
-   * @since 2.3.0
+   * @since 2.4.0
    */
   public void addSignature(Signature signature) {
     signatures.add(signature);

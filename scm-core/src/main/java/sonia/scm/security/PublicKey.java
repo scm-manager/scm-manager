@@ -31,7 +31,7 @@ import java.util.Optional;
 /**
  * The public key can be used to verify signatures.
  *
- * @since 2.3.0
+ * @since 2.4.0
  */
 public interface PublicKey {
 

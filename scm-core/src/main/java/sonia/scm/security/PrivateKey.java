@@ -29,7 +29,7 @@ import java.io.InputStream;
 
 /**
  * Can be used to create signatures of data.
- * @since 2.3.0
+ * @since 2.4.0
  */
 public interface PrivateKey {
 

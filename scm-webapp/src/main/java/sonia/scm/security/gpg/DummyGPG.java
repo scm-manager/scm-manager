@@ -22,42 +22,37 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security;
+package sonia.scm.security.gpg;
 
+import sonia.scm.security.GPG;
+import sonia.scm.security.PrivateKey;
+import sonia.scm.security.PublicKey;
+
+import java.util.Collections;
 import java.util.Optional;
 
 /**
- * Allows signing and verification using gpg.
- *
- * @since 2.4.0
+ * Dummy implementation of {@link GPG} should be replaced soon.
  */
-public interface GPG {
+public class DummyGPG implements GPG {
 
-  /**
-   * Returns the id of the key from the given signature.
-   * @param signature signature
-   * @return public key id
-   */
-  String findPublicKeyId(byte[] signature);
+  @Override
+  public String findPublicKeyId(byte[] signature) {
+    return "unknown";
+  }
 
-  /**
-   * Returns the public key with the given id or an empty optional.
-   * @param id id of public
-   * @return public key or empty optional
-   */
-  Optional<PublicKey> findPublicKey(String id);
+  @Override
+  public Optional<PublicKey> findPublicKey(String id) {
+    return Optional.empty();
+  }
 
-  /**
-   * Returns all public keys assigned to the given username
-   * @param username username of the public key owner
-   * @return collection of public keys
-   */
-  Iterable<PublicKey> findPublicKeysByUsername(String username);
+  @Override
+  public Iterable<PublicKey> findPublicKeysByUsername(String username) {
+    return Collections.emptySet();
+  }
 
-  /**
-   * Returns the default private key of the currently authenticated user.
-   *
-   * @return default private key
-   */
-  PrivateKey getPrivateKey();
+  @Override
+  public PrivateKey getPrivateKey() {
+    throw new UnsupportedOperationException("getPrivateKey is not yet implemented");
+  }
 }

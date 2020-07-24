@@ -27,20 +27,13 @@ package sonia.scm.security.gpg;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.shiro.SecurityUtils;
 import org.bouncycastle.openpgp.PGPException;
-import sonia.scm.security.PublicKey;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 

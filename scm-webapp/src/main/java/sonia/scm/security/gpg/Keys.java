@@ -24,18 +24,13 @@
 
 package sonia.scm.security.gpg;
 
-import org.bouncycastle.bcpg.ArmoredInputStream;
-import org.bouncycastle.gpg.keybox.PublicKeyRingBlob;
 import org.bouncycastle.openpgp.PGPException;
-import org.bouncycastle.openpgp.PGPObjectFactory;
 import org.bouncycastle.openpgp.PGPPublicKey;
 import org.bouncycastle.openpgp.PGPPublicKeyRing;
 import org.bouncycastle.openpgp.PGPPublicKeyRingCollection;
 import org.bouncycastle.openpgp.PGPUtil;
-import org.bouncycastle.openpgp.jcajce.JcaPGPPublicKeyRing;
 import org.bouncycastle.openpgp.operator.KeyFingerPrintCalculator;
 import org.bouncycastle.openpgp.operator.jcajce.JcaKeyFingerprintCalculator;
-import sonia.scm.security.PublicKey;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
