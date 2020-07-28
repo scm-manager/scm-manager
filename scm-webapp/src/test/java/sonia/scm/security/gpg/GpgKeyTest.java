@@ -28,8 +28,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 class GpgKeyTest {
 
   @Test
@@ -41,11 +39,11 @@ class GpgKeyTest {
 
     byte[] raw = GPGTestHelper.readKey("subkeys.asc").getBytes();
 
-    GpgKey key = new GpgKey("1", "trillian");
+    GpgKey key = new GpgKey("1", "trillian", raw);
 
     boolean verified = key.verify(longContent.toString().getBytes(), raw);
 
-   // assertThat(verified).isTrue();
+    // assertThat(verified).isTrue();
   }
 
 }

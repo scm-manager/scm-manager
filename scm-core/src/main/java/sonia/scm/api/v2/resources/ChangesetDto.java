@@ -30,6 +30,7 @@ import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sonia.scm.repository.Signature;
 
 import java.time.Instant;
 import java.util.List;
@@ -60,6 +61,8 @@ public class ChangesetDto extends HalRepresentation {
   private String description;
 
   private List<ContributorDto> contributors;
+
+  private List<Signature> signatures;
 
   public ChangesetDto(Links links, Embedded embedded) {
     super(links, embedded);

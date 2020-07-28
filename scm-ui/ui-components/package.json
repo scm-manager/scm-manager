@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-components",
-  "version": "2.3.0",
+  "version": "2.4.0-SNAPSHOT",
   "description": "UI Components for SCM-Manager and its plugins",
   "main": "src/index.ts",
   "files": [
@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@scm-manager/ui-extensions": "^2.1.0",
-    "@scm-manager/ui-types": "^2.3.0",
+    "@scm-manager/ui-types": "^2.4.0-SNAPSHOT",
     "classnames": "^2.2.6",
     "date-fns": "^2.4.1",
     "gitdiff-parser": "^0.1.2",

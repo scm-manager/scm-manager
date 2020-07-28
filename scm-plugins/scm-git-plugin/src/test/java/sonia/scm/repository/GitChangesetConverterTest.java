@@ -45,7 +45,6 @@ import org.eclipse.jgit.lib.GpgSignature;
 import org.eclipse.jgit.lib.GpgSigner;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -72,6 +71,7 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -165,7 +165,7 @@ class GitChangesetConverterTest {
       when(gpg.findPublicKeyId(any())).thenReturn(identity);
 
       Signature signature = addSignedCommitAndReturnSignature(identity);
-      assertThat(signature).isEqualTo(new Signature(identity, "gpg", false, null));
+      assertThat(signature).isEqualTo(new Signature(identity, "gpg", SignatureStatus.NOT_FOUND, null, Collections.emptySet()));
     }
 
     @Test
@@ -175,7 +175,7 @@ class GitChangesetConverterTest {
       setPublicKey(identity, owner, false);
 
       Signature signature = addSignedCommitAndReturnSignature(identity);
-      assertThat(signature).isEqualTo(new Signature(identity, "gpg", false, owner));
+      assertThat(signature).isEqualTo(new Signature(identity, "gpg", SignatureStatus.INVALID, owner, Collections.emptySet()));
     }
 
     @Test
@@ -185,7 +185,7 @@ class GitChangesetConverterTest {
       setPublicKey(identity, owner, true);
 
       Signature signature = addSignedCommitAndReturnSignature(identity);
-      assertThat(signature).isEqualTo(new Signature(identity, "gpg", true, owner));
+      assertThat(signature).isEqualTo(new Signature(identity, "gpg", SignatureStatus.VERIFIED, owner, Collections.emptySet()));
     }
 
     @Test
@@ -241,6 +241,7 @@ class GitChangesetConverterTest {
 
 
   }
+
   private PGPKeyPair createKeyPair() throws PGPException, NoSuchProviderException, NoSuchAlgorithmException {
     KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA", "BC");
     // we use a small key size to speedup test, a much larger size should be used for production

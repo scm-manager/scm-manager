@@ -43,7 +43,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashSet;
 import java.util.Optional;
+import java.util.Set;
 
 public class GpgKey implements PublicKey {
 
@@ -51,10 +53,16 @@ public class GpgKey implements PublicKey {
 
   private final String id;
   private final String owner;
+  private final Set<String> contacts = new LinkedHashSet<>();
 
-  public GpgKey(String id, String owner) {
+  public GpgKey(String id, String owner, byte[] raw) {
     this.id = id;
     this.owner = owner;
+    try {
+      getPgpPublicKey(raw).getUserIDs().forEachRemaining(contacts::add);
+    } catch (IOException e) {
+      LOG.error("Could not find contacts in public key", e);
+    }
   }
 
   @Override
@@ -71,12 +79,15 @@ public class GpgKey implements PublicKey {
   }
 
   @Override
+  public Set<String> getContacts() {
+    return contacts;
+  }
+
+  @Override
   public boolean verify(InputStream stream, byte[] signature) {
     boolean verified = false;
     try {
-      ArmoredInputStream armoredInputStream = new ArmoredInputStream(new ByteArrayInputStream(signature));
-      PGPObjectFactory pgpObjectFactory = new PGPObjectFactory(armoredInputStream, new JcaKeyFingerprintCalculator());
-      PGPPublicKey publicKey = ((PGPPublicKeyRing) pgpObjectFactory.nextObject()).getPublicKey();
+      PGPPublicKey publicKey = getPgpPublicKey(signature);
       PGPSignature pgpSignature = ((PGPSignature) publicKey.getSignatures().next());
 
       PGPContentVerifierBuilderProvider provider = new JcaPGPContentVerifierBuilderProvider();
@@ -96,6 +107,12 @@ public class GpgKey implements PublicKey {
       LOG.error("Could not verify GPG key", e);
     }
     return verified;
+  }
+
+  private PGPPublicKey getPgpPublicKey(byte[] signature) throws IOException {
+    ArmoredInputStream armoredInputStream = new ArmoredInputStream(new ByteArrayInputStream(signature));
+    PGPObjectFactory pgpObjectFactory = new PGPObjectFactory(armoredInputStream, new JcaKeyFingerprintCalculator());
+    return ((PGPPublicKeyRing) pgpObjectFactory.nextObject()).getPublicKey();
   }
 }
 

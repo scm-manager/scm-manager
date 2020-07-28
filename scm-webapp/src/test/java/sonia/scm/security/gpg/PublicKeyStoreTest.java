@@ -33,7 +33,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.security.NotPublicKeyException;
+import sonia.scm.security.PublicKeyDeletedEvent;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.store.InMemoryDataStoreFactory;
 
@@ -44,7 +46,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class PublicKeyStoreTest {
@@ -52,12 +56,15 @@ class PublicKeyStoreTest {
   @Mock
   private Subject subject;
 
+  @Mock
+  private ScmEventBus eventBus;
+
   private PublicKeyStore keyStore;
   private final DataStoreFactory dataStoreFactory = new InMemoryDataStoreFactory();
 
   @BeforeEach
   void setUpKeyStore() {
-    keyStore = new PublicKeyStore(dataStoreFactory);
+    keyStore = new PublicKeyStore(dataStoreFactory, eventBus);
   }
 
   @BeforeEach
@@ -72,7 +79,7 @@ class PublicKeyStoreTest {
 
   @Test
   void shouldThrowAuthorizationExceptionOnAdd() throws IOException {
-    doThrow(AuthorizationException.class).when(subject).checkPermission("user:modify:zaphod");
+    doThrow(AuthorizationException.class).when(subject).checkPermission("user:changePublicKeys:zaphod");
     String rawKey = GPGTestHelper.readKey("single.asc");
 
     assertThrows(AuthorizationException.class, () -> keyStore.add("zaphods key", "zaphod", rawKey));
@@ -118,6 +125,8 @@ class PublicKeyStoreTest {
     key = keyStore.findById("0x975922F193B07D6E");
 
     assertThat(key).isNotPresent();
+
+    verify(eventBus).post(any(PublicKeyDeletedEvent.class));
   }
 
   @Test

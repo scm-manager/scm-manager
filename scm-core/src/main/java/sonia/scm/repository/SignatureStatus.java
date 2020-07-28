@@ -22,40 +22,8 @@
  * SOFTWARE.
  */
 
-import { Collection, Links } from "./hal";
-import { Tag } from "./Tags";
-import { Branch } from "./Branches";
-import { Person } from "./Person";
+package sonia.scm.repository;
 
-export type Changeset = Collection & {
-  id: string;
-  date: Date;
-  author: Person;
-  description: string;
-  contributors?: Contributor[];
-  signatures?: Signature[];
-  _links: Links;
-  _embedded: {
-    tags?: Tag[];
-    branches?: Branch[];
-    parents?: ParentChangeset[];
-  };
-};
-
-export type Signature = {
-  keyId: string;
-  type: string;
-  status: "VERIFIED" | "NOT_FOUND" | "INVALID";
-  owner: string;
-  contacts: string[];
+public enum SignatureStatus {
+  VERIFIED, NOT_FOUND, INVALID;
 }
-
-export type Contributor = {
-  person: Person;
-  type: string;
-};
-
-export type ParentChangeset = {
-  id: string;
-  _links: Links;
-};

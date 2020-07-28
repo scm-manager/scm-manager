@@ -1765,58 +1765,62 @@ exports[`Storyshots Changesets Co-Authors with avatar 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                   
-                  commaSeparatedList.lastDivider
-                   
-                  changeset.contributors.coAuthoredBy
-                   
-                  <span
-                    className="ChangesetAuthor__AvatarList-sc-1oz0xgw-0 bpcCrU"
-                  >
+                    changeset.contributors.authoredBy
+                     
                     <a
-                      href="mailto:ford.prefect@hitchhiker.com"
-                      title="changeset.contributors.mailto ford.prefect@hitchhiker.com"
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
                     >
-                      <img
-                        alt="Ford Prefect"
-                        className="ContributorAvatar-sc-1yz8zn-0 laExrp"
-                        src="https://robohash.org/ford.prefect@hitchhiker.com"
-                      />
+                      SCM Administrator
                     </a>
-                    <a
-                      href="mailto:zaphod.beeblebrox@hitchhiker.cm"
-                      title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
+                     
+                    commaSeparatedList.lastDivider
+                     
+                    changeset.contributors.coAuthoredBy
+                     
+                    <span
+                      className="ChangesetAuthor__AvatarList-sc-1oz0xgw-0 bpcCrU"
                     >
-                      <img
-                        alt="Zaphod Beeblebrox"
-                        className="ContributorAvatar-sc-1yz8zn-0 laExrp"
-                        src="https://robohash.org/zaphod.beeblebrox@hitchhiker.cm"
-                      />
-                    </a>
-                    <a
-                      href="mailto:trillian@hitchhiker.cm"
-                      title="changeset.contributors.mailto trillian@hitchhiker.cm"
-                    >
-                      <img
-                        alt="Tricia Marie McMillan"
-                        className="ContributorAvatar-sc-1yz8zn-0 laExrp"
-                        src="https://robohash.org/trillian@hitchhiker.cm"
-                      />
-                    </a>
-                  </span>
-                   
-                </p>
+                      <a
+                        href="mailto:ford.prefect@hitchhiker.com"
+                        title="changeset.contributors.mailto ford.prefect@hitchhiker.com"
+                      >
+                        <img
+                          alt="Ford Prefect"
+                          className="ContributorAvatar-sc-1yz8zn-0 laExrp"
+                          src="https://robohash.org/ford.prefect@hitchhiker.com"
+                        />
+                      </a>
+                      <a
+                        href="mailto:zaphod.beeblebrox@hitchhiker.cm"
+                        title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
+                      >
+                        <img
+                          alt="Zaphod Beeblebrox"
+                          className="ContributorAvatar-sc-1yz8zn-0 laExrp"
+                          src="https://robohash.org/zaphod.beeblebrox@hitchhiker.cm"
+                        />
+                      </a>
+                      <a
+                        href="mailto:trillian@hitchhiker.cm"
+                        title="changeset.contributors.mailto trillian@hitchhiker.cm"
+                      >
+                        <img
+                          alt="Tricia Marie McMillan"
+                          className="ContributorAvatar-sc-1yz8zn-0 laExrp"
+                          src="https://robohash.org/trillian@hitchhiker.cm"
+                        />
+                      </a>
+                    </span>
+                     
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -1931,47 +1935,51 @@ exports[`Storyshots Changesets Commiter and Co-Authors with avatar 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                  , 
-                  changeset.contributors.committedBy
-                   
-                  <a
-                    href="mailto:zaphod.beeblebrox@hitchhiker.cm"
-                    title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
-                  >
-                    <img
-                      alt="Zaphod Beeblebrox"
-                      className="ContributorAvatar-sc-1yz8zn-0 laExrp"
-                      src="https://robohash.org/zaphod.beeblebrox@hitchhiker.cm"
-                    />
-                  </a>
-                   
-                  commaSeparatedList.lastDivider
-                   
-                  changeset.contributors.coAuthoredBy
-                   
-                  <a
-                    href="mailto:ford.prefect@hitchhiker.com"
-                    title="changeset.contributors.mailto ford.prefect@hitchhiker.com"
-                  >
-                    <img
-                      alt="Ford Prefect"
-                      className="ContributorAvatar-sc-1yz8zn-0 laExrp"
-                      src="https://robohash.org/ford.prefect@hitchhiker.com"
-                    />
-                  </a>
-                   
-                </p>
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                    , 
+                    changeset.contributors.committedBy
+                     
+                    <a
+                      href="mailto:zaphod.beeblebrox@hitchhiker.cm"
+                      title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
+                    >
+                      <img
+                        alt="Zaphod Beeblebrox"
+                        className="ContributorAvatar-sc-1yz8zn-0 laExrp"
+                        src="https://robohash.org/zaphod.beeblebrox@hitchhiker.cm"
+                      />
+                    </a>
+                     
+                    commaSeparatedList.lastDivider
+                     
+                    changeset.contributors.coAuthoredBy
+                     
+                    <a
+                      href="mailto:ford.prefect@hitchhiker.com"
+                      title="changeset.contributors.mailto ford.prefect@hitchhiker.com"
+                    >
+                      <img
+                        alt="Ford Prefect"
+                        className="ContributorAvatar-sc-1yz8zn-0 laExrp"
+                        src="https://robohash.org/ford.prefect@hitchhiker.com"
+                      />
+                    </a>
+                     
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -2073,18 +2081,22 @@ exports[`Storyshots Changesets Default 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                </p>
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -2196,18 +2208,22 @@ exports[`Storyshots Changesets Replacements 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                </p>
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -2309,30 +2325,34 @@ exports[`Storyshots Changesets With Committer 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                   
-                  commaSeparatedList.lastDivider
-                   
-                  changeset.contributors.committedBy
-                   
-                  <a
-                    href="mailto:zaphod.beeblebrox@hitchhiker.cm"
-                    title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
-                  >
-                    Zaphod Beeblebrox
-                  </a>
-                   
-                </p>
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                     
+                    commaSeparatedList.lastDivider
+                     
+                    changeset.contributors.committedBy
+                     
+                    <a
+                      href="mailto:zaphod.beeblebrox@hitchhiker.cm"
+                      title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
+                    >
+                      Zaphod Beeblebrox
+                    </a>
+                     
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -2434,39 +2454,43 @@ exports[`Storyshots Changesets With Committer and Co-Author 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                  , 
-                  changeset.contributors.committedBy
-                   
-                  <a
-                    href="mailto:zaphod.beeblebrox@hitchhiker.cm"
-                    title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
-                  >
-                    Zaphod Beeblebrox
-                  </a>
-                   
-                  commaSeparatedList.lastDivider
-                   
-                  changeset.contributors.coAuthoredBy
-                   
-                  <a
-                    href="mailto:ford.prefect@hitchhiker.com"
-                    title="changeset.contributors.mailto ford.prefect@hitchhiker.com"
-                  >
-                    Ford Prefect
-                  </a>
-                   
-                </p>
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                    , 
+                    changeset.contributors.committedBy
+                     
+                    <a
+                      href="mailto:zaphod.beeblebrox@hitchhiker.cm"
+                      title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
+                    >
+                      Zaphod Beeblebrox
+                    </a>
+                     
+                    commaSeparatedList.lastDivider
+                     
+                    changeset.contributors.coAuthoredBy
+                     
+                    <a
+                      href="mailto:ford.prefect@hitchhiker.com"
+                      title="changeset.contributors.mailto ford.prefect@hitchhiker.com"
+                    >
+                      Ford Prefect
+                    </a>
+                     
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -2581,18 +2605,22 @@ exports[`Storyshots Changesets With avatar 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                </p>
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -2694,31 +2722,35 @@ exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                   
-                  commaSeparatedList.lastDivider
-                   
-                  changeset.contributors.coAuthoredBy
-                   
-                  <a
-                    title="- Ford Prefect
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                     
+                    commaSeparatedList.lastDivider
+                     
+                    changeset.contributors.coAuthoredBy
+                     
+                    <a
+                      title="- Ford Prefect
 - Zaphod Beeblebrox
 - Tricia Marie McMillan"
-                  >
-                    changeset.contributors.more
-                  </a>
-                   
-                </p>
+                    >
+                      changeset.contributors.more
+                    </a>
+                     
+                  </p>
+                </div>
               </div>
             </div>
           </div>

@@ -26,6 +26,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import org.eclipse.jgit.lib.ObjectId;
@@ -51,7 +52,6 @@ import java.util.Optional;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
 public class GitChangesetConverter implements Closeable {
@@ -137,11 +137,15 @@ public class GitChangesetConverter implements Closeable {
     byte[] signature = Arrays.copyOfRange(raw, start, end);
 
     String publicKeyId = gpg.findPublicKeyId(signature);
+    if (Strings.isNullOrEmpty(publicKeyId)) {
+      // key not found
+      return new Signature(publicKeyId, "gpg", SignatureStatus.NOT_FOUND, null, Collections.emptySet());
+    }
 
     Optional<PublicKey> publicKeyById = gpg.findPublicKey(publicKeyId);
     if (!publicKeyById.isPresent()) {
       // key not found
-      return new Signature(publicKeyId, "gpg", false, null);
+      return new Signature(publicKeyId, "gpg", SignatureStatus.NOT_FOUND, null, Collections.emptySet());
     }
 
     PublicKey publicKey = publicKeyById.get();
@@ -159,7 +163,13 @@ public class GitChangesetConverter implements Closeable {
     }
 
     boolean verified = publicKey.verify(baos.toByteArray(), signature);
-    return new Signature(publicKeyId, "gpg", verified, publicKey.getOwner().orElse(null));
+    return new Signature(
+      publicKeyId,
+      "gpg",
+      verified ? SignatureStatus.VERIFIED : SignatureStatus.INVALID,
+      publicKey.getOwner().orElse(null),
+      publicKey.getContacts()
+    );
   }
 
   public Person createPersonFor(PersonIdent personIndent) {

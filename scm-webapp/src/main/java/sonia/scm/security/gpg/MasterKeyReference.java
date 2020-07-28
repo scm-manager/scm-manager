@@ -22,40 +22,21 @@
  * SOFTWARE.
  */
 
-import { Collection, Links } from "./hal";
-import { Tag } from "./Tags";
-import { Branch } from "./Branches";
-import { Person } from "./Person";
+package sonia.scm.security.gpg;
 
-export type Changeset = Collection & {
-  id: string;
-  date: Date;
-  author: Person;
-  description: string;
-  contributors?: Contributor[];
-  signatures?: Signature[];
-  _links: Links;
-  _embedded: {
-    tags?: Tag[];
-    branches?: Branch[];
-    parents?: ParentChangeset[];
-  };
-};
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-export type Signature = {
-  keyId: string;
-  type: string;
-  status: "VERIFIED" | "NOT_FOUND" | "INVALID";
-  owner: string;
-  contacts: string[];
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement
+public class MasterKeyReference {
+  String masterKey;
 }
-
-export type Contributor = {
-  person: Person;
-  type: string;
-};
-
-export type ParentChangeset = {
-  id: string;
-  _links: Links;
-};

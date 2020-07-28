@@ -24,16 +24,16 @@
 
 package sonia.scm.security.gpg;
 
-import org.bouncycastle.openpgp.PGPException;
 import sonia.scm.ContextEntry;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.security.NotPublicKeyException;
+import sonia.scm.security.PublicKeyDeletedEvent;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.user.UserPermissions;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -43,31 +43,39 @@ import java.util.stream.Collectors;
 public class PublicKeyStore {
 
   private static final String STORE_NAME = "gpg_public_keys";
+  private static final String SUBKEY_STORE_NAME = "gpg_public_sub_keys";
 
   private final DataStore<RawGpgKey> store;
+  private final DataStore<MasterKeyReference> subKeyStore;
+  private final ScmEventBus eventBus;
 
   @Inject
-  public PublicKeyStore(DataStoreFactory dataStoreFactory) {
+  public PublicKeyStore(DataStoreFactory dataStoreFactory, ScmEventBus eventBus) {
     this.store = dataStoreFactory.withType(RawGpgKey.class).withName(STORE_NAME).build();
+    this.subKeyStore = dataStoreFactory.withType(MasterKeyReference.class).withName(SUBKEY_STORE_NAME).build();
+    this.eventBus = eventBus;
   }
 
   public RawGpgKey add(String displayName, String username, String rawKey) {
-    UserPermissions.modify(username).check();
+    UserPermissions.changePublicKeys(username).check();
 
     if (!rawKey.contains("PUBLIC KEY")) {
       throw new NotPublicKeyException(ContextEntry.ContextBuilder.entity(RawGpgKey.class, displayName).build(), "The provided key is not a public key");
     }
 
-    try {
-      String id = Keys.resolveIdFromKey(rawKey);
-      RawGpgKey key = new RawGpgKey(id, displayName, username, rawKey, Instant.now());
+    Keys keys = Keys.resolve(rawKey);
+    String master = keys.getMaster();
 
-      store.put(id, key);
-
-      return key;
-    } catch (IOException | PGPException e) {
-      throw new GPGException("failed to resolve id from gpg key");
+    for (String subKey : keys.getSubs()) {
+      subKeyStore.put(subKey, new MasterKeyReference(master));
     }
+
+    RawGpgKey key = new RawGpgKey(master, displayName, username, rawKey, Instant.now());
+
+    store.put(master, key);
+
+    return key;
+
   }
 
   public void delete(String id) {
@@ -75,10 +83,17 @@ public class PublicKeyStore {
     if (rawGpgKey != null) {
       UserPermissions.modify(rawGpgKey.getOwner()).check();
       store.remove(id);
+      eventBus.post(new PublicKeyDeletedEvent());
     }
   }
 
   public Optional<RawGpgKey> findById(String id) {
+    Optional<MasterKeyReference> reference = subKeyStore.getOptional(id);
+
+    if (reference.isPresent()) {
+      return store.getOptional(reference.get().getMasterKey());
+    }
+
     return store.getOptional(id);
   }
 

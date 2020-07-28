@@ -24,7 +24,10 @@
 
 package sonia.scm.security.gpg;
 
-import org.bouncycastle.openpgp.PGPException;
+import org.bouncycastle.bcpg.ArmoredInputStream;
+import org.bouncycastle.openpgp.PGPObjectFactory;
+import org.bouncycastle.openpgp.PGPSignatureList;
+import org.bouncycastle.openpgp.operator.jcajce.JcaKeyFingerprintCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.security.GPG;
@@ -32,6 +35,7 @@ import sonia.scm.security.PrivateKey;
 import sonia.scm.security.PublicKey;
 
 import javax.inject.Inject;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -51,8 +55,11 @@ public class DefaultGPG implements GPG {
   @Override
   public String findPublicKeyId(byte[] signature) {
     try {
-      return Keys.resolveIdFromKey(new String(signature));
-    } catch (PGPException | IOException e) {
+      ArmoredInputStream armoredInputStream = new ArmoredInputStream(new ByteArrayInputStream(signature));
+      PGPObjectFactory pgpObjectFactory = new PGPObjectFactory(armoredInputStream, new JcaKeyFingerprintCalculator());
+      PGPSignatureList signatures = (PGPSignatureList) pgpObjectFactory.nextObject();
+      return "0x" + Long.toHexString(signatures.get(0).getKeyID()).toUpperCase();
+    } catch (IOException e) {
       LOG.error("Could not find public key id in signature");
     }
     return "";
@@ -61,7 +68,8 @@ public class DefaultGPG implements GPG {
   @Override
   public Optional<PublicKey> findPublicKey(String id) {
     Optional<RawGpgKey> key = store.findById(id);
-    return key.map(rawGpgKey -> new GpgKey(id, rawGpgKey.getOwner()));
+
+    return key.map(rawGpgKey -> new GpgKey(id, rawGpgKey.getOwner(), rawGpgKey.getRaw().getBytes()));
   }
 
   @Override
@@ -71,7 +79,7 @@ public class DefaultGPG implements GPG {
     if (!keys.isEmpty()) {
       return keys
         .stream()
-        .map(rawGpgKey -> new GpgKey(rawGpgKey.getId(), rawGpgKey.getOwner()))
+        .map(rawGpgKey -> new GpgKey(rawGpgKey.getId(), rawGpgKey.getOwner(), rawGpgKey.getRaw().getBytes()))
         .collect(Collectors.toSet());
     }
 

@@ -88,6 +88,12 @@
     "shortSummary": "Committet <0/> <1/>",
     "tags": "Tags",
     "diffNotSupported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt",
+    "signedBy": "Signiert von",
+    "signatureStatus": "Status",
+    "keyId": "Schlüssel-ID",
+    "signatureVerified": "Verifiziert",
+    "signatureNotVerified": "Nicht verifiziert",
+    "signatureInvalid": "Ungültig",
     "shortlink": {
       "title": "Changeset {{id}} aus {{namespace}}/{{name}}"
     },

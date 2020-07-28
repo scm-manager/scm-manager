@@ -24,6 +24,7 @@
 
 package sonia.scm.security.gpg;
 
+import lombok.Value;
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPPublicKey;
 import org.bouncycastle.openpgp.PGPPublicKeyRing;
@@ -37,45 +38,71 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
+import java.util.Set;
+import java.util.function.Function;
 
+@Value
 final class Keys {
 
   private static final KeyFingerPrintCalculator calculator = new JcaKeyFingerprintCalculator();
 
-  private Keys() {}
+  private final String master;
+  private final Set<String> subs;
 
-  static String resolveIdFromKey(String rawKey) throws IOException, PGPException {
-    List<PGPPublicKey> keys = collectKeys(rawKey);
-    if (keys.size() > 1) {
-      keys = keys.stream().filter(PGPPublicKey::isMasterKey).collect(Collectors.toList());
-    }
-    if (keys.isEmpty()) {
-      throw new IllegalArgumentException("found multiple keys, but no master keys");
-    }
-    if (keys.size() > 1) {
-      throw new IllegalArgumentException("found multiple master keys");
+  private Keys(String master, Set<String> subs) {
+    this.master = master;
+    this.subs = subs;
+  }
+
+  static Keys resolve(String raw) {
+    return resolve(raw, Keys::collectKeys);
+  }
+
+  static Keys resolve(String raw, Function<String, List<PGPPublicKey>> parser) {
+    List<PGPPublicKey> parsedKeys = parser.apply(raw);
+
+    String master = null;
+    Set<String> subs = new HashSet<>();
+
+    for (PGPPublicKey key : parsedKeys) {
+      if (key.isMasterKey()) {
+        if (master != null) {
+          throw new IllegalArgumentException("Found more than one master key");
+        }
+        master = createId(key);
+      } else {
+        subs.add(createId(key));
+      }
     }
 
-    PGPPublicKey pgpPublicKey = keys.get(0);
-    return createId(pgpPublicKey);
+    if (master == null) {
+      throw new IllegalArgumentException("No master key found");
+    }
+
+    return new Keys(master, Collections.unmodifiableSet(subs));
   }
 
   private static String createId(PGPPublicKey pgpPublicKey) {
     return "0x" + Long.toHexString(pgpPublicKey.getKeyID()).toUpperCase(Locale.ENGLISH);
   }
 
-  private static List<PGPPublicKey> collectKeys(String rawKey) throws IOException, PGPException {
-    List<PGPPublicKey> publicKeys = new ArrayList<>();
-    InputStream decoderStream = PGPUtil.getDecoderStream(new ByteArrayInputStream(rawKey.getBytes(StandardCharsets.UTF_8)));
-    PGPPublicKeyRingCollection collection = new PGPPublicKeyRingCollection(decoderStream, calculator);
-    for (PGPPublicKeyRing pgpPublicKeys : collection) {
-      for (PGPPublicKey pgpPublicKey : pgpPublicKeys) {
-        publicKeys.add(pgpPublicKey);
+  private static List<PGPPublicKey> collectKeys(String rawKey) {
+    try {
+      List<PGPPublicKey> publicKeys = new ArrayList<>();
+      InputStream decoderStream = PGPUtil.getDecoderStream(new ByteArrayInputStream(rawKey.getBytes(StandardCharsets.UTF_8)));
+      PGPPublicKeyRingCollection collection = new PGPPublicKeyRingCollection(decoderStream, calculator);
+      for (PGPPublicKeyRing pgpPublicKeys : collection) {
+        for (PGPPublicKey pgpPublicKey : pgpPublicKeys) {
+          publicKeys.add(pgpPublicKey);
+        }
       }
+      return publicKeys;
+    } catch (IOException | PGPException ex) {
+      throw new GPGException("Failed to collect public keys", ex);
     }
-    return publicKeys;
   }
 }

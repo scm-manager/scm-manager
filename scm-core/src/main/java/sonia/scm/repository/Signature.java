@@ -28,9 +28,11 @@ import lombok.Value;
 
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Signature is the output of a signature verification.
+ *
  * @since 2.4.0
  */
 @Value
@@ -40,8 +42,9 @@ public class Signature implements Serializable {
 
   private final String keyId;
   private final String type;
-  private final boolean verified;
+  private final SignatureStatus status;
   private final String owner;
+  private final Set<String> contacts;
 
   public Optional<String> getOwner() {
     return Optional.ofNullable(owner);

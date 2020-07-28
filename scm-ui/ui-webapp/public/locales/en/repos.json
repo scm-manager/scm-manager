@@ -87,6 +87,12 @@
     "summary": "Changeset <0/> was committed <1/>",
     "shortSummary": "Committed <0/> <1/>",
     "tags": "Tags",
+    "signedBy": "Signed by",
+    "keyId": "Key ID",
+    "signatureStatus": "Status",
+    "signatureVerified": "verified",
+    "signatureNotVerified": "not verified",
+    "signatureInvalid": "invalid",
     "shortlink": {
       "title": "Changeset {{id}} of {{namespace}}/{{name}}"
     },

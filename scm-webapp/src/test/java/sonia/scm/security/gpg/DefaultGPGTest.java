@@ -35,6 +35,7 @@ import sonia.scm.security.PublicKey;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -50,15 +51,16 @@ class DefaultGPGTest {
 
   @Test
   void shouldFindIdInSignature() throws IOException {
-    String raw = GPGTestHelper.readKey("single.asc");
+    String raw = GPGTestHelper.readKey("signature.asc");
     String publicKeyId = gpg.findPublicKeyId(raw.getBytes());
 
-    assertThat(publicKeyId).isEqualTo("0x975922F193B07D6E");
+    assertThat(publicKeyId).isEqualTo("0x1F17B79A09DAD5B9");
   }
 
   @Test
-  void shouldFindPublicKey() {
-    RawGpgKey key1 = new RawGpgKey("42", "key_42", "trillian", "raw", Instant.now());
+  void shouldFindPublicKey() throws IOException {
+    String raw = GPGTestHelper.readKey("subkeys.asc");
+    RawGpgKey key1 = new RawGpgKey("42", "key_42", "trillian", raw, Instant.now());
 
     when(store.findById("42")).thenReturn(Optional.of(key1));
 
@@ -68,12 +70,17 @@ class DefaultGPGTest {
     assertThat(publicKey.get().getOwner()).isPresent();
     assertThat(publicKey.get().getOwner().get()).contains("trillian");
     assertThat(publicKey.get().getId()).isEqualTo("42");
+    assertThat(publicKey.get().getContacts()).contains("Sebastian Sdorra <s.sdorra@gmail.com>",
+      "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>");
   }
 
   @Test
-  void shouldFindKeysForUsername() {
-    RawGpgKey key1 = new RawGpgKey("1", "1", "trillian", "raw", Instant.now());
-    RawGpgKey key2 = new RawGpgKey("2", "2", "trillian", "raw", Instant.now());
+  void shouldFindKeysForUsername() throws IOException {
+    String raw = GPGTestHelper.readKey("single.asc");
+    String raw2= GPGTestHelper.readKey("subkeys.asc");
+
+    RawGpgKey key1 = new RawGpgKey("1", "1", "trillian", raw, Instant.now());
+    RawGpgKey key2 = new RawGpgKey("2", "2", "trillian", raw2, Instant.now());
     when(store.findByUsername("trillian")).thenReturn(ImmutableList.of(key1, key2));
 
     Iterable<PublicKey> keys = gpg.findPublicKeysByUsername("trillian");

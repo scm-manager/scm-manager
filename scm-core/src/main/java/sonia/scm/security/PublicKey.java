@@ -27,6 +27,7 @@ package sonia.scm.security;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * The public key can be used to verify signatures.
@@ -50,8 +51,16 @@ public interface PublicKey {
   Optional<String> getOwner();
 
   /**
+   * Returns the contacts of the publickey.
+   *
+   * @return owner or empty optional
+   */
+  Set<String> getContacts();
+
+  /**
    * Verifies that the signature is valid for the given data.
-   * @param stream stream of data to verify
+   *
+   * @param stream    stream of data to verify
    * @param signature signature
    * @return {@code true} if the signature is valid for the given data
    */
@@ -59,7 +68,8 @@ public interface PublicKey {
 
   /**
    * Verifies that the signature is valid for the given data.
-   * @param data data to verify
+   *
+   * @param data      data to verify
    * @param signature signature
    * @return {@code true} if the signature is valid for the given data
    */
