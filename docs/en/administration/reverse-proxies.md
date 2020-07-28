@@ -4,62 +4,69 @@ subtitle: How to use SCM-Manager with common reverse proxies
 displayToc: true
 ---
 
-TODO reverse proxies in general send X-Forwarded headers ...
+SCM-Manager can run behind any reverse proxy, but a few rules must be respected.
+The reverse proxy should not encode slashes and the `X-Forwarded-For` and `X-Forwarded-Host` headers must be send to SCM-Manager.
+If the proxy uses a different protocol as the SCM-Manager e.g. https on proxy and http on scm-manager, the `X-Forwarded-Proto` header must be send too.
 
-### nginx
+## nginx
 
-TODO ...
+```nginx
+# set required forward headers
+proxy_set_header X-Forwarded-Host $host:$server_port;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+# if https is used make sure X-Forwarded-Proto header is send
+proxy_set_header X-Forwarded-Proto $scheme;
 
-### Apache
+# assuming scm-manager is running on localhost at port 8080
+location /scm {
+    proxy_pass http://scm:8080;
+}
+```
 
-<!--
-TODO: does this set X-Forwarded Headers?
--->
+## Apache
 
-```apache
-ProxyPass /scm http://localhost:8080/scm
+```apacheconf
+# Ensure mod_proxy and mod_proxy_http modules are loaded
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+
+# avoid encoding of slashes
+AllowEncodedSlashes NoDecode
+
+# if https is used, make sure X-Forwarded-Proto is send
+RequestHeader set "X-Forwarded-Proto" expr=%{REQUEST_SCHEME}
+RequestHeader set "X-Forwarded-SSL" expr=%{HTTPS}
+
+# assuming scm-manager is running on localhost at port 8080
+ProxyPass /scm http://localhost:8080/scm nocanon
 ProxyPassReverse /scm http://localhost:8080/scm
-ProxyPassReverse  /scm  http://servername:8080/scm
+ProxyPassReverse  /scm  http://localhost:8080/scm
+
 <Location /scm>
- Order allow,deny
- Allow from all
+    Order allow,deny
+    Allow from all
 </Location>
 ```
-- **Warning**: Setting ProxyPassReverseCookiePath would most likely cause problems with session handling!
-- **Note**: If you encounter timeout problems, please have a look at [Apache Module mod_proxy#Workers](http://httpd.apache.org/docs/current/mod/mod_proxy.html#workers).
 
-### HA-Proxy
+### Notes
 
-TODO ...
+* Setting ProxyPassReverseCookiePath would most likely cause problems with session handling!
+* If you encounter timeout problems, please have a look at [Apache Module mod_proxy#Workers](http://httpd.apache.org/docs/current/mod/mod_proxy.html#workers).
 
-### SCM-Server conf/server-config.xml
+## HAProxy
 
-<!--
-TODO: do we need it
--->
-
-NOTE: This file is found in the installation directory, not the user\'s
-home directory.
-
-Uncomment following line: 
-```xml
-<Set name="forwarded">true</Set>
-```
-
-Example: 
-```xml
-<Call name="addConnector">
-  <Arg>
-    <New class="org.eclipse.jetty.server.nio.SelectChannelConnector">
-      <Set name="host">
-        <SystemProperty name="jetty.host" />
-      </Set>
-      <Set name="port">
-        <SystemProperty name="jetty.port" default="8080"/>
-      </Set>
-      <!-- for mod_proxy -->
-      <Set name="forwarded">true</Set>
-    </New>
-  </Arg>
-</Call>
+```apacheconf
+backend scm
+    # use http as proxy protocol
+    mode http
+    # sets X-Forwarded-For header
+    option forwardfor
+    # check if scm is running
+    option httpchk GET /scm/api/v2
+    # assuming scm-manager is running on localhost at port 8080
+    server dcscm1 localhost:8080 check
+    # sets X-Forwarded-Host header
+    http-request set-header X-Forwarded-Host %[req.hdr(Host)]
+    # sets X-Forwarded-Proto to https if ssl is enabled
+    http-request set-header X-Forwarded-Proto https if { ssl_fc }
 ```

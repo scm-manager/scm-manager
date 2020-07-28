@@ -30,13 +30,15 @@ import { arduinoLight } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 type Props = {
   language?: string;
   value: string;
+  showLineNumbers?: boolean;
 };
 
 const defaultLanguage = "text";
 
 class SyntaxHighlighter extends React.Component<Props> {
   static defaultProps: Partial<Props> = {
-    language: defaultLanguage
+    language: defaultLanguage,
+    showLineNumbers: true
   };
 
   getLanguage = () => {
@@ -48,9 +50,10 @@ class SyntaxHighlighter extends React.Component<Props> {
   };
 
   render() {
+    const { showLineNumbers } = this.props;
     const language = this.getLanguage();
     return (
-      <ReactSyntaxHighlighter showLineNumbers={false} language={language} style={arduinoLight}>
+      <ReactSyntaxHighlighter showLineNumbers={showLineNumbers} language={language} style={arduinoLight}>
         {this.props.value}
       </ReactSyntaxHighlighter>
     );

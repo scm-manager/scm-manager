@@ -102,6 +102,22 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   }
 
   @Test
+  public void shouldAddNewFileInDefaultPath() throws IOException {
+    File testfile = temporaryFolder.newFile("Test123");
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setDefaultPath(true);
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("Test123", testfile, false));
+    request.setCommitMessage("this is great");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    svnModifyCommand.execute(request);
+
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
+    assertThat(new File(workingCopy.getWorkingRepository(), "trunk/Test123")).exists();
+  }
+
+  @Test
   public void shouldThrowFileAlreadyExistsException() throws IOException {
     File testfile = temporaryFolder.newFile("a.txt");
 

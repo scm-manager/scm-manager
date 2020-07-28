@@ -43,6 +43,11 @@ After clicking on a file in the sources, the details of the file are shown. Depe
 
 ![Repository-Code-FileDetails](assets/repository-code-fileViewer.png)
 
+### File Annotate
+Supplements each line of code with the relevant information when and by which author it was last modified. With a hover on the left side a popover with changeset and further information appears.
+
+![Repository-Code-FileAnnotate](assets/repository-code-fileAnnotate.png)
+
 ### File History
 In the detailed file view there is a switch button in the upper right corner which allows to switch to the history view. The history shows all commits that changed the file.
 

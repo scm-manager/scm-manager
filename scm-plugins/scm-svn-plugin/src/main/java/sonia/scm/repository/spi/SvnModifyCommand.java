@@ -39,12 +39,13 @@ import sonia.scm.repository.work.WorkingCopy;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class SvnModifyCommand implements ModifyCommand {
 
-  private SvnContext context;
-  private SvnWorkingCopyFactory workingCopyFactory;
-  private Repository repository;
+  private final SvnContext context;
+  private final SvnWorkingCopyFactory workingCopyFactory;
+  private final Repository repository;
 
   SvnModifyCommand(SvnContext context, SvnWorkingCopyFactory workingCopyFactory) {
     this.context = context;
@@ -57,6 +58,9 @@ public class SvnModifyCommand implements ModifyCommand {
     SVNClientManager clientManager = SVNClientManager.newInstance();
     try (WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null)) {
       File workingDirectory = workingCopy.getDirectory();
+      if (request.isDefaultPath()) {
+        workingDirectory = Paths.get(workingDirectory.toString() + "/trunk").toFile();
+      }
       modifyWorkingDirectory(request, clientManager, workingDirectory);
       return commitChanges(clientManager, workingDirectory, request.getCommitMessage());
     }

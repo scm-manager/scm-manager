@@ -22,38 +22,19 @@
  * SOFTWARE.
  */
 
-package sonia.scm.util;
+package sonia.scm.repository;
 
-import org.junit.jupiter.api.Test;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.Person;
+import lombok.Value;
+import sonia.scm.event.Event;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-class JexlUrlParserTest {
-
-  @Test
-  void shouldParseUrlWithoutExpression() {
-    JexlUrlParser jexlUrlParser = new JexlUrlParser();
-    Map<String, Object> env = new HashMap<>();
-    env.put("changeset", new Changeset("1", 1L, Person.toPerson("trillian")));
-
-    String parsedUrl = jexlUrlParser.parse("http://hitchhiker.org").evaluate(env);
-
-    assertThat(parsedUrl).isEqualTo("http://hitchhiker.org");
-  }
-
-  @Test
-  void shouldParseUrlWithExpression() {
-    JexlUrlParser jexlUrlParser = new JexlUrlParser();
-    Map<String, Object> env = new HashMap<>();
-    env.put("changeset", new Changeset("1", 1L, Person.toPerson("trillian")));
-
-    String parsedUrl = jexlUrlParser.parse("http://${changeset.author.name}.org").evaluate(env);
-
-    assertThat(parsedUrl).isEqualTo("http://trillian.org");
-  }
+/**
+ * This event is fired when a new branch was created from SCM-Manager.
+ * Warning: This event will not be fired if a new branch was pushed.
+ * @since 2.3.0
+ */
+@Event
+@Value
+public class BranchCreatedEvent {
+  private Repository repository;
+  private String branchName;
 }

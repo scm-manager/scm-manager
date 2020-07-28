@@ -16,7 +16,7 @@
   entries:
   - /administration/basedirectory/
   - /administration/logging/
-  - /administration/scm-server-ssl/
+  - /administration/scm-server/
   - /administration/reverse-proxies/
 
 - section: Development

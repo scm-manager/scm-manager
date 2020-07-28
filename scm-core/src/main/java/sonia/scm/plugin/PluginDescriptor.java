@@ -21,10 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import java.util.Set;
+
+import static java.util.Collections.emptySet;
 
 public interface PluginDescriptor {
 
@@ -33,5 +35,9 @@ public interface PluginDescriptor {
   PluginCondition getCondition();
 
   Set<String> getDependencies();
+
+  default Set<String> getOptionalDependencies() {
+    return emptySet();
+  }
 
 }

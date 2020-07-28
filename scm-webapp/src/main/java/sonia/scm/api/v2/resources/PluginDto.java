@@ -53,6 +53,7 @@ public class PluginDto extends HalRepresentation {
   private Boolean core;
   private Boolean markedForUninstall;
   private Set<String> dependencies;
+  private Set<String> optionalDependencies;
 
   public PluginDto(Links links) {
     add(links);

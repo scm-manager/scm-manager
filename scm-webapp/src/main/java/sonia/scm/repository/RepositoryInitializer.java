@@ -73,7 +73,7 @@ public class RepositoryInitializer {
     }
   }
 
-  private class InitializerContextImpl implements RepositoryContentInitializer.InitializerContext {
+  private static class InitializerContextImpl implements RepositoryContentInitializer.InitializerContext {
 
     private final Repository repository;
     private final ModifyCommandBuilder builder;
@@ -90,11 +90,11 @@ public class RepositoryInitializer {
 
     @Override
     public RepositoryContentInitializer.CreateFile create(String path) {
-      return new CreateFileImpl(this, builder.createFile(path).setOverwrite(true));
+      return new CreateFileImpl(this, builder.useDefaultPath(true).createFile(path).setOverwrite(true));
     }
   }
 
-  private class CreateFileImpl implements RepositoryContentInitializer.CreateFile {
+  private static class CreateFileImpl implements RepositoryContentInitializer.CreateFile {
 
     private final RepositoryContentInitializer.InitializerContext initializerContext;
     private final ModifyCommandBuilder.WithOverwriteFlagContentLoader contentLoader;
