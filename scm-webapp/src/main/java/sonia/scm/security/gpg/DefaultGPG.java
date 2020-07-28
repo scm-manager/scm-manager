@@ -24,30 +24,57 @@
 
 package sonia.scm.security.gpg;
 
+import org.bouncycastle.openpgp.PGPException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.security.GPG;
 import sonia.scm.security.PrivateKey;
 import sonia.scm.security.PublicKey;
 
+import javax.inject.Inject;
+import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-/**
- * Dummy implementation of {@link GPG} should be replaced soon.
- */
-public class DummyGPG implements GPG {
+public class DefaultGPG implements GPG {
+
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultGPG.class);
+  private final PublicKeyStore store;
+
+  @Inject
+  public DefaultGPG(PublicKeyStore store) {
+    this.store = store;
+  }
 
   @Override
   public String findPublicKeyId(byte[] signature) {
-    return "unknown";
+    try {
+      return Keys.resolveIdFromKey(new String(signature));
+    } catch (PGPException | IOException e) {
+      LOG.error("Could not find public key id in signature");
+    }
+    return "";
   }
 
   @Override
   public Optional<PublicKey> findPublicKey(String id) {
-    return Optional.empty();
+    Optional<RawGpgKey> key = store.findById(id);
+    return key.map(rawGpgKey -> new GpgKey(id, rawGpgKey.getOwner()));
   }
 
   @Override
   public Iterable<PublicKey> findPublicKeysByUsername(String username) {
+    List<RawGpgKey> keys = store.findByUsername(username);
+
+    if (!keys.isEmpty()) {
+      return keys
+        .stream()
+        .map(rawGpgKey -> new GpgKey(rawGpgKey.getId(), rawGpgKey.getOwner()))
+        .collect(Collectors.toSet());
+    }
+
     return Collections.emptySet();
   }
 

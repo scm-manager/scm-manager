@@ -32,6 +32,6 @@ import sonia.scm.security.GPG;
 public class GPGModule extends AbstractModule {
   @Override
   protected void configure() {
-    bind(GPG.class).to(DummyGPG.class);
+    bind(GPG.class).to(DefaultGPG.class);
   }
 }

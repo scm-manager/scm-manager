@@ -22,45 +22,30 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security;
+package sonia.scm.security.gpg;
 
-import java.util.Optional;
+import org.junit.jupiter.api.Test;
 
-/**
- * Allows signing and verification using gpg.
- *
- * @since 2.4.0
- */
-public interface GPG {
+import java.io.IOException;
 
-  /**
-   * Returns the id of the key from the given signature.
-   *
-   * @param signature signature
-   * @return public key id
-   */
-  String findPublicKeyId(byte[] signature);
+import static org.assertj.core.api.Assertions.assertThat;
 
-  /**
-   * Returns the public key with the given id or an empty optional.
-   *
-   * @param id id of public
-   * @return public key or empty optional
-   */
-  Optional<PublicKey> findPublicKey(String id);
+class GpgKeyTest {
 
-  /**
-   * Returns all public keys assigned to the given username
-   *
-   * @param username username of the public key owner
-   * @return collection of public keys
-   */
-  Iterable<PublicKey> findPublicKeysByUsername(String username);
+  @Test
+  void shouldVerifyPublicKey() throws IOException {
+    StringBuilder longContent = new StringBuilder();
+    for (int i = 1; i < 10000; i++) {
+      longContent.append(i);
+    }
 
-  /**
-   * Returns the default private key of the currently authenticated user.
-   *
-   * @return default private key
-   */
-  PrivateKey getPrivateKey();
+    byte[] raw = GPGTestHelper.readKey("subkeys.asc").getBytes();
+
+    GpgKey key = new GpgKey("1", "trillian");
+
+    boolean verified = key.verify(longContent.toString().getBytes(), raw);
+
+   // assertThat(verified).isTrue();
+  }
+
 }
