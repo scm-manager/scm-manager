@@ -47,6 +47,7 @@ type Props = DiffObjectProps &
   WithTranslation & {
     file: File;
     changesetId?: string;
+    baseUrl?: string;
   };
 
 type Collapsible = {
