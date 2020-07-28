@@ -38383,7 +38383,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
                 <a
                   aria-label="diff.jumpToFile"
                   className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
-                  href="/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/src/main/java/com/cloudogu/scm/review/events/EventListener.java/"
+                  href="/repo/hitchhiker/heartOfGold/code/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/src/main/java/com/cloudogu/scm/review/events/EventListener.java/"
                   onClick={[Function]}
                 >
                   <i
@@ -39002,7 +39002,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
                 <a
                   aria-label="diff.jumpToFile"
                   className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
-                  href="/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/src/main/js/ChangeNotification.tsx/"
+                  href="/repo/hitchhiker/heartOfGold/code/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/src/main/js/ChangeNotification.tsx/"
                   onClick={[Function]}
                 >
                   <i
@@ -39958,7 +39958,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
                 <a
                   aria-label="diff.jumpToFile"
                   className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
-                  href="/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/src/main/resources/locales/de/plugins.json/"
+                  href="/repo/hitchhiker/heartOfGold/code/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/src/main/resources/locales/de/plugins.json/"
                   onClick={[Function]}
                 >
                   <i
@@ -40485,7 +40485,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
                 <a
                   aria-label="diff.jumpToFile"
                   className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
-                  href="/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/src/main/resources/locales/en/plugins.json/"
+                  href="/repo/hitchhiker/heartOfGold/code/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/src/main/resources/locales/en/plugins.json/"
                   onClick={[Function]}
                 >
                   <i
@@ -41012,7 +41012,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
                 <a
                   aria-label="diff.jumpToFile"
                   className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
-                  href="/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/src/test/java/com/cloudogu/scm/review/events/ClientTest.java/"
+                  href="/repo/hitchhiker/heartOfGold/code/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/src/test/java/com/cloudogu/scm/review/events/ClientTest.java/"
                   onClick={[Function]}
                 >
                   <i
@@ -42229,7 +42229,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
                 <a
                   aria-label="diff.jumpToFile"
                   className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
-                  href="/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/Main.java/"
+                  href="/repo/hitchhiker/heartOfGold/code/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/Main.java/"
                   onClick={[Function]}
                 >
                   <i

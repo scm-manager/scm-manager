@@ -417,13 +417,14 @@ class DiffFile extends React.Component<Props, State> {
     }
     const collapseIcon = this.hasContent(file) ? <Icon name={icon} color="inherit" /> : null;
     const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
-    const jumpToFile = changesetId ? (
-      <JumpToFileButton
-        link={`${baseUrl.substr(0, baseUrl.lastIndexOf("/"))}/sources/${changesetId}/${
-          file.type !== "delete" ? file.newPath : file.oldPath.substr(0, file.oldPath.lastIndexOf("/"))
-        }/`}
-      />
-    ) : null;
+    const jumpToFile =
+      changesetId && baseUrl ? (
+        <JumpToFileButton
+          link={`${baseUrl.substr(0, baseUrl.lastIndexOf("/"))}/sources/${changesetId}/${
+            file.type !== "delete" ? file.newPath : file.oldPath.substr(0, file.oldPath.lastIndexOf("/"))
+          }/`}
+        />
+      ) : null;
     const sideBySideToggle =
       file.hunks && file.hunks.length > 0 ? (
         <ButtonWrapper className={classNames("level-right", "is-flex")}>

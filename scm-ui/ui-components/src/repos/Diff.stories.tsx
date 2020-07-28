@@ -126,4 +126,10 @@ storiesOf("Diff", module)
     });
     return <Diff diff={filesWithLanguage} />;
   })
-  .add("WithLinkToFile", () => <Diff diff={diffFiles} changesetId="0b92307029a2a171e3b467a1502f392c733e3e8f" />);
+  .add("WithLinkToFile", () => (
+    <Diff
+      diff={diffFiles}
+      changesetId="0b92307029a2a171e3b467a1502f392c733e3e8f"
+      baseUrl="/repo/hitchhiker/heartOfGold/code/changeset"
+    />
+  ));

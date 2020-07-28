@@ -31,6 +31,7 @@ type Props = WithTranslation &
   DiffObjectProps & {
     diff: File[];
     changesetId?: string;
+    baseUrl?: string;
   };
 
 class Diff extends React.Component<Props> {
