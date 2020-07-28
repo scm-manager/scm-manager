@@ -47,6 +47,7 @@ import { Link as ReactLink } from "react-router-dom";
 type Props = WithTranslation & {
   changeset: Changeset;
   repository: Repository;
+  baseUrl: string;
 };
 
 type State = {
@@ -157,7 +158,7 @@ class ChangesetDetails extends React.Component<Props, State> {
   }
 
   render() {
-    const { changeset, repository, t } = this.props;
+    const { changeset, repository, baseUrl, t } = this.props;
     const { collapsed } = this.state;
 
     const description = changesets.parseDescription(changeset.description);
@@ -238,7 +239,7 @@ class ChangesetDetails extends React.Component<Props, State> {
               />
             }
           />
-          <ChangesetDiff changeset={changeset} defaultCollapse={collapsed} />
+          <ChangesetDiff changeset={changeset} baseUrl={baseUrl} defaultCollapse={collapsed} />
         </div>
       </>
     );

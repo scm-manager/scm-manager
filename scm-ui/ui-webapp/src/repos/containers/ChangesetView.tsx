@@ -40,6 +40,7 @@ type Props = WithTranslation & {
   id: string;
   changeset: Changeset;
   repository: Repository;
+  baseUrl: string;
   loading: boolean;
   error: Error;
   fetchChangesetIfNeeded: (repository: Repository, id: string) => void;
@@ -60,7 +61,7 @@ class ChangesetView extends React.Component<Props> {
   }
 
   render() {
-    const { changeset, loading, error, t, repository } = this.props;
+    const { changeset, loading, error, t, repository, baseUrl } = this.props;
 
     if (error) {
       return <ErrorPage title={t("changesets.errorTitle")} subtitle={t("changesets.errorSubtitle")} error={error} />;
@@ -68,7 +69,7 @@ class ChangesetView extends React.Component<Props> {
 
     if (!changeset || loading) return <Loading />;
 
-    return <ChangesetDetails changeset={changeset} repository={repository} />;
+    return <ChangesetDetails changeset={changeset} repository={repository} baseUrl={baseUrl} />;
   }
 }
 

@@ -182,7 +182,7 @@ class RepositoryRoot extends React.Component<Props> {
                 <Route
                   exact
                   path={`${url}/code/changeset/:id`}
-                  render={() => <ChangesetView repository={repository} />}
+                  render={() => <ChangesetView repository={repository} baseUrl={`${url}/code/changeset`} />}
                 />
                 <Route
                   path={`${url}/code/sourceext/:extension`}

@@ -29,6 +29,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 
 type Props = WithTranslation & {
   changeset: Changeset;
+  baseUrl: string;
   defaultCollapse?: boolean;
 };
 
@@ -47,12 +48,12 @@ export const createUrl = (changeset: Collection) => {
 
 class ChangesetDiff extends React.Component<Props> {
   render() {
-    const { changeset, defaultCollapse, t } = this.props;
+    const { changeset, baseUrl, defaultCollapse, t } = this.props;
     if (!isDiffSupported(changeset)) {
       return <Notification type="danger">{t("changeset.diffNotSupported")}</Notification>;
     } else {
       const url = createUrl(changeset);
-      return <LoadingDiff url={url} defaultCollapse={defaultCollapse} sideBySide={false} changesetId={changeset.id} />;
+      return <LoadingDiff url={url} defaultCollapse={defaultCollapse} sideBySide={false} changesetId={changeset.id} baseUrl={baseUrl} />;
     }
   }
 }

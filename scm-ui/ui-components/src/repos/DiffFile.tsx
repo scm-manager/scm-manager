@@ -393,10 +393,9 @@ class DiffFile extends React.Component<Props, State> {
   hasContent = (file: File) => file && !file.isBinary && file.hunks && file.hunks.length > 0;
 
   render() {
-    const { fileControlFactory, fileAnnotationFactory, changesetId, t } = this.props;
+    const { fileControlFactory, fileAnnotationFactory, changesetId, baseUrl, t } = this.props;
     const { file, collapsed, sideBySide, diffExpander, expansionError } = this.state;
     const viewType = sideBySide ? "split" : "unified";
-    console.log(`DifFile ${file.newPath}:`, file); //TODO: delete log
 
     let body = null;
     let icon = "angle-right";
@@ -418,7 +417,13 @@ class DiffFile extends React.Component<Props, State> {
     }
     const collapseIcon = this.hasContent(file) ? <Icon name={icon} color="inherit" /> : null;
     const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
-    const jumpToFile = changesetId ? <JumpToFileButton link={`../sources/${changesetId}/${file.newPath}/`} /> : null;
+    const jumpToFile = changesetId ? (
+      <JumpToFileButton
+        link={`${baseUrl.substr(0, baseUrl.lastIndexOf("/"))}/sources/${changesetId}/${
+          file.type !== "delete" ? file.newPath : file.oldPath.substr(0, file.oldPath.lastIndexOf("/"))
+        }/`}
+      />
+    ) : null;
     const sideBySideToggle =
       file.hunks && file.hunks.length > 0 ? (
         <ButtonWrapper className={classNames("level-right", "is-flex")}>

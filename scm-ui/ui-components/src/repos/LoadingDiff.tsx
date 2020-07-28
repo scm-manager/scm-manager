@@ -38,6 +38,7 @@ type Props = WithTranslation &
   DiffObjectProps & {
     url: string;
     changesetId?: string;
+    baseUrl: string;
   };
 
 type State = {
