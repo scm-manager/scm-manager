@@ -39,12 +39,26 @@
 
   <fileSets>
 
+      <!-- 
+      we have to filter server-config.xml and logging.xml,
+      in order to add the correct link to the documentation
+    -->
+
+    <fileSet>
+      <directory>src/main/fs/conf</directory>
+      <filtered>true</filtered>
+      <outputDirectory>conf</outputDirectory>
+    </fileSet>
+
     <fileSet>
       <directory>src/main/fs</directory>
       <filtered>false</filtered>
+      <excludes>
+        <exclude>conf/**</exclude>
+      </excludes>
       <outputDirectory></outputDirectory>
     </fileSet>
-
+    
     <fileSet>
       <directory>target/windows</directory>
       <filtered>false</filtered>

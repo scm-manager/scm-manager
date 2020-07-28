@@ -4,14 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [2.3.0] - 2020-07-23
+
 ### Added
 - Add branch link provider to access branch links in plugins ([#1243](https://github.com/scm-manager/scm-manager/pull/1243))
 - Add key value input field component ([#1246](https://github.com/scm-manager/scm-manager/pull/1246))
-- Add Jexl parser ([#1251](https://github.com/scm-manager/scm-manager/pull/1251))
+- Update installed optional plugin dependencies upon plugin upgrade ([#1260](https://github.com/scm-manager/scm-manager/pull/1260))
 
 ### Changed
 - Adding start delay to liveness and readiness probes in helm chart template
+- Init svn repositories with trunk folder ([#1259](https://github.com/scm-manager/scm-manager/pull/1259))
+- Show line numbers in source code view by default ([#1265](https://github.com/scm-manager/scm-manager/pull/1265))
 
 ### Fixed
 - Fixed file extension detection with new spotter version
@@ -19,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed error in update step ([#1237](https://github.com/scm-manager/scm-manager/issues/1237) and [#1244](https://github.com/scm-manager/scm-manager/issues/1244))
 - Fix incorrect trimming of whitespaces in helm chart templates 
 - Fixed error on empty diff expand response ([#1247](https://github.com/scm-manager/scm-manager/pull/1247))
+- Ignore ports on proxy exclusions ([#1256](https://github.com/scm-manager/scm-manager/pull/1256))
+- Invalidate branches cache synchronously on create new branch ([#1261](https://github.com/scm-manager/scm-manager/pull/1261))
 
 ## [2.2.0] - 2020-07-03
 ### Added
@@ -239,3 +244,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.1.0]: https://www.scm-manager.org/download/2.1.0
 [2.1.1]: https://www.scm-manager.org/download/2.1.1
 [2.2.0]: https://www.scm-manager.org/download/2.2.0
+[2.3.0]: https://www.scm-manager.org/download/2.3.0

@@ -85,6 +85,9 @@ public final class PluginCenterDto implements Serializable {
     @XmlElement(name = "dependencies")
     private Set<String> dependencies;
 
+    @XmlElement(name = "optionalDependencies")
+    private Set<String> optionalDependencies;
+
     @XmlElement(name = "_links")
     private Map<String, Link> links;
   }

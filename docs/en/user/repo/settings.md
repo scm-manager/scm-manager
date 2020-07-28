@@ -7,7 +7,7 @@ By default, there are two items in the repository settings. Depending on additio
 ### General
 The "General" item allows you to edit the additional information of the repository. Git repositories for example also have the option to change the default branch here. The default branch is the one that is used when working with the repository if no specific branch is selected.
 
-At the bottom of this screen is also a button to delete the repository from SCM-Manager. The deletion is irreversible.
+In the danger zone at the bottom you may rename the repository or delete it. If the namespace strategy in the global SCM-Manager config is set to `custom` you may even rename the repository namespace.
 
 ![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
 

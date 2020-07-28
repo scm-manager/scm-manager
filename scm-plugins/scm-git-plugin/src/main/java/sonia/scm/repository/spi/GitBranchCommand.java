@@ -30,6 +30,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Branch;
+import sonia.scm.repository.BranchCreatedEvent;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
@@ -71,6 +72,8 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
       eventBus.post(new PreReceiveRepositoryHookEvent(hookEvent));
       Ref ref = git.branchCreate().setStartPoint(request.getParentBranch()).setName(request.getNewBranch()).call();
       eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
+      // Clear cache synchronously to avoid branch not found in invalid cache
+      eventBus.post(new BranchCreatedEvent(repository, request.getNewBranch()));
       return Branch.normalBranch(request.getNewBranch(), GitUtil.getId(ref.getObjectId()));
     } catch (GitAPIException | IOException ex) {
       throw new InternalRepositoryException(repository, "could not create branch " + request.getNewBranch(), ex);

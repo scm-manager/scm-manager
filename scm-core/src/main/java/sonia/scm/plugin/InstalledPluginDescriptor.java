@@ -191,6 +191,7 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
    *
    * @since 2.0.0
    */
+  @Override
   public Set<String> getOptionalDependencies() {
     if (optionalDependencies == null)
     {

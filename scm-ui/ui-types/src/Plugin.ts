@@ -36,6 +36,7 @@ export type Plugin = {
   pending: boolean;
   markedForUninstall?: boolean;
   dependencies: string[];
+  optionalDependencies: string[];
   _links: Links;
 };
 

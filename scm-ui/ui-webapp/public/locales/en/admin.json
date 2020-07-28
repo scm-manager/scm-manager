@@ -62,6 +62,7 @@
       "currentVersion": "Installed version",
       "newVersion": "New version",
       "dependencyNotification": "With this plugin, the following dependencies will be installed/updated if their latest versions are not installed yet!",
+      "optionalDependencyNotification": "With this plugin, the following optional dependencies will be updated if they are installed!",
       "dependencies": "Dependencies",
       "installedNotification": "Successfully installed plugin. You have to reload the page, to see ui changes:",
       "updatedNotification": "Successfully updated plugin. You have to reload the page, to see ui changes:",

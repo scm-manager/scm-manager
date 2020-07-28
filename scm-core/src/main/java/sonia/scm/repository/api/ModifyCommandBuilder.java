@@ -175,6 +175,11 @@ public class ModifyCommandBuilder {
     return this;
   }
 
+  public ModifyCommandBuilder useDefaultPath(boolean useDefaultPath) {
+    request.setDefaultPath(useDefaultPath);
+    return this;
+  }
+
   public interface ContentLoader {
     /**
      * Specify the data of the file using a {@link ByteSource}.
