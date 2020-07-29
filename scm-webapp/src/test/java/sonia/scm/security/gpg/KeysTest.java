@@ -38,21 +38,21 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static sonia.scm.security.gpg.GPGTestHelper.readKey;
+import static sonia.scm.security.gpg.GPGTestHelper.readResource;
 
 @ExtendWith(MockitoExtension.class)
 class KeysTest {
 
   @Test
   void shouldResolveSingleId() throws IOException {
-    String rawPublicKey = readKey("single.asc");
+    String rawPublicKey = readResource("single.asc");
     Keys keys = Keys.resolve(rawPublicKey);
     assertThat(keys.getMaster()).isEqualTo("0x975922F193B07D6E");
   }
 
   @Test
   void shouldResolveIdsFromSubkeys() throws IOException {
-    String rawPublicKey = readKey("subkeys.asc");
+    String rawPublicKey = readResource("subkeys.asc");
     Keys keys = Keys.resolve(rawPublicKey);
     assertThat(keys.getMaster()).isEqualTo("0x13B13D4C8A9350A1");
     assertThat(keys.getSubs()).containsOnly("0x247E908C6FD35473", "0xE50E1DD8B90D3A6B", "0xBF49759E43DD0E60");

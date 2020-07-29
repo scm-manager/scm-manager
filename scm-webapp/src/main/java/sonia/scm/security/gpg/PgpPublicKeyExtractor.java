@@ -24,55 +24,34 @@
 
 package sonia.scm.security.gpg;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import sonia.scm.xml.XmlInstantAdapter;
+import org.bouncycastle.bcpg.ArmoredInputStream;
+import org.bouncycastle.openpgp.PGPObjectFactory;
+import org.bouncycastle.openpgp.PGPPublicKey;
+import org.bouncycastle.openpgp.PGPPublicKeyRing;
+import org.bouncycastle.openpgp.operator.jcajce.JcaKeyFingerprintCalculator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.time.Instant;
-import java.util.Objects;
-import java.util.Set;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Optional;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
-public class RawGpgKey {
+public class PgpPublicKeyExtractor {
 
-  private String id;
-  private String displayName;
-  private String owner;
-  private String raw;
-  private Set<String> contacts;
+  private PgpPublicKeyExtractor() {}
 
-  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
-  private Instant created;
+  private static final Logger LOG = LoggerFactory.getLogger(PgpPublicKeyExtractor.class);
 
-  RawGpgKey(String id) {
-    this.id = id;
-  }
+  static Optional<PGPPublicKey> getFromRawKey(String rawKey) {
+    try {
+      ArmoredInputStream armoredInputStream = new ArmoredInputStream(new ByteArrayInputStream(rawKey.getBytes()));
+      PGPObjectFactory pgpObjectFactory = new PGPObjectFactory(armoredInputStream, new JcaKeyFingerprintCalculator());
+      PGPPublicKey publicKey = ((PGPPublicKeyRing) pgpObjectFactory.nextObject()).getPublicKey();
+      return Optional.of(publicKey);
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    } catch (IOException e) {
+      LOG.error("Invalid PGP key");
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    RawGpgKey that = (RawGpgKey) o;
-    return Objects.equals(id, that.id);
+    return Optional.empty();
   }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
-  }
-
 }

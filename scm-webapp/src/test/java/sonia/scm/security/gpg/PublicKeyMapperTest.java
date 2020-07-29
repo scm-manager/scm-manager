@@ -38,6 +38,7 @@ import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -68,8 +69,8 @@ class PublicKeyMapperTest {
   void shouldMapKeyToDto() throws IOException {
     when(subject.isPermitted("user:changePublicKeys:trillian")).thenReturn(true);
 
-    String raw = GPGTestHelper.readKey("single.asc");
-    RawGpgKey key = new RawGpgKey("1", "key_42", "trillian", raw, Instant.now());
+    String raw = GPGTestHelper.readResource("single.asc");
+    RawGpgKey key = new RawGpgKey("1", "key_42", "trillian", raw, Collections.emptySet(), Instant.now());
 
     RawGpgKeyDto dto = mapper.map(key);
 
@@ -82,8 +83,8 @@ class PublicKeyMapperTest {
 
   @Test
   void shouldNotAppendDeleteLink() throws IOException {
-    String raw = GPGTestHelper.readKey("single.asc");
-    RawGpgKey key = new RawGpgKey("1", "key_42", "trillian", raw, Instant.now());
+    String raw = GPGTestHelper.readResource("single.asc");
+    RawGpgKey key = new RawGpgKey("1", "key_42", "trillian", raw, Collections.emptySet(), Instant.now());
 
     RawGpgKeyDto dto = mapper.map(key);
 

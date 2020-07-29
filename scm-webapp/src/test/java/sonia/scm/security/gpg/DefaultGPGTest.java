@@ -25,6 +25,7 @@
 package sonia.scm.security.gpg;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,8 +35,8 @@ import sonia.scm.security.PublicKey;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -51,7 +52,7 @@ class DefaultGPGTest {
 
   @Test
   void shouldFindIdInSignature() throws IOException {
-    String raw = GPGTestHelper.readKey("signature.asc");
+    String raw = GPGTestHelper.readResource("signature.asc");
     String publicKeyId = gpg.findPublicKeyId(raw.getBytes());
 
     assertThat(publicKeyId).isEqualTo("0x1F17B79A09DAD5B9");
@@ -59,8 +60,8 @@ class DefaultGPGTest {
 
   @Test
   void shouldFindPublicKey() throws IOException {
-    String raw = GPGTestHelper.readKey("subkeys.asc");
-    RawGpgKey key1 = new RawGpgKey("42", "key_42", "trillian", raw, Instant.now());
+    String raw = GPGTestHelper.readResource("subkeys.asc");
+    RawGpgKey key1 = new RawGpgKey("42", "key_42", "trillian", raw, ImmutableSet.of("trillian", "zaphod"), Instant.now());
 
     when(store.findById("42")).thenReturn(Optional.of(key1));
 
@@ -70,17 +71,16 @@ class DefaultGPGTest {
     assertThat(publicKey.get().getOwner()).isPresent();
     assertThat(publicKey.get().getOwner().get()).contains("trillian");
     assertThat(publicKey.get().getId()).isEqualTo("42");
-    assertThat(publicKey.get().getContacts()).contains("Sebastian Sdorra <s.sdorra@gmail.com>",
-      "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>");
+    assertThat(publicKey.get().getContacts()).contains("trillian", "zaphod");
   }
 
   @Test
   void shouldFindKeysForUsername() throws IOException {
-    String raw = GPGTestHelper.readKey("single.asc");
-    String raw2= GPGTestHelper.readKey("subkeys.asc");
+    String raw = GPGTestHelper.readResource("single.asc");
+    String raw2= GPGTestHelper.readResource("subkeys.asc");
 
-    RawGpgKey key1 = new RawGpgKey("1", "1", "trillian", raw, Instant.now());
-    RawGpgKey key2 = new RawGpgKey("2", "2", "trillian", raw2, Instant.now());
+    RawGpgKey key1 = new RawGpgKey("1", "1", "trillian", raw, Collections.emptySet(), Instant.now());
+    RawGpgKey key2 = new RawGpgKey("2", "2", "trillian", raw2, Collections.emptySet(), Instant.now());
     when(store.findByUsername("trillian")).thenReturn(ImmutableList.of(key1, key2));
 
     Iterable<PublicKey> keys = gpg.findPublicKeysByUsername("trillian");

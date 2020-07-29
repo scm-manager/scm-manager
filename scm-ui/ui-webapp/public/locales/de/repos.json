@@ -91,6 +91,7 @@
     "signedBy": "Signiert von",
     "signatureStatus": "Status",
     "keyId": "Schlüssel-ID",
+    "keyContacts": "Kontakte",
     "signatureVerified": "Verifiziert",
     "signatureNotVerified": "Nicht verifiziert",
     "signatureInvalid": "Ungültig",

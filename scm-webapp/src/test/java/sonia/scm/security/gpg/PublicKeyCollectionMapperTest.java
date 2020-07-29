@@ -40,6 +40,7 @@ import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -103,8 +104,8 @@ class PublicKeyCollectionMapperTest {
   }
 
   private RawGpgKey createPublicKey(String displayName) throws IOException {
-    String raw = GPGTestHelper.readKey("single.asc");
-    return new RawGpgKey(displayName, displayName, "trillian", raw, Instant.now());
+    String raw = GPGTestHelper.readResource("single.asc");
+    return new RawGpgKey(displayName, displayName, "trillian", raw, Collections.emptySet(), Instant.now());
   }
 
 }

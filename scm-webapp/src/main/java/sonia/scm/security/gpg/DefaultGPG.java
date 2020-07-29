@@ -69,7 +69,7 @@ public class DefaultGPG implements GPG {
   public Optional<PublicKey> findPublicKey(String id) {
     Optional<RawGpgKey> key = store.findById(id);
 
-    return key.map(rawGpgKey -> new GpgKey(id, rawGpgKey.getOwner(), rawGpgKey.getRaw().getBytes()));
+    return key.map(rawGpgKey -> new GpgKey(rawGpgKey.getId(), rawGpgKey.getOwner(), rawGpgKey.getRaw(), rawGpgKey.getContacts()));
   }
 
   @Override
@@ -79,7 +79,7 @@ public class DefaultGPG implements GPG {
     if (!keys.isEmpty()) {
       return keys
         .stream()
-        .map(rawGpgKey -> new GpgKey(rawGpgKey.getId(), rawGpgKey.getOwner(), rawGpgKey.getRaw().getBytes()))
+        .map(rawGpgKey -> new GpgKey(rawGpgKey.getId(), rawGpgKey.getOwner(), rawGpgKey.getRaw(), rawGpgKey.getContacts()))
         .collect(Collectors.toSet());
     }
 

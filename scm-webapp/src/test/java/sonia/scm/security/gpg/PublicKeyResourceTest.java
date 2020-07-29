@@ -112,7 +112,7 @@ class PublicKeyResourceTest {
 
   @Test
   void shouldAddToStore() throws URISyntaxException, IOException {
-    String raw = GPGTestHelper.readKey("single.asc");
+    String raw = GPGTestHelper.readResource("single.asc");
 
     UriInfo uriInfo = mock(UriInfo.class);
     UriBuilder builder = mock(UriBuilder.class);

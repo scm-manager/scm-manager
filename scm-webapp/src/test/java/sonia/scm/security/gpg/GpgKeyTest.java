@@ -27,6 +27,9 @@ package sonia.scm.security.gpg;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Collections;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class GpgKeyTest {
 
@@ -37,13 +40,14 @@ class GpgKeyTest {
       longContent.append(i);
     }
 
-    byte[] raw = GPGTestHelper.readKey("subkeys.asc").getBytes();
+    String raw = GPGTestHelper.readResource("pubKeyEH.asc");
+    String signature = GPGTestHelper.readResource("signature.asc");
 
-    GpgKey key = new GpgKey("1", "trillian", raw);
+    GpgKey key = new GpgKey("1", "trillian", raw, Collections.emptySet());
 
-    boolean verified = key.verify(longContent.toString().getBytes(), raw);
+    boolean verified = key.verify(longContent.toString().getBytes(), signature.getBytes());
 
-    // assertThat(verified).isTrue();
+    //assertThat(verified).isTrue();
   }
 
 }

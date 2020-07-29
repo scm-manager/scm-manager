@@ -89,6 +89,7 @@
     "tags": "Tags",
     "signedBy": "Signed by",
     "keyId": "Key ID",
+    "keyContacts": "Contacts",
     "signatureStatus": "Status",
     "signatureVerified": "verified",
     "signatureNotVerified": "not verified",

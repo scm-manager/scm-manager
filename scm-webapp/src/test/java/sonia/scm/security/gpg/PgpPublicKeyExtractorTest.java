@@ -24,55 +24,24 @@
 
 package sonia.scm.security.gpg;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import sonia.scm.xml.XmlInstantAdapter;
+import org.bouncycastle.openpgp.PGPPublicKey;
+import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.time.Instant;
-import java.util.Objects;
-import java.util.Set;
+import java.io.IOException;
+import java.util.Optional;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
-public class RawGpgKey {
+import static org.assertj.core.api.Assertions.assertThat;
 
-  private String id;
-  private String displayName;
-  private String owner;
-  private String raw;
-  private Set<String> contacts;
+class PgpPublicKeyExtractorTest {
 
-  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
-  private Instant created;
+  @Test
+  void shouldExtractPublicKeyFromRawKey() throws IOException {
+    String raw = GPGTestHelper.readResource("pubKeyEH.asc");
 
-  RawGpgKey(String id) {
-    this.id = id;
-  }
+    Optional<PGPPublicKey> publicKey = PgpPublicKeyExtractor.getFromRawKey(raw);
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    RawGpgKey that = (RawGpgKey) o;
-    return Objects.equals(id, that.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
+    assertThat(publicKey).isPresent();
+    assertThat(Long.toHexString(publicKey.get().getKeyID())).isEqualTo("39ad4bed55527f1c");
   }
 
 }

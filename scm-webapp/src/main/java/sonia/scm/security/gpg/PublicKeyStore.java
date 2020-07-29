@@ -24,6 +24,9 @@
 
 package sonia.scm.security.gpg;
 
+import org.bouncycastle.openpgp.PGPPublicKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.security.NotPublicKeyException;
@@ -35,12 +38,18 @@ import sonia.scm.user.UserPermissions;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static sonia.scm.security.gpg.PgpPublicKeyExtractor.getFromRawKey;
 
 @Singleton
 public class PublicKeyStore {
+
+  private static final Logger LOG = LoggerFactory.getLogger(PublicKeyStore.class);
 
   private static final String STORE_NAME = "gpg_public_keys";
   private static final String SUBKEY_STORE_NAME = "gpg_public_sub_keys";
@@ -70,12 +79,19 @@ public class PublicKeyStore {
       subKeyStore.put(subKey, new MasterKeyReference(master));
     }
 
-    RawGpgKey key = new RawGpgKey(master, displayName, username, rawKey, Instant.now());
+    RawGpgKey key = new RawGpgKey(master, displayName, username, rawKey, getContactsFromPublicKey(rawKey), Instant.now());
 
     store.put(master, key);
 
     return key;
 
+  }
+
+  private Set<String> getContactsFromPublicKey(String rawKey) {
+    Set<String> contacts = new HashSet<>();
+    Optional<PGPPublicKey> publicKeyFromRawKey = getFromRawKey(rawKey);
+    publicKeyFromRawKey.ifPresent(pgpPublicKey -> pgpPublicKey.getUserIDs().forEachRemaining(contacts::add));
+    return contacts;
   }
 
   public void delete(String id) {

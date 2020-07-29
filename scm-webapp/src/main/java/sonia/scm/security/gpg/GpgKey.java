@@ -28,10 +28,9 @@ import org.bouncycastle.bcpg.ArmoredInputStream;
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPObjectFactory;
 import org.bouncycastle.openpgp.PGPPublicKey;
-import org.bouncycastle.openpgp.PGPPublicKeyRing;
 import org.bouncycastle.openpgp.PGPSignature;
+import org.bouncycastle.openpgp.PGPSignatureList;
 import org.bouncycastle.openpgp.operator.PGPContentVerifierBuilderProvider;
-import org.bouncycastle.openpgp.operator.jcajce.JcaKeyFingerprintCalculator;
 import org.bouncycastle.openpgp.operator.jcajce.JcaPGPContentVerifierBuilderProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,9 +42,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
+
+import static sonia.scm.security.gpg.PgpPublicKeyExtractor.getFromRawKey;
 
 public class GpgKey implements PublicKey {
 
@@ -53,16 +53,14 @@ public class GpgKey implements PublicKey {
 
   private final String id;
   private final String owner;
-  private final Set<String> contacts = new LinkedHashSet<>();
+  private final String raw;
+  private final Set<String> contacts;
 
-  public GpgKey(String id, String owner, byte[] raw) {
+  public GpgKey(String id, String owner, String raw, Set<String> contacts) {
     this.id = id;
     this.owner = owner;
-    try {
-      getPgpPublicKey(raw).getUserIDs().forEachRemaining(contacts::add);
-    } catch (IOException e) {
-      LOG.error("Could not find contacts in public key", e);
-    }
+    this.raw = raw;
+    this.contacts = contacts;
   }
 
   @Override
@@ -79,6 +77,11 @@ public class GpgKey implements PublicKey {
   }
 
   @Override
+  public String getRaw() {
+    return raw;
+  }
+
+  @Override
   public Set<String> getContacts() {
     return contacts;
   }
@@ -87,32 +90,34 @@ public class GpgKey implements PublicKey {
   public boolean verify(InputStream stream, byte[] signature) {
     boolean verified = false;
     try {
-      PGPPublicKey publicKey = getPgpPublicKey(signature);
-      PGPSignature pgpSignature = ((PGPSignature) publicKey.getSignatures().next());
+      ArmoredInputStream armoredInputStream = new ArmoredInputStream(new ByteArrayInputStream(signature));
+      PGPObjectFactory pgpObjectFactory = new PGPObjectFactory(armoredInputStream, null);
+      PGPSignature pgpSignature = ((PGPSignatureList) pgpObjectFactory.nextObject()).get(0);
 
       PGPContentVerifierBuilderProvider provider = new JcaPGPContentVerifierBuilderProvider();
-      pgpSignature.init(provider, publicKey);
 
-      char[] buffer = new char[1024];
-      int bytesRead = 0;
-      BufferedReader in = new BufferedReader(new InputStreamReader(stream));
+      Optional<PGPPublicKey> pgpPublicKey = getFromRawKey(raw);
 
-      while (bytesRead != -1) {
-        bytesRead = in.read(buffer, 0, 1024);
-        pgpSignature.update(new String(buffer).getBytes(StandardCharsets.UTF_8));
+      if (pgpPublicKey.isPresent()) {
+        pgpSignature.init(provider, pgpPublicKey.get());
+
+        char[] buffer = new char[1024];
+        int bytesRead = 0;
+        BufferedReader in = new BufferedReader(new InputStreamReader(stream));
+
+        while (bytesRead != -1) {
+          bytesRead = in.read(buffer, 0, 1024);
+          pgpSignature.update(new String(buffer).getBytes(StandardCharsets.UTF_8));
+        }
+
+        verified = pgpSignature.verify();
       }
 
-      verified = pgpSignature.verify();
     } catch (IOException | PGPException e) {
       LOG.error("Could not verify GPG key", e);
     }
-    return verified;
-  }
 
-  private PGPPublicKey getPgpPublicKey(byte[] signature) throws IOException {
-    ArmoredInputStream armoredInputStream = new ArmoredInputStream(new ByteArrayInputStream(signature));
-    PGPObjectFactory pgpObjectFactory = new PGPObjectFactory(armoredInputStream, new JcaKeyFingerprintCalculator());
-    return ((PGPPublicKeyRing) pgpObjectFactory.nextObject()).getPublicKey();
+    return verified;
   }
 }
 

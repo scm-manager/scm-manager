@@ -50,9 +50,15 @@ const SignatureIcon: FC<Props> = ({ signatures, className }) => {
       return `${t("changeset.signatureStatus")}: ${status}`;
     }
 
-    return `${t("changeset.signedBy")}: ${signature.owner}\n${t("changeset.keyId")}: ${signature.keyId}\n${t(
+    let message = `${t("changeset.signedBy")}: ${signature.owner}\n${t("changeset.keyId")}: ${signature.keyId}\n${t(
       "changeset.signatureStatus"
-    )}: ${status}\n${t("changeset.keyKontacts")}: ${signature.contacts.map((contact: string) => `\n- ${contact}`)}`;
+    )}: ${status}`;
+
+    if (signature.contacts?.length > 0) {
+      message = message + `\n${t("changeset.keyContacts")}: ${signature.contacts.map((contact: string) => `\n- ${contact}`)}`;
+    }
+
+    return message;
   };
 
   const getColor = () => {

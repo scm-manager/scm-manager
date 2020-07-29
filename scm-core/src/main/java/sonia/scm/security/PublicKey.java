@@ -51,6 +51,13 @@ public interface PublicKey {
   Optional<String> getOwner();
 
   /**
+   * Returns raw of the public key.
+   *
+   * @return raw of key
+   */
+  String getRaw();
+
+  /**
    * Returns the contacts of the publickey.
    *
    * @return owner or empty optional
