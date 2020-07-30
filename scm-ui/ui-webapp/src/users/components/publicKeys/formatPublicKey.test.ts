@@ -23,29 +23,14 @@
  */
 import { formatPublicKey } from "./formatPublicKey";
 
-describe("format authorized key tests", () => {
+describe("format public key tests", () => {
   it("should format the given key", () => {
-    const key = "ssh-rsa ACB0DEFGHIJKLMOPQRSTUVWXYZ tricia@hitchhiker.com";
-    expect(formatPublicKey(key)).toEqual("ssh-rsa ... tricia@hitchhiker.com");
+    const key = "-----BEGIN PGP PUBLIC KEY BLOCK-----\n\nA1B2C3D4E5F6HDJSURNSKFHSNEKFHK443MKD\n-----END PGP PUBLIC KEY BLOCK-----";
+    expect(formatPublicKey(key)).toEqual("A1B2C3D4E5F6HDJ");
   });
 
-  it("should use the first chars of the key without prefix", () => {
-    const key = "ACB0DEFGHIJKLMOPQRSTUVWXYZ tricia@hitchhiker.com";
-    expect(formatPublicKey(key)).toEqual("ACB0DEF... tricia@hitchhiker.com");
-  });
-
-  it("should use the last chars of the key without suffix", () => {
-    const key = "ssh-rsa ACB0DEFGHIJKLMOPQRSTUVWXYZ";
-    expect(formatPublicKey(key)).toEqual("ssh-rsa ...TUVWXYZ");
-  });
-
-  it("should use a few chars from the beginning and a few from the end, if the key has no prefix and suffix", () => {
-    const key = "ACB0DEFGHIJKLMOPQRSTUVWXYZ0123456789";
-    expect(formatPublicKey(key)).toEqual("ACB0DEF...3456789");
-  });
-
-  it("should return the whole string for a short key", () => {
-    const key = "ABCDE";
-    expect(formatPublicKey(key)).toEqual("ABCDE");
+  it("should format bad formatted key", () => {
+    const key = "-----BEGIN PGP PUBLIC KEY BLOCK-----\n\n\nA1B2C3D4E5F6HDJSURNSKFHSNEKFHK443MKD\n\n\n-----END PGP PUBLIC KEY BLOCK-----";
+    expect(formatPublicKey(key)).toEqual("-----BEGIN PGP ");
   });
 });

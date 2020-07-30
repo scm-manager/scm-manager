@@ -24,10 +24,10 @@
 import React, { FC } from "react";
 import { Icon, Tooltip } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-//import { Signature } from "@scm-manager/ui-types";
+import { Signature } from "@scm-manager/ui-types";
 
 type Props = {
-  signatures: any[];
+  signatures: Signature[];
   className: any;
 };
 
@@ -35,6 +35,10 @@ const SignatureIcon: FC<Props> = ({ signatures, className }) => {
   const [t] = useTranslation("repos");
 
   const signature = signatures?.length > 0 ? signatures[0] : undefined;
+
+  if (!signature) {
+    return null;
+  }
 
   const createTooltipMessage = () => {
     let status;
@@ -50,7 +54,7 @@ const SignatureIcon: FC<Props> = ({ signatures, className }) => {
       return `${t("changeset.signatureStatus")}: ${status}`;
     }
 
-    let message = `${t("changeset.signedBy")}: ${signature.owner}\n${t("changeset.keyId")}: ${signature.keyId}\n${t(
+    let message = `${t("changeset.signedBy")}: ${signature.owner ? signature.owner : t("changeset.noOwner")}\n${t("changeset.keyId")}: ${signature.keyId}\n${t(
       "changeset.signatureStatus"
     )}: ${status}`;
 
@@ -71,9 +75,6 @@ const SignatureIcon: FC<Props> = ({ signatures, className }) => {
     return undefined;
   };
 
-  if (!signature) {
-    return null;
-  }
 
   return (
     <Tooltip location="top" message={createTooltipMessage()}>

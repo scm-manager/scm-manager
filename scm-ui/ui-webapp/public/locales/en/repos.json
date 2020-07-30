@@ -90,6 +90,7 @@
     "signedBy": "Signed by",
     "keyId": "Key ID",
     "keyContacts": "Contacts",
+    "noOwner": "Unknown",
     "signatureStatus": "Status",
     "signatureVerified": "verified",
     "signatureNotVerified": "not verified",

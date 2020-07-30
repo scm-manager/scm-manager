@@ -92,6 +92,7 @@
     "signatureStatus": "Status",
     "keyId": "Schlüssel-ID",
     "keyContacts": "Kontakte",
+    "noOwner": "Unbekannt",
     "signatureVerified": "Verifiziert",
     "signatureNotVerified": "Nicht verifiziert",
     "signatureInvalid": "Ungültig",

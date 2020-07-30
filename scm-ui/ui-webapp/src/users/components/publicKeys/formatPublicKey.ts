@@ -24,5 +24,8 @@
 
 export const formatPublicKey = (key: string) => {
   const parts = key.split(/\n/);
-  return parts[2].substring(0, 15);
+  if (parts[2].length >= 15) {
+    return parts[2].substring(0, 15);
+  }
+  return parts[0].substring(0, 15);
 };
