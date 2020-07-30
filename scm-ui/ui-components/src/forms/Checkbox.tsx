@@ -47,7 +47,7 @@ export default class Checkbox extends React.Component<Props> {
   renderHelp = () => {
     const { title, helpText } = this.props;
     if (helpText && !title) {
-      return <Help message={helpText} />;
+      return <Help message={helpText} className="has-tooltip-multiline" />;
     }
   };
 

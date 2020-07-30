@@ -38549,6 +38549,65 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 </div>
 `;
 
+exports[`Storyshots Forms|Checkbox With HelpText 1`] = `
+<div
+  className="Checkboxstories__Spacing-sc-1bg8q8e-0 kJtXav"
+>
+  <div
+    className="field"
+  >
+    <div
+      className="control"
+      onClick={[Function]}
+    >
+      <label
+        className="checkbox"
+      >
+        <i
+          className="is-outlined fa-square has-text-black far"
+        />
+         
+        Classic helpText
+        <span
+          className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+          data-tooltip="This is a classic help text."
+        >
+          <i
+            className="fas fa-question-circle has-text-blue-light"
+          />
+        </span>
+      </label>
+    </div>
+  </div>
+  <div
+    className="field"
+  >
+    <div
+      className="control"
+      onClick={[Function]}
+    >
+      <label
+        className="checkbox"
+      >
+        <i
+          className="is-outlined fa-check-square has-text-link fa"
+        />
+         
+        Long helpText
+        <span
+          className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+          data-tooltip="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+        >
+          <i
+            className="fas fa-question-circle has-text-blue-light"
+          />
+        </span>
+      </label>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots Forms|DropDown Default 1`] = `
 <div
   className="select"
@@ -38654,6 +38713,51 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
     />
      
     Checked but disabled
+  </label>
+</div>
+`;
+
+exports[`Storyshots Forms|Radio With HelpText 1`] = `
+<div
+  className="Radiostories__RadioList-sc-18hvwhd-1 fSTSuW"
+>
+  <label
+    className="Radio__StyledRadio-ays4vp-0 hrHCWE radio"
+  >
+    <input
+      checked={false}
+      onChange={[Function]}
+      type="radio"
+    />
+     
+    Classic helpText
+    <span
+      className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+      data-tooltip="This is a classic help text."
+    >
+      <i
+        className="fas fa-question-circle has-text-blue-light"
+      />
+    </span>
+  </label>
+  <label
+    className="Radio__StyledRadio-ays4vp-0 hrHCWE radio"
+  >
+    <input
+      checked={true}
+      onChange={[Function]}
+      type="radio"
+    />
+     
+    Long helpText
+    <span
+      className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+      data-tooltip="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+    >
+      <i
+        className="fas fa-question-circle has-text-blue-light"
+      />
+    </span>
   </label>
 </div>
 `;
