@@ -22,14 +22,25 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Icon, Tooltip } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { Signature } from "@scm-manager/ui-types";
+import styled from "styled-components";
+import Icon from "../../Icon";
+import Tooltip from "../../Tooltip";
 
 type Props = {
   signatures: Signature[];
   className: any;
 };
+
+const StyledIcon = styled(Icon)`
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+  border-radius: 0.25em;
+  margin-bottom: 0.2em;
+`;
+
 
 const SignatureIcon: FC<Props> = ({ signatures, className }) => {
   const [t] = useTranslation("repos");
@@ -54,14 +65,16 @@ const SignatureIcon: FC<Props> = ({ signatures, className }) => {
       return `${t("changeset.signatureStatus")}: ${status}`;
     }
 
-    let message = `${t("changeset.signedBy")}: ${signature.owner ? signature.owner : t("changeset.noOwner")}\n${t("changeset.keyId")}: ${signature.keyId}\n${t(
+    let message = `${t("changeset.keyOwner")}: ${signature.owner ? signature.owner : t("changeset.noOwner")}\n${t("changeset.keyId")}: ${signature.keyId}\n${t(
       "changeset.signatureStatus"
     )}: ${status}`;
 
     if (signature.contacts?.length > 0) {
-      message = message + `\n${t("changeset.keyContacts")}: ${signature.contacts.map((contact: string) => `\n- ${contact}`)}`;
+      message += `\n${t("changeset.keyContacts")}:`;
+      signature.contacts.forEach((contact) => {
+        message += `\n- ${contact}`;
+      });
     }
-
     return message;
   };
 
@@ -78,7 +91,7 @@ const SignatureIcon: FC<Props> = ({ signatures, className }) => {
 
   return (
     <Tooltip location="top" message={createTooltipMessage()}>
-      <Icon name={"key"} className={className} color={getColor()} />
+      <StyledIcon name="key" className={className} color={getColor()} />
     </Tooltip>
   );
 };

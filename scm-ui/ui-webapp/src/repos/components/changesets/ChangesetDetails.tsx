@@ -43,7 +43,7 @@ import {
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
 import { Link as ReactLink } from "react-router-dom";
-import SignatureIcon from "./SignatureIcon";
+import SignatureIcon from "@scm-manager/ui-components/src/repos/changesets/SignatureIcon";
 
 type Props = WithTranslation & {
   changeset: Changeset;

@@ -87,7 +87,7 @@
     "summary": "Changeset <0/> was committed <1/>",
     "shortSummary": "Committed <0/> <1/>",
     "tags": "Tags",
-    "signedBy": "Signed by",
+    "keyOwner": "Key Owner",
     "keyId": "Key ID",
     "keyContacts": "Contacts",
     "noOwner": "Unknown",

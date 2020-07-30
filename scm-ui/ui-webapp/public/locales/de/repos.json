@@ -88,7 +88,7 @@
     "shortSummary": "Committet <0/> <1/>",
     "tags": "Tags",
     "diffNotSupported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt",
-    "signedBy": "Signiert von",
+    "keyOwner": "Schlüssel Besitzer",
     "signatureStatus": "Status",
     "keyId": "Schlüssel-ID",
     "keyContacts": "Kontakte",

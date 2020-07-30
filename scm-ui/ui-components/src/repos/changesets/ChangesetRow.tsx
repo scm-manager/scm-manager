@@ -35,8 +35,7 @@ import ChangesetAuthor from "./ChangesetAuthor";
 import ChangesetTags from "./ChangesetTags";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
 import ChangesetDescription from "./ChangesetDescription";
-import SignatureIcon from "@scm-manager/ui-webapp/src/repos/components/changesets/SignatureIcon";
-import { Level } from "../..";
+import SignatureIcon from "./SignatureIcon";
 
 type Props = WithTranslation & {
   repository: Repository;
