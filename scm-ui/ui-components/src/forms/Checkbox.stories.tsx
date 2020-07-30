@@ -25,7 +25,6 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 import Checkbox from "./Checkbox";
 import styled from "styled-components";
-import Radio from "./Radio";
 
 const Spacing = styled.div`
   padding: 2em;
