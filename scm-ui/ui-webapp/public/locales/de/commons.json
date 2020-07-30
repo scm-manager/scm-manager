@@ -69,6 +69,7 @@
     "navigationLabel": "Profil",
     "informationNavLink": "Information",
     "changePasswordNavLink": "Passwort ändern",
+    "publicKeysNavLink": "Öffentliche Schlüssel",
     "settingsNavLink": "Einstellungen",
     "username": "Benutzername",
     "displayName": "Anzeigename",
