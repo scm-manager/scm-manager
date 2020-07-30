@@ -27,6 +27,12 @@ import { MemoryRouter } from "react-router-dom";
 import * as React from "react";
 import { useState } from "react";
 import Modal from "./Modal";
+import Checkbox from "../forms/Checkbox";
+import styled from "styled-components";
+
+const TopAndBottomMargin = styled.div`
+  margin: 0.75rem 0; // only for aesthetic reasons
+`;
 
 const body = (
   <p>
@@ -37,9 +43,26 @@ const body = (
   </p>
 );
 
+const checkboxBody = (
+  <>
+    <p>This content should not cause a vertical scrollbar.</p>
+    <TopAndBottomMargin>
+      <Checkbox label="Classic helpText" checked={false} helpText="This is a classic help text." />
+      <Checkbox
+        label="Long helpText"
+        checked={true}
+        helpText="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+      />
+    </TopAndBottomMargin>
+  </>
+);
+
 storiesOf("Modal|Modal", module)
   .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .add("Default", () => <CloseableModal />);
+  .add("Default", () => <CloseableModal />)
+  .add("With Checkbox with HelpText inside", () => (
+    <Modal body={checkboxBody} closeFunction={() => true} active={true} title={"Hitchhiker Modal"} />
+  ));
 
 const CloseableModal = () => {
   const [show, setShow] = useState(true);

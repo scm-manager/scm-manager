@@ -41565,6 +41565,97 @@ exports[`Storyshots Modal|Modal Default 1`] = `
 </div>
 `;
 
+exports[`Storyshots Modal|Modal With Checkbox with HelpText inside 1`] = `
+<div
+  className="modal is-active"
+>
+  <div
+    className="modal-background"
+  />
+  <div
+    className="modal-card"
+  >
+    <header
+      className="modal-card-head has-background-light"
+    >
+      <p
+        className="modal-card-title is-marginless"
+      >
+        Hitchhiker Modal
+      </p>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body"
+    >
+      <p>
+        This content should not cause a vertical scrollbar.
+      </p>
+      <div
+        className="Modalstories__TopAndBottomMargin-sc-2lb0wg-0 bfocSI"
+      >
+        <div
+          className="field"
+        >
+          <div
+            className="control"
+            onClick={[Function]}
+          >
+            <label
+              className="checkbox"
+            >
+              <i
+                className="is-outlined fa-square has-text-black far"
+              />
+               
+              Classic helpText
+              <span
+                className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+                data-tooltip="This is a classic help text."
+              >
+                <i
+                  className="fas fa-question-circle has-text-blue-light"
+                />
+              </span>
+            </label>
+          </div>
+        </div>
+        <div
+          className="field"
+        >
+          <div
+            className="control"
+            onClick={[Function]}
+          >
+            <label
+              className="checkbox"
+            >
+              <i
+                className="is-outlined fa-check-square has-text-link fa"
+              />
+               
+              Long helpText
+              <span
+                className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+                data-tooltip="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+              >
+                <i
+                  className="fas fa-question-circle has-text-blue-light"
+                />
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+`;
+
 exports[`Storyshots Navigation|Secondary Active when match 1`] = `
 <div
   className="SecondaryNavigationstories__Columns-fdxo4w-0 iEPunq columns"
