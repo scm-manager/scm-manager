@@ -37,7 +37,7 @@ import { Changeset } from "@scm-manager/ui-types";
 import { Replacement } from "../../SplitAndReplace";
 
 const Wrapper = styled.div`
-  margin: 2rem;
+  margin: 4rem;
 `;
 
 const robohash = (person: Person) => {
@@ -67,6 +67,10 @@ const withReplacements = (
   );
 };
 
+const copy = (input: Object) => {
+  return JSON.parse(JSON.stringify(input));
+}
+
 storiesOf("Changesets", module)
   .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .addDecorator(storyFn => <Wrapper className="box box-link-shadow">{storyFn()}</Wrapper>)
@@ -93,4 +97,35 @@ storiesOf("Changesets", module)
       ],
       five
     );
+  })
+  .add("With Valid Signature", () => {
+    const changeset = copy(three);
+    changeset.signatures = [{
+      keyId: "0x247E908C6FD35473",
+      type: "gpg",
+      status: "VERIFIED",
+      owner: "trillian",
+      contacts: ["Tricia Marie McMilla <trillian@hitchhiker.com>"]
+    }];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
+  })
+  .add("With Unkown Signature", () => {
+    const changeset = copy(three);
+    changeset.signatures = [{
+      keyId: "0x247E908C6FD35473",
+      type: "gpg",
+      status: "NOT_FOUND"
+    }];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
+  })
+  .add("With Invalid Signature", () => {
+    const changeset = copy(three);
+    changeset.signatures = [{
+      keyId: "0x247E908C6FD35473",
+      type: "gpg",
+      status: "INVALID",
+      owner: "trillian",
+      contacts: ["Tricia Marie McMilla <trillian@hitchhiker.com>"]
+    }];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
   });
