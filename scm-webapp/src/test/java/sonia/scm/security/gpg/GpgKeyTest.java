@@ -35,19 +35,14 @@ class GpgKeyTest {
 
   @Test
   void shouldVerifyPublicKey() throws IOException {
-    StringBuilder longContent = new StringBuilder();
-    for (int i = 1; i < 10000; i++) {
-      longContent.append(i);
-    }
+    String rawPublicKey = GPGTestHelper.readResourceAsString("subkeys.asc");
+    GpgKey publicKey = new GpgKey("1", "trillian", rawPublicKey, Collections.emptySet());
 
-    String raw = GPGTestHelper.readResource("pubKeyEH.asc");
-    String signature = GPGTestHelper.readResource("signature.asc");
+    byte[] content = GPGTestHelper.readResourceAsBytes("slarti.txt");
+    byte[] signature = GPGTestHelper.readResourceAsBytes("slarti.txt.asc");
 
-    GpgKey key = new GpgKey("1", "trillian", raw, Collections.emptySet());
-
-    boolean verified = key.verify(longContent.toString().getBytes(), signature.getBytes());
-
-    //assertThat(verified).isTrue();
+    boolean verified = publicKey.verify(content, signature);
+    assertThat(verified).isTrue();
   }
 
 }

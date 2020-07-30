@@ -52,7 +52,7 @@ class DefaultGPGTest {
 
   @Test
   void shouldFindIdInSignature() throws IOException {
-    String raw = GPGTestHelper.readResource("signature.asc");
+    String raw = GPGTestHelper.readResourceAsString("signature.asc");
     String publicKeyId = gpg.findPublicKeyId(raw.getBytes());
 
     assertThat(publicKeyId).isEqualTo("0x1F17B79A09DAD5B9");
@@ -60,7 +60,7 @@ class DefaultGPGTest {
 
   @Test
   void shouldFindPublicKey() throws IOException {
-    String raw = GPGTestHelper.readResource("subkeys.asc");
+    String raw = GPGTestHelper.readResourceAsString("subkeys.asc");
     RawGpgKey key1 = new RawGpgKey("42", "key_42", "trillian", raw, ImmutableSet.of("trillian", "zaphod"), Instant.now());
 
     when(store.findById("42")).thenReturn(Optional.of(key1));
@@ -76,8 +76,8 @@ class DefaultGPGTest {
 
   @Test
   void shouldFindKeysForUsername() throws IOException {
-    String raw = GPGTestHelper.readResource("single.asc");
-    String raw2= GPGTestHelper.readResource("subkeys.asc");
+    String raw = GPGTestHelper.readResourceAsString("single.asc");
+    String raw2= GPGTestHelper.readResourceAsString("subkeys.asc");
 
     RawGpgKey key1 = new RawGpgKey("1", "1", "trillian", raw, Collections.emptySet(), Instant.now());
     RawGpgKey key2 = new RawGpgKey("2", "2", "trillian", raw2, Collections.emptySet(), Instant.now());

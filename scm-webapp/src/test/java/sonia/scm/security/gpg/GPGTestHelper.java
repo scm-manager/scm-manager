@@ -36,7 +36,13 @@ final class GPGTestHelper {
   }
 
   @SuppressWarnings("UnstableApiUsage")
-  static String readResource(String fileName) throws IOException {
+  static byte[] readResourceAsBytes(String fileName) throws IOException {
+    URL resource = Resources.getResource("sonia/scm/security/gpg/" + fileName);
+    return Resources.toByteArray(resource);
+  }
+
+  @SuppressWarnings("UnstableApiUsage")
+  static String readResourceAsString(String fileName) throws IOException {
     URL resource = Resources.getResource("sonia/scm/security/gpg/" + fileName);
     return Resources.toString(resource, StandardCharsets.UTF_8);
   }

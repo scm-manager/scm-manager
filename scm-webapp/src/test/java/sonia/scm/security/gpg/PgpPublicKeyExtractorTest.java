@@ -36,7 +36,7 @@ class PgpPublicKeyExtractorTest {
 
   @Test
   void shouldExtractPublicKeyFromRawKey() throws IOException {
-    String raw = GPGTestHelper.readResource("pubKeyEH.asc");
+    String raw = GPGTestHelper.readResourceAsString("pubKeyEH.asc");
 
     Optional<PGPPublicKey> publicKey = PgpPublicKeyExtractor.getFromRawKey(raw);
 

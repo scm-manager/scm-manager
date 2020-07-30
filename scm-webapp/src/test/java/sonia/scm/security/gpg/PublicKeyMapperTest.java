@@ -69,7 +69,7 @@ class PublicKeyMapperTest {
   void shouldMapKeyToDto() throws IOException {
     when(subject.isPermitted("user:changePublicKeys:trillian")).thenReturn(true);
 
-    String raw = GPGTestHelper.readResource("single.asc");
+    String raw = GPGTestHelper.readResourceAsString("single.asc");
     RawGpgKey key = new RawGpgKey("1", "key_42", "trillian", raw, Collections.emptySet(), Instant.now());
 
     RawGpgKeyDto dto = mapper.map(key);
@@ -83,7 +83,7 @@ class PublicKeyMapperTest {
 
   @Test
   void shouldNotAppendDeleteLink() throws IOException {
-    String raw = GPGTestHelper.readResource("single.asc");
+    String raw = GPGTestHelper.readResourceAsString("single.asc");
     RawGpgKey key = new RawGpgKey("1", "key_42", "trillian", raw, Collections.emptySet(), Instant.now());
 
     RawGpgKeyDto dto = mapper.map(key);

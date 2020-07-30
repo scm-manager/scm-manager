@@ -80,21 +80,21 @@ class PublicKeyStoreTest {
   @Test
   void shouldThrowAuthorizationExceptionOnAdd() throws IOException {
     doThrow(AuthorizationException.class).when(subject).checkPermission("user:changePublicKeys:zaphod");
-    String rawKey = GPGTestHelper.readResource("single.asc");
+    String rawKey = GPGTestHelper.readResourceAsString("single.asc");
 
     assertThrows(AuthorizationException.class, () -> keyStore.add("zaphods key", "zaphod", rawKey));
   }
 
   @Test
   void shouldOnlyStorePublicKeys() throws IOException {
-    String rawKey = GPGTestHelper.readResource("single.asc").replace("PUBLIC", "PRIVATE");
+    String rawKey = GPGTestHelper.readResourceAsString("single.asc").replace("PUBLIC", "PRIVATE");
 
     assertThrows(NotPublicKeyException.class, () -> keyStore.add("SCM Package Key", "trillian", rawKey));
   }
 
   @Test
   void shouldReturnStoredKey() throws IOException {
-    String rawKey = GPGTestHelper.readResource("single.asc");
+    String rawKey = GPGTestHelper.readResourceAsString("single.asc");
     Instant now = Instant.now();
 
     RawGpgKey key = keyStore.add("SCM Package Key", "trillian", rawKey);
@@ -107,7 +107,7 @@ class PublicKeyStoreTest {
 
   @Test
   void shouldFindStoredKeyById() throws IOException {
-    String rawKey = GPGTestHelper.readResource("single.asc");
+    String rawKey = GPGTestHelper.readResourceAsString("single.asc");
     keyStore.add("SCM Package Key", "trillian", rawKey);
     Optional<RawGpgKey> key = keyStore.findById("0x975922F193B07D6E");
     assertThat(key).isPresent();
@@ -115,7 +115,7 @@ class PublicKeyStoreTest {
 
   @Test
   void shouldDeleteKey() throws IOException {
-    String rawKey = GPGTestHelper.readResource("single.asc");
+    String rawKey = GPGTestHelper.readResourceAsString("single.asc");
     keyStore.add("SCM Package Key", "trillian", rawKey);
     Optional<RawGpgKey> key = keyStore.findById("0x975922F193B07D6E");
 
@@ -139,10 +139,10 @@ class PublicKeyStoreTest {
 
   @Test
   void shouldFindAllKeysForUser() throws IOException {
-    String singleKey = GPGTestHelper.readResource("single.asc");
+    String singleKey = GPGTestHelper.readResourceAsString("single.asc");
     keyStore.add("SCM Single Key", "trillian", singleKey);
 
-    String multiKey = GPGTestHelper.readResource("subkeys.asc");
+    String multiKey = GPGTestHelper.readResourceAsString("subkeys.asc");
     keyStore.add("SCM Multi Key", "trillian", multiKey);
 
     List<RawGpgKey> keys = keyStore.findByUsername("trillian");

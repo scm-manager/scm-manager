@@ -104,7 +104,7 @@ class PublicKeyCollectionMapperTest {
   }
 
   private RawGpgKey createPublicKey(String displayName) throws IOException {
-    String raw = GPGTestHelper.readResource("single.asc");
+    String raw = GPGTestHelper.readResourceAsString("single.asc");
     return new RawGpgKey(displayName, displayName, "trillian", raw, Collections.emptySet(), Instant.now());
   }
 

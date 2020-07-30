@@ -49,8 +49,6 @@ import static sonia.scm.security.gpg.PgpPublicKeyExtractor.getFromRawKey;
 @Singleton
 public class PublicKeyStore {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PublicKeyStore.class);
-
   private static final String STORE_NAME = "gpg_public_keys";
   private static final String SUBKEY_STORE_NAME = "gpg_public_sub_keys";
 
