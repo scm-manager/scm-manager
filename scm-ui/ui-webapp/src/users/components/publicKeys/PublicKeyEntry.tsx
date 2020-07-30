@@ -51,7 +51,7 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
         <td>
           <DateFromNow date={publicKey.created} />
         </td>
-        <td className="is-hidden-mobile">{formatPublicKey(publicKey.raw)}</td>
+        <td className="is-hidden-mobile">{publicKey.id}</td>
         <td>{deleteButton}</td>
       </tr>
     </>

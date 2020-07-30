@@ -38,6 +38,7 @@ import java.time.Instant;
 @SuppressWarnings("squid:S2160") // we do not need equals for dto
 public class RawGpgKeyDto extends HalRepresentation {
 
+  private String id;
   private String displayName;
   private String raw;
   private Instant created;

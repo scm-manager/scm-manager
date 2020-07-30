@@ -35,6 +35,7 @@ export type PublicKeysCollection = Collection & {
 };
 
 export type PublicKey = {
+  id: string;
   displayName: string;
   raw: string;
   created?: string;
