@@ -62,7 +62,7 @@ const SignatureIcon: FC<Props> = ({ signatures, className }) => {
     }
 
     if (signature.status === "NOT_FOUND") {
-      return `${t("changeset.signatureStatus")}: ${status}`;
+      return `${t("changeset.signatureStatus")}: ${status}\n${t("changeset.keyId")}: ${signature.keyId}`;
     }
 
     let message = `${t("changeset.keyOwner")}: ${signature.owner ? signature.owner : t("changeset.noOwner")}\n${t("changeset.keyId")}: ${signature.keyId}\n${t(

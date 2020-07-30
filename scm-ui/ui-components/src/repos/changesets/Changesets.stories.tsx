@@ -98,7 +98,16 @@ storiesOf("Changesets", module)
       five
     );
   })
-  .add("With Valid Signature", () => {
+  .add("With unknown signature", () => {
+    const changeset = copy(three);
+    changeset.signatures = [{
+      keyId: "0x247E908C6FD35473",
+      type: "gpg",
+      status: "NOT_FOUND"
+    }];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
+  })
+  .add("With valid signature", () => {
     const changeset = copy(three);
     changeset.signatures = [{
       keyId: "0x247E908C6FD35473",
@@ -109,16 +118,7 @@ storiesOf("Changesets", module)
     }];
     return <ChangesetRow repository={repository} changeset={changeset} />;
   })
-  .add("With Unkown Signature", () => {
-    const changeset = copy(three);
-    changeset.signatures = [{
-      keyId: "0x247E908C6FD35473",
-      type: "gpg",
-      status: "NOT_FOUND"
-    }];
-    return <ChangesetRow repository={repository} changeset={changeset} />;
-  })
-  .add("With Invalid Signature", () => {
+  .add("With invalid signature", () => {
     const changeset = copy(three);
     changeset.signatures = [{
       keyId: "0x247E908C6FD35473",
