@@ -21,35 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { storiesOf } from "@storybook/react";
-import Checkbox from "./Checkbox";
-import styled from "styled-components";
 
-const Spacing = styled.div`
-  padding: 2em;
+import styled from "styled-components";
+import * as React from "react";
+import { storiesOf } from "@storybook/react";
+import Help from "./Help";
+
+const Wrapper = styled.div`
+  margin: 5rem;
 `;
 
-storiesOf("Forms|Checkbox", module)
-  .add("Default", () => (
-    <Spacing>
-      <Checkbox label="Not checked" checked={false} />
-      <Checkbox label="Checked" checked={true} />
-      <Checkbox label="Indeterminate" checked={true} indeterminate={true} />
-    </Spacing>
-  ))
-  .add("Disabled", () => (
-    <Spacing>
-      <Checkbox label="Checked but disabled" checked={true} disabled={true} />
-    </Spacing>
-  ))
-  .add("With HelpText", () => (
-    <Spacing>
-      <Checkbox label="Classic helpText" checked={false} helpText="This is a classic help text." />
-      <Checkbox
-        label="Long helpText"
-        checked={true}
-        helpText="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-      />
-    </Spacing>
+const Spacing = styled.div`
+  margin-top: 1rem;
+`;
+
+const longContent =
+  "Cleverness nuclear genuine static irresponsibility invited President Zaphod\n" +
+  "Beeblebrox hyperspace ship. Another custard through computer-generated universe\n" +
+  "shapes field strong disaster parties Russell’s ancestors infinite colour\n" +
+  "imaginative generator sweep.";
+
+storiesOf("Help", module)
+  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .add("Default", () => <Help message="This is a help message" />)
+  .add("Multiline", () => (
+    <>
+      <Spacing>
+        <label>With multiline (default):</label>
+        <Help message={longContent} />
+      </Spacing>
+      <Spacing>
+        <label>Without multiline:</label>
+        <Help message={longContent} multiline={false} />
+      </Spacing>
+    </>
   ));
