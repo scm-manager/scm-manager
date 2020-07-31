@@ -5,8 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- Help tooltips are now mutliline by default ([#1271](https://github.com/scm-manager/scm-manager/pull/1271))
+
 ### Fixed
-- Fix tooltip overflow in checkbox and radio context ([#1271](https://github.com/scm-manager/scm-manager/pull/1271))
+- Fixed unecessary horizontal scrollbar in modal dialogs ([#1271](https://github.com/scm-manager/scm-manager/pull/1271))
 
 ## [2.3.0] - 2020-07-23
 ### Added
