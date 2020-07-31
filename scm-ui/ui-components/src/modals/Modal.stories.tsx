@@ -92,26 +92,22 @@ storiesOf("Modal|Modal", module)
         <p>The following elements will have a verly long help text, which has triggered the scrollbar in the past.</p>
         <hr />
         <TopAndBottomMargin>
-          <Checkbox label="Classic helpText" checked={false} helpText="This is a classic help text." />
-          <Checkbox label="Long helpText" checked={true} helpText={text} />
-        </TopAndBottomMargin>
-        <hr />
-        <RadioList>
-          <Radio label="Classic helpText" checked={true} helpText="This is a classic help text." />
-          <Radio label="Long helpText" checked={false} helpText={text} />
-        </RadioList>
-        <hr />
-        <TopAndBottomMargin>
-          <InputField onChange={doNothing} label="Classic helpText" helpText="This is a classic help text." />
-          <InputField onChange={doNothing} label="Long helpText" helpText={text} />
+          <Checkbox label="Checkbox" checked={true} helpText={text} />
         </TopAndBottomMargin>
         <hr />
         <TopAndBottomMargin>
-          <Textarea onChange={doNothing} label="Classic helpText" helpText="This is a classic help text." />
-          <Textarea onChange={doNothing} label="Long helpText" helpText={text} />
+          <Radio label="Radio button" checked={false} helpText={text} />
         </TopAndBottomMargin>
         <hr />
-        <p>If this modal has not horizontal scrollbar the issue is fixed</p>
+        <TopAndBottomMargin>
+          <InputField onChange={doNothing} label="Input" helpText={text} />
+        </TopAndBottomMargin>
+        <hr />
+        <TopAndBottomMargin>
+          <Textarea onChange={doNothing} label="Textarea" helpText={text} />
+        </TopAndBottomMargin>
+        <hr />
+        <p>If this modal has no horizontal scrollbar the issue is fixed</p>
       </NonCloseableModal>
     );
   })
