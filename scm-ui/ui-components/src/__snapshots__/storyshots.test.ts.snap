@@ -2743,7 +2743,7 @@ exports[`Storyshots Changesets With invalid signature 1`] = `
 changeset.keyId: 0x247E908C6FD35473
 changeset.signatureStatus: changeset.signatureInvalid
 changeset.keyContacts:
-- Tricia Marie McMilla <trillian@hitchhiker.com>"
+- undefined <undefined>"
                   >
                     <i
                       className="fas fa-key has-text-danger SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
@@ -3128,7 +3128,7 @@ exports[`Storyshots Changesets With valid signature 1`] = `
 changeset.keyId: 0x247E908C6FD35473
 changeset.signatureStatus: changeset.signatureVerified
 changeset.keyContacts:
-- Tricia Marie McMilla <trillian@hitchhiker.com>"
+- undefined <undefined>"
                   >
                     <i
                       className="fas fa-key has-text-success SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
