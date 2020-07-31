@@ -75,7 +75,6 @@ class PublicKeyMapperTest {
     RawGpgKeyDto dto = mapper.map(key);
 
     assertThat(dto.getDisplayName()).isEqualTo(key.getDisplayName());
-    assertThat(dto.getRaw()).isEqualTo(key.getRaw());
     assertThat(dto.getCreated()).isEqualTo(key.getCreated());
     assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo("/v2/public_keys/1");
     assertThat(dto.getLinks().getLinkBy("delete").get().getHref()).isEqualTo("/v2/public_keys/delete/1");

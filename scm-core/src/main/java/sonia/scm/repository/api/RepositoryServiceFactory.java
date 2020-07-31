@@ -55,6 +55,7 @@ import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.spi.RepositoryServiceResolver;
 import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.security.PublicKeyCreatedEvent;
 import sonia.scm.security.PublicKeyDeletedEvent;
 import sonia.scm.security.ScmSecurityException;
 
@@ -332,6 +333,11 @@ public final class RepositoryServiceFactory {
 
     @Subscribe
     public void onEvent(PublicKeyDeletedEvent event) {
+      cacheManager.getCache(LogCommandBuilder.CACHE_NAME).clear();
+    }
+
+    @Subscribe
+    public void onEvent(PublicKeyCreatedEvent event) {
       cacheManager.getCache(LogCommandBuilder.CACHE_NAME).clear();
     }
 

@@ -28,6 +28,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sonia.scm.repository.Person;
 import sonia.scm.xml.XmlInstantAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -49,7 +50,7 @@ public class RawGpgKey {
   private String displayName;
   private String owner;
   private String raw;
-  private Set<String> contacts;
+  private Set<Person> contacts;
 
   @XmlJavaTypeAdapter(XmlInstantAdapter.class)
   private Instant created;

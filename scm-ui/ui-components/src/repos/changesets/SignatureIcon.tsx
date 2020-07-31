@@ -69,10 +69,11 @@ const SignatureIcon: FC<Props> = ({ signatures, className }) => {
       "changeset.signatureStatus"
     )}: ${status}`;
 
+    console.log(signature.contacts)
     if (signature.contacts?.length > 0) {
       message += `\n${t("changeset.keyContacts")}:`;
       signature.contacts.forEach((contact) => {
-        message += `\n- ${contact}`;
+        message += `\n- ${contact.name} <${contact.mail}>`;
       });
     }
     return message;

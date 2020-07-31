@@ -24,6 +24,8 @@
 
 package sonia.scm.security;
 
+import sonia.scm.repository.Person;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Optional;
@@ -62,7 +64,7 @@ public interface PublicKey {
    *
    * @return owner or empty optional
    */
-  Set<String> getContacts();
+  Set<Person> getContacts();
 
   /**
    * Verifies that the signature is valid for the given data.

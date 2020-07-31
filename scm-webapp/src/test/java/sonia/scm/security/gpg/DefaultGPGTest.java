@@ -31,6 +31,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.repository.Person;
 import sonia.scm.security.PublicKey;
 
 import java.io.IOException;
@@ -52,16 +53,17 @@ class DefaultGPGTest {
 
   @Test
   void shouldFindIdInSignature() throws IOException {
-    String raw = GPGTestHelper.readResourceAsString("signature.asc");
+    String raw = GPGTestHelper.readResourceAsString("slarti.txt.asc");
     String publicKeyId = gpg.findPublicKeyId(raw.getBytes());
 
-    assertThat(publicKeyId).isEqualTo("0x1F17B79A09DAD5B9");
+    assertThat(publicKeyId).isEqualTo("0x247E908C6FD35473");
   }
 
   @Test
   void shouldFindPublicKey() throws IOException {
     String raw = GPGTestHelper.readResourceAsString("subkeys.asc");
-    RawGpgKey key1 = new RawGpgKey("42", "key_42", "trillian", raw, ImmutableSet.of("trillian", "zaphod"), Instant.now());
+    Person trillian = Person.toPerson("Trillian <tricia.mcmillan@hitchhiker.org>");
+    RawGpgKey key1 = new RawGpgKey("42", "key_42", "trillian", raw, ImmutableSet.of(trillian), Instant.now());
 
     when(store.findById("42")).thenReturn(Optional.of(key1));
 
@@ -71,7 +73,7 @@ class DefaultGPGTest {
     assertThat(publicKey.get().getOwner()).isPresent();
     assertThat(publicKey.get().getOwner().get()).contains("trillian");
     assertThat(publicKey.get().getId()).isEqualTo("42");
-    assertThat(publicKey.get().getContacts()).contains("trillian", "zaphod");
+    assertThat(publicKey.get().getContacts()).contains(trillian);
   }
 
   @Test

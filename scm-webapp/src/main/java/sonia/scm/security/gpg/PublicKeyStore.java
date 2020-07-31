@@ -25,11 +25,11 @@
 package sonia.scm.security.gpg;
 
 import org.bouncycastle.openpgp.PGPPublicKey;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.Person;
 import sonia.scm.security.NotPublicKeyException;
+import sonia.scm.security.PublicKeyCreatedEvent;
 import sonia.scm.security.PublicKeyDeletedEvent;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
@@ -38,6 +38,7 @@ import sonia.scm.user.UserPermissions;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -80,22 +81,24 @@ public class PublicKeyStore {
     RawGpgKey key = new RawGpgKey(master, displayName, username, rawKey, getContactsFromPublicKey(rawKey), Instant.now());
 
     store.put(master, key);
+    eventBus.post(new PublicKeyCreatedEvent());
 
     return key;
 
   }
 
-  private Set<String> getContactsFromPublicKey(String rawKey) {
-    Set<String> contacts = new HashSet<>();
+  private Set<Person> getContactsFromPublicKey(String rawKey) {
+    List<String> userIds = new ArrayList<>();
     Optional<PGPPublicKey> publicKeyFromRawKey = getFromRawKey(rawKey);
-    publicKeyFromRawKey.ifPresent(pgpPublicKey -> pgpPublicKey.getUserIDs().forEachRemaining(contacts::add));
-    return contacts;
+    publicKeyFromRawKey.ifPresent(pgpPublicKey -> pgpPublicKey.getUserIDs().forEachRemaining(userIds::add));
+
+    return userIds.stream().map(Person::toPerson).collect(Collectors.toSet());
   }
 
   public void delete(String id) {
     RawGpgKey rawGpgKey = store.get(id);
     if (rawGpgKey != null) {
-      UserPermissions.modify(rawGpgKey.getOwner()).check();
+      UserPermissions.changePublicKeys(rawGpgKey.getOwner()).check();
       store.remove(id);
       eventBus.post(new PublicKeyDeletedEvent());
     }

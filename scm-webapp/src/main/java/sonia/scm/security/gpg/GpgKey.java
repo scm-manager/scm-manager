@@ -36,6 +36,7 @@ import org.bouncycastle.openpgp.jcajce.JcaPGPObjectFactory;
 import org.bouncycastle.openpgp.operator.jcajce.JcaPGPContentVerifierBuilderProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.repository.Person;
 import sonia.scm.security.PublicKey;
 
 import java.io.ByteArrayInputStream;
@@ -52,9 +53,9 @@ public class GpgKey implements PublicKey {
   private final String id;
   private final String owner;
   private final String raw;
-  private final Set<String> contacts;
+  private final Set<Person> contacts;
 
-  public GpgKey(String id, String owner, String raw, Set<String> contacts) {
+  public GpgKey(String id, String owner, String raw, Set<Person> contacts) {
     this.id = id;
     this.owner = owner;
     this.raw = raw;
@@ -80,7 +81,7 @@ public class GpgKey implements PublicKey {
   }
 
   @Override
-  public Set<String> getContacts() {
+  public Set<Person> getContacts() {
     return contacts;
   }
 

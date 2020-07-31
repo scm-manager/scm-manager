@@ -44,7 +44,7 @@ public class Signature implements Serializable {
   private final String type;
   private final SignatureStatus status;
   private final String owner;
-  private final Set<String> contacts;
+  private final Set<Person> contacts;
 
   public Optional<String> getOwner() {
     return Optional.ofNullable(owner);

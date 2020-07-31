@@ -34,7 +34,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.Person;
 import sonia.scm.security.NotPublicKeyException;
+import sonia.scm.security.PublicKeyCreatedEvent;
 import sonia.scm.security.PublicKeyDeletedEvent;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.store.InMemoryDataStoreFactory;
@@ -103,6 +105,9 @@ class PublicKeyStoreTest {
     assertThat(key.getOwner()).isEqualTo("trillian");
     assertThat(key.getCreated()).isAfterOrEqualTo(now);
     assertThat(key.getRaw()).isEqualTo(rawKey);
+    assertThat(key.getContacts()).contains(Person.toPerson("SCM Packages (signing key for packages.scm-manager.org) <scm-team@cloudogu.com>"));
+
+    verify(eventBus).post(any(PublicKeyCreatedEvent.class));
   }
 
   @Test

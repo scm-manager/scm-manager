@@ -36,12 +36,12 @@ class PgpPublicKeyExtractorTest {
 
   @Test
   void shouldExtractPublicKeyFromRawKey() throws IOException {
-    String raw = GPGTestHelper.readResourceAsString("pubKeyEH.asc");
+    String raw = GPGTestHelper.readResourceAsString("single.asc");
 
     Optional<PGPPublicKey> publicKey = PgpPublicKeyExtractor.getFromRawKey(raw);
 
     assertThat(publicKey).isPresent();
-    assertThat(Long.toHexString(publicKey.get().getKeyID())).isEqualTo("39ad4bed55527f1c");
+    assertThat(Long.toHexString(publicKey.get().getKeyID())).isEqualTo("975922f193b07d6e");
   }
 
 }
