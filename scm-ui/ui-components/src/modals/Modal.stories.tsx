@@ -24,52 +24,194 @@
 
 import { storiesOf } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
-import * as React from "react";
-import { useState } from "react";
+import React, { useState, FC } from "react";
 import Modal from "./Modal";
 import Checkbox from "../forms/Checkbox";
 import styled from "styled-components";
+import ExternalLink from "../navigation/ExternalLink";
+import { Radio, Textarea, InputField } from "../forms";
+import { ButtonGroup, Button } from "../buttons";
+import Notification from "../Notification";
 
 const TopAndBottomMargin = styled.div`
   margin: 0.75rem 0; // only for aesthetic reasons
 `;
 
-const body = (
-  <p>
-    Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+const RadioList = styled.div`
+  display: flex;
+  flex-direction: column;
+  > label:not(:last-child) {
+    margin-bottom: 0.6em;
+  }
+`;
+
+const text = `Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
     hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
     Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
-    ordinary mob.
-  </p>
-);
+    ordinary mob.`;
 
-const checkboxBody = (
-  <>
-    <p>This content should not cause a vertical scrollbar.</p>
-    <TopAndBottomMargin>
-      <Checkbox label="Classic helpText" checked={false} helpText="This is a classic help text." />
-      <Checkbox
-        label="Long helpText"
-        checked={true}
-        helpText="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-      />
-    </TopAndBottomMargin>
-  </>
-);
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const doNothing = () => {};
 
 storiesOf("Modal|Modal", module)
   .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .add("Default", () => <CloseableModal />)
-  .add("With Checkbox with HelpText inside", () => (
-    <Modal body={checkboxBody} closeFunction={() => true} active={true} title={"Hitchhiker Modal"} />
+  .add("Default", () => (
+    <NonCloseableModal>
+      <p>{text}</p>
+    </NonCloseableModal>
+  ))
+  .add("Closeable", () => (
+    <CloseableModal>
+      <p>{text}</p>
+    </CloseableModal>
+  ))
+  .add("With form elements", () => (
+    <NonCloseableModal>
+      <RadioList>
+        <Radio label="One" checked={true} helpText="The first one" />
+        <Radio label="Two" checked={false} helpText="The second one" />
+      </RadioList>
+      <hr />
+      <p>{text}</p>
+      <hr />
+      <Textarea label="Text" onChange={doNothing} />
+      <hr />
+      <ButtonGroup>
+        <Button label="One" />
+        <Button label="Two" />
+      </ButtonGroup>
+    </NonCloseableModal>
+  ))
+  .add("With long tooltips", () => {
+    return (
+      <NonCloseableModal>
+        <Notification type="info">
+          This story exists because we had a problem, that long tooltips causes a horizontal scrollbar on the modal.
+        </Notification>
+        <hr />
+        <p>The following elements will have a verly long help text, which has triggered the scrollbar in the past.</p>
+        <hr />
+        <TopAndBottomMargin>
+          <Checkbox label="Classic helpText" checked={false} helpText="This is a classic help text." />
+          <Checkbox label="Long helpText" checked={true} helpText={text} />
+        </TopAndBottomMargin>
+        <hr />
+        <RadioList>
+          <Radio label="Classic helpText" checked={true} helpText="This is a classic help text." />
+          <Radio label="Long helpText" checked={false} helpText={text} />
+        </RadioList>
+        <hr />
+        <TopAndBottomMargin>
+          <InputField onChange={doNothing} label="Classic helpText" helpText="This is a classic help text." />
+          <InputField onChange={doNothing} label="Long helpText" helpText={text} />
+        </TopAndBottomMargin>
+        <hr />
+        <TopAndBottomMargin>
+          <Textarea onChange={doNothing} label="Classic helpText" helpText="This is a classic help text." />
+          <Textarea onChange={doNothing} label="Long helpText" helpText={text} />
+        </TopAndBottomMargin>
+        <hr />
+        <p>If this modal has not horizontal scrollbar the issue is fixed</p>
+      </NonCloseableModal>
+    );
+  })
+  .add("Long content", () => (
+    <NonCloseableModal>
+      <h1 className="title">Marvin</h1>
+      <h2 className="subtitle">The Paranoid Android</h2>
+      <hr />
+      <Notification type="info">
+        The following content comes from the awesome{" "}
+        <ExternalLink to="https://hitchhikers.fandom.com/wiki/Main_Page">Hitchhikers Wiki</ExternalLink>
+      </Notification>
+      <hr />
+      <div className="has-text-centered">
+        <img
+          alt="Marvin"
+          src="https://vignette.wikia.nocookie.net/hitchhikers/images/a/a4/Marvin.jpg/revision/latest/scale-to-width-down/150?cb=20100530114055"
+        />
+      </div>
+      <hr />
+      <p className="content">
+        Marvin, more fully known as Marvin the Paranoid Android, is an incredibly brilliant but overwhelmingly depressed
+        robot manufactured by the Sirius Cybernetics Corporation and unwilling servant to the crew of the Heart of Gold.
+      </p>
+      <hr />
+      <div className="content">
+        <h4>Physical Appearance</h4>
+        <p>
+          In the novels, Marvin is described thusly: "...though it was beautifully constructed and polished it looked
+          somehow as if the various parts of its more or less humanoid body didn't quite fit properly. In fact, they fit
+          perfectly well, but something in its bearing suggested that they might have fitted better."
+        </p>
+        <p>
+          On the radio show, there's no physical description of Marvin, though his voice is digitally altered to sound
+          more robotic, and any scene that focuses on him is accompanied by sounds of mechanical clanking and hissing.
+        </p>
+        <p>
+          In the TV series, Marvin is built in the style of a 1950's robot similar to Robbie the Robot from Forbidden
+          Planet or Twiki from Buck Rogers. His body is blocky and angular, with a pair of clamp-claw hands, shuffling
+          feet and a squarish head with a dour face.
+        </p>
+        <p>
+          In the movie, Marvin is a short, stout robot built of smooth, white plastic. His arms are much longer than his
+          legs, and his head is a massive sphere with only a pair of triangle eyes for a face. His large head and
+          simian-like proportions give Marvin a perpetual slouch, adding to his melancholy personality. At the start of
+          the film his eyes glow, but at the end he is shot but unharmed, leaving a hole in his head and dimming his
+          eyes. This is probably the most depressing and unacceptable manifestation of Marvin ever conceived, and thus
+          paradoxically the most accurate.
+        </p>
+      </div>
+      <hr />
+      <div className="content">
+        <h4>Personality</h4>
+        <p>
+          Marvin the robot has a prototype version of the Genuine People Personality (GPP) software from SCC, allowing
+          him sentience and the ability to feel emotions and develop a personality. He's also incredibly smart, having a
+          "brain the size of a planet" capable of computing extremely complex mathematics, as well as solving difficult
+          problems and operating high-tech devices.
+        </p>
+        <p>
+          However, despite being so smart, Marvin is typically made to perform menial tasks and labour such as escorting
+          people, opening doors, picking up pieces of paper, and other tasks well beneath his skills. Even extremely
+          hard tasks, such as computing for the vast Krikkit robot army, are trivial for Marvin. All this leaves him
+          extremely bored, frustrated, and overwhelmingly depressed. Because of this, all modern GPP-capable machines,
+          such as Eddie the computer and the Heart of Gold's automatic doors, are programmed to be extremely cheerful
+          and happy, much to Marvin's disgust.
+        </p>
+        <p>
+          Marvin hates everyone and everything he comes into contact with, having no respect for anybody and will
+          criticise and insult others at any opportunity, or otherwise rant and complain for hours on end about his own
+          problems, such as the terrible pain he suffers in all the diodes down his left side. His contempt for everyone
+          is often justified, as almost every person he comes across, even those who consider him a friend, (such as
+          Arthur and Trillian, who treat him more kindly than Ford and Zaphod) treat Marvin as an expendable servant,
+          even sending him to his death more than once (such as when Zaphod ordered Marvin to fight the gigantic,
+          heavy-duty Frogstar Scout Robot Class D so he could escape). Being a robot, he still does what he's told (he
+          won't enjoy it, nor will he let you forget it, but he'll do it anyway), though he'd much rather sulk in a
+          corner by himself.
+        </p>
+        <p>
+          Several times in the series Marvin ends up alone and isolated for extremely long periods of time, sometimes
+          spanning millions of years, either by sheer bad luck (such as the explosion that propelled everyone but Marvin
+          to Milliways in the far-off future) or because his unpleasantly depressing personality drives them away or, in
+          more than one case, makes them commit suicide. In his spare time (which he has a lot of), Marvin will attempt
+          to occupy himself by composing songs and writing poetry. Of course, none of them are particularly cheerful, or
+          even that good.
+        </p>
+      </div>
+    </NonCloseableModal>
   ));
 
-const CloseableModal = () => {
+const NonCloseableModal: FC = ({ children }) => {
+  return <Modal body={children} closeFunction={doNothing} active={true} title={"Hitchhiker Modal"} />;
+};
+
+const CloseableModal: FC = ({ children }) => {
   const [show, setShow] = useState(true);
 
   const toggleModal = () => {
     setShow(!show);
   };
 
-  return <Modal body={body} closeFunction={toggleModal} active={show} title={"Hitchhiker Modal"} />;
+  return <Modal body={children} closeFunction={toggleModal} active={show} title={"Hitchhiker Modal"} />;
 };
