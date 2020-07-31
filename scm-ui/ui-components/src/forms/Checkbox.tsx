@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent } from "react";
+import React from "react";
 import { Help } from "../index";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import TriStateCheckbox from "./TriStateCheckbox";
@@ -47,7 +47,7 @@ export default class Checkbox extends React.Component<Props> {
   renderHelp = () => {
     const { title, helpText } = this.props;
     if (helpText && !title) {
-      return <Help message={helpText} className="has-tooltip-multiline" />;
+      return <Help message={helpText} />;
     }
   };
 

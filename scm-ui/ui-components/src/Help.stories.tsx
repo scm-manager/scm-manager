@@ -21,34 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import classNames from "classnames";
+
 import styled from "styled-components";
-import Tooltip from "./Tooltip";
-import HelpIcon from "./HelpIcon";
+import * as React from "react";
+import { storiesOf } from "@storybook/react";
+import Help from "./Help";
 
-type Props = {
-  message: string;
-  multiline?: boolean;
-  className?: string;
-};
-
-const HelpTooltip = styled(Tooltip)`
-  position: absolute;
-  padding-left: 3px;
+const Wrapper = styled.div`
+  margin: 5rem;
 `;
 
-const Help: FC<Props> = ({ message, multiline, className }) => (
-  <HelpTooltip
-    className={classNames("is-inline-block", multiline ? "has-tooltip-multiline" : undefined, className)}
-    message={message}
-  >
-    <HelpIcon />
-  </HelpTooltip>
-);
+const Spacing = styled.div`
+  margin-top: 1rem;
+`;
 
-Help.defaultProps = {
-  multiline: true
-};
+const longContent =
+  "Cleverness nuclear genuine static irresponsibility invited President Zaphod\n" +
+  "Beeblebrox hyperspace ship. Another custard through computer-generated universe\n" +
+  "shapes field strong disaster parties Russell’s ancestors infinite colour\n" +
+  "imaginative generator sweep.";
 
-export default Help;
+storiesOf("Help", module)
+  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .add("Default", () => <Help message="This is a help message" />)
+  .add("Multiline", () => (
+    <>
+      <Spacing>
+        <label>With multiline (default):</label>
+        <Help message={longContent} />
+      </Spacing>
+      <Spacing>
+        <label>Without multiline:</label>
+        <Help message={longContent} multiline={false} />
+      </Spacing>
+    </>
+  ));

@@ -43,7 +43,7 @@ class Radio extends React.Component<Props> {
   renderHelp = () => {
     const helpText = this.props.helpText;
     if (helpText) {
-      return <Help message={helpText} className="has-tooltip-multiline" />;
+      return <Help message={helpText} />;
     }
   };
 
