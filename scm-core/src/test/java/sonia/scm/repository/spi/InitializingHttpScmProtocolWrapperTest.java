@@ -21,14 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.google.inject.ProvisionException;
 import com.google.inject.util.Providers;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.OngoingStubbing;
 import sonia.scm.api.v2.resources.ScmPathInfo;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
@@ -44,13 +46,11 @@ import java.io.IOException;
 import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.*;
 
-public class InitializingHttpScmProtocolWrapperTest {
+@ExtendWith(MockitoExtension.class)
+class InitializingHttpScmProtocolWrapperTest {
 
   private static final Repository REPOSITORY = new Repository("", "git", "space", "name");
 
@@ -60,6 +60,7 @@ public class InitializingHttpScmProtocolWrapperTest {
   private ScmPathInfoStore pathInfoStore;
   @Mock
   private ScmConfiguration scmConfiguration;
+
   private Provider<ScmPathInfoStore> pathInfoStoreProvider;
 
   @Mock
@@ -71,11 +72,10 @@ public class InitializingHttpScmProtocolWrapperTest {
 
   private InitializingHttpScmProtocolWrapper wrapper;
 
-  @Before
-  public void init() {
-    initMocks(this);
+  @BeforeEach
+  void init() {
     pathInfoStoreProvider = mock(Provider.class);
-    when(pathInfoStoreProvider.get()).thenReturn(pathInfoStore);
+    lenient().when(pathInfoStoreProvider.get()).thenReturn(pathInfoStore);
 
     wrapper = new InitializingHttpScmProtocolWrapper(Providers.of(this.delegateServlet), pathInfoStoreProvider, scmConfiguration) {
       @Override
@@ -83,11 +83,11 @@ public class InitializingHttpScmProtocolWrapperTest {
         return "git";
       }
     };
-    when(scmConfiguration.getBaseUrl()).thenReturn("http://example.com/scm");
+    lenient().when(scmConfiguration.getBaseUrl()).thenReturn("http://example.com/scm");
   }
 
   @Test
-  public void shouldUsePathFromPathInfo() {
+  void shouldUsePathFromPathInfo() {
     mockSetPathInfo();
 
     HttpScmProtocol httpScmProtocol = wrapper.get(REPOSITORY);
@@ -96,14 +96,14 @@ public class InitializingHttpScmProtocolWrapperTest {
   }
 
   @Test
-  public void shouldUseConfigurationWhenPathInfoNotSet() {
+  void shouldUseConfigurationWhenPathInfoNotSet() {
     HttpScmProtocol httpScmProtocol = wrapper.get(REPOSITORY);
 
     assertEquals("http://example.com/scm/repo/space/name", httpScmProtocol.getUrl());
   }
 
   @Test
-  public void shouldUseConfigurationWhenNotInRequestScope() {
+  void shouldUseConfigurationWhenNotInRequestScope() {
     when(pathInfoStoreProvider.get()).thenThrow(new ProvisionException("test"));
 
     HttpScmProtocol httpScmProtocol = wrapper.get(REPOSITORY);
@@ -112,7 +112,7 @@ public class InitializingHttpScmProtocolWrapperTest {
   }
 
   @Test
-  public void shouldInitializeAndDelegateRequestThroughFilter() throws ServletException, IOException {
+  void shouldInitializeAndDelegateRequestThroughFilter() throws ServletException, IOException {
     HttpScmProtocol httpScmProtocol = wrapper.get(REPOSITORY);
 
     httpScmProtocol.serve(request, response, servletConfig);
@@ -122,7 +122,7 @@ public class InitializingHttpScmProtocolWrapperTest {
   }
 
   @Test
-  public void shouldInitializeOnlyOnce() throws ServletException, IOException {
+  void shouldInitializeOnlyOnce() throws ServletException, IOException {
     HttpScmProtocol httpScmProtocol = wrapper.get(REPOSITORY);
 
     httpScmProtocol.serve(request, response, servletConfig);
@@ -132,9 +132,12 @@ public class InitializingHttpScmProtocolWrapperTest {
     verify(delegateServlet, times(2)).service(request, response, REPOSITORY);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void shouldFailForIllegalScmType() {
-    HttpScmProtocol httpScmProtocol = wrapper.get(new Repository("", "other", "space", "name"));
+  @Test
+  void shouldFailForIllegalScmType() {
+    assertThrows(
+      IllegalArgumentException.class,
+      () -> wrapper.get(new Repository("", "other", "space", "name"))
+    );
   }
 
   private OngoingStubbing<ScmPathInfo> mockSetPathInfo() {
