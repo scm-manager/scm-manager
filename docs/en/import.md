@@ -18,6 +18,7 @@ Than you have to create your new repository via the SCM-Manager web interface an
 In this example we assume that the new repository is available at `https://hitchhiker.com/scm/repo/hgttg/heart-of-gold`. After the new repository is created, we can configure our local repository for the new location and push all refs.
 
 ```bash
+cd heart-of-gold
 git remote set-url origin https://hitchhiker.com/scm/repo/hgttg/heart-of-gold
 git push --mirror
 ```
