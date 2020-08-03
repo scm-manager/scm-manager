@@ -43,4 +43,4 @@ Find the plugin you like to install at [plugins](/plugins#categories) and follow
 
 ### How can I import my existing (git|mercurial|subversion) repository
 
-Please have a look on [this](../import/) detailed instructions.
+Please have a look on [these](../import/) detailed instructions.
