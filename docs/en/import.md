@@ -30,6 +30,7 @@ In this example we assume that the old repository is `https://hgttg.com/r/hg/hea
 
 ```bash
 hg clone https://hitchhiker.com/scm/repo/hgttg/heart-of-gold
+cd heart-of-gold
 hg pull https://hgttg.com/r/hg/heart-of-gold
 hg push
 ```
