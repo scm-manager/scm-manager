@@ -64,7 +64,7 @@ public class PublicKeyStore {
     this.eventBus = eventBus;
   }
 
-  public RawGpgKey add(String displayName, String username, String rawKey) {
+  public RawGpgKey add(String displayName, String username, String rawKey, ) {
     UserPermissions.changePublicKeys(username).check();
 
     if (!rawKey.contains("PUBLIC KEY")) {

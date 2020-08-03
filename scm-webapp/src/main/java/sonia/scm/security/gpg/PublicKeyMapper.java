@@ -58,7 +58,7 @@ public abstract class PublicKeyMapper {
   RawGpgKeyDto createDto(RawGpgKey rawGpgKey) {
     Links.Builder linksBuilder = linkingTo();
     linksBuilder.self(createSelfLink(rawGpgKey));
-    if (UserPermissions.changePublicKeys(rawGpgKey.getOwner()).isPermitted()) {
+    if (UserPermissions.changePublicKeys(rawGpgKey.getOwner()).isPermitted() && !rawGpgKey.isReadonly()) {
       linksBuilder.single(Link.link("delete", createDeleteLink(rawGpgKey)));
     }
     return new RawGpgKeyDto(linksBuilder.build());

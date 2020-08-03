@@ -1,4 +1,5 @@
 /*
+ *
  * MIT License
  *
  * Copyright (c) 2020-present Cloudogu GmbH and Contributors
@@ -22,59 +23,40 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security.gpg;
+package sonia.scm.repository;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import sonia.scm.repository.Person;
-import sonia.scm.xml.XmlInstantAdapter;
+import org.eclipse.jgit.api.errors.CanceledException;
+import org.eclipse.jgit.lib.CommitBuilder;
+import org.eclipse.jgit.lib.GpgSignature;
+import org.eclipse.jgit.lib.GpgSigner;
+import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import sonia.scm.security.GPG;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.time.Instant;
-import java.util.Objects;
-import java.util.Set;
+import javax.inject.Inject;
+import java.io.UnsupportedEncodingException;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
-public class RawGpgKey {
+public class ScmGpgSigner extends GpgSigner {
 
-  private String id;
-  private String displayName;
-  private String owner;
-  private String raw;
-  private boolean readonly = false;
-  private Set<Person> contacts;
+  private final GPG gpg;
 
-  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
-  private Instant created;
-
-  RawGpgKey(String id) {
-    this.id = id;
+  @Inject
+  public ScmGpgSigner(GPG gpg) {
+    this.gpg = gpg;
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+  public void sign(CommitBuilder commitBuilder, String s, PersonIdent personIdent, CredentialsProvider credentialsProvider) throws CanceledException {
+    try {
+      final byte[] signature = this.gpg.getPrivateKey().sign(commitBuilder.build());
+      commitBuilder.setGpgSignature(new GpgSignature(signature));
+    } catch (UnsupportedEncodingException e) {
+      throw new IllegalStateException(e);
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    RawGpgKey that = (RawGpgKey) o;
-    return Objects.equals(id, that.id);
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(id);
+  public boolean canLocateSigningKey(String s, PersonIdent personIdent, CredentialsProvider credentialsProvider) throws CanceledException {
+    return true;
   }
-
 }

@@ -97,7 +97,7 @@ class PublicKeyResourceTest {
     RawGpgKeyDto dto = new RawGpgKeyDto();
     when(mapper.map(key)).thenReturn(dto);
 
-    Response response = resource.findById("42");
+    Response response = resource.findByIdJson("42");
     assertThat(response.getStatus()).isEqualTo(200);
     assertThat(response.getEntity()).isSameAs(dto);
   }
@@ -106,7 +106,7 @@ class PublicKeyResourceTest {
   void shouldReturn404IfIdDoesNotExists() {
     when(store.findById("42")).thenReturn(Optional.empty());
 
-    Response response = resource.findById("42");
+    Response response = resource.findByIdJson("42");
     assertThat(response.getStatus()).isEqualTo(404);
   }
 

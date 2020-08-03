@@ -30,12 +30,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.api.v2.resources.ErrorDto;
+import sonia.scm.security.AllowAnonymousAccess;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -97,6 +99,7 @@ public class PublicKeyResource {
   @GET
   @Path("{id}")
   @Produces(MEDIA_TYPE)
+  @AllowAnonymousAccess
   @Operation(
     summary = "Get single key for user",
     description = "Returns a single public key for username by id.",
@@ -129,7 +132,7 @@ public class PublicKeyResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  public Response findById(@PathParam("id") String id) {
+  public Response findByIdJson(@PathParam("id") String id) {
     Optional<RawGpgKey> byId = store.findById(id);
     if (byId.isPresent()) {
       return Response.ok(mapper.map(byId.get())).build();

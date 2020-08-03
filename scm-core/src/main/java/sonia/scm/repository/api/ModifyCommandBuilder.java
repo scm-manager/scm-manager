@@ -165,6 +165,15 @@ public class ModifyCommandBuilder {
   }
 
   /**
+   * Set the branch the changes should be made upon.
+   * @return This builder instance.
+   */
+  public ModifyCommandBuilder disableSignature(String branch) {
+    request.setBranch(branch);
+    return this;
+  }
+
+  /**
    * Set the expected revision of the branch, before the changes are applied. If the branch does not have the
    * expected revision, a concurrent modification exception will be thrown when the command is executed and no
    * changes will be applied.

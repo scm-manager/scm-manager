@@ -20,61 +20,59 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
+
 
 package sonia.scm.security.gpg;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import sonia.scm.repository.Person;
+import sonia.scm.security.CipherUtil;
+import sonia.scm.security.PrivateKey;
+import sonia.scm.store.DataStore;
+import sonia.scm.store.DataStoreFactory;
 import sonia.scm.xml.XmlInstantAdapter;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.Instant;
-import java.util.Objects;
-import java.util.Set;
+import java.util.Optional;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
-public class RawGpgKey {
+@Singleton
+class PrivateKeyStore {
 
-  private String id;
-  private String displayName;
-  private String owner;
-  private String raw;
-  private boolean readonly = false;
-  private Set<Person> contacts;
+  private static final String STORE_NAME = "gpg_private_keys";
 
-  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
-  private Instant created;
+  private final DataStore<RawPrivateKey> store;
 
-  RawGpgKey(String id) {
-    this.id = id;
+  @Inject
+  PrivateKeyStore(DataStoreFactory dataStoreFactory) {
+    this.store = dataStoreFactory.withType(RawPrivateKey.class).withName(STORE_NAME).build();
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    RawGpgKey that = (RawGpgKey) o;
-    return Objects.equals(id, that.id);
+  Optional<String> getForUserId(String userId) {
+    return store.getOptional(userId).map(rawPrivateKey -> CipherUtil.getInstance().decode(rawPrivateKey.key));
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
+  void setForUserId(String userId, String rawKey) {
+    final String encodedRawKey = CipherUtil.getInstance().encode(rawKey);
+    store.put(userId, new RawPrivateKey(encodedRawKey, Instant.now()));
+  }
+
+  @XmlRootElement
+  @XmlAccessorType(XmlAccessType.FIELD)
+  @AllArgsConstructor
+  @NoArgsConstructor
+  private class RawPrivateKey {
+    private String key;
+
+    @XmlJavaTypeAdapter(XmlInstantAdapter.class)
+    private Instant date;
   }
 
 }

@@ -1,4 +1,5 @@
 /*
+ *
  * MIT License
  *
  * Copyright (c) 2020-present Cloudogu GmbH and Contributors
@@ -21,30 +22,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.spi;
 
+package sonia.scm.repository;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import org.eclipse.jgit.lib.GpgSigner;
+import sonia.scm.plugin.Extension;
 
-@ToString
-@EqualsAndHashCode
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class ModificationsCommandRequest implements Resetable {
-  private String revision;
-  private boolean sign = true;
+import javax.inject.Inject;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+@Extension
+public class ScmGpgSignerInitializer implements ServletContextListener {
+
+  private final ScmGpgSigner scmGpgSigner;
+
+  @Inject
+  public ScmGpgSignerInitializer(ScmGpgSigner scmGpgSigner) {
+    this.scmGpgSigner = scmGpgSigner;
+  }
 
   @Override
-  public void reset() {
-    revision = null;
-    sign = true;
+  public void contextInitialized(ServletContextEvent servletContextEvent) {
+    GpgSigner.setDefault(scmGpgSigner);
+  }
+
+  @Override
+  public void contextDestroyed(ServletContextEvent servletContextEvent) {
+    // Do nothing
   }
 }

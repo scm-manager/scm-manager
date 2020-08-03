@@ -49,6 +49,7 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
   private String branch;
   private String expectedRevision;
   private boolean defaultPath;
+  private boolean disableSigning;
 
   @Override
   public void reset() {
@@ -57,6 +58,7 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
     commitMessage = null;
     branch = null;
     defaultPath = false;
+    disableSigning = false;
   }
 
   public void addRequest(PartialRequest request) {
@@ -110,6 +112,14 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
 
   public void setDefaultPath(boolean defaultPath) {
     this.defaultPath = defaultPath;
+  }
+
+  public boolean isDisableSigning() {
+    return disableSigning;
+  }
+
+  public void setDisableSigning(boolean disableSigning) {
+    this.disableSigning = disableSigning;
   }
 
   public interface PartialRequest {
