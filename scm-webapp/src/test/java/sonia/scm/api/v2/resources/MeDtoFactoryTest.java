@@ -198,6 +198,19 @@ class MeDtoFactoryTest {
     assertThat(dto.getLinks().getLinkBy("password")).isNotPresent();
   }
 
+
+  @Test
+  void shouldAppendOnlySelfLinkIfAnonymousUser() {
+    User user = SCMContext.ANONYMOUS;
+    prepareSubject(user);
+
+    MeDto dto = meDtoFactory.create();
+    assertThat(dto.getLinks().getLinkBy("self")).isPresent();
+    assertThat(dto.getLinks().getLinkBy("password")).isNotPresent();
+    assertThat(dto.getLinks().getLinkBy("delete")).isNotPresent();
+    assertThat(dto.getLinks().getLinkBy("update")).isNotPresent();
+  }
+
   @Test
   void shouldAppendLinks() {
     prepareSubject(UserTestData.createTrillian());
@@ -213,6 +226,4 @@ class MeDtoFactoryTest {
     MeDto dto = meDtoFactory.create();
     assertThat(dto.getLinks().getLinkBy("profile").get().getHref()).isEqualTo("http://hitchhiker.com/users/trillian");
   }
-
-
 }

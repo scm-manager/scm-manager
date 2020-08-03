@@ -63,6 +63,23 @@ class PrimaryNavigation extends React.Component<Props> {
     }
   };
 
+  appendLogin = (navigationItems: ReactNode[], append: Appender) => {
+    const { t, links } = this.props;
+
+    const props = {
+      links,
+      label: t("primary-navigation.login")
+    };
+
+    if (binder.hasExtension("primary-navigation.login", props)) {
+      navigationItems.push(
+        <ExtensionPoint key="primary-navigation.login" name="primary-navigation.login" props={props} />
+      );
+    } else {
+      append("/login", "/login", "primary-navigation.login", "login");
+    }
+  };
+
   createNavigationItems = () => {
     const navigationItems: ReactNode[] = [];
     const { t, links } = this.props;
@@ -95,6 +112,7 @@ class PrimaryNavigation extends React.Component<Props> {
     );
 
     this.appendLogout(navigationItems, append);
+    this.appendLogin(navigationItems, append);
 
     return navigationItems;
   };

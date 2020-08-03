@@ -25,7 +25,7 @@
     "@scm-manager/tsconfig": "^2.1.0",
     "@scm-manager/ui-scripts": "^2.1.0",
     "@scm-manager/ui-tests": "^2.1.0",
-    "@scm-manager/ui-types": "^2.3.0",
+    "@scm-manager/ui-types": "^2.4.0-SNAPSHOT",
     "@types/classnames": "^2.2.9",
     "@types/enzyme": "^3.10.3",
     "@types/fetch-mock": "^7.3.1",

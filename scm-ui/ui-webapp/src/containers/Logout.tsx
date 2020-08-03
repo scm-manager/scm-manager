@@ -43,7 +43,9 @@ type Props = WithTranslation & {
 
 class Logout extends React.Component<Props> {
   componentDidMount() {
-    this.props.logout(this.props.logoutLink);
+    if (this.props.logoutLink) {
+      this.props.logout(this.props.logoutLink);
+    }
   }
 
   render() {

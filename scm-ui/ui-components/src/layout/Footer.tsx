@@ -89,14 +89,24 @@ const Footer: FC<Props> = ({ me, version, links }) => {
     meSectionTile = <TitleWithIcon title={me.displayName} icon="user-circle" />;
   }
 
+  let meSectionBody = <div />;
+  {
+    if (me.name !== "_anonymous")
+      meSectionBody = (
+        <>
+          <NavLink to="/me/settings/password" label={t("profile.changePasswordNavLink")} />
+          <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
+        </>
+      );
+  }
+
   return (
     <footer className="footer">
       <section className="section container">
         <div className="columns is-size-7">
           <FooterSection title={meSectionTile}>
             <NavLink to="/me" label={t("footer.user.profile")} />
-            <NavLink to="/me/settings/password" label={t("profile.changePasswordNavLink")} />
-            <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
+            {meSectionBody}
           </FooterSection>
           <FooterSection title={<TitleWithIcon title={t("footer.information.title")} icon="info-circle" />}>
             <ExternalNavLink to="https://www.scm-manager.org/" label={`SCM-Manager ${version}`} />

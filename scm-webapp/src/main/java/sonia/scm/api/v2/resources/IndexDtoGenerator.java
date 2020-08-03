@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.common.base.Strings;
@@ -35,6 +35,7 @@ import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupPermissions;
 import sonia.scm.plugin.PluginPermissions;
+import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.Authentications;
 import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.UserPermissions;
@@ -70,7 +71,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       builder.single(link("loginInfo", loginInfoUrl));
     }
 
-    if (SecurityUtils.getSubject().isAuthenticated()) {
+    if (SecurityUtils.getSubject().isAuthenticated() && !Authentications.isAuthenticatedSubjectAnonymous() || isAnonymousAccess()) {
       builder.single(link("me", resourceLinks.me().self()));
 
       if (Authentications.isAuthenticatedSubjectAnonymous()) {
@@ -119,5 +120,9 @@ public class IndexDtoGenerator extends HalAppenderMapper {
     applyEnrichers(new EdisonHalAppender(builder, embeddedBuilder), new Index());
 
     return new IndexDto(builder.build(), embeddedBuilder.build(), scmContextProvider.getVersion());
+  }
+
+  private boolean isAnonymousAccess() {
+    return Authentications.isAuthenticatedSubjectAnonymous() && configuration.getAnonymousMode() == AnonymousMode.FULL;
   }
 }

@@ -26,7 +26,7 @@ import { connect } from "react-redux";
 import { Redirect, withRouter } from "react-router-dom";
 import { compose } from "redux";
 import styled from "styled-components";
-import { getLoginFailure, isAuthenticated, isLoginPending, login } from "../modules/auth";
+import { getLoginFailure, isAnonymous, isLoginPending, login } from "../modules/auth";
 import { getLoginInfoLink, getLoginLink } from "../modules/indexResource";
 import LoginInfo from "../components/LoginInfo";
 
@@ -86,7 +86,7 @@ class Login extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: any) => {
-  const authenticated = isAuthenticated(state);
+  const authenticated = state?.auth?.me && !isAnonymous(state.auth.me);
   const loading = isLoginPending(state);
   const error = getLoginFailure(state);
   const link = getLoginLink(state);

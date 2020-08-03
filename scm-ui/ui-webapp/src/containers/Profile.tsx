@@ -23,7 +23,7 @@
  */
 import React from "react";
 import { Route, RouteComponentProps, withRouter } from "react-router-dom";
-import { getMe } from "../modules/auth";
+import { getMe, isAnonymous } from "../modules/auth";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
@@ -92,7 +92,9 @@ class Profile extends React.Component<Props> {
           <CustomQueryFlexWrappedColumns>
             <PrimaryContentColumn>
               <Route path={url} exact render={() => <ProfileInfo me={me} />} />
-              <Route path={`${url}/settings/password`} render={() => <ChangeUserPassword me={me} />} />
+              {me?._links?.password && (
+                <Route path={`${url}/settings/password`} render={() => <ChangeUserPassword me={me} />} />
+              )}
               <ExtensionPoint name="profile.route" props={extensionProps} renderAll={true} />
             </PrimaryContentColumn>
             <SecondaryNavigationColumn>
@@ -103,14 +105,16 @@ class Profile extends React.Component<Props> {
                   label={t("profile.informationNavLink")}
                   title={t("profile.informationNavLink")}
                 />
-                <SubNavigation
-                  to={`${url}/settings/password`}
-                  label={t("profile.settingsNavLink")}
-                  title={t("profile.settingsNavLink")}
-                >
-                  <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
-                  <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
-                </SubNavigation>
+                {!isAnonymous(me) && (
+                  <SubNavigation
+                    to={`${url}/settings/password`}
+                    label={t("profile.settingsNavLink")}
+                    title={t("profile.settingsNavLink")}
+                  >
+                    <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
+                    <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
+                  </SubNavigation>
+                )}
               </SecondaryNavigation>
             </SecondaryNavigationColumn>
           </CustomQueryFlexWrappedColumns>

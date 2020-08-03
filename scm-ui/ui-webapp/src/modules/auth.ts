@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { Me } from "@scm-manager/ui-types";
+import { Link, Me } from "@scm-manager/ui-types";
 import * as types from "./types";
 
 import { apiClient, UnauthorizedError } from "@scm-manager/ui-components";
@@ -32,9 +32,9 @@ import {
   callFetchIndexResources,
   fetchIndexResources,
   fetchIndexResourcesPending,
-  fetchIndexResourcesSuccess,
-  getLoginLink
+  fetchIndexResourcesSuccess, getLoginLink
 } from "./indexResource";
+import { AnyAction } from "redux";
 
 // Action
 
@@ -61,7 +61,7 @@ const initialState = {};
 
 export default function reducer(
   state: object = initialState,
-  action: object = {
+  action: AnyAction = {
     type: "UNKNOWN"
   }
 ) {
@@ -174,23 +174,23 @@ const callFetchMe = (link: string): Promise<Me> => {
 };
 
 export const login = (loginLink: string, username: string, password: string) => {
-  const login_data = {
+  const loginData = {
     cookie: true,
-    grant_type: "password",
+    grantType: "password",
     username,
     password
   };
   return function(dispatch: any) {
     dispatch(loginPending());
     return apiClient
-      .post(loginLink, login_data)
+      .post(loginLink, loginData)
       .then(() => {
         dispatch(fetchIndexResourcesPending());
         return callFetchIndexResources();
       })
       .then(response => {
         dispatch(fetchIndexResourcesSuccess(response));
-        const meLink = response._links.me.href;
+        const meLink = (response._links.me as Link).href;
         return callFetchMe(meLink);
       })
       .then(me => {
@@ -256,17 +256,17 @@ export const logout = (link: string) => {
 // selectors
 
 const stateAuth = (state: object): object => {
+  // @ts-ignore Right types for redux not available
   return state.auth || {};
 };
 
 export const isAuthenticated = (state: object) => {
-  if (state.auth.me && !getLoginLink(state)) {
-    return true;
-  }
-  return false;
+  // @ts-ignore Right types for redux not available
+  return !!((state.auth.me && !getLoginLink(state)) || isAnonymous(state.auth.me));
 };
 
 export const getMe = (state: object): Me => {
+  // @ts-ignore Right types for redux not available
   return stateAuth(state).me;
 };
 
@@ -295,5 +295,12 @@ export const getLogoutFailure = (state: object) => {
 };
 
 export const isRedirecting = (state: object) => {
+  // @ts-ignore Right types for redux not available
   return !!stateAuth(state).redirecting;
+};
+
+// Helper methods
+
+export const isAnonymous = (me: Me) => {
+  return me?.name === "_anonymous";
 };

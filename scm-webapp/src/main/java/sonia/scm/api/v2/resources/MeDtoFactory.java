@@ -83,14 +83,16 @@ public class MeDtoFactory extends HalAppenderMapper {
 
   private MeDto createDto(User user) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.me().self());
-    if (UserPermissions.delete(user).isPermitted()) {
-      linksBuilder.single(link("delete", resourceLinks.me().delete(user.getName())));
-    }
-    if (UserPermissions.modify(user).isPermitted()) {
-      linksBuilder.single(link("update", resourceLinks.me().update(user.getName())));
-    }
-    if (userManager.isTypeDefault(user) && UserPermissions.changePassword(user).isPermitted() && !Authentications.isSubjectAnonymous(user.getName())) {
-      linksBuilder.single(link("password", resourceLinks.me().passwordChange()));
+    if (isNotAnonymous(user)) {
+      if (UserPermissions.delete(user).isPermitted()) {
+        linksBuilder.single(link("delete", resourceLinks.me().delete(user.getName())));
+      }
+      if (UserPermissions.modify(user).isPermitted()) {
+        linksBuilder.single(link("update", resourceLinks.me().update(user.getName())));
+      }
+      if (userManager.isTypeDefault(user) && UserPermissions.changePassword(user).isPermitted()) {
+        linksBuilder.single(link("password", resourceLinks.me().passwordChange()));
+      }
     }
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();
@@ -99,4 +101,7 @@ public class MeDtoFactory extends HalAppenderMapper {
     return new MeDto(linksBuilder.build(), embeddedBuilder.build());
   }
 
+  private boolean isNotAnonymous(User user) {
+    return !Authentications.isSubjectAnonymous(user.getName());
+  }
 }
