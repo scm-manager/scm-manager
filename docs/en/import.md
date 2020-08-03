@@ -46,6 +46,7 @@ svnadmin dump /path/to/repo > oldrepo.dump
 Now we have to create a new repository via the SCM-Manager web interface.
 After the repository is created, we have to find its location on the filesystem.
 This could be done by finding the directory with the newest timestamp in your scm home directory under `repositories`.
+You can check whether you have found the correct directory by having a look at the file `metadata.xml`. Here you should find the namespace and the name of the repository created.
 Now its time to import the dump from the old repository:
 
 ```bash
