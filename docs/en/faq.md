@@ -41,6 +41,6 @@ After changing the configuration, SCM-Manager must be restarted.
 
 Find the plugin you like to install at [plugins](/plugins#categories) and follow the installation instructions on the install page of the plugin.
 
-### How can i import my existing (git|mercurial|subversion) repository
+### How can I import my existing (git|mercurial|subversion) repository
 
 Please have a look on [this](../import/) detailed instructions.
