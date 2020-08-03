@@ -38,6 +38,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.AnonymousMode;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
@@ -110,7 +111,7 @@ public class PropagatePrincipleFilterTest {
    */
   @Test
   public void testAnonymousWithAccessEnabled() throws IOException, ServletException {
-    configuration.setAnonymousAccessEnabled(true);
+    configuration.setAnonymousMode(AnonymousMode.FULL);
     
     // execute
     propagatePrincipleFilter.doFilter(request, response, chain);

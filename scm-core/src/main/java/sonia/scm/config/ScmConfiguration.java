@@ -30,6 +30,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.security.AnonymousMode;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.xml.XmlSetStringAdapter;
 
@@ -161,7 +162,7 @@ public class ScmConfiguration implements Configuration {
    * @see <a href="http://momentjs.com/docs/#/parsing/" target="_blank">http://momentjs.com/docs/#/parsing/</a>
    */
   private String dateFormat = DEFAULT_DATEFORMAT;
-  private boolean anonymousAccessEnabled = false;
+  private AnonymousMode anonymousMode = AnonymousMode.OFF;
 
   /**
    * Enables xsrf cookie protection.
@@ -200,7 +201,7 @@ public class ScmConfiguration implements Configuration {
     this.realmDescription = other.realmDescription;
     this.dateFormat = other.dateFormat;
     this.pluginUrl = other.pluginUrl;
-    this.anonymousAccessEnabled = other.anonymousAccessEnabled;
+    this.anonymousMode = other.anonymousMode;
     this.enableProxy = other.enableProxy;
     this.proxyPort = other.proxyPort;
     this.proxyServer = other.proxyServer;
@@ -311,8 +312,8 @@ public class ScmConfiguration implements Configuration {
     return realmDescription;
   }
 
-  public boolean isAnonymousAccessEnabled() {
-    return anonymousAccessEnabled;
+  public AnonymousMode getAnonymousMode() {
+    return anonymousMode;
   }
 
   public boolean isDisableGroupingGrid() {
@@ -360,8 +361,8 @@ public class ScmConfiguration implements Configuration {
     return skipFailedAuthenticators;
   }
 
-  public void setAnonymousAccessEnabled(boolean anonymousAccessEnabled) {
-    this.anonymousAccessEnabled = anonymousAccessEnabled;
+  public void setAnonymousMode(AnonymousMode mode) {
+    this.anonymousMode = mode;
   }
 
   public void setBaseUrl(String baseUrl) {

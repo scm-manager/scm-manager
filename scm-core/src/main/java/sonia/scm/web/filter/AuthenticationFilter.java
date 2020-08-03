@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.AnonymousToken;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
@@ -303,7 +304,7 @@ public class AuthenticationFilter extends HttpFilter
    */
   private boolean isAnonymousAccessEnabled()
   {
-    return (configuration != null) && configuration.isAnonymousAccessEnabled();
+    return (configuration != null) && configuration.getAnonymousMode() != AnonymousMode.OFF;
   }
 
   //~--- fields ---------------------------------------------------------------

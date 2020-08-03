@@ -41,6 +41,7 @@ import sonia.scm.it.utils.ScmTypes;
 import sonia.scm.it.utils.TestData;
 import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.repository.client.api.RepositoryClientException;
+import sonia.scm.security.AnonymousMode;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -148,7 +149,7 @@ class AnonymousAccessITCase {
 
   private static void setAnonymousAccess(boolean anonymousAccessEnabled) {
     RestUtil.given("application/vnd.scmm-config+json;v=2")
-      .body(createConfig(anonymousAccessEnabled))
+      .body(createConfig(AnonymousMode.FULL))
 
       .when()
       .put(RestUtil.REST_BASE_URL.toASCIIString() + "config")
@@ -157,12 +158,12 @@ class AnonymousAccessITCase {
       .statusCode(HttpServletResponse.SC_NO_CONTENT);
   }
 
-  private static String createConfig(boolean anonymousAccessEnabled) {
+  private static String createConfig(AnonymousMode anonymousMode) {
     JsonArray emptyArray = Json.createBuilderFactory(emptyMap()).createArrayBuilder().build();
     return JSON_BUILDER
       .add("adminGroups", emptyArray)
       .add("adminUsers", emptyArray)
-      .add("anonymousAccessEnabled", anonymousAccessEnabled)
+      .add("anonymousMode", anonymousMode.toString())
       .add("baseUrl", "https://next-scm.cloudogu.com/scm")
       .add("dateFormat", "YYYY-MM-DD HH:mm:ss")
       .add("disableGroupingGrid", false)

@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
+import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.user.User;
@@ -94,7 +95,7 @@ public class SetupContextListener implements ServletContextListener {
     }
 
     private boolean anonymousUserRequiredButNotExists() {
-      return scmConfiguration.isAnonymousAccessEnabled() && !userManager.contains(SCMContext.USER_ANONYMOUS);
+      return scmConfiguration.getAnonymousMode() != AnonymousMode.OFF && !userManager.contains(SCMContext.USER_ANONYMOUS);
     }
 
     private boolean shouldCreateAdminAccount() {

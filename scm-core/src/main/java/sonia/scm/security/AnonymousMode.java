@@ -22,29 +22,8 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+package sonia.scm.security;
 
-export type AnonymousMode = "FULL" | "PROTOCOL_ONLY" | "OFF";
-
-export type Config = {
-  proxyPassword: string | null;
-  proxyPort: number;
-  proxyServer: string;
-  proxyUser: string | null;
-  enableProxy: boolean;
-  realmDescription: string;
-  disableGroupingGrid: boolean;
-  dateFormat: string;
-  anonymousMode: AnonymousMode;
-  baseUrl: string;
-  forceBaseUrl: boolean;
-  loginAttemptLimit: number;
-  proxyExcludes: string[];
-  skipFailedAuthenticators: boolean;
-  pluginUrl: string;
-  loginAttemptLimitTimeout: number;
-  enabledXsrfProtection: boolean;
-  namespaceStrategy: string;
-  loginInfoUrl: string;
-  _links: Links;
-};
+public enum AnonymousMode {
+  FULL, PROTOCOL_ONLY, OFF
+}

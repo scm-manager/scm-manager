@@ -34,12 +34,14 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.internal.util.collections.Sets;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.AnonymousMode;
 
 import java.net.URI;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -93,7 +95,7 @@ public class ScmConfigurationToConfigDtoMapperTest {
     assertEquals("description" , dto.getRealmDescription());
     assertTrue(dto.isDisableGroupingGrid());
     assertEquals("dd" , dto.getDateFormat());
-    assertTrue(dto.isAnonymousAccessEnabled());
+    assertSame(dto.getAnonymousMode(), AnonymousMode.FULL);
     assertEquals("baseurl" , dto.getBaseUrl());
     assertTrue(dto.isForceBaseUrl());
     assertEquals(1 , dto.getLoginAttemptLimit());
@@ -131,7 +133,7 @@ public class ScmConfigurationToConfigDtoMapperTest {
     config.setRealmDescription("description");
     config.setDisableGroupingGrid(true);
     config.setDateFormat("dd");
-    config.setAnonymousAccessEnabled(true);
+    config.setAnonymousMode(AnonymousMode.FULL);
     config.setBaseUrl("baseurl");
     config.setForceBaseUrl(true);
     config.setLoginAttemptLimit(1);

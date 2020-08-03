@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.internal.util.collections.Sets;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.AnonymousMode;
 
 import java.util.Arrays;
 
@@ -63,7 +64,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
     assertEquals("realm" , config.getRealmDescription());
     assertTrue(config.isDisableGroupingGrid());
     assertEquals("yyyy" , config.getDateFormat());
-    assertTrue(config.isAnonymousAccessEnabled());
+    assertTrue(config.getAnonymousMode() == AnonymousMode.FULL);
     assertEquals("baseurl" , config.getBaseUrl());
     assertTrue(config.isForceBaseUrl());
     assertEquals(41 , config.getLoginAttemptLimit());
@@ -86,7 +87,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
     configDto.setRealmDescription("realm");
     configDto.setDisableGroupingGrid(true);
     configDto.setDateFormat("yyyy");
-    configDto.setAnonymousAccessEnabled(true);
+    configDto.setAnonymousMode(AnonymousMode.FULL);
     configDto.setBaseUrl("baseurl");
     configDto.setForceBaseUrl(true);
     configDto.setLoginAttemptLimit(41);

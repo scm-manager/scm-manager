@@ -23,8 +23,8 @@
  */
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { Checkbox, InputField } from "@scm-manager/ui-components";
-import { NamespaceStrategies } from "@scm-manager/ui-types";
+import { Checkbox, InputField, Select } from "@scm-manager/ui-components";
+import { NamespaceStrategies, AnonymousMode } from "@scm-manager/ui-types";
 import NamespaceStrategySelect from "./NamespaceStrategySelect";
 
 type Props = WithTranslation & {
@@ -32,7 +32,7 @@ type Props = WithTranslation & {
   loginInfoUrl: string;
   disableGroupingGrid: boolean;
   dateFormat: string;
-  anonymousAccessEnabled: boolean;
+  anonymousMode: AnonymousMode;
   skipFailedAuthenticators: boolean;
   pluginUrl: string;
   enabledXsrfProtection: boolean;
@@ -50,7 +50,7 @@ class GeneralSettings extends React.Component<Props> {
       loginInfoUrl,
       pluginUrl,
       enabledXsrfProtection,
-      anonymousAccessEnabled,
+      anonymousMode,
       namespaceStrategy,
       hasUpdatePermission,
       namespaceStrategies
@@ -111,12 +111,16 @@ class GeneralSettings extends React.Component<Props> {
             />
           </div>
           <div className="column is-half">
-            <Checkbox
-              label={t("general-settings.anonymous-access-enabled")}
-              onChange={this.handleEnableAnonymousAccess}
-              checked={anonymousAccessEnabled}
-              title={t("general-settings.anonymous-access-enabled")}
+            <Select
+              label={t("general-settings.anonymousMode.title")}
+              onChange={this.handleAnonymousMode}
+              value={anonymousMode}
               disabled={!hasUpdatePermission}
+              options={[
+                { label: t("general-settings.anonymousMode.full"), value: "FULL" },
+                { label: t("general-settings.anonymousMode.protocolOnly"), value: "PROTOCOL_ONLY" },
+                { label: t("general-settings.anonymousMode.off"), value: "OFF" }
+              ]}
               helpText={t("help.allowAnonymousAccessHelpText")}
             />
           </div>
@@ -134,8 +138,8 @@ class GeneralSettings extends React.Component<Props> {
   handleEnabledXsrfProtectionChange = (value: boolean) => {
     this.props.onChange(true, value, "enabledXsrfProtection");
   };
-  handleEnableAnonymousAccess = (value: boolean) => {
-    this.props.onChange(true, value, "anonymousAccessEnabled");
+  handleAnonymousMode = (value: string) => {
+    this.props.onChange(true, value, "anonymousMode");
   };
   handleNamespaceStrategyChange = (value: string) => {
     this.props.onChange(true, value, "namespaceStrategy");
