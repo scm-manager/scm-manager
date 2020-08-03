@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import lombok.extern.slf4j.Slf4j;
+import sonia.scm.RootURL;
 import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
@@ -37,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -45,16 +47,36 @@ import static java.util.Optional.of;
 public abstract class InitializingHttpScmProtocolWrapper implements ScmProtocolProvider<HttpScmProtocol> {
 
   private final Provider<? extends ScmProviderHttpServlet> delegateProvider;
-  private final Provider<ScmPathInfoStore> pathInfoStore;
-  private final ScmConfiguration scmConfiguration;
+  private final Supplier<String> basePathSupplier;
 
   private volatile boolean isInitialized = false;
 
-
+  /**
+   * Constructs a new {@link InitializingHttpScmProtocolWrapper}.
+   *
+   * @param delegateProvider injection provider for the servlet delegate
+   * @param pathInfoStore url info store
+   * @param scmConfiguration scm-manager main configuration
+   *
+   * @deprecated use {@link InitializingHttpScmProtocolWrapper(Provider, RootURL)} instead.
+   */
+  @Deprecated
   protected InitializingHttpScmProtocolWrapper(Provider<? extends ScmProviderHttpServlet> delegateProvider, Provider<ScmPathInfoStore> pathInfoStore, ScmConfiguration scmConfiguration) {
     this.delegateProvider = delegateProvider;
-    this.pathInfoStore = pathInfoStore;
-    this.scmConfiguration = scmConfiguration;
+    this.basePathSupplier = new LegacySupplier(pathInfoStore, scmConfiguration);
+  }
+
+  /**
+   * Constructs a new {@link InitializingHttpScmProtocolWrapper}.
+   *
+   * @param delegateProvider injection provider for the servlet delegate
+   * @param rootURL root url
+   *
+   * @since 2.3.1
+   */
+  public InitializingHttpScmProtocolWrapper(Provider<? extends ScmProviderHttpServlet> delegateProvider, RootURL rootURL) {
+    this.delegateProvider = delegateProvider;
+    this.basePathSupplier = rootURL::getAsString;
   }
 
   protected void initializeServlet(ServletConfig config, ScmProviderHttpServlet httpServlet) throws ServletException {
@@ -64,30 +86,45 @@ public abstract class InitializingHttpScmProtocolWrapper implements ScmProtocolP
   @Override
   public HttpScmProtocol get(Repository repository) {
     if (!repository.getType().equals(getType())) {
-      throw new IllegalArgumentException(String.format("cannot handle repository with type %s with protocol for type %s", repository.getType(), getType()));
+      throw new IllegalArgumentException(
+        String.format("cannot handle repository with type %s with protocol for type %s", repository.getType(), getType())
+      );
     }
-    return new ProtocolWrapper(repository, computeBasePath());
+    return new ProtocolWrapper(repository, basePathSupplier.get());
   }
 
-  private String computeBasePath() {
-    return getPathFromScmPathInfoIfAvailable().orElse(getPathFromConfiguration());
-  }
+  private static class LegacySupplier implements Supplier<String> {
 
-  private Optional<String> getPathFromScmPathInfoIfAvailable() {
-    try {
-      ScmPathInfoStore scmPathInfoStore = pathInfoStore.get();
-      if (scmPathInfoStore != null && scmPathInfoStore.get() != null) {
-        return of(scmPathInfoStore.get().getRootUri().toASCIIString());
+    private final Provider<ScmPathInfoStore> pathInfoStore;
+    private final ScmConfiguration scmConfiguration;
+
+    private LegacySupplier(Provider<ScmPathInfoStore> pathInfoStore, ScmConfiguration scmConfiguration) {
+      this.pathInfoStore = pathInfoStore;
+      this.scmConfiguration = scmConfiguration;
+    }
+
+    @Override
+    public String get() {
+      return getPathFromScmPathInfoIfAvailable().orElse(getPathFromConfiguration());
+    }
+
+    private Optional<String> getPathFromScmPathInfoIfAvailable() {
+      try {
+        ScmPathInfoStore scmPathInfoStore = pathInfoStore.get();
+        if (scmPathInfoStore != null && scmPathInfoStore.get() != null) {
+          return of(scmPathInfoStore.get().getRootUri().toASCIIString());
+        }
+      } catch (Exception e) {
+        log.debug("could not get ScmPathInfoStore from context", e);
       }
-    } catch (Exception e) {
-      log.debug("could not get ScmPathInfoStore from context", e);
+      return empty();
     }
-    return empty();
-  }
 
-  private String getPathFromConfiguration() {
-    log.debug("using base path from configuration: {}", scmConfiguration.getBaseUrl());
-    return scmConfiguration.getBaseUrl();
+    private String getPathFromConfiguration() {
+      log.debug("using base path from configuration: {}", scmConfiguration.getBaseUrl());
+      return scmConfiguration.getBaseUrl();
+    }
+
   }
 
   private class ProtocolWrapper extends HttpScmProtocol {
