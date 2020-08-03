@@ -1,6 +1,6 @@
 ---
 title: Import existing repositories
-subtitle: Howto import existing repositories into SCM-Manager
+subtitle: How to import existing repositories into SCM-Manager
 displayToc: true
 ---
 
