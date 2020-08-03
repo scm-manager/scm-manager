@@ -134,9 +134,10 @@ class InitializingHttpScmProtocolWrapperTest {
 
   @Test
   void shouldFailForIllegalScmType() {
+    Repository repository = new Repository("", "other", "space", "name");
     assertThrows(
       IllegalArgumentException.class,
-      () -> wrapper.get(new Repository("", "other", "space", "name"))
+      () -> wrapper.get(repository)
     );
   }
 
