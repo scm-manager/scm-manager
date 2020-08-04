@@ -26,9 +26,9 @@ import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
 
-import { getLogoutFailure, isAuthenticated, isLogoutPending, isRedirecting, logout } from "../modules/auth";
+import { getLogoutFailure, isLogoutPending, isRedirecting, logout } from "../modules/auth";
 import { ErrorPage, Loading } from "@scm-manager/ui-components";
-import { getLogoutLink } from "../modules/indexResource";
+import { getLoginLink, getLogoutLink } from "../modules/indexResource";
 
 type Props = WithTranslation & {
   authenticated: boolean;
@@ -61,7 +61,7 @@ class Logout extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: any) => {
-  const authenticated = isAuthenticated(state);
+  const authenticated = state.auth.me && !getLoginLink(state);
   const loading = isLogoutPending(state);
   const redirecting = isRedirecting(state);
   const error = getLogoutFailure(state);

@@ -68,7 +68,7 @@ class App extends Component<Props> {
       content = <Loading />;
     } else if (error) {
       content = <ErrorPage title={t("app.error.title")} subtitle={t("app.error.subtitle")} error={error} />;
-    } else {
+    } else if (me) {
       content = <Main authenticated={authenticated} links={links} />;
     }
     return (

@@ -71,7 +71,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       builder.single(link("loginInfo", loginInfoUrl));
     }
 
-    if (SecurityUtils.getSubject().isAuthenticated() && !Authentications.isAuthenticatedSubjectAnonymous() || isAnonymousAccess()) {
+    if (shouldAppendSubjectRelatedLinks()) {
       builder.single(link("me", resourceLinks.me().self()));
 
       if (Authentications.isAuthenticatedSubjectAnonymous()) {
@@ -122,7 +122,10 @@ public class IndexDtoGenerator extends HalAppenderMapper {
     return new IndexDto(builder.build(), embeddedBuilder.build(), scmContextProvider.getVersion());
   }
 
-  private boolean isAnonymousAccess() {
-    return Authentications.isAuthenticatedSubjectAnonymous() && configuration.getAnonymousMode() == AnonymousMode.FULL;
+  private boolean shouldAppendSubjectRelatedLinks() {
+    return (SecurityUtils.getSubject().isAuthenticated()
+      && !Authentications.isAuthenticatedSubjectAnonymous())
+      || (Authentications.isAuthenticatedSubjectAnonymous()
+      && configuration.getAnonymousMode() == AnonymousMode.FULL);
   }
 }
