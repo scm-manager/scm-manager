@@ -109,11 +109,13 @@ class LoginForm extends React.Component<Props, State> {
           <ErrorNotification error={this.areCredentialsInvalid()} />
           <form onSubmit={this.handleSubmit}>
             <InputField
+              className="username"
               placeholder={t("login.username-placeholder")}
               autofocus={true}
               onChange={this.handleUsernameChange}
             />
             <InputField
+              className="password"
               placeholder={t("login.password-placeholder")}
               type="password"
               onChange={this.handlePasswordChange}
