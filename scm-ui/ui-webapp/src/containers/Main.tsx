@@ -24,7 +24,7 @@
 import React from "react";
 
 import { Redirect, Route, Switch, withRouter } from "react-router-dom";
-import { Links } from "@scm-manager/ui-types";
+import { Links, Me } from "@scm-manager/ui-types";
 
 import Overview from "../repos/containers/Overview";
 import Users from "../users/containers/Users";
@@ -48,15 +48,22 @@ import Admin from "../admin/containers/Admin";
 import Profile from "./Profile";
 
 type Props = {
+  me: Me;
   authenticated?: boolean;
   links: Links;
 };
 
 class Main extends React.Component<Props> {
   render() {
-    const { authenticated, links } = this.props;
+    const { authenticated, me, links } = this.props;
     const redirectUrlFactory = binder.getExtension("main.redirect", this.props);
-    let url = "/repos/";
+    let url = "/";
+    if (authenticated) {
+      url = "/repos/";
+    }
+    if (!me) {
+      url = "/login";
+    }
     if (redirectUrlFactory) {
       url = redirectUrlFactory(this.props);
     }

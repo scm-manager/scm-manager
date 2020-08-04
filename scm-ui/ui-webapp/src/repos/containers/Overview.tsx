@@ -25,8 +25,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
-import { RepositoryCollection } from "@scm-manager/ui-types";
+import { Me, RepositoryCollection } from "@scm-manager/ui-types";
 import {
   CreateButton,
   LinkPaginator,
@@ -45,9 +44,11 @@ import {
   isFetchReposPending
 } from "../modules/repos";
 import RepositoryList from "../components/list";
+import { fetchMe, isFetchMePending } from "../../modules/auth";
 
 type Props = WithTranslation &
   RouteComponentProps & {
+    me: Me;
     loading: boolean;
     error: Error;
     showCreateButton: boolean;
@@ -61,13 +62,15 @@ type Props = WithTranslation &
 
 class Overview extends React.Component<Props> {
   componentDidMount() {
-    const { fetchReposByPage, reposLink, page, location } = this.props;
-    fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
+    const { me, fetchReposByPage, reposLink, page, location } = this.props;
+    if (me) {
+      fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
+    }
   }
 
   componentDidUpdate = (prevProps: Props) => {
-    const { loading, collection, page, reposLink, location, fetchReposByPage } = this.props;
-    if (collection && page && !loading) {
+    const { me, loading, collection, page, reposLink, location, fetchReposByPage } = this.props;
+    if (collection && page && !loading && me) {
       const statePage: number = collection.page + 1;
       if (page !== statePage || prevProps.location.search !== location.search) {
         fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
@@ -125,13 +128,15 @@ class Overview extends React.Component<Props> {
 
 const mapStateToProps = (state: any, ownProps: Props) => {
   const { match } = ownProps;
+  const me = fetchMe(state);
   const collection = getRepositoryCollection(state);
-  const loading = isFetchReposPending(state);
+  const loading = isFetchReposPending(state) || isFetchMePending(state);
   const error = getFetchReposFailure(state);
   const page = urls.getPageFromMatch(match);
   const showCreateButton = isAbleToCreateRepos(state);
   const reposLink = getRepositoriesLink(state);
   return {
+    me,
     collection,
     loading,
     error,
