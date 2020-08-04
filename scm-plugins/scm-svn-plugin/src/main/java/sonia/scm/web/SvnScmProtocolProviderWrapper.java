@@ -21,18 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
-import sonia.scm.api.v2.resources.ScmPathInfoStore;
-import sonia.scm.config.ScmConfiguration;
+import sonia.scm.RootURL;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.spi.InitializingHttpScmProtocolWrapper;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -45,19 +43,18 @@ public class SvnScmProtocolProviderWrapper extends InitializingHttpScmProtocolWr
 
   public static final String PARAMETER_SVN_PARENTPATH = "SVNParentPath";
 
+  @Inject
+  public SvnScmProtocolProviderWrapper(SvnDAVServletProvider servletProvider, RootURL rootURL) {
+    super(servletProvider, rootURL);
+  }
+
   @Override
   public String getType() {
     return SvnRepositoryHandler.TYPE_NAME;
   }
 
-  @Inject
-  public SvnScmProtocolProviderWrapper(SvnDAVServletProvider servletProvider, Provider<ScmPathInfoStore> uriInfoStore, ScmConfiguration scmConfiguration) {
-    super(servletProvider, uriInfoStore, scmConfiguration);
-  }
-
   @Override
   protected void initializeServlet(ServletConfig config, ScmProviderHttpServlet httpServlet) throws ServletException {
-
     super.initializeServlet(new SvnConfigEnhancer(config), httpServlet);
   }
 
