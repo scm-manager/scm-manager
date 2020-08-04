@@ -78,10 +78,10 @@ class AnonymousAccessITCase {
 
   @Nested
   @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-  class WithAnonymousAccess {
+  class WithProtocolOnlyAnonymousAccess {
     @BeforeAll
     void enableAnonymousAccess() {
-      setAnonymousAccess(true);
+      setAnonymousAccess(AnonymousMode.PROTOCOL_ONLY);
     }
 
     @BeforeEach
@@ -121,7 +121,7 @@ class AnonymousAccessITCase {
 
       @BeforeEach
       void grantAnonymousAccessToRepo() {
-        ScmTypes.availableScmTypes().stream().forEach(type -> TestData.createUserPermission(USER_ANONYMOUS, WRITE, type));
+        ScmTypes.availableScmTypes().forEach(type -> TestData.createUserPermission(USER_ANONYMOUS, WRITE, type));
       }
 
       @ParameterizedTest
@@ -143,13 +143,84 @@ class AnonymousAccessITCase {
 
     @AfterAll
     void disableAnonymousAccess() {
-      setAnonymousAccess(false);
+      setAnonymousAccess(AnonymousMode.OFF);
     }
   }
 
-  private static void setAnonymousAccess(boolean anonymousAccessEnabled) {
+  @Nested
+  @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+  class WithFullAnonymousAccess {
+    @BeforeAll
+    void enableAnonymousAccess() {
+      setAnonymousAccess(AnonymousMode.FULL);
+    }
+
+    @BeforeEach
+    void createRepository() {
+      TestData.createDefault();
+    }
+
+    @Test
+    void shouldGrantAnonymousAccessToRepositoryList() {
+      assertEquals(200, RestAssured.given()
+        .when()
+        .get(RestUtil.REST_BASE_URL.resolve("repositories"))
+        .statusCode());
+    }
+
+    @Nested
+    class WithoutAnonymousAccessForRepository {
+
+      @ParameterizedTest
+      @ArgumentsSource(ScmTypes.class)
+      void shouldGrantAnonymousAccessToRepository(String type) {
+        assertEquals(401, RestAssured.given()
+          .when()
+          .get(getDefaultRepositoryUrl(type))
+          .statusCode());
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(ScmTypes.class)
+      void shouldNotCloneRepository(String type, @TempDir Path temporaryFolder) {
+        assertThrows(RepositoryClientException.class, () -> RepositoryUtil.createAnonymousRepositoryClient(type, Files.createDirectories(temporaryFolder).toFile()));
+      }
+    }
+
+    @Nested
+    class WithAnonymousAccessForRepository {
+
+      @BeforeEach
+      void grantAnonymousAccessToRepo() {
+        ScmTypes.availableScmTypes().forEach(type -> TestData.createUserPermission(USER_ANONYMOUS, WRITE, type));
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(ScmTypes.class)
+      void shouldGrantAnonymousAccessToRepository(String type) {
+        assertEquals(200, RestAssured.given()
+          .when()
+          .get(getDefaultRepositoryUrl(type))
+          .statusCode());
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(ScmTypes.class)
+      void shouldCloneRepository(String type, @TempDir Path temporaryFolder) throws IOException {
+        RepositoryClient client = RepositoryUtil.createAnonymousRepositoryClient(type, Files.createDirectories(temporaryFolder).toFile());
+        assertEquals(1, Objects.requireNonNull(client.getWorkingCopy().list()).length);
+      }
+    }
+
+    @AfterAll
+    void disableAnonymousAccess() {
+      setAnonymousAccess(AnonymousMode.OFF);
+    }
+  }
+
+  private static void setAnonymousAccess(AnonymousMode anonymousMode) {
     RestUtil.given("application/vnd.scmm-config+json;v=2")
-      .body(createConfig(AnonymousMode.FULL))
+      .body(createConfig(anonymousMode))
 
       .when()
       .put(RestUtil.REST_BASE_URL.toASCIIString() + "config")
