@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/scm-svn-plugin",
   "private": true,
-  "version": "2.3.1",
+  "version": "2.4.0-SNAPSHOT",
   "license": "MIT",
   "main": "./src/main/js/index.ts",
   "scripts": {
@@ -19,6 +19,6 @@
   },
   "prettier": "@scm-manager/prettier-config",
   "dependencies": {
-    "@scm-manager/ui-plugins": "^2.3.1"
+    "@scm-manager/ui-plugins": "^2.4.0-SNAPSHOT"
   }
 }
