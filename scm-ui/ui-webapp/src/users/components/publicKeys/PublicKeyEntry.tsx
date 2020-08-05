@@ -23,11 +23,10 @@
  */
 
 import React, { FC } from "react";
-import { DateFromNow, DeleteButton } from "@scm-manager/ui-components/src";
+import {DateFromNow, DeleteButton, DownloadButton} from "@scm-manager/ui-components/src";
 import { PublicKey } from "./SetPublicKeys";
 import { useTranslation } from "react-i18next";
 import { Link } from "@scm-manager/ui-types";
-import { formatPublicKey } from "./formatPublicKey";
 
 type Props = {
   publicKey: PublicKey;
@@ -43,6 +42,12 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
       <DeleteButton label={t("publicKey.delete")} action={() => onDelete((publicKey._links.delete as Link).href)} />
     );
   }
+  let downloadButton;
+  if (publicKey?._links?.raw) {
+    downloadButton = (
+      <DownloadButton displayName={t("publicKey.download")} url={(publicKey?._links?.raw as Link).href} />
+    );
+  }
 
   return (
     <>
@@ -53,6 +58,7 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
         </td>
         <td className="is-hidden-mobile">{publicKey.id}</td>
         <td>{deleteButton}</td>
+        <td>{downloadButton}</td>
       </tr>
     </>
   );

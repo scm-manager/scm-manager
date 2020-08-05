@@ -76,8 +76,9 @@ class PublicKeyMapperTest {
 
     assertThat(dto.getDisplayName()).isEqualTo(key.getDisplayName());
     assertThat(dto.getCreated()).isEqualTo(key.getCreated());
-    assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo("/v2/public_keys/1");
-    assertThat(dto.getLinks().getLinkBy("delete").get().getHref()).isEqualTo("/v2/public_keys/delete/1");
+    assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo("/v2/users/trillian/public_keys/1");
+    assertThat(dto.getLinks().getLinkBy("delete").get().getHref()).isEqualTo("/v2/users/trillian/public_keys/1");
+    assertThat(dto.getLinks().getLinkBy("raw").get().getHref()).isEqualTo("/v2/public_keys/1");
   }
 
   @Test

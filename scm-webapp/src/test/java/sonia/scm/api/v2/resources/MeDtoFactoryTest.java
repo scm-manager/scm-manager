@@ -206,7 +206,7 @@ class MeDtoFactoryTest {
     when(subject.isPermitted("user:changePublicKeys:trillian")).thenReturn(true);
 
     MeDto dto = meDtoFactory.create();
-    assertThat(dto.getLinks().getLinkBy("publicKeys").get().getHref()).isEqualTo("https://scm.hitchhiker.com/scm/v2/public_keys/trillian");
+    assertThat(dto.getLinks().getLinkBy("publicKeys").get().getHref()).isEqualTo("https://scm.hitchhiker.com/scm/v2/users/trillian/public_keys");
   }
 
   @Test

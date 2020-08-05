@@ -33,7 +33,7 @@ type Props = {
   onDelete: (link: string) => void;
 };
 
-const PublicKeyTable: FC<Props> = ({ publicKeys, onDelete }) => {
+const PublicKeyTable: FC<Props> = ({ publicKeys, onDelete, onDownload }) => {
   const [t] = useTranslation("users");
 
   if (publicKeys?._embedded?.keys?.length === 0) {

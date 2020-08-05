@@ -90,7 +90,9 @@ public class PublicKeyResource {
   public Response findByIdGpg(@PathParam("id") String id) {
     Optional<RawGpgKey> byId = store.findById(id);
     if (byId.isPresent()) {
-      return Response.ok(byId.get().getRaw()).build();
+      return Response.ok(byId.get().getRaw())
+        .header("Content-Disposition", "attachment; filename=\"" + byId.get().getDisplayName() + ".asc\"")
+        .build();
     }
     return Response.status(Response.Status.NOT_FOUND).build();
   }

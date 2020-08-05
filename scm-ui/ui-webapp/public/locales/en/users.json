@@ -68,6 +68,7 @@
     "raw": "Key",
     "created": "Created on",
     "addKey": "Add key",
-    "delete": "Delete"
+    "delete": "Delete",
+    "download": "Download"
   }
 }

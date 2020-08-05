@@ -68,6 +68,7 @@
     "raw": "Schlüssel",
     "created": "Eingetragen an",
     "addKey": "Schlüssel hinzufügen",
-    "delete": "Löschen"
+    "delete": "Löschen",
+    "download": "Herunterladen"
   }
 }

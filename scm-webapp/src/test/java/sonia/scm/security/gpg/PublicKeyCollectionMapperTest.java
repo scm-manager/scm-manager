@@ -86,7 +86,7 @@ class PublicKeyCollectionMapperTest {
     List<HalRepresentation> embedded = collection.getEmbedded().getItemsBy("keys");
     assertThat(embedded).hasSize(2);
 
-    assertThat(collection.getLinks().getLinkBy("self").get().getHref()).isEqualTo("/v2/public_keys/trillian");
+    assertThat(collection.getLinks().getLinkBy("self").get().getHref()).isEqualTo("/v2/users/trillian/public_keys");
   }
 
   @Test
@@ -94,7 +94,7 @@ class PublicKeyCollectionMapperTest {
     when(subject.isPermitted("user:changePublicKeys:trillian")).thenReturn(true);
 
     HalRepresentation collection = collectionMapper.map("trillian", Lists.newArrayList());
-    assertThat(collection.getLinks().getLinkBy("create").get().getHref()).isEqualTo("/v2/public_keys/trillian");
+    assertThat(collection.getLinks().getLinkBy("create").get().getHref()).isEqualTo("/v2/users/trillian/public_keys");
   }
 
   @Test

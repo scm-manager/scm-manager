@@ -61,6 +61,7 @@ public abstract class PublicKeyMapper {
     if (UserPermissions.changePublicKeys(rawGpgKey.getOwner()).isPermitted() && !rawGpgKey.isReadonly()) {
       linksBuilder.single(Link.link("delete", createDeleteLink(rawGpgKey)));
     }
+    linksBuilder.single(Link.link("raw", createDownloadLink(rawGpgKey)));
     return new RawGpgKeyDto(linksBuilder.build());
   }
 
@@ -75,6 +76,13 @@ public abstract class PublicKeyMapper {
     return new LinkBuilder(scmPathInfoStore.get().get(), UserPublicKeyResource.class)
       .method("deleteById")
       .parameters(rawGpgKey.getOwner(), rawGpgKey.getId())
+      .href();
+  }
+
+  private String createDownloadLink(RawGpgKey rawGpgKey) {
+    return new LinkBuilder(scmPathInfoStore.get().get(), PublicKeyResource.class)
+      .method("findByIdGpg")
+      .parameters(rawGpgKey.getId())
       .href();
   }
 }
