@@ -29,8 +29,10 @@ import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.apache.shiro.SecurityUtils;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
+import sonia.scm.group.GroupPermissions;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.web.VndMediaType;
@@ -106,6 +108,7 @@ public class GroupCollectionResource {
                          @QueryParam("desc") boolean desc,
                          @DefaultValue("") @QueryParam("q") String search
   ) {
+    GroupPermissions.list().check();
     return adapter.getAll(page, pageSize, createSearchPredicate(search), sortBy, desc,
       pageResult -> groupCollectionToDtoMapper.map(page, pageSize, pageResult));
   }

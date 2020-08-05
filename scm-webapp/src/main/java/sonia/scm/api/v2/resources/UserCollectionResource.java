@@ -30,10 +30,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.shiro.authc.credential.PasswordService;
+import sonia.scm.group.GroupPermissions;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
+import sonia.scm.user.UserPermissions;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -108,6 +110,7 @@ public class UserCollectionResource {
                          @DefaultValue("false") @QueryParam("desc") boolean desc,
                          @DefaultValue("") @QueryParam("q") String search
   ) {
+    UserPermissions.list().check();
     return adapter.getAll(page, pageSize, createSearchPredicate(search), sortBy, desc,
       pageResult -> userCollectionToDtoMapper.map(page, pageSize, pageResult));
   }
