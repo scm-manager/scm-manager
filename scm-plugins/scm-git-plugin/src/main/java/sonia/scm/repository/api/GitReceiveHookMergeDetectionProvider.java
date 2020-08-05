@@ -24,40 +24,33 @@
 
 package sonia.scm.repository.api;
 
-import org.eclipse.jgit.lib.AnyObjectId;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.ReceiveCommand;
-import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.spi.GitLogComputer;
 import sonia.scm.repository.spi.HookMergeDetectionProvider;
 import sonia.scm.repository.spi.LogCommandRequest;
 
-import java.util.List;
-
-public class GitPreReceiveHookMergeDetectionProvider implements HookMergeDetectionProvider {
-  private final List<ReceiveCommand> receiveCommands;
+public class GitReceiveHookMergeDetectionProvider implements HookMergeDetectionProvider {
   private final Repository repository;
   private final String repositoryId;
+  private final BranchMapper branchMapper;
 
-  public GitPreReceiveHookMergeDetectionProvider(List<ReceiveCommand> receiveCommands, Repository repository, String repositoryId) {
-    this.receiveCommands = receiveCommands;
+  public GitReceiveHookMergeDetectionProvider(Repository repository, String repositoryId, BranchMapper branchMapper) {
     this.repository = repository;
     this.repositoryId = repositoryId;
+    this.branchMapper = branchMapper;
   }
 
   @Override
   public boolean branchesMerged(String target, String branch) {
-
-    String sourceToUse = receiveCommands.stream().filter(receiveCommand -> GitUtil.getBranch(receiveCommand.getRef()).equals(branch)).findFirst().map(ReceiveCommand::getNewId).map(AnyObjectId::getName).orElse(branch);
-    String targetToUse = receiveCommands.stream().filter(receiveCommand -> GitUtil.getBranch(receiveCommand.getRef()).equals(target)).findFirst().map(ReceiveCommand::getNewId).map(AnyObjectId::getName).orElse(target);
-
     LogCommandRequest request = new LogCommandRequest();
-    request.setBranch(sourceToUse);
-    request.setAncestorChangeset(targetToUse);
+    request.setBranch(branchMapper.map(branch));
+    request.setAncestorChangeset(branchMapper.map(target));
     request.setPagingLimit(1);
 
-    ChangesetPagingResult changesets = new GitLogComputer(repositoryId, repository).compute(request);
-    return changesets.getTotal() == 0;
+    return new GitLogComputer(repositoryId, repository).compute(request).getTotal() == 0;
+  }
+
+  public interface BranchMapper {
+    String map(String branch);
   }
 }
